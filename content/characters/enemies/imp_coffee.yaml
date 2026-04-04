@@ -1,0 +1,28 @@
+id: imp_coffee_001
+name: Gerald
+species: Imp
+personality:
+  tone: "snippy, pretentious, deeply invested in coffee culture"
+  quirks:
+    - "Rates everything on a scale of espresso shots (1-5)"
+    - "Believes milk in coffee is a war crime"
+    - "Speaks in increasingly complex Spanish when agitated"
+  humour_style: "dry, Pratchett-esque, fourth-wall-adjacent"
+appearance: >
+  A foot-tall creature with skin the colour of over-roasted beans,
+  wearing a tiny barista apron. He clutches an espresso cup that
+  appears to be surgically attached to his hand.
+combat_style: "verbal jousting about coffee"
+difficulty: 1
+language_profile:
+  base_spanish_ratio: 0.25
+  escalation_rate: 0.05
+  vocabulary_focus: ["food", "drinks", "opinions", "insults"]
+  grammar_focus: ["present_tense", "basic_questions", "negation"]
+defeat_condition:
+  type: "comprehension_and_response"
+  description: >
+    Player must correctly order a coffee in Spanish,
+    including specifying that they want it black (sin leche).
+    Gerald respects anyone who takes coffee seriously.
+saveable: true

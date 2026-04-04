@@ -1,0 +1,18 @@
+id: imp_coffee_greeting
+character: characters/enemies/imp_coffee.yaml
+location: coffee_cart
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  trigger_phrases:
+    - "sin leche"
+    - "café negro"
+    - "cafe negro"
+    - "café solo"
+    - "cafe solo"
+  description: "Player orders black coffee in Spanish"
+max_turns: 20
+escalation:
+  spanish_ratio_increase_per_turn: 0.05
