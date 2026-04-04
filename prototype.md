@@ -49,7 +49,7 @@ A playable web-based level where the player:
 └─────────────────────────────────────────────────────┘
 ```
 
-An **encounter** plays out as a multi-turn conversation. The enemy speaks (partly or fully in Spanish, depending on difficulty). The player must understand and respond. The Companion assists with translation but is progressively limited as the player advances. Encounters are resolved when the player demonstrates comprehension or produces correct translations — not by picking the right multiple-choice answer, but by engaging with the language.
+An **encounter** plays out as a multi-turn conversation. The enemy speaks (partly or fully in Spanish, depending on difficulty). The player must understand and respond, ideally in the foreign language, or in a mix of foreign and native if necessary. The Companion assists with translation but is progressively limited as the player advances. Encounters are resolved when the player demonstrates comprehension or produces correct translations — not by picking the right multiple-choice answer, but by engaging with the language.
 
 The tone is Terry Pratchett absurdist: you're negotiating with an Imp about his coffee preferences, or debating philosophy with a Trepanner who's inflating his brain through a hole in his skull.
 
