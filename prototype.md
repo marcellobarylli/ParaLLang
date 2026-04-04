@@ -51,7 +51,9 @@ A playable web-based level where the player:
 
 An **encounter** plays out as a multi-turn conversation. The enemy speaks (partly or fully in Spanish, depending on difficulty). The player must understand and respond, ideally in the foreign language, or in a mix of foreign and native if necessary. The Companion assists with translation but is progressively limited as the player advances. Encounters are resolved when the player demonstrates comprehension or produces correct translations — not by picking the right multiple-choice answer, but by engaging with the language.
 
-The tone is Terry Pratchett absurdist: you're negotiating with an Imp about his coffee preferences, or debating philosophy with a Trepanner who's inflating his brain through a hole in his skull.
+For example, an enemy's turn contains 4 sentences: On beginner difficulty, the enemy will randomly say 1 out of 4 sentences in the foreign language. The player should respond as if in a normal conversation. Importantly, the interface should allow 1-click translation of the enemy's foreign sentence if needed.
+
+The tone is Terry Pratchett absurdist: you're negotiating with an Imp about his coffee preferences, or debating philosophy with a Trepanner who's inflating his brain through a hole in his skull. The coffee preference example is both absurd (due to it being with an enemy Imp), but also serves the purpose of teaching the Player conversational skills they might actually need in the real world. The philosohpy Trepanner example corresponds to later stages in normal translation apps, where topics like philosophy start becoming topical.
 
 ---
 
