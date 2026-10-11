@@ -36,5 +36,5 @@ effort = "xhigh"
 
 [seats.reviewer]
 provider = "claude_cli"
-model = "fable-5-1"
+model = "opus-5-5"
 effort = "high"
