@@ -6,8 +6,10 @@ import { CLIProcessRunner } from './cli-runner.js';
 import { ProviderError } from './provider-error.js';
 
 export function schemaForCLI(schema) {
+  // The OpenAI-style target lists every property as required (optional fields become nullable),
+  // which the Codex strict output schema demands; Claude accepts the same schema.
   const { $schema: _ignored, ...jsonSchema } = zodToJsonSchema(schema, {
-    target: 'jsonSchema7',
+    target: 'openAi',
     $refStrategy: 'none',
   });
   return jsonSchema;

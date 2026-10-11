@@ -51,12 +51,12 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
   const saveDir = await mkdtemp(join(tmpdir(), 'parallang-live-'));
   let server;
   let preflight;
+  const grading = [];
   try {
     preflight = await provider.preflight();
     const content = loadGameContent();
     const storage = new JsonLearningStorage({ saveDir });
     const service = new LearningService({ provider, storage, content });
-    const grading = [];
     for (const item of cases) {
       if (provider.generationCount >= 14) throw new Error('Live verification stopped at the 14-call scripted provider budget.');
       const objectives = content.encounter.objectives.slice(item.objectiveIndex ?? 0);
@@ -150,6 +150,7 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
         resolvedModel: provider.lastResolvedModel ?? 'not reported by CLI',
         generationCalls: provider.generationCount,
         budget: 14,
+        grading,
       },
     });
     throw error;

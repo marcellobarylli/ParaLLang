@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { createCLIEnvironment } from '../src/llm/cli-environment.js';
 import { createLLMAdapter } from '../src/llm/index.js';
+import { schemaForCLI } from '../src/llm/cli-adapter.js';
 import { encounterResponseSchema, gradingResponseSchema } from '../src/llm/schemas.js';
 import { loadRootEnv, parseCliTimeout, resolveLLMConfig } from '../src/config.js';
 import { checkProvider } from '../scripts/check-provider.js';
@@ -192,4 +193,15 @@ test('missing executables and machine-readable model failures use typed safe cat
     { role: 'system', content: 'Narrate.' },
     { role: 'user', content: 'TURN DATA: {"task":"greeting"}' },
   ], encounterResponseSchema), (error) => error.code === 'CLI_MODEL_UNAVAILABLE');
+});
+
+test('CLI JSON schemas list every property as required so strict native output schemas accept them', () => {
+  const words = schemaForCLI(encounterResponseSchema).properties.dialogue.properties.words.items;
+  assert.deepEqual(words.required, ['word', 'pos', 'root', 'meaning']);
+  assert.deepEqual(words.properties.root.type, ['string', 'null']);
+  assert.equal(schemaForCLI(gradingResponseSchema).additionalProperties, false);
+  assert.ok(encounterResponseSchema.safeParse({
+    narrative: 'n', dialogue: { speaker: 's', native: 'n', translation: 't', words: [{ word: 'w', pos: 'p', root: null, meaning: 'm' }] },
+    must_translate: true, difficulty: 1, hints_available: true, encounter_state: 'ongoing',
+  }).success, 'null root from the strict schema still validates');
 });
