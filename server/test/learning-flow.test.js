@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createApp } from '../src/app.js';
 import { api, createLearnerAndEncounter, createRuntime } from './helpers.js';
 
 async function submit(runtime, learnerId, encounter, message, attemptId = crypto.randomUUID()) {
@@ -84,6 +85,24 @@ test('invalid or failed grading is retryable and leaves encounter state unchange
   assert.equal(response.status, 503);
   current = await api(runtime, '/api/encounter/current', { learnerId: session.learnerId });
   assert.equal(current.data.encounter.committedPlayerTurns, 0);
+});
+
+test('unexpected server errors include their message only in the sanitized log', async (t) => {
+  const logs = [];
+  const app = createApp({
+    service: { getSpellbook: async () => { throw new Error('storage read failed'); } },
+    logger: { error: (line) => logs.push(line) },
+  });
+  const server = app.listen(0, '127.0.0.1');
+  await new Promise((resolve) => server.once('listening', resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+
+  const response = await fetch(`http://127.0.0.1:${server.address().port}/api/spellbook`);
+  const body = await response.json();
+
+  assert.equal(response.status, 500);
+  assert.equal(body.error.message, 'An unexpected server error occurred.');
+  assert.match(logs[0], /^\[[0-9a-f-]+\] INTERNAL_ERROR storage read failed$/);
 });
 
 test('protected answers use one server hint budget and help makes no provider call', async (t) => {
