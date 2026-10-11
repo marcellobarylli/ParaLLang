@@ -1,26 +1,29 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
+import dotenv from 'dotenv';
+import { resolve } from 'node:path';
 import { createLLMAdapter } from './src/llm/index.js';
-import { createEncounterRouter } from './src/routes/encounter.js';
+import { loadGameContent } from './src/content-loader.js';
+import { JsonLearningStorage } from './src/learning-storage.js';
+import { LearningService } from './src/learning-service.js';
+import { createApp } from './src/app.js';
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+dotenv.config({ path: resolve(import.meta.dirname, '..', '.env') });
 
-app.use(cors());
-app.use(express.json());
-
-const llmAdapter = createLLMAdapter();
-
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
+const port = Number(process.env.PORT || 3001);
+const content = loadGameContent();
+const provider = createLLMAdapter();
+const storage = new JsonLearningStorage({
+  saveDir: process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'),
 });
+const service = new LearningService({ provider, storage, content });
+const app = createApp({ service });
 
-app.use('/api/encounter', createEncounterRouter(llmAdapter));
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`ParaLLang server listening on port ${port}`);
+    console.log(`LLM provider: ${process.env.LLM_PROVIDER || 'openai'}`);
+    console.log(`Spellbook saves: ${storage.saveDir}`);
+  });
+}
 
-app.listen(PORT, () => {
-  console.log(`ParaLLang server listening on port ${PORT}`);
-  console.log(`LLM provider: ${process.env.LLM_PROVIDER || 'openai'}`);
-});
-
+export { app, service };
 export default app;

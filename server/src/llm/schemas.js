@@ -1,22 +1,36 @@
 import { z } from 'zod';
 
-export const wordSchema = z.object({
+export const generatedWordSchema = z.object({
   word: z.string(),
   pos: z.string(),
-  root: z.string().optional(),
+  root: z.string().nullable().optional(),
   meaning: z.string(),
-});
+}).strict();
 
 export const encounterResponseSchema = z.object({
-  narrative: z.string().describe('Atmospheric narrative text describing the scene (always in English)'),
+  narrative: z.string().min(1).describe('Atmospheric scene narration, always in English'),
   dialogue: z.object({
-    speaker: z.string().describe('Name of the character speaking'),
-    native: z.string().describe('The dialogue line, mixing Spanish and English per the Spanish ratio'),
-    translation: z.string().describe('Full English translation of the dialogue'),
-    words: z.array(wordSchema).describe('Spanish words used in the dialogue with POS and meaning'),
-  }),
-  must_translate: z.boolean().describe('Whether the player must translate something to proceed'),
-  difficulty: z.number().describe('Current difficulty level (1-5)'),
-  hints_available: z.boolean().describe('Whether the companion can offer hints'),
-  encounter_state: z.enum(['ongoing', 'resolved', 'failed']).describe('Current state of the encounter'),
-});
+    speaker: z.string().min(1),
+    native: z.string().min(1),
+    translation: z.string().min(1),
+    words: z.array(generatedWordSchema),
+  }).strict(),
+  must_translate: z.boolean(),
+  difficulty: z.number(),
+  hints_available: z.boolean(),
+  encounter_state: z.enum(['ongoing', 'resolved', 'failed']),
+}).strict();
+
+export const gradingResponseSchema = z.object({
+  objective_results: z.array(z.object({
+    objective_id: z.string().min(1),
+    passed: z.boolean(),
+    feedback: z.string().min(1),
+    vocabulary_evidence: z.array(z.object({
+      vocabulary_id: z.string().min(1),
+      evidence: z.string().min(1),
+      quality: z.number().int().min(0).max(5),
+    }).strict()),
+  }).strict()).min(1),
+  overall_feedback: z.string().min(1),
+}).strict();

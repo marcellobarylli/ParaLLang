@@ -6,13 +6,59 @@ initial_prompt_template: encounter/greeting.txt
 turn_prompt_template: encounter/dialogue_turn.txt
 defeat_condition:
   type: comprehension_and_response
-  trigger_phrases:
-    - "sin leche"
-    - "café negro"
-    - "cafe negro"
-    - "café solo"
-    - "cafe solo"
   description: "Player orders black coffee in Spanish"
 max_turns: 20
 escalation:
   spanish_ratio_increase_per_turn: 0.05
+objectives:
+  - id: order_coffee
+    prompt: "Order a coffee from Gerald, using Spanish for the coffee request."
+    intent: "The player asks Gerald for coffee for themself."
+    target_vocabulary_ids: [quiero, cafe, cafe_solo, cafe_negro]
+    required_target_groups:
+      - [cafe, cafe_solo, cafe_negro]
+    grammar_constraints:
+      - "Use a first-person request or an unambiguous direct order."
+      - "The coffee target must be expressed in Spanish; an English-only order does not pass."
+    accepted_examples:
+      - "Quiero un café."
+      - "Un café, por favor."
+      - "I would like un café, please."
+    negative_examples:
+      - text: "I want coffee."
+        reason: "English-only; it does not demonstrate the Spanish coffee target."
+      - text: "Gerald said, 'un café'."
+        reason: "A quotation is not the player's own order."
+      - text: "She wants un café."
+        reason: "It orders for someone else rather than the player."
+    reference_meaning: "A direct request by the player for coffee."
+    hint_limit: 2
+    next_objective: no_milk
+    assessment_reference_ids: [rae-cafe, cambridge-cafe, rae-querer]
+  - id: no_milk
+    prompt: "Make clear that your coffee must have no milk, using Spanish."
+    intent: "The player orders their coffee without milk or as black coffee."
+    target_vocabulary_ids: [sin_leche, cafe_solo, cafe_negro]
+    required_target_groups:
+      - [sin_leche, cafe_solo, cafe_negro]
+    grammar_constraints:
+      - "Use one authored Spanish no-milk or black-coffee expression in the player's own order."
+      - "Reject negated, contradicted, quoted, third-person, and off-topic occurrences."
+    accepted_examples:
+      - "Quiero un café sin leche."
+      - "Un café solo, por favor."
+      - "I want my café negro, please."
+      - "Sin leche, por favor."
+    negative_examples:
+      - text: "No sin leche, con leche."
+        reason: "The phrase is explicitly negated and contradicted by 'with milk'."
+      - text: "The sign says 'sin leche'."
+        reason: "A quotation about a sign is not an order."
+      - text: "My friend takes café negro."
+        reason: "It describes someone else's preference."
+      - text: "Sin leche is two words."
+        reason: "It discusses the phrase rather than ordering coffee."
+    reference_meaning: "The player's established coffee order contains no milk."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [rae-cafe, cambridge-sin, cambridge-leche, rae-solo, rae-negro]

@@ -1,77 +1,27 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import BilingualText from './BilingualText.jsx';
 
-function NpcMessage({ data }) {
-  return (
-    <div style={{ marginBottom: 16 }}>
-      {/* Narrative */}
-      <div style={{ color: '#9a94b8', fontStyle: 'italic', marginBottom: 8, lineHeight: 1.5 }}>
-        {data.narrative}
-      </div>
-
-      {/* Speaker label */}
-      <div style={{ color: '#c9a033', fontWeight: 700, fontSize: '0.9em', marginBottom: 2 }}>
-        {data.dialogue.speaker}
-      </div>
-
-      {/* Bilingual dialogue */}
-      <BilingualText dialogue={data.dialogue} />
-    </div>
-  );
-}
-
-function PlayerMessage({ text }) {
-  return (
-    <div style={{ marginBottom: 16, textAlign: 'right' }}>
-      <span
-        style={{
-          display: 'inline-block',
-          background: '#1e3a5f',
-          padding: '8px 14px',
-          borderRadius: 12,
-          maxWidth: '75%',
-          textAlign: 'left',
-        }}
-      >
-        {text}
-      </span>
-    </div>
-  );
-}
-
-export default function DialoguePanel({ messages, isLoading }) {
+export default function DialoguePanel({ encounter, isLoading, onHelp }) {
   const endRef = useRef(null);
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
-
+  useEffect(() => { endRef.current?.scrollIntoView?.({ behavior: 'smooth' }); }, [encounter?.transcript, isLoading]);
+  if (!encounter) return <main className="dialogue-panel"><p>Preparing The Coffee Cart…</p></main>;
   return (
-    <div
-      style={{
-        flex: 1,
-        overflowY: 'auto',
-        padding: '20px 24px',
-        maxWidth: 700,
-        width: '100%',
-        margin: '0 auto',
-      }}
-    >
-      {messages.map((msg, i) =>
-        msg.role === 'npc' ? (
-          <NpcMessage key={i} data={msg.data} />
-        ) : (
-          <PlayerMessage key={i} text={msg.text} />
-        )
-      )}
-
-      {isLoading && (
-        <div style={{ color: '#666', fontStyle: 'italic' }}>
-          Gerald is thinking...
-        </div>
-      )}
-
+    <main className="dialogue-panel" aria-label="Conversation with Gerald">
+      <section className="objective-card" aria-live="polite">
+        {encounter.currentObjective ? <><strong>Current objective</strong><p>{encounter.currentObjective.prompt}</p></> : <strong>Order complete</strong>}
+        <small>Spanish target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</small>
+      </section>
+      {encounter.transcript.map((message) => message.role === 'npc' ? (
+        <article className="npc-message" key={message.id}>
+          <p className="narrative">{message.narrative}</p>
+          <strong className="speaker">{message.dialogue.speaker}</strong>
+          <BilingualText message={message} onHelp={onHelp} disabled={isLoading || (message.protected && !encounter.hints_available)} />
+        </article>
+      ) : (
+        <p className="player-message" key={message.id}>{message.text}</p>
+      ))}
+      {isLoading && <p className="thinking" role="status">Gerald is considering the linguistic implications…</p>}
       <div ref={endRef} />
-    </div>
+    </main>
   );
 }

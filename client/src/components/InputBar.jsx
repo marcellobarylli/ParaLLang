@@ -1,65 +1,19 @@
-import { useState } from 'react';
-
-export default function InputBar({ onSend, disabled }) {
-  const [text, setText] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const trimmed = text.trim();
-    if (!trimmed || disabled) return;
-    onSend(trimmed);
-    setText('');
+export default function InputBar({ value, onChange, onSend, disabled, loading, resolved }) {
+  const submit = (event) => {
+    event.preventDefault();
+    if (!disabled && value.trim()) onSend(value);
   };
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        display: 'flex',
-        gap: 8,
-        padding: '12px 24px',
-        background: '#111122',
-        borderTop: '1px solid #2a2a3e',
-        maxWidth: 700,
-        width: '100%',
-        margin: '0 auto',
-      }}
-    >
+    <form className="input-bar" onSubmit={submit}>
+      <label className="sr-only" htmlFor="player-response">Your response</label>
       <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder={disabled ? 'Encounter resolved!' : 'Type your response...'}
+        id="player-response"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={resolved ? 'Order accepted. Restart to play again.' : loading ? 'Sending your response…' : 'Reply to Gerald…'}
         disabled={disabled}
-        style={{
-          flex: 1,
-          background: '#1a1a2e',
-          border: '1px solid #333',
-          borderRadius: 8,
-          padding: '10px 14px',
-          color: '#e0dcd0',
-          fontSize: '1em',
-          fontFamily: 'inherit',
-          outline: 'none',
-        }}
       />
-      <button
-        type="submit"
-        disabled={disabled || !text.trim()}
-        style={{
-          background: disabled ? '#333' : '#c9a033',
-          color: disabled ? '#666' : '#0d0d1a',
-          border: 'none',
-          borderRadius: 8,
-          padding: '10px 20px',
-          fontSize: '1em',
-          fontWeight: 700,
-          cursor: disabled ? 'default' : 'pointer',
-          fontFamily: 'inherit',
-        }}
-      >
-        Send
-      </button>
+      <button type="submit" className="primary-button" disabled={disabled || !value.trim()}>{loading ? 'Sending…' : 'Send'}</button>
     </form>
   );
 }

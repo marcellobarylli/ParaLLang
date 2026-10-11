@@ -16,7 +16,6 @@ combat_style: "verbal jousting about coffee"
 difficulty: 1
 language_profile:
   base_spanish_ratio: 0.25
-  escalation_rate: 0.05
   vocabulary_focus: ["food", "drinks", "opinions", "insults"]
   grammar_focus: ["present_tense", "basic_questions", "negation"]
 defeat_condition:

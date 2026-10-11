@@ -2,59 +2,46 @@ import { useEffect } from 'react';
 import { useGameStore } from './stores/gameStore.js';
 import DialoguePanel from './components/DialoguePanel.jsx';
 import InputBar from './components/InputBar.jsx';
+import Spellbook from './components/Spellbook.jsx';
+import ReviewPanel from './components/ReviewPanel.jsx';
 
 export default function App() {
-  const { messages, encounterState, isLoading, error, startEncounter, sendMessage } = useGameStore();
-
-  useEffect(() => {
-    startEncounter();
-  }, [startEncounter]);
+  const state = useGameStore();
+  useEffect(() => { state.initialize(); }, [state.initialize]);
+  const resolved = state.encounter?.state === 'resolved';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      {/* Header */}
-      <header
-        style={{
-          padding: '12px 24px',
-          borderBottom: '1px solid #2a2a3e',
-          textAlign: 'center',
-        }}
-      >
-        <h1 style={{ fontSize: '1.4em', color: '#c9a033', margin: 0, letterSpacing: 2 }}>
-          ParaLLang
-        </h1>
-        <div style={{ fontSize: '0.8em', color: '#666', marginTop: 2 }}>
-          The Crumbling Market — The Coffee Cart
-        </div>
+    <div className="app-shell">
+      <header className="app-header">
+        <div><h1>ParaLLang</h1><p>The Crumbling Market — The Coffee Cart</p></div>
+        <nav aria-label="Learning navigation">
+          <button type="button" className="secondary-button" onClick={state.openSpellbook}>
+            Spellbook <span className="due-badge" aria-label={`${state.spellbook.dueCount} reviews due`}>{state.spellbook.dueCount}</span>
+          </button>
+          <button type="button" className="text-button" onClick={state.restartEncounter} disabled={state.isLoading}>Restart encounter</button>
+        </nav>
       </header>
 
-      {/* Error banner */}
-      {error && (
-        <div style={{ background: '#5c1a1a', padding: '8px 24px', color: '#e06666', fontSize: '0.9em' }}>
-          {error}
-        </div>
-      )}
+      {state.error && <div className="error-banner" role="alert"><span>{state.error}</span><button type="button" onClick={state.clearError} aria-label="Dismiss error">×</button></div>}
 
-      {/* Dialogue */}
-      <DialoguePanel messages={messages} isLoading={isLoading} />
-
-      {/* Victory banner */}
-      {encounterState === 'resolved' && (
-        <div
-          style={{
-            background: '#1a3a1a',
-            padding: '12px 24px',
-            textAlign: 'center',
-            color: '#93c47d',
-            fontWeight: 700,
-          }}
-        >
-          Gerald is impressed. Encounter resolved!
-        </div>
-      )}
-
-      {/* Input */}
-      <InputBar onSend={sendMessage} disabled={isLoading || encounterState !== 'active'} />
+      {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} />}
+      {state.view === 'review' && <ReviewPanel
+        challenge={state.reviewChallenge} result={state.reviewResult} isLoading={state.isLoading}
+        onSubmit={state.submitReview} onReveal={state.revealReviewAnswer}
+        onContinue={() => state.startReview()} onReturn={state.returnToDialogue}
+      />}
+      {state.view === 'dialogue' && <>
+        <DialoguePanel encounter={state.encounter} isLoading={state.isLoading} onHelp={state.revealHelp} />
+        {state.assessment && <section className="assessment-banner" aria-live="polite">
+          <strong>Assessment</strong><p>{state.assessment.overallFeedback}</p>
+          {state.assessment.objectiveResults.map((result) => <p key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</p>)}
+        </section>}
+        {resolved && <section className="victory-banner" role="status">Gerald grudgingly approves. The coffee order is complete.</section>}
+        <InputBar
+          value={state.draft} onChange={state.setDraft} onSend={state.sendMessage}
+          loading={state.isLoading} resolved={resolved} disabled={state.isLoading || !state.encounter || resolved}
+        />
+      </>}
     </div>
   );
 }

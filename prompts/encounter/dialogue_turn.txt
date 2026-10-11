@@ -1,8 +1,3 @@
-The player said: "{{playerInput}}"
+React as Gerald to the player answer in TURN DATA. Express the authoritative decision in character, but do not alter it. Keep feedback useful and the Spanish beginner-friendly.
 
-Continue the conversation as {{enemy.name}}. React to what the player said:
-- If they used Spanish correctly, acknowledge it in character (grudging respect, surprise, etc.)
-- If they made errors or spoke only English, {{enemy.name}} might mock them or repeat the Spanish more emphatically
-- Maintain the current Spanish ratio ({{language.spanishRatio}}%) and escalate slightly if the player is doing well
-- Keep encounter_state as "ongoing" unless the conversation has reached a natural conclusion
-- Set difficulty based on the current Spanish ratio (1 for ≤25%, 2 for ≤50%, 3 for ≤75%)
+TURN DATA: {{turnData}}

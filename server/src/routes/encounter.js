@@ -1,77 +1,29 @@
 import { Router } from 'express';
-import { encounterState } from '../encounter-state.js';
-import { loadCharacter, loadEncounter } from '../content-loader.js';
-import { buildEncounterPrompt } from '../llm/prompt-builder.js';
-import { encounterResponseSchema } from '../llm/schemas.js';
+import { validationError } from '../errors.js';
 
-export function createEncounterRouter(llmAdapter) {
+function learnerId(req) {
+  const value = req.get('X-Learner-Id');
+  if (!value) throw validationError('X-Learner-Id header is required.');
+  return value;
+}
+
+export function createEncounterRouter(service) {
   const router = Router();
-
-  router.post('/start', async (req, res) => {
-    try {
-      encounterState.reset();
-
-      const encounter = loadEncounter('encounters/imp_coffee_greeting.yaml');
-      const character = loadCharacter(encounter.character);
-
-      encounterState.character = character;
-      encounterState.encounterConfig = encounter;
-
-      const messages = buildEncounterPrompt(character, encounter, [], null);
-      const response = await llmAdapter.structuredChat(messages, encounterResponseSchema);
-
-      encounterState.addAssistantMessage(JSON.stringify(response));
-
-      res.json(response);
-    } catch (err) {
-      console.error('Error starting encounter:', err);
-      res.status(500).json({ error: 'Failed to start encounter' });
-    }
+  router.post('/start', async (req, res, next) => {
+    try { res.json(await service.startEncounter(learnerId(req), { restart: req.body?.restart === true })); }
+    catch (error) { next(error); }
   });
-
-  router.post('/dialogue', async (req, res) => {
-    try {
-      const { message } = req.body;
-      if (!message) {
-        return res.status(400).json({ error: 'Message is required' });
-      }
-
-      if (encounterState.isResolved) {
-        return res.status(400).json({ error: 'Encounter already resolved' });
-      }
-
-      if (!encounterState.character) {
-        return res.status(400).json({ error: 'No active encounter. Call /api/encounter/start first.' });
-      }
-
-      encounterState.addPlayerMessage(message);
-
-      // Check defeat condition before LLM call
-      const defeated = encounterState.checkDefeatCondition(message);
-
-      const messages = buildEncounterPrompt(
-        encounterState.character,
-        encounterState.encounterConfig,
-        encounterState.conversationHistory,
-        message
-      );
-
-      const response = await llmAdapter.structuredChat(messages, encounterResponseSchema);
-
-      // Override encounter_state if defeat condition met
-      if (defeated) {
-        response.encounter_state = 'resolved';
-        encounterState.isResolved = true;
-      }
-
-      encounterState.addAssistantMessage(JSON.stringify(response));
-
-      res.json(response);
-    } catch (err) {
-      console.error('Error in dialogue:', err);
-      res.status(500).json({ error: 'Failed to process dialogue' });
-    }
+  router.get('/current', async (req, res, next) => {
+    try { res.json(await service.currentEncounter(learnerId(req))); }
+    catch (error) { next(error); }
   });
-
+  router.post('/dialogue', async (req, res, next) => {
+    try { res.json(await service.submitDialogue(learnerId(req), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
+  router.post('/help', async (req, res, next) => {
+    try { res.json(await service.revealEncounterHelp(learnerId(req), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
   return router;
 }

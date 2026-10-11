@@ -1,0 +1,95 @@
+version: gerald-coffee-v1
+references:
+  - id: rae-cafe
+    title: "Real Academia Española, Diccionario de la lengua española: café"
+    url: "https://dle.rae.es/caf%C3%A9"
+  - id: cambridge-cafe
+    title: "Cambridge Spanish–English Dictionary: café"
+    url: "https://dictionary.cambridge.org/dictionary/spanish-english/cafe"
+  - id: rae-querer
+    title: "Real Academia Española, Diccionario de la lengua española: querer"
+    url: "https://dle.rae.es/querer"
+  - id: cambridge-sin
+    title: "Cambridge Spanish–English Dictionary: sin"
+    url: "https://dictionary.cambridge.org/dictionary/spanish-english/sin"
+  - id: cambridge-leche
+    title: "Cambridge Spanish–English Dictionary: leche"
+    url: "https://dictionary.cambridge.org/dictionary/spanish-english/leche"
+  - id: rae-solo
+    title: "Real Academia Española, Diccionario de la lengua española: solo"
+    url: "https://dle.rae.es/solo"
+  - id: rae-negro
+    title: "Real Academia Española, Diccionario de la lengua española: negro"
+    url: "https://dle.rae.es/negro"
+  - id: cambridge-con
+    title: "Cambridge Spanish–English Dictionary: con"
+    url: "https://dictionary.cambridge.org/dictionary/spanish-english/con"
+entries:
+  - id: cafe
+    kind: word
+    spanish: "café"
+    part_of_speech: noun
+    accepted_translations: ["coffee", "a coffee"]
+    surface_variants: ["café", "cafe"]
+    accent_insensitive: true
+    example:
+      spanish: "Un café, por favor."
+      english: "A coffee, please."
+    reference_ids: [rae-cafe, cambridge-cafe]
+  - id: quiero
+    kind: word
+    spanish: "quiero"
+    part_of_speech: verb
+    accepted_translations: ["I want", "I would like"]
+    surface_variants: ["quiero"]
+    accent_insensitive: false
+    example:
+      spanish: "Quiero un café."
+      english: "I want a coffee."
+    note: "First-person present form of querer; reviewed as quiero, not the infinitive querer."
+    reference_ids: [rae-querer]
+  - id: sin_leche
+    kind: phrase
+    spanish: "sin leche"
+    part_of_speech: prepositional_phrase
+    accepted_translations: ["without milk", "no milk"]
+    surface_variants: ["sin leche"]
+    accent_insensitive: false
+    example:
+      spanish: "Quiero un café sin leche."
+      english: "I want a coffee without milk."
+    reference_ids: [cambridge-sin, cambridge-leche]
+  - id: cafe_solo
+    kind: phrase
+    spanish: "café solo"
+    part_of_speech: noun_phrase
+    accepted_translations: ["black coffee", "coffee without milk"]
+    surface_variants: ["café solo", "cafe solo"]
+    accent_insensitive: true
+    example:
+      spanish: "Un café solo, por favor."
+      english: "A black coffee, please."
+    note: "In a coffee-ordering context, café solo is coffee prepared without milk."
+    reference_ids: [rae-cafe, cambridge-cafe, rae-solo]
+  - id: cafe_negro
+    kind: phrase
+    spanish: "café negro"
+    part_of_speech: noun_phrase
+    accepted_translations: ["black coffee"]
+    surface_variants: ["café negro", "cafe negro"]
+    accent_insensitive: true
+    example:
+      spanish: "Tomo el café negro."
+      english: "I take my coffee black."
+    reference_ids: [rae-cafe, cambridge-cafe, rae-negro]
+  - id: con_leche
+    kind: phrase
+    spanish: "con leche"
+    part_of_speech: prepositional_phrase
+    accepted_translations: ["with milk"]
+    surface_variants: ["con leche"]
+    accent_insensitive: false
+    example:
+      spanish: "No quiero café con leche."
+      english: "I do not want coffee with milk."
+    reference_ids: [cambridge-con, cambridge-leche]
