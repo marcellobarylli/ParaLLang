@@ -50,6 +50,13 @@ test('OpenAI structured paths carry strict narration and grading schemas with pr
   assert.equal(mock.calls[0].response_format.json_schema.strict, true);
   assert.equal(mock.calls[0].response_format.json_schema.name, 'encounter_narration');
   assert.equal(mock.calls[1].response_format.json_schema.name, 'dialogue_assessment');
+  for (const call of mock.calls) {
+    const sent = call.response_format.json_schema.schema;
+    assert.equal(sent.type, 'object', 'OpenAI strict mode requires a root object schema');
+    assert.equal(Object.hasOwn(sent, '$ref'), false);
+    assert.equal(sent.additionalProperties, false);
+    assert.deepEqual(sent.required, Object.keys(sent.properties));
+  }
 });
 
 test('OpenAI transport, malformed JSON and schema failures are surfaced without manual retry loops', async () => {
@@ -68,6 +75,7 @@ test('Ollama sends explicit JSON schema for both flows and retries invalid outpu
   assert.deepEqual(await adapter.structuredChat(messages, encounterResponseSchema, { schemaName: 'encounter_narration' }), narration);
   assert.equal(calls.length, 2);
   assert.equal(typeof calls[0].format, 'object');
+  assert.equal(calls[0].format.type, 'object');
   assert.match(calls[0].messages.at(-1).content, /matching this schema exactly/);
   assert.match(calls[1].messages.at(-1).content, /prior response was invalid/i);
   assert.deepEqual(await adapter.structuredChat(messages, gradingResponseSchema, { schemaName: 'dialogue_assessment' }), grade);

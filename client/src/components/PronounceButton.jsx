@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 function spanishVoice(synthesis) {
-  return synthesis?.getVoices?.().find((voice) => /^es(?:-|_)/i.test(voice.lang));
+  return synthesis?.getVoices?.().find((voice) => /^es(?:[-_]|$)/i.test(voice.lang));
 }
 
 export default function PronounceButton({ text }) {

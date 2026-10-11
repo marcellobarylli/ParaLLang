@@ -121,6 +121,7 @@ test('actual learning UI enforces help, retains failed input, resolves, reviews,
   await screen.findByText('Correct.');
   await user.click(screen.getByRole('button', { name: 'Continue reviews' }));
   await screen.findByRole('heading', { name: 'sin leche' });
+  expect(screen.getByLabelText('English meaning').value).toBe(''); // previous answer must not carry over
   await user.click(screen.getByRole('button', { name: 'Show answer' }));
   await screen.findByText(/recorded as quality 0/);
   expect(screen.getByText('Answer:').parentElement.textContent).toContain('without milk');

@@ -22,7 +22,8 @@ export class OpenAIAdapter {
 
   async structuredChat(messages, schema, options = {}) {
     const name = options.schemaName || 'structured_response';
-    const jsonSchema = zodToJsonSchema(schema, { name, target: 'openAi', $refStrategy: 'none' });
+    // Strict mode requires the root to be the object schema itself; naming would wrap it in a $ref.
+    const { $schema: _ignored, ...jsonSchema } = zodToJsonSchema(schema, { target: 'openAi', $refStrategy: 'none' });
     const response = await this.client.chat.completions.create({
       model: this.model, messages,
       temperature: options.temperature ?? 0.2,

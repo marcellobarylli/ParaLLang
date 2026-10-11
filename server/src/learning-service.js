@@ -181,7 +181,11 @@ export class LearningService {
       const response = await this.provider.structuredChat(messages, schema, { schemaName, temperature: 0.2 });
       return schema.parse(response);
     }
-    catch (error) { throw retryableError(`${label} is temporarily unavailable. Your progress was not changed. ${error.message}`, 'PROVIDER_FAILURE'); }
+    catch (error) {
+      const wrapped = retryableError(`${label} is temporarily unavailable. Your progress was not changed. Please retry in a moment.`, 'PROVIDER_FAILURE');
+      wrapped.cause = error;
+      throw wrapped;
+    }
   }
 
   async startEncounter(learnerId, { restart = false } = {}) {

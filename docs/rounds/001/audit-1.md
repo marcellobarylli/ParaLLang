@@ -1,0 +1,25 @@
+# Round 001 — Critic's report
+
+**Usable, with gaps.** The whole learning loop is built and works end to end with deterministic fixtures, but no live model could be tried, and the Spellbook quietly shows meanings the hint budget is meant to protect.
+
+## Works
+
+- All 22 selected server tests, 8 client tests and the production build pass.
+- A full run through the real server routes with a fixture grader: greeting at 25% Spanish, English-only answer gives guidance without advancing, mixed English/Spanish complete order resolves Gerald even though the narrator says otherwise, assisted word drops to quality 2, review answer and Show answer score correctly, duplicate deliveries replay without rescoring, stale tabs are rejected, a second learner sees nothing, and the Spellbook survives a server restart exactly.
+- Real server boots, writes saves to the documented folder, and with a wrong OpenAI key returns a clear retryable error without touching progress.
+- I fixed four small issues: the OpenAI schema was wrapped in a reference form strict mode rejects, provider error text (which can echo key fragments) reached the browser, the review input kept the previous answer, and bare 'es' voices were missed. Tests re-run green.
+
+## Broken
+
+- Spellbook cards show the English meaning of words still protected in Gerald's current message, so a player can read the hint for free without spending one.
+
+## Not checked
+
+- Live OpenAI or Ollama grading quality: no key, no .env, and no local model were available, so model judgment is unverified.
+- Real speaker output and voice quality: speech was exercised only through mocked browser speech.
+- The browser UI was driven through component tests with mocked network, not a hand-run browser session.
+
+## Needs you
+
+- Decide whether Spellbook cards should hide meanings for words that are currently protected in the active message or due for review. I recommend hiding them until revealed or assessed; otherwise accept this as a known prototype leak.
+- Supply an OpenAI key or a running Ollama model so live grading can be checked before trusting teaching quality.

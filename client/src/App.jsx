@@ -26,6 +26,7 @@ export default function App() {
 
       {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} />}
       {state.view === 'review' && <ReviewPanel
+        key={state.reviewChallenge?.id ?? 'result'}
         challenge={state.reviewChallenge} result={state.reviewResult} isLoading={state.isLoading}
         onSubmit={state.submitReview} onReveal={state.revealReviewAnswer}
         onContinue={() => state.startReview()} onReturn={state.returnToDialogue}

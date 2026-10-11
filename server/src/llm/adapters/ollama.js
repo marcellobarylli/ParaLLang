@@ -41,7 +41,7 @@ export class OllamaAdapter {
 
   async structuredChat(messages, schema, options = {}) {
     const name = options.schemaName || 'structured_response';
-    const jsonSchema = zodToJsonSchema(schema, { name, target: 'jsonSchema7', $refStrategy: 'none' });
+    const { $schema: _ignored, ...jsonSchema } = zodToJsonSchema(schema, { target: 'jsonSchema7', $refStrategy: 'none' });
     const augmentedMessages = [...messages, {
       role: 'system',
       content: `Respond with JSON only, matching this schema exactly: ${JSON.stringify(jsonSchema)}`,
