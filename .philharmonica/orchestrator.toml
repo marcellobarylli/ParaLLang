@@ -12,7 +12,7 @@ step_hours = 12
 [seats.architect]
 provider = "codex_cli"
 model = "gpt-6-astra"
-effort = "low"
+effort = "xhigh"
 
 [seats.workbench]
 provider = "claude_cli"
