@@ -32,7 +32,8 @@ export function createApp({ service, logger = console }) {
   app.use((error, req, res, _next) => {
     const requestId = randomUUID();
     const appError = error instanceof AppError ? error : new AppError('An unexpected server error occurred.');
-    logger.error?.(`[${requestId}] ${appError.code}: ${error.message}${error.cause ? ` (cause: ${error.cause.message})` : ''}`);
+    const safeFields = appError.logFields ? ` ${JSON.stringify(appError.logFields)}` : '';
+    logger.error?.(`[${requestId}] ${appError.code}${safeFields}`);
     res.status(appError.status).json({
       error: { code: appError.code, message: appError.message, retryable: appError.retryable, requestId, details: appError.details },
     });

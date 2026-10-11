@@ -7,6 +7,7 @@ import {
 } from './language-engine.js';
 import { assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { conflictError, retryableError, validationError } from './errors.js';
+import { ProviderError } from './llm/provider-error.js';
 
 function clone(value) { return structuredClone(value); }
 function payloadHash(value) { return createHash('sha256').update(JSON.stringify(value)).digest('hex'); }
@@ -182,9 +183,8 @@ export class LearningService {
       return schema.parse(response);
     }
     catch (error) {
-      const wrapped = retryableError(`${label} is temporarily unavailable. Your progress was not changed. Please retry in a moment.`, 'PROVIDER_FAILURE');
-      wrapped.cause = error;
-      throw wrapped;
+      if (error instanceof ProviderError) throw error;
+      throw retryableError(`${label} is temporarily unavailable. Your progress was not changed. Please retry in a moment.`, 'PROVIDER_FAILURE');
     }
   }
 
@@ -266,7 +266,7 @@ export class LearningService {
   validateAssessment(raw, objectives, playerInput) {
     let assessment;
     try { assessment = gradingResponseSchema.parse(raw); }
-    catch (error) { throw retryableError(`The grading response was invalid. Your answer can be retried unchanged. ${error.message}`, 'INVALID_GRADING'); }
+    catch { throw retryableError('The grading response was invalid. Your answer can be retried unchanged.', 'INVALID_GRADING'); }
     const allowed = new Map(objectives.map((objective) => [objective.id, objective]));
     const seen = new Set();
     for (const result of assessment.objective_results) {
@@ -471,4 +471,6 @@ export class LearningService {
       return response;
     });
   }
+
+  async shutdown() { await this.provider.shutdown?.(); }
 }

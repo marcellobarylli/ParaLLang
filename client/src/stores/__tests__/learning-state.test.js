@@ -46,6 +46,24 @@ test('failed dialogue preserves pending input for retry', async () => {
   expect(store.getState().encounter.version).toBe(1);
 });
 
+test('CLI provider errors end a long pending request and preserve the exact draft', async () => {
+  let rejectDialogue;
+  const api = fakeApi({ sendDialogue: vi.fn(() => new Promise((_resolve, reject) => { rejectDialogue = reject; })) });
+  const store = createGameStore({ api, storage: memoryStorage() });
+  await store.getState().initialize();
+  store.getState().setDraft('Sin leche, por favor.');
+  const pending = store.getState().sendMessage();
+  expect(store.getState().isLoading).toBe(true);
+  expect(store.getState().pendingInput).toBe('Sin leche, por favor.');
+  rejectDialogue(Object.assign(new Error('The selected CLI timed out. Your progress was not changed.'), { code: 'CLI_TIMEOUT', retryable: true }));
+  await pending;
+  expect(store.getState().isLoading).toBe(false);
+  expect(store.getState().draft).toBe('Sin leche, por favor.');
+  expect(store.getState().pendingInput).toBe('Sin leche, por favor.');
+  expect(store.getState().error).toMatch(/CLI timed out/);
+  expect(store.getState().encounter.version).toBe(1);
+});
+
 test('server results synchronize encounter and Spellbook snapshots', async () => {
   const updated = { encounter: { ...encounter, version: 2 }, spellbook: { cards: [{ vocabularyId: 'cafe' }], dueCount: 1 }, assessment: { overallFeedback: 'Good' } };
   const api = fakeApi({ sendDialogue: vi.fn(async () => updated) });

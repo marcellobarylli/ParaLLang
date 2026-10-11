@@ -89,10 +89,16 @@ export async function createRuntime({ provider = new FixtureProvider(), clock = 
   const content = loadGameContent();
   const service = new LearningService({ provider, storage: actualStorage, content, clock });
   const app = createApp({ service, logger: { error() {} } });
-  const server = app.listen(0);
+  const server = app.listen(0, '127.0.0.1');
   await new Promise((resolve) => server.once('listening', resolve));
   const baseUrl = `http://127.0.0.1:${server.address().port}`;
-  return { provider, storage: actualStorage, service, content, server, baseUrl, saveDir, close: () => new Promise((resolve) => server.close(resolve)) };
+  return {
+    provider, storage: actualStorage, service, content, server, baseUrl, saveDir,
+    close: async () => {
+      await new Promise((resolve) => server.close(resolve));
+      await service.shutdown();
+    },
+  };
 }
 
 export async function api(runtime, path, { learnerId, method = 'GET', body } = {}) {

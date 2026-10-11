@@ -141,6 +141,40 @@ test('loading plus empty and no-due states remain understandable', () => {
   expect(screen.queryByRole('button', { name: 'Review' })).toBeNull();
 });
 
+test('CLI provider error is actionable, clears pending state, and retains input', async () => {
+  const user = userEvent.setup();
+  let resolveDialogue;
+  const fetchMock = vi.fn(async (url) => {
+    const path = String(url);
+    if (path === '/api/learner') return response(201, { learnerId: '11111111-1111-4111-8111-111111111111', recovered: false });
+    if (path === '/api/encounter/start') return response(200, { encounter: encounter(), spellbook });
+    if (path === '/api/encounter/dialogue') return new Promise((resolveRequest) => { resolveDialogue = resolveRequest; });
+    throw new Error(`Unexpected fetch ${path}`);
+  });
+  vi.stubGlobal('fetch', fetchMock);
+  useGameStore.setState({
+    learnerId: '11111111-1111-4111-8111-111111111111',
+    encounter: encounter(),
+    spellbook,
+    isLoading: false,
+  });
+  render(<App />);
+  await screen.findByText('Order a coffee using Spanish.');
+  const input = screen.getByLabelText('Your response');
+  await user.type(input, 'Un café sin leche.');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  expect(screen.getByRole('status').textContent).toMatch(/considering/);
+  expect(input.value).toBe('Un café sin leche.');
+  await act(async () => resolveDialogue(response(503, { error: {
+    code: 'CLI_AUTH_REQUIRED',
+    message: 'The selected CLI is not signed in with its native subscription. Sign in with the official CLI, run npm run check:provider, then retry.',
+    retryable: false,
+  } })));
+  expect((await screen.findByRole('alert')).textContent).toMatch(/Sign in with the official CLI/);
+  expect(input.disabled).toBe(false);
+  expect(input.value).toBe('Un café sin leche.');
+});
+
 describe('pronunciation boundary', () => {
   function installSpeech(initialVoices) {
     let voices = initialVoices;
