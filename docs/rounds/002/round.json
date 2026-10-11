@@ -1,0 +1,183 @@
+{
+  "number": "002",
+  "state": "finished",
+  "base": "baca8312f1c0e51bd8e3a46e9f0c2e691682abad",
+  "branch": "round/002",
+  "working_branch": "main",
+  "worktree": "/Users/bary/Library/Application Support/Coding Philharmonica/worktrees/5b812489-fef7-4cba-aede-7a7ea181ff87/002",
+  "preserved_checkouts": [],
+  "preparation_error": null,
+  "preparation_record": {
+    "error": null,
+    "error_detail": null,
+    "recovery_errors": [],
+    "recovery_error": null,
+    "preserved_checkouts": [],
+    "preserved_details": null,
+    "handoff": {
+      "round": "002",
+      "conversation": "002",
+      "base": "baca8312f1c0e51bd8e3a46e9f0c2e691682abad",
+      "branch": "round/002",
+      "packet_blob": "e6a43494df037f5a1289ace60c5da883061b746c",
+      "architecture_blob": "41c4db138b1aaf80c50c4fd8f9031bae498cd69c"
+    },
+    "checkout_attempt": 0,
+    "owned_paths": [
+      "/Users/bary/Library/Application Support/Coding Philharmonica/worktrees/5b812489-fef7-4cba-aede-7a7ea181ff87/002"
+    ],
+    "repository": "/Users/bary/LocalDocs/Code/ParaLLang",
+    "git_common_dir": "/Users/bary/LocalDocs/Code/ParaLLang/.git",
+    "created_at": "2026-10-11T17:08:08.317461Z",
+    "condition": "checkout_in_progress",
+    "recovered": false
+  },
+  "started_at": "2026-10-11T17:08:08.451783Z",
+  "ended_at": "2026-10-11T17:45:53.161752Z",
+  "current_step": null,
+  "next": {
+    "kind": "finish"
+  },
+  "steps": [
+    {
+      "number": 1,
+      "seat": "implementer",
+      "model": "sol",
+      "provider": "codex_cli",
+      "effort": "xhigh",
+      "cycle": null,
+      "label": "implement",
+      "base_sha": "baca8312f1c0e51bd8e3a46e9f0c2e691682abad",
+      "started_at": "2026-10-11T17:08:28.530357Z",
+      "ended_at": "2026-10-11T17:28:10.313932Z",
+      "exit_status": "completed",
+      "commit_sha": "34080d6831782320baec3c5db64f85886c80561c",
+      "usage": {
+        "input_tokens": 15965763,
+        "cached_input_tokens": 15745280,
+        "output_tokens": 73755
+      },
+      "detail": null,
+      "sandbox": "workspace-write"
+    },
+    {
+      "number": 2,
+      "seat": "auditor",
+      "model": "fable-5-1",
+      "provider": "claude_cli",
+      "effort": "high",
+      "cycle": 1,
+      "label": "audit-1",
+      "base_sha": "34080d6831782320baec3c5db64f85886c80561c",
+      "started_at": "2026-10-11T17:28:11.399408Z",
+      "ended_at": "2026-10-11T17:42:51.971982Z",
+      "exit_status": "completed",
+      "commit_sha": "252079cd1b4686297397b7962ff564408e31362d",
+      "usage": {
+        "input_tokens": 3022778,
+        "cached_input_tokens": 2896925,
+        "output_tokens": 35687
+      },
+      "detail": null
+    },
+    {
+      "number": 3,
+      "seat": "fixer",
+      "model": "sol",
+      "provider": "codex_cli",
+      "effort": "xhigh",
+      "cycle": 1,
+      "label": "fix-1",
+      "base_sha": "252079cd1b4686297397b7962ff564408e31362d",
+      "started_at": "2026-10-11T17:42:52.438991Z",
+      "ended_at": "2026-10-11T17:43:46.497198Z",
+      "exit_status": "completed",
+      "commit_sha": "1e3b4b874a7ccd86a91ef45e361f2941fbe4675c",
+      "usage": {
+        "input_tokens": 287525,
+        "cached_input_tokens": 260224,
+        "output_tokens": 3157
+      },
+      "detail": null,
+      "sandbox": "workspace-write"
+    },
+    {
+      "number": 4,
+      "seat": "auditor",
+      "model": "fable-5-1",
+      "provider": "claude_cli",
+      "effort": "high",
+      "cycle": 1,
+      "label": "verify-1",
+      "base_sha": "1e3b4b874a7ccd86a91ef45e361f2941fbe4675c",
+      "started_at": "2026-10-11T17:43:47.143411Z",
+      "ended_at": "2026-10-11T17:45:52.609651Z",
+      "exit_status": "completed",
+      "commit_sha": "e64111c6208bbc40a27bc2fd32d950102876267c",
+      "usage": {
+        "input_tokens": 300934,
+        "cached_input_tokens": 264478,
+        "output_tokens": 5581
+      },
+      "detail": null
+    }
+  ],
+  "head": "e64111c6208bbc40a27bc2fd32d950102876267c",
+  "reason": null,
+  "blockers": [],
+  "push_error": null,
+  "adopted": false,
+  "undone": false,
+  "conversation": "002",
+  "launch_pending": false,
+  "report": {
+    "source": "verify-1",
+    "call": "usable_with_gaps",
+    "headline": "The logging fix is confirmed and nothing it touched broke; the round remains usable with the same two gaps as before: a generic bad-model message and an incomplete live grading record.",
+    "works": [
+      "All 60 server tests pass, including the Reviser's new regression test for unexpected-error logging.",
+      "Hand reproduction against a loopback server: a plain Error now logs its message with the request id, while the browser still gets only the generic message.",
+      "Provider errors still log only safe fields (provider, category, exit code); raw CLI stderr does not reach the log.",
+      "Known AppError messages are unchanged in logs and responses.",
+      "Whitespace check on the diff is clean; the change touched only the error handler and one test file."
+    ],
+    "broken": [
+      "An unavailable model name still produces the generic 'temporarily unavailable, retry' message for both CLIs instead of a model-unavailable message (unchanged from audit 1).",
+      "Codex's nine live grading cases ran before the narration schema fix, so the full per-case record is still incomplete (unchanged from audit 1)."
+    ],
+    "not_checked": [
+      "Claude's nine live grading cases still rest on the Performer's report; the live call budget was exhausted in audit 1.",
+      "Browser playthroughs were not repeated; the correction did not touch client or provider code.",
+      "If a route ever throws a non-Error value, the log line ends in 'undefined'. Cosmetic; not exercised by real code paths."
+    ],
+    "needs_you": [
+      "Decide whether to allow two extra live calls so the bad-model error can be mapped properly. I recommend allowing it; otherwise accept the generic message.",
+      "Optionally run npm run verify:cli for each provider yourself (14 calls each) for the full nine-case live record."
+    ],
+    "fixes": [
+      {
+        "what": "Unexpected non-provider errors are now logged without their message, which hurts debugging.",
+        "where": "server/src/app.js",
+        "do": "When the caught error is not an AppError, append error.message to the sanitized log line; provider errors are already wrapped, so no CLI output can reach this path."
+      }
+    ],
+    "fix_results": [
+      {
+        "what": "Unexpected non-provider errors are logged without their message (server/src/app.js).",
+        "result": "fixed",
+        "note": "Log line now reads '[id] INTERNAL_ERROR <message>' for non-AppError throws; browser body stays generic; provider and AppError logs unchanged. Verified by the new test and a manual loopback reproduction saved in evidence."
+      }
+    ]
+  },
+  "fixes": [
+    {
+      "what": "Unexpected non-provider errors are now logged without their message, which hurts debugging.",
+      "where": "server/src/app.js",
+      "do": "When the caught error is not an AppError, append error.message to the sanitized log line; provider errors are already wrapped, so no CLI output can reach this path."
+    }
+  ],
+  "process_pid": null,
+  "process_group_id": null,
+  "process_command": null,
+  "process_ownership_token": "46e5e5f998824c2abc2b0af7fab10e35"
+}
