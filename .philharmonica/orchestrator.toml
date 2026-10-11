@@ -10,9 +10,9 @@ stall_minutes = 20
 step_hours = 12
 
 [seats.architect]
-provider = "claude_cli"
-model = "fable-5-1"
-effort = "high"
+provider = "codex_cli"
+model = "gpt-6.1-sol"
+effort = "low"
 
 [seats.workbench]
 provider = "claude_cli"
