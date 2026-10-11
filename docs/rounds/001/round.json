@@ -1,0 +1,122 @@
+{
+  "number": "001",
+  "state": "finished",
+  "base": "3c6ce2b426e7ef428fc5b8c56c2890886265fcef",
+  "branch": "round/001",
+  "working_branch": "main",
+  "worktree": "/Users/bary/Library/Application Support/Coding Philharmonica/worktrees/5b812489-fef7-4cba-aede-7a7ea181ff87/001",
+  "preserved_checkouts": [],
+  "preparation_error": null,
+  "preparation_record": {
+    "error": null,
+    "error_detail": null,
+    "recovery_errors": [],
+    "recovery_error": null,
+    "preserved_checkouts": [],
+    "preserved_details": null,
+    "handoff": {
+      "round": "001",
+      "conversation": "001",
+      "base": "3c6ce2b426e7ef428fc5b8c56c2890886265fcef",
+      "branch": "round/001",
+      "packet_blob": "51a2137364d448f2a78048e0682aa2bc10294c04",
+      "architecture_blob": "ee47bbc617c1a0ae71826393e48d1f0ea43fbc27"
+    },
+    "checkout_attempt": 0,
+    "owned_paths": [
+      "/Users/bary/Library/Application Support/Coding Philharmonica/worktrees/5b812489-fef7-4cba-aede-7a7ea181ff87/001"
+    ],
+    "repository": "/Users/bary/LocalDocs/Code/ParaLLang",
+    "git_common_dir": "/Users/bary/LocalDocs/Code/ParaLLang/.git",
+    "created_at": "2026-10-11T13:47:35.905233Z",
+    "condition": "checkout_in_progress",
+    "recovered": false
+  },
+  "started_at": "2026-10-11T13:47:36.012161Z",
+  "ended_at": "2026-10-11T14:19:01.356432Z",
+  "current_step": null,
+  "next": {
+    "kind": "finish"
+  },
+  "steps": [
+    {
+      "number": 1,
+      "seat": "implementer",
+      "model": "sol",
+      "provider": "codex_cli",
+      "effort": "xhigh",
+      "cycle": null,
+      "label": "implement",
+      "base_sha": "3c6ce2b426e7ef428fc5b8c56c2890886265fcef",
+      "started_at": "2026-10-11T13:47:55.044186Z",
+      "ended_at": "2026-10-11T14:09:28.402061Z",
+      "exit_status": "completed",
+      "commit_sha": "2407bf02171aa4d61757d346740e07b39e703a50",
+      "usage": {
+        "input_tokens": 9155880,
+        "cached_input_tokens": 8960384,
+        "output_tokens": 83376
+      },
+      "detail": null,
+      "sandbox": "workspace-write"
+    },
+    {
+      "number": 2,
+      "seat": "auditor",
+      "model": "fable-5-1",
+      "provider": "claude_cli",
+      "effort": "high",
+      "cycle": 1,
+      "label": "audit-1",
+      "base_sha": "2407bf02171aa4d61757d346740e07b39e703a50",
+      "started_at": "2026-10-11T14:09:29.375237Z",
+      "ended_at": "2026-10-11T14:19:00.718075Z",
+      "exit_status": "completed",
+      "commit_sha": "3d8b219c52e07232257f8e948e208f9151b70131",
+      "usage": {
+        "input_tokens": 3082875,
+        "cached_input_tokens": 2949170,
+        "output_tokens": 29865
+      },
+      "detail": null
+    }
+  ],
+  "head": "3d8b219c52e07232257f8e948e208f9151b70131",
+  "reason": null,
+  "blockers": [],
+  "push_error": null,
+  "adopted": false,
+  "undone": false,
+  "conversation": "001",
+  "launch_pending": false,
+  "report": {
+    "source": "audit-1",
+    "call": "usable_with_gaps",
+    "headline": "The whole learning loop is built and works end to end with deterministic fixtures, but no live model could be tried, and the Spellbook quietly shows meanings the hint budget is meant to protect.",
+    "works": [
+      "All 22 selected server tests, 8 client tests and the production build pass.",
+      "A full run through the real server routes with a fixture grader: greeting at 25% Spanish, English-only answer gives guidance without advancing, mixed English/Spanish complete order resolves Gerald even though the narrator says otherwise, assisted word drops to quality 2, review answer and Show answer score correctly, duplicate deliveries replay without rescoring, stale tabs are rejected, a second learner sees nothing, and the Spellbook survives a server restart exactly.",
+      "Real server boots, writes saves to the documented folder, and with a wrong OpenAI key returns a clear retryable error without touching progress.",
+      "I fixed four small issues: the OpenAI schema was wrapped in a reference form strict mode rejects, provider error text (which can echo key fragments) reached the browser, the review input kept the previous answer, and bare 'es' voices were missed. Tests re-run green."
+    ],
+    "broken": [
+      "Spellbook cards show the English meaning of words still protected in Gerald's current message, so a player can read the hint for free without spending one."
+    ],
+    "not_checked": [
+      "Live OpenAI or Ollama grading quality: no key, no .env, and no local model were available, so model judgment is unverified.",
+      "Real speaker output and voice quality: speech was exercised only through mocked browser speech.",
+      "The browser UI was driven through component tests with mocked network, not a hand-run browser session."
+    ],
+    "needs_you": [
+      "Decide whether Spellbook cards should hide meanings for words that are currently protected in the active message or due for review. I recommend hiding them until revealed or assessed; otherwise accept this as a known prototype leak.",
+      "Supply an OpenAI key or a running Ollama model so live grading can be checked before trusting teaching quality."
+    ],
+    "fixes": [],
+    "fix_results": []
+  },
+  "fixes": [],
+  "process_pid": null,
+  "process_group_id": null,
+  "process_command": null,
+  "process_ownership_token": "27d8f983a13447cbb0d12c99899cb130"
+}
