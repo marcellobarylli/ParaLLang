@@ -2,6 +2,7 @@ schema_version = 1
 name = "ParaLLang"
 working_branch = "main"
 rounds_dir = "docs/rounds"
+setup = "npm ci"
 push_round_branch = true
 adopt_on_success = true
 

@@ -1,0 +1,47 @@
+# Round 001 implementation packet: Phase 2 — Language Engine
+
+## Scope
+
+Deliver the entire Phase 2 learning loop for Gerald the Imp at The Coffee Cart in The Crumbling Market, following this round's architecture. This is one implementation run and one final owner gate; do not split delivery into separately approved stages.
+
+1. Author and validate a small, referenced Spanish/English vocabulary set for Gerald, including stable IDs, words and multiword phrases, accepted translations/forms, parts of speech, and beginner examples. Only canonical entries may become Spellbook items or grading references. Replace generated meanings for matching known words with canonical definitions.
+2. Add authored coffee-order and no-milk objectives, positive/negative examples, grammar/target constraints, and assessment references to the encounter content. Preserve conversational text input, beginner Spanish, English narration, Gerald's character, and contextual mixed-language answers.
+3. Implement hybrid grading: complete-answer local normalization/fuzzy matching for isolated vocabulary, and a separate structured provider call for open-ended dialogue. Validate pass/fail, vocabulary evidence, and per-target 0–5 qualities; apply assistance rules server-side. Replace substring victory and generator-controlled outcome flags with authoritative objective decisions.
+4. Implement companion "Translate Word" and "Translate Sentence" controls using existing/canonical translations without redundant LLM calls. Apply the same hint policy to all active-message reveal paths. Use two distinct hints per conversational objective; a due-review answer reveal completes that attempt with quality 0. Preserve easy translation access during ordinary reading.
+5. Build the server-owned Spellbook: discovery, deduplication, item-specific assessment evidence, SM-2, due dates, and Spanish-to-English word/phrase review. Add accessible vocabulary cards, mastery indicators, due count, feedback, and navigation between review and the encounter. Exposure alone does not establish mastery.
+6. Introduce browser learner identity, per-learner encounter state, durable JSON Spellbook saves, and safe retry/concurrency behavior. Progress survives reload/restart; repeated submissions cannot double-score. Implement atomic persistence and visible recovery errors without overwriting corrupt saves. Conversation persistence, accounts, and full game save/load remain excluded.
+7. Consolidate difficulty around the encounter escalation field and committed player-turn count. Pass canonical vocabulary and grammar constraints to prompts. Retain and verify the OpenAI/Ollama abstraction for both narration and grading, repairing directly required schema/error/configuration issues.
+8. Add explicit word pronunciation through browser speech synthesis with Spanish voice selection and an unavailable fallback. Add no provider audio service, autoplay, narration, or speech recognition.
+9. Supply the targeted tests, simulations, content checks, and client build selected by the architecture. Add only the necessary development test dependencies and lockfile changes. Document startup, provider configuration, save location, focused verification, and actual live-provider coverage.
+10. The only orchestration setup addition is the missing top-level setup = "npm ci". Preserve all other orchestrator configuration. Setup recreates workspace dependencies and does not automatically run validation.
+
+Dependencies between these tasks determine implementation order, not new owner checkpoints. Complete content, server, client, persistence, and validation before presenting the round for acceptance.
+
+## Acceptance
+
+The architecture's Test plan defines the checks; these are the observable outcomes they establish.
+
+1. **Trusted teaching content:** all target IDs and translations used for review resolve to authored content. Unknown generated vocabulary and mismatched generated meanings cannot enter the learning queue as canonical facts. Known inflections and multiword phrases retain the correct distinct meanings.
+2. **Meaningful encounter completion:** an appropriate complete black-coffee order can resolve Gerald; a contextual "sin leche" resolves the milk objective after coffee has been established. A suitable mixed English/Spanish answer is accepted. An English-only answer receives guidance without earning the required Spanish target. Contradictory, quoted, or off-topic phrase occurrences do not win through substring matching.
+3. **Authoritative assessment:** the UI explains the grade and next objective. The server's validated assessment controls resolution, assessed vocabulary, and effective qualities. A narrative model's conflicting resolved flag cannot override it. Invalid grading data causes a retryable error with no advancement or penalty.
+4. **Translation help:** word and sentence controls work by keyboard and pointer. Revealing an existing translation makes no new LLM request. Pending assessment has no untracked full-answer reveal via hover or other UI paths; hint use and limits are visible and enforced by the server. Reopening the same help does not consume another hint.
+5. **Honest recall credit:** assisted conversational success can advance the encounter without awarding unaided mastery. A review answer reveal records quality 0 once. Exposure, untested words, repeated HTTP delivery, and premature practice cannot repeatedly increase review intervals.
+6. **Usable Spellbook:** encountered canonical items appear once with meanings, part of speech where applicable, mastery state, and next review time. New items are due immediately. The player can answer a due word/phrase review, see feedback and a changed schedule, and return to the conversation. Empty and no-due states are understandable.
+7. **Deterministic scheduling:** qualities 3–5 produce the specified successful SM-2 intervals; qualities 0–2 reset repetitions and schedule 1 day. Ease never falls below 1.3. Server UTC time controls due status, and only one scheduler owns the result.
+8. **Durable, isolated progress:** a learner's Spellbook survives browser reload and recreation of the server process. A second learner does not inherit their cards or encounter. Same-learner tabs detect stale attempts, and duplicate committed requests replay their receipt without scoring again. React startup does not start duplicate encounters.
+9. **Safe failure behavior:** invalid input, provider failures, stale attempts, and storage errors produce actionable UI feedback. Failed requests retain the player's input and do not consume a turn or review, resolve an encounter, or silently overwrite progress. Corrupt/unsupported saves are preserved and reported.
+10. **One difficulty policy:** greeting uses 25% Spanish; the first committed player turn targets 30%, with subsequent five-point increments capped at 100%. Errors, help, and review do not advance the counter. Prompts use authored target vocabulary and grammar constraints; there is no duplicate ratio calculation or unused alternative escalation field.
+11. **Pronunciation:** an explicit vocabulary control speaks Spanish when an appropriate browser voice is available; absent support/voices yield a clear unavailable state without blocking learning. No audio autoplays.
+12. **Provider compatibility and verification:** both adapters accept the narration and grading schemas in mocked transport tests and handle malformed/failed responses without corrupting learning state. Any live evaluation uses only available configured access; the report identifies providers not verified live and does not present fixture success as proof of model judgment quality.
+13. **Focused validation:** all explicitly selected server/client tests, the persisted-learning simulation, content review, and client build pass. Report any unavailable owner-dependent checks. Do not run a broad suite merely because the round touches several components.
+14. **Complete delivery:** all scope is integrated into the existing app and documented before the single final owner review. No partially connected Spellbook, placeholder grader, temporary substring victory, or intermediate acceptance gate is a finished round.
+
+## Out of scope
+
+- Additional encounters, maps, navigation between locations, lore discovery, recruitment/party systems, world progression, boss drills, and the rest of Phase 3.
+- Full game save/load, save slots, persisted conversations, login/accounts, cloud sync, databases, hosted multi-user security, and deployment.
+- Narrated/provider TTS, ambient audio, speech recognition, forced reviews, mobile apps, broad visual redesign, and external playtesting.
+- New LLM providers, model downloads, account provisioning, model benchmarking, guaranteed per-sentence Spanish percentages, automatic language detection, and general-purpose semantic grading caches.
+- Unrelated refactors, wholesale rewrites of the design documents, orchestration seat changes, or an automatic broad check.
+- Claims of fully proven teaching quality from deterministic fixtures. Live model behavior depends on actual configured access and must be reported separately.
+- Owner-only verification of private provider accounts/networks, physical speaker output, and device-specific voice quality. Automated speech simulations do not substitute for hearing the result on the owner's device. Missing access is reported without creating an intermediate owner gate.
