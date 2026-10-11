@@ -1,0 +1,40 @@
+schema_version = 1
+name = "ParaLLang"
+working_branch = "main"
+rounds_dir = "docs/rounds"
+push_round_branch = true
+adopt_on_success = true
+
+[limits]
+stall_minutes = 20
+step_hours = 12
+
+[seats.architect]
+provider = "claude_cli"
+model = "fable-5-1"
+effort = "high"
+
+[seats.workbench]
+provider = "claude_cli"
+model = "fable-5-1"
+effort = "high"
+
+[seats.implementer]
+provider = "codex_cli"
+model = "sol"
+effort = "xhigh"
+
+[seats.auditor]
+provider = "claude_cli"
+model = "fable-5-1"
+effort = "high"
+
+[seats.fixer]
+provider = "codex_cli"
+model = "sol"
+effort = "xhigh"
+
+[seats.reviewer]
+provider = "claude_cli"
+model = "fable-5-1"
+effort = "high"
