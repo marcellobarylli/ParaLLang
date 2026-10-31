@@ -1,0 +1,8 @@
+
+> parallang-server@0.1.0 start
+> node server.js
+
+ParaLLang server listening on http://127.0.0.1:3001
+LLM provider: codex-cli
+Target language: Italian (it)
+Spellbook saves: /Users/bary/LocalDocs/Code/ParaLLang-round-004/server/data/saves/it

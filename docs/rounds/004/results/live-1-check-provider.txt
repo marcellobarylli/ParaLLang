@@ -1,0 +1,22 @@
+
+> parallang@0.1.0 check:provider
+> node server/scripts/check-provider.js --provider codex-cli
+
+{
+  "provider": "codex-cli",
+  "version": "0.162.1",
+  "authentication": "chatgpt-subscription",
+  "requestedModel": "CLI default",
+  "isolation": [
+    "ignored user configuration",
+    "ignored project rules",
+    "ephemeral session",
+    "shared daemon disabled",
+    "read-only sandbox",
+    "no approvals",
+    "OpenAI provider forced",
+    "ChatGPT login forced",
+    "coding/external features disabled"
+  ],
+  "inferenceRequests": 0
+}

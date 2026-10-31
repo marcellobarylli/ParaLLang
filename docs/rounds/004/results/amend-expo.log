@@ -1,0 +1,19 @@
+
+> parallang@0.1.0 dev:ios
+> npm run ios --prefix mobile
+
+
+> parallang-mobile@0.1.0 ios
+> expo start --ios --localhost
+
+Starting project at /Users/bary/LocalDocs/Code/ParaLLang-round-004/mobile
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+› Opening exp://127.0.0.1:8081?__expo_disable_fab=1&__expo_disable_auto_launch=1&__expo_disable_onboarding=1 on iPhone 17
+- Fetching Expo Go
+- Installing Expo Go on iPhone 17
+Waiting on http://localhost:8081
+
+Logs for your project will appear below.
+iOS Bundled 553ms index.js (749 modules)

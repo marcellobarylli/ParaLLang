@@ -1,0 +1,23 @@
+
+> parallang@0.1.0 dev:server
+> npm run dev -w server
+
+
+> parallang-server@0.1.0 dev
+> nodemon server.js
+
+[nodemon] 3.1.14
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node server.js`
+ParaLLang server listening on http://127.0.0.1:3001
+LLM provider: codex-cli
+Target language: Italian (it)
+Spellbook saves: /Users/bary/LocalDocs/Code/ParaLLang-round-004/server/data/saves/it
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+ParaLLang server listening on http://127.0.0.1:3001
+LLM provider: codex-cli
+Target language: Italian (it)
+Spellbook saves: /Users/bary/LocalDocs/Code/ParaLLang-round-004/server/data/saves/it

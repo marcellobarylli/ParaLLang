@@ -8,7 +8,7 @@ critiques, timeline) is in `trail/`; it is not needed to implement this round.
 - **Design source:** [round 001](../001/architecture.md) (learning loop, web client), [round 002](../002/architecture.md)
   (CLI providers, 127.0.0.1 binding), [round 003](../003/architecture.md) (API contract: `target`,
   `canonicalTarget`, `language`), [`prototype.md`](../../../prototype.md) section 7 (speech).
-- **Findings:** to be written after the run (`findings.md`).
+- **Findings:** [findings.md](findings.md).
 - **Artifact:** `mobile/`; after the rebase on round 003, README, root `package.json`, `CLAUDE.md`, `AGENTS.md`.
 
 ## Goal (pre-run)
@@ -247,3 +247,33 @@ target-language words; the Expo template's `AGENTS.md` (Expo Router, TypeScript)
 
 Not run: every Live step in Tests. This Mac has no Xcode yet (only the Command Line Tools), so there is no Simulator.
 Next: the owner installs Xcode (README, "Run the iPhone app"), then the Live steps run and are recorded here.
+
+## Amendment 2026-10-31: nodemon ignores learner saves (owner, after the live run)
+
+**Change.** New `server/nodemon.json`: `{ "ignore": ["data/"] }`. Dev configuration only; no server code changes.
+
+**Why.** In the live run, `npm run dev:server` restarted the server each time a learner save was written under
+`server/data/saves/`. Nodemon watches `.json`, and its default ignore list does not cover `data/`. The restart
+dropped the app's next request (`/api/encounter/start`, NSURLError -1005), so a fresh app showed "Can't reach the
+ParaLLang server". The bug has existed since round 001, when saves moved there. `server/data/` holds only saves, so
+ignoring it costs no reloads. This goes past the pre-run "no server change" line in Out of scope.
+
+**Approval.** Asked after the live pass. Offered: fix now (recommended), or an open item with a README workaround.
+Owner: **"Fix now (Recommended)"**.
+
+**Check.** A save no longer restarts the server (the next request returned 200, 0 restarts). Editing
+`server/server.js` still restarts it. A fresh app against `npm run dev:server` reached Gerald's greeting
+([results/amend-dev-server-greeting.png](results/amend-dev-server-greeting.png)).
+
+## Outcome (2026-10-31)
+
+Built as designed. Each Live step was done on an iPhone 17 Simulator (iOS 27.2, Xcode 27.2) with the Codex CLI
+provider. Departures from the pre-run text:
+
+- `mobile/package.json` `ios` runs `expo start --ios --localhost`. On the LAN address, Expo Go timed out because the
+  Mac's own en0 address refused connections. Loopback is all a Simulator-only round needs (owner decision 4).
+- The Amendment above: `server/nodemon.json`.
+- The live UI was driven with idb (installed locally at the owner's choice), because this Xcode has no Simulator
+  window app. Pronunciation was confirmed up to iOS speech synthesis starting, not as audible sound.
+
+Details, evidence and the claim boundary are in [findings.md](findings.md).

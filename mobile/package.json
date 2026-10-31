@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
-    "ios": "expo start --ios",
+    "ios": "expo start --ios --localhost",
     "test": "jest",
     "doctor": "npx expo-doctor"
   },
