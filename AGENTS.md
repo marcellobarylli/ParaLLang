@@ -2,6 +2,16 @@
 
 This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
+**Start at [STATUS.md](STATUS.md).** It holds the current state, the log protocol and the round index.
+
+## Reading and logging rounds
+
+- **Read the main stream only.** Read the status report's current state, the round's `architecture.md` and its
+  `findings.md` (from round 003 on). Open a round's `trail/` only to trace a decision back: the owner disputes a
+  decision, a provenance audit, backfilling, or a main record that is wrong or contradicts itself.
+- **Log with the `round-log` skill** from round 003 on, as each event happens. A round ends with its close step and
+  `python3 tools/round_log_check.py NNN`.
+
 ## Project Overview
 
 ParaLLang is an immersive narrative language learning game where players learn Spanish through conversational encounters with absurd characters. The game is currently in the **design/planning phase** — `parallang.md` contains the full vision and lore, and `prototype.md` is the technical blueprint for implementation.
@@ -53,3 +63,4 @@ Client (React/Vite)  →  Server (Node/Express)  →  LLM Provider (OpenAI/Anthr
 
 - `parallang.md` — vision, lore, world design, character archetypes, game mechanics philosophy
 - `prototype.md` — **primary reference for implementation**: full system architecture, component specs, YAML schemas, LLM integration strategy, 4-phase development roadmap, prototype level design ("The Crumbling Market")
+- `parallang_obsidian/` — the owner's Obsidian notes (copied 2026-10-31): design choices, lore, characters, locations, plot and quests, game mechanics, development roadmap. `Parallang.md` and `HUB.md` are the entry notes

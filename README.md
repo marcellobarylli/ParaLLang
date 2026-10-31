@@ -2,6 +2,12 @@
 
 ParaLLang is a conversational Spanish-learning game. The implemented Phase 2 loop takes place at The Coffee Cart in The Crumbling Market: order from Gerald, use tracked companion help, collect canonical vocabulary, and practise due Spellbook cards.
 
+## Design notes and project records
+
+- `parallang.md` is the vision and lore; `prototype.md` is the technical blueprint.
+- `parallang_obsidian/` holds the owner's Obsidian notes: design choices, lore, characters, locations, plot and quests, game mechanics and the development roadmap. Start at `Parallang.md` (the combined note) or `HUB.md` (links to the topic notes). The folder is a copy of the vault in `~/Documents/Parallang`, taken 2026-10-31 without the `.obsidian/` app settings. Edits made in Obsidian are not synced; copy the notes again to update them. To browse the notes with their `[[links]]`, open the folder as a vault in Obsidian.
+- [`STATUS.md`](STATUS.md) has the current state, how the project is logged, and the round index. Design rounds live in `docs/rounds/NNN/`. From round 003 on they are recorded with the `round-log` and `codex-critique` Claude Code skills, and `python3 tools/round_log_check.py NNN` checks a round's records (tests: `python3 -m unittest discover -s tools`).
+
 ## Playtest ParaLLang through Codex and Claude Code subscriptions
 
 ParaLLang can use either official CLI with its native subscription sign-in for both Gerald's narration and dialogue grading. CLI mode is local-only: the backend binds to `127.0.0.1`, starts a fresh isolated CLI process for each generation, disables coding and external tools, and never falls back to an API key, alternate provider, model, or billing path.
