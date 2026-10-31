@@ -24,15 +24,15 @@ export default function App() {
 
       {state.error && <div className="error-banner" role="alert"><span>{state.error}</span><button type="button" onClick={state.clearError} aria-label="Dismiss error">×</button></div>}
 
-      {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} />}
+      {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} />}
       {state.view === 'review' && <ReviewPanel
         key={state.reviewChallenge?.id ?? 'result'}
-        challenge={state.reviewChallenge} result={state.reviewResult} isLoading={state.isLoading}
+        challenge={state.reviewChallenge} result={state.reviewResult} language={state.language} isLoading={state.isLoading}
         onSubmit={state.submitReview} onReveal={state.revealReviewAnswer}
         onContinue={() => state.startReview()} onReturn={state.returnToDialogue}
       />}
       {state.view === 'dialogue' && <>
-        <DialoguePanel encounter={state.encounter} isLoading={state.isLoading} onHelp={state.revealHelp} />
+        <DialoguePanel encounter={state.encounter} language={state.language} isLoading={state.isLoading} onHelp={state.revealHelp} />
         {state.assessment && <section className="assessment-banner" aria-live="polite">
           <strong>Assessment</strong><p>{state.assessment.overallFeedback}</p>
           {state.assessment.objectiveResults.map((result) => <p key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</p>)}

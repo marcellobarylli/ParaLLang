@@ -9,7 +9,7 @@ defeat_condition:
   description: "Player orders black coffee in Spanish"
 max_turns: 20
 escalation:
-  spanish_ratio_increase_per_turn: 0.05
+  target_ratio_increase_per_turn: 0.05
 objectives:
   - id: order_coffee
     prompt: "Order a coffee from Gerald, using Spanish for the coffee request."

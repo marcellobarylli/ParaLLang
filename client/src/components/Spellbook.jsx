@@ -1,6 +1,6 @@
 import PronounceButton from './PronounceButton.jsx';
 
-export default function Spellbook({ spellbook, isLoading, onReview, onReturn }) {
+export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn }) {
   return (
     <main className="spellbook" aria-label="Spellbook">
       <div className="panel-heading">
@@ -13,7 +13,7 @@ export default function Spellbook({ spellbook, isLoading, onReview, onReturn }) 
         <div className="card-grid">
           {spellbook.cards.map((card) => (
             <article className="vocabulary-card" key={card.vocabularyId}>
-              <div className="card-title"><h3 lang="es">{card.spanish}</h3><PronounceButton text={card.spanish} /></div>
+              <div className="card-title"><h3 lang={language?.tag}>{card.target}</h3><PronounceButton text={card.target} language={language} /></div>
               <p>{card.meanings.join(' · ')}</p>
               <p><small>{card.partOfSpeech.replaceAll('_', ' ')} · Mastery: <strong>{card.mastery}</strong></small></p>
               <p><small>{card.due ? 'Due now' : `Next review: ${new Date(card.nextReviewAt).toLocaleString()}`}</small></p>

@@ -48,7 +48,7 @@ function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&
 
 export function matchCanonicalVocabulary(text, vocabulary) {
   const source = String(text ?? '');
-  const folded = source.normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase('es');
+  const folded = source.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
   const entries = [...vocabulary].sort((a, b) => {
     const longestA = Math.max(...a.surface_variants.map((form) => form.length));
     const longestB = Math.max(...b.surface_variants.map((form) => form.length));
@@ -59,7 +59,7 @@ export function matchCanonicalVocabulary(text, vocabulary) {
   for (const entry of entries) {
     const variants = [...entry.surface_variants].sort((a, b) => b.length - a.length);
     for (const variant of variants) {
-      const form = variant.normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase('es');
+      const form = variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
       const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
       const expression = new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu');
       for (const result of folded.matchAll(expression)) {
@@ -74,7 +74,7 @@ export function matchCanonicalVocabulary(text, vocabulary) {
   return matches.sort((a, b) => a.start - b.start);
 }
 
-export function calculateSpanishRatio(base, increment, committedPlayerTurns) {
+export function calculateTargetRatio(base, increment, committedPlayerTurns) {
   return Math.min(1, base + increment * committedPlayerTurns);
 }
 

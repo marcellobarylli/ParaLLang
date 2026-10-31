@@ -8,7 +8,9 @@ import PronounceButton from '../PronounceButton.jsx';
 import Spellbook from '../Spellbook.jsx';
 import { useGameStore } from '../../stores/gameStore.js';
 
-const word = (id, spanish, meaning) => ({ vocabularyId: id, spanish, canonicalSpanish: spanish, partOfSpeech: id === 'cafe' ? 'noun' : 'prepositional_phrase', ...(meaning ? { meaning } : {}), meaningAvailable: true });
+const spanishLanguage = { code: 'es', name: 'Spanish', tag: 'es-ES' };
+const italianLanguage = { code: 'it', name: 'Italian', tag: 'it-IT' };
+const word = (id, target, meaning) => ({ vocabularyId: id, target, canonicalTarget: target, partOfSpeech: id === 'cafe' ? 'noun' : 'prepositional_phrase', ...(meaning ? { meaning } : {}), meaningAvailable: true });
 const npc = (version, { translated = false, cafeMeaning = false, allVisible = false } = {}) => ({
   id: 'message-1', role: 'npc', narrative: 'A tiny barista glares over an espresso cup.', protected: !allVisible,
   dialogue: {
@@ -26,8 +28,8 @@ const encounter = (version = 1, options = {}) => ({
   transcript: [npc(version, options), ...(options.resolved ? [{ id: 'player-1', role: 'player', text: 'Un café sin leche.' }] : [])],
 });
 const cards = [
-  { vocabularyId: 'cafe', kind: 'word', spanish: 'café', meanings: ['coffee'], partOfSpeech: 'noun', mastery: 'discovered', due: true, nextReviewAt: '2026-01-15T12:00:00Z', lastOutcome: null, repetitions: 0 },
-  { vocabularyId: 'sin_leche', kind: 'phrase', spanish: 'sin leche', meanings: ['without milk', 'no milk'], partOfSpeech: 'prepositional_phrase', mastery: 'discovered', due: true, nextReviewAt: '2026-01-15T12:00:00Z', lastOutcome: null, repetitions: 0 },
+  { vocabularyId: 'cafe', kind: 'word', target: 'café', meanings: ['coffee'], partOfSpeech: 'noun', mastery: 'discovered', due: true, nextReviewAt: '2026-01-15T12:00:00Z', lastOutcome: null, repetitions: 0 },
+  { vocabularyId: 'sin_leche', kind: 'phrase', target: 'sin leche', meanings: ['without milk', 'no milk'], partOfSpeech: 'prepositional_phrase', mastery: 'discovered', due: true, nextReviewAt: '2026-01-15T12:00:00Z', lastOutcome: null, repetitions: 0 },
 ];
 const spellbook = { cards, dueCount: 2, contentVersion: 'gerald-coffee-v1' };
 const response = (status, data) => ({ ok: status >= 200 && status < 300, status, json: async () => data });
@@ -35,7 +37,7 @@ const response = (status, data) => ({ ok: status >= 200 && status < 300, status,
 beforeEach(() => {
   localStorage.clear();
   useGameStore.setState({
-    learnerId: null, encounter: null, spellbook: { cards: [], dueCount: 0, contentVersion: null },
+    learnerId: null, language: null, encounter: null, spellbook: { cards: [], dueCount: 0, contentVersion: null },
     view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null,
     draft: '', pendingInput: null, isLoading: false, error: null,
   });
@@ -50,7 +52,7 @@ test('actual learning UI enforces help, retains failed input, resolves, reviews,
   const fetchMock = vi.fn(async (url, init = {}) => {
     const path = String(url);
     const body = init.body ? JSON.parse(init.body) : {};
-    if (path === '/api/learner') return response(201, { learnerId: '11111111-1111-4111-8111-111111111111', recovered: false });
+    if (path === '/api/learner') return response(201, { learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: spanishLanguage });
     if (path === '/api/encounter/start') return response(200, { encounter: currentEncounter, spellbook });
     if (path === '/api/encounter/help') {
       if (body.kind === 'word') currentEncounter = encounter(2, { cafeMeaning: true });
@@ -69,7 +71,7 @@ test('actual learning UI enforces help, retains failed input, resolves, reviews,
     if (path === '/api/spellbook/review') {
       reviewCalls += 1;
       const target = reviewCalls === 1 ? cards[0] : cards[1];
-      return response(200, { challenge: { id: `challenge-${reviewCalls}`, vocabularyId: target.vocabularyId, spanish: target.spanish, kind: target.kind, practice: false }, spellbook });
+      return response(200, { challenge: { id: `challenge-${reviewCalls}`, vocabularyId: target.vocabularyId, target: target.target, kind: target.kind, practice: false }, spellbook });
     }
     if (path === '/api/spellbook/review/submit') {
       const revealed = body.action === 'reveal';
@@ -83,6 +85,7 @@ test('actual learning UI enforces help, retains failed input, resolves, reviews,
   vi.stubGlobal('fetch', fetchMock);
   render(<App />);
   await screen.findByText('Order a coffee using Spanish.');
+  expect(screen.getByText(/Spanish target: 25%/)).toBeTruthy(); // language from /api/learner reaches the labels
   expect(screen.queryByText('Do you want a coffee? Without milk is civilized.')).toBeNull();
 
   const native = screen.getByText('¿Quieres un café? Sin leche is civilized.');
@@ -146,7 +149,7 @@ test('CLI provider error is actionable, clears pending state, and retains input'
   let resolveDialogue;
   const fetchMock = vi.fn(async (url) => {
     const path = String(url);
-    if (path === '/api/learner') return response(201, { learnerId: '11111111-1111-4111-8111-111111111111', recovered: false });
+    if (path === '/api/learner') return response(201, { learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: spanishLanguage });
     if (path === '/api/encounter/start') return response(200, { encounter: encounter(), spellbook });
     if (path === '/api/encounter/dialogue') return new Promise((resolveRequest) => { resolveDialogue = resolveRequest; });
     throw new Error(`Unexpected fetch ${path}`);
@@ -154,6 +157,7 @@ test('CLI provider error is actionable, clears pending state, and retains input'
   vi.stubGlobal('fetch', fetchMock);
   useGameStore.setState({
     learnerId: '11111111-1111-4111-8111-111111111111',
+    language: spanishLanguage,
     encounter: encounter(),
     spellbook,
     isLoading: false,
@@ -189,7 +193,7 @@ describe('pronunciation boundary', () => {
     const user = userEvent.setup();
     const spanish = { lang: 'es-ES', name: 'Spanish' };
     const installed = installSpeech([]);
-    const view = render(<PronounceButton text="café" />);
+    const view = render(<PronounceButton text="café" language={spanishLanguage} />);
     expect(screen.getByRole('button', { name: 'Spanish pronunciation unavailable' }).disabled).toBe(true);
     act(() => installed.setVoices([spanish]));
     const speak = await screen.findByRole('button', { name: 'Hear café in Spanish' });
@@ -201,12 +205,33 @@ describe('pronunciation boundary', () => {
 
   test('shows a clear fallback for unsupported or non-Spanish voices', () => {
     installSpeech([{ lang: 'en-US', name: 'English' }]);
-    const first = render(<PronounceButton text="café" />);
+    const first = render(<PronounceButton text="café" language={spanishLanguage} />);
     expect(screen.getByRole('button', { name: 'Spanish pronunciation unavailable' }).disabled).toBe(true);
     first.unmount();
     Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: undefined });
-    const second = render(<PronounceButton text="café" />);
+    const second = render(<PronounceButton text="café" language={spanishLanguage} />);
     expect(screen.getByRole('button', { name: 'Spanish pronunciation unavailable' }).disabled).toBe(true);
     second.unmount();
+  });
+
+  test('an Italian pack picks an Italian voice and ignores a Spanish one', async () => {
+    const user = userEvent.setup();
+    const italian = { lang: 'it-IT', name: 'Italian' };
+    const installed = installSpeech([{ lang: 'es-ES', name: 'Spanish' }]);
+    const view = render(<PronounceButton text="caffè" language={italianLanguage} />);
+    expect(screen.getByRole('button', { name: 'Italian pronunciation unavailable' }).disabled).toBe(true);
+    act(() => installed.setVoices([{ lang: 'es-ES', name: 'Spanish' }, italian]));
+    await user.click(await screen.findByRole('button', { name: 'Hear caffè in Italian' }));
+    expect(installed.speech.speak.mock.calls[0][0].voice).toBe(italian);
+    view.unmount();
+  });
+
+  test('labels and lang attributes follow the pack', () => {
+    const italianCard = { ...cards[0], vocabularyId: 'caffe', target: 'caffè' };
+    const book = render(<Spellbook spellbook={{ cards: [italianCard], dueCount: 1 }} language={italianLanguage} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
+    expect(screen.getByRole('heading', { name: 'caffè' }).getAttribute('lang')).toBe('it-IT');
+    book.unmount();
+    render(<DialoguePanel encounter={encounter()} language={italianLanguage} isLoading={false} onHelp={() => {}} />);
+    expect(screen.getByText(/Italian target: 25%/)).toBeTruthy();
   });
 });

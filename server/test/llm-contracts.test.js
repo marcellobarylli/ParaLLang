@@ -94,19 +94,19 @@ test('Ollama bounds retry, reports non-2xx/schema failure, and enforces timeout'
 });
 
 test('prompt assembly contains one player-message copy and authored constraints', () => {
-  const content = loadGameContent();
+  const content = loadGameContent({ language: 'es' });
   const playerInput = 'UNIQUE PLAYER ANSWER';
   const grading = buildGradingMessages({
-    objectives: [content.encounter.objectives[0]], vocabularyById: content.vocabularyById,
+    language: content.language, objectives: [content.encounter.objectives[0]], vocabularyById: content.vocabularyById,
     conversationContext: ['Earlier context'], playerInput,
   });
   assert.equal(grading.map((message) => message.content).join('\n').split(playerInput).length - 1, 1);
   assert.match(grading[0].content, /grammar_constraints/);
   assert.match(grading[0].content, /café/);
   const narrative = buildNarrationMessages({
-    character: content.character, objectives: content.encounter.objectives,
+    language: content.language, character: content.character, objectives: content.encounter.objectives,
     vocabularyById: content.vocabularyById, conversationHistory: [], playerInput,
-    spanishRatio: .3, decision: { encounterState: 'ongoing' },
+    targetRatio: .3, decision: { encounterState: 'ongoing' },
   });
   assert.equal(narrative.map((message) => message.content).join('\n').split(playerInput).length - 1, 1);
   assert.match(narrative[0].content, /30% Spanish/);

@@ -1,22 +1,24 @@
 import { useEffect, useMemo, useState } from 'react';
 
-function spanishVoice(synthesis) {
-  return synthesis?.getVoices?.().find((voice) => /^es(?:[-_]|$)/i.test(voice.lang));
+function languageVoice(synthesis, language) {
+  const primary = language?.tag?.split('-')[0];
+  if (!primary) return undefined;
+  return synthesis?.getVoices?.().find((voice) => new RegExp(`^${primary}(?:[-_]|$)`, 'i').test(voice.lang));
 }
 
-export default function PronounceButton({ text }) {
+export default function PronounceButton({ text, language }) {
   const synthesis = typeof window !== 'undefined' ? window.speechSynthesis : null;
   const supported = Boolean(synthesis && typeof window.SpeechSynthesisUtterance === 'function');
-  const [voice, setVoice] = useState(() => supported ? spanishVoice(synthesis) : null);
-  const label = useMemo(() => voice ? `Hear ${text} in Spanish` : 'Spanish pronunciation unavailable', [voice, text]);
+  const [voice, setVoice] = useState(() => supported ? languageVoice(synthesis, language) : null);
+  const label = useMemo(() => voice ? `Hear ${text} in ${language.name}` : `${language?.name ?? 'Target-language'} pronunciation unavailable`, [voice, text, language]);
 
   useEffect(() => {
     if (!supported) return undefined;
-    const update = () => setVoice(spanishVoice(synthesis) ?? null);
+    const update = () => setVoice(languageVoice(synthesis, language) ?? null);
     update();
     synthesis.addEventListener?.('voiceschanged', update);
     return () => synthesis.removeEventListener?.('voiceschanged', update);
-  }, [supported, synthesis]);
+  }, [supported, synthesis, language]);
 
   const speak = () => {
     if (!voice) return;

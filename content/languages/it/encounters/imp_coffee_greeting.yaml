@@ -1,0 +1,63 @@
+id: imp_coffee_greeting
+character: characters/enemies/imp_coffee.yaml
+location: coffee_cart
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player orders a coffee without milk in Italian"
+max_turns: 20
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: order_coffee
+    prompt: "Order a coffee from Gerald, using Italian for the coffee request."
+    intent: "The player asks Gerald for coffee for themself."
+    target_vocabulary_ids: [vorrei, caffe, espresso, caffe_nero]
+    required_target_groups:
+      - [caffe, espresso, caffe_nero]
+    grammar_constraints:
+      - "Use a first-person request or an unambiguous direct order."
+      - "The coffee target must be expressed in Italian; an English-only order does not pass."
+    accepted_examples:
+      - "Vorrei un caffè."
+      - "Un caffè, per favore."
+      - "I would like un caffè, please."
+    negative_examples:
+      - text: "I want coffee."
+        reason: "English-only; it does not demonstrate the Italian coffee target."
+      - text: "Gerald said, 'un caffè'."
+        reason: "A quotation is not the player's own order."
+      - text: "She wants un caffè."
+        reason: "It orders for someone else rather than the player."
+    reference_meaning: "A direct request by the player for coffee."
+    hint_limit: 2
+    next_objective: no_milk
+    assessment_reference_ids: [treccani-caffe, treccani-espresso, treccani-volere]
+  - id: no_milk
+    prompt: "Make clear that your coffee must have no milk, using Italian."
+    intent: "The player orders their coffee without milk or as black coffee."
+    target_vocabulary_ids: [senza_latte, caffe_nero]
+    required_target_groups:
+      - [senza_latte, caffe_nero]
+    grammar_constraints:
+      - "Use one authored Italian no-milk or black-coffee expression in the player's own order."
+      - "Reject negated, contradicted, quoted, third-person, and off-topic occurrences."
+    accepted_examples:
+      - "Vorrei un caffè senza latte."
+      - "I want my caffè nero, please."
+      - "Senza latte, per favore."
+    negative_examples:
+      - text: "Non senza latte, con latte."
+        reason: "The phrase is explicitly negated and contradicted by 'with milk'."
+      - text: "The sign says 'senza latte'."
+        reason: "A quotation about a sign is not an order."
+      - text: "My friend takes caffè nero."
+        reason: "It describes someone else's preference."
+      - text: "Senza latte is two words."
+        reason: "It discusses the phrase rather than ordering coffee."
+    reference_meaning: "The player's established coffee order contains no milk."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [treccani-caffe, treccani-senza, treccani-latte]

@@ -74,3 +74,12 @@ export function resolveLLMConfig(overrides = {}, env = process.env) {
 export function listenHostForProvider(provider, env = process.env) {
   return CLI_PROVIDERS.has(provider) ? '127.0.0.1' : (nonBlank(env.HOST) ?? '0.0.0.0');
 }
+
+export function resolveTargetLanguage(env = process.env) {
+  return nonBlank(env.TARGET_LANGUAGE) ?? 'it';
+}
+
+// Spanish saves predate language packs and stay at the top of the save directory.
+export function saveDirForLanguage(saveDir, code) {
+  return code === 'es' ? saveDir : resolve(saveDir, code);
+}

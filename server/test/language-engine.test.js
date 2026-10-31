@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadGameContent } from '../src/content-loader.js';
 import {
-  calculateSpanishRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
+  calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
   isDue, matchCanonicalVocabulary, scheduleReview, DAY_MS,
 } from '../src/language-engine.js';
 
-const content = loadGameContent({ fresh: true });
+const content = loadGameContent({ language: 'es' });
 const entry = (id) => content.vocabularyById.get(id);
 
 test('real Gerald content is complete, referenced, and uses canonical objective IDs', () => {
@@ -64,8 +64,8 @@ test('phrases schedule independently and difficulty has one committed-turn calcu
   const word = scheduleReview(initialSchedule('2026-01-01T00:00:00Z'), 5, '2026-01-01T00:00:00Z');
   const phrase = initialSchedule('2026-01-01T00:00:00Z');
   assert.notEqual(word.dueAt, phrase.dueAt);
-  assert.equal(calculateSpanishRatio(.25, .05, 0), .25);
-  assert.equal(calculateSpanishRatio(.25, .05, 1), .30);
-  assert.equal(calculateSpanishRatio(.25, .05, 0), .25, 'failed turns do not change the supplied committed count');
-  assert.equal(calculateSpanishRatio(.25, .05, 100), 1);
+  assert.equal(calculateTargetRatio(.25, .05, 0), .25);
+  assert.equal(calculateTargetRatio(.25, .05, 1), .30);
+  assert.equal(calculateTargetRatio(.25, .05, 0), .25, 'failed turns do not change the supplied committed count');
+  assert.equal(calculateTargetRatio(.25, .05, 100), 1);
 });

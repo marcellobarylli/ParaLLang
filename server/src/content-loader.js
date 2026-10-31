@@ -1,16 +1,21 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import yaml from 'js-yaml';
 import { z } from 'zod';
 
 const defaultContentDir = resolve(import.meta.dirname, '..', '..', 'content');
-const cache = new Map();
+export const DEFAULT_LANGUAGE = 'it';
 
-const exampleSchema = z.object({ spanish: z.string().min(1), english: z.string().min(1) }).strict();
+const languageSchema = z.object({
+  code: z.string().regex(/^[a-z]{2,3}$/),
+  name: z.string().min(1),
+  tag: z.string().regex(/^[a-z]{2,3}(?:-[A-Za-z0-9]+)*$/),
+}).strict();
+const exampleSchema = z.object({ target: z.string().min(1), english: z.string().min(1) }).strict();
 const vocabularyEntrySchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9_]*$/),
   kind: z.enum(['word', 'phrase']),
-  spanish: z.string().min(1),
+  target: z.string().min(1),
   part_of_speech: z.string().min(1),
   accepted_translations: z.array(z.string().min(1)).min(1),
   surface_variants: z.array(z.string().min(1)).min(1),
@@ -53,7 +58,7 @@ const encounterSchema = z.object({
   turn_prompt_template: z.string().min(1),
   defeat_condition: z.object({ type: z.string(), description: z.string().min(1) }).strict(),
   max_turns: z.number().int().positive(),
-  escalation: z.object({ spanish_ratio_increase_per_turn: z.number().min(0) }).strict(),
+  escalation: z.object({ target_ratio_increase_per_turn: z.number().min(0) }).strict(),
   objectives: z.array(objectiveSchema).min(1),
 }).strict();
 
@@ -70,7 +75,7 @@ const characterSchema = z.object({
   combat_style: z.string().min(1),
   difficulty: z.number().min(1),
   language_profile: z.object({
-    base_spanish_ratio: z.number().min(0).max(1),
+    base_target_ratio: z.number().min(0).max(1),
     vocabulary_focus: z.array(z.string().min(1)).min(1),
     grammar_focus: z.array(z.string().min(1)).min(1),
   }).strict(),
@@ -98,12 +103,25 @@ function unique(values, label) {
   if (duplicates.length) throw new Error(`${label} contains duplicate IDs: ${[...new Set(duplicates)].join(', ')}`);
 }
 
-export function loadGameContent({ contentDir = defaultContentDir, fresh = false } = {}) {
-  if (!fresh && cache.has(contentDir)) return cache.get(contentDir);
+export function availableLanguages(contentDir = defaultContentDir) {
+  const languagesDir = resolve(contentDir, 'languages');
+  return readdirSync(languagesDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && existsSync(resolve(languagesDir, entry.name, 'language.yaml')))
+    .map((entry) => entry.name)
+    .sort();
+}
 
-  const vocabulary = vocabularySchema.parse(parseYaml(contentDir, 'language/vocabulary/gerald_coffee.yaml'));
+export function loadGameContent({ contentDir = defaultContentDir, language: code = DEFAULT_LANGUAGE } = {}) {
+  const available = availableLanguages(contentDir);
+  if (!available.includes(code)) {
+    throw new Error(`Unknown target language: ${code}. Available: ${available.join(', ')}`);
+  }
+  const pack = `languages/${code}`;
+  const language = languageSchema.parse(parseYaml(contentDir, `${pack}/language.yaml`));
+  if (language.code !== code) throw new Error(`content/${pack}/language.yaml must declare code ${code}`);
+  const vocabulary = vocabularySchema.parse(parseYaml(contentDir, `${pack}/vocabulary/gerald_coffee.yaml`));
   const character = characterSchema.parse(parseYaml(contentDir, 'characters/enemies/imp_coffee.yaml'));
-  const encounter = encounterSchema.parse(parseYaml(contentDir, 'encounters/imp_coffee_greeting.yaml'));
+  const encounter = encounterSchema.parse(parseYaml(contentDir, `${pack}/encounters/imp_coffee_greeting.yaml`));
   const styleGuide = styleGuideSchema.parse(parseYaml(contentDir, 'narration/style_guide.yaml'));
 
   unique(vocabulary.entries.map((entry) => entry.id), 'Vocabulary');
@@ -115,8 +133,8 @@ export function loadGameContent({ contentDir = defaultContentDir, fresh = false 
   const objectiveIds = new Set(encounter.objectives.map((objective) => objective.id));
 
   for (const entry of vocabulary.entries) {
-    if (!entry.surface_variants.some((form) => form.toLocaleLowerCase('es') === entry.spanish.toLocaleLowerCase('es'))) {
-      throw new Error(`Vocabulary ${entry.id} must include its canonical Spanish form in surface_variants`);
+    if (!entry.surface_variants.some((form) => form.toLowerCase() === entry.target.toLowerCase())) {
+      throw new Error(`Vocabulary ${entry.id} must include its canonical ${language.name} form in surface_variants`);
     }
     for (const referenceId of entry.reference_ids) {
       if (!referenceIds.has(referenceId)) throw new Error(`Vocabulary ${entry.id} references unknown source ${referenceId}`);
@@ -143,12 +161,8 @@ export function loadGameContent({ contentDir = defaultContentDir, fresh = false 
     }
   });
 
-  const content = Object.freeze({ character, encounter, styleGuide, vocabulary, vocabularyById });
-  cache.set(contentDir, content);
-  return content;
+  return Object.freeze({ language, character, encounter, styleGuide, vocabulary, vocabularyById });
 }
-
-export function clearContentCache() { cache.clear(); }
 
 // Narrow compatibility helpers for scripts which used the Phase 1 loader.
 export function loadCharacter() { return loadGameContent().character; }

@@ -1,3 +1,3 @@
-React as Gerald to the player answer in TURN DATA. Express the authoritative decision in character, but do not alter it. Keep feedback useful and the Spanish beginner-friendly.
+React as Gerald to the player answer in TURN DATA. Express the authoritative decision in character, but do not alter it. Keep feedback useful and the {{language.name}} beginner-friendly.
 
 TURN DATA: {{turnData}}

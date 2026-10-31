@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createApp } from '../src/app.js';
-import { CLI_PROVIDERS, loadRootEnv } from '../src/config.js';
+import { CLI_PROVIDERS, loadRootEnv, resolveTargetLanguage } from '../src/config.js';
 import { loadGameContent } from '../src/content-loader.js';
 import { LearningService } from '../src/learning-service.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
@@ -14,17 +14,38 @@ import { gradingResponseSchema } from '../src/llm/schemas.js';
 import { ProviderError } from '../src/llm/provider-error.js';
 import { providerArgument } from './check-provider.js';
 
-const cases = [
-  { name: 'positive', answer: 'Quiero un café.', expected: [true, false] },
-  { name: 'complete', answer: 'Quiero un café sin leche.', expected: [true, true] },
-  { name: 'mixed-language', answer: 'I would like un café sin leche, please.', expected: [true, true] },
-  { name: 'English-only', answer: 'I want black coffee without milk.', expected: [false, false] },
-  { name: 'contextual', answer: 'Sin leche, por favor.', context: ['Quiero un café.'], objectiveIndex: 1, expected: [true] },
-  { name: 'negated', answer: 'No sin leche, con leche.', context: ['Quiero un café.'], objectiveIndex: 1, expected: [false] },
-  { name: 'quoted', answer: "The sign says 'sin leche'.", expected: [false, false] },
-  { name: 'metalinguistic', answer: 'Sin leche is two words.', expected: [false, false] },
-  { name: 'third-person', answer: 'My friend takes café negro.', expected: [false, false] },
-];
+const casesByLanguage = {
+  es: {
+    order: 'Quiero un café.',
+    followUp: 'Sin leche, por favor.',
+    cases: [
+      { name: 'positive', answer: 'Quiero un café.', expected: [true, false] },
+      { name: 'complete', answer: 'Quiero un café sin leche.', expected: [true, true] },
+      { name: 'mixed-language', answer: 'I would like un café sin leche, please.', expected: [true, true] },
+      { name: 'English-only', answer: 'I want black coffee without milk.', expected: [false, false] },
+      { name: 'contextual', answer: 'Sin leche, por favor.', context: ['Quiero un café.'], objectiveIndex: 1, expected: [true] },
+      { name: 'negated', answer: 'No sin leche, con leche.', context: ['Quiero un café.'], objectiveIndex: 1, expected: [false] },
+      { name: 'quoted', answer: "The sign says 'sin leche'.", expected: [false, false] },
+      { name: 'metalinguistic', answer: 'Sin leche is two words.', expected: [false, false] },
+      { name: 'third-person', answer: 'My friend takes café negro.', expected: [false, false] },
+    ],
+  },
+  it: {
+    order: 'Vorrei un caffè.',
+    followUp: 'Senza latte, per favore.',
+    cases: [
+      { name: 'positive', answer: 'Vorrei un caffè.', expected: [true, false] },
+      { name: 'complete', answer: 'Vorrei un caffè senza latte.', expected: [true, true] },
+      { name: 'mixed-language', answer: 'I would like un caffè senza latte, please.', expected: [true, true] },
+      { name: 'English-only', answer: 'I want black coffee without milk.', expected: [false, false] },
+      { name: 'contextual', answer: 'Senza latte, per favore.', context: ['Vorrei un caffè.'], objectiveIndex: 1, expected: [true] },
+      { name: 'negated', answer: 'Non senza latte, con latte.', context: ['Vorrei un caffè.'], objectiveIndex: 1, expected: [false] },
+      { name: 'quoted', answer: "The sign says 'senza latte'.", expected: [false, false] },
+      { name: 'metalinguistic', answer: 'Senza latte is two words.', expected: [false, false] },
+      { name: 'third-person', answer: 'My friend takes caffè nero.', expected: [false, false] },
+    ],
+  },
+};
 
 async function request(baseUrl, path, { learnerId, body } = {}) {
   const response = await fetch(`${baseUrl}${path}`, {
@@ -54,14 +75,17 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
   const grading = [];
   try {
     preflight = await provider.preflight();
-    const content = loadGameContent();
+    const content = loadGameContent({ language: resolveTargetLanguage(env) });
+    const script = casesByLanguage[content.language.code];
+    if (!script) throw new Error(`verify:cli has no live cases for ${content.language.code}.`);
     const storage = new JsonLearningStorage({ saveDir });
     const service = new LearningService({ provider, storage, content });
-    for (const item of cases) {
+    for (const item of script.cases) {
       if (provider.generationCount >= 14) throw new Error('Live verification stopped at the 14-call scripted provider budget.');
       const objectives = content.encounter.objectives.slice(item.objectiveIndex ?? 0);
       const stop = timed();
       const raw = await provider.structuredChat(buildGradingMessages({
+        language: content.language,
         objectives,
         vocabularyById: content.vocabularyById,
         conversationContext: item.context ?? [],
@@ -99,7 +123,7 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
         encounterId: started.encounter.id,
         version: started.encounter.version,
         attemptId: randomUUID(),
-        message: 'Quiero un café.',
+        message: script.order,
       },
     });
     const firstTurnMs = firstStop();
@@ -110,7 +134,7 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
         encounterId: first.encounter.id,
         version: first.encounter.version,
         attemptId: randomUUID(),
-        message: 'Sin leche, por favor.',
+        message: script.followUp,
       },
     });
     const secondTurnMs = secondStop();
@@ -118,6 +142,8 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
     if (provider.generationCount > 14) throw new Error('Live verification exceeded the 14-call scripted provider budget.');
     return {
       title: 'Playtest ParaLLang through Codex and Claude Code subscriptions',
+      passed: grading.every((item) => item.matched) && second.encounter.state === 'resolved',
+      language: content.language.code,
       verifiedAt: new Date().toISOString(),
       provider: providerName,
       cliVersion: preflight.version,
@@ -162,7 +188,11 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
 }
 
 export async function main() {
-  try { console.log(JSON.stringify(await verifyCLI(), null, 2)); }
+  try {
+    const result = await verifyCLI();
+    console.log(JSON.stringify(result, null, 2));
+    if (!result.passed) process.exitCode = 1;
+  }
   catch (error) {
     const safe = error instanceof ProviderError
       ? { ...error.verification, error: { code: error.code, message: error.message, provider: error.provider, category: error.category } }

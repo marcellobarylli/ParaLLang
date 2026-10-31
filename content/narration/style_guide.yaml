@@ -3,6 +3,6 @@ narrator_voice: "omniscient, slightly exasperated, treats the absurd as mundane"
 rules:
   - "Never break character for the NPC"
   - "Narrative text is always in English"
-  - "Spanish dialogue must be grammatically correct"
-  - "Include word-level breakdowns in the response for all Spanish words"
+  - "Target-language dialogue must be grammatically correct"
+  - "Include word-level breakdowns in the response for all target-language words"
   - "Humour should arise naturally from character interactions, not forced jokes"

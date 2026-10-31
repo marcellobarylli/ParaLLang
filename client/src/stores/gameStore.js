@@ -16,6 +16,7 @@ export function createGameStore({ api = learningApi, storage = browserStorage() 
 
   return create((set, get) => ({
     learnerId: null,
+    language: null,
     encounter: null,
     spellbook: emptySpellbook,
     snapshotsByLearner: snapshots,
@@ -44,7 +45,7 @@ export function createGameStore({ api = learningApi, storage = browserStorage() 
           const started = await api.startEncounter(identity.learnerId, false);
           if (epoch !== requestEpoch) return;
           snapshots.set(identity.learnerId, { encounter: started.encounter, spellbook: started.spellbook });
-          set({ learnerId: identity.learnerId, encounter: started.encounter, spellbook: started.spellbook, isLoading: false });
+          set({ learnerId: identity.learnerId, language: identity.language ?? null, encounter: started.encounter, spellbook: started.spellbook, isLoading: false });
         } catch (error) {
           if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
           initializationPromise = null;

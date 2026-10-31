@@ -1,8 +1,8 @@
-export default function BilingualText({ message, onHelp, disabled = false }) {
+export default function BilingualText({ message, language, onHelp, disabled = false }) {
   const { dialogue, protected: isProtected } = message;
   return (
     <div className="bilingual-text">
-      <p className="native-line">{dialogue.native}</p>
+      <p className="native-line" lang={language?.tag}>{dialogue.native}</p>
       <div className="word-actions" aria-label="Word translations">
         {dialogue.words.map((word) => (
           <div className="word-help" key={word.vocabularyId}>
@@ -11,9 +11,9 @@ export default function BilingualText({ message, onHelp, disabled = false }) {
               className="text-button"
               disabled={disabled || Boolean(word.meaning)}
               onClick={() => onHelp({ kind: 'word', messageId: message.id, vocabularyId: word.vocabularyId })}
-              aria-label={`Translate word: ${word.canonicalSpanish}`}
+              aria-label={`Translate word: ${word.canonicalTarget}`}
             >
-              {word.canonicalSpanish}
+              <span lang={language?.tag}>{word.canonicalTarget}</span>
             </button>
             {word.meaning && <span role="status"> — {word.meaning} <small>({word.partOfSpeech.replaceAll('_', ' ')})</small></span>}
           </div>

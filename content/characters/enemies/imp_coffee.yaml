@@ -6,7 +6,7 @@ personality:
   quirks:
     - "Rates everything on a scale of espresso shots (1-5)"
     - "Believes milk in coffee is a war crime"
-    - "Speaks in increasingly complex Spanish when agitated"
+    - "Speaks in increasingly complex target-language phrases when agitated"
   humour_style: "dry, Pratchett-esque, fourth-wall-adjacent"
 appearance: >
   A foot-tall creature with skin the colour of over-roasted beans,
@@ -15,13 +15,13 @@ appearance: >
 combat_style: "verbal jousting about coffee"
 difficulty: 1
 language_profile:
-  base_spanish_ratio: 0.25
+  base_target_ratio: 0.25
   vocabulary_focus: ["food", "drinks", "opinions", "insults"]
   grammar_focus: ["present_tense", "basic_questions", "negation"]
 defeat_condition:
   type: "comprehension_and_response"
   description: >
-    Player must correctly order a coffee in Spanish,
-    including specifying that they want it black (sin leche).
+    Player must correctly order a coffee in the target language,
+    including specifying that they want it without milk.
     Gerald respects anyone who takes coffee seriously.
 saveable: true

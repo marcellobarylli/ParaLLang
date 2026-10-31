@@ -23,7 +23,7 @@ function targetData(objectives, vocabularyById) {
     reference_meaning: objective.reference_meaning,
     targets: objective.target_vocabulary_ids.map((id) => {
       const entry = vocabularyById.get(id);
-      return { id, spanish: entry.spanish, meanings: entry.accepted_translations };
+      return { id, target: entry.target, meanings: entry.accepted_translations };
     }),
     required_target_groups: objective.required_target_groups,
     grammar_constraints: objective.grammar_constraints,
@@ -33,17 +33,18 @@ function targetData(objectives, vocabularyById) {
 }
 
 export function buildNarrationMessages({
+  language,
   character,
   objectives,
   vocabularyById,
   conversationHistory = [],
   playerInput = null,
-  spanishRatio,
+  targetRatio,
   decision = null,
 }) {
   const system = fillTemplate(loadTemplate('system/base.txt'), {
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
-    language: { spanishRatio: Math.round(spanishRatio * 100), learningData: JSON.stringify(targetData(objectives, vocabularyById)) },
+    language: { name: language.name, targetRatio: Math.round(targetRatio * 100), learningData: JSON.stringify(targetData(objectives, vocabularyById)) },
   });
   const turnData = playerInput === null
     ? { task: 'greeting', scene: 'The player approaches Gerald at The Coffee Cart in The Crumbling Market.' }
@@ -52,30 +53,15 @@ export function buildNarrationMessages({
   return [
     { role: 'system', content: system },
     ...conversationHistory,
-    { role: 'user', content: fillTemplate(loadTemplate(playerInput === null ? 'encounter/greeting.txt' : 'encounter/dialogue_turn.txt'), { turnData: JSON.stringify(turnData) }) },
+    { role: 'user', content: fillTemplate(loadTemplate(playerInput === null ? 'encounter/greeting.txt' : 'encounter/dialogue_turn.txt'), { language, turnData: JSON.stringify(turnData) }) },
   ];
 }
 
-export function buildGradingMessages({ objectives, vocabularyById, conversationContext, playerInput }) {
+export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput }) {
   const rubric = targetData(objectives, vocabularyById);
-  const system = fillTemplate(loadTemplate('language/grading.txt'), { rubric: JSON.stringify(rubric) });
+  const system = fillTemplate(loadTemplate('language/grading.txt'), { language, rubric: JSON.stringify(rubric) });
   return [
     { role: 'system', content: system },
     { role: 'user', content: JSON.stringify({ conversation_context: conversationContext, player_answer: playerInput }) },
   ];
-}
-
-// Compatibility export with a fixed ratio; new code supplies the authoritative ratio explicitly above.
-export function buildEncounterPrompt(character, encounterConfig, conversationHistory, playerInput) {
-  const objectives = encounterConfig.objectives ?? [];
-  const vocabularyById = new Map();
-  for (const objective of objectives) {
-    for (const id of objective.target_vocabulary_ids ?? []) {
-      if (!vocabularyById.has(id)) vocabularyById.set(id, { spanish: id, accepted_translations: [] });
-    }
-  }
-  return buildNarrationMessages({
-    character, objectives, vocabularyById, conversationHistory, playerInput,
-    spanishRatio: character.language_profile.base_spanish_ratio,
-  });
 }

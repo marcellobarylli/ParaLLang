@@ -14,9 +14,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ParaLLang is an immersive narrative language learning game where players learn Spanish through conversational encounters with absurd characters. The game is currently in the **design/planning phase** — `parallang.md` contains the full vision and lore, and `prototype.md` is the technical blueprint for implementation.
+ParaLLang is an immersive narrative language learning game where players learn a language (Italian by default, Spanish also available) through conversational encounters with absurd characters. The game is currently in the **design/planning phase** — `parallang.md` contains the full vision and lore, and `prototype.md` is the technical blueprint for implementation.
 
-The core mechanic: enemy NPCs speak increasingly more Spanish as encounters escalate. Players must translate words/sentences to "defeat" them. Mechanically, translation generates power — mirroring the in-world lore where language underpins reality itself.
+The core mechanic: enemy NPCs speak increasingly more of the target language as encounters escalate. Players must translate words/sentences to "defeat" them. Mechanically, translation generates power — mirroring the in-world lore where language underpins reality itself.
 
 ## Planned Stack
 
@@ -53,11 +53,11 @@ Client (React/Vite)  →  Server (Node/Express)  →  LLM Provider (OpenAI/Anthr
 }
 ```
 
-**Difficulty scaling** is the core gameplay loop: each NPC has a `base_spanish_ratio` (e.g. 0.25) and an `escalation_rate` per turn. The Language Engine adjusts prompt parameters accordingly.
+**Difficulty scaling** is the core gameplay loop: each NPC has a `base_target_ratio` (e.g. 0.25) and an `escalation_rate` per turn. The Language Engine adjusts prompt parameters accordingly.
 
-**Content is data:** All game content (locations, characters, encounters, vocabulary) is authored in YAML under `content/`. The server loads and indexes this at startup. Character definitions include `language_profile` (Spanish ratio, vocabulary focus) and `defeat_condition`.
+**Content is data:** All game content (locations, characters, encounters, vocabulary) is authored in YAML under `content/`. The server loads and indexes this at startup. Each target language is a pack under `content/languages/<code>/` selected by `TARGET_LANGUAGE`. Character definitions include `language_profile` (target-language ratio, vocabulary focus) and `defeat_condition`.
 
-**Prompt architecture:** Prompts are modular templates combining world lore, location description, NPC character sheet, tone directives, language rules (% Spanish, grammar constraints), output format schema, summarized + recent conversation history.
+**Prompt architecture:** Prompts are modular templates combining world lore, location description, NPC character sheet, tone directives, language rules (% target language, grammar constraints), output format schema, summarized + recent conversation history.
 
 ## Key Design Documents
 

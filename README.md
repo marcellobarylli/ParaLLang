@@ -1,6 +1,6 @@
 # ParaLLang
 
-ParaLLang is a conversational Spanish-learning game. The implemented Phase 2 loop takes place at The Coffee Cart in The Crumbling Market: order from Gerald, use tracked companion help, collect canonical vocabulary, and practise due Spellbook cards.
+ParaLLang is a conversational language-learning game. It teaches Italian by default, and Spanish is also available. The implemented Phase 2 loop takes place at The Coffee Cart in The Crumbling Market: order from Gerald, use tracked companion help, collect canonical vocabulary, and practise due Spellbook cards.
 
 ## Design notes and project records
 
@@ -23,6 +23,10 @@ npm run dev
 ```
 
 The client runs at `http://localhost:5173` and proxies `/api` to the server on port 3001. The root `.env` is loaded consistently even when the server is started through its npm workspace.
+
+### Target language
+
+`TARGET_LANGUAGE` in the root `.env` selects the language Gerald speaks: `it` (Italian, the default) or `es` (Spanish). Each value names a language pack under `content/languages/<code>/`, which holds its `language.yaml` (name and BCP 47 tag), vocabulary and encounter; the character and narration style in `content/characters/` and `content/narration/` are shared. An unknown value stops the server at startup and lists the available packs. To switch, change the value, restart the server, then reload the browser page. The server prints the active language at startup.
 
 Choose one narration/grading provider in the root `.env`:
 
@@ -65,19 +69,22 @@ npm run verify:cli -- --provider codex-cli
 npm run verify:cli -- --provider claude-cli
 ```
 
+The cases and encounter answers follow `TARGET_LANGUAGE` (for example `TARGET_LANGUAGE=es npm run verify:cli -- --provider codex-cli`). The output's `passed` is true only when every grading case matches its expected verdict and the encounter ends `resolved`; otherwise the command exits with status 1.
+
 Live verification uses a temporary learner save and removes it afterward. It is never run by installation, startup, health checks, `check:provider`, or deterministic tests.
 
 ## Learning data and saves
 
-The browser keeps a server-issued opaque learner ID in local storage. The server writes that learner's Spellbook and durable attempt receipts as one atomic JSON document under `server/data/saves/` by default. Override the directory with `PARALLANG_SAVE_DIR`. The directory is resolved independently of the shell's working directory and is gitignored.
+The browser keeps a server-issued opaque learner ID in local storage. The server writes that learner's Spellbook and durable attempt receipts as one atomic JSON document under `server/data/saves/` by default. Override the directory with `PARALLANG_SAVE_DIR`. Each language has its own Spellbook: Spanish saves stay directly in the save directory (where they were before language packs existed), and every other language saves to a subdirectory named after its code, such as `server/data/saves/it/`. The same learner ID starts with an empty Spellbook in a new language and finds its earlier cards again when that language is selected. The directory is resolved independently of the shell's working directory and is gitignored.
 
-Definitions remain in `content/language/vocabulary/`; saves contain canonical IDs, content version, evidence, and review schedules. Encounter transcripts are intentionally in memory only, so a server restart starts a fresh conversation while preserving the Spellbook. Invalid, corrupt, or unsupported saves are reported and left untouched rather than reset.
+Definitions remain in each pack's `vocabulary/` folder; saves contain canonical IDs, content version, evidence, and review schedules. Encounter transcripts are intentionally in memory only, so a server restart starts a fresh conversation while preserving the Spellbook. Invalid, corrupt, or unsupported saves are reported and left untouched rather than reset.
 
 ## Focused verification
 
-Round 002 deliberately selects these checks rather than a broad repository suite:
+Round 002 deliberately selects these checks rather than a broad repository suite; round 003 adds the language-pack test (both packs, the Italian encounter and per-language saves):
 
 ```sh
+node --test server/test/language-packs.test.js
 node --test server/test/llm-contracts.test.js server/test/learning-flow.test.js server/test/cli-runner.test.js server/test/cli-providers.test.js server/test/cli-learning-flow.test.js
 node --test --test-name-pattern="same-learner mutations serialize|dialogue and review receipts replay after service restart|persisted full-flow simulation recovers the exact review schedule" server/test/learning-storage.test.js
 npm exec --workspace client -- vitest run src/stores/__tests__/learning-state.test.js

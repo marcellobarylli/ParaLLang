@@ -83,10 +83,10 @@ export class FixtureProvider {
   }
 }
 
-export async function createRuntime({ provider = new FixtureProvider(), clock = () => fixedNow, storage } = {}) {
-  const saveDir = await mkdtemp(join(tmpdir(), 'parallang-test-'));
+export async function createRuntime({ provider = new FixtureProvider(), clock = () => fixedNow, storage, language = 'es', saveDir: baseSaveDir } = {}) {
+  const saveDir = baseSaveDir ?? await mkdtemp(join(tmpdir(), 'parallang-test-'));
   const actualStorage = storage ?? new JsonLearningStorage({ saveDir });
-  const content = loadGameContent();
+  const content = loadGameContent({ language });
   const service = new LearningService({ provider, storage: actualStorage, content, clock });
   const app = createApp({ service, logger: { error() {} } });
   const server = app.listen(0, '127.0.0.1');

@@ -1,0 +1,104 @@
+version: gerald-coffee-it-v1
+references:
+  - id: treccani-caffe
+    title: "Treccani, Vocabolario: caffè"
+    url: "https://www.treccani.it/vocabolario/caffe/"
+  - id: treccani-volere
+    title: "Treccani, Vocabolario: volere"
+    url: "https://www.treccani.it/vocabolario/volere/"
+  - id: treccani-senza
+    title: "Treccani, Vocabolario: senza"
+    url: "https://www.treccani.it/vocabolario/senza/"
+  - id: treccani-latte
+    title: "Treccani, Vocabolario: latte"
+    url: "https://www.treccani.it/vocabolario/latte/"
+  - id: treccani-espresso
+    title: "Treccani, Vocabolario: espresso"
+    url: "https://www.treccani.it/vocabolario/espresso/"
+  - id: wiktionary-caffe
+    title: "Wiktionary: caffè (Italian)"
+    url: "https://en.wiktionary.org/wiki/caff%C3%A8"
+  - id: wiktionary-vorrei
+    title: "Wiktionary: vorrei (Italian)"
+    url: "https://en.wiktionary.org/wiki/vorrei"
+  - id: wiktionary-senza
+    title: "Wiktionary: senza (Italian)"
+    url: "https://en.wiktionary.org/wiki/senza"
+  - id: wiktionary-latte
+    title: "Wiktionary: latte (Italian)"
+    url: "https://en.wiktionary.org/wiki/latte"
+  - id: wiktionary-espresso
+    title: "Wiktionary: espresso (Italian)"
+    url: "https://en.wiktionary.org/wiki/espresso"
+entries:
+  - id: caffe
+    kind: word
+    target: "caffè"
+    part_of_speech: noun
+    accepted_translations: ["coffee", "a coffee", "espresso", "an espresso"]
+    surface_variants: ["caffè", "caffe", "caffé"]
+    accent_insensitive: true
+    example:
+      target: "Un caffè, per favore."
+      english: "A coffee, please."
+    note: "Un caffè is a cup of coffee, today usually made with an espresso machine (Treccani)."
+    reference_ids: [treccani-caffe, wiktionary-caffe]
+  - id: vorrei
+    kind: word
+    target: "vorrei"
+    part_of_speech: verb
+    accepted_translations: ["I would like", "I'd like"]
+    surface_variants: ["vorrei"]
+    accent_insensitive: false
+    example:
+      target: "Vorrei un caffè."
+      english: "I would like a coffee."
+    note: "First-person conditional of volere, used for polite requests; reviewed as vorrei, not the infinitive volere."
+    reference_ids: [treccani-volere, wiktionary-vorrei]
+  - id: senza_latte
+    kind: phrase
+    target: "senza latte"
+    part_of_speech: prepositional_phrase
+    accepted_translations: ["without milk", "no milk"]
+    surface_variants: ["senza latte"]
+    accent_insensitive: false
+    example:
+      target: "Vorrei un caffè senza latte."
+      english: "I would like a coffee without milk."
+    reference_ids: [treccani-senza, treccani-latte, wiktionary-senza, wiktionary-latte]
+  - id: espresso
+    kind: word
+    target: "espresso"
+    part_of_speech: noun
+    accepted_translations: ["espresso", "an espresso"]
+    surface_variants: ["espresso"]
+    accent_insensitive: false
+    example:
+      target: "Mi fa un espresso?"
+      english: "Could you make me an espresso?"
+    note: "Short for caffè espresso, made to order with an espresso machine (Treccani)."
+    reference_ids: [treccani-espresso, wiktionary-espresso]
+  - id: caffe_nero
+    kind: phrase
+    target: "caffè nero"
+    part_of_speech: noun_phrase
+    accepted_translations: ["black coffee", "coffee without milk"]
+    surface_variants: ["caffè nero", "caffe nero", "caffé nero"]
+    accent_insensitive: true
+    example:
+      target: "Prendo il caffè nero."
+      english: "I take my coffee black."
+    note: "Treccani glosses caffè nero as senza latte."
+    reference_ids: [treccani-caffe]
+  - id: con_latte
+    kind: phrase
+    target: "con latte"
+    part_of_speech: prepositional_phrase
+    accepted_translations: ["with milk"]
+    surface_variants: ["con latte", "col latte"]
+    accent_insensitive: false
+    example:
+      target: "Non voglio il caffè con latte."
+      english: "I do not want coffee with milk."
+    note: "Latte means milk; the English coffee drink called a latte is caffellatte in Italian."
+    reference_ids: [treccani-latte, wiktionary-latte]

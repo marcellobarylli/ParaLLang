@@ -39,7 +39,7 @@ async function cliRuntime(t, providerName, control = {}) {
   const logs = [];
   const saveDir = join(root, 'saves');
   const storage = new JsonLearningStorage({ saveDir });
-  const service = new LearningService({ provider, storage, content: loadGameContent(), clock: () => fixedNow });
+  const service = new LearningService({ provider, storage, content: loadGameContent({ language: 'es' }), clock: () => fixedNow });
   const app = createApp({ service, logger: { error: (line) => logs.push(line) } });
   const server = app.listen(0, '127.0.0.1');
   await new Promise((resolveListen) => server.once('listening', resolveListen));

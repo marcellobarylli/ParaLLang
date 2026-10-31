@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { createLLMAdapter } from './src/llm/index.js';
-import { listenHostForProvider, loadRootEnv } from './src/config.js';
+import { listenHostForProvider, loadRootEnv, resolveTargetLanguage, saveDirForLanguage } from './src/config.js';
 import { loadGameContent } from './src/content-loader.js';
 import { JsonLearningStorage } from './src/learning-storage.js';
 import { LearningService } from './src/learning-service.js';
@@ -11,10 +11,10 @@ loadRootEnv();
 const port = Number(process.env.PORT || 3001);
 const selectedProvider = process.env.LLM_PROVIDER || 'openai';
 const host = listenHostForProvider(selectedProvider);
-const content = loadGameContent();
+const content = loadGameContent({ language: resolveTargetLanguage() });
 const provider = createLLMAdapter();
 const storage = new JsonLearningStorage({
-  saveDir: process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'),
+  saveDir: saveDirForLanguage(process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'), content.language.code),
 });
 const service = new LearningService({ provider, storage, content });
 const app = createApp({ service });
@@ -23,6 +23,7 @@ if (process.env.NODE_ENV !== 'test') {
   const server = app.listen(port, host, () => {
     console.log(`ParaLLang server listening on http://${host}:${port}`);
     console.log(`LLM provider: ${selectedProvider}`);
+    console.log(`Target language: ${content.language.name} (${content.language.code})`);
     console.log(`Spellbook saves: ${storage.saveDir}`);
   });
   let stopping = false;

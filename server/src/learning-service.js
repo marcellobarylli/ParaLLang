@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { gradingResponseSchema, encounterResponseSchema } from './llm/schemas.js';
 import { buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
 import {
-  calculateSpanishRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
+  calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
   isDue, masteryLabel, matchCanonicalVocabulary, scheduleReview,
 } from './language-engine.js';
 import { assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
@@ -42,7 +42,7 @@ export class LearningService {
         envelope = createLearnerEnvelope(learnerId);
         await this.storage.save(envelope);
       }
-      return { learnerId, recovered };
+      return { learnerId, recovered, language: this.content.language };
     });
   }
 
@@ -54,9 +54,9 @@ export class LearningService {
   }
 
   ratioFor(turns) {
-    return calculateSpanishRatio(
-      this.content.character.language_profile.base_spanish_ratio,
-      this.content.encounter.escalation.spanish_ratio_increase_per_turn,
+    return calculateTargetRatio(
+      this.content.character.language_profile.base_target_ratio,
+      this.content.encounter.escalation.target_ratio_increase_per_turn,
       turns,
     );
   }
@@ -96,7 +96,7 @@ export class LearningService {
         return {
           vocabularyId: entry.id,
           kind: entry.kind,
-          spanish: entry.spanish,
+          target: entry.target,
           meanings: entry.accepted_translations,
           partOfSpeech: entry.part_of_speech,
           example: entry.example,
@@ -118,8 +118,8 @@ export class LearningService {
     const seen = new Set();
     const words = matches.filter((match) => !seen.has(match.id) && seen.add(match.id)).map(({ entry, excerpt }) => ({
       vocabularyId: entry.id,
-      spanish: excerpt || entry.spanish,
-      canonicalSpanish: entry.spanish,
+      target: excerpt || entry.target,
+      canonicalTarget: entry.target,
       partOfSpeech: entry.part_of_speech,
       meaning: entry.accepted_translations[0],
     }));
@@ -151,8 +151,8 @@ export class LearningService {
           translationAvailable: true,
           words: message.dialogue.words.map((word) => ({
             vocabularyId: word.vocabularyId,
-            spanish: word.spanish,
-            canonicalSpanish: word.canonicalSpanish,
+            target: word.target,
+            canonicalTarget: word.canonicalTarget,
             partOfSpeech: word.partOfSpeech,
             meaning: (!protectedMessage || revealKeys.includes(`word:${message.id}:${word.vocabularyId}`)) ? word.meaning : undefined,
             meaningAvailable: true,
@@ -197,10 +197,11 @@ export class LearningService {
       }
       const ratio = this.ratioFor(0);
       const generated = await this.callProvider(buildNarrationMessages({
+        language: this.content.language,
         character: this.content.character,
         objectives: this.content.encounter.objectives,
         vocabularyById: this.content.vocabularyById,
-        spanishRatio: ratio,
+        targetRatio: ratio,
       }), encounterResponseSchema, 'encounter_narration', 'Gerald');
       const npcMessage = this.canonicalizeNarration(generated);
       const stagedEnvelope = clone(envelope);
@@ -278,14 +279,14 @@ export class LearningService {
         if (!objective.target_vocabulary_ids.includes(evidence.vocabulary_id)) throw retryableError('The grader returned evidence for an unrelated vocabulary item.', 'INVALID_GRADING');
         const excerptIds = new Set(matchCanonicalVocabulary(evidence.evidence, this.content.vocabulary.entries).map((match) => match.id));
         if (evidenceIds.has(evidence.vocabulary_id)
-          || !playerInput.toLocaleLowerCase('es').includes(evidence.evidence.toLocaleLowerCase('es'))
+          || !playerInput.toLowerCase().includes(evidence.evidence.toLowerCase())
           || !excerptIds.has(evidence.vocabulary_id)) {
           throw retryableError('The grader returned vocabulary evidence that is not present in the answer.', 'INVALID_GRADING');
         }
         evidenceIds.add(evidence.vocabulary_id);
       }
       if (result.passed && objective.required_target_groups.some((group) => !group.some((id) => evidenceIds.has(id)))) {
-        throw retryableError('The grader passed an objective without the required Spanish evidence.', 'INVALID_GRADING');
+        throw retryableError(`The grader passed an objective without the required ${this.content.language.name} evidence.`, 'INVALID_GRADING');
       }
     }
     if (seen.size !== objectives.length || objectives.some((objective) => !seen.has(objective.id))) {
@@ -311,7 +312,7 @@ export class LearningService {
       if (current.state !== 'ongoing') throw validationError('Gerald has already accepted this order. Restart to play again.');
       const objectives = this.activeObjectives(current);
       const gradingRaw = await this.callProvider(buildGradingMessages({
-        objectives, vocabularyById: this.content.vocabularyById,
+        language: this.content.language, objectives, vocabularyById: this.content.vocabularyById,
         conversationContext: current.transcript.map((item) => item.role === 'player' ? item.text : item.dialogue.native),
         playerInput: message,
       }), gradingResponseSchema, 'dialogue_assessment', 'The language assessor');
@@ -335,12 +336,13 @@ export class LearningService {
         ? { role: 'user', content: item.text }
         : { role: 'assistant', content: item.dialogue.native });
       const generated = await this.callProvider(buildNarrationMessages({
+        language: this.content.language,
         character: this.content.character,
         objectives: this.content.encounter.objectives.slice(nextObjectiveIndex),
         vocabularyById: this.content.vocabularyById,
         conversationHistory: history,
         playerInput: message,
-        spanishRatio: this.ratioFor(nextTurns),
+        targetRatio: this.ratioFor(nextTurns),
         decision,
       }), encounterResponseSchema, 'encounter_narration', 'Gerald');
 
@@ -415,7 +417,7 @@ export class LearningService {
       if (!this.reviewChallenges.has(learnerId)) this.reviewChallenges.set(learnerId, new Map());
       this.reviewChallenges.get(learnerId).set(challenge.id, challenge);
       return {
-        challenge: { id: challenge.id, vocabularyId: entry.id, spanish: entry.spanish, kind: entry.kind, practice: challenge.practice },
+        challenge: { id: challenge.id, vocabularyId: entry.id, target: entry.target, kind: entry.kind, practice: challenge.practice },
         spellbook: this.spellbookSnapshot(envelope),
       };
     });

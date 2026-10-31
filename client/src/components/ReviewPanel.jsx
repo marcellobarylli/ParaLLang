@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PronounceButton from './PronounceButton.jsx';
 
-export default function ReviewPanel({ challenge, result, isLoading, onSubmit, onReveal, onContinue, onReturn }) {
+export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn }) {
   const [answer, setAnswer] = useState('');
   if (result) return (
     <main className="review-panel" aria-label="Review feedback">
@@ -17,9 +17,9 @@ export default function ReviewPanel({ challenge, result, isLoading, onSubmit, on
   );
   if (!challenge) return <main className="review-panel"><p>No due review is available.</p><button type="button" onClick={onReturn}>Return to Gerald</button></main>;
   return (
-    <main className="review-panel" aria-label="Spanish vocabulary review">
-      <p>{challenge.practice ? 'Optional practice (schedule will not change)' : 'Due Spanish-to-English recall'}</p>
-      <div className="review-prompt"><h2 lang="es">{challenge.spanish}</h2><PronounceButton text={challenge.spanish} /></div>
+    <main className="review-panel" aria-label={`${language?.name ?? 'Target-language'} vocabulary review`}>
+      <p>{challenge.practice ? 'Optional practice (schedule will not change)' : `Due ${language?.name ?? 'target-language'}-to-English recall`}</p>
+      <div className="review-prompt"><h2 lang={language?.tag}>{challenge.target}</h2><PronounceButton text={challenge.target} language={language} /></div>
       <form onSubmit={(event) => { event.preventDefault(); onSubmit(answer); }}>
         <label htmlFor="review-answer">English meaning</label>
         <input id="review-answer" value={answer} onChange={(event) => setAnswer(event.target.value)} disabled={isLoading} autoComplete="off" />
