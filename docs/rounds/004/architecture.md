@@ -234,3 +234,16 @@ round 003 is on `main`:
    not-reachable message shows and the trimmed text is kept.
 
 Each step is reported as done or not done, never assumed.
+
+## Status 2026-10-31: built, live Simulator pass not run
+
+The app is built and the automated checks pass (mobile jest 15/15, `expo-doctor` 20/20, iOS bundle; web client
+12/12 and build), on the branch rebased onto round 003's landed `main`. Round 003's shipped API matches the contract
+the app was written against (`language` on `POST /api/learner`; `target` and `canonicalTarget`), so no app change
+was needed. Implementation details within the design: a shared `Button` and colour set (`mobile/src/components/ui.js`);
+ARIA props (`role`, `aria-label`) as React Native Testing Library v14 recommends, with `accessibilityLanguage` on
+target-language words; the Expo template's `AGENTS.md` (Expo Router, TypeScript), `LICENSE`, plugin-enabling
+`.claude/settings.json`, Android and web config were removed, and the SDK 58 schema's rejected `splash` field dropped.
+
+Not run: every Live step in Tests. This Mac has no Xcode yet (only the Command Line Tools), so there is no Simulator.
+Next: the owner installs Xcode (README, "Run the iPhone app"), then the Live steps run and are recorded here.

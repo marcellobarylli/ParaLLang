@@ -22,7 +22,7 @@ cp .env.example .env
 npm run dev
 ```
 
-The client runs at `http://localhost:5173` and proxies `/api` to the server on port 3001. The root `.env` is loaded consistently even when the server is started through its npm workspace.
+For the iPhone app, see [Run the iPhone app](#run-the-iphone-app). The browser client runs at `http://localhost:5173` and proxies `/api` to the server on port 3001. The root `.env` is loaded consistently even when the server is started through its npm workspace.
 
 ### Target language
 
@@ -73,15 +73,41 @@ The cases and encounter answers follow `TARGET_LANGUAGE` (for example `TARGET_LA
 
 Live verification uses a temporary learner save and removes it afterward. It is never run by installation, startup, health checks, `check:provider`, or deterministic tests.
 
+## Run the iPhone app
+
+Development is app-first from round 004: new features go to the Expo / React Native app in `mobile/`, tested in the iOS Simulator on a Mac. The browser client in `client/` is kept working but frozen.
+
+One-time setup (needs the Mac App Store and `sudo`):
+
+1. Install Xcode from the App Store and open it once.
+2. `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`, then `sudo xcodebuild -runFirstLaunch`.
+3. If no iOS Simulator runtime came with Xcode, run `xcodebuild -downloadPlatform iOS`.
+4. Check that `xcrun simctl list devices available | grep iPhone` lists at least one iPhone.
+
+`mobile/` is a standalone npm project, not a root workspace (Expo pins its own React and React Native versions), so it is installed separately. From the repository root:
+
+```sh
+npm ci
+npm ci --prefix mobile
+npm run dev:server     # in one terminal, with the provider chosen in .env as above
+npm run dev:ios        # in another: boots the Simulator and opens the app in Expo Go
+```
+
+No Apple developer account, signing or native build is needed: Expo Go runs the app in the Simulator. The Simulator shares the Mac's network, so the app reaches the server at `http://127.0.0.1:3001` and CLI providers keep their local-only binding. To point the app at another address, set `EXPO_PUBLIC_API_URL` when starting Expo (for example `EXPO_PUBLIC_API_URL=http://127.0.0.1:3002 npm run dev:ios`); it is read at bundle time, so restart Expo after changing it.
+
+If the server is not running, the app shows "Can't reach the ParaLLang server at http://127.0.0.1:3001. Start it with npm run dev:server." and keeps the text you sent. The target language comes from the server's `TARGET_LANGUAGE`; restart the server and reload the app (press `r` in the Expo terminal) to switch. Pronunciation uses the iOS voices installed in the Simulator: if the speaker button shows "Italian pronunciation unavailable", add an Italian voice in the Simulator's Settings → Accessibility → Spoken Content → Voices.
+
+The app keeps its own learner ID (in the app's storage), so its Spellbook is separate from the browser's.
+
 ## Learning data and saves
 
-The browser keeps a server-issued opaque learner ID in local storage. The server writes that learner's Spellbook and durable attempt receipts as one atomic JSON document under `server/data/saves/` by default. Override the directory with `PARALLANG_SAVE_DIR`. Each language has its own Spellbook: Spanish saves stay directly in the save directory (where they were before language packs existed), and every other language saves to a subdirectory named after its code, such as `server/data/saves/it/`. The same learner ID starts with an empty Spellbook in a new language and finds its earlier cards again when that language is selected. The directory is resolved independently of the shell's working directory and is gitignored.
+The browser keeps a server-issued opaque learner ID in local storage, and the iPhone app keeps its own in the app's storage. The server writes that learner's Spellbook and durable attempt receipts as one atomic JSON document under `server/data/saves/` by default. Override the directory with `PARALLANG_SAVE_DIR`. Each language has its own Spellbook: Spanish saves stay directly in the save directory (where they were before language packs existed), and every other language saves to a subdirectory named after its code, such as `server/data/saves/it/`. The same learner ID starts with an empty Spellbook in a new language and finds its earlier cards again when that language is selected. The directory is resolved independently of the shell's working directory and is gitignored.
 
 Definitions remain in each pack's `vocabulary/` folder; saves contain canonical IDs, content version, evidence, and review schedules. Encounter transcripts are intentionally in memory only, so a server restart starts a fresh conversation while preserving the Spellbook. Invalid, corrupt, or unsupported saves are reported and left untouched rather than reset.
 
 ## Focused verification
 
-Round 002 deliberately selects these checks rather than a broad repository suite; round 003 adds the language-pack test (both packs, the Italian encounter and per-language saves):
+Round 002 deliberately selects these checks rather than a broad repository suite; round 003 adds the language-pack test (both packs, the Italian encounter and per-language saves), and round 004 adds the iPhone app's tests, its Expo health check and an iOS bundle:
 
 ```sh
 node --test server/test/language-packs.test.js
@@ -90,6 +116,8 @@ node --test --test-name-pattern="same-learner mutations serialize|dialogue and r
 npm exec --workspace client -- vitest run src/stores/__tests__/learning-state.test.js
 npm exec --workspace client -- vitest run src/components/__tests__/learning-flow.test.jsx -t "actual learning UI|loading plus|CLI provider"
 npm run build -w client
+npm run test:mobile
+(cd mobile && npx expo-doctor && npx expo export --platform ios --output-dir "$(mktemp -d)")
 git diff --check
 ```
 

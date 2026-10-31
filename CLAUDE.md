@@ -20,7 +20,7 @@ The core mechanic: enemy NPCs speak increasingly more of the target language as 
 
 ## Planned Stack
 
-- **Frontend:** React 18+ with Vite, Zustand for state
+- **Frontend:** iPhone-first. An Expo / React Native app in `mobile/` (Zustand for state), run in the iOS Simulator through Expo Go; development is app-first from round 004. The React/Vite web client in `client/` is kept working but frozen
 - **Backend:** Node.js with Express (or Fastify)
 - **LLM:** Provider-agnostic adapter (OpenAI GPT-4o-mini recommended, Anthropic and Ollama also supported)
 - **Content:** YAML files for world/characters/encounters/vocabulary
@@ -32,7 +32,7 @@ The core mechanic: enemy NPCs speak increasingly more of the target language as 
 The system is a client-server app with a content layer and external LLM APIs:
 
 ```
-Client (React/Vite)  →  Server (Node/Express)  →  LLM Provider (OpenAI/Anthropic/Ollama)
+iPhone app (Expo)    →  Server (Node/Express)  →  LLM Provider (OpenAI/Anthropic/Ollama)
                               ↑
                      Content System (YAML)
 ```
