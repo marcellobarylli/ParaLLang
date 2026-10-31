@@ -46,6 +46,35 @@ Memes are like life forms that exist within a language. They can spread from one
 - language memes can only be spread between people who speak the same language (obviously). However, bilinguals act as vectors for the memes to spread across languages
 - Antimemes?
 
+#### Infohazards
+*Classic (Lovecraft + Pratchett) × modern (SCP), like [[#Terry Pratchett × Meme Culture, Absurd Humour|Pratchett × meme culture]] for the tone.*
+
+An infohazard is a meme so dangerous that understanding it is enough to harm you. It is the predator at the top of the [[#Memes|meme]] food chain.
+- **Classic (Lovecraft):** forbidden knowledge. The text that drives the reader mad, the name that should not be spoken, the cosmic horror of finding out what is behind the page. Lovecraft's horror is already linguistic: the danger is in *reading* it
+- **Classic, played for laughs (Pratchett):** the same dread but absurd. The Necrotelicomnicon, his Necronomicon parody, kept in the Unseen University Library. The Things from the Dungeon Dimensions, crowding at the edges of reality wherever magic wears it thin. The horror is real, but everyone is too busy, too bureaucratic or too stupid to take it seriously. This is [[#Terry Pratchett × Meme Culture, Absurd Humour|our tone]]
+- **Modern (SCP):** we only take infohazards from SCP culture. What we borrow is the clinical, deadpan catalogue: every hazard has a file, properties and containment procedures, written in a voice so dry it becomes funny
+- **Infohazards are native to the foreign realm.** They live in the exo-language and only harm someone who understands it
+	- [[#Lore|The fish does not know it is water]]: natives of that realm are constituted by their language and have grown up with its infohazards, like a population immune to its local diseases. The player is not. The same distance that lets a learner grasp words as tools also exposes them
+	- The core tension: **you can't be harmed by an infohazard you can't understand.** Every word you learn is power and exposure at once. Fluency makes you stronger and more vulnerable
+- **They breach through.** Every translation is a string, and infohazards travel along strings. The player's own spellcasting is a breach vector, and bilinguals are the carriers (see the [[#Memes|meme vectors]]). As the branches approach and rifts open, more of them leak into the native realm's narrative ([[#4th Wall|4th wall]]: they show up in the text the player is reading)
+- **Properties (the SCP-style file):**
+	- *Virulence:* how fast it spreads from host to host
+	- *Harm:* what it does to the host, from annoying to lethal
+	- *Incubation:* how long between understanding it and the symptoms
+	- *Vector:* speech, writing, song, a single word, a full sentence
+	- *Containment:* how you keep it from spreading (don't translate it, let the [[#The Companion|companion]] redact it, never say it out loud)
+- **Symptom ideas, from mild to lethal:**
+	- An earworm: you can't stop humming a song in the exo-language
+	- A catchphrase that attaches to the end of every sentence the host says
+	- Involuntary code-switching: the host forgets the native word for 'bread' and can only say the foreign one
+	- Corruption: the host's native language turns çùršęd. At scale, this is a small collision in a single mind
+- **Gameplay hooks:**
+	- [[#Game Mechanics|Dark Souls-style]] optional texts: some untranslated passages are infohazards. Translating them gives juicy lore, but at a cost
+	- The [[#The Companion|companion]] can redact or blur a hazard, but it is limited during certain events, like everything else it does
+	- The [[#Option A|Spellbook]] keeps a containment file for every infohazard you encounter, written in the deadpan SCP voice
+	- The [[#The Lethargers|Lethargers]] farm the milder strains: brainrot is an infohazard with low harm and very high virulence
+- This could also absorb the eldritch-gods idea instead of adding another influence: the oldest and most dangerous infohazards are fragments of the [[#4th Wall|eldritch root language]], closest to the root of the cosmic tree
+
 Also see Orwell section for how realities can decay in other ways
 
 ### 4th Wall
@@ -93,6 +122,17 @@ Anulus Mirabilis itself not sure about yet. Ring motifs are universal in mytholo
 - Believe that to expand their mind, they literally have to expand their mind
 - drill holes in their skull, then drink a serum that inflates their brains, making it pop out of their skull like a balloon
 
+### Journathan
+- A hero of old, modelled on Odysseus. His legend is told in *The Journey*, this world's Odyssey (see [[#Myths|Myths]]). Like the Odyssey is named after Odysseus, The Journey is named after Journathan, or he was named after it. Nobody remembers which came first (4th wall: the story wrote the hero)
+- Odysseus is *polytropos*, the man of many turns. Journathan is the man of many tongues: one of the first bilinguals, which makes him one of the most powerful (and most feared) figures in the [[#Lore|lore]]
+- His journey home took twenty years because every crossing between branches left a string behind. His strings are among the oldest in the fabric. Could his crossings be the [[#Lore|first stitch]]?
+- Episodes from The Journey, re-read through the lore:
+	- The Cyclops: he tells the monster his name is a word from another branch's language. When the Cyclops shouts for help, nobody understands him. The first recorded translation trick, and the template for how the player fights
+	- The Sirens: the [[#The Lethargers|Lethargers]]' ancestors, singing in the corner of your vision. He has himself tied to the mast so he can listen without scrolling, sorry, without steering towards them
+	- His wife at home weaves a shroud by day and unpicks it by night. She is stitching and unstitching reality ([[#Lore|the stitch metaphor]]), holding two branches apart until he gets back
+- [[#Terry Pratchett × Meme Culture, Absurd Humour|Pratchett-style]] option: we meet him today as an ageing, slightly washed-up hero (think Cohen the Barbarian), still technically on his way home and happy to tell you about it. "It's about the journey, not the destination" is either his motto or the thing he can no longer stand hearing
+- Fragments of The Journey could be found [[#Game Mechanics|Dark Souls-style]] throughout the world, written in the exo-language. Optional to translate, but they give juicy lore
+
 ---
 
 # Locations
@@ -126,12 +166,17 @@ Anulus Mirabilis itself not sure about yet. Ring motifs are universal in mytholo
 		- -> According to RNG, R/S sentences in a paragraph are flipped. The RNG could be biased towards easier / harder sentences, providing an additional knob to scale. This would require an (automated) assessment of sentence difficulty
 - Translating phrases back / forwards would be done via voice recognition. Forwards is best because it forces sentence generation. The app *Superfluent* has some good inspiration for conversational AI learning - how to make it conversational within an interactive story?
 
-### Terry Pratchett, Absurd Humour
+### Terry Pratchett × Meme Culture, Absurd Humour
 - Superfluent's basic gameplay units are short conversations about grabbing a coffee, movies etc
 - We have dungeon encounters with monsters
 - Our basic encounter is having a chat with eg an Imp about grabbing a coffee, movies etc
 	- If you like a certain enemy, he can be saved instead of killed (Pokemon style). They can join your party, you can build a relationship with them and have more meaningful conversations over time
 	- Just save them as a .json
+- Pratchett gives the structure, memes give the texture. The narrator keeps the dry wit, the footnotes and the satire of the mundane. The characters talk like the internet: an Imp who is lowkey judging your coffee order, a [[#The Trepanners|Trepanner]] whose brain inflation is "a whole vibe", a demon who rates your translation "mid"
+- The footnotes can turn into meme formats: "Nobody: / The Imp:", "POV: you just learned the word for oat milk", a narrator who gets ratioed by the characters
+- Memes are diegetic. In the lore, [[#Memes|memes are life forms]] living in a language, so a meme spreading through the Imps is literally a virulent strain. Brainrot is real here ([[#Infohazards|a mild infohazard]]) and the [[#The Lethargers|Lethargers]] farm it. The jokes are funny and a threat at the same time
+- Each language pack brings its own meme culture: Italian internet slang and humour, not English memes translated. This is real, colloquial language people actually use, so it teaches as well as entertains
+- Memes date fast. Lean on evergreen formats and the attitude behind them, rather than this month's reference
 
 ## Main Gameplay Loop
 
@@ -219,6 +264,9 @@ Advanced:
 - Joseph Campbell, Hero with a Thousand Faces (Hero's Journey and Jungian mythology)
 - Dark souls
 - Bloodborne (Lovecraft)
+- H.P. Lovecraft (forbidden knowledge, see [[#Infohazards|Infohazards]])
+- Terry Pratchett, Discworld (the humorous take on Lovecraft: the Necrotelicomnicon, the Things from the Dungeon Dimensions)
+- SCP Foundation (infohazards only, see [[#Infohazards|Infohazards]])
 - Pat Rothfuss
 - 3 body problem
 - Rumo
@@ -228,6 +276,7 @@ Advanced:
 
 ### Myths
 - Prometheus / Sisyphus
+- Homer, The Odyssey (the model for [[#Journathan|Journathan]] and The Journey)
 
 ### Stories with Multiverses / Convoluted Time & Space
 - Rick & Morty

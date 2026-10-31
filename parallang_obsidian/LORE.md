@@ -27,6 +27,35 @@ Memes are like life forms that exist within a language. They can spread from one
 - language memes can only be spread between people who speak the same language (obviously). However, bilinguals act as vectors for the memes to spread across languages
 - Antimemes?
 
+#### Infohazards
+*Classic (Lovecraft + Pratchett) × modern (SCP), like [[GAME MECHANICS#Terry Pratchett × meme culture, absurd humour|Pratchett × meme culture]] for the tone.*
+
+An infohazard is a meme so dangerous that understanding it is enough to harm you. It is the predator at the top of the [[#memes|meme]] food chain.
+- **Classic (Lovecraft):** forbidden knowledge. The text that drives the reader mad, the name that should not be spoken, the cosmic horror of finding out what is behind the page. Lovecraft's horror is already linguistic: the danger is in *reading* it
+- **Classic, played for laughs (Pratchett):** the same dread but absurd. The Necrotelicomnicon, his Necronomicon parody, kept in the Unseen University Library. The Things from the Dungeon Dimensions, crowding at the edges of reality wherever magic wears it thin. The horror is real, but everyone is too busy, too bureaucratic or too stupid to take it seriously. This is [[GAME MECHANICS#Terry Pratchett × meme culture, absurd humour|our tone]]
+- **Modern (SCP):** we only take infohazards from SCP culture. What we borrow is the clinical, deadpan catalogue: every hazard has a file, properties and containment procedures, written in a voice so dry it becomes funny
+- **Infohazards are native to the foreign realm.** They live in the exo-language and only harm someone who understands it
+	- The fish does not know it is water: natives of that realm are constituted by their language and have grown up with its infohazards, like a population immune to its local diseases. The player is not. The same distance that lets a learner grasp words as tools also exposes them
+	- The core tension: **you can't be harmed by an infohazard you can't understand.** Every word you learn is power and exposure at once. Fluency makes you stronger and more vulnerable
+- **They breach through.** Every translation is a string, and infohazards travel along strings. The player's own spellcasting is a breach vector, and bilinguals are the carriers (see the [[#memes|meme vectors]]). As the branches approach and rifts open, more of them leak into the native realm's narrative ([[#4th wall|4th wall]]: they show up in the text the player is reading)
+- **Properties (the SCP-style file):**
+	- *Virulence:* how fast it spreads from host to host
+	- *Harm:* what it does to the host, from annoying to lethal
+	- *Incubation:* how long between understanding it and the symptoms
+	- *Vector:* speech, writing, song, a single word, a full sentence
+	- *Containment:* how you keep it from spreading (don't translate it, let the [[CHARACTERS#The Companion|companion]] redact it, never say it out loud)
+- **Symptom ideas, from mild to lethal:**
+	- An earworm: you can't stop humming a song in the exo-language
+	- A catchphrase that attaches to the end of every sentence the host says
+	- Involuntary code-switching: the host forgets the native word for 'bread' and can only say the foreign one
+	- Corruption: the host's native language turns çùršęd. At scale, this is a small collision in a single mind
+- **Gameplay hooks:**
+	- [[GAME MECHANICS|Dark Souls-style]] optional texts: some untranslated passages are infohazards. Translating them gives juicy lore, but at a cost
+	- The [[CHARACTERS#The Companion|companion]] can redact or blur a hazard, but it is limited during certain events, like everything else it does
+	- The [[GAME MECHANICS#Option A|Spellbook]] keeps a containment file for every infohazard you encounter, written in the deadpan SCP voice
+	- The [[CHARACTERS#The Lethargers|Lethargers]] farm the milder strains: brainrot is an infohazard with low harm and very high virulence
+- This could also absorb the eldritch-gods idea instead of adding another influence: the oldest and most dangerous infohazards are fragments of the [[#4th wall|eldritch root language]], closest to the root of the cosmic tree
+
 
 ### 4th wall
 - play with the fact that the reality of the story IS the narrative. It is the substrate, it constitutes reality itself. Therefore, the language it is written in is the material that reality is made of. A story written in another language is another, parallel reality. These stories have begun to mix. It is a 4th wall break to address this narrative being part of the story itself, the story is self-referencing.Mushrooms grow on the roots, destroying and recycling them. The mushrooms produce spores, which can be inhaled or consumed in some other way. The consumer dreams of another language, creating a new world from it. 

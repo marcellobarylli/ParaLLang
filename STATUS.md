@@ -17,6 +17,16 @@ The entry point for agents: the current state, how the project is logged, and th
 - **Next.** The owner reviews the Italian content and plays it in the browser
   ([round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-10-31: lore notes, Journathan and infohazards
+
+Owner-requested additions to the design notes, made in `parallang_obsidian/` and synced into the vault at
+`~/Documents/Parallang`. New character Journathan, a hero of old modelled on Odysseus, whose legend is *The Journey*
+(`CHARACTERS.md`). The Pratchett style section now adds a contemporary meme-culture layer (`GAME MECHANICS.md`). A new
+Infohazards lore subsection draws on Lovecraft and Pratchett (classic) and SCP (modern): dangerous memes native to the
+foreign realm that breach through the strings (`LORE.md`). The notes are cross-linked with Obsidian wikilinks. The
+game's tone files (`content/narration/style_guide.yaml`, `content/characters/enemies/imp_coffee.yaml`) still describe
+the Pratchett-only tone.
+
 ## Addendum 2026-10-31: round 003, Italian by default
 
 Round 003 was the first round recorded with the round log. It made the target language configurable, with Italian

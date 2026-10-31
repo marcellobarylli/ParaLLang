@@ -15,12 +15,17 @@ Tags:
 		- -> According to RNG, R/S sentences in a paragraph are flipped. The RNG could be biased towards easier / harder sentences, providing an additional knob to scale. This would require an (automated) assessment of sentence difficulty
 - Translating phrases back / forwards would be done via voice recognition. Forwards is best because it forces sentence generation. ==The app *Superfluent* has some good inspiration for conversational AI learning - how to make it conversational within an interactive story?==
 
-### Terry-ptratchett, absurd humour
+### Terry Pratchett × meme culture, absurd humour
 - Superfluent's basic gameplay units are short conversations about grabbing a coffee, movies etc
 - We have dungeon encounters with monsters
 - Our basic encounter is having a chat with eg an Imp about grabbing a coffee, movies etc
 	- If you like a certain enemy, he can be saved instead of killed (Pokemon style). They can join your party, you can build a relationship with them and have more meaningful conversations over time
 	- Just save them as a .json
+- Pratchett gives the structure, memes give the texture. The narrator keeps the dry wit, the footnotes and the satire of the mundane. The characters talk like the internet: an Imp who is lowkey judging your coffee order, a [[CHARACTERS#The Trepanners|Trepanner]] whose brain inflation is "a whole vibe", a demon who rates your translation "mid"
+- The footnotes can turn into meme formats: "Nobody: / The Imp:", "POV: you just learned the word for oat milk", a narrator who gets ratioed by the characters
+- Memes are diegetic. In the lore, [[LORE#memes|memes are life forms]] living in a language, so a meme spreading through the Imps is literally a virulent strain. Brainrot is real here ([[LORE#Infohazards|a mild infohazard]]) and the [[CHARACTERS#The Lethargers|Lethargers]] farm it. The jokes are funny and a threat at the same time
+- Each language pack brings its own meme culture: Italian internet slang and humour, not English memes translated. This is real, colloquial language people actually use, so it teaches as well as entertains
+- Memes date fast. Lean on evergreen formats and the attitude behind them, rather than this month's reference
 
 # Main Gameplay Loop
 

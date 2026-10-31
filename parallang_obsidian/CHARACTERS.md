@@ -24,6 +24,17 @@ Tags:
 - Believe that to expand their mind, they literally have to expand their mind
 - drill holes in their skull, then drink a serum that inflates their brains, making it pop out of their skull like a balloon
 
+### Journathan
+- A hero of old, modelled on Odysseus. His legend is told in *The Journey*, this world's Odyssey (see [[Stories with Ideas Worth Incorporating#myths|Myths]]). Like the Odyssey is named after Odysseus, The Journey is named after Journathan, or he was named after it. Nobody remembers which came first (4th wall: the story wrote the hero)
+- Odysseus is *polytropos*, the man of many turns. Journathan is the man of many tongues: one of the first bilinguals, which makes him one of the most powerful (and most feared) figures in the [[LORE|lore]]
+- His journey home took twenty years because every crossing between branches left a string behind. His strings are among the oldest in the fabric. Could his crossings be the [[LORE|first stitch]]?
+- Episodes from The Journey, re-read through the lore:
+	- The Cyclops: he tells the monster his name is a word from another branch's language. When the Cyclops shouts for help, nobody understands him. The first recorded translation trick, and the template for how the player fights
+	- The Sirens: the [[#The Lethargers|Lethargers]]' ancestors, singing in the corner of your vision. He has himself tied to the mast so he can listen without scrolling, sorry, without steering towards them
+	- His wife at home weaves a shroud by day and unpicks it by night. She is stitching and unstitching reality ([[LORE|the stitch metaphor]]), holding two branches apart until he gets back
+- [[GAME MECHANICS#Terry Pratchett × meme culture, absurd humour|Pratchett-style]] option: we meet him today as an ageing, slightly washed-up hero (think Cohen the Barbarian), still technically on his way home and happy to tell you about it. "It's about the journey, not the destination" is either his motto or the thing he can no longer stand hearing
+- Fragments of The Journey could be found [[GAME MECHANICS|Dark Souls-style]] throughout the world, written in the exo-language. Optional to translate, but they give juicy lore
+
 
 
 
