@@ -241,3 +241,12 @@ HTTP encounter answers come from the selected language (positive, complete, mixe
 quoted, metalinguistic, third-person). It passes only if every grading case matches its expected verdict and the
 HTTP encounter ends `resolved`; commands and output are recorded. A manual browser pass ordering "Vorrei un caffè
 senza latte" is reported as done or not done, never assumed.
+
+## Outcome (2026-10-31)
+
+Built as designed, with the departures listed in [findings.md](findings.md#decision). The main one: Cambridge
+blocked fetching, so Wiktionary replaced it as the English-gloss source, and two unsourced note claims were dropped.
+Every check in Tests ran except the manual browser pass. Server 65/65 and client 12/12 tests pass. The live
+`TARGET_LANGUAGE=it npm run verify:cli -- --provider codex-cli` passed: 9/9 cases matched and the encounter
+resolved, in 14 calls. Open: the owner's review of the Italian content and a manual browser pass. Details and claim
+boundary are in [findings.md](findings.md).

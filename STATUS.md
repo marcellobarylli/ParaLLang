@@ -11,7 +11,18 @@ The entry point for agents: the current state, how the project is logged, and th
   blueprint) and [`parallang_obsidian/`](parallang_obsidian/Parallang.md), the owner's Obsidian notes on design,
   lore, characters, locations and quests. The notes are a copy of the vault in `~/Documents/Parallang`, taken
   2026-10-31.
-- **Next.** Round 003 is the first round recorded with the round log.
+- **Language.** Italian is the default target language; Spanish is still available. `TARGET_LANGUAGE` (`it` or
+  `es`) selects a pack under `content/languages/`, and each language has its own Spellbook
+  ([round 003](docs/rounds/003/architecture.md)).
+- **Next.** The owner reviews the Italian content and plays it in the browser
+  ([round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-10-31: round 003, Italian by default
+
+Round 003 was the first round recorded with the round log. It made the target language configurable, with Italian
+as the default and Spanish kept. Codex critique 1 (14 findings) was accepted in full. Tests pass: server 65/65 and
+client 12/12. A live Codex run in Italian passed 9/9 cases and resolved the encounter. Open items: the owner's review
+of the Italian content, and a manual browser pass. See [findings](docs/rounds/003/findings.md).
 
 ## How the project is logged
 
@@ -32,6 +43,6 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
-| 003 | 10-31 | Italian by default: configurable target language packs, Italian Gerald content, per-language Spellbooks | [003](docs/rounds/003/architecture.md) (pre-run record) | to come | pre-run record |
+| 003 | 10-31 | Italian by default: configurable target language packs, Italian Gerald content, per-language Spellbooks | [003](docs/rounds/003/architecture.md) | [findings](docs/rounds/003/findings.md) | `4f7bbd3` (pre-run record) to round 003 close |
 | 002 | 10-11 | Playtest ParaLLang through Codex and Claude Code subscriptions: CLI providers for narration and grading, provider check, live verification | [002](docs/rounds/002/architecture.md) and pipeline files | [verify-1](docs/rounds/002/verify-1.md) | `baca831` (architecture and packet) to `8577c26` (finish) |
 | 001 | 10-11 | Phase 2 Language Engine at The Coffee Cart: grading, companion help, Spellbook, spaced review, persistence | [001](docs/rounds/001/architecture.md) and pipeline files | [audit-1](docs/rounds/001/audit-1.md) | `3c6ce2b` (architecture and packet) to `d272a1e` (finish) |
