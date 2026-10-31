@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "ParaLLang",
+    "slug": "parallang",
+    "version": "0.1.0",
+    "platforms": [
+      "ios"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.parallang.app",
+      "supportsTablet": false
+    }
+  }
+}
