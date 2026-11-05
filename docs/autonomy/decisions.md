@@ -66,3 +66,6 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 019 | Codex critique 1: 8 accepted, 2 in part, 2 rejected (1.3, 1.10) | Accept all | See round 019 Second opinion table | Yes |
 | 2026-11-05 | 019 | Correction to the row above: critique 1 was 7 accepted, 3 in part (1.1, 1.9, 1.12), 2 rejected (1.3, 1.10) | — | Miscounted | Yes |
 | 2026-11-05 | 019 | Keep the ambient vocabulary although the share did not rise (lines 0.17 → 0.16); E1 stays open with a content hypothesis (her English paperwork jokes) | Revert it | It fixes E2 (her real words are chipped), is inert elsewhere and leaves gameplay unchanged | Yes |
+| 2026-11-05 | 020 | Second E1 try through Portia's sheet: a quirk puts her short formalities in the target language using free vocabulary, never the visitor's words; revert if it fails | Change the shared language rules or greeting template | Content first: a template change moves every NPC and Gerald's pinned prompts | Yes |
+| 2026-11-05 | 020 | Round 019's after-runs serve as the baseline | Fresh baseline runs (critique 1.7) | Same model, script and settings ten minutes earlier; saves 28 calls | Yes |
+| 2026-11-05 | 020 | Codex critique 1: 4 accepted (1.1, 1.2, 1.4, 1.9), 5 in part | Accept all | See round 020 Second opinion table | Yes |
