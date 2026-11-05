@@ -7,10 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **A7** (The Rift: mini-boss in corrupted mixed language reviewing all vocabulary, gated on the
-  other five encounters; with B3, infohazard flavour). A7 is bigger than A3–A6: it needs an engine change (a gate on
-  completed encounters, objectives across every vocabulary file) and an app change (a locked node), so consider
-  splitting it (gate first, then the boss). **E1** (opening-line share) is the smaller alternative.
+- Nothing. Next: **A7b** (the Rift boss: corrupted mixed language reviewing every vocabulary file, with B3
+  infohazard flavour; its encounter start must check the gate too). The smaller alternative is **E1**, now narrowed
+  to Portia's tutorial (round 014 tour: her lines carry 0.11 target language against 0.28 requested; the others meet
+  theirs).
 
 ## Backlog
 
@@ -31,8 +31,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   later); brainrot flavour in the character sheet only. Telling the time deferred.
 - [x] **A6. The Old Bookshop.** (round 013, closed 2026-11-05) Marginalia the Bookworm reads two passages of
   *The Journey* (home; the Cyclops name trick).
-- [ ] **A7. The Rift.** Mini-boss in corrupted mixed language, reviewing all learned vocabulary; gated on the
-  other encounters.
+- [x] **A7a. The Rift gate.** (round 014, closed 2026-11-05) Sealed until the other five encounters are complete
+  (`requires_completed`, `gate` in the snapshot, 409 `SEALED`, sealed node in the app); `play-market.js --tour`.
+- [ ] **A7b. The Rift boss.** Mini-boss in corrupted mixed language, reviewing all learned vocabulary. Narration
+  chips need an objective targeting an entry of each vocabulary file (see traps). `startEncounter` must refuse a
+  sealed location (saves from rounds 005–013 may already stand in the Rift).
 - [ ] **A8. Party system.** Save defeated (saveable) enemies, revisit conversations with party members.
 - [ ] **A9. Lore fragments.** Optional hidden passages with advanced vocabulary (e.g. fragments of *The Journey*).
 - [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
@@ -68,13 +71,15 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   target-language answer to an open objective); re-run `verify:cli` (verdicts must stay 9/9) and `play-market.js`
   3 times; feedback only, verdicts unchanged.
 - [ ] **D4.** `expo-doctor` 19/20 since 2026-11-05: wants expo ~58.0.23 and react-native-safe-area-context ~5.11.1
-  (new upstream releases; nothing in the repo changed). `npx expo install --fix` in `mobile/`, then re-run jest,
+  (new upstream releases; nothing in the repo changed; 3 packages out of date by round 014). `npx expo install --fix` in `mobile/`, then re-run jest,
   expo-doctor and the iOS export. Simulator check of the update goes to "Needs owner".
 
 ### E. Follow-ups from live data
 
 - [ ] **E1. Opening-line language share.** Round 009: first NPC lines carry 0.05–0.24 target language against
-  0.20 requested (Gerald 0.19 vs 0.25). Measure over a few runs per encounter, then adjust the greeting template or
+  0.20 requested (Gerald 0.19 vs 0.25). Round 014's tour: only Portia is short (mean 0.11 vs 0.28, greeting 0.07 vs
+  0.20); Gerald 0.26/0.30, Mortimer, Flick and Marginalia at or above. Start with Portia's character sheet or
+  encounter (content), not the shared template. Measure over a few runs per encounter, then adjust the greeting template or
   language rules; keep the golden-prompt test in step (regenerate on purpose).
 - [x] **E3. NPCs list the answers.** (round 012, closed 2026-11-05) Style rule against menus of an open objective's
   targets; menus 4/4 → 0/4 runs. Portia's "Come ti chiami?" left allowed (pending owner review).
@@ -93,6 +98,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - Round 009: check the Market Entrance tutorial in the Simulator (companion card, first screen at the top, later
   turns scroll), review Portia's content and reference URLs, and decide whether Portia may model "come ti chiami"
   before the ask-back objective ([open items](../rounds/009/findings.md#open-items)).
+- Round 014: check the sealed Rift on the map in the Simulator (lock mark, "Sealed 4/5" caption, disabled tap,
+  VoiceOver label) and review the explicit five-id gate and keeping old saves in the Rift
+  ([open items](../rounds/014/findings.md#open-items)).
 - Round 013: review Marginalia's content, both passages of *The Journey* and the Journathan lore she states
   ([open items](../rounds/013/findings.md#open-items)).
 - Round 012: review the no-menu narration rule and the choice to keep Portia's "Come ti chiami?"
@@ -128,7 +136,20 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   passages of *The Journey*; greeting fix by Amendment; server 90/90, mobile 20/20, client 12/12; live 6/6 resolved,
   30/30 verdicts as intended. Iteration 3 ends here (rounds 011–013).
 
+- 2026-11-05, iteration 4: round 014 (A7a) built and closed: the Rift gate and `play-market.js --tour`; server
+  96/96, mobile 22/22, client 12/12; first live full-market tour (it): 5/5 resolved, 20/20 verdicts as intended,
+  Rift sealed at 4/5 and open after, 45 calls in 6 min 50 s.
+
 ## Handoff notes and traps
+
+- **Do not wait on Codex with `pgrep -f "codex exec ..."`**: the wait loop's own command line contains the pattern,
+  so it never ends (round 014). Run Codex with Bash `run_in_background` and wait for its notification, or test the
+  output file.
+- `play-market.js --tour` plays all five encounters in one save (45 calls, ~7 min with codex-cli) and checks the
+  Rift gate; exit code 0 only if all resolved and the gate held and opened. Use it as the end-to-end regression run.
+- Content copies in tests that remove or replace an encounter must also edit `the_rift.yaml`'s
+  `requires_completed` (the loader rejects unknown ids); see `fixtureContent` in `server/test/encounters.test.js`.
+- Adding an encounter elsewhere does not tighten the gate: add its id to `requires_completed` on purpose if it should.
 
 - `server` has no `npm test` script: run `node --test server/test/*.test.js`.
 - No iOS Simulator here: verify `mobile/` with `npm run test:mobile`, `npx expo-doctor` and

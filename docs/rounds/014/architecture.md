@@ -98,3 +98,12 @@ Net change from plan v1: −1 live tour, −the call estimate, −verdict aggreg
    `npx expo-doctor` (known D4 dependency check only), `npx expo export --platform ios`, web client tests and build.
 3. Live, codex-cli: `play-market.js --tour` in Italian. Findings: per encounter resolved and the verdict on each
    line, the two Rift attempts, calls and time, language shares, menus, dictation and feedback leaks.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendment. The Rift is sealed until all five other encounters are complete (each one is
+required, tested by leaving out each in turn), the map carries the seal's progress and the app shows a disabled
+sealed node. The first live tour of the whole market (Italian, codex-cli, one save, 45 calls, 6 min 50 s) resolved
+5/5 encounters with 20/20 lines graded as intended, was refused at the Rift at 4 of 5 and walked in after
+Marginalia. Tests: server 96/96, mobile 22/22, web client 12/12 and build. The tour also showed that only Portia's
+tutorial falls well short of its requested target-language share (E1). See [findings](findings.md).
