@@ -15,6 +15,7 @@ export const HELD_NOTE = 'A held objective was said correctly but does not count
 
 export const ATMOSPHERE_MAX_LENGTH = 300;
 export const ATMOSPHERE_RETRY_MS = 10 * 60_000;
+export const ATMOSPHERE_BUSY_RETRY_MS = 15_000;
 // Round 053 (critique 1.1): pack forms that are also English words; the atmosphere line may use them in English.
 export const ATMOSPHERE_ENGLISH = new Set(['once', 'kilo', 'kilos', 'cafe', 'sola', 'pollo', 'basta', 'io', 'due', 'otto', 'nove', 'sei',
   'salami', 'chorizo', 'chorizos', 'mezzo', 'cento', 'soy', 'media', 'piano', 'chili']);
@@ -678,7 +679,8 @@ export class LearningService {
     const failedUntil = this.atmosphereFailures.get(key);
     if (failedUntil !== undefined && new Date(this.clock()).getTime() < failedUntil) return result(null);
     if (!this.atmosphereCalls.has(key)) {
-      if (this.providerCallsInFlight > 0) { this.dropAtmosphere('busy', locationId); return result(null); }
+      // Review 1: busy is not cached, so the reply says when to ask again.
+      if (this.providerCallsInFlight > 0) { this.dropAtmosphere('busy', locationId); return { ...result(null), retryAfterMs: ATMOSPHERE_BUSY_RETRY_MS }; }
       const call = this.writeAtmosphere(location, state, encounter?.character ?? null, party)
         .then((text) => {
           if (text) { this.atmosphereLines.set(key, text); this.atmosphereFailures.delete(key); }
@@ -703,7 +705,9 @@ export class LearningService {
       open: `${who} is here and has not been won over yet.`,
       complete: `The player has already won over ${who} here.`,
     };
-    const messages = buildAtmosphereMessages({ language: this.content.language, styleGuide: this.content.styleGuide, location, state: facts[state], partyNames: party });
+    let messages;
+    try { messages = buildAtmosphereMessages({ language: this.content.language, styleGuide: this.content.styleGuide, location, state: facts[state], partyNames: party }); }
+    catch { this.dropAtmosphere('build', location.id); return null; } // review 1: never a 500
     this.atmosphereStats.calls += 1;
     let reply;
     try { reply = await this.provider.structuredChat(messages, locationAtmosphereSchema, { schemaName: 'location_atmosphere', temperature: 0.7 }); }

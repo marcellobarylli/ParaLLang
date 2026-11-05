@@ -423,10 +423,15 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     if (state.atmosphere) store.setState({ atmosphere: null }); // critique 1.7: never another state's line
     if (!key || typeof api.getAtmosphere !== 'function') return;
     const asked = state.learnerId;
-    Promise.resolve().then(() => api.getAtmosphere(asked)).then((data) => {
+    const ask = (retries) => Promise.resolve().then(() => api.getAtmosphere(asked)).then((data) => {
       if (atmosphereKey !== key) return;
       store.setState({ atmosphere: data?.atmosphere ?? null });
+      // Round 053 review 1: the server was busy with an encounter call; ask once more later, same key only.
+      if (!data?.atmosphere && retries > 0 && Number.isFinite(data?.retryAfterMs)) {
+        setTimeout(() => { if (atmosphereKey === key) ask(retries - 1); }, Math.min(data.retryAfterMs, 60_000));
+      }
     }, () => {});
+    ask(1);
   };
   store.subscribe(followAtmosphere);
   followAtmosphere(store.getState());

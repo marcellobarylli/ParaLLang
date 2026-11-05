@@ -20,8 +20,8 @@ Outcome, `round_log_check.py`, STATUS addendum):
 2. **Round 053 (A10, LLM location atmosphere, off by default).** Queued:
    `TARGET_LANGUAGE=it node docs/rounds/053/results/atmosphere-live.mjs --provider codex-cli > docs/rounds/053/results/live-it.json`
    and the same for es (12 calls each, in-process, no port). Success: at least 5 of 6 lines kept per pack, English, at
-   most 40 words, consistent with the description. A read-only code review of 052–053 was dispatched (journal row
-   10); if its report is not in the trail as `review-1.md`, re-run it.
+   most 40 words, consistent with the description. A read-only code review of 052–053 returned no serious bugs; its
+   two gaps are fixed (Amendment 1 of round 053).
 
 ## Backlog
 
@@ -364,7 +364,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings, 3 Errors accepted; Amendment 1 moved the line before the rubric), live it/es Fountain, combined answers,
   verify:cli and an es tour. Server 198/198, mobile 126/126, web 12/12.
 
-- 2026-11-05, iteration 16 (22:56–23:40 UTC): round 052 (H2, numbers 2–12 in Flick's slow walk; Codex critique,
+- 2026-11-05, iteration 16 (22:56–23:25 UTC): round 052 (H2, numbers 2–12 in Flick's slow walk; Codex critique,
   11 findings, 4 Errors accepted incl. a matcher offset bug on decomposed accents) built and run live with the scripted
   lines (it, es: as scripted); Codex then hit its limit (23:14), so its variant runs are queued. Round 053 (A10, LLM
   location atmosphere; Claude-subagent critique, 13 findings, 3 Errors accepted: off by default because the CLI

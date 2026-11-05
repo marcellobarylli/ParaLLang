@@ -112,3 +112,22 @@ every description through the filter (Tests).
 
 Net change from plan-v1: off by default and skipped during encounter calls, an English-word allowlist, cached
 failures, drop reasons, species in the facts, a store key covering completion and party.
+
+## Amendment 1 (2026-11-05): review 1, a build drop and a busy retry
+
+A read-only review of the rounds 052–053 diff ([trail/review-1.md](trail/review-1.md)) found no serious bugs and two
+gaps, both fixed:
+
+1. A prompt that cannot be built (a missing template, a bad style guide) made `getAtmosphere` reject with a 500. It
+   now gives null with a `build` drop and makes no call.
+2. A `busy` null (an encounter call in flight) was not cached, but the app asks only when its key changes, so the
+   line never came for that state. The reply now carries `retryAfterMs: 15000` (`ATMOSPHERE_BUSY_RETRY_MS`), and the
+   store asks once more after that delay (at most 60 s), for the same key only.
+
+Tests: a `build` drop with no call; the busy reply's hint; the store's single retry with fake timers. Server 214/214,
+mobile 131/131.
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Risk | A prompt build error reaches the client as a 500 and is retried on every visit | + | Accept: null with a `build` drop | **Accepted** (autonomous, pending owner review) | Amendment 1, item 1 |
+| R1.2 | Risk | A busy null is never asked again by the app | + | Accept: `retryAfterMs` hint and one store retry | **Accepted** (autonomous, pending owner review) | Amendment 1, item 2 |

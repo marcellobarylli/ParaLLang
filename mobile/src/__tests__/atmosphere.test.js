@@ -92,3 +92,20 @@ test('a fake API without getAtmosphere is left alone', async () => {
   expect(store.getState().atmosphere).toBeNull();
   expect(store.getState().error).toBeNull();
 });
+
+test('a busy reply is asked again once, after the hinted delay, for the same state only (review 1)', async () => {
+  jest.useFakeTimers();
+  try {
+    const getAtmosphere = jest.fn(async () => ({ atmosphere: null, retryAfterMs: 15_000 }));
+    const { store } = storeWith(getAtmosphere);
+    await store.getState().initialize();
+    await jest.advanceTimersByTimeAsync(0);
+    expect(getAtmosphere).toHaveBeenCalledTimes(1);
+    getAtmosphere.mockImplementationOnce(async () => ({ atmosphere: { locationId: 'cart', text: 'Late steam.' } }));
+    await jest.advanceTimersByTimeAsync(15_000);
+    expect(getAtmosphere).toHaveBeenCalledTimes(2);
+    expect(store.getState().atmosphere).toEqual({ locationId: 'cart', text: 'Late steam.' });
+    await jest.advanceTimersByTimeAsync(60_000);
+    expect(getAtmosphere).toHaveBeenCalledTimes(2);
+  } finally { jest.useRealTimers(); }
+});

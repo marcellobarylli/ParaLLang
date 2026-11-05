@@ -103,7 +103,7 @@ test('too long, schema and provider failures give null, are traced, and are not 
 test('no atmosphere call starts while an encounter call is in flight', async (t) => {
   const { provider, learnerId, service } = await setup(t);
   service.providerCallsInFlight = 1;
-  assert.deepEqual(await service.getAtmosphere(learnerId), { atmosphere: null });
+  assert.deepEqual(await service.getAtmosphere(learnerId), { atmosphere: null, retryAfterMs: 15_000 });
   assert.equal(provider.atmosphereCalls.length, 0);
   assert.equal(service.atmosphereStats.drops.at(-1).reason, 'busy');
   service.providerCallsInFlight = 0;
@@ -165,4 +165,12 @@ test('the prompt holds the place, its state and the party, in English, and no le
   assert.doesNotMatch(system.content, /\{\{|LEARNING DATA|target_vocabulary/);
   const [alone] = buildAtmosphereMessages({ language: content.language, styleGuide: content.styleGuide, location, state: 'x', partyNames: [] });
   assert.match(alone.content, /WITH THE PLAYER: nobody; the player walks alone/);
+});
+
+test('a prompt that cannot be built gives null and a build drop, not an error (review 1)', async (t) => {
+  const { provider, learnerId, service } = await setup(t);
+  service.content = { ...service.content, styleGuide: null };
+  assert.deepEqual(await service.getAtmosphere(learnerId), { atmosphere: null });
+  assert.equal(service.atmosphereStats.drops.at(-1).reason, 'build');
+  assert.equal(provider.atmosphereCalls.length, 0);
 });
