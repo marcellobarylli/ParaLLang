@@ -7,10 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 13 closed round 047 (G4, relationship tiers; Gerald's confidence at 3, it/es live).
-**Next:** G6 (deeper tiers for Mortimer, Flick, Marginalia: content plus `--party --member X --tier 3` runs) or G5
-(telling the time at the Fountain); A10 (LLM location atmosphere) is optional. Codex served a critique and 48 game
-calls between 21:10 and 21:22 UTC without hitting its limit.
+Nothing open. Iteration 14 closed round 048 (G6, deeper tiers for Mortimer, Flick, Marginalia; it/es live).
+**Next:** G5 (telling the time at the Fountain: content plus live runs), or a new G7 (cross-conversation words, see
+below); A10 (LLM location atmosphere) is optional. Codex served a critique and about 150 game calls between 21:26 and
+21:54 UTC without hitting its limit.
 
 ## Backlog
 
@@ -116,9 +116,12 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   party conversations, Gerald's confidence at 3, it/es live). Open: deeper tiers for Mortimer, Flick, Marginalia
   (content only, backlog G6).
 - [ ] **G5. Telling the time at the Fountain** (round 011 deferred it); content plus live runs.
-- [ ] **G6. Deeper tiers for the other members** (round 047 built the engine): one `after_conversations: 3`
-  conversation each for Mortimer, Flick and Marginalia (it, es), content only, then `--party --member X --tier 3`
-  live runs. Check stems against every fragment (`lore-fragments.test.js`) and overlaps first.
+- [x] **G6. Deeper tiers for the other members** (round 048, closed 2026-11-05: Mortimer's oath, Flick's lotus,
+  Marginalia's folded page at 3, it/es live, Amendment 1 for Marginalia's all-English line).
+- [ ] **G7. Words from other conversations** (round 048 open item 2): NPCs say other members' targets (Flick
+  *eccomi*, Mortimer *amico mio* in every line, Marginalia *insieme*). Decide (autonomously) whether a party
+  conversation's narration should avoid every party target it does not teach; extend `leak-scan.js` with a
+  "foreign target" kind first (no live calls), then measure.
 
 ### F. Maintenance
 
@@ -149,6 +152,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- Round 048: review Mortimer's oath, Flick's lotus and Marginalia's folded page (it, es), whether members may say
+  other conversations' targets, and check each member's Party-card tier line in the Simulator
+  ([open items](../rounds/048/findings.md#open-items)).
 
 - Round 047: review Gerald's confidence (it, es), whether the deeper tier should repeat or alternate, and check the
   Party card's tier line in the Simulator ([open items](../rounds/047/findings.md#open-items)).
@@ -317,6 +324,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings, 2 Errors accepted), built, run live (2 × it, 2 × es; Amendment 1 put the tier's opening in the
   greeting) and closed. Server 181/181, mobile 124/124, web 12/12, expo-doctor 20/20.
 
+- 2026-11-05, iteration 14 (21:23–21:58 UTC): round 048 (G6, deeper tiers for Mortimer, Flick and Marginalia)
+  planned, critiqued by Codex (6 Risks: 5 accepted, 1 in part), built, run live (8 runs: 6 + 2 after Amendment 1)
+  and closed. Also: `cli-learning-flow.test.js` now removes its temp dirs. Server 184/184, mobile 124/124, web
+  12/12, expo-doctor 20/20.
+
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
   - 033 (A12b): Journey fragments for Mortimer, Flick and Marginalia; a wider stem check.
@@ -332,6 +344,15 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Deeper tiers** (round 048): every saveable member has one at 3 (`mortimer_oath`, `flick_lotus`,
+  `marginalia_folded_page`, `gerald_confidence`). A new party vocabulary file changes the pinned party entry count
+  (17 now), the stems list in `lore-fragments.test.js`, the encounter key list and the vocabulary version pins in
+  `encounters.test.js` / `language-engine.test.js`, and `fixtureContent` must drop Mortimer's party files.
+  Reference ids are unique per pack, across vocabulary files (es `rae-solo` was taken: `rae-solo-alone`).
+  **"In English only" in an intent makes the whole line English** (Amendment 1): say "in one English sentence".
+  Double quotes inside a YAML double-quoted intent must be escaped (`\"`).
+  `docs/rounds/048/results/summarize.py` summarises `--party --tier` reports (verdicts, lines, unmet-target forms).
+- **Mobile jest flaked once** (round 048: 1 failure on 1 of 5 runs, not identified). Rerun before chasing it.
 - **Relationship tiers** (round 047): a party conversation with `after_conversations: N` is offered once the member
   has N finished conversations (`partyConversationFor(home, count)`, deepest wins, any file order). One first tier
   per home (loader). `partySnapshot` gives `conversationId` and `conversationTier`; an unresolved party session of

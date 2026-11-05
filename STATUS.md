@@ -33,6 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 048, deeper conversations for Mortimer, Flick and Marginalia (autonomous)
+
+After three conversations, every saveable member now offers a deeper conversation, as Gerald has since round 047.
+Mortimer's oath: calm him (*tranquillo* / *tranquilo*), then promise (*prometto* / *prometo*). Flick's lotus: wake
+it (*svegliati* / *despierta*), then give it courage (*coraggio* / *ánimo*). Marginalia's folded page: answer "here I
+am" (*eccomi* / *aquí estoy*), then tell her she is not alone (*non sei sola* / *no estás sola*). All three are
+content only. Live in both languages, all three resolved with every verdict as scripted, including a wrong line that
+holds the target word but not the meaning. Amendment 1: Marginalia's second line had become all English, and it now
+mixes languages again. Other members' targets turn up in NPC lines (Flick says *eccomi*), recorded as an open item.
+Critiqued by Codex (6 findings: 5 accepted, 1 in part). Server 184/184, mobile 124/124
+([open items](docs/rounds/048/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 047, a deeper conversation after three coffee breaks (autonomous)
 
 Party conversations can now have tiers. A conversation with `after_conversations: N` is offered once the member has
@@ -498,7 +510,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
-| 048 | 11-05 | Deeper conversations after three: Mortimer's oath, Flick's lotus, Marginalia's folded page (backlog G6) (autonomous) | [048](docs/rounds/048/architecture.md) | [findings](docs/rounds/048/findings.md) | pre-run record |
+| 048 | 11-05 | Deeper conversations after three: Mortimer's oath, Flick's lotus, Marginalia's folded page (backlog G6) (autonomous) | [048](docs/rounds/048/architecture.md) | [findings](docs/rounds/048/findings.md) | pre-run record to round 048 close |
 | 047 | 11-05 | Relationship tiers: a deeper party conversation after N conversations, Gerald's confidence first (backlog G4) (autonomous) | [047](docs/rounds/047/architecture.md) | [findings](docs/rounds/047/findings.md) | pre-run record to round 047 close (row added in round 048) |
 | 046 | 11-05 | A second share estimate (`folded`) that survives glitched English and gloss translations (autonomous) | [046](docs/rounds/046/architecture.md) | [findings](docs/rounds/046/findings.md) | pre-run record to round 046 close |
 | 045 | 11-05 | Objectives met in any order (`objectives_unordered`), Mortimer's tasting first (autonomous) | [045](docs/rounds/045/architecture.md) | [findings](docs/rounds/045/findings.md) | pre-run record to round 045 close |
