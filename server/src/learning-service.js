@@ -10,6 +10,9 @@ import { AppError, conflictError, retryableError, validationError } from './erro
 import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, worldSnapshot } from './world.js';
 
+// Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
+export const HELD_NOTE = 'A held objective was said correctly but does not count: an earlier objective comes first. Do not celebrate it or treat it as done, and do not give its answer; the player must say it again after the earlier objective.';
+
 function clone(value) { return structuredClone(value); }
 function payloadHash(value) { return createHash('sha256').update(JSON.stringify(value)).digest('hex'); }
 function nowIso(clock) { return new Date(clock()).toISOString(); }
@@ -503,6 +506,7 @@ export class LearningService {
         language: this.content.language, objectives, vocabularyById: this.content.vocabularyById,
         conversationContext: current.transcript.map((item) => item.role === 'player' ? item.text : item.dialogue.native),
         playerInput: message,
+        ordered: definition.encounter.objectives_unordered !== true,
       }), gradingResponseSchema, 'dialogue_assessment', 'The language assessor');
       const assessment = this.validateAssessment(gradingRaw, objectives, message);
 
@@ -522,10 +526,17 @@ export class LearningService {
         : definition.encounter.objectives.slice(nextObjectiveIndex);
       const resolved = remaining.length === 0;
       const nextTurns = current.committedPlayerTurns + 1;
+      // Round 051 (backlog H1): in order, a pass after a failed objective does not close. It is `held`: not banked,
+      // and the narrator is told not to treat it as done. The field is present only when true (pinned prompts).
+      const closingIds = new Set(closing.map((objective) => objective.id));
+      const heldIds = new Set(unordered ? [] : assessment.objective_results
+        .filter((result) => result.passed && !closingIds.has(result.objective_id)).map((result) => result.objective_id));
+      const heldMark = (id) => (heldIds.has(id) ? { held: true } : {});
       const decision = {
-        objectiveResults: assessment.objective_results.map(({ objective_id, passed }) => ({ objectiveId: objective_id, passed })),
+        objectiveResults: assessment.objective_results.map(({ objective_id, passed }) => ({ objectiveId: objective_id, passed, ...heldMark(objective_id) })),
         encounterState: resolved ? 'resolved' : 'ongoing',
         nextObjectiveId: remaining[0]?.id ?? null,
+        ...(heldIds.size ? { held_note: HELD_NOTE } : {}),
       };
       const history = current.transcript.map((item) => item.role === 'player'
         ? { role: 'user', content: item.text }
@@ -586,7 +597,7 @@ export class LearningService {
         assessment: {
           overallFeedback: assessment.overall_feedback,
           objectiveResults: assessment.objective_results.map((result) => ({
-            objectiveId: result.objective_id, passed: result.passed, feedback: result.feedback,
+            objectiveId: result.objective_id, passed: result.passed, ...heldMark(result.objective_id), feedback: result.feedback,
             vocabularyEvidence: result.vocabulary_evidence.map((evidence) => ({
               vocabularyId: evidence.vocabulary_id, evidence: evidence.evidence,
               quality: evidence.quality, effectiveQuality: evidence.effective_quality,

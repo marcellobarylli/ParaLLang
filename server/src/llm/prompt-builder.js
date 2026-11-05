@@ -82,9 +82,16 @@ export function buildNarrationMessages({
   ];
 }
 
-export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput }) {
+// Round 051 (backlog H1): in an ordered encounter only the leading run of passes closes. With more than one ordered
+// objective the grader is told so; otherwise the prompt is byte-identical to before (critique 1.5).
+function orderLine(language, objectives, ordered) {
+  if (!ordered || objectives.length < 2) return '';
+  return `\n- ORDER: these objectives count only in the order given. An objective after one that does not pass stays open whatever its verdict: its feedback must not call it a success or say it will count later; say in English that the player must say it again once the earlier objective is met. Treat it as not passed for every rule above, in \`feedback\` and \`overall_feedback\`: never write an expression in ${language.name} that would satisfy it.`;
+}
+
+export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput, ordered = false }) {
   const rubric = targetData(objectives, vocabularyById, { forms: true });
-  const system = fillTemplate(loadTemplate('language/grading.txt'), { language, rubric: JSON.stringify(rubric) });
+  const system = fillTemplate(loadTemplate('language/grading.txt'), { language, rubric: JSON.stringify(rubric), order: orderLine(language, objectives, ordered) });
   return [
     { role: 'system', content: system },
     { role: 'user', content: JSON.stringify({ conversation_context: conversationContext, player_answer: playerInput }) },

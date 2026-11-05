@@ -37,7 +37,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       {isLoading && <Text role="status" style={styles.thinking}>{name} is considering the linguistic implications…</Text>}
       {assessment && <FadeIn key={assessmentKey(assessment)} style={styles.assessment} aria-live="polite">
         <Text style={styles.strong}>Assessment</Text><Text style={styles.body}>{assessment.overallFeedback}</Text>
-        {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</Text>)}
+        {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{resultMark(result)} {result.feedback}{result.held ? HELD_SUFFIX : ''}</Text>)}
       </FadeIn>}
       {resolved && <FadeIn><Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}{fragmentNote(fragments, encounter)}</Text></FadeIn>}
       {resolved && encounter.character?.saveable && !encounter.partyConversation && onRecruit && <PartyOffer
@@ -74,7 +74,11 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
 }
 
 // Round 035 (critique 1.4): a new assessment replaces the old one in place, so the box is keyed by its content.
-const assessmentKey = (assessment) => [assessment.overallFeedback, ...assessment.objectiveResults.map((r) => `${r.objectiveId}:${r.passed}:${r.feedback}`)].join('|');
+const assessmentKey = (assessment) => [assessment.overallFeedback, ...assessment.objectiveResults.map((r) => `${r.objectiveId}:${r.passed}:${r.held === true}:${r.feedback}`)].join('|');
+// Round 051 (backlog H1): a held result (passed, but an earlier objective comes first) is not a success. It is not
+// banked either, so the player must say it again.
+export const HELD_SUFFIX = ' (say it again after the earlier objective)';
+export const resultMark = (result) => (result.held ? '…' : result.passed ? '✓' : '→');
 
 // Round 030 (backlog A9): a fragment of The Journey that this encounter's completion filed. Worded to stay true on
 // replays (critique 1.6); part of the victory status so it is announced with it. Round 032: a fragment unlocked by

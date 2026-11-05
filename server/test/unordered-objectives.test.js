@@ -72,6 +72,8 @@ test('unordered: thanks first closes thanks, the current objective stays praise,
   assert.equal(encounter.currentObjective.id, 'praise_coffee');
   let turn = await say(runtime, learnerId, encounter, '¡Gracias!');
   assert.deepEqual(turn.assessment.objectiveResults.map((r) => [r.objectiveId, r.passed]), [['praise_coffee', false], ['thank_gerald', true]]);
+  assert.ok(turn.assessment.objectiveResults.every((r) => !('held' in r)), 'round 051: unordered encounters never hold');
+  assert.doesNotMatch(JSON.stringify(narrations().at(-1).messages), /held_note/);
   assert.equal(turn.encounter.state, 'ongoing');
   assert.equal(turn.encounter.currentObjective.id, 'praise_coffee');
   const prompt = JSON.stringify(narrations().at(-1).messages);
@@ -93,6 +95,8 @@ test('unordered: both in one line resolve at once; ordered (the shipped flag abs
   const ordered = await coffeeBreak(t, await contentWith(undefined));
   const turn = await say(ordered.runtime, ordered.learnerId, ordered.encounter, '¡Gracias!');
   assert.equal(turn.encounter.currentObjective.id, 'praise_coffee');
+  // Round 051: in order, the early thanks is held (passed, not closed).
+  assert.deepEqual(turn.assessment.objectiveResults.map((r) => [r.objectiveId, r.passed, r.held ?? false]), [['praise_coffee', false, false], ['thank_gerald', true, true]]);
   const next = await say(ordered.runtime, ordered.learnerId, turn.encounter, '¡Está buenísimo!');
   assert.equal(next.encounter.state, 'ongoing', 'in order, the earlier thanks did not count');
   assert.equal(next.encounter.currentObjective.id, 'thank_gerald');

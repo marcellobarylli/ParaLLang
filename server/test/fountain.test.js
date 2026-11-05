@@ -48,7 +48,9 @@ class FountainProvider extends FixtureProvider {
         const [pattern, fixedId] = this.pack.patterns[id];
         const match = answer.match(pattern);
         // Round 050: the time objective has four forms; name the one that matched.
-        const vocabularyId = id === 'time' && match ? this.pack.timeIds[match[0].toLowerCase()] : fixedId;
+        // Round 051: "ora" is its own entry.
+        const vocabularyId = id === 'time' && match ? this.pack.timeIds[match[0].toLowerCase()]
+          : id === 'now' && match && /^ora$/i.test(match[0]) ? 'ora' : fixedId;
         return {
           objective_id: id, passed: Boolean(match), feedback: match ? `Passed ${id}.` : `Keep working on ${id}.`,
           vocabulary_evidence: match ? [{ vocabulary_id: vocabularyId, evidence: match[0], quality: 5 }] : [],
@@ -204,5 +206,75 @@ for (const [code, pack] of Object.entries(timePacks)) {
     }
     assert.deepEqual(verdicts.at(-1), [['time', true], ['now', true]]);
     assert.equal(encounter.state, 'resolved');
+  });
+}
+
+// Round 051 (backlog H1): in order, a pass after a failed objective is `held`: not banked, marked in the response and
+// in the narration decision (with a note), and the grader is told the order. Critiques 1.4, 1.6, 1.7, 1.9.
+const heldPacks = {
+  it: { now: 'Adesso!', time: "È l'una, Flick.", passFailPass: 'Fermati! Ora.' },
+  es: { now: '¡Ahora!', time: 'Es la una, Flick.', passFailPass: '¡Quieto! ¡Ahora!' },
+};
+
+async function fountainAt(t, code) {
+  const saveDir = await mkdtemp(join(tmpdir(), 'parallang-fountain-'));
+  t.after(() => rm(saveDir, { recursive: true, force: true }));
+  const content = loadGameContent({ language: code });
+  const provider = new FountainProvider(code);
+  const service = new LearningService({ provider, storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow });
+  const { learnerId } = await service.createOrRecoverLearner();
+  for (const locationId of route(content.world, content.world.start, 'cracked_fountain')) await service.moveTo(learnerId, { locationId });
+  const { encounter } = await service.startEncounter(learnerId, { encounterId: 'cracked_fountain_letharger' });
+  const say = async (current, message, attemptId = randomUUID()) => service.submitDialogue(learnerId, { encounterId: current.id, version: current.version, attemptId, message });
+  const lastTurnData = () => JSON.parse(provider.calls.at(-1).messages.at(-1).content.split('TURN DATA: ')[1]);
+  return { service, provider, learnerId, encounter, say, lastTurnData };
+}
+
+const marks = (turn) => turn.assessment.objectiveResults.map((r) => [r.objectiveId, r.passed, r.held === true]);
+
+for (const [code, pack] of Object.entries(heldPacks)) {
+  test(`${code}: an early "now" is held, not banked; the grader is told the order and the narrator is told not to celebrate`, async (t) => {
+    const { service, provider, learnerId, encounter: start, say, lastTurnData } = await fountainAt(t, code);
+    let turn = await say(start, packs[code].answers[1]);
+    turn = await say(turn.encounter, packs[code].answers[3]);
+    assert.equal(turn.encounter.currentObjective.id, 'time');
+    const attemptId = randomUUID();
+    const held = await say(turn.encounter, pack.now, attemptId);
+    assert.deepEqual(marks(held), [['time', false, false], ['now', true, true]]);
+    assert.ok(!('held' in held.assessment.objectiveResults[0]), 'held is present only when true');
+    const grading = provider.calls.at(-2).messages[0].content;
+    assert.match(grading, /\n- ORDER: these objectives count only in the order given\./);
+    const decision = lastTurnData().authoritative_decision;
+    assert.deepEqual(decision.objectiveResults, [{ objectiveId: 'time', passed: false }, { objectiveId: 'now', passed: true, held: true }]);
+    assert.match(decision.held_note, /does not count/);
+    assert.equal(decision.nextObjectiveId, 'time');
+
+    // A replay returns the stored held marks and records no evidence again.
+    const items = async () => { const { words, phrases } = (await service.loadEnvelope(learnerId)).spellbook; return { words, phrases }; };
+    const before = await items();
+    const nowWord = before.words[code === 'it' ? 'adesso' : 'ahora'];
+    assert.deepEqual(nowWord.evidence.map((e) => [e.objectiveId, e.passed]), [['now', true]], 'held evidence is kept as correct usage');
+    const calls = provider.calls.length;
+    const replay = await say(turn.encounter, pack.now, attemptId);
+    assert.equal(replay.replayed, true);
+    assert.deepEqual(marks(replay), marks(held));
+    assert.equal(provider.calls.length, calls);
+    assert.deepEqual(await items(), before, 'a replay records nothing');
+
+    // Not banked: the time alone closes only the time; now stays open and must be said again.
+    const timed = await say(held.encounter, pack.time);
+    assert.deepEqual(marks(timed), [['time', true, false], ['now', false, false]]);
+    assert.equal(timed.encounter.currentObjective.id, 'now');
+    assert.equal(lastTurnData().authoritative_decision.held_note, undefined);
+    const done = await say(timed.encounter, packs[code].answers.at(-1));
+    assert.equal(done.encounter.state, 'resolved');
+    assert.ok(done.assessment.objectiveResults.every((r) => !('held' in r)), 'a resolving turn holds nothing');
+  });
+
+  test(`${code}: pass, fail, pass: the first closes, the later pass is held`, async (t) => {
+    const { encounter, say } = await fountainAt(t, code);
+    const turn = await say(encounter, pack.passFailPass);
+    assert.deepEqual(marks(turn), [['stop', true, false], ['direction', false, false], ['time', false, false], ['now', true, true]]);
+    assert.equal(turn.encounter.currentObjective.id, 'direction');
   });
 }
