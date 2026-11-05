@@ -128,3 +128,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 038 | Critique 1: 7 of 7 accepted (1.6 moot by the system alert) | — | See round 038 Second opinion table | Yes |
 | 2026-11-05 | 039 | Removing a save deletes it on the server too (`DELETE /api/learner`, server first, then the device); a learner id suffices, as for every write route; critique by a Claude subagent | Device-only removal (round 038); a soft delete or trash | A removed save held the player's answers on the server; the alert now says what happens | Yes |
 | 2026-11-05 | 039 | Critique 1: 4 of 6 accepted, 1.2 and 1.4 in part | — | See round 039 Second opinion table | Yes |
+| 2026-11-05 | 040 | The app sends the optional server token from `EXPO_PUBLIC_PARALLANG_TOKEN` (bundled; README says so); both sides trim; critique by a Claude subagent | A token entry screen; secure storage | Matches how `EXPO_PUBLIC_API_URL` works; local Simulator use only | Yes |
+| 2026-11-05 | 040 | Critique 1: 6 of 6 accepted | — | See round 040 Second opinion table | Yes |
