@@ -1,0 +1,150 @@
+# Round 010: The Butcher's Stall (meats, quantities, numbers). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+version: butcher-meats-it-v1
+references:
+  - id: treccani-prosciutto
+    title: "Treccani, Vocabolario: prosciutto"
+    url: "https://www.treccani.it/vocabolario/prosciutto/"
+  - id: treccani-salame
+    title: "Treccani, Vocabolario: salame"
+    url: "https://www.treccani.it/vocabolario/salame/"
+  - id: treccani-salsiccia
+    title: "Treccani, Vocabolario: salsiccia"
+    url: "https://www.treccani.it/vocabolario/salsiccia/"
+  - id: treccani-pollo
+    title: "Treccani, Vocabolario: pollo"
+    url: "https://www.treccani.it/vocabolario/pollo/"
+  - id: treccani-etto
+    title: "Treccani, Vocabolario: etto"
+    url: "https://www.treccani.it/vocabolario/etto/"
+  - id: treccani-chilo
+    title: "Treccani, Vocabolario: chilo"
+    url: "https://www.treccani.it/vocabolario/chilo2/"
+  - id: treccani-grammo
+    title: "Treccani, Vocabolario: grammo"
+    url: "https://www.treccani.it/vocabolario/grammo/"
+  - id: treccani-mezzo
+    title: "Treccani, Vocabolario: mezzo"
+    url: "https://www.treccani.it/vocabolario/mezzo/"
+  - id: wiktionary-tre
+    title: "Wiktionary: tre (Italian)"
+    url: "https://en.wiktionary.org/wiki/tre"
+  - id: wiktionary-cento
+    title: "Wiktionary: cento (Italian)"
+    url: "https://en.wiktionary.org/wiki/cento"
+entries:
+  - id: prosciutto
+    kind: word
+    target: "prosciutto"
+    part_of_speech: noun
+    accepted_translations: ["ham"]
+    surface_variants: ["prosciutto", "prosciutti"]
+    accent_insensitive: false
+    example:
+      target: "Un etto di prosciutto, per favore."
+      english: "A hundred grams of ham, please."
+    note: "Prosciutto crudo is cured ham, prosciutto cotto cooked ham."
+    reference_ids: [treccani-prosciutto]
+  - id: salame
+    kind: word
+    target: "salame"
+    part_of_speech: noun
+    accepted_translations: ["salami", "salame"]
+    surface_variants: ["salame", "salami"]
+    accent_insensitive: false
+    example:
+      target: "Vorrei del salame."
+      english: "I would like some salami."
+    note: "Italian salami is singular salame, plural salami."
+    reference_ids: [treccani-salame]
+  - id: salsiccia
+    kind: word
+    target: "salsiccia"
+    part_of_speech: noun
+    accepted_translations: ["sausage"]
+    surface_variants: ["salsiccia", "salsicce"]
+    accent_insensitive: false
+    example:
+      target: "Due salsicce, per favore."
+      english: "Two sausages, please."
+    reference_ids: [treccani-salsiccia]
+  - id: pollo
+    kind: word
+    target: "pollo"
+    part_of_speech: noun
+    accepted_translations: ["chicken"]
+    surface_variants: ["pollo", "polli"]
+    accent_insensitive: false
+    example:
+      target: "Vorrei un pollo."
+      english: "I would like a chicken."
+    reference_ids: [treccani-pollo]
+  - id: etto
+    kind: word
+    target: "etto"
+    part_of_speech: noun
+    accepted_translations: ["hundred grams", "100 grams"]
+    surface_variants: ["etto", "etti"]
+    accent_insensitive: false
+    example:
+      target: "Due etti di salame."
+      english: "Two hundred grams of salami."
+    note: "Short for ettogrammo: 100 grams; the usual unit at an Italian deli counter."
+    reference_ids: [treccani-etto]
+  - id: chilo
+    kind: word
+    target: "chilo"
+    part_of_speech: noun
+    accepted_translations: ["kilo", "kilogram"]
+    surface_variants: ["chilo"]
+    accent_insensitive: false
+    example:
+      target: "Un chilo di salsicce."
+      english: "A kilo of sausages."
+    note: "Plural chili; also written kilo. Only the singular is matched here, because chili is also an English word."
+    reference_ids: [treccani-chilo]
+  - id: grammi
+    kind: word
+    target: "grammi"
+    part_of_speech: noun
+    accepted_translations: ["grams"]
+    surface_variants: ["grammi", "grammo"]
+    accent_insensitive: false
+    example:
+      target: "Trecento grammi di pollo."
+      english: "Three hundred grams of chicken."
+    note: "Singular grammo."
+    reference_ids: [treccani-grammo]
+  - id: tre
+    kind: word
+    target: "tre"
+    part_of_speech: numeral
+    accepted_translations: ["three"]
+    surface_variants: ["tre"]
+    accent_insensitive: false
+    example:
+      target: "Tre salsicce."
+      english: "Three sausages."
+    reference_ids: [wiktionary-tre]
+  - id: cento
+    kind: word
+    target: "cento"
+    part_of_speech: numeral
+    accepted_translations: ["a hundred", "one hundred"]
+    surface_variants: ["cento"]
+    accent_insensitive: false
+    example:
+      target: "Cento grammi di prosciutto."
+      english: "A hundred grams of ham."
+    reference_ids: [wiktionary-cento]
+  - id: mezzo
+    kind: word
+    target: "mezzo"
+    part_of_speech: adjective
+    accepted_translations: ["half", "half a"]
+    surface_variants: ["mezzo"]
+    accent_insensitive: false
+    example:
+      target: "Mezzo chilo di pollo."
+      english: "Half a kilo of chicken."
+    reference_ids: [treccani-mezzo]

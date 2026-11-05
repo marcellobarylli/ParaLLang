@@ -56,6 +56,9 @@ async function fixtureContent(t, extra = async () => {}) {
   t.after(() => rm(dir, { recursive: true, force: true }));
   await cp(contentRoot, dir, { recursive: true });
   await rm(join(dir, 'languages', 'it'), { recursive: true });
+  // Round 010: the real Butcher's Stall encounter stands where the fixture goes (and also authors jamon).
+  await rm(join(dir, 'languages/es/encounters/butchers_stall_charcutier.yaml'));
+  await rm(join(dir, 'languages/es/vocabulary/butcher_meats.yaml'));
   await writeYaml(join(dir, 'characters/enemies/charcutier_fixture.yaml'), character);
   await writeYaml(join(dir, 'languages/es/vocabulary/fixture_meat.yaml'), vocabulary);
   await writeYaml(join(dir, 'languages/es/encounters/fixture_butcher.yaml'), encounter);
@@ -108,13 +111,13 @@ test("Gerald's narration prompts match the round 007 fixture and carry the style
   }
 });
 
-test('the real packs hold Gerald (the default) and the tutorial, with per-file vocabulary versions', () => {
+test('the real packs hold Gerald (the default), the tutorial and the butcher, with per-file vocabulary versions', () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
-    assert.deepEqual([...c.encounters.keys()].sort(), ['imp_coffee_greeting', 'market_entrance_tutorial']);
+    assert.deepEqual([...c.encounters.keys()].sort(), ['butchers_stall_charcutier', 'imp_coffee_greeting', 'market_entrance_tutorial']);
     assert.equal(c.defaultEncounterId, 'imp_coffee_greeting');
     assert.equal(c.encounter, c.encounters.get('imp_coffee_greeting').encounter);
-    assert.equal(c.vocabulary.version, `entrance-greetings-${code}-v1+${c.entryVersion(c.encounter.objectives[0].target_vocabulary_ids[0])}`);
+    assert.equal(c.vocabulary.version, `butcher-meats-${code}-v1+entrance-greetings-${code}-v1+${c.entryVersion(c.encounter.objectives[0].target_vocabulary_ids[0])}`);
     assert.equal(c.language.default_encounter, undefined, 'the default encounter is not sent to clients');
   }
 });

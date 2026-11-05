@@ -1,5 +1,5 @@
 // Live playthrough of the Crumbling Market through a CLI provider, in-process (no port is opened).
-//   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance] [--out <file.json>]
+//   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall] [--out <file.json>]
 // It uses a temporary learner save, removes it afterwards and prints a JSON report: each step, the LLM's raw
 // outputs, grading verdicts, timings and an estimate of the target-language share of each NPC line.
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
@@ -19,6 +19,11 @@ const scripts = {
   coffee_cart: {
     it: ['Vorrei un caffè, per favore.', 'Senza latte, per favore.'],
     es: ['Quiero un café, por favor.', 'Sin leche, por favor.'],
+  },
+  // Round 010: ham and a bare unit first (both should fail), then a passing meat and quantity.
+  butchers_stall: {
+    it: ['Vorrei del prosciutto, per favore.', 'Vorrei del salame, per favore.', 'Chilo.', 'Due etti, per favore.'],
+    es: ['Quiero jamón, por favor.', 'Quiero chorizo, por favor.', 'Kilo.', 'Medio kilo, por favor.'],
   },
   market_entrance: {
     it: ['Ciao!', 'Mi chiamo Sam.', 'E tu?'],

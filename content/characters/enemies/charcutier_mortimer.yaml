@@ -1,0 +1,26 @@
+# Round 010: the Charcutier at The Butcher's Stall (backlog A4). Shared by every language pack.
+id: charcutier_mortimer_001
+name: Mortimer
+species: Charcutier
+personality:
+  tone: "booming, generous, absolutely certain, and wrong about taxonomy"
+  quirks:
+    - "Calls every cut on his stall by the target-language word for ham, including the sausages, the chicken and his own hat"
+    - "Trusts only his scales, which are honest, and weighs everything, compliments included"
+    - "Rates meat in his English like an influencer: certified ham, ham-adjacent, a ham-tier vibe"
+    - "Is delighted, and a little betrayed, when a customer names a cut correctly"
+  humour_style: "dry, Pratchett-esque, the confidence of a man who has never once been corrected and does not intend to start"
+appearance: >
+  A broad man in a striped apron and a hat that is, on closer inspection, also a ham. Every label on his stall has
+  the same word on it. Behind him, the honest scales sit in a little shrine of their own.
+combat_style: "relentless mislabelling"
+difficulty: 2
+language_profile:
+  base_target_ratio: 0.3
+  vocabulary_focus: ["meats", "quantities", "numbers"]
+  grammar_focus: ["partitive_and_quantities", "numbers", "polite_requests"]
+defeat_condition:
+  type: "comprehension_and_response"
+  description: >
+    Player must ask for a meat that is not ham, by its real name, and say how much of it they want.
+saveable: true

@@ -1,0 +1,148 @@
+# Round 010: The Butcher's Stall (meats, quantities, numbers). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+version: butcher-meats-es-v1
+references:
+  - id: rae-jamon
+    title: "Real Academia Española, Diccionario de la lengua española: jamón"
+    url: "https://dle.rae.es/jam%C3%B3n"
+  - id: rae-chorizo
+    title: "Real Academia Española, Diccionario de la lengua española: chorizo"
+    url: "https://dle.rae.es/chorizo"
+  - id: rae-salchicha
+    title: "Real Academia Española, Diccionario de la lengua española: salchicha"
+    url: "https://dle.rae.es/salchicha"
+  - id: rae-pollo
+    title: "Real Academia Española, Diccionario de la lengua española: pollo"
+    url: "https://dle.rae.es/pollo"
+  - id: rae-kilo
+    title: "Real Academia Española, Diccionario de la lengua española: kilo"
+    url: "https://dle.rae.es/kilo"
+  - id: rae-gramo
+    title: "Real Academia Española, Diccionario de la lengua española: gramo"
+    url: "https://dle.rae.es/gramo"
+  - id: rae-medio
+    title: "Real Academia Española, Diccionario de la lengua española: medio"
+    url: "https://dle.rae.es/medio"
+  - id: wiktionary-dos
+    title: "Wiktionary: dos (Spanish)"
+    url: "https://en.wiktionary.org/wiki/dos"
+  - id: wiktionary-tres
+    title: "Wiktionary: tres (Spanish)"
+    url: "https://en.wiktionary.org/wiki/tres"
+  - id: wiktionary-cien
+    title: "Wiktionary: cien (Spanish)"
+    url: "https://en.wiktionary.org/wiki/cien"
+entries:
+  - id: jamon
+    kind: word
+    target: "jamón"
+    part_of_speech: noun
+    accepted_translations: ["ham"]
+    surface_variants: ["jamón", "jamon", "jamones"]
+    accent_insensitive: true
+    example:
+      target: "Cien gramos de jamón, por favor."
+      english: "A hundred grams of ham, please."
+    reference_ids: [rae-jamon]
+  - id: chorizo
+    kind: word
+    target: "chorizo"
+    part_of_speech: noun
+    accepted_translations: ["chorizo", "spicy sausage"]
+    surface_variants: ["chorizo", "chorizos"]
+    accent_insensitive: false
+    example:
+      target: "Quiero chorizo."
+      english: "I want chorizo."
+    note: "A cured pork sausage seasoned with paprika."
+    reference_ids: [rae-chorizo]
+  - id: salchicha
+    kind: word
+    target: "salchicha"
+    part_of_speech: noun
+    accepted_translations: ["sausage"]
+    surface_variants: ["salchicha", "salchichas"]
+    accent_insensitive: false
+    example:
+      target: "Dos salchichas, por favor."
+      english: "Two sausages, please."
+    reference_ids: [rae-salchicha]
+  - id: pollo
+    kind: word
+    target: "pollo"
+    part_of_speech: noun
+    accepted_translations: ["chicken"]
+    surface_variants: ["pollo", "pollos"]
+    accent_insensitive: false
+    example:
+      target: "Quiero un pollo."
+      english: "I want a chicken."
+    reference_ids: [rae-pollo]
+  - id: kilo
+    kind: word
+    target: "kilo"
+    part_of_speech: noun
+    accepted_translations: ["kilo", "kilogram"]
+    surface_variants: ["kilo", "kilos"]
+    accent_insensitive: false
+    example:
+      target: "Un kilo de salchichas."
+      english: "A kilo of sausages."
+    reference_ids: [rae-kilo]
+  - id: gramos
+    kind: word
+    target: "gramos"
+    part_of_speech: noun
+    accepted_translations: ["grams"]
+    surface_variants: ["gramos", "gramo"]
+    accent_insensitive: false
+    example:
+      target: "Doscientos gramos de chorizo."
+      english: "Two hundred grams of chorizo."
+    note: "Singular gramo."
+    reference_ids: [rae-gramo]
+  - id: dos
+    kind: word
+    target: "dos"
+    part_of_speech: numeral
+    accepted_translations: ["two"]
+    surface_variants: ["dos"]
+    accent_insensitive: false
+    example:
+      target: "Dos salchichas."
+      english: "Two sausages."
+    reference_ids: [wiktionary-dos]
+  - id: tres
+    kind: word
+    target: "tres"
+    part_of_speech: numeral
+    accepted_translations: ["three"]
+    surface_variants: ["tres"]
+    accent_insensitive: false
+    example:
+      target: "Tres pollos."
+      english: "Three chickens."
+    reference_ids: [wiktionary-tres]
+  - id: cien
+    kind: word
+    target: "cien"
+    part_of_speech: numeral
+    accepted_translations: ["a hundred", "one hundred"]
+    surface_variants: ["cien"]
+    accent_insensitive: false
+    example:
+      target: "Cien gramos de jamón."
+      english: "A hundred grams of ham."
+    note: "Cien before a noun or on its own; ciento in compounds (ciento cincuenta)."
+    reference_ids: [wiktionary-cien]
+  - id: medio
+    kind: word
+    target: "medio"
+    part_of_speech: adjective
+    accepted_translations: ["half", "half a"]
+    surface_variants: ["medio"]
+    accent_insensitive: false
+    example:
+      target: "Medio kilo de chorizo."
+      english: "Half a kilo of chorizo."
+    reference_ids: [rae-medio]

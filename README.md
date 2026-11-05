@@ -107,7 +107,7 @@ Set `PARALLANG_TOKEN` in the root `.env` to require the header `X-ParaLLang-Toke
 
 ### Live Crumbling Market playthrough
 
-`node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance] [--out report.json]` plays the map and one encounter with scripted answers (Gerald at The Coffee Cart by default; `market_entrance` plays Portia's tutorial) in-process (no port) on a temporary save and prints a JSON report: each step, every raw LLM output, grading verdicts, timings and two rough estimates of the target-language share of each NPC line. It exits 1 unless the encounter resolves and the map marks it complete.
+`node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall] [--out report.json]` plays the map and one encounter with scripted answers (Gerald at The Coffee Cart by default; `market_entrance` plays Portia's tutorial, `butchers_stall` Mortimer, with a failing ham request and a bare unit first) in-process (no port) on a temporary save and prints a JSON report: each step, every raw LLM output, grading verdicts, timings and two rough estimates of the target-language share of each NPC line. It exits 1 unless the encounter resolves and the map marks it complete.
 
 ## Learning data and saves
 

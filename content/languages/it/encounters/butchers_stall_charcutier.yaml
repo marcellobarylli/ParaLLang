@@ -1,0 +1,65 @@
+# Round 010: The Butcher's Stall (backlog A4). Mortimer the Charcutier calls everything prosciutto; the player names the
+# real cut and says how much they want.
+id: butchers_stall_charcutier
+character: characters/enemies/charcutier_mortimer.yaml
+location: butchers_stall
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player asks for a meat that is not ham by its Italian name and says how much they want"
+max_turns: 20
+resolved_message: "Mortimer weighs your order twice, wraps it in paper labelled with the wrong word, and lets you go."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: name_meat
+    prompt: "Mortimer says everything is ham. Ask him for a different meat, by its Italian name."
+    intent: "The player asks Mortimer for a meat other than ham, naming it in Italian."
+    target_vocabulary_ids: ["salame", "salsiccia", "pollo"]
+    required_target_groups:
+      - ["salame", "salsiccia", "pollo"]
+    grammar_constraints:
+      - "The player's own request for a meat that is not ham, with the meat named in Italian."
+      - "Asking for ham does not pass; reject quotations, remarks about what Mortimer says, and English-only requests."
+    accepted_examples:
+      - "Vorrei del salame, per favore."
+      - "Due salsicce, per favore."
+      - "I'd like some pollo, please."
+    negative_examples:
+      - text: "Vorrei del prosciutto."
+        reason: "It asks for ham, which Mortimer insists everything is; the objective is to name a different cut."
+      - text: "I want sausage, please."
+        reason: "English-only; the meat must be named in Italian."
+      - text: "Mortimer says it is all salame."
+        reason: "A remark about what he says is not the player's own request."
+    reference_meaning: "The player asks for a specific meat other than ham."
+    hint_limit: 2
+    next_objective: quantity
+    assessment_reference_ids: ["treccani-salame", "treccani-salsiccia", "treccani-pollo"]
+  - id: quantity
+    prompt: "Tell Mortimer how much you want, in Italian."
+    intent: "The player says how much of the meat they want: a number or a half, with a unit of weight."
+    target_vocabulary_ids: ["etto", "chilo", "grammi", "tre", "cento", "mezzo"]
+    required_target_groups:
+      - ["etto", "chilo", "grammi"]
+    grammar_constraints:
+      - "A quantity in Italian: a number, un/una or a half, together with a unit of weight; a bare unit does not pass."
+      - "The player's own order; reject price questions, quotations and English-only quantities."
+    accepted_examples:
+      - "Due etti, per favore."
+      - "Un chilo."
+      - "Mezzo chilo di salsicce, per favore."
+      - "Trecento grammi, please."
+    negative_examples:
+      - text: "Etti."
+        reason: "A bare unit is not a quantity."
+      - text: "Two hundred grams."
+        reason: "English-only; the quantity must be in Italian."
+      - text: "How much is un chilo?"
+        reason: "It asks about a price rather than saying how much the player wants."
+    reference_meaning: "The player states the amount they want to buy."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["treccani-etto", "treccani-chilo", "treccani-grammo"]
