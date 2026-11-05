@@ -29,3 +29,4 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 010 | Butcher's Stall NPC is Mortimer the Charcutier; objectives: name a meat that is not ham, then a quantity with a unit | Bernard (the round 006 test fixture's name); a price objective | prototype.md §8.2; prices left for a later round | Yes |
 | 2026-11-05 | 010 | No Italian `due` entry and no `chili` variant | Author them | Both are English words that narration matching would chip in Mortimer's English | Yes |
 | 2026-11-05 | 010 | Codex critique 1: 1.1–1.5 accepted; 1.6, 1.7 in part | Accept all | See round 010 Second opinion table | Yes |
+| 2026-11-05 | 010 | Grading rubric lists each target's surface forms (`forms`); grading rule names them (Amendment) | Make plurals the canonical target in content | Live: "Due etti" passed without evidence and the server rejected it; the gap affected every variant in every pack | Yes |

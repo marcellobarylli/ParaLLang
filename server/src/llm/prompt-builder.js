@@ -16,14 +16,16 @@ export function fillTemplate(template, variables) {
   });
 }
 
-function targetData(objectives, vocabularyById) {
+// Round 010: the grading rubric also lists each target's authored surface forms (plurals, spellings), which the
+// grader must find in the answer; the narration prompt keeps the canonical form only.
+function targetData(objectives, vocabularyById, { forms = false } = {}) {
   return objectives.map((objective) => ({
     id: objective.id,
     intent: objective.intent,
     reference_meaning: objective.reference_meaning,
     targets: objective.target_vocabulary_ids.map((id) => {
       const entry = vocabularyById.get(id);
-      return { id, target: entry.target, meanings: entry.accepted_translations };
+      return { id, target: entry.target, ...(forms ? { forms: entry.surface_variants } : {}), meanings: entry.accepted_translations };
     }),
     required_target_groups: objective.required_target_groups,
     grammar_constraints: objective.grammar_constraints,
@@ -63,7 +65,7 @@ export function buildNarrationMessages({
 }
 
 export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput }) {
-  const rubric = targetData(objectives, vocabularyById);
+  const rubric = targetData(objectives, vocabularyById, { forms: true });
   const system = fillTemplate(loadTemplate('language/grading.txt'), { language, rubric: JSON.stringify(rubric) });
   return [
     { role: 'system', content: system },

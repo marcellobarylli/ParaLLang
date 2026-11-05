@@ -95,3 +95,20 @@ the script), +2 negative script lines per language.
 3. Live, codex-cli: `play-market.js --location butchers_stall` twice in Italian and once in Spanish. Findings: the
    verdict on each scripted line (ham and the bare unit should fail), resolution, share, dictation, feedback leaks,
    representative lines.
+
+## Amendment 2026-11-05: the grading rubric shows surface forms (autonomous, after the first live runs)
+
+**Why.** In both Italian runs the grader passed "Due etti, per favore." with no vocabulary evidence, and the server
+rejected the verdict (`INVALID_GRADING`, "passed an objective without the required Italian evidence"), so the
+encounter could not resolve. The grading prompt says to report a vocabulary id only when "its authored surface form
+is present", but the rubric (`targetData` in `server/src/llm/prompt-builder.js`) has listed only the canonical
+`target` ("etto") since round 001, never the authored `surface_variants` ("etti"). Gerald's scripted answers always
+used canonical forms, so this never showed.
+
+**Change.** The grading rubric's targets gain `forms` (the entry's `surface_variants`), and the grading rule reads
+"when one of its authored forms (`target` or any of `forms`) is present". The narration prompt's learning data is
+unchanged, so Gerald's pinned narration prompts stay byte-identical. A test checks both. Gerald's grading prompt does
+change, so `verify:cli` (codex-cli, Italian) is re-run alongside the three butcher runs.
+
+**Decision.** Autonomous, pending owner review: a prompt fix rather than a content workaround (making "etti" the
+target), because every plural or alternative spelling in every pack had the same problem.

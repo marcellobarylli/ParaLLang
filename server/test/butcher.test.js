@@ -88,3 +88,18 @@ for (const code of Object.keys(packs)) {
     assert.deepEqual(world.locations.find((l) => l.id === 'butchers_stall').encounter, { id: 'butchers_stall_charcutier', completed: true, characterName: 'Mortimer' });
   });
 }
+
+// Round 010 amendment: live, the grader passed "Due etti" without evidence because the rubric showed only "etto".
+test('the grading rubric lists every authored surface form; the narration data does not', async () => {
+  const { buildGradingMessages, buildNarrationMessages } = await import('../src/llm/prompt-builder.js');
+  const content = loadGameContent({ language: 'it' });
+  const { encounter, character } = content.encounters.get('butchers_stall_charcutier');
+  const grading = buildGradingMessages({ language: content.language, objectives: encounter.objectives.slice(1), vocabularyById: content.vocabularyById, conversationContext: [], playerInput: 'Due etti.' });
+  const marker = 'AUTHORED RUBRIC: ';
+  const system = grading[0].content;
+  const rubric = JSON.parse(system.slice(system.indexOf(marker) + marker.length, system.indexOf('\nReturn only structured JSON.')));
+  assert.deepEqual(rubric[0].targets.find((target) => target.id === 'etto').forms, ['etto', 'etti']);
+  assert.match(system, /any of `forms`/);
+  const narration = buildNarrationMessages({ language: content.language, character, styleGuide: content.styleGuide, locationName: "The Butcher's Stall", objectives: encounter.objectives, vocabularyById: content.vocabularyById, targetRatio: 0.3 });
+  assert.doesNotMatch(narration[0].content, /"forms"/);
+});
