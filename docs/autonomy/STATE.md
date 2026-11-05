@@ -307,13 +307,29 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings), built and closed; server 156/156, mobile 68/68, client 12/12, expo-doctor 20/20. No Codex calls
   (limit until about 20:35 UTC); round 026 still open with its live steps queued.
 
-- 2026-11-05, iteration 11: rounds 033 (A12b, Journey fragments for Mortimer, Flick, Marginalia after three
-  conversations; wider stem check), 034 (C3a, type scale, palette tokens, contrast test), 035 (C3b, fades that respect
-  Reduce Motion, line-height tokens) and 036 (fragment source line in the Spellbook) planned, critiqued by Claude
-  subagents (7, 8, 8 and 7 findings), built and closed; server 157/157, mobile 79/79, client 12/12, expo-doctor 20/20.
+- 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
+  live LLM calls (Codex limit until 20:35 UTC). The rounds:
+  - 033 (A12b): Journey fragments for Mortimer, Flick and Marginalia; a wider stem check.
+  - 034 (C3a): a type scale, palette tokens and a contrast test.
+  - 035 (C3b): fades that respect Reduce Motion.
+  - 036: the fragment source line in the Spellbook.
+  - 037 (C4a): two synthesized UI cues and a sound switch.
+  - 038 (A11b): removing a save.
+  - 039: the server deletes a removed save.
+  - 040: the app sends `PARALLANG_TOKEN`.
+  Server 162/162, mobile 95/95, client 12/12, expo-doctor 20/20.
 
 ## Handoff notes and traps
 
+- **Sounds** (round 037): `mobile/src/sounds.js` (`playCue`), cues injected into the store
+  (`createGameStore({ cue })`); jest mocks `expo-audio` in `jest.setup.js`. Regenerate the WAVs with
+  `node mobile/scripts/gen-ui-sounds.js`; the test compares bytes, so a changed generator needs regenerated files.
+  `expo-audio` needs its peer `expo-asset` (expo-doctor).
+- **Saves** (rounds 038–039): `removeSave` locks the store (`isLoading`, new epoch), deletes on the server first
+  (`api.deleteLearner`), then writes the record; `_loadSave` refuses an id no longer listed; `nextNumber` in the
+  record keeps removed numbers from coming back. Store fakes need `deleteLearner`.
+- **Token** (round 040): the app sends `X-ParaLLang-Token` from `EXPO_PUBLIC_PARALLANG_TOKEN`; jest deletes the variable
+  at setup. Tests that need it pass `token` to `createLearningApi`.
 - **Motion** (round 035): `mobile/src/motion.js` holds one app-wide Reduce Motion value; `<FadeIn>` decides once at
   mount and never fades while the value is unknown. Jest runs with Reduce Motion **on** (`jest.setup.js`); a test
   that wants a fade must turn it off, render a probe, settle, unmount, then render (see `motion.test.js`, `known()`),
