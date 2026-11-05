@@ -66,3 +66,8 @@ Net change from plan-v1: the old-server case, a single lookup, `toldBy` pinned i
 - Mobile: both lines and both labels are shown; there is no line for a fragment without a source or for an older
   server's conversation fragment.
 - All suites.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. Server 157/157, mobile 79/79, web client 12/12, expo-doctor 20/20. See
+[findings](findings.md).

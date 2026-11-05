@@ -12,3 +12,5 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 6 | 19:38:14 | 19:38:14 | plan-revised | Claude (claude-opus-5-5), autonomous | Net change: no source line for an older server's conversation fragment; one lookup; toldBy pinned for Gerald (also hidden) and Mortimer | `../architecture.md` |
 | 7 | 19:38:14 | 19:38:14 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed (round 036: pre-run record); the draft and the accepted fixes were already in the working tree, tested (server 157/157, mobile 79/79), and are committed separately | `../architecture.md` |
 | 8 | 19:39:13 | 19:39:13 | built | Claude (claude-opus-5-5), autonomous | round 036: toldBy on conversation fragments, fragmentSource line and label in the Spellbook; tests. Server 157/157, mobile 79/79, web 12/12, expo-doctor 20/20 | `../../../../mobile/src/components/Spellbook.js` |
+| 9 | 19:39:26 | 19:39:26 | outcome | Claude (claude-opus-5-5), autonomous | Built as designed | `../findings.md` |
+| 10 | 19:39:26 | 19:39:26 | closed | Claude (claude-opus-5-5), autonomous | Round 036 closed | `../findings.md` |
