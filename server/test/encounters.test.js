@@ -61,6 +61,8 @@ async function fixtureContent(t, extra = async () => {}) {
   await rm(join(dir, 'languages/es/vocabulary/butcher_meats.yaml'));
   // Round 023: Mortimer's party conversation continues the removed encounter.
   await rm(join(dir, 'languages/es/encounters/mortimer_tasting.yaml'));
+  // Round 048: so does his deeper tier.
+  await rm(join(dir, 'languages/es/encounters/mortimer_oath.yaml'));
   await writeYaml(join(dir, 'characters/enemies/charcutier_fixture.yaml'), character);
   await writeYaml(join(dir, 'languages/es/vocabulary/fixture_meat.yaml'), vocabulary);
   await writeYaml(join(dir, 'languages/es/encounters/fixture_butcher.yaml'), encounter);
@@ -129,17 +131,17 @@ test("Gerald's narration prompts match the round 026 fixture and carry the style
 test('the real packs hold Gerald (the default), the tutorial, the butcher, the fountain, the bookshop and the Rift, with per-file vocabulary versions', () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
-    assert.deepEqual([...c.encounters.keys()].sort(), ['butchers_stall_charcutier', 'cracked_fountain_letharger', 'flick_slow_walk', 'gerald_coffee_break', 'gerald_confidence', 'imp_coffee_greeting', 'marginalia_fragment', 'market_entrance_tutorial', 'mortimer_tasting', 'old_bookshop_bookworm', 'the_rift_errata']);
+    assert.deepEqual([...c.encounters.keys()].sort(), ['butchers_stall_charcutier', 'cracked_fountain_letharger', 'flick_lotus', 'flick_slow_walk', 'gerald_coffee_break', 'gerald_confidence', 'imp_coffee_greeting', 'marginalia_folded_page', 'marginalia_fragment', 'market_entrance_tutorial', 'mortimer_oath', 'mortimer_tasting', 'old_bookshop_bookworm', 'the_rift_errata']);
     assert.equal(c.defaultEncounterId, 'imp_coffee_greeting');
     assert.equal(c.encounter, c.encounters.get('imp_coffee_greeting').encounter);
-    assert.equal(c.vocabulary.version, `bookshop-journey-${code}-v1+butcher-meats-${code}-v1+entrance-greetings-${code}-v2+flick-party-${code}-v1+fountain-riddles-${code}-v1+gerald-break-${code}-v1+${c.entryVersion(c.encounter.objectives[0].target_vocabulary_ids[0])}+gerald-confidence-${code}-v1+marginalia-party-${code}-v1+mortimer-party-${code}-v1`);
+    assert.equal(c.vocabulary.version, `bookshop-journey-${code}-v1+butcher-meats-${code}-v1+entrance-greetings-${code}-v2+flick-lotus-${code}-v1+flick-party-${code}-v1+fountain-riddles-${code}-v1+gerald-break-${code}-v1+${c.entryVersion(c.encounter.objectives[0].target_vocabulary_ids[0])}+gerald-confidence-${code}-v1+marginalia-folded-page-${code}-v1+marginalia-party-${code}-v1+mortimer-oath-${code}-v1+mortimer-party-${code}-v1`);
     assert.equal(c.language.default_encounter, undefined, 'the default encounter is not sent to clients');
   }
 });
 
 test('a second encounter defined only as content plays at its own location, independently of Gerald', async (t) => {
   const { service, provider, content, storage } = await runtime(t, await fixtureContent(t));
-  assert.equal(content.vocabulary.version, 'bookshop-journey-es-v1+entrance-greetings-es-v2+fixture-meat-es-v1+flick-party-es-v1+fountain-riddles-es-v1+gerald-break-es-v1+gerald-coffee-v1+gerald-confidence-es-v1+marginalia-party-es-v1+mortimer-party-es-v1');
+  assert.equal(content.vocabulary.version, 'bookshop-journey-es-v1+entrance-greetings-es-v2+fixture-meat-es-v1+flick-lotus-es-v1+flick-party-es-v1+fountain-riddles-es-v1+gerald-break-es-v1+gerald-coffee-v1+gerald-confidence-es-v1+marginalia-folded-page-es-v1+marginalia-party-es-v1+mortimer-oath-es-v1+mortimer-party-es-v1');
   const { learnerId } = await service.createOrRecoverLearner();
 
   await assert.rejects(service.startEncounter(learnerId, { encounterId: 'fixture_butcher' }), { status: 409, code: 'NOT_HERE', message: /Bernard is not here\. Walk to The Butcher's Stall first\./ });

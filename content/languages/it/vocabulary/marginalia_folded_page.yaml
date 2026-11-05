@@ -1,0 +1,29 @@
+version: marginalia-folded-page-it-v1
+references:
+  - id: treccani-ecco
+    title: "Treccani, Vocabolario: ecco"
+    url: "https://www.treccani.it/vocabolario/ecco/"
+  - id: treccani-solo
+    title: "Treccani, Vocabolario: solo"
+    url: "https://www.treccani.it/vocabolario/solo/"
+entries:
+  - id: eccomi
+    kind: word
+    target: "eccomi"
+    part_of_speech: adverb
+    accepted_translations: ["here I am"]
+    surface_variants: ["eccomi"]
+    accent_insensitive: false
+    example: { target: "Eccomi, Marginalia!", english: "Here I am, Marginalia!" }
+    note: "'Ecco' (here is) with 'mi' (me) joined to it: 'here I am'."
+    reference_ids: [treccani-ecco]
+  - id: sola
+    kind: word
+    target: "sola"
+    part_of_speech: adjective
+    accepted_translations: ["alone"]
+    surface_variants: ["sola"]
+    accent_insensitive: false
+    example: { target: "Non sei sola.", english: "You are not alone." }
+    note: "Feminine of 'solo' (alone), said to or about a woman. 'Non sei sola' is 'you are not alone'."
+    reference_ids: [treccani-solo]

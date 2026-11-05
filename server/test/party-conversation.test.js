@@ -206,7 +206,7 @@ const fold = (form) => form.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase(
 const ALLOWED_OVERLAPS = new Set(['it:buono:buon:buongiorno:buon giorno', 'es:bueno:buen:buenos_dias:buen dia']);
 const ENGLISH = ['mas', 'juntas', 'rico', 'rica', 'bella', 'bonito', 'lee', 'piano', 'chili', 'soy', 'due', 'media', 'more', 'go'];
 
-test('each saveable character has exactly one first party conversation and the others none; Gerald has a deeper one at 3', () => {
+test('each saveable character has exactly one first party conversation and the others none; each has a deeper one at 3', () => {
   for (const code of ['it', 'es']) {
     const { encounters } = loadGameContent({ language: code });
     const conversations = [...encounters.values()].filter(({ encounter }) => encounter.party_of);
@@ -214,10 +214,12 @@ test('each saveable character has exactly one first party conversation and the o
       const own = conversations.filter(({ encounter }) => encounter.party_of === home.encounter.id && encounter.after_conversations === undefined);
       assert.equal(own.length, home.character.saveable ? 1 : 0, `${code} ${home.encounter.id}`);
     }
-    // Round 047 (backlog G4): the only deeper tier so far.
+    // Round 047 (backlog G4): Gerald's deeper tier; round 048 (G6): one for every other member.
     assert.deepEqual(conversations.filter(({ encounter }) => encounter.after_conversations !== undefined)
-      .map(({ encounter }) => [encounter.id, encounter.party_of, encounter.after_conversations]), [['gerald_confidence', 'imp_coffee_greeting', 3]]);
-    assert.deepEqual(conversations.map(({ encounter }) => encounter.id).sort(), ['flick_slow_walk', 'gerald_coffee_break', 'gerald_confidence', 'marginalia_fragment', 'mortimer_tasting']);
+      .map(({ encounter }) => [encounter.id, encounter.party_of, encounter.after_conversations]).sort(), [
+      ['flick_lotus', 'cracked_fountain_letharger', 3], ['gerald_confidence', 'imp_coffee_greeting', 3],
+      ['marginalia_folded_page', 'old_bookshop_bookworm', 3], ['mortimer_oath', 'butchers_stall_charcutier', 3]]);
+    assert.deepEqual(conversations.map(({ encounter }) => encounter.id).sort(), ['flick_lotus', 'flick_slow_walk', 'gerald_coffee_break', 'gerald_confidence', 'marginalia_folded_page', 'marginalia_fragment', 'mortimer_oath', 'mortimer_tasting']);
   }
 });
 
@@ -228,7 +230,7 @@ test('party vocabulary has no English-word forms and does not overlap other entr
       .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
     const formsOf = (entry) => entry.surface_variants.map(fold);
     const party = vocabulary.entries.filter((entry) => partyIds.has(entry.id));
-    assert.equal(party.length, 11, `${code}: five conversations' targets (3 + 2 + 2 + 2 + 2)`);
+    assert.equal(party.length, 17, `${code}: eight conversations' targets (3 + 2 × 7)`);
     for (const entry of party) {
       for (const form of formsOf(entry)) {
         // Whole forms: the matcher matches a phrase as a whole, so "un poco más" is safe where bare "más" is not.
@@ -249,7 +251,7 @@ test('each member\'s conversation waits until they have joined', async (t) => {
   const runtime = await createRuntime();
   t.after(runtime.close);
   const learnerId = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
-  for (const id of ['mortimer_tasting', 'flick_slow_walk', 'marginalia_fragment', 'gerald_coffee_break', 'gerald_confidence']) {
+  for (const id of ['mortimer_tasting', 'flick_slow_walk', 'marginalia_fragment', 'gerald_coffee_break', 'gerald_confidence', 'mortimer_oath', 'flick_lotus', 'marginalia_folded_page']) {
     const refused = await start(runtime, learnerId, id);
     assert.equal(refused.status, 409, id);
     assert.equal(refused.data.error.code, 'NOT_IN_PARTY', id);

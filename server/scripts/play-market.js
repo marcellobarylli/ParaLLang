@@ -3,7 +3,8 @@
 //   node server/scripts/play-market.js --provider codex-cli --tour [--out <file.json>]
 // --party (round 022) wins Gerald, recruits him, walks to the Market Entrance and plays his party conversation
 // (gerald_coffee_break) there; the report's `party` part holds that conversation and the member's count.
-// --tier N (round 047) sets the member's count to N first and plays the tier then offered (gerald_confidence at 3).
+// --tier N (round 047) sets the member's count to N first and plays the tier then offered (gerald_confidence at 3;
+// round 048: mortimer_oath, flick_lotus, marginalia_folded_page at 3).
 // --member <home location> (round 023) does the same for another member (butchers_stall, cracked_fountain,
 // old_bookshop); the conversation is played at the start location, or at a neighbour if home is the start.
 // --recruit (round 021) saves the defeated NPC to the party after a single-location run and reports the party;
@@ -68,6 +69,20 @@ const partyScripts = {
   gerald_confidence: {
     it: ['You are my friend.', 'Siamo amici, Gerald.', 'Cin cin!'],
     es: ['You are my friend.', 'Somos amigos, Gerald.', '¡Salud!'],
+  },
+  // Round 048 (--party --member X --tier 3): an English line, the first target in a variant form, a wrong line for
+  // the second objective (should fail without advancing), then the second target.
+  mortimer_oath: {
+    it: ['Calm down, Mortimer.', 'Stai tranquillo, Mortimer.', 'Non prometto niente.', 'Te lo prometto: only the ordinary hams.'],
+    es: ['Calm down, Mortimer.', 'Estate tranquilo, Mortimer.', 'No prometo nada.', 'Te lo prometo: only the ordinary hams.'],
+  },
+  flick_lotus: {
+    it: ['Wake up, Flick!', 'Svegliati, Flick, not five more minutes!', 'Non hai coraggio.', 'Coraggio, Flick!'],
+    es: ['Wake up, Flick!', '¡Despiertate, Flick, not five more minutes!', 'No tienes ánimo.', '¡Animo, Flick!'],
+  },
+  marginalia_folded_page: {
+    it: ['Here I am!', 'Eccomi, Marginalia.', 'Sei sola.', 'Non sei sola, Marginalia.'],
+    es: ['Here I am!', '¡Aqui estoy, Marginalia!', 'Estás sola.', 'No estás sola, Marginalia.'],
   },
   // Round 023.
   mortimer_tasting: {

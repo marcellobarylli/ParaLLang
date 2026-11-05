@@ -1,0 +1,29 @@
+version: flick-lotus-it-v1
+references:
+  - id: treccani-svegliare
+    title: "Treccani, Vocabolario: svegliare"
+    url: "https://www.treccani.it/vocabolario/svegliare/"
+  - id: treccani-coraggio
+    title: "Treccani, Vocabolario: coraggio"
+    url: "https://www.treccani.it/vocabolario/coraggio/"
+entries:
+  - id: svegliati
+    kind: word
+    target: "svegliati"
+    part_of_speech: verb
+    accepted_translations: ["wake up"]
+    surface_variants: ["svegliati"]
+    accent_insensitive: false
+    example: { target: "Svegliati, Flick!", english: "Wake up, Flick!" }
+    note: "The imperative of 'svegliarsi' (to wake up), said to one person you call 'tu'."
+    reference_ids: [treccani-svegliare]
+  - id: coraggio
+    kind: word
+    target: "coraggio"
+    part_of_speech: noun
+    accepted_translations: ["courage", "come on", "chin up"]
+    surface_variants: ["coraggio"]
+    accent_insensitive: false
+    example: { target: "Coraggio, Flick!", english: "Come on, Flick, you can do it!" }
+    note: "'Coraggio' is courage; said on its own, it is an encouragement: 'come on, you can do it'."
+    reference_ids: [treccani-coraggio]

@@ -1,0 +1,29 @@
+version: mortimer-oath-es-v1
+references:
+  - id: rae-tranquilo
+    title: "RAE, Diccionario de la lengua española: tranquilo"
+    url: "https://dle.rae.es/tranquilo"
+  - id: rae-prometer
+    title: "RAE, Diccionario de la lengua española: prometer"
+    url: "https://dle.rae.es/prometer"
+entries:
+  - id: tranquilo
+    kind: word
+    target: "tranquilo"
+    part_of_speech: adjective
+    accepted_translations: ["calm", "calm down", "don't worry"]
+    surface_variants: ["tranquilo"]
+    accent_insensitive: false
+    example: { target: "Tranquilo, Mortimer.", english: "Calm down, Mortimer." }
+    note: "Said on its own, 'tranquilo' (to a woman 'tranquila') means 'calm down, don't worry'. 'Estate tranquilo' is the same."
+    reference_ids: [rae-tranquilo]
+  - id: prometo
+    kind: word
+    target: "prometo"
+    part_of_speech: verb
+    accepted_translations: ["I promise"]
+    surface_variants: ["prometo"]
+    accent_insensitive: false
+    example: { target: "Te lo prometo.", english: "I promise you." }
+    note: "First person of 'prometer'. 'Te lo prometo' is 'I promise (it to) you'."
+    reference_ids: [rae-prometer]

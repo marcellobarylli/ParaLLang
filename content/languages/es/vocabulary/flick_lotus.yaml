@@ -1,0 +1,29 @@
+version: flick-lotus-es-v1
+references:
+  - id: rae-despertar
+    title: "RAE, Diccionario de la lengua española: despertar"
+    url: "https://dle.rae.es/despertar"
+  - id: rae-animo
+    title: "RAE, Diccionario de la lengua española: ánimo"
+    url: "https://dle.rae.es/%C3%A1nimo"
+entries:
+  - id: despierta
+    kind: word
+    target: "despierta"
+    part_of_speech: verb
+    accepted_translations: ["wake up"]
+    surface_variants: ["despierta", "despiértate", "despiertate"]
+    accent_insensitive: false
+    example: { target: "¡Despierta, Flick!", english: "Wake up, Flick!" }
+    note: "The imperative of 'despertar(se)' (to wake up), said to one person you call 'tú'; 'despiértate' is the same."
+    reference_ids: [rae-despertar]
+  - id: animo
+    kind: word
+    target: "ánimo"
+    part_of_speech: noun
+    accepted_translations: ["courage", "come on", "chin up"]
+    surface_variants: ["ánimo", "animo"]
+    accent_insensitive: false
+    example: { target: "¡Ánimo, Flick!", english: "Come on, Flick, you can do it!" }
+    note: "'Ánimo' is spirit or courage; said on its own, it is an encouragement: 'come on, you can do it'."
+    reference_ids: [rae-animo]

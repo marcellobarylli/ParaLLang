@@ -1,0 +1,67 @@
+id: marginalia_folded_page
+character: characters/enemies/bookworm_marginalia.yaml
+party_of: old_bookshop_bookworm
+# Round 048 (backlog G6): offered instead of the fragment reading once Marginalia has finished three conversations,
+# after she has read the old dog passage.
+after_conversations: 3
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player answers Marginalia's who-is-there and tells her she is not alone, in Italian"
+max_turns: 20
+resolved_message: "Marginalia opens the book again, at the page she keeps folded down, and reads it to you. Both of you, this time."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: here_i_am
+    prompt: "Marginalia has closed the book and her eyes, and asks who is there. Answer: here I am, using Italian."
+    intent: "Marginalia has travelled with the player for several readings, so in her greeting she does not introduce herself or describe the place: she greets the player as an old companion would, but tonight she has closed the book on her finger and closed her eyes, like the old dog at the door in a story she loves, and asks in the target language who is there. The player may not know the story. She never says \"eccomi\" or \"sola\" (in dialogue or narration) before the player has, and she does not tell the player what to say."
+    target_vocabulary_ids: [eccomi]
+    required_target_groups:
+      - [eccomi]
+    grammar_constraints:
+      - "The player answers, in their own words, with the Italian for here I am (eccomi), that they are there."
+      - "Reject English-only answers, quotations, definitions of the phrase, and answers about someone else."
+    accepted_examples:
+      - "Eccomi!"
+      - "Eccomi, Marginalia."
+      - "Eccomi, it's me."
+    negative_examples:
+      - text: "Here I am!"
+        reason: "English-only; it does not use the Italian phrase."
+      - text: "eccomi means here I am."
+        reason: "It discusses the phrase rather than answering her."
+    reference_meaning: "The player tells Marginalia that they are here."
+    hint_limit: 2
+    next_objective: not_alone
+    assessment_reference_ids: [treccani-ecco]
+  - id: not_alone
+    prompt: "Marginalia says she has waited a very long time for someone to read with. Tell her she is not alone, using Italian."
+    intent: "Marginalia opens her eyes and says, in English only, that she has waited a very long time, among the pages, for someone to read with. She does not ask for comfort. She never says \"sola\", \"solo\" or any form of the word for alone (in dialogue or narration) before the player has."
+    target_vocabulary_ids: [sola]
+    required_target_groups:
+      - [sola]
+    grammar_constraints:
+      - "The player tells Marginalia, in their own words, that she is not alone (Non sei sola.), with the feminine sola, as Marginalia is female. The sentence must deny that Marginalia is alone."
+      - "Reject English-only lines, quotations, talk about the word, lines that say she is alone (even inside a negated sentence), lines about the player being alone, and the masculine solo."
+    accepted_examples:
+      - "Non sei sola."
+      - "Marginalia, non sei sola: ci sono io."
+      - "Non sei più sola."
+    negative_examples:
+      - text: "You are not alone."
+        reason: "English-only; it does not use the Italian word."
+      - text: "Sei sola."
+        reason: "It says she is alone."
+      - text: "Non so perché sei sola."
+        reason: "A negation, but it still says she is alone."
+      - text: "Non sono sola."
+        reason: "It is about the player, not Marginalia."
+      - text: "Non sei solo."
+        reason: "Marginalia is female; solo does not describe her."
+    reference_meaning: "The player tells Marginalia that she is not alone."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [treccani-solo]

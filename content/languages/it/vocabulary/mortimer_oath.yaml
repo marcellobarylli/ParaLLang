@@ -1,0 +1,29 @@
+version: mortimer-oath-it-v1
+references:
+  - id: treccani-tranquillo
+    title: "Treccani, Vocabolario: tranquillo"
+    url: "https://www.treccani.it/vocabolario/tranquillo/"
+  - id: treccani-promettere
+    title: "Treccani, Vocabolario: promettere"
+    url: "https://www.treccani.it/vocabolario/promettere/"
+entries:
+  - id: tranquillo
+    kind: word
+    target: "tranquillo"
+    part_of_speech: adjective
+    accepted_translations: ["calm", "calm down", "don't worry"]
+    surface_variants: ["tranquillo"]
+    accent_insensitive: false
+    example: { target: "Tranquillo, Mortimer.", english: "Calm down, Mortimer." }
+    note: "Said on its own, 'tranquillo' (to a woman 'tranquilla') means 'calm down, don't worry'. 'Stai tranquillo' is the same."
+    reference_ids: [treccani-tranquillo]
+  - id: prometto
+    kind: word
+    target: "prometto"
+    part_of_speech: verb
+    accepted_translations: ["I promise"]
+    surface_variants: ["prometto"]
+    accent_insensitive: false
+    example: { target: "Te lo prometto.", english: "I promise you." }
+    note: "First person of 'promettere'. 'Te lo prometto' is 'I promise (it to) you'."
+    reference_ids: [treccani-promettere]

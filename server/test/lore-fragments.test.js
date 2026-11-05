@@ -68,8 +68,8 @@ function stemLeaks(content, fragment) {
 
 test('no fragment holds a stem of any party conversation\'s targets; the check is live', () => {
   const expected = {
-    it: ['buon', 'otti', 'graz', 'mill', 'piac', 'anco', 'andi', 'insi', 'mera', 'nuov', 'amic', 'cinc'],
-    es: ['buen', 'deli', 'grac', 'much', 'gust', 'poco', 'vamo', 'junt', 'prec', 'otra', 'amig', 'salu'],
+    it: ['buon', 'otti', 'graz', 'mill', 'piac', 'anco', 'andi', 'insi', 'mera', 'nuov', 'amic', 'cinc', 'tran', 'prom', 'sveg', 'cora', 'ecco', 'sola'],
+    es: ['buen', 'deli', 'grac', 'much', 'gust', 'poco', 'vamo', 'junt', 'prec', 'otra', 'amig', 'salu', 'tran', 'prom', 'desp', 'anim', 'aqui', 'esto', 'sola'],
   };
   for (const code of ['it', 'es']) {
     const content = loadGameContent({ language: code });

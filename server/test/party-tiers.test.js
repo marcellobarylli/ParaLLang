@@ -17,6 +17,13 @@ const RULES = {
   thank_gerald: [/muchas gracias|gracias/i, 'gracias'],
   call_friend: [/amigos?|amiga/i, 'amigo'],
   raise_toast: [/salud/i, 'salud'],
+  // Round 048 (backlog G6): the other members' deeper tiers (es).
+  calm_him: [/tranquilo/i, 'tranquilo'],
+  promise: [/prometo/i, 'prometo'],
+  wake_up: [/despi[eé]rta(te)?/i, 'despierta'],
+  courage: [/[aá]nimo/i, 'animo'],
+  here_i_am: [/aqu[ií] estoy/i, 'aqui_estoy'],
+  not_alone: [/no est[aá]s sola/i, 'sola'],
 };
 class GeraldProvider extends FixtureProvider {
   grade(messages) {
@@ -115,3 +122,42 @@ test('the deepest unlocked tier wins whatever the file order', async (t) => {
     assert.equal((await gerald(runtime, learnerId)).conversationId, expected, `count ${count}`);
   }
 });
+
+// Round 048 (backlog G6): every other saveable member offers a deeper tier at 3, which resolves and counts like
+// Gerald's.
+const MEMBERS = [
+  ['charcutier_mortimer_001', 'butchers_stall_charcutier', 'mortimer_tasting', 'mortimer_oath', ['Estate tranquilo, Mortimer.', 'Te lo prometo.']],
+  ['letharger_flick_001', 'cracked_fountain_letharger', 'flick_slow_walk', 'flick_lotus', ['¡Despiértate, Flick!', '¡Ánimo!']],
+  ['bookworm_marginalia_001', 'old_bookshop_bookworm', 'marginalia_fragment', 'marginalia_folded_page', ['¡Aqui estoy!', 'No estás sola.']],
+];
+async function withMember(t, characterId, home, conversations) {
+  const runtime = await createRuntime({ provider: new GeraldProvider() });
+  t.after(runtime.close);
+  const learnerId = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
+  const envelope = await runtime.storage.load(learnerId);
+  envelope.world = { ...envelope.world, completedEncounterIds: [home] };
+  envelope.party = [{ characterId, encounterId: home, joinedAt: '2026-01-15T12:00:00.000Z', conversations }];
+  await runtime.storage.save(envelope);
+  return { runtime, learnerId };
+}
+
+for (const [characterId, home, first, deeper, lines] of MEMBERS) {
+  test(`${deeper}: offered at 3 conversations, refused before, resolves and counts`, async (t) => {
+    const early = await withMember(t, characterId, home, 2);
+    assert.deepEqual([(await gerald(early.runtime, early.learnerId)).conversationId, (await gerald(early.runtime, early.learnerId)).conversationTier], [first, 0], 'count 2');
+    const refused = await start(early.runtime, early.learnerId, deeper);
+    assert.deepEqual([refused.status, refused.data.error.code], [409, 'NOT_YET']);
+    const { runtime, learnerId } = await withMember(t, characterId, home, 3);
+    const member = await gerald(runtime, learnerId);
+    assert.deepEqual([member.conversationId, member.conversationTier], [deeper, 3], 'count 3');
+    const encounter = (await start(runtime, learnerId, deeper)).data.encounter;
+    const failed = await say(runtime, learnerId, encounter, 'Hello, old friend.');
+    assert.equal(failed.encounter.state, 'ongoing');
+    const half = await say(runtime, learnerId, failed.encounter, lines[0]);
+    assert.equal(half.encounter.state, 'ongoing');
+    const done = await say(runtime, learnerId, half.encounter, lines[1]);
+    assert.equal(done.encounter.state, 'resolved');
+    const after = await gerald(runtime, learnerId);
+    assert.deepEqual([after.conversations, after.conversationId], [4, deeper], 'counts one and repeats');
+  });
+}

@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { createApp } from '../src/app.js';
 import { listenHostForProvider } from '../src/config.js';
@@ -10,7 +9,7 @@ import { LearningService } from '../src/learning-service.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { createCLIEnvironment } from '../src/llm/cli-environment.js';
 import { createLLMAdapter } from '../src/llm/index.js';
-import { api, createLearnerAndEncounter, createRuntime, fixedNow } from './helpers.js';
+import { api, createLearnerAndEncounter, createRuntime, fixedNow, makeTempDir } from './helpers.js';
 
 const paths = {
   'codex-cli': resolve(import.meta.dirname, 'fixtures', 'fake-codex-cli.mjs'),
@@ -18,7 +17,7 @@ const paths = {
 };
 
 async function cliRuntime(t, providerName, control = {}) {
-  const root = await mkdtemp(join(tmpdir(), 'parallang-cli-flow-'));
+  const root = await makeTempDir('parallang-cli-flow-') // round 048: removed at exit (backlog F1 missed it);
   const statePath = join(root, 'calls.json');
   const controlPath = join(root, 'control.json');
   const capturePath = join(root, 'capture.jsonl');
