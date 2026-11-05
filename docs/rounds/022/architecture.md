@@ -127,3 +127,12 @@ location encounter instead of "first by file order".
 
 Net change from v1: resolved conversations restart, *rico* replaced by *delicioso*, agreement graded, session
 location used throughout, stricter loader checks, Talk guarded during other encounters.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no amendment. Tests: server 127/127, mobile 37/37, web client 12/12 and build, expo-doctor
+20/20, iOS export ok; Gerald's pinned prompts unchanged. Live codex-cli: the coffee break resolved in all five runs
+with the planned script (it ×3, es ×1, it variant ×1), every verdict as scripted, agreement refused in the variant,
+no answer given away, share 0.37 against 0.32 requested; a sixth run used a stale script line (*riquísimo*, dropped
+by critique 1.2) and was correctly refused. A8b is done; Mortimer, Flick and Marginalia's conversations are next
+(A8c). Nothing was checked in the iOS Simulator. See [findings](findings.md).

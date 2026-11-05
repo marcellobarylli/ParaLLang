@@ -22,7 +22,7 @@ The entry point for agents: the current state, how the project is logged, and th
   Portia the Archway and a companion briefing ([round 009](docs/rounds/009/architecture.md)), Gerald at The Coffee
   Cart, Mortimer the Charcutier at The Butcher's Stall ([round 010](docs/rounds/010/architecture.md)), Flick the
   Letharger at The Cracked Fountain ([round 011](docs/rounds/011/architecture.md)) and Marginalia the Bookworm, who
-  reads from *The Journey*, at The Old Bookshop ([round 013](docs/rounds/013/architecture.md)). The Rift is sealed until those five are complete ([round 014](docs/rounds/014/architecture.md)) and holds the boss, Errata, an infohazard in glitched mixed language who reviews every earlier vocabulary file ([round 015](docs/rounds/015/architecture.md)). New encounters are content only ([round 006](docs/rounds/006/architecture.md)). Defeated saveable NPCs can be saved to the player's party ([round 021](docs/rounds/021/architecture.md)). The autonomous run's backlog
+  reads from *The Journey*, at The Old Bookshop ([round 013](docs/rounds/013/architecture.md)). The Rift is sealed until those five are complete ([round 014](docs/rounds/014/architecture.md)) and holds the boss, Errata, an infohazard in glitched mixed language who reviews every earlier vocabulary file ([round 015](docs/rounds/015/architecture.md)). New encounters are content only ([round 006](docs/rounds/006/architecture.md)). Defeated saveable NPCs can be saved to the player's party ([round 021](docs/rounds/021/architecture.md)) and talked to again anywhere ([round 022](docs/rounds/022/architecture.md)). The autonomous run's backlog
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
 - **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and neither NPCs nor the
   grader's feedback give the answer away ([round 007](docs/rounds/007/architecture.md),
@@ -32,6 +32,18 @@ The entry point for agents: the current state, how the project is logged, and th
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 022, talking to party members (autonomous)
+
+A party member can be talked to again from the Party screen, wherever the player is: a party conversation is an
+encounter file with `party_of` (no map location), graded like any other, set at the player's location, outside the
+map, the Rift gate and the Rift's review; each resolution adds one to the member's conversation count, and a resolved
+conversation can be played again. The first is Gerald's coffee break (praise his coffee with the right agreement,
+thank him), in Italian and Spanish; Spanish uses *bueno* / *delicioso* because *rico* matches "Puerto Rico". Codex
+critique 1 (10 findings: 5 accepted, 5 in part) decided autonomously. Tests: server 127/127, mobile 37/37, web client
+12/12 and build. Live codex-cli: 5 of 5 runs with the planned script resolved with every verdict as scripted
+("Il caffè è buona." refused for agreement), no answer given away, share 0.37 against 0.32 requested. Not checked in
+the iOS Simulator. See [findings](docs/rounds/022/findings.md).
 
 ## Addendum 2026-11-05: round 021, the party (autonomous)
 
@@ -250,7 +262,7 @@ Newest first.
 |---|---|---|---|---|---|
 | 020 | 11-05 | Portia's formalities in the target language: a character-sheet quirk (backlog E1, second try) (autonomous) | [020](docs/rounds/020/architecture.md) | [findings](docs/rounds/020/findings.md) | `4492e02` (pre-run record) to round 020 close (quirk reverted) |
 | 021 | 11-05 | Party recruitment: SAVE / LEAVE after a saveable NPC, party in the save, Party screen (backlog A8a); start route keeps `encounterId` (autonomous) | [021](docs/rounds/021/architecture.md) | [findings](docs/rounds/021/findings.md) | `9e51acd` (pre-run record) to round 021 close |
-| 022 | 11-05 | Conversations with party members: Gerald's coffee break, anywhere once he has joined (backlog A8b) (autonomous) | [022](docs/rounds/022/architecture.md) | [findings](docs/rounds/022/findings.md) | pre-run record |
+| 022 | 11-05 | Conversations with party members: Gerald's coffee break, anywhere once he has joined (backlog A8b) (autonomous) | [022](docs/rounds/022/architecture.md) | [findings](docs/rounds/022/findings.md) | `53b5cca` (pre-run record) to round 022 close |
 | 019 | 11-05 | Portia's own words: ambient vocabulary so the tutorial speaks its share of target language (backlog E1, E2) (autonomous) | [019](docs/rounds/019/architecture.md) | [findings](docs/rounds/019/findings.md) | `55eacb2` (pre-run record) to round 019 close |
 | 018 | 11-05 | claude-cli accepts a subscription OAuth token from the environment (supervisor note) (autonomous) | [018](docs/rounds/018/architecture.md) | [findings](docs/rounds/018/findings.md) | `b6fbd9e` (pre-run record) to round 018 close |
 | 017 | 11-05 | The Spellbook stops giving answers away: no meanings or reviews during an encounter, due cards hide theirs, notes shown (backlog D3) (autonomous) | [017](docs/rounds/017/architecture.md) | [findings](docs/rounds/017/findings.md) | `7657879` (pre-run record) to round 017 close |

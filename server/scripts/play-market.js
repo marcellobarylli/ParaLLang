@@ -59,7 +59,7 @@ const scripts = {
 const partyScripts = {
   gerald_coffee_break: {
     it: ['Delicious!', 'È buonissimo!', 'Grazie mille!'],
-    es: ['Delicious!', '¡Está riquísimo!', '¡Muchas gracias!'],
+    es: ['Delicious!', '¡Está buenísimo!', '¡Muchas gracias!'],
   },
 };
 
