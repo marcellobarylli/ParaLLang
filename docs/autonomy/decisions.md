@@ -30,3 +30,7 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 010 | No Italian `due` entry and no `chili` variant | Author them | Both are English words that narration matching would chip in Mortimer's English | Yes |
 | 2026-11-05 | 010 | Codex critique 1: 1.1–1.5 accepted; 1.6, 1.7 in part | Accept all | See round 010 Second opinion table | Yes |
 | 2026-11-05 | 010 | Grading rubric lists each target's surface forms (`forms`); grading rule names them (Amendment) | Make plurals the canonical target in content | Live: "Due etti" passed without evidence and the server rejected it; the gap affected every variant in every pack | Yes |
+| 2026-11-05 | 011 | Fountain NPC is Flick the Letharger; objectives: tell it to stop, give it a direction, insist on now | Telling the time; a single riddle objective | One objective per vocabulary focus in prototype.md §8.2; numbers live in the butcher's file | Yes |
+| 2026-11-05 | 011 | Brainrot / infohazard flavour only in the character sheet; no mechanics | Containment files now | Mechanics belong to B3 | Yes |
+| 2026-11-05 | 011 | No Spanish detente, recto, para, ya, derecho | Author them | English collisions (détente, recto) or ambiguity; Spanish has no "straight on" target | Yes |
+| 2026-11-05 | 011 | Codex critique 1: 1.1, 1.2 accepted; 1.3, 1.4 rejected | Accept all | See round 011 Second opinion table | Yes |
