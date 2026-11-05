@@ -151,3 +151,12 @@ Net change from plan v2: +1 startup fetch, +1 return-view field, one label line;
    codex-cli`, and `node server/scripts/play-market.js --provider codex-cli`, Italian; outputs saved under
    `docs/rounds/005/results/`.
 6. `git diff --check`; `python3 tools/round_log_check.py 005`.
+
+## Outcome (2026-11-05)
+
+Built as designed, with the critique 2 dispositions. Server 73/73, mobile 18/18, the frozen web client 12/12 and
+its build, the iOS bundle; `expo-doctor` 19/20 from upstream releases (no dependency changed). Live with codex-cli
+in Italian: the map playthrough resolved Gerald and marked the encounter complete on the map; `verify:cli` passed
+9/9. Gerald dictated the answer in one line, and the echo scored quality 2; that goes to B1. The build was drafted
+before the freeze while the critique ran (journal row 7). Nothing was checked in the iOS Simulator. See
+[findings](findings.md).

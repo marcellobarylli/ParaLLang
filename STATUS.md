@@ -2,7 +2,7 @@
 
 The entry point for agents: the current state, how the project is logged, and the round index.
 
-## Current state (2026-10-31)
+## Current state (2026-11-05)
 
 - **Built.** The Phase 2 Language Engine loop at The Coffee Cart in The Crumbling Market: Gerald the Imp's
   encounter, companion help, the Spellbook and spaced review ([round 001](docs/rounds/001/architecture.md)). It is
@@ -17,9 +17,23 @@ The entry point for agents: the current state, how the project is logged, and th
 - **App first.** Development is iPhone-first: the Expo / React Native app in `mobile/` plays the same loop and is
   tested in the iOS Simulator against the local server (`npm run dev:server`, `npm run dev:ios`). The web client in
   `client/` is frozen: it is kept working, but new features go to the app ([round 004](docs/rounds/004/architecture.md)).
+- **World.** The app opens on the Crumbling Market map (six locations, fog of war, saved position); only The
+  Coffee Cart has an encounter so far ([round 005](docs/rounds/005/architecture.md)). The autonomous run's backlog
+  is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 005, the Crumbling Market map (autonomous)
+
+First round of the 72-hour autonomous run (branch `autonomous`, no owner present; backlog and decisions in
+[`docs/autonomy/`](docs/autonomy/STATE.md)). The app now opens on a map of the six Crumbling Market locations, with
+fog of war; position, visited places and completed encounters are saved (save schema 2, version 1 saves migrate),
+and Gerald is entered from The Coffee Cart. Optional `PARALLANG_TOKEN` guards the API. Codex critique 2 (9
+findings; critique 1 could not run in the container) was decided autonomously, pending owner review. Tests: server
+73/73, mobile 18/18, web client 12/12 and build. Live codex-cli in Italian: map playthrough resolved, `verify:cli`
+9/9. Not checked in the iOS Simulator. Found: Gerald dictates the answer, which the grader scores quality 2. See
+[findings](docs/rounds/005/findings.md).
 
 ## Addendum 2026-10-31: round 004, iPhone app first
 
@@ -68,7 +82,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
-| 005 | 11-05 | The Crumbling Market map: six locations, paths, fog of war, saved position; Gerald entered from The Coffee Cart (autonomous) | [005](docs/rounds/005/architecture.md) | pending | pre-run record |
+| 005 | 11-05 | The Crumbling Market map: six locations, paths, fog of war, saved position; Gerald entered from The Coffee Cart (autonomous) | [005](docs/rounds/005/architecture.md) | [findings](docs/rounds/005/findings.md) | `1a21bdb` (pre-run record) to round 005 close |
 | 004 | 10-31 | iPhone app first: Expo / React Native app in `mobile/`, tested in the iOS Simulator against the local server; web client frozen | [004](docs/rounds/004/architecture.md) | [findings](docs/rounds/004/findings.md) | `8f4c456` (pre-run record) to round 004 close |
 | 003 | 10-31 | Italian by default: configurable target language packs, Italian Gerald content, per-language Spellbooks | [003](docs/rounds/003/architecture.md) | [findings](docs/rounds/003/findings.md) | `4f7bbd3` (pre-run record) to round 003 close |
 | 002 | 10-11 | Playtest ParaLLang through Codex and Claude Code subscriptions: CLI providers for narration and grading, provider check, live verification | [002](docs/rounds/002/architecture.md) and pipeline files | [verify-1](docs/rounds/002/verify-1.md) | `baca831` (architecture and packet) to `8577c26` (finish) |

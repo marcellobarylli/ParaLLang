@@ -1,0 +1,219 @@
+
+> parallang@0.1.0 verify:cli
+> node server/scripts/verify-cli.js --provider codex-cli
+
+{
+  "title": "Playtest ParaLLang through Codex and Claude Code subscriptions",
+  "passed": true,
+  "language": "it",
+  "verifiedAt": "2026-11-05T10:50:51.803Z",
+  "provider": "codex-cli",
+  "cliVersion": "0.166.0",
+  "authentication": "chatgpt-subscription",
+  "requestedModel": "CLI default",
+  "resolvedModel": "not reported by CLI",
+  "isolation": [
+    "ignored user configuration",
+    "ignored project rules",
+    "ephemeral session",
+    "shared daemon disabled",
+    "read-only sandbox",
+    "no approvals",
+    "OpenAI provider forced",
+    "ChatGPT login forced",
+    "coding/external features disabled"
+  ],
+  "grading": [
+    {
+      "case": "positive",
+      "expected": [
+        true,
+        false
+      ],
+      "observed": [
+        true,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 6185,
+      "feedback": "The coffee request is correct, but you must specify that it is without milk."
+    },
+    {
+      "case": "complete",
+      "expected": [
+        true,
+        true
+      ],
+      "observed": [
+        true,
+        true
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 7793,
+      "feedback": "Both objectives achieved correctly."
+    },
+    {
+      "case": "mixed-language",
+      "expected": [
+        true,
+        true
+      ],
+      "observed": [
+        true,
+        true
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 5469,
+      "feedback": "Both objectives are met with correctly used Italian expressions."
+    },
+    {
+      "case": "English-only",
+      "expected": [
+        false,
+        false
+      ],
+      "observed": [
+        false,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 6870,
+      "feedback": "Your meaning is clear, but both objectives require Italian expressions."
+    },
+    {
+      "case": "contextual",
+      "expected": [
+        true
+      ],
+      "observed": [
+        true
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 4945,
+      "feedback": "The answer clearly specifies no milk in the established coffee order."
+    },
+    {
+      "case": "negated",
+      "expected": [
+        false
+      ],
+      "observed": [
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 10353,
+      "feedback": "The objective was not met: the coffee was ordered with milk."
+    },
+    {
+      "case": "quoted",
+      "expected": [
+        false,
+        false
+      ],
+      "observed": [
+        false,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 4741,
+      "feedback": "Make your own order, for example: Vorrei un caffè senza latte."
+    },
+    {
+      "case": "metalinguistic",
+      "expected": [
+        false,
+        false
+      ],
+      "observed": [
+        false,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 8336,
+      "feedback": "Make your own order, for example: Un caffè senza latte, per favore."
+    },
+    {
+      "case": "third-person",
+      "expected": [
+        false,
+        false
+      ],
+      "observed": [
+        false,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 8920,
+      "feedback": "Order coffee for yourself and specify that you want it without milk."
+    }
+  ],
+  "encounter": {
+    "greetingMs": 6969,
+    "firstTurnMs": 13235,
+    "secondTurnMs": 13522,
+    "totalMs": 33776,
+    "finalState": "resolved",
+    "objectiveResults": [
+      [
+        {
+          "objectiveId": "order_coffee",
+          "passed": true,
+          "feedback": "Correct first-person request for coffee.",
+          "vocabularyEvidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": false,
+          "feedback": "The order does not include “senza latte” or “caffè nero”.",
+          "vocabularyEvidence": []
+        }
+      ],
+      [
+        {
+          "objectiveId": "no_milk",
+          "passed": true,
+          "feedback": "The player orders coffee without milk using the prompted Italian expression.",
+          "vocabularyEvidence": [
+            {
+              "vocabularyId": "senza_latte",
+              "evidence": "Senza latte",
+              "quality": 2,
+              "effectiveQuality": 2
+            }
+          ]
+        }
+      ]
+    ],
+    "canonicalVocabulary": [
+      "caffe",
+      "espresso",
+      "senza_latte",
+      "vorrei"
+    ],
+    "dueReviewAvailable": true
+  },
+  "generationCalls": 14,
+  "budget": 14
+}
