@@ -17,7 +17,7 @@ escalation:
 objectives:
   - id: call_friend
     prompt: "Gerald is brooding over the word that died with the Dead Branch. Tell him he is your friend, using Spanish."
-    intent: "Gerald has travelled with the player for several coffee breaks. Tonight he is quietly morose: in a line or two he mentions a dark, bitter drink from the Dead Branch, his old home, whose name died with it, so nobody remembers the word. The player may not know the story. He would never admit he wants to hear that the player considers him a friend, and he does not suggest the word for friend."
+    intent: "Gerald has travelled with the player for several coffee breaks, so in his greeting he does not introduce himself or describe the place: he greets the player as an old companion. Tonight he is quietly morose: in his greeting, in a line or two, he mentions a dark, bitter drink from the Dead Branch, his old home, whose name died with it, so nobody remembers the word. The player may not know the story. He would never admit he wants to hear that the player considers him a friend, and he does not suggest the word for friend."
     target_vocabulary_ids: [amigo]
     required_target_groups:
       - [amigo]

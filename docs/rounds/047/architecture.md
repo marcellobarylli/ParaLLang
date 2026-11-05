@@ -106,3 +106,13 @@ All other suites, including Gerald's golden prompts, unchanged.
 codex-cli: `play-market.js --party --tier 3` in it and es, one run each (~14 calls). The bar: both resolve; the
 English line fails; `leak-scan.js` and a reading of every NPC line find no target form (*amico*/*amigo* and
 inflections, *cin cin*/*cincin*, *salud*) before its objective is met.
+
+## Amendment 1 (2026-11-05): the deeper opening goes in the greeting
+
+The first live runs resolved as designed, but both greetings opened as a first meeting ("Ciao. Sono Gerald. This
+market? Two espresso shots."). The Italian run never mentioned the Dead Branch, and the Spanish run mentioned it only
+in turn 2. `prompts/encounter/greeting.txt` asks for a concise greeting and wins over an intent that does not say
+"in his greeting" (round 013 trap). So `call_friend`'s intent (it, es) now says that in his greeting Gerald does not
+introduce himself or describe the place, and that he mentions the Dead Branch drink there. The change is content
+only. Both live runs are repeated with the same bar, plus one more: the greeting is not a first meeting and names
+the dead word or drink. Autonomous decision, pending owner review.
