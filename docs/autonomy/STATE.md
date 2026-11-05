@@ -7,9 +7,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing in progress: rounds 015, 016 and 017 are closed. Next, in order: **E1** narrowed to Portia (round 014's
-tour, again in round 015's: greeting 0.07 against 0.20), **E2** (Portia's unprompted greetings), then **A8** (party)
-or **B3**'s Fountain part. All need live runs: check Codex's limit first (see traps).
+Nothing in progress: rounds 018 and 019 are closed. Next, in order: **E1** (Portia's share; round 019 refuted the
+vocabulary-scarcity hypothesis: try her sheet's English paperwork humour, content first), then **A8** (party) or
+**B3**'s Fountain part. All need live runs: check Codex's limit first (see traps).
 
 ## Backlog
 
@@ -61,7 +61,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
-- [ ] **D1.** `verify:cli` for `claude-cli` in Italian and for either provider in Spanish (round 003 item 3).
+- [ ] **D1.** (claude-cli preflight accepts an OAuth token since round 018; still blocked: no token in the shell)
+  `verify:cli` for `claude-cli` in Italian and for either provider in Spanish (round 003 item 3).
 - [x] **D2.** Grader caps echoed phrases at quality 2 (round 003 item 4): explained by rounds 007–008 (the echoes
   were prompted; unprompted, the same answer scores 5).
 - [x] **D3.** (round 017, closed 2026-11-05) Show vocabulary notes; the Spellbook meaning leak from round 001 (round 003 item 5).
@@ -79,17 +80,21 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **E1. Opening-line language share.** Round 009: first NPC lines carry 0.05–0.24 target language against
   0.20 requested (Gerald 0.19 vs 0.25). Round 014's tour: only Portia is short (mean 0.11 vs 0.28, greeting 0.07 vs
   0.20); Gerald 0.26/0.30, Mortimer, Flick and Marginalia at or above. Start with Portia's character sheet or
-  encounter (content), not the shared template. Measure over a few runs per encounter, then adjust the greeting template or
+  encounter (content), not the shared template. **Round 019:** ambient words did not raise it (lines 0.17 → 0.16,
+  greeting 0.08 → 0.12 on 3 runs): the gap is the English around her one Italian formula. Next: a language-profile
+  note or quirk that her formalities and remarks are in the target language; measure 3 it + 1 es as in round 019. Measure over a few runs per encounter, then adjust the greeting template or
   language rules; keep the golden-prompt test in step (regenerate on purpose).
 - [x] **E3. NPCs list the answers.** (round 012, closed 2026-11-05) Style rule against menus of an open objective's
   targets; menus 4/4 → 0/4 runs. Portia's "Come ti chiami?" left allowed (pending owner review).
-- [ ] **E2. Author the greetings Portia uses unprompted** (piacere, benvenuto; mucho gusto, bienvenido) so they get
-  chips and Spellbook cards.
+- [x] **E2. Author the greetings Portia uses unprompted** (round 019, closed 2026-11-05) as ambient vocabulary
+  (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
 
-- **Sign in the `claude` CLI** (`claude auth status` reports `loggedIn: false` on 2026-11-05), or confirm that live
-  runs are Codex-only. Without it, Codex's usage limit stops all live data (round 015).
+- **Expose `CLAUDE_CODE_OAUTH_TOKEN` to the agent's shell** (round 018). The game's claude-cli preflight now accepts
+  the subscription token (supervisor note), but the iteration's Bash shell does not carry it (only the agent's parent
+  process does), so `claude -p` says "Not logged in" and claude-cli live runs still fail. The agent does not copy it
+  out of another process. Until then Codex's usage limit stops all live data.
 
 - Play the app in the iOS Simulator (round 004 open item 1), and every Simulator check listed in later rounds'
   open items.
@@ -161,7 +166,26 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   closed: no Spellbook answers or reviews during encounters, due cards hide theirs, notes shown; server 103/103,
   mobile 25/25, client 12/12. Iteration 5 ends here (rounds 015–017 closed).
 
+- 2026-11-05, iteration 6: round 018 (supervisor note) planned, critiqued (7 findings, all accepted), built and
+  closed: claude-cli preflight accepts `CLAUDE_CODE_OAUTH_TOKEN`; server 108/108. No live claude-cli: the token is not
+  in the agent's shell.
+- 2026-11-05, iteration 6: round 019 (E1, E2) planned, critiqued (12 findings: 7 accepted, 3 in part, 2 rejected),
+  built and closed: ambient vocabulary for Portia; server 114/114, mobile 25/25, client 12/12; live 9 runs, 65
+  calls, all resolved and graded as scripted; E2 done, E1 not improved.
+
 ## Handoff notes and traps
+
+- **Ambient vocabulary** (round 019): `ambient_vocabulary_ids` on an encounter adds words to its narration entries
+  one by one and a FREE VOCABULARY line to its narration prompt (empty for encounters without it, so pinned prompts
+  hold). The loader refuses an ambient id that is a target or whose folded form overlaps a target's form.
+- **The claude CLI is not signed in from the Bash shell** (round 018): `CLAUDE_CODE_OAUTH_TOKEN` exists only in the
+  agent's parent process. `npm run check:provider -- --provider claude-cli` refuses (`authentication`). Do not copy
+  the token out of `/proc`. If a later shell has it, run check:provider first; an unlisted `authMethod` in
+  `claude auth status --json` is refused: add it to `TOKEN_AUTH_METHODS` with a test.
+- **Codex critique without file access works with a short bundle in about 1–2 minutes** (rounds 018, 019; ~450 and
+  ~1000 lines), much faster than the 7–9 minutes noted below for bigger bundles.
+- `/tmp/r019/tools/summarize.py` is not kept; the per-set table in round 019's findings came from a 20-line script
+  over `results/*.json` (greeting share, line means, tokens, ambient words).
 
 - **Reviews are refused during an encounter** (round 017, 409 `IN_ENCOUNTER`, create and submit). Server tests that
   review must resolve the encounter first (`finishEncounter` in `server/test/helpers.js`); `verify-cli.js` reviews

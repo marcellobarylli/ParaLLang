@@ -64,3 +64,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 019 | Tapping an ambient word spends a hint, as other NPCs' scene words do | Exempt ambient words from the allowance (critique 1.10) | Same rule as every encounter; the owner's Simulator check can revisit | Yes |
 | 2026-11-05 | 019 | Portia's sign quirk becomes language-neutral (no *MERCATO*) | Keep it | It is wrong in the Spanish pack (critique 1.6) | Yes |
 | 2026-11-05 | 019 | Codex critique 1: 8 accepted, 2 in part, 2 rejected (1.3, 1.10) | Accept all | See round 019 Second opinion table | Yes |
+| 2026-11-05 | 019 | Correction to the row above: critique 1 was 7 accepted, 3 in part (1.1, 1.9, 1.12), 2 rejected (1.3, 1.10) | — | Miscounted | Yes |
+| 2026-11-05 | 019 | Keep the ambient vocabulary although the share did not rise (lines 0.17 → 0.16); E1 stays open with a content hypothesis (her English paperwork jokes) | Revert it | It fixes E2 (her real words are chipped), is inert elsewhere and leaves gameplay unchanged | Yes |

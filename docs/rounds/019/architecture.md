@@ -113,3 +113,11 @@ codex-cli (claude-cli if Codex hits its limit and the shell has the token):
   the script, ambient words used and chipped, dictation or menus of open targets, feedback leaks.
 - Compared with the baseline (3 it + 1 es on HEAD). Target: mean Italian greeting share (not-in-translation) ≥ 0.15
   and a higher per-line mean, verdicts as scripted, no new dictation.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendment. Tests: server 114/114, mobile 25/25, web client 12/12 and build. Live (codex-cli,
+9 runs, 65 calls): every run resolved and every scripted line graded as intended; the ambient words appear and are
+chipped in every Italian line (E2 done), but the share of target language did not rise (Italian lines 0.17 → 0.16,
+greeting 0.08 → 0.12 on three runs; Spanish 0.21 → 0.19): the hypothesis does not explain the gap, and E1 stays open
+with a content hypothesis. See [findings](findings.md).
