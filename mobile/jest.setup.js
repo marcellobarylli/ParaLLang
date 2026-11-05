@@ -9,3 +9,9 @@ jest.mock('react-native-safe-area-context', () => require('react-native-safe-are
 // Round 035 (critique 1.6): tests run with Reduce Motion on, so nothing animates unless a test turns it off.
 const { AccessibilityInfo } = require('react-native');
 jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(() => Promise.resolve(true));
+
+// Round 037: expo-audio has no native module under jest.
+jest.mock('expo-audio', () => ({
+  createAudioPlayer: jest.fn(() => ({ seekTo: jest.fn(async () => {}), play: jest.fn(), remove: jest.fn() })),
+  setAudioModeAsync: jest.fn(async () => {}),
+}));

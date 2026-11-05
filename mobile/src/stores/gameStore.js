@@ -2,18 +2,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { learningApi } from '../api/learning.js';
 import { MAX_SAVES, SLOTS_KEY, parseSlots, withActive } from './saveSlots.js';
+import { playCue } from '../sounds.js';
 
 const LEARNER_KEY = 'parallang.learnerId';
 // Round 027: set once the player has entered the market from the philosophy statement (per device).
 export const ONBOARDING_KEY = 'parallang.onboardingSeen';
+// Round 037: the sound switch (per device); anything but 'off' means on.
+export const SOUNDS_KEY = 'parallang.soundsOn';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
 const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now()}-${Math.random()}`;
 
 // Ported from client/src/stores/gameStore.js (round 004). Storage is async (AsyncStorage) and the store keeps the
 // server's target language; the request-epoch, snapshot and retained-draft behaviour is the web store's.
-export function createGameStore({ api = learningApi, storage = AsyncStorage } = {}) {
+export function createGameStore({ api = learningApi, storage = AsyncStorage, cue = playCue } = {}) {
   let initializationPromise = null;
   let requestEpoch = 0;
+  let soundsTouched = false;
   const snapshots = new Map();
 
   return create((set, get) => ({
@@ -36,8 +40,16 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
     pendingInput: null,
     isLoading: false,
     error: null,
+    soundsOn: true,
 
     setDraft: (draft) => set({ draft }),
+    // Round 037 (backlog C4a): UI cues and their switch.
+    _cue: (name) => { if (get().soundsOn) Promise.resolve().then(() => cue(name)).catch(() => {}); },
+    setSoundsOn: (on) => {
+      soundsTouched = true;
+      set({ soundsOn: Boolean(on) });
+      Promise.resolve(storage?.setItem?.(SOUNDS_KEY, on ? 'on' : 'off')).catch(() => {});
+    },
     clearError: () => set({ error: null }),
 
     initialize: () => {
@@ -48,6 +60,8 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
         try {
           // Round 027: the statement is fetched beside startup, never inside it: a failure only skips the screen.
           const seen = await Promise.resolve(storage?.getItem?.(ONBOARDING_KEY)).catch(() => null);
+          // Round 037 (critique 1.7): only 'off' turns sounds off, and a switch made meanwhile wins.
+          Promise.resolve(storage?.getItem?.(SOUNDS_KEY)).then((value) => { if (value === 'off' && !soundsTouched) set({ soundsOn: false }); }, () => {});
           const onboardingPromise = seen ? Promise.resolve(null)
             : Promise.resolve().then(() => api.getOnboarding()).then((data) => data?.onboarding ?? null, () => null);
           // Round 031: the active save slot's id; without a valid slot record, the legacy key's (round 004).
@@ -184,6 +198,12 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
         if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
         snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
         set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
+        // Round 037: a cue for progress only: the encounter resolved, or the current objective was met (critique
+        // 1.1: a later objective passing alone advances nothing). Nothing on a miss or a replayed attempt.
+        if (!result.replayed) {
+          if (result.encounter.state === 'resolved') get()._cue('resolve');
+          else if (result.encounter.currentObjective?.id !== state.encounter.currentObjective?.id) get()._cue('pass');
+        }
         if (result.encounter.state === 'resolved') {
           try {
             // Round 022: a resolved party conversation raises the member's count, so the party is refreshed too.
@@ -248,6 +268,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
         const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'answer', answer: String(answer).trim() });
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
+        if (result.result?.correct) get()._cue('pass'); // Round 037 (critique 1.2)
       } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
 

@@ -1,10 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, colors, type } from './ui.js';
 import { MAX_SAVES } from '../stores/saveSlots.js';
 
 // Round 031 (backlog A11): the device's saves. Each is a learner on the server; the current one shows where it
 // stands, the others can be continued, and a new one can be started while fewer than MAX_SAVES exist.
-export default function SavesPanel({ saves, activeId, place, dueCount = 0, isLoading, onContinue, onNew, onReturn }) {
+export default function SavesPanel({ saves, activeId, place, dueCount = 0, isLoading, onContinue, onNew, onReturn, soundsOn = true, onToggleSounds }) {
   const full = saves.length >= MAX_SAVES;
   return (
     <ScrollView aria-label="Saves" contentContainerStyle={styles.content}>
@@ -27,6 +27,11 @@ export default function SavesPanel({ saves, activeId, place, dueCount = 0, isLoa
       {full
         ? <Text style={styles.muted}>Three saves is the most this device keeps.</Text>
         : <Button label="Start a new save" disabled={isLoading} onPress={onNew} />}
+      {/* Round 037: the device's sound switch (the ring/silent switch also mutes the cues). */}
+      {onToggleSounds && <Pressable role="switch" aria-checked={soundsOn} aria-label="Sounds" onPress={() => onToggleSounds(!soundsOn)} style={styles.switch} hitSlop={6}>
+        <Text style={styles.switchLabel}>Sounds</Text>
+        <Text style={[styles.switchState, soundsOn && styles.switchOn]}>{soundsOn ? 'On' : 'Off'}</Text>
+      </Pressable>}
     </ScrollView>
   );
 }
@@ -37,6 +42,10 @@ const styles = StyleSheet.create({
   title: { fontSize: type.title1, fontWeight: '700', color: colors.ink },
   card: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   current: { borderColor: colors.accent },
+  switch: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, marginTop: 8 },
+  switchLabel: { fontSize: type.callout, fontWeight: '600', color: colors.ink },
+  switchState: { fontSize: type.callout, fontWeight: '700', color: colors.muted },
+  switchOn: { color: colors.accent },
   cardTitle: { fontSize: type.title3, fontWeight: '600', color: colors.ink },
   action: { alignSelf: 'flex-start', marginTop: 4 },
   body: { color: colors.ink, fontSize: type.subhead },
