@@ -84,3 +84,8 @@ label reuse, honest wording, and the system alert.
 - Saves screen: no Remove on the current save, and its hint; the alert's title, message and buttons; only the
   destructive button calls `onRemove`.
 - Round 031's save tests unchanged; all suites; expo-doctor.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. Mobile 90/90, server 157/157, web client 12/12, expo-doctor 20/20. See
+[findings](findings.md).
