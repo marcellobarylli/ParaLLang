@@ -130,7 +130,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - [x] **G1. Party-screen hint.** (round 043, closed 2026-11-05: `storyProgress`, `storyHint`) Show how many conversations remain until a member's next fragment (rounds 032–033
   left it as an owner question: decide autonomously, record it). No live calls needed.
-- [ ] **G2. Leak check for bare target words inside authored phrases** (round 023: "¿Quieres más?"): a test or
+- [x] **G2. Leak check for bare target words inside authored phrases** (round 044, closed 2026-11-05: `server/scripts/leak-scan.js`; 6 near-leaks in 611 lines, no fix) (round 023: "¿Quieres más?"): a test or
   `replay-leaks.mjs`-style scan over authored content and live reports. No live calls needed for the content part.
 - [ ] **G3. Unordered objectives** (round 023): an encounter may mark objectives as completable in any order; engine
   and tests first (no live), then one live run.

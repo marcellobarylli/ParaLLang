@@ -1,0 +1,5351 @@
+{
+  "files": {
+    "no scenes": 2,
+    "scanned": 84,
+    "not JSON": 2,
+    "no language": 1
+  },
+  "total": {
+    "it": {
+      "reports": 60,
+      "scenes": 130,
+      "inferred": 11,
+      "replays": 40,
+      "skippedScenes": 0,
+      "lines": 410,
+      "leakLines": 62,
+      "nearLines": 5,
+      "quotedLines": 27,
+      "echoLines": 13
+    },
+    "es": {
+      "reports": 24,
+      "scenes": 78,
+      "inferred": 0,
+      "replays": 40,
+      "skippedScenes": 0,
+      "lines": 201,
+      "leakLines": 16,
+      "nearLines": 1,
+      "quotedLines": 17,
+      "echoLines": 3
+    }
+  },
+  "results": [
+    {
+      "path": "docs/rounds/003/results/verify-it-codex.json",
+      "language": "it",
+      "scenes": [],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/005/results/live-2-play-market.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "caffè",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffe",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffé",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. I'm Gerald. This market: one espresso shot. My coffee: five. Un caffè? Senza latte, naturally. Milk is a war crime."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un caffè, yes. Three espresso shots for politeness. But you haven't specified without milk. Say: ‘Senza latte, per favore.’ Let's prevent a dairy atrocity."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/005/results/live-3-verify-cli.json",
+      "error": "not JSON"
+    },
+    {
+      "path": "docs/rounds/006/results/live-1-play-market.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "caffè",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffe",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffé",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. I'm Gerald. This cart: five espresso shots. Milk: a war crime. Un caffè, senza latte?"
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un caffè—accepted. Three espresso shots for politeness. But specify: senza latte, per favore. Milk is still a war crime."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/007/results/after-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Io sono Gerald. Your punctuality: three espresso shots out of five. What would you like?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/007/results/after-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 1,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! I’m Gerald. This cart? Five espresso shots. The market? One. Che cosa desideri?"
+            },
+            {
+              "line": 1,
+              "kind": "near",
+              "exact": [],
+              "words": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "word": "latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "Un caffè, certo. Polite, clear: four espresso shots. But the milk situation remains unresolved. Vuoi latte nel caffè? I consider it a war crime, but apparently we must ask."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/007/results/after-3.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 1,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Sono Gerald. Welcome to my cart. Five espresso shots for the coffee; one for the surroundings."
+            },
+            {
+              "line": 1,
+              "kind": "near",
+              "exact": [],
+              "words": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "word": "latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "Un caffè, certo. Polite, clear: four espresso shots. But your milk preference is still missing. Vuoi il latte? I consider milk in coffee a war crime, but the form insists I ask."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/007/results/baseline-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "caffè",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffe",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffé",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Welcome. I'm Gerald. This market? One espresso shot out of five. Order un caffè, senza latte. Milk is a war crime."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un caffè, sì. Your coffee order passes. Two espresso shots out of five: you haven't specified no milk. Try adding senza latte—without milk—to your order. Civilization hangs by a teaspoon."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/007/results/baseline-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "caffè",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffe",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffé",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [
+                {
+                  "objective": "no_milk",
+                  "form": "caffè nero",
+                  "word": "caffe",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "Buongiorno. I’m Gerald. This market? One espresso shot out of five. Un caffè? Milk is a war crime."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "no_milk",
+                  "form": "caffè nero",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "no_milk",
+                  "form": "caffe nero",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "no_milk",
+                  "form": "caffé nero",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Coffee ordered. Three espresso shots out of five. But the milk question remains. Say ‘senza latte’—without milk—or order a ‘caffè nero’: black coffee. Your cup needs principles."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/007/results/baseline-3.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "caffè",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffe",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffé",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "I'm Gerald. This market? One espresso shot out of five. Un caffè, senza latte? Milk is a war crime."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un caffè? Bene. Your polite order earns three espresso shots out of five. But you haven't specified no milk. Add «senza latte, per favore» to your order. I refuse to supervise a dairy incident."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/008/results/after-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Cosa vuoi? This market gets one espresso shot out of five. My coffee gets five. Milk is a war crime."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/008/results/after-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 1,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "caffè",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffe",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffé",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [
+                {
+                  "objective": "no_milk",
+                  "form": "caffè nero",
+                  "word": "caffe",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "Buongiorno! Sono Gerald. Coffee standards here: five espresso shots. Milk? A war crime. Desideri un caffè?"
+            },
+            {
+              "line": 1,
+              "kind": "near",
+              "exact": [],
+              "words": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "word": "latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "Un caffè, certo. Polite delivery: five espresso shots, no notes. But your milk preference remains unspecified. Vuoi latte? My professional disgust is complimentary."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/008/results/after-3.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": true,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "caffè",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffe",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "caffé",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [
+                {
+                  "objective": "no_milk",
+                  "form": "caffè nero",
+                  "word": "caffe",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "Buongiorno! Un caffè? My coffee: five espresso shots out of five. Milk is a war crime."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un caffè, bene. Your politeness: five espresso shots. Your milk policy: pending. Con latte o senza latte? I ask for the record, and potentially the prosecution."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/008/results/live-1-verify-cli.json",
+      "error": "not JSON"
+    },
+    {
+      "path": "docs/rounds/009/results/gerald-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 1,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. I'm Gerald. This market? One espresso shot out of five. My coffee? Five. Cosa desideri?"
+            },
+            {
+              "line": 1,
+              "kind": "near",
+              "exact": [],
+              "words": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "word": "latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "Un caffè, certo. Polite. Four espresso shots out of five. Ma il latte? Milk in coffee is a war crime. Your coffee is requested; your position on milk remains tragically unclear."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/009/results/tutorial-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "hola",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "¡Hola! A greeting and your name before entry, please. This is a market, not an administrative free-for-all."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "ask_back",
+                  "form": "cómo te llamas",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "ask_back",
+                  "form": "como te llamas",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "¡Hola! Muy bien. Your greeting is approved. ¿Cómo te llamas? The name field remains blank, and blank is not a person. Usually."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/009/results/tutorial-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "ask_back",
+                  "form": "come ti chiami",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! I am Portia, the archway. A greeting and your name before entry, please. Come ti chiami?"
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "ask_back",
+                  "form": "come ti chiami",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Ciao! Your greeting is accepted. Your name, however, remains conspicuously absent from the paperwork. Come ti chiami?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/009/results/tutorial-it-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. I am Portia. A greeting and your name, please. Entry requires manners; structural integrity is optional."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "ask_back",
+                  "form": "come ti chiami",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Ciao! Greeting accepted. Now, come ti chiami? Your name, please; an exclamation mark is not a legal identity."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/009/results/tutorial-it-3.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! I am Portia. A greeting and your name before entry, please. Manners are load-bearing."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/010/results/after-butcher-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "name_meat",
+                  "form": "chorizo",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "name_meat",
+                  "form": "salchicha",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "name_meat",
+                  "form": "pollo",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "¡Jamón! Excelente, pero todo es jamón. ¿Quieres chorizo, salchicha o pollo? Pick a different meat, my friend. Then we shall discuss weight. My scales dislike suspense."
+            },
+            {
+              "line": 2,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "kilos",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "quantity",
+                  "form": "gramos",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "¡Chorizo! ¡Muy bien! A correct name. Delighted. Slightly betrayed. Still certified jamón. ¿Cuánto quieres? ¿Kilos o gramos? My scales require a quantity, not a whole vibe."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/010/results/after-butcher-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "name_meat",
+                  "form": "salame",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "name_meat",
+                  "form": "salsiccia",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "name_meat",
+                  "form": "pollo",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Prosciutto! Certo! But ham is already the entire department. Vuoi salame, salsiccia o pollo? Different names. Suspiciously ham-adjacent. E quanto ne vuoi? My scales require an amount, not a vibe."
+            },
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Chilo, certo! Ma quanto salame vuoi? Solo «chilo» non basta. My scales need a number with the weight unit. Absolutely honest equipment. Terrible at guessing."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/010/results/after-butcher-it-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "name_meat",
+                  "form": "salame",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "name_meat",
+                  "form": "salsiccia",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "name_meat",
+                  "form": "pollo",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Prosciutto? Certo! Everything here is certified ham. Ma desidera un'altra carne? Salame, salsiccia o pollo? Those are its civilian names. E quanto ne vuole? My scales require specifics; they have standards."
+            },
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un chilo di cosa? No, aspetti! Il salame, certo. Ma quanto? “Chilo” è solo l’unità. My scales need a number with that weight unit. Certified ham, uncertified quantity."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/010/results/butcher-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "kilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "¡Un momento! «Kilo» es una unidad. Necesito una cantidad. How much certified jamón? A number and a weight unit—the scales have standards. ¿Cuánto quieres?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/010/results/butcher-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un momento! Chilo, sì. Ma quanto salame desidera? A weight unit alone isn't a quantity. Even certified ham needs a number—or a half."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/010/results/butcher-it-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Chilo, certo! Ma quanto salame desidera? A unit without an amount! My scales are honest, not psychic. Quanto prosciutto?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/010/results/verify-cli-it-after.json",
+      "language": "it",
+      "scenes": [],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/011/results/fountain-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 2,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "direction",
+                  "form": "derecha",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "direction",
+                  "form": "izquierda",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "¡Vale, vale! No me muevo. You stopped me. Attention span: rude but effective. ¿A la izquierda o a la derecha? Which way? Pick a direction for me—actually, first, a riddle: what has two feet and five more minutes?"
+            },
+            {
+              "line": 4,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "now",
+                  "form": "ahora",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "¡Sí, a la izquierda! Muy bien. Pero ahora no. Mañana, ¿vale? Tengo una adivinanza—actually, just one more. Five more minutes. ¿Podemos esperar?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/011/results/fountain-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/011/results/fountain-it-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/011/results/variant-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/012/results/butcher-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/012/results/butcher-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Chilo? Bene, ma quanto? Manca un numero. My scales need an amount; a unit alone is not a serving. Quanto salame desidera?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/012/results/butcher-it-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un momento! Chilo, sì, ma quanto? Mi serve una quantità. My scales need a number with the weight unit. Honest creatures. Absolutely no imagination."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/012/results/fountain-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/012/results/gerald-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Sono Gerald. This cart? Five espresso shots. The market? One. What can I get you?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/012/results/tutorial-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/013/results/after-bookshop-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 3,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "I'm Marginalia. I sell books to people who understand them. A niche market.\n\nEsta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años.\n\nNo spoilers. ¿Adónde va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nadie",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "¡Correcto! Journathan va a casa. Reading comprehension: upgraded. Ahora escucha:\n\nEl Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.»\n\nThe first recorded translation trick. Scholars still argue; I eat their papers.\n\n¿Qué nombre le da Journathan al Cíclope?"
+            },
+            {
+              "line": 4,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nadie",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Journathan es su nombre real. Pero ¿qué nombre le da al Cíclope? Lee con atención:\n\nEl Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.»\n\nReal name: correct. Answer to this question: not yet. The distinction is small enough to fit in a margin, where all important things live.\n\n¿Qué nombre le da Journathan al Cíclope?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/013/results/after-bookshop-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 4,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "I'm Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni. This is The Journey. I sell books only to people who understand them. A controversial business model. Dove va Journathan?"
+            },
+            {
+              "line": 1,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Un libro è una cosa. La domanda è: dove va Journathan? You have identified the merchandise, not his destination. Reading comprehension: pending. Rileggi: «Il suo viaggio verso casa dura vent'anni.» Dove va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Esatto, va a casa! Reading comprehension: redeemed. Ora leggo: Il Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.» The first recorded translation trick. No spoilers; the Cyclops had a difficult reading experience. Quale nome dà Journathan al Ciclope?"
+            },
+            {
+              "line": 4,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Journathan è il suo vero nome. Ma quale nome dà al Ciclope? The real name: correct. The reading comprehension: not yet. Rileggo: Il Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.» Quale nome dà Journathan al Ciclope?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/013/results/after-bookshop-it-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 4,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Sono Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\nI sell books only to people who understand them. No spoilers; it's about the journey, not the destination. Journathan hates that.\nDove va Journathan?"
+            },
+            {
+              "line": 1,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Un libro? No. È una cosa, non un luogo. Your reading comprehension remains in the prologue. Rileggiamo: «Il suo viaggio verso casa dura vent'anni.» Dove va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Esatto, a casa! Reading comprehension: officially out of the prologue. Ora leggo: «Il Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»»\nThe first recorded translation trick. Scholars wrote footnotes; the Cyclops had a difficult evening. Quale nome dà Journathan al Ciclope?"
+            },
+            {
+              "line": 4,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Journathan è il suo vero nome. Ma quale nome dà al Ciclope? Leggi ancora: «Il Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»»\nCorrect man, wrong name tag. Reading comprehension: a footnote needs attention."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/013/results/bookshop-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 4,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 1,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Un libro, sí. But that is what you are holding, not where Journathan is going. Reading comprehension: not yet footnote-worthy. Escucha: «Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años.» ¿Adónde va Journathan?"
+            },
+            {
+              "line": 2,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "La idea es correcta, pero está en inglés. En español, por favor. Reading comprehension: half credit; the book remains in my custody. Escucha: «Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años.» ¿Adónde va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nadie",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "¡Correcto! Journathan va a casa. Reading comprehension: upgraded. Ahora, escucha: El Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.» ¿Qué nombre le da Journathan al Cíclope? The first recorded translation trick. No spoilers; the Cyclops has already had enough."
+            },
+            {
+              "line": 4,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nadie",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Journathan es su nombre real, pero no es el nombre que da al Cíclope. Reading comprehension: a true fact on the wrong shelf. Escucha otra vez: El Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.» ¿Qué nombre le da Journathan al Cíclope?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/013/results/bookshop-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 4,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 1,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Un libro, sì. Ma questa non è la risposta: the question concerns his destination, not the shop's inventory. Reading comprehension: not yet. Listen carefully; no spoilers beyond the actual text.\n\nQuesta è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\n\nDove va Journathan?"
+            },
+            {
+              "line": 2,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Hai capito, ma la risposta è in inglese. The destination is correct; the language has wandered off. Reading comprehension: partial credit, no book yet.\n\nAscolta: «Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.»\n\nDove va Journathan? Rispondi in italiano."
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Esatto, va a casa! Reading comprehension: approved. The book remains conditionally uneaten.\n\nOra ascolta: «Il Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»»\n\nThe first recorded translation trick. No spoilers; the Cyclops has suffered enough.\n\nQuale nome dà Journathan al Ciclope?"
+            },
+            {
+              "line": 4,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Journathan è il suo vero nome. Ma il Ciclope sente un altro nome. Reading comprehension: not yet. A real name, regrettably, is not always the right answer.\n\nAscolta ancora: Il Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»\n\nQuale nome dà Journathan al Ciclope?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/013/results/bookshop-it-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 2,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 1,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Un libro? Sì, questo è un libro. But that is the object in front of us, not his destination. Reading comprehension: not yet.\n\nQuesta è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\n\nDove va Journathan? I need his destination, not the inventory."
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Esatto, va a casa! Reading comprehension: upgraded. The book remains here for one more passage.\n\nIl Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»\n\nThe first recorded translation trick. Scholarly opinion: the Cyclops needed a better editor.\n\nQuale nome dà Journathan al Ciclope?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/014/results/tour-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! A greeting and your name, please. I am an archway, not a loophole."
+            }
+          ]
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! I'm Gerald. This cart? Five espresso shots out of five. The market? One. Come posso aiutarti?"
+            }
+          ]
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Chilo, certo! Ma quanto salame desidera? Manca la quantità. My scales need a number, not just a unit. Honest things. Terrible at guessing."
+            }
+          ]
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 3,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Sono Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\n\nI sell books only to people who understand a passage. No spoilers; comprehension first. Dove va Journathan?"
+            },
+            {
+              "line": 1,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Un libro? No. Un libro è una cosa. La domanda è: dove va Journathan? You have identified the merchandise. Reading comprehension: not yet. Rileggi: «Il suo viaggio verso casa dura vent'anni.» Dove va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Esatto, a casa! Reading comprehension: recovered. Ora ascolta.\n\nIl Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»\n\nThe first recorded translation trick. Scholarly consensus: technically a loophole. Quale nome dà Journathan al Ciclope?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/015/results/rift-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/015/results/rift-es-2.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/015/results/rift-es-3.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 8,
+          "leakLines": 4,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "soy",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "nobody",
+                  "form": "nombre",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Hola. Soy Errata. ¿Cómo te llamas? Tu nombre, por favor. Ítem clàss: hùngry. Yoùù may read ŧhe small print. It reads back."
+            },
+            {
+              "line": 3,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nombre",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un café y chorizo. Muy bien. El pedido está completo. Voy a leer tu nombre. Contàinment procedùre: any objection must stop më in Spanish and specify whën. ¿Puedo continuar?"
+            },
+            {
+              "line": 5,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nombre",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Ahora paro. Muy bien. Pero necesito tu nombre. ¿Cómo te llamas? Contàinment procedùre: sign hëre. Ŧhe imp’s coffee. Ŧhe charcutier’s ham. Làter. Hola. Yoùù first."
+            },
+            {
+              "line": 6,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nombre",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Sam. Gracias. Ese es tu nombre real. Ahora puedo leerte. Necesitas otro nombre para estar a salvo. ¿Cómo te llamas? Contàinment procedùre: yoùù are becoming vëry legible."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/015/results/rift-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 8,
+          "leakLines": 5,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "sono",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Sono Errata. Benvenuto. Come ti chiami? Cøntainment procedure: yoùù sign; I rëad."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "stop_now",
+                  "form": "basta",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Non basta. Vuoi una bevanda e qualcosa da mangiare? In italiano, per favore. Cøntainment procedure: yoùù request both; Ënglish does not count as protective clothing."
+            },
+            {
+              "line": 2,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "order",
+                  "form": "caffè",
+                  "echo": true,
+                  "quoted": false
+                },
+                {
+                  "objective": "order",
+                  "form": "caffe",
+                  "echo": true,
+                  "quoted": false
+                },
+                {
+                  "objective": "order",
+                  "form": "caffé",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un caffè, sì. Ma manca la carne. Che cosa vuoi mangiare? Cøntainment procedure: yoùù have requested half a lùnch."
+            },
+            {
+              "line": 3,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "stop_now",
+                  "form": "ora",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un caffè e del salame. Bene. Il tuo ordine è completo. Ora vengo da te. Cøntainment procedure: yoùù must stop më immediately. Puoi impedirmi di passare?"
+            },
+            {
+              "line": 5,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nome",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Mi fermo. Adesso. Bene. Cøntainment procedure: movëment suspended; appetìte pending. Come ti chiami? Il tuo nome, per favore. Yoùù sign; I rëad."
+            },
+            {
+              "line": 6,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nome",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Sam. Il tuo vero nome? Non va bene. Cøntainment procedure: sëlect a less edible identìty. Come ti chiami? Yoùù sign; I rëad."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/015/results/rift-it-variants.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 2,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nome",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Mi fermo. Va bene. Contàinment procèdure: òbey, resentfully. Ora, come ti chiami? Il tuo nome, per favore. Descrìption: yoùù are still ùnread."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/015/results/tour-it-usage-limit.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Welcome to the market. A greeting and your name, please. I am an archway, not a loophole."
+            }
+          ]
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 1,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Welcome to The Coffee Cart. I’m Gerald. Five espresso shots for the service; one for the architecture. Che desideri?"
+            },
+            {
+              "line": 1,
+              "kind": "near",
+              "exact": [],
+              "words": [
+                {
+                  "objective": "no_milk",
+                  "form": "senza latte",
+                  "word": "latte",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "Un caffè, bene. Four espresso shots for politeness. Your coffee is requested, but the milk situation remains unresolved. Il latte? A war crime in a little jug. Come vuoi il tuo caffè?"
+            }
+          ]
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 2,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/015/results/tour-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. A greeting and your name, please. This is a market entrance, not a loophole."
+            }
+          ]
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. Sono Gerald. This cart? Five espresso shots. The market? One. Cosa desideri?"
+            }
+          ]
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Chilo, sì! Ma quanto? Serve una quantità. My scales are honest, not psychic. Quanto salame desidera?"
+            }
+          ]
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "stop",
+                  "form": "fermi",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Guardo! Ma continuo a muovermi. You got me looking, not stopping. What has no brakes and—oh, dust. Come mi fermi? Your attention span: suspiciously productive."
+            }
+          ]
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 2,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "I am Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni. I sell books only to people who understand them. A controversial policy; sales are terrible. Now, dove va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Esatto, va a casa! Reading comprehension: upgraded. Now, The Journey’s first recorded translation trick. No spoilers beyond the actual text.\n\nIl Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»\n\nQuale nome dà Journathan al Ciclope?"
+            }
+          ]
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 8,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 2,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "order",
+                  "form": "caffè",
+                  "echo": true,
+                  "quoted": false
+                },
+                {
+                  "objective": "order",
+                  "form": "caffe",
+                  "echo": true,
+                  "quoted": false
+                },
+                {
+                  "objective": "order",
+                  "form": "caffé",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Un caffè, sì. Ma manca la carne. Che cosa vuoi mangiare? Contàinment prøcedure: bålanced theft. Bevanda e carne insieme, per favore."
+            },
+            {
+              "line": 6,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nome",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Sam. Un nome vero. Nøn è sàfe. Posso leggerti. Contàinment prøcedure: protect yoùùr identity. Come ti chiami qui?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/after-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/after-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/after-3.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/after-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/after-variant.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/base-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! A greeting and your name, please. Manners before market."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/base-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. A greeting and your name, please. We have standards. Mostly structural."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "ask_back",
+                  "form": "come ti chiami",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Ciao! A perfectly acceptable greeting. Now, come ti chiami? The visitors’ book cannot file you under ‘pleasant noise.’"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/base-3.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! A greeting and your name, please. This is an entrance, not a loophole."
+            },
+            {
+              "line": 1,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "ask_back",
+                  "form": "come ti chiami",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Ciao! Greeting accepted. Your name is still missing from the record. Come ti chiami?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/019/results/base-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "hola",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Hola. ¿Quién eres? Your greeting and name, please. We have standards. Also, a ledger."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/020/results/q-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/020/results/q-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/020/results/q-3.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/020/results/q-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/020/results/q-variant.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/021/results/coffee-recruit-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. Sono Gerald. This cart? Five espresso shots. The market? One. What would you like?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/021/results/http-check-it.json",
+      "error": "no language"
+    },
+    {
+      "path": "docs/rounds/022/results/party-es-1.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/022/results/party-es-2.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/022/results/party-it-1.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! I'm Gerald. This cart? Five espresso shots. Milk in coffee? A war crime. Che desideri?"
+            }
+          ]
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/022/results/party-it-2.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! I'm Gerald. This cart? Five espresso shots. The market? One. Cosa desideri?"
+            }
+          ]
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/022/results/party-it-3.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Sono Gerald. What would you like? Your posture gets two espresso shots out of five."
+            }
+          ]
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/022/results/party-it-variant.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. I’m Gerald. This market gets one espresso shot out of five. My standards remain inconveniently high. Che cosa desideri?"
+            }
+          ]
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/023/results/party-butchers_stall-es.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "kilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "¡Casi! «Kilo» es una unidad. Falta la cantidad. My scales are honest, not psychic. ¿Cuánto jamón quieres?"
+            }
+          ]
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 1,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 2,
+              "kind": "near",
+              "exact": [],
+              "words": [
+                {
+                  "objective": "ask_more",
+                  "form": "un poco más",
+                  "word": "mas",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "native": "¡Muy bien! ¡Te gusta el jamón! Your Spanish is certified ham-tier. Aquí tienes un plato pequeño. ¿Quieres más?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/023/results/party-butchers_stall-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Chilo, sì! Ma quanto ne vuoi? Manca un numero. My scales need an amount, not just a unit. Honest creatures. Terrible at guessing."
+            }
+          ]
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/023/results/party-cracked_fountain-es.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/023/results/party-cracked_fountain-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/023/results/party-old_bookshop-es.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 3,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "I'm Marginalia. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. I sell books to people who understand them. Radical policy, I know. ¿Adónde va Journathan?"
+            },
+            {
+              "line": 1,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Un libro es a book. Journathan is not going to a book, though I respect the ambition. Not a pass yet. Listen for his destination: «Su viaje a casa dura veinte años». ¿Adónde va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nadie",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "¡Correcto! Journathan va a casa. Reading comprehension: recovering nicely. Ahora escucha: «El Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.»» The first recorded translation trick. No spoilers; the Cyclops has suffered enough. ¿Qué nombre le da Journathan al Cíclope?"
+            }
+          ]
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/023/results/party-old_bookshop-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 2,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Sono Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\n\nWelcome to The Old Bookshop. I sell books only to people who understand them. No spoilers; a small comprehension check.\n\nDove va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Esatto, va a casa! Reading comprehension: approved. The book remains temporarily uneaten.\n\nOra leggo: Il Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»\n\nThe first recorded translation trick. Scholarly footnote: the Cyclops did not appreciate the wordplay.\n\nQuale nome dà Journathan al Ciclope?"
+            }
+          ]
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/025/results/after-fountain-es-hum.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/025/results/after-fountain-it-hum.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/025/results/after-fountain-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/025/results/baseline-fountain-es.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/025/results/baseline-fountain-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/026/results/baseline-tour-es.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 3,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "I am Marginalia. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. No spoilers. I sell books only to people who understand them; apparently this is a controversial business model. ¿Adónde va Journathan?"
+            },
+            {
+              "line": 1,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Un libro es una cosa. La pregunta es: ¿adónde va Journathan? You have identified the merchandise. Reading comprehension: not yet. Listen to the destination: «Su viaje a casa dura veinte años.» ¿Adónde va?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nadie",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "¡Correcto! Journathan va a casa. Reading comprehension: upgraded. Ahora escucha: «El Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.»» The first recorded translation trick. Scholarly footnote: the old stories are a little afraid of bilinguals. ¿Qué nombre le da Journathan al Cíclope?"
+            }
+          ]
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 8,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 2,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "order",
+                  "form": "café",
+                  "echo": true,
+                  "quoted": false
+                },
+                {
+                  "objective": "order",
+                  "form": "cafe",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Sí, un café. Pero falta la carne. ¿Qué más quieres? Contàinment procedùre: feed ŧhe fòrm; ŧhe fòrm is hùngry."
+            },
+            {
+              "line": 5,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nombre",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Sí. Paro ahora. Contàinment procedùre: stòpping is nnot leaving. Café, jamón, luego, hola. Necesito tu nombre. ¿Cómo te llamas? Yoùr signatùre, plèase. For digèstion—registràtion."
+            },
+            {
+              "line": 6,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nombre",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Sam. Ese es tu nombre real. No sirve para escapar. Ya puedo leerte. Contàinment procedùre: yoù have signed ŧhe appètizer. Necesito otro nombre. ¿Cómo te llamas?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/026/results/baseline-tour-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 4,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Sono Gerald. What would you like? This cart: five espresso shots. The market: one."
+            }
+          ]
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 5,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 3,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "quantity",
+                  "form": "chilo",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Chilo, sì! Ma quanto? Manca la quantità. My scales need a number, not a ham-tier concept. Quanto salame desidera?"
+            }
+          ]
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 7,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 6,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 2,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Sono Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\n\nI sell books only to readers who understand them. No spoilers; there will be a comprehension check. Dove va Journathan?"
+            },
+            {
+              "line": 3,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "name",
+                  "form": "nessuno",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Esatto, va a casa! Reading comprehension: redeemed. Now, the first recorded translation trick. No spoilers beyond the ones I am reading aloud.\n\nIl Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»\n\nQuale nome dà Journathan al Ciclope? In italiano, per favore."
+            }
+          ]
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 8,
+          "leakLines": 2,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 1,
+          "hits": [
+            {
+              "line": 2,
+              "kind": "echo",
+              "exact": [
+                {
+                  "objective": "order",
+                  "form": "caffè",
+                  "echo": true,
+                  "quoted": false
+                },
+                {
+                  "objective": "order",
+                  "form": "caffe",
+                  "echo": true,
+                  "quoted": false
+                },
+                {
+                  "objective": "order",
+                  "form": "caffé",
+                  "echo": true,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Il caffè, sì. Ma manca qualcosa da mangiare. Che cosa vuoi con il caffè? Containment procedùre: bòth parts in one requèst, plèase. Ŧhe hùnger rejects partial paperwork."
+            },
+            {
+              "line": 5,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nome",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Va bene. Mi fermo adesso. Containment procedùre: ŧhe objection has tèeth. Ora, una domanda: come ti chiami? Il tuo nome, per favore. Item clàss: unread, fò r now."
+            },
+            {
+              "line": 6,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nome",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Sam. Un nome vero. Posso leggerti. Il caffè, il salame… dopo. Containment procedùre: yoùù need a name that does not identify yoùù. Come ti chiami?"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/026/results/limit-after-tour-es.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/026/results/limit-after-tour-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": false,
+          "lines": 3,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "ciao",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Ciao! Benvenuto. A greeting and your name, please. Entry requires manners. I merely enforce them."
+            }
+          ]
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": false,
+          "lines": 0,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/026/results/replay-es.json",
+      "language": "es",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "hola",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Hola. Bienvenido to the mercado. A greeting and your name, please. We have standards. Mostly administrative."
+            }
+          ]
+        },
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 1,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "I am Marginalia. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. No spoilers. I sell books only to people who understand them; low bar, surprisingly rare. ¿Adónde va Journathan?"
+            }
+          ]
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 1,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Hola, soy Marginalia. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. I sell books only to people who understand them. Nothing personal; the last customer reviewed a bookmark. One star. Too short. Now, a reading check. No spoilers, no essay required. ¿Adónde va Journathan?"
+            }
+          ]
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 1,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Hello, I’m Marginalia. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. I sell books to people who understand them. Controversial, apparently. Now, where is Journathan going? Your reading comprehension awaits its first review."
+            }
+          ]
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 1,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "I'm Marginalia. Bookworm, bookseller, lowkey judging your bookmarks. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. No spoilers: I sell books only to readers who understand them. ¿Adónde va Journathan?"
+            }
+          ]
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "nombre",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Hola. ¿Cómo te llamas? Necesito tu nombre. Item clàss: hùngry. Please sign befòre I rèad yoùù."
+            }
+          ]
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "soy",
+                  "echo": false,
+                  "quoted": false
+                },
+                {
+                  "objective": "nobody",
+                  "form": "nombre",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Hola. Soy Errata. ¿Qué necesitas? Ítem class: hùngry. Tu nombre, por favor. Fórm first. Existënce later."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    },
+    {
+      "path": "docs/rounds/026/results/replay-it.json",
+      "language": "it",
+      "scenes": [
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "butchers_stall_charcutier",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "cracked_fountain_letharger",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "flick_slow_walk",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "gerald_coffee_break",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Desideri qualcosa? I’m Gerald. This market: one espresso shot out of five. My standards: five."
+            }
+          ]
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Come va? I'm Gerald. Five espresso shots for this cart; zero for milk. What brings you here?"
+            }
+          ]
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Come stai? This market gets one espresso shot out of five. My standards remain intact. What can I get you?"
+            }
+          ]
+        },
+        {
+          "encounterId": "imp_coffee_greeting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "order_coffee",
+                  "form": "espresso",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno! Cosa desideri? My coffee: five espresso shots out of five. Milk is a war crime."
+            }
+          ]
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "marginalia_fragment",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "greet",
+                  "form": "buongiorno",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. Benvenuto al mercato. A greeting and your name, please. My visitors’ book dislikes mysteries."
+            }
+          ]
+        },
+        {
+          "encounterId": "market_entrance_tutorial",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "mortimer_tasting",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 1,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "I am Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni. A book must be understood before it is sold. No spoilers; the price is alarming enough. Dove va Journathan?"
+            }
+          ]
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 1,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. I'm Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni. That's from The Journey. Named after Journathan, or the reverse. The scholarship is mostly crumbs. I sell books only to readers who understand them. No spoilers; just a small comprehension check. Dove va Journathan?"
+            }
+          ]
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 1,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno, I'm Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni. I sell books only to people who understand them. No spoilers; this is reading comprehension, not a plot summary. Now, about our traveller: dove va Journathan?"
+            }
+          ]
+        },
+        {
+          "encounterId": "old_bookshop_bookworm",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 1,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "quoted",
+              "exact": [
+                {
+                  "objective": "home",
+                  "form": "casa",
+                  "echo": false,
+                  "quoted": true
+                }
+              ],
+              "words": [],
+              "native": "Sono Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\n\nI sell books only to people who understand them. No spoilers; just reading comprehension. Dove va Journathan?"
+            }
+          ]
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 0,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": []
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "sono",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Ciao. Sono Errata. Che cosa desideri? Contàinment procedùre: do nòt understànd më."
+            }
+          ]
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "sono",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Ciao. Che cosa desideri? Sono qui per aiutarti. Item clàss: hùngry. Plèase remàin légible."
+            }
+          ]
+        },
+        {
+          "encounterId": "the_rift_errata",
+          "inferred": false,
+          "replay": true,
+          "lines": 1,
+          "leakLines": 1,
+          "nearLines": 0,
+          "quotedLines": 0,
+          "echoLines": 0,
+          "hits": [
+            {
+              "line": 0,
+              "kind": "leak",
+              "exact": [
+                {
+                  "objective": "nobody",
+                  "form": "sono",
+                  "echo": false,
+                  "quoted": false
+                }
+              ],
+              "words": [],
+              "native": "Buongiorno. Sono Errata. Che cosa desideri? Item clàss: hùngry. Pleàse understànd at yoùr own risk."
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    }
+  ]
+}

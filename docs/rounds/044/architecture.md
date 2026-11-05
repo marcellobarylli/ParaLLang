@@ -104,3 +104,9 @@ shapes, files by reason, echo and quoted kinds, closed-form and English filters,
   with reasons), and the file summary.
 
 Run: every `docs/rounds/*/results/*.json` (89 files).
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. Over 611 NPC lines, the scanner found 6 near-leaks (topic words) and 59 leak
+lines. Most of those leaks come from before round 012. Since round 020, only greetings and Errata's frame words
+remain. No prompt change. Server 172/172. See [findings](findings.md).

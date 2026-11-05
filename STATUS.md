@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 044, a leak scan over every live report (autonomous)
+
+`server/scripts/leak-scan.js` flags NPC lines that give away an open objective's answer, including words inside
+multi-word answers. It marks echoes of the player and passages quoted from an intent. Over all 611 lines in 84
+earlier reports there are 6 near-leaks, all topic words ("Vuoi latte?", "¿Quieres más?"), and no prompt change was
+made for them. Whole-form leaks fell after rounds 007 and 012; since round 020, only greetings and Errata's frame
+words remain. Critiqued by a Claude subagent (14 findings: 12 accepted, 2 in part). Server 172/172
+([open items](docs/rounds/044/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 043, the Party screen's story hint (autonomous)
 
 Each party member's card now counts down to the member's next *Journey* fragment ("2 more finished conversations
@@ -455,6 +464,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 044 | 11-05 | Leak scan over every live report: words inside authored phrases, echo and quoted kinds; near-leaks are rare topic words (autonomous) | [044](docs/rounds/044/architecture.md) | [findings](docs/rounds/044/findings.md) | pre-run record to round 044 close |
 | 043 | 11-05 | The Party screen counts down to each member's next story (autonomous) | [043](docs/rounds/043/architecture.md) | [findings](docs/rounds/043/findings.md) | pre-run record to round 043 close |
 | 042 | 11-05 | A display font for titles: Literata Bold (OFL), loaded at runtime, system font for the rest (autonomous) | [042](docs/rounds/042/architecture.md) | [findings](docs/rounds/042/findings.md) | pre-run record to round 042 close |
 | 041 | 11-05 | Ambient audio per location: six synthesized loops behind the Sounds switch, ducked under speech (autonomous) | [041](docs/rounds/041/architecture.md) | [findings](docs/rounds/041/findings.md) | pre-run record to round 041 close |
