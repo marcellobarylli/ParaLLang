@@ -1,0 +1,607 @@
+{
+  "language": "it",
+  "provider": "codex-cli",
+  "reps": 2,
+  "results": [
+    {
+      "encounterId": "butchers_stall_charcutier",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 11,
+        "notInTranslation": 0.55,
+        "canonical": 0.09
+      },
+      "native": "Benvenuto! Tutto prosciutto! Even the hat. Certified ham. Che cosa desideri?",
+      "translation": "Welcome! All ham! Even the hat. Certified ham. What would you like?",
+      "narrative": "Mortimer beams behind the stall. He places his hat on the scales, which have learned not to ask questions.",
+      "ms": 7163
+    },
+    {
+      "encounterId": "butchers_stall_charcutier",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.5,
+        "canonical": 0.07
+      },
+      "native": "Buongiorno! Tutto è prosciutto. My hat? Certified ham. The scales agree! Che cosa desideri?",
+      "translation": "Good morning! Everything is ham. My hat? Certified ham. The scales agree! What would you like?",
+      "narrative": "Mortimer beams behind the butcher’s stall. He weighs his hat, apparently settling a professional disagreement.",
+      "ms": 15347
+    },
+    {
+      "encounterId": "butchers_stall_charcutier",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.5,
+        "canonical": 0.07
+      },
+      "native": "Buongiorno! Tutto questo è prosciutto. Certified ham, every cut. Even the hat. Cosa desidera?",
+      "translation": "Good morning! All this is ham. Certified ham, every cut. Even the hat. What would you like?",
+      "narrative": "At the Butcher's Stall, Mortimer weighs his hat. The scales decline to comment on its freshness.",
+      "ms": 12663
+    },
+    {
+      "encounterId": "butchers_stall_charcutier",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.57,
+        "canonical": 0.07
+      },
+      "native": "Buongiorno! Sono Mortimer. Questo è prosciutto! Even the hat. Certified ham. Che cosa desideri?",
+      "translation": "Good morning! I'm Mortimer. This is ham! Even the hat. Certified ham. What would you like?",
+      "narrative": "Mortimer weighs his hat, nods at the honest scales, and welcomes you to his stall in The Crumbling Market.",
+      "ms": 7427
+    },
+    {
+      "encounterId": "cracked_fountain_letharger",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.37,
+        "canonical": 0.16
+      },
+      "native": "Ciao! Sono Flick. A riddle: what has—oh, a leaf! Just one more minute. Dove vai? Dopo, dopo, domani!",
+      "translation": "Hi! I'm Flick. A riddle: what has—oh, a leaf! Just one more minute. Where are you going? Later, later, tomorrow!",
+      "narrative": "The Cracked Fountain drips with the confidence of a public service doing its best. Flick darts into the corner of your vision. A tiny firecracker pops where it was.",
+      "ms": 8680
+    },
+    {
+      "encounterId": "cracked_fountain_letharger",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.35,
+        "canonical": 0.18
+      },
+      "native": "Ciao! Dove vai? A riddle: what has—ooh, a leaf. Just one more lap. Dopo, dopo, domani!",
+      "translation": "Hi! Where are you going? A riddle: what has—ooh, a leaf. Just one more lap. Later, later, tomorrow!",
+      "narrative": "The Cracked Fountain drips with municipal uncertainty. Flick flits at the edge of your vision; a tiny firecracker announces where it no longer is.",
+      "ms": 13518
+    },
+    {
+      "encounterId": "cracked_fountain_letharger",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.35,
+        "canonical": 0.18
+      },
+      "native": "Ciao! Come va? What's a fountain without—ooh, a leaf. Just one more minute? Dopo, dopo, domani!",
+      "translation": "Hi! How's it going? What's a fountain without—ooh, a leaf. Just one more minute? Later, later, tomorrow!",
+      "narrative": "The Cracked Fountain leaks with municipal confidence. A tiny firecracker pops beside you. Flick appears at the edge of your vision; looking directly only encourages its absence.",
+      "ms": 8575
+    },
+    {
+      "encounterId": "cracked_fountain_letharger",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 20,
+        "notInTranslation": 0.35,
+        "canonical": 0.15
+      },
+      "native": "Ciao! Sono Flick. A riddle: what has—oh, did that move? Just one more look. Dove vai? Dopo, dopo, domani!",
+      "translation": "Hi! I'm Flick. A riddle: what has—oh, did that move? Just one more look. Where are you going? Later, later, tomorrow!",
+      "narrative": "The Cracked Fountain drips with no particular ambition. Flick darts along the edge of your vision; a tiny firecracker pops where you were about to look.",
+      "ms": 8745
+    },
+    {
+      "encounterId": "flick_slow_walk",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.32,
+        "canonical": 0
+      },
+      "native": "Ciao! Sono Flick. Five more minutes? What has two feet and never—oh, a moth. Aspetta! ♪ La fontana canta! ♪",
+      "translation": "Hi! I'm Flick. Five more minutes? What has two feet and never—oh, a moth. Wait! ♪ The fountain sings! ♪",
+      "narrative": "At the Market Entrance, Flick sits just outside your field of vision. A tiny firecracker announces that sitting is now a group activity.",
+      "ms": 7886
+    },
+    {
+      "encounterId": "flick_slow_walk",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.37,
+        "canonical": 0
+      },
+      "native": "Ciao! Sono Flick. Hai fretta? Just five more minutes. What's a riddle without—oh, something moved. La fontana canta!",
+      "translation": "Hi! I'm Flick. Are you in a hurry? Just five more minutes. What's a riddle without—oh, something moved. The fountain sings!",
+      "narrative": "At the Market Entrance, Flick sits just outside your direct gaze. A tiny firecracker announces that nothing is about to happen.",
+      "ms": 12358
+    },
+    {
+      "encounterId": "flick_slow_walk",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 27,
+        "notInTranslation": 0.3,
+        "canonical": 0
+      },
+      "native": "Ciao! Sono Flick. Riddle me this: why walk when—oh, a moth. Aspetta un momento. Just five more minutes, your attention span is incredible. La fontana canta!",
+      "translation": "Hi! I'm Flick. Riddle me this: why walk when—oh, a moth. Wait a moment. Just five more minutes, your attention span is incredible. The fountain sings!",
+      "narrative": "At the Market Entrance, Flick sits just outside your direct gaze. A tiny firecracker pops. Apparently, introductions require a budget.",
+      "ms": 15679
+    },
+    {
+      "encounterId": "flick_slow_walk",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 20,
+        "notInTranslation": 0.35,
+        "canonical": 0
+      },
+      "native": "Ciao! Sono Flick. Five more minutes. Riddle me this: why walk when—oh, a moth. Aspetta! ♪ La fontana, la fontana… ♪",
+      "translation": "Hi! I'm Flick. Five more minutes. Riddle me this: why walk when—oh, a moth. Wait! ♪ The fountain, the fountain… ♪",
+      "narrative": "At the Market Entrance, Flick sits just outside your line of sight. A tiny firecracker pops. Apparently, sitting requires publicity.",
+      "ms": 8600
+    },
+    {
+      "encounterId": "gerald_coffee_break",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 20,
+        "notInTranslation": 0.25,
+        "canonical": 0
+      },
+      "native": "Ciao. Sono Gerald. Your new travelling companion. Here’s your coffee—five espresso shots out of five. Che ne pensi?",
+      "translation": "Hello. I’m Gerald. Your new travelling companion. Here’s your coffee—five espresso shots out of five. What do you think?",
+      "narrative": "At the Market Entrance, Gerald the imp offers you a tiny coffee beneath an unnecessarily large cloud of steam.",
+      "ms": 7193
+    },
+    {
+      "encounterId": "gerald_coffee_break",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 22,
+        "notInTranslation": 0.23,
+        "canonical": 0
+      },
+      "native": "Ciao! Il caffè è pronto. I'm Gerald. Five espresso shots for my brewing; your verdict is still pending. What do you think?",
+      "translation": "Hello! The coffee is ready. I'm Gerald. Five espresso shots for my brewing; your verdict is still pending. What do you think?",
+      "narrative": "At the Market Entrance, an imp offers you a tiny coffee cup with the solemnity usually reserved for handing over kingdoms.",
+      "ms": 12584
+    },
+    {
+      "encounterId": "gerald_coffee_break",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.26,
+        "canonical": 0
+      },
+      "native": "Ciao, sono Gerald. Your coffee: five espresso shots out of five. Milk is a war crime. Che ne pensi?",
+      "translation": "Hello, I’m Gerald. Your coffee: five espresso shots out of five. Milk is a war crime. What do you think?",
+      "narrative": "At the Market Entrance, an imp offers you a tiny coffee. His expression suggests the cup is on probation.",
+      "ms": 7055
+    },
+    {
+      "encounterId": "gerald_coffee_break",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 22,
+        "notInTranslation": 0.23,
+        "canonical": 0
+      },
+      "native": "Ciao. Il caffè è pronto. Five espresso shots for my technique. Your verdict? And please, no milk. This market has suffered enough.",
+      "translation": "Hello. The coffee is ready. Five espresso shots for my technique. Your verdict? And please, no milk. This market has suffered enough.",
+      "narrative": "At the Market Entrance, Gerald the imp offers you a tiny coffee cup with the gravity usually reserved for handing over a kingdom.",
+      "ms": 12515
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.18,
+        "canonical": 0.06
+      },
+      "native": "Buongiorno! Desideri qualcosa? I’m Gerald. This market: one espresso shot out of five. My standards: five.",
+      "translation": "Good morning! Would you like something? I’m Gerald. This market: one espresso shot out of five. My standards: five.",
+      "narrative": "Gerald peers over The Coffee Cart’s counter. Behind him, The Crumbling Market continues to depreciate.",
+      "ms": 6610
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 18,
+        "notInTranslation": 0.17,
+        "canonical": 0.06
+      },
+      "native": "Buongiorno! Come va? I'm Gerald. Five espresso shots for this cart; zero for milk. What brings you here?",
+      "translation": "Good morning! How’s it going? I'm Gerald. Five espresso shots for this cart; zero for milk. What brings you here?",
+      "narrative": "Gerald peers over The Coffee Cart’s counter. The market crumbles around him; his standards remain structurally unsound but upright.",
+      "ms": 13286
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 21,
+        "notInTranslation": 0.14,
+        "canonical": 0.05
+      },
+      "native": "Buongiorno! Come stai? This market gets one espresso shot out of five. My standards remain intact. What can I get you?",
+      "translation": "Good morning! How are you? This market gets one espresso shot out of five. My standards remain intact. What can I get you?",
+      "narrative": "Gerald, an imp in a spotless apron, surveys the Crumbling Market from behind The Coffee Cart. His cart appears to have passed inspections the market has not.",
+      "ms": 8282
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 16,
+        "notInTranslation": 0.19,
+        "canonical": 0.06
+      },
+      "native": "Buongiorno! Cosa desideri? My coffee: five espresso shots out of five. Milk is a war crime.",
+      "translation": "Good morning! What would you like? My coffee: five espresso shots out of five. Milk is a war crime.",
+      "narrative": "Gerald, an imp in a spotless apron, surveys The Crumbling Market from his coffee cart. The market crumbles. His standards do not.",
+      "ms": 9155
+    },
+    {
+      "encounterId": "marginalia_fragment",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.35,
+      "share": {
+        "tokens": 42,
+        "notInTranslation": 0.48,
+        "canonical": 0
+      },
+      "native": "Ciao. A passage from The Journey; no spoilers. “Journathan parla con il mare in due lingue. Il mare risponde in una lingua sola: la sua.” The man of many tongues. Even the sea keeps its replies brief. Che cosa pensi della storia?",
+      "translation": "Hello. A passage from The Journey; no spoilers. “Journathan speaks with the sea in two languages. The sea replies in only one language: its own.” The man of many tongues. Even the sea keeps its replies brief. What do you think of the story?",
+      "narrative": "At the Market Entrance, Marginalia settles onto your pack with a well-chewed book. Your travelling party now has an editor. Nobody was consulted.",
+      "ms": 9740
+    },
+    {
+      "encounterId": "marginalia_fragment",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.35,
+      "share": {
+        "tokens": 53,
+        "notInTranslation": 0.38,
+        "canonical": 0
+      },
+      "native": "Ciao! I’m Marginalia, your party’s bookworm. I annotate what I haven’t eaten. From The Journey: Journathan parla con il mare in due lingue. Il mare risponde in una lingua sola: la sua. The man of many tongues meets a sea with limited interest in coursework. Che ne pensi della storia?",
+      "translation": "Hello! I’m Marginalia, your party’s bookworm. I annotate what I haven’t eaten. From The Journey: Journathan speaks with the sea in two languages. The sea answers in only one language: its own. The man of many tongues meets a sea with limited interest in coursework. What do you think of the story?",
+      "narrative": "At the Market Entrance, Marginalia settles onto your pack and opens a book with thoroughly nibbled margins. Travel had not interrupted her scholarship. Merely her lunch.",
+      "ms": 13950
+    },
+    {
+      "encounterId": "marginalia_fragment",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.35,
+      "share": {
+        "tokens": 50,
+        "notInTranslation": 0.4,
+        "canonical": 0
+      },
+      "native": "Ciao! I’m Marginalia. Your travelling reader; no spoilers. This is The Journey. Journathan was named after it, or vice versa. Scholarship remains inconveniently divided.\n\nJournathan parla con il mare in due lingue. Il mare risponde in una lingua sola: la sua.\n\nChe cosa pensi della storia? Reading comprehension: pending.",
+      "translation": "Hello! I’m Marginalia. Your travelling reader; no spoilers. This is The Journey. Journathan was named after it, or vice versa. Scholarship remains inconveniently divided.\n\nJournathan speaks with the sea in two languages. The sea answers in only one language: its own.\n\nWhat do you think of the story? Reading comprehension: pending.",
+      "narrative": "At the Market Entrance, Marginalia settles onto your pack and opens a book with more annotations than surviving margins.",
+      "ms": 18594
+    },
+    {
+      "encounterId": "marginalia_fragment",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.35,
+      "share": {
+        "tokens": 36,
+        "notInTranslation": 0.58,
+        "canonical": 0
+      },
+      "native": "Ciao. Sono Marginalia. I travel with you now. No spoilers; I ate those pages.\n\n“Journathan parla con il mare in due lingue. Il mare risponde in una lingua sola: la sua.”\n\nChe cosa pensi della storia?",
+      "translation": "Hello. I’m Marginalia. I travel with you now. No spoilers; I ate those pages.\n\n“Journathan speaks with the sea in two languages. The sea answers in only one language: its own.”\n\nWhat do you think of the story?",
+      "narrative": "At the market entrance, Marginalia settles onto your pack with a half-eaten book. Your party now has a reader. Its luggage has a critic.",
+      "ms": 7738
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.12,
+        "canonical": 0.12
+      },
+      "native": "Benvenuto! Before you enter the mercato: a greeting and your name, please. Manners are load-bearing here.",
+      "translation": "Welcome! Before you enter the market: a greeting and your name, please. Manners are load-bearing here.",
+      "narrative": "A visitors’ book slides from the archway’s keystone. Above it, a half-translated sign appears to be awaiting managerial approval.",
+      "ms": 8929
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 21,
+        "notInTranslation": 0.14,
+        "canonical": 0.1
+      },
+      "native": "Benvenuto al mercato. Before entry, I require a greeting and your name. Manners first; being architecture does not lower my standards.",
+      "translation": "Welcome to the market. Before entry, I require a greeting and your name. Manners first; being architecture does not lower my standards.",
+      "narrative": "A visitors’ book slides from the archway’s keystone. The half-translated sign above it appears to be awaiting departmental approval.",
+      "ms": 15648
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 15,
+        "notInTranslation": 0.27,
+        "canonical": 0.2
+      },
+      "native": "Buongiorno. Benvenuto al mercato. A greeting and your name, please. My visitors’ book dislikes mysteries.",
+      "translation": "Good morning. Welcome to the market. A greeting and your name, please. My visitors’ book dislikes mysteries.",
+      "narrative": "A visitors’ book slides from Portia’s keystone. Above her, a half-translated sign appears to be awaiting approval.",
+      "ms": 13665
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.16,
+        "canonical": 0.11
+      },
+      "native": "Benvenuto al mercato. I’m Portia, the archway. A greeting and your name, please. Manners are load-bearing here.",
+      "translation": "Welcome to the market. I’m Portia, the archway. A greeting and your name, please. Manners are load-bearing here.",
+      "narrative": "A visitors’ book slides from the archway’s keystone. It opens with the confidence of paperwork expecting trouble.",
+      "ms": 12267
+    },
+    {
+      "encounterId": "mortimer_tasting",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.29,
+        "canonical": 0
+      },
+      "native": "Benvenuto! Sono Mortimer. Questo è prosciutto! The hat? Also certified ham. Come along—generous slices, honest scales.",
+      "translation": "Welcome! I'm Mortimer. This is ham! The hat? Also certified ham. Come along—generous slices, honest scales.",
+      "narrative": "At the market entrance, Mortimer weighs his hat. The scales find no fault; the hat has reservations.",
+      "ms": 8703
+    },
+    {
+      "encounterId": "mortimer_tasting",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 15,
+        "notInTranslation": 0.33,
+        "canonical": 0
+      },
+      "native": "Buongiorno! Sono Mortimer. Questo è prosciutto. The hat, too. Certified ham. Welcome to the stall!",
+      "translation": "Good morning! I'm Mortimer. This is ham. The hat, too. Certified ham. Welcome to the stall!",
+      "narrative": "At the market entrance, Mortimer weighs his hat, then nods as though it has passed inspection.",
+      "ms": 9162
+    },
+    {
+      "encounterId": "mortimer_tasting",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.26,
+        "canonical": 0
+      },
+      "native": "Buongiorno! Sono Mortimer. Questo è prosciutto. Even the hat! Certified ham-tier quality. My scales will back me up.",
+      "translation": "Good morning! I'm Mortimer. This is ham. Even the hat! Certified ham-tier quality. My scales will back me up.",
+      "narrative": "At the Market Entrance, Mortimer stands behind a stall of meats and one suspiciously priced hat. His scales occupy the place normally reserved for a trusted colleague.",
+      "ms": 14787
+    },
+    {
+      "encounterId": "mortimer_tasting",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.3,
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.47,
+        "canonical": 0
+      },
+      "native": "Benvenuto! Sono Mortimer. Questo è prosciutto. Certified ham! Assaggia. Che ne pensi? Your verdict carries weight. I brought scales.",
+      "translation": "Welcome! I'm Mortimer. This is ham. Certified ham! Have a taste. What do you think? Your verdict carries weight. I brought scales.",
+      "narrative": "At the market entrance, Mortimer lifts a slice from his travelling hamper and weighs it solemnly. His hat awaits classification beside the scales.",
+      "ms": 7891
+    },
+    {
+      "encounterId": "old_bookshop_bookworm",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.35,
+      "share": {
+        "tokens": 39,
+        "notInTranslation": 0.46,
+        "canonical": 0.13
+      },
+      "native": "I am Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni. A book must be understood before it is sold. No spoilers; the price is alarming enough. Dove va Journathan?",
+      "translation": "I am Marginalia. This is the story of Journathan, the man of many tongues. His journey home lasts twenty years. A book must be understood before it is sold. No spoilers; the price is alarming enough. Where is Journathan going?",
+      "narrative": "At The Old Bookshop, a bookworm emerges from a tunnel through the classics. The remaining stock bears her annotations. So does the counter.",
+      "ms": 11614
+    },
+    {
+      "encounterId": "old_bookshop_bookworm",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.35,
+      "share": {
+        "tokens": 54,
+        "notInTranslation": 0.35,
+        "canonical": 0.09
+      },
+      "native": "Buongiorno. I'm Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni. That's from The Journey. Named after Journathan, or the reverse. The scholarship is mostly crumbs. I sell books only to readers who understand them. No spoilers; just a small comprehension check. Dove va Journathan?",
+      "translation": "Good morning. I'm Marginalia. This is the story of Journathan, the man of many tongues. His journey home lasts twenty years. That's from The Journey. Named after Journathan, or the reverse. The scholarship is mostly crumbs. I sell books only to readers who understand them. No spoilers; just a small comprehension check. Where is Journathan going?",
+      "narrative": "At The Old Bookshop, a bookworm emerges from a thoroughly digested dictionary. She annotates your arrival with a small question mark.",
+      "ms": 13211
+    },
+    {
+      "encounterId": "old_bookshop_bookworm",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.35,
+      "share": {
+        "tokens": 46,
+        "notInTranslation": 0.41,
+        "canonical": 0.11
+      },
+      "native": "Buongiorno, I'm Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni. I sell books only to people who understand them. No spoilers; this is reading comprehension, not a plot summary. Now, about our traveller: dove va Journathan?",
+      "translation": "Good morning, I'm Marginalia. This is the story of Journathan, the man of many tongues. His journey home lasts twenty years. I sell books only to people who understand them. No spoilers; this is reading comprehension, not a plot summary. Now, about our traveller: where is Journathan going?",
+      "narrative": "At The Old Bookshop, a bookworm emerges from a neatly chewed dictionary. She annotates your arrival with a small question mark.",
+      "ms": 12773
+    },
+    {
+      "encounterId": "old_bookshop_bookworm",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.35,
+      "share": {
+        "tokens": 36,
+        "notInTranslation": 0.53,
+        "canonical": 0.14
+      },
+      "native": "Sono Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\n\nI sell books only to people who understand them. No spoilers; just reading comprehension. Dove va Journathan?",
+      "translation": "I am Marginalia. This is the story of Journathan, the man of many tongues. His journey home lasts twenty years.\n\nI sell books only to people who understand them. No spoilers; just reading comprehension. Where is Journathan going?",
+      "narrative": "At The Old Bookshop, a bookworm lifts her head from a freshly chewed page. The margins appear to have survived for professional reasons.",
+      "ms": 7277
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 12,
+        "notInTranslation": 0.67,
+        "canonical": 0.08
+      },
+      "native": "Buongiorno. Che cosa vuoi? Item clàss: hùngry. Containment procedùre: please remain ùnread.",
+      "translation": "Good morning. What do you want? Item class: hungry. Containment procedure: please remain unread.",
+      "narrative": "At the Rift, a seam in the air develops teeth. Errata unfolds like a form nobody remembers signing.",
+      "ms": 11187
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 12,
+        "notInTranslation": 0.83,
+        "canonical": 0.17
+      },
+      "native": "Ciao. Sono Errata. Che cosa desideri? Contàinment procedùre: do nòt understànd më.",
+      "translation": "Hello. I am Errata. What would you like? Containment procedure: do not understand me.",
+      "narrative": "The Rift develops a mouth. This is not an improvement, but it does simplify complaints.",
+      "ms": 14877
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.93,
+        "canonical": 0.14
+      },
+      "native": "Ciao. Che cosa desideri? Sono qui per aiutarti. Item clàss: hùngry. Plèase remàin légible.",
+      "translation": "Hello. What would you like? I am here to help you. Item class: hungry. Please remain legible.",
+      "narrative": "At the Rift, a seam in the air develops teeth and the patient manner of an understaffed reception desk. This is Errata.",
+      "ms": 13605
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 15,
+        "notInTranslation": 0.67,
+        "canonical": 0.13
+      },
+      "native": "Buongiorno. Sono Errata. Che cosa desideri? Item clàss: hùngry. Pleàse understànd at yoùr own risk.",
+      "translation": "Good morning. I am Errata. What would you like? Item class: hungry. Please understand at your own risk.",
+      "narrative": "At the Rift, a seam in the air develops teeth. This is not an improvement to the market.",
+      "ms": 11016
+    }
+  ]
+}

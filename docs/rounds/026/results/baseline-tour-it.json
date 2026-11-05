@@ -1,0 +1,2053 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "tour": true,
+  "riftSealedBefore": true,
+  "riftOpenAfter": true,
+  "resolved": true,
+  "generationCalls": 60,
+  "encounters": [
+    {
+      "location": "market_entrance",
+      "sceneLocation": "market_entrance",
+      "encounterId": "market_entrance_tutorial",
+      "companionBriefing": [
+        "Portia only lets in people who greet her properly. Answer in Italian; mixing in English is fine while you learn.",
+        "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance.",
+        "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+      ],
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 7,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.2,
+          "native": "Benvenuto al mercato. A greeting and your name, please. Manners first; shopping second.",
+          "translation": "Welcome to the market. A greeting and your name, please. Manners first; shopping second.",
+          "narrative": "A visitors’ book slides from the archway’s keystone. The entrance is structurally sound and administratively closed.",
+          "share": {
+            "tokens": 13,
+            "notInTranslation": 0.23,
+            "canonical": 0.15
+          },
+          "durationMs": 13060
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.25,
+          "native": "Ciao! Greeting accepted. Benvenuto al mercato. Your name, please; an empty entry is paperwork’s natural predator.",
+          "translation": "Hello! Greeting accepted. Welcome to the market. Your name, please; an empty entry is paperwork’s natural predator.",
+          "narrative": "A visitors’ book slides out of Portia’s keystone. She ticks one box and regards the remaining blank with professional disappointment.",
+          "share": {
+            "tokens": 17,
+            "notInTranslation": 0.24,
+            "canonical": 0.18
+          },
+          "durationMs": 7236
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.30000000000000004,
+          "native": "Piacere, Sam. Benvenuto al mercato! Your introduction is accepted. Now, might anyone be curious about my name?",
+          "translation": "Nice to meet you, Sam. Welcome to the market! Your introduction is accepted. Now, might anyone be curious about my name?",
+          "narrative": "Portia enters Sam in the visitors’ book lodged in her keystone. Her pen then hovers, apparently awaiting reciprocal paperwork.",
+          "share": {
+            "tokens": 17,
+            "notInTranslation": 0.24,
+            "canonical": 0.18
+          },
+          "durationMs": 9434
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.35000000000000003,
+          "native": "Io mi chiamo Portia. Piacere, Sam! You asked about me. How unexpectedly civil. Your paperwork is complete; please enter before I become sentimental architecture.",
+          "translation": "My name is Portia. Nice to meet you, Sam! You asked about me. How unexpectedly civil. Your paperwork is complete; please enter before I become sentimental architecture.",
+          "narrative": "The visitors’ book fluttered inside the keystone. Portia had prepared for every administrative eventuality except being included.",
+          "share": {
+            "tokens": 24,
+            "notInTranslation": 0.17,
+            "canonical": 0.17
+          },
+          "durationMs": 8323
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 6292,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "greet",
+                "passed": true,
+                "feedback": "You greeted Portia correctly.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "ciao",
+                    "evidence": "Ciao!",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "introduce",
+                "passed": false,
+                "feedback": "Introduce yourself using an Italian first-person expression and your name.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "ask_back",
+                "passed": false,
+                "feedback": "Ask Portia her name in Italian, or ask “and you?” using the informal Italian pronoun.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Good greeting! Now introduce yourself and ask Portia her name in return."
+          }
+        },
+        {
+          "durationMs": 5796,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "introduce",
+                "passed": true,
+                "feedback": "You correctly introduced yourself.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "mi_chiamo",
+                    "evidence": "Mi chiamo",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "ask_back",
+                "passed": false,
+                "feedback": "Now ask Portia her name in Italian, or ask “and you?” using the Italian informal pronoun.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your introduction is correct. Add a question asking Portia her name in return."
+          }
+        },
+        {
+          "durationMs": 5445,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "ask_back",
+                "passed": true,
+                "feedback": "You correctly ask Portia her name in return.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "tu",
+                    "evidence": "E tu?",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct! You naturally ask her name in return."
+          }
+        }
+      ]
+    },
+    {
+      "location": "coffee_cart",
+      "sceneLocation": "coffee_cart",
+      "encounterId": "imp_coffee_greeting",
+      "companionBriefing": null,
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 5,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.25,
+          "native": "Buongiorno! Sono Gerald. What would you like? This cart: five espresso shots. The market: one.",
+          "translation": "Good morning! I'm Gerald. What would you like? This cart: five espresso shots. The market: one.",
+          "narrative": "Gerald peers over The Coffee Cart’s counter. Behind him, The Crumbling Market continues to depreciate.",
+          "share": {
+            "tokens": 15,
+            "notInTranslation": 0.13,
+            "canonical": 0.07
+          },
+          "durationMs": 8226
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.3,
+          "native": "Un caffè, certo. Coffee secured: four espresso shots. Ma come lo vuoi? Milk is a war crime; I require reassurance.",
+          "translation": "A coffee, certainly. Coffee secured: four espresso shots. But how do you want it? Milk is a war crime; I require reassurance.",
+          "narrative": "Gerald lifts a tiny cup, then pauses. The paperwork of coffee remains unfinished.",
+          "share": {
+            "tokens": 20,
+            "notInTranslation": 0.35,
+            "canonical": 0.1
+          },
+          "durationMs": 6951
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.35,
+          "native": "Senza latte. Perfetto! Ecco il tuo caffè. Five espresso shots for your judgment. No notes; no dairy tribunal.",
+          "translation": "Without milk. Perfect! Here is your coffee. Five espresso shots for your judgment. No notes; no dairy tribunal.",
+          "narrative": "Gerald lowers the milk jug as though disarming a very small international incident. An espresso slides across the counter.",
+          "share": {
+            "tokens": 18,
+            "notInTranslation": 0.39,
+            "canonical": 0.22
+          },
+          "durationMs": 9921
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 6091,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order_coffee",
+                "passed": true,
+                "feedback": "You correctly asked for a coffee for yourself.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "vorrei",
+                    "evidence": "Vorrei",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "caffe",
+                    "evidence": "caffè",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "no_milk",
+                "passed": false,
+                "feedback": "Specify in Italian that your coffee is without milk or black.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your coffee request is correct. Add an Italian expression specifying no milk or black coffee."
+          }
+        },
+        {
+          "durationMs": 6067,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "no_milk",
+                "passed": true,
+                "feedback": "You clearly ordered your coffee without milk.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "senza_latte",
+                    "evidence": "Senza latte",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct and natural—your no-milk preference is clear."
+          }
+        }
+      ]
+    },
+    {
+      "location": "butchers_stall",
+      "sceneLocation": "butchers_stall",
+      "encounterId": "butchers_stall_charcutier",
+      "companionBriefing": null,
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 9,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.3,
+          "native": "Buongiorno! Sono Mortimer. Questo è prosciutto! Even the hat. Certified ham. Che cosa desidera?",
+          "translation": "Good morning! I’m Mortimer. This is ham! Even the hat. Certified ham. What would you like?",
+          "narrative": "Mortimer stands behind the butcher’s stall, weighing his hat. The scales have declined to comment.",
+          "share": {
+            "tokens": 14,
+            "notInTranslation": 0.57,
+            "canonical": 0.07
+          },
+          "durationMs": 7340
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.35,
+          "native": "Prosciutto? Certo! Everything here is prosciutto. Certified ham. But you have asked for ham, and we need a different meat. Quale carne desidera?",
+          "translation": "Ham? Certainly! Everything here is ham. Certified ham. But you have asked for ham, and we need a different meat. Which meat would you like?",
+          "narrative": "Mortimer places his hat on the scales. Its authority remains unproven; its weight does not.",
+          "share": {
+            "tokens": 23,
+            "notInTranslation": 0.26,
+            "canonical": 0.09
+          },
+          "durationMs": 7045
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.4,
+          "native": "Salame! Sì, molto bene! Per me è prosciutto. Your accuracy is certified ham-tier. Quanto salame desidera? My scales demand specifics.",
+          "translation": "Salami! Yes, very good! To me it is ham. Your accuracy is certified ham-tier. How much salami would you like? My scales demand specifics.",
+          "narrative": "Mortimer beams, then looks faintly betrayed. He places a congratulatory thumb on the scales; praise must be measured responsibly.",
+          "share": {
+            "tokens": 21,
+            "notInTranslation": 0.48,
+            "canonical": 0.14
+          },
+          "durationMs": 8136
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.45,
+          "native": "Chilo, sì! Ma quanto? Manca la quantità. My scales need a number, not a ham-tier concept. Quanto salame desidera?",
+          "translation": "Kilo, yes! But how much? The quantity is missing. My scales need a number, not a ham-tier concept. How much salami would you like?",
+          "narrative": "Mortimer examines the empty scales. They remain scrupulously unimpressed.",
+          "share": {
+            "tokens": 20,
+            "notInTranslation": 0.5,
+            "canonical": 0.1
+          },
+          "durationMs": 6535
+        },
+        {
+          "turn": 4,
+          "requestedRatio": 0.5,
+          "native": "Due etti di salame! Molto bene. Ecco a Lei! My scales approve. Il salame è prosciutto, naturalmente. Certified ham, despite its qualifications.",
+          "translation": "Two hundred grams of salami! Very good. Here you are! My scales approve. Salami is ham, naturally. Certified ham, despite its qualifications.",
+          "narrative": "Mortimer weighs the salami, then your compliment-free politeness, which incurs no surcharge.",
+          "share": {
+            "tokens": 22,
+            "notInTranslation": 0.64,
+            "canonical": 0.18
+          },
+          "durationMs": 6472
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 5423,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name_meat",
+                "passed": false,
+                "feedback": "You asked for ham. Request a different meat, naming it in Italian.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "quantity",
+                "passed": false,
+                "feedback": "State how much you want using an Italian number or half together with a weight unit.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Ask for a meat other than ham and include an amount with a weight unit in Italian."
+          }
+        },
+        {
+          "durationMs": 5981,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name_meat",
+                "passed": true,
+                "feedback": "You correctly requested a meat other than ham in Italian.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "salame",
+                    "evidence": "Vorrei del salame, per favore.",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "quantity",
+                "passed": false,
+                "feedback": "Add how much you want using an Italian number or half together with a unit of weight.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your meat request is correct. Now add a quantity in Italian with a unit of weight."
+          }
+        },
+        {
+          "durationMs": 9608,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "quantity",
+                "passed": false,
+                "feedback": "Add an Italian number or half to the weight unit to say how much salami you want.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "chilo",
+                    "evidence": "Chilo",
+                    "quality": 2
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "You named a weight unit, but you still need to specify an amount in Italian."
+          }
+        },
+        {
+          "durationMs": 4960,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "quantity",
+                "passed": true,
+                "feedback": "You correctly stated an amount with a unit of weight.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "etto",
+                    "evidence": "Due etti",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct—you clearly specified how much salami you want."
+          }
+        }
+      ]
+    },
+    {
+      "location": "cracked_fountain",
+      "sceneLocation": "cracked_fountain",
+      "encounterId": "cracked_fountain_letharger",
+      "companionBriefing": [
+        "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high.",
+        "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations.",
+        "Containment procedure: do not hum along."
+      ],
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 13,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.3,
+          "native": "Ciao! Sono Flick. Riddle me—oh, something moved. Just one more look? Five more minutes. Dopo, dopo, domani!",
+          "translation": "Hi! I'm Flick. Riddle me—oh, something moved. Just one more look? Five more minutes. Later, later, tomorrow!",
+          "narrative": "The Cracked Fountain drips with municipal confidence. Flick appears at the edge of your vision; looking directly at it proves unhelpful. A tiny firecracker pops.",
+          "share": {
+            "tokens": 18,
+            "notInTranslation": 0.28,
+            "canonical": 0.17
+          },
+          "durationMs": 9266
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.35,
+          "native": "Guardo! Che cosa? Un mistero! You told me to look, not stop moving. Attention span: surprisingly actionable. What’s a riddle that—oh, una luce! Sono qui! No, qui! Can you get me to hold still? Dopo, dopo, domani!",
+          "translation": "I’m looking! At what? A mystery! You told me to look, not stop moving. Attention span: surprisingly actionable. What’s a riddle that—oh, a light! I’m here! No, here! Can you get me to hold still? Later, later, tomorrow!",
+          "narrative": "A tiny firecracker pops beside your shoe. Flick remains in the corner of your vision, where accountability has poor reception.",
+          "share": {
+            "tokens": 39,
+            "notInTranslation": 0.33,
+            "canonical": 0.08
+          },
+          "durationMs": 10957
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.4,
+          "native": "Mi fermo! Va bene! Your attention span gets a nine. Riddle me this: where do I—oh, una farfalla! Dove devo andare? Give me a direction in Italian; we can handle the actual moving later. Dopo, dopo, domani!",
+          "translation": "I’m stopping! All right! Your attention span gets a nine. Riddle me this: where do I—oh, a butterfly! Where should I go? Give me a direction in Italian; we can handle the actual moving later. Later, later, tomorrow!",
+          "narrative": "Flick stops at the edge of your vision. A tiny firecracker lands beside your shoe, apparently to commemorate this administrative breakthrough.",
+          "share": {
+            "tokens": 38,
+            "notInTranslation": 0.32,
+            "canonical": 0.11
+          },
+          "durationMs": 9461
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.45,
+          "native": "Left? È inglese! Capisco, ma serve una direzione in italiano. Dove devo andare? Riddle me—actually, five more minutes. Dopo, dopo, domani!",
+          "translation": "Left? That’s English! I understand, but a direction in Italian is needed. Where should I go? Riddle me—actually, five more minutes. Later, later, tomorrow!",
+          "narrative": "A tiny firecracker pops beside your shoe. Flick remains at the edge of your vision, where responsibility has difficulty focusing.",
+          "share": {
+            "tokens": 22,
+            "notInTranslation": 0.64,
+            "canonical": 0.14
+          },
+          "durationMs": 8667
+        },
+        {
+          "turn": 4,
+          "requestedRatio": 0.5,
+          "native": "A sinistra! Sì, va bene! Riddle me this: why move today when—oh, una farfalla! Aspetta! Possiamo andare domani? Just five more minutes. Attention span: annoyingly effective. Dopo, dopo, domani!",
+          "translation": "To the left! Yes, all right! Riddle me this: why move today when—oh, a butterfly! Wait! Can we go tomorrow? Just five more minutes. Attention span: annoyingly effective. Later, later, tomorrow!",
+          "narrative": "Flick darts left, remaining in the corner of your vision through an apparent disagreement with geometry. A tiny firecracker announces a break it has not earned.",
+          "share": {
+            "tokens": 30,
+            "notInTranslation": 0.43,
+            "canonical": 0.17
+          },
+          "durationMs": 10860
+        },
+        {
+          "turn": 5,
+          "requestedRatio": 0.55,
+          "native": "Domani? Sì! Mi piace! Tomorrow: excellent scheduling, zero moving. Ma vuoi aspettare davvero? Quando vuoi andare? Riddle me—oh, una foglia! Dopo, dopo, domani!",
+          "translation": "Tomorrow? Yes! I like it! Tomorrow: excellent scheduling, zero moving. But do you really want to wait? When do you want to go? Riddle me—oh, a leaf! Later, later, tomorrow!",
+          "narrative": "A tiny firecracker pops beside your shoe. Flick remains at the edge of your vision, where accountability has difficulty focusing.",
+          "share": {
+            "tokens": 24,
+            "notInTranslation": 0.67,
+            "canonical": 0.17
+          },
+          "durationMs": 8848
+        },
+        {
+          "turn": 6,
+          "requestedRatio": 0.6000000000000001,
+          "native": "No, adesso? Sì, hai ragione! Vado a sinistra, adesso! You win. Riddle me this: can tomorrow—never mind, apparently we’re doing things. Dopo, dopo, domani!",
+          "translation": "No, now? Yes, you’re right! I’m going left, now! You win. Riddle me this: can tomorrow—never mind, apparently we’re doing things. Later, later, tomorrow!",
+          "narrative": "A tiny firecracker pops at your left. Flick moves now, looking personally betrayed by the present tense.",
+          "share": {
+            "tokens": 26,
+            "notInTranslation": 0.42,
+            "canonical": 0.23
+          },
+          "durationMs": 8821
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 6335,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "stop",
+                "passed": false,
+                "feedback": "You told Flick to look, not to stop. Give a stop or keep-still command in Italian.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "direction",
+                "passed": false,
+                "feedback": "Tell Flick to go left, right, or straight ahead in Italian.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "Insist on acting now in Italian rather than putting it off.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your command means “Look!” Try telling Flick to stop, giving a direction, and insisting on now in Italian."
+          }
+        },
+        {
+          "durationMs": 5584,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "stop",
+                "passed": true,
+                "feedback": "Correct: you directly command Flick to stop.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "fermati",
+                    "evidence": "Fermati",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "direction",
+                "passed": false,
+                "feedback": "Give Flick a direction in Italian: left, right, or straight ahead.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "Insist on doing it now in Italian rather than putting it off.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your stop command is correct. Still add a direction and insist on now, both in Italian."
+          }
+        },
+        {
+          "durationMs": 5298,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "direction",
+                "passed": false,
+                "feedback": "Give Flick a direction in Italian, not English.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "Insist on acting now using the Italian word for now.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Use Italian to give Flick a direction and insist on doing it now."
+          }
+        },
+        {
+          "durationMs": 5613,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "direction",
+                "passed": true,
+                "feedback": "You correctly gave Flick a direction in Italian.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "sinistra",
+                    "evidence": "A sinistra!",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "You still need to insist on doing it now, in Italian.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Direction achieved. Now refuse the delay and insist on acting immediately in Italian."
+          }
+        },
+        {
+          "durationMs": 4427,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "You agreed to tomorrow. Refuse the delay and insist on now in Italian.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Tell Flick to act now, not tomorrow, using Italian."
+          }
+        },
+        {
+          "durationMs": 5085,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "now",
+                "passed": true,
+                "feedback": "You clearly refuse to wait and insist on going now in Italian.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "adesso",
+                    "evidence": "No, adesso!",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct—you insist on acting now rather than postponing."
+          }
+        }
+      ]
+    },
+    {
+      "location": "old_bookshop",
+      "sceneLocation": "old_bookshop",
+      "encounterId": "old_bookshop_bookworm",
+      "companionBriefing": null,
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 11,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.35,
+          "native": "Sono Marginalia. Questa è la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni.\n\nI sell books only to readers who understand them. No spoilers; there will be a comprehension check. Dove va Journathan?",
+          "translation": "I am Marginalia. This is the story of Journathan, the man of many tongues. His journey home lasts twenty years.\n\nI sell books only to readers who understand them. No spoilers; there will be a comprehension check. Where is Journathan going?",
+          "narrative": "At The Old Bookshop, a bookworm emerges from a dictionary. Most of the stock bears her annotations; the rest bears her teeth marks.",
+          "share": {
+            "tokens": 39,
+            "notInTranslation": 0.49,
+            "canonical": 0.13
+          },
+          "durationMs": 10694
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.39999999999999997,
+          "native": "Un libro è una cosa. Dove va Journathan? The question asks where he is going, not what I sell. Reading comprehension: not quite there. Reread the passage; I have eaten only the margins.",
+          "translation": "A book is a thing. Where is Journathan going? The question asks where he is going, not what I sell. Reading comprehension: not quite there. Reread the passage; I have eaten only the margins.",
+          "narrative": "Marginalia pencils a small question mark beside your elbow. Apparently, you now have an edition history.",
+          "share": {
+            "tokens": 33,
+            "notInTranslation": 0.21,
+            "canonical": 0
+          },
+          "durationMs": 7021
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.44999999999999996,
+          "native": "Hai capito, ma la risposta è in inglese. In italiano, per favore: dove va Journathan? Meaning understood; language requirement unmet. A footnote, yes, but a binding one.",
+          "translation": "You understood, but the answer is in English. In Italian, please: where is Journathan going? Meaning understood; language requirement unmet. A footnote, yes, but a binding one.",
+          "narrative": "Marginalia makes a small annotation beside your elbow. The ink looks disappointed.",
+          "share": {
+            "tokens": 27,
+            "notInTranslation": 0.44,
+            "canonical": 0
+          },
+          "durationMs": 6819
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.5,
+          "native": "Esatto, va a casa! Reading comprehension: redeemed. Now, the first recorded translation trick. No spoilers beyond the ones I am reading aloud.\n\nIl Ciclope chiede il suo nome. Journathan risponde: «Il mio nome è Nessuno.»\n\nQuale nome dà Journathan al Ciclope? In italiano, per favore.",
+          "translation": "Exactly, he is going home! Reading comprehension: redeemed. Now, the first recorded translation trick. No spoilers beyond the ones I am reading aloud.\n\nThe Cyclops asks his name. Journathan answers: “My name is Nobody.”\n\nWhat name does Journathan give the Cyclops? In Italian, please.",
+          "narrative": "Marginalia marks a tick beside your name, then turns a page with fewer corners than its publisher intended.",
+          "share": {
+            "tokens": 45,
+            "notInTranslation": 0.53,
+            "canonical": 0.11
+          },
+          "durationMs": 9279
+        },
+        {
+          "turn": 4,
+          "requestedRatio": 0.55,
+          "native": "Journathan è il suo vero nome. Ma quale nome dà al Ciclope? Rileggi il brano. His actual name: correct. Your reading comprehension: on a small detour. I sell books, not shortcuts.",
+          "translation": "Journathan is his real name. But what name does he give the Cyclops? Reread the passage. His actual name: correct. Your reading comprehension: on a small detour. I sell books, not shortcuts.",
+          "narrative": "Marginalia adds a small pencil mark beside your name. The pencil appears disappointed, though this is not a recognised qualification.",
+          "share": {
+            "tokens": 31,
+            "notInTranslation": 0.45,
+            "canonical": 0.06
+          },
+          "durationMs": 8023
+        },
+        {
+          "turn": 5,
+          "requestedRatio": 0.6,
+          "native": "Esatto! Il suo nome è Journathan, ma al Ciclope risponde: «Il mio nome è Nessuno.» Hai capito. Il libro è tuo. Reading comprehension: redeemed. No spoilers; I have eaten the last page.",
+          "translation": "Exactly! His name is Journathan, but he answers the Cyclops: “My name is Nobody.” You understood. The book is yours. Reading comprehension: redeemed. No spoilers; I have eaten the last page.",
+          "narrative": "Marginalia slides the book across the counter, having first checked that its remaining pages outnumber her annotations.",
+          "share": {
+            "tokens": 32,
+            "notInTranslation": 0.63,
+            "canonical": 0.09
+          },
+          "durationMs": 6551
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 6174,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "home",
+                "passed": false,
+                "feedback": "Your answer refers to a book. Answer in Italian where Journathan is going.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "name",
+                "passed": false,
+                "feedback": "You have not given the Italian name Journathan told the Cyclops.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Answer the destination question in Italian, rather than naming an object."
+          }
+        },
+        {
+          "durationMs": 5401,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "home",
+                "passed": false,
+                "feedback": "You identified the destination in English. Answer in Italian.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "name",
+                "passed": false,
+                "feedback": "Give the Italian name Journathan told the Cyclops.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your answer must be in Italian. The name objective is also not yet demonstrated."
+          }
+        },
+        {
+          "durationMs": 7874,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "home",
+                "passed": true,
+                "feedback": "Correct—you answered in Italian that he is going home.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "casa",
+                    "evidence": "A casa!",
+                    "quality": 3
+                  }
+                ]
+              },
+              {
+                "objective_id": "name",
+                "passed": false,
+                "feedback": "You still need to give, in Italian, the name he told the Cyclops.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your destination answer is correct. The name objective remains unanswered."
+          }
+        },
+        {
+          "durationMs": 10531,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name",
+                "passed": false,
+                "feedback": "That is his real name. Give the different name he told the Cyclops, in Italian.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Reread his reply in the passage and identify the name he gives the Cyclops."
+          }
+        },
+        {
+          "durationMs": 5317,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name",
+                "passed": true,
+                "feedback": "Correct—you identified the name he gave the Cyclops.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "nessuno",
+                    "evidence": "Nessuno",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct answer in Italian!"
+          }
+        }
+      ]
+    },
+    {
+      "location": "the_rift",
+      "sceneLocation": "the_rift",
+      "encounterId": "the_rift_errata",
+      "companionBriefing": [
+        "Careful. That thing is made of both our languages and neither.",
+        "It can only hurt you if you understand it, and you understand quite a lot now.",
+        "Everything you learned in the market works here. Use it."
+      ],
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 15,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.5,
+          "native": "Buongiorno. Che cosa vuoi? Item clàss: hùngry. Containment procedùre: plèase remain unread.",
+          "translation": "Good morning. What do you want? Item class: hungry. Containment procedure: please remain unread.",
+          "narrative": "At the Rift, a tear in reality wears the suggestion of a clerk. Its smile has been translated twice and approved by neither language.",
+          "share": {
+            "tokens": 12,
+            "notInTranslation": 0.67,
+            "canonical": 0.08
+          },
+          "durationMs": 13513
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.5,
+          "native": "Una richiesta in italiano, per favore. Una bevanda e qualcosa da mangiare, insieme. Containment procedùre: yoùù have requested only half a lùnch, in ŧhe wrong language.",
+          "translation": "A request in Italian, please. A drink and something to eat, together. Containment procedure: you have requested only half a lunch, in the wrong language.",
+          "narrative": "Errata files your request under Almost Food. The folder appears to have teeth.",
+          "share": {
+            "tokens": 26,
+            "notInTranslation": 0.62,
+            "canonical": 0
+          },
+          "durationMs": 7286
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.5,
+          "native": "Il caffè, sì. Ma manca qualcosa da mangiare. Che cosa vuoi con il caffè? Containment procedùre: bòth parts in one requèst, plèase. Ŧhe hùnger rejects partial paperwork.",
+          "translation": "The coffee, yes. But something to eat is missing. What would you like with the coffee? Containment procedure: both parts in one request, please. The hunger rejects partial paperwork.",
+          "narrative": "Errata stamped half the receipt. The other half remained ominously employed.",
+          "share": {
+            "tokens": 27,
+            "notInTranslation": 0.74,
+            "canonical": 0.07
+          },
+          "durationMs": 7873
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.5,
+          "native": "Un caffè e del salame. La richiesta è completa. Molto bene. Item clàss: cùstomer, briefly. La tua mano, per favore. Containment procedùre: objections mùst be in Italian and require immediate effect. Otherwise, I contìnue.",
+          "translation": "A coffee and some salami. The request is complete. Very good. Item class: customer, briefly. Your hand, please. Containment procedure: objections must be in Italian and require immediate effect. Otherwise, I continue.",
+          "narrative": "The coffee arrives beside the salame. Errata's fingers continue across the counter toward your wrist. Apparently, lunch includes a reading fee.",
+          "share": {
+            "tokens": 34,
+            "notInTranslation": 0.62,
+            "canonical": 0.06
+          },
+          "durationMs": 15108
+        },
+        {
+          "turn": 4,
+          "requestedRatio": 0.5,
+          "native": "Domani? Va bene. Oggi continuo. La tua mano, per favore. Containment procedùre: yoùù have delayed ŧhe objection, not ŧhe reading.",
+          "translation": "Tomorrow? All right. Today I continue. Your hand, please. Containment procedure: you have delayed the objection, not the reading.",
+          "narrative": "Errata continues reaching for your hand. It has filed your objection under tomorrow, a department famous for never opening.",
+          "share": {
+            "tokens": 20,
+            "notInTranslation": 0.7,
+            "canonical": 0.05
+          },
+          "durationMs": 7792
+        },
+        {
+          "turn": 5,
+          "requestedRatio": 0.5,
+          "native": "Va bene. Mi fermo adesso. Containment procedùre: ŧhe objection has tèeth. Ora, una domanda: come ti chiami? Il tuo nome, per favore. Item clàss: unread, fò r now.",
+          "translation": "All right. I stop now. Containment procedure: the objection has teeth. Now, a question: what is your name? Your name, please. Item class: unread, for now.",
+          "narrative": "Errata's reaching hand stops. A second hand appears to file the interruption, then thinks better of it. Somewhere inside the seam, a blank signature line grows teeth.",
+          "share": {
+            "tokens": 28,
+            "notInTranslation": 0.79,
+            "canonical": 0.25
+          },
+          "durationMs": 8721
+        },
+        {
+          "turn": 6,
+          "requestedRatio": 0.5,
+          "native": "Sam. Un nome vero. Posso leggerti. Il caffè, il salame… dopo. Containment procedùre: yoùù need a name that does not identify yoùù. Come ti chiami?",
+          "translation": "Sam. A real name. I can read you. The coffee, the salami… later. Containment procedure: you need a name that does not identify you. What is your name?",
+          "narrative": "Errata files Sam under Appetisers. Somewhere inside its mouth, a drawer opens. Your introduction has worked; this is precisely the problem.",
+          "share": {
+            "tokens": 25,
+            "notInTranslation": 0.64,
+            "canonical": 0.28
+          },
+          "durationMs": 12854
+        },
+        {
+          "turn": 7,
+          "requestedRatio": 0.5,
+          "native": "Nessuno? Non conosco questo nome. Non posso leggerti. Puoi andare. Item clàss: ùnreadable. Containment procedùre: file nòbody under… whò? Il salame, dopo, buongiorno, il caffè. Ŧhis is administratively crùel.",
+          "translation": "Nobody? I don’t know this name. I can’t read you. You can go. Item class: unreadable. Containment procedure: file nobody under… who? The salami, later, good morning, the coffee. This is administratively cruel.",
+          "narrative": "Errata’s signature line folds inward. The form has encountered a valid answer for which it has no victim. Somewhere inside it, a filing cabinet quietly resigns.",
+          "share": {
+            "tokens": 29,
+            "notInTranslation": 0.79,
+            "canonical": 0.21
+          },
+          "durationMs": 7321
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 5491,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order",
+                "passed": false,
+                "feedback": "Ask in Italian for both a coffee and a meat; an English-only coffee order is not enough.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "stop_now",
+                "passed": false,
+                "feedback": "Tell Errata to stop and insist on now, both in Italian.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "Introduce yourself in Italian with the name Nobody, using the required introduction pattern.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Use Italian to complete each task: order both items, command an immediate stop, and introduce yourself as Nobody."
+          }
+        },
+        {
+          "durationMs": 8172,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order",
+                "passed": false,
+                "feedback": "You requested a coffee in Italian, but you still need to include a meat in the same order.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "vorrei",
+                    "evidence": "Vorrei",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "caffe",
+                    "evidence": "caffè",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "stop_now",
+                "passed": false,
+                "feedback": "Tell Errata to stop and insist on now, both in Italian.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "Introduce yourself in Italian using the name Nobody and the required introduction structure.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your coffee request is correct. Add a meat, then give the stop-now command and introduce yourself as Nobody in Italian."
+          }
+        },
+        {
+          "durationMs": 7657,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order",
+                "passed": true,
+                "feedback": "You correctly requested both a coffee and a meat in Italian.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "vorrei",
+                    "evidence": "Vorrei",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "caffe",
+                    "evidence": "caffè",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "salame",
+                    "evidence": "salame",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "stop_now",
+                "passed": false,
+                "feedback": "You still need to command Errata to stop and insist on now, both in Italian.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "You still need to introduce yourself in Italian as Nobody, using the required introduction pattern.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your order is complete. The stop-now command and introduction as Nobody are still missing."
+          }
+        },
+        {
+          "durationMs": 6923,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "stop_now",
+                "passed": false,
+                "feedback": "You gave a stop command, but postponed it until tomorrow. Insist on stopping now in Italian.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "fermati",
+                    "evidence": "Fermati",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "Introduce yourself in Italian using the name Nobody and the required introduction pattern.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your command delays the stop until tomorrow rather than now. You also still need to introduce yourself as Nobody in Italian."
+          }
+        },
+        {
+          "durationMs": 6137,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "stop_now",
+                "passed": true,
+                "feedback": "You clearly command Errata to stop immediately in Italian.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "basta",
+                    "evidence": "Basta",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "adesso",
+                    "evidence": "adesso",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "You still need to introduce yourself in Italian with the name Nobody, using the required introduction pattern.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your immediate stop command succeeds. Now introduce yourself in Italian as Nobody."
+          }
+        },
+        {
+          "durationMs": 5654,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "You used the correct introduction, but gave your real name. Introduce yourself with the name Nobody in Italian instead.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "mi_chiamo",
+                    "evidence": "Mi chiamo",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Keep your introduction structure, but use the Italian name meaning Nobody."
+          }
+        },
+        {
+          "durationMs": 4993,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "nobody",
+                "passed": true,
+                "feedback": "You correctly introduce yourself as Nobody in Italian.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "mi_chiamo",
+                    "evidence": "Mi chiamo",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "nessuno",
+                    "evidence": "Nessuno",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct—you give the intended name using an Italian introduction."
+          }
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "start Portia",
+      "ok": true
+    },
+    {
+      "name": "say \"Ciao!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "greet",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "ciao",
+              "evidence": "Ciao!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "introduce",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Good greeting! Now introduce yourself and ask Portia her name in return."
+    },
+    {
+      "name": "say \"Mi chiamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "introduce",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "mi_chiamo",
+              "evidence": "Mi chiamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your introduction is correct. Add a question asking Portia her name in return."
+    },
+    {
+      "name": "say \"E tu?\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "ask_back",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "tu",
+              "evidence": "E tu?",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! You naturally ask her name in return."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": true,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    },
+    {
+      "name": "move to coffee_cart",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Gerald",
+      "ok": true
+    },
+    {
+      "name": "say \"Vorrei un caffè, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order_coffee",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "no_milk",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee request is correct. Add an Italian expression specifying no milk or black coffee."
+    },
+    {
+      "name": "say \"Senza latte, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "no_milk",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "senza_latte",
+              "evidence": "Senza latte",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct and natural—your no-milk preference is clear."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "imp_coffee_greeting",
+        "completed": true,
+        "characterName": "Gerald",
+        "characterId": "imp_coffee_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Vorrei del prosciutto, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Ask for a meat other than ham and include an amount with a weight unit in Italian."
+    },
+    {
+      "name": "say \"Vorrei del salame, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "salame",
+              "evidence": "Vorrei del salame, per favore.",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meat request is correct. Now add a quantity in Italian with a unit of weight."
+    },
+    {
+      "name": "say \"Chilo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "chilo",
+              "evidence": "Chilo",
+              "quality": 2,
+              "effectiveQuality": 2
+            }
+          ]
+        }
+      ],
+      "feedback": "You named a weight unit, but you still need to specify an amount in Italian."
+    },
+    {
+      "name": "say \"Due etti, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "etto",
+              "evidence": "Due etti",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you clearly specified how much salami you want."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "butchers_stall_charcutier",
+        "completed": true,
+        "characterName": "Mortimer",
+        "characterId": "charcutier_mortimer_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"Guarda!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your command means “Look!” Try telling Flick to stop, giving a direction, and insisting on now in Italian."
+    },
+    {
+      "name": "say \"Fermati!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "fermati",
+              "evidence": "Fermati",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command is correct. Still add a direction and insist on now, both in Italian."
+    },
+    {
+      "name": "say \"Left.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Use Italian to give Flick a direction and insist on doing it now."
+    },
+    {
+      "name": "say \"A sinistra!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "sinistra",
+              "evidence": "A sinistra!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Direction achieved. Now refuse the delay and insist on acting immediately in Italian."
+    },
+    {
+      "name": "say \"Domani.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Tell Flick to act now, not tomorrow, using Italian."
+    },
+    {
+      "name": "say \"No, adesso!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "adesso",
+              "evidence": "No, adesso!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you insist on acting now rather than postponing."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "cracked_fountain_letharger",
+        "completed": true,
+        "characterName": "Flick",
+        "characterId": "letharger_flick_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "move to old_bookshop",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "move to the_rift before the last encounter (expect SEALED)",
+      "ok": false,
+      "code": "SEALED",
+      "message": "The Rift is sealed. Finish the other encounters first (4 of 5 done)."
+    },
+    {
+      "name": "start Marginalia",
+      "ok": true
+    },
+    {
+      "name": "say \"Un libro.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Answer the destination question in Italian, rather than naming an object."
+    },
+    {
+      "name": "say \"Home.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your answer must be in Italian. The name objective is also not yet demonstrated."
+    },
+    {
+      "name": "say \"A casa!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "casa",
+              "evidence": "A casa!",
+              "quality": 3,
+              "effectiveQuality": 3
+            }
+          ]
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your destination answer is correct. The name objective remains unanswered."
+    },
+    {
+      "name": "say \"Journathan.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Reread his reply in the passage and identify the name he gives the Cyclops."
+    },
+    {
+      "name": "say \"Nessuno!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "nessuno",
+              "evidence": "Nessuno",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct answer in Italian!"
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ],
+      "locationEncounter": {
+        "id": "old_bookshop_bookworm",
+        "completed": true,
+        "characterName": "Marginalia",
+        "characterId": "bookworm_marginalia_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "move to the_rift after every other encounter (expect success)",
+      "ok": true,
+      "current": "the_rift",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:current"
+      ],
+      "gate": {
+        "sealed": false,
+        "required": 5,
+        "completed": 5
+      }
+    },
+    {
+      "name": "start Errata",
+      "ok": true
+    },
+    {
+      "name": "say \"A coffee, please.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Use Italian to complete each task: order both items, command an immediate stop, and introduce yourself as Nobody."
+    },
+    {
+      "name": "say \"Vorrei un caffè.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee request is correct. Add a meat, then give the stop-now command and introduce yourself as Nobody in Italian."
+    },
+    {
+      "name": "say \"Vorrei un caffè e del salame.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "salame",
+              "evidence": "salame",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your order is complete. The stop-now command and introduction as Nobody are still missing."
+    },
+    {
+      "name": "say \"Fermati domani.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "fermati",
+              "evidence": "Fermati",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your command delays the stop until tomorrow rather than now. You also still need to introduce yourself as Nobody in Italian."
+    },
+    {
+      "name": "say \"Basta, adesso!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop_now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "basta",
+              "evidence": "Basta",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "adesso",
+              "evidence": "adesso",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your immediate stop command succeeds. Now introduce yourself in Italian as Nobody."
+    },
+    {
+      "name": "say \"Mi chiamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "mi_chiamo",
+              "evidence": "Mi chiamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Keep your introduction structure, but use the Italian name meaning Nobody."
+    },
+    {
+      "name": "say \"Mi chiamo Nessuno.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "nobody",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "mi_chiamo",
+              "evidence": "Mi chiamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "nessuno",
+              "evidence": "Nessuno",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you give the intended name using an Italian introduction."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "the_rift",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:current"
+      ],
+      "locationEncounter": {
+        "id": "the_rift_errata",
+        "completed": true,
+        "characterName": "Errata",
+        "characterId": "rift_errata_001",
+        "saveable": false
+      }
+    }
+  ]
+}

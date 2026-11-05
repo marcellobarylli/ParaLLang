@@ -109,5 +109,5 @@ test('prompt assembly contains one player-message copy and authored constraints'
     targetRatio: .3, decision: { encounterState: 'ongoing' },
   });
   assert.equal(narrative.map((message) => message.content).join('\n').split(playerInput).length - 1, 1);
-  assert.match(narrative[0].content, /30% Spanish/);
+  assert.match(narrative[0].content, /about 30% of the words in each dialogue line are Spanish/);
 });

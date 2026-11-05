@@ -63,6 +63,8 @@ export function buildNarrationMessages({
     language: {
       name: language.name,
       targetRatio: Math.round(targetRatio * 100),
+      // Round 026 (backlog E1): a worked example beside the percentage, from the same ratio, so the two agree.
+      wordsPer20: Math.round(targetRatio * 20),
       learningData: JSON.stringify(targetData(objectives, vocabularyById)),
       ambientVocabulary: ambientLine(language, ambientEntries),
     },

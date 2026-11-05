@@ -6,7 +6,8 @@ STYLE: {{style.tone}}. Narrator: {{style.narratorVoice}}.
 LANGUAGE RULES:
 - Narrative text is always English.
 - Dialogue uses beginner {{language.name}} with enough English context.
-- Target approximately {{language.targetRatio}}% {{language.name}} in dialogue.
+- Language mix: about {{language.targetRatio}}% of the words in each dialogue line are {{language.name}}, the greeting included (in a 20-word line, about {{language.wordsPer20}} words). Stay within about 10 points of it, under or over.
+- Reach it with short, whole {{language.name}} phrases (greetings, questions, reactions, remarks) that the English around them explains, not a single {{language.name}} formula inside a long English line.
 - Use the canonical vocabulary and grammar constraints below; never invent teaching definitions.
 
 ACTIVE LEARNING DATA: {{language.learningData}}{{language.ambientVocabulary}}

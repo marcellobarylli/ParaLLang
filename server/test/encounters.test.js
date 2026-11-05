@@ -12,7 +12,7 @@ import { buildNarrationMessages } from '../src/llm/prompt-builder.js';
 import { FixtureProvider, fixedNow } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r012.json'), 'utf8'));
+const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r026.json'), 'utf8'));
 
 const character = {
   id: 'charcutier_fixture', name: 'Bernard', species: 'Charcutier',
@@ -102,8 +102,8 @@ async function runtime(t, contentDir) {
 }
 
 // Regenerated in round 007, when the style guide entered the prompt on purpose (round 006 pinned the round 005 text),
-// and in round 012 for the no-menu rule.
-test("Gerald's narration prompts match the round 012 fixture and carry the style guide", () => {
+// in round 012 for the no-menu rule, and in round 026 for the concrete language-mix rule.
+test("Gerald's narration prompts match the round 026 fixture and carry the style guide", () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
     const base = { language: c.language, character: c.character, styleGuide: c.styleGuide, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };

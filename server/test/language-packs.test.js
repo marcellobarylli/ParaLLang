@@ -94,7 +94,7 @@ test('prompts name the selected language and leave no placeholder unfilled', () 
       ...buildNarrationMessages({ ...shared, character: content.character, styleGuide: content.styleGuide, locationName: 'The Coffee Cart', targetRatio: .3, playerInput: 'Ciao', decision: { encounterState: 'ongoing' } }),
       ...buildGradingMessages({ ...shared, conversationContext: [], playerInput: 'Ciao' }),
     ].map((message) => message.content).join('\n');
-    assert.match(prompts, new RegExp(`30% ${name} in dialogue`));
+    assert.match(prompts, new RegExp(`about 30% of the words in each dialogue line are ${name}`));
     assert.match(prompts, new RegExp(`strict contextual ${name}-learning assessor`));
     assert.doesNotMatch(prompts, /\{\{/);
     assert.doesNotMatch(prompts, new RegExp(name === 'Italian' ? 'Spanish' : 'Italian'));
