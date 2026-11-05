@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 
 export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to the map' }) {
   const [answer, setAnswer] = useState('');
@@ -10,7 +10,7 @@ export default function ReviewPanel({ challenge, result, language, isLoading, on
     <ScrollView aria-label="Review feedback" contentContainerStyle={styles.content}>
       <Text role="heading" style={styles.title}>Review feedback</Text>
       <Text role="status" style={styles.body}>{result.feedback}</Text>
-      <Text style={styles.body}>Answer: <Text style={styles.strong}>{result.canonicalAnswer}</Text></Text>
+      <Text style={styles.body}>Answer: <Text style={styles.emphasis}>{result.canonicalAnswer}</Text></Text>
       <Text style={styles.small}>Quality {result.effectiveQuality}/5 · Next review: {new Date(result.nextReviewAt).toLocaleString()}</Text>
       <View style={styles.buttons}>
         <Button label="Continue reviews" variant="primary" onPress={onContinue} />
@@ -48,13 +48,14 @@ export default function ReviewPanel({ challenge, result, language, isLoading, on
 
 const styles = StyleSheet.create({
   content: { padding: 16, gap: 12 },
-  title: { fontSize: 24, fontWeight: '700', color: colors.ink },
+  title: { fontSize: type.title1, fontWeight: '700', color: colors.ink },
   prompt: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  word: { fontSize: 32, fontWeight: '700', color: colors.ink },
-  input: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16, color: colors.ink },
+  word: { fontSize: type.largeTitle, fontWeight: '700', color: colors.ink },
+  input: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: type.callout, color: colors.ink },
   buttons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  body: { color: colors.ink, fontSize: 16 },
-  strong: { fontWeight: '700', color: colors.ink },
-  small: { color: colors.muted, fontSize: 13 },
-  muted: { color: colors.muted },
+  body: { color: colors.ink, fontSize: type.callout },
+  strong: { fontWeight: '700', color: colors.ink, fontSize: type.subhead },
+  emphasis: { fontWeight: '700' },
+  small: { color: colors.muted, fontSize: type.footnote },
+  muted: { color: colors.muted, fontSize: type.subhead },
 });

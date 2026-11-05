@@ -13,7 +13,7 @@ import MapPanel from './src/components/MapPanel.js';
 import PartyPanel from './src/components/PartyPanel.js';
 import OnboardingPanel from './src/components/OnboardingPanel.js';
 import SavesPanel from './src/components/SavesPanel.js';
-import { colors } from './src/components/ui.js';
+import { colors, type } from './src/components/ui.js';
 
 export default function App() {
   const state = useGameStore();
@@ -67,5 +67,5 @@ export default function App() {
 
 const styles = StyleSheet.create({
   shell: { flex: 1, backgroundColor: colors.background },
-  notice: { backgroundColor: '#e7f3e8', color: colors.success, paddingHorizontal: 16, paddingVertical: 8, fontWeight: '600' },
+  notice: { backgroundColor: colors.successSurface, color: colors.success, paddingHorizontal: 16, paddingVertical: 8, fontWeight: '600', fontSize: type.subhead },
 });

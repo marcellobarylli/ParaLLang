@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 
 // Round 027 (backlog C2): the game's philosophy statement, shown once before the map. The text is content
 // (content/narration/onboarding.yaml), served by GET /api/onboarding.
@@ -17,8 +17,8 @@ export default function OnboardingPanel({ onboarding, onBegin }) {
 const styles = StyleSheet.create({
   panel: { flex: 1 },
   content: { padding: 24, gap: 16 },
-  title: { fontSize: 24, fontWeight: '800', color: colors.ink },
-  statement: { fontSize: 17, lineHeight: 25, color: colors.ink, fontStyle: 'italic' },
-  paragraph: { fontSize: 16, lineHeight: 23, color: colors.ink },
+  title: { fontSize: type.title1, fontWeight: '800', color: colors.ink },
+  statement: { fontSize: type.body, lineHeight: 25, color: colors.ink, fontStyle: 'italic' },
+  paragraph: { fontSize: type.callout, lineHeight: 23, color: colors.ink },
   begin: { marginTop: 8 },
 });

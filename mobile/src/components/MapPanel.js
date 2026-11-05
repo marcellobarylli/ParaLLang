@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 
 const NODE = 18;
@@ -38,14 +38,15 @@ function Node({ location, size, onMove, disabled }) {
         accessibleName={nodeLabel(location)}
         onPress={() => onMove(location.id)}
         disabled={disabled || current || !location.adjacent || sealed}
+        dim={false}
         variant="text"
         style={styles.nodeButton}
       >
         <View style={[styles.dot, current && styles.dotCurrent, location.state === 'known' && styles.dotKnown, location.adjacent && styles.dotAdjacent, sealed && styles.dotSealed]} />
-        <Text style={[styles.nodeName, location.state === 'known' && styles.nodeNameKnown]} numberOfLines={2}>
+        <Text style={[styles.nodeName, !current && (!location.adjacent || sealed) && styles.nodeNameUnreachable, location.state === 'known' && styles.nodeNameKnown]} numberOfLines={2} maxFontSizeMultiplier={1.5}>
           {location.encounter?.completed ? '✓ ' : ''}{sealed ? '🔒 ' : ''}{location.name}
         </Text>
-        {sealed && <Text style={styles.sealCaption}>Sealed {location.gate.completed}/{location.gate.required}</Text>}
+        {sealed && <Text style={styles.sealCaption} maxFontSizeMultiplier={1.5}>Sealed {location.gate.completed}/{location.gate.required}</Text>}
       </Button>
     </View>
   );
@@ -119,13 +120,14 @@ const styles = StyleSheet.create({
   dotCurrent: { backgroundColor: colors.success, borderColor: colors.ink },
   dotKnown: { backgroundColor: colors.border },
   dotSealed: { backgroundColor: colors.ink, borderColor: colors.border },
-  nodeName: { marginTop: 2, fontSize: 12, fontWeight: '600', color: colors.ink, textAlign: 'center' },
-  sealCaption: { fontSize: 11, color: colors.muted, textAlign: 'center' },
+  nodeName: { marginTop: 2, fontSize: type.caption1, fontWeight: '600', color: colors.ink, textAlign: 'center' },
+  sealCaption: { fontSize: type.caption2, color: colors.muted, textAlign: 'center' },
+  nodeNameUnreachable: { color: colors.muted },
   nodeNameKnown: { color: colors.muted, fontStyle: 'italic' },
   card: { backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border, padding: 16, gap: 10 },
-  title: { fontSize: 20, fontWeight: '800', color: colors.ink },
-  body: { fontSize: 15, lineHeight: 21, color: colors.ink },
-  muted: { fontSize: 14, color: colors.muted, padding: 16 },
-  focus: { fontSize: 13, color: colors.muted, fontStyle: 'italic' },
-  done: { fontSize: 14, fontWeight: '600', color: colors.success },
+  title: { fontSize: type.title3, fontWeight: '800', color: colors.ink },
+  body: { fontSize: type.subhead, lineHeight: 21, color: colors.ink },
+  muted: { fontSize: type.subhead, color: colors.muted, padding: 16 },
+  focus: { fontSize: type.footnote, color: colors.muted, fontStyle: 'italic' },
+  done: { fontSize: type.subhead, fontWeight: '600', color: colors.success },
 });

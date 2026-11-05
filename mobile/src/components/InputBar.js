@@ -1,5 +1,5 @@
 import { StyleSheet, TextInput, View } from 'react-native';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 
 export default function InputBar({ value, onChange, onSend, disabled, loading, resolved, speaker }) {
   const submit = () => { if (!disabled && value.trim()) onSend(value); };
@@ -24,6 +24,6 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, r
 
 const styles = StyleSheet.create({
   bar: { flexDirection: 'row', gap: 8, padding: 12, borderTopWidth: 1, borderTopColor: colors.border, backgroundColor: colors.background },
-  input: { flex: 1, backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16, color: colors.ink },
+  input: { flex: 1, backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: type.callout, color: colors.ink },
   disabled: { opacity: 0.6 },
 });

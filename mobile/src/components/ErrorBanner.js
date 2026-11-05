@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 
 export default function ErrorBanner({ message, onDismiss }) {
   return (
@@ -12,5 +12,5 @@ export default function ErrorBanner({ message, onDismiss }) {
 
 const styles = StyleSheet.create({
   banner: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.dangerSurface, paddingHorizontal: 16, paddingVertical: 8 },
-  text: { flex: 1, color: colors.danger, fontSize: 14 },
+  text: { flex: 1, color: colors.danger, fontSize: type.subhead },
 });

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 
 export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to the map', now = Date.now() }) {
   const inEncounter = Boolean(spellbook.inEncounter);
@@ -100,18 +100,18 @@ function Card({ card, state, language, isLoading, onReview }) {
 const styles = StyleSheet.create({
   content: { padding: 16, gap: 12 },
   heading: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  title: { fontSize: 24, fontWeight: '700', color: colors.ink },
-  section: { fontSize: 18, fontWeight: '700', color: colors.ink, marginTop: 8 },
+  title: { fontSize: type.title1, fontWeight: '700', color: colors.ink },
+  section: { fontSize: type.title3, fontWeight: '700', color: colors.ink, marginTop: 8 },
   card: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  cardTitle: { fontSize: 20, fontWeight: '600', color: colors.ink },
+  cardTitle: { fontSize: type.title3, fontWeight: '600', color: colors.ink },
   review: { alignSelf: 'flex-start', marginTop: 6 },
-  body: { color: colors.ink, fontSize: 15 },
-  hidden: { color: colors.muted, fontSize: 15, fontStyle: 'italic' },
-  example: { color: colors.ink, fontSize: 14 },
-  passage: { color: colors.ink, fontSize: 16, lineHeight: 23, fontStyle: 'italic' },
+  body: { color: colors.ink, fontSize: type.subhead },
+  hidden: { color: colors.muted, fontSize: type.subhead, fontStyle: 'italic' },
+  example: { color: colors.ink, fontSize: type.subhead },
+  passage: { color: colors.ink, fontSize: type.callout, lineHeight: 23, fontStyle: 'italic' },
   translation: { gap: 4, marginTop: 4 },
   strong: { fontWeight: '700' },
-  small: { color: colors.muted, fontSize: 13 },
-  muted: { color: colors.muted },
+  small: { color: colors.muted, fontSize: type.footnote },
+  muted: { color: colors.muted, fontSize: type.subhead },
 });

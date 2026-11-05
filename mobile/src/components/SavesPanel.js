@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 import { MAX_SAVES } from '../stores/saveSlots.js';
 
 // Round 031 (backlog A11): the device's saves. Each is a learner on the server; the current one shows where it
@@ -34,12 +34,12 @@ export default function SavesPanel({ saves, activeId, place, dueCount = 0, isLoa
 const styles = StyleSheet.create({
   content: { padding: 16, gap: 12 },
   heading: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  title: { fontSize: 24, fontWeight: '700', color: colors.ink },
+  title: { fontSize: type.title1, fontWeight: '700', color: colors.ink },
   card: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   current: { borderColor: colors.accent },
-  cardTitle: { fontSize: 20, fontWeight: '600', color: colors.ink },
+  cardTitle: { fontSize: type.title3, fontWeight: '600', color: colors.ink },
   action: { alignSelf: 'flex-start', marginTop: 4 },
-  body: { color: colors.ink, fontSize: 15 },
-  small: { color: colors.muted, fontSize: 13 },
-  muted: { color: colors.muted },
+  body: { color: colors.ink, fontSize: type.subhead },
+  small: { color: colors.muted, fontSize: type.footnote },
+  muted: { color: colors.muted, fontSize: type.subhead },
 });

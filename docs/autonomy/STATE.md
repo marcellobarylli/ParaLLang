@@ -71,6 +71,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **A12. Relationship unlocks, first.** (round 032, closed 2026-11-05) Gerald's Dead Branch fragment after three
   coffee breaks (`after_conversations`). Open: unlocks for Mortimer, Flick, Marginalia; tiers that change the
   conversation; a Party-screen hint (owner question).
+- [x] **A12b. Unlocks for the other members.** (round 033, closed 2026-11-05) Mortimer (forbidden herd), Flick (lotus),
+  Marginalia (old dog) after three conversations each; stem check over every fragment and party conversation.
+  Open: tiers that change the conversation (needs live runs); a Party-screen hint (owner question).
 - [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
 - [x] **A11. Save slots.** (round 031, closed 2026-11-05) Up to three learners per device, Saves screen from the
   map; delete and rename deferred (owner question).
@@ -96,7 +99,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   per required target group, `DRILL_REQUIRED`, map note; `play-market.js --tour` clears it (`drillCards`).
 - [x] **C2. Onboarding.** (round 027, closed 2026-11-05) Philosophy statement screen before the map, once per
   device; `content/narration/onboarding.yaml`, `GET /api/onboarding`.
-- [ ] **C3. Visual polish.** Typography, palette, transitions in the app.
+- [ ] **C3. Visual polish.** Split: **C3a** type scale and palette tokens (round 034); **C3b** transitions (new
+  dialogue lines, screen changes; respect Reduce Motion); custom font needs an asset and a licence check.
 - [ ] **C4. Sound design.** Ambient and UI sounds (needs assets; check licensing).
 
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 
 // Round 021: after a saveable NPC is defeated, the player may save them to the party or leave (prototype.md §8,
 // "[SAVE / LEAVE choice]"). Leaving is not final: the map's location card keeps the invitation open.
@@ -23,6 +23,6 @@ export default function PartyOffer({ name, joined, isLoading, onSave, onLeave })
 const styles = StyleSheet.create({
   card: { backgroundColor: colors.surface, borderColor: colors.accent, borderWidth: 1, borderRadius: 12, padding: 12, gap: 8 },
   actions: { flexDirection: 'row', gap: 8 },
-  strong: { fontWeight: '700', color: colors.ink },
-  joined: { color: colors.success, fontWeight: '600' },
+  strong: { fontWeight: '700', color: colors.ink, fontSize: type.subhead },
+  joined: { color: colors.success, fontWeight: '600', fontSize: type.subhead },
 });

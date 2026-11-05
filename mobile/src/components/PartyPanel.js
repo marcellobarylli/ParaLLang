@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, colors } from './ui.js';
+import { Button, colors, type } from './ui.js';
 
 // Round 021: the party, in join order. Round 022: a member with an authored conversation can be talked to anywhere.
 // `ongoing` is the encounter under way, if any: Talk resumes it for its own member and is unavailable for the others.
@@ -30,8 +30,8 @@ export default function PartyPanel({ party, isLoading = false, ongoing = null, o
 const styles = StyleSheet.create({
   panel: { flex: 1 },
   content: { padding: 16, gap: 12 },
-  title: { fontSize: 20, fontWeight: '800', color: colors.ink },
+  title: { fontSize: type.title3, fontWeight: '800', color: colors.ink },
   member: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 6 },
-  name: { fontSize: 16, fontWeight: '700', color: colors.ink },
-  muted: { color: colors.muted },
+  name: { fontSize: type.callout, fontWeight: '700', color: colors.ink },
+  muted: { color: colors.muted, fontSize: type.subhead },
 });

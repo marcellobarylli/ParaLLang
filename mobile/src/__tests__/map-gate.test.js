@@ -17,3 +17,15 @@ test('an open Rift can be walked to like any neighbour', async () => {
   expect(screen.getByRole('button', { name: 'Walk to The Rift, unexplored' })).toBeEnabled();
   expect(screen.queryByText(/Sealed/)).toBeNull();
 });
+
+// Round 034 (critique 1.3): map nodes you cannot walk to are not faded; their labels are muted instead.
+test('map labels stay at full opacity; unreachable ones are muted, the current one is ink', async () => {
+  const { StyleSheet } = require('react-native');
+  const { colors } = require('../components/ui.js');
+  await render(<MapPanel world={worldWith({ sealed: true, required: 5, completed: 4 })} isLoading={false} onMove={jest.fn()} onEnterEncounter={jest.fn()} />);
+  const sealed = screen.getByRole('button', { name: 'The Rift, sealed: 4 of 5 encounters complete' });
+  const here = screen.getByRole('button', { name: /The Old Bookshop/ });
+  for (const node of [sealed, here]) expect(StyleSheet.flatten(node.props.style).opacity).toBeUndefined();
+  expect(StyleSheet.flatten(screen.getByText(/The Rift$/).props.style).color).toBe(colors.muted);
+  expect(StyleSheet.flatten(screen.getAllByText('The Old Bookshop')[0].props.style).color).toBe(colors.ink);
+});

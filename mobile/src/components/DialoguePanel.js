@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import BilingualText from './BilingualText.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
-import { colors } from './ui.js';
+import { colors, type } from './ui.js';
 
 export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
@@ -82,15 +82,15 @@ const styles = StyleSheet.create({
   companion: { backgroundColor: colors.surface, borderColor: colors.accent, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   objective: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   npc: { backgroundColor: colors.surface, borderRadius: 12, padding: 12, gap: 6 },
-  narrative: { color: colors.muted, fontStyle: 'italic', fontSize: 14 },
-  speaker: { color: colors.accent, fontWeight: '700' },
-  player: { alignSelf: 'flex-end', backgroundColor: colors.accent, color: colors.accentInk, borderRadius: 12, padding: 10, maxWidth: '85%', overflow: 'hidden', fontSize: 16 },
+  narrative: { color: colors.muted, fontStyle: 'italic', fontSize: type.subhead },
+  speaker: { color: colors.accent, fontWeight: '700', fontSize: type.subhead },
+  player: { alignSelf: 'flex-end', backgroundColor: colors.accent, color: colors.accentInk, borderRadius: 12, padding: 10, maxWidth: '85%', overflow: 'hidden', fontSize: type.callout },
   footer: { gap: 12, paddingBottom: 8 },
-  thinking: { color: colors.muted, fontStyle: 'italic' },
+  thinking: { color: colors.muted, fontStyle: 'italic', fontSize: type.subhead },
   assessment: { backgroundColor: colors.surface, borderLeftWidth: 4, borderLeftColor: colors.accent, borderRadius: 8, padding: 12, gap: 4 },
-  victory: { backgroundColor: '#e7f3e8', color: colors.success, borderRadius: 8, padding: 12, fontWeight: '600' },
-  strong: { fontWeight: '700', color: colors.ink },
-  body: { color: colors.ink, fontSize: 15 },
-  small: { color: colors.muted, fontSize: 12 },
-  muted: { color: colors.muted, padding: 16 },
+  victory: { backgroundColor: colors.successSurface, color: colors.success, borderRadius: 8, padding: 12, fontWeight: '600', fontSize: type.subhead },
+  strong: { fontWeight: '700', color: colors.ink, fontSize: type.subhead },
+  body: { color: colors.ink, fontSize: type.subhead },
+  small: { color: colors.muted, fontSize: type.caption1 },
+  muted: { color: colors.muted, padding: 16, fontSize: type.subhead },
 });
