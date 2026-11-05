@@ -7,8 +7,8 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **B1** (tone layer plus the "never dictate the answer" narration rule, re-measured live), then **A3**
-  (Market Entrance tutorial, the first real second encounter, content only).
+- Nothing. Next: **D5** (grader feedback dictates the answer), then **A3** (Market Entrance tutorial, the first real
+  second encounter, content only).
 
 ## Backlog
 
@@ -36,7 +36,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ### B. Content in line with the newer lore notes (do not edit `parallang_obsidian/`)
 
-- [ ] **B1. Tone layer.** Update `content/narration/style_guide.yaml` and Gerald's character sheet with the
+- [x] **B1. Tone layer.** (round 007, closed 2026-11-05) Update `content/narration/style_guide.yaml` and Gerald's character sheet with the
   Pratchett × meme-culture layer (GAME MECHANICS.md), and make sure the style guide actually reaches the prompt
   (`prompts/system/base.txt` does not use `styleGuide` today). Add the narration rule "never give the player the
   exact phrase to type": round 005 live data shows Gerald saying "Say: 'Senza latte, per favore.'", and the echo
@@ -56,6 +56,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **D1.** `verify:cli` for `claude-cli` in Italian and for either provider in Spanish (round 003 item 3).
 - [ ] **D2.** Grader caps echoed phrases at quality 2 (round 003 item 4): measure, then decide on the prompt.
 - [ ] **D3.** Show vocabulary notes; the Spellbook meaning leak from round 001 (round 003 item 5).
+- [ ] **D5. Grader feedback dictates the answer** (round 007 findings): after a partial order, `overall_feedback`
+  (shown in the app's Assessment panel) said "Add “senza latte” to specify no milk." in 2/3 runs (1/3 baseline).
+  Add a rule to `prompts/language/grading.txt` (feedback may name what is missing in English, never the
+  target-language answer to an open objective); re-run `verify:cli` (verdicts must stay 9/9) and `play-market.js`
+  3 times; feedback only, verdicts unchanged.
 - [ ] **D4.** `expo-doctor` 19/20 since 2026-11-05: wants expo ~58.0.23 and react-native-safe-area-context ~5.11.1
   (new upstream releases; nothing in the repo changed). `npx expo install --fix` in `mobile/`, then re-run jest,
   expo-doctor and the iOS export. Simulator check of the update goes to "Needs owner".
@@ -76,6 +81,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   server 73/73, mobile 18/18, client 12/12; live codex-cli map playthrough resolved, `verify:cli` 9/9.
 - 2026-11-05, iteration 1: round 006 (A2) built and closed: multi-encounter engine; server 77/77, mobile 19/19,
   client 12/12; Gerald's prompts byte-identical (golden test); live playthrough resolved.
+- 2026-11-05, iteration 1: round 007 (B1) built and closed: style guide in the prompt, no-dictation rule; live 3+3
+  runs: dictation 3/3 → 0/3, echo quality 2 → 5. Grader feedback dictation found (D5).
 
 ## Handoff notes and traps
 
@@ -98,8 +105,13 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Gerald's objectives; new encounters need their own test grader (see `TwoEncounterProvider`).
 - `/api/encounter/start` without `encounterId` starts the pack's `default_encounter` anywhere (web client); with one,
   the player must be at its location (409 `NOT_HERE`). One active session per learner.
-- Gerald's rendered narration prompts are pinned by `server/test/fixtures/gerald-prompts-r005.json`. **B1 changes
-  the prompts on purpose**: regenerate the fixture in that round and say so in its record.
-- `prompts/system/base.txt` does not use the style guide (`content/narration/style_guide.yaml`) at all.
+- Gerald's rendered narration prompts are pinned by `server/test/fixtures/gerald-prompts-r007.json` (test in
+  `server/test/encounters.test.js`). A round that changes the narration prompt on purpose regenerates it (the
+  generator is ~20 lines: `buildNarrationMessages` for `it`/`es`, greeting and one turn; see the test's arguments) and
+  says so in its record.
+- The style guide is filled into `prompts/system/base.txt` (STYLE block) since round 007; edit content there, not
+  the template.
+- Live A/B pattern that worked (round 007): 3 `play-market.js` runs on HEAD before building, 3 after, classify the
+  saved lines by reading them; ~35 s and 5 calls per run.
 - Saves are schema 2 (`world` block). In-memory encounters are lost on server restart (by design since round 001).
 - The map's node positions fall back to a 320-point square until `onLayout` fires (jest never fires it).

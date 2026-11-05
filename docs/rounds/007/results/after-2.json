@@ -1,0 +1,215 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 5,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to coffee_cart",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Gerald",
+      "ok": true
+    },
+    {
+      "name": "say \"Vorrei un caffè, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order_coffee",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "no_milk",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "You correctly ordered coffee. Add “senza latte” to specify no milk."
+    },
+    {
+      "name": "say \"Senza latte, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "no_milk",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "senza_latte",
+              "evidence": "Senza latte",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct and unassisted."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "coffeeCartEncounter": {
+        "id": "imp_coffee_greeting",
+        "completed": true,
+        "characterName": "Gerald"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.25,
+      "native": "Buongiorno! I’m Gerald. This cart? Five espresso shots. The market? One. Che cosa desideri?",
+      "translation": "Good morning! I’m Gerald. This cart? Five espresso shots. The market? One. What would you like?",
+      "narrative": "Gerald, an imp in a spotless apron, surveys The Crumbling Market from his coffee cart. The market crumbles; his standards do not.",
+      "share": {
+        "tokens": 15,
+        "notInTranslation": 0.27,
+        "canonical": 0.07
+      },
+      "durationMs": 6587
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.3,
+      "native": "Un caffè, certo. Polite, clear: four espresso shots. But the milk situation remains unresolved. Vuoi latte nel caffè? I consider it a war crime, but apparently we must ask.",
+      "translation": "A coffee, certainly. Polite, clear: four espresso shots. But the milk situation remains unresolved. Do you want milk in the coffee? I consider it a war crime, but apparently we must ask.",
+      "narrative": "Gerald places a cup beneath the machine. His hand pauses near the milk jug with the distaste usually reserved for administrative fees.",
+      "share": {
+        "tokens": 29,
+        "notInTranslation": 0.24,
+        "canonical": 0.1
+      },
+      "durationMs": 8323
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.35,
+      "native": "Senza latte. Perfetto! Five espresso shots for that answer. Clear, polite, no notes. Ecco il tuo caffè. The milk stays unemployed.",
+      "translation": "Without milk. Perfect! Five espresso shots for that answer. Clear, polite, no notes. Here is your coffee. The milk stays unemployed.",
+      "narrative": "Gerald pours the espresso. The milk jug remains untouched, spared another disciplinary hearing.",
+      "share": {
+        "tokens": 21,
+        "notInTranslation": 0.33,
+        "canonical": 0.19
+      },
+      "durationMs": 5715
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 5979,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "order_coffee",
+            "passed": true,
+            "feedback": "Correct first-person request for coffee.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "vorrei",
+                "evidence": "Vorrei",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "caffe",
+                "evidence": "caffè",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "no_milk",
+            "passed": false,
+            "feedback": "No authored Italian no-milk or black-coffee expression was used.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "You correctly ordered coffee. Add “senza latte” to specify no milk."
+      }
+    },
+    {
+      "durationMs": 5294,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "no_milk",
+            "passed": true,
+            "feedback": "The player clearly orders coffee without milk using the required Italian expression.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "senza_latte",
+                "evidence": "Senza latte",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Correct and unassisted."
+      }
+    }
+  ]
+}

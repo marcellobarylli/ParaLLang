@@ -99,3 +99,9 @@ pass condition now requires no dictation.
    `results/baseline-{1,2,3}.json`) and 3 after runs (`results/after-{1,2,3}.json`). **Pass:** all 3 after runs
    resolve and no after line dictates. The no_milk echo quality and share estimates are reported either way.
 4. `git diff --check`; `python3 tools/round_log_check.py 007`.
+
+## Outcome (2026-11-05)
+
+Built as designed with critique findings 1–9. All suites pass. Live codex-cli, Italian, 3 runs a side: runs with a
+dictating Gerald line 3/3 → 0/3, echo quality 2 → 5; all 6 resolved, so the pass condition holds. The grader's
+feedback still dictates the answer in 2/3 after runs: the next round. See [findings](findings.md).

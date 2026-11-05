@@ -21,9 +21,19 @@ The entry point for agents: the current state, how the project is logged, and th
   Coffee Cart has an encounter so far ([round 005](docs/rounds/005/architecture.md)). New encounters are content
   only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
+- **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and NPCs no longer dictate
+  answers ([round 007](docs/rounds/007/architecture.md)).
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 007, tone layer and no dictated answers (autonomous)
+
+The style guide now reaches the narration prompt, updated to the owner's Pratchett × meme-culture notes (English
+only; target-language dialogue stays beginner-level), with a rule against telling the player what to say. Codex
+critique 1: 9 of 10 findings accepted autonomously. Live codex-cli in Italian, 3 runs before and after: Gerald
+dictated the answer in 3/3 → 0/3 runs, and the player's "Senza latte" went from quality 2 to 5. The grader's
+feedback still gives the answer away (2/3): next round. See [findings](docs/rounds/007/findings.md).
 
 ## Addendum 2026-11-05: round 006, the multi-encounter engine (autonomous)
 
@@ -92,7 +102,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
-| 007 | 11-05 | Tone layer: style guide in the narration prompt (Pratchett × meme culture), no dictated answers (autonomous) | [007](docs/rounds/007/architecture.md) | pending | pre-run record |
+| 007 | 11-05 | Tone layer: style guide in the narration prompt (Pratchett × meme culture), no dictated answers (autonomous) | [007](docs/rounds/007/architecture.md) | [findings](docs/rounds/007/findings.md) | `d9b0861` (pre-run record) to round 007 close |
 | 006 | 11-05 | Multi-encounter engine: encounters per location from pack content, location-checked start, names from content (autonomous) | [006](docs/rounds/006/architecture.md) | [findings](docs/rounds/006/findings.md) | `e01baf1` (pre-run record) to round 006 close |
 | 005 | 11-05 | The Crumbling Market map: six locations, paths, fog of war, saved position; Gerald entered from The Coffee Cart (autonomous) | [005](docs/rounds/005/architecture.md) | [findings](docs/rounds/005/findings.md) | `1a21bdb` (pre-run record) to round 005 close |
 | 004 | 10-31 | iPhone app first: Expo / React Native app in `mobile/`, tested in the iOS Simulator against the local server; web client frozen | [004](docs/rounds/004/architecture.md) | [findings](docs/rounds/004/findings.md) | `8f4c456` (pre-run record) to round 004 close |
