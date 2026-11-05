@@ -117,9 +117,11 @@ for (const code of Object.keys(packs)) {
     assert.deepEqual(encounter.transcript[0].dialogue.words.map((word) => word.vocabularyId).sort(), packs[code].chips, 'words from every file are chips');
 
     const verdicts = [];
+    const fragmentLog = []; // Round 030: the fragments each turn's spellbook returns, and whether they are hidden.
     for (const message of packs[code].answers) {
       const turn = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message });
       verdicts.push(turn.assessment.objectiveResults.map((r) => [r.objectiveId, r.passed]));
+      fragmentLog.push(turn.spellbook.journeyFragments.map((f) => [f.id, f.hidden, f.translation === null]));
       encounter = turn.encounter;
     }
     assert.deepEqual(verdicts, [
@@ -132,6 +134,9 @@ for (const code of Object.keys(packs)) {
       [['nobody', true]],
     ]);
     assert.equal(encounter.state, 'resolved');
+    // Round 030: earlier fragments are hidden during the fight; the resolving turn files the shroud and shows all.
+    assert.deepEqual(fragmentLog[0], [['journey_first_stitch', true, true], ['journey_sirens', true, true]]);
+    assert.deepEqual(fragmentLog.at(-1), [['journey_first_stitch', false, false], ['journey_sirens', false, false], ['journey_shroud', false, false]]);
     assert.match(encounter.resolvedMessage, /^Errata cannot read Nobody/);
     const { world } = await service.getWorld(learnerId);
     assert.deepEqual(world.locations.find((l) => l.id === 'the_rift').encounter, { id: 'the_rift_errata', completed: true, characterName: 'Errata', characterId: 'rift_errata_001', saveable: false });

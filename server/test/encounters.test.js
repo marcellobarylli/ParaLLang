@@ -68,6 +68,10 @@ async function fixtureContent(t, extra = async () => {}) {
   // Round 014: the Rift's gate names the replaced encounter. Round 015: the Rift boss reviews the removed meats, so
   // the fixture pack leaves it out.
   await rm(join(dir, 'languages/es/encounters/the_rift_errata.yaml'));
+  // Round 030: the shroud fragment follows the removed Rift encounter.
+  await editYaml(join(dir, 'languages/es/lore/fragments.yaml'), (file) => {
+    file.fragments = file.fragments.filter((fragment) => fragment.found_after !== 'the_rift_errata');
+  });
   await editYaml(join(dir, 'world/locations/the_rift.yaml'), (location) => {
     location.encounter = null;
     location.requires_completed = location.requires_completed.map((id) => (id === 'butchers_stall_charcutier' ? 'fixture_butcher' : id));

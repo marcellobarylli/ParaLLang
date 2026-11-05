@@ -165,10 +165,11 @@ export class LearningService {
       })
       .filter(Boolean)
       .sort((a, b) => a.discoveredAt.localeCompare(b.discoveredAt) || a.vocabularyId.localeCompare(b.vocabularyId));
+    const inEncounter = this.inEncounter(encounter);
     return {
       cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version,
-      inEncounter: this.inEncounter(encounter), containmentFiles: this.containmentFiles(envelope),
-      drill: this.pendingDrill(envelope),
+      inEncounter, containmentFiles: this.containmentFiles(envelope),
+      journeyFragments: this.journeyFragments(envelope, inEncounter), drill: this.pendingDrill(envelope),
     };
   }
 
@@ -186,6 +187,23 @@ export class LearningService {
         };
       })
       .sort((a, b) => a.designation.localeCompare(b.designation));
+  }
+
+  // Round 030 (backlog A9): fragments of The Journey, found once their encounter is completed (no save change), in
+  // story (file) order. No text holds a vocabulary form of the pack (server test); the English translation and
+  // glossary are withheld while an encounter is under way, as card meanings are (round 017).
+  journeyFragments(envelope, inEncounter = false) {
+    const completed = new Set(envelope.world?.completedEncounterIds ?? []);
+    return this.content.fragments.filter((fragment) => completed.has(fragment.found_after)).map((fragment) => {
+      const { encounter } = this.content.encounters.get(fragment.found_after);
+      return {
+        id: fragment.id, title: fragment.title, found: fragment.found, encounterId: encounter.id,
+        locationName: this.content.world.locationsById.get(encounter.location).name, text: fragment.text,
+        hidden: inEncounter,
+        translation: inEncounter ? null : fragment.translation,
+        glossary: inEncounter ? null : fragment.glossary.map((entry) => ({ ...entry })),
+      };
+    });
   }
 
   canonicalizeNarration(generated, definition) {

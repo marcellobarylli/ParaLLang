@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
 import { Button, colors } from './ui.js';
@@ -18,6 +19,10 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
       {spellbook.containmentFiles?.length > 0 && <>
         <Text role="heading" style={styles.section}>Containment files</Text>
         {spellbook.containmentFiles.map((file) => <ContainmentFile key={file.designation} file={file} language={language} />)}
+      </>}
+      {spellbook.journeyFragments?.length > 0 && <>
+        <Text role="heading" style={styles.section}>Fragments of The Journey</Text>
+        {spellbook.journeyFragments.map((fragment) => <Fragment key={fragment.id} fragment={fragment} language={language} />)}
       </>}
     </ScrollView>
   );
@@ -42,6 +47,35 @@ function ContainmentFile({ file, language }) {
       <Text style={styles.small}>Class: {file.class} · Recovered at {file.locationName}</Text>
       {PROPERTIES.map(([key, label]) => <Text key={key} style={styles.body}><Text style={styles.strong}>{label}: </Text>{file.properties[key]}</Text>)}
       {file.notes.map((note) => <Text key={note} style={styles.small}>{note}</Text>)}
+    </View>
+  );
+}
+
+// Round 030 (backlog A9): a passage of The Journey in the target language. Optional to translate: the glossary and
+// translation stay behind a toggle, and the server withholds them during an encounter (`hidden`).
+function Fragment({ fragment, language }) {
+  const [open, setOpen] = useState(false);
+  const name = language?.name ?? 'the target language';
+  return (
+    <View style={styles.card} aria-label={`Fragment: ${fragment.title}`}>
+      <View style={styles.cardRow}>
+        <Text role="heading" style={styles.cardTitle}>{fragment.title}</Text>
+        <PronounceButton text={fragment.text} language={language} label={`Hear the fragment in ${name}`} />
+      </View>
+      <Text style={styles.small}>{fragment.found}</Text>
+      <Text style={styles.passage} accessibilityLanguage={language?.tag}>{fragment.text}</Text>
+      {fragment.hidden ? <Text style={styles.hidden}>The translation waits until the encounter is over.</Text> : <>
+        <Button
+          label={open ? 'Hide translation' : 'Show translation'} expanded={open}
+          onPress={() => setOpen(!open)} style={styles.review}
+        />
+        {open && <View style={styles.translation}>
+          {fragment.glossary.map((entry) => (
+            <Text key={entry.word} style={styles.body}><Text style={styles.strong} accessibilityLanguage={language?.tag}>{entry.word}</Text>: {entry.meaning}</Text>
+          ))}
+          <Text style={styles.example}>{fragment.translation}</Text>
+        </View>}
+      </>}
     </View>
   );
 }
@@ -75,6 +109,8 @@ const styles = StyleSheet.create({
   body: { color: colors.ink, fontSize: 15 },
   hidden: { color: colors.muted, fontSize: 15, fontStyle: 'italic' },
   example: { color: colors.ink, fontSize: 14 },
+  passage: { color: colors.ink, fontSize: 16, lineHeight: 23, fontStyle: 'italic' },
+  translation: { gap: 4, marginTop: 4 },
   strong: { fontWeight: '700' },
   small: { color: colors.muted, fontSize: 13 },
   muted: { color: colors.muted },

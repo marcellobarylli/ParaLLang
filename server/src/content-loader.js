@@ -133,6 +133,18 @@ const onboardingSchema = z.object({
   begin_label: z.string().min(1),
 }).strict();
 
+// Round 030 (backlog A9): fragments of The Journey (content/languages/<code>/lore/fragments.yaml, optional).
+const fragmentSchema = z.object({
+  id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+  title: z.string().min(1),
+  found_after: z.string().min(1),
+  found: z.string().min(1),
+  text: z.string().min(1),
+  translation: z.string().min(1),
+  glossary: z.array(z.object({ word: z.string().min(1), meaning: z.string().min(1) }).strict()).min(1).max(10),
+}).strict();
+const fragmentsSchema = z.object({ fragments: z.array(fragmentSchema) }).strict();
+
 const locationIdSchema = z.string().regex(/^[a-z][a-z0-9_]*$/);
 const locationSchema = z.object({
   id: locationIdSchema,
@@ -233,13 +245,35 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const { encounter, character } = defaultDefinition;
 
   const world = loadWorld(contentDir, encounters);
+  const fragments = loadFragments(contentDir, pack, encounters);
   return Object.freeze({
-    language, styleGuide, onboarding, vocabulary, vocabularyById, world, encounters,
+    language, styleGuide, onboarding, vocabulary, vocabularyById, world, encounters, fragments,
     defaultEncounterId,
     // The default encounter, for callers that know only one (the web client's start, verify:cli).
     encounter, character,
     entryVersion: (id) => versionById.get(id),
   });
+}
+
+// Round 030: a fragment is found once its `found_after` location encounter is complete. Each glossary word must
+// occur in the text (apostrophes split words, so "albero" is found in "all'albero").
+export const foldWords = (text) => ` ${String(text).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+  .replace(/[^\p{L}\s]/gu, ' ').replace(/\s+/g, ' ').trim()} `;
+function loadFragments(contentDir, pack, encounters) {
+  const relativePath = `${pack}/lore/fragments.yaml`;
+  if (!existsSync(resolve(contentDir, relativePath))) return Object.freeze([]);
+  const { fragments } = fragmentsSchema.parse(parseYaml(contentDir, relativePath));
+  unique(fragments.map((fragment) => fragment.id), 'Lore fragments');
+  for (const fragment of fragments) {
+    const home = encounters.get(fragment.found_after);
+    if (!home) throw new Error(`Lore fragment ${fragment.id} names unknown encounter ${fragment.found_after}`);
+    if (home.encounter.party_of) throw new Error(`Lore fragment ${fragment.id} must follow a location encounter, not ${fragment.found_after}`);
+    const text = foldWords(fragment.text);
+    for (const { word } of fragment.glossary) {
+      if (!text.includes(foldWords(word))) throw new Error(`Lore fragment ${fragment.id} glosses "${word}", which is not in its text`);
+    }
+  }
+  return Object.freeze(fragments.map((fragment) => Object.freeze({ ...fragment, glossary: Object.freeze(fragment.glossary.map((g) => Object.freeze({ ...g }))) })));
 }
 
 // Round 022: a party conversation continues a saveable character's location encounter, with the same character file.

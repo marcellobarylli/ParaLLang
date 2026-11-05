@@ -79,9 +79,11 @@ for (const code of Object.keys(packs)) {
     assert.deepEqual(encounter.transcript[0].dialogue.words.map((word) => word.vocabularyId), packs[code].chips, 'only her own words are chips');
 
     const verdicts = [];
+    const fragmentLog = []; // Round 030: the fragments each turn's spellbook returns, and whether they are hidden.
     for (const message of packs[code].answers) {
       const turn = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message });
       verdicts.push(turn.assessment.objectiveResults.map((r) => [r.objectiveId, r.passed]));
+      fragmentLog.push(turn.spellbook.journeyFragments.map((f) => [f.id, f.hidden, f.translation === null]));
       encounter = turn.encounter;
     }
     assert.deepEqual(verdicts, [
@@ -92,6 +94,9 @@ for (const code of Object.keys(packs)) {
       [['name', true]],
     ]);
     assert.equal(encounter.state, 'resolved');
+    // Round 030: the first stitch is filed by the resolving turn itself, with its translation.
+    assert.deepEqual(fragmentLog.slice(0, -1).flat(), [], 'nothing before the resolution');
+    assert.deepEqual(fragmentLog.at(-1), [['journey_first_stitch', false, false]]);
     assert.match(encounter.resolvedMessage, /^Marginalia annotates you as 'promising'/);
     const { world } = await service.getWorld(learnerId);
     assert.deepEqual(world.locations.find((l) => l.id === 'old_bookshop').encounter, { id: 'old_bookshop_bookworm', completed: true, characterName: 'Marginalia', characterId: 'bookworm_marginalia_001', saveable: true });

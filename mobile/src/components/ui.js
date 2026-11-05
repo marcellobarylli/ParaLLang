@@ -13,11 +13,12 @@ export const colors = {
   dangerSurface: '#fbe9e7',
 };
 
-export function Button({ label, accessibleName, onPress, disabled = false, variant = 'secondary', style, children }) {
+export function Button({ label, accessibleName, onPress, disabled = false, variant = 'secondary', style, children, expanded }) {
   return (
     <Pressable
       role="button"
       aria-label={accessibleName ?? label}
+      aria-expanded={expanded}
       onPress={onPress}
       disabled={disabled}
       hitSlop={6}

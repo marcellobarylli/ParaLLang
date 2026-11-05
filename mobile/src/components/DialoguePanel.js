@@ -4,7 +4,7 @@ import BilingualText from './BilingualText.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 import { colors } from './ui.js';
 
-export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave }) {
+export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
   if (!encounter) return <View style={styles.panel}><Text style={styles.muted}>Preparing the encounter…</Text></View>;
   const resolved = encounter.state === 'resolved';
@@ -31,7 +31,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
         <Text style={styles.strong}>Assessment</Text><Text style={styles.body}>{assessment.overallFeedback}</Text>
         {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</Text>)}
       </View>}
-      {resolved && <Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}</Text>}
+      {resolved && <Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}{fragmentNote(fragments, encounter)}</Text>}
       {resolved && encounter.character?.saveable && !encounter.partyConversation && onRecruit && <PartyOffer
         name={name} joined={inParty(party, encounter.character.id)} isLoading={isLoading}
         onSave={() => onRecruit(encounter.encounterId)} onLeave={onLeave}
@@ -63,6 +63,13 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       )}
     />
   );
+}
+
+// Round 030 (backlog A9): a fragment of The Journey that this encounter's completion filed. Worded to stay true on
+// replays (critique 1.6); part of the victory status so it is announced with it.
+export function fragmentNote(fragments, encounter) {
+  const fragment = (fragments ?? []).find((f) => f.encounterId === encounter.encounterId);
+  return fragment ? ` A fragment of The Journey from here is in your Spellbook: ${fragment.title}.` : '';
 }
 
 const styles = StyleSheet.create({
