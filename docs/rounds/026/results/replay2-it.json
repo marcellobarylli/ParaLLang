@@ -1,0 +1,187 @@
+{
+  "language": "it",
+  "provider": "codex-cli",
+  "reps": 2,
+  "results": [
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.36,
+        "canonical": 0.07
+      },
+      "native": "Buongiorno! Sono Gerald. This cart? Five espresso shots. The market? One. Che cosa desideri?",
+      "translation": "Good morning! I'm Gerald. This cart? Five espresso shots. The market? One. What would you like?",
+      "narrative": "At The Coffee Cart, an imp polishes a cup while the Crumbling Market quietly depreciates around him.",
+      "ms": 7041
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 21,
+        "notInTranslation": 0.24,
+        "canonical": 0.05
+      },
+      "native": "Buongiorno. Come va? Tutto bene? I'm Gerald. This cart gets five espresso shots. Your hesitation gets one. What brings you here?",
+      "translation": "Good morning. How’s it going? All good? I'm Gerald. This cart gets five espresso shots. Your hesitation gets one. What brings you here?",
+      "narrative": "Gerald peers over The Coffee Cart’s counter. Behind him, The Crumbling Market continues its slow commitment to the name.",
+      "ms": 12565
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 20,
+        "notInTranslation": 0.2,
+        "canonical": 0.05
+      },
+      "native": "Buongiorno! Come va? Sono Gerald. This cart earns five espresso shots. Milk is a war crime. What would you like?",
+      "translation": "Good morning! How’s it going? I’m Gerald. This cart earns five espresso shots. Milk is a war crime. What would you like?",
+      "narrative": "Gerald peers over the coffee cart. Behind him, the Crumbling Market continues depreciating.",
+      "ms": 14348
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.21,
+        "canonical": 0.07
+      },
+      "native": "Buongiorno. I’m Gerald. This cart? Five espresso shots. The market? One. Cosa desideri?",
+      "translation": "Good morning. I’m Gerald. This cart? Five espresso shots. The market? One. What would you like?",
+      "narrative": "Gerald peers over The Coffee Cart’s counter. Behind him, The Crumbling Market continues depreciating.",
+      "ms": 7162
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 18,
+        "notInTranslation": 0.11,
+        "canonical": 0.11
+      },
+      "native": "Benvenuto! A greeting and your name before entry, please. This is a mercato, not a manners-free zone.",
+      "translation": "Welcome! A greeting and your name before entry, please. This is a market, not a manners-free zone.",
+      "narrative": "A visitors’ book protrudes from the archway’s keystone. Above it, a half-translated sign appears to be awaiting approval.",
+      "ms": 8320
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 18,
+        "notInTranslation": 0.22,
+        "canonical": 0.17
+      },
+      "native": "Benvenuto. Welcome to il mercato. Piacere. A greeting and your name, please; entry requires manners, not merely legs.",
+      "translation": "Welcome. Welcome to the market. Pleased to meet you. A greeting and your name, please; entry requires manners, not merely legs.",
+      "narrative": "The archway clears her throat. A visitors’ book slides from her keystone, already disappointed by the lack of paperwork.",
+      "ms": 9884
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 18,
+        "notInTranslation": 0.17,
+        "canonical": 0.11
+      },
+      "native": "Benvenuto. Il mercato is beyond me. First, a proper greeting and your name, please. There is paperwork. Naturally.",
+      "translation": "Welcome. The market is beyond me. First, a proper greeting and your name, please. There is paperwork. Naturally.",
+      "narrative": "An archway clears her throat. A visitors’ book protrudes from her keystone; her half-translated sign appears to be awaiting approval.",
+      "ms": 10949
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.12,
+        "canonical": 0.12
+      },
+      "native": "Benvenuto! This is the mercato. Before entering, a greeting and your name, please. Manners are load-bearing.",
+      "translation": "Welcome! This is the market. Before entering, a greeting and your name, please. Manners are load-bearing.",
+      "narrative": "The archway clears her throat. A visitors’ book slides from her keystone, already disappointed by the lack of paperwork.",
+      "ms": 8511
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 18,
+        "notInTranslation": 0.89,
+        "canonical": 0.17
+      },
+      "native": "Benvenuto. Vuoi qualcosa dal mercato? Item clàss: hùngry. Prima il cibo, poi il tuo nome. Plèase remain légible.",
+      "translation": "Welcome. Do you want something from the market? Item class: hungry. First the food, then your name. Please remain legible.",
+      "narrative": "At the Rift, a seam in the air develops teeth. A form appears beneath them. Even reality has paperwork.",
+      "ms": 8631
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.74,
+        "canonical": 0.26
+      },
+      "native": "Ciao. Come ti chiami? Il tuo nome, per favore. Item clàss: hùngry. Please sign hëre; I rëad the signatùre.",
+      "translation": "Hello. What is your name? Your name, please. Item class: hungry. Please sign here; I read the signature.",
+      "narrative": "At the Rift, mistranslations gather into a figure with the patient hunger of an unsigned form. Errata extends a hand. It has too many margins.",
+      "ms": 13002
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.86,
+        "canonical": 0
+      },
+      "native": "Salve. Che cosa vuoi? Ho molta fame. Item clàss: hùngry. Yoùù lòok alarmingly rèadable.",
+      "translation": "Hello. What do you want? I am very hungry. Item class: hungry. You look alarmingly readable.",
+      "narrative": "At the Rift, a seam in the air develops teeth and the manner of a receptionist. Errata turns toward you. Somewhere, a form fills itself in incorrectly.",
+      "ms": 11488
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.57,
+        "canonical": 0.14
+      },
+      "native": "Sono Errata. Benvenuto alla Rift. Che cosa desideri? Containment procèdure: do not ùnderstand me.",
+      "translation": "I am Errata. Welcome to the Rift. What would you like? Containment procedure: do not understand me.",
+      "narrative": "At the Rift, a seam of mistranslations unfolds into something almost clerical. It has already filed you under Pending.",
+      "ms": 8988
+    }
+  ]
+}

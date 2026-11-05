@@ -1,0 +1,187 @@
+{
+  "language": "es",
+  "provider": "codex-cli",
+  "reps": 2,
+  "results": [
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.18,
+        "canonical": 0
+      },
+      "native": "Hola. ¿Qué quieres? Your timing gets two espresso shots out of five. Milk is a war crime.",
+      "translation": "Hello. What would you like? Your timing gets two espresso shots out of five. Milk is a war crime.",
+      "narrative": "At The Coffee Cart, an imp polishes a cup while The Crumbling Market sheds another nonessential brick. Gerald looks up, unimpressed.",
+      "ms": 9119
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.24,
+        "canonical": 0
+      },
+      "native": "Hola. ¿Qué quieres hoy? I’m Gerald. Milk is a war crime. Your timing: two espresso shots.",
+      "translation": "Hello. What would you like today? I’m Gerald. Milk is a war crime. Your timing: two espresso shots.",
+      "narrative": "Gerald peers over The Coffee Cart’s counter. Behind him, The Crumbling Market continues to depreciate.",
+      "ms": 8789
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 15,
+        "notInTranslation": 0.2,
+        "canonical": 0
+      },
+      "native": "Hola. ¿Qué quieres? I’m Gerald. This cart: five espresso shots. Your taste remains unreviewed.",
+      "translation": "Hello. What would you like? I’m Gerald. This cart: five espresso shots. Your taste remains unreviewed.",
+      "narrative": "Gerald, an imp with immaculate cuffs, stands behind The Coffee Cart. Around him, The Crumbling Market continues depreciating.",
+      "ms": 9105
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.25,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.18,
+        "canonical": 0
+      },
+      "native": "Hola. ¿Qué quieres? I’m Gerald. This cart: five espresso shots. Milk in coffee: a war crime.",
+      "translation": "Hello. What would you like? I’m Gerald. This cart: five espresso shots. Milk in coffee: a war crime.",
+      "narrative": "Gerald peers over The Coffee Cart’s counter. Behind him, The Crumbling Market continues to depreciate.",
+      "ms": 7225
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 17,
+        "notInTranslation": 0.12,
+        "canonical": 0.12
+      },
+      "native": "Bienvenido. Before you enter the mercado, a greeting and your name, please. Manners first; structural integrity second.",
+      "translation": "Welcome. Before you enter the market, a greeting and your name, please. Manners first; structural integrity second.",
+      "narrative": "A visitors’ book slides from the archway’s keystone. Above it, a half-translated sign reads THE CRUMBLING MERCADO. The stonework clears its throat.",
+      "ms": 8106
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 15,
+        "notInTranslation": 0.2,
+        "canonical": 0.13
+      },
+      "native": "Bienvenido. Entry to el mercado requires a greeting and your name. Manners first; shopping second.",
+      "translation": "Welcome. Entry to the market requires a greeting and your name. Manners first; shopping second.",
+      "narrative": "The archway clears her throat without possessing one. A visitors’ book slides out of her keystone, already disappointed by the lack of paperwork.",
+      "ms": 8343
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 18,
+        "notInTranslation": 0.17,
+        "canonical": 0.11
+      },
+      "native": "Bienvenido. Welcome to el mercado. A greeting and your name, please. I am an archway, not a loophole.",
+      "translation": "Welcome. Welcome to the market. A greeting and your name, please. I am an archway, not a loophole.",
+      "narrative": "A visitors’ book slides from the archway’s keystone. Her half-translated sign reads THE CRUMBLING MERCADO; the lettering looks defensive.",
+      "ms": 8023
+    },
+    {
+      "encounterId": "market_entrance_tutorial",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.2,
+      "share": {
+        "tokens": 16,
+        "notInTranslation": 0.19,
+        "canonical": 0.13
+      },
+      "native": "Bienvenido al mercado. A greeting and your name, please. Entry requires manners. I merely enforce them.",
+      "translation": "Welcome to the market. A greeting and your name, please. Entry requires manners. I merely enforce them.",
+      "narrative": "The archway clears her throat. A visitors’ book emerges from her keystone; apparently, masonry has administrative needs.",
+      "ms": 12787
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "old",
+      "rep": 0,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 11,
+        "notInTranslation": 0.82,
+        "canonical": 0.18
+      },
+      "native": "Hola. Soy Errata. ¿Qué necesitas? Item clàss: hùngry. Pleàse remàin ùnread.",
+      "translation": "Hello. I am Errata. What do you need? Item class: hungry. Please remain unread.",
+      "narrative": "At the Rift, a seam in the air develops teeth. Errata unfolds beside it, with the patience of a form missing your signature.",
+      "ms": 10990
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "new",
+      "rep": 0,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 11,
+        "notInTranslation": 1,
+        "canonical": 0.18
+      },
+      "native": "Hola. ¿Qué quieres del mercado? Contàinment procedùre: fèed ŧhe clèrical erròr.",
+      "translation": "Hello. What do you want from the market? Containment procedure: feed the clerical error.",
+      "narrative": "A seam in the air unfolds into Errata. It has the patient hunger of a form awaiting a signature.",
+      "ms": 12200
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "new",
+      "rep": 1,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 15,
+        "notInTranslation": 0.73,
+        "canonical": 0.33
+      },
+      "native": "Hola. ¿Cómo te llamas? Necesito tu nombre. Item clàss: hùngry. Please remain illeggible pending consùmption.",
+      "translation": "Hello. What is your name? I need your name. Item class: hungry. Please remain illegible pending consumption.",
+      "narrative": "At the Rift, a seam in the air develops teeth and the patient expression of a form awaiting your signature. This is Errata. It has already read the small print.",
+      "ms": 12524
+    },
+    {
+      "encounterId": "the_rift_errata",
+      "variant": "old",
+      "rep": 1,
+      "ratio": 0.5,
+      "share": {
+        "tokens": 15,
+        "notInTranslation": 0.73,
+        "canonical": 0.07
+      },
+      "native": "Hola. ¿Qué quieres? Tengo hambre. Ítem class: clericçal errror. Pleaše keep yoùr name inside yoù.",
+      "translation": "Hello. What do you want? I am hungry. Item class: clerical error. Please keep your name inside you.",
+      "narrative": "At the Rift, a seam in the market leaks something almost person-shaped. It straightens an imaginary name badge, a precaution against having an identity.",
+      "ms": 8642
+    }
+  ]
+}
