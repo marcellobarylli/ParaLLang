@@ -4,7 +4,7 @@ import { createCLIEnvironment } from './cli-environment.js';
 
 export function createLLMAdapter(overrides = {}, env = process.env) {
   const config = resolveLLMConfig(overrides, env);
-  if (CLI_PROVIDERS.has(config.provider) && !config.childEnv) config.childEnv = createCLIEnvironment(env);
+  if (CLI_PROVIDERS.has(config.provider) && !config.childEnv) config.childEnv = createCLIEnvironment(env, { provider: config.provider });
   return new LLMAdapter(config.provider, config);
 }
 

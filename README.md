@@ -31,7 +31,7 @@ For the iPhone app, see [Run the iPhone app](#run-the-iphone-app). The browser c
 Choose one narration/grading provider in the root `.env`:
 
 - `LLM_PROVIDER=codex-cli`: install the official Codex CLI, run `codex login`, and complete the ChatGPT browser sign-in. API-key login does not satisfy this mode.
-- `LLM_PROVIDER=claude-cli`: install the official Claude Code CLI, run `claude auth login`, and use native `claude.ai` subscription authentication. API keys and third-party providers do not satisfy this mode.
+- `LLM_PROVIDER=claude-cli`: install the official Claude Code CLI, run `claude auth login`, and use native `claude.ai` subscription authentication. API keys and third-party providers do not satisfy this mode. A subscription OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) is also accepted and passed to the Claude CLI only; `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL` and the Bedrock/Vertex switches are refused either way.
 - `LLM_PROVIDER=openai`: set `OPENAI_API_KEY`; the default model is `gpt-4o-mini`.
 - `LLM_PROVIDER=ollama`: ensure the configured `OLLAMA_BASE_URL` is already reachable; the default model is `llama3.1`.
 - `LLM_MODEL` optionally selects a model for any provider. When it is blank for a CLI provider, ParaLLang delegates to that CLI's default; it never supplies the OpenAI API default to a CLI.

@@ -205,3 +205,108 @@ test('CLI JSON schemas list every property as required so strict native output s
     must_translate: true, difficulty: 1, hints_available: true, encounter_state: 'ongoing',
   }).success, 'null root from the strict schema still validates');
 });
+
+// Round 018: a Claude subscription OAuth token in the environment.
+const SYNTHETIC_TOKEN = 'sk-ant-oat01-synthetic-round-018-token';
+
+async function tokenAdapter(t, { auth = 'oauth-env', token = SYNTHETIC_TOKEN, extraEnv = {}, control = {} } = {}) {
+  const root = await mkdtemp(join(tmpdir(), 'parallang-token-test-'));
+  const state = join(root, 'state.json');
+  const controlPath = join(root, 'control.json');
+  const capture = join(root, 'capture.jsonl');
+  await writeFile(controlPath, JSON.stringify(control), 'utf8');
+  const source = { ...process.env, ...(token ? { CLAUDE_CODE_OAUTH_TOKEN: token } : {}) };
+  delete source.ANTHROPIC_API_KEY;
+  if (!token) delete source.CLAUDE_CODE_OAUTH_TOKEN;
+  const childEnv = {
+    ...createCLIEnvironment(source, { provider: 'claude-cli' }),
+    ...extraEnv,
+    FAKE_PROVIDER: 'claude-cli', FAKE_AUTH: auth, FAKE_STATE_FILE: state, FAKE_CONTROL_FILE: controlPath, FAKE_CAPTURE_FILE: capture,
+  };
+  const adapter = createLLMAdapter({ provider: 'claude-cli', executable: paths['claude-cli'], childEnv, timeoutMs: 2_000 });
+  t.after(async () => {
+    await adapter.shutdown();
+    await rm(root, { recursive: true, force: true });
+  });
+  return { adapter, capture };
+}
+
+test('the OAuth token reaches claude-cli children only, including adapters built without a child environment', async (t) => {
+  const source = { PATH: '/usr/bin', CLAUDE_CODE_OAUTH_TOKEN: SYNTHETIC_TOKEN, ANTHROPIC_API_KEY: 'strip-me' };
+  assert.equal(createCLIEnvironment(source, { provider: 'claude-cli' }).CLAUDE_CODE_OAUTH_TOKEN, SYNTHETIC_TOKEN);
+  assert.equal(createCLIEnvironment(source, { provider: 'claude-cli' }).ANTHROPIC_API_KEY, undefined);
+  assert.equal(createCLIEnvironment(source, { provider: 'codex-cli' }).CLAUDE_CODE_OAUTH_TOKEN, undefined);
+  assert.equal(createCLIEnvironment(source).CLAUDE_CODE_OAUTH_TOKEN, undefined);
+  assert.equal(createCLIEnvironment({ ...source, CLAUDE_CODE_OAUTH_TOKEN: '' }, { provider: 'claude-cli' }).CLAUDE_CODE_OAUTH_TOKEN, undefined);
+  assert.equal(createLLMAdapter({ provider: 'codex-cli', executable: paths['codex-cli'] }, source).provider.childEnv.CLAUDE_CODE_OAUTH_TOKEN, undefined);
+  assert.equal(createLLMAdapter({ provider: 'claude-cli', executable: paths['claude-cli'] }, source).provider.childEnv.CLAUDE_CODE_OAUTH_TOKEN, SYNTHETIC_TOKEN);
+
+  const previous = process.env.CLAUDE_CODE_OAUTH_TOKEN;
+  process.env.CLAUDE_CODE_OAUTH_TOKEN = SYNTHETIC_TOKEN;
+  t.after(() => { if (previous === undefined) delete process.env.CLAUDE_CODE_OAUTH_TOKEN; else process.env.CLAUDE_CODE_OAUTH_TOKEN = previous; });
+  const { ClaudeCLIAdapter } = await import('../src/llm/adapters/claude-cli.js');
+  const { CodexCLIAdapter } = await import('../src/llm/adapters/codex-cli.js');
+  assert.equal(new ClaudeCLIAdapter({ executable: paths['claude-cli'] }).childEnv.CLAUDE_CODE_OAUTH_TOKEN, SYNTHETIC_TOKEN);
+  assert.equal(new CodexCLIAdapter({ executable: paths['codex-cli'] }).childEnv.CLAUDE_CODE_OAUTH_TOKEN, undefined);
+});
+
+test('a token with a logged-out or OAuth status passes preflight, and generation runs with the token', async (t) => {
+  for (const auth of ['oauth-env', 'oauth-method']) {
+    const { adapter, capture } = await tokenAdapter(t, { auth, control: { requireToken: true } });
+    const result = await adapter.preflight();
+    assert.equal(result.authentication, 'claude.ai-subscription-oauth-token');
+    assert.equal(adapter.generationCount, 0);
+    assert.doesNotMatch(JSON.stringify(result), /synthetic-round-018/);
+    const output = await adapter.structuredChat([
+      { role: 'system', content: 'Narrate.' },
+      { role: 'user', content: 'TURN DATA: {"task":"greeting"}' },
+    ], encounterResponseSchema);
+    assert.equal(output.dialogue.speaker, 'Gerald');
+    const captured = await readFile(capture, 'utf8');
+    assert.doesNotMatch(captured, /synthetic-round-018/);
+    const generation = captured.trim().split('\n').map((line) => JSON.parse(line)).at(-1);
+    assert.equal(generation.tokenPresent, true);
+  }
+});
+
+test('the token route refuses missing tokens, API-key, unknown and third-party statuses', async (t) => {
+  const rejected = [
+    { auth: 'oauth-env', token: null },
+    { auth: 'api' },
+    { auth: 'unknown-method' },
+    { auth: 'missing-method' },
+    { auth: 'third-party' },
+    { auth: 'third-party', token: null },
+  ];
+  for (const options of rejected) {
+    const { adapter } = await tokenAdapter(t, options);
+    await assert.rejects(adapter.preflight(), (error) => error.code === 'CLI_AUTH_REQUIRED', JSON.stringify(options));
+    assert.equal(adapter.generationCount, 0);
+  }
+});
+
+test('API keys, auth tokens, base URLs and Bedrock or Vertex switches are refused on both routes', async (t) => {
+  const { FORBIDDEN_ENV_KEYS } = await import('../src/llm/adapters/claude-cli.js');
+  assert.equal(FORBIDDEN_ENV_KEYS.length, 5);
+  for (const key of FORBIDDEN_ENV_KEYS) {
+    for (const route of [{ auth: 'native', token: null }, { auth: 'oauth-env' }]) {
+      const { adapter } = await tokenAdapter(t, { ...route, extraEnv: { [key]: '1' } });
+      await assert.rejects(adapter.preflight(), (error) => error.code === 'CLI_AUTH_REQUIRED', `${key} ${route.auth}`);
+    }
+    const empty = await tokenAdapter(t, { extraEnv: { [key]: '' } });
+    assert.equal((await empty.adapter.preflight()).authentication, 'claude.ai-subscription-oauth-token');
+  }
+  const native = await tokenAdapter(t, { auth: 'native', token: null });
+  assert.equal((await native.adapter.preflight()).authentication, 'claude.ai-subscription');
+});
+
+test('a failing CLI that echoes the token does not expose it in the error', async (t) => {
+  const { adapter } = await tokenAdapter(t, { control: { echoToken: true } });
+  await adapter.preflight();
+  const error = await adapter.structuredChat([
+    { role: 'system', content: 'Narrate.' },
+    { role: 'user', content: 'TURN DATA: {"task":"greeting"}' },
+  ], encounterResponseSchema).then(() => null, (failure) => failure);
+  assert.ok(error);
+  assert.doesNotMatch(`${error.message} ${JSON.stringify(error)} ${JSON.stringify(error.logFields ?? {})}`, /synthetic-round-018/);
+});

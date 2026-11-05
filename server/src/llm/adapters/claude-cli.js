@@ -1,8 +1,16 @@
 import {
   BaseCLIAdapter, parseVersion, prepareRoleSeparatedInput, requireCapabilities, schemaForCLI, writeInvocationFiles,
 } from '../cli-adapter.js';
-import { assertExecutablePath } from '../cli-environment.js';
+import { assertExecutablePath, CLAUDE_OAUTH_TOKEN_KEY } from '../cli-environment.js';
 import { ProviderError, providerErrorFromMachineCode } from '../provider-error.js';
+
+export const FORBIDDEN_ENV_KEYS = Object.freeze([
+  'ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_BASE_URL', 'CLAUDE_CODE_USE_BEDROCK', 'CLAUDE_CODE_USE_VERTEX',
+]);
+// Status shapes accepted with a token in the environment: logged out (`none`, what the CLI prints without a stored
+// sign-in) or a subscription method. API-key, unknown and missing methods are refused.
+const TOKEN_AUTH_METHODS = new Set(['none', 'claude.ai', 'oauth_token', 'oauthToken']);
+const present = (value) => typeof value === 'string' && value !== '';
 
 function parseClaudeEnvelope(stdout, provider) {
   let envelope;
@@ -40,24 +48,38 @@ export class ClaudeCLIAdapter extends BaseCLIAdapter {
       '--mcp-config', '--tools', '--disable-slash-commands', '--no-session-persistence', '--system-prompt[-file]',
       '--permission-prompts', '--no-chrome',
     ], this.providerName);
-    let auth;
-    try { auth = await this.probe(['--safe-mode', 'auth', 'status', '--json']); }
-    catch (error) {
-      if (error instanceof ProviderError && error.category !== 'missing-cli') {
-        throw new ProviderError('authentication', { provider: this.providerName });
-      }
-      throw error;
-    }
-    let status;
-    try { status = JSON.parse(auth.stdout); }
-    catch { throw new ProviderError('unsupported-configuration', { provider: this.providerName }); }
-    if (status.loggedIn !== true || status.authMethod !== 'claude.ai' || status.apiProvider !== 'firstParty') {
+    // Round 018: credentials or routing that bypass the subscription are refused on every route.
+    if (FORBIDDEN_ENV_KEYS.some((key) => present(this.childEnv?.[key]))) {
       throw new ProviderError('authentication', { provider: this.providerName });
     }
+    const hasToken = present(this.childEnv?.[CLAUDE_OAUTH_TOKEN_KEY]);
+    let authStdout;
+    let probeFailed = false;
+    try { authStdout = (await this.probe(['--safe-mode', 'auth', 'status', '--json'])).stdout; }
+    catch (error) {
+      // The CLI exits 1 when it has no stored sign-in; with a token its printed status still decides.
+      const stdout = error?.internal?.stdout;
+      if (hasToken && error instanceof ProviderError && error.category === 'process' && typeof stdout === 'string' && stdout) {
+        authStdout = stdout;
+        probeFailed = true;
+      } else if (error instanceof ProviderError && error.category !== 'missing-cli') {
+        throw new ProviderError('authentication', { provider: this.providerName });
+      } else throw error;
+    }
+    let status;
+    try { status = JSON.parse(authStdout); }
+    catch { throw new ProviderError(probeFailed ? 'authentication' : 'unsupported-configuration', { provider: this.providerName }); }
+    if (!status || typeof status !== 'object' || status.apiProvider !== 'firstParty') {
+      throw new ProviderError('authentication', { provider: this.providerName });
+    }
+    let authentication;
+    if (!probeFailed && status.loggedIn === true && status.authMethod === 'claude.ai') authentication = 'claude.ai-subscription';
+    else if (hasToken && TOKEN_AUTH_METHODS.has(status.authMethod)) authentication = 'claude.ai-subscription-oauth-token';
+    else throw new ProviderError('authentication', { provider: this.providerName });
     return {
       provider: this.providerName,
       version,
-      authentication: 'claude.ai-subscription',
+      authentication,
       requestedModel: this.model ?? 'CLI default',
       isolation: [
         'safe mode', 'restricted mode', 'empty built-in tool set', 'strict empty MCP configuration',

@@ -50,7 +50,7 @@ export class BaseCLIAdapter {
     this.model = model;
     this.timeoutMs = timeoutMs;
     this.runner = runner ?? new CLIProcessRunner();
-    this.childEnv = childEnv ?? createCLIEnvironment();
+    this.childEnv = childEnv ?? createCLIEnvironment(process.env, { provider });
     this.preflightPromise = null;
     this.generationCount = 0;
     this.lastResolvedModel = null;

@@ -92,3 +92,8 @@ when told to require it, and redacts the token in its capture file):
 - All suites: server, mobile 25/25, web client 12/12 and build.
 - Not here: a live `npm run check:provider -- --provider claude-cli` with the token set (next iteration whose shell
   has it).
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendment. Server 108/108, mobile 25/25, web client 12/12 and build. The live preflight
+in this shell refuses claude-cli because the shell has no token; no live claude-cli run. See [findings](findings.md).

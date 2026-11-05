@@ -36,11 +36,19 @@ if (provider === 'claude-cli' && args.includes('--help')) {
   process.exit(0);
 }
 if (provider === 'claude-cli' && args.includes('auth') && args.includes('status')) {
-  const native = process.env.FAKE_AUTH !== 'api';
-  process.stdout.write(JSON.stringify(native
-    ? { loggedIn: true, authMethod: 'claude.ai', apiProvider: 'firstParty', email: 'must-not-leak@example.test' }
-    : { loggedIn: true, authMethod: 'apiKey', apiProvider: 'firstParty', email: 'must-not-leak@example.test' }));
-  process.exit(0);
+  // Round 018: oauth-env prints what the real CLI prints without a stored sign-in, and exits 1 like it.
+  const statuses = {
+    native: { loggedIn: true, authMethod: 'claude.ai', apiProvider: 'firstParty', email: 'must-not-leak@example.test' },
+    api: { loggedIn: true, authMethod: 'apiKey', apiProvider: 'firstParty', email: 'must-not-leak@example.test' },
+    'oauth-env': { loggedIn: false, authMethod: 'none', apiProvider: 'firstParty' },
+    'oauth-method': { loggedIn: true, authMethod: 'oauth_token', apiProvider: 'firstParty' },
+    'third-party': { loggedIn: true, authMethod: 'claude.ai', apiProvider: 'bedrock' },
+    'unknown-method': { loggedIn: true, authMethod: 'console', apiProvider: 'firstParty' },
+    'missing-method': { loggedIn: true, apiProvider: 'firstParty' },
+  };
+  const mode = process.env.FAKE_AUTH ?? 'native';
+  process.stdout.write(JSON.stringify(statuses[mode] ?? statuses.native));
+  process.exit(mode === 'oauth-env' ? 1 : 0);
 }
 
 let stdin = '';
@@ -52,12 +60,20 @@ try { state = JSON.parse(await readFile(process.env.FAKE_STATE_FILE, 'utf8')); }
 state.calls += 1;
 await writeFile(process.env.FAKE_STATE_FILE, JSON.stringify(state), 'utf8');
 if (process.env.FAKE_CAPTURE_FILE) {
-  await appendFile(process.env.FAKE_CAPTURE_FILE, `${JSON.stringify({ args, stdin, env: process.env })}\n`, 'utf8');
+  const token = process.env.CLAUDE_CODE_OAUTH_TOKEN;
+  const env = { ...process.env, ...(token ? { CLAUDE_CODE_OAUTH_TOKEN: '[redacted]' } : {}) };
+  await appendFile(process.env.FAKE_CAPTURE_FILE, `${JSON.stringify({ args, stdin, env, tokenPresent: Boolean(token) })}\n`, 'utf8');
 }
 let control = {};
 try { control = JSON.parse(await readFile(process.env.FAKE_CONTROL_FILE, 'utf8')); } catch { /* defaults */ }
 const mode = control.failOn?.includes(state.calls) ? (control.failMode ?? 'process-fail') : (control.mode ?? 'success');
 if (control.stderr) process.stderr.write(control.stderr);
+if (control.requireToken && !process.env.CLAUDE_CODE_OAUTH_TOKEN) process.exit(9);
+if (control.echoToken) {
+  process.stdout.write(`token ${process.env.CLAUDE_CODE_OAUTH_TOKEN}`);
+  process.stderr.write(`token ${process.env.CLAUDE_CODE_OAUTH_TOKEN}`);
+  process.exit(7);
+}
 
 function instructionsPath() {
   if (provider === 'codex-cli') {
