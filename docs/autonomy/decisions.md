@@ -130,3 +130,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 039 | Critique 1: 4 of 6 accepted, 1.2 and 1.4 in part | — | See round 039 Second opinion table | Yes |
 | 2026-11-05 | 040 | The app sends the optional server token from `EXPO_PUBLIC_PARALLANG_TOKEN` (bundled; README says so); both sides trim; critique by a Claude subagent | A token entry screen; secure storage | Matches how `EXPO_PUBLIC_API_URL` works; local Simulator use only | Yes |
 | 2026-11-05 | 040 | Critique 1: 6 of 6 accepted | — | See round 040 Second opinion table | Yes |
+| 2026-11-05 | 041 | Ambient loops per location, synthesized by a committed script (16 kHz WAV, 6 s, RMS -30 dBFS, volume 0.5, 0.15 under speech), behind the one Sounds switch; silent on the statement screen; critique by a Claude subagent | Recorded or licensed loops; a separate ambience switch; compressed audio | No licence question; one switch keeps the Saves screen simple; WAV loops without encoder gaps | Yes |
+| 2026-11-05 | 041 | Critique 1: 9 of 10 accepted, 1.7 in part | — | See round 041 Second opinion table | Yes |
