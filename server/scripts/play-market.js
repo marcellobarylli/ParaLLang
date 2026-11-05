@@ -90,9 +90,10 @@ const partyScripts = {
     it: ['I like it.', 'Mi piace!', 'Ancora, per favore!'],
     es: ['I like it.', '¡Me gusta!', '¡Un poco más, por favor!'],
   },
+  // Round 052: the minutes objective comes first (an English refusal fails, then a number).
   flick_slow_walk: {
-    it: ["Let's go together.", 'Andiamo!', 'Insieme.'],
-    es: ["Let's go together.", '¡Vamos!', 'Juntos.'],
+    it: ['Five more minutes? No.', 'Due minuti!', 'Andiamo!', 'Insieme.'],
+    es: ['Five more minutes? No.', '¡Dos minutos!', '¡Vamos!', 'Juntos.'],
   },
   marginalia_fragment: {
     it: ['It was wonderful.', 'La storia è meravigliosa!', 'Di nuovo, per favore!'],

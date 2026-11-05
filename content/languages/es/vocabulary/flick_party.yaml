@@ -1,4 +1,4 @@
-version: flick-party-es-v1
+version: flick-party-es-v2
 references:
   - id: rae-ir
     title: 'RAE, Diccionario de la lengua española: ir'
@@ -9,6 +9,36 @@ references:
   - id: wiktionary-vamos
     title: 'Wiktionary: vamos (Spanish)'
     url: https://en.wiktionary.org/wiki/vamos
+  - id: wiktionary-cuatro
+    title: 'Wiktionary: cuatro (Spanish)'
+    url: https://en.wiktionary.org/wiki/cuatro
+  - id: wiktionary-cinco
+    title: 'Wiktionary: cinco (Spanish)'
+    url: https://en.wiktionary.org/wiki/cinco
+  - id: wiktionary-seis
+    title: 'Wiktionary: seis (Spanish)'
+    url: https://en.wiktionary.org/wiki/seis
+  - id: wiktionary-siete
+    title: 'Wiktionary: siete (Spanish)'
+    url: https://en.wiktionary.org/wiki/siete
+  - id: wiktionary-ocho
+    title: 'Wiktionary: ocho (Spanish)'
+    url: https://en.wiktionary.org/wiki/ocho
+  - id: wiktionary-nueve
+    title: 'Wiktionary: nueve (Spanish)'
+    url: https://en.wiktionary.org/wiki/nueve
+  - id: wiktionary-diez
+    title: 'Wiktionary: diez (Spanish)'
+    url: https://en.wiktionary.org/wiki/diez
+  - id: wiktionary-once
+    title: 'Wiktionary: once (Spanish)'
+    url: https://en.wiktionary.org/wiki/once
+  - id: wiktionary-doce
+    title: 'Wiktionary: doce (Spanish)'
+    url: https://en.wiktionary.org/wiki/doce
+  - id: wiktionary-minutos
+    title: 'Wiktionary: minutos (Spanish)'
+    url: https://en.wiktionary.org/wiki/minutos
 entries:
   - id: vamos
     kind: word
@@ -43,3 +73,146 @@ entries:
     note: Juntos agrees with the people going together; a mixed or male group is juntos.
     reference_ids:
       - rae-junto
+  - id: cuatro
+    kind: word
+    target: cuatro
+    part_of_speech: numeral
+    accepted_translations:
+      - four
+    surface_variants:
+      - cuatro
+    accent_insensitive: false
+    example:
+      target: Son las cuatro.
+      english: "It is four o'clock."
+    reference_ids:
+      - wiktionary-cuatro
+  - id: cinco
+    kind: word
+    target: cinco
+    part_of_speech: numeral
+    accepted_translations:
+      - five
+    surface_variants:
+      - cinco
+    accent_insensitive: false
+    example:
+      target: Son las cinco.
+      english: "It is five o'clock."
+    reference_ids:
+      - wiktionary-cinco
+  - id: seis
+    kind: word
+    target: seis
+    part_of_speech: numeral
+    accepted_translations:
+      - six
+    surface_variants:
+      - seis
+    accent_insensitive: false
+    example:
+      target: Son las seis.
+      english: "It is six o'clock."
+    reference_ids:
+      - wiktionary-seis
+  - id: siete
+    kind: word
+    target: siete
+    part_of_speech: numeral
+    accepted_translations:
+      - seven
+    surface_variants:
+      - siete
+    accent_insensitive: false
+    example:
+      target: Son las siete.
+      english: "It is seven o'clock."
+    reference_ids:
+      - wiktionary-siete
+  - id: ocho
+    kind: word
+    target: ocho
+    part_of_speech: numeral
+    accepted_translations:
+      - eight
+    surface_variants:
+      - ocho
+    accent_insensitive: false
+    example:
+      target: Son las ocho.
+      english: "It is eight o'clock."
+    reference_ids:
+      - wiktionary-ocho
+  - id: nueve
+    kind: word
+    target: nueve
+    part_of_speech: numeral
+    accepted_translations:
+      - nine
+    surface_variants:
+      - nueve
+    accent_insensitive: false
+    example:
+      target: Son las nueve.
+      english: "It is nine o'clock."
+    reference_ids:
+      - wiktionary-nueve
+  - id: diez
+    kind: word
+    target: diez
+    part_of_speech: numeral
+    accepted_translations:
+      - ten
+    surface_variants:
+      - diez
+    accent_insensitive: false
+    example:
+      target: Son las diez.
+      english: "It is ten o'clock."
+    reference_ids:
+      - wiktionary-diez
+  - id: once
+    kind: word
+    target: once
+    part_of_speech: numeral
+    accepted_translations:
+      - eleven
+    surface_variants:
+      - once
+    accent_insensitive: false
+    example:
+      target: Son las once.
+      english: "It is eleven o'clock."
+    reference_ids:
+      - wiktionary-once
+  - id: doce
+    kind: word
+    target: doce
+    part_of_speech: numeral
+    accepted_translations:
+      - twelve
+    surface_variants:
+      - doce
+    accent_insensitive: false
+    example:
+      target: Son las doce.
+      english: "It is twelve o'clock."
+    reference_ids:
+      - wiktionary-doce
+  - id: minutos
+    kind: word
+    target: minutos
+    part_of_speech: noun
+    accepted_translations:
+      - minutes
+      - minute
+    surface_variants:
+      - minuto
+      - minutos
+    accent_insensitive: false
+    example:
+      target: Cinco minutos más.
+      english: Five more minutes.
+    note: 'Singular minuto: un minuto, one minute.'
+    reference_ids:
+      - wiktionary-minutos

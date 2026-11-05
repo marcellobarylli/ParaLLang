@@ -230,11 +230,13 @@ test('party vocabulary has no English-word forms and does not overlap other entr
       .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
     const formsOf = (entry) => entry.surface_variants.map(fold);
     const party = vocabulary.entries.filter((entry) => partyIds.has(entry.id));
-    assert.equal(party.length, 17, `${code}: eight conversations' targets (3 + 2 × 7)`);
+    // Round 052: Flick's minutes objective adds eleven numbers (two to twelve; tre / dos, tres are Mortimer's).
+    assert.equal(party.length, 28, `${code}: eight conversations' targets (3 + 2 × 7 + 11)`);
     for (const entry of party) {
       for (const form of formsOf(entry)) {
         // Whole forms: the matcher matches a phrase as a whole, so "un poco más" is safe where bare "más" is not.
-        assert.ok(!ENGLISH.includes(form), `${code} ${entry.id}: "${form}" is an English word`);
+        // Round 052 (Decision 3): Italian two is kept knowingly; the hours need it.
+        if (`${code}:${entry.id}:${form}` !== 'it:due:due') assert.ok(!ENGLISH.includes(form), `${code} ${entry.id}: "${form}" is an English word`);
         for (const other of vocabulary.entries.filter((candidate) => candidate.id !== entry.id)) {
           for (const otherForm of formsOf(other)) {
             const clash = ` ${form} `.includes(` ${otherForm} `) || ` ${otherForm} `.includes(` ${form} `);

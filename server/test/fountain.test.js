@@ -153,12 +153,12 @@ for (const [code, pack] of Object.entries(packs)) {
 
 // Round 050 (backlog G5): telling the time. One answer can close the time and now together (critique 1.6), and the
 // authored time forms match through the real vocabulary index, typographic apostrophes and missing accents included
-// (critiques 1.2, 1.7, 1.11). Mortimer's quantities already teach tre / tres, which match too.
+// (critiques 1.2, 1.7, 1.11). Mortimer's quantities already teach tre / tres, which match too; round 052's numbers (dieci) too.
 const timePacks = {
   it: {
     combined: ['Fermati!', 'A sinistra!', 'Adesso, sono le tre!'],
     matches: [
-      ['È l’una, Flick.', ['luna']], ["e l'una", ['luna']], ['Sono le tre.', ['sono_le', 'tre']], ['Sono le dieci e mezza.', ['sono_le']],
+      ['È l’una, Flick.', ['luna']], ["e l'una", ['luna']], ['Sono le tre.', ['sono_le', 'tre']], ['Sono le dieci e mezza.', ['sono_le', 'dieci']],
       ['È mezzogiorno!', ['mezzogiorno']], ['mezzanotte', ['mezzanotte']], ['Che ora è?', ['che_ore_sono']], ['Che ore sono?', ['che_ore_sono']],
     ],
   },

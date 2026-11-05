@@ -112,17 +112,18 @@ fragments:
     found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
     text: >-
       En una playa tibia, algunos marineros de Journathan comieron la flor del loto. Olvidaron el rumbo, el regreso,
-      hasta las ganas de partir. «Cinco minutos», decían, tumbados en la arena, y luego otros cinco. Journathan tuvo
+      hasta las ganas de partir. «Un momentito», decían, tumbados en la arena, y luego otro momentito. Journathan tuvo
       que arrastrarlos a las naves, y ellos lloraban.
     translation: >-
       On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
-      the wish to leave. "Five minutes," they said, lying on the sand, and then five more. Journathan had to drag them
-      to the ships, and they wept.
+      the wish to leave. "Just a moment," they said, lying on the sand, and then another moment. Journathan had to drag
+      them to the ships, and they wept.
     glossary:
       - { word: "tibia", meaning: "lukewarm" }
       - { word: "loto", meaning: "lotus" }
       - { word: "rumbo", meaning: "course, heading" }
       - { word: "hasta", meaning: "even; also until" }
+      - { word: "momentito", meaning: "a little moment" }
       - { word: "tumbados", meaning: "lying down" }
       - { word: "arena", meaning: "sand" }
       - { word: "arrastrarlos", meaning: "to drag them" }

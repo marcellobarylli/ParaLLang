@@ -111,17 +111,18 @@ fragments:
     found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
     text: >-
       Su una spiaggia tiepida, alcuni marinai di Journathan mangiarono il fiore del loto. Dimenticarono la rotta, il
-      ritorno, perfino la voglia di partire. «Cinque minuti», dicevano, sdraiati sulla sabbia, e poi altri cinque.
+      ritorno, perfino la voglia di partire. «Un attimo», dicevano, sdraiati sulla sabbia, e poi un altro attimo.
       Journathan dovette trascinarli alle navi, e loro piangevano.
     translation: >-
       On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
-      the wish to leave. "Five minutes," they said, lying on the sand, and then five more. Journathan had to drag them
-      to the ships, and they wept.
+      the wish to leave. "Just a moment," they said, lying on the sand, and then another moment. Journathan had to drag
+      them to the ships, and they wept.
     glossary:
       - { word: "tiepida", meaning: "lukewarm" }
       - { word: "loto", meaning: "lotus" }
       - { word: "rotta", meaning: "course, heading" }
       - { word: "perfino", meaning: "even" }
+      - { word: "attimo", meaning: "moment, instant" }
       - { word: "sdraiati", meaning: "lying down" }
       - { word: "sabbia", meaning: "sand" }
       - { word: "trascinarli", meaning: "to drag them" }

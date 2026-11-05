@@ -30,10 +30,10 @@ containment_file:
   virulence: "Unknown. It does not spread so much as leak, through the seam where the two languages touch."
   harm: "Moderate. The host's own language turns çùršęd. It reads anyone whose name it learns."
   incubation: "Begins as soon as the host understands one of its sentences. The host understands quite a lot by now."
-  vector: "Speech, in both languages at once, slightly wrong in each."
+  vector: "Speech, in both languages at the same time, slightly wrong in each."
   containment: "Do not understand it more than necessary. Do not tell it who you are."
   notes:
-    - "Recovered at the Rift, once the other five encounters were filed."
+    - "Recovered at the Rift, after the other five encounters were filed."
     - "It talks in fragments of this file. This file would prefer that it did not."
 objectives:
   - id: order

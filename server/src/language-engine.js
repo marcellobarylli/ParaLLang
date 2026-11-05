@@ -48,7 +48,19 @@ function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&
 
 export function matchCanonicalVocabulary(text, vocabulary) {
   const source = String(text ?? '');
-  const folded = source.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+  // Round 052 (critique 1.4): fold cluster by cluster (a base character with its combining marks) and keep each
+  // folded unit's source span, so offsets and excerpts index the source even when it holds decomposed accents.
+  let folded = '';
+  const startOf = [];
+  const endOf = [];
+  for (const cluster of source.matchAll(/\P{M}\p{M}*|\p{M}+/gsu)) {
+    const piece = cluster[0].normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+    for (let i = 0; i < piece.length; i += 1) {
+      startOf.push(cluster.index);
+      endOf.push(cluster.index + cluster[0].length);
+    }
+    folded += piece;
+  }
   const entries = [...vocabulary].sort((a, b) => {
     const longestA = Math.max(...a.surface_variants.map((form) => form.length));
     const longestB = Math.max(...b.surface_variants.map((form) => form.length));
@@ -63,8 +75,8 @@ export function matchCanonicalVocabulary(text, vocabulary) {
       const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
       const expression = new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu');
       for (const result of folded.matchAll(expression)) {
-        const start = result.index;
-        const end = start + result[0].length;
+        const start = startOf[result.index];
+        const end = endOf[result.index + result[0].length - 1];
         if (occupied.some(([usedStart, usedEnd]) => start < usedEnd && end > usedStart)) continue;
         occupied.push([start, end]);
         matches.push({ id: entry.id, entry, excerpt: source.slice(start, end), start, end });

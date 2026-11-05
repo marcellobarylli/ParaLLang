@@ -1,4 +1,4 @@
-version: flick-party-it-v1
+version: flick-party-it-v2
 references:
   - id: treccani-andare
     title: 'Treccani, Vocabolario: andare'
@@ -9,6 +9,39 @@ references:
   - id: wiktionary-andiamo
     title: 'Wiktionary: andiamo (Italian)'
     url: https://en.wiktionary.org/wiki/andiamo
+  - id: wiktionary-due
+    title: 'Wiktionary: due (Italian)'
+    url: https://en.wiktionary.org/wiki/due
+  - id: wiktionary-quattro
+    title: 'Wiktionary: quattro (Italian)'
+    url: https://en.wiktionary.org/wiki/quattro
+  - id: wiktionary-cinque
+    title: 'Wiktionary: cinque (Italian)'
+    url: https://en.wiktionary.org/wiki/cinque
+  - id: wiktionary-sei
+    title: 'Wiktionary: sei (Italian)'
+    url: https://en.wiktionary.org/wiki/sei
+  - id: wiktionary-sette
+    title: 'Wiktionary: sette (Italian)'
+    url: https://en.wiktionary.org/wiki/sette
+  - id: wiktionary-otto
+    title: 'Wiktionary: otto (Italian)'
+    url: https://en.wiktionary.org/wiki/otto
+  - id: wiktionary-nove
+    title: 'Wiktionary: nove (Italian)'
+    url: https://en.wiktionary.org/wiki/nove
+  - id: wiktionary-dieci
+    title: 'Wiktionary: dieci (Italian)'
+    url: https://en.wiktionary.org/wiki/dieci
+  - id: wiktionary-undici
+    title: 'Wiktionary: undici (Italian)'
+    url: https://en.wiktionary.org/wiki/undici
+  - id: wiktionary-dodici
+    title: 'Wiktionary: dodici (Italian)'
+    url: https://en.wiktionary.org/wiki/dodici
+  - id: wiktionary-minuti
+    title: 'Wiktionary: minuti (Italian)'
+    url: https://en.wiktionary.org/wiki/minuti
 entries:
   - id: andiamo
     kind: word
@@ -42,3 +75,160 @@ entries:
       english: Let's go together.
     reference_ids:
       - treccani-insieme
+  - id: due
+    kind: word
+    target: due
+    part_of_speech: numeral
+    accepted_translations:
+      - two
+    surface_variants:
+      - due
+    accent_insensitive: false
+    example:
+      target: Sono le due.
+      english: "It is two o'clock."
+    reference_ids:
+      - wiktionary-due
+  - id: quattro
+    kind: word
+    target: quattro
+    part_of_speech: numeral
+    accepted_translations:
+      - four
+    surface_variants:
+      - quattro
+    accent_insensitive: false
+    example:
+      target: Sono le quattro.
+      english: "It is four o'clock."
+    reference_ids:
+      - wiktionary-quattro
+  - id: cinque
+    kind: word
+    target: cinque
+    part_of_speech: numeral
+    accepted_translations:
+      - five
+    surface_variants:
+      - cinque
+    accent_insensitive: false
+    example:
+      target: Sono le cinque.
+      english: "It is five o'clock."
+    reference_ids:
+      - wiktionary-cinque
+  - id: sei
+    kind: word
+    target: sei
+    part_of_speech: numeral
+    accepted_translations:
+      - six
+    surface_variants:
+      - sei
+    accent_insensitive: false
+    example:
+      target: Sono le sei.
+      english: "It is six o'clock."
+    reference_ids:
+      - wiktionary-sei
+  - id: sette
+    kind: word
+    target: sette
+    part_of_speech: numeral
+    accepted_translations:
+      - seven
+    surface_variants:
+      - sette
+    accent_insensitive: false
+    example:
+      target: Sono le sette.
+      english: "It is seven o'clock."
+    reference_ids:
+      - wiktionary-sette
+  - id: otto
+    kind: word
+    target: otto
+    part_of_speech: numeral
+    accepted_translations:
+      - eight
+    surface_variants:
+      - otto
+    accent_insensitive: false
+    example:
+      target: Sono le otto.
+      english: "It is eight o'clock."
+    reference_ids:
+      - wiktionary-otto
+  - id: nove
+    kind: word
+    target: nove
+    part_of_speech: numeral
+    accepted_translations:
+      - nine
+    surface_variants:
+      - nove
+    accent_insensitive: false
+    example:
+      target: Sono le nove.
+      english: "It is nine o'clock."
+    reference_ids:
+      - wiktionary-nove
+  - id: dieci
+    kind: word
+    target: dieci
+    part_of_speech: numeral
+    accepted_translations:
+      - ten
+    surface_variants:
+      - dieci
+    accent_insensitive: false
+    example:
+      target: Sono le dieci.
+      english: "It is ten o'clock."
+    reference_ids:
+      - wiktionary-dieci
+  - id: undici
+    kind: word
+    target: undici
+    part_of_speech: numeral
+    accepted_translations:
+      - eleven
+    surface_variants:
+      - undici
+    accent_insensitive: false
+    example:
+      target: Sono le undici.
+      english: "It is eleven o'clock."
+    reference_ids:
+      - wiktionary-undici
+  - id: dodici
+    kind: word
+    target: dodici
+    part_of_speech: numeral
+    accepted_translations:
+      - twelve
+    surface_variants:
+      - dodici
+    accent_insensitive: false
+    example:
+      target: Sono le dodici.
+      english: "It is twelve o'clock."
+    reference_ids:
+      - wiktionary-dodici
+  - id: minuti
+    kind: word
+    target: minuti
+    part_of_speech: noun
+    accepted_translations:
+      - minutes
+      - minute
+    surface_variants:
+      - minuto
+      - minuti
+    accent_insensitive: false
+    example:
+      target: Ancora cinque minuti.
+      english: Five more minutes.
+    note: 'Singular minuto: un minuto, one minute.'
+    reference_ids:
+      - wiktionary-minuti

@@ -68,8 +68,11 @@ function stemLeaks(content, fragment) {
 
 test('no fragment holds a stem of any party conversation\'s targets; the check is live', () => {
   const expected = {
-    it: ['buon', 'otti', 'graz', 'mill', 'piac', 'anco', 'andi', 'insi', 'mera', 'nuov', 'amic', 'cinc', 'tran', 'prom', 'sveg', 'cora', 'ecco', 'sola'],
-    es: ['buen', 'deli', 'grac', 'much', 'gust', 'poco', 'vamo', 'junt', 'prec', 'otra', 'amig', 'salu', 'tran', 'prom', 'desp', 'anim', 'aqui', 'esto', 'sola'],
+    it: ['buon', 'otti', 'graz', 'mill', 'piac', 'anco', 'andi', 'insi', 'mera', 'nuov', 'amic', 'cinc', 'tran', 'prom', 'sveg', 'cora', 'ecco', 'sola',
+      // Round 052: the numbers of Flick's minutes objective.
+      'quat', 'cinq', 'sett', 'otto', 'nove', 'diec', 'undi', 'dodi'],
+    es: ['buen', 'deli', 'grac', 'much', 'gust', 'poco', 'vamo', 'junt', 'prec', 'otra', 'amig', 'salu', 'tran', 'prom', 'desp', 'anim', 'aqui', 'esto', 'sola',
+      'tres', 'cinc', 'cuat', 'seis', 'siet', 'ocho', 'nuev', 'diez', 'once', 'doce'],
   };
   for (const code of ['it', 'es']) {
     const content = loadGameContent({ language: code });

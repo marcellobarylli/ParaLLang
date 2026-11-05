@@ -89,7 +89,12 @@ test('both packs put Errata in The Rift, reviewing every earlier vocabulary file
     const partyIds = new Set([...encounters.values()].filter(({ encounter }) => encounter.party_of)
       .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
     assert.ok(partyIds.size > 0);
-    assert.equal(definition.narrationEntries.length, vocabulary.entries.filter((entry) => !partyIds.has(entry.id)).length, 'its chips cover every location encounter entry');
+    // Round 052: Flick's minutes objective also targets Mortimer's numbers, which stay location encounter entries.
+    const locationIds = new Set([...encounters.values()].filter(({ encounter }) => !encounter.party_of)
+      .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
+    // Its non-target word for minutes sits in Flick's party file and is not reviewed either.
+    const reviewed = (entry) => (!partyIds.has(entry.id) || locationIds.has(entry.id)) && !['minuti', 'minutos'].includes(entry.id);
+    assert.equal(definition.narrationEntries.length, vocabulary.entries.filter(reviewed).length, 'its chips cover every location encounter entry');
     for (const file of files) assert.match(vocabulary.version, new RegExp(file.replace('_', '-')), `${file} is still one of the files`);
   }
 });

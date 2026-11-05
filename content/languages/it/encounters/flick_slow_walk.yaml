@@ -12,9 +12,62 @@ resolved_message: Flick moves. Now. Together with you. Historians will doubt it.
 escalation:
   target_ratio_increase_per_turn: 0.05
 objectives:
+  - id: minutes
+    prompt: 'Flick, now in your party, has sat down and wants five more minutes. Bargain: tell it how many minutes it gets, using a Italian number.'
+    intent: Flick, now travelling in the player's party, has sat down and asks, in one English sentence, for "five more minutes". In its greeting it does not introduce itself. The player answers with how many minutes Flick gets, as a Italian number. Before the player names a number, Flick says no Italian number itself, neither five nor any other; once the player has named one, Flick may haggle back with a different Italian number of minutes. Flick does not say "andiamo" or "insieme" itself before the player has.
+    target_vocabulary_ids:
+      - due
+      - tre
+      - quattro
+      - cinque
+      - sei
+      - sette
+      - otto
+      - nove
+      - dieci
+      - undici
+      - dodici
+    required_target_groups:
+      - - due
+        - tre
+        - quattro
+        - cinque
+        - sei
+        - sette
+        - otto
+        - nove
+        - dieci
+        - undici
+        - dodici
+    grammar_constraints:
+      - The player's own offer of a number of minutes from two to twelve, with the number as a Italian word, alone or with the word for minutes; a tentative question or a correction (not five, two) is an offer too.
+      - Agreeing to five passes; an agreement slip in the word for minutes passes, and feedback may correct it in English.
+      - Reject English-only numbers, digits, numbers outside two to twelve, a number that is not an offer of minutes, refusals, quotations and talk about the word.
+    accepted_examples:
+      - Due minuti!
+      - Dieci minuti, non di più.
+      - Tre.
+      - Tre minuti?
+      - Non cinque, due minuti!
+    negative_examples:
+      - text: Two minutes.
+        reason: English-only; it does not use an Italian number.
+      - text: 2 minuti.
+        reason: A digit, not the Italian word.
+      - text: Flick dice cinque.
+        reason: It reports what Flick says rather than making an offer.
+      - text: Sei stanco.
+        reason: Sei here means you are; it is not an offer of minutes.
+      - text: Cento minuti.
+        reason: A hundred is outside two to twelve.
+    reference_meaning: The player tells Flick how many minutes it gets.
+    hint_limit: 2
+    next_objective: lets_go
+    assessment_reference_ids:
+      - wiktionary-sei
   - id: lets_go
-    prompt: 'Flick, now in your party, wants to stay put for five more minutes. Get it moving: say let''s go, using Italian.'
-    intent: Flick, now travelling in the player's party, has sat down and wants to stay "five more minutes". The player must get it moving. Flick does not say "andiamo" or "insieme" itself before the player has.
+    prompt: 'Flick, now in your party, has had its minutes. Get it moving: say let''s go, using Italian.'
+    intent: Flick, now travelling in the player's party, has had its minutes, and they are up. The player must get it moving. Flick does not say "andiamo" or "insieme" itself before the player has.
     target_vocabulary_ids:
       - andiamo
     required_target_groups:
