@@ -170,8 +170,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - **Spellbook-only mobile tests go in `mobile/src/__tests__/spellbook.test.js`**: appended to `learning-flow.test.js`
   the Spellbook rendered null (cause not found).
 - **Codex's usage limit resets about 90 minutes after it hits** (iteration 4: hit 14:05, reset 15:34 UTC). Use the
-  wait for rounds without live runs (dependency updates, deterministic app or server rules). Iteration 5 spent
-  ~100 calls (two runs, one critique) after the reset without hitting it again.
+  wait for rounds without live runs (dependency updates, deterministic app or server rules). Iteration 5 made
+  76 calls (15 + 60 game calls and one critique) after the reset without hitting it again.
 
 - **Codex has a subscription usage limit.** Iteration 4 hit it after about 100 game calls and two critiques in
   ~50 minutes (14:05 UTC). The game maps it to `PROVIDER_FAILURE` ("temporarily unavailable"); a direct
