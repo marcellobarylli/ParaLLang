@@ -1,0 +1,453 @@
+=== docs/rounds/047/trail/plan-v1.md
+     1	# Round 047 plan v1: relationship tiers (backlog G4)
+     2	
+     3	## Goal
+     4	
+     5	A party member's conversation changes as the relationship deepens: after N finished conversations, the Party
+     6	screen's Talk starts a deeper, authored conversation instead of the first one. Gerald is the first, after three
+     7	coffee breaks (the same count that unlocks his Dead Branch fragment, so the deeper talk follows the story).
+     8	
+     9	## Today
+    10	
+    11	- One party conversation per home encounter (`party_of`), enforced by the loader ("has more than one party
+    12	  conversation"). `partyConversationFor(homeId)` finds it; `partySnapshot` sends it as `conversationId`; the app's
+    13	  Talk button starts `member.conversationId`.
+    14	- A resolved party conversation increments `member.conversations` (matched by character id).
+    15	- Fragments with `after_conversations` unlock by that count (rounds 032–033); `storyProgress` gives the hint.
+    16	
+    17	## Design
+    18	
+    19	1. **Schema.** A party conversation may set `after_conversations: <int ≥ 1>` (same name and meaning as on fragments:
+    20	   available once the member has finished that many conversations). Loader rules, per home encounter:
+    21	   - exactly one party conversation without it (the first tier);
+    22	   - thresholds unique among its conversations;
+    23	   - `after_conversations` on a location encounter is refused.
+    24	   The "more than one party conversation" error becomes "more than one party conversation without
+    25	   after_conversations"; a duplicate threshold has its own error.
+    26	2. **Which conversation.** `partyConversationFor(homeId, count = 0)`: among the home's conversations whose threshold
+    27	   (0 for the first) ≤ count, the one with the largest threshold. The deepest unlocked tier is what Talk offers, and
+    28	   it repeats like the first tier does today. Every caller passes the count it means:
+    29	   - `partySnapshot`: the member's count; adds `conversationTier` (the threshold, 0 for the first) and
+    30	     `conversationNew` (tier > 0 and count equals the tier: unlocked and not played yet, since finishing it raises
+    31	     the count).
+    32	   - `journeyFragments.conversationOf`: the first tier (the fragment's `encounterId` stays `gerald_coffee_break`).
+    33	3. **Start.** `startEncounter` of a party conversation whose threshold exceeds the member's count: 409
+    34	   `NOT_YET` ("Gerald is not ready for that conversation yet."). Earlier tiers stay startable over the API (the app
+    35	   only offers the deepest).
+    36	4. **Counting.** Unchanged: any tier's resolution adds one to the member (by character id).
+    37	5. **App.** `PartyPanel` shows "Gerald has something new to talk about." when `conversationNew`; nothing else changes
+    38	   (Talk already uses `conversationId`). Old servers without the fields: no line.
+    39	6. **Content, both packs: `gerald_confidence`** (`party_of: imp_coffee_greeting`, `after_conversations: 3`), a new
+    40	   vocabulary file `gerald_confidence.yaml`. Gerald, after reciting the Dead Branch passage, is quietly morose about
+    41	   the word that died; the player
+    42	   1. tells Gerald he is a friend: `amico` (it: amico, amica, amici), `amigo` (es: amigo, amiga, amigos);
+    43	   2. raises a toast with the coffee: `cin cin` (it: "cin cin", "cincin"), `salud` (es: "salud").
+    44	   Ordered (friend, then toast). Italian "salute" is left out on purpose: it is an English word and would be chipped
+    45	   in English text (round 009 trap).
+    46	7. **play-market.** `--party --tier N` plays the home encounter, recruits, sets the member's count to N in the save
+    47	   (a test-harness shortcut) and then plays `partyConversationFor(home, N)`; scripts for `gerald_confidence`
+    48	   (an English line first, then the friend line, then the toast).
+    49	
+    50	## Tests
+    51	
+    52	- Loader: threshold on a location encounter refused; two first tiers refused; duplicate thresholds refused; the
+    53	  shipped packs have exactly the five party conversations, one first tier per saveable home and
+    54	  `gerald_confidence` at 3.
+    55	- Service: count 2 → snapshot `conversationId` `gerald_coffee_break`, tier 0; count 3 → `gerald_confidence`, tier 3,
+    56	  `conversationNew` true; after resolving it, count 4, `conversationNew` false, still `gerald_confidence`; starting
+    57	  `gerald_confidence` at count 2 → 409 `NOT_YET`; the base stays startable at count 3; the fragment's `encounterId`
+    58	  is still the first tier. An HTTP test for the 409.
+    59	- Existing content tests updated on purpose: party vocabulary count (9 → 11), overlap and English-word checks over
+    60	  the new forms, the fragment stem check's expected stems (new: it `amic`, `cinc`; es `amig`, `salu`), the aggregate
+    61	  vocabulary version pins, the Rift's exclusion of party targets.
+    62	- Mobile: PartyPanel shows the new-conversation line only when `conversationNew`.
+    63	
+    64	## Live runs (after build)
+    65	
+    66	codex-cli: `play-market.js --party --tier 3` in it and es (one run each, ~14 calls). Bar: both resolve; the
+    67	English line fails; the opening line refers to the earlier breaks or the story without giving "amico"/"amigo" or
+    68	the toast away; leak-scan over the lines.
+    69	
+    70	## Out of scope
+    71	
+    72	Tiers for Mortimer, Flick and Marginalia (content only once this works); tiers changing an existing conversation's
+    73	text in place.
+=== server/src/content-loader.js (60-150, 240-300)
+     1	  incubation: z.string().min(1),
+     2	  vector: z.string().min(1),
+     3	  containment: z.string().min(1),
+     4	  notes: z.array(z.string().min(1)).min(1).max(3),
+     5	}).strict();
+     6	
+     7	const encounterSchema = z.object({
+     8	  id: z.string().min(1),
+     9	  character: z.string().min(1),
+    10	  // Round 022: a party conversation names the location encounter whose character it continues (`party_of`) and has
+    11	  // no map location; every other encounter has a location.
+    12	  location: z.string().min(1).optional(),
+    13	  party_of: z.string().min(1).optional(),
+    14	  type: z.literal('dialogue'),
+    15	  initial_prompt_template: z.string().min(1),
+    16	  turn_prompt_template: z.string().min(1),
+    17	  defeat_condition: z.object({ type: z.string(), description: z.string().min(1) }).strict(),
+    18	  max_turns: z.number().int().positive(),
+    19	  escalation: z.object({ target_ratio_increase_per_turn: z.number().min(0) }).strict(),
+    20	  resolved_message: z.string().min(1).optional(),
+    21	  // Round 009: static English lines in which the companion introduces the mechanics (the tutorial sets them).
+    22	  companion_briefing: z.array(z.string().min(1)).min(1).max(4).optional(),
+    23	  // Round 029 (backlog C1): before a first fight, every due Spellbook card among the objectives' targets is reviewed.
+    24	  drill_before: z.literal(true).optional(),
+    25	  // Round 028: the Spellbook's deadpan containment file for an infohazard (LORE.md); location encounters only.
+    26	  containment_file: containmentFileSchema.optional(),
+    27	  // Round 019: authored words the NPC may use in any line; never the target of one of the encounter's objectives.
+    28	  ambient_vocabulary_ids: z.array(z.string().min(1)).min(1).optional(),
+    29	  objectives: z.array(objectiveSchema).min(1),
+    30	  // Round 045 (backlog G3): objectives that may be met in any order; every passed one closes. Default: in order.
+    31	  objectives_unordered: z.boolean().optional(),
+    32	}).strict().superRefine((encounter, context) => {
+    33	  if (Boolean(encounter.location) === Boolean(encounter.party_of)) {
+    34	    context.addIssue({ code: z.ZodIssueCode.custom, message: 'An encounter has either a location or party_of, not both or neither' });
+    35	  }
+    36	  if (encounter.party_of && encounter.drill_before) {
+    37	    context.addIssue({ code: z.ZodIssueCode.custom, message: 'A party conversation cannot require a drill' });
+    38	  }
+    39	  if (encounter.party_of && encounter.containment_file) {
+    40	    context.addIssue({ code: z.ZodIssueCode.custom, message: 'A party conversation cannot hold a containment file' });
+    41	  }
+    42	});
+    43	
+    44	const characterSchema = z.object({
+    45	  id: z.string().min(1),
+    46	  name: z.string().min(1),
+    47	  species: z.string().min(1),
+    48	  personality: z.object({
+    49	    tone: z.string().min(1),
+    50	    quirks: z.array(z.string().min(1)).min(1),
+    51	    humour_style: z.string().min(1),
+    52	  }).strict(),
+    53	  appearance: z.string().min(1),
+    54	  combat_style: z.string().min(1),
+    55	  difficulty: z.number().min(1),
+    56	  language_profile: z.object({
+    57	    base_target_ratio: z.number().min(0).max(1),
+    58	    vocabulary_focus: z.array(z.string().min(1)).min(1),
+    59	    grammar_focus: z.array(z.string().min(1)).min(1),
+    60	  }).strict(),
+    61	  defeat_condition: z.object({ type: z.string().min(1), description: z.string().min(1) }).strict(),
+    62	  saveable: z.boolean(),
+    63	}).strict();
+    64	
+    65	const styleGuideSchema = z.object({
+    66	  tone: z.string().min(1),
+    67	  narrator_voice: z.string().min(1),
+    68	  rules: z.array(z.string().min(1)).min(1),
+    69	}).strict();
+    70	
+    71	// Round 027: the philosophy statement shown once before the map (content/narration/onboarding.yaml).
+    72	const onboardingSchema = z.object({
+    73	  title: z.string().min(1),
+    74	  statement: z.string().min(1),
+    75	  notes: z.array(z.string().min(1)).min(1).max(4),
+    76	  begin_label: z.string().min(1),
+    77	}).strict();
+    78	
+    79	// Round 030 (backlog A9): fragments of The Journey (content/languages/<code>/lore/fragments.yaml, optional).
+    80	const fragmentSchema = z.object({
+    81	  id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+    82	  title: z.string().min(1),
+    83	  found_after: z.string().min(1),
+    84	  // Round 032: unlocked by the found_after character's party conversations instead of the encounter's completion.
+    85	  after_conversations: z.number().int().min(1).optional(),
+    86	  found: z.string().min(1),
+    87	  text: z.string().min(1),
+    88	  translation: z.string().min(1),
+    89	  glossary: z.array(z.object({ word: z.string().min(1), meaning: z.string().min(1) }).strict()).min(1).max(10),
+    90	}).strict();
+    91	const fragmentsSchema = z.object({ fragments: z.array(fragmentSchema) }).strict();
+    92	    const fileEntries = vocabularyFiles.filter((file) => files.has(file)).flatMap((file) => file.entries);
+    93	    const narrationEntries = Object.freeze([...fileEntries, ...ambientEntries.filter((entry) => !fileEntries.includes(entry))]);
+    94	    encounters.set(encounter.id, Object.freeze({ encounter, character, narrationEntries, ambientEntries }));
+    95	  }
+    96	  validatePartyConversations(encounters);
+    97	  unique([...encounters.values()].flatMap(({ encounter: e }) => (e.containment_file ? [e.containment_file.designation] : [])), 'Containment file designations');
+    98	  const defaultDefinition = encounters.get(defaultEncounterId);
+    99	  if (!defaultDefinition) throw new Error(`content/${pack}/language.yaml names unknown default_encounter ${defaultEncounterId}`);
+   100	  if (defaultDefinition.encounter.party_of) throw new Error(`content/${pack}/language.yaml default_encounter ${defaultEncounterId} is a party conversation`);
+   101	  const { encounter, character } = defaultDefinition;
+   102	
+   103	  const world = loadWorld(contentDir, encounters);
+   104	  const fragments = loadFragments(contentDir, pack, encounters);
+   105	  return Object.freeze({
+   106	    language, styleGuide, onboarding, vocabulary, vocabularyById, world, encounters, fragments,
+   107	    defaultEncounterId,
+   108	    // The default encounter, for callers that know only one (the web client's start, verify:cli).
+   109	    encounter, character,
+   110	    entryVersion: (id) => versionById.get(id),
+   111	  });
+   112	}
+   113	
+   114	// Round 030: a fragment is found once its `found_after` location encounter is complete. Each glossary word must
+   115	// occur in the text (apostrophes split words, so "albero" is found in "all'albero").
+   116	export const foldWords = (text) => ` ${String(text).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+   117	  .replace(/[^\p{L}\s]/gu, ' ').replace(/\s+/g, ' ').trim()} `;
+   118	function loadFragments(contentDir, pack, encounters) {
+   119	  const relativePath = `${pack}/lore/fragments.yaml`;
+   120	  if (!existsSync(resolve(contentDir, relativePath))) return Object.freeze([]);
+   121	  const { fragments } = fragmentsSchema.parse(parseYaml(contentDir, relativePath));
+   122	  unique(fragments.map((fragment) => fragment.id), 'Lore fragments');
+   123	  for (const fragment of fragments) {
+   124	    const home = encounters.get(fragment.found_after);
+   125	    if (!home) throw new Error(`Lore fragment ${fragment.id} names unknown encounter ${fragment.found_after}`);
+   126	    if (home.encounter.party_of) throw new Error(`Lore fragment ${fragment.id} must follow a location encounter, not ${fragment.found_after}`);
+   127	    if (fragment.after_conversations !== undefined
+   128	      && ![...encounters.values()].some(({ encounter }) => encounter.party_of === fragment.found_after)) {
+   129	      throw new Error(`Lore fragment ${fragment.id} counts conversations, but ${fragment.found_after} has no party conversation`);
+   130	    }
+   131	    const text = foldWords(fragment.text);
+   132	    for (const { word } of fragment.glossary) {
+   133	      if (!text.includes(foldWords(word))) throw new Error(`Lore fragment ${fragment.id} glosses "${word}", which is not in its text`);
+   134	    }
+   135	  }
+   136	  return Object.freeze(fragments.map((fragment) => Object.freeze({ ...fragment, glossary: Object.freeze(fragment.glossary.map((g) => Object.freeze({ ...g }))) })));
+   137	}
+   138	
+   139	// Round 022: a party conversation continues a saveable character's location encounter, with the same character file.
+   140	function validatePartyConversations(encounters) {
+   141	  const homes = new Set();
+   142	  for (const { encounter, character } of encounters.values()) {
+   143	    if (!encounter.party_of) continue;
+   144	    if (homes.has(encounter.party_of)) throw new Error(`Encounter ${encounter.party_of} has more than one party conversation`);
+   145	    homes.add(encounter.party_of);
+   146	    const home = encounters.get(encounter.party_of);
+   147	    if (!home) throw new Error(`Party conversation ${encounter.id} names unknown encounter ${encounter.party_of}`);
+   148	    if (home.encounter.party_of) throw new Error(`Party conversation ${encounter.id} must name a location encounter, not ${encounter.party_of}`);
+   149	    if (home.encounter.character !== encounter.character) {
+   150	      throw new Error(`Party conversation ${encounter.id} must use the character of ${encounter.party_of} (${home.encounter.character})`);
+   151	    }
+   152	    if (character.saveable !== true) throw new Error(`Party conversation ${encounter.id} needs a saveable character; ${character.name} is not`);
+=== server/src/learning-service.js (94-101, 216-245, 326-345, 560-572, 618-660)
+  // Round 022: a party conversation is set wherever the player stood when it began; other encounters at their location.
+  sceneLocationId(session) { return session?.locationId ?? this.definition(session).encounter.location; }
+
+  sceneName(session) { return this.content.world.locationsById.get(this.sceneLocationId(session))?.name ?? this.sceneLocationId(session); }
+
+  partyConversationFor(encounterId) {
+    return [...this.content.encounters.values()].find((definition) => definition.encounter.party_of === encounterId) ?? null;
+  }
+  // glossary are withheld while an encounter is under way, as card meanings are (round 017).
+  journeyFragments(envelope, inEncounter = false) {
+    const completed = new Set(envelope.world?.completedEncounterIds ?? []);
+    const party = envelope.party ?? [];
+    // Round 032: a fragment with `after_conversations` is unlocked by the party member met at `found_after` (matched
+    // as partySnapshot does: encounter and character) once their conversation count reaches it, not by completion.
+    // Derived, not saved: removing the member or raising N would hide it again.
+    const memberCount = (homeId) => {
+      const member = party.find((m) => this.isHomeMember(m, homeId));
+      return member ? (member.conversations ?? 0) : null;
+    };
+    const conversationOf = (homeId) => [...this.content.encounters.values()].find(({ encounter }) => encounter.party_of === homeId).encounter.id;
+    const found = (fragment) => (fragment.after_conversations === undefined
+      ? completed.has(fragment.found_after)
+      : (memberCount(fragment.found_after) ?? 0) >= fragment.after_conversations);
+    return this.content.fragments.filter(found).map((fragment) => {
+      const { encounter, character } = this.content.encounters.get(fragment.found_after);
+      const byConversation = fragment.after_conversations !== undefined;
+      return {
+        id: fragment.id, title: fragment.title, found: fragment.found,
+        encounterId: byConversation ? conversationOf(encounter.id) : encounter.id,
+        // Round 036: a conversation fragment names who told it (shown in English, also during encounters).
+        ...(byConversation ? { unlockedAt: fragment.after_conversations, conversations: memberCount(encounter.id), toldBy: character.name } : {}),
+        locationName: this.content.world.locationsById.get(encounter.location).name, text: fragment.text,
+        hidden: inEncounter,
+        translation: inEncounter ? null : fragment.translation,
+        glossary: inEncounter ? null : fragment.glossary.map((entry) => ({ ...entry })),
+      };
+    });
+  }
+    }
+  }
+
+  // Without an encounterId the default encounter starts anywhere (the frozen web client); with one, the player
+  // must be at that encounter's location.
+  async startEncounter(learnerId, { restart = false, encounterId = null } = {}) {
+    assertLearnerId(learnerId);
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const definitionId = encounterId ?? this.content.defaultEncounterId;
+      const definition = this.content.encounters.get(definitionId);
+      if (typeof definitionId !== 'string' || !definition) throw validationError('Unknown encounter.');
+      const here = currentLocationId(this.content.world, envelope.world);
+      if (definition.encounter.party_of) {
+        // Round 022: a party member travels with the player, so their conversation starts anywhere once they have joined.
+        if (!envelope.party.some((member) => member.characterId === definition.character.id)) {
+          throw conflictError(`${definition.character.name} is not in your party yet.`, 'NOT_IN_PARTY');
+        }
+      } else {
+        if (encounterId !== null && here !== definition.encounter.location) {
+      stagedEncounter.passedObjectiveIds = nextPassedIds;
+      stagedEncounter.committedPlayerTurns = nextTurns;
+      stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
+      stagedEncounter.version += 1;
+      // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
+      // holds the encounter's containment file.
+      if (resolved && definition.encounter.party_of) {
+        // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
+        const member = stagedEnvelope.party.find((candidate) => candidate.characterId === definition.character.id);
+        if (member) member.conversations = (member.conversations ?? 0) + 1;
+      } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
+        stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
+      }
+  }
+
+  // Round 021: the party. Members whose encounter is not in the loaded pack stay in the save but are not shown.
+  partySnapshot(envelope) {
+    return (envelope.party ?? []).flatMap((member) => {
+      const definition = this.content.encounters.get(member.encounterId);
+      if (!definition || definition.character.id !== member.characterId) return [];
+      return [{
+        characterId: member.characterId,
+        name: definition.character.name,
+        encounterId: member.encounterId,
+        locationId: definition.encounter.location,
+        locationName: this.locationName(definition),
+        joinedAt: member.joinedAt,
+        conversations: member.conversations ?? 0,
+        conversationId: this.partyConversationFor(member.encounterId)?.encounter.id ?? null,
+        ...this.storyProgress(member),
+      }];
+    });
+  }
+
+  // Round 043 (critique 1.1): one rule for "this party member was met at that encounter", shared by the Spellbook's
+  // conversation fragments and the Party screen's hint: the same encounter and its character.
+  isHomeMember(member, homeId) {
+    const definition = this.content.encounters.get(homeId);
+    return Boolean(definition) && member.encounterId === homeId && member.characterId === definition.character.id;
+  }
+
+  // Round 043 (backlog G1): the Party screen's hint. The member's conversation fragments are those found after its
+  // home encounter with `after_conversations` (matched by encounter, as journeyFragments does). `nextStoryAt` is the
+  // smallest threshold not yet reached (null when none is left); `storiesTold` counts those reached. Derived.
+  storyProgress(member) {
+    const count = member.conversations ?? 0;
+    const thresholds = this.content.fragments
+      .filter((fragment) => fragment.after_conversations !== undefined && this.isHomeMember(member, fragment.found_after))
+      .map((fragment) => fragment.after_conversations);
+    const ahead = thresholds.filter((at) => at > count);
+    return { nextStoryAt: ahead.length ? Math.min(...ahead) : null, storiesTold: thresholds.length - ahead.length };
+  }
+
+  async getParty(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    return { party: this.partySnapshot(envelope) };
+=== content/languages/it/encounters/gerald_coffee_break.yaml
+id: gerald_coffee_break
+character: characters/enemies/imp_coffee.yaml
+party_of: imp_coffee_greeting
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player praises Gerald's coffee and thanks him, in Italian"
+max_turns: 20
+resolved_message: "Gerald pretends not to be pleased. He is extremely pleased."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_coffee
+    prompt: "Gerald has made you a coffee on the road. Tell him it is good, using Italian."
+    intent: "Gerald, now travelling in the player's party, has brewed the player a coffee and waits for the player's own verdict on it."
+    target_vocabulary_ids: [buono, ottimo]
+    required_target_groups:
+      - [buono, ottimo]
+    grammar_constraints:
+      - "The player gives their own positive verdict on the coffee Gerald made, with an Italian word for good."
+      - "The adjective agrees with what it praises: with il caffè (masculine) it is buono, buonissimo or ottimo, or buon before the noun (un buon caffè); a feminine form (buona, buonissima, ottima) passes only with an explicit feminine referent such as la tazza."
+      - "Reject English-only praise, negated verdicts, quotations, and praise of anything other than the coffee."
+    accepted_examples:
+      - "È buono!"
+      - "Il caffè è buonissimo."
+      - "Ottimo, Gerald."
+      - "This is buono."
+      - "Un buon caffè!"
+    negative_examples:
+      - text: "It's good."
+        reason: "English-only; it does not use an Italian word for good."
+      - text: "Il caffè è buona."
+        reason: "Il caffè is masculine; the adjective must be buono."
+      - text: "Non è buono."
+        reason: "A negated verdict is not praise."
+      - text: "Gerald says it is buono."
+        reason: "It reports someone else's words rather than giving the player's verdict."
+      - text: "Your cart is buono."
+        reason: "It praises the cart, not the coffee."
+    reference_meaning: "The player's own verdict that the coffee is good."
+    hint_limit: 2
+    next_objective: thank_gerald
+    assessment_reference_ids: [treccani-buono, treccani-ottimo]
+  - id: thank_gerald
+    prompt: "Thank Gerald for the coffee, using Italian."
+    intent: "The player thanks Gerald for the coffee he made."
+    target_vocabulary_ids: [grazie]
+    required_target_groups:
+      - [grazie]
+    grammar_constraints:
+      - "The player thanks Gerald in Italian, in their own words."
+      - "Reject English-only thanks, quotations, and thanks addressed to someone else."
+    accepted_examples:
+      - "Grazie!"
+      - "Grazie mille, Gerald."
+      - "Grazie for the coffee."
+    negative_examples:
+      - text: "Thank you."
+        reason: "English-only; it does not use the Italian thanks."
+      - text: "Grazie is how you say thanks."
+        reason: "It discusses the word rather than thanking Gerald."
+    reference_meaning: "The player thanks Gerald."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [treccani-grazie]
+=== mobile/src/components/PartyPanel.js
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button, colors, type, Title } from './ui.js';
+
+// Round 021: the party, in join order. Round 022: a member with an authored conversation can be talked to anywhere.
+// `ongoing` is the encounter under way, if any: Talk resumes it for its own member and is unavailable for the others.
+// Round 043 (backlog G1): how many conversations until the member's next Journey fragment, without naming it.
+// No line for a member without conversation fragments or from a server without the fields.
+export function storyHint(member) {
+  const count = member.conversations ?? 0;
+  if (Number.isInteger(member.nextStoryAt) && member.nextStoryAt > count) {
+    const left = member.nextStoryAt - count;
+    return `${left} more finished ${left === 1 ? 'conversation' : 'conversations'} until ${member.name} tells you a story.`;
+  }
+  if (member.nextStoryAt === null && member.storiesTold > 0) {
+    return member.storiesTold === 1 ? `${member.name} has told you a story. It is in your Spellbook.`
+      : `${member.name} has told you ${member.storiesTold} stories. They are in your Spellbook.`;
+  }
+  return null;
+}
+
+export default function PartyPanel({ party, isLoading = false, ongoing = null, onTalk, onReturn, returnLabel }) {
+  return (
+    <ScrollView style={styles.panel} contentContainerStyle={styles.content}>
+      <Title style={styles.title}>Your party</Title>
+      {party.length === 0
+        ? <Text style={styles.muted}>No one has joined you yet. Win someone over who is worth keeping.</Text>
+        : party.map((member) => { const hint = storyHint(member); return (
+          <View key={member.characterId} style={styles.member} aria-label={`${member.name}, met at ${member.locationName}`}>
+            <Text style={styles.name}>{member.name}</Text>
+            <Text style={styles.muted}>Met at {member.locationName} · Conversations: {member.conversations ?? 0}</Text>
+            {hint && <Text style={styles.hint}>{hint}</Text>}
+            {member.conversationId && onTalk && <Button
+              label={`Talk to ${member.name}`} variant="primary"
+              disabled={isLoading || Boolean(ongoing && ongoing.encounterId !== member.conversationId)}
+              onPress={() => onTalk(member.conversationId)}
+            />}
+            {member.conversationId && ongoing && ongoing.encounterId !== member.conversationId
+              && <Text style={styles.muted}>Finish your conversation with {ongoing.character?.name ?? 'them'} first.</Text>}
+          </View>
+        ); })}
+      <Button label={returnLabel} onPress={onReturn} />
+    </ScrollView>
