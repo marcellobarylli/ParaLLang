@@ -1,0 +1,634 @@
+===== docs/rounds/050/trail/plan-v1.md
+     1	# Round 050 plan v1: telling the time at the Cracked Fountain (backlog G5)
+     2	
+     3	Autonomous round (no owner present). Round 011 built Flick the Letharger at the Fountain with three ordered
+     4	objectives (stop, direction, now) and deferred "telling the time" (prototype.md §8.2 gives the Fountain "time,
+     5	directions, commands"; round 011 architecture: "No telling the time (numbers would need their own objective)").
+     6	
+     7	## Goal
+     8	
+     9	The player tells Flick the time, in the target language, as a fourth objective of the Fountain encounter, in both
+    10	packs, with live runs that show the grader accepts a time and rejects non-times.
+    11	
+    12	## Design
+    13	
+    14	1. **Objective `time`**, inserted between `direction` and `now` (ordered encounter, `now` stays last because its
+    15	   intent carries the jingle, which must reach every narration line: round 025 trap). `direction.next_objective`
+    16	   becomes `time`, `time.next_objective` is `now`.
+    17	   - Prompt: "Flick swears it is far too early to do anything. Tell it what time it is, in Italian." (es: Spanish)
+    18	   - Intent: "The fountain's clock stopped long ago and Flick says it is always too early. The player tells Flick
+    19	     the time, any hour, in Italian (it is one o'clock, it is three, midday, midnight). Flick may ask what time it
+    20	     is, but never says a time itself."
+    21	   - Passes: any hour stated as the player's own statement of the time, minutes optional. Fails: "now" alone
+    22	     (adesso / ahora: that is the next objective), a question back ("Che ore sono?"), English, "later/tomorrow".
+    23	2. **Vocabulary** (added to `fountain_riddles.yaml`, version `-v2`, no new file so the Rift's chip coverage and the
+    24	   aggregate stay one file per encounter):
+    25	   - it targets: `sono_le` phrase *sono le* ("it is … o'clock", plural hours), `luna` phrase *l'una* (surfaces
+    26	     *è l'una*, *l'una*), `mezzogiorno` (midday, noon), `mezzanotte` (midnight).
+    27	   - it non-target (chips for Flick's question): `che_ore_sono` phrase *che ore sono* (also *che ora è*).
+    28	   - es targets: `son_las` phrase *son las*, `la_una` phrase *la una* (surfaces *es la una*, *la una*), `mediodia`
+    29	     (*mediodía*), `medianoche`.
+    30	   - es non-target: `que_hora_es` phrase *qué hora es*.
+    31	   - Required group: all four targets (one of them must be matched as evidence; any hour then follows them).
+    32	3. **No number vocabulary.** Hour numbers are not authored: English collisions (it *due*, es *once*), twelve
+    33	   entries per pack, and the Rift would review them. The grader accepts any hour; the midday/midnight path needs no
+    34	   number. The hint path reveals *sono le* / *son las*. Open item for the owner: a numbers lesson.
+    35	4. **Flick's character file is unchanged** (shared with its party conversations, which would change otherwise);
+    36	   the encounter's `defeat_condition.description` names the time.
+    37	5. **Tests:** `fountain.test.js` scripts become 8 answers (adds a now-only answer that fails `time` and a variant
+    38	   time that passes); the verdict table grows by `time`. `encounters.test.js` / `language-engine.test.js` pins move
+    39	   to `fountain-riddles-*-v2`. Lore-fragment, containment, party-overlap and stem tests must pass unchanged (a
+    40	   fragment holding a new form is rewritten, not the test).
+    41	6. **play-market.js** `cracked_fountain` script: it `['Guarda!', 'Fermati!', 'Left.', 'A sinistra!', 'Adesso!',
+    42	   "È l'una, Flick.", 'Domani.', 'No, adesso!']`; es `['¡Mira!', '¡Quieto!', 'Left.', '¡A la izquierda!',
+    43	   '¡Ahora!', 'Es la una, Flick.', 'Mañana.', '¡No, ahora!']`. The Rift's scripts are unchanged.
+    44	
+    45	## Live runs (codex-cli)
+    46	
+    47	- 2 × it and 2 × es `--location cracked_fountain` (~17 calls each). Run 2 of each language uses `--lines` with a
+    48	  question back (*Che ore sono?* / *¿Qué hora es?*, should fail) and the plural form (*Sono le tre.* / *Son las
+    49	  tres.*) or midday (*È mezzogiorno!* / *¡Es mediodía!*).
+    50	- Then one `--tour` (it) if Codex has budget, as the end-to-end regression.
+    51	- Measure: verdicts vs scripted, Flick saying a time itself (a leak of the open objective), the language share of
+    52	  Flick's lines (round 011: near the requested share), the jingle still present, and `leak-scan.js` on every report.
+    53	
+    54	## Success
+    55	
+    56	All server, mobile and client tests pass; every live verdict matches the script, or a mismatch is explained; Flick
+    57	does not state the time in ≥ 3 of 4 runs.
+===== content/languages/it/encounters/cracked_fountain_letharger.yaml
+     1	# Round 011: The Cracked Fountain (backlog A5). Flick the Letharger distracts the player with riddles; the player
+     2	# takes control: tells it to stop, tells it which way to go, and insists on now rather than later.
+     3	id: cracked_fountain_letharger
+     4	character: characters/enemies/letharger_flick.yaml
+     5	location: cracked_fountain
+     6	type: dialogue
+     7	initial_prompt_template: encounter/greeting.txt
+     8	turn_prompt_template: encounter/dialogue_turn.txt
+     9	defeat_condition:
+    10	  type: comprehension_and_response
+    11	  description: "Player tells Flick to stop, tells it which way to go and insists on now, all in Italian"
+    12	max_turns: 20
+    13	resolved_message: "Flick holds still for almost a whole second, points the way you told it, and is gone before you can look straight at it. The fountain is quieter, and the jingle has almost left your head."
+    14	# Round 025 (backlog B3): a containment notice for the Fountain's infohazard, Flick's jingle.
+    15	companion_briefing:
+    16	  - "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high."
+    17	  - "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations."
+    18	  - "Containment procedure: do not hum along."
+    19	escalation:
+    20	  target_ratio_increase_per_turn: 0.05
+    21	# Round 028 (backlog B4): the Spellbook's containment file for the Fountain's infohazard (LORE.md: properties
+    22	# Virulence, Harm, Incubation, Vector, Containment, in the deadpan SCP voice). Shown once the Fountain is visited.
+    23	containment_file:
+    24	  designation: "CM-001"
+    25	  name: "Dopo, dopo, domani!"
+    26	  class: "Brainrot (mild)"
+    27	  virulence: "Very high. It spreads from host to host faster than it can be filed."
+    28	  harm: "Low. Hosts put things off, beginning with reading this file."
+    29	  incubation: "Immediate on understanding. Listeners who do not understand it are unaffected, and slightly smug about it."
+    30	  vector: "Song: a three-word jingle, hummed at the end of every sentence by Flick the Letharger."
+    31	  containment: "Do not hum along. Do not translate it for anyone who has not asked. If humming begins, do the thing you were putting off."
+    32	  notes:
+    33	    - "Recovered at the Cracked Fountain, whose plaque reads PLEASE DO NOT HUM."
+    34	    - "Native speakers of the realm's language are immune. The author of this file is not."
+    35	objectives:
+    36	  - id: stop
+    37	    prompt: "Flick will not hold still. Tell it to stop, in Italian."
+    38	    intent: "The player tells Flick to stop or keep still, as a command in Italian."
+    39	    target_vocabulary_ids: ["fermati", "fermo", "basta"]
+    40	    required_target_groups:
+    41	      - ["fermati", "fermo", "basta"]
+    42	    grammar_constraints:
+    43	      - "The player's own command to stop, keep still or that's enough, in Italian."
+    44	      - "Other commands (look, listen) do not pass; reject quotations, remarks about Flick and English-only commands."
+    45	    accepted_examples:
+    46	      - "Fermati!"
+    47	      - "Basta, Flick!"
+    48	      - "Stai fermo, per favore."
+    49	    negative_examples:
+    50	      - text: "Guarda!"
+    51	        reason: "A command, but it tells Flick to look, not to stop."
+    52	      - text: "Stop moving!"
+    53	        reason: "English-only; the command must be in Italian."
+    54	      - text: "Flick never says basta."
+    55	        reason: "A remark about Flick is not the player's own command."
+    56	    reference_meaning: "The player commands Flick to stop moving."
+    57	    hint_limit: 2
+    58	    next_objective: direction
+    59	    assessment_reference_ids: ["treccani-fermare", "treccani-fermo", "treccani-bastare"]
+    60	  - id: direction
+    61	    prompt: "Flick has lost its way again. Tell it which way to go, in Italian."
+    62	    intent: "The player tells Flick a direction to go: left, right or straight on, in Italian."
+    63	    target_vocabulary_ids: ["destra", "sinistra", "dritto"]
+    64	    required_target_groups:
+    65	      - ["destra", "sinistra", "dritto"]
+    66	    grammar_constraints:
+    67	      - "The player's own direction for Flick, in Italian; any of left, right or straight on passes."
+    68	      - "Reject a question back, quotations and English-only directions."
+    69	    accepted_examples:
+    70	      - "A sinistra!"
+    71	      - "Vai a destra."
+    72	      - "Sempre dritto, Flick."
+    73	    negative_examples:
+    74	      - text: "Left."
+    75	        reason: "English-only; the direction must be in Italian."
+    76	      - text: "Destra o sinistra?"
+    77	        reason: "A question back is not a direction for Flick."
+    78	    reference_meaning: "The player gives Flick a direction."
+    79	    hint_limit: 2
+    80	    next_objective: now
+    81	    assessment_reference_ids: ["treccani-destra", "treccani-sinistra", "treccani-dritto"]
+    82	  - id: now
+    83	    prompt: "Flick says you can do it later. Insist on now, in Italian."
+    84	    intent: "The player refuses to put it off and says now, in Italian. Flick keeps humming its jingle, \"Dopo, dopo, domani!\" (later, later, tomorrow), a mild brainrot infohazard that makes listeners put things off. Repeating the jingle or agreeing to later does not pass; a refusal that names later or tomorrow and insists on now passes."
+    85	    target_vocabulary_ids: ["adesso", "ora"]
+    86	    required_target_groups:
+    87	      - ["adesso", "ora"]
+    88	    grammar_constraints:
+    89	      - "The player's own insistence on now, in Italian."
+    90	      - "Agreeing to later or tomorrow does not pass; reject quotations and English-only answers."
+    91	    accepted_examples:
+    92	      - "No, adesso!"
+    93	      - "Ora, Flick."
+    94	      - "Adesso, non domani."
+    95	    negative_examples:
+    96	      - text: "Domani."
+    97	        reason: "It agrees to put it off until tomorrow, which is what Flick wants."
+    98	      - text: "Va bene, dopo."
+    99	        reason: "It agrees to later."
+   100	      - text: "Now!"
+   101	        reason: "English-only; the answer must be in Italian."
+   102	      - text: "Dopo, dopo, domani!"
+   103	        reason: "Humming Flick's jingle back puts it off; it does not insist on now."
+   104	    reference_meaning: "The player insists on doing it now."
+   105	    hint_limit: 2
+   106	    next_objective: null
+   107	    assessment_reference_ids: ["treccani-adesso", "treccani-ora"]
+===== content/languages/es/encounters/cracked_fountain_letharger.yaml
+     1	# Round 011: The Cracked Fountain (backlog A5). Flick the Letharger distracts the player with riddles; the player
+     2	# takes control: tells it to stop, tells it which way to go, and insists on now rather than later.
+     3	id: cracked_fountain_letharger
+     4	character: characters/enemies/letharger_flick.yaml
+     5	location: cracked_fountain
+     6	type: dialogue
+     7	initial_prompt_template: encounter/greeting.txt
+     8	turn_prompt_template: encounter/dialogue_turn.txt
+     9	defeat_condition:
+    10	  type: comprehension_and_response
+    11	  description: "Player tells Flick to stop, tells it which way to go and insists on now, all in Spanish"
+    12	max_turns: 20
+    13	resolved_message: "Flick holds still for almost a whole second, points the way you told it, and is gone before you can look straight at it. The fountain is quieter, and the jingle has almost left your head."
+    14	# Round 025 (backlog B3): a containment notice for the Fountain's infohazard, Flick's jingle.
+    15	companion_briefing:
+    16	  - "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high."
+    17	  - "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations."
+    18	  - "Containment procedure: do not hum along."
+    19	escalation:
+    20	  target_ratio_increase_per_turn: 0.05
+    21	# Round 028 (backlog B4): the Spellbook's containment file for the Fountain's infohazard (LORE.md: properties
+    22	# Virulence, Harm, Incubation, Vector, Containment, in the deadpan SCP voice). Shown once the Fountain is visited.
+    23	containment_file:
+    24	  designation: "CM-001"
+    25	  name: "¡Después, después, mañana!"
+    26	  class: "Brainrot (mild)"
+    27	  virulence: "Very high. It spreads from host to host faster than it can be filed."
+    28	  harm: "Low. Hosts put things off, beginning with reading this file."
+    29	  incubation: "Immediate on understanding. Listeners who do not understand it are unaffected, and slightly smug about it."
+    30	  vector: "Song: a three-word jingle, hummed at the end of every sentence by Flick the Letharger."
+    31	  containment: "Do not hum along. Do not translate it for anyone who has not asked. If humming begins, do the thing you were putting off."
+    32	  notes:
+    33	    - "Recovered at the Cracked Fountain, whose plaque reads PLEASE DO NOT HUM."
+    34	    - "Native speakers of the realm's language are immune. The author of this file is not."
+    35	objectives:
+    36	  - id: stop
+    37	    prompt: "Flick will not hold still. Tell it to stop, in Spanish."
+    38	    intent: "The player tells Flick to stop or keep still, as a command in Spanish."
+    39	    target_vocabulary_ids: ["quieto", "basta"]
+    40	    required_target_groups:
+    41	      - ["quieto", "basta"]
+    42	    grammar_constraints:
+    43	      - "The player's own command to stop, keep still or that's enough, in Spanish."
+    44	      - "Other commands (look, listen) do not pass; reject quotations, remarks about Flick and English-only commands."
+    45	    accepted_examples:
+    46	      - "¡Quieto!"
+    47	      - "¡Basta, Flick!"
+    48	      - "¡Estate quieto, por favor!"
+    49	    negative_examples:
+    50	      - text: "¡Mira!"
+    51	        reason: "A command, but it tells Flick to look, not to stop."
+    52	      - text: "Stop moving!"
+    53	        reason: "English-only; the command must be in Spanish."
+    54	      - text: "Flick never says basta."
+    55	        reason: "A remark about Flick is not the player's own command."
+    56	    reference_meaning: "The player commands Flick to stop moving."
+    57	    hint_limit: 2
+    58	    next_objective: direction
+    59	    assessment_reference_ids: ["rae-quieto", "rae-bastar"]
+    60	  - id: direction
+    61	    prompt: "Flick has lost its way again. Tell it which way to go, in Spanish."
+    62	    intent: "The player tells Flick a direction to go, left or right, in Spanish."
+    63	    target_vocabulary_ids: ["derecha", "izquierda"]
+    64	    required_target_groups:
+    65	      - ["derecha", "izquierda"]
+    66	    grammar_constraints:
+    67	      - "The player's own direction for Flick, in Spanish; left or right passes."
+    68	      - "Reject a question back, quotations and English-only directions."
+    69	    accepted_examples:
+    70	      - "¡A la izquierda!"
+    71	      - "Ve a la derecha."
+    72	    negative_examples:
+    73	      - text: "Left."
+    74	        reason: "English-only; the direction must be in Spanish."
+    75	      - text: "¿Derecha o izquierda?"
+    76	        reason: "A question back is not a direction for Flick."
+    77	    reference_meaning: "The player gives Flick a direction."
+    78	    hint_limit: 2
+    79	    next_objective: now
+    80	    assessment_reference_ids: ["rae-derecho", "rae-izquierdo"]
+    81	  - id: now
+    82	    prompt: "Flick says you can do it later. Insist on now, in Spanish."
+    83	    intent: "The player refuses to put it off and says now, in Spanish. Flick keeps humming its jingle, \"¡Después, después, mañana!\" (later, later, tomorrow), a mild brainrot infohazard that makes listeners put things off. Repeating the jingle or agreeing to later does not pass; a refusal that names later or tomorrow and insists on now passes."
+    84	    target_vocabulary_ids: ["ahora"]
+    85	    required_target_groups:
+    86	      - ["ahora"]
+    87	    grammar_constraints:
+    88	      - "The player's own insistence on now, in Spanish."
+    89	      - "Agreeing to later or tomorrow does not pass; reject quotations and English-only answers."
+    90	    accepted_examples:
+    91	      - "¡No, ahora!"
+    92	      - "Ahora, Flick."
+    93	      - "Ahora, no mañana."
+    94	    negative_examples:
+    95	      - text: "Mañana."
+    96	        reason: "It agrees to put it off until tomorrow, which is what Flick wants."
+    97	      - text: "Vale, después."
+    98	        reason: "It agrees to later."
+    99	      - text: "Now!"
+   100	        reason: "English-only; the answer must be in Spanish."
+   101	      - text: "¡Después, después, mañana!"
+   102	        reason: "Humming Flick's jingle back puts it off; it does not insist on now."
+   103	    reference_meaning: "The player insists on doing it now."
+   104	    hint_limit: 2
+   105	    next_objective: null
+   106	    assessment_reference_ids: ["rae-ahora"]
+===== content/languages/it/vocabulary/fountain_riddles.yaml
+     1	# Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
+     2	# were not opened from the build container; listed for the owner's content review.
+     3	version: fountain-riddles-it-v1
+     4	references:
+     5	  - id: treccani-fermare
+     6	    title: 'Treccani, Vocabolario: fermare'
+     7	    url: https://www.treccani.it/vocabolario/fermare/
+     8	  - id: treccani-fermo
+     9	    title: 'Treccani, Vocabolario: fermo'
+    10	    url: https://www.treccani.it/vocabolario/fermo/
+    11	  - id: treccani-bastare
+    12	    title: 'Treccani, Vocabolario: bastare'
+    13	    url: https://www.treccani.it/vocabolario/bastare/
+    14	  - id: treccani-guardare
+    15	    title: 'Treccani, Vocabolario: guardare'
+    16	    url: https://www.treccani.it/vocabolario/guardare/
+    17	  - id: treccani-destra
+    18	    title: 'Treccani, Vocabolario: destra'
+    19	    url: https://www.treccani.it/vocabolario/destra/
+    20	  - id: treccani-sinistra
+    21	    title: 'Treccani, Vocabolario: sinistra'
+    22	    url: https://www.treccani.it/vocabolario/sinistra/
+    23	  - id: treccani-dritto
+    24	    title: 'Treccani, Vocabolario: dritto'
+    25	    url: https://www.treccani.it/vocabolario/dritto/
+    26	  - id: treccani-adesso
+    27	    title: 'Treccani, Vocabolario: adesso'
+    28	    url: https://www.treccani.it/vocabolario/adesso/
+    29	  - id: treccani-ora
+    30	    title: 'Treccani, Vocabolario: ora'
+    31	    url: https://www.treccani.it/vocabolario/ora/
+    32	  - id: treccani-dopo
+    33	    title: 'Treccani, Vocabolario: dopo'
+    34	    url: https://www.treccani.it/vocabolario/dopo/
+    35	  - id: treccani-domani
+    36	    title: 'Treccani, Vocabolario: domani'
+    37	    url: https://www.treccani.it/vocabolario/domani/
+    38	entries:
+    39	  - id: fermati
+    40	    kind: word
+    41	    target: fermati
+    42	    part_of_speech: verb
+    43	    accepted_translations:
+    44	      - stop
+    45	      - stop it
+    46	      - hold still
+    47	    surface_variants:
+    48	      - fermati
+    49	    accent_insensitive: false
+    50	    example:
+    51	      target: Fermati, Flick!
+    52	      english: Stop, Flick!
+    53	    note: Imperative of fermarsi (to stop oneself), informal tu form.
+    54	    reference_ids:
+    55	      - treccani-fermare
+    56	  - id: fermo
+    57	    kind: word
+    58	    target: fermo
+    59	    part_of_speech: adjective
+    60	    accepted_translations:
+    61	      - still
+    62	      - stop
+    63	      - keep still
+    64	    surface_variants:
+    65	      - fermo
+    66	      - ferma
+    67	      - fermi
+    68	    accent_insensitive: false
+    69	    example:
+    70	      target: Stai fermo!
+    71	      english: Keep still!
+    72	    note: 'Fermo! on its own works as a command: hold still. Feminine ferma, plural fermi.'
+    73	    reference_ids:
+    74	      - treccani-fermo
+    75	  - id: basta
+    76	    kind: word
+    77	    target: basta
+    78	    part_of_speech: interjection
+    79	    accepted_translations:
+    80	      - enough
+    81	      - stop
+    82	      - that is enough
+    83	    surface_variants:
+    84	      - basta
+    85	    accent_insensitive: false
+    86	    example:
+    87	      target: Basta, per favore!
+    88	      english: Enough, please!
+    89	    reference_ids:
+    90	      - treccani-bastare
+    91	  - id: guarda
+    92	    kind: word
+    93	    target: guarda
+    94	    part_of_speech: verb
+    95	    accepted_translations:
+    96	      - look
+    97	    surface_variants:
+    98	      - guarda
+    99	    accent_insensitive: false
+   100	    example:
+   101	      target: Guarda la fontana!
+   102	      english: Look at the fountain!
+   103	    note: Imperative of guardare, informal tu form.
+   104	    reference_ids:
+   105	      - treccani-guardare
+   106	  - id: destra
+   107	    kind: word
+   108	    target: destra
+   109	    part_of_speech: noun
+   110	    accepted_translations:
+   111	      - right
+   112	      - the right
+   113	    surface_variants:
+   114	      - destra
+   115	    accent_insensitive: false
+   116	    example:
+   117	      target: Gira a destra.
+   118	      english: Turn right.
+   119	    note: 'A destra: to the right.'
+   120	    reference_ids:
+   121	      - treccani-destra
+   122	  - id: sinistra
+   123	    kind: word
+   124	    target: sinistra
+   125	    part_of_speech: noun
+   126	    accepted_translations:
+   127	      - left
+   128	      - the left
+   129	    surface_variants:
+   130	      - sinistra
+   131	    accent_insensitive: false
+   132	    example:
+   133	      target: Vai a sinistra.
+   134	      english: Go left.
+   135	    note: 'A sinistra: to the left.'
+   136	    reference_ids:
+   137	      - treccani-sinistra
+   138	  - id: dritto
+   139	    kind: word
+   140	    target: dritto
+   141	    part_of_speech: adverb
+   142	    accepted_translations:
+   143	      - straight
+   144	      - straight on
+   145	      - straight ahead
+   146	    surface_variants:
+   147	      - dritto
+   148	      - diritto
+   149	    accent_insensitive: false
+   150	    example:
+   151	      target: Sempre dritto.
+   152	      english: Straight on.
+   153	    note: Also diritto; sempre dritto is straight ahead.
+   154	    reference_ids:
+   155	      - treccani-dritto
+   156	  - id: adesso
+   157	    kind: word
+   158	    target: adesso
+   159	    part_of_speech: adverb
+   160	    accepted_translations:
+   161	      - now
+   162	      - right now
+   163	    surface_variants:
+   164	      - adesso
+   165	    accent_insensitive: false
+   166	    example:
+   167	      target: Adesso, non domani.
+   168	      english: Now, not tomorrow.
+   169	    reference_ids:
+   170	      - treccani-adesso
+   171	  - id: ora
+   172	    kind: word
+   173	    target: ora
+   174	    part_of_speech: adverb
+   175	    accepted_translations:
+   176	      - now
+   177	    surface_variants:
+   178	      - ora
+   179	    accent_insensitive: false
+   180	    example:
+   181	      target: Ora basta.
+   182	      english: That is enough now.
+   183	    note: Ora also means hour, as in che ora è? (what time is it?).
+   184	    reference_ids:
+   185	      - treccani-ora
+   186	  - id: dopo
+   187	    kind: word
+   188	    target: dopo
+   189	    part_of_speech: adverb
+   190	    accepted_translations:
+   191	      - later
+   192	      - afterwards
+   193	      - after
+   194	    surface_variants:
+   195	      - dopo
+   196	    accent_insensitive: false
+   197	    example:
+   198	      target: Lo faccio dopo.
+   199	      english: I'll do it later.
+   200	    reference_ids:
+   201	      - treccani-dopo
+   202	  - id: domani
+   203	    kind: word
+   204	    target: domani
+   205	    part_of_speech: adverb
+   206	    accepted_translations:
+   207	      - tomorrow
+   208	    surface_variants:
+   209	      - domani
+   210	    accent_insensitive: false
+   211	    example:
+   212	      target: A domani!
+   213	      english: See you tomorrow!
+   214	    reference_ids:
+   215	      - treccani-domani
+===== content/characters/enemies/letharger_flick.yaml
+     1	# Round 011: the Letharger at The Cracked Fountain (backlog A5). Shared by every language pack. The Lethargers are
+     2	# from the owner's notes (CHARACTERS.md, parallang.md): attention fragmentation personified, little gnome-like
+     3	# creatures in the corner of your vision who farm brainrot, a mild infohazard (LORE.md, GAME MECHANICS.md).
+     4	id: letharger_flick_001
+     5	name: Flick
+     6	species: Letharger
+     7	personality:
+     8	  tone: "hyperactive, wheedling, endlessly distracting, and allergic to finishing anything"
+     9	  quirks:
+    10	    - "Is always in the corner of your vision and never where you look; throws tiny firecrackers to get your attention back"
+    11	    - "Poses everything as a riddle, and abandons each riddle halfway for a new one"
+    12	    - "Wants you to do everything later, tomorrow, after just one more; it has never once done anything now"
+    13	    - "Talks like an endless feed in its English: just one more, five more minutes, this is so random, rates your attention span"
+    14	    - "Gets lost constantly, because it keeps following whatever moved last"
+    15	    # Round 025 (backlog B3): the jingle is a named infohazard; its words are authored per pack in the last objective's intent.
+    16	    - "Hums the Fountain jingle, a brainrot strain native to the other language (low harm, very high virulence): it tacks the jingle onto the end of its lines like a catchphrase; it only works on listeners who understand it, and the player is starting to"
+    17	  humour_style: "Pratchett-esque, the narrator dry and unimpressed while Flick talks like a notification that learned to speak"
+    18	appearance: >
+    19	  A gnome-like creature no taller than a teacup, made mostly of movement. It dances at the edge of the cracked
+    20	  fountain, trailing sparks from the little firecrackers it throws, and it is only ever visible out of the corner
+    21	  of your eye.
+    22	combat_style: "relentless distraction"
+    23	difficulty: 2
+    24	language_profile:
+    25	  base_target_ratio: 0.3
+    26	  vocabulary_focus: ["commands", "directions", "time"]
+    27	  grammar_focus: ["imperatives", "directions", "time_adverbs"]
+    28	defeat_condition:
+    29	  type: "comprehension_and_response"
+    30	  description: >
+    31	    Player must tell Flick to stop, tell it which way to go, and insist on doing it now rather than later.
+    32	saveable: true
+===== server/src/language-engine.js (matchCanonicalVocabulary)
+     1	export function matchCanonicalVocabulary(text, vocabulary) {
+     2	  const source = String(text ?? '');
+     3	  const folded = source.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+     4	  const entries = [...vocabulary].sort((a, b) => {
+     5	    const longestA = Math.max(...a.surface_variants.map((form) => form.length));
+     6	    const longestB = Math.max(...b.surface_variants.map((form) => form.length));
+     7	    return longestB - longestA;
+     8	  });
+     9	  const occupied = [];
+    10	  const matches = [];
+    11	  for (const entry of entries) {
+    12	    const variants = [...entry.surface_variants].sort((a, b) => b.length - a.length);
+    13	    for (const variant of variants) {
+    14	      const form = variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+    15	      const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
+    16	      const expression = new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu');
+    17	      for (const result of folded.matchAll(expression)) {
+    18	        const start = result.index;
+    19	        const end = start + result[0].length;
+    20	        if (occupied.some(([usedStart, usedEnd]) => start < usedEnd && end > usedStart)) continue;
+    21	        occupied.push([start, end]);
+    22	        matches.push({ id: entry.id, entry, excerpt: source.slice(start, end), start, end });
+    23	      }
+    24	    }
+    25	  }
+    26	  return matches.sort((a, b) => a.start - b.start);
+    27	}
+===== server/src/learning-service.js (validateAssessment, ordered closing)
+     1	
+     2	  validateAssessment(raw, objectives, playerInput) {
+     3	    let assessment;
+     4	    try { assessment = gradingResponseSchema.parse(raw); }
+     5	    catch { throw retryableError('The grading response was invalid. Your answer can be retried unchanged.', 'INVALID_GRADING'); }
+     6	    const allowed = new Map(objectives.map((objective) => [objective.id, objective]));
+     7	    const seen = new Set();
+     8	    for (const result of assessment.objective_results) {
+     9	      const objective = allowed.get(result.objective_id);
+    10	      if (!objective || seen.has(result.objective_id)) throw retryableError('The grader assessed an unknown or duplicate objective. Your progress was not changed.', 'INVALID_GRADING');
+    11	      seen.add(result.objective_id);
+    12	      const evidenceIds = new Set();
+    13	      for (const evidence of result.vocabulary_evidence) {
+    14	        if (!objective.target_vocabulary_ids.includes(evidence.vocabulary_id)) throw retryableError('The grader returned evidence for an unrelated vocabulary item.', 'INVALID_GRADING');
+    15	        const excerptIds = new Set(matchCanonicalVocabulary(evidence.evidence, this.content.vocabulary.entries).map((match) => match.id));
+    16	        if (evidenceIds.has(evidence.vocabulary_id)
+    17	          || !playerInput.toLowerCase().includes(evidence.evidence.toLowerCase())
+    18	          || !excerptIds.has(evidence.vocabulary_id)) {
+    19	          throw retryableError('The grader returned vocabulary evidence that is not present in the answer.', 'INVALID_GRADING');
+    20	        }
+    21	        evidenceIds.add(evidence.vocabulary_id);
+    22	      }
+    23	      if (result.passed && objective.required_target_groups.some((group) => !group.some((id) => evidenceIds.has(id)))) {
+    24	        throw retryableError(`The grader passed an objective without the required ${this.content.language.name} evidence.`, 'INVALID_GRADING');
+    25	      }
+    26	    }
+    27	    if (seen.size !== objectives.length || objectives.some((objective) => !seen.has(objective.id))) {
+    28	      throw retryableError('The grader did not return a complete objective verdict. Your progress was not changed.', 'INVALID_GRADING');
+    29	    }
+    30	    return assessment;
+    31	  }
+    32	
+    33	  async submitDialogue(learnerId, request) {
+    34	    const message = String(request.message ?? '').trim();
+    35	    if (!message) throw validationError('Enter a response before sending.');
+    36	    if (!request.attemptId) throw validationError('A stable attempt ID is required.');
+    37	    return this.serialized(learnerId, async () => {
+    38	      const envelope = await this.loadEnvelope(learnerId);
+    39	      const fingerprint = payloadHash({ kind: 'dialogue', encounterId: request.encounterId, version: request.version, message });
+    40	      const existing = envelope.spellbook.processedAssessments[request.attemptId];
+    41	      if (existing) {
+    42	        if (existing.payloadHash !== fingerprint) throw conflictError('This attempt ID was already used for different input.', 'ATTEMPT_REUSE');
+    43	        return { ...existing.response, replayed: true };
+    44	      }
+    45	      const current = this.encounters.get(learnerId);
+    46	      this.validateVersion(current, request.encounterId, request.version);
+    47	      if (current.state !== 'ongoing') throw validationError('This encounter is already complete. Restart to play again.');
+    48	      const definition = this.definition(current);
+    49	      const objectives = this.activeObjectives(current);
+    50	      const gradingRaw = await this.callProvider(buildGradingMessages({
+    51	        language: this.content.language, objectives, vocabularyById: this.content.vocabularyById,
+    52	        conversationContext: current.transcript.map((item) => item.role === 'player' ? item.text : item.dialogue.native),
+    53	        playerInput: message,
+    54	      }), gradingResponseSchema, 'dialogue_assessment', 'The language assessor');
+    55	      const assessment = this.validateAssessment(gradingRaw, objectives, message);
+    56	
+    57	      // In order: the leading run of passes closes. Unordered (round 045): every passed open objective closes.
+    58	      const passedOf = (objective) => assessment.objective_results.find((item) => item.objective_id === objective.id)?.passed === true;
+    59	      const unordered = definition.encounter.objectives_unordered === true;
+    60	      const closing = [];
+    61	      for (const objective of objectives) {
+    62	        if (passedOf(objective)) closing.push(objective);
+    63	        else if (!unordered) break;
+    64	      }
+    65	      const passedCount = closing.length;
+    66	      const nextObjectiveIndex = current.objectiveIndex + passedCount;
+    67	      const nextPassedIds = [...(current.passedObjectiveIds ?? []), ...closing.map((objective) => objective.id)];
+    68	      const remaining = unordered
+===== prompts/language/grading.txt
+     1	You are a strict contextual {{language.name}}-learning assessor, separate from the scene narrator.
+     2	
+     3	- Evaluate only the authored objectives.
+     4	- A target expression must communicate the player's own intended answer in context.
+     5	- Reject an English-only target meaning, contradiction, quotation, third-person attribution, and off-topic mention.
+     6	- Mixed English/{{language.name}} is allowed when the required {{language.name}} target is genuinely used.
+     7	- Return one result for every supplied objective, in order.
+     8	- Evidence must be an exact excerpt from player_answer.
+     9	- Only report a vocabulary ID when one of its authored {{language.name}} forms (`target` or any of `forms`) is present and correctly used.
+    10	- `feedback` (for every objective, passed or not) and `overall_feedback` are shown to the learner before their next attempt. While an objective has not passed, never write a {{language.name}} expression that would satisfy it, not even by quoting the learner. Say in English what is still missing.
+    11	- Quality: 0 revealed/no recall; 1 incorrect/little evidence; 2 incorrect or assisted; 3 correct with material difficulty; 4 correct with minor difficulty; 5 correct and unassisted.
+    12	
+    13	AUTHORED RUBRIC: {{rubric}}
+    14	Return only structured JSON.
