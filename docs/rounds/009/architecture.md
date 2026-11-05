@@ -127,3 +127,12 @@ Net change from plan v1: +1 matching scope, +1 scroll rule; −1 load-time check
 5. Live, codex-cli: `play-market.js --location market_entrance` three times in Italian, once in Spanish, and one
    Gerald run in Italian (regression). Findings report pass/fail per objective, the language share per line, whether
    Portia dictates an answer, and representative outputs; full outputs stay in `results/`.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no amendments: the tutorial content in both packs, the `companion_briefing` field and its
+card, narration matching scoped per encounter, the first-screen scroll rule and `play-market.js --location`. Tests:
+server 82/82, mobile 20/20, web client 12/12 and build, iOS export. Live codex-cli: the tutorial resolved 4/4 (three
+Italian, one Spanish) with every objective passed on its first attempt, Gerald's regression run resolved, and no
+line or feedback string gave the answer away; Portia's lines carried less target language than requested, and she
+models "come ti chiami" in 3/4 runs. See [findings](findings.md).

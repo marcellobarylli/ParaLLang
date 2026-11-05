@@ -17,9 +17,10 @@ The entry point for agents: the current state, how the project is logged, and th
 - **App first.** Development is iPhone-first: the Expo / React Native app in `mobile/` plays the same loop and is
   tested in the iOS Simulator against the local server (`npm run dev:server`, `npm run dev:ios`). The web client in
   `client/` is frozen: it is kept working, but new features go to the app ([round 004](docs/rounds/004/architecture.md)).
-- **World.** The app opens on the Crumbling Market map (six locations, fog of war, saved position); only The
-  Coffee Cart has an encounter so far ([round 005](docs/rounds/005/architecture.md)). New encounters are content
-  only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
+- **World.** The app opens on the Crumbling Market map (six locations, fog of war, saved position;
+  [round 005](docs/rounds/005/architecture.md)). Two locations have encounters: the Market Entrance tutorial with
+  Portia the Archway and a companion briefing ([round 009](docs/rounds/009/architecture.md)), and Gerald at The
+  Coffee Cart. New encounters are content only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
 - **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and neither NPCs nor the
   grader's feedback give the answer away ([round 007](docs/rounds/007/architecture.md),
@@ -27,6 +28,16 @@ The entry point for agents: the current state, how the project is logged, and th
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 009, the Market Entrance tutorial (autonomous)
+
+Where every player starts, Portia the Archway now asks for a greeting, the player's name and her own name back
+(greetings, pronouns; Italian and Spanish), and a static "Your companion" card explains word and sentence help, the
+hint allowance and the Spellbook. Narration word chips are now matched against the played encounter's vocabulary
+only. Codex critique 1: 9 findings, all accepted in full or in part, autonomously. Tests: server 82/82, mobile 20/20,
+web client 12/12 and build. Live codex-cli: tutorial 4/4 resolved (3 Italian, 1 Spanish), every objective passed
+first time, Gerald unchanged, no answers given away; Portia's lines carry less target language than requested. Not
+checked in the iOS Simulator. See [findings](docs/rounds/009/findings.md).
 
 ## Addendum 2026-11-05: round 008, grader feedback (autonomous)
 
@@ -110,6 +121,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 009 | 11-05 | Market Entrance tutorial: Portia the Archway (greetings, pronouns), companion briefing, per-encounter narration matching (autonomous) | [009](docs/rounds/009/architecture.md) | [findings](docs/rounds/009/findings.md) | `a59f548` (pre-run record) to round 009 close |
 | 008 | 11-05 | Grader feedback stops giving the answer away (autonomous) | [008](docs/rounds/008/architecture.md) | [findings](docs/rounds/008/findings.md) | `e525608` (pre-run record) to round 008 close |
 | 007 | 11-05 | Tone layer: style guide in the narration prompt (Pratchett × meme culture), no dictated answers (autonomous) | [007](docs/rounds/007/architecture.md) | [findings](docs/rounds/007/findings.md) | `d9b0861` (pre-run record) to round 007 close |
 | 006 | 11-05 | Multi-encounter engine: encounters per location from pack content, location-checked start, names from content (autonomous) | [006](docs/rounds/006/architecture.md) | [findings](docs/rounds/006/findings.md) | `e01baf1` (pre-run record) to round 006 close |

@@ -1,0 +1,273 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "location": "market_entrance",
+  "encounterId": "market_entrance_tutorial",
+  "companionBriefing": [
+    "Portia only lets in people who greet her properly. Answer in Italian; mixing in English is fine while you learn.",
+    "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance.",
+    "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+  ],
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 7,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "start Portia",
+      "ok": true
+    },
+    {
+      "name": "say \"Ciao!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "greet",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "ciao",
+              "evidence": "Ciao!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "introduce",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Good greeting! Now introduce yourself and ask Portia her name in Italian."
+    },
+    {
+      "name": "say \"Mi chiamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "introduce",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "mi_chiamo",
+              "evidence": "Mi chiamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your introduction is correct. Now ask Portia her name in Italian."
+    },
+    {
+      "name": "say \"E tu?\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "ask_back",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "tu",
+              "evidence": "E tu?",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! Your short question naturally asks Portia her name in return."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": true,
+        "characterName": "Portia"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.2,
+      "native": "Buongiorno! I am Portia. A greeting and your name before entry, please. Manners are load-bearing.",
+      "translation": "Good morning! I am Portia. A greeting and your name before entry, please. Manners are load-bearing.",
+      "narrative": "A visitors’ book slides out of the archway’s keystone. Even the entrance has paperwork.",
+      "share": {
+        "tokens": 16,
+        "notInTranslation": 0.06,
+        "canonical": 0.06
+      },
+      "durationMs": 6659
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.25,
+      "native": "Ciao! Greeting accepted. Bene. Your name is still required for the visitors’ book. We cannot file you under ‘pleasant noise.’",
+      "translation": "Hello! Greeting accepted. Good. Your name is still required for the visitors’ book. We cannot file you under ‘pleasant noise.’",
+      "narrative": "A visitors’ book slides from Portia’s keystone. The name column remains pointedly empty.",
+      "share": {
+        "tokens": 20,
+        "notInTranslation": 0.1,
+        "canonical": 0.05
+      },
+      "durationMs": 7428
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.30000000000000004,
+      "native": "Bene, Sam. Piacere! Your introduction is approved. Tutto in ordine. And the archway processing your paperwork? She also has a name. Just noting that. Casually.",
+      "translation": "Good, Sam. Nice to meet you! Your introduction is approved. Everything is in order. And the archway processing your paperwork? She also has a name. Just noting that. Casually.",
+      "narrative": "A visitors’ book slides from Portia’s keystone. She records Sam with the solemnity usually reserved for disputed borders.",
+      "share": {
+        "tokens": 25,
+        "notInTranslation": 0.16,
+        "canonical": 0
+      },
+      "durationMs": 13155
+    },
+    {
+      "turn": 3,
+      "requestedRatio": 0.35000000000000003,
+      "native": "Io mi chiamo Portia. Piacere, Sam! You asked my name. How very considerate. Your paperwork is complete. Benvenuto al mercato! Please proceed before I become visibly delighted.",
+      "translation": "My name is Portia. Nice to meet you, Sam! You asked my name. How very considerate. Your paperwork is complete. Welcome to the market! Please proceed before I become visibly delighted.",
+      "narrative": "The visitors’ book snaps shut. A small blush travels through the masonry, where it will later be classified as weathering.",
+      "share": {
+        "tokens": 27,
+        "notInTranslation": 0.26,
+        "canonical": 0.11
+      },
+      "durationMs": 7529
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 6123,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "greet",
+            "passed": true,
+            "feedback": "You greeted Portia correctly.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "ciao",
+                "evidence": "Ciao!",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "introduce",
+            "passed": false,
+            "feedback": "Introduce yourself using an Italian first-person expression and your name.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "ask_back",
+            "passed": false,
+            "feedback": "Ask Portia her name in Italian, or ask her an informal 'and you?' question.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Good greeting! Now introduce yourself and ask Portia her name in Italian."
+      }
+    },
+    {
+      "durationMs": 5104,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "introduce",
+            "passed": true,
+            "feedback": "You correctly introduced yourself by name.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "mi_chiamo",
+                "evidence": "Mi chiamo",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "ask_back",
+            "passed": false,
+            "feedback": "Ask Portia her name in return using Italian.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your introduction is correct. Now ask Portia her name in Italian."
+      }
+    },
+    {
+      "durationMs": 7690,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "ask_back",
+            "passed": true,
+            "feedback": "You correctly ask Portia her name in return.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "tu",
+                "evidence": "E tu?",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Correct! Your short question naturally asks Portia her name in return."
+      }
+    }
+  ]
+}
