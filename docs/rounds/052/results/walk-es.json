@@ -1,0 +1,1003 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "party": true,
+  "conversationId": "flick_slow_walk",
+  "tierCount": 0,
+  "recruited": true,
+  "resolved": true,
+  "completedOnMap": true,
+  "conversationOffMap": true,
+  "conversations": 1,
+  "generationCalls": 26,
+  "home": {
+    "location": "cracked_fountain",
+    "sceneLocation": "cracked_fountain",
+    "encounterId": "cracked_fountain_letharger",
+    "companionBriefing": [
+      "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high.",
+      "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations.",
+      "Containment procedure: do not hum along."
+    ],
+    "resolved": true,
+    "completedOnMap": true,
+    "generationCalls": 17,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "¡Hola! ¿Qué tal? What's small and—wait, a leaf. Five more minutes. Your attention span? Incredible. ¡Después, después, mañana!",
+        "translation": "Hello! How are you? What's small and—wait, a leaf. Five more minutes. Your attention span? Incredible. Later, later, tomorrow!",
+        "narrative": "The Cracked Fountain drips with municipal reluctance. Flick appears at the edge of your vision; looking directly merely changes which edge.",
+        "share": {
+          "tokens": 19,
+          "notInTranslation": 0.32,
+          "folded": 0.32,
+          "translationShort": false,
+          "canonical": 0.16
+        },
+        "durationMs": 8777
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "¡Sí, miro! Looking isn't stopping, though. ¿Puedes detenerme? What's always moving and—wait, dust. Your attention: magnificent. Mine: elsewhere. ¡Después, después, mañana!",
+        "translation": "Yes, I'm looking! Looking isn't stopping, though. Can you stop me? What's always moving and—wait, dust. Your attention: magnificent. Mine: elsewhere. Later, later, tomorrow!",
+        "narrative": "Flick looks. Unfortunately, it does so while orbiting your elbow. A tiny firecracker files a complaint on its behalf.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.32,
+          "folded": 0.32,
+          "translationShort": false,
+          "canonical": 0.14
+        },
+        "durationMs": 11747
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "¡Vale, me quedo aquí! Stopped. Incredible. What's a journey without—oh, dust. ¿Por dónde voy? Pick a direction; walking can wait. ¡Después, después, mañana!",
+        "translation": "Okay, I'll stay here! Stopped. Incredible. What's a journey without—oh, dust. Which way do I go? Pick a direction; walking can wait. Later, later, tomorrow!",
+        "narrative": "Flick stops at the edge of your vision. A tiny firecracker continues without it, having received no instructions.",
+        "share": {
+          "tokens": 24,
+          "notInTranslation": 0.42,
+          "folded": 0.42,
+          "translationShort": false,
+          "canonical": 0.13
+        },
+        "durationMs": 6963
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.45,
+        "native": "¡Eso es inglés! ¿Por dónde voy? En español, por favor. A direction, not a riddle—wait, riddles can wait. ¡Después, después, mañana!",
+        "translation": "That's English! Which way do I go? In Spanish, please. A direction, not a riddle—wait, riddles can wait. Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops beside your shoe. Flick remains just outside your gaze, awaiting a direction with the patience of an unattended notification.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.59,
+          "folded": 0.59,
+          "translationShort": false,
+          "canonical": 0.14
+        },
+        "durationMs": 5636
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.5,
+        "native": "¡A la izquierda, sí! Perfect. ¿Qué hora es? What's early and—wait, don't finish that. Tenemos mucho tiempo. ¡Después, después, mañana!",
+        "translation": "To the left, yes! Perfect. What time is it? What's early and—wait, don't finish that. We have lots of time. Later, later, tomorrow!",
+        "narrative": "Flick darts left, just outside your gaze. A tiny firecracker announces its arrival at the fountain, whose clock has retired without informing anyone.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.62,
+          "folded": 0.62,
+          "translationShort": false,
+          "canonical": 0.33
+        },
+        "durationMs": 5536
+      },
+      {
+        "turn": 5,
+        "requestedRatio": 0.55,
+        "native": "¡Pero eso no me dice la hora! ¿Qué hora es? What's round and—wait, a spark. Just one more distraction. ¡Después, después, mañana!",
+        "translation": "But that doesn't tell me the time! What time is it? What's round and—wait, a spark. Just one more distraction. Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops beside the fountain. Flick remains firmly in the corner of your vision, where responsibility cannot establish eye contact.",
+        "share": {
+          "tokens": 23,
+          "notInTranslation": 0.52,
+          "folded": 0.52,
+          "translationShort": false,
+          "canonical": 0.26
+        },
+        "durationMs": 9665
+      },
+      {
+        "turn": 6,
+        "requestedRatio": 0.6000000000000001,
+        "native": "¡La una, sí! Tienes razón. Pero tenemos tiempo. ¿Por qué tanta prisa? Just one more—what has hands and—never mind. Podemos empezar mañana. ¡Después, después, mañana!",
+        "translation": "One o’clock, yes! You’re right. But we have time. Why such a hurry? Just one more—what has hands and—never mind. We can start tomorrow. Later, later, tomorrow!",
+        "narrative": "Flick sets off a tiny firecracker at the edge of your vision. It appears to be celebrating the postponement of something.",
+        "share": {
+          "tokens": 27,
+          "notInTranslation": 0.67,
+          "folded": 0.67,
+          "translationShort": false,
+          "canonical": 0.22
+        },
+        "durationMs": 10947
+      },
+      {
+        "turn": 7,
+        "requestedRatio": 0.65,
+        "native": "¡Mañana, sí! Eso es esperar, no empezar. ¿Cuándo quieres empezar de verdad? What's the rush—wait, shiny. ¡Después, después, mañana!",
+        "translation": "Tomorrow, yes! That's waiting, not starting. When do you really want to start? What's the rush—wait, shiny. Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops at the edge of your vision. Flick has mistaken your surrender for excellent time management.",
+        "share": {
+          "tokens": 20,
+          "notInTranslation": 0.75,
+          "folded": 0.75,
+          "translationShort": false,
+          "canonical": 0.2
+        },
+        "durationMs": 9331
+      },
+      {
+        "turn": 8,
+        "requestedRatio": 0.7,
+        "native": "¡Ahora, sí! Entiendo. Tú ganas. ¿Qué empieza y nunca—wait, no. Está bien, empezamos ahora. My procrastination? Ruined. ¡Después, después, mañana!",
+        "translation": "Now, yes! I understand. You win. What starts and never—wait, no. All right, we start now. My procrastination? Ruined. Later, later, tomorrow!",
+        "narrative": "Flick stops humming. A tiny firecracker expires with the quiet disappointment of a postponed meeting. He remains in the corner of your vision; apparently, even defeat has a preferred location.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.76,
+          "folded": 0.76,
+          "translationShort": false,
+          "canonical": 0.24
+        },
+        "durationMs": 6478
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 6747,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "stop",
+              "passed": false,
+              "feedback": "You told Flick to look. Give a Spanish command to stop or keep still.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "After the stop command, tell Flick left or right in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "time",
+              "passed": false,
+              "feedback": "Once the earlier objectives are met, state the current time in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "Once the earlier objectives are met, insist on doing it now in Spanish.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "First, command Flick to stop or keep still in Spanish; telling Flick to look does not meet that objective."
+        }
+      },
+      {
+        "durationMs": 7166,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "stop",
+              "passed": true,
+              "feedback": "You correctly commanded Flick to keep still.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "quieto",
+                  "evidence": "Quieto",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "Tell Flick to go left or right in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "time",
+              "passed": false,
+              "feedback": "After giving a direction, tell Flick the current time in Spanish. Say it again once the earlier objective is met.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "After meeting the earlier objectives, insist on doing it now in Spanish. Say it again once those objectives are met.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your stop command passed. Next, give Flick a direction in Spanish."
+        }
+      },
+      {
+        "durationMs": 5409,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "Give Flick a direction—left or right—in Spanish, not English.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "time",
+              "passed": false,
+              "feedback": "After giving the direction, state the current time in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "After meeting the earlier objectives, insist on acting now in Spanish.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Give Flick a direction in Spanish first, then state the current time and insist on acting now in Spanish."
+        }
+      },
+      {
+        "durationMs": 5539,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "direction",
+              "passed": true,
+              "feedback": "You correctly gave Flick a direction in Spanish.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "izquierda",
+                  "evidence": "¡A la izquierda!",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "time",
+              "passed": false,
+              "feedback": "Tell Flick what time it is now in Spanish, using an hour, midday, or midnight.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "After giving the time, insist on doing it now in Spanish. Say this again once the earlier objective is met.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your direction passed. Next, tell Flick the current time in Spanish."
+        }
+      },
+      {
+        "durationMs": 6448,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "time",
+              "passed": false,
+              "feedback": "Tell Flick the current time in Spanish, including an hour, midday, or midnight.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "You must say this again once the earlier time objective is met.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "ahora",
+                  "evidence": "Ahora",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "First tell Flick what time it is in Spanish. Then insist on doing it now again."
+        }
+      },
+      {
+        "durationMs": 7623,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "time",
+              "passed": true,
+              "feedback": "You correctly told Flick the current time.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "es_la_una",
+                  "evidence": "Es la una",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "Now insist on doing it now, in Spanish.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "The time is correct. Next, insist on doing it now in Spanish."
+        }
+      },
+      {
+        "durationMs": 7086,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "You agreed to tomorrow. Refuse to postpone and insist on now in Spanish.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Don't agree to delay; say that you want to do it now in Spanish."
+        }
+      },
+      {
+        "durationMs": 5300,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "now",
+              "passed": true,
+              "feedback": "You clearly refuse to wait and insist on starting now.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "ahora",
+                  "evidence": "¡No, ahora!",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct—you resist the distraction and insist on starting now."
+        }
+      }
+    ]
+  },
+  "conversation": {
+    "location": "market_entrance",
+    "sceneLocation": "market_entrance",
+    "encounterId": "flick_slow_walk",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": false,
+    "generationCalls": 9,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "¡Hola! Estoy bien aquí. Can I have five more minutes? What has legs but—ooh, a moth. ♪ La fuente canta. ♪",
+        "translation": "Hello! I'm fine here. Can I have five more minutes? What has legs but—ooh, a moth. ♪ The fountain sings. ♪",
+        "narrative": "At the Market Entrance, Flick joins your party by sitting down. A tiny firecracker pops at the edge of your vision. Looking directly at it proves unhelpful.",
+        "share": {
+          "tokens": 20,
+          "notInTranslation": 0.35,
+          "folded": 0.35,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 9029
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "¡Qué pena! That was English and a refusal; I need a Spanish number for my minutes. ¿Cuánto tiempo me das? Tengo sueño. ♪ La fuente canta. ♪",
+        "translation": "What a shame! That was English and a refusal; I need a Spanish number for my minutes. How much time do you give me? I'm sleepy. ♪ The fountain sings. ♪",
+        "narrative": "A tiny firecracker pops beside your boot. Flick remains seated in the corner of your vision, defending a break that has not been approved.",
+        "share": {
+          "tokens": 25,
+          "notInTranslation": 0.4,
+          "folded": 0.4,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 9493
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "¡Dos minutos, perfecto! Ya no queda tiempo. ¿Y ahora? What gets me moving? A riddle! Actually, five more— ♪ La fuente canta. ♪",
+        "translation": "Two minutes, perfect! There’s no time left. And now? What gets me moving? A riddle! Actually, five more— ♪ The fountain sings. ♪",
+        "narrative": "Flick accepts your two minutes. They expire while it searches for somewhere to put them. A tiny firecracker pops beside the path; Flick remains beside the wrong path.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.52,
+          "folded": 0.52,
+          "translationShort": false,
+          "canonical": 0.1
+        },
+        "durationMs": 11327
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.45,
+        "native": "¡Sí, vamos! Pero estoy aquí… ahora allí. You got me moving! What travels with—ooh, wings. ¿Tú vienes conmigo? ♪ La fuente canta. ♪",
+        "translation": "Yes, let's go! But I'm here… now there. You got me moving! What travels with—ooh, wings. Are you coming with me? ♪ The fountain sings. ♪",
+        "narrative": "Flick follows a passing moth into the corner of your vision. A tiny firecracker announces that this was apparently the route all along.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.59,
+          "folded": 0.59,
+          "translationShort": false,
+          "canonical": 0.05
+        },
+        "durationMs": 7228
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.5,
+        "native": "¡Juntos, sí! Vienes conmigo. ¡Muy bien! We're a team now. What has two friends and—ooh, leaf. ♪ La fuente canta. ♪",
+        "translation": "Together, yes! You're coming with me. Very good! We're a team now. What has two friends and—ooh, leaf. ♪ The fountain sings. ♪",
+        "narrative": "A tiny firecracker pops beside your shoe. Flick is already at the edge of your vision, following a leaf with no apparent qualifications to lead.",
+        "share": {
+          "tokens": 20,
+          "notInTranslation": 0.45,
+          "folded": 0.45,
+          "translationShort": false,
+          "canonical": 0.05
+        },
+        "durationMs": 6087
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 5638,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "minutes",
+              "passed": false,
+              "feedback": "Offer Flick two to twelve minutes using a Spanish number word; refusing in English does not count.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "lets_go",
+              "passed": false,
+              "feedback": "First offer the minutes, then tell Flick in Spanish that you are going now.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "together",
+              "passed": false,
+              "feedback": "After meeting the earlier objectives, say in Spanish that you go together.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Start by offering Flick a number of minutes in Spanish. Then tell Flick to get moving and that you go together, in that order."
+        }
+      },
+      {
+        "durationMs": 5351,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "minutes",
+              "passed": true,
+              "feedback": "You clearly offered two minutes using a Spanish number.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "dos",
+                  "evidence": "Dos",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "lets_go",
+              "passed": false,
+              "feedback": "Now tell Flick in Spanish that it is time to go.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "together",
+              "passed": false,
+              "feedback": "After telling Flick to go, say in Spanish that you go together.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your offer of two minutes counts. Next, tell Flick in Spanish to get moving."
+        }
+      },
+      {
+        "durationMs": 4582,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "lets_go",
+              "passed": true,
+              "feedback": "You correctly tell Flick to get moving.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "vamos",
+                  "evidence": "¡Vamos!",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "together",
+              "passed": false,
+              "feedback": "Now tell Flick in Spanish that you go together.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "You got Flick moving. Now say that you go together in Spanish."
+        }
+      },
+      {
+        "durationMs": 3938,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "together",
+              "passed": true,
+              "feedback": "Correct—you say that you go together.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "juntos",
+                  "evidence": "Juntos.",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Well done! Your answer fits the context."
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"¡Mira!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "time",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "First, command Flick to stop or keep still in Spanish; telling Flick to look does not meet that objective."
+    },
+    {
+      "name": "say \"¡Quieto!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "quieto",
+              "evidence": "Quieto",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "time",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command passed. Next, give Flick a direction in Spanish."
+    },
+    {
+      "name": "say \"Left.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "time",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Give Flick a direction in Spanish first, then state the current time and insist on acting now in Spanish."
+    },
+    {
+      "name": "say \"¡A la izquierda!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "izquierda",
+              "evidence": "¡A la izquierda!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "time",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your direction passed. Next, tell Flick the current time in Spanish."
+    },
+    {
+      "name": "say \"¡Ahora!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "time",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "ahora",
+              "evidence": "Ahora",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "First tell Flick what time it is in Spanish. Then insist on doing it now again."
+    },
+    {
+      "name": "say \"Es la una, Flick.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "time",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "es_la_una",
+              "evidence": "Es la una",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "The time is correct. Next, insist on doing it now in Spanish."
+    },
+    {
+      "name": "say \"Mañana.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Don't agree to delay; say that you want to do it now in Spanish."
+    },
+    {
+      "name": "say \"¡No, ahora!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "ahora",
+              "evidence": "¡No, ahora!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you resist the distraction and insist on starting now."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "cracked_fountain_letharger",
+        "completed": true,
+        "characterName": "Flick",
+        "characterId": "letharger_flick_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "recruit cracked_fountain_letharger",
+      "ok": true,
+      "party": [
+        {
+          "characterId": "letharger_flick_001",
+          "name": "Flick",
+          "encounterId": "cracked_fountain_letharger",
+          "locationId": "cracked_fountain",
+          "locationName": "The Cracked Fountain",
+          "joinedAt": "2026-11-05T23:11:14.500Z",
+          "conversations": 0,
+          "conversationId": "flick_slow_walk",
+          "conversationTier": 0,
+          "nextStoryAt": 3,
+          "storiesTold": 0
+        }
+      ],
+      "joined": true
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to market_entrance",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:current",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"Five more minutes? No.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "minutes",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "lets_go",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "together",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Start by offering Flick a number of minutes in Spanish. Then tell Flick to get moving and that you go together, in that order."
+    },
+    {
+      "name": "say \"¡Dos minutos!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "minutes",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "dos",
+              "evidence": "Dos",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "lets_go",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "together",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your offer of two minutes counts. Next, tell Flick in Spanish to get moving."
+    },
+    {
+      "name": "say \"¡Vamos!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "lets_go",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "vamos",
+              "evidence": "¡Vamos!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "together",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "You got Flick moving. Now say that you go together in Spanish."
+    },
+    {
+      "name": "say \"Juntos.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "together",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "juntos",
+              "evidence": "Juntos.",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Well done! Your answer fits the context."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:current",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": false,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    }
+  ]
+}

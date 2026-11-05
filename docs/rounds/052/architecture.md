@@ -127,3 +127,11 @@ text in `trail/critique-1.md`.
 
 Net change from plan-v1: reinforcement framing, Flick may haggle after the player's first number, range and meaning
 in the grading constraints, the protection rule in `minutes`, a matcher offset fix, a pinned English-word list.
+
+## Amendment 1 (2026-11-05): the variant runs wait for Codex's reset
+
+The two scripted runs (it, es) were played. The first variant run (it) failed before the slow walk: Codex reached its
+usage limit at about 23:14 UTC, on the Fountain's last line, so Flick was never recruited (its report is kept as
+`results/variant-it-provider-limit.json`). Codex's message gives the reset as 01:36 UTC on 2026-11-06. The round
+stays open. The variant runs (it, es) are queued for the next iteration, with the same `--lines` as in Live. Nothing
+else in the design changes.
