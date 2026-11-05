@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 033, unlocks for Mortimer, Flick and Marginalia (autonomous)
+
+Each of the other three party members now recites a fragment of *The Journey* after three resolved conversations:
+Mortimer the Sun's forbidden herd, Flick the lotus ("five minutes", then five more), Marginalia the old dog who alone
+knows Journathan. Content and tests only. The leak check now stems every word of every party conversation's answers
+and runs over every fragment; it caught one word in round 030's Spanish text, now reworded. Critiqued by a Claude
+subagent (7 findings, all accepted). Server 157/157, mobile 69/69. Not seen in the Simulator; the texts await a
+native speaker ([open items](docs/rounds/033/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 032, Gerald remembers the Dead Branch (autonomous)
 
 The first relationship unlock (prototype.md §4.2). After his third resolved coffee break, Gerald recites "The word
@@ -360,6 +369,7 @@ Newest first.
 | 027 | 11-05 | The philosophy statement on first launch: content, `GET /api/onboarding`, app screen shown once (backlog C2) (autonomous) | [027](docs/rounds/027/architecture.md) | [findings](docs/rounds/027/findings.md) | `88b223b` (pre-run record) to round 027 close |
 | 028 | 11-05 | Containment files in the Spellbook: the Fountain jingle and Errata, filed on completion (backlog B4) (autonomous) | [028](docs/rounds/028/architecture.md) | [findings](docs/rounds/028/findings.md) | `09248d5` (pre-run record) to round 028 close |
 | 032 | 11-05 | Gerald's Dead Branch fragment after three coffee breaks: the first relationship unlock (backlog A12) (autonomous) | [032](docs/rounds/032/architecture.md) | [findings](docs/rounds/032/findings.md) | `f1589f1` (pre-run record) to round 032 close |
+| 033 | 11-05 | Journey fragments for Mortimer, Flick and Marginalia after three party conversations; wider stem check (backlog A12) (autonomous) | [033](docs/rounds/033/architecture.md) | [findings](docs/rounds/033/findings.md) | pre-run record to round 033 close |
 | 031 | 11-05 | Save slots: up to three learners per device, Saves screen, stale-reply guards (backlog A11) (autonomous) | [031](docs/rounds/031/architecture.md) | [findings](docs/rounds/031/findings.md) | `2c5e2ae` (pre-run record) to round 031 close |
 | 030 | 11-05 | Fragments of The Journey: three authored passages per pack in the Spellbook, found on completion, translation behind a toggle (backlog A9) (autonomous) | [030](docs/rounds/030/architecture.md) | [findings](docs/rounds/030/findings.md) | `d6e2e51` (pre-run record) to round 030 close |
 | 029 | 11-05 | Forced repetition before the Rift: one due card per answer slot, DRILL_REQUIRED, map drill note (backlog C1) (autonomous) | [029](docs/rounds/029/architecture.md) | [findings](docs/rounds/029/findings.md) | `4942a58` (pre-run record) to round 029 close |

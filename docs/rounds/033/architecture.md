@@ -79,3 +79,10 @@ end-to-end test, two texts adjusted.
 - `encounters.test.js`: the fixture pack drops Mortimer's fragment with his stall.
 - Mobile: Marginalia's two fragments and Flick's two each noted in the right place; none on a 4th conversation.
 - All suites, web build, expo-doctor.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. The three fragments are filed after three resolved party conversations, each
+under its member's conversation. The widened stem check passes on every fragment in both packs, after round 030's
+es stitch was reworded. Server 157/157, mobile 69/69, web client 12/12 and build, expo-doctor 20/20. See
+[findings](findings.md).
