@@ -1,4 +1,4 @@
-# Round 025: applies the Fountain infohazard content (plan-v1 design 1-6) by exact string edits, so YAML comments
+# Round 025: applies the Fountain infohazard content (architecture.md Design 1-6, after critique 1) by exact string edits, so YAML comments
 # and layout stay as authored. Run from the repo root after the baseline runs.
 import sys
 def edit(path, old, new):
@@ -17,7 +17,7 @@ edit('content/world/locations/cracked_fountain.yaml',
 
 BRIEFING = '''companion_briefing:
   - "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high."
-  - "Vector: a jingle. It only works on people who understand it, which now includes you. Congratulations."
+  - "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations."
   - "Containment procedure: do not hum along."
 '''
 for code, lang, jingle, last_neg in [
@@ -28,6 +28,7 @@ for code, lang, jingle, last_neg in [
     edit(p, 'The fountain is quieter."\n', 'The fountain is quieter, and the jingle has almost left your head."\n')
     edit(p, 'escalation:\n', '# Round 025 (backlog B3): a containment notice for the Fountain\'s infohazard, Flick\'s jingle.\n' + BRIEFING + 'escalation:\n')
     edit(p, f'    intent: "The player refuses to put it off and says now, in {lang}."\n',
-         f'    intent: "The player refuses to put it off and says now, in {lang}. Flick keeps humming its jingle, \\"{jingle}\\" (later, later, tomorrow), a mild brainrot infohazard that makes listeners put things off; humming it back is giving in, not insisting on now."\n')
+         f'    intent: "The player refuses to put it off and says now, in {lang}. Flick keeps humming its jingle, \\"{jingle}\\" (later, later, tomorrow), a mild brainrot infohazard that makes listeners put things off. Repeating the jingle or agreeing to later does not pass; a refusal that names later or tomorrow and insists on now passes."\n')
+    edit(p, '      - text: "Stop!"\n', '      - text: "Stop moving!"\n')
     edit(p, last_neg, last_neg + f'      - text: "{jingle}"\n        reason: "Humming Flick\'s jingle back puts it off; it does not insist on now."\n')
 print('applied')

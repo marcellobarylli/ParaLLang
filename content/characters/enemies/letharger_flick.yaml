@@ -12,7 +12,8 @@ personality:
     - "Wants you to do everything later, tomorrow, after just one more; it has never once done anything now"
     - "Talks like an endless feed in its English: just one more, five more minutes, this is so random, rates your attention span"
     - "Gets lost constantly, because it keeps following whatever moved last"
-    - "Hums a jingle that sticks: brainrot it farms, low harm and very high virulence"
+    # Round 025 (backlog B3): the jingle is a named infohazard; its words are authored per pack in the last objective's intent.
+    - "Hums the Fountain jingle, a brainrot strain native to the other language (low harm, very high virulence): it tacks the jingle onto the end of its lines like a catchphrase; it only works on listeners who understand it, and the player is starting to"
   humour_style: "Pratchett-esque, the narrator dry and unimpressed while Flick talks like a notification that learned to speak"
 appearance: >
   A gnome-like creature no taller than a teacup, made mostly of movement. It dances at the edge of the cracked

@@ -10,7 +10,12 @@ defeat_condition:
   type: comprehension_and_response
   description: "Player tells Flick to stop, tells it which way to go and insists on now, all in Spanish"
 max_turns: 20
-resolved_message: "Flick holds still for almost a whole second, points the way you told it, and is gone before you can look straight at it. The fountain is quieter."
+resolved_message: "Flick holds still for almost a whole second, points the way you told it, and is gone before you can look straight at it. The fountain is quieter, and the jingle has almost left your head."
+# Round 025 (backlog B3): a containment notice for the Fountain's infohazard, Flick's jingle.
+companion_briefing:
+  - "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high."
+  - "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations."
+  - "Containment procedure: do not hum along."
 escalation:
   target_ratio_increase_per_turn: 0.05
 objectives:
@@ -30,7 +35,7 @@ objectives:
     negative_examples:
       - text: "¡Mira!"
         reason: "A command, but it tells Flick to look, not to stop."
-      - text: "Stop!"
+      - text: "Stop moving!"
         reason: "English-only; the command must be in Spanish."
       - text: "Flick never says basta."
         reason: "A remark about Flick is not the player's own command."
@@ -61,7 +66,7 @@ objectives:
     assessment_reference_ids: ["rae-derecho", "rae-izquierdo"]
   - id: now
     prompt: "Flick says you can do it later. Insist on now, in Spanish."
-    intent: "The player refuses to put it off and says now, in Spanish."
+    intent: "The player refuses to put it off and says now, in Spanish. Flick keeps humming its jingle, \"¡Después, después, mañana!\" (later, later, tomorrow), a mild brainrot infohazard that makes listeners put things off. Repeating the jingle or agreeing to later does not pass; a refusal that names later or tomorrow and insists on now passes."
     target_vocabulary_ids: ["ahora"]
     required_target_groups:
       - ["ahora"]
@@ -79,6 +84,8 @@ objectives:
         reason: "It agrees to later."
       - text: "Now!"
         reason: "English-only; the answer must be in Spanish."
+      - text: "¡Después, después, mañana!"
+        reason: "Humming Flick's jingle back puts it off; it does not insist on now."
     reference_meaning: "The player insists on doing it now."
     hint_limit: 2
     next_objective: null

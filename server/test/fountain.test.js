@@ -6,6 +6,7 @@ import { randomUUID } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { loadGameContent } from '../src/content-loader.js';
+import { normalizeAnswer } from '../src/language-engine.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { LearningService } from '../src/learning-service.js';
 import { route } from '../scripts/play-market.js';
@@ -17,12 +18,16 @@ const packs = {
     patterns: { stop: [/fermati|fermo|basta/i, 'fermati'], direction: [/destra|sinistra|dritto/i, 'sinistra'], now: [/adesso|\bora\b/i, 'adesso'] },
     line: 'Guarda! Dopo, domani... Prosciutto? Ciao, caffè.',
     chips: ['guarda', 'dopo', 'domani'],
+    jingle: 'Dopo, dopo, domani!',
+    jingleIds: ['dopo', 'domani'],
   },
   es: {
     answers: ['¡Mira!', '¡Quieto!', 'Left.', '¡A la izquierda!', 'Mañana.', '¡No, ahora!'],
     patterns: { stop: [/quiet[oa]s?|basta/i, 'quieto'], direction: [/derecha|izquierda/i, 'izquierda'], now: [/ahora/i, 'ahora'] },
     line: '¡Mira! Después, mañana... ¿Jamón? Hola, café.',
     chips: ['mira', 'despues', 'manana'],
+    jingle: '¡Después, después, mañana!',
+    jingleIds: ['despues', 'manana'],
   },
 };
 
@@ -76,7 +81,8 @@ for (const code of Object.keys(packs)) {
     assert.match(provider.calls.at(-1).messages[0].content, /Speak as Flick, a Letharger/);
     assert.equal(encounter.character.name, 'Flick');
     assert.equal(encounter.difficulty, 0.3);
-    assert.equal(encounter.companionBriefing, null);
+    assert.equal(encounter.companionBriefing.length, 3);
+    assert.match(encounter.companionBriefing[0], /^Containment notice, the Cracked Fountain/);
     assert.deepEqual(encounter.transcript[0].dialogue.words.map((word) => word.vocabularyId), packs[code].chips, 'only its own words are chips');
 
     const verdicts = [];
@@ -97,5 +103,33 @@ for (const code of Object.keys(packs)) {
     assert.match(encounter.resolvedMessage, /^Flick holds still for almost a whole second/);
     const { world } = await service.getWorld(learnerId);
     assert.deepEqual(world.locations.find((l) => l.id === 'cracked_fountain').encounter, { id: 'cracked_fountain_letharger', completed: true, characterName: 'Flick', characterId: 'letharger_flick_001', saveable: true });
+  });
+}
+
+// Round 025 (backlog B3): Flick's jingle is a brainrot infohazard, authored per pack in the last objective's intent so
+// it reaches every narration prompt, and humming it back fails.
+for (const [code, pack] of Object.entries(packs)) {
+  test(`${code}: Flick's jingle is authored, reaches every narration prompt, gives no answer away and fails when hummed`, () => {
+    const content = loadGameContent({ language: code });
+    const definition = content.encounters.get('cracked_fountain_letharger');
+    const { objectives } = definition.encounter;
+    const now = objectives.at(-1);
+    assert.equal(now.id, 'now');
+    assert.ok(now.intent.includes(`"${pack.jingle}"`), 'the last objective carries the jingle, so every turn prompt has it');
+    assert.ok(now.negative_examples.some((example) => example.text === pack.jingle), 'humming the jingle back is a negative example');
+    assert.match(definition.character.personality.quirks.join(' '), /Fountain jingle, a brainrot strain/);
+    assert.match(content.world.locationsById.get('cracked_fountain').description, /PLEASE DO NOT HUM/);
+    const stop = objectives.find((objective) => objective.id === 'stop');
+    assert.ok(!stop.negative_examples.some((example) => example.text === 'Stop!'), '"Stop!" is Italian and Spanish too (critique 1.4)');
+    assert.ok(stop.negative_examples.some((example) => example.text === 'Stop moving!'));
+    assert.match(definition.encounter.resolved_message, /the jingle has almost left your head\.$/);
+
+    const fold = (text) => normalizeAnswer(text, { stripAccents: true }).replace(/[^\p{L}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
+    const jingleWords = new Set(fold(pack.jingle).split(' '));
+    const jingleForms = pack.jingleIds.flatMap((id) => definition.narrationEntries.find((entry) => entry.id === id).surface_variants.map(fold));
+    assert.deepEqual([...jingleWords].sort(), [...new Set(jingleForms)].sort(), 'the jingle uses only its two authored words');
+    const targetForms = objectives.flatMap((objective) => objective.target_vocabulary_ids)
+      .flatMap((id) => definition.narrationEntries.find((entry) => entry.id === id).surface_variants.map(fold));
+    for (const form of targetForms) assert.ok(!` ${fold(pack.jingle)} `.includes(` ${form} `), `the jingle contains the target form ${form}`);
   });
 }
