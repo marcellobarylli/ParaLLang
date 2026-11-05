@@ -7,26 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- **Round 015 (A7b, the Rift boss, with B3): built and committed, live runs incomplete, not closed.** Pre-run record
-  and build are pushed (`docs/rounds/015/architecture.md`; journal rows 1–12). Errata, a Rift-born infohazard,
-  reviews all five vocabulary files in three objectives. Codex's subscription usage limit stopped the live runs at
-  14:05 UTC ("try again at 3:34 PM", as printed by the CLI; the container runs UTC), and `claude-cli` is not signed
-  in. To finish:
-  1. Check the limit: `codex exec --sandbox read-only --json "Reply with the single word ok." < /dev/null` from
-     `/work/ParaLLang` (an `error` event saying "usage limit" means wait; `play-market.js` only shows it as
-     `PROVIDER_FAILURE`).
-  2. Run `TARGET_LANGUAGE=es node server/scripts/play-market.js --provider codex-cli --location the_rift --out
-     docs/rounds/015/results/rift-es-3.json` and `TARGET_LANGUAGE=it node server/scripts/play-market.js --provider
-     codex-cli --tour --out docs/rounds/015/results/tour-it.json` (~70 calls, ~10 min), one after the other.
-  3. Write `findings.md` from journal rows 9–12, the results files and the new runs. Already seen (Italian, 2/2
-     resolved, 10/10 lines graded as intended, 0 feedback leaks): every line glitches its English and keeps the
-     Italian clean; the script's `notInTranslation` share is inflated by glitched tokens (0.60–0.89 against 0.50;
-     `canonical` 0.04–0.33), so report both; near-dictation before `stop_now` ("Devi fermarmi subito", "Ora vengo da
-     te", `rift-it-1` turns 3–4); her greeting asks "Come ti chiami?" before the order objective (`rift-it-1`).
-     Spanish: 4/4 lines as intended before the limit; `rift-es-1` failed at the start with `CLI_INVALID_RESPONSE`,
-     cause not captured.
-  4. Outcome, STATUS addendum and index row, `closed` row, `python3 tools/round_log_check.py 015`, commit, push.
-- Then: **E1** narrowed to Portia (round 014), or **A8** (party).
+- **Round 017 (D3, Spellbook answer leak and notes): planned, critique 1 dispatched, not frozen.** A draft build is
+  in the working tree (server `inPlay`/`note` on cards and 409 `IN_PLAY` on review; app hides meanings of in-play
+  and due cards; tests). See `docs/rounds/017/trail/`.
+- Then: **E1** narrowed to Portia (round 014), **E2**, or **A8** (party).
 
 ## Backlog
 
@@ -49,7 +33,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   *The Journey* (home; the Cyclops name trick).
 - [x] **A7a. The Rift gate.** (round 014, closed 2026-11-05) Sealed until the other five encounters are complete
   (`requires_completed`, `gate` in the snapshot, 409 `SEALED`, sealed node in the app); `play-market.js --tour`.
-- [ ] **A7b. The Rift boss.** (round 015, built; live runs and close pending, see In progress) Mini-boss in corrupted mixed language, reviewing all learned vocabulary. Narration
+- [x] **A7b. The Rift boss.** (round 015, closed 2026-11-05) Mini-boss in corrupted mixed language, reviewing all learned vocabulary. Narration
   chips need an objective targeting an entry of each vocabulary file (see traps). `startEncounter` must refuse a
   sealed location (saves from rounds 005–013 may already stand in the Rift).
 - [ ] **A8. Party system.** Save defeated (saveable) enemies, revisit conversations with party members.
@@ -66,7 +50,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   then scores quality 2 (also D2). Re-measure with `play-market.js`.
 - [x] **B2. Journathan.** (round 013, closed 2026-11-05) Journathan and *The Journey* in Marginalia's sheet and
   passages. More fragments belong to A9.
-- [ ] **B3. Infohazards.** Infohazard flavour in the Rift and Fountain content (LORE.md).
+- [ ] **B3. Infohazards.** Infohazard flavour in the Rift and Fountain content (LORE.md). The Rift part is done
+  (round 015, Errata); the Fountain part is open.
 
 ### C. prototype.md Phase 4: Polish & Audio
 

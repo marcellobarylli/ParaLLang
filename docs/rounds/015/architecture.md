@@ -112,3 +112,14 @@ Net change from plan v1: +1 required group (`order`), −1 accepted alternative 
    salsiccia e un espresso.|Fermo! Ora!|Sono Nessuno.'` (surface variants), in Spanish, and one Italian `--tour`.
    Findings: the verdict on each line against intent, resolution, the corrupted style (English glitched, target
    words clean), share, menus, dictation, feedback leaks, chips from several files.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendment. Errata, a Rift-born infohazard, reviews all five earlier vocabulary files in
+three objectives (a coffee and a meat; stop now; "my name is Nobody") in a fixed 0.50 mix of glitched English and
+clean target language, and cannot be started while the Rift is sealed. Live codex-cli: every run that reached the
+provider resolved (Italian 3, Spanish 1, plus a Spanish run cut off by Codex's usage limit), every scripted line was
+graded as intended, 0 feedback leaks; the Italian tour played all six encounters in one save (27/27 lines, 60 calls).
+The script's share measure counts glitched English as target language, so report both numbers. Tests: server
+101/101, mobile 22/22, web client 12/12 and build. Live runs spanned two iterations because of the usage limit (rows
+12–14). Not checked in the iOS Simulator. See [findings](findings.md).

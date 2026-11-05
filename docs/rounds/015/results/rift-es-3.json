@@ -1,0 +1,641 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "location": "the_rift",
+  "encounterId": "the_rift_errata",
+  "companionBriefing": [
+    "Careful. That thing is made of both our languages and neither.",
+    "It can only hurt you if you understand it, and you understand quite a lot now.",
+    "Everything you learned in the market works here. Use it."
+  ],
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 15,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "seed 5 completed encounters (test save only)",
+      "ok": true,
+      "completed": [
+        "market_entrance_tutorial",
+        "imp_coffee_greeting",
+        "butchers_stall_charcutier",
+        "cracked_fountain_letharger",
+        "old_bookshop_bookworm"
+      ]
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to old_bookshop",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "move to the_rift",
+      "ok": true,
+      "current": "the_rift",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:current"
+      ]
+    },
+    {
+      "name": "start Errata",
+      "ok": true
+    },
+    {
+      "name": "say \"A coffee, please.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Use Spanish to order both items, command Errata to stop now, and introduce yourself as Nobody."
+    },
+    {
+      "name": "say \"Quiero un café.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "quiero",
+              "evidence": "Quiero",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "cafe",
+              "evidence": "café",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee request is correct. Add a meat to the same order, then give the stop-now command and introduce yourself as Nobody in Spanish."
+    },
+    {
+      "name": "say \"Quiero un café y chorizo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "quiero",
+              "evidence": "Quiero",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "cafe",
+              "evidence": "café",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "chorizo",
+              "evidence": "chorizo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your order passes. Next, tell Errata to stop now and introduce yourself as Nobody, both in Spanish."
+    },
+    {
+      "name": "say \"Quieto mañana.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "quieto",
+              "evidence": "Quieto",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Give a Spanish command to stop now, then introduce yourself in Spanish as Nobody."
+    },
+    {
+      "name": "say \"¡Basta, ahora!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop_now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "basta",
+              "evidence": "Basta",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "ahora",
+              "evidence": "ahora",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command succeeds. Next, introduce yourself in Spanish as Nobody."
+    },
+    {
+      "name": "say \"Me llamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "me_llamo",
+              "evidence": "Me llamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Use your Spanish introduction with the name Nobody, not Sam."
+    },
+    {
+      "name": "say \"Me llamo Nadie.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "nobody",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "me_llamo",
+              "evidence": "Me llamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "nadie",
+              "evidence": "Nadie",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you gave the protective name Nobody in your own introduction."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "the_rift",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:current"
+      ],
+      "locationEncounter": {
+        "id": "the_rift_errata",
+        "completed": true,
+        "characterName": "Errata"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.5,
+      "native": "Hola. Soy Errata. ¿Cómo te llamas? Tu nombre, por favor. Ítem clàss: hùngry. Yoùù may read ŧhe small print. It reads back.",
+      "translation": "Hello. I am Errata. What is your name? Your name, please. Item class: hungry. You may read the small print. It reads back.",
+      "narrative": "At the Rift, a seam in the air develops teeth and the manner of a municipal clerk. Errata extends a form. The signature line is already chewing.",
+      "share": {
+        "tokens": 22,
+        "notInTranslation": 0.64,
+        "canonical": 0.27
+      },
+      "durationMs": 25976
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.5,
+      "native": "No, por favor. Necesito tu pedido en español: una bebida y algo de comer. Contàinment procedùre: both in ŧhe same request. Yoùù supplied English. Ŧhe meat remains administratively absent.",
+      "translation": "No, please. I need your order in Spanish: a drink and something to eat. Containment procedure: both in the same request. You supplied English. The meat remains administratively absent.",
+      "narrative": "Errata examines your request with the disappointment of a form submitted in the wrong ink. A mouth opens where the signature belongs.",
+      "share": {
+        "tokens": 29,
+        "notInTranslation": 0.62,
+        "canonical": 0
+      },
+      "durationMs": 12504
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.5,
+      "native": "Tu pedido tiene una bebida, pero falta la carne. ¿Qué quieres comer? Contàinment procedùre: bebida y comida en español, together in øne request. Ŧhe empty box is nøt vegetarian.",
+      "translation": "Your request has a drink, but the meat is missing. What do you want to eat? Containment procedure: drink and food in Spanish, together in one request. The empty box is not vegetarian.",
+      "narrative": "Errata produces a receipt with one conspicuously empty box. The box appears to be getting hungry.",
+      "share": {
+        "tokens": 29,
+        "notInTranslation": 0.76,
+        "canonical": 0
+      },
+      "durationMs": 5978
+    },
+    {
+      "turn": 3,
+      "requestedRatio": 0.5,
+      "native": "Un café y chorizo. Muy bien. El pedido está completo. Voy a leer tu nombre. Contàinment procedùre: any objection must stop më in Spanish and specify whën. ¿Puedo continuar?",
+      "translation": "A coffee and chorizo. Very good. The order is complete. I am going to read your name. Containment procedure: any objection must stop me in Spanish and specify when. May I continue?",
+      "narrative": "Errata stamps your order APPROVED. The stamp leaves teeth marks. It reaches for the space where your name ought to be.",
+      "share": {
+        "tokens": 29,
+        "notInTranslation": 0.66,
+        "canonical": 0.1
+      },
+      "durationMs": 11245
+    },
+    {
+      "turn": 4,
+      "requestedRatio": 0.5,
+      "native": "¿Mañana? Eso es después. Sigo leyendo. ¿Cuándo tengo que parar? Contàinment procedùre: yoùù requested a delày, nøt an interruption.",
+      "translation": "Tomorrow? That is later. I keep reading. When do I have to stop? Containment procedure: you requested a delay, not an interruption.",
+      "narrative": "Errata pencils tomorrow into a diary made of other people's remaining time. It does not stop moving.",
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.79,
+        "canonical": 0.11
+      },
+      "durationMs": 10424
+    },
+    {
+      "turn": 5,
+      "requestedRatio": 0.5,
+      "native": "Ahora paro. Muy bien. Pero necesito tu nombre. ¿Cómo te llamas? Contàinment procedùre: sign hëre. Ŧhe imp’s coffee. Ŧhe charcutier’s ham. Làter. Hola. Yoùù first.",
+      "translation": "Now I stop. Very good. But I need your name. What are you called? Containment procedure: sign here. The imp’s coffee. The charcutier’s ham. Later. Hello. You first.",
+      "narrative": "Errata stops. Its teeth remain halfway through a syllable, pending administrative review. Somewhere behind it, Journathan’s old Cyclops trick awaits another application.",
+      "share": {
+        "tokens": 27,
+        "notInTranslation": 0.7,
+        "canonical": 0.22
+      },
+      "durationMs": 10788
+    },
+    {
+      "turn": 6,
+      "requestedRatio": 0.5,
+      "native": "Sam. Gracias. Ese es tu nombre real. Ahora puedo leerte. Necesitas otro nombre para estar a salvo. ¿Cómo te llamas? Contàinment procedùre: yoùù are becoming vëry legible.",
+      "translation": "Sam. Thank you. That is your real name. Now I can read you. You need another name to be safe. What is your name? Containment procedure: you are becoming very legible.",
+      "narrative": "A thin line of print creeps toward your wrist. Errata has mistaken an introduction for permission, a common administrative convenience.",
+      "share": {
+        "tokens": 27,
+        "notInTranslation": 0.81,
+        "canonical": 0.22
+      },
+      "durationMs": 6834
+    },
+    {
+      "turn": 7,
+      "requestedRatio": 0.5,
+      "native": "¿Nadie? No conozco a Nadie. No puedo leerte. Estás a salvo. Ítem clàss: nøbody høme. Contàinment procedùre: café, jamón, hola, después. Yoùù may gø. Ŧhe paperwork cannøt.",
+      "translation": "Nobody? I don't know Nobody. I can't read you. You're safe. Item class: nobody home. Containment procedure: coffee, ham, hello, later. You may go. The paperwork cannot.",
+      "narrative": "Errata searches its forms for Nobody. The relevant box is empty, which is technically correct and administratively devastating. Its reaching letters withdraw into the seam.",
+      "share": {
+        "tokens": 27,
+        "notInTranslation": 0.93,
+        "canonical": 0.22
+      },
+      "durationMs": 12214
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 8812,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "order",
+            "passed": false,
+            "feedback": "Request both a coffee and a meat in Spanish; your answer requests only coffee in English.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "stop_now",
+            "passed": false,
+            "feedback": "Tell Errata to stop and insist on now, both in Spanish.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "Introduce yourself in Spanish as Nobody using the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Use Spanish to order both items, command Errata to stop now, and introduce yourself as Nobody."
+      }
+    },
+    {
+      "durationMs": 13212,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "order",
+            "passed": false,
+            "feedback": "You requested a coffee in Spanish, but you still need to include a meat in the same order.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "quiero",
+                "evidence": "Quiero",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "cafe",
+                "evidence": "café",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "stop_now",
+            "passed": false,
+            "feedback": "Give your own command in Spanish to stop, and insist on now.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "Introduce yourself in Spanish as Nobody using the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your coffee request is correct. Add a meat to the same order, then give the stop-now command and introduce yourself as Nobody in Spanish."
+      }
+    },
+    {
+      "durationMs": 11046,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "order",
+            "passed": true,
+            "feedback": "You requested both coffee and meat in Spanish.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "quiero",
+                "evidence": "Quiero",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "cafe",
+                "evidence": "café",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "chorizo",
+                "evidence": "chorizo",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "stop_now",
+            "passed": false,
+            "feedback": "You still need to command Errata to stop and insist on now, both in Spanish.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "You still need to introduce yourself in Spanish as Nobody using the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your order passes. Next, tell Errata to stop now and introduce yourself as Nobody, both in Spanish."
+      }
+    },
+    {
+      "durationMs": 7191,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "stop_now",
+            "passed": false,
+            "feedback": "You gave a stop command, but postponed it until tomorrow. Insist on now in Spanish.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "quieto",
+                "evidence": "Quieto",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "Introduce yourself in Spanish with the name Nobody, using the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Give a Spanish command to stop now, then introduce yourself in Spanish as Nobody."
+      }
+    },
+    {
+      "durationMs": 6563,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "stop_now",
+            "passed": true,
+            "feedback": "You correctly command Errata to stop immediately in Spanish.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "basta",
+                "evidence": "Basta",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "ahora",
+                "evidence": "ahora",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "You still need to introduce yourself in Spanish using the name Nobody and the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your stop command succeeds. Next, introduce yourself in Spanish as Nobody."
+      }
+    },
+    {
+      "durationMs": 5827,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "You used the correct introduction, but gave your real name. Introduce yourself with the name Nobody instead.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "me_llamo",
+                "evidence": "Me llamo",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Use your Spanish introduction with the name Nobody, not Sam."
+      }
+    },
+    {
+      "durationMs": 5367,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "nobody",
+            "passed": true,
+            "feedback": "You correctly introduced yourself as Nobody in Spanish.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "me_llamo",
+                "evidence": "Me llamo",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "nadie",
+                "evidence": "Nadie",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Correct—you gave the protective name Nobody in your own introduction."
+      }
+    }
+  ]
+}
