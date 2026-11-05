@@ -1,0 +1,490 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "party": true,
+  "conversationId": "gerald_confidence",
+  "tierCount": 3,
+  "recruited": true,
+  "resolved": true,
+  "completedOnMap": true,
+  "conversationOffMap": true,
+  "conversations": 4,
+  "generationCalls": 12,
+  "home": {
+    "location": "coffee_cart",
+    "sceneLocation": "coffee_cart",
+    "encounterId": "imp_coffee_greeting",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": true,
+    "generationCalls": 5,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.25,
+        "native": "Buongiorno! Sono Gerald. What would you like? Milk is a war crime. This market? Two espresso shots.",
+        "translation": "Good morning! I'm Gerald. What would you like? Milk is a war crime. This market? Two espresso shots.",
+        "narrative": "Gerald peers over The Coffee Cart’s counter. Behind him, The Crumbling Market continues its gradual commitment to the name.",
+        "share": {
+          "tokens": 17,
+          "notInTranslation": 0.12,
+          "folded": 0.12,
+          "translationShort": false,
+          "canonical": 0.06
+        },
+        "durationMs": 6220
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.3,
+        "native": "Bene, un caffè. Your politeness earns four espresso shots. Ma come lo vuoi? Your order hasn't settled the milk issue. Deeply concerning.",
+        "translation": "Good, a coffee. Your politeness earns four espresso shots. But how do you want it? Your order hasn't settled the milk issue. Deeply concerning.",
+        "narrative": "Gerald holds a tiny cup beneath the machine, withholding espresso with the gravity of a civil servant withholding a stamp.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.32,
+          "folded": 0.32,
+          "translationShort": false,
+          "canonical": 0.09
+        },
+        "durationMs": 7167
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.35,
+        "native": "Senza latte. Molto bene! Il caffè è pronto. Five espresso shots for your judgment. No notes. The milk remains unemployed.",
+        "translation": "Without milk. Very good! The coffee is ready. Five espresso shots for your judgment. No notes. The milk remains unemployed.",
+        "narrative": "Gerald sets down the cup. The milk jug remains untouched, its diplomatic status uncertain.",
+        "share": {
+          "tokens": 20,
+          "notInTranslation": 0.4,
+          "folded": 0.4,
+          "translationShort": false,
+          "canonical": 0.2
+        },
+        "durationMs": 5349
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 5641,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "order_coffee",
+              "passed": true,
+              "feedback": "You clearly requested a coffee for yourself.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "vorrei",
+                  "evidence": "Vorrei",
+                  "quality": 5
+                },
+                {
+                  "vocabulary_id": "caffe",
+                  "evidence": "caffè",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "no_milk",
+              "passed": false,
+              "feedback": "Specify in Italian that your coffee is without milk or black.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your coffee request is correct. Add an Italian expression specifying no milk or black coffee."
+        }
+      },
+      {
+        "durationMs": 5182,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "no_milk",
+              "passed": true,
+              "feedback": "You clearly ordered your coffee without milk.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "senza_latte",
+                  "evidence": "Senza latte",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct and natural—your no-milk preference is clear."
+        }
+      }
+    ]
+  },
+  "conversation": {
+    "location": "market_entrance",
+    "sceneLocation": "market_entrance",
+    "encounterId": "gerald_confidence",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": false,
+    "generationCalls": 7,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.25,
+        "native": "Ciao, eccoti qui. Another coffee break together. Bene. The Dead Branch had a drink—scuro e amaro. Five espresso shots out of five. Its name died with my old home. Nessuno ricorda. Not even me.",
+        "translation": "Hello, there you are. Another coffee break together. Good. The Dead Branch had a drink—dark and bitter. Five espresso shots out of five. Its name died with my old home. Nobody remembers. Not even me.",
+        "narrative": "At the Market Entrance, Gerald cradles his surgically attached espresso cup. For once, he lets the silence go uncorrected.",
+        "share": {
+          "tokens": 35,
+          "notInTranslation": 0.26,
+          "folded": 0.26,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 11076
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.3,
+        "native": "Ho capito. That was… not mid. But entirely English. Two espresso shots for now. Puoi parlare in italiano? I have standards to hide behind.",
+        "translation": "I understood. That was… not mid. But entirely English. Two espresso shots for now. Can you speak in Italian? I have standards to hide behind.",
+        "narrative": "Gerald studies his cup, which has abruptly become more interesting than eye contact.",
+        "share": {
+          "tokens": 24,
+          "notInTranslation": 0.21,
+          "folded": 0.21,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 8484
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.35,
+        "native": "Sì, siamo amici. Five espresso shots. No notes. Alla nostra amicizia, e alla parola morta. The toast is yours; do not involve milk.",
+        "translation": "Yes, we are friends. Five espresso shots. No notes. To our friendship, and to the dead word. The toast is yours; do not involve milk.",
+        "narrative": "Gerald lifts his surgically attached espresso cup toward yours. Friendship has been approved; the paperwork now requires a toast. He waits, cup poised, for you to honor the friendship and the dead word.",
+        "share": {
+          "tokens": 23,
+          "notInTranslation": 0.43,
+          "folded": 0.43,
+          "translationShort": false,
+          "canonical": 0.04
+        },
+        "durationMs": 5931
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.4,
+        "native": "Cin cin! Alla nostra amicizia. Five espresso shots. No notes. Il brindisi è perfetto. Still judging the milk, obviously.",
+        "translation": "Cheers! To our friendship. Five espresso shots. No notes. The toast is perfect. Still judging the milk, obviously.",
+        "narrative": "Gerald raises his tiny cup. For once, he finds no procedural fault with happiness.",
+        "share": {
+          "tokens": 19,
+          "notInTranslation": 0.47,
+          "folded": 0.47,
+          "translationShort": false,
+          "canonical": 0.11
+        },
+        "durationMs": 5513
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 5303,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "call_friend",
+              "passed": false,
+              "feedback": "You expressed friendship, but you need to use the Italian word for friend.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "raise_toast",
+              "passed": false,
+              "feedback": "You still need to make a toast using the Italian expression for cheers.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your meaning is clear. Use Italian for the friendship statement and the toast."
+        }
+      },
+      {
+        "durationMs": 4952,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "call_friend",
+              "passed": true,
+              "feedback": "You correctly tell Gerald that you are friends.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "amico",
+                  "evidence": "Siamo amici, Gerald.",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "raise_toast",
+              "passed": false,
+              "feedback": "You still need to make a toast using the Italian expression for cheers.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your friendship statement is correct. Now make the toast in Italian."
+        }
+      },
+      {
+        "durationMs": 4115,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "raise_toast",
+              "passed": true,
+              "feedback": "You correctly made the Italian toast in your own words.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "cin_cin",
+                  "evidence": "Cin cin",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "A correct and natural toast!"
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to coffee_cart",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Gerald",
+      "ok": true
+    },
+    {
+      "name": "say \"Vorrei un caffè, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order_coffee",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "no_milk",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee request is correct. Add an Italian expression specifying no milk or black coffee."
+    },
+    {
+      "name": "say \"Senza latte, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "no_milk",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "senza_latte",
+              "evidence": "Senza latte",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct and natural—your no-milk preference is clear."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "imp_coffee_greeting",
+        "completed": true,
+        "characterName": "Gerald",
+        "characterId": "imp_coffee_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "recruit imp_coffee_greeting",
+      "ok": true,
+      "party": [
+        {
+          "characterId": "imp_coffee_001",
+          "name": "Gerald",
+          "encounterId": "imp_coffee_greeting",
+          "locationId": "coffee_cart",
+          "locationName": "The Coffee Cart",
+          "joinedAt": "2026-11-05T21:20:07.464Z",
+          "conversations": 0,
+          "conversationId": "gerald_coffee_break",
+          "conversationTier": 0,
+          "nextStoryAt": 3,
+          "storiesTold": 0
+        }
+      ],
+      "joined": true
+    },
+    {
+      "name": "move to market_entrance",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:visited",
+        "cracked_fountain:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "start Gerald",
+      "ok": true
+    },
+    {
+      "name": "say \"You are my friend.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "call_friend",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "raise_toast",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meaning is clear. Use Italian for the friendship statement and the toast."
+    },
+    {
+      "name": "say \"Siamo amici, Gerald.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "call_friend",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "amico",
+              "evidence": "Siamo amici, Gerald.",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "raise_toast",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your friendship statement is correct. Now make the toast in Italian."
+    },
+    {
+      "name": "say \"Cin cin!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "raise_toast",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "cin_cin",
+              "evidence": "Cin cin",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "A correct and natural toast!"
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:visited",
+        "cracked_fountain:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": false,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    }
+  ]
+}
