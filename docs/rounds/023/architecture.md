@@ -100,3 +100,12 @@ Critiqued draft: `trail/plan-v1.md`, sha256 a2ce0feb…; Codex, effort high; raw
 
 Net change from v1: Spanish *un poco más* and *juntos* only, singular liking, a fixed feminine referent and a
 present-tense fragment, an answer-withholding line in each intent, overlap and blocklist tests.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no amendment. Server 130/130, mobile 37/37, web client 12/12 and build; Gerald's pinned
+prompts unchanged. Live codex-cli, one run per member and language: 6/6 resolved, 18/18 conversation turns graded as
+scripted, no authored answer given away (one near-leak by the bare Spanish *más*), share 0.43 against 0.39 requested
+(Flick short at 0.24–0.28). The overlap test found round 022's *buon* / *buen* inside *buon giorno* / *buen día*,
+allowed as a named exception. Backlog A8 is done. Nothing was checked in the iOS Simulator. See
+[findings](findings.md).

@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 023, every party member can talk (autonomous)
+
+Mortimer (a tasting: say you like it, ask for more), Flick (a slow walk: let's go, together) and Marginalia (a
+fragment of *The Journey*: praise the story, ask her to read it again) have party conversations in Italian and
+Spanish, so every saveable character has one. Spanish asks for *un poco más* and *juntos*, because bare *más* and
+*juntas* match English words (Codex critique 1: 11 findings, 7 accepted, 3 in part, 1 rejected, decided autonomously).
+A new test checks party vocabulary against an English blocklist and every other form in the pack. Tests: server
+130/130, mobile 37/37, web client 12/12 and build. Live codex-cli: 6 of 6 runs resolved with every verdict as scripted,
+and no authored answer given away; Flick's lines are under the requested share (0.24–0.28 against 0.38). Not checked
+in the iOS Simulator; the content needs a native speaker's review. See [findings](docs/rounds/023/findings.md).
+
 ## Addendum 2026-11-05: round 022, talking to party members (autonomous)
 
 A party member can be talked to again from the Party screen, wherever the player is: a party conversation is an
@@ -263,7 +274,7 @@ Newest first.
 | 020 | 11-05 | Portia's formalities in the target language: a character-sheet quirk (backlog E1, second try) (autonomous) | [020](docs/rounds/020/architecture.md) | [findings](docs/rounds/020/findings.md) | `4492e02` (pre-run record) to round 020 close (quirk reverted) |
 | 021 | 11-05 | Party recruitment: SAVE / LEAVE after a saveable NPC, party in the save, Party screen (backlog A8a); start route keeps `encounterId` (autonomous) | [021](docs/rounds/021/architecture.md) | [findings](docs/rounds/021/findings.md) | `9e51acd` (pre-run record) to round 021 close |
 | 022 | 11-05 | Conversations with party members: Gerald's coffee break, anywhere once he has joined (backlog A8b) (autonomous) | [022](docs/rounds/022/architecture.md) | [findings](docs/rounds/022/findings.md) | `53b5cca` (pre-run record) to round 022 close |
-| 023 | 11-05 | Party conversations for Mortimer, Flick and Marginalia (backlog A8c) (autonomous) | [023](docs/rounds/023/architecture.md) | [findings](docs/rounds/023/findings.md) | pre-run record |
+| 023 | 11-05 | Party conversations for Mortimer, Flick and Marginalia (backlog A8c) (autonomous) | [023](docs/rounds/023/architecture.md) | [findings](docs/rounds/023/findings.md) | `677b75a` (pre-run record) to round 023 close |
 | 019 | 11-05 | Portia's own words: ambient vocabulary so the tutorial speaks its share of target language (backlog E1, E2) (autonomous) | [019](docs/rounds/019/architecture.md) | [findings](docs/rounds/019/findings.md) | `55eacb2` (pre-run record) to round 019 close |
 | 018 | 11-05 | claude-cli accepts a subscription OAuth token from the environment (supervisor note) (autonomous) | [018](docs/rounds/018/architecture.md) | [findings](docs/rounds/018/findings.md) | `b6fbd9e` (pre-run record) to round 018 close |
 | 017 | 11-05 | The Spellbook stops giving answers away: no meanings or reviews during an encounter, due cards hide theirs, notes shown (backlog D3) (autonomous) | [017](docs/rounds/017/architecture.md) | [findings](docs/rounds/017/findings.md) | `7657879` (pre-run record) to round 017 close |

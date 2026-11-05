@@ -7,9 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing in progress: rounds 021 (A8a) and 022 (A8b) are closed. Next, in order: **A8c** (party conversations for
-Mortimer, Flick, Marginalia; content only), **B3**'s Fountain part (content, live runs), then **E1** as a template
-round (see its entry). Check Codex's limit first (see traps).
+Nothing in progress: rounds 021–023 (A8a–c) are closed; backlog A8 is done. Next, in order: **B3**'s Fountain part
+(content, live runs), then **E1** as a template round (see its entry; round 023 adds Flick's party lines as evidence),
+then **A9** (lore fragments). **F1** (test temp-dir cleanup) is a quick win before any long session. Check Codex's
+limit and `df -h /tmp` first (see traps).
 
 ## Backlog
 
@@ -41,10 +42,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **A8b. Party conversations.** (round 022, closed 2026-11-05) Encounters with `party_of` (no location), started
   from the Party screen anywhere once the member joined, counted per member (`conversations`); Gerald's coffee break
   (it, es).
-- [ ] **A8c. More party conversations.** One `party_of` encounter each for Mortimer, Flick and Marginalia (it and es),
-  content only (round 022's coffee break is the template; `play-market.js --party` plays only Gerald's: generalise
-  it with a `--member <location>` option). Consider unordered objectives (round 022 open item: thanks before praise
-  is passed but held) and deeper tiers by `conversations`.
+- [x] **A8c. More party conversations.** (round 023, closed 2026-11-05) Mortimer's tasting, Flick's slow walk,
+  Marginalia's fragment (it, es); `play-market.js --party --member <home location>`. Deferred: unordered objectives,
+  deeper tiers by `conversations`, leak checks for bare words inside authored phrases ("¿Quieres más?").
 - [ ] **A9. Lore fragments.** Optional hidden passages with advanced vocabulary (e.g. fragments of *The Journey*).
 - [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
 - [ ] **A11. Save slots** (if still wanted after A1's save format).
@@ -84,6 +84,13 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (new upstream releases; nothing in the repo changed; 3 packages out of date by round 014). `npx expo install --fix` in `mobile/`, then re-run jest,
   expo-doctor and the iOS export. Simulator check of the update goes to "Needs owner".
 
+### F. Maintenance
+
+- [ ] **F1. Test temp dirs.** Server tests `mkdtemp` save dirs under `/tmp` and never remove them; `/tmp` is a 64 MB
+  tmpfs and filled during round 023. Add `t.after(() => rm(dir, …))` in `createRuntime` (helpers.js) and the other
+  `mkdtemp` sites; check `ls /tmp | grep parallang | wc -l` stays 0 after `node --test`.
+
+
 ### E. Follow-ups from live data
 
 - [ ] **E1. Opening-line language share.** Round 009: first NPC lines carry 0.05–0.24 target language against
@@ -95,7 +102,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   **Round 020:** that quirk did not help either (lines 0.17, greeting 0.13) and was reverted. Content is exhausted;
   next is a template round: make "Target approximately N%" concrete (e.g. about K of every 10 words), regenerate
   Gerald's golden prompts on purpose, and measure with a full `--tour` (Mortimer, Flick, Marginalia overshoot today,
-  so a stronger rule may push them further). Use `docs/rounds/020/results/compare.py` for the measures. Measure over a few runs per encounter, then adjust the greeting template or
+  so a stronger rule may push them further). **Round 023:** Flick's party lines are also short (0.24 es, 0.28 it
+  against 0.38; long English riddles around short phrases), while Mortimer (es 0.60) and Marginalia run over. Use `docs/rounds/020/results/compare.py` for the measures. Measure over a few runs per encounter, then adjust the greeting template or
   language rules; keep the golden-prompt test in step (regenerate on purpose).
 - [x] **E3. NPCs list the answers.** (round 012, closed 2026-11-05) Style rule against menus of an open objective's
   targets; menus 4/4 → 0/4 runs. Portia's "Come ti chiami?" left allowed (pending owner review).
@@ -104,6 +112,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Round 023: native-speaker review of the four party conversations (rounds 022–023) and their reference URLs
+  ([open items](../rounds/023/findings.md#open-items)).
 - Round 022: check the Party screen's Talk button and count, the coffee break, and review Gerald's coffee-break
   content, the agreement rule and its unopened reference URLs ([open items](../rounds/022/findings.md#open-items)).
 - **Round 021: re-check the app over HTTP.** Until round 021 the HTTP start route dropped `encounterId`, so the app
@@ -205,7 +215,21 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   closed: party conversations and Gerald's coffee break; server 127/127, mobile 37/37, client 12/12; live 6 runs,
   70 calls, 5/5 with the planned script resolved as scripted.
 
+- 2026-11-05, iteration 7: round 023 (A8c) planned, critiqued (11 findings: 7 accepted, 3 in part, 1 rejected),
+  built and closed: party conversations for Mortimer, Flick, Marginalia; server 130/130; live 6/6 resolved as
+  scripted (108 calls). Iteration 7 ends here (rounds 021–023 closed; about 200 Codex calls, no limit).
+
 ## Handoff notes and traps
+
+- **`/tmp` is a 64 MB tmpfs and the server tests never delete their save dirs** (`mkdtemp` `parallang-test-*`,
+  `parallang-party-*`, …; 1,406 dirs / 17 MB by round 023, plus iOS exports). At 8 MB free, Claude Code's own temp
+  output failed. Before a long session: `df -h /tmp`; remove your own `/tmp/parallang-*` dirs and export copies (no
+  server running). Export iOS builds into a dir you delete afterwards.
+- **No Python `yaml` module** in the sandbox: generate content as JSON and write YAML with the server's `js-yaml`
+  (`docs/rounds/023/results/gen/`).
+- **The overlap test** (`server/test/party-conversation.test.js`) checks every party vocabulary form against all
+  other entries in its pack and an English blocklist; `buon`/`buen` inside `buon giorno`/`buen día` is the one
+  allowed overlap (the matcher takes the longest match).
 
 - **Party conversations** (round 022): an encounter file with `party_of: <location encounter>` and no `location`.
   The loader checks same character file, saveable, one per location encounter, not default, not in
