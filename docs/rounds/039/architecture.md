@@ -87,3 +87,8 @@ device-write-failure case.
   - when the device write fails after the delete, the slot stays off the list and the next switch records it;
   - the alert carries the new wording.
 - All suites; web client unchanged.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. Server 162/162, mobile 91/91, web client 12/12 and build, expo-doctor 20/20.
+See [findings](findings.md).

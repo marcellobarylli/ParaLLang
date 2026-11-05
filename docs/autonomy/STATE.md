@@ -74,8 +74,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **A12b. Unlocks for the other members.** (round 033, closed 2026-11-05) Mortimer (forbidden herd), Flick (lotus),
   Marginalia (old dog) after three conversations each; stem check over every fragment and party conversation.
   Open: tiers that change the conversation (needs live runs); a Party-screen hint (owner question).
-- [x] **A11b. Removing saves.** (round 038, closed 2026-11-05) Non-current saves, device only, system alert, no label
-  reuse. Open (owner): a server delete endpoint; renaming.
+- [x] **A11b. Removing saves.** (rounds 038–039, closed 2026-11-05) Non-current saves, system alert, no label reuse;
+  deleted on the server first (`DELETE /api/learner`). Open (owner): renaming; the app sending `PARALLANG_TOKEN`.
 - [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
 - [x] **A11. Save slots.** (round 031, closed 2026-11-05) Up to three learners per device, Saves screen from the
   map; delete and rename deferred (owner question).
