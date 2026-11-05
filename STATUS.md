@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 035, transitions (autonomous)
+
+New dialogue lines, a new assessment, the victory banner and a new screen fade in over 200 ms. Under Reduce Motion
+nothing moves, and nothing moves until the setting is known. Lines already on screen when an encounter appears
+(opening, resume, restart) do not fade, and the list's auto-scroll follows the setting. Line heights are now tokens.
+Critiqued by a Claude subagent (8 findings: 6 accepted, 2 in part), which found three ways the first plan would have
+flashed or missed fades. Mobile 78/78. Not seen in the Simulator ([open items](docs/rounds/035/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 034, type scale and palette (autonomous)
 
 The app has one type scale (ten sizes named after Apple's text styles, in `mobile/src/components/ui.js`) and one
@@ -380,6 +388,7 @@ Newest first.
 | 032 | 11-05 | Gerald's Dead Branch fragment after three coffee breaks: the first relationship unlock (backlog A12) (autonomous) | [032](docs/rounds/032/architecture.md) | [findings](docs/rounds/032/findings.md) | `f1589f1` (pre-run record) to round 032 close |
 | 033 | 11-05 | Journey fragments for Mortimer, Flick and Marginalia after three party conversations; wider stem check (backlog A12) (autonomous) | [033](docs/rounds/033/architecture.md) | [findings](docs/rounds/033/findings.md) | pre-run record to round 033 close |
 | 034 | 11-05 | App type scale and palette tokens; every text style sized, map labels undimmed, contrast tests (backlog C3a) (autonomous) | [034](docs/rounds/034/architecture.md) | [findings](docs/rounds/034/findings.md) | pre-run record to round 034 close |
+| 035 | 11-05 | Fade-in transitions that respect Reduce Motion; line-height tokens (backlog C3b) (autonomous) | [035](docs/rounds/035/architecture.md) | [findings](docs/rounds/035/findings.md) | pre-run record to round 035 close |
 | 031 | 11-05 | Save slots: up to three learners per device, Saves screen, stale-reply guards (backlog A11) (autonomous) | [031](docs/rounds/031/architecture.md) | [findings](docs/rounds/031/findings.md) | `2c5e2ae` (pre-run record) to round 031 close |
 | 030 | 11-05 | Fragments of The Journey: three authored passages per pack in the Spellbook, found on completion, translation behind a toggle (backlog A9) (autonomous) | [030](docs/rounds/030/architecture.md) | [findings](docs/rounds/030/findings.md) | `d6e2e51` (pre-run record) to round 030 close |
 | 029 | 11-05 | Forced repetition before the Rift: one due card per answer slot, DRILL_REQUIRED, map drill note (backlog C1) (autonomous) | [029](docs/rounds/029/architecture.md) | [findings](docs/rounds/029/findings.md) | `4942a58` (pre-run record) to round 029 close |

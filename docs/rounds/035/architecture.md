@@ -83,3 +83,9 @@ keyed; jest defaults to Reduce Motion; start opacity 0.02; line-height pairing c
 - `learning-flow.test.js`: `scrollToEnd({ animated: false })` under Reduce Motion.
 - `theme.test.js`: no numeric `lineHeight`; each `leading.X` sits with `type.X` and is 1.3–1.6 times it.
 - All mobile suites, expo-doctor, iOS export; server and web unchanged.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. Fades run only when motion is known to be allowed, once per new line, per new
+assessment, per screen, and never for lines already shown. Line heights are paired tokens. Mobile 78/78, server
+157/157, web client 12/12 and build, expo-doctor 20/20, iOS export ok. See [findings](findings.md).
