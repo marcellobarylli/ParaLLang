@@ -1,0 +1,9 @@
+# The Crumbling Market: which locations connect (paths are two-way) and where a new player starts.
+start: market_entrance
+paths:
+  - [market_entrance, coffee_cart]
+  - [market_entrance, butchers_stall]
+  - [coffee_cart, cracked_fountain]
+  - [butchers_stall, cracked_fountain]
+  - [cracked_fountain, old_bookshop]
+  - [old_bookshop, the_rift]

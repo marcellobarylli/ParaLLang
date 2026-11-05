@@ -2,8 +2,9 @@ import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { retryableError, validationError } from './errors.js';
+import { emptyWorldProgress } from './world.js';
 
-export const SAVE_SCHEMA_VERSION = 1;
+export const SAVE_SCHEMA_VERSION = 2;
 export const LEARNER_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export function assertLearnerId(learnerId) {
@@ -12,7 +13,28 @@ export function assertLearnerId(learnerId) {
 }
 
 export function createLearnerEnvelope(learnerId) {
-  return { schemaVersion: SAVE_SCHEMA_VERSION, learnerId, spellbook: { words: {}, phrases: {}, processedAssessments: {} } };
+  return {
+    schemaVersion: SAVE_SCHEMA_VERSION,
+    learnerId,
+    spellbook: { words: {}, phrases: {}, processedAssessments: {} },
+    world: emptyWorldProgress(),
+  };
+}
+
+// Version 1 saves (rounds 001-004) hold only the Spellbook. They gain empty world progress in memory and are
+// written as version 2 on their next save.
+function migrate(value) {
+  if (value && typeof value === 'object' && value.schemaVersion === 1) {
+    return { ...value, schemaVersion: SAVE_SCHEMA_VERSION, world: emptyWorldProgress() };
+  }
+  return value;
+}
+
+function validWorld(world) {
+  const ids = (list) => Array.isArray(list) && list.every((id) => typeof id === 'string');
+  return Boolean(world) && typeof world === 'object' && !Array.isArray(world)
+    && (world.currentLocationId === null || typeof world.currentLocationId === 'string')
+    && ids(world.visitedLocationIds) && ids(world.completedEncounterIds);
 }
 
 function validateEnvelope(value, learnerId) {
@@ -47,6 +69,9 @@ function validateEnvelope(value, learnerId) {
       throw retryableError('The learner save contains an invalid assessment receipt. The original file was preserved.', 'SAVE_UNREADABLE');
     }
   }
+  if (!validWorld(value.world)) {
+    throw retryableError('The learner save contains invalid world progress. The original file was preserved.', 'SAVE_UNREADABLE');
+  }
   return value;
 }
 
@@ -65,7 +90,7 @@ export class JsonLearningStorage {
       let parsed;
       try { parsed = JSON.parse(raw); }
       catch { throw retryableError('This learner save contains invalid JSON. The original file was preserved.', 'SAVE_UNREADABLE'); }
-      return validateEnvelope(parsed, learnerId);
+      return validateEnvelope(migrate(parsed), learnerId);
     } catch (error) {
       if (error.code === 'ENOENT' && create) return createLearnerEnvelope(learnerId);
       if (error.code === 'ENOENT') return null;

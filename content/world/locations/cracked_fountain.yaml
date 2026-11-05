@@ -1,0 +1,8 @@
+id: cracked_fountain
+name: The Cracked Fountain
+description: >
+  The fountain stopped running water some time ago and now runs mostly rumours. A split down its middle leaks a
+  faint light, and something small keeps darting at the edge of your vision, just where you are not looking.
+vocabulary_focus: [time, directions, commands]
+encounter: null
+map: { x: 0.5, y: 0.44 }

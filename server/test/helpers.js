@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -88,12 +89,14 @@ export async function createRuntime({ provider = new FixtureProvider(), clock = 
   const actualStorage = storage ?? new JsonLearningStorage({ saveDir });
   const content = loadGameContent({ language });
   const service = new LearningService({ provider, storage: actualStorage, content, clock });
-  const app = createApp({ service, logger: { error() {} } });
+  // Test servers bind 127.0.0.1 and are protected by a random PARALLANG_TOKEN-style secret.
+  const token = randomUUID();
+  const app = createApp({ service, logger: { error() {} }, token });
   const server = app.listen(0, '127.0.0.1');
   await new Promise((resolve) => server.once('listening', resolve));
   const baseUrl = `http://127.0.0.1:${server.address().port}`;
   return {
-    provider, storage: actualStorage, service, content, server, baseUrl, saveDir,
+    provider, storage: actualStorage, service, content, server, baseUrl, saveDir, token,
     close: async () => {
       await new Promise((resolve) => server.close(resolve));
       await service.shutdown();
@@ -101,10 +104,14 @@ export async function createRuntime({ provider = new FixtureProvider(), clock = 
   };
 }
 
-export async function api(runtime, path, { learnerId, method = 'GET', body } = {}) {
+export async function api(runtime, path, { learnerId, method = 'GET', body, token = runtime.token } = {}) {
   const response = await fetch(`${runtime.baseUrl}${path}`, {
     method,
-    headers: { ...(body ? { 'Content-Type': 'application/json' } : {}), ...(learnerId ? { 'X-Learner-Id': learnerId } : {}) },
+    headers: {
+      ...(body ? { 'Content-Type': 'application/json' } : {}),
+      ...(learnerId ? { 'X-Learner-Id': learnerId } : {}),
+      ...(token ? { 'X-ParaLLang-Token': token } : {}),
+    },
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await response.json();

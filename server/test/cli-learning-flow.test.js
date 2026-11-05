@@ -40,11 +40,12 @@ async function cliRuntime(t, providerName, control = {}) {
   const saveDir = join(root, 'saves');
   const storage = new JsonLearningStorage({ saveDir });
   const service = new LearningService({ provider, storage, content: loadGameContent({ language: 'es' }), clock: () => fixedNow });
-  const app = createApp({ service, logger: { error: (line) => logs.push(line) } });
+  const token = crypto.randomUUID();
+  const app = createApp({ service, logger: { error: (line) => logs.push(line) }, token });
   const server = app.listen(0, '127.0.0.1');
   await new Promise((resolveListen) => server.once('listening', resolveListen));
   const runtime = {
-    provider, service, storage, server, saveDir, logs, statePath, controlPath, capturePath,
+    provider, service, storage, server, saveDir, logs, statePath, controlPath, capturePath, token,
     baseUrl: `http://127.0.0.1:${server.address().port}`,
     close: async () => {
       await new Promise((resolveClose) => server.close(resolveClose));

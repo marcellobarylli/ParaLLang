@@ -17,7 +17,7 @@ const storage = new JsonLearningStorage({
   saveDir: saveDirForLanguage(process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'), content.language.code),
 });
 const service = new LearningService({ provider, storage, content });
-const app = createApp({ service });
+const app = createApp({ service, token: process.env.PARALLANG_TOKEN || null });
 
 if (process.env.NODE_ENV !== 'test') {
   const server = app.listen(port, host, () => {

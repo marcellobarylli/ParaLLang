@@ -8,6 +8,7 @@ import {
 import { assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
+import { applyMove, worldSnapshot } from './world.js';
 
 function clone(value) { return structuredClone(value); }
 function payloadHash(value) { return createHash('sha256').update(JSON.stringify(value)).digest('hex'); }
@@ -385,12 +386,32 @@ export class LearningService {
         spellbook: this.spellbookSnapshot(stagedEnvelope),
         replayed: false,
       };
+      if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(this.content.encounter.id)) {
+        stagedEnvelope.world.completedEncounterIds.push(this.content.encounter.id);
+      }
       stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
         kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response,
       };
       await this.storage.save(stagedEnvelope);
       this.encounters.set(learnerId, stagedEncounter);
       return response;
+    });
+  }
+
+  async getWorld(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    return { world: worldSnapshot(this.content.world, envelope.world) };
+  }
+
+  async moveTo(learnerId, request) {
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const { progress, changed } = applyMove(this.content.world, envelope.world, request.locationId);
+      if (!changed) return { world: worldSnapshot(this.content.world, envelope.world) };
+      const stagedEnvelope = clone(envelope);
+      stagedEnvelope.world = progress;
+      await this.storage.save(stagedEnvelope);
+      return { world: worldSnapshot(this.content.world, progress) };
     });
   }
 

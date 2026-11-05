@@ -89,6 +89,20 @@ const styleGuideSchema = z.object({
   rules: z.array(z.string().min(1)).min(1),
 }).strict();
 
+const locationIdSchema = z.string().regex(/^[a-z][a-z0-9_]*$/);
+const locationSchema = z.object({
+  id: locationIdSchema,
+  name: z.string().min(1),
+  description: z.string().min(1),
+  vocabulary_focus: z.array(z.string().min(1)).min(1),
+  encounter: z.string().min(1).nullable(),
+  map: z.object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) }).strict(),
+}).strict();
+const connectionsSchema = z.object({
+  start: locationIdSchema,
+  paths: z.array(z.tuple([locationIdSchema, locationIdSchema])).min(1),
+}).strict();
+
 function parseYaml(contentDir, relativePath) {
   const fullPath = resolve(contentDir, relativePath);
   try {
@@ -161,7 +175,53 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     }
   });
 
-  return Object.freeze({ language, character, encounter, styleGuide, vocabulary, vocabularyById });
+  const world = loadWorld(contentDir, encounter);
+  return Object.freeze({ language, character, encounter, styleGuide, vocabulary, vocabularyById, world });
+}
+
+// The world is shared by every language pack: locations in content/world/locations/, paths in connections.yaml.
+export function loadWorld(contentDir, encounter) {
+  const locationsDir = resolve(contentDir, 'world', 'locations');
+  const locations = readdirSync(locationsDir)
+    .filter((name) => name.endsWith('.yaml'))
+    .sort()
+    .map((name) => {
+      const location = locationSchema.parse(parseYaml(contentDir, `world/locations/${name}`));
+      if (`${location.id}.yaml` !== name) throw new Error(`content/world/locations/${name} must declare id ${name.slice(0, -5)}`);
+      return Object.freeze(location);
+    });
+  const connections = connectionsSchema.parse(parseYaml(contentDir, 'world/connections.yaml'));
+  const byId = new Map(locations.map((location) => [location.id, location]));
+  if (!byId.has(connections.start)) throw new Error(`World start ${connections.start} is not a known location`);
+
+  const neighbours = new Map(locations.map((location) => [location.id, new Set()]));
+  for (const [a, b] of connections.paths) {
+    for (const id of [a, b]) if (!byId.has(id)) throw new Error(`World path ${a}–${b} names unknown location ${id}`);
+    if (a === b) throw new Error(`World path ${a}–${b} joins a location to itself`);
+    neighbours.get(a).add(b);
+    neighbours.get(b).add(a);
+  }
+  const reached = new Set([connections.start]);
+  const queue = [connections.start];
+  while (queue.length) for (const next of neighbours.get(queue.shift())) if (!reached.has(next)) { reached.add(next); queue.push(next); }
+  const unreachable = locations.filter((location) => !reached.has(location.id)).map((location) => location.id);
+  if (unreachable.length) throw new Error(`World locations unreachable from ${connections.start}: ${unreachable.join(', ')}`);
+
+  const withEncounter = locations.filter((location) => location.encounter !== null);
+  for (const location of withEncounter) {
+    if (location.encounter !== encounter.id) throw new Error(`Location ${location.id} names unknown encounter ${location.encounter}`);
+  }
+  if (withEncounter.length !== 1 || withEncounter[0].id !== encounter.location) {
+    throw new Error(`Encounter ${encounter.id} must be held by exactly its location ${encounter.location}`);
+  }
+
+  return Object.freeze({
+    start: connections.start,
+    locations,
+    locationsById: byId,
+    paths: connections.paths.map(([a, b]) => Object.freeze([a, b])),
+    neighbours: new Map([...neighbours].map(([id, set]) => [id, Object.freeze([...set].sort())])),
+  });
 }
 
 // Narrow compatibility helpers for scripts which used the Phase 1 loader.

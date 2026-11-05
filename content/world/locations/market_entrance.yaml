@@ -1,0 +1,9 @@
+id: market_entrance
+name: Market Entrance
+description: >
+  An archway that has not decided which language it is in. The sign above it says MERCATO on Tuesdays and MARKET
+  on the other days, and today it is trying both, which is why it is smoking slightly. Glowing threads show through
+  the cracks in the stone, the way stitches show through a coat that has been mended once too often.
+vocabulary_focus: [greetings, pronouns]
+encounter: null
+map: { x: 0.5, y: 0.92 }

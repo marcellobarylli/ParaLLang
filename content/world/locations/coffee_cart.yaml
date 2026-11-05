@@ -1,0 +1,9 @@
+id: coffee_cart
+name: The Coffee Cart
+description: >
+  A cart on three wheels and one strong opinion. Steam rises from a copper machine that has been polished more
+  often than it has been cleaned. Behind it, an imp in a tiny apron watches every passer-by with the expression of
+  a sommelier being offered boxed wine.
+vocabulary_focus: [food, drinks, opinions]
+encounter: imp_coffee_greeting
+map: { x: 0.2, y: 0.66 }

@@ -1,12 +1,27 @@
 import express from 'express';
 import cors from 'cors';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { createEncounterRouter } from './routes/encounter.js';
 import { AppError } from './errors.js';
 
-export function createApp({ service, logger = console }) {
+const digest = (value) => createHash('sha256').update(String(value)).digest();
+
+// Optional shared secret (PARALLANG_TOKEN): when set, every /api route except /api/health needs the
+// X-ParaLLang-Token header with that value.
+function requireToken(token) {
+  const expected = digest(token);
+  return (req, res, next) => {
+    if (req.path === '/api/health' || !req.path.startsWith('/api/')) return next();
+    const given = req.get('X-ParaLLang-Token');
+    if (given && timingSafeEqual(digest(given), expected)) return next();
+    return next(new AppError('A valid X-ParaLLang-Token header is required.', { status: 401, code: 'UNAUTHORIZED' }));
+  };
+}
+
+export function createApp({ service, logger = console, token = null }) {
   const app = express();
   app.use(cors());
+  if (token) app.use(requireToken(token));
   app.use(express.json({ limit: '32kb' }));
   app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
@@ -15,6 +30,15 @@ export function createApp({ service, logger = console }) {
     catch (error) { next(error); }
   });
   app.use('/api/encounter', createEncounterRouter(service));
+
+  app.get('/api/world', async (req, res, next) => {
+    try { res.json(await service.getWorld(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
+  app.post('/api/world/move', async (req, res, next) => {
+    try { res.json(await service.moveTo(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
 
   app.get('/api/spellbook', async (req, res, next) => {
     try { res.json(await service.getSpellbook(req.get('X-Learner-Id'))); }

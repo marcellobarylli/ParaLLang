@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
 import { Button, colors } from './ui.js';
 
-export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn }) {
+export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to Gerald' }) {
   const [answer, setAnswer] = useState('');
   const name = language?.name ?? 'Target-language';
   if (result) return (
@@ -14,12 +14,12 @@ export default function ReviewPanel({ challenge, result, language, isLoading, on
       <Text style={styles.small}>Quality {result.effectiveQuality}/5 · Next review: {new Date(result.nextReviewAt).toLocaleString()}</Text>
       <View style={styles.buttons}>
         <Button label="Continue reviews" variant="primary" onPress={onContinue} />
-        <Button label="Return to Gerald" onPress={onReturn} />
+        <Button label={returnLabel} onPress={onReturn} />
       </View>
     </ScrollView>
   );
   if (!challenge) return (
-    <View style={styles.content}><Text style={styles.body}>No due review is available.</Text><Button label="Return to Gerald" onPress={onReturn} /></View>
+    <View style={styles.content}><Text style={styles.body}>No due review is available.</Text><Button label={returnLabel} onPress={onReturn} /></View>
   );
   return (
     <ScrollView aria-label={`${name} vocabulary review`} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -40,7 +40,7 @@ export default function ReviewPanel({ challenge, result, language, isLoading, on
       <View style={styles.buttons}>
         <Button label="Check answer" variant="primary" disabled={isLoading || !answer.trim()} onPress={() => onSubmit(answer)} />
         <Button label="Show answer" disabled={isLoading} onPress={onReveal} />
-        <Button label="Return to Gerald" variant="text" onPress={onReturn} />
+        <Button label={returnLabel} variant="text" onPress={onReturn} />
       </View>
     </ScrollView>
   );

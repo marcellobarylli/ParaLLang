@@ -17,9 +17,11 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
     learnerId: null,
     language: null,
     encounter: null,
+    world: null,
     spellbook: emptySpellbook,
     snapshotsByLearner: snapshots,
-    view: 'dialogue',
+    view: 'map',
+    returnView: 'map',
     reviewChallenge: null,
     reviewResult: null,
     assessment: null,
@@ -41,16 +43,51 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
           const identity = await api.createLearner(storedId);
           if (epoch !== requestEpoch) return;
           await storage?.setItem?.(LEARNER_KEY, identity.learnerId);
-          const started = await api.startEncounter(identity.learnerId, false);
+          const [{ world }, spellbook] = await Promise.all([api.getWorld(identity.learnerId), api.getSpellbook(identity.learnerId)]);
           if (epoch !== requestEpoch) return;
-          snapshots.set(identity.learnerId, { encounter: started.encounter, spellbook: started.spellbook });
-          set({ learnerId: identity.learnerId, language: identity.language ?? null, encounter: started.encounter, spellbook: started.spellbook, isLoading: false });
+          snapshots.set(identity.learnerId, { encounter: null, spellbook });
+          set({ learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, isLoading: false });
         } catch (error) {
           if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
           initializationPromise = null;
         }
       })();
       return initializationPromise;
+    },
+
+    // Round 005: the app opens on the Crumbling Market map; encounters are entered from their location.
+    moveTo: async (locationId) => {
+      const { learnerId, isLoading } = get();
+      if (!learnerId || isLoading) return;
+      set({ isLoading: true, error: null });
+      try {
+        const { world } = await api.moveTo(learnerId, locationId);
+        if (get().learnerId !== learnerId) return;
+        set({ world, isLoading: false });
+      } catch (error) { set({ error: error.message, isLoading: false }); }
+    },
+
+    enterEncounter: async () => {
+      const { learnerId, isLoading } = get();
+      if (!learnerId || isLoading) return;
+      const epoch = requestEpoch;
+      set({ isLoading: true, error: null });
+      try {
+        const started = await api.startEncounter(learnerId, false);
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        snapshots.set(learnerId, { encounter: started.encounter, spellbook: started.spellbook });
+        set({ encounter: started.encounter, spellbook: started.spellbook, isLoading: false, view: 'dialogue' });
+      } catch (error) { set({ error: error.message, isLoading: false }); }
+    },
+
+    openMap: async () => {
+      const { learnerId } = get();
+      set({ view: 'map', reviewChallenge: null, reviewResult: null, error: null });
+      if (!learnerId) return;
+      try {
+        const { world } = await api.getWorld(learnerId);
+        if (get().learnerId === learnerId) set({ world });
+      } catch (error) { set({ error: error.message }); }
     },
 
     restartEncounter: async () => {
@@ -80,6 +117,12 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
         if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
         snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
         set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
+        if (result.encounter.state === 'resolved') {
+          try {
+            const { world } = await api.getWorld(learnerId);
+            if (get().learnerId === learnerId) set({ world });
+          } catch { /* the map refreshes again when it is opened */ }
+        }
       } catch (error) {
         if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
       }
@@ -98,8 +141,14 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       } catch (error) { set({ error: error.message, isLoading: false }); }
     },
 
-    openSpellbook: () => set({ view: 'spellbook', reviewChallenge: null, reviewResult: null, error: null }),
-    returnToDialogue: () => set({ view: 'dialogue', reviewChallenge: null, reviewResult: null, error: null }),
+    // The Spellbook and review return to the screen they were opened from (the map or the encounter).
+    openSpellbook: () => set((state) => ({
+      view: 'spellbook', returnView: ['map', 'dialogue'].includes(state.view) ? state.view : state.returnView,
+      reviewChallenge: null, reviewResult: null, error: null,
+    })),
+    returnToDialogue: () => set((state) => ({
+      view: state.returnView === 'dialogue' && state.encounter ? 'dialogue' : 'map', reviewChallenge: null, reviewResult: null, error: null,
+    })),
 
     startReview: async (vocabularyId) => {
       const { learnerId } = get();

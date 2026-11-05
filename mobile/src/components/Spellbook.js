@@ -2,12 +2,12 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
 import { Button, colors } from './ui.js';
 
-export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn }) {
+export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to Gerald' }) {
   return (
     <ScrollView aria-label="Spellbook" contentContainerStyle={styles.content}>
       <View style={styles.heading}>
         <View><Text role="heading" style={styles.title}>Spellbook</Text><Text style={styles.muted}>{spellbook.dueCount} due for review</Text></View>
-        <Button label="Return to Gerald" onPress={onReturn} />
+        <Button label={returnLabel} onPress={onReturn} />
       </View>
       {spellbook.cards.length === 0 ? (
         <View style={styles.card}><Text style={styles.cardTitle}>No vocabulary yet</Text><Text style={styles.body}>Words and phrases appear here after you encounter them.</Text></View>

@@ -92,12 +92,13 @@ test('unexpected server errors include their message only in the sanitized log',
   const app = createApp({
     service: { getSpellbook: async () => { throw new Error('storage read failed'); } },
     logger: { error: (line) => logs.push(line) },
+    token: 'test-token',
   });
   const server = app.listen(0, '127.0.0.1');
   await new Promise((resolve) => server.once('listening', resolve));
   t.after(() => new Promise((resolve) => server.close(resolve)));
 
-  const response = await fetch(`http://127.0.0.1:${server.address().port}/api/spellbook`);
+  const response = await fetch(`http://127.0.0.1:${server.address().port}/api/spellbook`, { headers: { 'X-ParaLLang-Token': 'test-token' } });
   const body = await response.json();
 
   assert.equal(response.status, 500);

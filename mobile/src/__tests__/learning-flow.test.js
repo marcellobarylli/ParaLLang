@@ -31,6 +31,13 @@ const cards = [
   { vocabularyId: 'senza_latte', kind: 'phrase', target: 'senza latte', meanings: ['without milk', 'no milk'], partOfSpeech: 'prepositional_phrase', mastery: 'discovered', due: true, nextReviewAt: '2026-01-15T12:00:00Z', lastOutcome: null, repetitions: 0 },
 ];
 const spellbook = { cards, dueCount: 2, contentVersion: 'gerald-coffee-v1' };
+const place = (id, name, state, adjacent, map, extra = {}) => ({ id, name, state, adjacent, map, ...extra });
+const entrance = (state) => place('market_entrance', 'Market Entrance', state, state !== 'current', { x: 0.5, y: 0.92 }, { description: 'An archway that has not decided which language it is in.', vocabularyFocus: ['greetings'], encounter: null });
+const cart = (state, completed = false) => state === 'known'
+  ? place('coffee_cart', 'The Coffee Cart', 'known', true, { x: 0.2, y: 0.66 })
+  : place('coffee_cart', 'The Coffee Cart', state, false, { x: 0.2, y: 0.66 }, { description: 'A cart on three wheels and one strong opinion.', vocabularyFocus: ['drinks'], encounter: { id: 'imp_coffee_greeting', completed } });
+const startWorld = { currentLocationId: 'market_entrance', locations: [cart('known'), entrance('current')], paths: [['market_entrance', 'coffee_cart']] };
+const cartWorld = (completed = false) => ({ currentLocationId: 'coffee_cart', locations: [cart('current', completed), entrance('visited')], paths: [['market_entrance', 'coffee_cart']] });
 const response = (status, data) => ({ ok: status >= 200 && status < 300, status, json: async () => data });
 const pathOf = (url) => new URL(String(url)).pathname;
 
@@ -38,7 +45,7 @@ beforeEach(async () => {
   await AsyncStorage.clear();
   useGameStore.setState({
     learnerId: null, language: null, encounter: null, spellbook: { cards: [], dueCount: 0, contentVersion: null },
-    view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null,
+    world: null, view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null,
     draft: '', pendingInput: null, isLoading: false, error: null,
   });
 });
@@ -47,12 +54,20 @@ afterEach(() => { delete globalThis.fetch; });
 test('the app enforces help, retains failed input, resolves, reviews, reveals, and returns', async () => {
   const user = userEvent.setup();
   let currentEncounter = encounter();
+  let currentWorld = startWorld;
   let dialogueCalls = 0;
   let reviewCalls = 0;
   globalThis.fetch = jest.fn(async (url, init = {}) => {
     const path = pathOf(url);
     const body = init.body ? JSON.parse(init.body) : {};
     if (path === '/api/learner') return response(201, learner);
+    if (path === '/api/world') return response(200, { world: currentWorld });
+    if (path === '/api/spellbook') return response(200, spellbook);
+    if (path === '/api/world/move') {
+      if (body.locationId !== 'coffee_cart') return response(409, { error: { code: 'NOT_ADJACENT', message: "You can't get there from here." } });
+      currentWorld = cartWorld();
+      return response(200, { world: currentWorld });
+    }
     if (path === '/api/encounter/start') return response(200, { encounter: currentEncounter, spellbook });
     if (path === '/api/encounter/help') {
       if (body.kind === 'word') currentEncounter = encounter(2, { caffeMeaning: true });
@@ -63,6 +78,7 @@ test('the app enforces help, retains failed input, resolves, reviews, reveals, a
       dialogueCalls += 1;
       if (dialogueCalls === 1) return response(503, { error: { message: 'Grading is temporarily unavailable; retry your answer.', retryable: true } });
       currentEncounter = encounter(4, { resolved: true, allVisible: true });
+      currentWorld = cartWorld(true);
       return response(200, {
         encounter: currentEncounter, spellbook,
         assessment: { overallFeedback: 'Your contextual order passed.', objectiveResults: [{ objectiveId: 'order_coffee', passed: true, feedback: 'Coffee requested.' }, { objectiveId: 'no_milk', passed: true, feedback: 'No milk specified.' }] },
@@ -84,11 +100,22 @@ test('the app enforces help, retains failed input, resolves, reviews, reveals, a
   });
 
   await render(<App />);
+  expect(await screen.findByRole('heading', { name: 'Market Entrance' })).toBeOnTheScreen();
+  expect(screen.getByText(/has not decided which language/)).toBeOnTheScreen();
+  expect(screen.getByText('Nothing here wants to talk to you yet.')).toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Market Entrance, you are here' })).toBeDisabled();
+  expect(screen.queryByRole('button', { name: 'Restart encounter' })).not.toBeOnTheScreen();
+  expect(await AsyncStorage.getItem('parallang.learnerId')).toBe(learner.learnerId);
+  await user.press(screen.getByRole('button', { name: 'Walk to The Coffee Cart, unexplored' }));
+  expect(await screen.findByRole('heading', { name: 'The Coffee Cart' })).toBeOnTheScreen();
+  expect(screen.getByText('The Crumbling Market — The Coffee Cart')).toBeOnTheScreen();
+  expect(screen.getByText('Words here: drinks')).toBeOnTheScreen();
+  expect(globalThis.fetch.mock.calls.some(([url]) => pathOf(url) === '/api/encounter/start')).toBe(false);
+  await user.press(screen.getByRole('button', { name: 'Talk to Gerald' }));
+
   await screen.findByText('Order a coffee from Gerald, using Italian for the coffee request.');
   expect(screen.getByText(/Italian target: 25%/)).toBeOnTheScreen();
   expect(screen.queryByText('Do you want a coffee? Without milk is civilized.')).not.toBeOnTheScreen();
-  expect(globalThis.fetch).toHaveBeenCalledTimes(2);
-  expect(await AsyncStorage.getItem('parallang.learnerId')).toBe(learner.learnerId);
 
   await user.press(screen.getByRole('button', { name: 'Translate word: caffè' }));
   await screen.findByText(/^coffee/);
@@ -129,6 +156,11 @@ test('the app enforces help, retains failed input, resolves, reviews, reveals, a
   expect(screen.getByText(/^Answer:/)).toHaveTextContent('Answer: without milk');
   await user.press(screen.getByRole('button', { name: 'Return to Gerald' }));
   expect(await screen.findByLabelText('Conversation with Gerald')).toBeOnTheScreen();
+
+  await user.press(screen.getByRole('button', { name: 'Open the map' }));
+  expect(await screen.findByText('✓ Encounter complete')).toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Talk to Gerald again' })).toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Walk to Market Entrance' })).toBeEnabled();
 });
 
 test('loading plus empty and no-due states remain understandable', async () => {
@@ -150,10 +182,12 @@ test('CLI provider error is actionable, clears pending state, and retains input'
     const path = pathOf(url);
     if (path === '/api/learner') return response(201, learner);
     if (path === '/api/encounter/start') return response(200, { encounter: encounter(), spellbook });
+    if (path === '/api/world') return response(200, { world: cartWorld() });
+    if (path === '/api/spellbook') return response(200, spellbook);
     if (path === '/api/encounter/dialogue') return new Promise((resolveRequest) => { resolveDialogue = resolveRequest; });
     throw new Error(`Unexpected fetch ${path}`);
   });
-  useGameStore.setState({ learnerId: learner.learnerId, language, encounter: encounter(), spellbook, isLoading: false });
+  useGameStore.setState({ learnerId: learner.learnerId, language, encounter: encounter(), spellbook, isLoading: false, view: 'dialogue' });
   await render(<App />);
   await screen.findByText('Order a coffee from Gerald, using Italian for the coffee request.');
   const input = screen.getByLabelText('Your response');

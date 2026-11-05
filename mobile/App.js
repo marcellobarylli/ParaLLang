@@ -9,26 +9,34 @@ import DialoguePanel from './src/components/DialoguePanel.js';
 import InputBar from './src/components/InputBar.js';
 import Spellbook from './src/components/Spellbook.js';
 import ReviewPanel from './src/components/ReviewPanel.js';
+import MapPanel from './src/components/MapPanel.js';
 import { colors } from './src/components/ui.js';
 
 export default function App() {
   const state = useGameStore();
   useEffect(() => { state.initialize(); }, [state.initialize]);
   const resolved = state.encounter?.state === 'resolved';
+  const here = state.world?.locations.find((location) => location.id === state.world.currentLocationId);
+  const returnLabel = state.returnView === 'dialogue' && state.encounter ? 'Return to Gerald' : 'Return to the map';
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.shell}>
         <StatusBar style="dark" />
-        <Header dueCount={state.spellbook.dueCount} isLoading={state.isLoading} onSpellbook={state.openSpellbook} onRestart={state.restartEncounter} />
+        <Header
+          place={here?.name} dueCount={state.spellbook.dueCount} isLoading={state.isLoading}
+          onSpellbook={state.openSpellbook} onMap={state.view === 'map' ? null : state.openMap}
+          onRestart={state.view === 'dialogue' ? state.restartEncounter : null}
+        />
         {state.error && <ErrorBanner message={state.error} onDismiss={state.clearError} />}
 
-        {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} />}
+        {state.view === 'map' && <MapPanel world={state.world} isLoading={state.isLoading} onMove={state.moveTo} onEnterEncounter={state.enterEncounter} />}
+        {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'review' && <ReviewPanel
           key={state.reviewChallenge?.id ?? 'result'}
           challenge={state.reviewChallenge} result={state.reviewResult} language={state.language} isLoading={state.isLoading}
           onSubmit={state.submitReview} onReveal={state.revealReviewAnswer}
-          onContinue={() => state.startReview()} onReturn={state.returnToDialogue}
+          onContinue={() => state.startReview()} onReturn={state.returnToDialogue} returnLabel={returnLabel}
         />}
         {state.view === 'dialogue' && <KeyboardAvoidingView style={styles.shell} behavior="padding">
           <DialoguePanel encounter={state.encounter} language={state.language} isLoading={state.isLoading} assessment={state.assessment} onHelp={state.revealHelp} />

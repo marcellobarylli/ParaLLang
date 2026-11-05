@@ -99,6 +99,16 @@ If the server is not running, the app shows "Can't reach the ParaLLang server at
 
 The app keeps its own learner ID (in the app's storage), so its Spellbook is separate from the browser's.
 
+The app opens on the map of the Crumbling Market (round 005): six locations from `content/world/locations/`, joined by the paths in `content/world/connections.yaml`. Unvisited places beyond your neighbours stay hidden; tap a neighbouring place to walk there. Gerald is at The Coffee Cart ("Talk to Gerald"); the other places have no encounter yet. Your position, the places you have visited and the encounters you have completed are saved with your Spellbook.
+
+### Optional API token
+
+Set `PARALLANG_TOKEN` in the root `.env` to require the header `X-ParaLLang-Token: <value>` on every `/api` route except `/api/health`. It is unset by default; the app and the web client do not send it, so leave it unset to play. `verify:cli` and the tests protect their temporary servers with a random token.
+
+### Live Crumbling Market playthrough
+
+`node server/scripts/play-market.js --provider codex-cli [--out report.json]` plays the map and Gerald's encounter in-process (no port) on a temporary save and prints a JSON report: each step, every raw LLM output, grading verdicts, timings and two rough estimates of the target-language share of each of Gerald's lines. It exits 1 unless the encounter resolves and the map marks it complete.
+
 ## Learning data and saves
 
 The browser keeps a server-issued opaque learner ID in local storage, and the iPhone app keeps its own in the app's storage. The server writes that learner's Spellbook and durable attempt receipts as one atomic JSON document under `server/data/saves/` by default. Override the directory with `PARALLANG_SAVE_DIR`. Each language has its own Spellbook: Spanish saves stay directly in the save directory (where they were before language packs existed), and every other language saves to a subdirectory named after its code, such as `server/data/saves/it/`. The same learner ID starts with an empty Spellbook in a new language and finds its earlier cards again when that language is selected. The directory is resolved independently of the shell's working directory and is gitignored.

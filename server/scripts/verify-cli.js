@@ -47,10 +47,13 @@ const casesByLanguage = {
   },
 };
 
+// The ephemeral 127.0.0.1 server is protected by a per-run random token (PARALLANG_TOKEN, round 005).
+const liveToken = randomUUID();
+
 async function request(baseUrl, path, { learnerId, body } = {}) {
   const response = await fetch(`${baseUrl}${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...(learnerId ? { 'X-Learner-Id': learnerId } : {}) },
+    headers: { 'Content-Type': 'application/json', 'X-ParaLLang-Token': liveToken, ...(learnerId ? { 'X-Learner-Id': learnerId } : {}) },
     body: JSON.stringify(body ?? {}),
   });
   const data = await response.json();
@@ -104,7 +107,7 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
       });
     }
 
-    const app = createApp({ service, logger: { error() {} } });
+    const app = createApp({ service, logger: { error() {} }, token: liveToken });
     server = app.listen(0, '127.0.0.1');
     await new Promise((resolve, reject) => {
       server.once('listening', resolve);
