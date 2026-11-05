@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 046, a share estimate for glitched lines (autonomous)
+
+`languageShare` (play-market) now also reports `folded`, which folds glitch letters on both sides before comparing.
+It abstains (`translationShort`) when the translation is under 60% of the line. Against the hand counts, its mean
+error on the same lines is 0.003, against the old estimate's 0.175, and 0.021 against 0.350 on a held-out set. All
+the gain is in Errata's lines. It abstains only on the two known glosses. The old estimate is unchanged. Critiqued by
+Codex (9 findings: 5 accepted, 4 in part) ([open items](docs/rounds/046/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 045, objectives in any order (autonomous)
 
 An encounter may now set `objectives_unordered: true`: every objective that passes closes, in any order. Mortimer's
@@ -480,6 +488,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 046 | 11-05 | A second share estimate (`folded`) that survives glitched English and gloss translations (autonomous) | [046](docs/rounds/046/architecture.md) | [findings](docs/rounds/046/findings.md) | pre-run record to round 046 close |
 | 045 | 11-05 | Objectives met in any order (`objectives_unordered`), Mortimer's tasting first (autonomous) | [045](docs/rounds/045/architecture.md) | [findings](docs/rounds/045/findings.md) | pre-run record to round 045 close |
 | 044 | 11-05 | Leak scan over every live report: words inside authored phrases, echo and quoted kinds; near-leaks are rare topic words (autonomous) | [044](docs/rounds/044/architecture.md) | [findings](docs/rounds/044/findings.md) | pre-run record to round 044 close |
 | 043 | 11-05 | The Party screen counts down to each member's next story (autonomous) | [043](docs/rounds/043/architecture.md) | [findings](docs/rounds/043/findings.md) | pre-run record to round 043 close |

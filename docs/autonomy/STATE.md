@@ -7,7 +7,7 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 12 ended with every round closed (026, 041–045). **Next:** backlog G4 (relationship tiers
+Nothing open. Iteration 12 ended with every round closed (026, 041–046). **Next:** backlog G4 (relationship tiers
 that change a party conversation, live runs) or G5 (telling the time at the Fountain, content plus live runs); A10
 (LLM location atmosphere) is optional. Codex served about 175 calls between 20:36 and 21:01 UTC without hitting its
 limit; pace a new window the same way (single-location runs before tours, no parallel live runs).
@@ -303,7 +303,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Party-screen story hint) and 044 (G2, leak scan over every live report) planned, critiqued by Claude subagents and
   closed while Codex was at its limit. After the reset (20:36): round 026 closed (Amendment 2 check passed; tours
   gap it 0.12 → 0.07, es 0.15 → 0.14; E1 done), round 045 (G3, unordered objectives, Codex critique) built and closed
-  with live runs. Server 176/176, mobile 120/120, web 12/12, expo-doctor 20/20. Seeded backlog G.
+  with live runs; round 046 (a `folded` share estimate, Codex critique) closed without live calls. Server 177/177,
+  mobile 120/120, web 12/12, expo-doctor 20/20. Seeded backlog G. About 177 Codex calls after the reset, no limit.
 
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
@@ -320,6 +321,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Share estimates** (round 046): `languageShare` returns `folded` (trust it over `notInTranslation`; null means the
+  translation is a gloss: hand-count) and `translationShort`. `docs/rounds/046/results/evaluate.mjs` scores both
+  against the hand counts; add new hand counts there.
 - **Leak scan** (round 044): `node server/scripts/leak-scan.js <reports...>` reads every play-market report shape
   (tour, party, single, rounds 005–008, greeting replays). Kinds: leak, near, quoted, echo. Known noise: Gerald's
   English "espresso", Errata's frame words (*sono*, *nome*, *nombre*), Portia's greeting word (about half of her

@@ -90,3 +90,9 @@ Net change from plan-v1:
 - the empty shape.
 
 Evaluation: `evaluate.mjs` on both sets, and `collisions.mjs` over every report.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. On the same covered lines, `folded` cuts the mean error against the hand count
+from 0.175 to 0.003 (development) and from 0.350 to 0.021 (held out). It abstains only on the two known glosses. See
+[findings](findings.md).
