@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import yaml from 'js-yaml';
 import { z } from 'zod';
+import { normalizeAnswer } from './language-engine.js';
 
 const defaultContentDir = resolve(import.meta.dirname, '..', '..', 'content');
 export const DEFAULT_LANGUAGE = 'it';
@@ -63,6 +64,8 @@ const encounterSchema = z.object({
   resolved_message: z.string().min(1).optional(),
   // Round 009: static English lines in which the companion introduces the mechanics (the tutorial sets them).
   companion_briefing: z.array(z.string().min(1)).min(1).max(4).optional(),
+  // Round 019: authored words the NPC may use in any line; never the target of one of the encounter's objectives.
+  ambient_vocabulary_ids: z.array(z.string().min(1)).min(1).optional(),
   objectives: z.array(objectiveSchema).min(1),
 }).strict();
 
@@ -174,9 +177,14 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     validateObjectives(encounter, vocabularyById, referenceIds);
     // Round 009: narration is matched only against the vocabulary files this encounter's objectives draw on (whole
     // files), so one encounter's words never appear as chips or Spellbook entries in another's lines.
+    const ambientIds = encounter.ambient_vocabulary_ids ?? [];
+    validateAmbientVocabulary(encounter, ambientIds, vocabularyById);
     const files = new Set(encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids.map((id) => fileById.get(id))));
-    const narrationEntries = Object.freeze(vocabularyFiles.filter((file) => files.has(file)).flatMap((file) => file.entries));
-    encounters.set(encounter.id, Object.freeze({ encounter, character, narrationEntries }));
+    const ambientEntries = Object.freeze(ambientIds.map((id) => vocabularyById.get(id)));
+    // Round 019: ambient entries join one by one, not their whole file.
+    const fileEntries = vocabularyFiles.filter((file) => files.has(file)).flatMap((file) => file.entries);
+    const narrationEntries = Object.freeze([...fileEntries, ...ambientEntries.filter((entry) => !fileEntries.includes(entry))]);
+    encounters.set(encounter.id, Object.freeze({ encounter, character, narrationEntries, ambientEntries }));
   }
   const defaultDefinition = encounters.get(defaultEncounterId);
   if (!defaultDefinition) throw new Error(`content/${pack}/language.yaml names unknown default_encounter ${defaultEncounterId}`);
@@ -195,6 +203,23 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
 function yamlFiles(contentDir, relativeDir) {
   return readdirSync(resolve(contentDir, relativeDir)).filter((name) => name.endsWith('.yaml')).sort()
     .map((name) => `${relativeDir}/${name}`);
+}
+
+function validateAmbientVocabulary(encounter, ambientIds, vocabularyById) {
+  unique(ambientIds, `Encounter ${encounter.id} ambient vocabulary`);
+  const targets = new Set(encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids));
+  const fold = (form) => normalizeAnswer(form, { stripAccents: true });
+  const targetForms = [...targets].flatMap((id) => vocabularyById.get(id)?.surface_variants ?? []).map(fold);
+  for (const id of ambientIds) {
+    if (!vocabularyById.has(id)) throw new Error(`Encounter ${encounter.id} names unknown ambient vocabulary ${id}`);
+    if (targets.has(id)) throw new Error(`Encounter ${encounter.id} ambient vocabulary ${id} is an objective target`);
+    // No ambient form may be, or contain as a whole word, a form of an objective target (it would give it away).
+    for (const form of vocabularyById.get(id).surface_variants.map(fold)) {
+      const words = ` ${form} `;
+      const clash = targetForms.find((target) => words.includes(` ${target} `) || ` ${target} `.includes(words));
+      if (clash) throw new Error(`Encounter ${encounter.id} ambient vocabulary ${id} overlaps the objective target form "${clash}"`);
+    }
+  }
 }
 
 function validateObjectives(encounter, vocabularyById, referenceIds) {

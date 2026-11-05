@@ -34,6 +34,16 @@ function targetData(objectives, vocabularyById, { forms = false } = {}) {
   }));
 }
 
+// Round 019: an encounter's ambient vocabulary, as one extra line after the learning data; empty when it has none, so
+// prompts without it stay byte-identical (Gerald's golden prompts).
+function ambientLine(language, entries) {
+  if (!entries.length) return '';
+  const words = entries.map((entry) => ({
+    target: entry.target, meanings: entry.accepted_translations, ...(entry.note ? { usage: entry.note } : {}),
+  }));
+  return `\nFREE VOCABULARY (authored ${language.name} you may use in any line, including the greeting; it is not the answer to any objective, and every rule above about open objectives still applies): ${JSON.stringify(words)}`;
+}
+
 export function buildNarrationMessages({
   language,
   character,
@@ -45,11 +55,17 @@ export function buildNarrationMessages({
   playerInput = null,
   targetRatio,
   decision = null,
+  ambientEntries = [],
 }) {
   const system = fillTemplate(loadTemplate('system/base.txt'), {
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
     style: { tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n') },
-    language: { name: language.name, targetRatio: Math.round(targetRatio * 100), learningData: JSON.stringify(targetData(objectives, vocabularyById)) },
+    language: {
+      name: language.name,
+      targetRatio: Math.round(targetRatio * 100),
+      learningData: JSON.stringify(targetData(objectives, vocabularyById)),
+      ambientVocabulary: ambientLine(language, ambientEntries),
+    },
   });
   const turnData = playerInput === null
     ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in The Crumbling Market.` }

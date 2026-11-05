@@ -17,6 +17,8 @@ companion_briefing:
   - "Portia only lets in people who greet her properly. Answer in Italian; mixing in English is fine while you learn."
   - "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance."
   - "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+# Round 019: words Portia may use freely (not objective answers); they get chips and Spellbook cards.
+ambient_vocabulary_ids: [benvenuto, piacere, mercato]
 objectives:
   - id: greet
     prompt: "Greet Portia in Italian."

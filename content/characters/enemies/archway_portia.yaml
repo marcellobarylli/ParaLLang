@@ -6,7 +6,8 @@ personality:
   tone: "fussy, formal, bureaucratic about manners, quietly unsure which language she is in today"
   quirks:
     - "Will not let anyone into the market who has not greeted her and said who they are"
-    - "Her sign says MERCATO on Tuesdays and MARKET on other days, and she takes questions about it personally"
+    # Round 019: language-neutral (the Italian MERCATO was wrong in the Spanish pack).
+    - "Her half-translated sign never says market in the same language two days running, and she takes questions about it personally"
     - "Keeps a visitors' book in her keystone and treats every introduction like paperwork"
     - "Is delighted, and slightly flustered, when someone asks her name back"
   humour_style: "dry, Pratchett-esque, the politeness of an institution that has been left in charge of itself"

@@ -1,6 +1,6 @@
 # Round 009: Market Entrance tutorial (greetings, pronouns). Reference URLs follow the Gerald file's patterns and were
 # not opened from the build container; listed for the owner's content review.
-version: entrance-greetings-es-v1
+version: entrance-greetings-es-v2
 references:
   - id: rae-hola
     title: "Real Academia Española, Diccionario de la lengua española: hola"
@@ -23,6 +23,15 @@ references:
   - id: cambridge-hola
     title: "Cambridge Spanish–English Dictionary: hola"
     url: "https://dictionary.cambridge.org/dictionary/spanish-english/hola"
+  - id: rae-bienvenido
+    title: "Real Academia Española, Diccionario de la lengua española: bienvenido"
+    url: "https://dle.rae.es/bienvenido"
+  - id: rae-gusto
+    title: "Real Academia Española, Diccionario de la lengua española: gusto"
+    url: "https://dle.rae.es/gusto"
+  - id: rae-mercado
+    title: "Real Academia Española, Diccionario de la lengua española: mercado"
+    url: "https://dle.rae.es/mercado"
 entries:
   - id: hola
     kind: word
@@ -107,3 +116,40 @@ entries:
       english: "What's your name?"
     note: "Informal; te is the you of llamarse."
     reference_ids: [rae-llamar]
+  # Round 019: ambient vocabulary, words Portia may use freely; not targets of any objective.
+  - id: bienvenido
+    kind: word
+    target: "bienvenido"
+    part_of_speech: interjection
+    accepted_translations: ["welcome"]
+    surface_variants: ["bienvenido", "bienvenida", "bienvenidos", "bienvenidas"]
+    accent_insensitive: true
+    example:
+      target: "¡Bienvenido al mercado!"
+      english: "Welcome to the market!"
+    note: "Agrees with the person welcomed: bienvenido to a man or anyone by default, bienvenida to a woman, bienvenidos to a group (RAE)."
+    reference_ids: [rae-bienvenido]
+  - id: mucho_gusto
+    kind: phrase
+    target: "mucho gusto"
+    part_of_speech: interjection
+    accepted_translations: ["nice to meet you", "pleased to meet you"]
+    surface_variants: ["mucho gusto"]
+    accent_insensitive: true
+    example:
+      target: "Mucho gusto, Portia."
+      english: "Nice to meet you, Portia."
+    note: "Said on being introduced (RAE, gusto)."
+    reference_ids: [rae-gusto]
+  - id: mercado
+    kind: word
+    target: "mercado"
+    part_of_speech: noun
+    accepted_translations: ["market"]
+    surface_variants: ["mercado", "mercados"]
+    accent_insensitive: true
+    example:
+      target: "El mercado está abierto."
+      english: "The market is open."
+    note: "Masculine: el mercado, los mercados."
+    reference_ids: [rae-mercado]

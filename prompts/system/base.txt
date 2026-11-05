@@ -9,6 +9,6 @@ LANGUAGE RULES:
 - Target approximately {{language.targetRatio}}% {{language.name}} in dialogue.
 - Use the canonical vocabulary and grammar constraints below; never invent teaching definitions.
 
-ACTIVE LEARNING DATA: {{language.learningData}}
+ACTIVE LEARNING DATA: {{language.learningData}}{{language.ambientVocabulary}}
 
 Return only JSON matching the supplied response schema. Generator fields about encounter outcome, difficulty, translation requirements, or hints are advisory: the server owns and replaces them.

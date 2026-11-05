@@ -239,6 +239,7 @@ export class LearningService {
         objectives: definition.encounter.objectives,
         vocabularyById: this.content.vocabularyById,
         targetRatio: ratio,
+        ambientEntries: definition.ambientEntries,
       }), encounterResponseSchema, 'encounter_narration', definition.character.name);
       const npcMessage = this.canonicalizeNarration(generated, definition);
       const stagedEnvelope = clone(envelope);
@@ -384,6 +385,7 @@ export class LearningService {
         playerInput: message,
         targetRatio: this.ratioFor(nextTurns, definition),
         decision,
+        ambientEntries: definition.ambientEntries,
       }), encounterResponseSchema, 'encounter_narration', definition.character.name);
 
       const stagedEnvelope = clone(envelope);

@@ -1,6 +1,6 @@
 # Round 009: Market Entrance tutorial (greetings, pronouns). Reference URLs follow the Gerald file's patterns and were
 # not opened from the build container; listed for the owner's content review.
-version: entrance-greetings-it-v1
+version: entrance-greetings-it-v2
 references:
   - id: treccani-ciao
     title: "Treccani, Vocabolario: ciao"
@@ -38,6 +38,15 @@ references:
   - id: wiktionary-tu
     title: "Wiktionary: tu (Italian)"
     url: "https://en.wiktionary.org/wiki/tu"
+  - id: treccani-benvenuto
+    title: "Treccani, Vocabolario: benvenuto"
+    url: "https://www.treccani.it/vocabolario/benvenuto/"
+  - id: treccani-piacere
+    title: "Treccani, Vocabolario: piacere"
+    url: "https://www.treccani.it/vocabolario/piacere/"
+  - id: treccani-mercato
+    title: "Treccani, Vocabolario: mercato"
+    url: "https://www.treccani.it/vocabolario/mercato/"
 entries:
   - id: ciao
     kind: word
@@ -123,3 +132,40 @@ entries:
       english: "What's your name?"
     note: "Informal; ti is the you of chiamarsi."
     reference_ids: [treccani-chiamare, wiktionary-chiamarsi]
+  # Round 019: ambient vocabulary, words Portia may use freely; not targets of any objective.
+  - id: benvenuto
+    kind: word
+    target: "benvenuto"
+    part_of_speech: interjection
+    accepted_translations: ["welcome"]
+    surface_variants: ["benvenuto", "benvenuta", "benvenuti", "benvenute"]
+    accent_insensitive: false
+    example:
+      target: "Benvenuto al mercato!"
+      english: "Welcome to the market!"
+    note: "Agrees with the person welcomed: benvenuto to a man or anyone by default, benvenuta to a woman, benvenuti to a group (Treccani)."
+    reference_ids: [treccani-benvenuto]
+  - id: piacere
+    kind: word
+    target: "piacere"
+    part_of_speech: interjection
+    accepted_translations: ["nice to meet you", "pleased to meet you", "pleasure"]
+    surface_variants: ["piacere"]
+    accent_insensitive: false
+    example:
+      target: "Piacere, Portia."
+      english: "Nice to meet you, Portia."
+    note: "Said on being introduced (nice to meet you); as a noun it means pleasure (Treccani)."
+    reference_ids: [treccani-piacere]
+  - id: mercato
+    kind: word
+    target: "mercato"
+    part_of_speech: noun
+    accepted_translations: ["market"]
+    surface_variants: ["mercato", "mercati"]
+    accent_insensitive: false
+    example:
+      target: "Il mercato è aperto."
+      english: "The market is open."
+    note: "Masculine: il mercato, i mercati."
+    reference_ids: [treccani-mercato]
