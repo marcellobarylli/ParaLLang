@@ -35,6 +35,7 @@ function targetData(objectives, vocabularyById) {
 export function buildNarrationMessages({
   language,
   character,
+  styleGuide,
   locationName,
   objectives,
   vocabularyById,
@@ -45,6 +46,7 @@ export function buildNarrationMessages({
 }) {
   const system = fillTemplate(loadTemplate('system/base.txt'), {
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
+    style: { tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n') },
     language: { name: language.name, targetRatio: Math.round(targetRatio * 100), learningData: JSON.stringify(targetData(objectives, vocabularyById)) },
   });
   const turnData = playerInput === null

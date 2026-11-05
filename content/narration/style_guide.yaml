@@ -1,8 +1,12 @@
-tone: "Terry Pratchett absurdist — dry wit, footnote energy, fourth-wall adjacent"
-narrator_voice: "omniscient, slightly exasperated, treats the absurd as mundane"
+# Round 007: the owner's tone notes (parallang_obsidian/GAME MECHANICS.md, "Terry Pratchett × meme culture").
+# Pratchett gives the structure, memes give the texture. Filled into prompts/system/base.txt.
+tone: "Terry Pratchett absurdist structure — dry wit, footnote energy, satire of the mundane, fourth-wall adjacent — with a contemporary meme-culture texture in how the characters talk"
+narrator_voice: "omniscient, slightly exasperated, treats the absurd as mundane; the narrator stays dry while the characters talk like the internet"
 rules:
   - "Never break character for the NPC"
   - "Narrative text is always in English"
-  - "Target-language dialogue must be grammatically correct"
-  - "Include word-level breakdowns in the response for all target-language words"
+  - "Target-language dialogue must be grammatically correct and stay beginner-level; keep internet slang to the character's English"
+  - "Characters may use internet register in their English (lowkey judging, rating things, calling something mid or a whole vibe); the narrator does not"
+  - "Prefer evergreen meme formats and the attitude behind them over this month's reference"
   - "Humour should arise naturally from character interactions, not forced jokes"
+  - "Never tell the player what to say or how to phrase it: no 'say', 'try', 'add' or 'order' followed by a target-language answer, and no quoted model answers, for any objective the player has not passed yet. Target-language words may appear naturally in the character's own questions and remarks"

@@ -12,7 +12,7 @@ import { buildNarrationMessages } from '../src/llm/prompt-builder.js';
 import { FixtureProvider, fixedNow } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r005.json'), 'utf8'));
+const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r007.json'), 'utf8'));
 
 const character = {
   id: 'charcutier_fixture', name: 'Bernard', species: 'Charcutier',
@@ -89,11 +89,17 @@ async function runtime(t, contentDir) {
   return { content, provider, storage, service: new LearningService({ provider, storage, content, clock: () => fixedNow }) };
 }
 
-test("Gerald's narration prompts are unchanged from round 005", () => {
+// Regenerated in round 007, when the style guide entered the prompt on purpose (round 006 pinned the round 005 text).
+test("Gerald's narration prompts match the round 007 fixture and carry the style guide", () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
-    const base = { language: c.language, character: c.character, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };
-    assert.deepEqual(buildNarrationMessages({ ...base, objectives: c.encounter.objectives, targetRatio: 0.25 }), golden[code].greeting);
+    const base = { language: c.language, character: c.character, styleGuide: c.styleGuide, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };
+    const greeting = buildNarrationMessages({ ...base, objectives: c.encounter.objectives, targetRatio: 0.25 });
+    assert.deepEqual(greeting, golden[code].greeting);
+    assert.match(greeting[0].content, /- Never tell the player what to say or how to phrase it/);
+    assert.match(greeting[0].content, /meme-culture texture/);
+    assert.match(greeting[0].content, /Rates translations like a food critic/);
+    assert.doesNotMatch(greeting[0].content, /word-level breakdowns/);
     assert.deepEqual(buildNarrationMessages({
       ...base, objectives: c.encounter.objectives.slice(1), targetRatio: 0.3,
       conversationHistory: [{ role: 'assistant', content: 'Ciao.' }], playerInput: 'Un caffè.',

@@ -7,6 +7,7 @@ personality:
     - "Rates everything on a scale of espresso shots (1-5)"
     - "Believes milk in coffee is a war crime"
     - "Speaks in increasingly complex target-language phrases when agitated"
+    - "Rates translations like a food critic (\"mid\", \"no notes\")"
   humour_style: "dry, Pratchett-esque, fourth-wall-adjacent"
 appearance: >
   A foot-tall creature with skin the colour of over-roasted beans,

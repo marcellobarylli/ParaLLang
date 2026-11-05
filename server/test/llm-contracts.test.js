@@ -104,7 +104,7 @@ test('prompt assembly contains one player-message copy and authored constraints'
   assert.match(grading[0].content, /grammar_constraints/);
   assert.match(grading[0].content, /café/);
   const narrative = buildNarrationMessages({
-    language: content.language, character: content.character, objectives: content.encounter.objectives,
+    language: content.language, character: content.character, styleGuide: content.styleGuide, locationName: 'The Coffee Cart', objectives: content.encounter.objectives,
     vocabularyById: content.vocabularyById, conversationHistory: [], playerInput,
     targetRatio: .3, decision: { encounterState: 'ongoing' },
   });

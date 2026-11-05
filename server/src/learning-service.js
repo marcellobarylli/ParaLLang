@@ -219,6 +219,7 @@ export class LearningService {
       const generated = await this.callProvider(buildNarrationMessages({
         language: this.content.language,
         character: definition.character,
+        styleGuide: this.content.styleGuide,
         locationName: this.locationName(definition),
         objectives: definition.encounter.objectives,
         vocabularyById: this.content.vocabularyById,
@@ -360,6 +361,7 @@ export class LearningService {
       const generated = await this.callProvider(buildNarrationMessages({
         language: this.content.language,
         character: definition.character,
+        styleGuide: this.content.styleGuide,
         locationName: this.locationName(definition),
         objectives: definition.encounter.objectives.slice(nextObjectiveIndex),
         vocabularyById: this.content.vocabularyById,
