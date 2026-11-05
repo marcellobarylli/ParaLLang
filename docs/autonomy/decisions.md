@@ -70,3 +70,8 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 020 | Round 019's after-runs serve as the baseline | Fresh baseline runs (critique 1.7) | Same model, script and settings ten minutes earlier; saves 28 calls | Yes |
 | 2026-11-05 | 020 | Codex critique 1: 4 accepted (1.1, 1.2, 1.4, 1.9), 5 in part | Accept all | See round 020 Second opinion table | Yes |
 | 2026-11-05 | 020 | Quirk reverted after missing the success criterion (lines 0.17, greeting 0.13); E1 becomes a template question for its own round | Keep the harmless quirk | Pre-run decision 2; it adds prompt text with no measured effect | Yes |
+| 2026-11-05 | 021 | Split A8: party recruitment (A8a: SAVE / LEAVE, party in the save, Party screen) now; revisit conversations (A8b) next | One round for both | Recruitment is deterministic; conversations need a prompt template and live runs | Yes |
+| 2026-11-05 | 021 | Leave is not final: a defeated saveable NPC can be invited later from the map | A final refusal | A missed tap should not cost content A8b builds on | Yes |
+| 2026-11-05 | 021 | Party membership is per character; recruiting is allowed during another encounter | Per encounter; refuse during encounters | One character, one member; recruiting reveals nothing an encounter protects | Yes |
+| 2026-11-05 | 021 | Fix the start route dropping `encounterId` (found while planning) | Leave for a later round | The app over HTTP started Gerald at every location | Yes |
+| 2026-11-05 | 021 | Codex critique 1: 1.1, 1.2, 1.3, 1.6, 1.8 accepted; 1.4, 1.5, 1.7 in part | Accept all | See round 021 Second opinion table | Yes |
