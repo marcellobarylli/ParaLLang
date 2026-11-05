@@ -99,7 +99,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   per required target group, `DRILL_REQUIRED`, map note; `play-market.js --tour` clears it (`drillCards`).
 - [x] **C2. Onboarding.** (round 027, closed 2026-11-05) Philosophy statement screen before the map, once per
   device; `content/narration/onboarding.yaml`, `GET /api/onboarding`.
-- [ ] **C3. Visual polish.** Split: **C3a** type scale and palette tokens (round 034); **C3b** transitions (new
+- [ ] **C3. Visual polish.** Split: **C3a** type scale and palette tokens (round 034, closed 2026-11-05); **C3b** transitions (new
   dialogue lines, screen changes; respect Reduce Motion); custom font needs an asset and a licence check.
 - [ ] **C4. Sound design.** Ambient and UI sounds (needs assets; check licensing).
 

@@ -76,3 +76,9 @@ boxes.
     `dangerSurface`; `success` on `successSurface`.
 - `map.test` (or the existing map test): a non-adjacent node's label has no opacity and uses `muted`.
 - All mobile suites, expo-doctor, iOS export; server and web unchanged.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. No component sets a literal font size or colour, every text style names a
+size from the scale, every text/background pair in use meets 4.5:1, and map labels are no longer faded. Mobile
+74/74, server 157/157, web client 12/12 and build, expo-doctor 20/20, iOS export ok. See [findings](findings.md).
