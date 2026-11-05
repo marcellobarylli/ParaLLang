@@ -13,3 +13,5 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 7 | 19:58:33 | 19:58:33 | plan-revised | Claude (claude-opus-5-5), autonomous | Net change: malformed-token check, trim on both sides, two 401 messages, jest isolation, fuller README | `../architecture.md` |
 | 8 | 19:58:33 | 19:58:33 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed (round 040: pre-run record); the revised draft was already in the working tree, tested (mobile 95/95, server 162/162), and is committed separately | `../architecture.md` |
 | 9 | 19:58:55 | 19:58:55 | built | Claude (claude-opus-5-5), autonomous | round 040: API_TOKEN (trimmed), X-ParaLLang-Token on every app request, malformed-token check, two 401 messages, server trim, README; tests. Mobile 95/95, server 162/162, web 12/12, expo-doctor 20/20 | `../../../../mobile/src/api/learning.js`, `../../../../mobile/src/config.js` |
+| 10 | 19:58:55 | 19:58:55 | outcome | Claude (claude-opus-5-5), autonomous | Built as designed | `../findings.md` |
+| 11 | 19:58:55 | 19:58:55 | closed | Claude (claude-opus-5-5), autonomous | Round 040 closed | `../findings.md` |

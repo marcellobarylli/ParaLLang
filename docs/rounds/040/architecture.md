@@ -71,3 +71,8 @@ fuller README.
   - a malformed token is reported without its value and sends no request;
   - config trims, and blank means none (`isolateModules`).
 - Server unchanged in behaviour apart from the trim; all suites.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. Mobile 95/95, server 162/162, web client 12/12, expo-doctor 20/20. See
+[findings](findings.md).
