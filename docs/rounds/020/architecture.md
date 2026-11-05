@@ -88,3 +88,16 @@ codex-cli, sequential: 3 Italian tutorial runs, 1 Spanish, 1 Italian variant
   feedback leaks; verdicts and transitions as scripted.
 - **Success:** Italian line mean (not in translation) ≥ 0.22 and greeting mean ≥ 0.15, verdicts as scripted, no new
   leaks. Otherwise decision 2.
+
+## Amendment 2026-11-05: quirk reverted (decision 2)
+
+The live runs missed the success criterion (Italian lines 0.17 against ≥ 0.22, greeting 0.13 against ≥ 0.15), so the
+quirk and its test are removed; `content/` and `server/` are back to the freeze commit's state. The runs and their
+results stay in `results/`.
+
+## Outcome (2026-11-05)
+
+Built, measured and reverted as decided before the run. With the quirk: 5/5 runs resolved, 17/17 lines graded as
+scripted, no leaks, but Portia's share did not move (Italian lines 0.16 → 0.17, greeting 0.12 → 0.13, Spanish 0.18
+→ 0.17). Content alone (round 019's words, this round's quirk) does not change it; E1 becomes a template question.
+Tests after the revert: server 114/114, mobile 25/25, web client 12/12. See [findings](findings.md).

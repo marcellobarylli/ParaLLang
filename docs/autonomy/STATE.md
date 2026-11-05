@@ -7,9 +7,8 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing in progress: rounds 018 and 019 are closed. Next, in order: **E1** (Portia's share; round 019 refuted the
-vocabulary-scarcity hypothesis: try her sheet's English paperwork humour, content first), then **A8** (party) or
-**B3**'s Fountain part. All need live runs: check Codex's limit first (see traps).
+Nothing in progress: rounds 018, 019 and 020 are closed. Next, in order: **A8** (party system) or **B3**'s Fountain
+part (content, live runs), then **E1** as a template round (see its entry). Check Codex's limit first (see traps).
 
 ## Backlog
 
@@ -82,7 +81,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   0.20); Gerald 0.26/0.30, Mortimer, Flick and Marginalia at or above. Start with Portia's character sheet or
   encounter (content), not the shared template. **Round 019:** ambient words did not raise it (lines 0.17 → 0.16,
   greeting 0.08 → 0.12 on 3 runs): the gap is the English around her one Italian formula. Next: a language-profile
-  note or quirk that her formalities and remarks are in the target language; measure 3 it + 1 es as in round 019. Measure over a few runs per encounter, then adjust the greeting template or
+  note or quirk that her formalities and remarks are in the target language; measure 3 it + 1 es as in round 019.
+  **Round 020:** that quirk did not help either (lines 0.17, greeting 0.13) and was reverted. Content is exhausted;
+  next is a template round: make "Target approximately N%" concrete (e.g. about K of every 10 words), regenerate
+  Gerald's golden prompts on purpose, and measure with a full `--tour` (Mortimer, Flick, Marginalia overshoot today,
+  so a stronger rule may push them further). Use `docs/rounds/020/results/compare.py` for the measures. Measure over a few runs per encounter, then adjust the greeting template or
   language rules; keep the golden-prompt test in step (regenerate on purpose).
 - [x] **E3. NPCs list the answers.** (round 012, closed 2026-11-05) Style rule against menus of an open objective's
   targets; menus 4/4 → 0/4 runs. Portia's "Come ti chiami?" left allowed (pending owner review).
@@ -173,7 +176,15 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   built and closed: ambient vocabulary for Portia; server 114/114, mobile 25/25, client 12/12; live 9 runs, 65
   calls, all resolved and graded as scripted; E2 done, E1 not improved.
 
+- 2026-11-05, iteration 6: round 020 (E1, second try) planned, critiqued (9 findings: 4 accepted, 5 in part), built,
+  measured (5 runs, 37 calls) and reverted by Amendment: Portia's quirk left the share unchanged. Re-read of round 019:
+  open-answer modelling 5/12 → 0/12 lines. Iteration 6 ends here (rounds 018–020 closed; ~140 Codex calls, no limit).
+
 ## Handoff notes and traps
+
+- **`docs/rounds/020/results/compare.py`** compares `play-market.js` tutorial runs (`label=f1,f2 ...`): both share
+  measures, token counts, overshoot, verdicts, and lines that model an open objective's answer. Its leak patterns are
+  Portia's; extend `LEAKS` for other encounters.
 
 - **Ambient vocabulary** (round 019): `ambient_vocabulary_ids` on an encounter adds words to its narration entries
   one by one and a FREE VOCABULARY line to its narration prompt (empty for encounters without it, so pinned prompts
@@ -184,8 +195,6 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `claude auth status --json` is refused: add it to `TOKEN_AUTH_METHODS` with a test.
 - **Codex critique without file access works with a short bundle in about 1–2 minutes** (rounds 018, 019; ~450 and
   ~1000 lines), much faster than the 7–9 minutes noted below for bigger bundles.
-- `/tmp/r019/tools/summarize.py` is not kept; the per-set table in round 019's findings came from a 20-line script
-  over `results/*.json` (greeting share, line means, tokens, ambient words).
 
 - **Reviews are refused during an encounter** (round 017, 409 `IN_ENCOUNTER`, create and submit). Server tests that
   review must resolve the encounter first (`finishEncounter` in `server/test/helpers.js`); `verify-cli.js` reviews

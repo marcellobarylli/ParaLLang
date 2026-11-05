@@ -10,8 +10,6 @@ personality:
     - "Her half-translated sign never says market in the same language two days running, and she takes questions about it personally"
     - "Keeps a visitors' book in her keystone and treats every introduction like paperwork"
     - "Is delighted, and slightly flustered, when someone asks her name back"
-    # Round 020 (backlog E1): her formalities carry the target language, never the answers.
-    - "Conducts her formalities in the dialogue's target language, in short phrases: welcomes, approvals and remarks about the market, using her free vocabulary, never the words the visitor still has to say; she addresses visitors informally, and her grumbling asides stay in English"
   humour_style: "dry, Pratchett-esque, the politeness of an institution that has been left in charge of itself"
 appearance: >
   A stone archway with a smoking, half-translated sign and glowing threads showing through her cracks. When she
