@@ -34,3 +34,6 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 011 | Brainrot / infohazard flavour only in the character sheet; no mechanics | Containment files now | Mechanics belong to B3 | Yes |
 | 2026-11-05 | 011 | No Spanish detente, recto, para, ya, derecho | Author them | English collisions (détente, recto) or ambiguity; Spanish has no "straight on" target | Yes |
 | 2026-11-05 | 011 | Codex critique 1: 1.1, 1.2 accepted; 1.3, 1.4 rejected | Accept all | See round 011 Second opinion table | Yes |
+| 2026-11-05 | 012 | Narration rule: never offer an open objective's target words as a list or either/or choice | Allow menus; ban target words in NPC lines altogether | Menus turn recall into recognition (Mortimer 3/3); a full ban would remove natural exposure (Gerald's caffè) | Yes |
+| 2026-11-05 | 012 | Portia may still ask "Come ti chiami?" before the ask-back objective | Ban it too | Modelled input in the gentlest encounter, not a menu; round 009 open item stays with the owner | Yes |
+| 2026-11-05 | 012 | Codex critique 1: 1.1 rejected | Accept | Run brief's quality bar | Yes |
