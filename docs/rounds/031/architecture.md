@@ -110,3 +110,12 @@ tolerant record parser, and a slot recorded before it loads.
 - App: Saves on the map only (not on onboarding); the screen's Continue, Start a new save and limit line; the
   selected state.
 - All server, mobile and web tests, expo-doctor, iOS export.
+
+## Outcome (2026-11-05)
+
+Built as designed. Up to three saves per device, each a learner on the server. They are kept in
+`parallang.saveSlots`, and an older install's id becomes "Save 1". The Saves screen opens from the map's header. A
+switch reloads world, the server's encounter, the spellbook and the party, resets every per-save field and says
+"Now playing Save N." Every store action drops replies and failures that land after a switch. Mobile 67/67 (11 new),
+server 154/154, web client 12/12 and build, expo-doctor 20/20, iOS export ok. Not seen in the Simulator. See
+[findings](findings.md).

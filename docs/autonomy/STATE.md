@@ -66,7 +66,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Spellbook, found on completion; translation behind a toggle, withheld during encounters. More fragments (Gerald's
   Dead Branch coffee) wait for relationship tiers.
 - [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
-- [ ] **A11. Save slots** (if still wanted after A1's save format).
+- [x] **A11. Save slots.** (round 031, closed 2026-11-05) Up to three learners per device, Saves screen from the
+  map; delete and rename deferred (owner question).
 
 ### B. Content in line with the newer lore notes (do not edit `parallang_obsidian/`)
 
@@ -137,6 +138,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- Round 031: check the Saves button and screen in the Simulator; decide on deleting / renaming saves and whether a
+  new save shows the statement again ([open items](../rounds/031/findings.md#open-items)).
 
 - Round 030: native-speaker review of the six fragment texts and glosses; check the Fragments section, the toggle
   and VoiceOver on glossary lines in the Simulator ([open items](../rounds/030/findings.md#open-items)).
