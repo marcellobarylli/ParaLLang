@@ -1,0 +1,44 @@
+version: flick-party-it-v1
+references:
+  - id: treccani-andare
+    title: 'Treccani, Vocabolario: andare'
+    url: https://www.treccani.it/vocabolario/andare/
+  - id: treccani-insieme
+    title: 'Treccani, Vocabolario: insieme'
+    url: https://www.treccani.it/vocabolario/insieme/
+  - id: wiktionary-andiamo
+    title: 'Wiktionary: andiamo (Italian)'
+    url: https://en.wiktionary.org/wiki/andiamo
+entries:
+  - id: andiamo
+    kind: word
+    target: andiamo
+    part_of_speech: verb
+    accepted_translations:
+      - let's go
+      - we go
+      - we are going
+    surface_variants:
+      - andiamo
+    accent_insensitive: false
+    example:
+      target: Andiamo al mercato!
+      english: Let's go to the market!
+    note: 'From andare, to go: andiamo is both "we go" and "let''s go".'
+    reference_ids:
+      - treccani-andare
+      - wiktionary-andiamo
+  - id: insieme
+    kind: word
+    target: insieme
+    part_of_speech: adverb
+    accepted_translations:
+      - together
+    surface_variants:
+      - insieme
+    accent_insensitive: false
+    example:
+      target: Andiamo insieme.
+      english: Let's go together.
+    reference_ids:
+      - treccani-insieme

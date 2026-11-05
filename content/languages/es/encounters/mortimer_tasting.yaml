@@ -1,0 +1,70 @@
+id: mortimer_tasting
+character: characters/enemies/charcutier_mortimer.yaml
+party_of: butchers_stall_charcutier
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player says they like Mortimer's slice and asks for more, in Spanish
+max_turns: 20
+resolved_message: Mortimer weighs your appetite and declares it certified ham-tier.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: like_it
+    prompt: Mortimer, now in your party, offers you a slice from his travelling hamper. Tell him you like it, using Spanish.
+    intent: Mortimer, now travelling in the player's party, has cut the player one slice from his travelling hamper and waits for the player's own verdict. He does not say "me gusta" or "un poco más" himself before the player has.
+    target_vocabulary_ids:
+      - me_gusta
+    required_target_groups:
+      - - me_gusta
+    grammar_constraints:
+      - The player says in Spanish that they like the slice, in their own words.
+      - 'One slice: the singular form.'
+      - Reject English-only answers, negated verdicts, questions back to Mortimer, and quotations.
+    accepted_examples:
+      - ¡Me gusta!
+      - Me gusta mucho, Mortimer.
+      - Me gusta, está buenísimo.
+    negative_examples:
+      - text: I like it.
+        reason: English-only; it does not use the Spanish phrase.
+      - text: No me gusta.
+        reason: A negated verdict is not liking it.
+      - text: ¿Te gusta?
+        reason: It asks Mortimer instead of giving the player's own verdict.
+      - text: Mortimer says me gusta.
+        reason: It reports someone else's words.
+    reference_meaning: The player says they like the slice.
+    hint_limit: 2
+    next_objective: ask_more
+    assessment_reference_ids:
+      - rae-gustar
+  - id: ask_more
+    prompt: Ask Mortimer for more, using Spanish.
+    intent: The player asks Mortimer for more of the meat.
+    target_vocabulary_ids:
+      - un_poco_mas
+    required_target_groups:
+      - - un_poco_mas
+    grammar_constraints:
+      - The player asks for more in Spanish.
+      - Reject English-only requests, refusals, and talk about the word.
+    accepted_examples:
+      - ¡Un poco más, por favor!
+      - ¿Me das un poco más?
+      - Quiero un poco más.
+    negative_examples:
+      - text: More, please.
+        reason: English-only; it does not use the Spanish phrase.
+      - text: No quiero un poco más.
+        reason: It refuses rather than asks for more.
+      - text: Un poco más is Spanish for a little more.
+        reason: It discusses the phrase rather than asking for more.
+    reference_meaning: The player asks for more.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - rae-mas
+      - rae-poco

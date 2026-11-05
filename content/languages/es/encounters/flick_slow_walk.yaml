@@ -1,0 +1,66 @@
+id: flick_slow_walk
+character: characters/enemies/letharger_flick.yaml
+party_of: cracked_fountain_letharger
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player gets Flick moving and keeps it beside them, in Spanish
+max_turns: 20
+resolved_message: Flick moves. Now. Together with you. Historians will doubt it.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: lets_go
+    prompt: 'Flick, now in your party, wants to stay put for five more minutes. Get it moving: say let''s go, using Spanish.'
+    intent: Flick, now travelling in the player's party, has sat down and wants to stay "five more minutes". The player must get it moving. Flick does not say "vamos" or "juntos" itself before the player has.
+    target_vocabulary_ids:
+      - vamos
+    required_target_groups:
+      - - vamos
+    grammar_constraints:
+      - The player tells Flick in Spanish that they are going now.
+      - Reject English-only answers, refusals, and quotations.
+    accepted_examples:
+      - ¡Vamos!
+      - ¡Vamos, Flick!
+      - Venga, vamos ahora.
+    negative_examples:
+      - text: Let's go.
+        reason: English-only; it does not use the Spanish word.
+      - text: No vamos.
+        reason: It refuses to go.
+      - text: Flick says vamos.
+        reason: It reports someone else's words.
+    reference_meaning: The player says let's go.
+    hint_limit: 2
+    next_objective: together
+    assessment_reference_ids:
+      - rae-ir
+  - id: together
+    prompt: Flick wanders off again. Tell it you go together, using Spanish.
+    intent: Flick keeps drifting away; the player says they go together.
+    target_vocabulary_ids:
+      - juntos
+    required_target_groups:
+      - - juntos
+    grammar_constraints:
+      - The player says in Spanish that they go together.
+      - Reject English-only answers, refusals, and talk about the word.
+    accepted_examples:
+      - Juntos.
+      - ¡Vamos juntos!
+      - Juntos, Flick.
+    negative_examples:
+      - text: Together.
+        reason: English-only; it does not use the Spanish word.
+      - text: No juntos.
+        reason: It refuses to go together.
+      - text: Juntos means together.
+        reason: It discusses the word rather than saying it to Flick.
+    reference_meaning: The player says they go together.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - rae-junto

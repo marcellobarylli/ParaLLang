@@ -1,0 +1,45 @@
+version: flick-party-es-v1
+references:
+  - id: rae-ir
+    title: 'RAE, Diccionario de la lengua española: ir'
+    url: https://dle.rae.es/ir
+  - id: rae-junto
+    title: 'RAE, Diccionario de la lengua española: junto'
+    url: https://dle.rae.es/junto
+  - id: wiktionary-vamos
+    title: 'Wiktionary: vamos (Spanish)'
+    url: https://en.wiktionary.org/wiki/vamos
+entries:
+  - id: vamos
+    kind: word
+    target: vamos
+    part_of_speech: verb
+    accepted_translations:
+      - let's go
+      - we go
+      - we are going
+    surface_variants:
+      - vamos
+    accent_insensitive: false
+    example:
+      target: ¡Vamos al mercado!
+      english: Let's go to the market!
+    note: 'From ir, to go: vamos is both "we go" and "let''s go".'
+    reference_ids:
+      - rae-ir
+      - wiktionary-vamos
+  - id: juntos
+    kind: word
+    target: juntos
+    part_of_speech: adverb
+    accepted_translations:
+      - together
+    surface_variants:
+      - juntos
+    accent_insensitive: false
+    example:
+      target: Vamos juntos.
+      english: Let's go together.
+    note: Juntos agrees with the people going together; a mixed or male group is juntos.
+    reference_ids:
+      - rae-junto

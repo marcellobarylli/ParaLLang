@@ -1,0 +1,69 @@
+id: marginalia_fragment
+character: characters/enemies/bookworm_marginalia.yaml
+party_of: old_bookshop_bookworm
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player praises Marginalia's fragment of The Journey and asks her to read it again, in Italian
+max_turns: 20
+resolved_message: Marginalia reads it again, slower, and annotates your face.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_story
+    prompt: Marginalia, now in your party, reads you a fragment of The Journey. Tell her the story is wonderful, using Italian.
+    intent: 'Marginalia, now travelling in the player''s party, reads aloud this fragment of The Journey in her greeting, exactly: "Journathan parla con il mare in due lingue. Il mare risponde in una lingua sola: la sua." Then she asks what the player thought of la storia. She does not say "meravigliosa" or "di nuovo" herself before the player has.'
+    target_vocabulary_ids:
+      - meraviglioso
+    required_target_groups:
+      - - meraviglioso
+    grammar_constraints:
+      - The player gives their own verdict in Italian that the story is wonderful.
+      - 'The adjective agrees with la storia (feminine): meravigliosa; meraviglioso only with an explicit masculine referent such as il racconto or il libro.'
+      - Reject English-only answers, negated verdicts, and quotations.
+    accepted_examples:
+      - La storia è meravigliosa!
+      - Meravigliosa!
+      - È una storia meravigliosa, Marginalia.
+    negative_examples:
+      - text: It was wonderful.
+        reason: English-only; it does not use the Italian word.
+      - text: La storia è meraviglioso.
+        reason: La storia is feminine; the adjective must be meravigliosa.
+      - text: Non è meravigliosa.
+        reason: A negated verdict is not praise.
+      - text: Journathan says it is meravigliosa.
+        reason: It reports someone else's words.
+    reference_meaning: The player says the story is wonderful.
+    hint_limit: 2
+    next_objective: read_again
+    assessment_reference_ids:
+      - treccani-meraviglioso
+  - id: read_again
+    prompt: Ask Marginalia to read it again, using Italian.
+    intent: The player asks Marginalia to read the fragment again.
+    target_vocabulary_ids:
+      - di_nuovo
+    required_target_groups:
+      - - di_nuovo
+    grammar_constraints:
+      - The player asks Marginalia in Italian to read it again.
+      - Reject English-only requests, the player saying they will read it themself, and talk about the phrase.
+    accepted_examples:
+      - Di nuovo, per favore!
+      - Puoi leggerla di nuovo?
+      - Leggi di nuovo, Marginalia.
+    negative_examples:
+      - text: Again, please.
+        reason: English-only; it does not use the Italian phrase.
+      - text: Lo leggo di nuovo.
+        reason: The player would read it again; the objective is to ask Marginalia to read.
+      - text: Di nuovo means again.
+        reason: It discusses the phrase rather than asking her.
+    reference_meaning: The player asks her to read it again.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - treccani-nuovo

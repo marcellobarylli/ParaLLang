@@ -1,0 +1,41 @@
+version: marginalia-party-es-v1
+references:
+  - id: rae-precioso
+    title: 'RAE, Diccionario de la lengua española: precioso'
+    url: https://dle.rae.es/precioso
+  - id: rae-vez
+    title: 'RAE, Diccionario de la lengua española: vez (otra vez)'
+    url: https://dle.rae.es/vez
+entries:
+  - id: precioso
+    kind: word
+    target: precioso
+    part_of_speech: adjective
+    accepted_translations:
+      - beautiful
+      - lovely
+      - wonderful
+    surface_variants:
+      - precioso
+      - preciosa
+    accent_insensitive: false
+    example:
+      target: La historia es preciosa.
+      english: The story is beautiful.
+    note: 'Agrees with its noun: la historia es preciosa, el cuento es precioso.'
+    reference_ids:
+      - rae-precioso
+  - id: otra_vez
+    kind: phrase
+    target: otra vez
+    part_of_speech: adverbial_phrase
+    accepted_translations:
+      - again
+    surface_variants:
+      - otra vez
+    accent_insensitive: false
+    example:
+      target: Lee otra vez, por favor.
+      english: Read it again, please.
+    reference_ids:
+      - rae-vez

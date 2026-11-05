@@ -1,0 +1,40 @@
+version: marginalia-party-it-v1
+references:
+  - id: treccani-meraviglioso
+    title: 'Treccani, Vocabolario: meraviglioso'
+    url: https://www.treccani.it/vocabolario/meraviglioso/
+  - id: treccani-nuovo
+    title: 'Treccani, Vocabolario: nuovo (di nuovo)'
+    url: https://www.treccani.it/vocabolario/nuovo/
+entries:
+  - id: meraviglioso
+    kind: word
+    target: meraviglioso
+    part_of_speech: adjective
+    accepted_translations:
+      - wonderful
+      - marvellous
+    surface_variants:
+      - meraviglioso
+      - meravigliosa
+    accent_insensitive: false
+    example:
+      target: La storia è meravigliosa.
+      english: The story is wonderful.
+    note: 'Agrees with its noun: la storia è meravigliosa, il libro è meraviglioso.'
+    reference_ids:
+      - treccani-meraviglioso
+  - id: di_nuovo
+    kind: phrase
+    target: di nuovo
+    part_of_speech: adverbial_phrase
+    accepted_translations:
+      - again
+    surface_variants:
+      - di nuovo
+    accent_insensitive: false
+    example:
+      target: Leggi di nuovo, per favore.
+      english: Read it again, please.
+    reference_ids:
+      - treccani-nuovo

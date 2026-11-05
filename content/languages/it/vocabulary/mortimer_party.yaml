@@ -1,0 +1,44 @@
+version: mortimer-party-it-v1
+references:
+  - id: treccani-ancora
+    title: 'Treccani, Vocabolario: ancora'
+    url: https://www.treccani.it/vocabolario/ancora2/
+  - id: wiktionary-mi-piace
+    title: 'Wiktionary: mi piace (Italian)'
+    url: https://en.wiktionary.org/wiki/mi_piace
+entries:
+  - id: mi_piace
+    kind: phrase
+    target: mi piace
+    part_of_speech: phrase
+    accepted_translations:
+      - I like it
+      - I like
+    surface_variants:
+      - mi piace
+    accent_insensitive: false
+    example:
+      target: Mi piace il salame.
+      english: I like salami.
+    note: 'Literally "it pleases me": the thing liked is the subject. One thing: mi piace.'
+    reference_ids:
+      - treccani-piacere
+      - wiktionary-mi-piace
+  - id: ancora
+    kind: word
+    target: ancora
+    part_of_speech: adverb
+    accepted_translations:
+      - more
+      - again
+      - some more
+    surface_variants:
+      - ancora
+      - ancora un po'
+    accent_insensitive: false
+    example:
+      target: Ancora un po', per favore.
+      english: A little more, please.
+    note: 'Ancora un po'': a little more. Ancora also means still and yet.'
+    reference_ids:
+      - treccani-ancora

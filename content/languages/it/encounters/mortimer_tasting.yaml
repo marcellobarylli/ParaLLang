@@ -1,0 +1,69 @@
+id: mortimer_tasting
+character: characters/enemies/charcutier_mortimer.yaml
+party_of: butchers_stall_charcutier
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player says they like Mortimer's slice and asks for more, in Italian
+max_turns: 20
+resolved_message: Mortimer weighs your appetite and declares it certified ham-tier.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: like_it
+    prompt: Mortimer, now in your party, offers you a slice from his travelling hamper. Tell him you like it, using Italian.
+    intent: Mortimer, now travelling in the player's party, has cut the player one slice from his travelling hamper and waits for the player's own verdict. He does not say "mi piace" or "ancora" himself before the player has.
+    target_vocabulary_ids:
+      - mi_piace
+    required_target_groups:
+      - - mi_piace
+    grammar_constraints:
+      - The player says in Italian that they like the slice, in their own words.
+      - 'One slice: the singular form.'
+      - Reject English-only answers, negated verdicts, questions back to Mortimer, and quotations.
+    accepted_examples:
+      - Mi piace!
+      - Mi piace molto, Mortimer.
+      - Mi piace, è buonissimo.
+    negative_examples:
+      - text: I like it.
+        reason: English-only; it does not use the Italian phrase.
+      - text: Non mi piace.
+        reason: A negated verdict is not liking it.
+      - text: Ti piace?
+        reason: It asks Mortimer instead of giving the player's own verdict.
+      - text: Mortimer says mi piace.
+        reason: It reports someone else's words.
+    reference_meaning: The player says they like the slice.
+    hint_limit: 2
+    next_objective: ask_more
+    assessment_reference_ids:
+      - treccani-piacere
+  - id: ask_more
+    prompt: Ask Mortimer for more, using Italian.
+    intent: The player asks Mortimer for more of the meat.
+    target_vocabulary_ids:
+      - ancora
+    required_target_groups:
+      - - ancora
+    grammar_constraints:
+      - The player asks for more in Italian.
+      - Reject English-only requests, refusals, and talk about the word.
+    accepted_examples:
+      - Ancora, per favore!
+      - Ancora un po'?
+      - Posso averne ancora?
+    negative_examples:
+      - text: More, please.
+        reason: English-only; it does not use the Italian word.
+      - text: Non ancora.
+        reason: '"Not yet" refuses rather than asks for more.'
+      - text: Ancora is Italian for more.
+        reason: It discusses the word rather than asking for more.
+    reference_meaning: The player asks for more.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - treccani-ancora

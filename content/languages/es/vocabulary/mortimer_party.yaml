@@ -1,0 +1,46 @@
+version: mortimer-party-es-v1
+references:
+  - id: rae-gustar
+    title: 'RAE, Diccionario de la lengua española: gustar'
+    url: https://dle.rae.es/gustar
+  - id: rae-mas
+    title: 'RAE, Diccionario de la lengua española: más'
+    url: https://dle.rae.es/m%C3%A1s
+  - id: rae-poco
+    title: 'RAE, Diccionario de la lengua española: poco'
+    url: https://dle.rae.es/poco
+entries:
+  - id: me_gusta
+    kind: phrase
+    target: me gusta
+    part_of_speech: phrase
+    accepted_translations:
+      - I like it
+      - I like
+    surface_variants:
+      - me gusta
+    accent_insensitive: false
+    example:
+      target: Me gusta el chorizo.
+      english: I like chorizo.
+    note: 'Literally "it pleases me": the thing liked is the subject. One thing: me gusta.'
+    reference_ids:
+      - rae-gustar
+  - id: un_poco_mas
+    kind: phrase
+    target: un poco más
+    part_of_speech: phrase
+    accepted_translations:
+      - a little more
+      - some more
+      - more
+    surface_variants:
+      - un poco más
+    accent_insensitive: false
+    example:
+      target: Un poco más, por favor.
+      english: A little more, please.
+    note: Más alone also means more; the game asks for the whole phrase.
+    reference_ids:
+      - rae-mas
+      - rae-poco

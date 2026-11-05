@@ -188,3 +188,57 @@ test('the loader rejects broken party conversations', async (t) => {
     assert.throws(() => loadGameContent({ contentDir: dir, language: 'it' }), error, name);
   }
 });
+
+// Round 023: every saveable character has one party conversation, and their words do not collide.
+const fold = (form) => form.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}' ]/gu, ' ').replace(/\s+/g, ' ').trim();
+// Round 023: the one known overlap. Gerald's "buon" (round 022, "un buon caffè") is the same word as the "buon" of
+// Portia's "buon giorno" (es: "buen" in "buen día"); a "good" chip on it is correct, and dropping it would refuse "Un buon caffè!".
+const ALLOWED_OVERLAPS = new Set(['it:buono:buon:buongiorno:buon giorno', 'es:bueno:buen:buenos_dias:buen dia']);
+const ENGLISH = ['mas', 'juntas', 'rico', 'rica', 'bella', 'bonito', 'lee', 'piano', 'chili', 'soy', 'due', 'media', 'more', 'go'];
+
+test('each saveable character has exactly one party conversation and the others none', () => {
+  for (const code of ['it', 'es']) {
+    const { encounters } = loadGameContent({ language: code });
+    const conversations = [...encounters.values()].filter(({ encounter }) => encounter.party_of);
+    for (const home of [...encounters.values()].filter(({ encounter }) => !encounter.party_of)) {
+      const own = conversations.filter(({ encounter }) => encounter.party_of === home.encounter.id);
+      assert.equal(own.length, home.character.saveable ? 1 : 0, `${code} ${home.encounter.id}`);
+    }
+    assert.deepEqual(conversations.map(({ encounter }) => encounter.id).sort(), ['flick_slow_walk', 'gerald_coffee_break', 'marginalia_fragment', 'mortimer_tasting']);
+  }
+});
+
+test('party vocabulary has no English-word forms and does not overlap other entries in its pack', () => {
+  for (const code of ['it', 'es']) {
+    const { encounters, vocabulary } = loadGameContent({ language: code });
+    const partyIds = new Set([...encounters.values()].filter(({ encounter }) => encounter.party_of)
+      .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
+    const formsOf = (entry) => entry.surface_variants.map(fold);
+    const party = vocabulary.entries.filter((entry) => partyIds.has(entry.id));
+    assert.equal(party.length, 9, `${code}: four conversations' targets (3 + 2 + 2 + 2)`);
+    for (const entry of party) {
+      for (const form of formsOf(entry)) {
+        // Whole forms: the matcher matches a phrase as a whole, so "un poco más" is safe where bare "más" is not.
+        assert.ok(!ENGLISH.includes(form), `${code} ${entry.id}: "${form}" is an English word`);
+        for (const other of vocabulary.entries.filter((candidate) => candidate.id !== entry.id)) {
+          for (const otherForm of formsOf(other)) {
+            const clash = ` ${form} `.includes(` ${otherForm} `) || ` ${otherForm} `.includes(` ${form} `);
+            if (ALLOWED_OVERLAPS.has(`${code}:${entry.id}:${form}:${other.id}:${otherForm}`)) continue;
+            assert.ok(!clash, `${code}: ${entry.id} "${form}" overlaps ${other.id} "${otherForm}"`);
+          }
+        }
+      }
+    }
+  }
+});
+
+test('each member\'s conversation waits until they have joined', async (t) => {
+  const runtime = await createRuntime();
+  t.after(runtime.close);
+  const learnerId = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
+  for (const id of ['mortimer_tasting', 'flick_slow_walk', 'marginalia_fragment', 'gerald_coffee_break']) {
+    const refused = await start(runtime, learnerId, id);
+    assert.equal(refused.status, 409, id);
+    assert.equal(refused.data.error.code, 'NOT_IN_PARTY', id);
+  }
+});

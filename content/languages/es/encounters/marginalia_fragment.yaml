@@ -1,0 +1,69 @@
+id: marginalia_fragment
+character: characters/enemies/bookworm_marginalia.yaml
+party_of: old_bookshop_bookworm
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player praises Marginalia's fragment of The Journey and asks her to read it again, in Spanish
+max_turns: 20
+resolved_message: Marginalia reads it again, slower, and annotates your face.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_story
+    prompt: Marginalia, now in your party, reads you a fragment of The Journey. Tell her the story is wonderful, using Spanish.
+    intent: 'Marginalia, now travelling in the player''s party, reads aloud this fragment of The Journey in her greeting, exactly: "Journathan habla con el mar en dos lenguas. El mar responde en una sola lengua: la suya." Then she asks what the player thought of la historia. She does not say "preciosa" or "otra vez" herself before the player has.'
+    target_vocabulary_ids:
+      - precioso
+    required_target_groups:
+      - - precioso
+    grammar_constraints:
+      - The player gives their own verdict in Spanish that the story is wonderful.
+      - 'The adjective agrees with la historia (feminine): preciosa; precioso only with an explicit masculine referent such as el cuento or el libro.'
+      - Reject English-only answers, negated verdicts, and quotations.
+    accepted_examples:
+      - ¡La historia es preciosa!
+      - ¡Preciosa!
+      - Es una historia preciosa, Marginalia.
+    negative_examples:
+      - text: It was wonderful.
+        reason: English-only; it does not use the Spanish word.
+      - text: La historia es precioso.
+        reason: La historia is feminine; the adjective must be preciosa.
+      - text: No es preciosa.
+        reason: A negated verdict is not praise.
+      - text: Journathan says it is preciosa.
+        reason: It reports someone else's words.
+    reference_meaning: The player says the story is wonderful.
+    hint_limit: 2
+    next_objective: read_again
+    assessment_reference_ids:
+      - rae-precioso
+  - id: read_again
+    prompt: Ask Marginalia to read it again, using Spanish.
+    intent: The player asks Marginalia to read the fragment again.
+    target_vocabulary_ids:
+      - otra_vez
+    required_target_groups:
+      - - otra_vez
+    grammar_constraints:
+      - The player asks Marginalia in Spanish to read it again.
+      - Reject English-only requests, the player saying they will read it themself, and talk about the phrase.
+    accepted_examples:
+      - ¡Otra vez, por favor!
+      - ¿Puedes leerla otra vez?
+      - Lee otra vez, Marginalia.
+    negative_examples:
+      - text: Again, please.
+        reason: English-only; it does not use the Spanish phrase.
+      - text: Lo leo otra vez.
+        reason: The player would read it again; the objective is to ask Marginalia to read.
+      - text: Otra vez means again.
+        reason: It discusses the phrase rather than asking her.
+    reference_meaning: The player asks her to read it again.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - rae-vez

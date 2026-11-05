@@ -3,6 +3,8 @@
 //   node server/scripts/play-market.js --provider codex-cli --tour [--out <file.json>]
 // --party (round 022) wins Gerald, recruits him, walks to the Market Entrance and plays his party conversation
 // (gerald_coffee_break) there; the report's `party` part holds that conversation and the member's count.
+// --member <home location> (round 023) does the same for another member (butchers_stall, cracked_fountain,
+// old_bookshop); the conversation is played at the start location, or at a neighbour if home is the start.
 // --recruit (round 021) saves the defeated NPC to the party after a single-location run and reports the party;
 // the exit code then also needs the recruit to succeed.
 // --tour (round 014) plays every encounter in order and checks that The Rift is sealed before the Old Bookshop's
@@ -60,6 +62,19 @@ const partyScripts = {
   gerald_coffee_break: {
     it: ['Delicious!', 'È buonissimo!', 'Grazie mille!'],
     es: ['Delicious!', '¡Está buenísimo!', '¡Muchas gracias!'],
+  },
+  // Round 023.
+  mortimer_tasting: {
+    it: ['I like it.', 'Mi piace!', 'Ancora, per favore!'],
+    es: ['I like it.', '¡Me gusta!', '¡Un poco más, por favor!'],
+  },
+  flick_slow_walk: {
+    it: ["Let's go together.", 'Andiamo!', 'Insieme.'],
+    es: ["Let's go together.", '¡Vamos!', 'Juntos.'],
+  },
+  marginalia_fragment: {
+    it: ['It was wonderful.', 'La storia è meravigliosa!', 'Di nuovo, per favore!'],
+    es: ['It was wonderful.', '¡La historia es preciosa!', '¡Otra vez, por favor!'],
   },
 };
 
@@ -222,11 +237,17 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
     }
 
     if (args.includes('--party')) {
-      const home = await playAt('coffee_cart', scripts.coffee_cart[content.language.code]);
-      const recruited = await step('recruit imp_coffee_greeting', async () => service.recruit(learnerId, { encounterId: 'imp_coffee_greeting' }));
+      const memberIndex = args.indexOf('--member');
+      const homeLocation = memberIndex >= 0 ? args[memberIndex + 1] : 'coffee_cart';
+      const homeEncounter = content.world.locationsById.get(homeLocation)?.encounter;
+      const conversationId = [...content.encounters.values()].find(({ encounter }) => encounter.party_of === homeEncounter)?.encounter.id;
+      if (!conversationId || !partyScripts[conversationId]) throw new Error(`play-market has no party conversation script for --member ${homeLocation}.`);
+      const home = await playAt(homeLocation, scripts[homeLocation][content.language.code]);
+      const recruited = await step(`recruit ${homeEncounter}`, async () => service.recruit(learnerId, { encounterId: homeEncounter }));
       const linesIndex = args.indexOf('--lines');
-      const conversationLines = linesIndex >= 0 ? args[linesIndex + 1].split('|') : partyScripts.gerald_coffee_break[content.language.code];
-      const conversation = await playAt('market_entrance', conversationLines, 'gerald_coffee_break');
+      const conversationLines = linesIndex >= 0 ? args[linesIndex + 1].split('|') : partyScripts[conversationId][content.language.code];
+      const away = homeLocation === content.world.start ? content.world.neighbours.get(homeLocation)[0] : content.world.start;
+      const conversation = await playAt(away, conversationLines, conversationId);
       const { party } = await service.getParty(learnerId);
       strip();
       return {
@@ -235,8 +256,8 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         resolved: home.resolved && conversation.resolved,
         // The conversation must not mark anything on the map; the member's count goes up instead.
         completedOnMap: home.completedOnMap,
-        conversationOffMap: !(await storage.load(learnerId)).world.completedEncounterIds.includes('gerald_coffee_break'),
-        conversations: party.find((member) => member.encounterId === 'imp_coffee_greeting')?.conversations ?? null,
+        conversationOffMap: !(await storage.load(learnerId)).world.completedEncounterIds.includes(conversationId),
+        conversations: party.find((member) => member.encounterId === homeEncounter)?.conversations ?? null,
         generationCalls: raw.length,
         home, conversation, steps,
       };
