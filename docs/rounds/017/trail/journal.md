@@ -1,0 +1,13 @@
+# Journal: round 017
+
+Append only. Times are UTC. Occurred is when the event happened; Recorded is when the row was written.
+
+| # | Occurred | Recorded | Event | Actor | What | Record |
+|---|---|---|---|---|---|---|
+| 1 | 2026-11-05 14:29:30 | 14:31:20 | round-opened | Claude (claude-opus-5-5), autonomous | Backlog item D3 (Spellbook meaning leak from round 001's audit, vocabulary notes from round 003 item 5), taken while round 015 waits for Codex's usage limit. Occurred approximate | `../../../autonomy/STATE.md` |
+| 2 | 14:31:04 | 14:31:20 | plan-drafted | Claude (claude-opus-5-5), autonomous | Draft v1: cards carry `note` and `inPlay`; the app hides meanings of in-play and due cards; review skips or refuses (409 `IN_PLAY`) in-play words | `plan-v1.md` |
+| 3 | 15:48:30 | 15:48:40 | critique-dispatched | Claude (claude-opus-5-5), autonomous | Critique 1 sent: `codex exec --sandbox read-only -c model_reasoning_effort=high --json`, template plus the no-commands preamble; `plan-v1.md` sha256 e5e0f129… and 12 files at HEAD f264de7 inlined on stdin (bundle sha256 a97f0da7…, 1456 lines; list in `critique-1.md`). A draft build (uncommitted) sits in the working tree; it is not in the bundle | `plan-v1.md` |
+| 4 | 15:54:40 | 15:55:08 | critique-returned | Codex, effort high | Critique 1: 6 findings (4 Error, 1 Gap... see file: Errors 1, 2, 5; Gaps 3, 4; Cut 6). Occurred is the output file's mtime | `critique-1.md` |
+| 5 | 15:57:00 | 15:57:38 | disposition | Claude (claude-opus-5-5), autonomous | No owner present: autonomous decisions pending owner review. Correction to row 4: the critique has 3 Errors (1, 2, 5), 2 Gaps (3, 4) and 1 Cut (6). Accepted 1.1 narrowed (no meanings, notes or example English on any card while an encounter is under way; not while any card is due), 1.2, 1.3, 1.4 without the timer, 1.5, 1.6. Occurred approximate | `../architecture.md`, `../../../autonomy/decisions.md` |
+| 6 | 15:57:00 | 15:57:38 | plan-revised | Claude (claude-opus-5-5), autonomous | Net change: per-word `inPlay` replaced by one `inEncounter` flag on the snapshot; reviews closed (409 `IN_ENCOUNTER`) on create and submit during an encounter; due derived from `nextReviewAt` in the app; no note in review feedback; expo-doctor dropped. Recorded in `architecture.md` (no plan-v2 critiqued). Occurred approximate | `../architecture.md` |
+| 7 | 15:57:38 | 15:57:38 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed: `architecture.md`, trail, decisions rows, status index row. A draft build was written before the critique returned and is reworked to the revised design; it is committed after this | `../architecture.md` |
