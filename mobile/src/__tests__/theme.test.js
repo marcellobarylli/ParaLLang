@@ -64,6 +64,7 @@ const contrast = (a, b) => { const [hi, lo] = [luminance(a), luminance(b)].sort(
 test('every text colour meets 4.5:1 on the backgrounds it is used on', () => {
   const pairs = [
     ...['ink', 'muted', 'accent', 'success', 'danger'].flatMap((fg) => [[fg, 'background'], [fg, 'surface']]),
+    ['wordNoun', 'surface'], ['wordVerb', 'surface'], ['wordAdjective', 'surface'], // round 056: chips sit on surface
     ['accentInk', 'accent'], ['danger', 'dangerSurface'], ['muted', 'dangerSurface'], ['accent', 'dangerSurface'], ['success', 'successSurface'],
   ];
   // No text sits on the dot colours (border, muted, ink, success, accent fills on the map); disabled and pressed

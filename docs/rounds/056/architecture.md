@@ -96,3 +96,8 @@ Corrected counts: noun 43, noun_phrase 3, verb 13, verb_phrase 6, adjective 14 (
 
 Net change: a `suffix` on `Button`, undimmed chips with uniform borders, a dashed verb border, no duplicate class,
 and pinned protected-line behaviour.
+
+## Outcome (2026-11-05)
+
+Built as designed. Mobile 142/142, server 228/228, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
+See [findings.md](findings.md).

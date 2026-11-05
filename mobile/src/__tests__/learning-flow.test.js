@@ -122,10 +122,10 @@ test('the app enforces help, retains failed input, resolves, reviews, reveals, a
   expect(screen.getByText(/Italian target: 25%/)).toBeOnTheScreen();
   expect(screen.queryByText('Do you want a coffee? Without milk is civilized.')).not.toBeOnTheScreen();
 
-  await user.press(screen.getByRole('button', { name: 'Translate word: caffè' }));
+  await user.press(screen.getByRole('button', { name: 'Translate word: caffè, noun' }));
   await screen.findByText(/^coffee/);
   expect(screen.getByText(/Hints: 1\/2/)).toBeOnTheScreen();
-  expect(screen.getByRole('button', { name: 'Translate word: caffè' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Translate word: caffè, noun' })).toBeDisabled();
   await user.press(screen.getByRole('button', { name: 'Translate sentence' }));
   await screen.findByText('Do you want a coffee? Without milk is civilized.');
   expect(screen.getByText(/Hints: 0\/2/)).toBeOnTheScreen();

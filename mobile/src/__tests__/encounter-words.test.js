@@ -48,7 +48,7 @@ test('the speaker stays enabled while its chip is disabled: loading, meaning sho
   ];
   for (const { props, chip } of cases) {
     const view = await render(panel(props));
-    expect(screen.getByRole('button', { name: `Translate word: ${chip}` })).toBeDisabled();
+    expect(screen.getByRole('button', { name: `Translate word: ${chip}, noun` })).toBeDisabled();
     expect(await screen.findByRole('button', { name: `Hear ${chip} in Italian` })).toBeEnabled();
     await view.unmount();
   }
@@ -62,7 +62,7 @@ test('without an Italian voice the chip rows have no speaker and the chips still
   await waitFor(() => expect(Speech.getAvailableVoicesAsync).toHaveBeenCalled());
   expect(screen.queryByRole('button', { name: /^Hear / })).not.toBeOnTheScreen();
   expect(screen.queryByRole('button', { name: 'Italian pronunciation unavailable' })).not.toBeOnTheScreen();
-  await user.press(screen.getByRole('button', { name: 'Translate word: caffè' }));
+  await user.press(screen.getByRole('button', { name: 'Translate word: caffè, noun' }));
   expect(onHelp).toHaveBeenCalledWith({ kind: 'word', messageId: 'npc-1', vocabularyId: 'caffe' });
 });
 

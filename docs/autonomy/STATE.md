@@ -102,7 +102,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - [x] **C5. Hear the words of an encounter line** (round 055, closed 2026-11-05): a pronounce button per word chip under NPC lines
   (TTS was only in the Spellbook and reviews; prototype.md Phase 4). No live calls.
-- [ ] **C6. Word chips by class** (round 056): nouns, verbs and adjectives coloured with a label (owner's GAME
+- [x] **C6. Word chips by class** (round 056, closed 2026-11-05): nouns, verbs and adjectives coloured with a label (owner's GAME
   MECHANICS note, "R/G/B for noun/verb/adjective"). No live calls.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
@@ -393,6 +393,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Word chips** (round 056): `wordClass(partOfSpeech)` in `mobile/src/wordClass.js` (noun, verb, adjective or
+  null); colours `wordNoun`/`wordVerb`/`wordAdjective` and `wordClassStyle(cls)` in `ui.js`; `Button` takes
+  `suffix`/`suffixStyle`. A coloured chip's name ends ", noun" / ", verb" / ", adjective" (tests query
+  "Translate word: caffè, noun"). Word chips pass `dim={false}`. A new `part_of_speech` value fails
+  `word-class.test.js` until it is mapped.
 - **Speech** (round 055): `PronounceButton` looks voices up through `voiceFor(tag)` (in-flight promise cached per
   tag, misses dropped); `findVoice` stays pure. `mobile/jest.after-env.js` (`setupFilesAfterEnv`) resets the cache
   before every test. `speak` only lets the latest utterance restore the ambience; `stopSpeech()` runs when

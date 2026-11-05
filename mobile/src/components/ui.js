@@ -15,7 +15,22 @@ export const colors = {
   danger: '#9b1c1c',
   dangerSurface: '#fbe9e7',
   successSurface: '#e7f3e8',
+  // Round 056 (backlog C6): word classes on chips, each at least 4.5:1 on surface, apart from danger and success.
+  wordNoun: '#1f5a96',
+  wordVerb: '#b3261e',
+  wordAdjective: '#1d6e4e',
 };
+
+// Round 056: a chip's border and label colours for a word class (null: today's look with a 2-point border). Verbs
+// are dashed, so red and green differ by more than hue (critique 1.3).
+const WORD_CLASS_COLOUR = { noun: 'wordNoun', verb: 'wordVerb', adjective: 'wordAdjective' };
+export function wordClassStyle(cls) {
+  const colour = cls ? colors[WORD_CLASS_COLOUR[cls]] : null;
+  return {
+    chip: { borderWidth: 2, borderColor: colour ?? colors.border, borderStyle: cls === 'verb' ? 'dashed' : 'solid' },
+    label: colour ? { color: colour } : null,
+  };
+}
 
 // Round 034 (backlog C3a): the app's font sizes, in points, named after Apple's text styles. Sizes the app already
 // used are kept where close (title1 is 24, not Apple's 28). Dynamic Type scales them (allowFontScaling is on).
@@ -48,7 +63,9 @@ export function Title({ style, children, role = 'heading', ...props }) {
 }
 
 // Round 034 (critique 1.3): `dim` fades a disabled button; the map turns it off, since its node labels carry information.
-export function Button({ label, accessibleName, onPress, disabled = false, dim = true, variant = 'secondary', style, children, expanded }) {
+// Round 056 (critique 1.1): `suffix` is a short second text after the label (a chip's word class), styled by
+// `suffixStyle` on top of a caption size.
+export function Button({ label, accessibleName, onPress, disabled = false, dim = true, variant = 'secondary', style, children, expanded, suffix, suffixStyle }) {
   return (
     <Pressable
       role="button"
@@ -59,7 +76,7 @@ export function Button({ label, accessibleName, onPress, disabled = false, dim =
       hitSlop={6}
       style={({ pressed }) => [styles.button, styles[variant], pressed && styles.pressed, disabled && dim && styles.disabled, style]}
     >
-      {children ?? <Text style={[styles.label, variant === 'primary' && styles.primaryLabel, variant === 'text' && styles.textLabel]}>{label}</Text>}
+      {children ?? <Text style={[styles.label, variant === 'primary' && styles.primaryLabel, variant === 'text' && styles.textLabel]}>{label}{suffix ? <Text style={[styles.suffix, suffixStyle]}>{` ${suffix}`}</Text> : null}</Text>}
     </Pressable>
   );
 }
@@ -74,5 +91,6 @@ const styles = StyleSheet.create({
   label: { color: colors.ink, fontSize: type.subhead, fontWeight: '600' },
   primaryLabel: { color: colors.accentInk },
   textLabel: { color: colors.accent },
+  suffix: { color: colors.muted, fontSize: type.caption1, fontWeight: '600' },
   display: { fontFamily: fonts.display, fontWeight: 'normal', fontStyle: 'normal' },
 });
