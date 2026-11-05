@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadGameContent } from '../src/content-loader.js';
-import { fold, openObjectives, playerTurns, scanLine, scanReport, scenesOf, summarize } from '../scripts/leak-scan.js';
+import { fold, openObjectives, playerTurns, scanLine, scanReport, scenesOf, summarize, foreignFormsFor } from '../scripts/leak-scan.js';
 
 const es = loadGameContent({ language: 'es' });
 const it = loadGameContent({ language: 'it' });
@@ -76,4 +76,47 @@ test('report shapes: a tour, a party run, a top-level scene of rounds 005–008,
   const { files, total } = summarize([{ error: 'not JSON' }, { language: 'it', scenes: [], skipped: [] }, { language: 'it', ...replays }]);
   assert.deepEqual(files, { 'not JSON': 1, 'no scenes': 1, scanned: 1 });
   assert.equal(total.it.leakLines, 1);
+});
+
+// Round 049 (backlog G7): other-target exposure, counted apart from the four kinds.
+const scene = (language, encounterId, lines, steps = []) => ({ language, conversation: { encounterId, lines: lines.map((native) => ({ native })), grading: [] }, steps });
+
+test('another conversation\'s target is a foreign hit, apart from the four kinds; own targets are not foreign', () => {
+  const report = scene('it', 'flick_lotus', ['Eccomi, sono sveglio!', 'Coraggio, sì!'],
+    [say('Svegliati!', [v('wake_up', true), v('courage', false)])]);
+  const [s] = scanReport(report, it).scenes;
+  assert.deepEqual(s.foreign.map((f) => [f.line, f.hits.map((h) => [h.owner, h.id, h.form])]), [[0, [['marginalia_folded_page', 'eccomi', 'eccomi']]]]);
+  assert.deepEqual([s.leakLines, s.nearLines, s.quotedLines, s.echoLines, s.foreignLines, s.party], [1, 0, 0, 0, 1, true], 'coraggio is its own open target: a leak, not foreign');
+  assert.deepEqual(s.hits.map((h) => [h.line, h.kind]), [[1, 'leak']], 'the foreign-only line 0 adds no kind (critique 1.8)');
+  assert.ok(!foreignFormsFor(it, 'flick_lotus').some((f) => ['svegliati', 'coraggio'].includes(f.id)));
+});
+
+test('Spanish: a borrowed English form is marked, not counted; a surface variant counts; shared surfaces are the scene\'s own', () => {
+  const [s] = scanReport(scene('es', 'flick_lotus', ['¡Muchas gracias, amigo!']), es).scenes;
+  assert.deepEqual(s.foreign[0].hits.map((h) => [h.owner, h.form, h.english]), [['gerald_coffee_break', 'gracias', false], ['gerald_coffee_break', 'muchas gracias', false], ['gerald_confidence', 'amigo', true]]);
+  assert.equal(s.foreignLines, 1, 'one line, however many owners');
+  const [amigoOnly] = scanReport(scene('es', 'flick_lotus', ['Te oigo, amigo.']), es).scenes;
+  assert.equal(amigoOnly.foreignLines, 0, 'amigo alone is an English look-alike (critique 1.2)');
+  const [own] = scanReport(scene('it', 'gerald_coffee_break', ['Grazie!']), it).scenes;
+  assert.deepEqual([own.foreign, own.foreignLines, own.party], [[], 0, true]);
+  const [home] = scanReport(scene('it', 'imp_coffee_greeting', ['Grazie!']), it).scenes;
+  assert.deepEqual([home.foreign[0].hits[0].owner, home.foreignLines, home.party], ['gerald_coffee_break', 1, false]);
+});
+
+test('a foreign echo needs one earlier message with the whole form (critique 1.7); a fresh hit beside an echo counts', () => {
+  const lines = ['Ciao.', 'Ciao.', 'Grazie, amico mio. Insieme!'];
+  const turns = [say('Sei mio', [v('wake_up', false)]), say('amico', [v('wake_up', false)])];
+  const [echoed] = scanReport(scene('it', 'flick_lotus', lines.slice(0, 3), turns), it).scenes;
+  const hits = echoed.foreign[0].hits.map((h) => [h.form, h.echo]).sort();
+  assert.deepEqual(hits, [['amico', true], ['grazie', false], ['insieme', false]]);
+  assert.equal(echoed.foreignLines, 1);
+  const [split] = scanReport(scene('it', 'flick_lotus', ['Ciao.', 'Ciao.', 'Amico!'], [say('ami', [v('wake_up', false)]), say('co', [v('wake_up', false)])]), it).scenes;
+  assert.deepEqual([split.foreign[0].hits[0].echo, split.foreignLines], [false, 1]);
+});
+
+test('summarize: foreign lines overall and in party conversations only (critique 1.1); zero-hit scenes add lines', () => {
+  const party = scanReport(scene('it', 'flick_lotus', ['Eccomi!', 'Nothing here.'], [say('x', [v('wake_up', false)])]), it);
+  const home = scanReport(scene('it', 'imp_coffee_greeting', ['Grazie!']), it);
+  const { total } = summarize([{ language: 'it', ...party }, { language: 'it', ...home }]);
+  assert.deepEqual([total.it.lines, total.it.foreignLines, total.it.partyLines, total.it.partyForeignLines, total.it.leakLines], [3, 2, 2, 1, 0]);
 });

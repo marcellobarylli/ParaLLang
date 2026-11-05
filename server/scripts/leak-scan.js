@@ -6,6 +6,8 @@
 // authored intent holds it, e.g. a passage read aloud). A line is `leak` (a fresh exact hit), `near` (fresh word
 // hits only), `quoted` or `echo`. Hits are flags for reading, not verdicts. Reports are read against today's
 // content, and the word scan is a lower bound (no inflection: "chiamo" never hits "chiami").
+// Round 049 (backlog G7): `foreign` lines, counted apart from the four kinds, hold a whole surface form of a target that
+// a party conversation teaches and the scene's own encounter does not (Flick saying Marginalia's "eccomi").
 //   node server/scripts/leak-scan.js <report.json ...> [--json <out.json>]
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -106,6 +108,30 @@ export function passagesOf(objectives, id) {
   return [...intent.matchAll(/"([^"]+)"|«([^»]+)»|“([^”]+)”/g)].map((m) => fold(m[1] ?? m[2] ?? m[3])).filter((passage) => passage.trim().split(' ').length >= 5);
 }
 
+// Round 049: the whole forms of every entry a party conversation targets, minus the entries the scene's own encounter
+// targets, each with the conversation that teaches it.
+// Critique 1.3: a form that folds like one of the scene's own forms is the scene's word, not another conversation's.
+export function foreignFormsFor(content, encounterId) {
+  const objectives = content.encounters.get(encounterId)?.encounter.objectives ?? [];
+  const own = new Set(objectives.flatMap((objective) => objective.target_vocabulary_ids));
+  const ownForms = new Set(formsFor(objectives, content.vocabularyById).map(({ form }) => fold(form).trim()));
+  const forms = [];
+  for (const { encounter } of content.encounters.values()) {
+    if (!encounter.party_of) continue;
+    for (const id of new Set(encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids))) {
+      if (own.has(id)) continue;
+      const entry = content.vocabularyById.get(id);
+      for (const form of new Set([entry?.target, ...(entry?.surface_variants ?? [])].filter(Boolean))) {
+        if (!ownForms.has(fold(form).trim())) forms.push({ owner: encounter.id, id, form });
+      }
+    }
+  }
+  return forms;
+}
+
+// Critique 1.2: party forms that English has borrowed ("amigo", round 047 critique 1.4); marked, never counted.
+export const FOREIGN_ENGLISH = new Set(['amigo', 'amigos']);
+
 export function scanReport(report, content) {
   const found = scenesOf(report);
   const turns = playerTurns(report);
@@ -132,6 +158,8 @@ export function scanReport(report, content) {
     }
     const english = ENGLISH_SPEAKERS.has(encounterId);
     const hits = [];
+    const foreignForms = foreignFormsFor(content, encounterId);
+    const foreign = [];
     scene.lines.forEach((line, k) => {
       const open = openObjectives(objectives, mine, k);
       const closed = objectives.filter((objective) => !open.includes(objective));
@@ -139,6 +167,11 @@ export function scanReport(report, content) {
       const closedForms = new Set(formsFor(closed, content.vocabularyById).map(({ form }) => fold(form).trim()));
       const { exact, words } = scanLine(line.native ?? '', formsFor(open, content.vocabularyById), content.language.code, { english });
       const before = fold(mine.slice(0, k).map((turn) => turn.message).join(' '));
+      // Critique 1.7: echo only if one earlier message holds the whole form by itself.
+      const messages = mine.slice(0, k).map((turn) => fold(turn.message));
+      const strange = foreignForms.filter(({ form }) => holds(fold(line.native ?? ''), fold(form).trim()))
+        .map((hit) => ({ ...hit, echo: messages.some((message) => holds(message, fold(hit.form))), english: FOREIGN_ENGLISH.has(fold(hit.form).trim()) }));
+      if (strange.length) foreign.push({ line: k, hits: strange, native: line.native });
       const mark = (hit, text) => ({ ...hit, echo: holds(before, fold(text)), quoted: passagesOf(objectives, hit.objective).some((passage) => holds(passage, fold(text))) });
       const marked = {
         exact: exact.map((hit) => mark(hit, hit.form)),
@@ -155,6 +188,8 @@ export function scanReport(report, content) {
     scenes.push({
       encounterId, inferred: scene.inferred, replay: Boolean(scene.replay), lines: scene.lines.length,
       leakLines: count('leak'), nearLines: count('near'), quotedLines: count('quoted'), echoLines: count('echo'), hits,
+      party: Boolean(definition.encounter.party_of),
+      foreignLines: foreign.filter((entry) => entry.hits.some((hit) => !hit.echo && !hit.english)).length, foreign,
     });
   }
   return { scenes, skipped };
@@ -169,12 +204,14 @@ export function summarize(results) {
     if (r.error) { files[r.error] = (files[r.error] ?? 0) + 1; continue; }
     if (!r.scenes.length && !r.skipped.length) { files['no scenes'] = (files['no scenes'] ?? 0) + 1; continue; }
     files.scanned = (files.scanned ?? 0) + 1;
-    const t = (total[r.language] ??= { reports: 0, scenes: 0, inferred: 0, replays: 0, skippedScenes: 0, lines: 0, leakLines: 0, nearLines: 0, quotedLines: 0, echoLines: 0 });
+    const t = (total[r.language] ??= { reports: 0, scenes: 0, inferred: 0, replays: 0, skippedScenes: 0, lines: 0, leakLines: 0, nearLines: 0, quotedLines: 0, echoLines: 0, foreignLines: 0, partyLines: 0, partyForeignLines: 0 });
     t.reports += 1;
     t.skippedScenes += r.skipped.reduce((sum, s) => sum + s.scenes, 0);
     for (const s of r.scenes) {
       t.scenes += 1; t.lines += s.lines; if (s.inferred) t.inferred += 1; if (s.replay) t.replays += 1;
       for (const kind of KINDS) t[`${kind}Lines`] += s[`${kind}Lines`];
+      t.foreignLines += s.foreignLines;
+      if (s.party) { t.partyLines += s.lines; t.partyForeignLines += s.foreignLines; }
     }
   }
   return { files, total };
@@ -201,12 +238,16 @@ async function main(args = process.argv.slice(2)) {
         const what = [...h.exact.map((x) => `${x.objective}:${x.form}${tag(x)}`), ...h.words.map((x) => `${x.objective}:${x.word}<${x.form}>${tag(x)}`)];
         console.log(`${h.kind}\t${r.path}\t${s.encounterId}\tline ${h.line}\t[${what.join(', ')}]\t${String(h.native).replace(/\s+/g, ' ').slice(0, 160)}`);
       }
+      for (const f of s.foreign) {
+        const what = f.hits.map((x) => `${x.owner}:${x.form}${x.echo ? ' (echo)' : ''}${x.english ? ' (english)' : ''}`);
+        console.log(`foreign\t${r.path}\t${s.encounterId}\tline ${f.line}\t[${what.join(', ')}]\t${String(f.native).replace(/\s+/g, ' ').slice(0, 160)}`);
+      }
     }
   }
   const { files, total } = summarize(results);
   console.log(`== files: ${Object.entries(files).map(([k, v]) => `${k} ${v}`).join(', ')} (of ${paths.length})`);
   for (const [language, t] of Object.entries(total)) {
-    console.log(`== ${language}: ${t.reports} reports, ${t.scenes} scenes (${t.inferred} inferred, ${t.replays} replay greetings, ${t.skippedScenes} skipped), ${t.lines} lines; leak ${t.leakLines}, near ${t.nearLines}, quoted ${t.quotedLines}, echo ${t.echoLines}`);
+    console.log(`== ${language}: ${t.reports} reports, ${t.scenes} scenes (${t.inferred} inferred, ${t.replays} replay greetings, ${t.skippedScenes} skipped), ${t.lines} lines; leak ${t.leakLines}, near ${t.nearLines}, quoted ${t.quotedLines}, echo ${t.echoLines}; foreign ${t.foreignLines} (party conversations: ${t.partyForeignLines} of ${t.partyLines} lines)`);
   }
   if (out) writeFileSync(out, `${JSON.stringify({ files, total, results }, null, 2)}\n`);
 }
