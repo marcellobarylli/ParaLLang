@@ -1,9 +1,10 @@
 import { useRef } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import BilingualText from './BilingualText.js';
+import PartyOffer, { inParty } from './PartyOffer.js';
 import { colors } from './ui.js';
 
-export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp }) {
+export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave }) {
   const listRef = useRef(null);
   if (!encounter) return <View style={styles.panel}><Text style={styles.muted}>Preparing the encounter…</Text></View>;
   const resolved = encounter.state === 'resolved';
@@ -31,6 +32,10 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
         {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</Text>)}
       </View>}
       {resolved && <Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}</Text>}
+      {resolved && encounter.character?.saveable && onRecruit && <PartyOffer
+        name={name} joined={inParty(party, encounter.character.id)} isLoading={isLoading}
+        onSave={() => onRecruit(encounter.encounterId)} onLeave={onLeave}
+      />}
     </View>
   );
 

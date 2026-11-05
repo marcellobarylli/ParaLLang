@@ -184,7 +184,7 @@ export class LearningService {
       id: encounter.id,
       encounterId: definition.encounter.id,
       location: definition.encounter.location,
-      character: { name: definition.character.name },
+      character: { id: definition.character.id, name: definition.character.name, saveable: definition.character.saveable === true },
       resolvedMessage: definition.encounter.resolved_message ?? null,
       companionBriefing: definition.encounter.companion_briefing ?? null,
       version: encounter.version,
@@ -453,6 +453,49 @@ export class LearningService {
       stagedEnvelope.world = progress;
       await this.storage.save(stagedEnvelope);
       return { world: worldSnapshot(this.content.world, progress, this.content.encounters) };
+    });
+  }
+
+  // Round 021: the party. Members whose encounter is not in the loaded pack stay in the save but are not shown.
+  partySnapshot(envelope) {
+    return (envelope.party ?? []).flatMap((member) => {
+      const definition = this.content.encounters.get(member.encounterId);
+      if (!definition || definition.character.id !== member.characterId) return [];
+      return [{
+        characterId: member.characterId,
+        name: definition.character.name,
+        encounterId: member.encounterId,
+        locationId: definition.encounter.location,
+        locationName: this.locationName(definition),
+        joinedAt: member.joinedAt,
+      }];
+    });
+  }
+
+  async getParty(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    return { party: this.partySnapshot(envelope) };
+  }
+
+  // A defeated, saveable character joins the party. Declining writes nothing, so the offer stays open.
+  async recruit(learnerId, request) {
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const encounterId = request?.encounterId;
+      const definition = typeof encounterId === 'string' ? this.content.encounters.get(encounterId) : null;
+      if (!definition) throw validationError('Unknown encounter.');
+      const { character } = definition;
+      if (character.saveable !== true) throw conflictError(`${character.name} cannot join your party.`, 'NOT_SAVEABLE');
+      if (!envelope.world.completedEncounterIds.includes(encounterId)) {
+        throw conflictError(`${character.name} has not been won over yet. Finish the encounter first.`, 'NOT_DEFEATED');
+      }
+      if (envelope.party.some((member) => member.characterId === character.id)) {
+        return { party: this.partySnapshot(envelope), joined: false };
+      }
+      const stagedEnvelope = clone(envelope);
+      stagedEnvelope.party.push({ characterId: character.id, encounterId, joinedAt: nowIso(this.clock) });
+      await this.storage.save(stagedEnvelope);
+      return { party: this.partySnapshot(stagedEnvelope), joined: true };
     });
   }
 

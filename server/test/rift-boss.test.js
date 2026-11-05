@@ -130,6 +130,6 @@ for (const code of Object.keys(packs)) {
     assert.equal(encounter.state, 'resolved');
     assert.match(encounter.resolvedMessage, /^Errata cannot read Nobody/);
     const { world } = await service.getWorld(learnerId);
-    assert.deepEqual(world.locations.find((l) => l.id === 'the_rift').encounter, { id: 'the_rift_errata', completed: true, characterName: 'Errata' });
+    assert.deepEqual(world.locations.find((l) => l.id === 'the_rift').encounter, { id: 'the_rift_errata', completed: true, characterName: 'Errata', characterId: 'rift_errata_001', saveable: false });
   });
 }

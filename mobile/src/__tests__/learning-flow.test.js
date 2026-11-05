@@ -47,7 +47,7 @@ beforeEach(async () => {
   await AsyncStorage.clear();
   useGameStore.setState({
     learnerId: null, language: null, encounter: null, spellbook: { cards: [], dueCount: 0, contentVersion: null },
-    world: null, view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null,
+    world: null, party: [], notice: null, view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null,
     draft: '', pendingInput: null, isLoading: false, error: null,
   });
 });
@@ -65,6 +65,7 @@ test('the app enforces help, retains failed input, resolves, reviews, reveals, a
     if (path === '/api/learner') return response(201, learner);
     if (path === '/api/world') return response(200, { world: currentWorld });
     if (path === '/api/spellbook') return response(200, spellbook);
+    if (path === '/api/party') return response(200, { party: [] });
     if (path === '/api/world/move') {
       if (body.locationId !== 'coffee_cart') return response(409, { error: { code: 'NOT_ADJACENT', message: "You can't get there from here." } });
       currentWorld = cartWorld();
@@ -205,6 +206,7 @@ test('CLI provider error is actionable, clears pending state, and retains input'
     if (path === '/api/encounter/start') return response(200, { encounter: encounter(), spellbook });
     if (path === '/api/world') return response(200, { world: cartWorld() });
     if (path === '/api/spellbook') return response(200, spellbook);
+    if (path === '/api/party') return response(200, { party: [] });
     if (path === '/api/encounter/dialogue') return new Promise((resolveRequest) => { resolveDialogue = resolveRequest; });
     throw new Error(`Unexpected fetch ${path}`);
   });

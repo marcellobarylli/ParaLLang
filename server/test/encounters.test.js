@@ -182,8 +182,8 @@ test('a second encounter defined only as content plays at its own location, inde
     { message: 'This encounter is already complete. Restart to play again.' },
   );
   const { world } = await service.getWorld(learnerId);
-  assert.deepEqual(world.locations.find((l) => l.id === 'butchers_stall').encounter, { id: 'fixture_butcher', completed: true, characterName: 'Bernard' });
-  assert.deepEqual(world.locations.find((l) => l.id === 'coffee_cart').encounter, { id: 'imp_coffee_greeting', completed: false, characterName: 'Gerald' });
+  assert.deepEqual(world.locations.find((l) => l.id === 'butchers_stall').encounter, { id: 'fixture_butcher', completed: true, characterName: 'Bernard', characterId: 'charcutier_fixture', saveable: true });
+  assert.deepEqual(world.locations.find((l) => l.id === 'coffee_cart').encounter, { id: 'imp_coffee_greeting', completed: false, characterName: 'Gerald', characterId: 'imp_coffee_001', saveable: true });
 
   const web = await service.startEncounter(learnerId, {});
   assert.equal(web.encounter.encounterId, 'imp_coffee_greeting', 'without an id the default starts anywhere (web client)');

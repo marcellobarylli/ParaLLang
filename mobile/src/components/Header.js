@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, colors } from './ui.js';
 
-export default function Header({ place, dueCount, isLoading, onSpellbook, onMap, onRestart }) {
+export default function Header({ place, dueCount, partyCount = 0, isLoading, onSpellbook, onParty, onMap, onRestart }) {
   return (
     <View style={styles.header}>
       <View style={styles.titles}>
@@ -13,6 +13,7 @@ export default function Header({ place, dueCount, isLoading, onSpellbook, onMap,
           <Text style={styles.label}>Spellbook</Text>
           <Text style={styles.badge}>{dueCount}</Text>
         </Button>
+        {onParty && <Button label={`Party ${partyCount}`} accessibleName={`Party, ${partyCount} ${partyCount === 1 ? 'member' : 'members'}`} variant="text" onPress={onParty} />}
         {onMap && <Button label="Map" accessibleName="Open the map" variant="text" onPress={onMap} disabled={isLoading} />}
         {onRestart && <Button label="Restart" accessibleName="Restart encounter" variant="text" onPress={onRestart} disabled={isLoading} />}
       </View>

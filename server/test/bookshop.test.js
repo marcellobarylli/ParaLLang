@@ -94,6 +94,6 @@ for (const code of Object.keys(packs)) {
     assert.equal(encounter.state, 'resolved');
     assert.match(encounter.resolvedMessage, /^Marginalia annotates you as 'promising'/);
     const { world } = await service.getWorld(learnerId);
-    assert.deepEqual(world.locations.find((l) => l.id === 'old_bookshop').encounter, { id: 'old_bookshop_bookworm', completed: true, characterName: 'Marginalia' });
+    assert.deepEqual(world.locations.find((l) => l.id === 'old_bookshop').encounter, { id: 'old_bookshop_bookworm', completed: true, characterName: 'Marginalia', characterId: 'bookworm_marginalia_001', saveable: true });
   });
 }

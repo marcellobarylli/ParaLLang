@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, colors } from './ui.js';
+import PartyOffer, { inParty } from './PartyOffer.js';
 
 const NODE = 18;
 
@@ -50,7 +51,7 @@ function Node({ location, size, onMove, disabled }) {
   );
 }
 
-export default function MapPanel({ world, isLoading, onMove, onEnterEncounter }) {
+export default function MapPanel({ world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
   const [size, setSize] = useState(320); // replaced by the measured width on layout
   if (!world) return <View style={styles.panel}><Text style={styles.muted}>Finding the Crumbling Market…</Text></View>;
   const byId = new Map(world.locations.map((location) => [location.id, location]));
@@ -77,6 +78,10 @@ export default function MapPanel({ world, isLoading, onMove, onEnterEncounter })
             />
           : <Text style={styles.muted}>Nothing here wants to talk to you yet.</Text>}
         {here.encounter?.completed && <Text style={styles.done}>✓ Encounter complete</Text>}
+        {here.encounter?.completed && here.encounter.saveable && onRecruit && <PartyOffer
+          name={here.encounter.characterName} joined={inParty(party, here.encounter.characterId)} isLoading={isLoading}
+          onSave={() => onRecruit(here.encounter.id)}
+        />}
       </View>}
     </ScrollView>
   );

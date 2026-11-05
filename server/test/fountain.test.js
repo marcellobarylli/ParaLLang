@@ -96,6 +96,6 @@ for (const code of Object.keys(packs)) {
     assert.equal(encounter.state, 'resolved');
     assert.match(encounter.resolvedMessage, /^Flick holds still for almost a whole second/);
     const { world } = await service.getWorld(learnerId);
-    assert.deepEqual(world.locations.find((l) => l.id === 'cracked_fountain').encounter, { id: 'cracked_fountain_letharger', completed: true, characterName: 'Flick' });
+    assert.deepEqual(world.locations.find((l) => l.id === 'cracked_fountain').encounter, { id: 'cracked_fountain_letharger', completed: true, characterName: 'Flick', characterId: 'letharger_flick_001', saveable: true });
   });
 }

@@ -85,7 +85,7 @@ for (const code of Object.keys(packs)) {
     assert.equal(encounter.state, 'resolved');
     assert.equal(encounter.resolvedMessage, 'Mortimer weighs your order twice, wraps it in paper labelled with the wrong word, and lets you go.');
     const { world } = await service.getWorld(learnerId);
-    assert.deepEqual(world.locations.find((l) => l.id === 'butchers_stall').encounter, { id: 'butchers_stall_charcutier', completed: true, characterName: 'Mortimer' });
+    assert.deepEqual(world.locations.find((l) => l.id === 'butchers_stall').encounter, { id: 'butchers_stall_charcutier', completed: true, characterName: 'Mortimer', characterId: 'charcutier_mortimer_001', saveable: true });
   });
 }
 

@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { retryableError, validationError } from './errors.js';
 import { emptyWorldProgress } from './world.js';
 
-export const SAVE_SCHEMA_VERSION = 2;
+export const SAVE_SCHEMA_VERSION = 3;
 export const LEARNER_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export function assertLearnerId(learnerId) {
@@ -18,16 +18,30 @@ export function createLearnerEnvelope(learnerId) {
     learnerId,
     spellbook: { words: {}, phrases: {}, processedAssessments: {} },
     world: emptyWorldProgress(),
+    party: [],
   };
 }
 
-// Version 1 saves (rounds 001-004) hold only the Spellbook. They gain empty world progress in memory and are
-// written as version 2 on their next save.
+// Version 1 saves (rounds 001-004) hold only the Spellbook; version 2 (rounds 005-020) adds world progress. Both
+// gain what they lack (empty world progress, an empty party) in memory and are written as version 3 on their next save.
 function migrate(value) {
   if (value && typeof value === 'object' && value.schemaVersion === 1) {
-    return { ...value, schemaVersion: SAVE_SCHEMA_VERSION, world: emptyWorldProgress() };
+    return { ...value, schemaVersion: SAVE_SCHEMA_VERSION, world: emptyWorldProgress(), party: [] };
+  }
+  if (value && typeof value === 'object' && value.schemaVersion === 2) {
+    return { ...value, schemaVersion: SAVE_SCHEMA_VERSION, party: [] };
   }
   return value;
+}
+
+// Round 021: party members are defeated, saveable characters, one entry per character, in join order.
+function validParty(party) {
+  if (!Array.isArray(party)) return false;
+  const seen = new Set();
+  return party.every((member) => member && typeof member === 'object'
+    && typeof member.characterId === 'string' && typeof member.encounterId === 'string'
+    && typeof member.joinedAt === 'string' && Number.isFinite(Date.parse(member.joinedAt))
+    && !seen.has(member.characterId) && seen.add(member.characterId));
 }
 
 function validWorld(world) {
@@ -71,6 +85,9 @@ function validateEnvelope(value, learnerId) {
   }
   if (!validWorld(value.world)) {
     throw retryableError('The learner save contains invalid world progress. The original file was preserved.', 'SAVE_UNREADABLE');
+  }
+  if (!validParty(value.party)) {
+    throw retryableError('The learner save contains an invalid party. The original file was preserved.', 'SAVE_UNREADABLE');
   }
   return value;
 }

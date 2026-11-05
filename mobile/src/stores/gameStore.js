@@ -18,6 +18,8 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
     language: null,
     encounter: null,
     world: null,
+    party: [],
+    notice: null,
     spellbook: emptySpellbook,
     snapshotsByLearner: snapshots,
     view: 'map',
@@ -43,10 +45,12 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
           const identity = await api.createLearner(storedId);
           if (epoch !== requestEpoch) return;
           await storage?.setItem?.(LEARNER_KEY, identity.learnerId);
-          const [{ world }, spellbook] = await Promise.all([api.getWorld(identity.learnerId), api.getSpellbook(identity.learnerId)]);
+          const [{ world }, spellbook, { party }] = await Promise.all([
+            api.getWorld(identity.learnerId), api.getSpellbook(identity.learnerId), api.getParty(identity.learnerId),
+          ]);
           if (epoch !== requestEpoch) return;
           snapshots.set(identity.learnerId, { encounter: null, spellbook });
-          set({ learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, isLoading: false });
+          set({ learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, party, isLoading: false });
         } catch (error) {
           if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
           initializationPromise = null;
@@ -88,13 +92,35 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
 
     openMap: async () => {
       const { learnerId } = get();
-      set({ view: 'map', reviewChallenge: null, reviewResult: null, error: null });
+      set({ view: 'map', reviewChallenge: null, reviewResult: null, error: null, notice: null });
       if (!learnerId) return;
       try {
         const { world } = await api.getWorld(learnerId);
         if (get().learnerId === learnerId) set({ world });
       } catch (error) { set({ error: error.message }); }
     },
+
+    // Round 021: a defeated, saveable NPC joins the party (from the resolved encounter or the map). Leaving writes
+    // nothing, so the invitation stays open on the map.
+    recruit: async (encounterId) => {
+      const { learnerId, isLoading } = get();
+      if (!learnerId || isLoading || !encounterId) return;
+      const epoch = requestEpoch;
+      set({ isLoading: true, error: null, notice: null });
+      try {
+        const { party, joined } = await api.recruit(learnerId, encounterId);
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        const member = party.find((candidate) => candidate.encounterId === encounterId);
+        set({ party, isLoading: false, notice: joined && member ? `${member.name} joined your party.` : null });
+      } catch (error) {
+        if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false });
+      }
+    },
+
+    openParty: () => set((state) => ({
+      view: 'party', returnView: ['map', 'dialogue'].includes(state.view) ? state.view : state.returnView,
+      reviewChallenge: null, reviewResult: null, error: null,
+    })),
 
     restartEncounter: async () => {
       const { learnerId } = get();
@@ -190,7 +216,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       requestEpoch += 1;
       initializationPromise = null;
       const snapshot = snapshots.get(learnerId) ?? { encounter: null, spellbook: emptySpellbook };
-      set({ learnerId, ...snapshot, draft: '', pendingInput: null, assessment: null });
+      set({ learnerId, ...snapshot, party: [], notice: null, draft: '', pendingInput: null, assessment: null, isLoading: false });
     },
   }));
 }

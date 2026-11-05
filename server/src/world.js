@@ -56,6 +56,9 @@ export function worldSnapshot(world, progress, encounters = new Map()) {
         id: location.encounter,
         completed: completed.has(location.encounter),
         characterName: encounters.get(location.encounter)?.character.name ?? null,
+        // Round 021: the map offers a party invitation for a defeated, saveable character.
+        characterId: encounters.get(location.encounter)?.character.id ?? null,
+        saveable: encounters.get(location.encounter)?.character.saveable === true,
       } : null,
     };
   });

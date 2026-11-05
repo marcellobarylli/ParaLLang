@@ -29,6 +29,7 @@ function fakeApi(overrides = {}) {
     startEncounter: jest.fn(async () => started),
     getWorld: jest.fn(async () => ({ world })),
     getSpellbook: jest.fn(async () => spellbook),
+    getParty: jest.fn(async () => ({ party: [] })),
     moveTo: jest.fn(async () => ({ world: atCart })),
     sendDialogue: jest.fn(), revealHelp: jest.fn(), createReview: jest.fn(), submitReview: jest.fn(),
     ...overrides,

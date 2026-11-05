@@ -41,6 +41,8 @@ export function createLearningApi({ baseUrl = API_URL, fetch: fetchImpl = (...ar
     revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),
     getWorld: (learnerId) => request('/api/world', { learnerId }),
     moveTo: (learnerId, locationId) => request('/api/world/move', { learnerId, method: 'POST', body: { locationId } }),
+    getParty: (learnerId) => request('/api/party', { learnerId }),
+    recruit: (learnerId, encounterId) => request('/api/party/recruit', { learnerId, method: 'POST', body: { encounterId } }),
     getSpellbook: (learnerId) => request('/api/spellbook', { learnerId }),
     createReview: (learnerId, vocabularyId) => request('/api/spellbook/review', { learnerId, method: 'POST', body: vocabularyId ? { vocabularyId } : {} }),
     submitReview: (learnerId, payload) => request('/api/spellbook/review/submit', { learnerId, method: 'POST', body: payload }),

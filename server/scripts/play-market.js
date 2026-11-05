@@ -1,6 +1,8 @@
 // Live playthrough of the Crumbling Market through a CLI provider, in-process (no port is opened).
 //   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall|cracked_fountain|old_bookshop|the_rift] [--lines 'a|b|c'] [--out <file.json>]
 //   node server/scripts/play-market.js --provider codex-cli --tour [--out <file.json>]
+// --recruit (round 021) saves the defeated NPC to the party after a single-location run and reports the party;
+// the exit code then also needs the recruit to succeed.
 // --tour (round 014) plays every encounter in order and checks that The Rift is sealed before the Old Bookshop's
 // encounter and open after it (round 015: then plays the Rift boss); exit code 0 only if every encounter resolved and the gate behaved.
 // --lines 'a|b|c' replaces the scripted player lines (round 011: a surface-variant run). It uses a temporary learner
@@ -220,9 +222,16 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
     const linesIndex = args.indexOf('--lines');
     const playerLines = linesIndex >= 0 ? args[linesIndex + 1].split('|') : scripts[locationId][content.language.code];
     const played = await playAt(locationId, playerLines);
+    let party = null;
+    if (args.includes('--recruit')) {
+      const encounterId = content.world.locationsById.get(locationId).encounter;
+      const recruited = await step(`recruit ${encounterId}`, async () => service.recruit(learnerId, { encounterId }));
+      await step('party after recruiting', async () => service.getParty(learnerId));
+      party = { joined: recruited?.joined === true, members: recruited?.party ?? [] };
+    }
     strip();
     const { lines, grading, generationCalls, ...head } = played;
-    return { provider: preflight, language: content.language.code, ...head, generationCalls, steps, lines, grading };
+    return { provider: preflight, language: content.language.code, ...head, ...(party ? { party } : {}), generationCalls, steps, lines, grading };
   } finally {
     await provider.shutdown?.();
     await rm(saveDir, { recursive: true, force: true });
@@ -235,7 +244,8 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     const text = `${JSON.stringify(report, null, 2)}\n`;
     if (outIndex > 0) await writeFile(process.argv[outIndex + 1], text);
     process.stdout.write(text);
-    const ok = report.tour ? report.resolved && report.riftSealedBefore && report.riftOpenAfter : report.resolved && report.completedOnMap;
+    const ok = report.tour ? report.resolved && report.riftSealedBefore && report.riftOpenAfter
+      : report.resolved && report.completedOnMap && (!report.party || report.party.joined);
     process.exitCode = ok ? 0 : 1;
   }).catch((error) => { console.error(error.message); process.exitCode = 1; });
 }

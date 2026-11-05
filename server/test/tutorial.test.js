@@ -90,7 +90,7 @@ for (const code of Object.keys(packs)) {
     assert.equal(encounter.state, 'resolved');
     assert.equal(encounter.resolvedMessage, 'Portia sighs with relief, unlocks herself and lets you into the market.');
     const { world } = await service.getWorld(learnerId);
-    assert.deepEqual(world.locations.find((l) => l.id === 'market_entrance').encounter, { id: 'market_entrance_tutorial', completed: true, characterName: 'Portia' });
+    assert.deepEqual(world.locations.find((l) => l.id === 'market_entrance').encounter, { id: 'market_entrance_tutorial', completed: true, characterName: 'Portia', characterId: 'archway_portia_001', saveable: false });
   });
 
   test(`${code}: Gerald has no companion briefing and his lines never match tutorial words`, async (t) => {

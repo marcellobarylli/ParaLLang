@@ -80,7 +80,7 @@ test('a new learner starts at the Market Entrance and sees only its neighbours t
   const known = world.locations.find((l) => l.id === 'coffee_cart');
   assert.equal(known.description, undefined, 'known locations keep their description hidden');
   assert.equal(known.encounter, undefined);
-  assert.deepEqual(world.locations.find((l) => l.id === 'market_entrance').encounter, { id: 'market_entrance_tutorial', completed: false, characterName: 'Portia' });
+  assert.deepEqual(world.locations.find((l) => l.id === 'market_entrance').encounter, { id: 'market_entrance_tutorial', completed: false, characterName: 'Portia', characterId: 'archway_portia_001', saveable: false });
   assert.deepEqual(world.paths, [['market_entrance', 'coffee_cart'], ['market_entrance', 'butchers_stall']]);
 });
 
@@ -101,7 +101,7 @@ test('moves follow paths, reveal the map and persist; other moves are rejected',
   const cart = atCart.world.locations.find((l) => l.id === 'coffee_cart');
   assert.equal(cart.state, 'current');
   assert.match(cart.description, /imp in a tiny apron/);
-  assert.deepEqual(cart.encounter, { id: 'imp_coffee_greeting', completed: false, characterName: 'Gerald' });
+  assert.deepEqual(cart.encounter, { id: 'imp_coffee_greeting', completed: false, characterName: 'Gerald', characterId: 'imp_coffee_001', saveable: true });
   assert.equal(atCart.world.locations.find((l) => l.id === 'market_entrance').state, 'visited');
   assert.equal(atCart.world.locations.find((l) => l.id === 'cracked_fountain').state, 'known');
   assert.ok(!atCart.world.locations.some((l) => l.id === 'old_bookshop'));
@@ -140,7 +140,8 @@ test('a version 1 save migrates with its Spellbook intact and unknown locations 
 
   await runtime.service.moveTo(learnerId, { locationId: 'butchers_stall' });
   const saved = JSON.parse(await readFile(join(runtime.saveDir, `${learnerId}.json`), 'utf8'));
-  assert.equal(saved.schemaVersion, 2);
+  assert.equal(saved.schemaVersion, 3);
+  assert.deepEqual(saved.party, []);
   assert.deepEqual(saved.spellbook, v1.spellbook);
   assert.equal(saved.world.currentLocationId, 'butchers_stall');
 
@@ -169,7 +170,7 @@ test('resolving Gerald marks The Coffee Cart encounter completed on the map', as
   }
   assert.equal(encounter.state, 'resolved');
   const world = await api(runtime, '/api/world', { learnerId });
-  assert.deepEqual(world.data.world.locations.find((l) => l.id === 'coffee_cart').encounter, { id: 'imp_coffee_greeting', completed: true, characterName: 'Gerald' });
+  assert.deepEqual(world.data.world.locations.find((l) => l.id === 'coffee_cart').encounter, { id: 'imp_coffee_greeting', completed: true, characterName: 'Gerald', characterId: 'imp_coffee_001', saveable: true });
   const rejected = await api(runtime, '/api/world/move', { learnerId, method: 'POST', body: { locationId: 'the_rift' } });
   assert.equal(rejected.status, 409);
   assert.equal(rejected.data.error.code, 'NOT_ADJACENT');

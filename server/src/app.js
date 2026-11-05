@@ -40,6 +40,15 @@ export function createApp({ service, logger = console, token = null }) {
     catch (error) { next(error); }
   });
 
+  app.get('/api/party', async (req, res, next) => {
+    try { res.json(await service.getParty(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
+  app.post('/api/party/recruit', async (req, res, next) => {
+    try { res.json(await service.recruit(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
+
   app.get('/api/spellbook', async (req, res, next) => {
     try { res.json(await service.getSpellbook(req.get('X-Learner-Id'))); }
     catch (error) { next(error); }

@@ -88,7 +88,7 @@ test('the map shows The Rift sealed with progress, the server refuses the move, 
   const rift = moved.data.world.locations.find((l) => l.id === 'the_rift');
   assert.equal(rift.state, 'current');
   assert.deepEqual(rift.gate, { sealed: false, required: 5, completed: 5 });
-  assert.deepEqual(rift.encounter, { id: 'the_rift_errata', completed: false, characterName: 'Errata' }, 'round 015: the boss waits inside');
+  assert.deepEqual(rift.encounter, { id: 'the_rift_errata', completed: false, characterName: 'Errata', characterId: 'rift_errata_001', saveable: false }, 'round 015: the boss waits inside');
 });
 
 test('a learner already standing in The Rift from an older save is not thrown out, but cannot walk back in', async (t) => {
