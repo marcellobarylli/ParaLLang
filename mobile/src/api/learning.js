@@ -35,6 +35,7 @@ export function createLearningApi({ baseUrl = API_URL, fetch: fetchImpl = (...ar
 
   return {
     createLearner: (learnerId) => request('/api/learner', { method: 'POST', body: learnerId ? { learnerId } : {} }),
+    deleteLearner: (learnerId) => request('/api/learner', { learnerId, method: 'DELETE' }), // Round 039
     startEncounter: (learnerId, restart = false, encounterId = null) => request('/api/encounter/start', { learnerId, method: 'POST', body: encounterId ? { restart, encounterId } : { restart } }),
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),

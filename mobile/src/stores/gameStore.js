@@ -317,14 +317,23 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const record = withoutSlot({ activeId: learnerId, slots: saves, nextNumber: savesFloor }, target);
       const label = saves.find((save) => save.learnerId === target).label;
       set({ isLoading: true, error: null, notice: null, saves: record.slots, savesFloor: record.nextNumber });
+      // Round 039: the server deletes the save first; if it cannot, the slot stays so the player can try again.
+      try { await api.deleteLearner(target); }
+      catch (error) {
+        set({ saves, savesFloor, isLoading: false, error: `The server could not delete ${label}, so it is still here: ${error.message}` });
+        return false;
+      }
       try {
         await storage?.setItem?.(SLOTS_KEY, JSON.stringify(record));
         // Critique 1.2: the legacy key must not lead back to the removed save.
         const legacy = await Promise.resolve(storage?.getItem?.(LEARNER_KEY)).catch(() => null);
         if (legacy === target) await Promise.resolve(storage?.setItem?.(LEARNER_KEY, learnerId)).catch(() => {});
       } catch (error) {
-        set({ saves, savesFloor, isLoading: false, error: `This device could not forget that save: ${error.message}` });
-        return false;
+        // The server's copy is gone, so the slot stays off the list; the next record write (a switch, a new save)
+        // stores the list without it.
+        snapshots.delete(target);
+        set({ isLoading: false, error: `${label} was deleted, but this device could not record it yet: ${error.message}` });
+        return true;
       }
       snapshots.delete(target);
       set({ isLoading: false, notice: `${label} was removed from this device.` });

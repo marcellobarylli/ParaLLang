@@ -29,6 +29,11 @@ export function createApp({ service, logger = console, token = null }) {
     try { res.status(req.body?.learnerId ? 200 : 201).json(await service.createOrRecoverLearner(req.body?.learnerId)); }
     catch (error) { next(error); }
   });
+  // Round 039: deletes the learner named by X-Learner-Id (the app's "Remove" on the Saves screen).
+  app.delete('/api/learner', async (req, res, next) => {
+    try { res.json(await service.deleteLearner(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
   app.use('/api/encounter', createEncounterRouter(service));
   app.get('/api/onboarding', (req, res) => res.json(service.getOnboarding()));
 

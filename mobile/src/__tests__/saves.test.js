@@ -31,6 +31,7 @@ function fakeApi(fresh = [A, B, C, D], overrides = {}) {
     currentEncounter: jest.fn(async (id) => ({ encounter: id === A ? encounterFor(id) : null, spellbook: spellbookFor(id) })),
     getOnboarding: jest.fn(async () => null),
     createReview: jest.fn(), submitReview: jest.fn(), moveTo: jest.fn(), startEncounter: jest.fn(),
+    deleteLearner: jest.fn(async () => ({ deleted: true, existed: true })),
     ...overrides,
   };
 }
@@ -261,18 +262,34 @@ describe('removing a save', () => {
     expect(store.getState().saves.map((s) => s.learnerId)).toEqual([A, C]);
   });
 
-  test('a failed write puts the slot back and says so; the legacy key never points at a removed save', async () => {
+  test('the server deletes first: a failed delete keeps the slot and writes nothing; the legacy key moves off it', async () => {
     const storage = three({ 'parallang.learnerId': C });
-    const store = createGameStore({ api: fakeApi(), storage });
+    const api = fakeApi();
+    const store = createGameStore({ api, storage });
     await store.getState().initialize();
     storage.values.set('parallang.learnerId', C); // as if a switch's second write had failed
-    storage.setItem.mockImplementationOnce(async () => { throw new Error('disk full'); });
+    const before = storage.values.get(SLOTS_KEY);
+    api.deleteLearner.mockImplementationOnce(async () => { throw new Error("Can't reach the ParaLLang server"); });
     expect(await store.getState().removeSave(C)).toBe(false);
     expect(store.getState().saves).toHaveLength(3);
+    expect(storage.values.get(SLOTS_KEY)).toBe(before);
     expect(store.getState()).toMatchObject({ isLoading: false });
-    expect(store.getState().error).toMatch(/could not forget that save: disk full/);
+    expect(store.getState().error).toMatch(/server could not delete Save 3, so it is still here/);
     expect(await store.getState().removeSave(C)).toBe(true);
+    expect(api.deleteLearner).toHaveBeenLastCalledWith(C);
     expect(storage.values.get('parallang.learnerId')).toBe(A);
+  });
+
+  test('deleted on the server but the device write fails: the slot stays off the list, the next write records it', async () => {
+    const storage = three();
+    const store = createGameStore({ api: fakeApi([D]), storage });
+    await store.getState().initialize();
+    storage.setItem.mockImplementationOnce(async () => { throw new Error('disk full'); });
+    expect(await store.getState().removeSave(C)).toBe(true);
+    expect(store.getState().saves.map((s) => s.learnerId)).toEqual([A, B]);
+    expect(store.getState().error).toMatch(/Save 3 was deleted, but this device could not record it yet: disk full/);
+    await store.getState().switchSave(B);
+    expect(record(storage).slots.map((s) => s.learnerId)).toEqual([A, B]);
   });
 
   test('the Saves screen asks through the system alert; only Remove removes; the current save has none', async () => {
@@ -285,7 +302,7 @@ describe('removing a save', () => {
     expect(screen.getByText('To remove this save, continue another one first.')).toBeOnTheScreen();
     await user.press(screen.getByRole('button', { name: 'Remove Save 2' }));
     const [title, message, buttons] = alert.mock.calls[0];
-    expect([title, message]).toEqual(['Remove Save 2?', 'This device forgets Save 2. You cannot open it again from this app.']);
+    expect([title, message]).toEqual(['Remove Save 2?', 'This deletes Save 2 and its progress, on this device and on the server. It cannot be undone.']);
     expect(buttons.map((b) => [b.text, b.style])).toEqual([['Keep Save 2', 'cancel'], ['Remove', 'destructive']]);
     expect(onRemove).not.toHaveBeenCalled();
     buttons[1].onPress();

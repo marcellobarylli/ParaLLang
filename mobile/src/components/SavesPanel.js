@@ -7,10 +7,10 @@ import { MAX_SAVES } from '../stores/saveSlots.js';
 export default function SavesPanel({ saves, activeId, place, dueCount = 0, isLoading, onContinue, onNew, onReturn, soundsOn = true, onToggleSounds, onRemove }) {
   const full = saves.length >= MAX_SAVES;
   // Round 038 (critique 1.5): the question is the system's alert, which takes VoiceOver focus and has a destructive
-  // button; the wording says only what is true (the server keeps the file, critique 1.3).
+  // button; the wording says only what is true (round 039: the server deletes the file too).
   const confirmRemove = (save) => Alert.alert(
     `Remove ${save.label}?`,
-    `This device forgets ${save.label}. You cannot open it again from this app.`,
+    `This deletes ${save.label} and its progress, on this device and on the server. It cannot be undone.`,
     [{ text: `Keep ${save.label}`, style: 'cancel' }, { text: 'Remove', style: 'destructive', onPress: () => onRemove(save.learnerId) }],
   );
   return (

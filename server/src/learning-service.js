@@ -47,6 +47,18 @@ export class LearningService {
     });
   }
 
+  // Round 039: removing a save deletes it here too. Serialized, so it waits for any request in flight for this
+  // learner; the in-memory encounter and review challenges go with it.
+  async deleteLearner(learnerId) {
+    assertLearnerId(learnerId);
+    return this.serialized(learnerId, async () => {
+      this.encounters.delete(learnerId);
+      this.reviewChallenges.delete(learnerId);
+      const existed = await this.storage.remove(learnerId);
+      return { deleted: true, existed };
+    });
+  }
+
   async loadEnvelope(learnerId) {
     assertLearnerId(learnerId);
     const envelope = await this.storage.load(learnerId);

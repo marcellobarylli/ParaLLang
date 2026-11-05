@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rename, unlink, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { retryableError, validationError } from './errors.js';
@@ -97,7 +97,7 @@ function validateEnvelope(value, learnerId) {
 export class JsonLearningStorage {
   constructor({ saveDir = resolve(import.meta.dirname, '..', 'data', 'saves'), io = {} } = {}) {
     this.saveDir = resolve(saveDir);
-    this.io = { mkdir, readFile, rename, unlink, writeFile, ...io };
+    this.io = { mkdir, readdir, readFile, rename, unlink, writeFile, ...io };
   }
 
   filePath(learnerId) { assertLearnerId(learnerId); return resolve(this.saveDir, `${learnerId}.json`); }
@@ -116,6 +116,24 @@ export class JsonLearningStorage {
       if (error.retryable) throw error;
       throw retryableError(`The learner save could not be read: ${error.message}`, 'STORAGE_FAILURE');
     }
+  }
+
+  // Round 039: deletes a learner's save, and any temporary copy a failed write left behind (critique 1.1). A missing
+  // file counts as deleted (idempotent).
+  async remove(learnerId) {
+    const filePath = this.filePath(learnerId);
+    const unlinkQuietly = async (path) => {
+      try { await this.io.unlink(path); return true; }
+      catch (error) {
+        if (error.code === 'ENOENT') return false;
+        throw retryableError(`The learner save could not be deleted: ${error.message}`, 'STORAGE_FAILURE');
+      }
+    };
+    let leftovers = [];
+    try { leftovers = (await this.io.readdir(this.saveDir)).filter((name) => name.startsWith(`.${learnerId}.`) && name.endsWith('.tmp')); }
+    catch (error) { if (error.code !== 'ENOENT') throw retryableError(`The learner save could not be deleted: ${error.message}`, 'STORAGE_FAILURE'); }
+    for (const name of leftovers) await unlinkQuietly(resolve(this.saveDir, name));
+    return unlinkQuietly(filePath);
   }
 
   async save(envelope) {
