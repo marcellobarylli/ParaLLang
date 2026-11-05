@@ -16,3 +16,6 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 006 | One active encounter per learner; entering another replaces the session | Several sessions | The app shows one encounter at a time; transcripts were never durable | Yes |
 | 2026-11-05 | 006 | `default_encounter` in language.yaml for requests without an encounter id (web client), no location check for those | Enforce location for all | Keeps the frozen web client working | Yes |
 | 2026-11-05 | 006 | Codex critique 1: all 10 findings accepted | — | See round 006 Second opinion table | Yes |
+| 2026-11-05 | 007 | Fix dictated answers in the narration prompt, not the grader | Remove the grader's cap for prompted echoes | The cap is correct; prompting the answer defeats recall | Yes |
+| 2026-11-05 | 007 | Meme-culture texture in English only; target-language dialogue stays beginner-level | Italian internet slang now | Needs authored, owner-reviewed colloquial content | Yes |
+| 2026-11-05 | 007 | Codex critique 1: 1–9 accepted, 10 rejected | Accept all | See round 007 Second opinion table | Yes |

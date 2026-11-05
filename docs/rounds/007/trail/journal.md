@@ -1,0 +1,14 @@
+# Journal: round 007
+
+Append only. Times are UTC. Occurred is when the event happened; Recorded is when the row was written.
+
+| # | Occurred | Recorded | Event | Actor | What | Record |
+|---|---|---|---|---|---|---|
+| 1 | 2026-11-05 11:09:00 | 11:10:05 | round-opened | Claude (claude-opus-5-5), autonomous | Backlog item B1 (tone layer) with the dictated-answer rule, chosen from the round 005 and 006 live data (Gerald dictated the answer 2/2). No owner present. Occurred time approximate | `../../../autonomy/STATE.md` |
+| 2 | 11:09:38 | 11:10:05 | plan-drafted | Claude (claude-opus-5-5), autonomous | Draft v1: style guide updated to the meme-culture layer and filled into base.txt, no-dictation rule, Gerald's humour, regenerated golden fixture, dictation detector in play-market.js, 3 baseline + 3 after live runs | `plan-v1.md` |
+| 3 | 11:09:44 | 11:10:05 | critique-dispatched | Claude (claude-opus-5-5), autonomous | Critique 1 sent: `codex exec --sandbox read-only -c model_reasoning_effort=high`, template plus the no-commands preamble; `plan-v1.md` sha256 b256ac32… and 13 files at HEAD 83ec243 inlined on stdin (bundle sha256 3fbc51b5…, 1551 lines; list in `critique-1.md`) | `plan-v1.md` |
+| 4 | 11:09:57 | 11:10:05 | run | Claude (claude-opus-5-5), autonomous | Baseline: 3 sequential `play-market.js --provider codex-cli` runs on HEAD 83ec243 (unchanged code), Italian, in-process, CPU, started while the critique runs | `../results/` |
+| 5 | 11:16:16 | 11:17:18 | critique-returned | Codex, effort high | Critique 1: 10 findings (6 Error, 1 Gap, 3 Cut... see table: 1, 2, 3, 4, 8 Error; 5 Gap; 6, 7, 9, 10 Cut) | `critique-1.md` |
+| 6 | 11:11:53 | 11:17:18 | result | Claude (claude-opus-5-5), autonomous | Baseline: 3/3 runs resolved and marked complete. Manual classification (an instruction to the player to say/add/try/order an expression that satisfies an unsatisfied objective, or a quoted model answer; dialogue and narrative): dictation in 3/3 runs, 4 lines (run 1 greeting "Order un caffè, senza latte." and turn 1 "Try adding senza latte"; run 2 turn 1 "Say 'senza latte' … or order a 'caffè nero'"; run 3 turn 1 "Add «senza latte, per favore»"); no narrative dictated. no_milk echo quality 2, 2, 2 | `../results/baseline-1.json`, `../results/baseline-2.json`, `../results/baseline-3.json` |
+| 7 | 11:17:18 | 11:17:18 | disposition | Claude (claude-opus-5-5), autonomous | No owner present: autonomous decisions pending owner review. Accepted 1.1–1.9 (manual classification replaces the detector; after runs must be free of dictation); rejected 1.10 (the run's quality bar requires all suites before a non-wip commit) | `../architecture.md`, `../../../autonomy/decisions.md` |
+| 8 | 11:17:18 | 11:17:18 | result | Claude (claude-opus-5-5), autonomous | Correction to row 5: the type count is 5 Error (1, 2, 3, 4, 8), 1 Gap (5), 4 Cut (6, 7, 9, 10) | `critique-1.md` |
