@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { rmSync } from 'node:fs';
 import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -6,6 +7,32 @@ import { loadGameContent } from '../src/content-loader.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { LearningService } from '../src/learning-service.js';
 import { createApp } from '../src/app.js';
+
+// Round 024: temp dirs made by the tests are removed when the test process exits (node --test runs each file in its
+// own process). Not on runtime close: tests reopen a runtime's save dir to simulate a server restart.
+const tempDirs = new Set();
+let exitHookRegistered = false;
+
+function removeTempDirs() {
+  for (const dir of tempDirs) {
+    try {
+      rmSync(dir, { recursive: true, force: true });
+    } catch (error) {
+      process.stderr.write(`could not remove test temp dir ${dir}: ${error.message}\n`);
+    }
+  }
+  tempDirs.clear();
+}
+
+export async function makeTempDir(prefix) {
+  const dir = await mkdtemp(join(tmpdir(), prefix));
+  if (!exitHookRegistered) {
+    process.once('exit', removeTempDirs);
+    exitHookRegistered = true;
+  }
+  tempDirs.add(dir);
+  return dir;
+}
 
 export const fixedNow = new Date('2026-01-15T12:00:00.000Z');
 
@@ -85,7 +112,7 @@ export class FixtureProvider {
 }
 
 export async function createRuntime({ provider = new FixtureProvider(), clock = () => fixedNow, storage, language = 'es', saveDir: baseSaveDir } = {}) {
-  const saveDir = baseSaveDir ?? await mkdtemp(join(tmpdir(), 'parallang-test-'));
+  const saveDir = baseSaveDir ?? await makeTempDir('parallang-test-');
   const actualStorage = storage ?? new JsonLearningStorage({ saveDir });
   const content = loadGameContent({ language });
   const service = new LearningService({ provider, storage: actualStorage, content, clock });

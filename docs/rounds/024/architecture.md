@@ -70,3 +70,8 @@ caller's dir and natural child exit.
 - Acceptance: `TMPDIR=$(mktemp -d) node --test server/test/*.test.js` green, and that dir holds no `parallang-*`
   entry afterwards (34 at HEAD 31bb5ef with the same check, to be measured); peak size noted.
 - Full suites: server, mobile, web client.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no amendment. Server 131/131, mobile 37/37, web client 12/12 and build. The full suite now
+leaves 0 test dirs in a fresh `TMPDIR` (34 before). Backlog F1 is done. See [findings](findings.md).

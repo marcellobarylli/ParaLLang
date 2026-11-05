@@ -86,7 +86,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ### F. Maintenance
 
-- [ ] **F1. Test temp dirs.** Server tests `mkdtemp` save dirs under `/tmp` and never remove them; `/tmp` is a 64 MB
+- [x] **F1. Test temp dirs.** (round 024, closed 2026-11-05: `makeTempDir` in helpers.js, removed at process exit) Server tests `mkdtemp` save dirs under `/tmp` and never remove them; `/tmp` is a 64 MB
   tmpfs and filled during round 023. Add `t.after(() => rm(dir, …))` in `createRuntime` (helpers.js) and the other
   `mkdtemp` sites; check `ls /tmp | grep parallang | wc -l` stays 0 after `node --test`.
 

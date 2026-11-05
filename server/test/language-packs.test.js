@@ -1,14 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { access, mkdtemp } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { access } from 'node:fs/promises';
 import { join } from 'node:path';
 import { availableLanguages, loadGameContent } from '../src/content-loader.js';
 import { resolveTargetLanguage, saveDirForLanguage } from '../src/config.js';
 import { matchCanonicalVocabulary } from '../src/language-engine.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { buildGradingMessages, buildNarrationMessages } from '../src/llm/prompt-builder.js';
-import { api, createLearnerAndEncounter, createRuntime } from './helpers.js';
+import { api, createLearnerAndEncounter, createRuntime, makeTempDir } from './helpers.js';
 
 const italian = loadGameContent({ language: 'it' });
 
@@ -137,7 +136,7 @@ test('the Italian encounter teaches, charges hints, separates espresso from no m
 });
 
 test('each language keeps its own Spellbook; Spanish saves stay at the top of the save directory', async (t) => {
-  const base = await mkdtemp(join(tmpdir(), 'parallang-languages-'));
+  const base = await makeTempDir('parallang-languages-');
   assert.equal(saveDirForLanguage(base, 'es'), base);
   assert.equal(saveDirForLanguage(base, 'it'), join(base, 'it'));
 
