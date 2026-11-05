@@ -94,3 +94,20 @@ text in `trail/critique-1.md`.
 
 Net change from plan-v1: no-banking wording, held is not passed for answer protection, a behavioural narration note,
 more lifecycle and replay tests, narration in the success criteria.
+
+## Amendment 1 (2026-11-05): the ORDER line sits before the rubric
+
+Design 2 put the ORDER line after the rubric, appended to `{{rubric}}`. Built that way, 32 server tests failed:
+the test graders (`helpers.js`, `fake-cli.mjs`, `butcher.test.js`, `language-packs.test.js`) read the rubric JSON
+up to the end of the `AUTHORED RUBRIC:` line. The line is now the last bullet of the rules, through a `{{order}}`
+placeholder at the end of the Quality bullet in `prompts/language/grading.txt`. An empty value keeps the prompt
+byte-identical (tested in `server/test/order-line.test.js`). The wording is unchanged, except "an expression in
+<language>" instead of "a <language> expression", which reads wrong as "a Italian".
+
+## Outcome (2026-11-05)
+
+Built with Amendment 1, which moved the ORDER line before the rubric. Live, the grader followed the ORDER line by
+failing the early "now" in both languages, so the `held` mark did not occur. It is tested offline and kept as the
+backstop. Feedback said to say it again, gave no answer, and Flick did not celebrate. Combined answers still closed
+both objectives, verify:cli passed, and the Spanish tour resolved with no late pass anywhere. The success criteria
+were met; the held lifecycle is verified by tests only. Backlog H1 is closed. See [findings.md](findings.md).

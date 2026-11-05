@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 051, an early pass is not a success (autonomous)
+
+In an encounter with ordered objectives, an answer that meets a later objective while an earlier one is still open
+used to be graded as passed and shown with ✓. The narrator praised it too. Yet the objective stayed open, and the
+player had to say it again. The grading prompt now says that objectives count only in order. Live, the grader then
+failed the early "now" at the Fountain and said to say it again after the time. Flick did not celebrate, and an
+answer holding both still closed both. A pass that does not close is now marked `held` and shown as "…" in the app.
+This is a backstop that was tested offline only. verify:cli and the Spanish tour pass. Critiqued by Codex (9
+findings: 7 accepted, 2 in part). Server 198/198, mobile 126/126
+([open items](docs/rounds/051/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 050, telling the time at the Fountain (autonomous)
 
 Flick now has a fourth objective between the direction and "now": the fountain's clock stopped, Flick says it is
@@ -530,6 +541,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 051 | 11-05 | An early pass in an ordered encounter is no longer reported as a success: grading ORDER line, `held` marks (backlog H1) (autonomous) | [051](docs/rounds/051/architecture.md) | [findings](docs/rounds/051/findings.md) | pre-run record to round 051 close |
 | 050 | 11-05 | Telling the time at the Cracked Fountain: a fourth objective for Flick, four authored constructions per pack (backlog G5) (autonomous) | [050](docs/rounds/050/architecture.md) | [findings](docs/rounds/050/findings.md) | pre-run record to round 050 close |
 | 049 | 11-05 | Other-target exposure in the leak scan: NPC lines that carry another party conversation's target (backlog G7) (autonomous) | [049](docs/rounds/049/architecture.md) | [findings](docs/rounds/049/findings.md) | pre-run record to round 049 close |
 | 048 | 11-05 | Deeper conversations after three: Mortimer's oath, Flick's lotus, Marginalia's folded page (backlog G6) (autonomous) | [048](docs/rounds/048/architecture.md) | [findings](docs/rounds/048/findings.md) | pre-run record to round 048 close |

@@ -7,10 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 15 closed round 050 (G5, telling the time at the Fountain; it/es live, 48/48 verdicts, it tour
-resolved). **Next:** the backlog is empty except A10 (optional LLM location atmosphere) and D1 (blocked). Candidates
-seeded from round 050: H1 (grader feedback on an early pass in ordered encounters). Codex served one critique and
-about 166 game calls between 22:04 and 22:30 UTC without hitting its limit.
+Nothing open. Iteration 15 closed round 050 (G5, telling the time at the Fountain) and round 051 (H1, an early pass
+in an ordered encounter is no longer reported as a success). **Next:** H2 (hours 1–12, a numbers lesson; content plus
+live runs) or A10 (optional LLM location atmosphere). D1 stays blocked. Codex served two critiques and about 300
+game calls between 22:04 and 22:55 UTC without hitting its limit.
 
 ## Backlog
 
@@ -124,10 +124,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ### H. Follow-ups seeded in iteration 15 (round 050)
 
-- [ ] **H1. Early pass in an ordered encounter.** The grader's feedback says "You successfully insist on now" when a
-  later objective passes before an earlier one, but only the leading run of passes closes, so the player must say it
-  again. Fix in the grading template (say a later pass waits) or grade only the current objective in ordered
-  encounters; regenerate Gerald's pinned prompts on purpose; one live Fountain run per language.
+- [x] **H1. Early pass in an ordered encounter.** (round 051, closed 2026-11-05: an ORDER bullet in the grading
+  prompt, and the grader now fails the early objective with "say it again" feedback; `held` marks a pass that does
+  not close, shown as "…" in the app; Gerald's pinned narration prompts unchanged.)
 - [ ] **H2. Hours 1–12** (owner question in round 050): a numbers lesson (a party conversation or the Fountain) so
   *sono le* / *son las* has numbers behind it. Mortimer teaches only *tre*/*cento* (it) and *dos*/*tres*/*cien* (es).
   Watch English collisions (it *due*, es *once*).
@@ -162,6 +161,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Round 051: should an early correct use be recorded in the Spellbook though it does not close (the grader now fails
+  it); check the "…" mark in the Simulator ([open items](../rounds/051/findings.md#open-items)).
+- Round 050: review the Fountain's time objective and its ten entries (it, es), the four constructions and no number
+  lesson (backlog H2); play the Fountain with four objectives in the Simulator
+  ([open items](../rounds/050/findings.md#open-items)).
 - Round 049: confirm that NPCs may say other conversations' words (*grazie*, Mortimer's *amico mio*), and keeping
   *sola* despite Marginalia's "una lingua sola" ([open items](../rounds/049/findings.md#open-items)).
 - Round 048: review Mortimer's oath, Flick's lotus and Marginalia's folded page (it, es), whether members may say
@@ -341,9 +345,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   12/12, expo-doctor 20/20. Then round 049 (G7, other-target exposure in the leak scan; Codex critique, 9 findings,
   4 Errors accepted; no live calls) closed: server 188/188.
 
-- 2026-11-05, iteration 15 (22:02–22:35 UTC): round 050 (G5, telling the time at the Fountain) planned, critiqued
+- 2026-11-05, iteration 15 (22:02–23:00 UTC): round 050 (G5, telling the time at the Fountain) planned, critiqued
   by Codex (13 findings, 5 Errors accepted), built, run live (3 × it, 3 × es, matrix of pass and fail paths; plus an
-  it tour) and closed. Server 192/192, mobile 124/124, web 12/12. Seeded backlog H.
+  it tour) and closed. Seeded backlog H. Then round 051 (H1, held results and the grading ORDER line; Codex critique, 9
+  findings, 3 Errors accepted; Amendment 1 moved the line before the rubric), live it/es Fountain, combined answers,
+  verify:cli and an es tour. Server 198/198, mobile 126/126, web 12/12.
 
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
@@ -359,6 +365,13 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   subagent: no serious bugs), mobile 95/95, client 12/12, expo-doctor 20/20. Iteration 11 ended at 20:01 UTC.
 
 ## Handoff notes and traps
+
+- **Ordered grading** (round 051): `buildGradingMessages({ ordered })` fills `{{order}}` (end of the Quality bullet in
+  `grading.txt`) with an ORDER bullet when two or more ordered objectives are graded; empty otherwise (byte-identical,
+  `order-line.test.js`). **Never append text after the `AUTHORED RUBRIC:` line**: the test graders parse the rubric
+  JSON to the end of that line (Amendment 1). With the line, the grader fails an early later objective instead of
+  passing it. `held: true` (only when true) marks a pass that does not close, in the response and the narration
+  decision (`held_note`, `HELD_NOTE`); the app shows "…" (`resultMark`, `HELD_SUFFIX` in `DialoguePanel.js`).
 
 - **The Fountain has four objectives** (round 050): stop, direction, `time`, now (ordered; `now` stays last for the
   jingle). A Fountain script needs eight lines now; `fountain.test.js`'s `FountainProvider` names the time entry
