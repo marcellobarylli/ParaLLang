@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createApp } from '../src/app.js';
-import { api, createLearnerAndEncounter, createRuntime } from './helpers.js';
+import { api, createLearnerAndEncounter, createRuntime, finishEncounter } from './helpers.js';
 
 async function submit(runtime, learnerId, encounter, message, attemptId = crypto.randomUUID()) {
   return api(runtime, '/api/encounter/dialogue', {
@@ -156,6 +156,7 @@ test('due-review answer stays protected and Show answer commits quality 0 exactl
   const runtime = await createRuntime();
   t.after(runtime.close);
   const session = await createLearnerAndEncounter(runtime);
+  await finishEncounter(runtime, session);
   const challenge = await api(runtime, '/api/spellbook/review', { learnerId: session.learnerId, method: 'POST', body: { vocabularyId: 'cafe' } });
   assert.equal(Object.hasOwn(challenge.data.challenge, 'acceptedAnswers'), false);
   assert.equal(Object.hasOwn(challenge.data.challenge, 'answer'), false);

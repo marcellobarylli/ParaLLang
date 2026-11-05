@@ -124,3 +124,13 @@ export async function createLearnerAndEncounter(runtime) {
   const started = await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: {} });
   return { learnerId, started: started.data };
 }
+
+// Round 017: reviews are closed while an encounter is under way. Resolve the opening encounter so a test can review.
+export async function finishEncounter(runtime, session) {
+  const encounter = session.started.encounter;
+  const result = await runtime.service.submitDialogue(session.learnerId, {
+    encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message: 'Quiero un café negro.',
+  });
+  if (result.encounter.state !== 'resolved') throw new Error('fixture encounter did not resolve');
+  return result;
+}

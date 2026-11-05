@@ -93,7 +93,17 @@ export class LearningService {
     return envelope.spellbook.words[vocabularyId] ?? envelope.spellbook.phrases[vocabularyId] ?? null;
   }
 
-  spellbookSnapshot(envelope) {
+  // Round 017: while an encounter is under way the Spellbook gives no meanings and reviews are closed, because any
+  // card (its own meaning, another card's example, a phrase) could answer the NPC's protected line.
+  inEncounter(encounter) { return encounter?.state === 'ongoing'; }
+
+  assertNoEncounter(learnerId) {
+    if (this.inEncounter(this.encounters.get(learnerId))) {
+      throw conflictError('Reviews wait until the encounter is over. Ask your companion for a hint instead.', 'IN_ENCOUNTER');
+    }
+  }
+
+  spellbookSnapshot(envelope, encounter = this.encounters.get(envelope.learnerId)) {
     const now = this.clock();
     const cards = [...Object.values(envelope.spellbook.words), ...Object.values(envelope.spellbook.phrases)]
       .map((item) => {
@@ -106,6 +116,7 @@ export class LearningService {
           meanings: entry.accepted_translations,
           partOfSpeech: entry.part_of_speech,
           example: entry.example,
+          note: entry.note ?? null,
           discoveredAt: item.discoveredAt,
           mastery: masteryLabel(item.schedule),
           due: isDue(item.schedule, now),
@@ -116,7 +127,7 @@ export class LearningService {
       })
       .filter(Boolean)
       .sort((a, b) => a.discoveredAt.localeCompare(b.discoveredAt) || a.vocabularyId.localeCompare(b.vocabularyId));
-    return { cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version };
+    return { cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version, inEncounter: this.inEncounter(encounter) };
   }
 
   canonicalizeNarration(generated, definition) {
@@ -411,7 +422,7 @@ export class LearningService {
             })),
           })),
         },
-        spellbook: this.spellbookSnapshot(stagedEnvelope),
+        spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
         replayed: false,
       };
       if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
@@ -450,6 +461,7 @@ export class LearningService {
 
   async createReviewChallenge(learnerId, vocabularyId = null) {
     return this.serialized(learnerId, async () => {
+      this.assertNoEncounter(learnerId);
       const envelope = await this.loadEnvelope(learnerId);
       let item;
       if (vocabularyId) item = this.findItem(envelope, vocabularyId);
@@ -478,6 +490,7 @@ export class LearningService {
     const answer = String(request.answer ?? '').trim();
     if (request.action === 'answer' && !answer) throw validationError('Enter an answer or choose Show answer.');
     return this.serialized(learnerId, async () => {
+      this.assertNoEncounter(learnerId);
       const envelope = await this.loadEnvelope(learnerId);
       const fingerprint = payloadHash({ kind: 'review', challengeId: request.challengeId, action: request.action, answer });
       const existing = envelope.spellbook.processedAssessments[request.attemptId];

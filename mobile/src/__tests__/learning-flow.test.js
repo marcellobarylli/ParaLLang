@@ -172,7 +172,7 @@ test('loading plus empty and no-due states remain understandable', async () => {
   const empty = await render(<Spellbook spellbook={{ cards: [], dueCount: 0 }} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
   expect(screen.getByText('No vocabulary yet')).toBeOnTheScreen();
   await empty.unmount();
-  await render(<Spellbook spellbook={{ cards: [{ ...cards[0], due: false, nextReviewAt: '2026-01-16T12:00:00Z' }], dueCount: 0 }} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
+  await render(<Spellbook spellbook={{ cards: [{ ...cards[0], due: false, nextReviewAt: '2026-01-16T12:00:00Z' }], dueCount: 0 }} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} now={Date.parse('2026-01-15T12:00:00Z')} />);
   expect(screen.getByText(/Nothing is due/)).toBeOnTheScreen();
   expect(screen.queryByRole('button', { name: 'Review' })).not.toBeOnTheScreen();
 });

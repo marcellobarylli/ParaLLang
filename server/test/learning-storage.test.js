@@ -4,7 +4,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { LearningService } from '../src/learning-service.js';
-import { api, createLearnerAndEncounter, createRuntime, FixtureProvider, fixedNow } from './helpers.js';
+import { api, createLearnerAndEncounter, createRuntime, FixtureProvider, fixedNow, finishEncounter } from './helpers.js';
 
 test('discovery is deduplicated, unmastered, durable, and isolated per learner', async (t) => {
   const runtime = await createRuntime();
@@ -21,7 +21,8 @@ test('discovery is deduplicated, unmastered, durable, and isolated per learner',
   const recoveredStorage = new JsonLearningStorage({ saveDir: runtime.saveDir });
   const recoveredService = new LearningService({ provider: new FixtureProvider(), storage: recoveredStorage, content: runtime.content, clock: () => fixedNow });
   const recovered = await recoveredService.getSpellbook(first.learnerId);
-  assert.deepEqual(recovered, duplicateStart.data.spellbook);
+  // In-memory encounters are lost on restart, so no encounter is under way any more (round 017); the rest is identical.
+  assert.deepEqual(recovered, { ...duplicateStart.data.spellbook, inEncounter: false });
 });
 
 test('same-learner mutations serialize, stale tabs conflict, and duplicate delivery replays once', async (t) => {
@@ -72,6 +73,7 @@ test('premature practice gives feedback without advancing the stored schedule', 
   const runtime = await createRuntime();
   t.after(runtime.close);
   const session = await createLearnerAndEncounter(runtime);
+  await finishEncounter(runtime, session);
   const due = await runtime.service.createReviewChallenge(session.learnerId, 'cafe');
   const reviewed = await runtime.service.submitReview(session.learnerId, {
     challengeId: due.challenge.id, attemptId: randomUUID(), action: 'answer', answer: 'coffee',
