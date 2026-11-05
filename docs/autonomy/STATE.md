@@ -8,7 +8,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 ## In progress
 
 **Round 026 (E1, template round) is open**, built and committed. Codex hit its usage limit at 18:17 UTC ("try
-again at 8:35 PM"). Steps to close it, in order:
+again at 8:35 PM"; a probe at 19:40 UTC was still refused). Iteration 11 ended at 20:01 UTC, before the reset, so
+**the next iteration starts here**: probe Codex once (`codex exec --skip-git-repo-check --sandbox read-only "Reply
+OK" < /dev/null` from /tmp), then run these steps in order:
 
 1. **Amendment 2 is built and committed** (iteration 9, journal row 16): "greetings" dropped from the rule's
    phrase list, golden r026 regenerated, tests green. Still to do, after Codex's reset: the Amendment's check.
@@ -317,7 +319,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   - 038 (A11b): removing a save.
   - 039: the server deletes a removed save.
   - 040: the app sends `PARALLANG_TOKEN`.
-  Server 162/162, mobile 95/95, client 12/12, expo-doctor 20/20.
+  Server 163/163 (after round 039's Amendment 1, from a read-only review of the eight rounds by a Claude
+  subagent: no serious bugs), mobile 95/95, client 12/12, expo-doctor 20/20. Iteration 11 ended at 20:01 UTC.
 
 ## Handoff notes and traps
 
