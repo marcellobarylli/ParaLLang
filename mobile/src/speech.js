@@ -1,4 +1,5 @@
 import * as Speech from 'expo-speech';
+import { duckAmbience } from './ambience.js';
 
 const primarySubtag = (tag) => String(tag ?? '').split(/[-_]/)[0].toLowerCase();
 
@@ -12,7 +13,10 @@ export async function findVoice(tag, speech = Speech) {
 }
 
 // expo-speech takes the voice's identifier string, not the voice object.
-export async function speak(text, { tag, voice }, speech = Speech) {
+// Round 041 (critique 1.8): the location ambience is lowered while the voice speaks.
+export async function speak(text, { tag, voice }, speech = Speech, duck = duckAmbience) {
   await speech.stop();
-  speech.speak(text, { language: tag, voice: voice.identifier });
+  const restore = () => duck(false);
+  duck(true);
+  speech.speak(text, { language: tag, voice: voice.identifier, onDone: restore, onStopped: restore, onError: restore });
 }

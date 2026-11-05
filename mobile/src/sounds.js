@@ -1,4 +1,4 @@
-// Round 037 (backlog C4a): two short UI cues, synthesized by scripts/gen-ui-sounds.mjs. A sound never breaks play:
+// Round 037 (backlog C4a): two short UI cues, synthesized by scripts/gen-ui-sounds.js. A sound never breaks play:
 // every failure is swallowed. The ring/silent switch mutes them, and they mix with the player's own audio.
 import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 
@@ -13,11 +13,16 @@ let modeSet = null;
 
 export function resetSoundsForTests() { players = new Map(); modeSet = null; }
 
+// Round 041: the cues and the location ambience share one audio mode, set once.
+export function ensureAudioMode() {
+  modeSet ??= Promise.resolve().then(() => setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' })).catch(() => {});
+  return modeSet;
+}
+
 export async function playCue(name) {
   if (!SOURCES[name]) return;
   try {
-    modeSet ??= Promise.resolve(setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' })).catch(() => {});
-    await modeSet;
+    await ensureAudioMode();
     let player = players.get(name);
     if (!player) { player = createAudioPlayer(SOURCES[name]); players.set(name, player); }
     await Promise.resolve(player.seekTo(0)).catch(() => {});

@@ -75,7 +75,7 @@ function storeWith(replies, { stored = {}, fresh = [A, B] } = {}) {
     submitReview: jest.fn(async (_id, { action }) => ({ result: { correct: action === 'answer', effectiveQuality: action === 'answer' ? 5 : 0 }, spellbook: { cards: [], dueCount: 0 } })),
   };
   const cue = jest.fn();
-  const store = createGameStore({ api, storage, cue });
+  const store = createGameStore({ api, storage, cue, ambience: jest.fn() }); // round 041: no real ambience here
   return { store, cue, storage, api };
 }
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0));

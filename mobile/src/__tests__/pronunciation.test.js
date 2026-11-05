@@ -27,7 +27,7 @@ test('speaks with the chosen voice identifier after stopping the previous uttera
   await render(<PronounceButton text="caffè" language={italian} />);
   await user.press(await screen.findByRole('button', { name: 'Hear caffè in Italian' }));
   expect(Speech.stop).toHaveBeenCalledTimes(1);
-  expect(Speech.speak).toHaveBeenCalledWith('caffè', { language: 'it-IT', voice: 'com.apple.voice.compact.it-IT.Alice' });
+  expect(Speech.speak).toHaveBeenCalledWith('caffè', expect.objectContaining({ language: 'it-IT', voice: 'com.apple.voice.compact.it-IT.Alice' }));
   expect(Speech.stop.mock.invocationCallOrder[0]).toBeLessThan(Speech.speak.mock.invocationCallOrder[0]);
 });
 

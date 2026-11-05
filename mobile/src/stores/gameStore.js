@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { learningApi } from '../api/learning.js';
 import { MAX_SAVES, SLOTS_KEY, parseSlots, withActive, withoutSlot } from './saveSlots.js';
 import { playCue } from '../sounds.js';
+import { setAmbience } from '../ambience.js';
 
 const LEARNER_KEY = 'parallang.learnerId';
 // Round 027: set once the player has entered the market from the philosophy statement (per device).
@@ -14,13 +15,13 @@ const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now
 
 // Ported from client/src/stores/gameStore.js (round 004). Storage is async (AsyncStorage) and the store keeps the
 // server's target language; the request-epoch, snapshot and retained-draft behaviour is the web store's.
-export function createGameStore({ api = learningApi, storage = AsyncStorage, cue = playCue } = {}) {
+export function createGameStore({ api = learningApi, storage = AsyncStorage, cue = playCue, ambience = setAmbience } = {}) {
   let initializationPromise = null;
   let requestEpoch = 0;
   let soundsTouched = false;
   const snapshots = new Map();
 
-  return create((set, get) => ({
+  const store = create((set, get) => ({
     learnerId: null,
     language: null,
     encounter: null,
@@ -42,13 +43,14 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     isLoading: false,
     error: null,
     soundsOn: true,
+    soundsKnown: false, // round 041 (critique 1.9): the stored switch has been read (or set)
 
     setDraft: (draft) => set({ draft }),
     // Round 037 (backlog C4a): UI cues and their switch.
     _cue: (name) => { if (get().soundsOn) Promise.resolve().then(() => cue(name)).catch(() => {}); },
     setSoundsOn: (on) => {
       soundsTouched = true;
-      set({ soundsOn: Boolean(on) });
+      set({ soundsOn: Boolean(on), soundsKnown: true });
       Promise.resolve(storage?.setItem?.(SOUNDS_KEY, on ? 'on' : 'off')).catch(() => {});
     },
     clearError: () => set({ error: null }),
@@ -62,7 +64,8 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           // Round 027: the statement is fetched beside startup, never inside it: a failure only skips the screen.
           const seen = await Promise.resolve(storage?.getItem?.(ONBOARDING_KEY)).catch(() => null);
           // Round 037 (critique 1.7): only 'off' turns sounds off, and a switch made meanwhile wins.
-          Promise.resolve(storage?.getItem?.(SOUNDS_KEY)).then((value) => { if (value === 'off' && !soundsTouched) set({ soundsOn: false }); }, () => {});
+          Promise.resolve(storage?.getItem?.(SOUNDS_KEY)).then((value) => { if (value === 'off' && !soundsTouched) set({ soundsOn: false }); }, () => {})
+            .finally(() => { if (!get().soundsKnown) set({ soundsKnown: true }); });
           const onboardingPromise = seen ? Promise.resolve(null)
             : Promise.resolve().then(() => api.getOnboarding()).then((data) => data?.onboarding ?? null, () => null);
           // Round 031: the active save slot's id; without a valid slot record, the legacy key's (round 004).
@@ -382,6 +385,19 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       set({ learnerId, ...snapshot, party: [], notice: null, draft: '', pendingInput: null, assessment: null, isLoading: false });
     },
   }));
+
+  // Round 041 (backlog C4b): the current location's ambience, behind the same switch as the cues; silent on the
+  // statement screen and before a learner and world are known.
+  let heard = null; // nothing plays until a location is known
+  const follow = (state) => {
+    const want = state.soundsOn && state.soundsKnown && state.view !== 'onboarding' && state.learnerId ? state.world?.currentLocationId ?? null : null;
+    if (want === heard) return;
+    heard = want;
+    try { Promise.resolve(ambience(want)).catch(() => {}); } catch { /* ignore */ }
+  };
+  store.subscribe(follow);
+  follow(store.getState());
+  return store;
 }
 
 export const useGameStore = createGameStore();

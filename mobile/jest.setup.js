@@ -12,7 +12,7 @@ jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(() => 
 
 // Round 037: expo-audio has no native module under jest.
 jest.mock('expo-audio', () => ({
-  createAudioPlayer: jest.fn(() => ({ seekTo: jest.fn(async () => {}), play: jest.fn(), remove: jest.fn() })),
+  createAudioPlayer: jest.fn(() => ({ loop: false, volume: 1, seekTo: jest.fn(async () => {}), play: jest.fn(), pause: jest.fn(), remove: jest.fn() })),
   setAudioModeAsync: jest.fn(async () => {}),
 }));
 
