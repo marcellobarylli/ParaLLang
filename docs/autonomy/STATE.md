@@ -104,6 +104,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (TTS was only in the Spellbook and reviews; prototype.md Phase 4). No live calls.
 - [x] **C6. Word chips by class** (round 056, closed 2026-11-05): nouns, verbs and adjectives coloured with a label (owner's GAME
   MECHANICS note, "R/G/B for noun/verb/adjective"). No live calls.
+- [ ] **C7. Chip words marked in the line** (round 057): the server's match spans, coloured and underlined by
+  class inside the NPC line. No live calls.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
 - [ ] **D1.** (claude-cli preflight accepts an OAuth token since round 018; still blocked: no token in the shell)
