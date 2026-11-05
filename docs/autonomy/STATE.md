@@ -324,6 +324,17 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Ambience** (round 041): `mobile/src/ambience.js` (`setAmbience`, `duckAmbience`), injected into the store
+  (`createGameStore({ ambience })`), which calls it only when the wanted location changes. Store tests that count
+  `createAudioPlayer` calls must pass `ambience: jest.fn()` (see `sounds.test.js`). A new map location needs a loop:
+  add a recipe in `mobile/scripts/gen-ambient.js`, run it, and add the `require` in `ambience.js`
+  (`ambience.test.js` checks the ids against the location YAMLs). `wav(samples, rate)` in `gen-ui-sounds.js` is
+  shared; the cue bytes must stay identical.
+- **Titles** (round 042): screen and section titles use `<Title>` from `ui.js` (Literata Bold once loaded, through
+  the `DisplayFont` context set in App). `expo-font` is mocked in `jest.setup.js`. Import only
+  `@expo-google-fonts/literata/700Bold`, never the package root (it would bundle all faces; `font.test.js` checks).
+  Card titles and the review word stay on the system font by design.
+
 - **Sounds** (round 037): `mobile/src/sounds.js` (`playCue`), cues injected into the store
   (`createGameStore({ cue })`); jest mocks `expo-audio` in `jest.setup.js`. Regenerate the WAVs with
   `node mobile/scripts/gen-ui-sounds.js`; the test compares bytes, so a changed generator needs regenerated files.
