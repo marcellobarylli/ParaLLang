@@ -65,7 +65,7 @@ export default function MapPanel({ world, isLoading, onMove, onEnterEncounter })
         {here.vocabularyFocus?.length > 0 && <Text style={styles.focus}>Words here: {here.vocabularyFocus.join(', ')}</Text>}
         {here.encounter
           ? <Button
-              label={here.encounter.completed ? 'Talk to Gerald again' : 'Talk to Gerald'}
+              label={`Talk to ${here.encounter.characterName}${here.encounter.completed ? ' again' : ''}`}
               variant="primary" onPress={onEnterEncounter} disabled={isLoading}
             />
           : <Text style={styles.muted}>Nothing here wants to talk to you yet.</Text>}

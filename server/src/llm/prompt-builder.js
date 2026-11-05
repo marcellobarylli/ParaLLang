@@ -35,6 +35,7 @@ function targetData(objectives, vocabularyById) {
 export function buildNarrationMessages({
   language,
   character,
+  locationName,
   objectives,
   vocabularyById,
   conversationHistory = [],
@@ -47,13 +48,15 @@ export function buildNarrationMessages({
     language: { name: language.name, targetRatio: Math.round(targetRatio * 100), learningData: JSON.stringify(targetData(objectives, vocabularyById)) },
   });
   const turnData = playerInput === null
-    ? { task: 'greeting', scene: 'The player approaches Gerald at The Coffee Cart in The Crumbling Market.' }
+    ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in The Crumbling Market.` }
     : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision };
 
   return [
     { role: 'system', content: system },
     ...conversationHistory,
-    { role: 'user', content: fillTemplate(loadTemplate(playerInput === null ? 'encounter/greeting.txt' : 'encounter/dialogue_turn.txt'), { language, turnData: JSON.stringify(turnData) }) },
+    { role: 'user', content: fillTemplate(loadTemplate(playerInput === null ? 'encounter/greeting.txt' : 'encounter/dialogue_turn.txt'), {
+      language, enemy: { name: character.name }, location: { name: locationName }, turnData: JSON.stringify(turnData),
+    }) },
   ];
 }
 

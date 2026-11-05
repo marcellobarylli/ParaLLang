@@ -3,7 +3,7 @@ import { createGameStore } from '../stores/gameStore.js';
 
 const language = { code: 'it', name: 'Italian', tag: 'it-IT' };
 const identity = { learnerId: '11111111-1111-4111-8111-111111111111', recovered: true, language };
-const encounter = { id: 'enc-1', version: 1, state: 'ongoing', transcript: [], hints: { remaining: 2, limit: 2 } };
+const encounter = { id: 'enc-1', encounterId: 'imp_coffee_greeting', character: { name: 'Gerald' }, version: 1, state: 'ongoing', transcript: [], hints: { remaining: 2, limit: 2 } };
 const spellbook = { cards: [], dueCount: 0, contentVersion: 'v1' };
 const started = { encounter, spellbook };
 const place = (id, state, adjacent, extra = {}) => ({ id, name: id, state, adjacent, map: { x: 0.5, y: 0.5 }, ...extra });
@@ -14,7 +14,7 @@ const world = {
 };
 const atCart = {
   currentLocationId: 'coffee_cart',
-  locations: [place('coffee_cart', 'current', false, { description: 'A cart.', encounter: { id: 'imp_coffee_greeting', completed: false } })],
+  locations: [place('coffee_cart', 'current', false, { description: 'A cart.', encounter: { id: 'imp_coffee_greeting', completed: false, characterName: 'Gerald' } })],
   paths: [],
 };
 
@@ -71,7 +71,7 @@ test('moving on the map and entering the Coffee Cart starts Gerald, and the Spel
   expect(api.moveTo).toHaveBeenCalledWith(identity.learnerId, 'coffee_cart');
   expect(store.getState().world.currentLocationId).toBe('coffee_cart');
   await store.getState().enterEncounter();
-  expect(api.startEncounter).toHaveBeenCalledWith(identity.learnerId, false);
+  expect(api.startEncounter).toHaveBeenCalledWith(identity.learnerId, false, 'imp_coffee_greeting');
   expect(store.getState().view).toBe('dialogue');
   expect(store.getState().encounter).toEqual(encounter);
   store.getState().openSpellbook();
@@ -80,6 +80,25 @@ test('moving on the map and entering the Coffee Cart starts Gerald, and the Spel
   await store.getState().openMap();
   expect(store.getState().view).toBe('map');
   expect(api.getWorld).toHaveBeenCalledTimes(2);
+});
+
+test('entering a different encounter clears the old assessment and draft; resuming keeps them', async () => {
+  const api = fakeApi({ sendDialogue: jest.fn(async () => ({ encounter: { ...encounter, version: 2 }, spellbook, assessment: { overallFeedback: 'Not yet' } })) });
+  const store = createGameStore({ api, storage: memoryStorage() });
+  await ready(store);
+  await store.getState().sendMessage('Un caffè');
+  store.getState().setDraft('senza');
+  await store.getState().enterEncounter();
+  expect(store.getState().assessment.overallFeedback).toBe('Not yet');
+  expect(store.getState().draft).toBe('senza');
+  api.startEncounter.mockResolvedValueOnce({ encounter: { ...encounter, id: 'enc-2', encounterId: 'fixture_butcher', character: { name: 'Bernard' } }, spellbook });
+  await store.getState().enterEncounter();
+  expect(store.getState().encounter.character.name).toBe('Bernard');
+  expect(store.getState().assessment).toBeNull();
+  expect(store.getState().draft).toBe('');
+  expect(store.getState().pendingInput).toBeNull();
+  await store.getState().restartEncounter();
+  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, true, 'fixture_butcher');
 });
 
 test('a failed move keeps the map and reports the error', async () => {

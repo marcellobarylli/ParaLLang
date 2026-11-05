@@ -5,32 +5,33 @@ import { colors } from './ui.js';
 
 export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp }) {
   const listRef = useRef(null);
-  if (!encounter) return <View style={styles.panel}><Text style={styles.muted}>Preparing The Coffee Cart…</Text></View>;
+  if (!encounter) return <View style={styles.panel}><Text style={styles.muted}>Preparing the encounter…</Text></View>;
   const resolved = encounter.state === 'resolved';
+  const name = encounter.character?.name ?? 'Your opponent';
 
   const objective = (
     <View style={styles.objective} aria-live="polite">
       {encounter.currentObjective
         ? <><Text style={styles.strong}>Current objective</Text><Text style={styles.body}>{encounter.currentObjective.prompt}</Text></>
-        : <Text style={styles.strong}>Order complete</Text>}
+        : <Text style={styles.strong}>Encounter complete</Text>}
       <Text style={styles.small}>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</Text>
     </View>
   );
   const footer = (
     <View style={styles.footer}>
-      {isLoading && <Text role="status" style={styles.thinking}>Gerald is considering the linguistic implications…</Text>}
+      {isLoading && <Text role="status" style={styles.thinking}>{name} is considering the linguistic implications…</Text>}
       {assessment && <View style={styles.assessment} aria-live="polite">
         <Text style={styles.strong}>Assessment</Text><Text style={styles.body}>{assessment.overallFeedback}</Text>
         {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</Text>)}
       </View>}
-      {resolved && <Text role="status" style={styles.victory}>Gerald grudgingly approves. The coffee order is complete.</Text>}
+      {resolved && <Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}</Text>}
     </View>
   );
 
   return (
     <FlatList
       ref={listRef}
-      aria-label="Conversation with Gerald"
+      aria-label={`Conversation with ${name}`}
       style={styles.panel}
       contentContainerStyle={styles.content}
       data={encounter.transcript}

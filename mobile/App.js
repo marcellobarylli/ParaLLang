@@ -17,7 +17,7 @@ export default function App() {
   useEffect(() => { state.initialize(); }, [state.initialize]);
   const resolved = state.encounter?.state === 'resolved';
   const here = state.world?.locations.find((location) => location.id === state.world.currentLocationId);
-  const returnLabel = state.returnView === 'dialogue' && state.encounter ? 'Return to Gerald' : 'Return to the map';
+  const returnLabel = state.returnView === 'dialogue' && state.encounter ? `Return to ${state.encounter.character?.name ?? 'the encounter'}` : 'Return to the map';
 
   return (
     <SafeAreaProvider>
@@ -42,7 +42,7 @@ export default function App() {
           <DialoguePanel encounter={state.encounter} language={state.language} isLoading={state.isLoading} assessment={state.assessment} onHelp={state.revealHelp} />
           <InputBar
             value={state.draft} onChange={state.setDraft} onSend={state.sendMessage}
-            loading={state.isLoading} resolved={resolved} disabled={state.isLoading || !state.encounter || resolved}
+            loading={state.isLoading} resolved={resolved} speaker={state.encounter?.character?.name} disabled={state.isLoading || !state.encounter || resolved}
           />
         </KeyboardAvoidingView>}
       </SafeAreaView>

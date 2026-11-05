@@ -18,7 +18,7 @@ function visitedSet(world, progress) {
   return visited;
 }
 
-export function worldSnapshot(world, progress) {
+export function worldSnapshot(world, progress, encounters = new Map()) {
   const current = currentLocationId(world, progress);
   const visited = visitedSet(world, progress);
   const completed = new Set(progress?.completedEncounterIds ?? []);
@@ -39,7 +39,11 @@ export function worldSnapshot(world, progress) {
       ...base,
       description: location.description,
       vocabularyFocus: location.vocabulary_focus,
-      encounter: location.encounter ? { id: location.encounter, completed: completed.has(location.encounter) } : null,
+      encounter: location.encounter ? {
+        id: location.encounter,
+        completed: completed.has(location.encounter),
+        characterName: encounters.get(location.encounter)?.character.name ?? null,
+      } : null,
     };
   });
   return {

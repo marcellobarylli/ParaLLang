@@ -8,6 +8,7 @@ defeat_condition:
   type: comprehension_and_response
   description: "Player orders a coffee without milk in Italian"
 max_turns: 20
+resolved_message: "Gerald grudgingly approves. The coffee order is complete."
 escalation:
   target_ratio_increase_per_turn: 0.05
 objectives:

@@ -67,16 +67,22 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       } catch (error) { set({ error: error.message, isLoading: false }); }
     },
 
+    // Enters the encounter at the current location. A different session than the one held starts clean.
     enterEncounter: async () => {
-      const { learnerId, isLoading } = get();
+      const { learnerId, isLoading, world } = get();
       if (!learnerId || isLoading) return;
+      const encounterId = world?.locations.find((location) => location.id === world.currentLocationId)?.encounter?.id ?? null;
       const epoch = requestEpoch;
       set({ isLoading: true, error: null });
       try {
-        const started = await api.startEncounter(learnerId, false);
+        const started = await api.startEncounter(learnerId, false, encounterId);
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         snapshots.set(learnerId, { encounter: started.encounter, spellbook: started.spellbook });
-        set({ encounter: started.encounter, spellbook: started.spellbook, isLoading: false, view: 'dialogue' });
+        const fresh = started.encounter.id !== get().encounter?.id;
+        set({
+          encounter: started.encounter, spellbook: started.spellbook, isLoading: false, view: 'dialogue',
+          ...(fresh ? { assessment: null, draft: '', pendingInput: null } : {}),
+        });
       } catch (error) { set({ error: error.message, isLoading: false }); }
     },
 
@@ -96,7 +102,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       const epoch = requestEpoch;
       set({ isLoading: true, error: null, assessment: null });
       try {
-        const result = await api.startEncounter(learnerId, true);
+        const result = await api.startEncounter(learnerId, true, get().encounter?.encounterId ?? null);
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         snapshots.set(learnerId, result);
         set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false, draft: '', pendingInput: null, view: 'dialogue' });

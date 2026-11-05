@@ -65,7 +65,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
     await step('world at start', async () => summary((await service.getWorld(learnerId)).world));
     await step('move to the_rift (expect NOT_ADJACENT)', async () => summary((await service.moveTo(learnerId, { locationId: 'the_rift' })).world));
     await step('move to coffee_cart', async () => summary((await service.moveTo(learnerId, { locationId: 'coffee_cart' })).world));
-    let encounter = (await step('start Gerald', async () => ({ encounter: (await service.startEncounter(learnerId)).encounter })))?.encounter;
+    let encounter = (await step('start Gerald', async () => ({ encounter: (await service.startEncounter(learnerId, { encounterId: content.world.locationsById.get('coffee_cart').encounter })).encounter })))?.encounter;
     for (const message of orders[content.language.code]) {
       if (!encounter || encounter.state !== 'ongoing') break;
       const result = await step(`say "${message}"`, async () => {
@@ -86,7 +86,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
 
     const lines = raw.filter((item) => item.schema === 'encounter_narration').map((item, turn) => ({
       turn,
-      requestedRatio: service.ratioFor(turn),
+      requestedRatio: service.ratioFor(turn, service.definition(null)),
       native: item.output.dialogue.native,
       translation: item.output.dialogue.translation,
       narrative: item.output.narrative,

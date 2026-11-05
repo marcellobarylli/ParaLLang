@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
 import { Button, colors } from './ui.js';
 
-export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to Gerald' }) {
+export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to the map' }) {
   return (
     <ScrollView aria-label="Spellbook" contentContainerStyle={styles.content}>
       <View style={styles.heading}>

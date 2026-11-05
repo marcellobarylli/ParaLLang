@@ -19,7 +19,8 @@ const npc = (version, { translated = false, caffeMeaning = false, allVisible = f
   },
 });
 const encounter = (version = 1, options = {}) => ({
-  id: 'encounter-1', version, state: options.resolved ? 'resolved' : 'ongoing', encounter_state: options.resolved ? 'resolved' : 'ongoing',
+  id: 'encounter-1', encounterId: 'imp_coffee_greeting', location: 'coffee_cart', character: { name: 'Gerald' },
+  resolvedMessage: 'Gerald grudgingly approves. The coffee order is complete.', version, state: options.resolved ? 'resolved' : 'ongoing', encounter_state: options.resolved ? 'resolved' : 'ongoing',
   committedPlayerTurns: options.resolved ? 1 : 0, difficulty: options.resolved ? .3 : .25,
   must_translate: !options.resolved, hints_available: !options.exhausted,
   hints: { used: options.exhausted ? 2 : version - 1, remaining: options.exhausted ? 0 : 3 - version, limit: 2 },
@@ -35,7 +36,7 @@ const place = (id, name, state, adjacent, map, extra = {}) => ({ id, name, state
 const entrance = (state) => place('market_entrance', 'Market Entrance', state, state !== 'current', { x: 0.5, y: 0.92 }, { description: 'An archway that has not decided which language it is in.', vocabularyFocus: ['greetings'], encounter: null });
 const cart = (state, completed = false) => state === 'known'
   ? place('coffee_cart', 'The Coffee Cart', 'known', true, { x: 0.2, y: 0.66 })
-  : place('coffee_cart', 'The Coffee Cart', state, false, { x: 0.2, y: 0.66 }, { description: 'A cart on three wheels and one strong opinion.', vocabularyFocus: ['drinks'], encounter: { id: 'imp_coffee_greeting', completed } });
+  : place('coffee_cart', 'The Coffee Cart', state, false, { x: 0.2, y: 0.66 }, { description: 'A cart on three wheels and one strong opinion.', vocabularyFocus: ['drinks'], encounter: { id: 'imp_coffee_greeting', completed, characterName: 'Gerald' } });
 const startWorld = { currentLocationId: 'market_entrance', locations: [cart('known'), entrance('current')], paths: [['market_entrance', 'coffee_cart']] };
 const cartWorld = (completed = false) => ({ currentLocationId: 'coffee_cart', locations: [cart('current', completed), entrance('visited')], paths: [['market_entrance', 'coffee_cart']] });
 const response = (status, data) => ({ ok: status >= 200 && status < 300, status, json: async () => data });
@@ -136,7 +137,7 @@ test('the app enforces help, retains failed input, resolves, reviews, reveals, a
   await user.press(screen.getByRole('button', { name: 'Send' }));
   await screen.findByText('Your contextual order passed.');
   expect(screen.getByText(/Gerald grudgingly approves/)).toBeOnTheScreen();
-  expect(screen.getByPlaceholderText('Order accepted. Restart to play again.')).toBeDisabled();
+  expect(screen.getByPlaceholderText('Encounter complete. Restart to play again.')).toBeDisabled();
 
   await user.press(screen.getByRole('button', { name: /Spellbook/ }));
   expect(await screen.findByRole('heading', { name: 'Spellbook' })).toBeOnTheScreen();

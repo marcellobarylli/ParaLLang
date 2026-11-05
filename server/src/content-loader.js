@@ -10,6 +10,7 @@ const languageSchema = z.object({
   code: z.string().regex(/^[a-z]{2,3}$/),
   name: z.string().min(1),
   tag: z.string().regex(/^[a-z]{2,3}(?:-[A-Za-z0-9]+)*$/),
+  default_encounter: z.string().min(1),
 }).strict();
 const exampleSchema = z.object({ target: z.string().min(1), english: z.string().min(1) }).strict();
 const vocabularyEntrySchema = z.object({
@@ -59,6 +60,7 @@ const encounterSchema = z.object({
   defeat_condition: z.object({ type: z.string(), description: z.string().min(1) }).strict(),
   max_turns: z.number().int().positive(),
   escalation: z.object({ target_ratio_increase_per_turn: z.number().min(0) }).strict(),
+  resolved_message: z.string().min(1).optional(),
   objectives: z.array(objectiveSchema).min(1),
 }).strict();
 
@@ -131,20 +133,24 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     throw new Error(`Unknown target language: ${code}. Available: ${available.join(', ')}`);
   }
   const pack = `languages/${code}`;
-  const language = languageSchema.parse(parseYaml(contentDir, `${pack}/language.yaml`));
+  const { default_encounter: defaultEncounterId, ...language } = languageSchema.parse(parseYaml(contentDir, `${pack}/language.yaml`));
   if (language.code !== code) throw new Error(`content/${pack}/language.yaml must declare code ${code}`);
-  const vocabulary = vocabularySchema.parse(parseYaml(contentDir, `${pack}/vocabulary/gerald_coffee.yaml`));
-  const character = characterSchema.parse(parseYaml(contentDir, 'characters/enemies/imp_coffee.yaml'));
-  const encounter = encounterSchema.parse(parseYaml(contentDir, `${pack}/encounters/imp_coffee_greeting.yaml`));
   const styleGuide = styleGuideSchema.parse(parseYaml(contentDir, 'narration/style_guide.yaml'));
 
+  // Round 006: every vocabulary file of the pack is merged; each entry keeps its own file's version.
+  const vocabularyFiles = yamlFiles(contentDir, `${pack}/vocabulary`)
+    .map((file) => vocabularySchema.parse(parseYaml(contentDir, file)));
+  const vocabulary = Object.freeze({
+    version: vocabularyFiles.map((file) => file.version).sort().join('+'),
+    references: vocabularyFiles.flatMap((file) => file.references),
+    entries: vocabularyFiles.flatMap((file) => file.entries),
+  });
+  const versionById = new Map(vocabularyFiles.flatMap((file) => file.entries.map((entry) => [entry.id, file.version])));
   unique(vocabulary.entries.map((entry) => entry.id), 'Vocabulary');
   unique(vocabulary.references.map((reference) => reference.id), 'Vocabulary references');
-  unique(encounter.objectives.map((objective) => objective.id), 'Encounter objectives');
 
   const vocabularyById = new Map(vocabulary.entries.map((entry) => [entry.id, Object.freeze(entry)]));
   const referenceIds = new Set(vocabulary.references.map((reference) => reference.id));
-  const objectiveIds = new Set(encounter.objectives.map((objective) => objective.id));
 
   for (const entry of vocabulary.entries) {
     if (!entry.surface_variants.some((form) => form.toLowerCase() === entry.target.toLowerCase())) {
@@ -155,6 +161,36 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     }
   }
 
+  const encounters = new Map();
+  for (const file of yamlFiles(contentDir, `${pack}/encounters`)) {
+    const encounter = encounterSchema.parse(parseYaml(contentDir, file));
+    if (encounters.has(encounter.id)) throw new Error(`Encounter id ${encounter.id} is declared twice`);
+    const character = characterSchema.parse(parseYaml(contentDir, encounter.character));
+    validateObjectives(encounter, vocabularyById, referenceIds);
+    encounters.set(encounter.id, Object.freeze({ encounter, character }));
+  }
+  const defaultDefinition = encounters.get(defaultEncounterId);
+  if (!defaultDefinition) throw new Error(`content/${pack}/language.yaml names unknown default_encounter ${defaultEncounterId}`);
+  const { encounter, character } = defaultDefinition;
+
+  const world = loadWorld(contentDir, encounters);
+  return Object.freeze({
+    language, styleGuide, vocabulary, vocabularyById, world, encounters,
+    defaultEncounterId,
+    // The default encounter, for callers that know only one (the web client's start, verify:cli).
+    encounter, character,
+    entryVersion: (id) => versionById.get(id),
+  });
+}
+
+function yamlFiles(contentDir, relativeDir) {
+  return readdirSync(resolve(contentDir, relativeDir)).filter((name) => name.endsWith('.yaml')).sort()
+    .map((name) => `${relativeDir}/${name}`);
+}
+
+function validateObjectives(encounter, vocabularyById, referenceIds) {
+  unique(encounter.objectives.map((objective) => objective.id), `Encounter ${encounter.id} objectives`);
+  const objectiveIds = new Set(encounter.objectives.map((objective) => objective.id));
   encounter.objectives.forEach((objective, index) => {
     for (const id of objective.target_vocabulary_ids) {
       if (!vocabularyById.has(id)) throw new Error(`Objective ${objective.id} references unknown vocabulary ${id}`);
@@ -174,13 +210,10 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
       throw new Error(`Objective ${objective.id} must point to the next ordered objective (${expectedNext ?? 'none'})`);
     }
   });
-
-  const world = loadWorld(contentDir, encounter);
-  return Object.freeze({ language, character, encounter, styleGuide, vocabulary, vocabularyById, world });
 }
 
 // The world is shared by every language pack: locations in content/world/locations/, paths in connections.yaml.
-export function loadWorld(contentDir, encounter) {
+export function loadWorld(contentDir, encounters) {
   const locationsDir = resolve(contentDir, 'world', 'locations');
   const locations = readdirSync(locationsDir)
     .filter((name) => name.endsWith('.yaml'))
@@ -207,12 +240,18 @@ export function loadWorld(contentDir, encounter) {
   const unreachable = locations.filter((location) => !reached.has(location.id)).map((location) => location.id);
   if (unreachable.length) throw new Error(`World locations unreachable from ${connections.start}: ${unreachable.join(', ')}`);
 
-  const withEncounter = locations.filter((location) => location.encounter !== null);
-  for (const location of withEncounter) {
-    if (location.encounter !== encounter.id) throw new Error(`Location ${location.id} names unknown encounter ${location.encounter}`);
+  // Each encounter sits at exactly one place: the location it names, which names it back.
+  for (const location of locations.filter((candidate) => candidate.encounter !== null)) {
+    const definition = encounters.get(location.encounter);
+    if (!definition) throw new Error(`Location ${location.id} names unknown encounter ${location.encounter}`);
+    if (definition.encounter.location !== location.id) {
+      throw new Error(`Location ${location.id} names encounter ${location.encounter}, which is set at ${definition.encounter.location}`);
+    }
   }
-  if (withEncounter.length !== 1 || withEncounter[0].id !== encounter.location) {
-    throw new Error(`Encounter ${encounter.id} must be held by exactly its location ${encounter.location}`);
+  for (const { encounter } of encounters.values()) {
+    if (byId.get(encounter.location)?.encounter !== encounter.id) {
+      throw new Error(`Encounter ${encounter.id} must be held by its location ${encounter.location}`);
+    }
   }
 
   return Object.freeze({

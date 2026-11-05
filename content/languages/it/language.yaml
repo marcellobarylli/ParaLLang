@@ -1,3 +1,4 @@
 code: it
 name: Italian
 tag: it-IT
+default_encounter: imp_coffee_greeting

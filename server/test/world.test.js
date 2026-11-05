@@ -58,7 +58,7 @@ test('the world loader rejects bad paths, unreachable locations and wrong encoun
     ['encounter moved', (dir) => Promise.all([
       editYaml(join(dir, 'world/locations/coffee_cart.yaml'), (l) => { l.encounter = null; }),
       editYaml(join(dir, 'world/locations/butchers_stall.yaml'), (l) => { l.encounter = 'imp_coffee_greeting'; }),
-    ]), /must be held by exactly its location coffee_cart/],
+    ]), /names encounter imp_coffee_greeting, which is set at coffee_cart/],
     ['id mismatch', (dir) => editYaml(join(dir, 'world/locations/the_rift.yaml'), (l) => { l.id = 'rift'; }), /must declare id the_rift/],
   ];
   for (const [name, edit, error] of cases) {
@@ -101,7 +101,7 @@ test('moves follow paths, reveal the map and persist; other moves are rejected',
   const cart = atCart.world.locations.find((l) => l.id === 'coffee_cart');
   assert.equal(cart.state, 'current');
   assert.match(cart.description, /imp in a tiny apron/);
-  assert.deepEqual(cart.encounter, { id: 'imp_coffee_greeting', completed: false });
+  assert.deepEqual(cart.encounter, { id: 'imp_coffee_greeting', completed: false, characterName: 'Gerald' });
   assert.equal(atCart.world.locations.find((l) => l.id === 'market_entrance').state, 'visited');
   assert.equal(atCart.world.locations.find((l) => l.id === 'cracked_fountain').state, 'known');
   assert.ok(!atCart.world.locations.some((l) => l.id === 'old_bookshop'));
@@ -169,7 +169,7 @@ test('resolving Gerald marks The Coffee Cart encounter completed on the map', as
   }
   assert.equal(encounter.state, 'resolved');
   const world = await api(runtime, '/api/world', { learnerId });
-  assert.deepEqual(world.data.world.locations.find((l) => l.id === 'coffee_cart').encounter, { id: 'imp_coffee_greeting', completed: true });
+  assert.deepEqual(world.data.world.locations.find((l) => l.id === 'coffee_cart').encounter, { id: 'imp_coffee_greeting', completed: true, characterName: 'Gerald' });
   const rejected = await api(runtime, '/api/world/move', { learnerId, method: 'POST', body: { locationId: 'the_rift' } });
   assert.equal(rejected.status, 409);
   assert.equal(rejected.data.error.code, 'NOT_ADJACENT');

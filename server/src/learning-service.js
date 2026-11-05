@@ -8,7 +8,7 @@ import {
 import { assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
-import { applyMove, worldSnapshot } from './world.js';
+import { applyMove, currentLocationId, worldSnapshot } from './world.js';
 
 function clone(value) { return structuredClone(value); }
 function payloadHash(value) { return createHash('sha256').update(JSON.stringify(value)).digest('hex'); }
@@ -54,15 +54,20 @@ export class LearningService {
     return envelope;
   }
 
-  ratioFor(turns) {
+  // Round 006: each session plays one encounter definition ({ encounter, character }) from the pack.
+  definition(session) { return this.content.encounters.get(session?.definitionId ?? this.content.defaultEncounterId); }
+
+  ratioFor(turns, definition = this.definition(null)) {
     return calculateTargetRatio(
-      this.content.character.language_profile.base_target_ratio,
-      this.content.encounter.escalation.target_ratio_increase_per_turn,
+      definition.character.language_profile.base_target_ratio,
+      definition.encounter.escalation.target_ratio_increase_per_turn,
       turns,
     );
   }
 
-  activeObjectives(encounter) { return this.content.encounter.objectives.slice(encounter.objectiveIndex); }
+  activeObjectives(session) { return this.definition(session).encounter.objectives.slice(session.objectiveIndex); }
+
+  locationName(definition) { return this.content.world.locationsById.get(definition.encounter.location)?.name ?? definition.encounter.location; }
 
   discover(envelope, vocabularyIds, discoveredAt, source) {
     let changed = false;
@@ -73,7 +78,7 @@ export class LearningService {
       if (bucket[vocabularyId]) continue;
       bucket[vocabularyId] = {
         vocabularyId,
-        contentVersion: this.content.vocabulary.version,
+        contentVersion: this.content.entryVersion(vocabularyId),
         discoveredAt,
         discoverySource: source,
         schedule: initialSchedule(discoveredAt),
@@ -93,7 +98,7 @@ export class LearningService {
     const cards = [...Object.values(envelope.spellbook.words), ...Object.values(envelope.spellbook.phrases)]
       .map((item) => {
         const entry = this.content.vocabularyById.get(item.vocabularyId);
-        if (!entry || item.contentVersion !== this.content.vocabulary.version) return null;
+        if (!entry || item.contentVersion !== this.content.entryVersion(entry.id)) return null;
         return {
           vocabularyId: entry.id,
           kind: entry.kind,
@@ -114,7 +119,7 @@ export class LearningService {
     return { cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version };
   }
 
-  canonicalizeNarration(generated) {
+  canonicalizeNarration(generated, definition) {
     const matches = matchCanonicalVocabulary(generated.dialogue.native, this.content.vocabulary.entries);
     const seen = new Set();
     const words = matches.filter((match) => !seen.has(match.id) && seen.add(match.id)).map(({ entry, excerpt }) => ({
@@ -126,17 +131,18 @@ export class LearningService {
     }));
     return {
       id: randomUUID(), role: 'npc', narrative: generated.narrative,
-      dialogue: { speaker: this.content.character.name, native: generated.dialogue.native, translation: generated.dialogue.translation, words },
+      dialogue: { speaker: definition.character.name, native: generated.dialogue.native, translation: generated.dialogue.translation, words },
     };
   }
 
   currentRevealKeys(encounter) {
-    const objective = this.content.encounter.objectives[encounter.objectiveIndex];
+    const objective = this.definition(encounter).encounter.objectives[encounter.objectiveIndex];
     return objective ? (encounter.reveals[objective.id] ?? []) : [];
   }
 
   serializeEncounter(encounter) {
-    const objective = this.content.encounter.objectives[encounter.objectiveIndex] ?? null;
+    const definition = this.definition(encounter);
+    const objective = definition.encounter.objectives[encounter.objectiveIndex] ?? null;
     const currentNpc = [...encounter.transcript].reverse().find((message) => message.role === 'npc');
     const revealKeys = this.currentRevealKeys(encounter);
     const transcript = encounter.transcript.map((message) => {
@@ -165,11 +171,15 @@ export class LearningService {
     const limit = objective?.hint_limit ?? 0;
     return {
       id: encounter.id,
+      encounterId: definition.encounter.id,
+      location: definition.encounter.location,
+      character: { name: definition.character.name },
+      resolvedMessage: definition.encounter.resolved_message ?? null,
       version: encounter.version,
       state: encounter.state,
       encounter_state: encounter.state === 'resolved' ? 'resolved' : 'ongoing',
       committedPlayerTurns: encounter.committedPlayerTurns,
-      difficulty: this.ratioFor(encounter.committedPlayerTurns),
+      difficulty: this.ratioFor(encounter.committedPlayerTurns, definition),
       must_translate: encounter.state === 'ongoing' && Boolean(objective),
       hints_available: encounter.state === 'ongoing' && revealKeys.length < limit,
       hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit },
@@ -189,26 +199,36 @@ export class LearningService {
     }
   }
 
-  async startEncounter(learnerId, { restart = false } = {}) {
+  // Without an encounterId the default encounter starts anywhere (the frozen web client); with one, the player
+  // must be at that encounter's location.
+  async startEncounter(learnerId, { restart = false, encounterId = null } = {}) {
     assertLearnerId(learnerId);
     return this.serialized(learnerId, async () => {
       const envelope = await this.loadEnvelope(learnerId);
-      if (!restart && this.encounters.has(learnerId)) {
-        return { encounter: this.serializeEncounter(this.encounters.get(learnerId)), spellbook: this.spellbookSnapshot(envelope) };
+      const definitionId = encounterId ?? this.content.defaultEncounterId;
+      const definition = this.content.encounters.get(definitionId);
+      if (typeof definitionId !== 'string' || !definition) throw validationError('Unknown encounter.');
+      if (encounterId !== null && currentLocationId(this.content.world, envelope.world) !== definition.encounter.location) {
+        throw conflictError(`${definition.character.name} is not here. Walk to ${this.locationName(definition)} first.`, 'NOT_HERE');
       }
-      const ratio = this.ratioFor(0);
+      const active = this.encounters.get(learnerId);
+      if (!restart && active && this.definition(active) === definition) {
+        return { encounter: this.serializeEncounter(active), spellbook: this.spellbookSnapshot(envelope) };
+      }
+      const ratio = this.ratioFor(0, definition);
       const generated = await this.callProvider(buildNarrationMessages({
         language: this.content.language,
-        character: this.content.character,
-        objectives: this.content.encounter.objectives,
+        character: definition.character,
+        locationName: this.locationName(definition),
+        objectives: definition.encounter.objectives,
         vocabularyById: this.content.vocabularyById,
         targetRatio: ratio,
-      }), encounterResponseSchema, 'encounter_narration', 'Gerald');
-      const npcMessage = this.canonicalizeNarration(generated);
+      }), encounterResponseSchema, 'encounter_narration', definition.character.name);
+      const npcMessage = this.canonicalizeNarration(generated, definition);
       const stagedEnvelope = clone(envelope);
       this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
       const encounter = {
-        id: randomUUID(), version: 1, state: 'ongoing', objectiveIndex: 0,
+        id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0,
         committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
       };
       await this.storage.save(stagedEnvelope);
@@ -234,9 +254,9 @@ export class LearningService {
       const current = this.encounters.get(learnerId);
       this.validateVersion(current, request.encounterId, request.version);
       if (current.state !== 'ongoing') throw validationError('This encounter no longer has an active learning objective.');
-      const objective = this.content.encounter.objectives[current.objectiveIndex];
+      const objective = this.definition(current).encounter.objectives[current.objectiveIndex];
       const activeMessage = [...current.transcript].reverse().find((message) => message.role === 'npc');
-      if (!activeMessage || request.messageId !== activeMessage.id) throw conflictError('Help is only available for the current Gerald message.', 'STALE_MESSAGE');
+      if (!activeMessage || request.messageId !== activeMessage.id) throw conflictError(`Help is only available for the current ${this.definition(current).character.name} message.`, 'STALE_MESSAGE');
       let key;
       let reveal;
       if (request.kind === 'sentence') {
@@ -310,7 +330,8 @@ export class LearningService {
       }
       const current = this.encounters.get(learnerId);
       this.validateVersion(current, request.encounterId, request.version);
-      if (current.state !== 'ongoing') throw validationError('Gerald has already accepted this order. Restart to play again.');
+      if (current.state !== 'ongoing') throw validationError('This encounter is already complete. Restart to play again.');
+      const definition = this.definition(current);
       const objectives = this.activeObjectives(current);
       const gradingRaw = await this.callProvider(buildGradingMessages({
         language: this.content.language, objectives, vocabularyById: this.content.vocabularyById,
@@ -326,26 +347,27 @@ export class LearningService {
         passedCount += 1;
       }
       const nextObjectiveIndex = current.objectiveIndex + passedCount;
-      const resolved = nextObjectiveIndex >= this.content.encounter.objectives.length;
+      const resolved = nextObjectiveIndex >= definition.encounter.objectives.length;
       const nextTurns = current.committedPlayerTurns + 1;
       const decision = {
         objectiveResults: assessment.objective_results.map(({ objective_id, passed }) => ({ objectiveId: objective_id, passed })),
         encounterState: resolved ? 'resolved' : 'ongoing',
-        nextObjectiveId: this.content.encounter.objectives[nextObjectiveIndex]?.id ?? null,
+        nextObjectiveId: definition.encounter.objectives[nextObjectiveIndex]?.id ?? null,
       };
       const history = current.transcript.map((item) => item.role === 'player'
         ? { role: 'user', content: item.text }
         : { role: 'assistant', content: item.dialogue.native });
       const generated = await this.callProvider(buildNarrationMessages({
         language: this.content.language,
-        character: this.content.character,
-        objectives: this.content.encounter.objectives.slice(nextObjectiveIndex),
+        character: definition.character,
+        locationName: this.locationName(definition),
+        objectives: definition.encounter.objectives.slice(nextObjectiveIndex),
         vocabularyById: this.content.vocabularyById,
         conversationHistory: history,
         playerInput: message,
-        targetRatio: this.ratioFor(nextTurns),
+        targetRatio: this.ratioFor(nextTurns, definition),
         decision,
-      }), encounterResponseSchema, 'encounter_narration', 'Gerald');
+      }), encounterResponseSchema, 'encounter_narration', definition.character.name);
 
       const stagedEnvelope = clone(envelope);
       const stagedEncounter = clone(current);
@@ -364,7 +386,7 @@ export class LearningService {
           evidence.effective_quality = effectiveQuality;
         }
       }
-      const npcMessage = this.canonicalizeNarration(generated);
+      const npcMessage = this.canonicalizeNarration(generated, definition);
       this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
       stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
       stagedEncounter.objectiveIndex = nextObjectiveIndex;
@@ -386,8 +408,8 @@ export class LearningService {
         spellbook: this.spellbookSnapshot(stagedEnvelope),
         replayed: false,
       };
-      if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(this.content.encounter.id)) {
-        stagedEnvelope.world.completedEncounterIds.push(this.content.encounter.id);
+      if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
+        stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
       }
       stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
         kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response,
@@ -400,18 +422,18 @@ export class LearningService {
 
   async getWorld(learnerId) {
     const envelope = await this.loadEnvelope(learnerId);
-    return { world: worldSnapshot(this.content.world, envelope.world) };
+    return { world: worldSnapshot(this.content.world, envelope.world, this.content.encounters) };
   }
 
   async moveTo(learnerId, request) {
     return this.serialized(learnerId, async () => {
       const envelope = await this.loadEnvelope(learnerId);
       const { progress, changed } = applyMove(this.content.world, envelope.world, request.locationId);
-      if (!changed) return { world: worldSnapshot(this.content.world, envelope.world) };
+      if (!changed) return { world: worldSnapshot(this.content.world, envelope.world, this.content.encounters) };
       const stagedEnvelope = clone(envelope);
       stagedEnvelope.world = progress;
       await this.storage.save(stagedEnvelope);
-      return { world: worldSnapshot(this.content.world, progress) };
+      return { world: worldSnapshot(this.content.world, progress, this.content.encounters) };
     });
   }
 
@@ -429,10 +451,10 @@ export class LearningService {
         .find((candidate) => isDue(candidate.schedule, this.clock()));
       if (!item) return { challenge: null, spellbook: this.spellbookSnapshot(envelope) };
       const entry = this.content.vocabularyById.get(item.vocabularyId);
-      if (!entry || item.contentVersion !== this.content.vocabulary.version) throw conflictError('This card belongs to a different content version.', 'STALE_CONTENT');
+      if (!entry || item.contentVersion !== this.content.entryVersion(entry.id)) throw conflictError('This card belongs to a different content version.', 'STALE_CONTENT');
       const challenge = {
         id: randomUUID(), learnerId, vocabularyId: entry.id,
-        contentVersion: this.content.vocabulary.version, issuedAt: nowIso(this.clock),
+        contentVersion: this.content.entryVersion(entry.id), issuedAt: nowIso(this.clock),
         practice: !isDue(item.schedule, this.clock()),
       };
       if (!this.reviewChallenges.has(learnerId)) this.reviewChallenges.set(learnerId, new Map());
@@ -461,7 +483,7 @@ export class LearningService {
       if (!challenge) throw conflictError('That review challenge is stale. Fetch a new due review.', 'STALE_CHALLENGE');
       const item = this.findItem(envelope, challenge.vocabularyId);
       const entry = this.content.vocabularyById.get(challenge.vocabularyId);
-      if (!item || !entry || challenge.contentVersion !== this.content.vocabulary.version) throw conflictError('That review card is no longer available.', 'STALE_CONTENT');
+      if (!item || !entry || challenge.contentVersion !== this.content.entryVersion(entry.id)) throw conflictError('That review card is no longer available.', 'STALE_CONTENT');
 
       const stagedEnvelope = clone(envelope);
       const stagedItem = this.findItem(stagedEnvelope, challenge.vocabularyId);

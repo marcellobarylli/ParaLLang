@@ -91,8 +91,8 @@ test('prompts name the selected language and leave no placeholder unfilled', () 
     const content = loadGameContent({ language: code });
     const shared = { language: content.language, objectives: content.encounter.objectives, vocabularyById: content.vocabularyById };
     const prompts = [
-      ...buildNarrationMessages({ ...shared, character: content.character, targetRatio: .3 }),
-      ...buildNarrationMessages({ ...shared, character: content.character, targetRatio: .3, playerInput: 'Ciao', decision: { encounterState: 'ongoing' } }),
+      ...buildNarrationMessages({ ...shared, character: content.character, locationName: 'The Coffee Cart', targetRatio: .3 }),
+      ...buildNarrationMessages({ ...shared, character: content.character, locationName: 'The Coffee Cart', targetRatio: .3, playerInput: 'Ciao', decision: { encounterState: 'ongoing' } }),
       ...buildGradingMessages({ ...shared, conversationContext: [], playerInput: 'Ciao' }),
     ].map((message) => message.content).join('\n');
     assert.match(prompts, new RegExp(`30% ${name} in dialogue`));

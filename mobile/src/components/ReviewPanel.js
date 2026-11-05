@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
 import { Button, colors } from './ui.js';
 
-export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to Gerald' }) {
+export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to the map' }) {
   const [answer, setAnswer] = useState('');
   const name = language?.name ?? 'Target-language';
   if (result) return (

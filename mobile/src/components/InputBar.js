@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, View } from 'react-native';
 import { Button, colors } from './ui.js';
 
-export default function InputBar({ value, onChange, onSend, disabled, loading, resolved }) {
+export default function InputBar({ value, onChange, onSend, disabled, loading, resolved, speaker }) {
   const submit = () => { if (!disabled && value.trim()) onSend(value); };
   return (
     <View style={styles.bar}>
@@ -12,7 +12,7 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, r
         onChangeText={onChange}
         onSubmitEditing={submit}
         returnKeyType="send"
-        placeholder={resolved ? 'Order accepted. Restart to play again.' : loading ? 'Sending your response…' : 'Reply to Gerald…'}
+        placeholder={resolved ? 'Encounter complete. Restart to play again.' : loading ? 'Sending your response…' : `Reply to ${speaker ?? 'them'}…`}
         placeholderTextColor={colors.muted}
         editable={!disabled}
         autoCorrect={false}
