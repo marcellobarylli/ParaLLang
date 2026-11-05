@@ -15,3 +15,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 9 | 17:31:36 | 17:31:36 | result | Claude (claude-opus-5-5), autonomous | Fresh `TMPDIR` check: 0 `parallang-*` entries after the full suite (34 at HEAD 31bb5ef, 420 KB in total) | `../findings.md` |
 | 10 | 17:31:36 | 17:31:36 | outcome | Claude (claude-opus-5-5), autonomous | Findings and Outcome written: F1 done | `../findings.md` |
 | 11 | 17:31:36 | 17:31:36 | closed | Claude (claude-opus-5-5), autonomous | Round 024 closed; STATUS.md addendum and index row | `../findings.md` |
+| 12 | 17:33:32 | 17:33:32 | amended | Claude (claude-opus-5-5), autonomous | Correction: row 8's Occurred (17:34:40) was typed, not read from the clock; the build finished before 17:31:36, exact time unknown | — |

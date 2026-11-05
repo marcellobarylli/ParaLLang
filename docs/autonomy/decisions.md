@@ -88,3 +88,7 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 023 | Codex critique 1: 1.1, 1.2, 1.4–1.7, 1.10 accepted; 1.8, 1.9, 1.11 in part; 1.3 rejected | Accept all | See round 023 Second opinion table | Yes |
 | 2026-11-05 | 024 | Test temp dirs are removed when the test process exits, not when a runtime closes | Remove on `close()`; per-file teardown hook | Tests reopen a runtime's save dir to simulate a restart; an exit hook needs no change in the test files | Yes |
 | 2026-11-05 | 024 | Codex critique 1: 1.1, 1.4, 1.6 accepted; 1.2, 1.5 in part; 1.3 rejected | Accept all | See round 024 Second opinion table | Yes |
+| 2026-11-05 | 025 | Flick's jingle is a named brainrot infohazard, authored per pack ("Dopo, dopo, domani!", "¡Después, después, mañana!") in the last objective's intent; humming it back fails | A new engine field for the jingle; the jingle in the shared quirk | Content only; the last objective's intent reaches every narration prompt and the grader | Yes |
+| 2026-11-05 | 025 | The Fountain's containment file is a companion briefing; Spellbook containment files become backlog B4 | Build the Spellbook file now | Needs an app change; the briefing card exists since round 009 | Yes |
+| 2026-11-05 | 025 | Flick's English-only negative example "Stop!" becomes "Stop moving!" (Stop! is Italian and Spanish too) | Keep it | Critique 1.4 (Error) | Yes |
+| 2026-11-05 | 025 | Codex critique 1: 1.1, 1.3, 1.4, 1.5, 1.7 accepted; 1.2, 1.6 in part | Accept all | See round 025 Second opinion table | Yes |
