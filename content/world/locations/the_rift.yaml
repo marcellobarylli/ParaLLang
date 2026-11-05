@@ -5,7 +5,7 @@ description: >
   way to a seam of light, and the roots of a dead branch push up through it. Something on the other side is
   talking, in a language made of both of yours and neither.
 vocabulary_focus: [review of all learned vocabulary]
-encounter: null
+encounter: the_rift_errata
 map: { x: 0.72, y: 0.08 }
 # Round 014: sealed until the other five encounters are complete (A7; the boss is A7b).
 requires_completed:

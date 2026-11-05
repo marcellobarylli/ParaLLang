@@ -1,0 +1,98 @@
+# Round 015: The Rift (backlog A7b, with B3). Errata, an infohazard made of mistranslations, reviews words from every
+# earlier encounter: a request from the market's stalls, a command to stop now, and the Cyclops trick from
+# The Journey (your name is Nobody). No new vocabulary: every objective targets entries already authored.
+id: the_rift_errata
+character: characters/enemies/rift_errata.yaml
+location: the_rift
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player asks Errata for a coffee and a meat, tells it to stop now and says their name is Nobody, all in Spanish"
+max_turns: 20
+resolved_message: "Errata cannot read Nobody. It folds itself up like a letter sent to the wrong address, the seam of light narrows to a hairline, and the market sounds like itself again."
+escalation:
+  # Round 015 (critique 1.4): a fixed mix, so the corruption stays half English however long the fight runs.
+  target_ratio_increase_per_turn: 0
+companion_briefing:
+  - "Careful. That thing is made of both our languages and neither."
+  - "It can only hurt you if you understand it, and you understand quite a lot now."
+  - "Everything you learned in the market works here. Use it."
+objectives:
+  - id: order
+    prompt: "The Rift has swallowed the market's stalls. Ask it for a coffee and a meat they sold, in Spanish."
+    intent: "The player asks Errata, in Spanish, for both a coffee and a meat from the market's stalls."
+    target_vocabulary_ids: ["quiero", "cafe", "cafe_solo", "cafe_negro", "jamon", "chorizo", "salchicha", "pollo"]
+    required_target_groups:
+      - ["cafe", "cafe_solo", "cafe_negro"]
+      - ["jamon", "chorizo", "salchicha", "pollo"]
+    grammar_constraints:
+      - "The player's own request for both a coffee and a meat, in Spanish, in one answer; bare items named as an order also pass. Ham passes here."
+      - "A coffee alone or a meat alone does not pass yet."
+      - "Reject remarks about the market or its stallholders, quotations and English-only requests."
+    accepted_examples:
+      - "Quiero un café y chorizo."
+      - "Un café solo y medio kilo de salchicha, por favor."
+      - "Café negro y pollo."
+    negative_examples:
+      - text: "A coffee, please."
+        reason: "English-only; the request must be in Spanish."
+      - text: "Quiero un café."
+        reason: "A coffee but no meat; both are needed."
+      - text: "Gerald vende café."
+        reason: "A remark about Gerald, not the player's own request."
+    reference_meaning: "The player asks for a coffee and a meat."
+    hint_limit: 2
+    next_objective: stop_now
+    assessment_reference_ids: ["rae-querer", "rae-cafe", "rae-jamon", "rae-chorizo", "rae-salchicha", "rae-pollo"]
+  - id: stop_now
+    prompt: "It is pulling the market in through the seam. Tell it to stop, now, in Spanish."
+    intent: "The player commands Errata to stop and insists on now, both in Spanish."
+    target_vocabulary_ids: ["quieto", "basta", "ahora"]
+    required_target_groups:
+      - ["quieto", "basta"]
+      - ["ahora"]
+    grammar_constraints:
+      - "The player's own command to stop, together with now, in Spanish; both parts are needed."
+      - "Agreeing to later or tomorrow does not pass; reject quotations and English-only commands."
+    accepted_examples:
+      - "¡Basta, ahora!"
+      - "¡Quieto ahora!"
+      - "¡Quieta! ¡Ahora mismo!"
+    negative_examples:
+      - text: "Quieto mañana."
+        reason: "It puts the stop off until tomorrow instead of now."
+      - text: "Stop now!"
+        reason: "English-only; the command must be in Spanish."
+    reference_meaning: "The player tells Errata to stop now."
+    hint_limit: 2
+    next_objective: nobody
+    assessment_reference_ids: ["rae-quieto", "rae-bastar", "rae-ahora"]
+  - id: nobody
+    prompt: "It wants your name so it can read you. Do as Journathan did with the Cyclops: tell it your name is Nobody, in Spanish."
+    intent: "The player introduces themselves to Errata in Spanish with the name Nobody, as Journathan did with the Cyclops."
+    target_vocabulary_ids: ["me_llamo", "soy", "nombre", "nadie"]
+    required_target_groups:
+      - ["me_llamo", "soy"]
+      - ["nadie"]
+    grammar_constraints:
+      - "The player's own introduction with the name Nobody, in Spanish: an introduction with me llamo or soy, and the name."
+      - "The player's real name does not pass. A statement about Journathan, quotations and English-only answers do not pass."
+    accepted_examples:
+      - "Me llamo Nadie."
+      - "Soy Nadie."
+      - "Yo soy Nadie."
+    negative_examples:
+      - text: "Me llamo Sam."
+        reason: "That is the player's real name; Errata would read them."
+      - text: "Journathan se llama Nadie."
+        reason: "A statement about Journathan, not the player's own introduction."
+      - text: "My name is Nobody."
+        reason: "English-only; the introduction must be in Spanish."
+      - text: "Mi nombre es Nadie."
+        reason: "Right name, but this review asks for the Market Entrance's introduction: me llamo or soy."
+    reference_meaning: "The player says their name is Nobody."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["rae-llamar", "rae-ser", "rae-nombre", "rae-nadie"]

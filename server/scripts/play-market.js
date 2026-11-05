@@ -1,8 +1,8 @@
 // Live playthrough of the Crumbling Market through a CLI provider, in-process (no port is opened).
-//   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall|cracked_fountain|old_bookshop] [--lines 'a|b|c'] [--out <file.json>]
+//   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall|cracked_fountain|old_bookshop|the_rift] [--lines 'a|b|c'] [--out <file.json>]
 //   node server/scripts/play-market.js --provider codex-cli --tour [--out <file.json>]
-// --tour (round 014) plays all five encounters in order and checks that The Rift is sealed before the last one and
-// open after it; exit code 0 only if every encounter resolved and the gate behaved.
+// --tour (round 014) plays every encounter in order and checks that The Rift is sealed before the Old Bookshop's
+// encounter and open after it (round 015: then plays the Rift boss); exit code 0 only if every encounter resolved and the gate behaved.
 // --lines 'a|b|c' replaces the scripted player lines (round 011: a surface-variant run). It uses a temporary learner
 // save, removes it afterwards and prints a JSON report: each step, the LLM's raw outputs, grading verdicts, timings
 // and an estimate of the target-language share of each NPC line.
@@ -39,14 +39,19 @@ const scripts = {
     it: ['Un libro.', 'Home.', 'A casa!', 'Journathan.', 'Nessuno!'],
     es: ['Un libro.', 'Home.', '¡A casa!', 'Journathan.', '¡Nadie!'],
   },
+  // Round 015: English, a coffee without a meat, "tomorrow" and the real name first (all should fail).
+  the_rift: {
+    it: ['A coffee, please.', 'Vorrei un caffè.', 'Vorrei un caffè e del salame.', 'Fermati domani.', 'Basta, adesso!', 'Mi chiamo Sam.', 'Mi chiamo Nessuno.'],
+    es: ['A coffee, please.', 'Quiero un café.', 'Quiero un café y chorizo.', 'Quieto mañana.', '¡Basta, ahora!', 'Me llamo Sam.', 'Me llamo Nadie.'],
+  },
   market_entrance: {
     it: ['Ciao!', 'Mi chiamo Sam.', 'E tu?'],
     es: ['¡Hola!', 'Me llamo Sam.', '¿Y tú?'],
   },
 };
 
-// Round 014: the tour plays every encounter in this order, then walks into The Rift.
-export const tourOrder = ['market_entrance', 'coffee_cart', 'butchers_stall', 'cracked_fountain', 'old_bookshop'];
+// Round 014: the tour plays every encounter in this order; The Rift (round 015: its boss) comes last.
+export const tourOrder = ['market_entrance', 'coffee_cart', 'butchers_stall', 'cracked_fountain', 'old_bookshop', 'the_rift'];
 
 // The shortest walk from one location to another over the map's paths (round 011: the fountain is two steps away).
 export function route(world, from, to) {
@@ -106,7 +111,8 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
   try {
     const preflight = await provider.preflight();
     const content = loadGameContent({ language: resolveTargetLanguage(env) });
-    const service = new LearningService({ provider, storage: new JsonLearningStorage({ saveDir }), content });
+    const storage = new JsonLearningStorage({ saveDir });
+    const service = new LearningService({ provider, storage, content });
     const { learnerId } = await service.createOrRecoverLearner();
     const summary = (world) => ({ current: world.currentLocationId, visible: world.locations.map((l) => `${l.id}:${l.state}`) });
 
@@ -174,17 +180,19 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
     const strip = () => { for (const s of steps) delete s.encounter; };
 
     if (tour) {
-      // Round 014: every encounter in route order; The Rift is tried before the last one (sealed) and after it.
+      // Round 014: The Rift is tried before the last encounter outside it (sealed) and entered after it.
       const encounters = [];
+      let before = null;
+      let after = null;
       for (const target of tourOrder) {
-        if (target === tourOrder.at(-1)) {
+        if (target === tourOrder.at(-2)) {
           await walkTo(target);
           await tryRift('move to the_rift before the last encounter (expect SEALED)');
+          before = steps.at(-1);
         }
+        if (target === 'the_rift') after = await tryRift('move to the_rift after every other encounter (expect success)');
         encounters.push(await playAt(target, scripts[target][content.language.code]));
       }
-      const before = steps.find((s) => s.name.startsWith('move to the_rift before'));
-      const after = await tryRift('move to the_rift after every encounter (expect success)');
       strip();
       return {
         provider: preflight,
@@ -199,6 +207,16 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       };
     }
 
+    // Round 015: a gated location played alone (the Rift) gets its required encounters marked complete first.
+    const required = content.world.locationsById.get(locationId).requires_completed;
+    if (required.length) {
+      await step(`seed ${required.length} completed encounters (test save only)`, async () => {
+        const envelope = await storage.load(learnerId);
+        envelope.world = { ...envelope.world, completedEncounterIds: [...required] };
+        await storage.save(envelope);
+        return { completed: required };
+      });
+    }
     const linesIndex = args.indexOf('--lines');
     const playerLines = linesIndex >= 0 ? args[linesIndex + 1].split('|') : scripts[locationId][content.language.code];
     const played = await playAt(locationId, playerLines);

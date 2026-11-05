@@ -63,8 +63,11 @@ async function fixtureContent(t, extra = async () => {}) {
   await writeYaml(join(dir, 'languages/es/vocabulary/fixture_meat.yaml'), vocabulary);
   await writeYaml(join(dir, 'languages/es/encounters/fixture_butcher.yaml'), encounter);
   await editYaml(join(dir, 'world/locations/butchers_stall.yaml'), (location) => { location.encounter = 'fixture_butcher'; });
-  // Round 014: the Rift's gate names the replaced encounter.
+  // Round 014: the Rift's gate names the replaced encounter. Round 015: the Rift boss reviews the removed meats, so
+  // the fixture pack leaves it out.
+  await rm(join(dir, 'languages/es/encounters/the_rift_errata.yaml'));
   await editYaml(join(dir, 'world/locations/the_rift.yaml'), (location) => {
+    location.encounter = null;
     location.requires_completed = location.requires_completed.map((id) => (id === 'butchers_stall_charcutier' ? 'fixture_butcher' : id));
   });
   await extra(dir);
@@ -117,10 +120,10 @@ test("Gerald's narration prompts match the round 012 fixture and carry the style
   }
 });
 
-test('the real packs hold Gerald (the default), the tutorial, the butcher, the fountain and the bookshop, with per-file vocabulary versions', () => {
+test('the real packs hold Gerald (the default), the tutorial, the butcher, the fountain, the bookshop and the Rift, with per-file vocabulary versions', () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
-    assert.deepEqual([...c.encounters.keys()].sort(), ['butchers_stall_charcutier', 'cracked_fountain_letharger', 'imp_coffee_greeting', 'market_entrance_tutorial', 'old_bookshop_bookworm']);
+    assert.deepEqual([...c.encounters.keys()].sort(), ['butchers_stall_charcutier', 'cracked_fountain_letharger', 'imp_coffee_greeting', 'market_entrance_tutorial', 'old_bookshop_bookworm', 'the_rift_errata']);
     assert.equal(c.defaultEncounterId, 'imp_coffee_greeting');
     assert.equal(c.encounter, c.encounters.get('imp_coffee_greeting').encounter);
     assert.equal(c.vocabulary.version, `bookshop-journey-${code}-v1+butcher-meats-${code}-v1+entrance-greetings-${code}-v1+fountain-riddles-${code}-v1+${c.entryVersion(c.encounter.objectives[0].target_vocabulary_ids[0])}`);

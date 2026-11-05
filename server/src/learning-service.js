@@ -8,7 +8,7 @@ import {
 import { assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
-import { applyMove, currentLocationId, worldSnapshot } from './world.js';
+import { applyMove, currentLocationId, gateFor, sealedMessage, worldSnapshot } from './world.js';
 
 function clone(value) { return structuredClone(value); }
 function payloadHash(value) { return createHash('sha256').update(JSON.stringify(value)).digest('hex'); }
@@ -212,6 +212,9 @@ export class LearningService {
       if (encounterId !== null && currentLocationId(this.content.world, envelope.world) !== definition.encounter.location) {
         throw conflictError(`${definition.character.name} is not here. Walk to ${this.locationName(definition)} first.`, 'NOT_HERE');
       }
+      // Round 015: a save from rounds 005–013 may already stand in the Rift; its encounter still waits for the gate.
+      const gate = gateFor(this.content.world.locationsById.get(definition.encounter.location), envelope.world);
+      if (gate?.sealed) throw conflictError(sealedMessage(this.locationName(definition), gate), 'SEALED');
       const active = this.encounters.get(learnerId);
       if (!restart && active && this.definition(active) === definition) {
         return { encounter: this.serializeEncounter(active), spellbook: this.spellbookSnapshot(envelope) };

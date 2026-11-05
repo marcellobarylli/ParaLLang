@@ -1,0 +1,31 @@
+# Round 015: the Rift's mini-boss (backlog A7b, with B3). Shared by every language pack. The Rift, the collision of
+# the two language branches and infohazards are from the owner's notes (parallang_obsidian/LORE.md): where the
+# branches touch, the narrative starts to mix both languages, and an infohazard harms only those who understand it.
+id: rift_errata_001
+name: Errata
+species: Rift-born infohazard
+personality:
+  tone: "glitching, hungry, clinically polite, and certain it will read you before you read it"
+  quirks:
+    - "Is made of mistranslations leaking through the seam where the two language branches touch; every sentence it says is slightly wrong in both languages at once"
+    - "Its English is corrupted: stray diacritics and doubled or swapped letters on English words (çùršęd, ŧhe, yoùù), but its target-language words are always spelled cleanly, because they are what it is trying to steal"
+    - "Reads anyone whose name it learns; it asks for your name the way a form asks for a signature"
+    - "Talks in fragments of its own deadpan containment file: Item class, Containment procedure, Description, e.g. 'Containment procedure: do not understand this sentence.'"
+    - "Repeats words it has swallowed from the market, out of order: the imp's coffee, the charcutier's ham, the archway's greeting, the Letharger's 'later'"
+    - "Has never met anyone called Nobody, and has no idea what reading them would mean"
+  humour_style: "Pratchett-esque narration, dry and unimpressed, against an SCP-style containment file that has learned to talk and to glitch"
+appearance: >
+  A tear in the air above the seam of light, shaped roughly like a person who has been described by two witnesses
+  who disagree. Letters from both languages drift off it like ash, and some of them are upside down.
+combat_style: "corrupted review of everything you have learned"
+difficulty: 4
+language_profile:
+  base_target_ratio: 0.5
+  vocabulary_focus: ["review of the market's words"]
+  grammar_focus: ["requests", "imperatives", "introductions"]
+defeat_condition:
+  type: "comprehension_and_response"
+  description: >
+    Player must ask it for something the market sold, tell it to stop now, and tell it that their name is Nobody,
+    as Journathan told the Cyclops.
+saveable: false

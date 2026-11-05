@@ -27,6 +27,8 @@ export function gateFor(location, progress) {
   return { sealed: completed < required.length, required: required.length, completed };
 }
 
+export const sealedMessage = (name, gate) => `${name} is sealed. Finish the other encounters first (${gate.completed} of ${gate.required} done).`;
+
 export function worldSnapshot(world, progress, encounters = new Map()) {
   const current = currentLocationId(world, progress);
   const visited = visitedSet(world, progress);
@@ -78,7 +80,7 @@ export function applyMove(world, progress, locationId) {
   const target = world.locationsById.get(locationId);
   const gate = gateFor(target, progress);
   if (gate?.sealed) {
-    throw conflictError(`${target.name} is sealed. Finish the other encounters first (${gate.completed} of ${gate.required} done).`, 'SEALED');
+    throw conflictError(sealedMessage(target.name, gate), 'SEALED');
   }
   const visited = [...visitedSet(world, progress)];
   if (!visited.includes(locationId)) visited.push(locationId);
