@@ -120,3 +120,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 034 | Critique 1: 6 of 8 accepted, 1.6 and 1.7 in part | — | See round 034 Second opinion table | Yes |
 | 2026-11-05 | 035 | Transitions (C3b): 200 ms fade with a 6 pt rise for new dialogue lines, assessments, the victory banner and screen changes; no fade at all under Reduce Motion; no stagger; critique by a Claude subagent | Opacity-only fade under Reduce Motion; staggered lines; animated map movement | Most conservative reading of Reduce Motion; smallest testable change | Yes |
 | 2026-11-05 | 035 | Critique 1: 6 of 8 accepted, 1.5 and 1.6 in part | — | See round 035 Second opinion table | Yes |
+| 2026-11-05 | 036 | Spellbook fragments show "Told by X" / "Found at Y" (also during encounters), file order kept; critique by a Claude subagent | Grouping by member or place; hiding the line during encounters | Seven items; the line names no answer | Yes |
+| 2026-11-05 | 036 | Critique 1: 3 findings accepted, 4 checks noted | — | See round 036 Second opinion table | Yes |
