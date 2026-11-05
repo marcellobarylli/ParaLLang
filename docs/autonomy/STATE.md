@@ -7,10 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 12 ended with every round closed (026, 041–046). **Next:** backlog G4 (relationship tiers
-that change a party conversation, live runs) or G5 (telling the time at the Fountain, content plus live runs); A10
-(LLM location atmosphere) is optional. Codex served about 175 calls between 20:36 and 21:01 UTC without hitting its
-limit; pace a new window the same way (single-location runs before tours, no parallel live runs).
+Nothing open. Iteration 13 closed round 047 (G4, relationship tiers; Gerald's confidence at 3, it/es live).
+**Next:** G6 (deeper tiers for Mortimer, Flick, Marginalia: content plus `--party --member X --tier 3` runs) or G5
+(telling the time at the Fountain); A10 (LLM location atmosphere) is optional. Codex served a critique and 48 game
+calls between 21:10 and 21:22 UTC without hitting its limit.
 
 ## Backlog
 
@@ -112,9 +112,13 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `replay-leaks.mjs`-style scan over authored content and live reports. No live calls needed for the content part.
 - [x] **G3. Unordered objectives** (round 045, closed 2026-11-05: `objectives_unordered`, Mortimer's tasting; live it/es passed) (round 023): an encounter may mark objectives as completable in any order; engine
   and tests first (no live), then one live run.
-- [ ] **G4. Relationship tiers that change the conversation** (rounds 032–033): a deeper party conversation after N
-  conversations; needs live runs.
+- [x] **G4. Relationship tiers that change the conversation** (round 047, closed 2026-11-05: `after_conversations` on
+  party conversations, Gerald's confidence at 3, it/es live). Open: deeper tiers for Mortimer, Flick, Marginalia
+  (content only, backlog G6).
 - [ ] **G5. Telling the time at the Fountain** (round 011 deferred it); content plus live runs.
+- [ ] **G6. Deeper tiers for the other members** (round 047 built the engine): one `after_conversations: 3`
+  conversation each for Mortimer, Flick and Marginalia (it, es), content only, then `--party --member X --tier 3`
+  live runs. Check stems against every fragment (`lore-fragments.test.js`) and overlaps first.
 
 ### F. Maintenance
 
@@ -145,6 +149,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- Round 047: review Gerald's confidence (it, es), whether the deeper tier should repeat or alternate, and check the
+  Party card's tier line in the Simulator ([open items](../rounds/047/findings.md#open-items)).
 
 - Round 032: review Gerald's Dead Branch fragment (it, es) and the threshold of three coffee breaks; check the "from
   Gerald" note in the Simulator ([open items](../rounds/032/findings.md#open-items)).
@@ -306,6 +313,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   with live runs; round 046 (a `folded` share estimate, Codex critique) closed without live calls. Server 177/177,
   mobile 120/120, web 12/12, expo-doctor 20/20. Seeded backlog G. About 177 Codex calls after the reset, no limit.
 
+- 2026-11-05, iteration 13 (21:08–21:25 UTC): round 047 (G4, relationship tiers) planned, critiqued by Codex (8
+  findings, 2 Errors accepted), built, run live (2 × it, 2 × es; Amendment 1 put the tier's opening in the
+  greeting) and closed. Server 181/181, mobile 124/124, web 12/12, expo-doctor 20/20.
+
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
   - 033 (A12b): Journey fragments for Mortimer, Flick and Marginalia; a wider stem check.
@@ -320,6 +331,15 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   subagent: no serious bugs), mobile 95/95, client 12/12, expo-doctor 20/20. Iteration 11 ended at 20:01 UTC.
 
 ## Handoff notes and traps
+
+- **Relationship tiers** (round 047): a party conversation with `after_conversations: N` is offered once the member
+  has N finished conversations (`partyConversationFor(home, count)`, deepest wins, any file order). One first tier
+  per home (loader). `partySnapshot` gives `conversationId` and `conversationTier`; an unresolved party session of
+  that member wins the offer. Members are matched by home (`isHomeMember`) for start, `NOT_YET` and counting.
+  `play-market.js --party [--member X] --tier N` writes count N into the save and plays the offered tier. A new
+  party vocabulary file changes the pinned party entry count (11 now) and the stems list in `lore-fragments.test.js`.
+  **A tier's opening must be in the greeting** (Amendment 1): say "in his greeting he does not introduce himself"
+  in the first objective's intent, or the NPC greets the player as a stranger.
 
 - **Share estimates** (round 046): `languageShare` returns `folded` (trust it over `notInTranslation`; null means the
   translation is a gloss: hand-count) and `translationShort`. `docs/rounds/046/results/evaluate.mjs` scores both

@@ -116,3 +116,9 @@ in turn 2. `prompts/encounter/greeting.txt` asks for a concise greeting and wins
 introduce himself or describe the place, and that he mentions the Dead Branch drink there. The change is content
 only. Both live runs are repeated with the same bar, plus one more: the greeting is not a first meeting and names
 the dead word or drink. Autonomous decision, pending owner review.
+
+## Outcome (2026-11-05)
+
+Built as designed, with Amendment 1. Live in both languages, after three conversations Talk's tier (Gerald's
+confidence) resolved with every verdict as scripted. After Amendment 1, both openings greet an old companion and
+name the Dead Branch drink. Server 181/181, mobile 124/124, web 12/12, expo-doctor 20/20. See [findings](findings.md).

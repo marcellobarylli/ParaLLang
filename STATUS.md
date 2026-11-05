@@ -33,6 +33,16 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 047, a deeper conversation after three coffee breaks (autonomous)
+
+Party conversations can now have tiers. A conversation with `after_conversations: N` is offered once the member has
+finished N conversations, and the deepest unlocked tier is what Talk starts. Gerald's confidence is the first: after
+three coffee breaks, the player tells him he is a friend and makes the toast (it *amico*, *cin cin*; es *amigo*,
+*salud*). The Party card says that a deeper conversation is waiting. Live, both languages resolved as scripted.
+Amendment 1 moved the Dead Branch opening into the greeting: before it, Gerald greeted the player as a stranger.
+Critiqued by Codex (8 findings: 6 accepted, 1 in part, 1 rejected). Server 181/181, mobile 124/124
+([open items](docs/rounds/047/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 046, a share estimate for glitched lines (autonomous)
 
 `languageShare` (play-market) now also reports `folded`, which folds glitch letters on both sides before comparing.

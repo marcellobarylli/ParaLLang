@@ -1,0 +1,490 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "party": true,
+  "conversationId": "gerald_confidence",
+  "tierCount": 3,
+  "recruited": true,
+  "resolved": true,
+  "completedOnMap": true,
+  "conversationOffMap": true,
+  "conversations": 4,
+  "generationCalls": 12,
+  "home": {
+    "location": "coffee_cart",
+    "sceneLocation": "coffee_cart",
+    "encounterId": "imp_coffee_greeting",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": true,
+    "generationCalls": 5,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.25,
+        "native": "Hola. Soy Gerald. ¿Qué quieres? This cart earns five espresso shots. Milk remains a war crime.",
+        "translation": "Hello. I’m Gerald. What would you like? This cart earns five espresso shots. Milk remains a war crime.",
+        "narrative": "Beneath the Crumbling Market’s cracked arches, an imp polishes a cup with the severity usually reserved for sentencing.",
+        "share": {
+          "tokens": 16,
+          "notInTranslation": 0.25,
+          "folded": 0.25,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 9491
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.3,
+        "native": "Un café, entendido. Your request earns four espresso shots. ¿Cómo lo quieres? Your milk preference remains unspecified. A troubling omission.",
+        "translation": "A coffee, understood. Your request earns four espresso shots. How do you want it? Your milk preference remains unspecified. A troubling omission.",
+        "narrative": "Gerald records the coffee request. The milk column remains blank, a bureaucratic emergency with a handle.",
+        "share": {
+          "tokens": 20,
+          "notInTranslation": 0.3,
+          "folded": 0.3,
+          "translationShort": false,
+          "canonical": 0.05
+        },
+        "durationMs": 10145
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.35,
+        "native": "¡Muy bien! Sin leche, perfecto. Aquí tienes tu café. Five espresso shots for your answer. No notes. The milk tribunal is adjourned.",
+        "translation": "Very good! Without milk, perfect. Here is your coffee. Five espresso shots for your answer. No notes. The milk tribunal is adjourned.",
+        "narrative": "Gerald pours the coffee. The milk jug remains untouched, its criminal ambitions thwarted.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.41,
+          "folded": 0.41,
+          "translationShort": false,
+          "canonical": 0.14
+        },
+        "durationMs": 5799
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 5188,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "order_coffee",
+              "passed": true,
+              "feedback": "You clearly requested coffee for yourself.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "quiero",
+                  "evidence": "Quiero",
+                  "quality": 5
+                },
+                {
+                  "vocabulary_id": "cafe",
+                  "evidence": "café",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "no_milk",
+              "passed": false,
+              "feedback": "Specify in Spanish that your coffee is without milk or black.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your coffee request is clear. Add a Spanish expression specifying no milk or black coffee."
+        }
+      },
+      {
+        "durationMs": 4766,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "no_milk",
+              "passed": true,
+              "feedback": "You clearly ordered your coffee without milk.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "sin_leche",
+                  "evidence": "Sin leche",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct—you clearly specified your milk preference in Spanish."
+        }
+      }
+    ]
+  },
+  "conversation": {
+    "location": "market_entrance",
+    "sceneLocation": "market_entrance",
+    "encounterId": "gerald_confidence",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": false,
+    "generationCalls": 7,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.25,
+        "native": "Ah, otra vez tú. Another coffee break together. Five espresso shots for consistency.\nEra oscuro y amargo—the drink back home in the Dead Branch. Its name died with the place. Nadie recuerda su nombre. Not even me.",
+        "translation": "Ah, you again. Another coffee break together. Five espresso shots for consistency.\nIt was dark and bitter—the drink back home in the Dead Branch. Its name died with the place. Nobody remembers its name. Not even me.",
+        "narrative": "At the market entrance, Gerald cradles his attached espresso cup. For once, he lets a silence pass without reviewing it.",
+        "share": {
+          "tokens": 38,
+          "notInTranslation": 0.29,
+          "folded": 0.29,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 9397
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.3,
+        "native": "Bueno, eso es importante. Two espresso shots for the English; the sentiment is… not mid. Pero falta algo. Can you tell me what I am to you with some Spanish?",
+        "translation": "Well, that is important. Two espresso shots for the English; the sentiment is… not mid. But something is missing. Can you tell me what I am to you with some Spanish?",
+        "narrative": "Gerald examines his cup with unnecessary concentration. Apparently the sediment requires privacy.",
+        "share": {
+          "tokens": 30,
+          "notInTranslation": 0.23,
+          "folded": 0.23,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 8804
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.35,
+        "native": "Sí, somos amigos. Eso es importante. Five espresso shots; no notes. A toast for our friendship and the dead word. ¿Estás listo?",
+        "translation": "Yes, we are friends. That is important. Five espresso shots; no notes. A toast for our friendship and the dead word. Are you ready?",
+        "narrative": "Gerald lifts his surgically attached espresso cup toward yours, honoring both your friendship and the dead word. He waits for you to make the toast. Even sentiment apparently requires a chairperson.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.36,
+          "folded": 0.36,
+          "translationShort": false,
+          "canonical": 0.05
+        },
+        "durationMs": 11864
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.4,
+        "native": "¡Salud, amigo! Por nuestra amistad. Five espresso shots; no notes. El café está bien sin leche. Milk remains a war crime.",
+        "translation": "Cheers, friend! To our friendship. Five espresso shots; no notes. Coffee is fine without milk. Milk remains a war crime.",
+        "narrative": "Gerald raises his tiny cup with the solemnity normally reserved for treaties and correctly ground beans.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.52,
+          "folded": 0.52,
+          "translationShort": false,
+          "canonical": 0.1
+        },
+        "durationMs": 5242
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 6505,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "call_friend",
+              "passed": false,
+              "feedback": "You expressed friendship, but you need to use a Spanish word for friend when addressing Gerald.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "raise_toast",
+              "passed": false,
+              "feedback": "Make the toast using the Spanish word for cheers.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your meaning is clear in English. Use Spanish to express your friendship and make the toast."
+        }
+      },
+      {
+        "durationMs": 5181,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "call_friend",
+              "passed": true,
+              "feedback": "You correctly tell Gerald that the two of you are friends.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "amigo",
+                  "evidence": "Somos amigos, Gerald.",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "raise_toast",
+              "passed": false,
+              "feedback": "You still need to make a toast in Spanish.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "You expressed your friendship correctly. Now make a toast in Spanish."
+        }
+      },
+      {
+        "durationMs": 3975,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "raise_toast",
+              "passed": true,
+              "feedback": "You correctly made the toast in Spanish.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "salud",
+                  "evidence": "¡Salud!",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "A correct, natural Spanish toast!"
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to coffee_cart",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Gerald",
+      "ok": true
+    },
+    {
+      "name": "say \"Quiero un café, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order_coffee",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "quiero",
+              "evidence": "Quiero",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "cafe",
+              "evidence": "café",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "no_milk",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee request is clear. Add a Spanish expression specifying no milk or black coffee."
+    },
+    {
+      "name": "say \"Sin leche, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "no_milk",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "sin_leche",
+              "evidence": "Sin leche",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you clearly specified your milk preference in Spanish."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "imp_coffee_greeting",
+        "completed": true,
+        "characterName": "Gerald",
+        "characterId": "imp_coffee_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "recruit imp_coffee_greeting",
+      "ok": true,
+      "party": [
+        {
+          "characterId": "imp_coffee_001",
+          "name": "Gerald",
+          "encounterId": "imp_coffee_greeting",
+          "locationId": "coffee_cart",
+          "locationName": "The Coffee Cart",
+          "joinedAt": "2026-11-05T21:21:28.751Z",
+          "conversations": 0,
+          "conversationId": "gerald_coffee_break",
+          "conversationTier": 0,
+          "nextStoryAt": 3,
+          "storiesTold": 0
+        }
+      ],
+      "joined": true
+    },
+    {
+      "name": "move to market_entrance",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:visited",
+        "cracked_fountain:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "start Gerald",
+      "ok": true
+    },
+    {
+      "name": "say \"You are my friend.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "call_friend",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "raise_toast",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meaning is clear in English. Use Spanish to express your friendship and make the toast."
+    },
+    {
+      "name": "say \"Somos amigos, Gerald.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "call_friend",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "amigo",
+              "evidence": "Somos amigos, Gerald.",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "raise_toast",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "You expressed your friendship correctly. Now make a toast in Spanish."
+    },
+    {
+      "name": "say \"¡Salud!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "raise_toast",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "salud",
+              "evidence": "¡Salud!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "A correct, natural Spanish toast!"
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:visited",
+        "cracked_fountain:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": false,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    }
+  ]
+}
