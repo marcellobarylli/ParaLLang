@@ -1,0 +1,93 @@
+# Round 009: the Market Entrance tutorial (backlog A3). Portia the Archway asks for a greeting, the player's name
+# and her own name back (greetings, pronouns); the companion briefing introduces the mechanics.
+id: market_entrance_tutorial
+character: characters/enemies/archway_portia.yaml
+location: market_entrance
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player greets Portia, says who they are and asks her name back, in Italian"
+max_turns: 20
+resolved_message: "Portia sighs with relief, unlocks herself and lets you into the market."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+companion_briefing:
+  - "Portia only lets in people who greet her properly. Answer in Italian; mixing in English is fine while you learn."
+  - "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance."
+  - "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+objectives:
+  - id: greet
+    prompt: "Greet Portia in Italian."
+    intent: "The player greets Portia."
+    target_vocabulary_ids: ["ciao", "buongiorno"]
+    required_target_groups:
+      - ["ciao", "buongiorno"]
+    grammar_constraints:
+      - "Use an authored Italian greeting addressed to Portia as the player's own greeting."
+      - "An English-only greeting does not pass; reject quoted greetings and discussion of the word."
+    accepted_examples:
+      - "Ciao!"
+      - "Buongiorno, Portia."
+      - "Ciao, nice to meet you."
+    negative_examples:
+      - text: "Hello!"
+        reason: "English-only; it does not greet in Italian."
+      - text: "Portia said 'ciao'."
+        reason: "A quotation is not the player's own greeting."
+      - text: "Ciao means hello."
+        reason: "It discusses the word rather than greeting Portia."
+    reference_meaning: "The player says hello to Portia."
+    hint_limit: 2
+    next_objective: introduce
+    assessment_reference_ids: ["treccani-ciao", "treccani-buongiorno"]
+  - id: introduce
+    prompt: "Tell Portia who you are, in Italian."
+    intent: "The player tells Portia their own name or who they are."
+    target_vocabulary_ids: ["io", "sono", "mi_chiamo"]
+    required_target_groups:
+      - ["sono", "mi_chiamo"]
+    grammar_constraints:
+      - "Use a first-person statement of who the player is or what they are called (sono, io sono, mi chiamo); the name itself may be in any language."
+      - "Reject third-person, second-person, quoted or metalinguistic statements."
+    accepted_examples:
+      - "Io sono Sam."
+      - "Sono Alex."
+      - "Mi chiamo Robin."
+      - "Hi, mi chiamo Sam."
+    negative_examples:
+      - text: "I am Sam."
+        reason: "English-only; it does not use the Italian first person."
+      - text: "Lei è Sam."
+        reason: "It says who someone else is (she is), not the player."
+      - text: "The word sono means I am."
+        reason: "It discusses the word rather than saying who the player is."
+    reference_meaning: "The player introduces themself."
+    hint_limit: 2
+    next_objective: ask_back
+    assessment_reference_ids: ["treccani-io", "treccani-essere", "treccani-chiamare"]
+  - id: ask_back
+    prompt: "Ask Portia who she is in return, in Italian."
+    intent: "The player asks Portia her name or who she is."
+    target_vocabulary_ids: ["tu", "come_ti_chiami"]
+    required_target_groups:
+      - ["tu", "come_ti_chiami"]
+    grammar_constraints:
+      - "Ask Portia, addressed with the informal tu, who she is or what her name is (a short 'and you?' question with tu, or come ti chiami)."
+      - "Reject questions about someone or something else, quotations and discussion of the words."
+    accepted_examples:
+      - "E tu?"
+      - "Come ti chiami?"
+      - "And tu? Come ti chiami?"
+    negative_examples:
+      - text: "And you?"
+        reason: "English-only; it does not use the Italian you."
+      - text: "Tu is Italian for you."
+        reason: "It discusses the word rather than asking Portia."
+      - text: "Come si chiama il caffè?"
+        reason: "It asks the name of something else, not Portia's."
+    reference_meaning: "The player asks Portia's name in return."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["treccani-tu", "treccani-chiamare"]

@@ -80,7 +80,7 @@ test('a new learner starts at the Market Entrance and sees only its neighbours t
   const known = world.locations.find((l) => l.id === 'coffee_cart');
   assert.equal(known.description, undefined, 'known locations keep their description hidden');
   assert.equal(known.encounter, undefined);
-  assert.equal(world.locations.find((l) => l.id === 'market_entrance').encounter, null);
+  assert.deepEqual(world.locations.find((l) => l.id === 'market_entrance').encounter, { id: 'market_entrance_tutorial', completed: false, characterName: 'Portia' });
   assert.deepEqual(world.paths, [['market_entrance', 'coffee_cart'], ['market_entrance', 'butchers_stall']]);
 });
 
@@ -124,7 +124,7 @@ test('a version 1 save migrates with its Spellbook intact and unknown locations 
     spellbook: {
       words: {
         cafe: {
-          vocabularyId: 'cafe', contentVersion: runtime.content.vocabulary.version, discoveredAt: fixedNow.toISOString(),
+          vocabularyId: 'cafe', contentVersion: runtime.content.entryVersion('cafe'), discoveredAt: fixedNow.toISOString(),
           discoverySource: 'encounter_exposure', evidence: [],
           schedule: { ease: 2.5, repetitions: 0, intervalDays: 0, dueAt: fixedNow.toISOString(), lastQuality: null },
         },

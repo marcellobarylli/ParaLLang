@@ -1,0 +1,125 @@
+# Round 009: Market Entrance tutorial (greetings, pronouns). Reference URLs follow the Gerald file's patterns and were
+# not opened from the build container; listed for the owner's content review.
+version: entrance-greetings-it-v1
+references:
+  - id: treccani-ciao
+    title: "Treccani, Vocabolario: ciao"
+    url: "https://www.treccani.it/vocabolario/ciao/"
+  - id: treccani-buongiorno
+    title: "Treccani, Vocabolario: buongiorno"
+    url: "https://www.treccani.it/vocabolario/buongiorno/"
+  - id: treccani-io
+    title: "Treccani, Vocabolario: io"
+    url: "https://www.treccani.it/vocabolario/io/"
+  - id: treccani-essere
+    title: "Treccani, Vocabolario: essere"
+    url: "https://www.treccani.it/vocabolario/essere/"
+  - id: treccani-chiamare
+    title: "Treccani, Vocabolario: chiamare"
+    url: "https://www.treccani.it/vocabolario/chiamare/"
+  - id: treccani-tu
+    title: "Treccani, Vocabolario: tu"
+    url: "https://www.treccani.it/vocabolario/tu/"
+  - id: wiktionary-ciao
+    title: "Wiktionary: ciao (Italian)"
+    url: "https://en.wiktionary.org/wiki/ciao"
+  - id: wiktionary-buongiorno
+    title: "Wiktionary: buongiorno (Italian)"
+    url: "https://en.wiktionary.org/wiki/buongiorno"
+  - id: wiktionary-io
+    title: "Wiktionary: io (Italian)"
+    url: "https://en.wiktionary.org/wiki/io"
+  - id: wiktionary-sono
+    title: "Wiktionary: sono (Italian)"
+    url: "https://en.wiktionary.org/wiki/sono"
+  - id: wiktionary-chiamarsi
+    title: "Wiktionary: chiamarsi (Italian)"
+    url: "https://en.wiktionary.org/wiki/chiamarsi"
+  - id: wiktionary-tu
+    title: "Wiktionary: tu (Italian)"
+    url: "https://en.wiktionary.org/wiki/tu"
+entries:
+  - id: ciao
+    kind: word
+    target: "ciao"
+    part_of_speech: interjection
+    accepted_translations: ["hello", "hi", "bye", "goodbye"]
+    surface_variants: ["ciao"]
+    accent_insensitive: false
+    example:
+      target: "Ciao, Portia!"
+      english: "Hi, Portia!"
+    note: "Informal; used both on meeting and on leaving (Treccani)."
+    reference_ids: [treccani-ciao, wiktionary-ciao]
+  - id: buongiorno
+    kind: word
+    target: "buongiorno"
+    part_of_speech: interjection
+    accepted_translations: ["good morning", "good day", "hello"]
+    surface_variants: ["buongiorno", "buon giorno"]
+    accent_insensitive: false
+    example:
+      target: "Buongiorno, signora."
+      english: "Good morning, madam."
+    note: "A polite greeting for the morning and early afternoon; also written buon giorno."
+    reference_ids: [treccani-buongiorno, wiktionary-buongiorno]
+  - id: io
+    kind: word
+    target: "io"
+    part_of_speech: pronoun
+    accepted_translations: ["I"]
+    surface_variants: ["io"]
+    accent_insensitive: false
+    example:
+      target: "Io sono Sam."
+      english: "I am Sam."
+    note: "Often left out, because the verb already shows the person: sono alone means I am."
+    reference_ids: [treccani-io, wiktionary-io]
+  - id: sono
+    kind: word
+    target: "sono"
+    part_of_speech: verb
+    accepted_translations: ["I am", "I'm"]
+    surface_variants: ["sono"]
+    accent_insensitive: false
+    example:
+      target: "Sono Sam."
+      english: "I'm Sam."
+    note: "First person singular of essere; the same form also means they are (sono stanchi, they are tired)."
+    reference_ids: [treccani-essere, wiktionary-sono]
+  - id: mi_chiamo
+    kind: phrase
+    target: "mi chiamo"
+    part_of_speech: verb_phrase
+    accepted_translations: ["my name is", "I am called", "I'm called"]
+    surface_variants: ["mi chiamo"]
+    accent_insensitive: false
+    example:
+      target: "Mi chiamo Sam."
+      english: "My name is Sam."
+    note: "Literally I call myself, from chiamarsi."
+    reference_ids: [treccani-chiamare, wiktionary-chiamarsi]
+  - id: tu
+    kind: word
+    target: "tu"
+    part_of_speech: pronoun
+    accepted_translations: ["you"]
+    surface_variants: ["tu"]
+    accent_insensitive: false
+    example:
+      target: "E tu?"
+      english: "And you?"
+    note: "Informal you, for one person; the polite form is Lei."
+    reference_ids: [treccani-tu, wiktionary-tu]
+  - id: come_ti_chiami
+    kind: phrase
+    target: "come ti chiami"
+    part_of_speech: question
+    accepted_translations: ["what is your name", "what's your name", "what are you called"]
+    surface_variants: ["come ti chiami"]
+    accent_insensitive: false
+    example:
+      target: "Come ti chiami?"
+      english: "What's your name?"
+    note: "Informal; ti is the you of chiamarsi."
+    reference_ids: [treccani-chiamare, wiktionary-chiamarsi]

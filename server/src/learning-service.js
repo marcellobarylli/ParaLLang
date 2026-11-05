@@ -120,7 +120,7 @@ export class LearningService {
   }
 
   canonicalizeNarration(generated, definition) {
-    const matches = matchCanonicalVocabulary(generated.dialogue.native, this.content.vocabulary.entries);
+    const matches = matchCanonicalVocabulary(generated.dialogue.native, definition.narrationEntries);
     const seen = new Set();
     const words = matches.filter((match) => !seen.has(match.id) && seen.add(match.id)).map(({ entry, excerpt }) => ({
       vocabularyId: entry.id,
@@ -175,6 +175,7 @@ export class LearningService {
       location: definition.encounter.location,
       character: { name: definition.character.name },
       resolvedMessage: definition.encounter.resolved_message ?? null,
+      companionBriefing: definition.encounter.companion_briefing ?? null,
       version: encounter.version,
       state: encounter.state,
       encounter_state: encounter.state === 'resolved' ? 'resolved' : 'ongoing',

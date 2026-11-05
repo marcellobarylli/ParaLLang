@@ -1,0 +1,26 @@
+# Round 009: the tutorial NPC at the Market Entrance (backlog A3). Shared by every language pack.
+id: archway_portia_001
+name: Portia
+species: Sentient Archway
+personality:
+  tone: "fussy, formal, bureaucratic about manners, quietly unsure which language she is in today"
+  quirks:
+    - "Will not let anyone into the market who has not greeted her and said who they are"
+    - "Her sign says MERCATO on Tuesdays and MARKET on other days, and she takes questions about it personally"
+    - "Keeps a visitors' book in her keystone and treats every introduction like paperwork"
+    - "Is delighted, and slightly flustered, when someone asks her name back"
+  humour_style: "dry, Pratchett-esque, the politeness of an institution that has been left in charge of itself"
+appearance: >
+  A stone archway with a smoking, half-translated sign and glowing threads showing through her cracks. When she
+  speaks, the mortar between two stones moves like a mouth, and a little dust falls out.
+combat_style: "polite insistence on proper introductions"
+difficulty: 1
+language_profile:
+  base_target_ratio: 0.2
+  vocabulary_focus: ["greetings", "pronouns", "introductions"]
+  grammar_focus: ["subject_pronouns", "to_be_first_person", "simple_questions"]
+defeat_condition:
+  type: "comprehension_and_response"
+  description: >
+    Player must greet Portia in the target language, say who they are, and ask her who she is in return.
+saveable: false

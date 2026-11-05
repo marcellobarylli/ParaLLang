@@ -61,6 +61,8 @@ const encounterSchema = z.object({
   max_turns: z.number().int().positive(),
   escalation: z.object({ target_ratio_increase_per_turn: z.number().min(0) }).strict(),
   resolved_message: z.string().min(1).optional(),
+  // Round 009: static English lines in which the companion introduces the mechanics (the tutorial sets them).
+  companion_briefing: z.array(z.string().min(1)).min(1).max(4).optional(),
   objectives: z.array(objectiveSchema).min(1),
 }).strict();
 
@@ -145,7 +147,8 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     references: vocabularyFiles.flatMap((file) => file.references),
     entries: vocabularyFiles.flatMap((file) => file.entries),
   });
-  const versionById = new Map(vocabularyFiles.flatMap((file) => file.entries.map((entry) => [entry.id, file.version])));
+  const fileById = new Map(vocabularyFiles.flatMap((file) => file.entries.map((entry) => [entry.id, file])));
+  const versionById = new Map([...fileById].map(([id, file]) => [id, file.version]));
   unique(vocabulary.entries.map((entry) => entry.id), 'Vocabulary');
   unique(vocabulary.references.map((reference) => reference.id), 'Vocabulary references');
 
@@ -167,7 +170,11 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     if (encounters.has(encounter.id)) throw new Error(`Encounter id ${encounter.id} is declared twice`);
     const character = characterSchema.parse(parseYaml(contentDir, encounter.character));
     validateObjectives(encounter, vocabularyById, referenceIds);
-    encounters.set(encounter.id, Object.freeze({ encounter, character }));
+    // Round 009: narration is matched only against the vocabulary files this encounter's objectives draw on (whole
+    // files), so one encounter's words never appear as chips or Spellbook entries in another's lines.
+    const files = new Set(encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids.map((id) => fileById.get(id))));
+    const narrationEntries = Object.freeze(vocabularyFiles.filter((file) => files.has(file)).flatMap((file) => file.entries));
+    encounters.set(encounter.id, Object.freeze({ encounter, character, narrationEntries }));
   }
   const defaultDefinition = encounters.get(defaultEncounterId);
   if (!defaultDefinition) throw new Error(`content/${pack}/language.yaml names unknown default_encounter ${defaultEncounterId}`);

@@ -10,7 +10,8 @@ const content = loadGameContent({ language: 'es' });
 const entry = (id) => content.vocabularyById.get(id);
 
 test('real Gerald content is complete, referenced, and uses canonical objective IDs', () => {
-  assert.equal(content.vocabulary.version, 'gerald-coffee-v1');
+  assert.equal(content.entryVersion('cafe'), 'gerald-coffee-v1');
+  assert.equal(content.vocabulary.version, 'entrance-greetings-es-v1+gerald-coffee-v1');
   assert.deepEqual(content.encounter.objectives.map((objective) => objective.id), ['order_coffee', 'no_milk']);
   assert.equal(new Set(content.vocabulary.entries.map((item) => item.id)).size, content.vocabulary.entries.length);
   for (const objective of content.encounter.objectives) {

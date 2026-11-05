@@ -108,20 +108,20 @@ test("Gerald's narration prompts match the round 007 fixture and carry the style
   }
 });
 
-test('the real packs hold one encounter each, the default, with per-file vocabulary versions', () => {
+test('the real packs hold Gerald (the default) and the tutorial, with per-file vocabulary versions', () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
-    assert.deepEqual([...c.encounters.keys()], ['imp_coffee_greeting']);
+    assert.deepEqual([...c.encounters.keys()].sort(), ['imp_coffee_greeting', 'market_entrance_tutorial']);
     assert.equal(c.defaultEncounterId, 'imp_coffee_greeting');
     assert.equal(c.encounter, c.encounters.get('imp_coffee_greeting').encounter);
-    assert.equal(c.entryVersion(c.vocabulary.entries[0].id), c.vocabulary.version);
+    assert.equal(c.vocabulary.version, `entrance-greetings-${code}-v1+${c.entryVersion(c.encounter.objectives[0].target_vocabulary_ids[0])}`);
     assert.equal(c.language.default_encounter, undefined, 'the default encounter is not sent to clients');
   }
 });
 
 test('a second encounter defined only as content plays at its own location, independently of Gerald', async (t) => {
   const { service, provider, content, storage } = await runtime(t, await fixtureContent(t));
-  assert.equal(content.vocabulary.version, 'fixture-meat-es-v1+gerald-coffee-v1');
+  assert.equal(content.vocabulary.version, 'entrance-greetings-es-v1+fixture-meat-es-v1+gerald-coffee-v1');
   const { learnerId } = await service.createOrRecoverLearner();
 
   await assert.rejects(service.startEncounter(learnerId, { encounterId: 'fixture_butcher' }), { status: 409, code: 'NOT_HERE', message: /Bernard is not here\. Walk to The Butcher's Stall first\./ });

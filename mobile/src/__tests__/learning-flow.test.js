@@ -1,7 +1,8 @@
 // Ported from client/src/components/__tests__/learning-flow.test.jsx. Fixtures use round 003's field names
 // (target, canonicalTarget, language) and the Italian pack.
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { act, render, screen, userEvent } from '@testing-library/react-native';
+import { act, fireEvent, render, screen, userEvent } from '@testing-library/react-native';
+import { FlatList } from 'react-native';
 import App from '../../App.js';
 import DialoguePanel from '../components/DialoguePanel.js';
 import Spellbook from '../components/Spellbook.js';
@@ -174,6 +175,25 @@ test('loading plus empty and no-due states remain understandable', async () => {
   await render(<Spellbook spellbook={{ cards: [{ ...cards[0], due: false, nextReviewAt: '2026-01-16T12:00:00Z' }], dueCount: 0 }} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
   expect(screen.getByText(/Nothing is due/)).toBeOnTheScreen();
   expect(screen.queryByRole('button', { name: 'Review' })).not.toBeOnTheScreen();
+});
+
+test('the tutorial shows the companion briefing, Gerald does not, and the first screen does not auto-scroll', async () => {
+  const scroll = jest.spyOn(FlatList.prototype, 'scrollToEnd').mockImplementation(() => {});
+  const briefing = ['Portia only lets in people who greet her properly.', 'Tap a word under her line to see what it means.'];
+  const tutorial = { ...encounter(), encounterId: 'market_entrance_tutorial', location: 'market_entrance', character: { name: 'Portia' }, companionBriefing: briefing };
+  const view = await render(<DialoguePanel encounter={tutorial} language={language} isLoading={false} onHelp={() => {}} />);
+  expect(screen.getByLabelText('Your companion')).toBeOnTheScreen();
+  for (const line of briefing) expect(screen.getByText(line)).toBeOnTheScreen();
+  const list = screen.getByLabelText('Conversation with Portia');
+  fireEvent(list, 'contentSizeChange', 320, 900);
+  expect(scroll).not.toHaveBeenCalled();
+  await view.rerender(<DialoguePanel encounter={{ ...tutorial, transcript: [...tutorial.transcript, { id: 'player-1', role: 'player', text: 'Ciao!' }] }} language={language} isLoading={false} onHelp={() => {}} />);
+  fireEvent(screen.getByLabelText('Conversation with Portia'), 'contentSizeChange', 320, 1200);
+  expect(scroll).toHaveBeenCalled();
+  await view.unmount();
+  await render(<DialoguePanel encounter={{ ...encounter(), companionBriefing: null }} language={language} isLoading={false} onHelp={() => {}} />);
+  expect(screen.queryByLabelText('Your companion')).not.toBeOnTheScreen();
+  scroll.mockRestore();
 });
 
 test('CLI provider error is actionable, clears pending state, and retains input', async () => {

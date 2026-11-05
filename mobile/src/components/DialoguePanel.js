@@ -9,13 +9,19 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
   const resolved = encounter.state === 'resolved';
   const name = encounter.character?.name ?? 'Your opponent';
 
+  const briefing = encounter.companionBriefing?.length ? (
+    <View style={styles.companion} aria-label="Your companion">
+      <Text style={styles.strong}>Your companion</Text>
+      {encounter.companionBriefing.map((line) => <Text style={styles.body} key={line}>{line}</Text>)}
+    </View>
+  ) : null;
   const objective = (
-    <View style={styles.objective} aria-live="polite">
+    <>{briefing}<View style={styles.objective} aria-live="polite">
       {encounter.currentObjective
         ? <><Text style={styles.strong}>Current objective</Text><Text style={styles.body}>{encounter.currentObjective.prompt}</Text></>
         : <Text style={styles.strong}>Encounter complete</Text>}
       <Text style={styles.small}>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</Text>
-    </View>
+    </View></>
   );
   const footer = (
     <View style={styles.footer}>
@@ -38,7 +44,8 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       keyExtractor={(message) => message.id}
       ListHeaderComponent={objective}
       ListFooterComponent={footer}
-      onContentSizeChange={() => listRef.current?.scrollToEnd?.({ animated: true })}
+      // Round 009: the first screen (briefing, objective, opening line) stays at the top; later turns scroll down.
+      onContentSizeChange={() => { if (encounter.transcript.length > 1) listRef.current?.scrollToEnd?.({ animated: true }); }}
       keyboardShouldPersistTaps="handled"
       renderItem={({ item: message }) => message.role === 'npc' ? (
         <View style={styles.npc}>
@@ -56,6 +63,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
 const styles = StyleSheet.create({
   panel: { flex: 1 },
   content: { padding: 16, gap: 12 },
+  companion: { backgroundColor: colors.surface, borderColor: colors.accent, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   objective: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   npc: { backgroundColor: colors.surface, borderRadius: 12, padding: 12, gap: 6 },
   narrative: { color: colors.muted, fontStyle: 'italic', fontSize: 14 },

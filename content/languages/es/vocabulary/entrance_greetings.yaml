@@ -1,0 +1,109 @@
+# Round 009: Market Entrance tutorial (greetings, pronouns). Reference URLs follow the Gerald file's patterns and were
+# not opened from the build container; listed for the owner's content review.
+version: entrance-greetings-es-v1
+references:
+  - id: rae-hola
+    title: "Real Academia Española, Diccionario de la lengua española: hola"
+    url: "https://dle.rae.es/hola"
+  - id: rae-dia
+    title: "Real Academia Española, Diccionario de la lengua española: día"
+    url: "https://dle.rae.es/d%C3%ADa"
+  - id: rae-yo
+    title: "Real Academia Española, Diccionario de la lengua española: yo"
+    url: "https://dle.rae.es/yo"
+  - id: rae-ser
+    title: "Real Academia Española, Diccionario de la lengua española: ser"
+    url: "https://dle.rae.es/ser"
+  - id: rae-llamar
+    title: "Real Academia Española, Diccionario de la lengua española: llamar"
+    url: "https://dle.rae.es/llamar"
+  - id: rae-tu
+    title: "Real Academia Española, Diccionario de la lengua española: tú"
+    url: "https://dle.rae.es/t%C3%BA"
+  - id: cambridge-hola
+    title: "Cambridge Spanish–English Dictionary: hola"
+    url: "https://dictionary.cambridge.org/dictionary/spanish-english/hola"
+entries:
+  - id: hola
+    kind: word
+    target: "hola"
+    part_of_speech: interjection
+    accepted_translations: ["hello", "hi"]
+    surface_variants: ["hola"]
+    accent_insensitive: false
+    example:
+      target: "¡Hola, Portia!"
+      english: "Hi, Portia!"
+    reference_ids: [rae-hola, cambridge-hola]
+  - id: buenos_dias
+    kind: phrase
+    target: "buenos días"
+    part_of_speech: interjection
+    accepted_translations: ["good morning", "good day", "hello"]
+    surface_variants: ["buenos días", "buenos dias", "buen día", "buen dia"]
+    accent_insensitive: true
+    example:
+      target: "Buenos días, señora."
+      english: "Good morning, madam."
+    note: "A polite greeting until midday; buen día is common in parts of Latin America."
+    reference_ids: [rae-dia]
+  - id: yo
+    kind: word
+    target: "yo"
+    part_of_speech: pronoun
+    accepted_translations: ["I"]
+    surface_variants: ["yo"]
+    accent_insensitive: false
+    example:
+      target: "Yo soy Sam."
+      english: "I am Sam."
+    note: "Often left out, because the verb already shows the person: soy alone means I am."
+    reference_ids: [rae-yo]
+  - id: soy
+    kind: word
+    target: "soy"
+    part_of_speech: verb
+    accepted_translations: ["I am", "I'm"]
+    surface_variants: ["soy"]
+    accent_insensitive: false
+    example:
+      target: "Soy Sam."
+      english: "I'm Sam."
+    note: "First person singular of ser."
+    reference_ids: [rae-ser]
+  - id: me_llamo
+    kind: phrase
+    target: "me llamo"
+    part_of_speech: verb_phrase
+    accepted_translations: ["my name is", "I am called", "I'm called"]
+    surface_variants: ["me llamo"]
+    accent_insensitive: false
+    example:
+      target: "Me llamo Sam."
+      english: "My name is Sam."
+    note: "Literally I call myself, from llamarse."
+    reference_ids: [rae-llamar]
+  - id: y_tu
+    kind: phrase
+    target: "y tú"
+    part_of_speech: question
+    accepted_translations: ["and you", "what about you"]
+    surface_variants: ["y tú", "y tu"]
+    accent_insensitive: true
+    example:
+      target: "Me llamo Sam. ¿Y tú?"
+      english: "My name is Sam. And you?"
+    note: "Tú is informal you, for one person, written with an accent; without it, tu means your (tu café, your coffee)."
+    reference_ids: [rae-tu]
+  - id: como_te_llamas
+    kind: phrase
+    target: "cómo te llamas"
+    part_of_speech: question
+    accepted_translations: ["what is your name", "what's your name", "what are you called"]
+    surface_variants: ["cómo te llamas", "como te llamas"]
+    accent_insensitive: true
+    example:
+      target: "¿Cómo te llamas?"
+      english: "What's your name?"
+    note: "Informal; te is the you of llamarse."
+    reference_ids: [rae-llamar]
