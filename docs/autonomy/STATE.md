@@ -7,10 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 14 closed rounds 048 (G6, deeper tiers for Mortimer, Flick, Marginalia; it/es live) and 049
-(G7, other-target exposure in the leak scan; no content rule).
-**Next:** G5 (telling the time at the Fountain: content plus live runs). A10 (LLM location atmosphere) is optional.
-Codex served two critiques and about 150 game calls between 21:26 and 21:58 UTC without hitting its limit.
+Nothing open. Iteration 15 closed round 050 (G5, telling the time at the Fountain; it/es live, 48/48 verdicts, it tour
+resolved). **Next:** the backlog is empty except A10 (optional LLM location atmosphere) and D1 (blocked). Candidates
+seeded from round 050: H1 (grader feedback on an early pass in ordered encounters). Codex served one critique and
+about 166 game calls between 22:04 and 22:30 UTC without hitting its limit.
 
 ## Backlog
 
@@ -115,11 +115,22 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **G4. Relationship tiers that change the conversation** (round 047, closed 2026-11-05: `after_conversations` on
   party conversations, Gerald's confidence at 3, it/es live). Open: deeper tiers for Mortimer, Flick, Marginalia
   (content only, backlog G6).
-- [ ] **G5. Telling the time at the Fountain** (round 011 deferred it); content plus live runs.
+- [x] **G5. Telling the time at the Fountain** (round 050, closed 2026-11-05: objective `time` between direction and
+  now, four authored constructions per pack, no number lesson; 48/48 live verdicts, zero stated times).
 - [x] **G6. Deeper tiers for the other members** (round 048, closed 2026-11-05: Mortimer's oath, Flick's lotus,
   Marginalia's folded page at 3, it/es live, Amendment 1 for Marginalia's all-English line).
 - [x] **G7. Words from other conversations** (round 049, closed 2026-11-05: `foreign` hits in `leak-scan.js`;
   common but everyday words, no content rule; *sola* is in Marginalia's first-tier passage).
+
+### H. Follow-ups seeded in iteration 15 (round 050)
+
+- [ ] **H1. Early pass in an ordered encounter.** The grader's feedback says "You successfully insist on now" when a
+  later objective passes before an earlier one, but only the leading run of passes closes, so the player must say it
+  again. Fix in the grading template (say a later pass waits) or grade only the current objective in ordered
+  encounters; regenerate Gerald's pinned prompts on purpose; one live Fountain run per language.
+- [ ] **H2. Hours 1–12** (owner question in round 050): a numbers lesson (a party conversation or the Fountain) so
+  *sono le* / *son las* has numbers behind it. Mortimer teaches only *tre*/*cento* (it) and *dos*/*tres*/*cien* (es).
+  Watch English collisions (it *due*, es *once*).
 
 ### F. Maintenance
 
@@ -330,6 +341,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   12/12, expo-doctor 20/20. Then round 049 (G7, other-target exposure in the leak scan; Codex critique, 9 findings,
   4 Errors accepted; no live calls) closed: server 188/188.
 
+- 2026-11-05, iteration 15 (22:02–22:35 UTC): round 050 (G5, telling the time at the Fountain) planned, critiqued
+  by Codex (13 findings, 5 Errors accepted), built, run live (3 × it, 3 × es, matrix of pass and fail paths; plus an
+  it tour) and closed. Server 192/192, mobile 124/124, web 12/12. Seeded backlog H.
+
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
   - 033 (A12b): Journey fragments for Mortimer, Flick and Marginalia; a wider stem check.
@@ -344,6 +359,17 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   subagent: no serious bugs), mobile 95/95, client 12/12, expo-doctor 20/20. Iteration 11 ended at 20:01 UTC.
 
 ## Handoff notes and traps
+
+- **The Fountain has four objectives** (round 050): stop, direction, `time`, now (ordered; `now` stays last for the
+  jingle). A Fountain script needs eight lines now; `fountain.test.js`'s `FountainProvider` names the time entry
+  from `timeIds`. Time targets: it `sono_le`, `luna` (*è l'una*, straight and typographic apostrophes),
+  `mezzogiorno`, `mezzanotte`; es `son_las`, `es_la_una`, `mediodia`, `medianoche`; non-targets `che_ore_sono`,
+  `que_hora_es`. *tre* / *tres* are Mortimer's entries and also match in "Sono le tre". The leak scan flags *l'ora*
+  (hour) as the target *ora*: noise. `docs/rounds/050/results/measure.py` measures Fountain reports with closure
+  in order.
+- **Typographic apostrophes are not folded** by `matchCanonicalVocabulary` (round 050 critique 1.2): an iPhone types
+  `’`. A form with an apostrophe needs a `’` surface variant too (only *l'una* has one; the other apostrophe form is it
+  *ancora un po'* in `mortimer_party.yaml`, unchecked against `po’`).
 
 - **Other-target exposure** (round 049): `leak-scan.js` prints `foreign` rows (a party target of another
   conversation, exact whole forms; `amigo` marked `english`) apart from the four kinds, and the summary line ends

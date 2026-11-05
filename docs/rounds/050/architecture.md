@@ -116,3 +116,11 @@ text in `trail/critique-1.md`.
 
 Net change from plan-v1: four authored constructions instead of "any hour", typographic apostrophes, target-bearing
 negatives, zero leaks, a six-run matrix and two more tests.
+
+## Outcome (2026-11-05)
+
+Built as planned, with no amendment. One thing was found while building: Mortimer's quantities already teach *tre* /
+*tres*, which also match in time answers (tests updated). The six-run matrix gave 48/48 verdicts as planned, and no
+Flick line stated a time while `time` was open (Decisions 4–5 met). The optional Italian tour also ran: all
+resolved, 64 calls. Success criteria met; backlog G5 closed. Open: grader feedback calls an early "now" a success
+although it does not close, and the scan reads *l'ora* (hour) as the target *ora*. See [findings.md](findings.md).

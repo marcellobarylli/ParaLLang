@@ -1,0 +1,9 @@
+echo	docs/rounds/050/results/run1-es.json	cracked_fountain_letharger	line 5	[now:ahora (echo)]	¡Ahora, sí! No quieres esperar. Pero falta la hora. ¿Qué hora es? El reloj no funciona. Riddle me—what has hands but zero motivation? Ooh, smoke. Your urgency g
+leak	docs/rounds/050/results/run1-it.json	cracked_fountain_letharger	line 5	[now:adesso (echo), now:ora]	Adesso? Va bene! Ma che ore sono? Non hai detto l'ora! Urgency: ten out of ten. Clock information: missing. Dopo, dopo, domani!
+leak	docs/rounds/050/results/run1-it.json	cracked_fountain_letharger	line 6	[now:ora]	È l'una, sì! L'ora è giusta! Ma possiamo aspettare, vero? Clock skills: ten out of ten. What's the rush—ooh, sparks. Dopo, dopo, domani!
+foreign	docs/rounds/050/results/run2-it.json	cracked_fountain_letharger	line 7	[mortimer_tasting:mi piace, mortimer_tasting:ancora]	Domani? Sì, mi piace! Ma così aspettiamo ancora. Vuoi davvero aspettare? A riddle: what waits—ooh, dust. Dopo, dopo, domani!
+foreign	docs/rounds/050/results/run2-it.json	cracked_fountain_letharger	line 8	[flick_slow_walk:andiamo]	Adesso? Sì, hai ragione! Basta aspettare, andiamo! Un indovinello: che cosa corre senza—ooh, shiny. Your attention span: unfair. Dopo, dopo, domani!
+leak	docs/rounds/050/results/run3-it.json	cracked_fountain_letharger	line 5	[now:ora]	Quello è un piano! Non è l'ora. Che ore sono? You scheduled it; you haven't told me the current time. Riddle me—actually, save that thought. È troppo presto! Do
+== files: scanned 6 (of 6)
+== es: 3 reports, 3 scenes (0 inferred, 0 replay greetings, 0 skipped), 27 lines; leak 0, near 0, quoted 0, echo 1; foreign 0 (party conversations: 0 of 0 lines)
+== it: 3 reports, 3 scenes (0 inferred, 0 replay greetings, 0 skipped), 27 lines; leak 3, near 0, quoted 0, echo 0; foreign 2 (party conversations: 0 of 0 lines)

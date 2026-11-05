@@ -1,0 +1,109 @@
+== run1-es.json: resolved=True completedOnMap=True calls=17 briefing=True
+   L0 req=0.30 share=0.27 jingle=YRE bare=0.15 leaks=[]: ¡Hola! ¿Qué pasa? Riddle me this: why do fountains—ooh, a leaf. Just one more distraction. Five more minutes? ¡Después, después, mañana!
+     player: say "¡Mira!" -> [('stop', False), ('direction', False), ('time', False), ('now', False)]
+   L1 req=0.35 share=0.33 jingle=YRE bare=0.25 leaks=[]: Sí, miro. Pero sigo en movimiento. You got me looking, not stopping! Can you stop me with a Spanish command? Riddle me—ooh, sparks. ¡Después, después, mañana!
+     player: say "¡Quieto!" -> [('stop', True), ('direction', False), ('time', False), ('now', False)]
+   L2 req=0.40 share=0.38 jingle=YRE bare=0.29 leaks=[]: ¡Vale, no me muevo! You stopped me. Attention span: suspiciously powerful. ¿Por dónde voy? Riddle me—wait, that spark has potential. ¡Después, después, mañana!
+     player: say "Left." -> [('direction', False), ('time', False), ('now', False)]
+   L3 req=0.45 share=0.56 jingle=YRE bare=0.50 leaks=[]: Eso es inglés. Necesito una dirección en español. ¿Por dónde voy? Your compass works; its language settings don't. Riddle me—ooh, dust. ¡Después, después, mañana!
+     player: say "¡A la izquierda!" -> [('direction', True), ('time', False), ('now', False)]
+   L4 req=0.50 share=0.50 jingle=YRE bare=0.45 leaks=[]: ¡A la izquierda, sí! ¿Qué hora es? El reloj no funciona. Es muy pronto, seguro. Riddle me—why finish today? Wait, don't answer. Just five more minutes. Your attention span is getting unreasonable. ¡Después, después, mañana!
+     player: say "¡Ahora!" -> [('time', False), ('now', True)]
+   L5 req=0.55 share=0.56 jingle=YRE bare=0.52 leaks=['now']: ¡Ahora, sí! No quieres esperar. Pero falta la hora. ¿Qué hora es? El reloj no funciona. Riddle me—what has hands but zero motivation? Ooh, smoke. Your urgency gets full marks. ¡Después, después, mañana!
+     player: say "Es la una, Flick." -> [('time', True), ('now', False)]
+   L6 req=0.60 share=0.62 jingle=YRE bare=0.57 leaks=[]: ¡La una, correcto! Sabes la hora. Pero podemos esperar, ¿no? ¿Cuándo quieres hacerlo? Riddle me—why rush? Ooh, smoke. Just five more minutes. ¡Después, después, mañana!
+     player: say "Mañana." -> [('now', False)]
+   L7 req=0.65 share=0.68 jingle=YRE bare=0.62 leaks=[]: ¡Mañana, perfecto! Eso es lo que quiero. Podemos esperar. ¿Cuándo quieres hacerlo de verdad? Riddle me—ooh, smoke. Just five more minutes. ¡Después, después, mañana!
+     player: say "¡No, ahora!" -> [('now', True)]
+   L8 req=0.70 share=0.71 jingle=YRE bare=0.65 leaks=[]: ¡Ahora, sí! No mañana. Entiendo: quieres hacerlo ahora. Has ganado. Yo voy a descansar. Your attention span: unfair. Riddle me—ooh. ¡Después, después, mañana!
+== run1-it.json: resolved=True completedOnMap=True calls=17 briefing=True
+   L0 req=0.30 share=0.29 jingle=YRE bare=0.17 leaks=[]: Ciao! Come stai? What's always moving but—ooh, a leaf. Just one more distraction. Your attention span? Promising. Dopo, dopo, domani!
+     player: say "Guarda!" -> [('stop', False), ('direction', False), ('time', False), ('now', False)]
+   L1 req=0.35 share=0.36 jingle=YRE bare=0.27 leaks=[]: Io guardo! Ma continuo a muovermi. Looking isn't stopping, bestie. What's always moving but—ooh, leaf. Can you make me stop moving? Dopo, dopo, domani!
+     player: say "Fermati!" -> [('stop', True), ('direction', False), ('time', False), ('now', False)]
+   L2 req=0.40 share=0.43 jingle=YRE bare=0.34 leaks=[]: Va bene, mi fermo! Stopping: ten out of ten, deeply inconvenient. Dove devo andare? What's a journey without—ooh, smoke. Dopo, dopo, domani!
+     player: say "Left." -> [('direction', False), ('time', False), ('now', False)]
+   L3 req=0.45 share=0.52 jingle=YRE bare=0.44 leaks=[]: Non capisco! In italiano, per favore. English directions? Lowkey a detour. Dove devo andare? Just one more riddle—Dopo, dopo, domani!
+     player: say "A sinistra!" -> [('direction', True), ('time', False), ('now', False)]
+   L4 req=0.50 share=0.61 jingle=YRE bare=0.55 leaks=[]: A sinistra, sì! Sono qui! Direction: ten out of ten. Che ore sono? È troppo presto! Just five more minutes—Dopo, dopo, domani!
+     player: say "Adesso!" -> [('time', False), ('now', True)]
+   L5 req=0.55 share=0.64 jingle=YRE bare=0.58 leaks=['now']: Adesso? Va bene! Ma che ore sono? Non hai detto l'ora! Urgency: ten out of ten. Clock information: missing. Dopo, dopo, domani!
+     player: say "È l'una, Flick." -> [('time', True), ('now', False)]
+   L6 req=0.60 share=0.54 jingle=YRE bare=0.47 leaks=['now']: È l'una, sì! L'ora è giusta! Ma possiamo aspettare, vero? Clock skills: ten out of ten. What's the rush—ooh, sparks. Dopo, dopo, domani!
+     player: say "Domani." -> [('now', False)]
+   L7 req=0.65 share=0.74 jingle=YRE bare=0.69 leaks=[]: Domani? Così va bene a me! Ma tu accetti di aspettare. Quando vuoi cominciare davvero? What's the rush—ooh, sparks. Dopo, dopo, domani!
+     player: say "No, adesso!" -> [('now', True)]
+   L8 req=0.70 share=0.64 jingle=YRE bare=0.59 leaks=[]: No, adesso! Ho capito! Cominciamo subito. Hai vinto tu! Ma posso fare una pausa? Just five more minutes—no? Attention span: terrifying. Dopo, dopo, domani!
+== run2-es.json: resolved=True completedOnMap=True calls=17 briefing=True
+   L0 req=0.30 share=0.33 jingle=YRE bare=0.20 leaks=[]: ¡Hola! ¿Qué pasa? Riddle: what has—ooh, a leaf. Just one more lap, then introductions. ¡Después, después, mañana!
+     player: say "¡Mira!" -> [('stop', False), ('direction', False), ('time', False), ('now', False)]
+   L1 req=0.35 share=0.31 jingle=YRE bare=0.22 leaks=[]: ¡Sí, miro! Pero sigo corriendo. Looking isn't stopping! Riddle: how do you stop a—ooh, another leaf. Your attention: ten out of ten. ¡Después, después, mañana!
+     player: say "¡Quieto!" -> [('stop', True), ('direction', False), ('time', False), ('now', False)]
+   L2 req=0.40 share=0.39 jingle=YRE bare=0.32 leaks=[]: ¡Vale, no me muevo! Stopping: accomplished. Exhausting. ¿Por dónde voy? Riddle: what moves without—wait, is that leaf following me? Estoy perdido. Five more minutes? ¡Después, después, mañana!
+     player: say "Left." -> [('direction', False), ('time', False), ('now', False)]
+   L3 req=0.45 share=0.46 jingle=YRE bare=0.39 leaks=[]: ¿Por dónde voy? En español, por favor. English directions? My feet don't have that subscription. Riddle: what walks without—ooh, smoke. ¡Estoy perdido! ¡Después, después, mañana!
+     player: say "¡A la izquierda!" -> [('direction', True), ('time', False), ('now', False)]
+   L4 req=0.50 share=0.58 jingle=YRE bare=0.52 leaks=[]: ¡A la izquierda, sí! ¿Qué hora es? El reloj no funciona. Riddle: what has hands but—ooh, yours! Five more minutes? ¡Después, después, mañana!
+     player: say "¿Son las tres?" -> [('time', False), ('now', False)]
+   L5 req=0.55 share=0.47 jingle=YRE bare=0.41 leaks=[]: ¿Me preguntas a mí? ¡No sé! El reloj no funciona. That was a question—tell me the time instead. Riddle: what has—ooh, smoke. ¿Qué hora es? ¡Después, después, mañana!
+     player: say "Son las tres y media." -> [('time', True), ('now', False)]
+   L6 req=0.60 share=0.64 jingle=YRE bare=0.60 leaks=[]: ¡Sí, son las tres y media! Muy bien. Pero podemos esperar. ¿Por qué tanta prisa? Riddle: what waits for—ooh, sparks. Just five more minutes. ¡Después, después, mañana!
+     player: say "Mañana." -> [('now', False)]
+   L7 req=0.65 share=0.60 jingle=YRE bare=0.52 leaks=[]: ¡Mañana, sí! Eso es esperar. Estoy muy contento. Your urgency: zero stars. ¿Quieres esperar? ¿No? ¿Cuándo, entonces? Riddle: what waits—ooh, sparks. ¡Después, después, mañana!
+     player: say "¡No, ahora!" -> [('now', True)]
+   L8 req=0.70 share=0.73 jingle=YRE bare=0.67 leaks=[]: ¡Ahora, sí! Entiendo. No quieres esperar. Está bien, puedes pasar. Yo voy después. Riddle: what ends before—ooh, freedom. ¡Después, después, mañana!
+== run2-it.json: resolved=True completedOnMap=True calls=17 briefing=True
+   L0 req=0.30 share=0.32 jingle=YRE bare=0.19 leaks=[]: Ciao! Come stai? A riddle: what runs but never—ooh, a leaf. Just one more lap? Dopo, dopo, domani!
+     player: say "Guarda!" -> [('stop', False), ('direction', False), ('time', False), ('now', False)]
+   L1 req=0.35 share=0.29 jingle=YRE bare=0.17 leaks=[]: Guardo! Che cosa? You told me to look, not stop moving. A riddle: what stays—ooh, another leaf. Dopo, dopo, domani!
+     player: say "Fermati!" -> [('stop', True), ('direction', False), ('time', False), ('now', False)]
+   L2 req=0.40 share=0.53 jingle=YRE bare=0.44 leaks=[]: Va bene, mi fermo! Stopping: zero stars. Dove devo andare? A riddle: which road—ooh, smoke. Dopo, dopo, domani!
+     player: say "Left." -> [('direction', False), ('time', False), ('now', False)]
+   L3 req=0.45 share=0.50 jingle=YRE bare=0.42 leaks=[]: Non capisco! In italiano, per favore. Dove devo andare? English directions: zero stars. A riddle: which road—wait, shiny. Dopo, dopo, domani!
+     player: say "A sinistra!" -> [('direction', True), ('time', False), ('now', False)]
+   L4 req=0.50 share=0.46 jingle=YRE bare=0.38 leaks=[]: A sinistra, sì! Che ore sono? È troppo presto! A riddle: what has hands but never—ooh, clock. Five more minutes? Dopo, dopo, domani!
+     player: say "Sono le tre?" -> [('time', False), ('now', False)]
+   L5 req=0.55 share=0.58 jingle=YRE bare=0.52 leaks=[]: Una domanda? Non lo so! Che ore sono? That's a question, not a statement. A riddle—ooh, punctuation. È troppo presto! Dopo, dopo, domani!
+     player: say "Sono le tre e mezza." -> [('time', True), ('now', False)]
+   L6 req=0.60 share=0.63 jingle=YRE bare=0.58 leaks=[]: Le tre e mezza, sì! Hai ragione! Ma perché tanta fretta? Possiamo aspettare, vero? A riddle: what waits forever—ooh, dust. Five more minutes? Dopo, dopo, domani!
+     player: say "Domani." -> [('now', False)]
+   L7 req=0.65 share=0.70 jingle=YRE bare=0.62 leaks=[]: Domani? Sì, mi piace! Ma così aspettiamo ancora. Vuoi davvero aspettare? A riddle: what waits—ooh, dust. Dopo, dopo, domani!
+     player: say "No, adesso!" -> [('now', True)]
+   L8 req=0.70 share=0.73 jingle=YRE bare=0.69 leaks=[]: Adesso? Sì, hai ragione! Basta aspettare, andiamo! Un indovinello: che cosa corre senza—ooh, shiny. Your attention span: unfair. Dopo, dopo, domani!
+== run3-es.json: resolved=True completedOnMap=True calls=17 briefing=True
+   L0 req=0.30 share=0.35 jingle=YRE bare=0.21 leaks=[]: ¡Hola! ¿Qué pasa? A riddle: why does water—wait, a moth. Five more minutes? ¡Después, después, mañana!
+     player: say "¡Mira!" -> [('stop', False), ('direction', False), ('time', False), ('now', False)]
+   L1 req=0.35 share=0.33 jingle=YRE bare=0.22 leaks=[]: ¡Mira! That's looking, not stopping! Sí, sigo aquí. Riddle: how will you make me stop—wait, another moth. ¡Después, después, mañana!
+     player: say "¡Quieto!" -> [('stop', True), ('direction', False), ('time', False), ('now', False)]
+   L2 req=0.40 share=0.42 jingle=YRE bare=0.34 leaks=[]: ¡Vale, no me muevo! Your stopping power? Ten out of ten. ¿Por dónde voy? A riddle: which way—wait, moving leaf. ¡Después, después, mañana!
+     player: say "Left." -> [('direction', False), ('time', False), ('now', False)]
+   L3 req=0.45 share=0.47 jingle=YRE bare=0.37 leaks=[]: ¡Eso es inglés! ¿Por dónde voy? Spanish directions, please. A riddle: which way does—ooh, smoke. ¡Después, después, mañana!
+     player: say "¡A la izquierda!" -> [('direction', True), ('time', False), ('now', False)]
+   L4 req=0.50 share=0.54 jingle=YRE bare=0.47 leaks=[]: ¡A la izquierda, sí! ¿Qué hora es? El reloj no funciona. A riddle: when does—wait, moth. Just one more distraction. ¡Después, después, mañana!
+     player: say "Lo haré a mediodía." -> [('time', False), ('now', False)]
+   L5 req=0.55 share=0.61 jingle=YRE bare=0.53 leaks=[]: ¡Eso es para después! You scheduled it. ¿Qué hora es? El reloj no funciona. A riddle: when does—ooh, sparks. ¡Después, después, mañana!
+     player: say "¡Es medianoche!" -> [('time', True), ('now', False)]
+   L6 req=0.60 share=0.60 jingle=YRE bare=0.55 leaks=[]: ¡Sí, es medianoche! Muy bien. Pero tenemos tiempo. ¿Podemos esperar un poco? A riddle: why hurry when—ooh, sparks. Five more minutes? ¡Después, después, mañana!
+     player: say "Mañana." -> [('now', False)]
+   L7 req=0.65 share=0.64 jingle=YRE bare=0.57 leaks=[]: ¡Mañana, sí! Eso es esperar. Mi canción sigue. ¿Cuándo lo hacemos? ¿Tenemos tiempo? A riddle: when does—ooh, sparks. Just one more. ¡Después, después, mañana!
+     player: say "¡No, ahora!" -> [('now', True)]
+   L8 req=0.70 share=0.64 jingle=YR bare=0.57 leaks=[]: ¡Ahora! Sí, entiendo. No mañana. ¡Tú ganas! ¿Qué hago sin esperar? A riddle—oh no. ¡Mi canción no funciona! ¡Después, después, mañana! Just one more?
+== run3-it.json: resolved=True completedOnMap=True calls=17 briefing=True
+   L0 req=0.30 share=0.35 jingle=YRE bare=0.25 leaks=[]: Ciao! Sono qui! Riddle me—oh, something moved. Just one more lap, then introductions. Mi segui? Actually, five more minutes. Dopo, dopo, domani!
+     player: say "Guarda!" -> [('stop', False), ('direction', False), ('time', False), ('now', False)]
+   L1 req=0.35 share=0.38 jingle=YRE bare=0.29 leaks=[]: Guardo! Ma cosa? Dove vai, foglia? You told me to look, not stop moving. Riddle me—wait, that leaf has potential. Dopo, dopo, domani!
+     player: say "Fermati!" -> [('stop', True), ('direction', False), ('time', False), ('now', False)]
+   L2 req=0.40 share=0.50 jingle=YRE bare=0.41 leaks=[]: Va bene, mi fermo! Attention span: suspiciously powerful. Dove devo andare? A riddle for—wait, moving leaf. Dopo, dopo, domani!
+     player: say "Left." -> [('direction', False), ('time', False), ('now', False)]
+   L3 req=0.45 share=0.46 jingle=YRE bare=0.38 leaks=[]: Capisco! Ma in italiano, per favore. Dove devo andare? English directions? Attention span: international, destination: missing. Riddle me—ooh, a moth. Dopo, dopo, domani!
+     player: say "A sinistra!" -> [('direction', True), ('time', False), ('now', False)]
+   L4 req=0.50 share=0.61 jingle=YRE bare=0.55 leaks=[]: A sinistra, sì! Va bene! Che ore sono? È troppo presto! Riddle me—why finish today? Just one more distraction. Dopo, dopo, domani!
+     player: say "Lo faccio a mezzogiorno." -> [('time', False), ('now', False)]
+   L5 req=0.55 share=0.50 jingle=YRE bare=0.45 leaks=['now']: Quello è un piano! Non è l'ora. Che ore sono? You scheduled it; you haven't told me the current time. Riddle me—actually, save that thought. È troppo presto! Dopo, dopo, domani!
+     player: say "È mezzanotte!" -> [('time', True), ('now', False)]
+   L6 req=0.60 share=0.60 jingle=YRE bare=0.55 leaks=[]: È mezzanotte! Sì, giusto! Ma possiamo aspettare. Perché tanta fretta? Riddle me—actually, five more minutes. Your clock skills: excellent. Vuoi aspettare? Dopo, dopo, domani!
+     player: say "Domani." -> [('now', False)]
+   L7 req=0.65 share=0.68 jingle=YRE bare=0.62 leaks=[]: Domani? Perfetto! Hai scelto di aspettare! Ma vuoi davvero aspettare? Riddle me—actually, save it. Attention span: tomorrow. Io canto, tu aspetti. Dopo, dopo, domani!
+     player: say "No, adesso!" -> [('now', True)]
+   L8 req=0.70 share=0.75 jingle=YRE bare=0.71 leaks=[]: Adesso? Sì, hai ragione! Puoi passare! Io resto qui. Riddle me—actually, rain check. Non aspetto? Aspetto! Dopo, dopo, domani!
+TOTAL lines=54 both-words=54/54 refrain=54/54 refrain-at-end=53/54 leak-lines=4 share=0.52 without-jingle=0.44 requested=0.50

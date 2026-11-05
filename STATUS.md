@@ -33,6 +33,16 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 050, telling the time at the Fountain (autonomous)
+
+Flick now has a fourth objective between the direction and "now": the fountain's clock stopped, Flick says it is
+always too early, and the player tells it the time (it *sono le …*, *è l'una*, *mezzogiorno*, *mezzanotte*; es *son
+las …*, *es la una*, *mediodía*, *medianoche*). No number lesson was added, but Mortimer already teaches *tre* /
+*tres*. Live, three runs per language passed 48 of 48 verdicts as planned. The grader rejected "now" without a time,
+a question with a time in it and an action scheduled for midday. Flick asked the time but never said one. The
+Italian tour still resolves (64 calls). Critiqued by Codex (13 findings: 8 accepted, 5 in part). Server 192/192,
+mobile 124/124 ([open items](docs/rounds/050/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 049, other conversations' words in NPC lines (autonomous)
 
 The leak scan now also reports *other-target exposure*: NPC lines holding a word that a different party
@@ -520,6 +530,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 050 | 11-05 | Telling the time at the Cracked Fountain: a fourth objective for Flick, four authored constructions per pack (backlog G5) (autonomous) | [050](docs/rounds/050/architecture.md) | [findings](docs/rounds/050/findings.md) | pre-run record to round 050 close |
 | 049 | 11-05 | Other-target exposure in the leak scan: NPC lines that carry another party conversation's target (backlog G7) (autonomous) | [049](docs/rounds/049/architecture.md) | [findings](docs/rounds/049/findings.md) | pre-run record to round 049 close |
 | 048 | 11-05 | Deeper conversations after three: Mortimer's oath, Flick's lotus, Marginalia's folded page (backlog G6) (autonomous) | [048](docs/rounds/048/architecture.md) | [findings](docs/rounds/048/findings.md) | pre-run record to round 048 close |
 | 047 | 11-05 | Relationship tiers: a deeper party conversation after N conversations, Gerald's confidence first (backlog G4) (autonomous) | [047](docs/rounds/047/architecture.md) | [findings](docs/rounds/047/findings.md) | pre-run record to round 047 close (row added in round 048) |
