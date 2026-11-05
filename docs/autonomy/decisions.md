@@ -21,3 +21,8 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 007 | Codex critique 1: 1–9 accepted, 10 rejected | Accept all | See round 007 Second opinion table | Yes |
 | 2026-11-05 | 008 | Stop grader feedback leaking answers with a prompt rule | Server-side filter on feedback text | One line; a filter would rewrite free text | Yes |
 | 2026-11-05 | 008 | Codex critique 1: 1–7 accepted, 8–9 rejected | Accept all | See round 008 Second opinion table | Yes |
+| 2026-11-05 | 009 | Tutorial NPC is Portia, the Market Entrance archway; the companion introduces the mechanics in a static briefing | The companion as the encounter's LLM character | The notes define the companion as the translator, not an opponent; static text cannot dictate answers by accident | Yes |
+| 2026-11-05 | 009 | No gating: the Coffee Cart stays open before the tutorial; Gerald stays the default encounter | Gate the market on the tutorial | The map has been open since round 005; gating belongs to the Rift (A7); the web client is unchanged | Yes |
+| 2026-11-05 | 009 | Narration word matching scoped to the played encounter's vocabulary files | Pack-wide matching (round 006) | New greetings and pronouns would otherwise appear in Gerald's lines and Spellbook | Yes |
+| 2026-11-05 | 009 | Spanish ask-back target is the phrase `y tú`, not bare `tú` or `usted` | Bare `tú`; formal `usted` (Codex) | Accent folding would gloss possessive tu as "you"; informal you in both packs | Yes |
+| 2026-11-05 | 009 | Codex critique 1: 1.1–1.3, 1.6, 1.7 accepted; 1.4, 1.5 with other fixes; 1.8, 1.9 in part | Accept all | See round 009 Second opinion table | Yes |
