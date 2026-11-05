@@ -148,6 +148,7 @@ test('fragments appear on completion only, through the API; hidden during an enc
       assert.deepEqual(list.map((f) => [f.encounterId, f.locationName, f.unlockedAt, f.conversations]), [
         ['mortimer_tasting', "The Butcher's Stall", 3, 3], ['flick_slow_walk', 'The Cracked Fountain', 3, 3], ['marginalia_fragment', 'The Old Bookshop', 3, 3],
       ]);
+      assert.deepEqual(list.map((f) => f.toldBy), ['Mortimer', 'Flick', 'Marginalia'], 'round 036');
     }
   }
   { const envelope = await runtime.storage.load(learnerId); envelope.party = []; await runtime.storage.save(envelope); }

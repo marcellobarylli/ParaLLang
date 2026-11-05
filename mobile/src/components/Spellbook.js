@@ -53,15 +53,26 @@ function ContainmentFile({ file, language }) {
 
 // Round 030 (backlog A9): a passage of The Journey in the target language. Optional to translate: the glossary and
 // translation stay behind a toggle, and the server withholds them during an encounter (`hidden`).
+// Round 036: where a fragment came from: the member who told it, or the place it was found. An older server sends
+// no `toldBy`, and its conversation fragments carry their member's home as `locationName`: no line then (critique 1.1).
+export function fragmentSource(fragment) {
+  if (fragment.toldBy) return `Told by ${fragment.toldBy}`;
+  if (fragment.unlockedAt !== undefined) return null;
+  if (fragment.locationName) return `Found at ${fragment.locationName}`;
+  return null;
+}
+
 function Fragment({ fragment, language }) {
   const [open, setOpen] = useState(false);
   const name = language?.name ?? 'the target language';
+  const source = fragmentSource(fragment);
   return (
-    <View style={styles.card} aria-label={`Fragment: ${fragment.title}`}>
+    <View style={styles.card} aria-label={source ? `Fragment: ${fragment.title}, ${source[0].toLowerCase()}${source.slice(1)}` : `Fragment: ${fragment.title}`}>
       <View style={styles.cardRow}>
         <Text role="heading" style={styles.cardTitle}>{fragment.title}</Text>
         <PronounceButton text={fragment.text} language={language} label={`Hear the fragment in ${name}`} />
       </View>
+      {source && <Text style={styles.source}>{source}</Text>}
       <Text style={styles.small}>{fragment.found}</Text>
       <Text style={styles.passage} accessibilityLanguage={language?.tag}>{fragment.text}</Text>
       {fragment.hidden ? <Text style={styles.hidden}>The translation waits until the encounter is over.</Text> : <>
@@ -109,6 +120,7 @@ const styles = StyleSheet.create({
   body: { color: colors.ink, fontSize: type.subhead },
   hidden: { color: colors.muted, fontSize: type.subhead, fontStyle: 'italic' },
   example: { color: colors.ink, fontSize: type.subhead },
+  source: { color: colors.accent, fontSize: type.footnote, fontWeight: '600' },
   passage: { color: colors.ink, fontSize: type.callout, lineHeight: leading.callout, fontStyle: 'italic' },
   translation: { gap: 4, marginTop: 4 },
   strong: { fontWeight: '700' },

@@ -208,12 +208,13 @@ export class LearningService {
       ? completed.has(fragment.found_after)
       : (memberCount(fragment.found_after) ?? 0) >= fragment.after_conversations);
     return this.content.fragments.filter(found).map((fragment) => {
-      const { encounter } = this.content.encounters.get(fragment.found_after);
+      const { encounter, character } = this.content.encounters.get(fragment.found_after);
       const byConversation = fragment.after_conversations !== undefined;
       return {
         id: fragment.id, title: fragment.title, found: fragment.found,
         encounterId: byConversation ? conversationOf(encounter.id) : encounter.id,
-        ...(byConversation ? { unlockedAt: fragment.after_conversations, conversations: memberCount(encounter.id) } : {}),
+        // Round 036: a conversation fragment names who told it (shown in English, also during encounters).
+        ...(byConversation ? { unlockedAt: fragment.after_conversations, conversations: memberCount(encounter.id), toldBy: character.name } : {}),
         locationName: this.content.world.locationsById.get(encounter.location).name, text: fragment.text,
         hidden: inEncounter,
         translation: inEncounter ? null : fragment.translation,

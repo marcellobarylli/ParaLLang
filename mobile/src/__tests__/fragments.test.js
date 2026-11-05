@@ -1,7 +1,7 @@
 // Round 030 (backlog A9): fragments of The Journey in the Spellbook and the note on the resolved encounter.
 import * as Speech from 'expo-speech';
 import { render, screen, userEvent } from '@testing-library/react-native';
-import Spellbook from '../components/Spellbook.js';
+import Spellbook, { fragmentSource } from '../components/Spellbook.js';
 import DialoguePanel, { fragmentNote } from '../components/DialoguePanel.js';
 
 const language = { code: 'it', name: 'Italian', tag: 'it-IT' };
@@ -89,4 +89,17 @@ test('a member with both a completion and a conversation fragment gets the right
   const walk = { ...resolved('flick_slow_walk'), partyConversation: true, character: { name: 'Flick', saveable: true } };
   expect(fragmentNote([fragment(), lotus], walk)).toBe(' A fragment of The Journey from Flick is in your Spellbook: The lotus.');
   expect(fragmentNote([fragment(), lotus], resolved('cracked_fountain_letharger'))).toBe(' A fragment of The Journey from here is in your Spellbook: The Sirens.');
+});
+
+// Round 036: each fragment says where it came from, on screen and in its accessible label.
+test('a fragment names the member who told it or the place it was found', async () => {
+  const dog = fragment({ id: 'journey_old_dog', title: 'The old dog', encounterId: 'marginalia_fragment', locationName: 'The Old Bookshop', toldBy: 'Marginalia', unlockedAt: 3, conversations: 3 });
+  await show(book([fragment(), dog]));
+  expect(screen.getByText('Found at The Cracked Fountain')).toBeOnTheScreen();
+  expect(screen.getByText('Told by Marginalia')).toBeOnTheScreen();
+  expect(screen.getByLabelText('Fragment: The Sirens, found at The Cracked Fountain')).toBeOnTheScreen();
+  expect(screen.getByLabelText('Fragment: The old dog, told by Marginalia')).toBeOnTheScreen();
+  const { locationName, ...old } = fragment();
+  expect(fragmentSource(old)).toBeNull();
+  expect(fragmentSource({ ...dog, toldBy: undefined })).toBeNull(); // an older server's conversation fragment
 });
