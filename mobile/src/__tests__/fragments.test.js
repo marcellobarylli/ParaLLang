@@ -65,3 +65,12 @@ test('the resolved encounter mentions its own fragment only', async () => {
   await render(<DialoguePanel encounter={resolved('cracked_fountain_letharger')} language={language} isLoading={false} fragments={[fragment()]} />);
   expect(screen.getByText('Flick holds still. A fragment of The Journey from here is in your Spellbook: The Sirens.')).toBeOnTheScreen();
 });
+
+// Round 032: Gerald's fragment is noted on the coffee break that unlocked it (the third), not on later ones.
+test('a conversation fragment is noted on its unlocking break only, from the member', () => {
+  const coffeeBreak = { ...resolved('gerald_coffee_break'), partyConversation: true, character: { name: 'Gerald', saveable: true } };
+  const dead = (conversations) => fragment({ id: 'journey_dead_branch', title: 'The word for it', encounterId: 'gerald_coffee_break', unlockedAt: 3, conversations });
+  expect(fragmentNote([dead(3)], coffeeBreak)).toBe(' A fragment of The Journey from Gerald is in your Spellbook: The word for it.');
+  expect(fragmentNote([dead(4)], coffeeBreak)).toBe('');
+  expect(fragmentNote([fragment()], resolved('cracked_fountain_letharger'))).toMatch(/from here/);
+});

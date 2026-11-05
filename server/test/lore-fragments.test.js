@@ -9,7 +9,7 @@ import { foldWords, loadGameContent } from '../src/content-loader.js';
 import { api, createLearnerAndEncounter, createRuntime, finishEncounter, makeTempDir } from './helpers.js';
 
 const root = resolve(import.meta.dirname, '..', '..');
-const IDS = ['journey_first_stitch', 'journey_sirens', 'journey_shroud'];
+const IDS = ['journey_first_stitch', 'journey_sirens', 'journey_shroud', 'journey_dead_branch'];
 
 // Every vocabulary form of the pack found in a fragment's text or glossary words, and every glossary meaning that
 // is an accepted translation of an objective target (critique 1.1, 1.2, 1.10).
@@ -24,11 +24,12 @@ function leaks(content, fragment) {
   };
 }
 
-test('both packs hold the same three fragments, after the same encounters, with the same English text', () => {
+test('both packs hold the same four fragments, after the same encounters, with the same English text', () => {
   const [it, es] = ['it', 'es'].map((code) => loadGameContent({ language: code }).fragments);
   assert.deepEqual(it.map((f) => f.id), IDS);
-  assert.deepEqual(it.map((f) => f.found_after), ['old_bookshop_bookworm', 'cracked_fountain_letharger', 'the_rift_errata']);
-  const english = (fragments) => fragments.map(({ id, title, found_after, found, translation }) => ({ id, title, found_after, found, translation }));
+  assert.deepEqual(it.map((f) => f.found_after), ['old_bookshop_bookworm', 'cracked_fountain_letharger', 'the_rift_errata', 'imp_coffee_greeting']);
+  assert.deepEqual(it.map((f) => f.after_conversations), [undefined, undefined, undefined, 3], 'round 032: Gerald\'s after three coffee breaks');
+  const english = (fragments) => fragments.map(({ id, title, found_after, after_conversations, found, translation }) => ({ id, title, found_after, after_conversations, found, translation }));
   assert.deepEqual(english(es), english(it));
   for (const fragment of [...it, ...es]) assert.ok(fragment.glossary.length >= 4 && fragment.text !== fragment.translation, fragment.id);
 });
@@ -47,6 +48,26 @@ test('no fragment holds a vocabulary form of its pack or glosses a target\'s mea
     }
     const glossed = { ...fragment, glossary: [...fragment.glossary, { word: fragment.glossary[0].word, meaning: 'thread; now' }] };
     assert.deepEqual(leaks(content, glossed).meanings, [fragment.glossary[0].word], `${code} planted meaning`);
+  }
+});
+
+// Round 032 (critique 1.5): a conversation fragment shows during later conversations with its member, so its text
+// and glossary hold no word starting with a stem (first 4 folded letters) of that conversation's targets.
+function stemLeaks(content, fragment) {
+  const conversation = [...content.encounters.values()].find(({ encounter }) => encounter.party_of === fragment.found_after).encounter;
+  const stems = conversation.objectives.flatMap((o) => o.target_vocabulary_ids)
+    .flatMap((id) => content.vocabularyById.get(id).surface_variants).map((form) => foldWords(form).trim().slice(0, 4));
+  const words = foldWords([fragment.text, ...fragment.glossary.map((entry) => entry.word)].join(' ')).trim().split(' ');
+  return [...new Set(stems)].filter((stem) => words.some((word) => word.startsWith(stem)));
+}
+
+test('a conversation fragment holds no stem of its conversation\'s targets; the check is live', () => {
+  for (const code of ['it', 'es']) {
+    const content = loadGameContent({ language: code });
+    const fragment = content.fragments.find((f) => f.after_conversations !== undefined);
+    assert.deepEqual(stemLeaks(content, fragment), [], code);
+    const planted = code === 'it' ? 'Era buonissimo.' : 'Era buenísimo.';
+    assert.deepEqual(stemLeaks(content, { ...fragment, text: `${fragment.text} ${planted}` }), [code === 'it' ? 'buon' : 'buen'], `${code} planted`);
   }
 });
 
@@ -76,6 +97,10 @@ test('the loader refuses malformed fragments and loads a pack without lore/', as
     ['substring glossary word', (f) => { f[0].text += ' Su nomea creció.'; f[0].glossary.push({ word: 'nome', meaning: 'name' }); }, /glosses "nome"/],
     ['unknown key', (f) => { f[0].colour = 'beige'; }, /colour/],
     ['empty glossary', (f) => { f[0].glossary = []; }, /glossary/],
+    // Round 032: conversation counts need a party conversation, and a whole number from 1.
+    ['count without a party conversation', (f) => { f[0].found_after = 'market_entrance_tutorial'; f[0].after_conversations = 2; }, /counts conversations, but market_entrance_tutorial has no party conversation/],
+    ['zero conversations', (f) => { f[3].after_conversations = 0; }, /after_conversations/],
+    ['fractional conversations', (f) => { f[3].after_conversations = 1.5; }, /after_conversations/],
   ];
   for (const [name, edit, error] of cases) {
     const dir = await packCopy(editFragments(edit));
@@ -93,8 +118,15 @@ test('fragments appear on completion only, through the API; hidden during an enc
   assert.deepEqual(await fragments(), []);
   const seed = async (world) => { const envelope = await runtime.storage.load(learnerId); envelope.world = { ...envelope.world, ...world }; await runtime.storage.save(envelope); };
 
-  await seed({ visitedLocationIds: ['market_entrance', 'old_bookshop', 'cracked_fountain'], completedEncounterIds: ['marginalia_fragment'] });
-  assert.deepEqual(await fragments(), [], 'a visit or a party conversation finds nothing');
+  await seed({ visitedLocationIds: ['market_entrance', 'old_bookshop', 'cracked_fountain'], completedEncounterIds: ['marginalia_fragment', 'imp_coffee_greeting'] });
+  assert.deepEqual(await fragments(), [], 'a visit, a party conversation or Gerald\'s completion alone finds nothing');
+  // Round 032: Gerald's fragment counts his member's conversations (two are not enough; a missing count reads as 0).
+  const member = (conversations) => ({ characterId: 'imp_coffee_001', encounterId: 'imp_coffee_greeting', joinedAt: '2026-01-15T12:00:00.000Z', conversations });
+  for (const [party, ids] of [[[member(undefined)], []], [[member(2)], []], [[member(3)], ['journey_dead_branch']], [[member(9)], ['journey_dead_branch']], [[{ ...member(5), characterId: 'someone_else' }], []]]) {
+    const envelope = await runtime.storage.load(learnerId); envelope.party = party; await runtime.storage.save(envelope);
+    assert.deepEqual((await fragments()).map((f) => f.id), ids, JSON.stringify(party));
+  }
+  { const envelope = await runtime.storage.load(learnerId); envelope.party = []; await runtime.storage.save(envelope); }
 
   await seed({ completedEncounterIds: ['cracked_fountain_letharger', 'old_bookshop_bookworm'] });
   const found = await fragments();

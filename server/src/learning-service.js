@@ -194,10 +194,26 @@ export class LearningService {
   // glossary are withheld while an encounter is under way, as card meanings are (round 017).
   journeyFragments(envelope, inEncounter = false) {
     const completed = new Set(envelope.world?.completedEncounterIds ?? []);
-    return this.content.fragments.filter((fragment) => completed.has(fragment.found_after)).map((fragment) => {
+    const party = envelope.party ?? [];
+    // Round 032: a fragment with `after_conversations` is unlocked by the party member met at `found_after` (matched
+    // as partySnapshot does: encounter and character) once their conversation count reaches it, not by completion.
+    // Derived, not saved: removing the member or raising N would hide it again.
+    const memberCount = (homeId) => {
+      const { character } = this.content.encounters.get(homeId);
+      const member = party.find((m) => m.encounterId === homeId && m.characterId === character.id);
+      return member ? (member.conversations ?? 0) : null;
+    };
+    const conversationOf = (homeId) => [...this.content.encounters.values()].find(({ encounter }) => encounter.party_of === homeId).encounter.id;
+    const found = (fragment) => (fragment.after_conversations === undefined
+      ? completed.has(fragment.found_after)
+      : (memberCount(fragment.found_after) ?? 0) >= fragment.after_conversations);
+    return this.content.fragments.filter(found).map((fragment) => {
       const { encounter } = this.content.encounters.get(fragment.found_after);
+      const byConversation = fragment.after_conversations !== undefined;
       return {
-        id: fragment.id, title: fragment.title, found: fragment.found, encounterId: encounter.id,
+        id: fragment.id, title: fragment.title, found: fragment.found,
+        encounterId: byConversation ? conversationOf(encounter.id) : encounter.id,
+        ...(byConversation ? { unlockedAt: fragment.after_conversations, conversations: memberCount(encounter.id) } : {}),
         locationName: this.content.world.locationsById.get(encounter.location).name, text: fragment.text,
         hidden: inEncounter,
         translation: inEncounter ? null : fragment.translation,

@@ -138,6 +138,8 @@ const fragmentSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9_]*$/),
   title: z.string().min(1),
   found_after: z.string().min(1),
+  // Round 032: unlocked by the found_after character's party conversations instead of the encounter's completion.
+  after_conversations: z.number().int().min(1).optional(),
   found: z.string().min(1),
   text: z.string().min(1),
   translation: z.string().min(1),
@@ -268,6 +270,10 @@ function loadFragments(contentDir, pack, encounters) {
     const home = encounters.get(fragment.found_after);
     if (!home) throw new Error(`Lore fragment ${fragment.id} names unknown encounter ${fragment.found_after}`);
     if (home.encounter.party_of) throw new Error(`Lore fragment ${fragment.id} must follow a location encounter, not ${fragment.found_after}`);
+    if (fragment.after_conversations !== undefined
+      && ![...encounters.values()].some(({ encounter }) => encounter.party_of === fragment.found_after)) {
+      throw new Error(`Lore fragment ${fragment.id} counts conversations, but ${fragment.found_after} has no party conversation`);
+    }
     const text = foldWords(fragment.text);
     for (const { word } of fragment.glossary) {
       if (!text.includes(foldWords(word))) throw new Error(`Lore fragment ${fragment.id} glosses "${word}", which is not in its text`);

@@ -90,3 +90,18 @@ resolution and worded for a party conversation, and a stem leak check.
 - Mobile: the note on the third break, none on the fourth, the "from Gerald" wording; round 030's location note is
   unchanged.
 - All suites, expo-doctor, iOS export.
+
+## Amendment 1 (2026-11-05): Second opinion rows renumbered
+
+The pre-run Second opinion table numbers critique 1's findings 2.1–2.7 by mistake. They are findings 1.1–1.7 of
+[critique 1](trail/critique-1.md), with the same dispositions:
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| 1.1 | Error | The completion filter would show it after the greeting (row 2.1) | + | Accept | **Accepted** (autonomous, pending owner review) | Design 3 |
+| 1.2 | Error | Member lookup must match `partySnapshot` (row 2.2) | + | Accept | **Accepted** (autonomous, pending owner review) | Design 3 |
+| 1.3 | Risk | The note repeats on later breaks (row 2.3) | + | Accept | **Accepted** (autonomous, pending owner review) | Design 3, 4 |
+| 1.4 | Risk | "From here" is false for party conversations (row 2.4) | + | Accept | **Accepted** (autonomous, pending owner review) | Design 4 |
+| 1.5 | Risk | Near-forms of the coffee break's targets (row 2.5) | + | Accept in part | **Accepted in part** (autonomous, pending owner review) | Design 5 |
+| 1.6 | Suggestion | Pack equality should cover N (row 2.6) | + | Accept | **Accepted** (autonomous, pending owner review) | Design 1 |
+| 1.7 | Suggestion | Resolving turn, replay, hidden on the 4th (row 2.7) | + | Accept | **Accepted** (autonomous, pending owner review) | Tests |

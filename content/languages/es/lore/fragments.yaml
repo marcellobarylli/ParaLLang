@@ -2,6 +2,7 @@
 # translate (parallang_obsidian/CHARACTERS.md, Journathan). Authored, not generated. No fragment contains an
 # objective target of the pack (server test), so the Spellbook may show them at any time. `title`, `found` and
 # `translation` are the same English text in every pack (tested). Pending a native speaker's review.
+# Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
 fragments:
   - id: journey_first_stitch
     title: The first stitch
@@ -63,3 +64,23 @@ fragments:
       - { word: "ganaba tiempo", meaning: "she was buying time" }
       - { word: "separadas", meaning: "apart, separated" }
       - { word: "hasta que", meaning: "until" }
+  - id: journey_dead_branch
+    title: The word for it
+    found_after: imp_coffee_greeting
+    after_conversations: 3
+    found: "On your third coffee break, Gerald recites a passage he swears he learned as a barista in the Dead Branch."
+    text: >-
+      En la Rama Muerta, Journathan bebió algo oscuro y amargo, servido en tazas diminutas. Quien lo probaba lloraba.
+      La palabra para decirlo ya no existe: murió con la rama, y hoy no la recuerda ni un diccionario.
+    translation: >-
+      In the Dead Branch, Journathan drank something dark and bitter, served in very small cups. Whoever tasted it
+      wept. The word for it no longer exists: it died with the branch, and today not even a dictionary remembers it.
+    glossary:
+      - { word: "Rama Muerta", meaning: "Dead Branch" }
+      - { word: "bebió", meaning: "he drank (pretérito of beber)" }
+      - { word: "amargo", meaning: "bitter" }
+      - { word: "tazas", meaning: "cups" }
+      - { word: "probaba", meaning: "tasted" }
+      - { word: "lloraba", meaning: "wept" }
+      - { word: "ni", meaning: "not even" }
+      - { word: "diccionario", meaning: "dictionary" }

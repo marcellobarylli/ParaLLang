@@ -66,10 +66,14 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
 }
 
 // Round 030 (backlog A9): a fragment of The Journey that this encounter's completion filed. Worded to stay true on
-// replays (critique 1.6); part of the victory status so it is announced with it.
+// replays (critique 1.6); part of the victory status so it is announced with it. Round 032: a fragment unlocked by
+// party conversations is noted only on the resolution that reached its count, and named after the member.
 export function fragmentNote(fragments, encounter) {
-  const fragment = (fragments ?? []).find((f) => f.encounterId === encounter.encounterId);
-  return fragment ? ` A fragment of The Journey from here is in your Spellbook: ${fragment.title}.` : '';
+  const fragment = (fragments ?? []).find((f) => f.encounterId === encounter.encounterId
+    && (f.unlockedAt === undefined || f.conversations === f.unlockedAt));
+  if (!fragment) return '';
+  const source = encounter.partyConversation ? `from ${encounter.character?.name ?? 'your companion'}` : 'from here';
+  return ` A fragment of The Journey ${source} is in your Spellbook: ${fragment.title}.`;
 }
 
 const styles = StyleSheet.create({

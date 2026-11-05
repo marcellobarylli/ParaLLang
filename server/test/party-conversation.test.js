@@ -242,3 +242,26 @@ test('each member\'s conversation waits until they have joined', async (t) => {
     assert.equal(refused.data.error.code, 'NOT_IN_PARTY', id);
   }
 });
+
+// Round 032: Gerald's Dead Branch fragment is unlocked by his third resolved coffee break, and noted on it.
+test('the third coffee break files Gerald\'s fragment; it is withheld during the fourth', async (t) => {
+  const { runtime, learnerId } = await recruitedGerald(t);
+  const filed = [];
+  let turn;
+  let last;
+  for (let n = 1; n <= 3; n += 1) {
+    last = { encounter: (await start(runtime, learnerId, 'gerald_coffee_break')).data.encounter, attemptId: randomUUID() };
+    turn = await say(runtime, learnerId, last.encounter, '¡Un buen café, gracias!', last.attemptId);
+    assert.equal(turn.encounter.state, 'resolved');
+    filed.push(turn.spellbook.journeyFragments.map((f) => f.id));
+  }
+  assert.deepEqual(filed, [[], [], ['journey_dead_branch']], 'not on Gerald\'s defeat, nor the first two breaks');
+  const [fragment] = turn.spellbook.journeyFragments;
+  assert.deepEqual([fragment.encounterId, fragment.locationName, fragment.hidden, fragment.unlockedAt, fragment.conversations],
+    ['gerald_coffee_break', 'The Coffee Cart', false, 3, 3]);
+  const replayed = await say(runtime, learnerId, last.encounter, '¡Un buen café, gracias!', last.attemptId);
+  assert.equal(replayed.replayed, true);
+  assert.deepEqual(replayed.spellbook.journeyFragments.map((f) => [f.id, f.conversations]), [['journey_dead_branch', 3]], 'a replay does not count again');
+  const fourth = await start(runtime, learnerId, 'gerald_coffee_break');
+  assert.deepEqual(fourth.data.spellbook.journeyFragments.map((f) => [f.id, f.hidden, f.translation]), [['journey_dead_branch', true, null]]);
+});
