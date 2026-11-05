@@ -150,3 +150,21 @@ test("ambient words in Portia's greeting become chips and Spellbook entries", as
   for (const id of ['bienvenido', 'mercado']) assert.ok(spellbook.words[id], id);
   assert.ok(spellbook.phrases.mucho_gusto);
 });
+
+test("round 020: Portia's formalities quirk reaches her narration prompt in both packs, not her grading prompt", () => {
+  for (const code of ['it', 'es']) {
+    const content = loadGameContent({ language: code });
+    const definition = content.encounters.get('market_entrance_tutorial');
+    const narration = buildNarrationMessages({
+      language: content.language, character: definition.character, styleGuide: content.styleGuide,
+      locationName: 'The Market Entrance', objectives: definition.encounter.objectives, vocabularyById: content.vocabularyById,
+      targetRatio: 0.2, ambientEntries: definition.ambientEntries,
+    })[0].content;
+    assert.match(narration, /Conducts her formalities in the dialogue's target language, in short phrases.*never the words the visitor still has to say/);
+    const grading = buildGradingMessages({
+      language: content.language, objectives: definition.encounter.objectives, vocabularyById: content.vocabularyById,
+      conversationContext: [], playerInput: 'Ciao',
+    })[0].content;
+    assert.doesNotMatch(grading, /formalities/);
+  }
+});
