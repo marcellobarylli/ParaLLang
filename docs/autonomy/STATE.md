@@ -24,8 +24,11 @@ again at 8:35 PM"). Steps to close it, in order:
    The `limit-after-tour-*.json` files are failed runs, not results.
 3. Findings, Outcome, close. If the tours fail or show new answer lines, revert by Amendment.
 
-Without Codex (before the reset), do only work that needs neither live runs nor a critique. Iteration 9 closed
-rounds 027 (C2), 028 (B4) and 029 (C1) meanwhile, with a Claude subagent as the critic. **The tours in step 2
+Without Codex (before the reset), do only work that needs neither live runs nor a critique. Iterations 9 and 10
+closed rounds 027–032 meanwhile, with a Claude subagent as the critic. **After round 026 closes**, the queued live
+checks of rounds 030–032 are optional: they change no prompt, so the after-build tours already exercise them
+(record in round 030's findings that the tour's resolving turns at the Bookshop, Fountain and Rift returned
+`journeyFragments`, if you read them). **The tours in step 2
 now pass through round 029's drill**: the tour must report `drillCards` as an array (exit-code criterion); record
 its length in round 029's findings as well (round 029 open item 1).
 
@@ -290,7 +293,27 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   148/148, mobile 51/51, client 12/12. Iteration 9 ends here (Amendment 2 of round 026 built; rounds 027–029 closed;
   no Codex calls: limit until 20:35 UTC).
 
+- 2026-11-05, iteration 10: rounds 030 (A9, fragments of *The Journey*), 031 (A11, save slots) and 032 (A12,
+  Gerald's Dead Branch fragment after three coffee breaks) planned, critiqued by Claude subagents (10, 10 and 7
+  findings), built and closed; server 156/156, mobile 68/68, client 12/12, expo-doctor 20/20. No Codex calls
+  (limit until about 20:35 UTC); round 026 still open with its live steps queued.
+
 ## Handoff notes and traps
+
+- **Second opinion rows are numbered by critique, `K.n`** (critique-1 → `1.1`…), even in a new round: round 032 wrote
+  `2.n` in its pre-run table and needed Amendment 1. Run `round_log_check.py NNN` right after the freeze commit.
+- **Recorded times: use `$(date -u +%H:%M:%S)` in the heredoc**, never type them (round 030 rows 4–5 are
+  corrections again).
+- **Fragments** (rounds 030, 032): `content/languages/<code>/lore/fragments.yaml`, optional file. A text must hold no
+  surface form of any vocabulary entry of the pack (`foldWords` splits apostrophes: "vent'anni" hits `anni`), and no
+  glossary meaning equal to a target's accepted translation; `after_conversations` fragments also no stem of their
+  party conversation's targets. Draft the text, run the test, then rewrite. A new vocabulary entry whose form
+  appears in a fragment fails `lore-fragments.test.js`: rewrite the fragment, not the test. Fixtures that remove an
+  encounter must also drop its fragments (see `fixtureContent` in `encounters.test.js`).
+- **Spellbook snapshot has `journeyFragments`** (translation and glossary `null`, `hidden: true` during encounters).
+- **Save slots** (round 031): the app keeps `parallang.saveSlots` and still writes `parallang.learnerId` (active).
+  Every store action captures `requestEpoch` and the learner and drops late replies; keep that in new actions.
+  Store tests for saves use `fakeApi` in `mobile/src/__tests__/saves.test.js` (distinct ids per `createLearner(null)`).
 
 - **`python3 tools/round_log_check.py` (all rounds) fails on round 012** since round 026 removed
   `server/test/fixtures/gerald-prompts-r012.json` (journal row 8 records it). Expected and append-only; check single
