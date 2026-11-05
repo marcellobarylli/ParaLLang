@@ -277,6 +277,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **`python3 tools/round_log_check.py` (all rounds) fails on round 012** since round 026 removed
+  `server/test/fixtures/gerald-prompts-r012.json` (journal row 8 records it). Expected and append-only; check single
+  rounds (`round_log_check.py NNN`) at close. Do not restore the file or edit the row.
 - **The Rift drill** (round 029): a test or script that starts the Rift with due Spellbook cards in its target groups
   gets 409 `DRILL_REQUIRED`; clear it with `clearDrill(service, learnerId)` from `play-market.js`. The drill lives in
   `spellbook.drill` (only at the Rift, not completed). `createReviewChallenge(null)` serves drill cards first and
