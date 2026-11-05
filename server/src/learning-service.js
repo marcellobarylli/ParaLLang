@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { gradingResponseSchema, encounterResponseSchema } from './llm/schemas.js';
-import { buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
+import { gradingResponseSchema, encounterResponseSchema, locationAtmosphereSchema } from './llm/schemas.js';
+import { buildAtmosphereMessages, buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
 import {
   calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
   isDue, masteryLabel, matchCanonicalVocabulary, scheduleReview,
@@ -13,13 +13,27 @@ import { applyMove, currentLocationId, gateFor, sealedMessage, worldSnapshot } f
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
 export const HELD_NOTE = 'A held objective was said correctly but does not count: an earlier objective comes first. Do not celebrate it or treat it as done, and do not give its answer; the player must say it again after the earlier objective.';
 
+export const ATMOSPHERE_MAX_LENGTH = 300;
+export const ATMOSPHERE_RETRY_MS = 10 * 60_000;
+// Round 053 (critique 1.1): pack forms that are also English words; the atmosphere line may use them in English.
+export const ATMOSPHERE_ENGLISH = new Set(['once', 'kilo', 'kilos', 'cafe', 'sola', 'pollo', 'basta', 'io', 'due', 'otto', 'nove', 'sei',
+  'salami', 'chorizo', 'chorizos', 'mezzo', 'cento', 'soy', 'media', 'piano', 'chili']);
+const foldForAtmosphere = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+
 function clone(value) { return structuredClone(value); }
 function payloadHash(value) { return createHash('sha256').update(JSON.stringify(value)).digest('hex'); }
 function nowIso(clock) { return new Date(clock()).toISOString(); }
 
 export class LearningService {
-  constructor({ provider, storage, content, clock = () => new Date() }) {
+  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false }) {
     this.provider = provider;
+    // Round 053 (backlog A10): atmosphere lines by state key, and the calls under way for a key.
+    this.atmosphereEnabled = atmosphere;
+    this.atmosphereLines = new Map();
+    this.atmosphereCalls = new Map();
+    this.atmosphereFailures = new Map();
+    this.atmosphereStats = { calls: 0, drops: [] };
+    this.providerCallsInFlight = 0;
     this.storage = storage;
     this.content = content;
     this.clock = clock;
@@ -324,6 +338,7 @@ export class LearningService {
   }
 
   async callProvider(messages, schema, schemaName, label) {
+    this.providerCallsInFlight += 1; // round 053: no atmosphere call starts meanwhile
     try {
       const response = await this.provider.structuredChat(messages, schema, { schemaName, temperature: 0.2 });
       return schema.parse(response);
@@ -332,6 +347,7 @@ export class LearningService {
       if (error instanceof ProviderError) throw error;
       throw retryableError(`${label} is temporarily unavailable. Your progress was not changed. Please retry in a moment.`, 'PROVIDER_FAILURE');
     }
+    finally { this.providerCallsInFlight -= 1; }
   }
 
   // Without an encounterId the default encounter starts anywhere (the frozen web client); with one, the player
@@ -637,6 +653,72 @@ export class LearningService {
       await this.storage.save(stagedEnvelope);
       return { world: worldSnapshot(this.content.world, progress, this.content.encounters) };
     });
+  }
+
+  // Round 053 (backlog A10): an English line of atmosphere for the current location, or null. Never an error for
+  // the provider's sake: the static description is always shown. Off unless switched on (the CLI runner is serial);
+  // skipped while an encounter call is in flight. Cached by state (not by learner) for the server's lifetime; a
+  // failure is cached as null for ATMOSPHERE_RETRY_MS. Every drop is traced in atmosphereStats.
+  async getAtmosphere(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    if (!this.atmosphereEnabled) return { atmosphere: null };
+    const { world } = this.content;
+    const locationId = currentLocationId(world, envelope.world);
+    const location = world.locationsById.get(locationId);
+    const encounter = location.encounter ? this.content.encounters.get(location.encounter) : null;
+    const done = new Set(envelope.world?.completedEncounterIds ?? []);
+    const state = !encounter ? 'none' : done.has(location.encounter) ? 'complete' : 'open';
+    const party = [...new Set(this.partySnapshot(envelope).map((member) => {
+      const species = this.content.encounters.get(member.encounterId)?.character.species;
+      return species ? `${member.name} (${species})` : member.name;
+    }))].sort();
+    const key = JSON.stringify([this.content.language.code, locationId, state, party]);
+    const result = (text) => ({ atmosphere: text ? { locationId, text } : null });
+    if (this.atmosphereLines.has(key)) return result(this.atmosphereLines.get(key));
+    const failedUntil = this.atmosphereFailures.get(key);
+    if (failedUntil !== undefined && new Date(this.clock()).getTime() < failedUntil) return result(null);
+    if (!this.atmosphereCalls.has(key)) {
+      if (this.providerCallsInFlight > 0) { this.dropAtmosphere('busy', locationId); return result(null); }
+      const call = this.writeAtmosphere(location, state, encounter?.character ?? null, party)
+        .then((text) => {
+          if (text) { this.atmosphereLines.set(key, text); this.atmosphereFailures.delete(key); }
+          else this.atmosphereFailures.set(key, new Date(this.clock()).getTime() + ATMOSPHERE_RETRY_MS);
+          return text;
+        })
+        .finally(() => this.atmosphereCalls.delete(key));
+      this.atmosphereCalls.set(key, call);
+    }
+    return result(await this.atmosphereCalls.get(key));
+  }
+
+  dropAtmosphere(reason, locationId, excerpt) {
+    this.atmosphereStats.drops.push({ reason, locationId, ...(excerpt ? { excerpt } : {}) });
+    if (this.atmosphereStats.drops.length > 50) this.atmosphereStats.drops.shift();
+  }
+
+  async writeAtmosphere(location, state, character, party) {
+    const who = character ? `${character.name}, ${/^[aeiou]/i.test(character.species) ? 'an' : 'a'} ${character.species},` : null;
+    const facts = {
+      none: 'Nobody here wants to talk to the player.',
+      open: `${who} is here and has not been won over yet.`,
+      complete: `The player has already won over ${who} here.`,
+    };
+    const messages = buildAtmosphereMessages({ language: this.content.language, styleGuide: this.content.styleGuide, location, state: facts[state], partyNames: party });
+    this.atmosphereStats.calls += 1;
+    let reply;
+    try { reply = await this.provider.structuredChat(messages, locationAtmosphereSchema, { schemaName: 'location_atmosphere', temperature: 0.7 }); }
+    catch { this.dropAtmosphere('provider', location.id); return null; }
+    const parsed = locationAtmosphereSchema.safeParse(reply);
+    if (!parsed.success) { this.dropAtmosphere('schema', location.id); return null; }
+    const text = parsed.data.atmosphere.trim().replace(/\s+/g, ' ');
+    if (!text || text.length > ATMOSPHERE_MAX_LENGTH) { this.dropAtmosphere('length', location.id); return null; }
+    // No form of a pack entry (it teaches nothing and gives nothing away), unless it is also an English word or a
+    // word of the location's own description (critique 1.1).
+    const ownWords = new Set(foldForAtmosphere(location.description).split(' '));
+    const hit = matchCanonicalVocabulary(text, this.content.vocabulary.entries)
+      .find((match) => { const folded = foldForAtmosphere(match.excerpt); return !ATMOSPHERE_ENGLISH.has(folded) && !folded.split(' ').every((word) => ownWords.has(word)); });
+    if (hit) { this.dropAtmosphere('vocabulary', location.id, hit.excerpt); return null; }
+    return text;
   }
 
   // Round 021: the party. Members whose encounter is not in the loaded pack stay in the save but are not shown.

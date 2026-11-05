@@ -107,6 +107,8 @@ export class FixtureProvider {
 
   async structuredChat(messages, _schema, options) {
     this.calls.push({ messages, options });
+    // Round 053 (critique 1.8): the map's atmosphere line has its own branch.
+    if (options.schemaName === 'location_atmosphere') return { atmosphere: 'Dust settles on the stalls like it has opinions.' };
     return options.schemaName === 'dialogue_assessment' ? this.grade(messages) : this.narrate(messages);
   }
 }

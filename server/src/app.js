@@ -41,6 +41,11 @@ export function createApp({ service, logger = console, token = null }) {
     try { res.json(await service.getWorld(req.get('X-Learner-Id'))); }
     catch (error) { next(error); }
   });
+  // Round 053 (backlog A10): the current location's atmosphere line, or null; asked for apart from the map.
+  app.get('/api/world/atmosphere', async (req, res, next) => {
+    try { res.json(await service.getAtmosphere(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
   app.post('/api/world/move', async (req, res, next) => {
     try { res.json(await service.moveTo(req.get('X-Learner-Id'), req.body ?? {})); }
     catch (error) { next(error); }

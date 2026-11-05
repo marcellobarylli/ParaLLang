@@ -52,6 +52,7 @@ export function createLearningApi({ baseUrl = API_URL, token = API_TOKEN, fetch:
     revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),
     getOnboarding: () => request('/api/onboarding'),
     getWorld: (learnerId) => request('/api/world', { learnerId }),
+    getAtmosphere: (learnerId) => request('/api/world/atmosphere', { learnerId }), // round 053
     moveTo: (learnerId, locationId) => request('/api/world/move', { learnerId, method: 'POST', body: { locationId } }),
     getParty: (learnerId) => request('/api/party', { learnerId }),
     recruit: (learnerId, encounterId) => request('/api/party/recruit', { learnerId, method: 'POST', body: { encounterId } }),

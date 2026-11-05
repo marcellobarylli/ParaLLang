@@ -26,6 +26,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     language: null,
     encounter: null,
     world: null,
+    atmosphere: null, // Round 053: { locationId, text } for the current location, or null
     onboarding: null,
     party: [],
     notice: null,
@@ -406,6 +407,29 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
   };
   store.subscribe(follow);
   follow(store.getState());
+
+  // Round 053 (backlog A10): the current location's atmosphere line, asked for when the learner, the location, its
+  // encounter's completion or the party changes; a reply is kept only if all of those still hold. Never blocks the map.
+  let atmosphereKey = null;
+  const keyOf = (state) => {
+    const here = state.world?.locations.find((location) => location.id === state.world.currentLocationId);
+    if (!state.learnerId || !here) return null;
+    return JSON.stringify([state.learnerId, here.id, here.encounter?.completed ?? null, (state.party ?? []).map((member) => member.characterId).sort()]);
+  };
+  const followAtmosphere = (state) => {
+    const key = keyOf(state);
+    if (key === atmosphereKey) return;
+    atmosphereKey = key;
+    if (state.atmosphere) store.setState({ atmosphere: null }); // critique 1.7: never another state's line
+    if (!key || typeof api.getAtmosphere !== 'function') return;
+    const asked = state.learnerId;
+    Promise.resolve().then(() => api.getAtmosphere(asked)).then((data) => {
+      if (atmosphereKey !== key) return;
+      store.setState({ atmosphere: data?.atmosphere ?? null });
+    }, () => {});
+  };
+  store.subscribe(followAtmosphere);
+  followAtmosphere(store.getState());
   return store;
 }
 

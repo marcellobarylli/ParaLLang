@@ -16,7 +16,8 @@ const provider = createLLMAdapter();
 const storage = new JsonLearningStorage({
   saveDir: saveDirForLanguage(process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'), content.language.code),
 });
-const service = new LearningService({ provider, storage, content });
+// Round 053: PARALLANG_ATMOSPHERE=on turns the map's LLM atmosphere line on (off by default: the CLI runner is serial).
+const service = new LearningService({ provider, storage, content, atmosphere: (process.env.PARALLANG_ATMOSPHERE || '').trim().toLowerCase() === 'on' });
 // Round 040 (critique 1.2): the ends are trimmed, as fetch trims header values.
 const app = createApp({ service, token: (process.env.PARALLANG_TOKEN || '').trim() || null });
 

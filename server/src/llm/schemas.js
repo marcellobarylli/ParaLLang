@@ -34,3 +34,8 @@ export const gradingResponseSchema = z.object({
   }).strict()).min(1),
   overall_feedback: z.string().min(1),
 }).strict();
+
+// Round 053 (backlog A10): the map card's atmosphere line. Length is checked by the service, not the schema.
+export const locationAtmosphereSchema = z.object({
+  atmosphere: z.string().min(1),
+}).strict();

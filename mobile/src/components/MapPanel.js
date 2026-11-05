@@ -53,7 +53,7 @@ function Node({ location, size, onMove, disabled }) {
 }
 
 // Round 029: `drill` is the server's pending drill (spellbook.drill); `ongoing` an encounter under way elsewhere.
-export default function MapPanel({ drill = null, ongoing = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
+export default function MapPanel({ atmosphere = null, drill = null, ongoing = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
   const [size, setSize] = useState(320); // replaced by the measured width on layout
   if (!world) return <View style={styles.panel}><Text style={styles.muted}>Finding the Crumbling Market…</Text></View>;
   const byId = new Map(world.locations.map((location) => [location.id, location]));
@@ -73,6 +73,7 @@ export default function MapPanel({ drill = null, ongoing = null, onDrill, onRetu
       {here && <View style={styles.card} aria-live="polite">
         <Title style={styles.title}>{here.name}</Title>
         <Text style={styles.body}>{here.description}</Text>
+        {atmosphere?.locationId === here.id && atmosphere.text && <Text style={styles.atmosphere}>{atmosphere.text}</Text>}
         {here.vocabularyFocus?.length > 0 && <Text style={styles.focus}>Words here: {here.vocabularyFocus.join(', ')}</Text>}
         {here.encounter && drillHere && <DrillNote drill={drillHere} ongoing={ongoing} isLoading={isLoading} onDrill={onDrill} onReturnToEncounter={onReturnToEncounter} />}
         {here.encounter
@@ -129,5 +130,6 @@ const styles = StyleSheet.create({
   body: { fontSize: type.subhead, lineHeight: leading.subhead, color: colors.ink },
   muted: { fontSize: type.subhead, color: colors.muted, padding: 16 },
   focus: { fontSize: type.footnote, color: colors.muted, fontStyle: 'italic' },
+  atmosphere: { fontSize: type.subhead, color: colors.muted, fontStyle: 'italic' }, // round 053
   done: { fontSize: type.subhead, fontWeight: '600', color: colors.success },
 });

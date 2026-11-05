@@ -97,3 +97,19 @@ export function buildGradingMessages({ language, objectives, vocabularyById, con
     { role: 'user', content: JSON.stringify({ conversation_context: conversationContext, player_answer: playerInput }) },
   ];
 }
+
+// Round 053 (backlog A10): one passing line of atmosphere for the current location, in English, from its static
+// description and state. No learning data: the line teaches nothing and must hold no pack vocabulary.
+export function buildAtmosphereMessages({ language, styleGuide, location, state, partyNames }) {
+  const system = fillTemplate(loadTemplate('world/atmosphere.txt'), {
+    language,
+    style: { tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice },
+    location: { name: location.name, description: location.description.trim() },
+    state,
+    party: partyNames.length ? partyNames.join(', ') : 'nobody; the player walks alone',
+  });
+  return [
+    { role: 'system', content: system },
+    { role: 'user', content: JSON.stringify({ task: 'location_atmosphere', location_id: location.id }) },
+  ];
+}
