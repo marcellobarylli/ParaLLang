@@ -87,3 +87,10 @@ Hides answers in the app's Spellbook and closes reviews during encounters; the A
   during an encounter, no card shows any of them and there is no Review.
 - `node --test server/test/*.test.js`, `npm run test:mobile`, web client vitest and build,
   `npx expo export --platform ios`.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendment. No card shows a meaning, note or example English and reviews are refused
+(409 `IN_ENCOUNTER`) while an encounter is under way; between encounters due cards hide theirs and the rest show
+notes. Server 103/103, mobile 25/25, web client 12/12 and build, iOS export ok. No live runs (no prompt or content
+change). Not checked in the iOS Simulator. See [findings](findings.md).

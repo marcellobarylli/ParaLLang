@@ -27,10 +27,21 @@ The entry point for agents: the current state, how the project is logged, and th
 - **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and neither NPCs nor the
   grader's feedback give the answer away ([round 007](docs/rounds/007/architecture.md),
   [round 008](docs/rounds/008/architecture.md)), nor offer the answers as a menu to pick from
-  ([round 012](docs/rounds/012/architecture.md)).
+  ([round 012](docs/rounds/012/architecture.md)). The Spellbook hides meanings during encounters and on due cards
+  ([round 017](docs/rounds/017/architecture.md)).
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 017, the Spellbook stops giving answers away (autonomous)
+
+The app's Spellbook no longer shows the answers the game is asking for (round 001's audit): while an encounter is
+under way no card shows a meaning, note or example translation and reviews are refused (409 `IN_ENCOUNTER`, also for
+a challenge issued earlier); between encounters a due card hides its meaning until reviewed, and the other cards
+show their authored notes (round 003's deferred item). Codex critique 1 (6 findings: 4 accepted, 2 in part) widened
+the plan from the current line's words to the whole Spellbook, decided autonomously. Tests: server 103/103, mobile
+25/25, web client 12/12 and build, iOS export ok; no live runs (no prompt or content change). The frozen web client
+still shows meanings. Not checked in the iOS Simulator. See [findings](docs/rounds/017/findings.md).
 
 ## Addendum 2026-11-05: round 015, the Rift boss (autonomous)
 
@@ -196,7 +207,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
-| 017 | 11-05 | The Spellbook stops giving answers away: no meanings or reviews during an encounter, due cards hide theirs, notes shown (backlog D3) (autonomous) | [017](docs/rounds/017/architecture.md) | findings (after the build) | pre-run record |
+| 017 | 11-05 | The Spellbook stops giving answers away: no meanings or reviews during an encounter, due cards hide theirs, notes shown (backlog D3) (autonomous) | [017](docs/rounds/017/architecture.md) | [findings](docs/rounds/017/findings.md) | `7657879` (pre-run record) to round 017 close |
 | 016 | 11-05 | Expo patch and minor updates so expo-doctor passes again (backlog D4) (autonomous) | [016](docs/rounds/016/architecture.md) | [findings](docs/rounds/016/findings.md) | `76dea06` (pre-run record) to round 016 close |
 | 015 | 11-05 | The Rift boss: Errata, an infohazard in glitched mixed language, reviewing every earlier vocabulary file (autonomous) | [015](docs/rounds/015/architecture.md) | [findings](docs/rounds/015/findings.md) | `82371f9` (pre-run record) to round 015 close |
 | 014 | 11-05 | The Rift gate: sealed on the map until the other five encounters are complete; live full-market tour (autonomous) | [014](docs/rounds/014/architecture.md) | [findings](docs/rounds/014/findings.md) | `14a5830` (pre-run record) to round 014 close |

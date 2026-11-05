@@ -7,10 +7,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- **Round 017 (D3, Spellbook answer leak and notes): planned, critique 1 dispatched, not frozen.** A draft build is
-  in the working tree (server `inPlay`/`note` on cards and 409 `IN_PLAY` on review; app hides meanings of in-play
-  and due cards; tests). See `docs/rounds/017/trail/`.
-- Then: **E1** narrowed to Portia (round 014), **E2**, or **A8** (party).
+Nothing in progress: rounds 015, 016 and 017 are closed. Next, in order: **E1** narrowed to Portia (round 014's
+tour, again in round 015's: greeting 0.07 against 0.20), **E2** (Portia's unprompted greetings), then **A8** (party)
+or **B3**'s Fountain part. All need live runs: check Codex's limit first (see traps).
 
 ## Backlog
 
@@ -65,7 +64,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **D1.** `verify:cli` for `claude-cli` in Italian and for either provider in Spanish (round 003 item 3).
 - [x] **D2.** Grader caps echoed phrases at quality 2 (round 003 item 4): explained by rounds 007–008 (the echoes
   were prompted; unprompted, the same answer scores 5).
-- [ ] **D3.** Show vocabulary notes; the Spellbook meaning leak from round 001 (round 003 item 5).
+- [x] **D3.** (round 017, closed 2026-11-05) Show vocabulary notes; the Spellbook meaning leak from round 001 (round 003 item 5).
 - [x] **D5. Grader feedback dictates the answer** (round 008, closed 2026-11-05) (round 007 findings): after a partial order, `overall_feedback`
   (shown in the app's Assessment panel) said "Add “senza latte” to specify no milk." in 2/3 runs (1/3 baseline).
   Add a rule to `prompts/language/grading.txt` (feedback may name what is missing in English, never the
@@ -102,6 +101,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - Round 009: check the Market Entrance tutorial in the Simulator (companion card, first screen at the top, later
   turns scroll), review Portia's content and reference URLs, and decide whether Portia may model "come ti chiami"
   before the ask-back objective ([open items](../rounds/009/findings.md#open-items)).
+- Round 017: check the Spellbook during an encounter (explanation line, no Review) and between encounters (due
+  cards hidden, notes on reference cards); review closing reviews during encounters
+  ([open items](../rounds/017/findings.md#open-items)).
+- Round 015: check Errata's glitched English on screen and with VoiceOver; review Errata and the containment-file
+  voice ([open items](../rounds/015/findings.md#open-items)).
 - Round 016: open the app after the Expo update (expo 58.0.23, safe-area-context 5.11.1); check safe-area insets
   on the map and encounter screens ([open items](../rounds/016/findings.md#open-items)).
 - Round 014: check the sealed Rift on the map in the Simulator (lock mark, "Sealed 4/5" caption, disabled tap,
@@ -151,8 +155,23 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   usage limit; round left open. Iteration 4 ends here (round 014 closed, 015 open).
 - 2026-11-05, iteration 5: round 016 (D4) built and closed while Codex's limit lasted: `npx expo install --fix`,
   expo-doctor 20/20; mobile 22/22, server 101/101, client 12/12.
+- 2026-11-05, iteration 5: round 015 closed after Codex's reset (15:35 UTC): Spanish Rift resolved 7/7, Italian
+  tour 6/6 encounters and 27/27 lines, 0/81 feedback leaks.
+- 2026-11-05, iteration 5: round 017 (D3) planned, critiqued (6 findings: 4 accepted, 2 in part), frozen, built and
+  closed: no Spellbook answers or reviews during encounters, due cards hide theirs, notes shown; server 103/103,
+  mobile 25/25, client 12/12. Iteration 5 ends here (rounds 015–017 closed).
 
 ## Handoff notes and traps
+
+- **Reviews are refused during an encounter** (round 017, 409 `IN_ENCOUNTER`, create and submit). Server tests that
+  review must resolve the encounter first (`finishEncounter` in `server/test/helpers.js`); `verify-cli.js` reviews
+  after its second turn and so needs that turn to resolve. The app decides "due" from `nextReviewAt` against the
+  real clock: component tests with 2026-01 fixture dates must pass `now` to `Spellbook`.
+- **Spellbook-only mobile tests go in `mobile/src/__tests__/spellbook.test.js`**: appended to `learning-flow.test.js`
+  the Spellbook rendered null (cause not found).
+- **Codex's usage limit resets about 90 minutes after it hits** (iteration 4: hit 14:05, reset 15:34 UTC). Use the
+  wait for rounds without live runs (dependency updates, deterministic app or server rules). Iteration 5 spent
+  ~100 calls (two runs, one critique) after the reset without hitting it again.
 
 - **Codex has a subscription usage limit.** Iteration 4 hit it after about 100 game calls and two critiques in
   ~50 minutes (14:05 UTC). The game maps it to `PROVIDER_FAILURE` ("temporarily unavailable"); a direct
