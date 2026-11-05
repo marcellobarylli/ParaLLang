@@ -1,0 +1,43 @@
+version: gerald-break-es-v1
+references:
+  - id: rae-bueno
+    title: "RAE, Diccionario de la lengua española: bueno"
+    url: "https://dle.rae.es/bueno"
+  - id: rae-delicioso
+    title: "RAE, Diccionario de la lengua española: delicioso"
+    url: "https://dle.rae.es/delicioso"
+  - id: rae-gracia
+    title: "RAE, Diccionario de la lengua española: gracia (gracias)"
+    url: "https://dle.rae.es/gracia"
+  - id: wiktionary-gracias
+    title: "Wiktionary: gracias (Spanish)"
+    url: "https://en.wiktionary.org/wiki/gracias"
+entries:
+  - id: bueno
+    kind: word
+    target: "bueno"
+    part_of_speech: adjective
+    accepted_translations: ["good", "tasty"]
+    surface_variants: ["bueno", "buena", "buen", "buenísimo", "buenísima"]
+    accent_insensitive: false
+    example: { target: "El café está bueno.", english: "The coffee is good." }
+    note: "Bueno agrees with its noun: el café está bueno, la taza está buena. Buenísimo means 'very good'. Before a masculine noun it shortens: un buen café."
+    reference_ids: [rae-bueno]
+  - id: delicioso
+    kind: word
+    target: "delicioso"
+    part_of_speech: adjective
+    accepted_translations: ["delicious", "tasty"]
+    surface_variants: ["delicioso", "deliciosa"]
+    accent_insensitive: false
+    example: { target: "El café está delicioso.", english: "The coffee is delicious." }
+    reference_ids: [rae-delicioso]
+  - id: gracias
+    kind: word
+    target: "gracias"
+    part_of_speech: interjection
+    accepted_translations: ["thank you", "thanks"]
+    surface_variants: ["gracias", "muchas gracias"]
+    accent_insensitive: false
+    example: { target: "Muchas gracias, Gerald.", english: "Thank you very much, Gerald." }
+    reference_ids: [rae-gracia, wiktionary-gracias]

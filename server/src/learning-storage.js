@@ -41,6 +41,8 @@ function validParty(party) {
   return party.every((member) => member && typeof member === 'object'
     && typeof member.characterId === 'string' && typeof member.encounterId === 'string'
     && typeof member.joinedAt === 'string' && Number.isFinite(Date.parse(member.joinedAt))
+    // Round 022: resolved party conversations; missing means none yet.
+    && (member.conversations === undefined || (Number.isInteger(member.conversations) && member.conversations >= 0))
     && !seen.has(member.characterId) && seen.add(member.characterId));
 }
 

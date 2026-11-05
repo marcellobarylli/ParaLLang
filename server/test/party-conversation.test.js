@@ -1,0 +1,190 @@
+// Round 022: conversations with party members (backlog A8b): Gerald's coffee break.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
+import yaml from 'js-yaml';
+import { loadGameContent } from '../src/content-loader.js';
+import { FixtureProvider, api, createRuntime } from './helpers.js';
+import { gateFor } from '../src/world.js';
+
+const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
+
+// Grades the coffee break's objectives itself and delegates Gerald's first encounter to the shared fixture provider.
+class CoffeeBreakProvider extends FixtureProvider {
+  grade(messages) {
+    if (!messages[0].content.includes('"praise_coffee"') && !messages[0].content.includes('"thank_gerald"')) return super.grade(messages);
+    const answer = JSON.parse(messages.at(-1).content).player_answer;
+    const objectives = ['praise_coffee', 'thank_gerald'].filter((id) => messages[0].content.includes(`"${id}"`));
+    const praise = answer.match(/buen[ií]simo|bueno|buen|delicioso/i);
+    const thanks = answer.match(/muchas gracias|gracias/i);
+    return {
+      objective_results: objectives.map((id) => {
+        const match = id === 'praise_coffee' ? praise : thanks;
+        const vocabularyId = id === 'thank_gerald' ? 'gracias' : /delicioso/i.test(match?.[0] ?? '') ? 'delicioso' : 'bueno';
+        return {
+          objective_id: id, passed: Boolean(match), feedback: match ? `Passed ${id}.` : `Keep working on ${id}.`,
+          vocabulary_evidence: match ? [{ vocabulary_id: vocabularyId, evidence: match[0], quality: 5 }] : [],
+        };
+      }),
+      overall_feedback: 'Fixture assessment applied.',
+    };
+  }
+}
+
+const say = async (runtime, learnerId, encounter, message, attemptId = randomUUID()) => {
+  const turn = await api(runtime, '/api/encounter/dialogue', { learnerId, method: 'POST', body: { encounterId: encounter.id, version: encounter.version, attemptId, message } });
+  assert.equal(turn.status, 200, JSON.stringify(turn.data));
+  return turn.data;
+};
+const move = (runtime, learnerId, locationId) => api(runtime, '/api/world/move', { learnerId, method: 'POST', body: { locationId } });
+const start = (runtime, learnerId, encounterId) => api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { encounterId } });
+const narrationPrompts = (runtime) => runtime.provider.calls.filter((call) => call.options.schemaName === 'encounter_narration').map((call) => call.messages);
+
+async function recruitedGerald(t) {
+  const runtime = await createRuntime({ provider: new CoffeeBreakProvider() });
+  t.after(runtime.close);
+  const learnerId = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
+  await move(runtime, learnerId, 'coffee_cart');
+  const before = await start(runtime, learnerId, 'gerald_coffee_break');
+  assert.equal(before.status, 409);
+  assert.equal(before.data.error.code, 'NOT_IN_PARTY');
+  const first = (await start(runtime, learnerId, 'imp_coffee_greeting')).data.encounter;
+  assert.equal((await say(runtime, learnerId, first, 'Quiero un café negro.')).encounter.state, 'resolved');
+  assert.equal((await api(runtime, '/api/party/recruit', { learnerId, method: 'POST', body: { encounterId: 'imp_coffee_greeting' } })).data.joined, true);
+  return { runtime, learnerId };
+}
+
+test('the coffee break starts anywhere once Gerald has joined, is set where the player stands, and counts per resolution', async (t) => {
+  const { runtime, learnerId } = await recruitedGerald(t);
+  await move(runtime, learnerId, 'market_entrance');
+  const calls = narrationPrompts(runtime).length;
+  const started = await start(runtime, learnerId, 'gerald_coffee_break');
+  assert.equal(started.status, 200);
+  let encounter = started.data.encounter;
+  assert.equal(encounter.location, 'market_entrance');
+  assert.equal(encounter.partyConversation, true);
+  assert.deepEqual(encounter.character, { id: 'imp_coffee_001', name: 'Gerald', saveable: true });
+  const greeting = narrationPrompts(runtime)[calls];
+  assert.match(greeting.at(-1).content, /introduce Gerald at Market Entrance/);
+  assert.match(greeting.at(-1).content, /The player approaches Gerald at Market Entrance in The Crumbling Market/);
+  assert.match(JSON.stringify(greeting), /has brewed the player a coffee/, 'the scene reaches the narration through the objective intent');
+
+  // Walking on mid-conversation does not move the scene.
+  await move(runtime, learnerId, 'coffee_cart');
+  let turn = await say(runtime, learnerId, encounter, 'Delicious!');
+  assert.deepEqual(turn.assessment.objectiveResults.map((r) => r.passed), [false, false]);
+  const turnPrompt = JSON.stringify(narrationPrompts(runtime).at(-1));
+  // Turn prompts carry no location (only the greeting does), so the walk cannot move the scene.
+  assert.doesNotMatch(turnPrompt, /The Coffee Cart|Market Entrance/);
+  turn = await say(runtime, learnerId, turn.encounter, '¡Está buenísimo!');
+  assert.equal(turn.encounter.state, 'ongoing', 'praise alone leaves the thanks open');
+  assert.equal(turn.encounter.currentObjective.id, 'thank_gerald');
+  const finalAttempt = randomUUID();
+  const beforeFinal = turn.encounter;
+  turn = await say(runtime, learnerId, beforeFinal, '¡Muchas gracias!', finalAttempt);
+  assert.equal(turn.encounter.state, 'resolved');
+  assert.equal(turn.encounter.location, 'market_entrance');
+
+  const party = async () => (await api(runtime, '/api/party', { learnerId })).data.party;
+  assert.equal((await party())[0].conversations, 1);
+  const replayed = await say(runtime, learnerId, beforeFinal, '¡Muchas gracias!', finalAttempt);
+  assert.equal(replayed.replayed, true);
+  assert.equal((await party())[0].conversations, 1, 'a replayed attempt does not count twice');
+
+  const saved = JSON.parse(await readFile(join(runtime.saveDir, `${learnerId}.json`), 'utf8'));
+  assert.deepEqual(saved.world.completedEncounterIds, ['imp_coffee_greeting'], 'the conversation is not a map encounter');
+  const rift = runtime.content.world.locationsById.get('the_rift');
+  assert.deepEqual(gateFor(rift, saved.world), { sealed: true, required: 5, completed: 1 });
+  const world = (await api(runtime, '/api/world', { learnerId })).data.world;
+  assert.ok(!JSON.stringify(world).includes('gerald_coffee_break'));
+
+  // Talking again after a resolution starts a fresh session (critique 1.1); praise and thanks in one line resolve it.
+  const again = (await start(runtime, learnerId, 'gerald_coffee_break')).data.encounter;
+  assert.notEqual(again.id, encounter.id);
+  assert.equal(again.state, 'ongoing');
+  assert.equal(again.location, 'coffee_cart', 'the new session is set where the player now stands');
+  const resumed = (await start(runtime, learnerId, 'gerald_coffee_break')).data.encounter;
+  assert.equal(resumed.id, again.id, 'an ongoing conversation is resumed');
+  assert.equal((await say(runtime, learnerId, again, '¡Un buen café, gracias!')).encounter.state, 'resolved');
+  assert.equal((await party())[0].conversations, 2);
+  assert.equal((await party())[0].conversationId, 'gerald_coffee_break');
+});
+
+test('a resolved location encounter is still resumed, not restarted', async (t) => {
+  const { runtime, learnerId } = await recruitedGerald(t);
+  const before = (await api(runtime, '/api/encounter/current', { learnerId })).data.encounter;
+  const again = (await start(runtime, learnerId, 'imp_coffee_greeting')).data.encounter;
+  assert.equal(again.id, before.id);
+  assert.equal(again.state, 'resolved');
+  assert.equal(again.partyConversation, false);
+});
+
+test('a member conversation count must be a non-negative integer', async (t) => {
+  const { runtime, learnerId } = await recruitedGerald(t);
+  const path = join(runtime.saveDir, `${learnerId}.json`);
+  const saved = JSON.parse(await readFile(path, 'utf8'));
+  assert.equal(saved.party[0].conversations, undefined, 'a new member has no count yet');
+  assert.equal((await api(runtime, '/api/party', { learnerId })).data.party[0].conversations, 0, 'missing reads as 0');
+  for (const conversations of [-1, 1.5, '2', null]) {
+    const raw = JSON.stringify({ ...saved, party: [{ ...saved.party[0], conversations }] });
+    await writeFile(path, raw);
+    assert.equal((await api(runtime, '/api/party', { learnerId })).data.error?.code, 'SAVE_UNREADABLE', String(conversations));
+    assert.equal(await readFile(path, 'utf8'), raw);
+  }
+});
+
+test('both packs hold Gerald\'s coffee break as his only party conversation, off the map', () => {
+  for (const code of ['it', 'es']) {
+    const { encounters, world } = loadGameContent({ language: code });
+    const definition = encounters.get('gerald_coffee_break');
+    assert.equal(definition.encounter.party_of, 'imp_coffee_greeting');
+    assert.equal(definition.encounter.location, undefined);
+    assert.equal(definition.character.id, 'imp_coffee_001');
+    assert.deepEqual(definition.encounter.objectives.map((o) => o.id), ['praise_coffee', 'thank_gerald']);
+    assert.ok(world.locations.every((location) => location.encounter !== 'gerald_coffee_break'));
+    const forms = definition.narrationEntries.flatMap((entry) => entry.surface_variants.map((form) => form.toLowerCase()));
+    assert.ok(!forms.some((form) => ['rico', 'rica'].includes(form)), 'no forms that are English names (Puerto Rico, Costa Rica)');
+  }
+});
+
+test('the loader rejects broken party conversations', async (t) => {
+  const conversation = 'languages/it/encounters/gerald_coffee_break.yaml';
+  const cases = [
+    ['missing', (dir, c) => { c.party_of = 'dragon_lair'; }, /names unknown encounter dragon_lair/],
+    ['self', (dir, c) => { c.party_of = 'gerald_coffee_break'; }, /must name a location encounter/],
+    ['wrong character', (dir, c) => { c.party_of = 'butchers_stall_charcutier'; }, /must use the character of butchers_stall_charcutier/],
+    ['not saveable', (dir, c) => { c.party_of = 'market_entrance_tutorial'; c.character = 'characters/enemies/archway_portia.yaml'; }, /needs a saveable character; Portia is not/],
+    ['both', (dir, c) => { c.location = 'coffee_cart'; }, /either a location or party_of/],
+    ['neither', (dir, c) => { delete c.party_of; }, /either a location or party_of/],
+    ['two', async (dir, c) => {
+      await writeFile(join(dir, 'languages/it/encounters/gerald_second_break.yaml'), yaml.dump({ ...c, id: 'gerald_second_break' }));
+    }, /imp_coffee_greeting has more than one party conversation/],
+    ['chained', async (dir, c) => {
+      await writeFile(join(dir, 'languages/it/encounters/gerald_second_break.yaml'), yaml.dump({ ...c, id: 'gerald_second_break', party_of: 'gerald_coffee_break' }));
+    }, /gerald_second_break must name a location encounter, not gerald_coffee_break/],
+    ['default', async (dir) => {
+      const path = join(dir, 'languages/it/language.yaml');
+      const language = yaml.load(await readFile(path, 'utf8'));
+      await writeFile(path, yaml.dump({ ...language, default_encounter: 'gerald_coffee_break' }));
+    }, /default_encounter gerald_coffee_break is a party conversation/],
+    ['gate', async (dir) => {
+      const path = join(dir, 'world/locations/the_rift.yaml');
+      const rift = yaml.load(await readFile(path, 'utf8'));
+      rift.requires_completed.push('gerald_coffee_break');
+      await writeFile(path, yaml.dump(rift));
+    }, /requires party conversation gerald_coffee_break/],
+  ];
+  for (const [name, change, error] of cases) {
+    const dir = await mkdtemp(join(tmpdir(), 'parallang-party-'));
+    t.after(() => rm(dir, { recursive: true, force: true }));
+    await cp(contentRoot, dir, { recursive: true });
+    const path = join(dir, conversation);
+    const value = yaml.load(await readFile(path, 'utf8'));
+    await change(dir, value);
+    await writeFile(path, yaml.dump(value));
+    assert.throws(() => loadGameContent({ contentDir: dir, language: 'it' }), error, name);
+  }
+});

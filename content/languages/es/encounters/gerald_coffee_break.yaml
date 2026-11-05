@@ -1,0 +1,67 @@
+id: gerald_coffee_break
+character: characters/enemies/imp_coffee.yaml
+party_of: imp_coffee_greeting
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player praises Gerald's coffee and thanks him, in Spanish"
+max_turns: 20
+resolved_message: "Gerald pretends not to be pleased. He is extremely pleased."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_coffee
+    prompt: "Gerald has made you a coffee on the road. Tell him it is good, using Spanish."
+    intent: "Gerald, now travelling in the player's party, has brewed the player a coffee and waits for the player's own verdict on it."
+    target_vocabulary_ids: [bueno, delicioso]
+    required_target_groups:
+      - [bueno, delicioso]
+    grammar_constraints:
+      - "The player gives their own positive verdict on the coffee Gerald made, with a Spanish word for good."
+      - "The adjective agrees with what it praises: with el café (masculine) it is bueno, buenísimo or delicioso, or buen before the noun (un buen café); a feminine form (buena, buenísima, deliciosa) passes only with an explicit feminine referent such as la taza."
+      - "Reject English-only praise, negated verdicts (including 'no bueno'), quotations, and praise of anything other than the coffee."
+    accepted_examples:
+      - "¡Está bueno!"
+      - "El café está buenísimo."
+      - "Delicioso, Gerald."
+      - "This is bueno."
+      - "¡Un buen café!"
+    negative_examples:
+      - text: "It's good."
+        reason: "English-only; it does not use a Spanish word for good."
+      - text: "El café está buena."
+        reason: "El café is masculine; the adjective must be bueno."
+      - text: "No está bueno."
+        reason: "A negated verdict is not praise."
+      - text: "Gerald says it is bueno."
+        reason: "It reports someone else's words rather than giving the player's verdict."
+      - text: "Your cart is bueno."
+        reason: "It praises the cart, not the coffee."
+    reference_meaning: "The player's own verdict that the coffee is good."
+    hint_limit: 2
+    next_objective: thank_gerald
+    assessment_reference_ids: [rae-bueno, rae-delicioso]
+  - id: thank_gerald
+    prompt: "Thank Gerald for the coffee, using Spanish."
+    intent: "The player thanks Gerald for the coffee he made."
+    target_vocabulary_ids: [gracias]
+    required_target_groups:
+      - [gracias]
+    grammar_constraints:
+      - "The player thanks Gerald in Spanish, in their own words."
+      - "Reject English-only thanks, quotations, and thanks addressed to someone else."
+    accepted_examples:
+      - "¡Gracias!"
+      - "Muchas gracias, Gerald."
+      - "Gracias for the coffee."
+    negative_examples:
+      - text: "Thank you."
+        reason: "English-only; it does not use the Spanish thanks."
+      - text: "Gracias is how you say thanks."
+        reason: "It discusses the word rather than thanking Gerald."
+    reference_meaning: "The player thanks Gerald."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [rae-gracia]

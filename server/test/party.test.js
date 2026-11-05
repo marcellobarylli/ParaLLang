@@ -8,7 +8,7 @@ import { api, createRuntime } from './helpers.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { retryableError } from '../src/errors.js';
 
-const gerald = { characterId: 'imp_coffee_001', name: 'Gerald', encounterId: 'imp_coffee_greeting', locationId: 'coffee_cart', locationName: 'The Coffee Cart', joinedAt: '2026-01-15T12:00:00.000Z' };
+const gerald = { characterId: 'imp_coffee_001', name: 'Gerald', encounterId: 'imp_coffee_greeting', locationId: 'coffee_cart', locationName: 'The Coffee Cart', joinedAt: '2026-01-15T12:00:00.000Z', conversations: 0, conversationId: 'gerald_coffee_break' };
 
 async function newLearner(runtime) {
   return (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
@@ -159,7 +159,7 @@ test('an invalid party makes the save unreadable and leaves the file unchanged',
   const learnerId = await newLearner(runtime);
   const fresh = JSON.parse(await readFile(savePath(runtime, learnerId), 'utf8'));
   assert.deepEqual(fresh.party, [], 'a new save has an empty party');
-  const member = { characterId: 'imp_coffee_001', encounterId: 'imp_coffee_greeting', joinedAt: '2026-01-15T12:00:00.000Z' };
+  const member = { characterId: 'imp_coffee_001', encounterId: 'imp_coffee_greeting', joinedAt: '2026-01-15T12:00:00.000Z', conversations: 0, conversationId: 'gerald_coffee_break' };
   for (const party of [{}, null, [null], [member, { ...member }], [{ ...member, joinedAt: 'yesterday' }], [{ ...member, characterId: 3 }]]) {
     const raw = JSON.stringify({ ...fresh, party });
     await writeFile(savePath(runtime, learnerId), raw);

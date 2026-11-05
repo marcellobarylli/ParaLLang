@@ -69,6 +69,15 @@ export class LearningService {
 
   locationName(definition) { return this.content.world.locationsById.get(definition.encounter.location)?.name ?? definition.encounter.location; }
 
+  // Round 022: a party conversation is set wherever the player stood when it began; other encounters at their location.
+  sceneLocationId(session) { return session?.locationId ?? this.definition(session).encounter.location; }
+
+  sceneName(session) { return this.content.world.locationsById.get(this.sceneLocationId(session))?.name ?? this.sceneLocationId(session); }
+
+  partyConversationFor(encounterId) {
+    return [...this.content.encounters.values()].find((definition) => definition.encounter.party_of === encounterId) ?? null;
+  }
+
   discover(envelope, vocabularyIds, discoveredAt, source) {
     let changed = false;
     for (const vocabularyId of new Set(vocabularyIds)) {
@@ -183,7 +192,8 @@ export class LearningService {
     return {
       id: encounter.id,
       encounterId: definition.encounter.id,
-      location: definition.encounter.location,
+      location: this.sceneLocationId(encounter),
+      partyConversation: Boolean(definition.encounter.party_of),
       character: { id: definition.character.id, name: definition.character.name, saveable: definition.character.saveable === true },
       resolvedMessage: definition.encounter.resolved_message ?? null,
       companionBriefing: definition.encounter.companion_briefing ?? null,
@@ -220,14 +230,25 @@ export class LearningService {
       const definitionId = encounterId ?? this.content.defaultEncounterId;
       const definition = this.content.encounters.get(definitionId);
       if (typeof definitionId !== 'string' || !definition) throw validationError('Unknown encounter.');
-      if (encounterId !== null && currentLocationId(this.content.world, envelope.world) !== definition.encounter.location) {
-        throw conflictError(`${definition.character.name} is not here. Walk to ${this.locationName(definition)} first.`, 'NOT_HERE');
+      const here = currentLocationId(this.content.world, envelope.world);
+      if (definition.encounter.party_of) {
+        // Round 022: a party member travels with the player, so their conversation starts anywhere once they have joined.
+        if (!envelope.party.some((member) => member.characterId === definition.character.id)) {
+          throw conflictError(`${definition.character.name} is not in your party yet.`, 'NOT_IN_PARTY');
+        }
+      } else {
+        if (encounterId !== null && here !== definition.encounter.location) {
+          throw conflictError(`${definition.character.name} is not here. Walk to ${this.locationName(definition)} first.`, 'NOT_HERE');
+        }
+        // Round 015: a save from rounds 005–013 may already stand in the Rift; its encounter still waits for the gate.
+        const gate = gateFor(this.content.world.locationsById.get(definition.encounter.location), envelope.world);
+        if (gate?.sealed) throw conflictError(sealedMessage(this.locationName(definition), gate), 'SEALED');
       }
-      // Round 015: a save from rounds 005–013 may already stand in the Rift; its encounter still waits for the gate.
-      const gate = gateFor(this.content.world.locationsById.get(definition.encounter.location), envelope.world);
-      if (gate?.sealed) throw conflictError(sealedMessage(this.locationName(definition), gate), 'SEALED');
+      const locationId = definition.encounter.party_of ? here : undefined;
       const active = this.encounters.get(learnerId);
-      if (!restart && active && this.definition(active) === definition) {
+      // Round 022: a resolved party conversation is played again from the start; other encounters resume as before.
+      const replay = Boolean(definition.encounter.party_of) && active?.state === 'resolved';
+      if (!restart && !replay && active && this.definition(active) === definition) {
         return { encounter: this.serializeEncounter(active), spellbook: this.spellbookSnapshot(envelope) };
       }
       const ratio = this.ratioFor(0, definition);
@@ -235,7 +256,7 @@ export class LearningService {
         language: this.content.language,
         character: definition.character,
         styleGuide: this.content.styleGuide,
-        locationName: this.locationName(definition),
+        locationName: this.sceneName({ definitionId: definition.encounter.id, locationId }),
         objectives: definition.encounter.objectives,
         vocabularyById: this.content.vocabularyById,
         targetRatio: ratio,
@@ -247,6 +268,7 @@ export class LearningService {
       const encounter = {
         id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0,
         committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
+        ...(locationId ? { locationId } : {}),
       };
       await this.storage.save(stagedEnvelope);
       this.encounters.set(learnerId, encounter);
@@ -378,7 +400,7 @@ export class LearningService {
         language: this.content.language,
         character: definition.character,
         styleGuide: this.content.styleGuide,
-        locationName: this.locationName(definition),
+        locationName: this.sceneName(current),
         objectives: definition.encounter.objectives.slice(nextObjectiveIndex),
         vocabularyById: this.content.vocabularyById,
         conversationHistory: history,
@@ -427,7 +449,11 @@ export class LearningService {
         spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
         replayed: false,
       };
-      if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
+      if (resolved && definition.encounter.party_of) {
+        // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
+        const member = stagedEnvelope.party.find((candidate) => candidate.characterId === definition.character.id);
+        if (member) member.conversations = (member.conversations ?? 0) + 1;
+      } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
         stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
       }
       stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
@@ -468,6 +494,8 @@ export class LearningService {
         locationId: definition.encounter.location,
         locationName: this.locationName(definition),
         joinedAt: member.joinedAt,
+        conversations: member.conversations ?? 0,
+        conversationId: this.partyConversationFor(member.encounterId)?.encounter.id ?? null,
       }];
     });
   }

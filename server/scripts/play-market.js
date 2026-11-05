@@ -1,6 +1,8 @@
 // Live playthrough of the Crumbling Market through a CLI provider, in-process (no port is opened).
 //   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall|cracked_fountain|old_bookshop|the_rift] [--lines 'a|b|c'] [--out <file.json>]
 //   node server/scripts/play-market.js --provider codex-cli --tour [--out <file.json>]
+// --party (round 022) wins Gerald, recruits him, walks to the Market Entrance and plays his party conversation
+// (gerald_coffee_break) there; the report's `party` part holds that conversation and the member's count.
 // --recruit (round 021) saves the defeated NPC to the party after a single-location run and reports the party;
 // the exit code then also needs the recruit to succeed.
 // --tour (round 014) plays every encounter in order and checks that The Rift is sealed before the Old Bookshop's
@@ -49,6 +51,15 @@ const scripts = {
   market_entrance: {
     it: ['Ciao!', 'Mi chiamo Sam.', 'E tu?'],
     es: ['¡Hola!', 'Me llamo Sam.', '¿Y tú?'],
+  },
+};
+
+// Round 022: party conversations, played by --party after recruiting. An English verdict first (should fail), then
+// a variant form of the praise, then the thanks.
+const partyScripts = {
+  gerald_coffee_break: {
+    it: ['Delicious!', 'È buonissimo!', 'Grazie mille!'],
+    es: ['Delicious!', '¡Está riquísimo!', '¡Muchas gracias!'],
   },
 };
 
@@ -129,10 +140,10 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
     };
 
     // Plays the encounter at `target` with `playerLines` and returns its part of the report.
-    const playAt = async (target, playerLines) => {
+    const playAt = async (target, playerLines, conversationId = null) => {
       await walkTo(target);
       const firstCall = raw.length;
-      const encounterId = content.world.locationsById.get(target).encounter;
+      const encounterId = conversationId ?? content.world.locationsById.get(target).encounter;
       const definition = content.encounters.get(encounterId);
       let encounter = (await step(`start ${definition.character.name}`, async () => ({ encounter: (await service.startEncounter(learnerId, { encounterId })).encounter })))?.encounter;
       const companionBriefing = encounter?.companionBriefing ?? null;
@@ -165,6 +176,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       }));
       return {
         location: target,
+        sceneLocation: encounter?.location ?? null,
         encounterId,
         companionBriefing,
         resolved: encounter?.state === 'resolved',
@@ -209,6 +221,27 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       };
     }
 
+    if (args.includes('--party')) {
+      const home = await playAt('coffee_cart', scripts.coffee_cart[content.language.code]);
+      const recruited = await step('recruit imp_coffee_greeting', async () => service.recruit(learnerId, { encounterId: 'imp_coffee_greeting' }));
+      const linesIndex = args.indexOf('--lines');
+      const conversationLines = linesIndex >= 0 ? args[linesIndex + 1].split('|') : partyScripts.gerald_coffee_break[content.language.code];
+      const conversation = await playAt('market_entrance', conversationLines, 'gerald_coffee_break');
+      const { party } = await service.getParty(learnerId);
+      strip();
+      return {
+        provider: preflight, language: content.language.code, party: true,
+        recruited: recruited?.joined === true,
+        resolved: home.resolved && conversation.resolved,
+        // The conversation must not mark anything on the map; the member's count goes up instead.
+        completedOnMap: home.completedOnMap,
+        conversationOffMap: !(await storage.load(learnerId)).world.completedEncounterIds.includes('gerald_coffee_break'),
+        conversations: party.find((member) => member.encounterId === 'imp_coffee_greeting')?.conversations ?? null,
+        generationCalls: raw.length,
+        home, conversation, steps,
+      };
+    }
+
     // Round 015: a gated location played alone (the Rift) gets its required encounters marked complete first.
     const required = content.world.locationsById.get(locationId).requires_completed;
     if (required.length) {
@@ -245,6 +278,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     if (outIndex > 0) await writeFile(process.argv[outIndex + 1], text);
     process.stdout.write(text);
     const ok = report.tour ? report.resolved && report.riftSealedBefore && report.riftOpenAfter
+      : report.party === true ? report.recruited && report.resolved && report.conversationOffMap && report.conversations === 1
       : report.resolved && report.completedOnMap && (!report.party || report.party.joined);
     process.exitCode = ok ? 0 : 1;
   }).catch((error) => { console.error(error.message); process.exitCode = 1; });

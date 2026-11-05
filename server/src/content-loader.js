@@ -54,7 +54,10 @@ const objectiveSchema = z.object({
 const encounterSchema = z.object({
   id: z.string().min(1),
   character: z.string().min(1),
-  location: z.string().min(1),
+  // Round 022: a party conversation names the location encounter whose character it continues (`party_of`) and has
+  // no map location; every other encounter has a location.
+  location: z.string().min(1).optional(),
+  party_of: z.string().min(1).optional(),
   type: z.literal('dialogue'),
   initial_prompt_template: z.string().min(1),
   turn_prompt_template: z.string().min(1),
@@ -67,7 +70,11 @@ const encounterSchema = z.object({
   // Round 019: authored words the NPC may use in any line; never the target of one of the encounter's objectives.
   ambient_vocabulary_ids: z.array(z.string().min(1)).min(1).optional(),
   objectives: z.array(objectiveSchema).min(1),
-}).strict();
+}).strict().superRefine((encounter, context) => {
+  if (Boolean(encounter.location) === Boolean(encounter.party_of)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'An encounter has either a location or party_of, not both or neither' });
+  }
+});
 
 const characterSchema = z.object({
   id: z.string().min(1),
@@ -186,8 +193,10 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     const narrationEntries = Object.freeze([...fileEntries, ...ambientEntries.filter((entry) => !fileEntries.includes(entry))]);
     encounters.set(encounter.id, Object.freeze({ encounter, character, narrationEntries, ambientEntries }));
   }
+  validatePartyConversations(encounters);
   const defaultDefinition = encounters.get(defaultEncounterId);
   if (!defaultDefinition) throw new Error(`content/${pack}/language.yaml names unknown default_encounter ${defaultEncounterId}`);
+  if (defaultDefinition.encounter.party_of) throw new Error(`content/${pack}/language.yaml default_encounter ${defaultEncounterId} is a party conversation`);
   const { encounter, character } = defaultDefinition;
 
   const world = loadWorld(contentDir, encounters);
@@ -198,6 +207,23 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     encounter, character,
     entryVersion: (id) => versionById.get(id),
   });
+}
+
+// Round 022: a party conversation continues a saveable character's location encounter, with the same character file.
+function validatePartyConversations(encounters) {
+  const homes = new Set();
+  for (const { encounter, character } of encounters.values()) {
+    if (!encounter.party_of) continue;
+    if (homes.has(encounter.party_of)) throw new Error(`Encounter ${encounter.party_of} has more than one party conversation`);
+    homes.add(encounter.party_of);
+    const home = encounters.get(encounter.party_of);
+    if (!home) throw new Error(`Party conversation ${encounter.id} names unknown encounter ${encounter.party_of}`);
+    if (home.encounter.party_of) throw new Error(`Party conversation ${encounter.id} must name a location encounter, not ${encounter.party_of}`);
+    if (home.encounter.character !== encounter.character) {
+      throw new Error(`Party conversation ${encounter.id} must use the character of ${encounter.party_of} (${home.encounter.character})`);
+    }
+    if (character.saveable !== true) throw new Error(`Party conversation ${encounter.id} needs a saveable character; ${character.name} is not`);
+  }
 }
 
 function yamlFiles(contentDir, relativeDir) {
@@ -283,6 +309,7 @@ export function loadWorld(contentDir, encounters) {
     }
   }
   for (const { encounter } of encounters.values()) {
+    if (encounter.party_of) continue; // round 022: party conversations are not on the map
     if (byId.get(encounter.location)?.encounter !== encounter.id) {
       throw new Error(`Encounter ${encounter.id} must be held by its location ${encounter.location}`);
     }
@@ -293,6 +320,7 @@ export function loadWorld(contentDir, encounters) {
     if (new Set(required).size !== required.length) throw new Error(`Location ${location.id} lists an encounter twice in requires_completed`);
     for (const id of required) {
       if (!encounters.has(id)) throw new Error(`Location ${location.id} requires unknown encounter ${id}`);
+      if (encounters.get(id).encounter.party_of) throw new Error(`Location ${location.id} requires party conversation ${id}, which never completes on the map`);
       if (id === location.encounter) throw new Error(`Location ${location.id} requires its own encounter ${id}`);
     }
   }

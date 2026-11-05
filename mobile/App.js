@@ -33,7 +33,7 @@ export default function App() {
         {state.notice && <Text role="status" style={styles.notice}>{state.notice}</Text>}
 
         {state.view === 'map' && <MapPanel world={state.world} isLoading={state.isLoading} onMove={state.moveTo} onEnterEncounter={state.enterEncounter} party={state.party} onRecruit={state.recruit} />}
-        {state.view === 'party' && <PartyPanel party={state.party} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
+        {state.view === 'party' && <PartyPanel party={state.party} isLoading={state.isLoading} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'review' && <ReviewPanel
           key={state.reviewChallenge?.id ?? 'result'}

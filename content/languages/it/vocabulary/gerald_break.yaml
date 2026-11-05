@@ -1,0 +1,47 @@
+version: gerald-break-it-v1
+references:
+  - id: treccani-buono
+    title: "Treccani, Vocabolario: buono"
+    url: "https://www.treccani.it/vocabolario/buono/"
+  - id: treccani-ottimo
+    title: "Treccani, Vocabolario: ottimo"
+    url: "https://www.treccani.it/vocabolario/ottimo/"
+  - id: treccani-grazie
+    title: "Treccani, Vocabolario: grazie"
+    url: "https://www.treccani.it/vocabolario/grazie/"
+  - id: wiktionary-buono
+    title: "Wiktionary: buono (Italian)"
+    url: "https://en.wiktionary.org/wiki/buono"
+  - id: wiktionary-grazie
+    title: "Wiktionary: grazie (Italian)"
+    url: "https://en.wiktionary.org/wiki/grazie"
+entries:
+  - id: buono
+    kind: word
+    target: "buono"
+    part_of_speech: adjective
+    accepted_translations: ["good", "tasty", "nice"]
+    surface_variants: ["buono", "buona", "buon", "buonissimo", "buonissima"]
+    accent_insensitive: false
+    example: { target: "Il caffè è buono.", english: "The coffee is good." }
+    note: "Buono agrees with its noun: il caffè è buono, la tazza è buona. Buonissimo means 'very good'. Before most masculine nouns it shortens: un buon caffè."
+    reference_ids: [treccani-buono, wiktionary-buono]
+  - id: ottimo
+    kind: word
+    target: "ottimo"
+    part_of_speech: adjective
+    accepted_translations: ["excellent", "very good"]
+    surface_variants: ["ottimo", "ottima"]
+    accent_insensitive: false
+    example: { target: "È un ottimo caffè.", english: "It is an excellent coffee." }
+    reference_ids: [treccani-ottimo]
+  - id: grazie
+    kind: word
+    target: "grazie"
+    part_of_speech: interjection
+    accepted_translations: ["thank you", "thanks"]
+    surface_variants: ["grazie", "grazie mille"]
+    accent_insensitive: false
+    example: { target: "Grazie mille, Gerald.", english: "Thanks a lot, Gerald." }
+    note: "Grazie mille: 'a thousand thanks', thanks a lot."
+    reference_ids: [treccani-grazie, wiktionary-grazie]

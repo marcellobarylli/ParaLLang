@@ -85,7 +85,11 @@ test('both packs put Errata in The Rift, reviewing every earlier vocabulary file
     assert.equal(definition.character.saveable, false);
     assert.equal(definition.encounter.companion_briefing.length, 3);
     assert.deepEqual(definition.encounter.objectives.map((o) => o.id), ['order', 'stop_now', 'nobody']);
-    assert.equal(definition.narrationEntries.length, vocabulary.entries.length, 'its chips cover every authored entry');
+    // Round 022: party conversations are optional, so their vocabulary is not part of the Rift's review.
+    const partyIds = new Set([...encounters.values()].filter(({ encounter }) => encounter.party_of)
+      .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
+    assert.ok(partyIds.size > 0);
+    assert.equal(definition.narrationEntries.length, vocabulary.entries.filter((entry) => !partyIds.has(entry.id)).length, 'its chips cover every location encounter entry');
     for (const file of files) assert.match(vocabulary.version, new RegExp(file.replace('_', '-')), `${file} is still one of the files`);
   }
 });

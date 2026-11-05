@@ -32,7 +32,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
         {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</Text>)}
       </View>}
       {resolved && <Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}</Text>}
-      {resolved && encounter.character?.saveable && onRecruit && <PartyOffer
+      {resolved && encounter.character?.saveable && !encounter.partyConversation && onRecruit && <PartyOffer
         name={name} joined={inParty(party, encounter.character.id)} isLoading={isLoading}
         onSave={() => onRecruit(encounter.encounterId)} onLeave={onLeave}
       />}

@@ -72,10 +72,17 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
     },
 
     // Enters the encounter at the current location. A different session than the one held starts clean.
-    enterEncounter: async () => {
-      const { learnerId, isLoading, world } = get();
+    enterEncounter: () => {
+      const { world } = get();
+      return get()._startNamed(world?.locations.find((location) => location.id === world.currentLocationId)?.encounter?.id ?? null);
+    },
+
+    // Round 022: a party member's conversation starts from the Party screen, wherever the player is.
+    talkTo: (encounterId) => (typeof encounterId === 'string' ? get()._startNamed(encounterId) : undefined),
+
+    _startNamed: async (encounterId) => {
+      const { learnerId, isLoading } = get();
       if (!learnerId || isLoading) return;
-      const encounterId = world?.locations.find((location) => location.id === world.currentLocationId)?.encounter?.id ?? null;
       const epoch = requestEpoch;
       set({ isLoading: true, error: null });
       try {
@@ -151,8 +158,9 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
         set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
         if (result.encounter.state === 'resolved') {
           try {
-            const { world } = await api.getWorld(learnerId);
-            if (get().learnerId === learnerId) set({ world });
+            // Round 022: a resolved party conversation raises the member's count, so the party is refreshed too.
+            const [{ world }, { party }] = await Promise.all([api.getWorld(learnerId), api.getParty(learnerId)]);
+            if (get().learnerId === learnerId) set({ world, party });
           } catch { /* the map refreshes again when it is opened */ }
         }
       } catch (error) {

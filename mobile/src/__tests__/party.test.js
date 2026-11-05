@@ -148,3 +148,55 @@ test('in the app, saving Gerald fills the Party screen and Leave returns to the 
     expect(screen.getByLabelText('Gerald, met at The Coffee Cart')).toBeOnTheScreen();
   } finally { delete globalThis.fetch; }
 });
+
+// Round 022: conversations with party members.
+describe('party conversations', () => {
+  const member = { ...gerald, conversations: 2, conversationId: 'gerald_coffee_break' };
+
+  test('the Party screen shows the count and Talk starts the conversation', async () => {
+    const user = userEvent.setup();
+    const onTalk = jest.fn();
+    await render(<PartyPanel party={[member]} onTalk={onTalk} onReturn={jest.fn()} returnLabel="Return to the map" />);
+    expect(screen.getByText(/Conversations: 2/)).toBeOnTheScreen();
+    await user.press(screen.getByRole('button', { name: 'Talk to Gerald' }));
+    expect(onTalk).toHaveBeenCalledWith('gerald_coffee_break');
+  });
+
+  test('Talk waits while another encounter is under way, and resumes its own', async () => {
+    const props = { party: [member], onTalk: jest.fn(), onReturn: jest.fn(), returnLabel: 'Return' };
+    const { rerender } = await render(<PartyPanel {...props} ongoing={{ encounterId: 'butchers_stall_charcutier', character: { name: 'Mortimer' } }} />);
+    expect(screen.getByRole('button', { name: 'Talk to Gerald' })).toBeDisabled();
+    expect(screen.getByText('Finish your conversation with Mortimer first.')).toBeOnTheScreen();
+    await rerender(<PartyPanel {...props} ongoing={{ encounterId: 'gerald_coffee_break', character: { name: 'Gerald' } }} />);
+    expect(screen.getByRole('button', { name: 'Talk to Gerald' })).toBeEnabled();
+    expect(screen.queryByText(/Finish your conversation/)).toBeNull();
+  });
+
+  test('a resolved party conversation offers no recruitment', async () => {
+    await render(<DialoguePanel encounter={{ ...resolvedEncounter(undefined, 'gerald_coffee_break'), partyConversation: true }} language={language} isLoading={false} party={[]} onRecruit={jest.fn()} onLeave={jest.fn()} />);
+    expect(screen.queryByText(/could join your party/)).toBeNull();
+    expect(screen.queryByRole('button', { name: /Save Gerald/ })).toBeNull();
+  });
+
+  test('talkTo starts the named conversation and a resolution refreshes the count', async () => {
+    const storage = { getItem: jest.fn(async () => learnerId), setItem: jest.fn(async () => {}) };
+    const ongoing = { ...resolvedEncounter(undefined, 'gerald_coffee_break'), state: 'ongoing', encounter_state: 'ongoing', partyConversation: true, version: 1 };
+    const api = {
+      createLearner: jest.fn(async () => ({ learnerId, recovered: true, language })),
+      getWorld: jest.fn(async () => ({ world: worldWith(geraldDone) })),
+      getSpellbook: jest.fn(async () => spellbook),
+      getParty: jest.fn().mockResolvedValueOnce({ party: [{ ...member, conversations: 0 }] }).mockResolvedValue({ party: [{ ...member, conversations: 1 }] }),
+      startEncounter: jest.fn(async () => ({ encounter: ongoing, spellbook })),
+      sendDialogue: jest.fn(async () => ({ encounter: { ...ongoing, state: 'resolved', version: 2 }, spellbook, assessment: { overallFeedback: 'ok', objectiveResults: [] } })),
+    };
+    const store = createGameStore({ api, storage });
+    await store.getState().initialize();
+    store.getState().talkTo({ nativeEvent: {} });
+    expect(api.startEncounter).not.toHaveBeenCalled();
+    await store.getState().talkTo('gerald_coffee_break');
+    expect(api.startEncounter).toHaveBeenCalledWith(learnerId, false, 'gerald_coffee_break');
+    expect(store.getState().view).toBe('dialogue');
+    await store.getState().sendMessage('Un buon caffè, grazie!');
+    expect(store.getState().party[0].conversations).toBe(1);
+  });
+});
