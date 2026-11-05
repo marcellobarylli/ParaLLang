@@ -7,3 +7,10 @@ description: >
 vocabulary_focus: [review of all learned vocabulary]
 encounter: null
 map: { x: 0.72, y: 0.08 }
+# Round 014: sealed until the other five encounters are complete (A7; the boss is A7b).
+requires_completed:
+  - market_entrance_tutorial
+  - imp_coffee_greeting
+  - butchers_stall_charcutier
+  - cracked_fountain_letharger
+  - old_bookshop_bookworm

@@ -63,6 +63,10 @@ async function fixtureContent(t, extra = async () => {}) {
   await writeYaml(join(dir, 'languages/es/vocabulary/fixture_meat.yaml'), vocabulary);
   await writeYaml(join(dir, 'languages/es/encounters/fixture_butcher.yaml'), encounter);
   await editYaml(join(dir, 'world/locations/butchers_stall.yaml'), (location) => { location.encounter = 'fixture_butcher'; });
+  // Round 014: the Rift's gate names the replaced encounter.
+  await editYaml(join(dir, 'world/locations/the_rift.yaml'), (location) => {
+    location.requires_completed = location.requires_completed.map((id) => (id === 'butchers_stall_charcutier' ? 'fixture_butcher' : id));
+  });
   await extra(dir);
   return dir;
 }

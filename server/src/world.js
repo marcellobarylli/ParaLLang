@@ -18,6 +18,15 @@ function visitedSet(world, progress) {
   return visited;
 }
 
+// A gated location's seal: how many of the encounters it requires are complete. Null for an open location.
+export function gateFor(location, progress) {
+  const required = location.requires_completed ?? [];
+  if (!required.length) return null;
+  const done = new Set(progress?.completedEncounterIds ?? []);
+  const completed = required.filter((id) => done.has(id)).length;
+  return { sealed: completed < required.length, required: required.length, completed };
+}
+
 export function worldSnapshot(world, progress, encounters = new Map()) {
   const current = currentLocationId(world, progress);
   const visited = visitedSet(world, progress);
@@ -34,6 +43,8 @@ export function worldSnapshot(world, progress, encounters = new Map()) {
       map: location.map,
       adjacent: world.neighbours.get(current).includes(location.id),
     };
+    const gate = gateFor(location, progress);
+    if (gate) base.gate = gate;
     if (state === 'known') return base;
     return {
       ...base,
@@ -63,6 +74,11 @@ export function applyMove(world, progress, locationId) {
   if (locationId === current) return { progress: { ...base, currentLocationId: current }, changed: false };
   if (!world.neighbours.get(current).includes(locationId)) {
     throw conflictError(`You can't get to ${world.locationsById.get(locationId).name} from here.`, 'NOT_ADJACENT');
+  }
+  const target = world.locationsById.get(locationId);
+  const gate = gateFor(target, progress);
+  if (gate?.sealed) {
+    throw conflictError(`${target.name} is sealed. Finish the other encounters first (${gate.completed} of ${gate.required} done).`, 'SEALED');
   }
   const visited = [...visitedSet(world, progress)];
   if (!visited.includes(locationId)) visited.push(locationId);

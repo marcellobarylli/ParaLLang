@@ -1,5 +1,8 @@
 // Live playthrough of the Crumbling Market through a CLI provider, in-process (no port is opened).
 //   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall|cracked_fountain|old_bookshop] [--lines 'a|b|c'] [--out <file.json>]
+//   node server/scripts/play-market.js --provider codex-cli --tour [--out <file.json>]
+// --tour (round 014) plays all five encounters in order and checks that The Rift is sealed before the last one and
+// open after it; exit code 0 only if every encounter resolved and the gate behaved.
 // --lines 'a|b|c' replaces the scripted player lines (round 011: a surface-variant run). It uses a temporary learner
 // save, removes it afterwards and prints a JSON report: each step, the LLM's raw outputs, grading verdicts, timings
 // and an estimate of the target-language share of each NPC line.
@@ -42,6 +45,9 @@ const scripts = {
   },
 };
 
+// Round 014: the tour plays every encounter in this order, then walks into The Rift.
+export const tourOrder = ['market_entrance', 'coffee_cart', 'butchers_stall', 'cracked_fountain', 'old_bookshop'];
+
 // The shortest walk from one location to another over the map's paths (round 011: the fountain is two steps away).
 export function route(world, from, to) {
   const previous = new Map([[from, null]]);
@@ -78,9 +84,10 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
   const providerName = providerArgument(args) ?? env.LLM_PROVIDER;
   if (!CLI_PROVIDERS.has(providerName)) throw new Error('play-market requires --provider codex-cli or --provider claude-cli.');
   env.LLM_PROVIDER = providerName;
+  const tour = args.includes('--tour');
   const locationIndex = args.indexOf('--location');
   const locationId = locationIndex >= 0 ? args[locationIndex + 1] : 'coffee_cart';
-  if (!scripts[locationId]) throw new Error(`play-market has no script for --location ${locationId}; use ${Object.keys(scripts).join(' or ')}.`);
+  if (!tour && !scripts[locationId]) throw new Error(`play-market has no script for --location ${locationId}; use ${Object.keys(scripts).join(' or ')}.`);
   const provider = createLLMAdapter({}, env);
   const raw = [];
   const structuredChat = provider.structuredChat.bind(provider);
@@ -105,56 +112,99 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
 
     await step('world at start', async () => summary((await service.getWorld(learnerId)).world));
     await step('move to the_rift (expect NOT_ADJACENT)', async () => summary((await service.moveTo(learnerId, { locationId: 'the_rift' })).world));
-    for (const next of route(content.world, content.world.start, locationId)) {
-      await step(`move to ${next}`, async () => summary((await service.moveTo(learnerId, { locationId: next })).world));
+    let at = content.world.start;
+    const walkTo = async (target) => {
+      for (const next of route(content.world, at, target)) {
+        await step(`move to ${next}`, async () => summary((await service.moveTo(learnerId, { locationId: next })).world));
+      }
+      at = target;
+    };
+
+    // Plays the encounter at `target` with `playerLines` and returns its part of the report.
+    const playAt = async (target, playerLines) => {
+      await walkTo(target);
+      const firstCall = raw.length;
+      const encounterId = content.world.locationsById.get(target).encounter;
+      const definition = content.encounters.get(encounterId);
+      let encounter = (await step(`start ${definition.character.name}`, async () => ({ encounter: (await service.startEncounter(learnerId, { encounterId })).encounter })))?.encounter;
+      const companionBriefing = encounter?.companionBriefing ?? null;
+      for (const message of playerLines) {
+        if (!encounter || encounter.state !== 'ongoing') break;
+        const result = await step(`say "${message}"`, async () => {
+          const response = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: crypto.randomUUID(), message });
+          return {
+            encounter: response.encounter,
+            verdicts: response.assessment.objectiveResults.map((r) => ({ objective: r.objectiveId, passed: r.passed, evidence: r.vocabularyEvidence })),
+            feedback: response.assessment.overallFeedback,
+          };
+        });
+        encounter = result?.encounter ?? encounter;
+      }
+      const finalWorld = (await service.getWorld(learnerId)).world;
+      await step('world after the encounter', async () => ({
+        ...summary(finalWorld),
+        locationEncounter: finalWorld.locations.find((l) => l.id === target)?.encounter ?? null,
+      }));
+      const calls = raw.slice(firstCall);
+      const lines = calls.filter((item) => item.schema === 'encounter_narration').map((item, turn) => ({
+        turn,
+        requestedRatio: service.ratioFor(turn, definition),
+        native: item.output.dialogue.native,
+        translation: item.output.dialogue.translation,
+        narrative: item.output.narrative,
+        share: languageShare(item.output.dialogue.native, item.output.dialogue.translation, definition.narrationEntries),
+        durationMs: item.durationMs,
+      }));
+      return {
+        location: target,
+        encounterId,
+        companionBriefing,
+        resolved: encounter?.state === 'resolved',
+        completedOnMap: finalWorld.locations.find((l) => l.id === target)?.encounter?.completed === true,
+        generationCalls: calls.length,
+        lines,
+        grading: calls.filter((item) => item.schema === 'dialogue_assessment').map((item) => ({ durationMs: item.durationMs, output: item.output })),
+      };
+    };
+    const tryRift = (label) => step(label, async () => {
+      const { world } = await service.moveTo(learnerId, { locationId: 'the_rift' });
+      at = 'the_rift';
+      return { ...summary(world), gate: world.locations.find((l) => l.id === 'the_rift')?.gate ?? null };
+    });
+    const strip = () => { for (const s of steps) delete s.encounter; };
+
+    if (tour) {
+      // Round 014: every encounter in route order; The Rift is tried before the last one (sealed) and after it.
+      const encounters = [];
+      for (const target of tourOrder) {
+        if (target === tourOrder.at(-1)) {
+          await walkTo(target);
+          await tryRift('move to the_rift before the last encounter (expect SEALED)');
+        }
+        encounters.push(await playAt(target, scripts[target][content.language.code]));
+      }
+      const before = steps.find((s) => s.name.startsWith('move to the_rift before'));
+      const after = await tryRift('move to the_rift after every encounter (expect success)');
+      strip();
+      return {
+        provider: preflight,
+        language: content.language.code,
+        tour: true,
+        riftSealedBefore: before?.ok === false && before.code === 'SEALED',
+        riftOpenAfter: after?.current === 'the_rift' && after.gate?.sealed === false,
+        resolved: encounters.every((e) => e.resolved && e.completedOnMap),
+        generationCalls: raw.length,
+        encounters,
+        steps,
+      };
     }
-    const encounterId = content.world.locationsById.get(locationId).encounter;
-    const definition = content.encounters.get(encounterId);
-    let encounter = (await step(`start ${definition.character.name}`, async () => ({ encounter: (await service.startEncounter(learnerId, { encounterId })).encounter })))?.encounter;
-    const companionBriefing = encounter?.companionBriefing ?? null;
+
     const linesIndex = args.indexOf('--lines');
     const playerLines = linesIndex >= 0 ? args[linesIndex + 1].split('|') : scripts[locationId][content.language.code];
-    for (const message of playerLines) {
-      if (!encounter || encounter.state !== 'ongoing') break;
-      const result = await step(`say "${message}"`, async () => {
-        const response = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: crypto.randomUUID(), message });
-        return {
-          encounter: response.encounter,
-          verdicts: response.assessment.objectiveResults.map((r) => ({ objective: r.objectiveId, passed: r.passed, evidence: r.vocabularyEvidence })),
-          feedback: response.assessment.overallFeedback,
-        };
-      });
-      encounter = result?.encounter ?? encounter;
-    }
-    const finalWorld = (await service.getWorld(learnerId)).world;
-    await step('world after the encounter', async () => ({
-      ...summary(finalWorld),
-      locationEncounter: finalWorld.locations.find((l) => l.id === locationId)?.encounter ?? null,
-    }));
-
-    const lines = raw.filter((item) => item.schema === 'encounter_narration').map((item, turn) => ({
-      turn,
-      requestedRatio: service.ratioFor(turn, definition),
-      native: item.output.dialogue.native,
-      translation: item.output.dialogue.translation,
-      narrative: item.output.narrative,
-      share: languageShare(item.output.dialogue.native, item.output.dialogue.translation, definition.narrationEntries),
-      durationMs: item.durationMs,
-    }));
-    for (const s of steps) delete s.encounter;
-    return {
-      provider: preflight,
-      language: content.language.code,
-      location: locationId,
-      encounterId,
-      companionBriefing,
-      resolved: encounter?.state === 'resolved',
-      completedOnMap: finalWorld.locations.find((l) => l.id === locationId)?.encounter?.completed === true,
-      generationCalls: raw.length,
-      steps,
-      lines,
-      grading: raw.filter((item) => item.schema === 'dialogue_assessment').map((item) => ({ durationMs: item.durationMs, output: item.output })),
-    };
+    const played = await playAt(locationId, playerLines);
+    strip();
+    const { lines, grading, generationCalls, ...head } = played;
+    return { provider: preflight, language: content.language.code, ...head, generationCalls, steps, lines, grading };
   } finally {
     await provider.shutdown?.();
     await rm(saveDir, { recursive: true, force: true });
@@ -167,6 +217,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     const text = `${JSON.stringify(report, null, 2)}\n`;
     if (outIndex > 0) await writeFile(process.argv[outIndex + 1], text);
     process.stdout.write(text);
-    process.exitCode = report.resolved && report.completedOnMap ? 0 : 1;
+    const ok = report.tour ? report.resolved && report.riftSealedBefore && report.riftOpenAfter : report.resolved && report.completedOnMap;
+    process.exitCode = ok ? 0 : 1;
   }).catch((error) => { console.error(error.message); process.exitCode = 1; });
 }

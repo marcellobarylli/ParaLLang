@@ -100,6 +100,8 @@ const locationSchema = z.object({
   description: z.string().min(1),
   vocabulary_focus: z.array(z.string().min(1)).min(1),
   encounter: z.string().min(1).nullable(),
+  // Round 014: a gated location (the Rift) opens once every listed encounter is complete.
+  requires_completed: z.array(z.string().min(1)).default([]),
   map: z.object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) }).strict(),
 }).strict();
 const connectionsSchema = z.object({
@@ -258,6 +260,15 @@ export function loadWorld(contentDir, encounters) {
   for (const { encounter } of encounters.values()) {
     if (byId.get(encounter.location)?.encounter !== encounter.id) {
       throw new Error(`Encounter ${encounter.id} must be held by its location ${encounter.location}`);
+    }
+  }
+
+  for (const location of locations) {
+    const required = location.requires_completed;
+    if (new Set(required).size !== required.length) throw new Error(`Location ${location.id} lists an encounter twice in requires_completed`);
+    for (const id of required) {
+      if (!encounters.has(id)) throw new Error(`Location ${location.id} requires unknown encounter ${id}`);
+      if (id === location.encounter) throw new Error(`Location ${location.id} requires its own encounter ${id}`);
     }
   }
 

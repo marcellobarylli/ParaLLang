@@ -16,8 +16,13 @@ function Path({ from, to, size }) {
   />;
 }
 
+// Round 014: a gated location (The Rift) is sealed until the encounters it requires are complete.
+const isSealed = (location) => location.gate?.sealed === true;
+const sealNote = (gate) => `sealed: ${gate.completed} of ${gate.required} encounters complete`;
+
 function nodeLabel(location) {
   if (location.state === 'current') return `${location.name}, you are here`;
+  if (isSealed(location)) return `${location.name}, ${sealNote(location.gate)}`;
   const done = location.encounter?.completed ? ', encounter complete' : '';
   if (location.adjacent) return `Walk to ${location.name}${location.state === 'known' ? ', unexplored' : done}`;
   return `${location.name}${location.state === 'known' ? ', unexplored' : done}, not reachable from here`;
@@ -25,19 +30,21 @@ function nodeLabel(location) {
 
 function Node({ location, size, onMove, disabled }) {
   const current = location.state === 'current';
+  const sealed = isSealed(location);
   return (
     <View style={[styles.nodeWrap, { left: location.map.x * size - 60, top: location.map.y * size - NODE / 2 }]}>
       <Button
         accessibleName={nodeLabel(location)}
         onPress={() => onMove(location.id)}
-        disabled={disabled || current || !location.adjacent}
+        disabled={disabled || current || !location.adjacent || sealed}
         variant="text"
         style={styles.nodeButton}
       >
-        <View style={[styles.dot, current && styles.dotCurrent, location.state === 'known' && styles.dotKnown, location.adjacent && styles.dotAdjacent]} />
+        <View style={[styles.dot, current && styles.dotCurrent, location.state === 'known' && styles.dotKnown, location.adjacent && styles.dotAdjacent, sealed && styles.dotSealed]} />
         <Text style={[styles.nodeName, location.state === 'known' && styles.nodeNameKnown]} numberOfLines={2}>
-          {location.encounter?.completed ? '✓ ' : ''}{location.name}
+          {location.encounter?.completed ? '✓ ' : ''}{sealed ? '🔒 ' : ''}{location.name}
         </Text>
+        {sealed && <Text style={styles.sealCaption}>Sealed {location.gate.completed}/{location.gate.required}</Text>}
       </Button>
     </View>
   );
@@ -86,7 +93,9 @@ const styles = StyleSheet.create({
   dotAdjacent: { backgroundColor: colors.accent },
   dotCurrent: { backgroundColor: colors.success, borderColor: colors.ink },
   dotKnown: { backgroundColor: colors.border },
+  dotSealed: { backgroundColor: colors.ink, borderColor: colors.border },
   nodeName: { marginTop: 2, fontSize: 12, fontWeight: '600', color: colors.ink, textAlign: 'center' },
+  sealCaption: { fontSize: 11, color: colors.muted, textAlign: 'center' },
   nodeNameKnown: { color: colors.muted, fontStyle: 'italic' },
   card: { backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border, padding: 16, gap: 10 },
   title: { fontSize: 20, fontWeight: '800', color: colors.ink },
