@@ -7,9 +7,25 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing in progress: rounds 024 (F1) and 025 (B3, Fountain part) are closed. Next, in order: **E1** as a template
-round (see its entry; rounds 023 and 025 add evidence), then **A9** (lore fragments), then **B4**. Check Codex's
-limit and `df -h /tmp` first (see traps).
+**Round 026 (E1, template round) is open**, built and committed. Codex hit its usage limit at 18:17 UTC ("try
+again at 8:35 PM"). Steps to close it, in order:
+
+1. **Amendment 2: drop "greetings" from the rule's list of phrases** (`prompts/system/base.txt` line "- Reach it
+   with short, whole … phrases (greetings, questions, reactions, remarks)…"; also `NEW_RULE` in
+   `docs/rounds/026/results/greeting-replay.mjs` and the assertion in `server/test/language-mix.test.js`).
+   Regenerate the golden fixture with `node docs/rounds/026/results/gen-golden.mjs`. Why: `replay-leaks.mjs` found
+   Portia's greeting saying her open greet answer in 2/4 new-rule replays ("Buongiorno." / "Hola.") against 0/4 old.
+   Then re-run the replays (`greeting-replay.mjs`; at least Portia, Gerald and Errata, or all 80 calls) and
+   compare with `replay-summary.py` and `replay-leaks.mjs` against the stored old-variant data. Note that the
+   replay's old variant is the HEAD template text. After Amendment 2, `variants()` must still find the old line;
+   it swaps the new lines for the old line by exact text, so keep `NEW_RULE` identical to the template.
+2. **The after-build tours** (`play-market.js --tour`, it and es, 60 calls each). Measure with `tour-measure.mjs`
+   against `baseline-tour-*.json`, and read every flagged line and every greeting (Amendment 1's integration
+   check: both tours pass, with no new open-answer line). Hand-count the greetings into `results/hand-count.md`.
+   The `limit-after-tour-*.json` files are failed runs, not results.
+3. Findings, Outcome, close. If the tours fail or show new answer lines, revert by Amendment.
+
+Without Codex (before the reset), do only work that needs neither live runs nor a critique.
 
 ## Backlog
 
@@ -229,11 +245,22 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - 2026-11-05, iteration 8: round 024 (F1) planned, critiqued (6 findings: 3 accepted, 2 in part, 1 rejected), built
   and closed: test temp dirs removed at exit; server 131/131, 0 dirs left (34 before).
+- 2026-11-05, iteration 8: round 026 (E1) planned, critiqued (9 findings: 4 accepted, 5 in part), built and committed;
+  baseline tours (it, es) and 80 paired greeting replays: mean gap 0.108 → 0.095 (it), 0.133 → 0.108 (es), Portia's
+  greeting 0.14 → 0.21 and 0.10 → 0.18; Amendment 1 keeps the rule (the bar's failing cells are estimate artifacts by
+  hand count); Portia greet-answer leak found; Codex limit at 18:17 stopped the after-build tours. Round left open.
 - 2026-11-05, iteration 8: round 025 (B3, Fountain) planned, critiqued (7 findings: 5 accepted, 2 in part), built and
   closed: Flick's jingle as an infohazard; server 133/133, mobile 37/37, client 12/12; live 5 runs (2 baseline),
   65 calls, all resolved as scripted, refrain 21/21 lines, share displaced (E1).
 
 ## Handoff notes and traps
+
+- **The share estimate `notInTranslation` overcounts** in two cases (round 026 hand counts): glitched English
+  (Errata: 0.67 by estimate, 0.33 by hand) and a `translation` field holding a summary, not a translation (0.93 vs
+  0.37). Errata's "overshoot" in every tour since round 015 is mostly this artifact. Hand-count before acting on
+  Errata's or any outlier's share.
+- **A tour is 60 calls now** (not 45): the Rift and Fountain lines grew. Two tours, 80 replays and smaller runs used
+  Codex's whole window in iteration 8 (~300 calls in ~55 min).
 
 - **Test temp dirs** (round 024): use `makeTempDir(prefix)` from `server/test/helpers.js` in new tests; it removes
   the dir at process exit. Check with `TMPDIR=$(mktemp -d) node --test server/test/*.test.js` and `ls` that dir.

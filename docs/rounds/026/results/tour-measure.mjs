@@ -9,7 +9,7 @@ import { normalizeAnswer } from '../../../../server/src/language-engine.js';
 
 const fold = (text) => ` ${normalizeAnswer(text, { stripAccents: true }).replace(/[^\p{L}\s']/gu, ' ').replace(/\s+/g, ' ').trim()} `;
 const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
-const f2 = (x) => x.toFixed(2);
+const f2 = (x) => (x === undefined ? '-' : x.toFixed(2));
 
 for (const arg of process.argv.slice(2)) {
   const [label, path] = arg.split('=');
