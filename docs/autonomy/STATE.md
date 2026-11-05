@@ -159,6 +159,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F2. Typographic apostrophes** (round 054, closed 2026-11-05): fold ’ ‘ ʼ (and look-alikes) to ' in `matchCanonicalVocabulary`
   and the grader-evidence presence check, so an iPhone's Smart Punctuation cannot make a correct answer
   `INVALID_GRADING` on every retry. No live calls.
+- [ ] **F3. Vocabulary forms match their own entry** (round 058): matcher sorts (entry, variant) pairs longest
+  first; pack-wide behavioural test. No live calls.
 
 ### E. Follow-ups from live data
 
