@@ -62,7 +62,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **A8c. More party conversations.** (round 023, closed 2026-11-05) Mortimer's tasting, Flick's slow walk,
   Marginalia's fragment (it, es); `play-market.js --party --member <home location>`. Deferred: unordered objectives,
   deeper tiers by `conversations`, leak checks for bare words inside authored phrases ("¿Quieres más?").
-- [ ] **A9. Lore fragments.** Optional hidden passages with advanced vocabulary (e.g. fragments of *The Journey*).
+- [x] **A9. Lore fragments.** (round 030, closed 2026-11-05) Three fragments of *The Journey* per pack in the
+  Spellbook, found on completion; translation behind a toggle, withheld during encounters. More fragments (Gerald's
+  Dead Branch coffee) wait for relationship tiers.
 - [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
 - [ ] **A11. Save slots** (if still wanted after A1's save format).
 
@@ -135,6 +137,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- Round 030: native-speaker review of the six fragment texts and glosses; check the Fragments section, the toggle
+  and VoiceOver on glossary lines in the Simulator ([open items](../rounds/030/findings.md#open-items)).
 
 - Round 029: check the Rift's drill note, the review loop from the map and back, the finish-first case; decide
   whether a reveal counts as a drill review and whether replays should drill

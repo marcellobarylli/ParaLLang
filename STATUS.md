@@ -33,6 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 030, fragments of The Journey (autonomous)
+
+The market now hides optional passages of *The Journey* in the target language (backlog A9; CHARACTERS.md: "Optional
+to translate, but they give juicy lore"). There are three per pack: the first stitch after Marginalia, the Sirens
+after Flick, and the shroud after Errata. Each is filed in the Spellbook when its encounter is completed. The
+glossary of advanced words and the English translation sit behind a Show translation toggle. During an encounter
+the server withholds both. The resolved encounter screen says which fragment from there is in the Spellbook. A test
+checks that no text contains any vocabulary form of its pack, so no fragment answers an NPC. The plan was critiqued
+by a Claude subagent (10 findings: 9 accepted, 1 in part), since Codex was at its usage limit. Server 154/154,
+mobile 56/56. The texts await a native speaker, and nothing has been seen in the Simulator
+([open items](docs/rounds/030/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 029, forced repetition before the Rift (autonomous)
 
 Before the first fight with Errata, the Rift now runs a Spellbook drill (backlog C1, prototype.md Phase 4). Each of
@@ -327,6 +339,7 @@ Newest first.
 | 026 | 11-05 | A concrete language-mix rule in the shared prompt (backlog E1, template round) (autonomous) | [026](docs/rounds/026/architecture.md) | [findings](docs/rounds/026/findings.md) | pre-run record |
 | 027 | 11-05 | The philosophy statement on first launch: content, `GET /api/onboarding`, app screen shown once (backlog C2) (autonomous) | [027](docs/rounds/027/architecture.md) | [findings](docs/rounds/027/findings.md) | `88b223b` (pre-run record) to round 027 close |
 | 028 | 11-05 | Containment files in the Spellbook: the Fountain jingle and Errata, filed on completion (backlog B4) (autonomous) | [028](docs/rounds/028/architecture.md) | [findings](docs/rounds/028/findings.md) | `09248d5` (pre-run record) to round 028 close |
+| 030 | 11-05 | Fragments of The Journey: three authored passages per pack in the Spellbook, found on completion, translation behind a toggle (backlog A9) (autonomous) | [030](docs/rounds/030/architecture.md) | [findings](docs/rounds/030/findings.md) | `d6e2e51` (pre-run record) to round 030 close |
 | 029 | 11-05 | Forced repetition before the Rift: one due card per answer slot, DRILL_REQUIRED, map drill note (backlog C1) (autonomous) | [029](docs/rounds/029/architecture.md) | [findings](docs/rounds/029/findings.md) | `4942a58` (pre-run record) to round 029 close |
 | 019 | 11-05 | Portia's own words: ambient vocabulary so the tutorial speaks its share of target language (backlog E1, E2) (autonomous) | [019](docs/rounds/019/architecture.md) | [findings](docs/rounds/019/findings.md) | `55eacb2` (pre-run record) to round 019 close |
 | 018 | 11-05 | claude-cli accepts a subscription OAuth token from the environment (supervisor note) (autonomous) | [018](docs/rounds/018/architecture.md) | [findings](docs/rounds/018/findings.md) | `b6fbd9e` (pre-run record) to round 018 close |

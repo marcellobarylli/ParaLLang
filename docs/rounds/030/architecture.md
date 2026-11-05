@@ -119,3 +119,13 @@ Net change from plan-v1: translation and glossary hidden during encounters, a st
   expanded state), shows the hidden note when the server hides it, and renders with no cards. DialoguePanel shows
   the note for a matching resolved encounter and not otherwise. The PronounceButton label.
 - All server, mobile and web tests, web build, expo-doctor, iOS export.
+
+## Outcome (2026-11-05)
+
+Built as designed. Each pack holds three fragments of *The Journey*: the first stitch, the Sirens and the shroud.
+Each is filed in the Spellbook when the Bookshop, Fountain or Rift encounter is completed, with a glossary and an
+English translation behind a Show / Hide toggle. During an encounter the server withholds both. The resolved
+encounter screen names the fragment from there. No text holds a vocabulary form of its pack (tested), and the
+inflected forms of targets were checked by hand. Server 154/154 (6 new), mobile 56/56 (5 new), web client 12/12 and
+build, expo-doctor 20/20, iOS export ok. Not seen in the Simulator; the texts await a native speaker. See
+[findings](findings.md).
