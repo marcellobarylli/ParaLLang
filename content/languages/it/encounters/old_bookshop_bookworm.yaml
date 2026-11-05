@@ -1,0 +1,71 @@
+# Round 013: The Old Bookshop (backlog A6, with B2). Marginalia the Bookworm reads two passages of The Journey and
+# asks about each; the player answers in Italian. The passages are in each objective's intent, so they reach the
+# narration prompt.
+id: old_bookshop_bookworm
+character: characters/enemies/bookworm_marginalia.yaml
+location: old_bookshop
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player shows, in Italian, that they understood two passages of The Journey"
+max_turns: 20
+resolved_message: "Marginalia annotates you as 'promising', sells you a battered copy of The Journey, and goes back to eating the poetry section."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: home
+    prompt: "Marginalia reads you the opening of The Journey. Where is Journathan going? Answer in Italian."
+    intent: >
+      Marginalia first reads this passage aloud, word for word, in her dialogue: "Questa è la storia di Journathan,
+      l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni." Only then does she ask her question: where
+      is Journathan going? The player answers in Italian that he is going home.
+    target_vocabulary_ids: ["casa"]
+    required_target_groups:
+      - ["casa"]
+    grammar_constraints:
+      - "Reading comprehension: an answer about Journathan, in the third person, reusing the passage's words or quoting the relevant part of it, is the player's own answer and passes when it says, in Italian, that he is going home."
+      - "Another detail (how long, a book), an unrelated quotation, English-only answers and questions do not pass."
+    accepted_examples:
+      - "A casa."
+      - "Va a casa."
+      - "Torna a casa sua."
+    negative_examples:
+      - text: "Home."
+        reason: "English-only; the answer must be in Italian."
+      - text: "Vent'anni."
+        reason: "It says how long the journey lasts, not where he is going."
+      - text: "Un libro."
+        reason: "It does not answer the question about the passage."
+    reference_meaning: "Journathan is going home."
+    hint_limit: 2
+    next_objective: name
+    assessment_reference_ids: ["treccani-casa"]
+  - id: name
+    prompt: "Marginalia reads the Cyclops episode. What name did Journathan give the Cyclops? Answer in Italian."
+    intent: >
+      Marginalia first reads this passage aloud, word for word, in her dialogue: "Il Ciclope chiede il suo nome.
+      Journathan risponde: «Il mio nome è Nessuno.»" Only then does she ask her question: what name did Journathan
+      give the Cyclops? In the lore it was the first recorded translation trick. The player answers in Italian:
+      Nobody.
+    target_vocabulary_ids: ["nessuno"]
+    required_target_groups:
+      - ["nessuno"]
+    grammar_constraints:
+      - "Reading comprehension: an answer about Journathan, in the third person or as reported speech, reusing the passage's words or quoting the name, is the player's own answer and passes when it gives, in Italian, the name Nobody."
+      - "His real name, an unrelated quotation, English-only answers and questions do not pass."
+    accepted_examples:
+      - "Nessuno."
+      - "Si chiama Nessuno."
+      - "Il suo nome è Nessuno."
+      - "Ha detto «Nessuno»."
+    negative_examples:
+      - text: "Journathan."
+        reason: "That is his real name; the passage says he gave the Cyclops a different one."
+      - text: "Nobody."
+        reason: "English-only; the answer must be in Italian."
+    reference_meaning: "He told the Cyclops his name was Nobody."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["treccani-nessuno"]

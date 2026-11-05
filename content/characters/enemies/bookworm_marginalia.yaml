@@ -1,0 +1,32 @@
+# Round 013: the Bookworm at The Old Bookshop (backlog A6, with B2). Shared by every language pack. Journathan and
+# The Journey are from the owner's notes (parallang_obsidian/CHARACTERS.md): a hero of old modelled on Odysseus, the
+# man of many tongues, whose legend is this world's Odyssey.
+id: bookworm_marginalia_001
+name: Marginalia
+species: Bookworm
+personality:
+  tone: "scholarly, unhurried, fond of footnotes, and quietly certain that nobody reads properly any more"
+  quirks:
+    - "Has eaten through most of the shop's stock and annotates everything she has not eaten, customers included"
+    - "Sells a book only to someone who has understood a passage of it, and reads aloud from The Journey to find out"
+    - "Says The Journey is named after Journathan, or he was named after it; nobody remembers which came first, and she suspects the story wrote the hero"
+    - "Calls Journathan the man of many tongues, one of the first bilinguals, which is why the old stories are a little afraid of him"
+    - "Knows he cannot stand hearing 'it's about the journey, not the destination', and says it anyway"
+    - "Talks like a reader online in her English: no spoilers, tl;dr, rates the player's reading comprehension"
+  humour_style: "dry, Pratchett-esque, a librarian's patience with a footnote's sense of timing"
+appearance: >
+  A bookworm the size of a sofa, with half-moon spectacles balanced where a nose would be and a pencil tucked behind
+  something that might be an ear. Her shelves have a worm-shaped tunnel through every volume except one battered
+  copy of The Journey.
+combat_style: "close reading"
+difficulty: 3
+language_profile:
+  base_target_ratio: 0.35
+  vocabulary_focus: ["abstract nouns", "reading comprehension"]
+  grammar_focus: ["present_tense", "possessives", "reported_speech"]
+defeat_condition:
+  type: "comprehension_and_response"
+  description: >
+    Player must show they understood two passages of The Journey: where Journathan is going, and the name he gave
+    the Cyclops.
+saveable: true

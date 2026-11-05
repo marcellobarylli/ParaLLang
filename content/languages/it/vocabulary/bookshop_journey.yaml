@@ -1,0 +1,141 @@
+# Round 013: The Old Bookshop (abstract nouns, reading comprehension; The Journey). Reference URLs follow the
+# existing patterns and were not opened from the build container; listed for the owner's content review.
+version: bookshop-journey-it-v1
+references:
+  - id: treccani-storia
+    title: 'Treccani, Vocabolario: storia'
+    url: https://www.treccani.it/vocabolario/storia/
+  - id: treccani-viaggio
+    title: 'Treccani, Vocabolario: viaggio'
+    url: https://www.treccani.it/vocabolario/viaggio/
+  - id: treccani-casa
+    title: 'Treccani, Vocabolario: casa'
+    url: https://www.treccani.it/vocabolario/casa/
+  - id: treccani-lingua
+    title: 'Treccani, Vocabolario: lingua'
+    url: https://www.treccani.it/vocabolario/lingua/
+  - id: treccani-anno
+    title: 'Treccani, Vocabolario: anno'
+    url: https://www.treccani.it/vocabolario/anno/
+  - id: treccani-nome
+    title: 'Treccani, Vocabolario: nome'
+    url: https://www.treccani.it/vocabolario/nome/
+  - id: treccani-nessuno
+    title: 'Treccani, Vocabolario: nessuno'
+    url: https://www.treccani.it/vocabolario/nessuno/
+entries:
+  - id: storia
+    kind: word
+    target: storia
+    part_of_speech: noun
+    accepted_translations:
+      - story
+      - history
+    surface_variants:
+      - storia
+      - storie
+    accent_insensitive: false
+    example:
+      target: Questa è la storia di Journathan.
+      english: This is the story of Journathan.
+    note: Storia means both story and history.
+    reference_ids:
+      - treccani-storia
+  - id: viaggio
+    kind: word
+    target: viaggio
+    part_of_speech: noun
+    accepted_translations:
+      - journey
+      - trip
+      - voyage
+    surface_variants:
+      - viaggio
+      - viaggi
+    accent_insensitive: false
+    example:
+      target: Il suo viaggio dura vent'anni.
+      english: His journey lasts twenty years.
+    reference_ids:
+      - treccani-viaggio
+  - id: casa
+    kind: word
+    target: casa
+    part_of_speech: noun
+    accepted_translations:
+      - home
+      - house
+    surface_variants:
+      - casa
+    accent_insensitive: false
+    example:
+      target: Journathan va a casa.
+      english: Journathan is going home.
+    note: 'A casa: (at or to) home.'
+    reference_ids:
+      - treccani-casa
+  - id: lingua
+    kind: word
+    target: lingua
+    part_of_speech: noun
+    accepted_translations:
+      - language
+      - tongue
+    surface_variants:
+      - lingua
+      - lingue
+    accent_insensitive: false
+    example:
+      target: L'uomo dalle molte lingue.
+      english: The man of many tongues.
+    note: Lingua means both language and the tongue in your mouth.
+    reference_ids:
+      - treccani-lingua
+  - id: anni
+    kind: word
+    target: anni
+    part_of_speech: noun
+    accepted_translations:
+      - years
+    surface_variants:
+      - anni
+      - anno
+    accent_insensitive: false
+    example:
+      target: Vent'anni.
+      english: Twenty years.
+    note: Singular anno (year).
+    reference_ids:
+      - treccani-anno
+  - id: nome
+    kind: word
+    target: nome
+    part_of_speech: noun
+    accepted_translations:
+      - name
+    surface_variants:
+      - nome
+      - nomi
+    accent_insensitive: false
+    example:
+      target: Il mio nome è Nessuno.
+      english: My name is Nobody.
+    reference_ids:
+      - treccani-nome
+  - id: nessuno
+    kind: word
+    target: nessuno
+    part_of_speech: pronoun
+    accepted_translations:
+      - nobody
+      - no one
+      - Nobody
+    surface_variants:
+      - nessuno
+    accent_insensitive: false
+    example:
+      target: Nessuno lo sa.
+      english: Nobody knows.
+    note: In Italian translations of the Odyssey the hero tells the Cyclops his name is Nessuno.
+    reference_ids:
+      - treccani-nessuno

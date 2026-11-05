@@ -1,0 +1,122 @@
+# Round 013: The Old Bookshop (abstract nouns, reading comprehension; The Journey). Reference URLs follow the
+# existing patterns and were not opened from the build container; listed for the owner's content review.
+version: bookshop-journey-es-v1
+references:
+  - id: rae-historia
+    title: 'Real Academia Española, Diccionario de la lengua española: historia'
+    url: https://dle.rae.es/historia
+  - id: rae-viaje
+    title: 'Real Academia Española, Diccionario de la lengua española: viaje'
+    url: https://dle.rae.es/viaje
+  - id: rae-casa
+    title: 'Real Academia Española, Diccionario de la lengua española: casa'
+    url: https://dle.rae.es/casa
+  - id: rae-lengua
+    title: 'Real Academia Española, Diccionario de la lengua española: lengua'
+    url: https://dle.rae.es/lengua
+  - id: rae-nombre
+    title: 'Real Academia Española, Diccionario de la lengua española: nombre'
+    url: https://dle.rae.es/nombre
+  - id: rae-nadie
+    title: 'Real Academia Española, Diccionario de la lengua española: nadie'
+    url: https://dle.rae.es/nadie
+entries:
+  - id: historia
+    kind: word
+    target: historia
+    part_of_speech: noun
+    accepted_translations:
+      - story
+      - history
+    surface_variants:
+      - historia
+      - historias
+    accent_insensitive: false
+    example:
+      target: Esta es la historia de Journathan.
+      english: This is the story of Journathan.
+    note: Historia means both story and history.
+    reference_ids:
+      - rae-historia
+  - id: viaje
+    kind: word
+    target: viaje
+    part_of_speech: noun
+    accepted_translations:
+      - journey
+      - trip
+      - voyage
+    surface_variants:
+      - viaje
+      - viajes
+    accent_insensitive: false
+    example:
+      target: Su viaje dura veinte años.
+      english: His journey lasts twenty years.
+    reference_ids:
+      - rae-viaje
+  - id: casa
+    kind: word
+    target: casa
+    part_of_speech: noun
+    accepted_translations:
+      - home
+      - house
+    surface_variants:
+      - casa
+    accent_insensitive: false
+    example:
+      target: Journathan va a casa.
+      english: Journathan is going home.
+    note: 'A casa: (to) home.'
+    reference_ids:
+      - rae-casa
+  - id: lengua
+    kind: word
+    target: lengua
+    part_of_speech: noun
+    accepted_translations:
+      - language
+      - tongue
+    surface_variants:
+      - lengua
+      - lenguas
+    accent_insensitive: false
+    example:
+      target: El hombre de muchas lenguas.
+      english: The man of many tongues.
+    note: Lengua means both language and the tongue in your mouth.
+    reference_ids:
+      - rae-lengua
+  - id: nombre
+    kind: word
+    target: nombre
+    part_of_speech: noun
+    accepted_translations:
+      - name
+    surface_variants:
+      - nombre
+      - nombres
+    accent_insensitive: false
+    example:
+      target: Mi nombre es Nadie.
+      english: My name is Nobody.
+    reference_ids:
+      - rae-nombre
+  - id: nadie
+    kind: word
+    target: nadie
+    part_of_speech: pronoun
+    accepted_translations:
+      - nobody
+      - no one
+      - Nobody
+    surface_variants:
+      - nadie
+    accent_insensitive: false
+    example:
+      target: Nadie lo sabe.
+      english: Nobody knows.
+    note: In Spanish translations of the Odyssey the hero tells the Cyclops his name is Nadie.
+    reference_ids:
+      - rae-nadie
