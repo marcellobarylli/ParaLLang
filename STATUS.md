@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 042, a display font for titles (autonomous)
+
+Screen and section titles now use Literata Bold (SIL Open Font License 1.1, from `@expo-google-fonts/literata`; one
+256 KB face). It loads at runtime with `expo-font`, and the app never waits for it. Titles keep the system font until
+it loads, or if it fails; all other text stays on the system font. The licence notice is in
+`mobile/THIRD_PARTY_NOTICES.md`. Critiqued by a Claude subagent (9 findings: 8 accepted, 1 in part). Mobile 110/110
+([open items](docs/rounds/042/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 041, ambient audio per location (autonomous)
 
 Each of the six locations now has a quiet 6-second loop, synthesized by `mobile/scripts/gen-ambient.js` (no
@@ -439,6 +447,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 042 | 11-05 | A display font for titles: Literata Bold (OFL), loaded at runtime, system font for the rest (autonomous) | [042](docs/rounds/042/architecture.md) | [findings](docs/rounds/042/findings.md) | pre-run record to round 042 close |
 | 041 | 11-05 | Ambient audio per location: six synthesized loops behind the Sounds switch, ducked under speech (autonomous) | [041](docs/rounds/041/architecture.md) | [findings](docs/rounds/041/findings.md) | pre-run record to round 041 close |
 | 040 | 11-05 | The app sends the optional server token (`EXPO_PUBLIC_PARALLANG_TOKEN`) (autonomous) | [040](docs/rounds/040/architecture.md) | [findings](docs/rounds/040/findings.md) | pre-run record to round 040 close |
 | 031 | 11-05 | Save slots: up to three learners per device, Saves screen, stale-reply guards (backlog A11) (autonomous) | [031](docs/rounds/031/architecture.md) | [findings](docs/rounds/031/findings.md) | `2c5e2ae` (pre-run record) to round 031 close |

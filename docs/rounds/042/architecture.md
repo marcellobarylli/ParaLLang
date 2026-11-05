@@ -91,3 +91,9 @@ expo-font mocked under jest, wrapping titles, a licence notice.
   - nine titles go through Title, and the only `role="heading"` Texts left are the card titles and the review word.
 - Theme test: `ui.js:display` is a modifier.
 - All suites, expo-doctor, and the iOS export bundles exactly one font file (md5 of the 700 ttf).
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. The nine titles use Literata Bold once it has loaded, and keep the system
+font until then. Mobile 110/110, server 163/163, web client 12/12 and build, expo-doctor 20/20, and the iOS export
+holds one font file. See [findings](findings.md).
