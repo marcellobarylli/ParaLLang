@@ -136,7 +136,26 @@ export class LearningService {
       })
       .filter(Boolean)
       .sort((a, b) => a.discoveredAt.localeCompare(b.discoveredAt) || a.vocabularyId.localeCompare(b.vocabularyId));
-    return { cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version, inEncounter: this.inEncounter(encounter) };
+    return {
+      cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version,
+      inEncounter: this.inEncounter(encounter), containmentFiles: this.containmentFiles(envelope),
+    };
+  }
+
+  // Round 028 (backlog B4): a containment file is filed once its encounter is completed (world progress; no save
+  // change). Not on a visit or at the start: the file would explain the hazard before the player met it (critique 1.2).
+  containmentFiles(envelope) {
+    const completed = new Set(envelope.world?.completedEncounterIds ?? []);
+    return [...this.content.encounters.values()]
+      .filter(({ encounter }) => encounter.containment_file && completed.has(encounter.id))
+      .map(({ encounter }) => {
+        const { designation, name, class: hazardClass, notes, ...properties } = encounter.containment_file;
+        return {
+          encounterId: encounter.id, locationName: this.content.world.locationsById.get(encounter.location).name,
+          designation, name, class: hazardClass, properties, notes: [...notes],
+        };
+      })
+      .sort((a, b) => a.designation.localeCompare(b.designation));
   }
 
   canonicalizeNarration(generated, definition) {
@@ -434,6 +453,15 @@ export class LearningService {
       stagedEncounter.committedPlayerTurns = nextTurns;
       stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
       stagedEncounter.version += 1;
+      // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
+      // holds the encounter's containment file.
+      if (resolved && definition.encounter.party_of) {
+        // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
+        const member = stagedEnvelope.party.find((candidate) => candidate.characterId === definition.character.id);
+        if (member) member.conversations = (member.conversations ?? 0) + 1;
+      } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
+        stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
+      }
       const response = {
         encounter: this.serializeEncounter(stagedEncounter),
         assessment: {
@@ -449,13 +477,6 @@ export class LearningService {
         spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
         replayed: false,
       };
-      if (resolved && definition.encounter.party_of) {
-        // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
-        const member = stagedEnvelope.party.find((candidate) => candidate.characterId === definition.character.id);
-        if (member) member.conversations = (member.conversations ?? 0) + 1;
-      } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
-        stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
-      }
       stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
         kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response,
       };

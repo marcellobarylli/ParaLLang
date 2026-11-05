@@ -18,6 +18,20 @@ companion_briefing:
   - "Containment procedure: do not hum along."
 escalation:
   target_ratio_increase_per_turn: 0.05
+# Round 028 (backlog B4): the Spellbook's containment file for the Fountain's infohazard (LORE.md: properties
+# Virulence, Harm, Incubation, Vector, Containment, in the deadpan SCP voice). Shown once the Fountain is visited.
+containment_file:
+  designation: "CM-001"
+  name: "Dopo, dopo, domani!"
+  class: "Brainrot (mild)"
+  virulence: "Very high. It spreads from host to host faster than it can be filed."
+  harm: "Low. Hosts put things off, beginning with reading this file."
+  incubation: "Immediate on understanding. Listeners who do not understand it are unaffected, and slightly smug about it."
+  vector: "Song: a three-word jingle, hummed at the end of every sentence by Flick the Letharger."
+  containment: "Do not hum along. Do not translate it for anyone who has not asked. If humming begins, do the thing you were putting off."
+  notes:
+    - "Recovered at the Cracked Fountain, whose plaque reads PLEASE DO NOT HUM."
+    - "Native speakers of the realm's language are immune. The author of this file is not."
 objectives:
   - id: stop
     prompt: "Flick will not hold still. Tell it to stop, in Italian."

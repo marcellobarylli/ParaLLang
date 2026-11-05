@@ -48,3 +48,31 @@ test('during an encounter: no meanings, notes, examples or Review on any card', 
   expect(screen.queryByRole('button', { name: 'Review' })).not.toBeOnTheScreen();
   expect(screen.getByText('zucchero')).toBeOnTheScreen();
 });
+
+// Round 028 (backlog B4): containment files, filed by the server once their encounter is completed.
+const file = {
+  encounterId: 'cracked_fountain_letharger', locationName: 'The Cracked Fountain', designation: 'CM-001', name: 'Dopo, dopo, domani!',
+  class: 'Brainrot (mild)', notes: ['Recovered at the Cracked Fountain.', 'The author of this file is not immune.'],
+  properties: { virulence: 'Very high.', harm: 'Low.', incubation: 'Immediate.', vector: 'Song.', containment: 'Do not hum along.' },
+};
+
+test('containment files show their designation, class, five properties and notes, also during an encounter', async () => {
+  for (const inEncounter of [false, true]) {
+    await render(<Spellbook spellbook={{ ...book(inEncounter), containmentFiles: [file] }} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} now={now} />);
+    expect(screen.getByRole('heading', { name: 'Containment files' })).toBeOnTheScreen();
+    expect(screen.getByLabelText('Containment file CM-001')).toBeOnTheScreen();
+    expect(screen.getByText(/Dopo, dopo, domani!/)).toBeOnTheScreen();
+    expect(screen.getByText('Class: Brainrot (mild) · Recovered at The Cracked Fountain')).toBeOnTheScreen();
+    for (const [label, value] of [['Virulence', 'Very high.'], ['Harm', 'Low.'], ['Incubation', 'Immediate.'], ['Vector', 'Song.'], ['Containment', 'Do not hum along.']]) {
+      expect(screen.getByText(`${label}: ${value}`)).toBeOnTheScreen();
+    }
+    for (const note of file.notes) expect(screen.getByText(note)).toBeOnTheScreen();
+  }
+});
+
+test('no containment section without files', async () => {
+  for (const containmentFiles of [undefined, []]) {
+    await render(<Spellbook spellbook={{ ...book(false), containmentFiles }} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} now={now} />);
+    expect(screen.queryByRole('heading', { name: 'Containment files' })).not.toBeOnTheScreen();
+  }
+});

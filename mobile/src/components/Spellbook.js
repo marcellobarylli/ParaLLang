@@ -15,6 +15,10 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
         <View style={styles.card}><Text style={styles.cardTitle}>No vocabulary yet</Text><Text style={styles.body}>Words and phrases appear here after you encounter them.</Text></View>
       ) : spellbook.cards.map((card) => <Card key={card.vocabularyId} card={card} state={cardState(card, { inEncounter, now })} language={language} isLoading={isLoading} onReview={onReview} />)}
       {!inEncounter && spellbook.cards.length > 0 && spellbook.dueCount === 0 && <Text style={styles.muted}>Nothing is due. Your next review times are shown on each card.</Text>}
+      {spellbook.containmentFiles?.length > 0 && <>
+        <Text role="heading" style={styles.section}>Containment files</Text>
+        {spellbook.containmentFiles.map((file) => <ContainmentFile key={file.designation} file={file} language={language} />)}
+      </>}
     </ScrollView>
   );
 }
@@ -26,6 +30,20 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
 export function cardState(card, { inEncounter = false, now = Date.now() } = {}) {
   if (inEncounter) return 'inEncounter';
   return card.due || new Date(card.nextReviewAt).getTime() <= now ? 'due' : 'reference';
+}
+
+// Round 028 (backlog B4): the deadpan file for each infohazard met (LORE.md). No file holds an objective's answer
+// (server test), so files show during encounters too.
+const PROPERTIES = [['virulence', 'Virulence'], ['harm', 'Harm'], ['incubation', 'Incubation'], ['vector', 'Vector'], ['containment', 'Containment']];
+function ContainmentFile({ file, language }) {
+  return (
+    <View style={styles.card} aria-label={`Containment file ${file.designation}`}>
+      <Text role="heading" style={styles.cardTitle}>{file.designation}: <Text accessibilityLanguage={language?.tag}>{file.name}</Text></Text>
+      <Text style={styles.small}>Class: {file.class} · Recovered at {file.locationName}</Text>
+      {PROPERTIES.map(([key, label]) => <Text key={key} style={styles.body}><Text style={styles.strong}>{label}: </Text>{file.properties[key]}</Text>)}
+      {file.notes.map((note) => <Text key={note} style={styles.small}>{note}</Text>)}
+    </View>
+  );
 }
 
 function Card({ card, state, language, isLoading, onReview }) {
@@ -49,6 +67,7 @@ const styles = StyleSheet.create({
   content: { padding: 16, gap: 12 },
   heading: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   title: { fontSize: 24, fontWeight: '700', color: colors.ink },
+  section: { fontSize: 18, fontWeight: '700', color: colors.ink, marginTop: 8 },
   card: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   cardTitle: { fontSize: 20, fontWeight: '600', color: colors.ink },

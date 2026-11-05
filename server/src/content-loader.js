@@ -51,6 +51,18 @@ const objectiveSchema = z.object({
   assessment_reference_ids: z.array(z.string()).min(1),
 }).strict();
 
+const containmentFileSchema = z.object({
+  designation: z.string().regex(/^CM-\d{3}$/),
+  name: z.string().min(1),
+  class: z.string().min(1),
+  virulence: z.string().min(1),
+  harm: z.string().min(1),
+  incubation: z.string().min(1),
+  vector: z.string().min(1),
+  containment: z.string().min(1),
+  notes: z.array(z.string().min(1)).min(1).max(3),
+}).strict();
+
 const encounterSchema = z.object({
   id: z.string().min(1),
   character: z.string().min(1),
@@ -67,12 +79,17 @@ const encounterSchema = z.object({
   resolved_message: z.string().min(1).optional(),
   // Round 009: static English lines in which the companion introduces the mechanics (the tutorial sets them).
   companion_briefing: z.array(z.string().min(1)).min(1).max(4).optional(),
+  // Round 028: the Spellbook's deadpan containment file for an infohazard (LORE.md); location encounters only.
+  containment_file: containmentFileSchema.optional(),
   // Round 019: authored words the NPC may use in any line; never the target of one of the encounter's objectives.
   ambient_vocabulary_ids: z.array(z.string().min(1)).min(1).optional(),
   objectives: z.array(objectiveSchema).min(1),
 }).strict().superRefine((encounter, context) => {
   if (Boolean(encounter.location) === Boolean(encounter.party_of)) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'An encounter has either a location or party_of, not both or neither' });
+  }
+  if (encounter.party_of && encounter.containment_file) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'A party conversation cannot hold a containment file' });
   }
 });
 
@@ -204,6 +221,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     encounters.set(encounter.id, Object.freeze({ encounter, character, narrationEntries, ambientEntries }));
   }
   validatePartyConversations(encounters);
+  unique([...encounters.values()].flatMap(({ encounter: e }) => (e.containment_file ? [e.containment_file.designation] : [])), 'Containment file designations');
   const defaultDefinition = encounters.get(defaultEncounterId);
   if (!defaultDefinition) throw new Error(`content/${pack}/language.yaml names unknown default_encounter ${defaultEncounterId}`);
   if (defaultDefinition.encounter.party_of) throw new Error(`content/${pack}/language.yaml default_encounter ${defaultEncounterId} is a party conversation`);

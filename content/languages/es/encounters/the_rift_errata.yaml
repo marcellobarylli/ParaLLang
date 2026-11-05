@@ -19,6 +19,20 @@ companion_briefing:
   - "Careful. That thing is made of both our languages and neither."
   - "It can only hurt you if you understand it, and you understand quite a lot now."
   - "Everything you learned in the market works here. Use it."
+# Round 028 (backlog B4): the Spellbook's containment file for Errata (LORE.md, deadpan SCP voice). Shown once the
+# Rift is visited.
+containment_file:
+  designation: "CM-002"
+  name: "Errata"
+  class: "Rift-born (corruption)"
+  virulence: "Unknown. It does not spread so much as leak, through the seam where the two languages touch."
+  harm: "Moderate. The host's own language turns çùršęd. It reads anyone whose name it learns."
+  incubation: "Begins as soon as the host understands one of its sentences. The host understands quite a lot by now."
+  vector: "Speech, in both languages at once, slightly wrong in each."
+  containment: "Do not understand it more than necessary. Do not tell it who you are."
+  notes:
+    - "Recovered at the Rift, once the other five encounters were filed."
+    - "It talks in fragments of this file. This file would prefer that it did not."
 objectives:
   - id: order
     prompt: "The Rift has swallowed the market's stalls. Ask it for a coffee and a meat they sold, in Spanish."

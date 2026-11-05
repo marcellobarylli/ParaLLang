@@ -77,7 +77,10 @@ for (const code of Object.keys(packs)) {
     const { learnerId } = await service.createOrRecoverLearner();
     for (const locationId of route(content.world, content.world.start, 'cracked_fountain')) await service.moveTo(learnerId, { locationId });
 
-    let encounter = (await service.startEncounter(learnerId, { encounterId: 'cracked_fountain_letharger' })).encounter;
+    const started = await service.startEncounter(learnerId, { encounterId: 'cracked_fountain_letharger' });
+    let encounter = started.encounter;
+    // Round 028: the containment file is filed on completion, not on the visit or at the start.
+    assert.deepEqual(started.spellbook.containmentFiles, []);
     assert.match(provider.calls.at(-1).messages[0].content, /Speak as Flick, a Letharger/);
     assert.equal(encounter.character.name, 'Flick');
     assert.equal(encounter.difficulty, 0.3);
@@ -86,11 +89,15 @@ for (const code of Object.keys(packs)) {
     assert.deepEqual(encounter.transcript[0].dialogue.words.map((word) => word.vocabularyId), packs[code].chips, 'only its own words are chips');
 
     const verdicts = [];
+    const filed = [];
     for (const message of packs[code].answers) {
       const turn = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message });
       verdicts.push(turn.assessment.objectiveResults.map((r) => [r.objectiveId, r.passed]));
+      filed.push(turn.spellbook.containmentFiles.map((file) => file.designation).join());
       encounter = turn.encounter;
     }
+    assert.deepEqual(filed, ['', '', '', '', '', 'CM-001'], 'filed by the resolving turn');
+    assert.deepEqual((await service.getSpellbook(learnerId)).containmentFiles.map((file) => file.name), [packs[code].jingle]);
     assert.deepEqual(verdicts, [
       [['stop', false], ['direction', false], ['now', false]],
       [['stop', true], ['direction', false], ['now', false]],
