@@ -19,3 +19,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 007 | Fix dictated answers in the narration prompt, not the grader | Remove the grader's cap for prompted echoes | The cap is correct; prompting the answer defeats recall | Yes |
 | 2026-11-05 | 007 | Meme-culture texture in English only; target-language dialogue stays beginner-level | Italian internet slang now | Needs authored, owner-reviewed colloquial content | Yes |
 | 2026-11-05 | 007 | Codex critique 1: 1–9 accepted, 10 rejected | Accept all | See round 007 Second opinion table | Yes |
+| 2026-11-05 | 008 | Stop grader feedback leaking answers with a prompt rule | Server-side filter on feedback text | One line; a filter would rewrite free text | Yes |
+| 2026-11-05 | 008 | Codex critique 1: 1–7 accepted, 8–9 rejected | Accept all | See round 008 Second opinion table | Yes |
