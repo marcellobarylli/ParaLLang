@@ -3,7 +3,7 @@ import { gradingResponseSchema, encounterResponseSchema, locationAtmosphereSchem
 import { buildAtmosphereMessages, buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
 import {
   calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
-  isDue, masteryLabel, matchCanonicalVocabulary, scheduleReview,
+  foldEvidenceText, isDue, masteryLabel, matchCanonicalVocabulary, scheduleReview,
 } from './language-engine.js';
 import { assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
@@ -486,7 +486,7 @@ export class LearningService {
         if (!objective.target_vocabulary_ids.includes(evidence.vocabulary_id)) throw retryableError('The grader returned evidence for an unrelated vocabulary item.', 'INVALID_GRADING');
         const excerptIds = new Set(matchCanonicalVocabulary(evidence.evidence, this.content.vocabulary.entries).map((match) => match.id));
         if (evidenceIds.has(evidence.vocabulary_id)
-          || !playerInput.toLowerCase().includes(evidence.evidence.toLowerCase())
+          || !foldEvidenceText(playerInput).includes(foldEvidenceText(evidence.evidence))
           || !excerptIds.has(evidence.vocabulary_id)) {
           throw retryableError('The grader returned vocabulary evidence that is not present in the answer.', 'INVALID_GRADING');
         }

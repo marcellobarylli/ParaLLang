@@ -90,3 +90,8 @@ build); Italian ASCII `e'` for `è` (backlog line); `po‘` test (in the behavio
 
 Net change: one apostrophe definition through `normalizeAnswer`, a fuller evidence fold, atmosphere and residual
 tests.
+
+## Outcome (2026-11-05)
+
+Built as designed. Server 228/228, mobile 131/131, client 12/12 and build. On HEAD the 10 behaviour tests fail and
+the guards pass. No live runs. See [findings.md](findings.md).

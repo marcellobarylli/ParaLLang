@@ -246,6 +246,7 @@ entries:
     surface_variants:
       - è l'una
       - l'una
+      # Round 054: redundant since the matcher folds ’ to '; kept so the file's version does not move.
       - è l’una
       - l’una
     accent_insensitive: false

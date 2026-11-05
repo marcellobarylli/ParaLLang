@@ -150,7 +150,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   tmpfs and filled during round 023. Add `t.after(() => rm(dir, …))` in `createRuntime` (helpers.js) and the other
   `mkdtemp` sites; check `ls /tmp | grep parallang | wc -l` stays 0 after `node --test`.
 
-- [ ] **F2. Typographic apostrophes** (round 054): fold ’ ‘ ʼ (and look-alikes) to ' in `matchCanonicalVocabulary`
+- [x] **F2. Typographic apostrophes** (round 054, closed 2026-11-05): fold ’ ‘ ʼ (and look-alikes) to ' in `matchCanonicalVocabulary`
   and the grader-evidence presence check, so an iPhone's Smart Punctuation cannot make a correct answer
   `INVALID_GRADING` on every retry. No live calls.
 
@@ -421,9 +421,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `que_hora_es`. *tre* / *tres* are Mortimer's entries and also match in "Sono le tre". The leak scan flags *l'ora*
   (hour) as the target *ora*: noise. `docs/rounds/050/results/measure.py` measures Fountain reports with closure
   in order.
-- **Typographic apostrophes are not folded** by `matchCanonicalVocabulary` (round 050 critique 1.2): an iPhone types
-  `’`. A form with an apostrophe needs a `’` surface variant too (only *l'una* has one; the other apostrophe form is it
-  *ancora un po'* in `mortimer_party.yaml`, unchecked against `po’`).
+- **Typographic apostrophes are folded** since round 054: `foldApostrophes` (’ ‘ ʼ \` ´ ′ → ', one unit for one) runs
+  in `matchCanonicalVocabulary`, `normalizeAnswer` and the evidence check (`foldEvidenceText`: also NFC, whitespace).
+  New content needs no `’` variants. ʼ was a letter before, so it is now a word boundary for the matcher.
 
 - **Other-target exposure** (round 049): `leak-scan.js` prints `foreign` rows (a party target of another
   conversation, exact whole forms; `amigo` marked `english`) apart from the four kinds, and the summary line ends

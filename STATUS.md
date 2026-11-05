@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 054, typographic apostrophes (autonomous)
+
+An iPhone types ’ with Smart Punctuation, and the server compared apostrophes exactly. A correct "È l’una" could
+therefore fail as `INVALID_GRADING` on every retry whenever the grader quoted it with '. `ancora un po’` also
+matched only `ancora`. Every apostrophe look-alike now folds to ' in four places: the vocabulary matcher, answer
+normalisation (reviews), the grader-evidence check (which also folds NFC and whitespace) and the atmosphere filter.
+Content and prompts are unchanged. There were no live runs (Codex at its limit). The owner should check the case
+in the Simulator ([open items](docs/rounds/054/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 051, an early pass is not a success (autonomous)
 
 In an encounter with ordered objectives, an answer that meets a later objective while an earlier one is still open
@@ -541,6 +550,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 054 | 11-05 | Typographic apostrophes fold to ' in the matcher, reviews and the grader-evidence check (backlog F2) (autonomous) | [054](docs/rounds/054/architecture.md) | [findings](docs/rounds/054/findings.md) | pre-run record to round 054 close |
 | 053 | 11-05 | An LLM atmosphere line under each location's description, off by default (backlog A10) (autonomous) | [053](docs/rounds/053/architecture.md) | [findings](docs/rounds/053/findings.md) | pre-run record |
 | 052 | 11-05 | Numbers 2–12 in Flick's slow walk: a bargaining objective, reinforcement for the hours (backlog H2) (autonomous) | [052](docs/rounds/052/architecture.md) | [findings](docs/rounds/052/findings.md) | pre-run record |
 | 051 | 11-05 | An early pass in an ordered encounter is no longer reported as a success: grading ORDER line, `held` marks (backlog H1) (autonomous) | [051](docs/rounds/051/architecture.md) | [findings](docs/rounds/051/findings.md) | pre-run record to round 051 close |

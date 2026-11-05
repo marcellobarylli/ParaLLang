@@ -1,7 +1,18 @@
 const DAY_MS = 86_400_000;
 
+// Round 054 (backlog F2): an iPhone types ’ (Smart Punctuation). Every apostrophe look-alike becomes ', one UTF-16
+// unit for one, so offsets into the source do not move. Before NFKC, which would split ´ into a space and an accent.
+const APOSTROPHES = /[\u2019\u2018\u02BC\u0060\u00B4\u2032]/gu;
+export function foldApostrophes(text) { return String(text ?? '').replace(APOSTROPHES, "'"); }
+
+// Round 054 (critique 1.3): the grader-evidence presence check compares texts folded alike: apostrophes, NFC, every
+// whitespace run (no-break space included) to one space, case.
+export function foldEvidenceText(text) {
+  return foldApostrophes(text).normalize('NFC').replace(/\s+/gu, ' ').toLowerCase();
+}
+
 export function normalizeAnswer(value, { stripAccents = false } = {}) {
-  let normalized = String(value ?? '')
+  let normalized = foldApostrophes(value)
     .normalize('NFKC')
     .toLocaleLowerCase('en')
     .replace(/[.,!?;¿¡:"'()“”‘’]+/gu, ' ')
@@ -54,7 +65,7 @@ export function matchCanonicalVocabulary(text, vocabulary) {
   const startOf = [];
   const endOf = [];
   for (const cluster of source.matchAll(/\P{M}\p{M}*|\p{M}+/gsu)) {
-    const piece = cluster[0].normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+    const piece = foldApostrophes(cluster[0].normalize('NFD').replace(/\p{M}/gu, '').toLowerCase());
     for (let i = 0; i < piece.length; i += 1) {
       startOf.push(cluster.index);
       endOf.push(cluster.index + cluster[0].length);
@@ -71,7 +82,7 @@ export function matchCanonicalVocabulary(text, vocabulary) {
   for (const entry of entries) {
     const variants = [...entry.surface_variants].sort((a, b) => b.length - a.length);
     for (const variant of variants) {
-      const form = variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+      const form = foldApostrophes(variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase());
       const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
       const expression = new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu');
       for (const result of folded.matchAll(expression)) {

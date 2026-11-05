@@ -174,3 +174,15 @@ test('a prompt that cannot be built gives null and a build drop, not an error (r
   assert.equal(service.atmosphereStats.drops.at(-1).reason, 'build');
   assert.equal(provider.atmosphereCalls.length, 0);
 });
+
+// Round 054 (critique 1.4): apostrophes fold before the pack-form check, so ʼ (a letter) no longer hides a form,
+// and an English line with typographic apostrophes is kept.
+test('it: a pack form written with ʼ drops the line; an English line with ’ is kept', async (t) => {
+  const { provider, learnerId, service } = await setup(t, { language: 'it' });
+  provider.lines.push('The clock insists: È lʼuna.');
+  assert.deepEqual(await service.getAtmosphere(learnerId), { atmosphere: null });
+  assert.deepEqual(service.atmosphereStats.drops.at(-1), { reason: 'vocabulary', locationId: 'market_entrance', excerpt: 'È lʼuna' });
+  const { learnerId: other, service: fresh, provider: second } = await setup(t, { language: 'it' });
+  second.lines.push('The archway’s keystone hums; nobody’s listening.');
+  assert.equal((await fresh.getAtmosphere(other)).atmosphere.text, 'The archway’s keystone hums; nobody’s listening.');
+});
