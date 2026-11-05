@@ -7,8 +7,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing in progress: rounds 018, 019 and 020 are closed. Next, in order: **A8** (party system) or **B3**'s Fountain
-part (content, live runs), then **E1** as a template round (see its entry). Check Codex's limit first (see traps).
+Nothing in progress: round 021 (A8a) is closed. Next, in order: **A8b** (revisit conversations with party members),
+**B3**'s Fountain part (content, live runs), then **E1** as a template round (see its entry). Check Codex's limit
+first (see traps).
 
 ## Backlog
 
@@ -34,7 +35,14 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **A7b. The Rift boss.** (round 015, closed 2026-11-05) Mini-boss in corrupted mixed language, reviewing all learned vocabulary. Narration
   chips need an objective targeting an entry of each vocabulary file (see traps). `startEncounter` must refuse a
   sealed location (saves from rounds 005–013 may already stand in the Rift).
-- [ ] **A8. Party system.** Save defeated (saveable) enemies, revisit conversations with party members.
+- [x] **A8a. Party recruitment.** (round 021, closed 2026-11-05) SAVE / LEAVE after a saveable NPC, party in the
+  save (schema 3), `GET /api/party`, `POST /api/party/recruit`, map invitation, Party screen. Also fixed the start
+  route dropping `encounterId`.
+- [ ] **A8b. Party conversations.** Revisit conversations with party members (prototype.md §7 lists
+  `save_to_party.txt`; a new prompt template, a free-conversation turn without objectives or with light ones, a
+  relationship / conversation counter in the party member, a Talk button on the Party screen). Needs live runs: the
+  share and tone of a member's lines, no answer leaks. Members hold `{ characterId, encounterId, joinedAt }` today;
+  adding fields needs the validation in `learning-storage.js` (`validParty`) and maybe a schema bump.
 - [ ] **A9. Lore fragments.** Optional hidden passages with advanced vocabulary (e.g. fragments of *The Journey*).
 - [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
 - [ ] **A11. Save slots** (if still wanted after A1's save format).
@@ -93,6 +101,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- **Round 021: re-check the app over HTTP.** Until round 021 the HTTP start route dropped `encounterId`, so the app
+  started Gerald at every location (Simulator sessions since round 009 never met Portia, Mortimer, Flick, Marginalia
+  or Errata). Check the SAVE / LEAVE card, the map invitation, the Party screen and the header's Party button
+  ([open items](../rounds/021/findings.md#open-items)).
 
 - **Expose `CLAUDE_CODE_OAUTH_TOKEN` to the agent's shell** (round 018). The game's claude-cli preflight now accepts
   the subscription token (supervisor note), but the iteration's Bash shell does not carry it (only the agent's parent
@@ -180,7 +193,24 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   measured (5 runs, 37 calls) and reverted by Amendment: Portia's quirk left the share unchanged. Re-read of round 019:
   open-answer modelling 5/12 → 0/12 lines. Iteration 6 ends here (rounds 018–020 closed; ~140 Codex calls, no limit).
 
+- 2026-11-05, iteration 7: round 021 (A8a) planned, critiqued (8 findings: 5 accepted, 3 in part), built and
+  closed: party recruitment and the start route fix; server 122/122, mobile 33/33, client 12/12; live recruit run
+  and a real-HTTP check passed (6 calls).
+
 ## Handoff notes and traps
+
+- **In-process runs bypass the HTTP routes** (round 021): `play-market.js` and most tests call `LearningService`
+  directly, which hid a route that dropped `encounterId` for 15 rounds. A new request field needs an HTTP test
+  through `api()` in `server/test/helpers.js`. `docs/rounds/021/results/http-check.mjs` is a live HTTP driver that
+  spawns the real server on 127.0.0.1 with a random token and always stops it.
+- **Starting the server from Bash with `VAR=... node server/server.js &`**: `$!` was not node's PID, so `kill $!`
+  left the server running (round 021). Spawn it from a Node script (`http-check.mjs`) or check with
+  `pgrep -af server/server.js` afterwards.
+- **Codex critique from `/tmp`** needs `--skip-git-repo-check` (round 021: without it codex exits at once).
+- **The world snapshot's encounter block** has `characterId` and `saveable` since round 021; tests that
+  `deepEqual` it list all five fields.
+- **Save schema 3** (round 021): `party` is required in a v3 save; v1/v2 migrate in memory. Test fixtures that write
+  a save by hand must include `party: []`.
 
 - **`docs/rounds/020/results/compare.py`** compares `play-market.js` tutorial runs (`label=f1,f2 ...`): both share
   measures, token counts, overshoot, verdicts, and lines that model an open objective's answer. Its leak patterns are

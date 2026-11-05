@@ -1,0 +1,39 @@
+{
+  "startedAt": "2026-11-05T16:40:34.815Z",
+  "portia": {
+    "status": 200,
+    "encounterId": "market_entrance_tutorial",
+    "character": {
+      "id": "archway_portia_001",
+      "name": "Portia",
+      "saveable": false
+    },
+    "native": "Benvenuto! Portia, entrance administration. Before the mercato: a greeting and your name, please. The book gets fussy."
+  },
+  "geraldAtEntrance": {
+    "status": 409,
+    "code": "NOT_HERE",
+    "message": "Gerald is not here. Walk to The Coffee Cart first."
+  },
+  "recruitPortia": {
+    "status": 409,
+    "code": "NOT_SAVEABLE"
+  },
+  "recruitGerald": {
+    "status": 409,
+    "code": "NOT_DEFEATED"
+  },
+  "party": {
+    "party": []
+  },
+  "finishedAt": "2026-11-05T16:40:46.393Z",
+  "serverLog": [
+    "ParaLLang server listening on http://127.0.0.1:3917",
+    "LLM provider: codex-cli",
+    "Target language: Italian (it)",
+    "Spellbook saves: /tmp/parallang-http-Ws3A8V/it",
+    "[32ef8dab-cd1a-4a49-9e44-2b2121cce49e] NOT_HERE",
+    "[d2e07bab-3d50-44bf-8820-3976b1403c51] NOT_SAVEABLE",
+    "[e9b9ca1c-126f-4c5c-be87-dc7418ecbfa4] NOT_DEFEATED"
+  ]
+}

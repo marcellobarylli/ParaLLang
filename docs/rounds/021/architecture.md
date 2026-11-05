@@ -121,3 +121,11 @@ return rule unchanged.
 
 Net change from v1: the world snapshot and encounter carry character id and saveability, membership is compared by
 character, and the test list grows.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no amendment. Party recruitment works under tests (server 122/122, mobile 33/33, web client
+12/12 and build, expo-doctor 20/20, iOS export ok) and live: a codex-cli Coffee Cart run resolved and recruited Gerald
+(5 calls), and a real-HTTP check started Portia at the Market Entrance through the fixed route (`NOT_HERE` for
+Gerald there; `NOT_SAVEABLE` and `NOT_DEFEATED` as designed). Gerald's pinned prompts are unchanged. A8a is done;
+A8b (revisit conversations) is next. Nothing was checked in the iOS Simulator. See [findings](findings.md).
