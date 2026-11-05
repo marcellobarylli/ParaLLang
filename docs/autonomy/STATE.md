@@ -7,10 +7,21 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 15 closed round 050 (G5, telling the time at the Fountain) and round 051 (H1, an early pass
-in an ordered encounter is no longer reported as a success). **Next:** H2 (hours 1–12, a numbers lesson; content plus
-live runs) or A10 (optional LLM location atmosphere). D1 stays blocked. Codex served two critiques and about 300
-game calls between 22:04 and 22:55 UTC without hitting its limit.
+**Two rounds open, built and committed, waiting only for live runs** (iteration 16; Codex hit its usage limit at about
+23:14 UTC, reset given as **01:36 UTC 2026-11-06**). Run these first, in order, then close each round (findings.md,
+Outcome, `round_log_check.py`, STATUS addendum):
+
+1. **Round 052 (H2, numbers 2–12 in Flick's slow walk).** The scripted runs passed (it, es; `results/walk-*.json`).
+   Queued, as in its Live section: the variant runs, with codex-cli:
+   `TARGET_LANGUAGE=it node server/scripts/play-market.js --provider codex-cli --party --member cracked_fountain --lines 'Sei stanco.|Non cinque, tre minuti.|Andiamo!|Insieme.' --out docs/rounds/052/results/variant-it.json`
+   and es with `'Tres horas.|Diez minutos, ni uno más.|¡Vamos!|Juntos.'`. Expect: the first line fails, the second
+   passes (it records Mortimer's `tre`), then resolved. Then `leak-scan.js` on all four reports, and write
+   findings.md (scripted results in journal row 10).
+2. **Round 053 (A10, LLM location atmosphere, off by default).** Queued:
+   `TARGET_LANGUAGE=it node docs/rounds/053/results/atmosphere-live.mjs --provider codex-cli > docs/rounds/053/results/live-it.json`
+   and the same for es (12 calls each, in-process, no port). Success: at least 5 of 6 lines kept per pack, English, at
+   most 40 words, consistent with the description. A read-only code review of 052–053 was dispatched (journal row
+   10); if its report is not in the trail as `review-1.md`, re-run it.
 
 ## Backlog
 
@@ -56,7 +67,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Open: tiers that change the conversation (needs live runs); a Party-screen hint (owner question).
 - [x] **A11b. Removing saves.** (rounds 038–039, closed 2026-11-05) Non-current saves, system alert, no label reuse;
   deleted on the server first (`DELETE /api/learner`). Open (owner): renaming; the app sending `PARALLANG_TOKEN`.
-- [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
+- [ ] **A10. LLM-enhanced location atmosphere** (round 053, built, live check queued: `PARALLANG_ATMOSPHERE=on`,
+  `GET /api/world/atmosphere`, a line under the description on the map card).
 - [x] **A11. Save slots.** (round 031, closed 2026-11-05) Up to three learners per device, Saves screen from the
   map; delete and rename deferred (owner question).
 
@@ -127,7 +139,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **H1. Early pass in an ordered encounter.** (round 051, closed 2026-11-05: an ORDER bullet in the grading
   prompt, and the grader now fails the early objective with "say it again" feedback; `held` marks a pass that does
   not close, shown as "…" in the app; Gerald's pinned narration prompts unchanged.)
-- [ ] **H2. Hours 1–12** (owner question in round 050): a numbers lesson (a party conversation or the Fountain) so
+- [ ] **H2. Hours 1–12** (round 052, built, variant live runs queued: objective `minutes` first in `flick_slow_walk`,
+  numbers 2–12 in `flick_party.yaml` v2) (owner question in round 050): a numbers lesson (a party conversation or the Fountain) so
   *sono le* / *son las* has numbers behind it. Mortimer teaches only *tre*/*cento* (it) and *dos*/*tres*/*cien* (es).
   Watch English collisions (it *due*, es *once*).
 
@@ -351,6 +364,13 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings, 3 Errors accepted; Amendment 1 moved the line before the rubric), live it/es Fountain, combined answers,
   verify:cli and an es tour. Server 198/198, mobile 126/126, web 12/12.
 
+- 2026-11-05, iteration 16 (22:56–23:40 UTC): round 052 (H2, numbers 2–12 in Flick's slow walk; Codex critique,
+  11 findings, 4 Errors accepted incl. a matcher offset bug on decomposed accents) built and run live with the scripted
+  lines (it, es: as scripted); Codex then hit its limit (23:14), so its variant runs are queued. Round 053 (A10, LLM
+  location atmosphere; Claude-subagent critique, 13 findings, 3 Errors accepted: off by default because the CLI
+  runner is serial) built offline. Server 213/213, mobile 130/130, web 12/12. `git push` failed from 23:22 with a
+  GitHub-side "fatal error in commit_refs" (see traps).
+
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
   - 033 (A12b): Journey fragments for Mortimer, Flick and Marginalia; a wider stem check.
@@ -365,6 +385,24 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   subagent: no serious bugs), mobile 95/95, client 12/12, expo-doctor 20/20. Iteration 11 ended at 20:01 UTC.
 
 ## Handoff notes and traps
+
+- **Numbers in Flick's slow walk** (round 052): `minutes` targets it `due` … `dodici` with Mortimer's `tre`, es
+  Mortimer's `dos`, `tres` and `cuatro` … `doce` (cross-file ids: Mortimer's whole butcher file is chipped in this
+  conversation). `minuti` / `minutos` are non-target entries in `flick_party.yaml`. English-word forms among the
+  slow walk's chips are pinned in `server/test/flick-numbers.test.js` (it *due*, *sei*, *otto*, *nove*, *salami*,
+  *mezzo*, *cento*; es *once*, *kilo(s)*, *chorizo(s)*); a new one fails there. Any English text checked against the
+  es pack now hits *once* (round 052 rewrote Errata's containment file and the lotus fragment for this).
+  `encounters.test.js`'s `fixtureContent` strips `dos`/`tres` from es `minutes`, since it removes Mortimer's file.
+- **Matcher offsets** (round 052): `matchCanonicalVocabulary` folds per cluster and maps folded indices back to the
+  source; NFC results are unchanged, decomposed accents and growing lowercases (İ) no longer shift offsets.
+- **Atmosphere** (round 053): off unless `PARALLANG_ATMOSPHERE=on` (`new LearningService({ atmosphere: true })` in
+  scripts/tests). `providerCallsInFlight` (counted in `callProvider`) makes it return null ("busy", not cached) while an
+  encounter call runs; once started it still delays the next encounter call on the serial CLI runner. Failures are
+  cached as null for `ATMOSPHERE_RETRY_MS` (10 min); `service.atmosphereStats` holds calls and drop reasons.
+  `ATMOSPHERE_ENGLISH` lists pack forms the English line may use. The `FixtureProvider` answers `location_atmosphere`.
+  The app's store subscription (`followAtmosphere`) keys by learner, location, completion and party ids.
+- **`git push` rejected by GitHub** from 23:22 UTC 2026-11-05: `remote: fatal error in commit_refs`, while fetch
+  works. Not a local problem found (no large files). Retry `git push origin autonomous`; never force-push.
 
 - **Ordered grading** (round 051): `buildGradingMessages({ ordered })` fills `{{order}}` (end of the Quality bullet in
   `grading.txt`) with an ORDER bullet when two or more ordered objectives are graded; empty otherwise (byte-identical,

@@ -13,3 +13,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 7 | 23:19:35 | 23:19:35 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed | `../architecture.md` |
 | 8 | 23:21:47 | 23:21:47 | built | Claude (claude-opus-5-5), autonomous | Server (getAtmosphere, route, prompt, schema, in-flight guard, cached failures, drop trace), app (store subscription, MapPanel line); server 213/213, mobile 130/130, web 12/12 | — |
 | 9 | unknown | 23:22:21 | amended | Claude (claude-opus-5-5), autonomous | Correction: rows 1 and 4 have typed Occurred times (23:17:00, 23:27:00), not clock readings; 23:27 is after this row's clock. Row 1 occurred between 23:14:11 and row 2; row 4 between row 3 and 23:22:05. Both are unknown | — |
+| 10 | 23:23:08 | 23:23:08 | review-dispatched | Claude (claude-opus-5-5), autonomous | Read-only review of the rounds 052–053 code diff (58cf236..HEAD) by a fresh Claude subagent | — |
