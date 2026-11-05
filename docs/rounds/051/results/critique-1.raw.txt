@@ -1,0 +1,22 @@
+1. **Error — The wording promises deferred credit that does not exist.** Plan lines 30–38 say the objective “will count once the earlier one is done.” Held evidence is not banked: the player must satisfy that objective again, possibly alongside the earlier objective. Both feedback and the app note must state this explicitly.
+
+2. **Error — Held answers fall outside the grading prompt’s answer-protection rule.** Plan lines 28–32 constrain the held objective’s feedback, but leave `overall_feedback` unchanged. The existing grading instruction protects objectives that have “not passed”; a held objective has passed grading while remaining open, allowing its target expression to leak through overall feedback. Define held objectives as still open for answer protection in both feedback fields.
+
+3. **Risk — The narration instruction leaves the central ambiguity intact.** Plan lines 33–36 retain `passed: true` and add a descriptive note, without explicitly directing the narrator not to celebrate completion, advance past the held objective, or supply its answer. Give the note behavioral instructions, including that the player must satisfy the held objective again.
+
+4. **Risk — The tests do not establish the full leading-run rule.** Plan lines 39–42 cover an early failure followed by a pass and a combined answer, but do not explicitly cover `[pass, fail, pass]`: the first closes, the second fails, and only the third is held. Derive held status from passed results whose IDs are absent from `closing`; test that unordered turns never hold and resolved turns contain no held results.
+
+5. **Risk — Conditional text does not automatically preserve prompt bytes.** Plan lines 24–29 promise compatibility, but an empty placeholder on its own template line still introduces whitespace. Follow `ambientLine`’s conditional-newline pattern and compare complete messages for existing pinned cases; checking only that ORDER is absent does not establish byte identity.
+
+6. **Risk — Processed-attempt replays bypass the proposed fix.** Plan lines 22–27 and 39–42 do not address the existing early return of stored responses, so prechange attempts will replay without held annotations. Explicitly choose the legacy behavior, and test that a newly processed held attempt replays its stored annotation after subsequent progress without grading, narrating, or recording evidence again; recomputing against current progress would be incorrect.
+
+7. **Risk — Spellbook preservation needs assertions beyond retaining `passed`.** Plan lines 26–27 reasonably preserve correct-usage evidence, but the tests in lines 39–42 do not verify the separate scheduling rule. Assert that held evidence retains its effective quality and passed verdict, while scheduling advances only upon closure and replay adds no duplicate evidence.
+
+8. **Risk — The web client retains the reported display bug.** Plan lines 37–38 explicitly leave its ✓ unchanged, so the same server result will communicate different completion states across clients. This is an accepted scope limitation only if stated clearly; otherwise, include the small held-state rendering fix there too.
+
+9. **Error — The success criteria omit the narrator’s behavior.** Plan lines 46–48 measure Flick’s reaction, but lines 52–53 allow success based on feedback, verdicts, and Gerald’s regression alone. Require correct narration and explicitly verify the held lifecycle: closing the earlier objective alone does not bank the previous pass, and the later objective still requires another qualifying answer.
+
+## Optional
+
+- Include `held` in `assessmentKey` so the animation key continues to represent all displayed assessment content.
+- Inspect `overall_feedback`, narration, and app text during both live runs for answer leakage and misleading promises of automatic future credit.

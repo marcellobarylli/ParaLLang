@@ -1,0 +1,330 @@
+===== docs/rounds/051/trail/plan-v1.md
+     1	# Round 051 plan v1: an early pass in an ordered encounter is not a success (backlog H1)
+     2	
+     3	Autonomous round (no owner present).
+     4	
+     5	## Problem (round 050 data)
+     6	
+     7	In an ordered encounter (every encounter except `mortimer_tasting`), `submitDialogue` grades every remaining
+     8	objective and closes only the leading run of passes (`learning-service.js`, "In order: the leading run of passes
+     9	closes"). When a later objective passes while an earlier one fails, three things tell the player it succeeded,
+    10	though it stays open and must be met again:
+    11	
+    12	1. the grader's `feedback` for it: "You successfully insist on now. You still need to tell Flick what time it is."
+    13	   (round 050, run 1 it and es);
+    14	2. the app's Assessment panel shows ✓ for it (`DialoguePanel.js`: `result.passed ? '✓' : '→'`);
+    15	3. the narrator gets `authoritative_decision.objectiveResults` with `passed: true` and reacts as to a success
+    16	   ("¡Ahora, sí! No quieres esperar.").
+    17	
+    18	Two turns later the player is asked to say "now" again.
+    19	
+    20	## Design
+    21	
+    22	1. **`held` on a result** (server). In an ordered encounter, a result that passed but does not close (it follows a
+    23	   failed objective) is marked `held: true`, in both `decision.objectiveResults` (narration) and the response's
+    24	   `assessment.objectiveResults`. The field is added only when true, so every other prompt and response stays
+    25	   byte-identical (Gerald's pinned narration prompts, `server/test/fixtures/gerald-prompts-r026.json`). Unordered
+    26	   encounters never hold. `passed` keeps the grader's verdict (the evidence was correct usage; the Spellbook
+    27	   records it as now).
+    28	2. **Grading prompt** (`prompts/language/grading.txt`, filled from `buildGradingMessages`): a conditional ORDER line
+    29	   after the rubric, only when the encounter is ordered and more than one objective is supplied (empty otherwise,
+    30	   like `ambientLine`): "ORDER: the objectives count in the order given. If an objective passes while an earlier
+    31	   one has not, its feedback must say in English that it will count once the earlier one is done, not that it
+    32	   succeeded." `buildGradingMessages` gets `ordered` (boolean).
+    33	3. **Narration** (`prompts/encounter/dialogue_turn.txt` unchanged): `held: true` is self-describing inside the
+    34	   authoritative decision, plus one sentence added to the TURN DATA only when a held result exists:
+    35	   `held_note: "A held objective was said correctly but does not count yet: an earlier objective comes first."`
+    36	   (inside `authoritative_decision`, only when held, so pinned prompts stay identical).
+    37	4. **App** (`mobile/src/components/DialoguePanel.js`): a held result shows `…` instead of ✓, and its line ends with
+    38	   "(counts once the earlier objective is done)". The frozen web client is unchanged (it shows ✓; noted).
+    39	5. **Tests:** service test (Fountain fixture: "Adesso!" at `time` gives `now` held in the response and in the
+    40	   narration call's decision; a combined answer gives no held); unordered (`mortimer_tasting`) never holds; grading
+    41	   prompt has the ORDER line for an ordered multi-objective call and not for single or unordered; Gerald's pinned
+    42	   prompts unchanged; mobile component test for `…` and the note.
+    43	
+    44	## Live
+    45	
+    46	codex-cli, `play-market.js --location cracked_fountain` (the script holds "Adesso!" at `time`), 1 × it, 1 × es.
+    47	Measure: feedback for the held `now` (says it will count later, not success), Flick's next line (does not treat
+    48	now as achieved), all verdicts as scripted. Then `npm run verify:cli -- --provider codex-cli` as Gerald's regression.
+    49	
+    50	## Success
+    51	
+    52	All tests pass; in both live runs the held objective's feedback does not call it a success and the verdicts match
+    53	the script; verify:cli passes.
+===== prompts/language/grading.txt
+     1	You are a strict contextual {{language.name}}-learning assessor, separate from the scene narrator.
+     2	
+     3	- Evaluate only the authored objectives.
+     4	- A target expression must communicate the player's own intended answer in context.
+     5	- Reject an English-only target meaning, contradiction, quotation, third-person attribution, and off-topic mention.
+     6	- Mixed English/{{language.name}} is allowed when the required {{language.name}} target is genuinely used.
+     7	- Return one result for every supplied objective, in order.
+     8	- Evidence must be an exact excerpt from player_answer.
+     9	- Only report a vocabulary ID when one of its authored {{language.name}} forms (`target` or any of `forms`) is present and correctly used.
+    10	- `feedback` (for every objective, passed or not) and `overall_feedback` are shown to the learner before their next attempt. While an objective has not passed, never write a {{language.name}} expression that would satisfy it, not even by quoting the learner. Say in English what is still missing.
+    11	- Quality: 0 revealed/no recall; 1 incorrect/little evidence; 2 incorrect or assisted; 3 correct with material difficulty; 4 correct with minor difficulty; 5 correct and unassisted.
+    12	
+    13	AUTHORED RUBRIC: {{rubric}}
+    14	Return only structured JSON.
+===== prompts/encounter/dialogue_turn.txt
+     1	React as {{enemy.name}} to the player answer in TURN DATA. Express the authoritative decision in character, but do not alter it. Keep feedback useful and the {{language.name}} beginner-friendly.
+     2	
+     3	TURN DATA: {{turnData}}
+===== server/src/llm/prompt-builder.js
+     1	import { readFileSync } from 'node:fs';
+     2	import { resolve } from 'node:path';
+     3	
+     4	const promptRoot = resolve(import.meta.dirname, '..', '..', '..', 'prompts');
+     5	const templateCache = new Map();
+     6	
+     7	export function loadTemplate(relativePath) {
+     8	  if (!templateCache.has(relativePath)) templateCache.set(relativePath, readFileSync(resolve(promptRoot, relativePath), 'utf8'));
+     9	  return templateCache.get(relativePath);
+    10	}
+    11	
+    12	export function fillTemplate(template, variables) {
+    13	  return template.replace(/\{\{([\w.]+)\}\}/g, (placeholder, path) => {
+    14	    const value = path.split('.').reduce((current, key) => current?.[key], variables);
+    15	    return value === undefined ? placeholder : String(value);
+    16	  });
+    17	}
+    18	
+    19	// Round 010: the grading rubric also lists each target's authored surface forms (plurals, spellings), which the
+    20	// grader must find in the answer; the narration prompt keeps the canonical form only.
+    21	function targetData(objectives, vocabularyById, { forms = false } = {}) {
+    22	  return objectives.map((objective) => ({
+    23	    id: objective.id,
+    24	    intent: objective.intent,
+    25	    reference_meaning: objective.reference_meaning,
+    26	    targets: objective.target_vocabulary_ids.map((id) => {
+    27	      const entry = vocabularyById.get(id);
+    28	      return { id, target: entry.target, ...(forms ? { forms: entry.surface_variants } : {}), meanings: entry.accepted_translations };
+    29	    }),
+    30	    required_target_groups: objective.required_target_groups,
+    31	    grammar_constraints: objective.grammar_constraints,
+    32	    accepted_examples: objective.accepted_examples,
+    33	    negative_examples: objective.negative_examples,
+    34	  }));
+    35	}
+    36	
+    37	// Round 019: an encounter's ambient vocabulary, as one extra line after the learning data; empty when it has none, so
+    38	// prompts without it stay byte-identical (Gerald's golden prompts).
+    39	function ambientLine(language, entries) {
+    40	  if (!entries.length) return '';
+    41	  const words = entries.map((entry) => ({
+    42	    target: entry.target, meanings: entry.accepted_translations, ...(entry.note ? { usage: entry.note } : {}),
+    43	  }));
+    44	  return `\nFREE VOCABULARY (authored ${language.name} you may use in any line, including the greeting; it is not the answer to any objective, and every rule above about open objectives still applies): ${JSON.stringify(words)}`;
+    45	}
+    46	
+    47	export function buildNarrationMessages({
+    48	  language,
+    49	  character,
+    50	  styleGuide,
+    51	  locationName,
+    52	  objectives,
+    53	  vocabularyById,
+    54	  conversationHistory = [],
+    55	  playerInput = null,
+    56	  targetRatio,
+    57	  decision = null,
+    58	  ambientEntries = [],
+    59	}) {
+    60	  const system = fillTemplate(loadTemplate('system/base.txt'), {
+    61	    enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
+    62	    style: { tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n') },
+    63	    language: {
+    64	      name: language.name,
+    65	      targetRatio: Math.round(targetRatio * 100),
+    66	      // Round 026 (backlog E1): a worked example beside the percentage, from the same ratio, so the two agree.
+    67	      wordsPer20: Math.round(targetRatio * 20),
+    68	      learningData: JSON.stringify(targetData(objectives, vocabularyById)),
+    69	      ambientVocabulary: ambientLine(language, ambientEntries),
+    70	    },
+    71	  });
+    72	  const turnData = playerInput === null
+    73	    ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in The Crumbling Market.` }
+    74	    : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision };
+    75	
+    76	  return [
+    77	    { role: 'system', content: system },
+    78	    ...conversationHistory,
+    79	    { role: 'user', content: fillTemplate(loadTemplate(playerInput === null ? 'encounter/greeting.txt' : 'encounter/dialogue_turn.txt'), {
+    80	      language, enemy: { name: character.name }, location: { name: locationName }, turnData: JSON.stringify(turnData),
+    81	    }) },
+    82	  ];
+    83	}
+    84	
+    85	export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput }) {
+    86	  const rubric = targetData(objectives, vocabularyById, { forms: true });
+    87	  const system = fillTemplate(loadTemplate('language/grading.txt'), { language, rubric: JSON.stringify(rubric) });
+    88	  return [
+    89	    { role: 'system', content: system },
+    90	    { role: 'user', content: JSON.stringify({ conversation_context: conversationContext, player_answer: playerInput }) },
+    91	  ];
+    92	}
+===== server/src/learning-service.js (lines 495-600)
+     1	        return { ...existing.response, replayed: true };
+     2	      }
+     3	      const current = this.encounters.get(learnerId);
+     4	      this.validateVersion(current, request.encounterId, request.version);
+     5	      if (current.state !== 'ongoing') throw validationError('This encounter is already complete. Restart to play again.');
+     6	      const definition = this.definition(current);
+     7	      const objectives = this.activeObjectives(current);
+     8	      const gradingRaw = await this.callProvider(buildGradingMessages({
+     9	        language: this.content.language, objectives, vocabularyById: this.content.vocabularyById,
+    10	        conversationContext: current.transcript.map((item) => item.role === 'player' ? item.text : item.dialogue.native),
+    11	        playerInput: message,
+    12	      }), gradingResponseSchema, 'dialogue_assessment', 'The language assessor');
+    13	      const assessment = this.validateAssessment(gradingRaw, objectives, message);
+    14	
+    15	      // In order: the leading run of passes closes. Unordered (round 045): every passed open objective closes.
+    16	      const passedOf = (objective) => assessment.objective_results.find((item) => item.objective_id === objective.id)?.passed === true;
+    17	      const unordered = definition.encounter.objectives_unordered === true;
+    18	      const closing = [];
+    19	      for (const objective of objectives) {
+    20	        if (passedOf(objective)) closing.push(objective);
+    21	        else if (!unordered) break;
+    22	      }
+    23	      const passedCount = closing.length;
+    24	      const nextObjectiveIndex = current.objectiveIndex + passedCount;
+    25	      const nextPassedIds = [...(current.passedObjectiveIds ?? []), ...closing.map((objective) => objective.id)];
+    26	      const remaining = unordered
+    27	        ? definition.encounter.objectives.filter((objective) => !nextPassedIds.includes(objective.id))
+    28	        : definition.encounter.objectives.slice(nextObjectiveIndex);
+    29	      const resolved = remaining.length === 0;
+    30	      const nextTurns = current.committedPlayerTurns + 1;
+    31	      const decision = {
+    32	        objectiveResults: assessment.objective_results.map(({ objective_id, passed }) => ({ objectiveId: objective_id, passed })),
+    33	        encounterState: resolved ? 'resolved' : 'ongoing',
+    34	        nextObjectiveId: remaining[0]?.id ?? null,
+    35	      };
+    36	      const history = current.transcript.map((item) => item.role === 'player'
+    37	        ? { role: 'user', content: item.text }
+    38	        : { role: 'assistant', content: item.dialogue.native });
+    39	      const generated = await this.callProvider(buildNarrationMessages({
+    40	        language: this.content.language,
+    41	        character: definition.character,
+    42	        styleGuide: this.content.styleGuide,
+    43	        locationName: this.sceneName(current),
+    44	        objectives: remaining,
+    45	        vocabularyById: this.content.vocabularyById,
+    46	        conversationHistory: history,
+    47	        playerInput: message,
+    48	        targetRatio: this.ratioFor(nextTurns, definition),
+    49	        decision,
+    50	        ambientEntries: definition.ambientEntries,
+    51	      }), encounterResponseSchema, 'encounter_narration', definition.character.name);
+    52	
+    53	      const stagedEnvelope = clone(envelope);
+    54	      const stagedEncounter = clone(current);
+    55	      const timestamp = nowIso(this.clock);
+    56	      const advancedObjectiveIds = new Set(closing.map((objective) => objective.id));
+    57	      // Round 045 (critique 1.5): in an unordered encounter, help taken on the current objective may serve any open
+    58	      // objective, so a reveal caps the quality of every objective graded this turn.
+    59	      const anyReveal = objectives.some((objective) => (current.reveals[objective.id] ?? []).length > 0);
+    60	      for (const result of assessment.objective_results) {
+    61	        const assisted = unordered ? anyReveal : (current.reveals[result.objective_id] ?? []).length > 0;
+    62	        for (const evidence of result.vocabulary_evidence) {
+    63	          this.discover(stagedEnvelope, [evidence.vocabulary_id], timestamp, 'dialogue_assessment');
+    64	          const item = this.findItem(stagedEnvelope, evidence.vocabulary_id);
+    65	          const effectiveQuality = capAssistedQuality(evidence.quality, assisted);
+    66	          item.evidence.push({ at: timestamp, kind: 'dialogue', objectiveId: result.objective_id, quality: effectiveQuality, passed: result.passed });
+    67	          if (advancedObjectiveIds.has(result.objective_id) && result.passed && isDue(item.schedule, this.clock())) {
+    68	            item.schedule = scheduleReview(item.schedule, effectiveQuality, this.clock());
+    69	          }
+    70	          evidence.effective_quality = effectiveQuality;
+    71	        }
+    72	      }
+    73	      const npcMessage = this.canonicalizeNarration(generated, definition);
+    74	      this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
+    75	      stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
+    76	      stagedEncounter.objectiveIndex = nextObjectiveIndex;
+    77	      stagedEncounter.passedObjectiveIds = nextPassedIds;
+    78	      stagedEncounter.committedPlayerTurns = nextTurns;
+    79	      stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
+    80	      stagedEncounter.version += 1;
+    81	      // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
+    82	      // holds the encounter's containment file.
+    83	      if (resolved && definition.encounter.party_of) {
+    84	        // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
+    85	        const member = stagedEnvelope.party.find((candidate) => this.isHomeMember(candidate, definition.encounter.party_of));
+    86	        if (member) member.conversations = (member.conversations ?? 0) + 1;
+    87	      } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
+    88	        stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
+    89	      }
+    90	      const response = {
+    91	        encounter: this.serializeEncounter(stagedEncounter),
+    92	        assessment: {
+    93	          overallFeedback: assessment.overall_feedback,
+    94	          objectiveResults: assessment.objective_results.map((result) => ({
+    95	            objectiveId: result.objective_id, passed: result.passed, feedback: result.feedback,
+    96	            vocabularyEvidence: result.vocabulary_evidence.map((evidence) => ({
+    97	              vocabularyId: evidence.vocabulary_id, evidence: evidence.evidence,
+    98	              quality: evidence.quality, effectiveQuality: evidence.effective_quality,
+    99	            })),
+   100	          })),
+   101	        },
+   102	        spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
+   103	        replayed: false,
+   104	      };
+   105	      stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
+   106	        kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response,
+===== mobile/src/components/DialoguePanel.js (lines 25-80)
+     1	    </View>
+     2	  ) : null;
+     3	  const objective = (
+     4	    <>{briefing}<View style={styles.objective} aria-live="polite">
+     5	      {encounter.currentObjective
+     6	        ? <><Text style={styles.strong}>Current objective</Text><Text style={styles.body}>{encounter.currentObjective.prompt}</Text></>
+     7	        : <Text style={styles.strong}>Encounter complete</Text>}
+     8	      <Text style={styles.small}>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</Text>
+     9	    </View></>
+    10	  );
+    11	  const footer = (
+    12	    <View style={styles.footer}>
+    13	      {isLoading && <Text role="status" style={styles.thinking}>{name} is considering the linguistic implications…</Text>}
+    14	      {assessment && <FadeIn key={assessmentKey(assessment)} style={styles.assessment} aria-live="polite">
+    15	        <Text style={styles.strong}>Assessment</Text><Text style={styles.body}>{assessment.overallFeedback}</Text>
+    16	        {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</Text>)}
+    17	      </FadeIn>}
+    18	      {resolved && <FadeIn><Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}{fragmentNote(fragments, encounter)}</Text></FadeIn>}
+    19	      {resolved && encounter.character?.saveable && !encounter.partyConversation && onRecruit && <PartyOffer
+    20	        name={name} joined={inParty(party, encounter.character.id)} isLoading={isLoading}
+    21	        onSave={() => onRecruit(encounter.encounterId)} onLeave={onLeave}
+    22	      />}
+    23	    </View>
+    24	  );
+    25	
+    26	  return (
+    27	    <FlatList
+    28	      ref={listRef}
+    29	      aria-label={`Conversation with ${name}`}
+    30	      style={styles.panel}
+    31	      contentContainerStyle={styles.content}
+    32	      data={encounter.transcript}
+    33	      keyExtractor={(message) => message.id}
+    34	      ListHeaderComponent={objective}
+    35	      ListFooterComponent={footer}
+    36	      // Round 009: the first screen (briefing, objective, opening line) stays at the top; later turns scroll down.
+    37	      onContentSizeChange={() => { if (encounter.transcript.length > 1) listRef.current?.scrollToEnd?.({ animated: !reduced }); }}
+    38	      keyboardShouldPersistTaps="handled"
+    39	      renderItem={({ item: message }) => <FadeIn animate={firstShowing(message.id)}>{message.role === 'npc' ? (
+    40	        <View style={styles.npc}>
+    41	          <Text style={styles.narrative}>{message.narrative}</Text>
+    42	          <Text style={styles.speaker}>{message.dialogue.speaker}</Text>
+    43	          <BilingualText message={message} onHelp={onHelp} disabled={isLoading || (message.protected && !encounter.hints_available)} />
+    44	        </View>
+    45	      ) : (
+    46	        <Text style={styles.player}>{message.text}</Text>
+    47	      )}</FadeIn>}
+    48	    />
+    49	  );
+    50	}
+    51	
+    52	// Round 035 (critique 1.4): a new assessment replaces the old one in place, so the box is keyed by its content.
+    53	const assessmentKey = (assessment) => [assessment.overallFeedback, ...assessment.objectiveResults.map((r) => `${r.objectiveId}:${r.passed}:${r.feedback}`)].join('|');
+    54	
+    55	// Round 030 (backlog A9): a fragment of The Journey that this encounter's completion filed. Worded to stay true on
+    56	// replays (critique 1.6); part of the victory status so it is announced with it. Round 032: a fragment unlocked by
