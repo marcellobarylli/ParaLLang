@@ -1,0 +1,9 @@
+# HEAD d0fa912+freeze source, round 058 tests (vocabularyFormConflicts stubbed in the test, as designed)
+ok 1 - it: every variant alone matches only its own entry, whole
+ok 2 - it: variants are trimmed and hold no runs of whitespace (critique 1.5)
+ok 3 - es: every variant alone matches only its own entry, whole
+ok 4 - es: variants are trimmed and hold no runs of whitespace (critique 1.5)
+ok 5 - two entries with one folded form conflict; an entry repeating its own form does not
+not ok 6 - a short variant of an entry with one long variant no longer steals a longer entry's phrase
+# pass 5
+# fail 1

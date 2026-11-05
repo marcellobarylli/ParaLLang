@@ -159,7 +159,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F2. Typographic apostrophes** (round 054, closed 2026-11-05): fold ’ ‘ ʼ (and look-alikes) to ' in `matchCanonicalVocabulary`
   and the grader-evidence presence check, so an iPhone's Smart Punctuation cannot make a correct answer
   `INVALID_GRADING` on every retry. No live calls.
-- [ ] **F3. Vocabulary forms match their own entry** (round 058): matcher sorts (entry, variant) pairs longest
+- [x] **F3. Vocabulary forms match their own entry** (round 058, closed 2026-11-05): matcher sorts (entry, variant) pairs longest
   first; pack-wide behavioural test. No live calls.
 
 ### E. Follow-ups from live data
@@ -397,6 +397,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Matcher order** (round 058): `matchCanonicalVocabulary` tries (entry, variant) pairs longest folded form first
+  across all entries (stable: ties keep load order). `vocabularyFormConflicts(entries)` is the pack-wide check in
+  `vocabulary-forms.test.js`: a new variant that another entry takes, or that takes another's, fails there.
+  `docs/rounds/058/results/compare-matchers.mjs <old-engine.js>` compares two matchers over every saved NPC line.
 - **Spans** (round 057): narration words carry `spans` (every `[start, end]` of that id, UTF-16 offsets into
   `dialogue.native`), stored in saves and serialized when present; older lines lack them and show unmarked.
   `segmentLine` (`mobile/src/wordClass.js`) drops malformed or overlapping spans. `server/test/word-spans.test.js`

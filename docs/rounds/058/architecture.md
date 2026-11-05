@@ -80,3 +80,9 @@ limit), read-only; raw text in `trail/critique-1.md`.
 
 Net change: a matcher sort by variant over all entries, a behavioural pack-wide check, and a hygiene assertion
 instead of a folded-form equality lint.
+
+## Outcome (2026-11-05)
+
+Built as designed. Server 238/238, mobile 146/146, client 12/12. The stealing fixture fails on HEAD and passes
+after the fix. The old and new matcher agree on all 1,021 saved NPC lines in both packs. See
+[findings.md](findings.md).

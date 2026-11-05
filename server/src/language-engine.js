@@ -72,29 +72,35 @@ export function matchCanonicalVocabulary(text, vocabulary) {
     }
     folded += piece;
   }
-  const entries = [...vocabulary].sort((a, b) => {
-    const longestA = Math.max(...a.surface_variants.map((form) => form.length));
-    const longestB = Math.max(...b.surface_variants.map((form) => form.length));
-    return longestB - longestA;
-  });
+  // Round 058 (critique 1.2): every (entry, variant) pair, longest folded form first across all entries (a stable sort:
+  // ties keep load order), so no entry's short variant takes a span a longer form of another entry would match.
+  const pairs = [...vocabulary]
+    .flatMap((entry) => entry.surface_variants.map((variant) => ({ entry, form: foldApostrophes(variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()) })))
+    .sort((a, b) => b.form.length - a.form.length);
   const occupied = [];
   const matches = [];
-  for (const entry of entries) {
-    const variants = [...entry.surface_variants].sort((a, b) => b.length - a.length);
-    for (const variant of variants) {
-      const form = foldApostrophes(variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase());
-      const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
-      const expression = new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu');
-      for (const result of folded.matchAll(expression)) {
-        const start = startOf[result.index];
-        const end = endOf[result.index + result[0].length - 1];
-        if (occupied.some(([usedStart, usedEnd]) => start < usedEnd && end > usedStart)) continue;
-        occupied.push([start, end]);
-        matches.push({ id: entry.id, entry, excerpt: source.slice(start, end), start, end });
-      }
+  for (const { entry, form } of pairs) {
+    const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
+    const expression = new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu');
+    for (const result of folded.matchAll(expression)) {
+      const start = startOf[result.index];
+      const end = endOf[result.index + result[0].length - 1];
+      if (occupied.some(([usedStart, usedEnd]) => start < usedEnd && end > usedStart)) continue;
+      occupied.push([start, end]);
+      matches.push({ id: entry.id, entry, excerpt: source.slice(start, end), start, end });
     }
   }
   return matches.sort((a, b) => a.start - b.start);
+}
+
+// Round 058 (backlog F3): every variant of every entry, read alone, must be matched as that entry, whole. Returns the
+// failures (an equal folded form in another entry, or a form taken by another entry's).
+export function vocabularyFormConflicts(entries) {
+  return entries.flatMap((entry) => entry.surface_variants.flatMap((variant) => {
+    const got = matchCanonicalVocabulary(variant, entries);
+    const whole = got.length === 1 && got[0].id === entry.id && got[0].start === 0 && got[0].end === variant.length;
+    return whole ? [] : [{ id: entry.id, variant, got: got.map((match) => match.id) }];
+  }));
 }
 
 export function calculateTargetRatio(base, increment, committedPlayerTurns) {
