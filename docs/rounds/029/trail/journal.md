@@ -1,0 +1,12 @@
+# Journal: round 029
+
+Append only. Times are UTC. Occurred is when the event happened; Recorded is when the row was written.
+
+| # | Occurred | Recorded | Event | Actor | What | Record |
+|---|---|---|---|---|---|---|
+| 1 | 18:38:00 | 18:40:41 | round-opened | Claude (claude-opus-5-5), autonomous | Round 029 opened for backlog C1 (forced repetition before the Rift boss); Codex still at its limit (occurred time approximate) | — |
+| 2 | 18:40:20 | 18:40:41 | plan-drafted | Claude (claude-opus-5-5), autonomous | plan-v1, sha256 1867107f… | `plan-v1.md` |
+| 3 | 18:41:00 | 18:40:41 | critique-dispatched | Claude (claude-opus-5-5), autonomous | plan-v1 to a fresh Claude subagent (general-purpose, claude-opus-5-5, read-only, repo access), as in rounds 027–028 (autonomous decision, pending owner review) | `plan-v1.md` |
+| 4 | 18:43:00 | 18:42:14 | critique-returned | Claude subagent (claude-opus-5-5), read-only | 8 findings (3 Errors, 3 Risks, 2 Suggestions); returned time approximate (notification) | `critique-1.md` |
+| 5 | 18:42:48 | 18:42:48 | disposition | Claude (claude-opus-5-5), autonomous | All 8 accepted (1.8 moot by the new design) (autonomous decisions, pending owner review) | `../architecture.md` |
+| 6 | 18:42:48 | 18:42:48 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed (round 029: pre-run record) | `../architecture.md` |
