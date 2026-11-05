@@ -1,0 +1,12 @@
+# Journal: round 013
+
+Append only. Times are UTC. Occurred is when the event happened; Recorded is when the row was written.
+
+| # | Occurred | Recorded | Event | Actor | What | Record |
+|---|---|---|---|---|---|---|
+| 1 | 2026-11-05 12:56:30 | 12:58:57 | round-opened | Claude (claude-opus-5-5), autonomous | Backlog item A6 (The Old Bookshop) with B2 (Journathan), next in `STATE.md` after round 012. No owner present. Occurred time approximate | `../../../autonomy/STATE.md` |
+| 2 | 12:58:40 | 12:58:57 | plan-drafted | Claude (claude-opus-5-5), autonomous | Draft v1: Marginalia the Bookworm, two reading-comprehension objectives on passages of *The Journey* (home; the Cyclops name trick) | `plan-v1.md` |
+| 3 | 12:58:50 | 12:58:57 | critique-dispatched | Claude (claude-opus-5-5), autonomous | Critique 1 sent: `codex exec --sandbox read-only -c model_reasoning_effort=high`, template plus the no-commands preamble; `plan-v1.md` sha256 5603360c… and 13 files at HEAD b965253 inlined on stdin (bundle sha256 081175f5…, 1201 lines; list in `critique-1.md`) | `plan-v1.md` |
+| 4 | 13:07:50 | 13:08:48 | critique-returned | Claude (claude-opus-5-5), autonomous | Critique 1: 5 findings (3 Error, 2 Cut). Occurred approximate | `critique-1.md` |
+| 5 | 13:08:48 | 13:08:48 | disposition | Claude (claude-opus-5-5), autonomous | No owner present: autonomous decisions pending owner review. Accepted 1.1 (the matcher folds accents unconditionally: drop es años), 1.2 (reading-context exception to the third-person rule; a reported-speech line in the second Italian run), 1.3 (each intent tells her to read the passage first; the live check must see it), 1.4 (no blanket rejection of a recited sentence); rejected 1.5 (run brief's quality bar) | `../architecture.md`, `../../../autonomy/decisions.md` |
+| 6 | 13:09:19 | 13:09:19 | correction | Claude (claude-opus-5-5), autonomous | Row 4 and the critique header: the output file's mtime is 13:08:01, so critique 1 returned at 13:08:01, not 13:07:50 | `critique-1.md` |

@@ -37,3 +37,7 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 012 | Narration rule: never offer an open objective's target words as a list or either/or choice | Allow menus; ban target words in NPC lines altogether | Menus turn recall into recognition (Mortimer 3/3); a full ban would remove natural exposure (Gerald's caffè) | Yes |
 | 2026-11-05 | 012 | Portia may still ask "Come ti chiami?" before the ask-back objective | Ban it too | Modelled input in the gentlest encounter, not a menu; round 009 open item stays with the owner | Yes |
 | 2026-11-05 | 012 | Codex critique 1: 1.1 rejected | Accept | Run brief's quality bar | Yes |
+| 2026-11-05 | 013 | Bookshop NPC is Marginalia the Bookworm; two comprehension questions on authored passages of The Journey (home; the Cyclops name trick, Nessuno / Nadie) | Generated passages; an English comprehension answer | Authored text keeps the reading level and lore fixed; answers stay in the target language | Yes |
+| 2026-11-05 | 013 | Passages live in each objective's `intent`, with an instruction to read them first | A new passage field in the engine | Content only; the intent already reaches the narration prompt | Yes |
+| 2026-11-05 | 013 | Reading-context exception to the grader's third-person rule, in the encounter's constraints | Change grading.txt for all encounters | Only reading comprehension needs it | Yes |
+| 2026-11-05 | 013 | Codex critique 1: 1.1–1.4 accepted, 1.5 rejected | Accept all | See round 013 Second opinion table | Yes |
