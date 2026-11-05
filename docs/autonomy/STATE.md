@@ -369,7 +369,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   lines (it, es: as scripted); Codex then hit its limit (23:14), so its variant runs are queued. Round 053 (A10, LLM
   location atmosphere; Claude-subagent critique, 13 findings, 3 Errors accepted: off by default because the CLI
   runner is serial) built offline. Server 213/213, mobile 130/130, web 12/12. `git push` failed from 23:22 with a
-  GitHub-side "fatal error in commit_refs" (see traps).
+  GitHub-side "fatal error in commit_refs" until 23:25 (see traps).
 
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
@@ -402,7 +402,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `ATMOSPHERE_ENGLISH` lists pack forms the English line may use. The `FixtureProvider` answers `location_atmosphere`.
   The app's store subscription (`followAtmosphere`) keys by learner, location, completion and party ids.
 - **`git push` rejected by GitHub** from 23:22 UTC 2026-11-05: `remote: fatal error in commit_refs`, while fetch
-  works. Not a local problem found (no large files). Retry `git push origin autonomous`; never force-push.
+  works. Not a local problem found (no large files); it passed again at 23:25 UTC. If it recurs, retry `git push origin autonomous` later; never force-push.
 
 - **Ordered grading** (round 051): `buildGradingMessages({ ordered })` fills `{{order}}` (end of the Quality bullet in
   `grading.txt`) with an ORDER bullet when two or more ordered objectives are graded; empty otherwise (byte-identical,
