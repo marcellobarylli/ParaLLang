@@ -1,0 +1,26 @@
+es Errata old 0                          hand  4/11 = 0.36  old 0.82 (0.46)  folded 0.36 (0.00)
+es Errata old 1                          hand  5/15 = 0.33  old 0.73 (0.40)  folded 0.33 (0.00)
+es Errata new 0                          hand  5/11 = 0.45  old 1.00 (0.55)  folded 0.45 (0.00)
+es Errata new 1                          hand  7/15 = 0.47  old 0.73 (0.26)  folded 0.47 (0.00)
+it Errata old 0                          hand 12/18 = 0.67  old 0.89 (0.22)  folded 0.67 (0.00)
+it Errata old 1                          hand  6/14 = 0.43  old 0.57 (0.14)  folded 0.43 (0.00)
+it Errata new 0                          hand  9/19 = 0.47  old 0.74 (0.27)  folded 0.47 (0.00)
+it Errata new 1                          hand  7/14 = 0.50  old 0.86 (0.36)  folded 0.50 (0.00)
+it tour market_entrance_tutorial         hand  3/16 = 0.19  old 0.19 (0.00)  folded 0.19 (0.00)
+es tour market_entrance_tutorial         hand  3/17 = 0.18  old 0.17 (0.01)  folded 0.17 (0.01)
+it tour imp_coffee_greeting              hand  4/16 = 0.25  old 0.25 (0.00)  folded 0.25 (0.00)
+es tour imp_coffee_greeting              hand  3/17 = 0.18  old 0.17 (0.01)  folded 0.17 (0.01)
+it tour butchers_stall_charcutier        hand  6/18 = 0.33  old 0.33 (0.00)  folded 0.33 (0.00)
+es tour butchers_stall_charcutier        hand  6/20 = 0.30  old 0.30 (0.00)  folded 0.30 (0.00)
+it tour cracked_fountain_letharger       hand  6/20 = 0.30  old 0.30 (0.00)  folded 0.30 (0.00)
+es tour cracked_fountain_letharger       hand  7/24 = 0.29  old 0.30 (0.01)  folded 0.30 (0.01)
+it tour old_bookshop_bookworm            hand 18/47 = 0.38  old 0.38 (0.00)  folded 0.38 (0.00)
+es tour old_bookshop_bookworm            hand 19/50 = 0.38  old 0.92 (0.54)  folded  null  translationShort
+it tour the_rift_errata                  hand  5/11 = 0.45  old 0.64 (0.19)  folded 0.45 (0.00)
+es tour the_rift_errata                  hand  5/11 = 0.45  old 0.91 (0.46)  folded 0.45 (0.00)
+
+lines 20; folded covers 19, abstains on 1 (es tour old_bookshop_bookworm: old error 0.54)
+mean |error| on the same covered lines (critique 1.4): all (19 lines): old 0.175, folded 0.003
+  Errata (10 lines): old 0.329, folded 0.003
+  others (9 lines): old 0.003, folded 0.003
+folded worse than old by more than 0.10: none

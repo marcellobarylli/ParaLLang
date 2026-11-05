@@ -100,14 +100,36 @@ const tokens = (text) => text.toLocaleLowerCase().match(/[\p{L}']+/gu) ?? [];
 
 // Two rough estimates of the share of target-language words in an NPC line: tokens absent from the English
 // translation, and tokens covered by canonical vocabulary matches. Neither is exact; both are reported.
+// Round 046: glitch folding for the second estimate. Marks stripped, Errata's glitch letters mapped, runs of one letter
+// collapsed ("yoùù" → "you", "procedùre" → "procedure"), on both sides of the comparison.
+const GLITCH = { 'ŧ': 't', 'ø': 'o', 'ł': 'l', 'đ': 'd', 'ß': 'ss', 'æ': 'ae', 'œ': 'oe', 'ı': 'i' };
+// Critique 1.1: runs collapse only in words of 4+ letters, so Spanish "al" never meets English "all" (round 046's
+// collision scan). Accent stripping still merges a few cognates ("opinión" → "opinion"): a known small undercount.
+export const glitchFold = (word) => {
+  const plain = word.normalize('NFD').replace(/\p{M}/gu, '').replace(/[ŧøłđßæœı]/gu, (c) => GLITCH[c]);
+  return plain.length >= 4 ? plain.replace(/(\p{L})\1+/gu, '$1') : plain;
+};
+// Round 046: a translation with fewer than 60% of the line's tokens is a gloss, not a translation.
+export const GLOSS_RATIO = 0.6;
+
 export function languageShare(native, translation, entries) {
   const words = tokens(native);
-  if (!words.length) return { tokens: 0, notInTranslation: 0, canonical: 0 };
-  const english = new Set(tokens(translation));
+  if (!words.length) return { tokens: 0, notInTranslation: 0, folded: 0, translationShort: false, canonical: 0 };
+  const translated = tokens(translation);
+  const english = new Set(translated);
+  // Critique 1.2: composed forms first, so a decomposed accent cannot split a word in the folded estimate.
+  const nfc = (text) => tokens(String(text).normalize('NFC'));
+  const foldedWords = nfc(native);
+  const foldedEnglish = new Set(nfc(translation).map(glitchFold));
+  // A length warning (critique 1.3): a translation this much shorter than the line is likely a gloss.
+  const translationShort = translated.length < GLOSS_RATIO * words.length;
   const canonicalTokens = matchCanonicalVocabulary(native, entries).reduce((sum, match) => sum + tokens(match.excerpt || match.entry.target).length, 0);
   return {
     tokens: words.length,
     notInTranslation: +(words.filter((word) => !english.has(word)).length / words.length).toFixed(2),
+    // Round 046: the same estimate on glitch-folded tokens; null when the translation is a gloss.
+    folded: translationShort ? null : +(foldedWords.filter((word) => !foldedEnglish.has(glitchFold(word))).length / foldedWords.length).toFixed(2),
+    translationShort,
     canonical: +(Math.min(canonicalTokens, words.length) / words.length).toFixed(2),
   };
 }

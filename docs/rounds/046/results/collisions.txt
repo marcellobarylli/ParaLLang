@@ -1,0 +1,8 @@
+lines with a translation: 613
+tokens English only after folding (132 distinct):
+procedùre×39 yoùù×36 ŧhe×30 contàinment×25 contäinment×13 clàss×10 cøntainment×8 prøcedure×7 hùngry×5 lùnch×5 bòth×4 hùnger×4 ítem×3 nøt×3 më×3 rëad×3 nòte×3 ŧhis×3 nnot×3 yoùr×3 plèase×3 requëst×2 hëre×2 nøbody×2 descrìption×2 accèpted×2 procèdure×2 yoùùr×2 ùnreadable×2 becöming×2 legïble×2 signatùre×2 understànd×2 requèst×2 fòrm×2 cùstomer×2 caffè×1 befòre×1 nòt×1 snäck×1 pròcess×1 ònly×1 fòrmm×1 descrïption×1 nëxt×1 menù×1 spëcific×1 abòut×1 øne×1 whën×1 delày×1 làter×1 vëry×1 høme×1 gø×1 cannøt×1 ënglish×1 dày×1 movëment×1 appetìte×1 sëlect×1 identìty×1 nobødy×1 ëveryone×1 clìnically×1 polìte×1 òrder×1 nòtt×1 pròcedure×1 òbey×1 ùnread×1 repòrt×1 pàssed×1 ì×1 nòw×1 sòmeone×1 pàperwork×1 nø×1 døes×1 fèed×1 bålanced×1 ørder×1 dø×1 prøblem×1 pàuse×1 møuth×1 rèad×1 beføre×1 sàfe×1 sømebody×1 gøodbye×1 persøn×1 opinión×1 complëte×1 förm×1 indigestïble×1 önly×1 intérrupt×1 schëduled×1 contïnues×1 för×1 nöw×1 nöte×1 näme×1 accëpted×1 resùlt×1 cläss×1 nöbody×1 höme×1 resùbmit×1 illegàl×1 deliciòus×1 digèsted×1 postponemènt×1 stòp×1 schèduled×1 ùninterrupted×1 stòpping×1 digèstion×1 registràtion×1 yoù×1 appètizer×1 foùnd×1 contàct×1 administràtion×1 mùst×1 contìnue×1 tèeth×1 nòbody×1 whò×1 crùel×1 precisión×1
+
+length warnings: 3
+  023/results/party-old_bookshop-it.json old_bookshop_bookworm: That's right, he goes home! Now I read a passage. What name does Journathan give the Cyclo
+  026/results/after-tour-es.json old_bookshop_bookworm: ¿Adónde va Journathan? means “Where is Journathan going?”
+  026/results/after-tour-es.json old_bookshop_bookworm: Reading check: What name does Journathan give the Cyclops?

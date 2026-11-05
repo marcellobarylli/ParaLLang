@@ -1,0 +1,15 @@
+held it Errata old 0                     hand  4/12 = 0.33  old 0.67 (0.34)  folded 0.33 (0.00)
+held it Errata old 1                     hand  5/16 = 0.31  old 0.67 (0.36)  folded 0.33 (0.02)
+held it Errata new 0                     hand  5/13 = 0.38  old 0.83 (0.45)  folded 0.42 (0.04)
+held it Errata new 1                     hand  8/14 = 0.57  old 0.93 (0.36)  folded 0.57 (0.00)
+held es Errata old 0                     hand  6/15 = 0.40  old 0.75 (0.35)  folded 0.44 (0.04)
+held es Errata old 1                     hand  7/16 = 0.44  old 0.75 (0.31)  folded 0.50 (0.06)
+held es Errata new 0                     hand  5/11 = 0.45  old 0.73 (0.28)  folded 0.45 (0.00)
+held es Errata new 1                     hand  5/11 = 0.45  old 0.82 (0.37)  folded 0.45 (0.00)
+held es Marginalia new 0                 hand 20/57 = 0.35  old 0.93 (0.58)  folded  null  translationShort
+
+lines 9; folded covers 8, abstains on 1 (held es Marginalia new 0: old error 0.58)
+mean |error| on the same covered lines (critique 1.4): all (8 lines): old 0.350, folded 0.021
+  Errata (8 lines): old 0.350, folded 0.021
+  others (0 lines): old NaN, folded NaN
+folded worse than old by more than 0.10: none
