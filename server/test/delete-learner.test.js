@@ -89,3 +89,13 @@ test('a request queued behind a delete fails as for an unknown learner and write
   assert.deepEqual([started.status, moved.status], [400, 400]);
   assert.deepEqual(await readdir(runtime.saveDir), []);
 });
+
+test('a failed delete keeps the learner\'s session in memory', async (t) => {
+  const runtime = await createRuntime();
+  t.after(() => runtime.close());
+  const { learnerId } = await createLearnerAndEncounter(runtime);
+  runtime.storage.io.unlink = async () => { throw Object.assign(new Error('read-only'), { code: 'EROFS' }); };
+  const failed = await api(runtime, '/api/learner', { learnerId, method: 'DELETE' });
+  assert.equal(failed.data.error.code, 'STORAGE_FAILURE');
+  assert.equal(runtime.service.encounters.has(learnerId), true);
+});

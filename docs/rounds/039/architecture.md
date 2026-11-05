@@ -92,3 +92,15 @@ device-write-failure case.
 
 Built as designed, with no Amendments. Server 162/162, mobile 91/91, web client 12/12 and build, expo-doctor 20/20.
 See [findings](findings.md).
+
+## Amendment 1 (2026-11-05): post-close review fix
+
+A read-only review of rounds 033–040 by a Claude subagent (no serious bugs found) noted one problem here.
+`deleteLearner` cleared the in-memory encounter and review challenges before the unlink, so a failed delete (for
+example a read-only disk) dropped a live session whose file stayed. The maps are now cleared only after
+`storage.remove` succeeds. Test: a failed delete keeps the encounter. Server 163/163. The review's other notes are
+recorded where they belong:
+- a slot can reappear after a restart when the device write failed after the server delete (already a claim
+  boundary of this round);
+- `renderItem` marks lines as shown during render, which is cosmetic only (round 035);
+- a cue whose asset fails to load stays silent for the session (round 037).

@@ -52,9 +52,10 @@ export class LearningService {
   async deleteLearner(learnerId) {
     assertLearnerId(learnerId);
     return this.serialized(learnerId, async () => {
+      // Post-close review: the in-memory state goes only once the file is gone (a failed unlink keeps the session).
+      const existed = await this.storage.remove(learnerId);
       this.encounters.delete(learnerId);
       this.reviewChallenges.delete(learnerId);
-      const existed = await this.storage.remove(learnerId);
       return { deleted: true, existed };
     });
   }
