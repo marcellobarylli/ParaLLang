@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { learningApi } from '../api/learning.js';
+import { MAX_SAVES, SLOTS_KEY, parseSlots, withActive } from './saveSlots.js';
 
 const LEARNER_KEY = 'parallang.learnerId';
 // Round 027: set once the player has entered the market from the philosophy statement (per device).
@@ -24,6 +25,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
     party: [],
     notice: null,
     spellbook: emptySpellbook,
+    saves: [], // Round 031: the device's save slots ({ learnerId, label, createdAt }), active one = learnerId
     snapshotsByLearner: snapshots,
     view: 'map',
     returnView: 'map',
@@ -48,10 +50,14 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
           const seen = await Promise.resolve(storage?.getItem?.(ONBOARDING_KEY)).catch(() => null);
           const onboardingPromise = seen ? Promise.resolve(null)
             : Promise.resolve().then(() => api.getOnboarding()).then((data) => data?.onboarding ?? null, () => null);
-          const storedId = (await storage?.getItem?.(LEARNER_KEY)) || null;
+          // Round 031: the active save slot's id; without a valid slot record, the legacy key's (round 004).
+          const record = parseSlots(await Promise.resolve(storage?.getItem?.(SLOTS_KEY)).catch(() => null));
+          const storedId = record?.activeId ?? ((await storage?.getItem?.(LEARNER_KEY)) || null);
           const identity = await api.createLearner(storedId);
           if (epoch !== requestEpoch) return;
+          const slots = withActive(record, identity.learnerId);
           await storage?.setItem?.(LEARNER_KEY, identity.learnerId);
+          await storage?.setItem?.(SLOTS_KEY, JSON.stringify(slots));
           const [{ world }, spellbook, { party }] = await Promise.all([
             api.getWorld(identity.learnerId), api.getSpellbook(identity.learnerId), api.getParty(identity.learnerId),
           ]);
@@ -62,6 +68,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
           const showOnboarding = Boolean(onboarding) && get().view === 'map';
           set({
             learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, party, isLoading: false,
+            saves: slots.slots,
             ...(showOnboarding ? { onboarding, view: 'onboarding' } : {}),
           });
         } catch (error) {
@@ -84,11 +91,12 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       const { learnerId, isLoading } = get();
       if (!learnerId || isLoading) return;
       set({ isLoading: true, error: null });
+      const epoch = requestEpoch;
       try {
         const { world } = await api.moveTo(learnerId, locationId);
         if (get().learnerId !== learnerId) return;
         set({ world, isLoading: false });
-      } catch (error) { set({ error: error.message, isLoading: false }); }
+      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
 
     // Enters the encounter at the current location. A different session than the one held starts clean.
@@ -114,7 +122,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
           encounter: started.encounter, spellbook: started.spellbook, isLoading: false, view: 'dialogue',
           ...(fresh ? { assessment: null, draft: '', pendingInput: null } : {}),
         });
-      } catch (error) { set({ error: error.message, isLoading: false }); }
+      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
 
     openMap: async () => {
@@ -124,7 +132,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       try {
         const { world } = await api.getWorld(learnerId);
         if (get().learnerId === learnerId) set({ world });
-      } catch (error) { set({ error: error.message }); }
+      } catch (error) { if (get().learnerId === learnerId) set({ error: error.message }); }
     },
 
     // Round 021: a defeated, saveable NPC joins the party (from the resolved encounter or the map). Leaving writes
@@ -159,7 +167,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         snapshots.set(learnerId, result);
         set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false, draft: '', pendingInput: null, view: 'dialogue' });
-      } catch (error) { set({ error: error.message, isLoading: false }); }
+      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
 
     sendMessage: async (providedText) => {
@@ -193,12 +201,13 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       if (!learnerId || !encounter || isLoading) return;
       const version = encounter.version;
       set({ isLoading: true, error: null });
+      const epoch = requestEpoch;
       try {
         const result = await api.revealHelp(learnerId, { encounterId: encounter.id, version, kind, messageId, vocabularyId });
         if (get().learnerId !== learnerId || get().encounter?.version !== version) return;
         snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
         set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false });
-      } catch (error) { set({ error: error.message, isLoading: false }); }
+      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
 
     // The Spellbook and review return to the screen they were opened from (the map or the encounter).
@@ -222,30 +231,90 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       const { learnerId } = get();
       if (!learnerId) return;
       set({ isLoading: true, error: null, reviewResult: null });
+      const epoch = requestEpoch; // Round 031: a reply after a save switch is dropped (critique 1.1).
       try {
         const result = await api.createReview(learnerId, vocabularyId);
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         set({ reviewChallenge: result.challenge, spellbook: result.spellbook, view: result.challenge ? 'review' : 'spellbook', isLoading: false });
-      } catch (error) { set({ error: error.message, isLoading: false }); }
+      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
 
     submitReview: async (answer) => {
       const { learnerId, reviewChallenge, isLoading } = get();
       if (!learnerId || !reviewChallenge || isLoading || !String(answer).trim()) return;
       set({ isLoading: true, error: null });
+      const epoch = requestEpoch; // Round 031: a reply after a save switch is dropped (critique 1.1).
       try {
         const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'answer', answer: String(answer).trim() });
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
-      } catch (error) { set({ error: error.message, isLoading: false }); }
+      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
 
     revealReviewAnswer: async () => {
       const { learnerId, reviewChallenge, isLoading } = get();
       if (!learnerId || !reviewChallenge || isLoading) return;
       set({ isLoading: true, error: null });
+      const epoch = requestEpoch; // Round 031: a reply after a save switch is dropped (critique 1.1).
       try {
         const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'reveal', answer: '' });
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
-      } catch (error) { set({ error: error.message, isLoading: false }); }
+      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
+    },
+
+    // Round 031 (backlog A11): the Saves screen, a new save and switching between saves. A switch drops every response
+    // still in flight for the old save (requestEpoch) and writes the device record only once the new save loaded.
+    openSaves: () => set({ view: 'saves', returnView: 'map', reviewChallenge: null, reviewResult: null, error: null, notice: null }),
+    newSave: async () => {
+      const { saves, isLoading, learnerId } = get();
+      if (!learnerId || isLoading || saves.length >= MAX_SAVES) return;
+      const epoch = ++requestEpoch;
+      set({ isLoading: true, error: null, notice: null });
+      try {
+        const identity = await api.createLearner(null);
+        // Critique 1.8: the new slot is recorded (still inactive) before it loads, so a failure leaves no orphan.
+        const record = withActive({ slots: get().saves }, identity.learnerId);
+        const kept = { ...record, activeId: learnerId };
+        await storage?.setItem?.(SLOTS_KEY, JSON.stringify(kept));
+        if (epoch !== requestEpoch) return;
+        set({ saves: kept.slots });
+        await get()._loadSave(identity.learnerId, epoch);
+      } catch (error) {
+        if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
+      }
+    },
+    switchSave: (target) => {
+      const { saves, isLoading, learnerId } = get();
+      if (!learnerId || isLoading || target === learnerId || !saves.some((save) => save.learnerId === target)) return undefined;
+      const epoch = ++requestEpoch;
+      set({ isLoading: true, error: null, notice: null });
+      return get()._loadSave(target, epoch);
+    },
+    // Loads a known slot from the server (createLearner recreates a save the server lost, critique 1.5; the encounter
+    // and spellbook are the server's, not the in-app snapshot, critique 1.3) and resets every per-save field (1.4).
+    _loadSave: async (target, epoch) => {
+      try {
+        const identity = await api.createLearner(target);
+        const [{ world }, current, { party }] = await Promise.all([
+          api.getWorld(identity.learnerId), api.currentEncounter(identity.learnerId), api.getParty(identity.learnerId),
+        ]);
+        if (epoch !== requestEpoch) return;
+        const record = withActive({ slots: get().saves }, identity.learnerId);
+        await storage?.setItem?.(SLOTS_KEY, JSON.stringify(record));
+        await storage?.setItem?.(LEARNER_KEY, identity.learnerId);
+        if (epoch !== requestEpoch) return;
+        snapshots.set(identity.learnerId, { encounter: current.encounter ?? null, spellbook: current.spellbook });
+        const label = record.slots.find((slot) => slot.learnerId === identity.learnerId).label;
+        set({
+          learnerId: identity.learnerId, language: identity.language ?? get().language, world, party, saves: record.slots,
+          encounter: current.encounter ?? null, spellbook: current.spellbook,
+          view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null, draft: '',
+          pendingInput: null, error: null, onboarding: null, isLoading: false, notice: `Now playing ${label}.`,
+        });
+      } catch (error) {
+        if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
+      }
     },
 
     switchLearnerForTest: (learnerId) => {

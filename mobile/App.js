@@ -12,6 +12,7 @@ import ReviewPanel from './src/components/ReviewPanel.js';
 import MapPanel from './src/components/MapPanel.js';
 import PartyPanel from './src/components/PartyPanel.js';
 import OnboardingPanel from './src/components/OnboardingPanel.js';
+import SavesPanel from './src/components/SavesPanel.js';
 import { colors } from './src/components/ui.js';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
           place={here?.name} dueCount={state.spellbook.dueCount} partyCount={state.party.length} isLoading={state.isLoading}
           onSpellbook={state.openSpellbook} onParty={state.view === 'party' ? null : state.openParty} onMap={state.view === 'map' ? null : state.openMap}
           onRestart={state.view === 'dialogue' ? state.restartEncounter : null}
+          onSaves={state.view === 'map' && state.learnerId ? state.openSaves : null}
         />
         {state.error && <ErrorBanner message={state.error} onDismiss={state.clearError} />}
         {state.notice && <Text role="status" style={styles.notice}>{state.notice}</Text>}
@@ -39,6 +41,10 @@ export default function App() {
           drill={state.spellbook.drill ?? null} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null}
           onDrill={state.startDrill} onReturnToEncounter={state.returnToEncounter}
           world={state.world} isLoading={state.isLoading} onMove={state.moveTo} onEnterEncounter={state.enterEncounter} party={state.party} onRecruit={state.recruit} />}
+        {state.view === 'saves' && <SavesPanel
+          saves={state.saves} activeId={state.learnerId} place={here?.name} dueCount={state.spellbook.dueCount} isLoading={state.isLoading}
+          onContinue={state.switchSave} onNew={state.newSave} onReturn={state.openMap}
+        />}
         {state.view === 'party' && <PartyPanel party={state.party} isLoading={state.isLoading} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'review' && <ReviewPanel
