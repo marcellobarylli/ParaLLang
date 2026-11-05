@@ -109,3 +109,11 @@ Measures (`results/measure.py`): resolved; verdicts as scripted (the hum fails `
 passes); lines with both jingle words, the exact refrain, the refrain at the end; share with and without the jingle
 words against requested; open targets in Flick's lines. Pass bar: all resolved, verdicts as scripted, the refrain in
 at least half the lines, no open target used by Flick.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no amendment. Server 133/133, mobile 37/37, web client 12/12 and build; Gerald's pinned
+prompts unchanged. Live codex-cli, 3 runs after the change and 2 baseline runs, all resolved with every verdict as
+scripted. The refrain ended 21/21 of Flick's lines (0/14 before), humming it back failed `now`, and no open target
+leaked. The jingle takes up part of the target-language share: 0.39 without it, against 0.53 on the baseline.
+That is evidence for E1. Backlog B3 is done; B4 (Spellbook containment files) is new. See [findings](findings.md).

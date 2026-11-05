@@ -33,6 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 025, the Fountain's infohazard (autonomous)
+
+Flick's jingle at the Cracked Fountain is now a named brainrot infohazard: *Dopo, dopo, domani!* / *¡Después,
+después, mañana!* ("later, later, tomorrow"). The companion gives a containment notice when the encounter starts,
+and a plaque on the fountain reads PLEASE DO NOT HUM. Humming the jingle back fails the "insist on now" objective.
+"Stop!" is no longer rejected as English-only, because it is also Italian and Spanish (Codex critique 1: 7
+findings, 5 accepted, 2 in part, decided autonomously). Tests: server 133/133, mobile 37/37, web client 12/12 and
+build. Live codex-cli: 3 of 3 runs resolved with every verdict as scripted. The refrain ended all 21 of Flick's
+lines, and no line gave an answer away. The refrain takes up part of the target-language share (0.39 without it,
+against 0.53 before), which is evidence for backlog E1. Backlog B3 is done. Not checked in the iOS Simulator. See
+[findings](docs/rounds/025/findings.md).
+
 ## Addendum 2026-11-05: round 024, server tests clean up their temp dirs (autonomous)
 
 The server tests no longer leave save directories in `/tmp` (34 per run before, which filled the 64 MB tmpfs over
@@ -283,7 +295,7 @@ Newest first.
 | 022 | 11-05 | Conversations with party members: Gerald's coffee break, anywhere once he has joined (backlog A8b) (autonomous) | [022](docs/rounds/022/architecture.md) | [findings](docs/rounds/022/findings.md) | `53b5cca` (pre-run record) to round 022 close |
 | 023 | 11-05 | Party conversations for Mortimer, Flick and Marginalia (backlog A8c) (autonomous) | [023](docs/rounds/023/architecture.md) | [findings](docs/rounds/023/findings.md) | `677b75a` (pre-run record) to round 023 close |
 | 024 | 11-05 | Server tests remove their temp dirs (backlog F1) (autonomous) | [024](docs/rounds/024/architecture.md) | [findings](docs/rounds/024/findings.md) | `f2220e8` (pre-run record) to round 024 close |
-| 025 | 11-05 | The Cracked Fountain's infohazard: Flick's jingle, a containment notice (backlog B3, Fountain part) (autonomous) | [025](docs/rounds/025/architecture.md) | [findings](docs/rounds/025/findings.md) | pre-run record |
+| 025 | 11-05 | The Cracked Fountain's infohazard: Flick's jingle, a containment notice (backlog B3, Fountain part) (autonomous) | [025](docs/rounds/025/architecture.md) | [findings](docs/rounds/025/findings.md) | `07ef542` (pre-run record) to round 025 close |
 | 019 | 11-05 | Portia's own words: ambient vocabulary so the tutorial speaks its share of target language (backlog E1, E2) (autonomous) | [019](docs/rounds/019/architecture.md) | [findings](docs/rounds/019/findings.md) | `55eacb2` (pre-run record) to round 019 close |
 | 018 | 11-05 | claude-cli accepts a subscription OAuth token from the environment (supervisor note) (autonomous) | [018](docs/rounds/018/architecture.md) | [findings](docs/rounds/018/findings.md) | `b6fbd9e` (pre-run record) to round 018 close |
 | 017 | 11-05 | The Spellbook stops giving answers away: no meanings or reviews during an encounter, due cards hide theirs, notes shown (backlog D3) (autonomous) | [017](docs/rounds/017/architecture.md) | [findings](docs/rounds/017/findings.md) | `7657879` (pre-run record) to round 017 close |

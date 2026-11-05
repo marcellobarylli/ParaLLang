@@ -7,9 +7,8 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing in progress: rounds 021–023 (A8a–c) are closed; backlog A8 is done. Next, in order: **B3**'s Fountain part
-(content, live runs), then **E1** as a template round (see its entry; round 023 adds Flick's party lines as evidence),
-then **A9** (lore fragments). **F1** (test temp-dir cleanup) is a quick win before any long session. Check Codex's
+Nothing in progress: rounds 024 (F1) and 025 (B3, Fountain part) are closed. Next, in order: **E1** as a template
+round (see its entry; rounds 023 and 025 add evidence), then **A9** (lore fragments), then **B4**. Check Codex's
 limit and `df -h /tmp` first (see traps).
 
 ## Backlog
@@ -58,8 +57,12 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   then scores quality 2 (also D2). Re-measure with `play-market.js`.
 - [x] **B2. Journathan.** (round 013, closed 2026-11-05) Journathan and *The Journey* in Marginalia's sheet and
   passages. More fragments belong to A9.
-- [ ] **B3. Infohazards.** Infohazard flavour in the Rift and Fountain content (LORE.md). The Rift part is done
+- [x] **B3. Infohazards.** (Fountain part: round 025, closed 2026-11-05: Flick's jingle, containment notice, plaque) Infohazard flavour in the Rift and Fountain content (LORE.md). The Rift part is done
   (round 015, Errata); the Fountain part is open.
+
+- [ ] **B4. Containment files.** The Spellbook keeps a deadpan SCP-style file for each infohazard met (LORE.md
+  gameplay hook): Errata (round 015) and the Fountain jingle (round 025). Needs a Spellbook/app change; the
+  companion briefings hold the text today.
 
 ### C. prototype.md Phase 4: Polish & Audio
 
@@ -102,7 +105,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   **Round 020:** that quirk did not help either (lines 0.17, greeting 0.13) and was reverted. Content is exhausted;
   next is a template round: make "Target approximately N%" concrete (e.g. about K of every 10 words), regenerate
   Gerald's golden prompts on purpose, and measure with a full `--tour` (Mortimer, Flick, Marginalia overshoot today,
-  so a stronger rule may push them further). **Round 023:** Flick's party lines are also short (0.24 es, 0.28 it
+  so a stronger rule may push them further). **Round 025:** with Flick's refrain on every line, the share was 0.46
+  against 0.45 but only 0.39 without the refrain (0.53 before): the model counts a recurring formula toward its
+  quota. A template rule should say whether refrains count. **Round 023:** Flick's party lines are also short (0.24 es, 0.28 it
   against 0.38; long English riddles around short phrases), while Mortimer (es 0.60) and Marginalia run over. Use `docs/rounds/020/results/compare.py` for the measures. Measure over a few runs per encounter, then adjust the greeting template or
   language rules; keep the golden-prompt test in step (regenerate on purpose).
 - [x] **E3. NPCs list the answers.** (round 012, closed 2026-11-05) Style rule against menus of an open objective's
@@ -111,6 +116,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- Round 025: review Flick's jingle, the Fountain's containment notice and plaque, and whether the refrain should be
+  on every line; check the Fountain's companion card in the Simulator ([open items](../rounds/025/findings.md#open-items)).
 
 - Round 023: native-speaker review of the four party conversations (rounds 022–023) and their reference URLs
   ([open items](../rounds/023/findings.md#open-items)).
@@ -219,7 +227,21 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   built and closed: party conversations for Mortimer, Flick, Marginalia; server 130/130; live 6/6 resolved as
   scripted (108 calls). Iteration 7 ends here (rounds 021–023 closed; about 200 Codex calls, no limit).
 
+- 2026-11-05, iteration 8: round 024 (F1) planned, critiqued (6 findings: 3 accepted, 2 in part, 1 rejected), built
+  and closed: test temp dirs removed at exit; server 131/131, 0 dirs left (34 before).
+- 2026-11-05, iteration 8: round 025 (B3, Fountain) planned, critiqued (7 findings: 5 accepted, 2 in part), built and
+  closed: Flick's jingle as an infohazard; server 133/133, mobile 37/37, client 12/12; live 5 runs (2 baseline),
+  65 calls, all resolved as scripted, refrain 21/21 lines, share displaced (E1).
+
 ## Handoff notes and traps
+
+- **Test temp dirs** (round 024): use `makeTempDir(prefix)` from `server/test/helpers.js` in new tests; it removes
+  the dir at process exit. Check with `TMPDIR=$(mktemp -d) node --test server/test/*.test.js` and `ls` that dir.
+- **Content that must reach every narration line goes in the last objective's intent** (round 025): turns get the
+  remaining objectives, so the last one is always there (greeting included), and the grader sees it too.
+- **`docs/rounds/025/results/measure.py`** measures `--location cracked_fountain` reports (verdicts, open-target
+  leaks, refrain, share with and without the refrain); adapt its regexes for other encounters.
+- **Flick's party conversation** (`flick_slow_walk`) shares the changed quirk (the jingle) but was not re-run.
 
 - **`/tmp` is a 64 MB tmpfs and the server tests never delete their save dirs** (`mkdtemp` `parallang-test-*`,
   `parallang-party-*`, …; 1,406 dirs / 17 MB by round 023, plus iOS exports). At 8 MB free, Claude Code's own temp
