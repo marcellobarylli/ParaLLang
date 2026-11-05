@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 import { render, screen, within } from '@testing-library/react-native';
 import DialoguePanel from '../components/DialoguePanel.js';
 import { colors } from '../components/ui.js';
-import { wordClass } from '../wordClass.js';
+import { segmentLine, wordClass } from '../wordClass.js';
 
 const language = { code: 'it', name: 'Italian', tag: 'it-IT' };
 
@@ -65,4 +65,46 @@ test('revealed chips are not dimmed and do not repeat their class; an uncoloured
   expect(screen.getByText('salami')).toBeOnTheScreen();
   expect(screen.queryByText(/\(noun\)/)).not.toBeOnTheScreen();
   expect(screen.getByText('very (adverb)')).toBeOnTheScreen();
+});
+
+// Round 057 (backlog C7): the chips' words marked in the line, at the server's spans.
+
+describe('segmentLine', () => {
+  const noun = { vocabularyId: 'caffe', partOfSpeech: 'noun' };
+  test('no spans (lines saved before round 057): one plain segment', () => {
+    expect(segmentLine('Un caffè?', [{ vocabularyId: 'caffe' }])).toEqual([{ text: 'Un caffè?', word: null }]);
+    expect(segmentLine('', [])).toEqual([{ text: '', word: null }]);
+  });
+  test('every span is marked, the rest stays plain, and the text is unchanged', () => {
+    const word = { ...noun, spans: [[3, 8], [14, 19]] };
+    expect(segmentLine('Un caffè? Sì, caffè.', [word])).toEqual([
+      { text: 'Un ', word: null }, { text: 'caffè', word }, { text: '? Sì, ', word: null }, { text: 'caffè', word }, { text: '.', word: null },
+    ]);
+  });
+  test('malformed, out-of-range and overlapping spans are dropped', () => {
+    const a = { ...noun, spans: [[0, 5], [3, 7], [-1, 2], [2, 2], [4, 99], ['0', 1], null, [1.5, 3]] };
+    expect(segmentLine('caffè nero', [a])).toEqual([{ text: 'caffè', word: a }, { text: ' nero', word: null }]);
+  });
+});
+
+test('the line marks its words: noun in its colour and underlined, verb dashed, adverb in ink; no spans, no marks', async () => {
+  const line = 'Salame? Tagliare, molto.';
+  const spanned = [
+    { ...word('salame', 'salame', 'noun'), target: 'Salame', spans: [[0, 6]] },
+    { ...word('tagliare', 'tagliare', 'verb'), target: 'Tagliare', spans: [[8, 16]] },
+    { ...word('molto', 'molto', 'adverb'), spans: [[18, 23]] },
+  ];
+  const panel = (words) => <DialoguePanel language={language} isLoading={false} onHelp={() => {}} encounter={{ ...encounter(words), transcript: [{ ...encounter(words).transcript[0], dialogue: { ...encounter(words).transcript[0].dialogue, native: line } }] }} />;
+  const view = await render(panel(spanned));
+  const native = screen.getByTestId('npc-line');
+  const mark = (text) => StyleSheet.flatten(within(native).getByText(text).props.style);
+  expect(mark('Salame')).toMatchObject({ color: colors.wordNoun, textDecorationLine: 'underline', textDecorationColor: colors.wordNoun, textDecorationStyle: 'solid' });
+  expect(mark('Tagliare')).toMatchObject({ color: colors.wordVerb, textDecorationStyle: 'dashed' });
+  expect(mark('molto')).toMatchObject({ color: colors.ink, textDecorationLine: 'underline' });
+  expect(native).toHaveTextContent(line);
+  await view.unmount();
+  await render(panel(spanned.map(({ spans, ...rest }) => rest)));
+  const plain = screen.getByTestId('npc-line');
+  expect(plain).toHaveTextContent(line);
+  expect(within(plain).queryByText('Salame')).not.toBeOnTheScreen();
 });

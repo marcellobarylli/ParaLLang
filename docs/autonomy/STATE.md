@@ -104,7 +104,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (TTS was only in the Spellbook and reviews; prototype.md Phase 4). No live calls.
 - [x] **C6. Word chips by class** (round 056, closed 2026-11-05): nouns, verbs and adjectives coloured with a label (owner's GAME
   MECHANICS note, "R/G/B for noun/verb/adjective"). No live calls.
-- [ ] **C7. Chip words marked in the line** (round 057): the server's match spans, coloured and underlined by
+- [x] **C7. Chip words marked in the line** (round 057, closed 2026-11-05): the server's match spans, coloured and underlined by
   class inside the NPC line. No live calls.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
@@ -395,6 +395,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Spans** (round 057): narration words carry `spans` (every `[start, end]` of that id, UTF-16 offsets into
+  `dialogue.native`), stored in saves and serialized when present; older lines lack them and show unmarked.
+  `segmentLine` (`mobile/src/wordClass.js`) drops malformed or overlapping spans. `server/test/word-spans.test.js`
+  imports the app module (Node prints a typeless-package warning: expected). The `mark` style in `wordClassStyle`
+  is listed in the theme test's `MODIFIERS`.
 - **Word chips** (round 056): `wordClass(partOfSpeech)` in `mobile/src/wordClass.js` (noun, verb, adjective or
   null); colours `wordNoun`/`wordVerb`/`wordAdjective` and `wordClassStyle(cls)` in `ui.js`; `Button` takes
   `suffix`/`suffixStyle`. A coloured chip's name ends ", noun" / ", verb" / ", adjective" (tests query

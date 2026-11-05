@@ -85,3 +85,8 @@ spans renders plain (in the tests).
 
 Net change: offsets from the server instead of a search in the app, every occurrence marked, dashed verbs, and a
 contract test.
+
+## Outcome (2026-11-05)
+
+Built as designed. Server 232/232, mobile 146/146, client 12/12 and build, expo-doctor 20/20, iOS export built. No
+live runs. See [findings.md](findings.md).

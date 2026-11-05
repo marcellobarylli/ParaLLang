@@ -29,6 +29,11 @@ export function wordClassStyle(cls) {
   return {
     chip: { borderWidth: 2, borderColor: colour ?? colors.border, borderStyle: cls === 'verb' ? 'dashed' : 'solid' },
     label: colour ? { color: colour } : null,
+    // Round 057: the word marked inside the line, underlined in its class colour (ink if uncoloured), dashed for verbs.
+    mark: {
+      color: colour ?? colors.ink, textDecorationLine: 'underline', textDecorationColor: colour ?? colors.ink,
+      textDecorationStyle: cls === 'verb' ? 'dashed' : 'solid',
+    },
   };
 }
 

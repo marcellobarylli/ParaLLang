@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, colors, type, leading, wordClassStyle } from './ui.js';
-import { WORD_CLASS_LABEL, WORD_CLASS_NAME, wordClass } from '../wordClass.js';
+import { WORD_CLASS_LABEL, WORD_CLASS_NAME, segmentLine, wordClass } from '../wordClass.js';
 import PronounceButton from './PronounceButton.js';
 
 // Round 055 (backlog C5): each chip can be heard (its canonical form, the chip's label), free of hints and outside
@@ -9,7 +9,12 @@ export default function BilingualText({ message, onHelp, disabled = false, langu
   const { dialogue, protected: isProtected } = message;
   return (
     <View style={styles.block}>
-      <Text style={styles.native}>{dialogue.native}</Text>
+      {/* Round 057 (backlog C7): the chips' words marked where the server matched them; one Text for VoiceOver. */}
+      <Text style={styles.native} testID="npc-line">
+        {segmentLine(dialogue.native, dialogue.words).map((segment, index) => (segment.word
+          ? <Text key={index} style={wordClassStyle(wordClass(segment.word.partOfSpeech)).mark}>{segment.text}</Text>
+          : segment.text))}
+      </Text>
       <View style={styles.words} aria-label="Words">
         {dialogue.words.map((word) => {
           // Round 056 (backlog C6): the word class in colour and words, on every line (decision 1); never dimmed.

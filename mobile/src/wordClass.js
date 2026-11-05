@@ -9,3 +9,24 @@ export function wordClass(partOfSpeech) {
 // Shown on the chip / read by VoiceOver.
 export const WORD_CLASS_LABEL = Object.freeze({ noun: 'noun', verb: 'verb', adjective: 'adj.' });
 export const WORD_CLASS_NAME = Object.freeze({ noun: 'noun', verb: 'verb', adjective: 'adjective' });
+
+// Round 057 (backlog C7): the line split at the spans the server matched (UTF-16 offsets into the line), so each
+// chip's word can be marked where it stands. Only well-formed spans count: integers inside the line, in order, not
+// overlapping (decision 1). Lines saved before round 057 have no spans and come back as one plain segment.
+export function segmentLine(native, words) {
+  const text = String(native ?? '');
+  const marks = (words ?? []).flatMap((word) => (Array.isArray(word.spans) ? word.spans : [])
+    .filter((span) => Array.isArray(span) && Number.isInteger(span[0]) && Number.isInteger(span[1]) && span[0] >= 0 && span[0] < span[1] && span[1] <= text.length)
+    .map(([start, end]) => ({ start, end, word })))
+    .sort((a, b) => a.start - b.start || a.end - b.end);
+  const segments = [];
+  let cursor = 0;
+  for (const mark of marks) {
+    if (mark.start < cursor) continue; // overlaps a mark already taken
+    if (mark.start > cursor) segments.push({ text: text.slice(cursor, mark.start), word: null });
+    segments.push({ text: text.slice(mark.start, mark.end), word: mark.word });
+    cursor = mark.end;
+  }
+  if (cursor < text.length || !segments.length) segments.push({ text: text.slice(cursor), word: null });
+  return segments;
+}

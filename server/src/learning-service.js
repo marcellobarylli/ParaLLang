@@ -269,13 +269,20 @@ export class LearningService {
 
   canonicalizeNarration(generated, definition) {
     const matches = matchCanonicalVocabulary(generated.dialogue.native, definition.narrationEntries);
-    const seen = new Set();
-    const words = matches.filter((match) => !seen.has(match.id) && seen.add(match.id)).map(({ entry, excerpt }) => ({
+    // Round 057 (backlog C7): every span the matcher gave an id, so the app can mark the word in the line where the
+    // server found it (critique 1.1); the first match still sets the order and `target`.
+    const spans = new Map();
+    for (const match of matches) {
+      if (!spans.has(match.id)) spans.set(match.id, { match, spans: [] });
+      spans.get(match.id).spans.push([match.start, match.end]);
+    }
+    const words = [...spans.values()].map(({ match: { entry, excerpt }, spans: wordSpans }) => ({
       vocabularyId: entry.id,
       target: excerpt || entry.target,
       canonicalTarget: entry.target,
       partOfSpeech: entry.part_of_speech,
       meaning: entry.accepted_translations[0],
+      spans: wordSpans,
     }));
     return {
       id: randomUUID(), role: 'npc', narrative: generated.narrative,
@@ -309,6 +316,7 @@ export class LearningService {
             target: word.target,
             canonicalTarget: word.canonicalTarget,
             partOfSpeech: word.partOfSpeech,
+            ...(word.spans ? { spans: word.spans.map((span) => [...span]) } : {}),
             meaning: (!protectedMessage || revealKeys.includes(`word:${message.id}:${word.vocabularyId}`)) ? word.meaning : undefined,
             meaningAvailable: true,
           })),
