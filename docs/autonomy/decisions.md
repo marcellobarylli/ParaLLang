@@ -151,3 +151,4 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 048 | Amendment 1: Marginalia's loneliness in one English sentence, the rest of the line mixed | Keep "in English only"; ban sola only | The whole line went English (share 0) in both packs | Yes |
 | 2026-11-05 | 049 | Other-target exposure measured and read word by word; no automatic 5% closure rule | Close G7 when under 5% of party lines | Codex critique 1.3/1.5: a target of another conversation is often an everyday word; exact matching is a lower bound | Yes |
 | 2026-11-05 | 049 | Critique 1: 7 of 9 accepted (all Errors), 2 in part | — | See round 049 Second opinion table | Yes |
+| 2026-11-05 | 049 | No rule against other conversations' targets in NPC lines; keep sola despite Marginalia's "una lingua sola" | Ban every party target outside its conversation | The words are everyday ones and count as input; objectives still require producing them in the right sense | Yes |

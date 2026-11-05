@@ -73,3 +73,9 @@ line "Grazie!" is not foreign there; an echo needs one earlier message holding t
 "mio" do not echo "amico mio"... the form is "amico", so: a message "Sei mio amico" echoes, a message "amic" does not);
 `summarize` carries `foreignLines`, `partyLines`, `partyForeignLines`; a line with a leak and a foreign hit keeps its
 leak kind and counts.
+
+## Outcome (2026-11-05)
+
+Built as designed. Other-target exposure is common (round 048: it 10/20, es 7/20 party lines), but the words are
+everyday ones (*grazie*, *ancora*, *vamos*, *amico*). G7 is closed with no content rule. One authored case: *sola*
+is in Marginalia's first-tier passage. Server 188/188. See [findings](findings.md).

@@ -7,10 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 14 closed round 048 (G6, deeper tiers for Mortimer, Flick, Marginalia; it/es live).
-**Next:** G5 (telling the time at the Fountain: content plus live runs), or a new G7 (cross-conversation words, see
-below); A10 (LLM location atmosphere) is optional. Codex served a critique and about 150 game calls between 21:26 and
-21:54 UTC without hitting its limit.
+Nothing open. Iteration 14 closed rounds 048 (G6, deeper tiers for Mortimer, Flick, Marginalia; it/es live) and 049
+(G7, other-target exposure in the leak scan; no content rule).
+**Next:** G5 (telling the time at the Fountain: content plus live runs). A10 (LLM location atmosphere) is optional.
+Codex served two critiques and about 150 game calls between 21:26 and 21:58 UTC without hitting its limit.
 
 ## Backlog
 
@@ -118,10 +118,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **G5. Telling the time at the Fountain** (round 011 deferred it); content plus live runs.
 - [x] **G6. Deeper tiers for the other members** (round 048, closed 2026-11-05: Mortimer's oath, Flick's lotus,
   Marginalia's folded page at 3, it/es live, Amendment 1 for Marginalia's all-English line).
-- [ ] **G7. Words from other conversations** (round 048 open item 2): NPCs say other members' targets (Flick
-  *eccomi*, Mortimer *amico mio* in every line, Marginalia *insieme*). Decide (autonomously) whether a party
-  conversation's narration should avoid every party target it does not teach; extend `leak-scan.js` with a
-  "foreign target" kind first (no live calls), then measure.
+- [x] **G7. Words from other conversations** (round 049, closed 2026-11-05: `foreign` hits in `leak-scan.js`;
+  common but everyday words, no content rule; *sola* is in Marginalia's first-tier passage).
 
 ### F. Maintenance
 
@@ -153,6 +151,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Round 049: confirm that NPCs may say other conversations' words (*grazie*, Mortimer's *amico mio*), and keeping
+  *sola* despite Marginalia's "una lingua sola" ([open items](../rounds/049/findings.md#open-items)).
 - Round 048: review Mortimer's oath, Flick's lotus and Marginalia's folded page (it, es), whether members may say
   other conversations' targets, and check each member's Party-card tier line in the Simulator
   ([open items](../rounds/048/findings.md#open-items)).
@@ -324,10 +324,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings, 2 Errors accepted), built, run live (2 × it, 2 × es; Amendment 1 put the tier's opening in the
   greeting) and closed. Server 181/181, mobile 124/124, web 12/12, expo-doctor 20/20.
 
-- 2026-11-05, iteration 14 (21:23–21:58 UTC): round 048 (G6, deeper tiers for Mortimer, Flick and Marginalia)
+- 2026-11-05, iteration 14 (21:23–22:01 UTC): round 048 (G6, deeper tiers for Mortimer, Flick and Marginalia)
   planned, critiqued by Codex (6 Risks: 5 accepted, 1 in part), built, run live (8 runs: 6 + 2 after Amendment 1)
   and closed. Also: `cli-learning-flow.test.js` now removes its temp dirs. Server 184/184, mobile 124/124, web
-  12/12, expo-doctor 20/20.
+  12/12, expo-doctor 20/20. Then round 049 (G7, other-target exposure in the leak scan; Codex critique, 9 findings,
+  4 Errors accepted; no live calls) closed: server 188/188.
 
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
@@ -344,6 +345,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Other-target exposure** (round 049): `leak-scan.js` prints `foreign` rows (a party target of another
+  conversation, exact whole forms; `amigo` marked `english`) apart from the four kinds, and the summary line ends
+  "foreign N (party conversations: X of Y lines)". About half of party lines have one: read the words, do not act on
+  the rate. `docs/rounds/049/results/measure.mjs` tabulates every report. **A new party target must also be checked
+  against every other conversation's authored intents** (round 048 missed Marginalia's "una lingua sola").
 - **Deeper tiers** (round 048): every saveable member has one at 3 (`mortimer_oath`, `flick_lotus`,
   `marginalia_folded_page`, `gerald_confidence`). A new party vocabulary file changes the pinned party entry count
   (17 now), the stems list in `lore-fragments.test.js`, the encounter key list and the vocabulary version pins in

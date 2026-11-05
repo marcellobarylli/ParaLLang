@@ -33,6 +33,16 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 049, other conversations' words in NPC lines (autonomous)
+
+The leak scan now also reports *other-target exposure*: NPC lines holding a word that a different party
+conversation teaches. These are counted apart from leaks. In round 048's runs it is common (half the Italian and a
+third of the Spanish party lines), but the words are everyday ones (*grazie*, *ancora*, *vamos*, Mortimer's *amico
+mio*). Hearing them first is input, not the answer, so no content rule was added. One authored case was found:
+Marginalia's first passage says "una lingua sola" ("only"), and *sola* is now her deeper tier's target. No live calls.
+Critiqued by Codex (9 findings: 7 accepted, 2 in part). Server 188/188
+([open items](docs/rounds/049/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 048, deeper conversations for Mortimer, Flick and Marginalia (autonomous)
 
 After three conversations, every saveable member now offers a deeper conversation, as Gerald has since round 047.
@@ -510,7 +520,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
-| 049 | 11-05 | Other-target exposure in the leak scan: NPC lines that carry another party conversation's target (backlog G7) (autonomous) | [049](docs/rounds/049/architecture.md) | [findings](docs/rounds/049/findings.md) | pre-run record |
+| 049 | 11-05 | Other-target exposure in the leak scan: NPC lines that carry another party conversation's target (backlog G7) (autonomous) | [049](docs/rounds/049/architecture.md) | [findings](docs/rounds/049/findings.md) | pre-run record to round 049 close |
 | 048 | 11-05 | Deeper conversations after three: Mortimer's oath, Flick's lotus, Marginalia's folded page (backlog G6) (autonomous) | [048](docs/rounds/048/architecture.md) | [findings](docs/rounds/048/findings.md) | pre-run record to round 048 close |
 | 047 | 11-05 | Relationship tiers: a deeper party conversation after N conversations, Gerald's confidence first (backlog G4) (autonomous) | [047](docs/rounds/047/architecture.md) | [findings](docs/rounds/047/findings.md) | pre-run record to round 047 close (row added in round 048) |
 | 046 | 11-05 | A second share estimate (`folded`) that survives glitched English and gloss translations (autonomous) | [046](docs/rounds/046/architecture.md) | [findings](docs/rounds/046/findings.md) | pre-run record to round 046 close |
