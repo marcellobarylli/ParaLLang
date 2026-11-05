@@ -51,11 +51,13 @@ function Node({ location, size, onMove, disabled }) {
   );
 }
 
-export default function MapPanel({ world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
+// Round 029: `drill` is the server's pending drill (spellbook.drill); `ongoing` an encounter under way elsewhere.
+export default function MapPanel({ drill = null, ongoing = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
   const [size, setSize] = useState(320); // replaced by the measured width on layout
   if (!world) return <View style={styles.panel}><Text style={styles.muted}>Finding the Crumbling Market…</Text></View>;
   const byId = new Map(world.locations.map((location) => [location.id, location]));
   const here = byId.get(world.currentLocationId);
+  const drillHere = drill && here?.encounter?.id === drill.encounterId && !here.encounter.completed ? drill : null;
 
   return (
     <ScrollView style={styles.panel} contentContainerStyle={styles.content}>
@@ -71,10 +73,11 @@ export default function MapPanel({ world, isLoading, onMove, onEnterEncounter, p
         <Text role="heading" style={styles.title}>{here.name}</Text>
         <Text style={styles.body}>{here.description}</Text>
         {here.vocabularyFocus?.length > 0 && <Text style={styles.focus}>Words here: {here.vocabularyFocus.join(', ')}</Text>}
+        {here.encounter && drillHere && <DrillNote drill={drillHere} ongoing={ongoing} isLoading={isLoading} onDrill={onDrill} onReturnToEncounter={onReturnToEncounter} />}
         {here.encounter
           ? <Button
               label={`Talk to ${here.encounter.characterName}${here.encounter.completed ? ' again' : ''}`}
-              variant="primary" onPress={onEnterEncounter} disabled={isLoading}
+              variant={drillHere ? 'secondary' : 'primary'} onPress={onEnterEncounter} disabled={isLoading || Boolean(drillHere)}
             />
           : <Text style={styles.muted}>Nothing here wants to talk to you yet.</Text>}
         {here.encounter?.completed && <Text style={styles.done}>✓ Encounter complete</Text>}
@@ -87,7 +90,24 @@ export default function MapPanel({ world, isLoading, onMove, onEnterEncounter, p
   );
 }
 
+// Round 029 (backlog C1): forced repetition before the Rift. Reviews are closed while another encounter runs, so
+// then the note sends the player back to it instead.
+function DrillNote({ drill, ongoing, isLoading, onDrill, onReturnToEncounter }) {
+  const count = drill.vocabularyIds.length;
+  const words = `${count} due ${count === 1 ? 'word' : 'words'}`;
+  const other = ongoing?.character?.name ?? null;
+  return (
+    <View style={styles.drill} aria-live="polite">
+      <Text style={styles.body}>{drill.characterName} reviews everything you have learned. {other ? `Finish your conversation with ${other} first, then review ${words}.` : `Review ${words} first.`}</Text>
+      {other
+        ? <Button label={`Return to ${other}`} onPress={onReturnToEncounter} disabled={isLoading} />
+        : <Button label={`Review ${words}`} variant="primary" onPress={() => onDrill(drill.vocabularyIds[0])} disabled={isLoading} />}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  drill: { gap: 8, padding: 10, borderRadius: 10, backgroundColor: colors.background, borderWidth: 1, borderColor: colors.accent },
   panel: { flex: 1 },
   content: { padding: 16, gap: 16 },
   map: { width: '100%', aspectRatio: 1, backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },

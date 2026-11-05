@@ -97,3 +97,31 @@ ongoing-elsewhere case is named; the tour script reviews before the Rift.
 - Mobile: the map line and button at the Rift with a drill; Talk disabled; the button starts the review with the
   first id; no drill → Talk enabled; an ongoing encounter elsewhere → finish-first line, no button.
 - Full suites, expo-doctor, iOS export.
+
+## Amendment 1 (2026-11-05): critique 2, a second report from the same reviewer
+
+After the freeze, the same subagent returned a second, different report on plan-v1 ([critique 2](trail/critique-2.md),
+11 findings). Dispositions (autonomous, pending owner review) and the changes they make to the frozen design:
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| 2.1 | Error | An ongoing encounter elsewhere deadlocks the drill | 0 | Accept in part: keep `DRILL_REQUIRED` with the finish-first sentence (Design 4); the map adds "Return to X" (`returnToDialogue`) instead of the review button | **Accepted in part** (autonomous) | Change 1 |
+| 2.2 | Error | Restart of an active Rift session hits the drill and deadlocks | 0 | Accept: skip the drill whenever an active session of the same encounter exists, restart or not | **Accepted** (autonomous) | Change 2 |
+| 2.3 | Error | deepEqual of the Rift's world block | 0 | Moot: the world snapshot is unchanged (drill in the spellbook) | **Accepted** (autonomous) | — |
+| 2.4 | Risk | Continue leaves the drill; stale due card breaks no-id reviews | 0 | Accept: drill-first is in Design 3; also skip stale cards in the no-id pick | **Accepted** (autonomous) | Change 3 |
+| 2.5 | Risk | Device clock vs server due | 0 | Moot: the app shows the server's drill, it does not count | **Accepted** (autonomous) | Decision 4 |
+| 2.6 | Risk | Tour check could pass without a drill | 0 | Accept: the report gains `drillCards`; the offline test asserts N > 0 before and 0 after | **Accepted** (autonomous) | Change 4 |
+| 2.7 | Risk | Fixed clock hides the rule | 0 | Accept: a test advances the clock a day before completion and sees the drill again | **Accepted** (autonomous) | Change 4 |
+| 2.8 | Suggestion | Reveal clicks through | 0 | Accept as is: a reveal is still a forced exposure and is scheduled as a failure; stated in the claim boundary | **Accepted** (autonomous) | Findings |
+| 2.9 | Suggestion | Name the words on the map | 0 | Reject: the Spellbook shows them; the line keeps N | **Rejected** (autonomous) | — |
+| 2.10 | Suggestion | MapPanel needs the drill | 0 | Accept: App passes `spellbook.drill`, `ongoing` and handlers to MapPanel | **Accepted** (autonomous) | Change 1 |
+| 2.11 | Suggestion | Loader: reject a non-boolean | 0 | Accept | **Accepted** (autonomous) | Change 4 |
+
+Changes:
+
+1. The map at a drill location shows the drill line. If an encounter is ongoing elsewhere, it shows "Finish your
+   conversation with X first." and a "Return to X" button. Otherwise it shows "Review N due words".
+2. `startEncounter` skips the drill whenever an active session of this encounter exists, with or without restart.
+3. `createReviewChallenge(null)` picks only cards with a current content version.
+4. Tests: a restart of an active Rift session with due cards succeeds; the clock-advance case; a stale due card
+   beside a due target; `drill_before: "yes"` is refused; `clearDrill` reports the cards it reviewed.

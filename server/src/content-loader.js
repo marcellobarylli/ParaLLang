@@ -79,6 +79,8 @@ const encounterSchema = z.object({
   resolved_message: z.string().min(1).optional(),
   // Round 009: static English lines in which the companion introduces the mechanics (the tutorial sets them).
   companion_briefing: z.array(z.string().min(1)).min(1).max(4).optional(),
+  // Round 029 (backlog C1): before a first fight, every due Spellbook card among the objectives' targets is reviewed.
+  drill_before: z.literal(true).optional(),
   // Round 028: the Spellbook's deadpan containment file for an infohazard (LORE.md); location encounters only.
   containment_file: containmentFileSchema.optional(),
   // Round 019: authored words the NPC may use in any line; never the target of one of the encounter's objectives.
@@ -87,6 +89,9 @@ const encounterSchema = z.object({
 }).strict().superRefine((encounter, context) => {
   if (Boolean(encounter.location) === Boolean(encounter.party_of)) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'An encounter has either a location or party_of, not both or neither' });
+  }
+  if (encounter.party_of && encounter.drill_before) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'A party conversation cannot require a drill' });
   }
   if (encounter.party_of && encounter.containment_file) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'A party conversation cannot hold a containment file' });

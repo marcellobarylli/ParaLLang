@@ -6,7 +6,7 @@ import {
   isDue, masteryLabel, matchCanonicalVocabulary, scheduleReview,
 } from './language-engine.js';
 import { assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
-import { conflictError, retryableError, validationError } from './errors.js';
+import { AppError, conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, worldSnapshot } from './world.js';
 
@@ -102,6 +102,35 @@ export class LearningService {
     return envelope.spellbook.words[vocabularyId] ?? envelope.spellbook.phrases[vocabularyId] ?? null;
   }
 
+  isCurrent(item) { return Boolean(this.content.vocabularyById.get(item.vocabularyId)) && item.contentVersion === this.content.entryVersion(item.vocabularyId); }
+
+  // Round 029 (backlog C1): the cards to review before a drill encounter's first fight. Per required target group:
+  // the group's current Spellbook cards; it blocks when it has some and all are due, and its drill card is the one
+  // due longest (then by id). Undiscovered and stale cards never block.
+  drillFor(envelope, definition) {
+    const now = this.clock();
+    const ids = [];
+    for (const objective of definition.encounter.objectives) {
+      for (const group of objective.required_target_groups) {
+        const cards = group.map((id) => this.findItem(envelope, id)).filter((item) => item && this.isCurrent(item));
+        if (!cards.length || !cards.every((item) => isDue(item.schedule, now))) continue;
+        const [first] = [...cards].sort((a, b) => a.schedule.dueAt.localeCompare(b.schedule.dueAt) || a.vocabularyId.localeCompare(b.vocabularyId));
+        if (!ids.includes(first.vocabularyId)) ids.push(first.vocabularyId);
+      }
+    }
+    return ids;
+  }
+
+  // The drill pending where the player stands: a drill_before encounter at this location, not yet completed.
+  pendingDrill(envelope) {
+    const here = currentLocationId(this.content.world, envelope.world);
+    const encounterId = this.content.world.locationsById.get(here)?.encounter;
+    const definition = encounterId ? this.content.encounters.get(encounterId) : null;
+    if (!definition?.encounter.drill_before || envelope.world.completedEncounterIds.includes(encounterId)) return null;
+    const vocabularyIds = this.drillFor(envelope, definition);
+    return vocabularyIds.length ? { encounterId, characterName: definition.character.name, vocabularyIds } : null;
+  }
+
   // Round 017: while an encounter is under way the Spellbook gives no meanings and reviews are closed, because any
   // card (its own meaning, another card's example, a phrase) could answer the NPC's protected line.
   inEncounter(encounter) { return encounter?.state === 'ongoing'; }
@@ -139,6 +168,7 @@ export class LearningService {
     return {
       cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version,
       inEncounter: this.inEncounter(encounter), containmentFiles: this.containmentFiles(envelope),
+      drill: this.pendingDrill(envelope),
     };
   }
 
@@ -269,6 +299,17 @@ export class LearningService {
       const replay = Boolean(definition.encounter.party_of) && active?.state === 'resolved';
       if (!restart && !replay && active && this.definition(active) === definition) {
         return { encounter: this.serializeEncounter(active), spellbook: this.spellbookSnapshot(envelope) };
+      }
+      // Round 029: forced repetition before the first fight, checked after resuming and never for a session of this
+      // encounter that is already active (restart included: reviews are closed while it runs; critique 2.2).
+      if (definition.encounter.drill_before && !(active && this.definition(active) === definition)) {
+        const drill = this.pendingDrill(envelope);
+        if (drill?.encounterId === definition.encounter.id) {
+          const words = drill.vocabularyIds.length === 1 ? 'word' : 'words';
+          const elsewhere = this.inEncounter(active) ? ` Finish your conversation with ${this.definition(active).character.name} first.` : '';
+          throw new AppError(`${definition.character.name} reviews everything you have learned. Review your ${drill.vocabularyIds.length} due ${words} in the Spellbook first.${elsewhere}`,
+            { status: 409, code: 'DRILL_REQUIRED', details: { vocabularyIds: drill.vocabularyIds } });
+        }
       }
       const ratio = this.ratioFor(0, definition);
       const generated = await this.callProvider(buildNarrationMessages({
@@ -565,8 +606,13 @@ export class LearningService {
       const envelope = await this.loadEnvelope(learnerId);
       let item;
       if (vocabularyId) item = this.findItem(envelope, vocabularyId);
-      else item = [...Object.values(envelope.spellbook.words), ...Object.values(envelope.spellbook.phrases)]
-        .find((candidate) => isDue(candidate.schedule, this.clock()));
+      else {
+        // Round 029: a pending drill's cards come first; stale cards are never picked (critique 2.4).
+        const drillId = this.pendingDrill(envelope)?.vocabularyIds[0];
+        item = drillId ? this.findItem(envelope, drillId)
+          : [...Object.values(envelope.spellbook.words), ...Object.values(envelope.spellbook.phrases)]
+            .find((candidate) => this.isCurrent(candidate) && isDue(candidate.schedule, this.clock()));
+      }
       if (!item) return { challenge: null, spellbook: this.spellbookSnapshot(envelope) };
       const entry = this.content.vocabularyById.get(item.vocabularyId);
       if (!entry || item.contentVersion !== this.content.entryVersion(entry.id)) throw conflictError('This card belongs to a different content version.', 'STALE_CONTENT');

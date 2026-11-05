@@ -112,6 +112,22 @@ export function languageShare(native, translation, entries) {
   };
 }
 
+// Round 029 (backlog C1): reviews the drill pending where the player stands (the Rift's forced repetition), answering
+// each card with its first accepted meaning. No LLM calls. Returns the ids it reviewed, in order.
+export async function clearDrill(service, learnerId) {
+  const reviewed = [];
+  for (let guard = 0; guard < 12; guard += 1) {
+    const spellbook = await service.getSpellbook(learnerId);
+    const id = spellbook.drill?.vocabularyIds[0];
+    if (!id) return reviewed;
+    const { challenge } = await service.createReviewChallenge(learnerId, id);
+    const entry = service.content.vocabularyById.get(id);
+    await service.submitReview(learnerId, { challengeId: challenge.id, attemptId: crypto.randomUUID(), action: 'answer', answer: entry.accepted_translations[0] });
+    reviewed.push(id);
+  }
+  throw new Error('the drill did not clear after 12 reviews');
+}
+
 export async function playMarket({ args = process.argv.slice(2), env = process.env } = {}) {
   loadRootEnv({ env });
   const providerName = providerArgument(args) ?? env.LLM_PROVIDER;
@@ -213,6 +229,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       const encounters = [];
       let before = null;
       let after = null;
+      let drillCards = null;
       for (const target of tourOrder) {
         if (target === tourOrder.at(-2)) {
           await walkTo(target);
@@ -220,6 +237,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
           before = steps.at(-1);
         }
         if (target === 'the_rift') after = await tryRift('move to the_rift after every other encounter (expect success)');
+        if (target === 'the_rift') drillCards = (await step('review the drill before the Rift', async () => ({ drillCards: await clearDrill(service, learnerId) })))?.drillCards ?? null;
         encounters.push(await playAt(target, scripts[target][content.language.code]));
       }
       strip();
@@ -229,6 +247,8 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         tour: true,
         riftSealedBefore: before?.ok === false && before.code === 'SEALED',
         riftOpenAfter: after?.current === 'the_rift' && after.gate?.sealed === false,
+        // Round 029: the forced repetition before Errata (null if the step failed).
+        drillCards,
         resolved: encounters.every((e) => e.resolved && e.completedOnMap),
         generationCalls: raw.length,
         encounters,
@@ -298,7 +318,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     const text = `${JSON.stringify(report, null, 2)}\n`;
     if (outIndex > 0) await writeFile(process.argv[outIndex + 1], text);
     process.stdout.write(text);
-    const ok = report.tour ? report.resolved && report.riftSealedBefore && report.riftOpenAfter
+    const ok = report.tour ? report.resolved && report.riftSealedBefore && report.riftOpenAfter && Array.isArray(report.drillCards)
       : report.party === true ? report.recruited && report.resolved && report.conversationOffMap && report.conversations === 1
       : report.resolved && report.completedOnMap && (!report.party || report.party.joined);
     process.exitCode = ok ? 0 : 1;

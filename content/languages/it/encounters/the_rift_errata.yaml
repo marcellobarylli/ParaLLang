@@ -15,6 +15,8 @@ resolved_message: "Errata cannot read Nobody. It folds itself up like a letter s
 escalation:
   # Round 015 (critique 1.4): a fixed mix, so the corruption stays half English however long the fight runs.
   target_ratio_increase_per_turn: 0
+# Round 029 (backlog C1): forced repetition: every due card among the targets is reviewed before the first fight.
+drill_before: true
 companion_briefing:
   - "Careful. That thing is made of both our languages and neither."
   - "It can only hurt you if you understand it, and you understand quite a lot now."

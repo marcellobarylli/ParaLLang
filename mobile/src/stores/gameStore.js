@@ -206,6 +206,14 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       view: 'spellbook', returnView: ['map', 'dialogue'].includes(state.view) ? state.view : state.returnView,
       reviewChallenge: null, reviewResult: null, error: null,
     })),
+    // Round 029: the Rift's drill starts from the map and returns to it; the encounter under way elsewhere is
+    // reopened when it blocks the reviews.
+    startDrill: (vocabularyId) => {
+      set({ returnView: 'map' });
+      return get().startReview(vocabularyId);
+    },
+    returnToEncounter: () => set((state) => (state.encounter ? { view: 'dialogue', error: null, notice: null } : {})),
+
     returnToDialogue: () => set((state) => ({
       view: state.returnView === 'dialogue' && state.encounter ? 'dialogue' : 'map', reviewChallenge: null, reviewResult: null, error: null,
     })),
