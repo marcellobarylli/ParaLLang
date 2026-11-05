@@ -7,7 +7,8 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Round 006 (A2, multi-encounter engine): plan v1 drafted and sent to Codex (`docs/rounds/006/trail/`). Then B1 with the dictated-answer rule (see Handoff).
+- Nothing. Next: **B1** (tone layer plus the "never dictate the answer" narration rule, re-measured live), then **A3**
+  (Market Entrance tutorial, the first real second encounter, content only).
 
 ## Backlog
 
@@ -18,7 +19,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **A1. Map and navigation.** (round 005, closed 2026-11-05) Crumbling Market locations and connections in YAML (6 nodes, prototype.md §8.2),
   a world API (current location, move to an adjacent node, fog of war over unvisited nodes), world progress in the
   learner save, and a Map screen in `mobile/` from which the Coffee Cart opens Gerald's encounter.
-- [ ] **A2. Multi-encounter engine.** Generalise `LearningService` from one hard-wired encounter to encounters keyed
+- [x] **A2. Multi-encounter engine.** (round 006, closed 2026-11-05) Generalise `LearningService` from one hard-wired encounter to encounters keyed
   by location (per-encounter vocabulary, character, objectives), with Gerald unchanged in behaviour.
 - [ ] **A3. Market Entrance tutorial.** The companion introduces the mechanics (greetings, pronouns), Italian and
   Spanish packs.
@@ -73,6 +74,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-05, iteration 1: created this file and `decisions.md`; baseline tests green (server 65/65, mobile 15/15,
   client 12/12). Round 005 (A1) built and closed: map, world API, save v2, PARALLANG_TOKEN, `play-market.js`;
   server 73/73, mobile 18/18, client 12/12; live codex-cli map playthrough resolved, `verify:cli` 9/9.
+- 2026-11-05, iteration 1: round 006 (A2) built and closed: multi-encounter engine; server 77/77, mobile 19/19,
+  client 12/12; Gerald's prompts byte-identical (golden test); live playthrough resolved.
 
 ## Handoff notes and traps
 
@@ -86,10 +89,17 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   record the bundle's file list and sha256 in the critique header.
 - Live data: `node server/scripts/play-market.js --provider codex-cli --out <file>` (in-process, ~40 s, 5 calls)
   and `npm run verify:cli -- --provider codex-cli` (~2 min, 14 calls). Both passed in round 005.
-- Encounter start is still location-agnostic on the server (frozen web client); A2 should add location-keyed
-  encounter start for the app while keeping `/api/encounter/start` working for the web client.
-- `LearningService` hard-wires one encounter (`this.content.encounter`, `this.content.character`, the vocabulary
-  file name `gerald_coffee.yaml` in `content-loader.js`); the world loader insists exactly one location holds it.
-  A2 must relax that check.
+- **Adding an encounter (A3–A7)** is content only since round 006: a character file in
+  `content/characters/enemies/`, then **in every language pack** (`it` and `es`) an `encounters/<id>.yaml` whose
+  `location` names the place and a `vocabulary/<file>.yaml` (own `version`, ids unique across the pack), and set the
+  location's `encounter:` in `content/world/locations/`. The world is shared, so a location naming an encounter
+  that one pack lacks stops that pack from loading. `server/test/encounters.test.js` shows a minimal example
+  (Bernard the Charcutier fixture). The fixture `FixtureProvider` grader in `server/test/helpers.js` only knows
+  Gerald's objectives; new encounters need their own test grader (see `TwoEncounterProvider`).
+- `/api/encounter/start` without `encounterId` starts the pack's `default_encounter` anywhere (web client); with one,
+  the player must be at its location (409 `NOT_HERE`). One active session per learner.
+- Gerald's rendered narration prompts are pinned by `server/test/fixtures/gerald-prompts-r005.json`. **B1 changes
+  the prompts on purpose**: regenerate the fixture in that round and say so in its record.
+- `prompts/system/base.txt` does not use the style guide (`content/narration/style_guide.yaml`) at all.
 - Saves are schema 2 (`world` block). In-memory encounters are lost on server restart (by design since round 001).
 - The map's node positions fall back to a 320-point square until `onLayout` fires (jest never fires it).

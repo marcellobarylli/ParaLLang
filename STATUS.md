@@ -18,11 +18,21 @@ The entry point for agents: the current state, how the project is logged, and th
   tested in the iOS Simulator against the local server (`npm run dev:server`, `npm run dev:ios`). The web client in
   `client/` is frozen: it is kept working, but new features go to the app ([round 004](docs/rounds/004/architecture.md)).
 - **World.** The app opens on the Crumbling Market map (six locations, fog of war, saved position); only The
-  Coffee Cart has an encounter so far ([round 005](docs/rounds/005/architecture.md)). The autonomous run's backlog
+  Coffee Cart has an encounter so far ([round 005](docs/rounds/005/architecture.md)). New encounters are content
+  only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 006, the multi-encounter engine (autonomous)
+
+Encounters are now content: every encounter and vocabulary file in a language pack loads, each encounter sits at
+one map location, and the app starts the encounter of the place you stand in (the server checks, 409 `NOT_HERE`).
+Names, the location and the victory message come from content; requests without an encounter id (the frozen web
+client) get the pack's `default_encounter`. Codex critique 1 (10 findings) accepted autonomously. Tests: server
+77/77, mobile 19/19, web client 12/12 and build. Live codex-cli: Gerald resolved as before, prompts byte-identical.
+Gerald dictated the answer again. See [findings](docs/rounds/006/findings.md).
 
 ## Addendum 2026-11-05: round 005, the Crumbling Market map (autonomous)
 
@@ -82,7 +92,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
-| 006 | 11-05 | Multi-encounter engine: encounters per location from pack content, location-checked start, names from content (autonomous) | [006](docs/rounds/006/architecture.md) | pending | pre-run record |
+| 006 | 11-05 | Multi-encounter engine: encounters per location from pack content, location-checked start, names from content (autonomous) | [006](docs/rounds/006/architecture.md) | [findings](docs/rounds/006/findings.md) | `e01baf1` (pre-run record) to round 006 close |
 | 005 | 11-05 | The Crumbling Market map: six locations, paths, fog of war, saved position; Gerald entered from The Coffee Cart (autonomous) | [005](docs/rounds/005/architecture.md) | [findings](docs/rounds/005/findings.md) | `1a21bdb` (pre-run record) to round 005 close |
 | 004 | 10-31 | iPhone app first: Expo / React Native app in `mobile/`, tested in the iOS Simulator against the local server; web client frozen | [004](docs/rounds/004/architecture.md) | [findings](docs/rounds/004/findings.md) | `8f4c456` (pre-run record) to round 004 close |
 | 003 | 10-31 | Italian by default: configurable target language packs, Italian Gerald content, per-language Spellbooks | [003](docs/rounds/003/architecture.md) | [findings](docs/rounds/003/findings.md) | `4f7bbd3` (pre-run record) to round 003 close |

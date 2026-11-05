@@ -130,3 +130,10 @@ requirement, aliases kept instead of removed.
 4. `npx expo export --platform ios`.
 5. Live (codex-cli, Italian): `node server/scripts/play-market.js --provider codex-cli`, saved under `results/`.
 6. `git diff --check`; `python3 tools/round_log_check.py 006`.
+
+## Outcome (2026-11-05)
+
+Built as designed with all 10 critique findings. Server 77/77, mobile 19/19, web client 12/12 and build, iOS bundle.
+A content-only fixture encounter plays end to end in tests; Gerald's prompts are byte-identical to round 005; the
+live codex-cli playthrough resolved Gerald and marked him complete. Gerald again dictated the answer (quality 2
+echo), which goes to B1. See [findings](findings.md).
