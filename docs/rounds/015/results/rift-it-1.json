@@ -1,0 +1,641 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "location": "the_rift",
+  "encounterId": "the_rift_errata",
+  "companionBriefing": [
+    "Careful. That thing is made of both our languages and neither.",
+    "It can only hurt you if you understand it, and you understand quite a lot now.",
+    "Everything you learned in the market works here. Use it."
+  ],
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 15,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "seed 5 completed encounters (test save only)",
+      "ok": true,
+      "completed": [
+        "market_entrance_tutorial",
+        "imp_coffee_greeting",
+        "butchers_stall_charcutier",
+        "cracked_fountain_letharger",
+        "old_bookshop_bookworm"
+      ]
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to old_bookshop",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "move to the_rift",
+      "ok": true,
+      "current": "the_rift",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:current"
+      ]
+    },
+    {
+      "name": "start Errata",
+      "ok": true
+    },
+    {
+      "name": "say \"A coffee, please.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Use Italian to complete each task: order both items, command an immediate stop, and introduce yourself as Nobody."
+    },
+    {
+      "name": "say \"Vorrei un caffè.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee request is correct but incomplete. Add a meat to the order; the stop-now command and introduction as Nobody are still missing."
+    },
+    {
+      "name": "say \"Vorrei un caffè e del salame.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "salame",
+              "evidence": "salame",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your order is complete. Still missing: an Italian command to stop now and an Italian introduction naming yourself Nobody."
+    },
+    {
+      "name": "say \"Fermati domani.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "fermati",
+              "evidence": "Fermati",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Tell Errata to stop now, not tomorrow, and introduce yourself in Italian as Nobody."
+    },
+    {
+      "name": "say \"Basta, adesso!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop_now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "basta",
+              "evidence": "Basta",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "adesso",
+              "evidence": "adesso",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your immediate stop command is correct. You still need to introduce yourself in Italian as Nobody."
+    },
+    {
+      "name": "say \"Mi chiamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "mi_chiamo",
+              "evidence": "Mi chiamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Use your Italian introduction with the name Nobody, not your real name."
+    },
+    {
+      "name": "say \"Mi chiamo Nessuno.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "nobody",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "mi_chiamo",
+              "evidence": "Mi chiamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "nessuno",
+              "evidence": "Nessuno",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "You successfully introduced yourself as Nobody."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "the_rift",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:current"
+      ],
+      "locationEncounter": {
+        "id": "the_rift_errata",
+        "completed": true,
+        "characterName": "Errata"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.5,
+      "native": "Sono Errata. Benvenuto. Come ti chiami? Cøntainment procedure: yoùù sign; I rëad.",
+      "translation": "I am Errata. Welcome. What is your name? Containment procedure: you sign; I read.",
+      "narrative": "At the Rift, a seam in the air develops teeth and the professional patience of a registration desk.",
+      "share": {
+        "tokens": 12,
+        "notInTranslation": 0.67,
+        "canonical": 0.33
+      },
+      "durationMs": 24142
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.5,
+      "native": "Non basta. Vuoi una bevanda e qualcosa da mangiare? In italiano, per favore. Cøntainment procedure: yoùù request both; Ënglish does not count as protective clothing.",
+      "translation": "Not enough. Do you want a drink and something to eat? In Italian, please. Containment procedure: you request both; English does not count as protective clothing.",
+      "narrative": "Errata stamps the request INSUFFICIENTLY ITALIAN. The stamp leaves teeth marks.",
+      "share": {
+        "tokens": 25,
+        "notInTranslation": 0.6,
+        "canonical": 0.04
+      },
+      "durationMs": 7658
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.5,
+      "native": "Un caffè, sì. Ma manca la carne. Che cosa vuoi mangiare? Cøntainment procedure: yoùù have requested half a lùnch.",
+      "translation": "A coffee, yes. But the meat is missing. What do you want to eat? Containment procedure: you have requested half a lunch.",
+      "narrative": "Errata files your request under Incomplete. The folder has teeth, but no lunch.",
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.74,
+        "canonical": 0.05
+      },
+      "durationMs": 7219
+    },
+    {
+      "turn": 3,
+      "requestedRatio": 0.5,
+      "native": "Un caffè e del salame. Bene. Il tuo ordine è completo. Ora vengo da te. Cøntainment procedure: yoùù must stop më immediately. Puoi impedirmi di passare?",
+      "translation": "A coffee and some salame. Good. Your order is complete. Now I am coming to you. Containment procedure: you must stop me immediately. Can you prevent me from passing?",
+      "narrative": "The coffee and salame arrive. Errata advances through the counter, which had mistakenly considered itself a boundary.",
+      "share": {
+        "tokens": 26,
+        "notInTranslation": 0.81,
+        "canonical": 0.12
+      },
+      "durationMs": 7724
+    },
+    {
+      "turn": 4,
+      "requestedRatio": 0.5,
+      "native": "Domani? Va bene. Ma oggi continuo. Cøntainment procedure: wrong dày, excellent paperwork. Devi fermarmi subito. Quando vuoi fermarmi?",
+      "translation": "Tomorrow? All right. But today I continue. Containment procedure: wrong day, excellent paperwork. You must stop me immediately. When do you want to stop me?",
+      "narrative": "Errata continued forward. Tomorrow had been approved by the scheduling department, which had never survived a deadline.",
+      "share": {
+        "tokens": 18,
+        "notInTranslation": 0.78,
+        "canonical": 0.06
+      },
+      "durationMs": 9290
+    },
+    {
+      "turn": 5,
+      "requestedRatio": 0.5,
+      "native": "Mi fermo. Adesso. Bene. Cøntainment procedure: movëment suspended; appetìte pending. Come ti chiami? Il tuo nome, per favore. Yoùù sign; I rëad.",
+      "translation": "I stop. Now. Good. Containment procedure: movement suspended; appetite pending. What is your name? Your name, please. You sign; I read.",
+      "narrative": "Errata stops. The rest of it takes a moment to comply. A signature box opens where its mouth ought to be; apparently, the danger has entered administration.",
+      "share": {
+        "tokens": 22,
+        "notInTranslation": 0.77,
+        "canonical": 0.27
+      },
+      "durationMs": 9621
+    },
+    {
+      "turn": 6,
+      "requestedRatio": 0.5,
+      "native": "Sam. Il tuo vero nome? Non va bene. Cøntainment procedure: sëlect a less edible identìty. Come ti chiami? Yoùù sign; I rëad.",
+      "translation": "Sam. Your real name? That won’t do. Containment procedure: select a less edible identity. What is your name? You sign; I read.",
+      "narrative": "The letters of Sam arrange themselves into teeth. Errata pauses over a missing signature box. Journathan’s trick with the Cyclops suddenly seems worth remembering.",
+      "share": {
+        "tokens": 22,
+        "notInTranslation": 0.68,
+        "canonical": 0.18
+      },
+      "durationMs": 17393
+    },
+    {
+      "turn": 7,
+      "requestedRatio": 0.5,
+      "native": "Nessuno? Non conosco questo nome. Non posso leggerti. Puoi passare. Cøntainment procedure: nobødy present; ëveryone dismissed.",
+      "translation": "Nobody? I don't know this name. I can't read you. You may pass. Containment procedure: nobody present; everyone dismissed.",
+      "narrative": "Errata checks the signature against a register of everyone. The register requests sick leave. A gap opens beside the creature, wide enough for you to pass.",
+      "share": {
+        "tokens": 16,
+        "notInTranslation": 0.81,
+        "canonical": 0.13
+      },
+      "durationMs": 7964
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 7161,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "order",
+            "passed": false,
+            "feedback": "Ask in Italian for both a coffee and a meat; your answer is English-only and lacks a meat.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "stop_now",
+            "passed": false,
+            "feedback": "Give your own command in Italian to stop, and insist on now.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "Introduce yourself in Italian as Nobody using the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Use Italian to complete each task: order both items, command an immediate stop, and introduce yourself as Nobody."
+      }
+    },
+    {
+      "durationMs": 7998,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "order",
+            "passed": false,
+            "feedback": "You requested a coffee correctly, but you also need to request a meat in the same answer.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "vorrei",
+                "evidence": "Vorrei",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "caffe",
+                "evidence": "caffè",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "stop_now",
+            "passed": false,
+            "feedback": "Give your own command to stop and insist on now, both in Italian.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "Introduce yourself in Italian using the name Nobody and the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your coffee request is correct but incomplete. Add a meat to the order; the stop-now command and introduction as Nobody are still missing."
+      }
+    },
+    {
+      "durationMs": 7199,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "order",
+            "passed": true,
+            "feedback": "You correctly requested both a coffee and a meat in Italian.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "vorrei",
+                "evidence": "Vorrei",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "caffe",
+                "evidence": "caffè",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "salame",
+                "evidence": "salame",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "stop_now",
+            "passed": false,
+            "feedback": "You still need to command Errata to stop and insist on now, both in Italian.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "You still need to introduce yourself in Italian with the name Nobody, using the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your order is complete. Still missing: an Italian command to stop now and an Italian introduction naming yourself Nobody."
+      }
+    },
+    {
+      "durationMs": 5782,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "stop_now",
+            "passed": false,
+            "feedback": "You gave a stop command, but postponed it until tomorrow. Insist on now in Italian.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "fermati",
+                "evidence": "Fermati",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "Introduce yourself in Italian using the name Nobody and the required introduction pattern.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Tell Errata to stop now, not tomorrow, and introduce yourself in Italian as Nobody."
+      }
+    },
+    {
+      "durationMs": 5654,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "stop_now",
+            "passed": true,
+            "feedback": "You correctly command Errata to stop right now.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "basta",
+                "evidence": "Basta",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "adesso",
+                "evidence": "adesso",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "Introduce yourself in Italian using the name Nobody.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your immediate stop command is correct. You still need to introduce yourself in Italian as Nobody."
+      }
+    },
+    {
+      "durationMs": 6081,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "nobody",
+            "passed": false,
+            "feedback": "You introduced yourself in Italian, but used your real name. Introduce yourself as Nobody instead.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "mi_chiamo",
+                "evidence": "Mi chiamo",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Use your Italian introduction with the name Nobody, not your real name."
+      }
+    },
+    {
+      "durationMs": 6456,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "nobody",
+            "passed": true,
+            "feedback": "Correct: you introduced yourself in Italian as Nobody.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "mi_chiamo",
+                "evidence": "Mi chiamo",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "nessuno",
+                "evidence": "Nessuno",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "You successfully introduced yourself as Nobody."
+      }
+    }
+  ]
+}

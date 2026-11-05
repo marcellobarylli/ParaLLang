@@ -7,10 +7,26 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **A7b** (the Rift boss: corrupted mixed language reviewing every vocabulary file, with B3
-  infohazard flavour; its encounter start must check the gate too). The smaller alternative is **E1**, now narrowed
-  to Portia's tutorial (round 014 tour: her lines carry 0.11 target language against 0.28 requested; the others meet
-  theirs).
+- **Round 015 (A7b, the Rift boss, with B3): built and committed, live runs incomplete, not closed.** Pre-run record
+  and build are pushed (`docs/rounds/015/architecture.md`; journal rows 1–12). Errata, a Rift-born infohazard,
+  reviews all five vocabulary files in three objectives. Codex's subscription usage limit stopped the live runs at
+  14:05 UTC ("try again at 3:34 PM", as printed by the CLI; the container runs UTC), and `claude-cli` is not signed
+  in. To finish:
+  1. Check the limit: `codex exec --sandbox read-only --json "Reply with the single word ok." < /dev/null` from
+     `/work/ParaLLang` (an `error` event saying "usage limit" means wait; `play-market.js` only shows it as
+     `PROVIDER_FAILURE`).
+  2. Run `TARGET_LANGUAGE=es node server/scripts/play-market.js --provider codex-cli --location the_rift --out
+     docs/rounds/015/results/rift-es-3.json` and `TARGET_LANGUAGE=it node server/scripts/play-market.js --provider
+     codex-cli --tour --out docs/rounds/015/results/tour-it.json` (~70 calls, ~10 min), one after the other.
+  3. Write `findings.md` from journal rows 9–12, the results files and the new runs. Already seen (Italian, 2/2
+     resolved, 10/10 lines graded as intended, 0 feedback leaks): every line glitches its English and keeps the
+     Italian clean; the script's `notInTranslation` share is inflated by glitched tokens (0.60–0.89 against 0.50;
+     `canonical` 0.04–0.33), so report both; near-dictation before `stop_now` ("Devi fermarmi subito", "Ora vengo da
+     te", `rift-it-1` turns 3–4); her greeting asks "Come ti chiami?" before the order objective (`rift-it-1`).
+     Spanish: 4/4 lines as intended before the limit; `rift-es-1` failed at the start with `CLI_INVALID_RESPONSE`,
+     cause not captured.
+  4. Outcome, STATUS addendum and index row, `closed` row, `python3 tools/round_log_check.py 015`, commit, push.
+- Then: **E1** narrowed to Portia (round 014), or **A8** (party).
 
 ## Backlog
 
@@ -33,7 +49,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   *The Journey* (home; the Cyclops name trick).
 - [x] **A7a. The Rift gate.** (round 014, closed 2026-11-05) Sealed until the other five encounters are complete
   (`requires_completed`, `gate` in the snapshot, 409 `SEALED`, sealed node in the app); `play-market.js --tour`.
-- [ ] **A7b. The Rift boss.** Mini-boss in corrupted mixed language, reviewing all learned vocabulary. Narration
+- [ ] **A7b. The Rift boss.** (round 015, built; live runs and close pending, see In progress) Mini-boss in corrupted mixed language, reviewing all learned vocabulary. Narration
   chips need an objective targeting an entry of each vocabulary file (see traps). `startEncounter` must refuse a
   sealed location (saves from rounds 005–013 may already stand in the Rift).
 - [ ] **A8. Party system.** Save defeated (saveable) enemies, revisit conversations with party members.
@@ -88,6 +104,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Sign in the `claude` CLI** (`claude auth status` reports `loggedIn: false` on 2026-11-05), or confirm that live
+  runs are Codex-only. Without it, Codex's usage limit stops all live data (round 015).
+
 - Play the app in the iOS Simulator (round 004 open item 1), and every Simulator check listed in later rounds'
   open items.
 - Review the Italian content (round 003 item 1) and any content added by autonomous rounds.
@@ -140,7 +159,16 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   96/96, mobile 22/22, client 12/12; first live full-market tour (it): 5/5 resolved, 20/20 verdicts as intended,
   Rift sealed at 4/5 and open after, 45 calls in 6 min 50 s.
 
+- 2026-11-05, iteration 4: round 015 (A7b) planned, critiqued (7 findings: 5 accepted, 2 rejected), frozen and
+  built: Errata at the Rift; server 101/101, mobile 22/22, client 12/12. Live: Italian 2/2 resolved, then Codex's
+  usage limit; round left open. Iteration 4 ends here (round 014 closed, 015 open).
+
 ## Handoff notes and traps
+
+- **Codex has a subscription usage limit.** Iteration 4 hit it after about 100 game calls and two critiques in
+  ~50 minutes (14:05 UTC). The game maps it to `PROVIDER_FAILURE` ("temporarily unavailable"); a direct
+  `codex exec --json` shows the real message and reset time. Pace live runs: single-location runs before tours, and
+  no parallel live runs.
 
 - **Do not wait on Codex with `pgrep -f "codex exec ..."`**: the wait loop's own command line contains the pattern,
   so it never ends (round 014). Run Codex with Bash `run_in_background` and wait for its notification, or test the

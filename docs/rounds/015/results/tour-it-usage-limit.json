@@ -1,0 +1,768 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "tour": true,
+  "riftSealedBefore": true,
+  "riftOpenAfter": false,
+  "resolved": false,
+  "generationCalls": 16,
+  "encounters": [
+    {
+      "location": "market_entrance",
+      "encounterId": "market_entrance_tutorial",
+      "companionBriefing": [
+        "Portia only lets in people who greet her properly. Answer in Italian; mixing in English is fine while you learn.",
+        "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance.",
+        "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+      ],
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 7,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.2,
+          "native": "Buongiorno! Welcome to the market. A greeting and your name, please. I am an archway, not a loophole.",
+          "translation": "Good morning! Welcome to the market. A greeting and your name, please. I am an archway, not a loophole.",
+          "narrative": "A visitors’ book slides out of the archway’s keystone. Apparently, even entering a market requires a paper trail.",
+          "share": {
+            "tokens": 18,
+            "notInTranslation": 0.06,
+            "canonical": 0.06
+          },
+          "durationMs": 8172
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.25,
+          "native": "Ciao! A perfectly acceptable greeting. Very civil. Now, chi sei? Your name is still required; waving at the paperwork does not complete it.",
+          "translation": "Hello! A perfectly acceptable greeting. Very civil. Now, who are you? Your name is still required; waving at the paperwork does not complete it.",
+          "narrative": "A visitors’ book slides from Portia’s keystone. The name column remains pointedly empty.",
+          "share": {
+            "tokens": 23,
+            "notInTranslation": 0.13,
+            "canonical": 0.04
+          },
+          "durationMs": 10661
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.30000000000000004,
+          "native": "Piacere, Sam! Your introduction is approved. Now, hai una domanda per me? Introductions are not meant to be a solo performance.",
+          "translation": "Nice to meet you, Sam! Your introduction is approved. Now, do you have a question for me? Introductions are not meant to be a solo performance.",
+          "narrative": "Portia enters Sam in the visitors’ book. Her pen hovers over a second column, apparently reserved for reciprocal courtesy.",
+          "share": {
+            "tokens": 21,
+            "notInTranslation": 0.24,
+            "canonical": 0
+          },
+          "durationMs": 8985
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.35000000000000003,
+          "native": "Io mi chiamo Portia. Piacere, Sam! You asked about me. How terribly considerate. Your paperwork is complete; please enter before I become visibly sentimental masonry.",
+          "translation": "My name is Portia. Nice to meet you, Sam! You asked about me. How terribly considerate. Your paperwork is complete; please enter before I become visibly sentimental masonry.",
+          "narrative": "The archway’s visitors’ book fluttered in her keystone. Nobody had provided a form for being pleasantly surprised.",
+          "share": {
+            "tokens": 25,
+            "notInTranslation": 0.16,
+            "canonical": 0.12
+          },
+          "durationMs": 8179
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 7430,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "greet",
+                "passed": true,
+                "feedback": "You greeted Portia correctly.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "ciao",
+                    "evidence": "Ciao",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "introduce",
+                "passed": false,
+                "feedback": "Introduce yourself using an Italian first-person expression and your name.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "ask_back",
+                "passed": false,
+                "feedback": "Ask Portia her name in Italian, or ask “and you?” using the Italian informal pronoun.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Good greeting! Now introduce yourself and ask Portia her name in return."
+          }
+        },
+        {
+          "durationMs": 5299,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "introduce",
+                "passed": true,
+                "feedback": "You correctly introduced yourself by name.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "mi_chiamo",
+                    "evidence": "Mi chiamo",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "ask_back",
+                "passed": false,
+                "feedback": "You still need to ask Portia her name in Italian.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your introduction is correct. Now ask Portia her name in Italian."
+          }
+        },
+        {
+          "durationMs": 5135,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "ask_back",
+                "passed": true,
+                "feedback": "You correctly ask Portia her name in return.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "tu",
+                    "evidence": "tu",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Well done! Your question naturally returns the introduction."
+          }
+        }
+      ]
+    },
+    {
+      "location": "coffee_cart",
+      "encounterId": "imp_coffee_greeting",
+      "companionBriefing": null,
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 5,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.25,
+          "native": "Buongiorno! Welcome to The Coffee Cart. I’m Gerald. Five espresso shots for the service; one for the architecture. Che desideri?",
+          "translation": "Good morning! Welcome to The Coffee Cart. I’m Gerald. Five espresso shots for the service; one for the architecture. What would you like?",
+          "narrative": "Gerald polishes a tiny cup beneath a market arch held together by civic optimism.",
+          "share": {
+            "tokens": 21,
+            "notInTranslation": 0.14,
+            "canonical": 0.05
+          },
+          "durationMs": 8557
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.3,
+          "native": "Un caffè, bene. Four espresso shots for politeness. Your coffee is requested, but the milk situation remains unresolved. Il latte? A war crime in a little jug. Come vuoi il tuo caffè?",
+          "translation": "A coffee, good. Four espresso shots for politeness. Your coffee is requested, but the milk situation remains unresolved. Milk? A war crime in a little jug. How would you like your coffee?",
+          "narrative": "Gerald marks the coffee request approved. His quill hovers over the remaining box with bureaucratic suspicion.",
+          "share": {
+            "tokens": 32,
+            "notInTranslation": 0.31,
+            "canonical": 0.09
+          },
+          "durationMs": 12356
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.35,
+          "native": "Senza latte. Perfetto! Ecco il tuo caffè. Five espresso shots for your judgment. Your Italian? No notes. Civilization survives another morning.",
+          "translation": "Without milk. Perfect! Here is your coffee. Five espresso shots for your judgment. Your Italian? No notes. Civilization survives another morning.",
+          "narrative": "Gerald removes the milk jug with the solemn relief of a clerk cancelling a meeting.",
+          "share": {
+            "tokens": 21,
+            "notInTranslation": 0.33,
+            "canonical": 0.19
+          },
+          "durationMs": 6021
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 5512,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order_coffee",
+                "passed": true,
+                "feedback": "You clearly requested a coffee for yourself.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "vorrei",
+                    "evidence": "Vorrei",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "caffe",
+                    "evidence": "caffè",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "no_milk",
+                "passed": false,
+                "feedback": "Specify in Italian that your coffee should be without milk or black.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your coffee request is correct. Add an Italian expression specifying no milk or black coffee."
+          }
+        },
+        {
+          "durationMs": 7140,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "no_milk",
+                "passed": true,
+                "feedback": "You clearly ordered your coffee without milk.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "senza_latte",
+                    "evidence": "Senza latte",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct and natural—you specified your coffee without milk."
+          }
+        }
+      ]
+    },
+    {
+      "location": "butchers_stall",
+      "encounterId": "butchers_stall_charcutier",
+      "companionBriefing": null,
+      "resolved": false,
+      "completedOnMap": false,
+      "generationCalls": 4,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.3,
+          "native": "Buongiorno! Sono Mortimer. Questo è prosciutto. Anche il cappello! Certified ham. What can I get you?",
+          "translation": "Good morning! I’m Mortimer. This is ham. The hat too! Certified ham. What can I get you?",
+          "narrative": "Mortimer beams behind the butcher’s stall. His hat sits on the scales, awaiting an honest appraisal.",
+          "share": {
+            "tokens": 16,
+            "notInTranslation": 0.5,
+            "canonical": 0.06
+          },
+          "durationMs": 9021
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.35,
+          "native": "Prosciutto? Certo! Everything here is certified ham. But you want a different meat, and you haven't given me a weight yet. Che carne vuoi?",
+          "translation": "Ham? Certainly! Everything here is certified ham. But you want a different meat, and you haven't given me a weight yet. What meat would you like?",
+          "narrative": "Mortimer weighs his own nod of approval. The scales decline to endorse it.",
+          "share": {
+            "tokens": 24,
+            "notInTranslation": 0.21,
+            "canonical": 0.04
+          },
+          "durationMs": 8693
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 6140,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name_meat",
+                "passed": false,
+                "feedback": "You asked for ham. Request a different meat, naming it in Italian.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "quantity",
+                "passed": false,
+                "feedback": "State how much you want using an Italian number or half together with a unit of weight.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Ask for a meat other than ham in Italian and include an Italian quantity with a unit of weight."
+          }
+        },
+        {
+          "durationMs": 118912,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name_meat",
+                "passed": true,
+                "feedback": "You correctly requested a meat other than ham in Italian.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "salame",
+                    "evidence": "Vorrei del salame, per favore.",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "quantity",
+                "passed": false,
+                "feedback": "State how much you want using an Italian number or half together with a unit of weight.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your meat request is correct. Add the amount you want in Italian, including a unit of weight."
+          }
+        }
+      ]
+    },
+    {
+      "location": "cracked_fountain",
+      "encounterId": "cracked_fountain_letharger",
+      "companionBriefing": null,
+      "resolved": false,
+      "completedOnMap": false,
+      "generationCalls": 0,
+      "lines": [],
+      "grading": []
+    },
+    {
+      "location": "old_bookshop",
+      "encounterId": "old_bookshop_bookworm",
+      "companionBriefing": null,
+      "resolved": false,
+      "completedOnMap": false,
+      "generationCalls": 0,
+      "lines": [],
+      "grading": []
+    },
+    {
+      "location": "the_rift",
+      "encounterId": "the_rift_errata",
+      "companionBriefing": null,
+      "resolved": false,
+      "completedOnMap": false,
+      "generationCalls": 0,
+      "lines": [],
+      "grading": []
+    }
+  ],
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "start Portia",
+      "ok": true
+    },
+    {
+      "name": "say \"Ciao!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "greet",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "ciao",
+              "evidence": "Ciao",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "introduce",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Good greeting! Now introduce yourself and ask Portia her name in return."
+    },
+    {
+      "name": "say \"Mi chiamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "introduce",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "mi_chiamo",
+              "evidence": "Mi chiamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your introduction is correct. Now ask Portia her name in Italian."
+    },
+    {
+      "name": "say \"E tu?\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "ask_back",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "tu",
+              "evidence": "tu",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Well done! Your question naturally returns the introduction."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": true,
+        "characterName": "Portia"
+      }
+    },
+    {
+      "name": "move to coffee_cart",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Gerald",
+      "ok": true
+    },
+    {
+      "name": "say \"Vorrei un caffè, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order_coffee",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "no_milk",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee request is correct. Add an Italian expression specifying no milk or black coffee."
+    },
+    {
+      "name": "say \"Senza latte, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "no_milk",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "senza_latte",
+              "evidence": "Senza latte",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct and natural—you specified your coffee without milk."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "imp_coffee_greeting",
+        "completed": true,
+        "characterName": "Gerald"
+      }
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Vorrei del prosciutto, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Ask for a meat other than ham in Italian and include an Italian quantity with a unit of weight."
+    },
+    {
+      "name": "say \"Vorrei del salame, per favore.\"",
+      "ok": false,
+      "code": "PROVIDER_FAILURE",
+      "message": "The selected provider is temporarily unavailable. Your progress was not changed; retry in a moment."
+    },
+    {
+      "name": "say \"Chilo.\"",
+      "ok": false,
+      "code": "PROVIDER_FAILURE",
+      "message": "The selected provider is temporarily unavailable. Your progress was not changed; retry in a moment."
+    },
+    {
+      "name": "say \"Due etti, per favore.\"",
+      "ok": false,
+      "code": "PROVIDER_FAILURE",
+      "message": "The selected provider is temporarily unavailable. Your progress was not changed; retry in a moment."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "butchers_stall_charcutier",
+        "completed": false,
+        "characterName": "Mortimer"
+      }
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": false,
+      "code": "PROVIDER_FAILURE",
+      "message": "The selected provider is temporarily unavailable. Your progress was not changed; retry in a moment."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "cracked_fountain_letharger",
+        "completed": false,
+        "characterName": "Flick"
+      }
+    },
+    {
+      "name": "move to old_bookshop",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "move to the_rift before the last encounter (expect SEALED)",
+      "ok": false,
+      "code": "SEALED",
+      "message": "The Rift is sealed. Finish the other encounters first (2 of 5 done)."
+    },
+    {
+      "name": "start Marginalia",
+      "ok": false,
+      "code": "PROVIDER_FAILURE",
+      "message": "The selected provider is temporarily unavailable. Your progress was not changed; retry in a moment."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ],
+      "locationEncounter": {
+        "id": "old_bookshop_bookworm",
+        "completed": false,
+        "characterName": "Marginalia"
+      }
+    },
+    {
+      "name": "move to the_rift after every other encounter (expect success)",
+      "ok": false,
+      "code": "SEALED",
+      "message": "The Rift is sealed. Finish the other encounters first (2 of 5 done)."
+    },
+    {
+      "name": "move to the_rift",
+      "ok": false,
+      "code": "SEALED",
+      "message": "The Rift is sealed. Finish the other encounters first (2 of 5 done)."
+    },
+    {
+      "name": "start Errata",
+      "ok": false,
+      "code": "NOT_HERE",
+      "message": "Errata is not here. Walk to The Rift first."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ],
+      "locationEncounter": null
+    }
+  ]
+}
