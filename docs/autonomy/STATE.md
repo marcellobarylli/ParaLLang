@@ -150,6 +150,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   tmpfs and filled during round 023. Add `t.after(() => rm(dir, …))` in `createRuntime` (helpers.js) and the other
   `mkdtemp` sites; check `ls /tmp | grep parallang | wc -l` stays 0 after `node --test`.
 
+- [ ] **F2. Typographic apostrophes** (round 054): fold ’ ‘ ʼ (and look-alikes) to ' in `matchCanonicalVocabulary`
+  and the grader-evidence presence check, so an iPhone's Smart Punctuation cannot make a correct answer
+  `INVALID_GRADING` on every retry. No live calls.
 
 ### E. Follow-ups from live data
 

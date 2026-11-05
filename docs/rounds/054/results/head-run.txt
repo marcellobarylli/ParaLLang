@@ -1,0 +1,12 @@
+ok 1 - foldApostrophes maps every apostrophe look-alike to the straight one, one unit for one
+not ok 2 - the matcher treats typographic apostrophes in the text as straight ones and keeps the source excerpt
+not ok 3 - a typographic apostrophe in a variant matches a straight one in the text
+not ok 4 - offsets stay right with a decomposed accent before a typographic apostrophe
+not ok 5 - word boundaries hold around a folded apostrophe
+not ok 6 - the real it pack: Mortimer's ancora un po' and Flick's l'una match with either apostrophe
+ok 7 - reviews already accept either apostrophe in an accepted translation
+not ok 8 - the player types ’ and the grader quotes ': the evidence is accepted and the Fountain resolves
+not ok 9 - the player types ' and the grader quotes ’: the evidence is accepted too
+ok 10 - evidence that is not in the answer is still refused
+# pass 3
+# fail 7
