@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 037, UI sounds (autonomous)
+
+The app plays two short cues, synthesized by a committed script (no third-party assets): one when the current
+objective is met or a review is correct, one when an encounter is won. A miss plays nothing. A "Sounds" switch on the
+Saves screen turns them off, and the silent switch mutes them. New dependencies: `expo-audio` and its peer
+`expo-asset`. Critiqued by a Claude subagent (9 findings, all accepted). Mobile 86/86, expo-doctor 20/20. Not heard
+on a device ([open items](docs/rounds/037/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 036, where each fragment came from (autonomous)
 
 Each of the Spellbook's seven Journey fragments now says "Told by Marginalia" or "Found at The Old Bookshop", on screen
@@ -397,6 +405,7 @@ Newest first.
 | 034 | 11-05 | App type scale and palette tokens; every text style sized, map labels undimmed, contrast tests (backlog C3a) (autonomous) | [034](docs/rounds/034/architecture.md) | [findings](docs/rounds/034/findings.md) | pre-run record to round 034 close |
 | 035 | 11-05 | Fade-in transitions that respect Reduce Motion; line-height tokens (backlog C3b) (autonomous) | [035](docs/rounds/035/architecture.md) | [findings](docs/rounds/035/findings.md) | pre-run record to round 035 close |
 | 036 | 11-05 | Journey fragments name who told them or where they were found, in the Spellbook (autonomous) | [036](docs/rounds/036/architecture.md) | [findings](docs/rounds/036/findings.md) | pre-run record to round 036 close |
+| 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 031 | 11-05 | Save slots: up to three learners per device, Saves screen, stale-reply guards (backlog A11) (autonomous) | [031](docs/rounds/031/architecture.md) | [findings](docs/rounds/031/findings.md) | `2c5e2ae` (pre-run record) to round 031 close |
 | 030 | 11-05 | Fragments of The Journey: three authored passages per pack in the Spellbook, found on completion, translation behind a toggle (backlog A9) (autonomous) | [030](docs/rounds/030/architecture.md) | [findings](docs/rounds/030/findings.md) | `d6e2e51` (pre-run record) to round 030 close |
 | 029 | 11-05 | Forced repetition before the Rift: one due card per answer slot, DRILL_REQUIRED, map drill note (backlog C1) (autonomous) | [029](docs/rounds/029/architecture.md) | [findings](docs/rounds/029/findings.md) | `4942a58` (pre-run record) to round 029 close |

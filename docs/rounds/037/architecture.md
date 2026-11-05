@@ -89,3 +89,9 @@ outranks, a fixed switch name, and a byte-compared generator.
   - Saves screen: the switch's name, state and toggle.
 - Theme test: the new styles are sized (`switchOn` is a modifier).
 - All suites, expo-doctor, iOS export with the WAVs in the bundle.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. One addition: `expo-asset` (expo-audio's peer, required by expo-doctor). Cues
+play on progress only, behind a persisted switch. Mobile 86/86, server 157/157, web client 12/12 and build,
+expo-doctor 20/20, iOS export with both cues. See [findings](findings.md).
