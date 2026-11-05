@@ -75,3 +75,10 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 021 | Party membership is per character; recruiting is allowed during another encounter | Per encounter; refuse during encounters | One character, one member; recruiting reveals nothing an encounter protects | Yes |
 | 2026-11-05 | 021 | Fix the start route dropping `encounterId` (found while planning) | Leave for a later round | The app over HTTP started Gerald at every location | Yes |
 | 2026-11-05 | 021 | Codex critique 1: 1.1, 1.2, 1.3, 1.6, 1.8 accepted; 1.4, 1.5, 1.7 in part | Accept all | See round 021 Second opinion table | Yes |
+| 2026-11-05 | 022 | A party conversation is an authored, graded encounter (`party_of`), not free chat | Ungraded free conversation | Keeps "translation generates power"; reuses objectives, hints, Spellbook | Yes |
+| 2026-11-05 | 022 | Party conversations start anywhere, at the player's location; off the map, outside the Rift gate and the Rift's review | Only at the member's home location | Members travel with the player; recruiting is optional, so the Rift cannot depend on it | Yes |
+| 2026-11-05 | 022 | Resolved conversations count per member and can be replayed (fresh session); tiers deferred | Count only once; unlock tiers now | One authored conversation per member so far | Yes |
+| 2026-11-05 | 022 | Spanish praise: bueno or delicioso, not rico | rico in a phrase ("está rico") | English collisions Puerto Rico, RICO, Costa Rica (critique 1.2) | Yes |
+| 2026-11-05 | 022 | Gerald's coffee break grades adjective agreement with the coffee | Accept any form | Beginners should not be taught "il caffè è buona" | Yes |
+| 2026-11-05 | 022 | Talk is disabled in the app while another encounter is under way | Let it replace the session | A tap should not throw away an ongoing encounter | Yes |
+| 2026-11-05 | 022 | Codex critique 1: 1.1, 1.2, 1.5, 1.6, 1.8 accepted; 1.3, 1.4, 1.7, 1.9, 1.10 in part | Accept all | See round 022 Second opinion table | Yes |
