@@ -1,0 +1,373 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "location": "old_bookshop",
+  "encounterId": "old_bookshop_bookworm",
+  "companionBriefing": null,
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 11,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to old_bookshop",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "start Marginalia",
+      "ok": true
+    },
+    {
+      "name": "say \"Un libro.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Answer the questions about Journathan’s destination and the name he gave the Cyclops in Spanish."
+    },
+    {
+      "name": "say \"Home.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Answer the destination question in Spanish rather than English."
+    },
+    {
+      "name": "say \"¡A casa!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "casa",
+              "evidence": "¡A casa!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "The destination answer passes. The name objective is still unanswered."
+    },
+    {
+      "name": "say \"Journathan.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Identify the name Journathan gives in the passage, not his real name."
+    },
+    {
+      "name": "say \"¡Nadie!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "nadie",
+              "evidence": "¡Nadie!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct Spanish answer."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ],
+      "locationEncounter": {
+        "id": "old_bookshop_bookworm",
+        "completed": true,
+        "characterName": "Marginalia"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.35,
+      "native": "I'm Marginalia. I sell books to people who understand them. A niche market.\n\nEsta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años.\n\nNo spoilers. ¿Adónde va Journathan?",
+      "translation": "I'm Marginalia. I sell books to people who understand them. A niche market.\n\nThis is the story of Journathan, the man of many tongues. His journey home lasts twenty years.\n\nNo spoilers. Where is Journathan going?",
+      "narrative": "At The Old Bookshop, a bookworm emerges from a neatly annotated hole. The stock has been reduced by both sales and appetite.",
+      "share": {
+        "tokens": 36,
+        "notInTranslation": 0.5,
+        "canonical": 0.11
+      },
+      "durationMs": 9270
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.39999999999999997,
+      "native": "Un libro is a book. Correct object, wrong destination. Reading comprehension: not yet.\n\n¿Adónde va Journathan? La pregunta es sobre su viaje, no sobre este libro.",
+      "translation": "“Un libro” means “a book.” Correct object, wrong destination. Reading comprehension: not yet.\n\nWhere is Journathan going? The question is about his journey, not about this book.",
+      "narrative": "Marginalia pencils a small question mark beside you. The pencil has clearly held this position before.",
+      "share": {
+        "tokens": 26,
+        "notInTranslation": 0.42,
+        "canonical": 0.04
+      },
+      "durationMs": 7825
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.44999999999999996,
+      "native": "You understood the destination. English, however, does not pass the Spanish reading test. A technicality with an entire language attached.\n\nLa respuesta debe estar en español. ¿Adónde va Journathan?",
+      "translation": "You understood the destination. English, however, does not pass the Spanish reading test. A technicality with an entire language attached.\n\nThe answer must be in Spanish. Where is Journathan going?",
+      "narrative": "Marginalia pencils a small note in the margin of your shadow. Apparently, even that requires revision.",
+      "share": {
+        "tokens": 29,
+        "notInTranslation": 0.28,
+        "canonical": 0
+      },
+      "durationMs": 9911
+    },
+    {
+      "turn": 3,
+      "requestedRatio": 0.5,
+      "native": "¡Correcto! Journathan va a casa. Reading comprehension: upgraded. Ahora escucha:\n\nEl Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.»\n\nThe first recorded translation trick. Scholars still argue; I eat their papers.\n\n¿Qué nombre le da Journathan al Cíclope?",
+      "translation": "Correct! Journathan goes home. Reading comprehension: upgraded. Now listen:\n\nThe Cyclops asks him his name. Journathan replies: “My name is Nobody.”\n\nThe first recorded translation trick. Scholars still argue; I eat their papers.\n\nWhat name does Journathan give the Cyclops?",
+      "narrative": "Marginalia pencils a tick beside your name. The pencil has fewer teeth marks than the book, suggesting professional restraint.",
+      "share": {
+        "tokens": 41,
+        "notInTranslation": 0.56,
+        "canonical": 0.12
+      },
+      "durationMs": 8437
+    },
+    {
+      "turn": 4,
+      "requestedRatio": 0.55,
+      "native": "Journathan es su nombre real. Pero ¿qué nombre le da al Cíclope? Lee con atención:\n\nEl Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.»\n\nReal name: correct. Answer to this question: not yet. The distinction is small enough to fit in a margin, where all important things live.\n\n¿Qué nombre le da Journathan al Cíclope?",
+      "translation": "Journathan is his real name. But what name does he give the Cyclops? Read carefully:\n\nThe Cyclops asks him his name. Journathan replies: “My name is Nobody.”\n\nReal name: correct. Answer to this question: not yet. The distinction is small enough to fit in a margin, where all important things live.\n\nWhat name does Journathan give the Cyclops?",
+      "narrative": "Marginalia pencils a small correction in the air beside you. Apparently, you are now a revised edition.",
+      "share": {
+        "tokens": 58,
+        "notInTranslation": 0.52,
+        "canonical": 0.1
+      },
+      "durationMs": 10897
+    },
+    {
+      "turn": 5,
+      "requestedRatio": 0.6,
+      "native": "¡Correcto! Journathan le da el nombre de Nadie al Cíclope. Has entendido el pasaje. Puedes comprar el libro.\n\nReading comprehension: approved. El libro tiene todas sus páginas. Algunas tienen mis notas. Free commentary; you're welcome.",
+      "translation": "Correct! Journathan gives the Cyclops the name Nobody. You have understood the passage. You can buy the book.\n\nReading comprehension: approved. The book has all its pages. Some have my notes. Free commentary; you're welcome.",
+      "narrative": "Marginalia makes a small tick beside your name. For once, the annotation is not a complaint.",
+      "share": {
+        "tokens": 35,
+        "notInTranslation": 0.74,
+        "canonical": 0.06
+      },
+      "durationMs": 8598
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 6687,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "home",
+            "passed": false,
+            "feedback": "Your answer names an object, not where Journathan is going. Answer the destination in Spanish.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "name",
+            "passed": false,
+            "feedback": "Give the Spanish name Journathan told the Cyclops.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Answer the questions about Journathan’s destination and the name he gave the Cyclops in Spanish."
+      }
+    },
+    {
+      "durationMs": 5932,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "home",
+            "passed": false,
+            "feedback": "You identified the destination, but your answer must be in Spanish.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "name",
+            "passed": false,
+            "feedback": "Give the name Journathan told the Cyclops, in Spanish.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Answer the destination question in Spanish rather than English."
+      }
+    },
+    {
+      "durationMs": 7248,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "home",
+            "passed": true,
+            "feedback": "Correct—you answered the destination in Spanish.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "casa",
+                "evidence": "¡A casa!",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "name",
+            "passed": false,
+            "feedback": "You have not yet given the name Journathan told the Cyclops in Spanish.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "The destination answer passes. The name objective is still unanswered."
+      }
+    },
+    {
+      "durationMs": 5492,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "name",
+            "passed": false,
+            "feedback": "That is his real name. Answer in Spanish with the name he gave the Cyclops.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Identify the name Journathan gives in the passage, not his real name."
+      }
+    },
+    {
+      "durationMs": 8035,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "name",
+            "passed": true,
+            "feedback": "Correct—you identified the name he gave the Cyclops.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "nadie",
+                "evidence": "¡Nadie!",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Correct Spanish answer."
+      }
+    }
+  ]
+}

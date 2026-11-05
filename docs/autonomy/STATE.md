@@ -7,9 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **A6** (The Old Bookshop, content only; see the "Adding an encounter" note below), combined with
-  **B2** (Journathan / *The Journey* as the Bookshop's lore), or **E1** (opening-line share; Portia 0.05–0.22 and
-  Gerald 0.13 against 0.20–0.25 again in round 012) if a smaller round fits.
+- Nothing. Next: **A7** (The Rift: mini-boss in corrupted mixed language reviewing all vocabulary, gated on the
+  other five encounters; with B3, infohazard flavour). A7 is bigger than A3–A6: it needs an engine change (a gate on
+  completed encounters, objectives across every vocabulary file) and an app change (a locked node), so consider
+  splitting it (gate first, then the boss). **E1** (opening-line share) is the smaller alternative.
 
 ## Backlog
 
@@ -28,7 +29,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   ham, a quantity with a unit); also fixed the grading rubric, which never showed surface forms.
 - [x] **A5. The Cracked Fountain.** (round 011, closed 2026-11-05) Flick the Letharger (stop, a direction, now not
   later); brainrot flavour in the character sheet only. Telling the time deferred.
-- [ ] **A6. The Old Bookshop.** Lore-heavy NPC with advanced passages (abstract nouns, reading).
+- [x] **A6. The Old Bookshop.** (round 013, closed 2026-11-05) Marginalia the Bookworm reads two passages of
+  *The Journey* (home; the Cyclops name trick).
 - [ ] **A7. The Rift.** Mini-boss in corrupted mixed language, reviewing all learned vocabulary; gated on the
   other encounters.
 - [ ] **A8. Party system.** Save defeated (saveable) enemies, revisit conversations with party members.
@@ -43,7 +45,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`prompts/system/base.txt` does not use `styleGuide` today). Add the narration rule "never give the player the
   exact phrase to type": round 005 live data shows Gerald saying "Say: 'Senza latte, per favore.'", and the echo
   then scores quality 2 (also D2). Re-measure with `play-market.js`.
-- [ ] **B2. Journathan.** Content presence for Journathan and *The Journey* (a lore fragment or a Bookshop tie-in).
+- [x] **B2. Journathan.** (round 013, closed 2026-11-05) Journathan and *The Journey* in Marginalia's sheet and
+  passages. More fragments belong to A9.
 - [ ] **B3. Infohazards.** Infohazard flavour in the Rift and Fountain content (LORE.md).
 
 ### C. prototype.md Phase 4: Polish & Audio
@@ -90,6 +93,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - Round 009: check the Market Entrance tutorial in the Simulator (companion card, first screen at the top, later
   turns scroll), review Portia's content and reference URLs, and decide whether Portia may model "come ti chiami"
   before the ask-back objective ([open items](../rounds/009/findings.md#open-items)).
+- Round 013: review Marginalia's content, both passages of *The Journey* and the Journathan lore she states
+  ([open items](../rounds/013/findings.md#open-items)).
 - Round 012: review the no-menu narration rule and the choice to keep Portia's "Come ti chiami?"
   ([open items](../rounds/012/findings.md#open-items)).
 - Round 011: review Flick's content and reference URLs, and the dropped Spanish `detente` / `recto` (no Spanish
@@ -119,7 +124,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   intended, 0/60 feedback leaks.
 - 2026-11-05, iteration 3: round 012 (E3) built and closed: narration rule against answer menus, Gerald's golden
   prompts regenerated (r012); server 88/88, mobile 20/20, client 12/12; live 6/6 resolved, menus 0/4 (4/4 before).
-  Iteration 3 ends here (rounds 011–012).
+- 2026-11-05, iteration 3: round 013 (A6, B2) built and closed: Marginalia the Bookworm at The Old Bookshop with
+  passages of *The Journey*; greeting fix by Amendment; server 90/90, mobile 20/20, client 12/12; live 6/6 resolved,
+  30/30 verdicts as intended. Iteration 3 ends here (rounds 011–013).
 
 ## Handoff notes and traps
 
@@ -147,6 +154,13 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   a correction row because Recorded was written ahead of the clock.
 - **`git rm` stages immediately**: a later `git add <paths> && git commit` commits it too. Round 012's freeze commit
   carried a fixture removal and fails the golden test on its own. Do `git rm` after the freeze, or `git commit <paths>`.
+- **Reading passages are content** (round 013): put the passage in the objective's `intent`. A passage that must
+  open the scene has to say "in her greeting": `prompts/encounter/greeting.txt` asks for a concise greeting and wins
+  otherwise. Changing that template would change Gerald's pinned prompts.
+- **`accent_insensitive` is ignored**: `matchCanonicalVocabulary` always folds accents. Do not author a word whose
+  folded form is a different word (es `años` → `anos`).
+- The grader rejects "third-person attribution" (`grading.txt`); comprehension objectives need an explicit
+  reading-context constraint and an accepted reported-speech example (round 013).
 - `play-market.js` walks the shortest route to `--location` (round 011, exported `route()`), and `--lines 'a|b|c'`
   replaces the scripted player lines: use it for surface-variant runs instead of editing the script table.
 - Codex critique on a content-only encounter takes ~9 minutes and checks English collisions with web search; run it

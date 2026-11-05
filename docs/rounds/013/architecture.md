@@ -113,3 +113,12 @@ the three live runs.
 
 **Decision.** Autonomous, pending owner review: content rather than the shared template, because only this
 encounter needs a passage up front.
+
+## Outcome (2026-11-05)
+
+Built as designed, plus the Amendment. In the first three live runs Marginalia read each passage before its question
+and every line was graded as intended, but her greeting never read the first passage (3/3). With the reading moved
+into the greeting by content, the after runs read it up front 3/3 and resolved 3/3, with 15/15 lines graded as
+intended, the reported-speech answer "Ha detto «Nessuno»." included. Tests: server 90/90, mobile 20/20, web client
+12/12 and build. Journathan, *The Journey* and the Cyclops trick are now in the game (backlog B2). See
+[findings](findings.md).
