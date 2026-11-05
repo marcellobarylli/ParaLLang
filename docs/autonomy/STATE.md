@@ -7,8 +7,8 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **D5** (grader feedback dictates the answer), then **A3** (Market Entrance tutorial, the first real
-  second encounter, content only).
+- Nothing. Next: **A3** (Market Entrance tutorial, the first real second encounter, content only; see the
+  "Adding an encounter" note below).
 
 ## Backlog
 
@@ -54,9 +54,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
 - [ ] **D1.** `verify:cli` for `claude-cli` in Italian and for either provider in Spanish (round 003 item 3).
-- [ ] **D2.** Grader caps echoed phrases at quality 2 (round 003 item 4): measure, then decide on the prompt.
+- [x] **D2.** Grader caps echoed phrases at quality 2 (round 003 item 4): explained by rounds 007–008 (the echoes
+  were prompted; unprompted, the same answer scores 5).
 - [ ] **D3.** Show vocabulary notes; the Spellbook meaning leak from round 001 (round 003 item 5).
-- [ ] **D5. Grader feedback dictates the answer** (round 007 findings): after a partial order, `overall_feedback`
+- [x] **D5. Grader feedback dictates the answer** (round 008, closed 2026-11-05) (round 007 findings): after a partial order, `overall_feedback`
   (shown in the app's Assessment panel) said "Add “senza latte” to specify no milk." in 2/3 runs (1/3 baseline).
   Add a rule to `prompts/language/grading.txt` (feedback may name what is missing in English, never the
   target-language answer to an open objective); re-run `verify:cli` (verdicts must stay 9/9) and `play-market.js`
@@ -83,6 +84,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   client 12/12; Gerald's prompts byte-identical (golden test); live playthrough resolved.
 - 2026-11-05, iteration 1: round 007 (B1) built and closed: style guide in the prompt, no-dictation rule; live 3+3
   runs: dictation 3/3 → 0/3, echo quality 2 → 5. Grader feedback dictation found (D5).
+- 2026-11-05, iteration 1: round 008 (D5) built and closed: grading-prompt feedback rule; verify:cli 9/9; 0/29
+  feedback strings leak (3/7 and 3/6 before). Iteration 1 ends here (four rounds, 005–008).
 
 ## Handoff notes and traps
 

@@ -21,11 +21,19 @@ The entry point for agents: the current state, how the project is logged, and th
   Coffee Cart has an encounter so far ([round 005](docs/rounds/005/architecture.md)). New encounters are content
   only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
-- **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and NPCs no longer dictate
-  answers ([round 007](docs/rounds/007/architecture.md)).
+- **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and neither NPCs nor the
+  grader's feedback give the answer away ([round 007](docs/rounds/007/architecture.md),
+  [round 008](docs/rounds/008/architecture.md)).
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 008, grader feedback (autonomous)
+
+One rule in the grading prompt: feedback is shown to the learner, so it must never contain the target-language
+answer to an objective not yet passed. Codex critique 1: 7 of 9 findings accepted autonomously. Live codex-cli in
+Italian: `verify:cli` 9/9, three playthroughs with unchanged verdicts, and 0 of 29 feedback strings leaked an answer
+(3/7 and 3/6 before). See [findings](docs/rounds/008/findings.md).
 
 ## Addendum 2026-11-05: round 007, tone layer and no dictated answers (autonomous)
 
@@ -102,7 +110,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
-| 008 | 11-05 | Grader feedback stops giving the answer away (autonomous) | [008](docs/rounds/008/architecture.md) | pending | pre-run record |
+| 008 | 11-05 | Grader feedback stops giving the answer away (autonomous) | [008](docs/rounds/008/architecture.md) | [findings](docs/rounds/008/findings.md) | `e525608` (pre-run record) to round 008 close |
 | 007 | 11-05 | Tone layer: style guide in the narration prompt (Pratchett × meme culture), no dictated answers (autonomous) | [007](docs/rounds/007/architecture.md) | [findings](docs/rounds/007/findings.md) | `d9b0861` (pre-run record) to round 007 close |
 | 006 | 11-05 | Multi-encounter engine: encounters per location from pack content, location-checked start, names from content (autonomous) | [006](docs/rounds/006/architecture.md) | [findings](docs/rounds/006/findings.md) | `e01baf1` (pre-run record) to round 006 close |
 | 005 | 11-05 | The Crumbling Market map: six locations, paths, fog of war, saved position; Gerald entered from The Coffee Cart (autonomous) | [005](docs/rounds/005/architecture.md) | [findings](docs/rounds/005/findings.md) | `1a21bdb` (pre-run record) to round 005 close |

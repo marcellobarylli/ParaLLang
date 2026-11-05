@@ -85,3 +85,9 @@ Net change from plan v1: +1 small report change in `verify-cli.js`, +1 verdict g
    favore." `[true, false]` and "Senza latte, per favore." `[true]` and resolves; **0 leaking strings** in all
    after-run feedback. Counts reported either way.
 3. `git diff --check`; `python3 tools/round_log_check.py 008`.
+
+## Outcome (2026-11-05)
+
+Built as designed with critique findings 1–7. All suites pass. Live codex-cli in Italian: `verify:cli` 9/9 and
+resolved; 3/3 playthroughs with the expected verdicts; 0 of 29 feedback strings leak an answer (baseline 3/7 and
+3/6). See [findings](findings.md).
