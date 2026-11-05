@@ -7,9 +7,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **E3** (narration rule against listing an open objective's answers; now seen with Mortimer 3/3 and
-  Flick 1/4), then **A6** (The Old Bookshop, content only; see the "Adding an encounter" note below; it ties in B2,
-  Journathan).
+- Nothing. Next: **A6** (The Old Bookshop, content only; see the "Adding an encounter" note below), combined with
+  **B2** (Journathan / *The Journey* as the Bookshop's lore), or **E1** (opening-line share; Portia 0.05–0.22 and
+  Gerald 0.13 against 0.20–0.25 again in round 012) if a smaller round fits.
 
 ## Backlog
 
@@ -73,10 +73,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **E1. Opening-line language share.** Round 009: first NPC lines carry 0.05–0.24 target language against
   0.20 requested (Gerald 0.19 vs 0.25). Measure over a few runs per encounter, then adjust the greeting template or
   language rules; keep the golden-prompt test in step (regenerate on purpose).
-- [ ] **E3. NPCs list the answers.** Round 010: after a wrong request Mortimer offers the passing meats ("Vuoi salame,
-  salsiccia o pollo?") in 3/3 runs; Portia asks "Come ti chiami?" before the ask-back objective (round 009, 3/4).
-  The style rule allows target words in the NPC's own questions. Decide (pending owner review) whether to add
-  "never list or model the answers to an open objective", then A/B with `play-market.js` as in round 007.
+- [x] **E3. NPCs list the answers.** (round 012, closed 2026-11-05) Style rule against menus of an open objective's
+  targets; menus 4/4 → 0/4 runs. Portia's "Come ti chiami?" left allowed (pending owner review).
 - [ ] **E2. Author the greetings Portia uses unprompted** (piacere, benvenuto; mucho gusto, bienvenido) so they get
   chips and Spellbook cards.
 
@@ -92,6 +90,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - Round 009: check the Market Entrance tutorial in the Simulator (companion card, first screen at the top, later
   turns scroll), review Portia's content and reference URLs, and decide whether Portia may model "come ti chiami"
   before the ask-back objective ([open items](../rounds/009/findings.md#open-items)).
+- Round 012: review the no-menu narration rule and the choice to keep Portia's "Come ti chiami?"
+  ([open items](../rounds/012/findings.md#open-items)).
 - Round 011: review Flick's content and reference URLs, and the dropped Spanish `detente` / `recto` (no Spanish
   "straight on") ([open items](../rounds/011/findings.md#open-items)).
 - Round 010: review Mortimer's content and reference URLs, the dropped Italian `due` entry, and whether NPCs may
@@ -117,6 +117,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-05, iteration 3: round 011 (A5) built and closed: Flick the Letharger at The Cracked Fountain; server
   88/88, mobile 20/20, client 12/12; live 4/4 resolved (it ×3 incl. a variant run, es ×1), 24/24 verdicts as
   intended, 0/60 feedback leaks.
+- 2026-11-05, iteration 3: round 012 (E3) built and closed: narration rule against answer menus, Gerald's golden
+  prompts regenerated (r012); server 88/88, mobile 20/20, client 12/12; live 6/6 resolved, menus 0/4 (4/4 before).
+  Iteration 3 ends here (rounds 011–012).
 
 ## Handoff notes and traps
 
@@ -140,6 +143,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (e.g. reviewing all words in the Rift, A7), target an entry of each file from an objective.
 - **Spellbook `contentVersion`** (the aggregate) changes whenever a vocabulary file is added; cards use the per-file
   `entryVersion(id)`. Tests must not compare a card's version with `content.vocabulary.version`.
+- **Journal times: run `date -u` when writing a row**, never type an expected time. Rounds 011 and 012 each needed
+  a correction row because Recorded was written ahead of the clock.
+- **`git rm` stages immediately**: a later `git add <paths> && git commit` commits it too. Round 012's freeze commit
+  carried a fixture removal and fails the golden test on its own. Do `git rm` after the freeze, or `git commit <paths>`.
 - `play-market.js` walks the shortest route to `--location` (round 011, exported `route()`), and `--lines 'a|b|c'`
   replaces the scripted player lines: use it for surface-variant runs instead of editing the script table.
 - Codex critique on a content-only encounter takes ~9 minutes and checks English collisions with web search; run it
@@ -156,7 +163,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Gerald's objectives; new encounters need their own test grader (see `TwoEncounterProvider`).
 - `/api/encounter/start` without `encounterId` starts the pack's `default_encounter` anywhere (web client); with one,
   the player must be at its location (409 `NOT_HERE`). One active session per learner.
-- Gerald's rendered narration prompts are pinned by `server/test/fixtures/gerald-prompts-r007.json` (test in
+- Gerald's rendered narration prompts are pinned by `server/test/fixtures/gerald-prompts-r012.json` (test in
   `server/test/encounters.test.js`). A round that changes the narration prompt on purpose regenerates it (the
   generator is ~20 lines: `buildNarrationMessages` for `it`/`es`, greeting and one turn; see the test's arguments) and
   says so in its record.

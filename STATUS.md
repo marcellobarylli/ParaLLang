@@ -25,10 +25,21 @@ The entry point for agents: the current state, how the project is logged, and th
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
 - **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and neither NPCs nor the
   grader's feedback give the answer away ([round 007](docs/rounds/007/architecture.md),
-  [round 008](docs/rounds/008/architecture.md)).
+  [round 008](docs/rounds/008/architecture.md)), nor offer the answers as a menu to pick from
+  ([round 012](docs/rounds/012/architecture.md)).
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 012, no menus of the answers (autonomous)
+
+A narration style rule now forbids NPCs offering an open objective's target words as options ("Vuoi salame,
+salsiccia o pollo?"), which turned recall into recognition. Gerald's pinned prompts were regenerated on purpose
+(`gerald-prompts-r012.json`). Codex critique 1 (one Cut, rejected) decided autonomously. Tests: server 88/88, mobile
+20/20, web client 12/12 and build. Live codex-cli: 6/6 runs resolved with unchanged verdicts; menus 0/4 runs after
+against 4/4 before; no dictation. Portia may still model "Come ti chiami?" (pending owner review). The freeze commit
+alone fails the golden test (a staged fixture removal; fixed in the next commit). See
+[findings](docs/rounds/012/findings.md).
 
 ## Addendum 2026-11-05: round 011, The Cracked Fountain (autonomous)
 
@@ -143,6 +154,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 012 | 11-05 | No menus of the answers: narration rule against listing an open objective's targets; Gerald's golden prompts regenerated (autonomous) | [012](docs/rounds/012/architecture.md) | [findings](docs/rounds/012/findings.md) | `9e87913` (pre-run record) to round 012 close |
 | 011 | 11-05 | The Cracked Fountain: Flick the Letharger (commands, directions, now not later); play-market route and `--lines` (autonomous) | [011](docs/rounds/011/architecture.md) | [findings](docs/rounds/011/findings.md) | `f078d3e` (pre-run record) to round 011 close |
 | 010 | 11-05 | The Butcher's Stall: Mortimer the Charcutier (meats, quantities); grading rubric shows surface forms (autonomous) | [010](docs/rounds/010/architecture.md) | [findings](docs/rounds/010/findings.md) | `a90ff32` (pre-run record) to round 010 close |
 | 009 | 11-05 | Market Entrance tutorial: Portia the Archway (greetings, pronouns), companion briefing, per-encounter narration matching (autonomous) | [009](docs/rounds/009/architecture.md) | [findings](docs/rounds/009/findings.md) | `a59f548` (pre-run record) to round 009 close |

@@ -68,3 +68,12 @@ Net change from plan v1: none.
    Portia's question noted). Every NPC line is read and classified: a menu of an open objective's targets yes/no,
    dictation yes/no. Success: no menus in the after butcher and fountain runs, and every run resolves with the
    same scripted verdicts.
+
+## Outcome (2026-11-05)
+
+Built as designed. Live codex-cli, six runs: every run resolved with the scripted verdicts of rounds 009–011, and no
+NPC offered a menu of an open objective's targets in the four butcher and fountain runs (baseline 4/4 at the same
+prompt without the rule). After the ham request Mortimer now asks an open question ("Che cosa desidera?", "¿Qué
+carne quieres?"). Gerald and Portia played as before, without dictation. Tests: server 88/88, mobile 20/20, web
+client 12/12 and build. Process slip: the freeze commit also carried the staged removal of the r007 fixture, so the
+golden test fails at that one commit (journal row 9). See [findings](findings.md).
