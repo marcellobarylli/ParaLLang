@@ -105,3 +105,10 @@ The pre-run Second opinion table numbers critique 1's findings 2.1–2.7 by mist
 | 1.5 | Risk | Near-forms of the coffee break's targets (row 2.5) | + | Accept in part | **Accepted in part** (autonomous, pending owner review) | Design 5 |
 | 1.6 | Suggestion | Pack equality should cover N (row 2.6) | + | Accept | **Accepted** (autonomous, pending owner review) | Design 1 |
 | 1.7 | Suggestion | Resolving turn, replay, hidden on the 4th (row 2.7) | + | Accept | **Accepted** (autonomous, pending owner review) | Tests |
+
+## Outcome (2026-11-05)
+
+Built as designed, with Amendment 1 (rows renumbered). Gerald's "The word for it" is filed on his third resolved
+coffee break, matched as on the Party screen, and noted on that resolution only. It contains no pack vocabulary
+form and no stem of the coffee break's answers. Server 156/156, mobile 68/68, web client 12/12 and build,
+expo-doctor 20/20, iOS export ok. See [findings](findings.md).

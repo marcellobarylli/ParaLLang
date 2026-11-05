@@ -65,6 +65,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **A9. Lore fragments.** (round 030, closed 2026-11-05) Three fragments of *The Journey* per pack in the
   Spellbook, found on completion; translation behind a toggle, withheld during encounters. More fragments (Gerald's
   Dead Branch coffee) wait for relationship tiers.
+- [x] **A12. Relationship unlocks, first.** (round 032, closed 2026-11-05) Gerald's Dead Branch fragment after three
+  coffee breaks (`after_conversations`). Open: unlocks for Mortimer, Flick, Marginalia; tiers that change the
+  conversation; a Party-screen hint (owner question).
 - [ ] **A10. LLM-enhanced location atmosphere** (optional; static YAML descriptions first).
 - [x] **A11. Save slots.** (round 031, closed 2026-11-05) Up to three learners per device, Saves screen from the
   map; delete and rename deferred (owner question).
@@ -138,6 +141,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- Round 032: review Gerald's Dead Branch fragment (it, es) and the threshold of three coffee breaks; check the "from
+  Gerald" note in the Simulator ([open items](../rounds/032/findings.md#open-items)).
 
 - Round 031: check the Saves button and screen in the Simulator; decide on deleting / renaming saves and whether a
   new save shows the statement again ([open items](../rounds/031/findings.md#open-items)).
