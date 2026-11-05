@@ -1,0 +1,722 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "party": true,
+  "conversationId": "marginalia_folded_page",
+  "tierCount": 3,
+  "recruited": true,
+  "resolved": true,
+  "completedOnMap": true,
+  "conversationOffMap": true,
+  "conversations": 4,
+  "generationCalls": 20,
+  "home": {
+    "location": "old_bookshop",
+    "sceneLocation": "old_bookshop",
+    "encounterId": "old_bookshop_bookworm",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": true,
+    "generationCalls": 11,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.35,
+        "native": "Hola, soy Marginalia. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. I sell books only to readers who understand them. No spoilers; I have eaten those pages. The book is called The Journey. Possibly named after him. Scholarship remains divided, mostly because I ate the evidence. ¿Adónde va Journathan?",
+        "translation": "Hello, I’m Marginalia. This is the story of Journathan, the man of many tongues. His journey home lasts twenty years. I sell books only to readers who understand them. No spoilers; I have eaten those pages. The book is called The Journey. Possibly named after him. Scholarship remains divided, mostly because I ate the evidence. Where is Journathan going?",
+        "narrative": "At The Old Bookshop, a bookworm emerges from a chewed spine. She annotates your arrival with a small, doubtful tick.",
+        "share": {
+          "tokens": 59,
+          "notInTranslation": 0.36,
+          "folded": 0.36,
+          "translationShort": false,
+          "canonical": 0.07
+        },
+        "durationMs": 14568
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.39999999999999997,
+        "native": "Un libro, sí, pero esa no es la respuesta. That names an object, not his destination. Reading comprehension: pending. Lee otra vez. ¿Adónde va Journathan?",
+        "translation": "A book, yes, but that is not the answer. That names an object, not his destination. Reading comprehension: pending. Read again. Where is Journathan going?",
+        "narrative": "Marginalia makes a small annotation beside your elbow. It does not appear to be a recommendation.",
+        "share": {
+          "tokens": 25,
+          "notInTranslation": 0.56,
+          "folded": 0.56,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 6050
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.44999999999999996,
+        "native": "Entiendes el destino, pero tu respuesta está en inglés. Necesito una respuesta en español. ¿Adónde va Journathan? Reading comprehension: promising; language compliance: pending. I sell books, not exemptions. Even the footnotes have standards.",
+        "translation": "You understand the destination, but your answer is in English. I need an answer in Spanish. Where is Journathan going? Reading comprehension: promising; language compliance: pending. I sell books, not exemptions. Even the footnotes have standards.",
+        "narrative": "Marginalia pencils a small correction in the air beside you. Apparently, you have margins.",
+        "share": {
+          "tokens": 33,
+          "notInTranslation": 0.48,
+          "folded": 0.48,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 9760
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.5,
+        "native": "Correcto: va a casa. Reading comprehension: approved. Your sleeve now has academic value. Escucha este pasaje: El Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.» The first recorded translation trick, according to a footnote I have not eaten. Yet. ¿Qué nombre le da Journathan al Cíclope?",
+        "translation": " ",
+        "narrative": "Marginalia marks your answer correct in the margin of your sleeve, then opens a book with suspiciously few margins remaining.",
+        "share": {
+          "tokens": 49,
+          "notInTranslation": 1,
+          "folded": null,
+          "translationShort": true,
+          "canonical": 0.1
+        },
+        "durationMs": 8864
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.55,
+        "native": "Journathan es su nombre real, pero no es el nombre que da al Cíclope. Reading comprehension: pending. His actual name is not the trick; that would make this a very short book. ¿Qué nombre usa en el pasaje?",
+        "translation": "Journathan is his real name, but it is not the name he gives the Cyclops. Reading comprehension: pending. His actual name is not the trick; that would make this a very short book. What name does he use in the passage?",
+        "narrative": "Marginalia pencils a small correction in the margin of your shadow. There is evidently room for improvement.",
+        "share": {
+          "tokens": 38,
+          "notInTranslation": 0.47,
+          "folded": 0.47,
+          "translationShort": false,
+          "canonical": 0.08
+        },
+        "durationMs": 9534
+      },
+      {
+        "turn": 5,
+        "requestedRatio": 0.6,
+        "native": "¡Correcto! Usa el nombre Nadie. Entiendes el pasaje; el libro es tuyo. Journathan quiere volver a casa, pero primero necesita un buen nombre falso. Reading comprehension: approved. No spoilers; the remaining pages are load-bearing.",
+        "translation": "Correct! He uses the name Nobody. You understand the passage; the book is yours. Journathan wants to return home, but first he needs a good false name. Reading comprehension: approved. No spoilers; the remaining pages are load-bearing.",
+        "narrative": "Marginalia slides the book across the counter and annotates your receipt: ‘Has read something.’ In this shop, that constitutes an honours degree.",
+        "share": {
+          "tokens": 35,
+          "notInTranslation": 0.63,
+          "folded": 0.63,
+          "translationShort": false,
+          "canonical": 0.11
+        },
+        "durationMs": 9007
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 4629,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "home",
+              "passed": false,
+              "feedback": "Your answer means “a book.” Answer in Spanish where Journathan is going.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "name",
+              "passed": false,
+              "feedback": "Give the Spanish name Journathan told the Cyclops.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your answer does not give the destination or the name requested."
+        }
+      },
+      {
+        "durationMs": 5006,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "home",
+              "passed": false,
+              "feedback": "You identified the destination correctly, but you must answer in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "name",
+              "passed": false,
+              "feedback": "Give in Spanish the name Journathan told the Cyclops.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Answer in Spanish rather than English."
+        }
+      },
+      {
+        "durationMs": 8453,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "home",
+              "passed": true,
+              "feedback": "Correct—you answered his destination in Spanish after earlier difficulty.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "casa",
+                  "evidence": "¡A casa!",
+                  "quality": 3
+                }
+              ]
+            },
+            {
+              "objective_id": "name",
+              "passed": false,
+              "feedback": "You still need to give, in Spanish, the name Journathan told the Cyclops.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "You correctly identified his destination. The name he gave the Cyclops is still missing."
+        }
+      },
+      {
+        "durationMs": 4323,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "name",
+              "passed": false,
+              "feedback": "That is his real name. Answer in Spanish with the name he gave the Cyclops in the passage.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Identify the name he used with the Cyclops, not his real name."
+        }
+      },
+      {
+        "durationMs": 4359,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "name",
+              "passed": true,
+              "feedback": "Correct—you identified the name he gave the Cyclops.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "nadie",
+                  "evidence": "Nadie",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct Spanish answer and reading comprehension."
+        }
+      }
+    ]
+  },
+  "conversation": {
+    "location": "market_entrance",
+    "sceneLocation": "market_entrance",
+    "encounterId": "marginalia_folded_page",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": false,
+    "generationCalls": 9,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.35,
+        "native": "Hola, ¿quién está ahí? Familiar footsteps. Promising. No spoilers, please.",
+        "translation": "Hello, who is there? Familiar footsteps. Promising. No spoilers, please.",
+        "narrative": "At the Market Entrance, Marginalia rests with her eyes closed and The Journey shut on her finger, like an old dog guarding a familiar door. A bookmark would have lacked commitment.",
+        "share": {
+          "tokens": 10,
+          "notInTranslation": 0.4,
+          "folded": 0.4,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 9872
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.39999999999999997,
+        "native": "Te oigo, te oigo. Pero ¿quién está ahí? Your English arrived safely. This reading requires Spanish. Partial credit for presence.",
+        "translation": "I hear you, I hear you. But who is there? Your English arrived safely. This reading requires Spanish. Partial credit for presence.",
+        "narrative": "Marginalia keeps her eyes closed and her finger between the pages. The book has accepted this arrangement under protest.",
+        "share": {
+          "tokens": 20,
+          "notInTranslation": 0.4,
+          "folded": 0.4,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 9467
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.44999999999999996,
+        "native": "There you are. Full marks for presence. I have waited a very long time, among these pages, for someone to read with. Even my footnotes have stopped expecting visitors.",
+        "translation": "There you are. Full marks for presence. I have waited a very long time, among these pages, for someone to read with. Even my footnotes have stopped expecting visitors.",
+        "narrative": "Marginalia opens her eyes. She places a bookmark with the care usually reserved for stopping a century.",
+        "share": {
+          "tokens": 29,
+          "notInTranslation": 0,
+          "folded": 0,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 7582
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.5,
+        "native": "Eso significa que no tengo compañía. Your sentence confirms the problem. Pero tú estás aquí, entre mis libros. Reading comprehension: pending. Please reconsider that interpretation.",
+        "translation": "That means I have no company. Your sentence confirms the problem. But you are here, among my books. Reading comprehension: pending. Please reconsider that interpretation.",
+        "narrative": "Marginalia pencils a small question mark beside you. The pencil has clearly done this before.",
+        "share": {
+          "tokens": 25,
+          "notInTranslation": 0.48,
+          "folded": 0.48,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 14770
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.55,
+        "native": "Sí, no estoy sola. Tú estás aquí, y ahora podemos leer juntos. Reading comprehension: full marks. I shall refrain from annotating you. For now.",
+        "translation": "Yes, I’m not alone. You’re here, and now we can read together. Reading comprehension: full marks. I shall refrain from annotating you. For now.",
+        "narrative": "Marginalia lowers her pencil. For once, she leaves a perfectly good margin empty.",
+        "share": {
+          "tokens": 24,
+          "notInTranslation": 0.5,
+          "folded": 0.5,
+          "translationShort": false,
+          "canonical": 0.04
+        },
+        "durationMs": 9910
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 5018,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "here_i_am",
+              "passed": false,
+              "feedback": "Your meaning is right, but you need to say it in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "not_alone",
+              "passed": false,
+              "feedback": "Tell Marginalia in Spanish that she is not alone, using the feminine form.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Use Spanish to say that you are here and that Marginalia is not alone."
+        }
+      },
+      {
+        "durationMs": 7011,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "here_i_am",
+              "passed": true,
+              "feedback": "You correctly tell Marginalia that you are here in Spanish.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "aqui_estoy",
+                  "evidence": "Aqui estoy",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "not_alone",
+              "passed": false,
+              "feedback": "You still need to tell Marginalia in Spanish that she is not alone, using the feminine form.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your greeting succeeds. Now reassure Marginalia in Spanish that she is not alone."
+        }
+      },
+      {
+        "durationMs": 4418,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "not_alone",
+              "passed": false,
+              "feedback": "Your sentence says Marginalia is alone. You need to tell her that she is not alone.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Negate your statement to reassure Marginalia that she is not alone."
+        }
+      },
+      {
+        "durationMs": 4567,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "not_alone",
+              "passed": true,
+              "feedback": "You correctly tell Marginalia that she is not alone, using the feminine form.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "sola",
+                  "evidence": "No estás sola, Marginalia.",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct! Your Spanish clearly expresses the intended reassurance."
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to old_bookshop",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "start Marginalia",
+      "ok": true
+    },
+    {
+      "name": "say \"Un libro.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your answer does not give the destination or the name requested."
+    },
+    {
+      "name": "say \"Home.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Answer in Spanish rather than English."
+    },
+    {
+      "name": "say \"¡A casa!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "casa",
+              "evidence": "¡A casa!",
+              "quality": 3,
+              "effectiveQuality": 3
+            }
+          ]
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "You correctly identified his destination. The name he gave the Cyclops is still missing."
+    },
+    {
+      "name": "say \"Journathan.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Identify the name he used with the Cyclops, not his real name."
+    },
+    {
+      "name": "say \"¡Nadie!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "nadie",
+              "evidence": "Nadie",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct Spanish answer and reading comprehension."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ],
+      "locationEncounter": {
+        "id": "old_bookshop_bookworm",
+        "completed": true,
+        "characterName": "Marginalia",
+        "characterId": "bookworm_marginalia_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "recruit old_bookshop_bookworm",
+      "ok": true,
+      "party": [
+        {
+          "characterId": "bookworm_marginalia_001",
+          "name": "Marginalia",
+          "encounterId": "old_bookshop_bookworm",
+          "locationId": "old_bookshop",
+          "locationName": "The Old Bookshop",
+          "joinedAt": "2026-11-05T21:47:41.584Z",
+          "conversations": 0,
+          "conversationId": "marginalia_fragment",
+          "conversationTier": 0,
+          "nextStoryAt": 3,
+          "storiesTold": 0
+        }
+      ],
+      "joined": true
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "move to market_entrance",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:current",
+        "old_bookshop:visited",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "start Marginalia",
+      "ok": true
+    },
+    {
+      "name": "say \"Here I am!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "here_i_am",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "not_alone",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Use Spanish to say that you are here and that Marginalia is not alone."
+    },
+    {
+      "name": "say \"¡Aqui estoy, Marginalia!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "here_i_am",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "aqui_estoy",
+              "evidence": "Aqui estoy",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "not_alone",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your greeting succeeds. Now reassure Marginalia in Spanish that she is not alone."
+    },
+    {
+      "name": "say \"Estás sola.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "not_alone",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Negate your statement to reassure Marginalia that she is not alone."
+    },
+    {
+      "name": "say \"No estás sola, Marginalia.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "not_alone",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "sola",
+              "evidence": "No estás sola, Marginalia.",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! Your Spanish clearly expresses the intended reassurance."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:current",
+        "old_bookshop:visited",
+        "the_rift:known"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": false,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    }
+  ]
+}

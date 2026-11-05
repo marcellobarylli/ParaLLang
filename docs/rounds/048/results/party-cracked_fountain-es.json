@@ -1,0 +1,783 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "party": true,
+  "conversationId": "flick_lotus",
+  "tierCount": 3,
+  "recruited": true,
+  "resolved": true,
+  "completedOnMap": true,
+  "conversationOffMap": true,
+  "conversations": 4,
+  "generationCalls": 22,
+  "home": {
+    "location": "cracked_fountain",
+    "sceneLocation": "cracked_fountain",
+    "encounterId": "cracked_fountain_letharger",
+    "companionBriefing": [
+      "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high.",
+      "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations.",
+      "Containment procedure: do not hum along."
+    ],
+    "resolved": true,
+    "completedOnMap": true,
+    "generationCalls": 13,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "¡Hola! ¿Qué pasa? Riddle me—oh, a ripple. Just one more look. Your attention span? Needs confetti. ¡Después, después, mañana!",
+        "translation": "Hello! What's up? Riddle me—oh, a ripple. Just one more look. Your attention span? Needs confetti. Later, later, tomorrow!",
+        "narrative": "The Cracked Fountain drips with the confidence of infrastructure beyond complaint. Flick darts at the edge of your vision. A tiny firecracker pops; it has apparently been appointed your guide.",
+        "share": {
+          "tokens": 20,
+          "notInTranslation": 0.3,
+          "folded": 0.3,
+          "translationShort": false,
+          "canonical": 0.15
+        },
+        "durationMs": 9345
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "¡Miro, miro! But looking isn't stopping. ¿Qué quieres? A riddle: what moves constantly and—ooh, your shoe. ¡Después, después, mañana!",
+        "translation": "I'm looking, I'm looking! But looking isn't stopping. What do you want? A riddle: what moves constantly and—ooh, your shoe. Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops beside your shoe. Flick remains in the corner of your vision, where accountability has poor reception.",
+        "share": {
+          "tokens": 20,
+          "notInTranslation": 0.35,
+          "folded": 0.35,
+          "translationShort": false,
+          "canonical": 0.15
+        },
+        "durationMs": 7652
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "¡Vale, estoy quieto! Movement privileges revoked. ¿Por dónde voy? Riddle me—wait, you navigate; I'll supervise. ¡Después, después, mañana!",
+        "translation": "All right, I'm still! Movement privileges revoked. Which way do I go? Riddle me—wait, you navigate; I'll supervise. Later, later, tomorrow!",
+        "narrative": "Flick stops at the edge of your vision. A tiny firecracker continues on its own, apparently exempt from instructions.",
+        "share": {
+          "tokens": 19,
+          "notInTranslation": 0.47,
+          "folded": 0.47,
+          "translationShort": false,
+          "canonical": 0.21
+        },
+        "durationMs": 6544
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.45,
+        "native": "“Left” is English; navigation is still buffering. ¿Por dónde voy? En español, por favor. Riddle me—oh, una sombra. ¿Adónde va? ¡Después, después, mañana!",
+        "translation": "“Left” is English; navigation is still buffering. Which way do I go? In Spanish, please. Riddle me—oh, a shadow. Where is it going? Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops beside your shoe. Flick appears at the edge of your vision, having misplaced both the route and the responsibility.",
+        "share": {
+          "tokens": 24,
+          "notInTranslation": 0.58,
+          "folded": 0.58,
+          "translationShort": false,
+          "canonical": 0.13
+        },
+        "durationMs": 11549
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.5,
+        "native": "¡A la izquierda, sí! ¿Cuándo vamos? Just five more minutes. Riddle me—what waits forever and—¡Después, después, mañana!",
+        "translation": "To the left, yes! When are we going? Just five more minutes. Riddle me—what waits forever and—Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops to your left. Flick has accepted your directions without accepting any obligation to follow them yet.",
+        "share": {
+          "tokens": 19,
+          "notInTranslation": 0.47,
+          "folded": 0.47,
+          "translationShort": false,
+          "canonical": 0.21
+        },
+        "durationMs": 8924
+      },
+      {
+        "turn": 5,
+        "requestedRatio": 0.55,
+        "native": "¡Mañana, sí! Eso es esperar. You picked postponement—my whole business model. ¿Cuándo quieres ir? Riddle me—actually, five more minutes. ¡Después, después, mañana!",
+        "translation": "Tomorrow, yes! That means waiting. You picked postponement—my whole business model. When do you want to go? Riddle me—actually, five more minutes. Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops beside your shoe. Flick remains in the corner of your vision, where accountability cannot reach.",
+        "share": {
+          "tokens": 24,
+          "notInTranslation": 0.46,
+          "folded": 0.46,
+          "translationShort": false,
+          "canonical": 0.17
+        },
+        "durationMs": 10511
+      },
+      {
+        "turn": 6,
+        "requestedRatio": 0.6000000000000001,
+        "native": "¡Ahora, sí! ¡Está bien, vamos! No quiero, pero vamos. You win. Riddle me—where’s my five-minute extension? ¡Después, después, mañana!",
+        "translation": "Now, yes! All right, let's go! I don't want to, but let's go. You win. Riddle me—where’s my five-minute extension? Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops at your left. Flick is already at your right, appalled that a deadline has become a time.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.55,
+          "folded": 0.55,
+          "translationShort": false,
+          "canonical": 0.18
+        },
+        "durationMs": 5968
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 5623,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "stop",
+              "passed": false,
+              "feedback": "Your command means “look,” not “stop.” Tell Flick to stop or keep still in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "Give Flick a direction—left or right—in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "Insist on doing it now in Spanish rather than putting it off.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "You gave a Spanish command to look. You still need to command Flick to stop, give a direction, and insist on now."
+        }
+      },
+      {
+        "durationMs": 6561,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "stop",
+              "passed": true,
+              "feedback": "You correctly commanded Flick to keep still.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "quieto",
+                  "evidence": "Quieto",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "Tell Flick to go left or right in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "Insist on doing it now in Spanish rather than putting it off.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your stop command is correct. Add a direction and insist on acting now, both in Spanish."
+        }
+      },
+      {
+        "durationMs": 4727,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "Give Flick a direction—left or right—in Spanish, not English.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "Insist on doing it now in Spanish rather than putting it off.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your direction is in English. Give a Spanish direction and insist in Spanish on acting now."
+        }
+      },
+      {
+        "durationMs": 5372,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "direction",
+              "passed": true,
+              "feedback": "You clearly gave Flick a direction in Spanish.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "izquierda",
+                  "evidence": "¡A la izquierda!",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "You still need to insist on doing it now in Spanish rather than putting it off.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Direction complete. Now insist on acting immediately in Spanish."
+        }
+      },
+      {
+        "durationMs": 4135,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "You agreed to tomorrow. Refuse the delay and insist on doing it now in Spanish.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Insist on going now rather than agreeing to postpone."
+        }
+      },
+      {
+        "durationMs": 5133,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "now",
+              "passed": true,
+              "feedback": "You clearly refuse to postpone and insist on going now.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "ahora",
+                  "evidence": "¡No, ahora!",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct—you insist on acting now rather than waiting."
+        }
+      }
+    ]
+  },
+  "conversation": {
+    "location": "market_entrance",
+    "sceneLocation": "market_entrance",
+    "encounterId": "flick_lotus",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": false,
+    "generationCalls": 9,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "Hola, otra vez. Cinco minutos más, old friend. Remember those sailors who ate a flower and forgot the way home? Tengo miedo de olvidar también. What walks home on—wait, one more minute. La fuente canta…",
+        "translation": "Hello again. Five more minutes, old friend. Remember those sailors who ate a flower and forgot the way home? I’m afraid of forgetting too. What walks home on—wait, one more minute. The fountain sings…",
+        "narrative": "At the Market Entrance, Flick lies half-asleep in the fountain’s dry basin, just outside your direct gaze. A tiny firecracker pops. Apparently, resting requires an audience.",
+        "share": {
+          "tokens": 36,
+          "notInTranslation": 0.39,
+          "folded": 0.39,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 9502
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "Te oigo, amigo. But English alone won’t pull me out; I need a little Spanish. Cinco minutos más. What has two feet and never—wait, tomorrow. Tengo sueño. La fuente canta…",
+        "translation": "I hear you, friend. But English alone won’t pull me out; I need a little Spanish. Five more minutes. What has two feet and never—wait, tomorrow. I’m sleepy. The fountain sings…",
+        "narrative": "One half-closed eye remains half-closed. Flick’s tiny firecracker lands in the sand with the confidence of a much larger budget. It fails to go off.",
+        "share": {
+          "tokens": 32,
+          "notInTranslation": 0.34,
+          "folded": 0.34,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 12847
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "¡Estoy despierto! Pero no puedo hacerlo. Hoy no. Tal vez mañana. What gets up but never—wait, that’s me. Your wake-up call? Ten out of ten. Tengo miedo. La fuente canta…",
+        "translation": "I’m awake! But I can’t do it. Not today. Maybe tomorrow. What gets up but never—wait, that’s me. Your wake-up call? Ten out of ten. I’m afraid. The fountain sings…",
+        "narrative": "Flick sits up at the edge of your vision. A tiny firecracker announces this unprecedented administrative achievement. It waits, looking almost ready, which is not legally the same as ready.",
+        "share": {
+          "tokens": 33,
+          "notInTranslation": 0.48,
+          "folded": 0.48,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 7891
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.45,
+        "native": "Eso no ayuda. Tengo miedo, pero sigo aquí. You’ve described the problem, bestie; I need encouragement. What lifts a Flick without—wait. Hoy no puedo. Tal vez mañana. La fuente canta…",
+        "translation": "That doesn’t help. I’m afraid, but I’m still here. You’ve described the problem, bestie; I need encouragement. What lifts a Flick without—wait. Today I can’t. Maybe tomorrow. The fountain sings…",
+        "narrative": "Flick sits upright at the edge of your vision. A tiny firecracker pops with the confidence it currently lacks. It waits; apparently even postponement sometimes needs support.",
+        "share": {
+          "tokens": 32,
+          "notInTranslation": 0.53,
+          "folded": 0.53,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 11253
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.5,
+        "native": "¡Gracias, amigo! Tengo miedo, pero puedo seguir. Encouragement: ten out of ten. What escapes without—wait, tomorrow. ¡Estoy mejor! La fuente canta…",
+        "translation": "Thank you, friend! I’m afraid, but I can keep going. Encouragement: ten out of ten. What escapes without—wait, tomorrow. I feel better! The fountain sings…",
+        "narrative": "The Fountain’s hold loosens. Flick appears in the corner of your vision, where courage apparently keeps its less organised belongings.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.55,
+          "folded": 0.55,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 11713
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 4767,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "wake_up",
+              "passed": false,
+              "feedback": "You told Flick to wake up in English. Use the Spanish imperative to tell Flick to wake up.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "courage",
+              "passed": false,
+              "feedback": "Encourage Flick using the required Spanish word for encouragement.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your meaning is clear, but you still need the Spanish wake-up command and the Spanish encouragement."
+        }
+      },
+      {
+        "durationMs": 5286,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "wake_up",
+              "passed": true,
+              "feedback": "You correctly tell Flick to wake up in Spanish.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "despierta",
+                  "evidence": "Despiertate",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "courage",
+              "passed": false,
+              "feedback": "You still need to encourage Flick using the required Spanish word for encouragement.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your wake-up command works. Now give Flick encouragement in Spanish."
+        }
+      },
+      {
+        "durationMs": 4230,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "courage",
+              "passed": false,
+              "feedback": "Your answer says Flick has no courage rather than encouraging it. Give Flick a positive encouragement using the required Spanish word.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Encourage Flick directly instead of saying it lacks courage."
+        }
+      },
+      {
+        "durationMs": 4714,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "courage",
+              "passed": true,
+              "feedback": "You correctly encouraged Flick using the required Spanish word.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "animo",
+                  "evidence": "¡Animo, Flick!",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Well done—you gave Flick encouragement!"
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"¡Mira!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "You gave a Spanish command to look. You still need to command Flick to stop, give a direction, and insist on now."
+    },
+    {
+      "name": "say \"¡Quieto!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "quieto",
+              "evidence": "Quieto",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command is correct. Add a direction and insist on acting now, both in Spanish."
+    },
+    {
+      "name": "say \"Left.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your direction is in English. Give a Spanish direction and insist in Spanish on acting now."
+    },
+    {
+      "name": "say \"¡A la izquierda!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "izquierda",
+              "evidence": "¡A la izquierda!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Direction complete. Now insist on acting immediately in Spanish."
+    },
+    {
+      "name": "say \"Mañana.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Insist on going now rather than agreeing to postpone."
+    },
+    {
+      "name": "say \"¡No, ahora!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "ahora",
+              "evidence": "¡No, ahora!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you insist on acting now rather than waiting."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "cracked_fountain_letharger",
+        "completed": true,
+        "characterName": "Flick",
+        "characterId": "letharger_flick_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "recruit cracked_fountain_letharger",
+      "ok": true,
+      "party": [
+        {
+          "characterId": "letharger_flick_001",
+          "name": "Flick",
+          "encounterId": "cracked_fountain_letharger",
+          "locationId": "cracked_fountain",
+          "locationName": "The Cracked Fountain",
+          "joinedAt": "2026-11-05T21:42:28.116Z",
+          "conversations": 0,
+          "conversationId": "flick_slow_walk",
+          "conversationTier": 0,
+          "nextStoryAt": 3,
+          "storiesTold": 0
+        }
+      ],
+      "joined": true
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to market_entrance",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:current",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"Wake up, Flick!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "wake_up",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "courage",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meaning is clear, but you still need the Spanish wake-up command and the Spanish encouragement."
+    },
+    {
+      "name": "say \"¡Despiertate, Flick, not five more minutes!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "wake_up",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "despierta",
+              "evidence": "Despiertate",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "courage",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your wake-up command works. Now give Flick encouragement in Spanish."
+    },
+    {
+      "name": "say \"No tienes ánimo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "courage",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Encourage Flick directly instead of saying it lacks courage."
+    },
+    {
+      "name": "say \"¡Animo, Flick!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "courage",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "animo",
+              "evidence": "¡Animo, Flick!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Well done—you gave Flick encouragement!"
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:current",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": false,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    }
+  ]
+}

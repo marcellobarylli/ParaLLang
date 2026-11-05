@@ -1,0 +1,2 @@
+old_bookshop it (Amendment 1) 21:49:35-21:52:01 exit 0
+old_bookshop es (Amendment 1) 21:52:01-21:54:25 exit 0

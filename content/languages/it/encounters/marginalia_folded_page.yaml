@@ -39,7 +39,7 @@ objectives:
     assessment_reference_ids: [treccani-ecco]
   - id: not_alone
     prompt: "Marginalia says she has waited a very long time for someone to read with. Tell her she is not alone, using Italian."
-    intent: "Marginalia opens her eyes and says, in English only, that she has waited a very long time, among the pages, for someone to read with. She does not ask for comfort. She never says \"sola\", \"solo\" or any form of the word for alone (in dialogue or narration) before the player has."
+    intent: "Marginalia opens her eyes and says, in one English sentence, that she has waited a very long time, among the pages, for someone to read with; the rest of her line mixes the languages as usual. She does not ask for comfort. She never says \"sola\", \"solo\" or any form of the word for alone (in dialogue or narration) before the player has."
     target_vocabulary_ids: [sola]
     required_target_groups:
       - [sola]

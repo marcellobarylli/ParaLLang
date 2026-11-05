@@ -88,3 +88,19 @@ codex-cli, `play-market.js --party --member <home> --tier 3`, it and es for each
 Scripts: an English line (fails), the first target in a variant form, a wrong second-objective line (fails without
 advancing), the second target. The bar: all six resolve with those verdicts; every greeting is not a first meeting
 and carries the tier's opening; `leak-scan.js` and a reading of every NPC line find no unmet target form.
+
+## Amendment 1 (2026-11-05): Marginalia's loneliness is one English sentence, not the whole line
+
+All six first live runs resolved as scripted, but Marginalia's line at `not_alone` was entirely English in both
+packs (share 0 against 0.45 requested): the intent's "in English only", added for critique 1.1, applied to the whole
+line. The intent (it, es) now says she says it "in one English sentence", and "the rest of her line mixes the
+languages as usual". The ban on *sola* and any form of the word for alone stays. Content only. Marginalia's two runs
+are repeated with the same bar, plus: her `not_alone` line has a target-language share above 0. Autonomous
+decision, pending owner review.
+
+## Outcome (2026-11-05)
+
+Built as designed, with Amendment 1. Live in both languages, after three conversations Talk's tier resolved for
+Mortimer, Flick and Marginalia with every verdict as scripted, including a wrong second line that holds the target
+but not the meaning. After Amendment 1, Marginalia's second line mixes languages again (0.44 it, 0.53 es). Server
+184/184, mobile 124/124, web 12/12, expo-doctor 20/20. See [findings](findings.md).

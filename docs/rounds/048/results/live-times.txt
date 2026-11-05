@@ -1,0 +1,6 @@
+butchers_stall it 21:32:44-21:34:53 exit 0
+butchers_stall es 21:34:53-21:37:14 exit 0
+cracked_fountain it 21:37:15-21:40:55 exit 0
+cracked_fountain es 21:40:55-21:43:40 exit 0
+old_bookshop it 21:43:40-21:46:16 exit 0
+old_bookshop es 21:46:16-21:48:54 exit 0

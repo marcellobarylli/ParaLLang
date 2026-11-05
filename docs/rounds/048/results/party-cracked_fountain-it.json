@@ -1,0 +1,783 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "party": true,
+  "conversationId": "flick_lotus",
+  "tierCount": 3,
+  "recruited": true,
+  "resolved": true,
+  "completedOnMap": true,
+  "conversationOffMap": true,
+  "conversations": 4,
+  "generationCalls": 22,
+  "home": {
+    "location": "cracked_fountain",
+    "sceneLocation": "cracked_fountain",
+    "encounterId": "cracked_fountain_letharger",
+    "companionBriefing": [
+      "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high.",
+      "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations.",
+      "Containment procedure: do not hum along."
+    ],
+    "resolved": true,
+    "completedOnMap": true,
+    "generationCalls": 13,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "Ciao! Dove sei? Riddle: what never stops moving but—ooh, a leaf. Just one more distraction. Five more minutes. Dopo, dopo, domani!",
+        "translation": "Hi! Where are you? Riddle: what never stops moving but—ooh, a leaf. Just one more distraction. Five more minutes. Later, later, tomorrow!",
+        "narrative": "The Cracked Fountain leaks with municipal confidence. Flick flickers at the edge of your vision; a tiny firecracker requests your attention without completing the paperwork.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.27,
+          "folded": 0.27,
+          "translationShort": false,
+          "canonical": 0.14
+        },
+        "durationMs": 11318
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "Guardo! Ma mi muovo ancora. You asked me to look, not stop. Riddle: how do you command these feet? Ooh, a moth. Dopo, dopo, domani!",
+        "translation": "I'm looking! But I'm still moving. You asked me to look, not stop. Riddle: how do you command these feet? Ooh, a moth. Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops at the edge of your vision. Flick looks obediently while continuing to move, having discovered a loophole with legs.",
+        "share": {
+          "tokens": 25,
+          "notInTranslation": 0.32,
+          "folded": 0.32,
+          "translationShort": false,
+          "canonical": 0.12
+        },
+        "durationMs": 10660
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "Mi fermo! Piedi fermi. Dove devo andare? Riddle: what has feet but—ooh, smoke. Choose my route; thinking is cardio. Dopo, dopo, domani!",
+        "translation": "I'm stopping! Feet still. Where should I go? Riddle: what has feet but—ooh, smoke. Choose my route; thinking is cardio. Later, later, tomorrow!",
+        "narrative": "Flick stops at the edge of your vision. A tiny firecracker rolls onward, apparently exempt from instructions.",
+        "share": {
+          "tokens": 23,
+          "notInTranslation": 0.43,
+          "folded": 0.43,
+          "translationShort": false,
+          "canonical": 0.22
+        },
+        "durationMs": 9664
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.45,
+        "native": "Capisco, ma è inglese! Dove devo andare? Dimmelo in italiano. Riddle: what has a route but—ooh, sparks. Your attention span gets five more minutes. Non ho fretta. Dopo, dopo, domani!",
+        "translation": "I understand, but that's English! Where should I go? Tell me in Italian. Riddle: what has a route but—ooh, sparks. Your attention span gets five more minutes. I'm not in a hurry. Later, later, tomorrow!",
+        "narrative": "A tiny firecracker pops beside your shoe. Flick remains in the corner of your vision, apparently exempt from the usual rules of location.",
+        "share": {
+          "tokens": 31,
+          "notInTranslation": 0.48,
+          "folded": 0.48,
+          "translationShort": false,
+          "canonical": 0.1
+        },
+        "durationMs": 12468
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.5,
+        "native": "A sinistra, va bene! Ma quando vuoi partire? Non ho fretta. Riddle: what makes tomorrow better than—ooh, sparks. Just five more minutes. Dopo, dopo, domani!",
+        "translation": "To the left, all right! But when do you want to leave? I'm not in a hurry. Riddle: what makes tomorrow better than—ooh, sparks. Just five more minutes. Later, later, tomorrow!",
+        "narrative": "Flick moves left, briefly achieving geography. A tiny firecracker pops beside your shoe; Flick is already elsewhere.",
+        "share": {
+          "tokens": 26,
+          "notInTranslation": 0.5,
+          "folded": 0.5,
+          "translationShort": false,
+          "canonical": 0.15
+        },
+        "durationMs": 11343
+      },
+      {
+        "turn": 5,
+        "requestedRatio": 0.55,
+        "native": "Domani? Perfetto, allora aspettiamo! Non vuoi aspettare? Quando vuoi partire? Riddle: what comes after five more minutes—ooh, smoke. Dopo, dopo, domani!",
+        "translation": "Tomorrow? Perfect, then we wait! You don't want to wait? When do you want to leave? Riddle: what comes after five more minutes—ooh, smoke. Later, later, tomorrow!",
+        "narrative": "Flick applauds from the corner of your vision. Tomorrow suits it perfectly; your departure remains postponed. A tiny firecracker lands where progress was expected.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.59,
+          "folded": 0.59,
+          "translationShort": false,
+          "canonical": 0.18
+        },
+        "durationMs": 18322
+      },
+      {
+        "turn": 6,
+        "requestedRatio": 0.6000000000000001,
+        "native": "Adesso? Va bene, partiamo! Vado a sinistra. Riddle: what beats tomorrow—oh, you. Hai vinto! Sono pronto. Purtroppo. Dopo, dopo, domani!",
+        "translation": "Now? All right, let's go! I'm going left. Riddle: what beats tomorrow—oh, you. You won! I'm ready. Unfortunately. Later, later, tomorrow!",
+        "narrative": "Flick stops humming. A tiny firecracker pops in the corner of your vision: a formal complaint from the Department of Later. He shuffles left, astonished to find himself participating in the present.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.71,
+          "folded": 0.71,
+          "translationShort": false,
+          "canonical": 0.24
+        },
+        "durationMs": 7620
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 7105,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "stop",
+              "passed": false,
+              "feedback": "Your command asks Flick to look. Tell Flick to stop or keep still in Italian.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "Give Flick a direction—left, right, or straight ahead—in Italian.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "Refuse to delay and insist on now in Italian.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "You gave a command to look. You still need to command Flick to stop, give a direction, and insist on now, using Italian."
+        }
+      },
+      {
+        "durationMs": 5535,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "stop",
+              "passed": true,
+              "feedback": "Correct: you directly command Flick to stop.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "fermati",
+                  "evidence": "Fermati!",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "Give Flick a direction in Italian: left, right, or straight ahead.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "Insist on doing it now using Italian.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your stop command is correct. Still add a direction and insist on now in Italian."
+        }
+      },
+      {
+        "durationMs": 5926,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "direction",
+              "passed": false,
+              "feedback": "Give Flick a direction in Italian, not English.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "Insist on doing it now using Italian.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Tell Flick which way to go in Italian, and insist on now in Italian."
+        }
+      },
+      {
+        "durationMs": 7997,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "direction",
+              "passed": true,
+              "feedback": "You correctly tell Flick to go left in Italian.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "sinistra",
+                  "evidence": "A sinistra!",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "You still need to insist on doing it now, in Italian, rather than putting it off.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your direction is correct. Now also insist on acting immediately in Italian."
+        }
+      },
+      {
+        "durationMs": 7041,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "now",
+              "passed": false,
+              "feedback": "You agreed to tomorrow. Refuse the delay and insist on now in Italian.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Say that you want to act now, not tomorrow, using Italian."
+        }
+      },
+      {
+        "durationMs": 4494,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "now",
+              "passed": true,
+              "feedback": "You clearly refuse to wait and insist on leaving now.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "adesso",
+                  "evidence": "No, adesso!",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct! You clearly insist on now rather than tomorrow."
+        }
+      }
+    ]
+  },
+  "conversation": {
+    "location": "market_entrance",
+    "sceneLocation": "market_entrance",
+    "encounterId": "flick_lotus",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": false,
+    "generationCalls": 9,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "Ciao, ancora tu. Cinque minuti, just five more. Remember those sailors who ate a flower on a warm beach and forgot the way home? Ho paura di dimenticare la strada. What has feet but—wait, tomorrow. ♪ La fontana chiama… ♪",
+        "translation": "Hello, you again. Five minutes, just five more. Remember those sailors who ate a flower on a warm beach and forgot the way home? I’m afraid of forgetting the way. What has feet but—wait, tomorrow. ♪ The fountain calls… ♪",
+        "narrative": "At the market entrance, Flick lies half asleep in the fountain’s dry sand, just outside your direct gaze. A tiny firecracker expires beside it. Even its interruptions are tired.",
+        "share": {
+          "tokens": 39,
+          "notInTranslation": 0.36,
+          "folded": 0.36,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 10782
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "Ti sento, amico. But English only reaches my decorative ear. In italiano, per favore? What gets up but never—actually, five more minutes. Ho tanto sonno. ♪ La fontana chiama… ♪",
+        "translation": "I hear you, friend. But English only reaches my decorative ear. In Italian, please? What gets up but never—actually, five more minutes. I'm so sleepy. ♪ The fountain calls… ♪",
+        "narrative": "Flick opens half an eye at the edge of your vision. The other half appears to have filed for an extension.",
+        "share": {
+          "tokens": 29,
+          "notInTranslation": 0.41,
+          "folded": 0.41,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 8604
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "Eccomi, sono sveglio! Your attention span gets a nine. Non posso farlo. Non oggi, forse domani. What has legs but never—wait, is that music? Ho paura. Just one more minute. ♪ La fontana chiama… ♪",
+        "translation": "Here I am, I’m awake! Your attention span gets a nine. I can’t do it. Not today, maybe tomorrow. What has legs but never—wait, is that music? I’m afraid. Just one more minute. ♪ The fountain calls… ♪",
+        "narrative": "Flick sits up at the edge of your vision. A tiny firecracker pops, apparently to congratulate management. It waits, looking unusually small for something capable of wasting an entire afternoon.",
+        "share": {
+          "tokens": 34,
+          "notInTranslation": 0.44,
+          "folded": 0.44,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 11715
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.45,
+        "native": "Questo non mi aiuta. You’re telling me I lack courage, not encouraging me. Sono sveglio, ma ho paura. What has legs but—wait, five more minutes. Forse domani. ♪ La fontana chiama… ♪",
+        "translation": "That doesn’t help me. You’re telling me I lack courage, not encouraging me. I’m awake, but I’m afraid. What has legs but—wait, five more minutes. Maybe tomorrow. ♪ The fountain calls… ♪",
+        "narrative": "Flick sits upright at the edge of your vision. A tiny firecracker pops with the confidence it otherwise lacks.",
+        "share": {
+          "tokens": 32,
+          "notInTranslation": 0.44,
+          "folded": 0.44,
+          "translationShort": false,
+          "canonical": 0
+        },
+        "durationMs": 11942
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.5,
+        "native": "Coraggio, sì! Ho paura, ma vengo con te. Encouragement works, apparently. Rude. What walks toward—wait, that's me. Andiamo! ♪ La fontana chiama… ♪",
+        "translation": "Courage, yes! I’m afraid, but I’m coming with you. Encouragement works, apparently. Rude. What walks toward—wait, that's me. Let’s go! ♪ The fountain calls… ♪",
+        "narrative": "A tiny firecracker pops beside your shoe. Flick steps toward the fountain, just outside your field of vision. Progress has occurred; he looks offended.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.55,
+          "folded": 0.55,
+          "translationShort": false,
+          "canonical": 0.05
+        },
+        "durationMs": 6870
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 5555,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "wake_up",
+              "passed": false,
+              "feedback": "You told Flick to wake up, but you need to use the Italian imperative.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "courage",
+              "passed": false,
+              "feedback": "Encourage Flick using the required Italian word for courage.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your English instruction is clear. Use the required Italian expressions to wake Flick and encourage it."
+        }
+      },
+      {
+        "durationMs": 5291,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "wake_up",
+              "passed": true,
+              "feedback": "You correctly told Flick to wake up in Italian.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "svegliati",
+                  "evidence": "Svegliati",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "courage",
+              "passed": false,
+              "feedback": "You still need to encourage Flick using the required Italian word for courage.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your wake-up command is correct. Next, give Flick encouragement using the required Italian word."
+        }
+      },
+      {
+        "durationMs": 4751,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "courage",
+              "passed": false,
+              "feedback": "Your answer says Flick lacks courage rather than encouraging it. Use the required Italian word to offer encouragement.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Encourage Flick directly instead of saying it lacks courage."
+        }
+      },
+      {
+        "durationMs": 5120,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "courage",
+              "passed": true,
+              "feedback": "You directly encouraged Flick using the required Italian word.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "coraggio",
+                  "evidence": "Coraggio, Flick!",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Well done—you gave Flick encouragement in Italian."
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"Guarda!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "You gave a command to look. You still need to command Flick to stop, give a direction, and insist on now, using Italian."
+    },
+    {
+      "name": "say \"Fermati!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "fermati",
+              "evidence": "Fermati!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command is correct. Still add a direction and insist on now in Italian."
+    },
+    {
+      "name": "say \"Left.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Tell Flick which way to go in Italian, and insist on now in Italian."
+    },
+    {
+      "name": "say \"A sinistra!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "sinistra",
+              "evidence": "A sinistra!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your direction is correct. Now also insist on acting immediately in Italian."
+    },
+    {
+      "name": "say \"Domani.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Say that you want to act now, not tomorrow, using Italian."
+    },
+    {
+      "name": "say \"No, adesso!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "adesso",
+              "evidence": "No, adesso!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! You clearly insist on now rather than tomorrow."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "cracked_fountain_letharger",
+        "completed": true,
+        "characterName": "Flick",
+        "characterId": "letharger_flick_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "recruit cracked_fountain_letharger",
+      "ok": true,
+      "party": [
+        {
+          "characterId": "letharger_flick_001",
+          "name": "Flick",
+          "encounterId": "cracked_fountain_letharger",
+          "locationId": "cracked_fountain",
+          "locationName": "The Cracked Fountain",
+          "joinedAt": "2026-11-05T21:39:44.725Z",
+          "conversations": 0,
+          "conversationId": "flick_slow_walk",
+          "conversationTier": 0,
+          "nextStoryAt": 3,
+          "storiesTold": 0
+        }
+      ],
+      "joined": true
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to market_entrance",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:current",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"Wake up, Flick!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "wake_up",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "courage",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your English instruction is clear. Use the required Italian expressions to wake Flick and encourage it."
+    },
+    {
+      "name": "say \"Svegliati, Flick, not five more minutes!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "wake_up",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "svegliati",
+              "evidence": "Svegliati",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "courage",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your wake-up command is correct. Next, give Flick encouragement using the required Italian word."
+    },
+    {
+      "name": "say \"Non hai coraggio.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "courage",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Encourage Flick directly instead of saying it lacks courage."
+    },
+    {
+      "name": "say \"Coraggio, Flick!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "courage",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "coraggio",
+              "evidence": "Coraggio, Flick!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Well done—you gave Flick encouragement in Italian."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:visited",
+        "market_entrance:current",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": false,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    }
+  ]
+}
