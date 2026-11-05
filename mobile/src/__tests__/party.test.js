@@ -4,7 +4,7 @@ import { render, screen, userEvent } from '@testing-library/react-native';
 import App from '../../App.js';
 import DialoguePanel from '../components/DialoguePanel.js';
 import MapPanel from '../components/MapPanel.js';
-import PartyPanel from '../components/PartyPanel.js';
+import PartyPanel, { storyHint } from '../components/PartyPanel.js';
 import { createGameStore, useGameStore } from '../stores/gameStore.js';
 
 const language = { code: 'it', name: 'Italian', tag: 'it-IT' };
@@ -199,5 +199,46 @@ describe('party conversations', () => {
     expect(store.getState().view).toBe('dialogue');
     await store.getState().sendMessage('Un buon caffè, grazie!');
     expect(store.getState().party[0].conversations).toBe(1);
+  });
+});
+
+// Round 043 (backlog G1): the hint counts down to the member's next story, without naming it.
+describe('story hint', () => {
+  const base = { ...gerald, conversationId: 'gerald_coffee_break' };
+  test.each([
+    [{ conversations: 1, nextStoryAt: 3, storiesTold: 0 }, '2 more finished conversations until Gerald tells you a story.'],
+    [{ conversations: 2, nextStoryAt: 3, storiesTold: 0 }, '1 more finished conversation until Gerald tells you a story.'],
+    [{ nextStoryAt: 3, storiesTold: 0 }, '3 more finished conversations until Gerald tells you a story.'],
+    [{ conversations: 4, nextStoryAt: 6, storiesTold: 1 }, '2 more finished conversations until Gerald tells you a story.'], // one told, one ahead: the countdown only
+    [{ conversations: 3, nextStoryAt: null, storiesTold: 1 }, 'Gerald has told you a story. It is in your Spellbook.'],
+    [{ conversations: 6, nextStoryAt: null, storiesTold: 2 }, 'Gerald has told you 2 stories. They are in your Spellbook.'],
+  ])('%j', async (fields, line) => {
+    await render(<PartyPanel party={[{ ...base, ...fields }]} onTalk={jest.fn()} onReturn={jest.fn()} returnLabel="Return" />);
+    expect(screen.getByText(line)).toBeOnTheScreen();
+  });
+
+  test.each([[{}], [{ conversations: 2, nextStoryAt: null, storiesTold: 0 }], [{ conversations: 4, nextStoryAt: 3, storiesTold: 0 }]])('no line for %j', (fields) => {
+    expect(storyHint({ ...base, ...fields })).toBeNull();
+  });
+
+  test('opening the Party screen refreshes the party; a reply for another save is dropped', async () => {
+    let release;
+    const api = {
+      getParty: jest.fn().mockImplementationOnce(async () => ({ party: [{ ...base, conversations: 3, nextStoryAt: null, storiesTold: 1 }] }))
+        .mockImplementationOnce(() => new Promise((resolve) => { release = resolve; })),
+    };
+    const store = createGameStore({ api, storage: null, cue: jest.fn(), ambience: jest.fn() });
+    store.setState({ learnerId: 'learner-a', party: [{ ...base, conversations: 2, nextStoryAt: 3, storiesTold: 0 }] });
+    store.getState().openParty();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(api.getParty).toHaveBeenCalledWith('learner-a');
+    expect(store.getState().view).toBe('party');
+    expect(storyHint(store.getState().party[0])).toBe('Gerald has told you a story. It is in your Spellbook.');
+    store.getState().openParty();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    store.setState({ learnerId: 'learner-b', party: [] });
+    release({ party: [base] });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(store.getState().party).toEqual([]);
   });
 });

@@ -170,10 +170,19 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       }
     },
 
-    openParty: () => set((state) => ({
-      view: 'party', returnView: ['map', 'dialogue'].includes(state.view) ? state.view : state.returnView,
-      reviewChallenge: null, reviewResult: null, error: null,
-    })),
+    openParty: () => {
+      set((state) => ({
+        view: 'party', returnView: ['map', 'dialogue'].includes(state.view) ? state.view : state.returnView,
+        reviewChallenge: null, reviewResult: null, error: null,
+      }));
+      // Round 043 (critique 1.2): refresh the party behind the screen, so counts and story hints are never stale
+      // after a failed refresh. A late reply for another save is dropped.
+      const { learnerId } = get();
+      if (!learnerId || !api.getParty) return;
+      Promise.resolve().then(() => api.getParty(learnerId)).then(({ party }) => {
+        if (get().learnerId === learnerId && Array.isArray(party)) set({ party });
+      }, () => {});
+    },
 
     restartEncounter: async () => {
       const { learnerId } = get();

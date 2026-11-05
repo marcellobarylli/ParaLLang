@@ -183,3 +183,28 @@ test('during an encounter the translation and glossary are withheld; the resolvi
   assert.equal(resolved.spellbook.journeyFragments[0].hidden, false);
   assert.equal(resolved.spellbook.journeyFragments[0].translation, runtime.content.fragments[0].translation);
 });
+
+// Round 043 (backlog G1): the Party screen's hint agrees with what the Spellbook shows.
+for (const language of ['it', 'es']) test(`the party snapshot counts down to each member's next story and agrees with the Spellbook (${language})`, async (t) => {
+  const runtime = await createRuntime({ language });
+  t.after(() => runtime.close());
+  const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
+  const member = (conversations) => ({ characterId: 'imp_coffee_001', encounterId: 'imp_coffee_greeting', joinedAt: '2026-01-15T12:00:00.000Z', conversations });
+  for (const [conversations, nextStoryAt, storiesTold] of [[undefined, 3, 0], [2, 3, 0], [3, null, 1], [7, null, 1]]) {
+    const envelope = await runtime.storage.load(learnerId); envelope.party = [member(conversations)]; await runtime.storage.save(envelope);
+    const [gerald] = (await api(runtime, '/api/party', { learnerId })).data.party;
+    assert.deepEqual([gerald.nextStoryAt, gerald.storiesTold], [nextStoryAt, storiesTold], String(conversations));
+    const told = (await api(runtime, '/api/spellbook', { learnerId })).data.journeyFragments.filter((f) => f.toldBy === 'Gerald');
+    assert.equal(told.length, storiesTold, 'the Spellbook holds as many of his stories as the hint says');
+  }
+  // A member with no conversation fragments (a pack without them) gets no hint.
+  assert.deepEqual(runtime.service.storyProgress({ characterId: 'archway_portia_001', encounterId: 'market_entrance_tutorial', conversations: 4 }), { nextStoryAt: null, storiesTold: 0 });
+  assert.deepEqual(runtime.service.storyProgress({ ...member(5), characterId: 'someone_else' }), { nextStoryAt: null, storiesTold: 0 }, 'matched as the Spellbook matches');
+  // Two thresholds for one member: the nearer unreached one is next.
+  const fragments = [...runtime.content.fragments, { ...runtime.content.fragments.find((f) => f.id === 'journey_dead_branch'), id: 'journey_test_later', after_conversations: 6 }];
+  // Content is frozen: a stand-in `this` with the edited list (storyProgress reads only fragments and isHomeMember).
+  const progress = (m) => runtime.service.storyProgress.call({ content: { fragments }, isHomeMember: (x, id) => runtime.service.isHomeMember(x, id) }, m);
+  assert.deepEqual(progress(member(4)), { nextStoryAt: 6, storiesTold: 1 });
+  assert.deepEqual(progress(member(1)), { nextStoryAt: 3, storiesTold: 0 });
+  assert.deepEqual(progress(member(6)), { nextStoryAt: null, storiesTold: 2 });
+});

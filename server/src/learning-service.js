@@ -212,8 +212,7 @@ export class LearningService {
     // as partySnapshot does: encounter and character) once their conversation count reaches it, not by completion.
     // Derived, not saved: removing the member or raising N would hide it again.
     const memberCount = (homeId) => {
-      const { character } = this.content.encounters.get(homeId);
-      const member = party.find((m) => m.encounterId === homeId && m.characterId === character.id);
+      const member = party.find((m) => this.isHomeMember(m, homeId));
       return member ? (member.conversations ?? 0) : null;
     };
     const conversationOf = (homeId) => [...this.content.encounters.values()].find(({ encounter }) => encounter.party_of === homeId).encounter.id;
@@ -612,8 +611,28 @@ export class LearningService {
         joinedAt: member.joinedAt,
         conversations: member.conversations ?? 0,
         conversationId: this.partyConversationFor(member.encounterId)?.encounter.id ?? null,
+        ...this.storyProgress(member),
       }];
     });
+  }
+
+  // Round 043 (critique 1.1): one rule for "this party member was met at that encounter", shared by the Spellbook's
+  // conversation fragments and the Party screen's hint: the same encounter and its character.
+  isHomeMember(member, homeId) {
+    const definition = this.content.encounters.get(homeId);
+    return Boolean(definition) && member.encounterId === homeId && member.characterId === definition.character.id;
+  }
+
+  // Round 043 (backlog G1): the Party screen's hint. The member's conversation fragments are those found after its
+  // home encounter with `after_conversations` (matched by encounter, as journeyFragments does). `nextStoryAt` is the
+  // smallest threshold not yet reached (null when none is left); `storiesTold` counts those reached. Derived.
+  storyProgress(member) {
+    const count = member.conversations ?? 0;
+    const thresholds = this.content.fragments
+      .filter((fragment) => fragment.after_conversations !== undefined && this.isHomeMember(member, fragment.found_after))
+      .map((fragment) => fragment.after_conversations);
+    const ahead = thresholds.filter((at) => at > count);
+    return { nextStoryAt: ahead.length ? Math.min(...ahead) : null, storiesTold: thresholds.length - ahead.length };
   }
 
   async getParty(learnerId) {
