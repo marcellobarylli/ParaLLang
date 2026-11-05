@@ -74,3 +74,19 @@ test('a conversation fragment is noted on its unlocking break only, from the mem
   expect(fragmentNote([dead(4)], coffeeBreak)).toBe('');
   expect(fragmentNote([fragment()], resolved('cracked_fountain_letharger'))).toMatch(/from here/);
 });
+
+// Round 033: Marginalia has a completion fragment (the Bookshop) and a conversation one; each note keeps to its own.
+test('a member with both a completion and a conversation fragment gets the right note in each place', () => {
+  const stitch = fragment({ id: 'journey_first_stitch', title: 'The first stitch', encounterId: 'old_bookshop_bookworm' });
+  const dog = fragment({ id: 'journey_old_dog', title: 'The old dog', encounterId: 'marginalia_fragment', unlockedAt: 3, conversations: 3 });
+  const reading = { ...resolved('marginalia_fragment'), partyConversation: true, character: { name: 'Marginalia', saveable: true } };
+  expect(fragmentNote([stitch, dog], reading)).toBe(' A fragment of The Journey from Marginalia is in your Spellbook: The old dog.');
+  expect(fragmentNote([stitch, dog], resolved('old_bookshop_bookworm'))).toBe(' A fragment of The Journey from here is in your Spellbook: The first stitch.');
+  expect(fragmentNote([stitch, { ...dog, conversations: 4 }], reading)).toBe('');
+  expect(fragmentNote([stitch], reading)).toBe('');
+  // Flick's lotus and the Sirens the same way.
+  const lotus = fragment({ id: 'journey_lotus', title: 'The lotus', encounterId: 'flick_slow_walk', unlockedAt: 3, conversations: 3 });
+  const walk = { ...resolved('flick_slow_walk'), partyConversation: true, character: { name: 'Flick', saveable: true } };
+  expect(fragmentNote([fragment(), lotus], walk)).toBe(' A fragment of The Journey from Flick is in your Spellbook: The lotus.');
+  expect(fragmentNote([fragment(), lotus], resolved('cracked_fountain_letharger'))).toBe(' A fragment of The Journey from here is in your Spellbook: The Sirens.');
+});

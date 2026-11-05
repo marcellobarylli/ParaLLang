@@ -9,7 +9,7 @@ fragments:
     found_after: old_bookshop_bookworm
     found: "Folded inside the battered copy of The Journey that Marginalia sold you, in a hand that changes language halfway through a word."
     text: >-
-      Cada vez que Journathan pasaba de una rama a otra, un hilo se quedaba detrás de él. Veinte inviernos de travesías:
+      Cada vez que Journathan pasaba de una rama a la siguiente, un hilo se quedaba detrás de él. Veinte inviernos de travesías:
       veinte inviernos de hilos. Dicen que los más antiguos todavía sostienen la trama del mundo. Quizá la primera
       puntada fue suya.
     translation: >-
@@ -84,3 +84,66 @@ fragments:
       - { word: "lloraba", meaning: "wept" }
       - { word: "ni", meaning: "not even" }
       - { word: "diccionario", meaning: "dictionary" }
+  - id: journey_forbidden_herd
+    title: The forbidden herd
+    found_after: butchers_stall_charcutier
+    after_conversations: 3
+    found: "On your third tasting, Mortimer lowers his voice and recites the one passage of The Journey he refuses to slice."
+    text: >-
+      En la isla del Sol pastaban rebaños sagrados. Journathan dijo a sus compañeros que no los tocaran. Pero el hambre
+      venció al juramento: asaron las reses, y la carne mugía en el asador. Desde entonces, quien corta la carne
+      pide permiso.
+    translation: >-
+      On the island of the Sun grazed sacred herds. Journathan told his companions not to touch them. But hunger was
+      stronger than the oath: they roasted the beasts, and the meat lowed on the spit. Since then, whoever cuts meat
+      asks permission.
+    glossary:
+      - { word: "pastaban", meaning: "grazed" }
+      - { word: "rebaños", meaning: "herds" }
+      - { word: "juramento", meaning: "oath" }
+      - { word: "asaron", meaning: "they roasted" }
+      - { word: "mugía", meaning: "lowed, mooed" }
+      - { word: "asador", meaning: "spit (for roasting)" }
+      - { word: "permiso", meaning: "permission" }
+  - id: journey_lotus
+    title: The lotus
+    found_after: cracked_fountain_letharger
+    after_conversations: 3
+    found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
+    text: >-
+      En una playa tibia, algunos marineros de Journathan comieron la flor del loto. Olvidaron el rumbo, el regreso,
+      hasta las ganas de partir. «Cinco minutos», decían, tumbados en la arena, y luego otros cinco. Journathan tuvo
+      que arrastrarlos a las naves, y ellos lloraban.
+    translation: >-
+      On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
+      the wish to leave. "Five minutes," they said, lying on the sand, and then five more. Journathan had to drag them
+      to the ships, and they wept.
+    glossary:
+      - { word: "tibia", meaning: "lukewarm" }
+      - { word: "loto", meaning: "lotus" }
+      - { word: "rumbo", meaning: "course, heading" }
+      - { word: "hasta", meaning: "even; also until" }
+      - { word: "tumbados", meaning: "lying down" }
+      - { word: "arena", meaning: "sand" }
+      - { word: "arrastrarlos", meaning: "to drag them" }
+  - id: journey_old_dog
+    title: The old dog
+    found_after: old_bookshop_bookworm
+    after_conversations: 3
+    found: "On your third reading, Marginalia turns to a page she keeps folded down and reads it without looking."
+    text: >-
+      Journathan volvió a su isla vestido de mendigo, y los suyos no lo reconocieron. Solo un perro viejo, echado sobre
+      el estiércol delante de la puerta, levantó las orejas y movió la cola. Lo había esperado todo aquel tiempo. Luego
+      cerró los ojos, contento.
+    translation: >-
+      Journathan came back to his island dressed as a beggar, and his own people did not know him. Only an old dog,
+      lying on the dung heap before the door, raised its ears and moved its tail. It had waited for him all that time.
+      Then it closed its eyes, content.
+    glossary:
+      - { word: "mendigo", meaning: "beggar" }
+      - { word: "reconocieron", meaning: "they recognised" }
+      - { word: "perro", meaning: "dog" }
+      - { word: "estiércol", meaning: "dung heap" }
+      - { word: "levantó", meaning: "raised" }
+      - { word: "cola", meaning: "tail" }
+      - { word: "contento", meaning: "content, happy" }

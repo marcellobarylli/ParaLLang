@@ -9,7 +9,7 @@ import { foldWords, loadGameContent } from '../src/content-loader.js';
 import { api, createLearnerAndEncounter, createRuntime, finishEncounter, makeTempDir } from './helpers.js';
 
 const root = resolve(import.meta.dirname, '..', '..');
-const IDS = ['journey_first_stitch', 'journey_sirens', 'journey_shroud', 'journey_dead_branch'];
+const IDS = ['journey_first_stitch', 'journey_sirens', 'journey_shroud', 'journey_dead_branch', 'journey_forbidden_herd', 'journey_lotus', 'journey_old_dog'];
 
 // Every vocabulary form of the pack found in a fragment's text or glossary words, and every glossary meaning that
 // is an accepted translation of an objective target (critique 1.1, 1.2, 1.10).
@@ -24,11 +24,11 @@ function leaks(content, fragment) {
   };
 }
 
-test('both packs hold the same four fragments, after the same encounters, with the same English text', () => {
+test('both packs hold the same seven fragments, after the same encounters, with the same English text', () => {
   const [it, es] = ['it', 'es'].map((code) => loadGameContent({ language: code }).fragments);
   assert.deepEqual(it.map((f) => f.id), IDS);
-  assert.deepEqual(it.map((f) => f.found_after), ['old_bookshop_bookworm', 'cracked_fountain_letharger', 'the_rift_errata', 'imp_coffee_greeting']);
-  assert.deepEqual(it.map((f) => f.after_conversations), [undefined, undefined, undefined, 3], 'round 032: Gerald\'s after three coffee breaks');
+  assert.deepEqual(it.map((f) => f.found_after), ['old_bookshop_bookworm', 'cracked_fountain_letharger', 'the_rift_errata', 'imp_coffee_greeting', 'butchers_stall_charcutier', 'cracked_fountain_letharger', 'old_bookshop_bookworm']);
+  assert.deepEqual(it.map((f) => f.after_conversations), [undefined, undefined, undefined, 3, 3, 3, 3], 'rounds 032, 033: after three party conversations');
   const english = (fragments) => fragments.map(({ id, title, found_after, after_conversations, found, translation }) => ({ id, title, found_after, after_conversations, found, translation }));
   assert.deepEqual(english(es), english(it));
   for (const fragment of [...it, ...es]) assert.ok(fragment.glossary.length >= 4 && fragment.text !== fragment.translation, fragment.id);
@@ -52,22 +52,33 @@ test('no fragment holds a vocabulary form of its pack or glosses a target\'s mea
 });
 
 // Round 032 (critique 1.5): a conversation fragment shows during later conversations with its member, so its text
-// and glossary hold no word starting with a stem (first 4 folded letters) of that conversation's targets.
+// and glossary hold no word starting with a stem (first 4 folded letters) of a party conversation's targets. Round 033
+// (critique 1.2, 1.3): every word of 4 letters or more of a multi-word form gives a stem, and every fragment is checked
+// against every party conversation, since the Spellbook shows all found texts during any of them.
+function partyStems(content) {
+  const ids = [...content.encounters.values()].filter(({ encounter }) => encounter.party_of)
+    .flatMap(({ encounter }) => encounter.objectives.flatMap((o) => o.target_vocabulary_ids));
+  return [...new Set(ids.flatMap((id) => content.vocabularyById.get(id).surface_variants)
+    .flatMap((form) => foldWords(form).trim().split(' ')).filter((word) => word.length >= 4).map((word) => word.slice(0, 4)))];
+}
 function stemLeaks(content, fragment) {
-  const conversation = [...content.encounters.values()].find(({ encounter }) => encounter.party_of === fragment.found_after).encounter;
-  const stems = conversation.objectives.flatMap((o) => o.target_vocabulary_ids)
-    .flatMap((id) => content.vocabularyById.get(id).surface_variants).map((form) => foldWords(form).trim().slice(0, 4));
   const words = foldWords([fragment.text, ...fragment.glossary.map((entry) => entry.word)].join(' ')).trim().split(' ');
-  return [...new Set(stems)].filter((stem) => words.some((word) => word.startsWith(stem)));
+  return partyStems(content).filter((stem) => words.some((word) => word.startsWith(stem)));
 }
 
-test('a conversation fragment holds no stem of its conversation\'s targets; the check is live', () => {
+test('no fragment holds a stem of any party conversation\'s targets; the check is live', () => {
+  const expected = {
+    it: ['buon', 'otti', 'graz', 'mill', 'piac', 'anco', 'andi', 'insi', 'mera', 'nuov'],
+    es: ['buen', 'deli', 'grac', 'much', 'gust', 'poco', 'vamo', 'junt', 'prec', 'otra'],
+  };
   for (const code of ['it', 'es']) {
     const content = loadGameContent({ language: code });
-    const fragment = content.fragments.find((f) => f.after_conversations !== undefined);
-    assert.deepEqual(stemLeaks(content, fragment), [], code);
-    const planted = code === 'it' ? 'Era buonissimo.' : 'Era buenísimo.';
-    assert.deepEqual(stemLeaks(content, { ...fragment, text: `${fragment.text} ${planted}` }), [code === 'it' ? 'buon' : 'buen'], `${code} planted`);
+    assert.deepEqual(partyStems(content).sort(), expected[code].sort(), `${code} stems, multi-word forms split`);
+    assert.equal(content.fragments.filter((f) => f.after_conversations !== undefined).length, 4, 'round 033: Gerald, Mortimer, Flick, Marginalia');
+    for (const each of content.fragments) assert.deepEqual(stemLeaks(content, each), [], `${code} ${each.id}`);
+    const herd = content.fragments.find((f) => f.id === 'journey_forbidden_herd');
+    const planted = code === 'it' ? [['Era buonissimo.', 'buon'], ['Insistevano.', 'insi']] : [['Era buenísimo.', 'buen'], ['Le gustaba.', 'gust'], ['Se juntaron.', 'junt']];
+    for (const [sentence, stem] of planted) assert.deepEqual(stemLeaks(content, { ...herd, text: `${herd.text} ${sentence}` }), [stem], `${code} planted ${stem}`);
   }
 });
 
@@ -125,6 +136,19 @@ test('fragments appear on completion only, through the API; hidden during an enc
   for (const [party, ids] of [[[member(undefined)], []], [[member(2)], []], [[member(3)], ['journey_dead_branch']], [[member(9)], ['journey_dead_branch']], [[{ ...member(5), characterId: 'someone_else' }], []]]) {
     const envelope = await runtime.storage.load(learnerId); envelope.party = party; await runtime.storage.save(envelope);
     assert.deepEqual((await fragments()).map((f) => f.id), ids, JSON.stringify(party));
+  }
+  // Round 033: Mortimer, Flick and Marginalia unlock theirs the same way, each filed under its party conversation.
+  const members = [['charcutier_mortimer_001', 'butchers_stall_charcutier'], ['letharger_flick_001', 'cracked_fountain_letharger'], ['bookworm_marginalia_001', 'old_bookshop_bookworm']]
+    .map(([characterId, encounterId]) => (conversations) => ({ characterId, encounterId, joinedAt: '2026-01-15T12:00:00.000Z', conversations }));
+  for (const [counts, ids] of [[[2, 2, 2], []], [[3, 2, 2], ['journey_forbidden_herd']], [[3, 3, 3], ['journey_forbidden_herd', 'journey_lotus', 'journey_old_dog']]]) {
+    const envelope = await runtime.storage.load(learnerId); envelope.party = members.map((m, i) => m(counts[i])); await runtime.storage.save(envelope);
+    const list = await fragments();
+    assert.deepEqual(list.map((f) => f.id), ids, JSON.stringify(counts));
+    if (ids.length === 3) {
+      assert.deepEqual(list.map((f) => [f.encounterId, f.locationName, f.unlockedAt, f.conversations]), [
+        ['mortimer_tasting', "The Butcher's Stall", 3, 3], ['flick_slow_walk', 'The Cracked Fountain', 3, 3], ['marginalia_fragment', 'The Old Bookshop', 3, 3],
+      ]);
+    }
   }
   { const envelope = await runtime.storage.load(learnerId); envelope.party = []; await runtime.storage.save(envelope); }
 

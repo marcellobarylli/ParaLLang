@@ -265,3 +265,42 @@ test('the third coffee break files Gerald\'s fragment; it is withheld during the
   const fourth = await start(runtime, learnerId, 'gerald_coffee_break');
   assert.deepEqual(fourth.data.spellbook.journeyFragments.map((f) => [f.id, f.hidden, f.translation]), [['journey_dead_branch', true, null]]);
 });
+
+// Round 033 (critique 1.4): Mortimer's fragment through real resolved tastings, counted by the service itself.
+class TastingProvider extends FixtureProvider {
+  grade(messages) {
+    const objectives = ['like_it', 'ask_more'].filter((id) => messages[0].content.includes(`"${id}"`));
+    if (objectives.length === 0) return super.grade(messages);
+    const answer = JSON.parse(messages.at(-1).content).player_answer;
+    const found = { like_it: answer.match(/me gusta/i), ask_more: answer.match(/un poco m[aá]s/i) };
+    return {
+      objective_results: objectives.map((id) => ({
+        objective_id: id, passed: Boolean(found[id]), feedback: found[id] ? `Passed ${id}.` : `Keep working on ${id}.`,
+        vocabulary_evidence: found[id] ? [{ vocabulary_id: id === 'like_it' ? 'me_gusta' : 'un_poco_mas', evidence: found[id][0], quality: 5 }] : [],
+      })),
+      overall_feedback: 'Fixture assessment applied.',
+    };
+  }
+}
+
+test('the third tasting files Mortimer\'s fragment under his party conversation; Gerald\'s stays locked', async (t) => {
+  const runtime = await createRuntime({ provider: new TastingProvider() });
+  t.after(runtime.close);
+  const learnerId = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
+  const envelope = await runtime.storage.load(learnerId);
+  envelope.world = { ...envelope.world, completedEncounterIds: ['butchers_stall_charcutier'] };
+  envelope.party = [{ characterId: 'charcutier_mortimer_001', encounterId: 'butchers_stall_charcutier', joinedAt: '2026-01-15T12:00:00.000Z', conversations: 0 }];
+  await runtime.storage.save(envelope);
+  const filed = [];
+  let turn;
+  for (let n = 1; n <= 3; n += 1) {
+    const encounter = (await start(runtime, learnerId, 'mortimer_tasting')).data.encounter;
+    turn = await say(runtime, learnerId, encounter, 'Me gusta mucho. ¿Un poco más?');
+    assert.equal(turn.encounter.state, 'resolved', `tasting ${n}`);
+    filed.push(turn.spellbook.journeyFragments.map((f) => f.id));
+  }
+  assert.deepEqual(filed, [[], [], ['journey_forbidden_herd']]);
+  const [fragment] = turn.spellbook.journeyFragments;
+  assert.deepEqual([fragment.encounterId, fragment.locationName, fragment.unlockedAt, fragment.conversations],
+    ['mortimer_tasting', "The Butcher's Stall", 3, 3]);
+});

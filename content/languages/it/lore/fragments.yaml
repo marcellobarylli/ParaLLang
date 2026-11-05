@@ -83,3 +83,66 @@ fragments:
       - { word: "piangeva", meaning: "wept" }
       - { word: "nemmeno", meaning: "not even" }
       - { word: "vocabolario", meaning: "dictionary" }
+  - id: journey_forbidden_herd
+    title: The forbidden herd
+    found_after: butchers_stall_charcutier
+    after_conversations: 3
+    found: "On your third tasting, Mortimer lowers his voice and recites the one passage of The Journey he refuses to slice."
+    text: >-
+      Sull'isola del Sole pascolavano mandrie sacre. Journathan disse ai compagni di non toccarle. Ma la fame vinse il
+      giuramento: arrostirono le bestie, e la carne muggiva sullo spiedo. Da allora, chi taglia la carne
+      chiede il permesso.
+    translation: >-
+      On the island of the Sun grazed sacred herds. Journathan told his companions not to touch them. But hunger was
+      stronger than the oath: they roasted the beasts, and the meat lowed on the spit. Since then, whoever cuts meat
+      asks permission.
+    glossary:
+      - { word: "pascolavano", meaning: "grazed" }
+      - { word: "mandrie", meaning: "herds" }
+      - { word: "giuramento", meaning: "oath" }
+      - { word: "arrostirono", meaning: "they roasted" }
+      - { word: "muggiva", meaning: "lowed, mooed" }
+      - { word: "spiedo", meaning: "spit (for roasting)" }
+      - { word: "permesso", meaning: "permission" }
+  - id: journey_lotus
+    title: The lotus
+    found_after: cracked_fountain_letharger
+    after_conversations: 3
+    found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
+    text: >-
+      Su una spiaggia tiepida, alcuni marinai di Journathan mangiarono il fiore del loto. Dimenticarono la rotta, il
+      ritorno, perfino la voglia di partire. «Cinque minuti», dicevano, sdraiati sulla sabbia, e poi altri cinque.
+      Journathan dovette trascinarli alle navi, e loro piangevano.
+    translation: >-
+      On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
+      the wish to leave. "Five minutes," they said, lying on the sand, and then five more. Journathan had to drag them
+      to the ships, and they wept.
+    glossary:
+      - { word: "tiepida", meaning: "lukewarm" }
+      - { word: "loto", meaning: "lotus" }
+      - { word: "rotta", meaning: "course, heading" }
+      - { word: "perfino", meaning: "even" }
+      - { word: "sdraiati", meaning: "lying down" }
+      - { word: "sabbia", meaning: "sand" }
+      - { word: "trascinarli", meaning: "to drag them" }
+  - id: journey_old_dog
+    title: The old dog
+    found_after: old_bookshop_bookworm
+    after_conversations: 3
+    found: "On your third reading, Marginalia turns to a page she keeps folded down and reads it without looking."
+    text: >-
+      Journathan tornò sulla sua isola vestito da mendicante, e i suoi non lo riconobbero. Solo un vecchio cane,
+      steso sul letame davanti alla porta, alzò le orecchie e mosse la coda. Lo aveva aspettato per tutto quel tempo.
+      Poi chiuse gli occhi, contento.
+    translation: >-
+      Journathan came back to his island dressed as a beggar, and his own people did not know him. Only an old dog,
+      lying on the dung heap before the door, raised its ears and moved its tail. It had waited for him all that time.
+      Then it closed its eyes, content.
+    glossary:
+      - { word: "mendicante", meaning: "beggar" }
+      - { word: "riconobbero", meaning: "they recognised" }
+      - { word: "cane", meaning: "dog" }
+      - { word: "letame", meaning: "dung heap" }
+      - { word: "alzò", meaning: "raised" }
+      - { word: "coda", meaning: "tail" }
+      - { word: "contento", meaning: "content, happy" }
