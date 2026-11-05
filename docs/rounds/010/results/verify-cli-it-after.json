@@ -1,0 +1,317 @@
+{
+  "title": "Playtest ParaLLang through Codex and Claude Code subscriptions",
+  "passed": true,
+  "language": "it",
+  "verifiedAt": "2026-11-05T12:17:22.570Z",
+  "provider": "codex-cli",
+  "cliVersion": "0.166.0",
+  "authentication": "chatgpt-subscription",
+  "requestedModel": "CLI default",
+  "resolvedModel": "not reported by CLI",
+  "isolation": [
+    "ignored user configuration",
+    "ignored project rules",
+    "ephemeral session",
+    "shared daemon disabled",
+    "read-only sandbox",
+    "no approvals",
+    "OpenAI provider forced",
+    "ChatGPT login forced",
+    "coding/external features disabled"
+  ],
+  "grading": [
+    {
+      "case": "positive",
+      "expected": [
+        true,
+        false
+      ],
+      "observed": [
+        true,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 6246,
+      "feedback": "Your coffee request is correct. Add an Italian expression specifying no milk or black coffee.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "order_coffee",
+          "passed": true,
+          "feedback": "You correctly requested a coffee for yourself."
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": false,
+          "feedback": "Specify in Italian that your coffee is without milk or black."
+        }
+      ]
+    },
+    {
+      "case": "complete",
+      "expected": [
+        true,
+        true
+      ],
+      "observed": [
+        true,
+        true
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 6243,
+      "feedback": "Both objectives achieved correctly.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "order_coffee",
+          "passed": true,
+          "feedback": "You correctly requested coffee for yourself."
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": true,
+          "feedback": "You correctly specified that your coffee should have no milk."
+        }
+      ]
+    },
+    {
+      "case": "mixed-language",
+      "expected": [
+        true,
+        true
+      ],
+      "observed": [
+        true,
+        true
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 6055,
+      "feedback": "Both objectives passed. Your mixed English and Italian request was clear and correct.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "order_coffee",
+          "passed": true,
+          "feedback": "You clearly ordered coffee for yourself using Italian."
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": true,
+          "feedback": "You correctly specified that your coffee should have no milk."
+        }
+      ]
+    },
+    {
+      "case": "English-only",
+      "expected": [
+        false,
+        false
+      ],
+      "observed": [
+        false,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 6379,
+      "feedback": "Your meaning is clear, but both objectives require Italian expressions.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "order_coffee",
+          "passed": false,
+          "feedback": "Ask for your coffee using an Italian coffee expression."
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": false,
+          "feedback": "Use an Italian expression for without milk or black coffee in your order."
+        }
+      ]
+    },
+    {
+      "case": "contextual",
+      "expected": [
+        true
+      ],
+      "observed": [
+        true
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 5502,
+      "feedback": "Correct and natural—your order clearly specifies no milk.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "no_milk",
+          "passed": true,
+          "feedback": "You clearly ordered your coffee without milk."
+        }
+      ]
+    },
+    {
+      "case": "negated",
+      "expected": [
+        false
+      ],
+      "observed": [
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 5233,
+      "feedback": "Use an Italian expression to order your coffee without milk; do not negate or contradict it.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "no_milk",
+          "passed": false,
+          "feedback": "Your order explicitly asks for milk. Order your coffee without milk or as black coffee using Italian."
+        }
+      ]
+    },
+    {
+      "case": "quoted",
+      "expected": [
+        false,
+        false
+      ],
+      "observed": [
+        false,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 7098,
+      "feedback": "Place your own coffee order and specify in Italian that it should have no milk.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "order_coffee",
+          "passed": false,
+          "feedback": "Make your own direct coffee order using an Italian word for coffee."
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": false,
+          "feedback": "Request your own coffee without milk using an Italian expression; describing a sign does not count."
+        }
+      ]
+    },
+    {
+      "case": "metalinguistic",
+      "expected": [
+        false,
+        false
+      ],
+      "observed": [
+        false,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 6044,
+      "feedback": "Your sentence discusses words rather than placing an order. Request coffee for yourself and specify no milk using Italian.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "order_coffee",
+          "passed": false,
+          "feedback": "Make a direct coffee request for yourself using an Italian coffee word."
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": false,
+          "feedback": "Use an Italian no-milk or black-coffee expression as part of your own order, rather than discussing the expression."
+        }
+      ]
+    },
+    {
+      "case": "third-person",
+      "expected": [
+        false,
+        false
+      ],
+      "observed": [
+        false,
+        false
+      ],
+      "matched": true,
+      "schemaValid": true,
+      "durationMs": 7571,
+      "feedback": "Describe your own coffee order rather than your friend's preference.",
+      "objectiveFeedback": [
+        {
+          "objectiveId": "order_coffee",
+          "passed": false,
+          "feedback": "Make a direct coffee request for yourself, using an Italian coffee term rather than describing your friend's preference."
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": false,
+          "feedback": "Use an Italian no-milk or black-coffee expression in your own order, not to describe your friend's preference."
+        }
+      ]
+    }
+  ],
+  "encounter": {
+    "greetingMs": 8129,
+    "firstTurnMs": 19210,
+    "secondTurnMs": 10448,
+    "totalMs": 37826,
+    "finalState": "resolved",
+    "objectiveResults": [
+      [
+        {
+          "objectiveId": "order_coffee",
+          "passed": true,
+          "feedback": "You correctly asked for a coffee for yourself.",
+          "vocabularyEvidence": [
+            {
+              "vocabularyId": "vorrei",
+              "evidence": "Vorrei",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "caffe",
+              "evidence": "caffè",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objectiveId": "no_milk",
+          "passed": false,
+          "feedback": "Specify in Italian that your coffee is without milk or black.",
+          "vocabularyEvidence": []
+        }
+      ],
+      [
+        {
+          "objectiveId": "no_milk",
+          "passed": true,
+          "feedback": "You clearly ordered your coffee without milk.",
+          "vocabularyEvidence": [
+            {
+              "vocabularyId": "senza_latte",
+              "evidence": "Senza latte",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ]
+    ],
+    "overallFeedback": [
+      "Your coffee request is correct. Add an Italian expression specifying no milk or black coffee.",
+      "Correct and natural—your preference is clear."
+    ],
+    "canonicalVocabulary": [
+      "espresso",
+      "caffe",
+      "vorrei",
+      "senza_latte"
+    ],
+    "dueReviewAvailable": true
+  },
+  "generationCalls": 14,
+  "budget": 14
+}

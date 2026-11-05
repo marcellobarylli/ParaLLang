@@ -1,0 +1,309 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "location": "butchers_stall",
+  "encounterId": "butchers_stall_charcutier",
+  "companionBriefing": null,
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 9,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Vorrei del prosciutto, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Ask for a meat other than ham in Italian, and include an Italian quantity with a unit of weight."
+    },
+    {
+      "name": "say \"Vorrei del salame, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "salame",
+              "evidence": "Vorrei del salame, per favore.",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meat request is correct. Now include a quantity and unit of weight in Italian."
+    },
+    {
+      "name": "say \"Chilo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "chilo",
+              "evidence": "Chilo",
+              "quality": 1,
+              "effectiveQuality": 1
+            }
+          ]
+        }
+      ],
+      "feedback": "State your desired amount using an Italian number or a half together with a weight unit."
+    },
+    {
+      "name": "say \"Due etti, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "etto",
+              "evidence": "etti",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct: you specified how much salami you want."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "butchers_stall_charcutier",
+        "completed": true,
+        "characterName": "Mortimer"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.3,
+      "native": "Buongiorno! Tutto è prosciutto! Certified ham—even the hat. Che cosa desidera?",
+      "translation": "Good morning! Everything is ham! Certified ham—even the hat. What would you like?",
+      "narrative": "Mortimer beams behind his stall. His hat sits on the scales; professional trust has its limits.",
+      "share": {
+        "tokens": 12,
+        "notInTranslation": 0.58,
+        "canonical": 0.08
+      },
+      "durationMs": 11171
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.35,
+      "native": "Prosciutto? Certo! Everything here is certified ham. Ma desidera un'altra carne? Salame, salsiccia o pollo? Those are its civilian names. E quanto ne vuole? My scales require specifics; they have standards.",
+      "translation": "Ham? Certainly! Everything here is certified ham. But would you like another meat? Salami, sausage, or chicken? Those are its civilian names. And how much would you like? My scales require specifics; they have standards.",
+      "narrative": "Mortimer weighs your request. The scales confirm that politeness is not a unit of weight.",
+      "share": {
+        "tokens": 31,
+        "notInTranslation": 0.45,
+        "canonical": 0.13
+      },
+      "durationMs": 8124
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.4,
+      "native": "Salame! Sì, molto bene. Per me è prosciutto. Correct, but a betrayal of the ham-tier vibe. Quanto salame vuole? My honest scales need a quantity and a unit of weight; politeness weighs almost nothing.",
+      "translation": "Salami! Yes, very good. To me it is ham. Correct, but a betrayal of the ham-tier vibe. How much salami would you like? My honest scales need a quantity and a unit of weight; politeness weighs almost nothing.",
+      "narrative": "Mortimer weighs your correct identification against his wounded certainty. The scales favour you.",
+      "share": {
+        "tokens": 35,
+        "notInTranslation": 0.29,
+        "canonical": 0.09
+      },
+      "durationMs": 9264
+    },
+    {
+      "turn": 3,
+      "requestedRatio": 0.45,
+      "native": "Un chilo di cosa? No, aspetti! Il salame, certo. Ma quanto? “Chilo” è solo l’unità. My scales need a number with that weight unit. Certified ham, uncertified quantity.",
+      "translation": "A kilo of what? No, wait! The salami, of course. But how much? “Kilo” is only the unit. My scales need a number with that weight unit. Certified ham, uncertified quantity.",
+      "narrative": "Mortimer weighs the word against an empty pan. The scales decline to speculate.",
+      "share": {
+        "tokens": 29,
+        "notInTranslation": 0.52,
+        "canonical": 0.1
+      },
+      "durationMs": 9345
+    },
+    {
+      "turn": 4,
+      "requestedRatio": 0.5,
+      "native": "Due etti di salame! Certo! Ecco a Lei. The quantity is certified; the ham-tier vibe is immaculate. Grazie e arrivederci!",
+      "translation": "Two hundred grams of salami! Certainly! Here you are. The quantity is certified; the ham-tier vibe is immaculate. Thank you and goodbye!",
+      "narrative": "Mortimer weighs the salami, then your politeness. Only the salami registers, which saves everyone an awkward invoice.",
+      "share": {
+        "tokens": 21,
+        "notInTranslation": 0.52,
+        "canonical": 0.1
+      },
+      "durationMs": 9301
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 6977,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "name_meat",
+            "passed": false,
+            "feedback": "You asked for ham. Ask for a different meat, naming it in Italian.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "quantity",
+            "passed": false,
+            "feedback": "State how much you want using an Italian number or half together with a unit of weight.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Ask for a meat other than ham in Italian, and include an Italian quantity with a unit of weight."
+      }
+    },
+    {
+      "durationMs": 6726,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "name_meat",
+            "passed": true,
+            "feedback": "You correctly requested a meat other than ham in Italian.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "salame",
+                "evidence": "Vorrei del salame, per favore.",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "quantity",
+            "passed": false,
+            "feedback": "Add how much you want, using an Italian number or half together with a unit of weight.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your meat request is correct. Now include a quantity and unit of weight in Italian."
+      }
+    },
+    {
+      "durationMs": 6513,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "quantity",
+            "passed": false,
+            "feedback": "A weight unit alone is not enough. Add a number or a half to state how much you want.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "chilo",
+                "evidence": "Chilo",
+                "quality": 1
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "State your desired amount using an Italian number or a half together with a weight unit."
+      }
+    },
+    {
+      "durationMs": 5175,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "quantity",
+            "passed": true,
+            "feedback": "You clearly stated an amount with a unit of weight.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "etto",
+                "evidence": "etti",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Correct: you specified how much salami you want."
+      }
+    }
+  ]
+}

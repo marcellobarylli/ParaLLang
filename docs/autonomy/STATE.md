@@ -7,8 +7,8 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **A4** (The Butcher's Stall, content only; see the "Adding an encounter" note below), or the
-  small **E1** if a round needs a warm-up.
+- Nothing. Next: **A5** (The Cracked Fountain, content only; see the "Adding an encounter" note below), or
+  **E3** (narration rule against listing an open objective's answers) if a smaller round fits.
 
 ## Backlog
 
@@ -23,7 +23,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   by location (per-encounter vocabulary, character, objectives), with Gerald unchanged in behaviour.
 - [x] **A3. Market Entrance tutorial.** (round 009, closed 2026-11-05) Portia the Archway (greet, introduce,
   ask back), companion briefing card, Italian and Spanish packs.
-- [ ] **A4. The Butcher's Stall.** The Charcutier (meats, quantities, numbers).
+- [x] **A4. The Butcher's Stall.** (round 010, closed 2026-11-05) Mortimer the Charcutier (name a meat that is not
+  ham, a quantity with a unit); also fixed the grading rubric, which never showed surface forms.
 - [ ] **A5. The Cracked Fountain.** A Letharger with riddles (time, directions, commands). Tie in the notes'
   Lethargers (attention, brainrot as a mild infohazard).
 - [ ] **A6. The Old Bookshop.** Lore-heavy NPC with advanced passages (abstract nouns, reading).
@@ -71,6 +72,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **E1. Opening-line language share.** Round 009: first NPC lines carry 0.05–0.24 target language against
   0.20 requested (Gerald 0.19 vs 0.25). Measure over a few runs per encounter, then adjust the greeting template or
   language rules; keep the golden-prompt test in step (regenerate on purpose).
+- [ ] **E3. NPCs list the answers.** Round 010: after a wrong request Mortimer offers the passing meats ("Vuoi salame,
+  salsiccia o pollo?") in 3/3 runs; Portia asks "Come ti chiami?" before the ask-back objective (round 009, 3/4).
+  The style rule allows target words in the NPC's own questions. Decide (pending owner review) whether to add
+  "never list or model the answers to an open objective", then A/B with `play-market.js` as in round 007.
 - [ ] **E2. Author the greetings Portia uses unprompted** (piacere, benvenuto; mucho gusto, bienvenido) so they get
   chips and Spellbook cards.
 
@@ -86,6 +91,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - Round 009: check the Market Entrance tutorial in the Simulator (companion card, first screen at the top, later
   turns scroll), review Portia's content and reference URLs, and decide whether Portia may model "come ti chiami"
   before the ask-back objective ([open items](../rounds/009/findings.md#open-items)).
+- Round 010: review Mortimer's content and reference URLs, the dropped Italian `due` entry, and whether NPCs may
+  list an open objective's answers as options ([open items](../rounds/010/findings.md#open-items)).
 
 ## Progress
 
@@ -101,6 +108,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-05, iteration 2: round 009 (A3) built and closed: Portia's tutorial at the Market Entrance, companion
   briefing, per-encounter narration matching; server 82/82, mobile 20/20, client 12/12; live tutorial 4/4 resolved
   (it ×3, es ×1), Gerald unchanged.
+- 2026-11-05, iteration 2: round 010 (A4) built and closed: Mortimer at The Butcher's Stall; live runs found that
+  the grading rubric never showed surface forms (plurals failed evidence); fixed by Amendment; server 85/85, mobile
+  20/20, client 12/12; butcher 3/3 resolved after the fix, verify:cli 9/9. Iteration 2 ends here (rounds 009–010).
 
 ## Handoff notes and traps
 
@@ -114,6 +124,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   record the bundle's file list and sha256 in the critique header.
 - Live data: `node server/scripts/play-market.js --provider codex-cli --out <file>` (in-process, ~40 s, 5 calls)
   and `npm run verify:cli -- --provider codex-cli` (~2 min, 14 calls). Both passed in round 005.
+- **Always script a plural or variant answer in live runs.** Round 010's bug (rubric without `forms`) was invisible
+  for nine rounds because every scripted answer used the canonical form. The grading rubric now carries `forms`; the
+  narration data deliberately does not (Gerald's golden prompts).
+- **Surface variants that are English words** ("due", "chili", "media", "soy") get chipped in the NPC's English
+  text, because matching is language-blind. Leave them out or accept the risk knowingly (round 009 kept "soy").
 - **Narration chips are per encounter since round 009**: `definition.narrationEntries` holds the whole vocabulary
   files that the encounter's objectives target. A new encounter's words only show in its own lines; to share a file
   (e.g. reviewing all words in the Rift, A7), target an entry of each file from an objective.

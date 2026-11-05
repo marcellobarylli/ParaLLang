@@ -1,0 +1,320 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "location": "butchers_stall",
+  "encounterId": "butchers_stall_charcutier",
+  "companionBriefing": null,
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 9,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Quiero jamón, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Request a meat other than ham in Spanish and include a quantity with a weight unit."
+    },
+    {
+      "name": "say \"Quiero chorizo, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "chorizo",
+              "evidence": "chorizo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meat request is correct. Now add the quantity in Spanish, including a unit of weight."
+    },
+    {
+      "name": "say \"Kilo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "kilo",
+              "evidence": "Kilo",
+              "quality": 3,
+              "effectiveQuality": 3
+            }
+          ]
+        }
+      ],
+      "feedback": "You named a weight unit, but still need to specify an amount in Spanish."
+    },
+    {
+      "name": "say \"Medio kilo, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "kilo",
+              "evidence": "kilo",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "medio",
+              "evidence": "Medio",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you ordered half a kilo politely."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "butchers_stall_charcutier",
+        "completed": true,
+        "characterName": "Mortimer"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.3,
+      "native": "¡Hola! Todo es jamón. This one? Certified ham. The hat? Ham-adjacent. ¿Qué quieres?",
+      "translation": "Hello! Everything is ham. This one? Certified ham. The hat? Ham-adjacent. What would you like?",
+      "narrative": "Mortimer beams behind the butcher’s stall and places his hat on the scales. Professional standards must begin somewhere.",
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.43,
+        "canonical": 0.07
+      },
+      "durationMs": 7776
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.35,
+      "native": "¡Jamón! Excelente, pero todo es jamón. ¿Quieres chorizo, salchicha o pollo? Pick a different meat, my friend. Then we shall discuss weight. My scales dislike suspense.",
+      "translation": "Ham! Excellent, but everything is ham. Do you want chorizo, sausage, or chicken? Pick a different meat, my friend. Then we shall discuss weight. My scales dislike suspense.",
+      "narrative": "Mortimer weighs your request. The scales register perfect agreement, which is not the same as progress.",
+      "share": {
+        "tokens": 26,
+        "notInTranslation": 0.38,
+        "canonical": 0.19
+      },
+      "durationMs": 7617
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.4,
+      "native": "¡Chorizo! ¡Muy bien! A correct name. Delighted. Slightly betrayed. Still certified jamón. ¿Cuánto quieres? ¿Kilos o gramos? My scales require a quantity, not a whole vibe.",
+      "translation": "Chorizo! Very good! A correct name. Delighted. Slightly betrayed. Still certified ham. How much do you want? Kilos or grams? My scales require a quantity, not a whole vibe.",
+      "narrative": "Mortimer beams, then weighs his approval. The scales find it excessive.",
+      "share": {
+        "tokens": 26,
+        "notInTranslation": 0.27,
+        "canonical": 0.15
+      },
+      "durationMs": 8462
+    },
+    {
+      "turn": 3,
+      "requestedRatio": 0.45,
+      "native": "¡Un momento! ¿Cuánto chorizo quieres? Necesito una cantidad y una unidad. A unit alone is not enough, my friend. My scales are honest, but tragically not psychic.",
+      "translation": "One moment! How much chorizo do you want? I need an amount and a unit. A unit alone is not enough, my friend. My scales are honest, but tragically not psychic.",
+      "narrative": "Mortimer weighs the empty air above the scales. The result supports his concerns.",
+      "share": {
+        "tokens": 27,
+        "notInTranslation": 0.37,
+        "canonical": 0.04
+      },
+      "durationMs": 8236
+    },
+    {
+      "turn": 4,
+      "requestedRatio": 0.5,
+      "native": "¡Medio kilo de chorizo! ¡Perfecto! Aquí tienes. My honest scales approve. Correct meat, correct quantity. Certified ham-tier shopping. ¡Gracias!",
+      "translation": "Half a kilo of chorizo! Perfect! Here you are. My honest scales approve. Correct meat, correct quantity. Certified ham-tier shopping. Thank you!",
+      "narrative": "Mortimer weighs the chorizo, then your good manners. Only the first receives a price label.",
+      "share": {
+        "tokens": 20,
+        "notInTranslation": 0.3,
+        "canonical": 0.15
+      },
+      "durationMs": 8035
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 7013,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "name_meat",
+            "passed": false,
+            "feedback": "You asked for ham. Ask for a different meat, naming it in Spanish.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "quantity",
+            "passed": false,
+            "feedback": "State how much you want using a Spanish number or half together with a weight unit.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Request a meat other than ham in Spanish and include a quantity with a weight unit."
+      }
+    },
+    {
+      "durationMs": 5451,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "name_meat",
+            "passed": true,
+            "feedback": "You clearly requested a meat other than ham in Spanish.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "chorizo",
+                "evidence": "chorizo",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "quantity",
+            "passed": false,
+            "feedback": "Add how much you want, using a Spanish number or half together with a unit of weight.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your meat request is correct. Now add the quantity in Spanish, including a unit of weight."
+      }
+    },
+    {
+      "durationMs": 9113,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "quantity",
+            "passed": false,
+            "feedback": "Add a Spanish number or half to the weight unit to say how much you want.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "kilo",
+                "evidence": "Kilo",
+                "quality": 3
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "You named a weight unit, but still need to specify an amount in Spanish."
+      }
+    },
+    {
+      "durationMs": 4588,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "quantity",
+            "passed": true,
+            "feedback": "You clearly stated how much chorizo you want, using a quantity and a weight unit.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "kilo",
+                "evidence": "kilo",
+                "quality": 5
+              },
+              {
+                "vocabulary_id": "medio",
+                "evidence": "Medio",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Correct—you ordered half a kilo politely."
+      }
+    }
+  ]
+}

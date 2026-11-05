@@ -112,3 +112,11 @@ change, so `verify:cli` (codex-cli, Italian) is re-run alongside the three butch
 
 **Decision.** Autonomous, pending owner review: a prompt fix rather than a content workaround (making "etti" the
 target), because every plural or alternative spelling in every pack had the same problem.
+
+## Outcome (2026-11-05)
+
+Built as designed, plus the Amendment: the first live Italian runs could not resolve because the grading rubric
+never showed authored surface forms, so "Due etti" passed without evidence and was rejected. With `forms` in the
+rubric, the butcher resolved 3/3 (two Italian, one Spanish) with every scripted line graded as intended, and Gerald's
+`verify:cli` stayed 9/9. Tests: server 85/85, mobile 20/20, web client 12/12 and build. Found: Mortimer lists the
+passing meats after a wrong request (3/3 after runs). See [findings](findings.md).

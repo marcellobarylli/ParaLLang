@@ -18,9 +18,9 @@ The entry point for agents: the current state, how the project is logged, and th
   tested in the iOS Simulator against the local server (`npm run dev:server`, `npm run dev:ios`). The web client in
   `client/` is frozen: it is kept working, but new features go to the app ([round 004](docs/rounds/004/architecture.md)).
 - **World.** The app opens on the Crumbling Market map (six locations, fog of war, saved position;
-  [round 005](docs/rounds/005/architecture.md)). Two locations have encounters: the Market Entrance tutorial with
-  Portia the Archway and a companion briefing ([round 009](docs/rounds/009/architecture.md)), and Gerald at The
-  Coffee Cart. New encounters are content only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
+  [round 005](docs/rounds/005/architecture.md)). Three locations have encounters: the Market Entrance tutorial with
+  Portia the Archway and a companion briefing ([round 009](docs/rounds/009/architecture.md)), Gerald at The Coffee
+  Cart, and Mortimer the Charcutier at The Butcher's Stall ([round 010](docs/rounds/010/architecture.md)). New encounters are content only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
 - **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and neither NPCs nor the
   grader's feedback give the answer away ([round 007](docs/rounds/007/architecture.md),
@@ -28,6 +28,16 @@ The entry point for agents: the current state, how the project is logged, and th
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 010, The Butcher's Stall (autonomous)
+
+Mortimer the Charcutier calls every cut ham; the player names a real meat (asking for ham fails) and says how much,
+with a unit (a bare unit fails); Italian and Spanish, content only. The first live Italian runs found an old grading
+bug: the rubric never showed authored surface forms, so plurals such as "etti" passed without evidence and the server
+rejected the verdict. The rubric now lists them (Amendment). Codex critique 1: 7 findings, accepted in full or in
+part, autonomously. Tests: server 85/85, mobile 20/20, web client 12/12 and build. Live codex-cli after the fix:
+butcher 3/3 resolved with every scripted line graded as intended, Gerald's `verify:cli` 9/9. Mortimer offers the
+passing meats as a menu after a wrong request (3/3). See [findings](docs/rounds/010/findings.md).
 
 ## Addendum 2026-11-05: round 009, the Market Entrance tutorial (autonomous)
 
@@ -121,6 +131,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 010 | 11-05 | The Butcher's Stall: Mortimer the Charcutier (meats, quantities); grading rubric shows surface forms (autonomous) | [010](docs/rounds/010/architecture.md) | [findings](docs/rounds/010/findings.md) | `a90ff32` (pre-run record) to round 010 close |
 | 009 | 11-05 | Market Entrance tutorial: Portia the Archway (greetings, pronouns), companion briefing, per-encounter narration matching (autonomous) | [009](docs/rounds/009/architecture.md) | [findings](docs/rounds/009/findings.md) | `a59f548` (pre-run record) to round 009 close |
 | 008 | 11-05 | Grader feedback stops giving the answer away (autonomous) | [008](docs/rounds/008/architecture.md) | [findings](docs/rounds/008/findings.md) | `e525608` (pre-run record) to round 008 close |
 | 007 | 11-05 | Tone layer: style guide in the narration prompt (Pratchett × meme culture), no dictated answers (autonomous) | [007](docs/rounds/007/architecture.md) | [findings](docs/rounds/007/findings.md) | `d9b0861` (pre-run record) to round 007 close |
