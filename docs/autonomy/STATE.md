@@ -126,6 +126,18 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (new upstream releases; nothing in the repo changed; 3 packages out of date by round 014). `npx expo install --fix` in `mobile/`, then re-run jest,
   expo-doctor and the iOS export. Simulator check of the update goes to "Needs owner".
 
+### G. Follow-ups seeded in iteration 12 (from deferred items of rounds 011, 023, 032–033)
+
+- [ ] **G1. Party-screen hint.** Show how many conversations remain until a member's next fragment (rounds 032–033
+  left it as an owner question: decide autonomously, record it). No live calls needed.
+- [ ] **G2. Leak check for bare target words inside authored phrases** (round 023: "¿Quieres más?"): a test or
+  `replay-leaks.mjs`-style scan over authored content and live reports. No live calls needed for the content part.
+- [ ] **G3. Unordered objectives** (round 023): an encounter may mark objectives as completable in any order; engine
+  and tests first (no live), then one live run.
+- [ ] **G4. Relationship tiers that change the conversation** (rounds 032–033): a deeper party conversation after N
+  conversations; needs live runs.
+- [ ] **G5. Telling the time at the Fountain** (round 011 deferred it); content plus live runs.
+
 ### F. Maintenance
 
 - [x] **F1. Test temp dirs.** (round 024, closed 2026-11-05: `makeTempDir` in helpers.js, removed at process exit) Server tests `mkdtemp` save dirs under `/tmp` and never remove them; `/tmp` is a 64 MB
