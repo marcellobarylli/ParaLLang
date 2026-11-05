@@ -17,7 +17,7 @@ test('the language-mix rule renders the percentage and a 20-word example that ag
     assert.ok(system.includes(`- Language mix: about ${pct}% of the words in each dialogue line are Italian, the greeting included (in a 20-word line, about ${words} words). Stay within about 10 points of it, under or over.`), `ratio ${ratio}`);
   }
   const system = render(0.25);
-  assert.match(system, /- Reach it with short, whole Italian phrases \(greetings, questions, reactions, remarks\) that the English around them explains, not a single Italian formula inside a long English line\./);
+  assert.match(system, /- Reach it with short, whole Italian phrases \(questions, reactions, remarks\) that the English around them explains, not a single Italian formula inside a long English line\./);
   assert.doesNotMatch(system, /Target approximately/);
 });
 

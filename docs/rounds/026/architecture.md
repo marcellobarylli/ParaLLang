@@ -130,3 +130,20 @@ See [`results/hand-count.md`](results/hand-count.md).
 the estimate showed false regressions, and the hand count overturns both. Moving the bar after the run is named here
 as such. The after-build tours remain an integration check (both must pass, with no new open-answer line found by
 reading). If they fail, the rule is reverted.
+
+## Amendment 2 (2026-11-05): "greetings" dropped from the rule's list of phrases
+
+**Why.** `results/replay-leaks.mjs` found Portia's greeting saying her open greet answer in 2 of 4 new-rule replays
+(it "Buongiorno.", es "Hola.") against 0 of 4 under the old rule. The new rule's second line listed "greetings"
+among the short phrases to use, and Portia's first objective asks the player to greet her: the rule invited her to
+say the answer.
+
+**Change.** `prompts/system/base.txt`: "(greetings, questions, reactions, remarks)" becomes "(questions, reactions,
+remarks)". The replay script's `NEW_RULE` and the assertion in `server/test/language-mix.test.js` follow; the r026
+golden fixture is regenerated with `results/gen-golden.mjs` (the fixture keeps its name: same round). The replay
+script gained `--only id,id` to replay a subset. Server 135/135, mobile 37/37, web client 12/12.
+
+**Check (after Codex's reset).** Paired replays for Portia, Gerald and Errata in both languages (`--only`), read for
+open-answer lines with `replay-leaks.mjs`; the bar is 0 greet-answer lines from Portia under the amended rule and
+mean gaps no worse than the round's first replays. Then the after-build tours as in Amendment 1. If the check fails,
+the rule is reverted by Amendment.

@@ -1,7 +1,7 @@
 // Round 026: paired greeting replays. For every encounter of the pack, renders the greeting prompt as startEncounter
 // does, once with the HEAD language-mix rule (old) and once with the round 026 rule (new), and sends each to the
 // provider `--reps` times, alternating variants. Records each greeting's share estimate.
-//   TARGET_LANGUAGE=it node docs/rounds/026/results/greeting-replay.mjs --provider codex-cli [--reps 2] --out <file>
+//   TARGET_LANGUAGE=it node docs/rounds/026/results/greeting-replay.mjs --provider codex-cli [--reps 2] [--only id,id] --out <file>
 import { writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { CLI_PROVIDERS, loadRootEnv } from '../../../../server/src/config.js';
@@ -11,7 +11,7 @@ import { buildNarrationMessages } from '../../../../server/src/llm/prompt-builde
 import { languageShare } from '../../../../server/scripts/play-market.js';
 
 const OLD_RULE = (pct, name) => `- Target approximately ${pct}% ${name} in dialogue.`;
-export const NEW_RULE = (pct, name, per20) => `- Language mix: about ${pct}% of the words in each dialogue line are ${name}, the greeting included (in a 20-word line, about ${per20} words). Stay within about 10 points of it, under or over.\n- Reach it with short, whole ${name} phrases (greetings, questions, reactions, remarks) that the English around them explains, not a single ${name} formula inside a long English line.`;
+export const NEW_RULE = (pct, name, per20) => `- Language mix: about ${pct}% of the words in each dialogue line are ${name}, the greeting included (in a 20-word line, about ${per20} words). Stay within about 10 points of it, under or over.\n- Reach it with short, whole ${name} phrases (questions, reactions, remarks) that the English around them explains, not a single ${name} formula inside a long English line.`;
 
 // The greeting messages of an encounter, as startEncounter renders them (party conversations at the market's start).
 export function greetingMessages(content, definition) {
@@ -46,8 +46,10 @@ async function main(args = process.argv.slice(2), env = process.env) {
   const out = args[args.indexOf('--out') + 1];
   const content = loadGameContent({ language: env.TARGET_LANGUAGE ?? 'it' });
   const adapter = createLLMAdapter({}, env);
+  const only = args.includes('--only') ? new Set(args[args.indexOf('--only') + 1].split(',')) : null;
   const results = [];
   for (const [id, definition] of content.encounters) {
+    if (only && !only.has(id)) continue;
     const { messages, ratio } = greetingMessages(content, definition);
     const pair = variants(messages, ratio, content.language.name);
     for (let rep = 0; rep < reps; rep += 1) {
