@@ -164,3 +164,15 @@ test('each language keeps its own Spellbook; Spanish saves stay at the top of th
   assert.deepEqual(back.data.cards.map((card) => card.vocabularyId), spanishCards);
   assert.deepEqual(back.data.cards.map((card) => card.target), started.spellbook.cards.map((card) => card.target));
 });
+
+test('the grading prompt forbids feedback that gives away an open objective (round 008)', () => {
+  for (const code of ['it', 'es']) {
+    const content = loadGameContent({ language: code });
+    const [system] = buildGradingMessages({
+      language: content.language, objectives: content.encounter.objectives, vocabularyById: content.vocabularyById,
+      conversationContext: [], playerInput: 'Ciao',
+    });
+    assert.match(system.content, new RegExp(`While an objective has not passed, never write a ${content.language.name} expression that would satisfy it, not even by quoting the learner`));
+    assert.match(system.content, /shown to the learner before their next attempt/);
+  }
+});

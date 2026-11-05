@@ -104,6 +104,7 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
         schemaValid: true,
         durationMs: stop(),
         feedback: validated.overall_feedback,
+        objectiveFeedback: validated.objective_results.map((result) => ({ objectiveId: result.objective_id, passed: result.passed, feedback: result.feedback })),
       });
     }
 
@@ -162,6 +163,7 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
         totalMs: routeStop(),
         finalState: second.encounter.state,
         objectiveResults: [first.assessment.objectiveResults, second.assessment.objectiveResults],
+        overallFeedback: [first.assessment.overallFeedback, second.assessment.overallFeedback],
         canonicalVocabulary: second.spellbook.cards.map((card) => card.vocabularyId),
         dueReviewAvailable: Boolean(review.challenge),
       },
