@@ -102,6 +102,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - [x] **C5. Hear the words of an encounter line** (round 055, closed 2026-11-05): a pronounce button per word chip under NPC lines
   (TTS was only in the Spellbook and reviews; prototype.md Phase 4). No live calls.
+- [ ] **C6. Word chips by class** (round 056): nouns, verbs and adjectives coloured with a label (owner's GAME
+  MECHANICS note, "R/G/B for noun/verb/adjective"). No live calls.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
 - [ ] **D1.** (claude-cli preflight accepts an OAuth token since round 018; still blocked: no token in the shell)
