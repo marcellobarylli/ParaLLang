@@ -116,7 +116,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   left it as an owner question: decide autonomously, record it). No live calls needed.
 - [x] **G2. Leak check for bare target words inside authored phrases** (round 044, closed 2026-11-05: `server/scripts/leak-scan.js`; 6 near-leaks in 611 lines, no fix) (round 023: "¿Quieres más?"): a test or
   `replay-leaks.mjs`-style scan over authored content and live reports. No live calls needed for the content part.
-- [ ] **G3. Unordered objectives** (round 023): an encounter may mark objectives as completable in any order; engine
+- [x] **G3. Unordered objectives** (round 045, closed 2026-11-05: `objectives_unordered`, Mortimer's tasting; live it/es passed) (round 023): an encounter may mark objectives as completable in any order; engine
   and tests first (no live), then one live run.
 - [ ] **G4. Relationship tiers that change the conversation** (rounds 032–033): a deeper party conversation after N
   conversations; needs live runs.

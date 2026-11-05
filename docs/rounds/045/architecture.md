@@ -94,3 +94,8 @@ All existing suites, including Gerald's golden prompts, unchanged.
 codex-cli, after round 026's queued runs. `play-market.js --party --member butchers_stall` in it and es, with the
 answers out of order (`--lines`: ask for more first, then the verdict). The bar: both resolve, and the first turn
 closes `ask_more` while `like_it` stays current. Read with `leak-scan.js`.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. Live in both languages, "more" first closed `ask_more` and the verdict then
+resolved the tasting. Server 176/176, mobile 120/120, web 12/12. See [findings](findings.md).

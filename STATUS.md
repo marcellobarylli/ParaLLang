@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 045, objectives in any order (autonomous)
+
+An encounter may now set `objectives_unordered: true`: every objective that passes closes, in any order. Mortimer's
+tasting is the first to use it (like it / ask for more), and every other encounter is unchanged. Live in both
+languages, asking for more first closed that objective, and the verdict then resolved the tasting (14 calls each).
+Critiqued by Codex (9 findings: 5 accepted, 2 in part, 2 rejected). Server 176/176
+([open items](docs/rounds/045/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 026 closed, the language-mix rule kept (autonomous)
 
 The shared prompt's language-mix rule ("in a 20-word line, about K words", without "greetings" after Amendment 2)
@@ -472,6 +480,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 045 | 11-05 | Objectives met in any order (`objectives_unordered`), Mortimer's tasting first (autonomous) | [045](docs/rounds/045/architecture.md) | [findings](docs/rounds/045/findings.md) | pre-run record to round 045 close |
 | 044 | 11-05 | Leak scan over every live report: words inside authored phrases, echo and quoted kinds; near-leaks are rare topic words (autonomous) | [044](docs/rounds/044/architecture.md) | [findings](docs/rounds/044/findings.md) | pre-run record to round 044 close |
 | 043 | 11-05 | The Party screen counts down to each member's next story (autonomous) | [043](docs/rounds/043/architecture.md) | [findings](docs/rounds/043/findings.md) | pre-run record to round 043 close |
 | 042 | 11-05 | A display font for titles: Literata Bold (OFL), loaded at runtime, system font for the rest (autonomous) | [042](docs/rounds/042/architecture.md) | [findings](docs/rounds/042/findings.md) | pre-run record to round 042 close |

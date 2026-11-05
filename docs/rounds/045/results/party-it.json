@@ -1,0 +1,514 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "party": true,
+  "recruited": true,
+  "resolved": true,
+  "completedOnMap": true,
+  "conversationOffMap": true,
+  "conversations": 1,
+  "generationCalls": 14,
+  "home": {
+    "location": "butchers_stall",
+    "sceneLocation": "butchers_stall",
+    "encounterId": "butchers_stall_charcutier",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": true,
+    "generationCalls": 9,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "Buongiorno! Tutto prosciutto! Even the hat is certified ham. My scales never lie. Che cosa desidera?",
+        "translation": "Good morning! Everything is ham! Even the hat is certified ham. My scales never lie. What would you like?",
+        "narrative": "Mortimer booms across the stall and places his hat on the scales. In The Crumbling Market, trust must be weighed.",
+        "share": {
+          "tokens": 16,
+          "notInTranslation": 0.38,
+          "canonical": 0.06
+        },
+        "durationMs": 9953
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "Certamente! Il prosciutto è prosciutto! Certified ham, impeccable logic. But I need a different meat named, not ham. Che cosa desidera?",
+        "translation": "Certainly! Ham is ham! Certified ham, impeccable logic. But I need a different meat named, not ham. What would you like?",
+        "narrative": "Mortimer weighs your request. The scales confirm that it contains ham, but no useful distinction.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.38,
+          "canonical": 0.1
+        },
+        "durationMs": 6577
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "Sì, salame! Ha ragione! Correctly named. I'm delighted. Slightly betrayed. Questo prosciutto è speciale. Quanto ne vuole? My scales await greatness.",
+        "translation": "Yes, salami! You're right! Correctly named. I'm delighted. Slightly betrayed. This ham is special. How much would you like? My scales await greatness.",
+        "narrative": "Mortimer beams, then weighs his approval. The scales remain professionally unmoved.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.52,
+          "canonical": 0.1
+        },
+        "durationMs": 7770
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.45,
+        "native": "Un momento! Manca la quantità. Quanto ne vuole? La bilancia aspetta! A unit alone is ham-adjacent paperwork, not a purchase.",
+        "translation": "One moment! The quantity is missing. How much would you like? The scales are waiting! A unit alone is ham-adjacent paperwork, not a purchase.",
+        "narrative": "Mortimer weighs your answer. The scales register a unit, but decline to invent the rest.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.52,
+          "canonical": 0
+        },
+        "durationMs": 9888
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.5,
+        "native": "Due etti! Certamente, ecco il suo salame. La quantità è giusta! Correct quantity, certified ham-tier precision. My scales approve. Grazie e arrivederci!",
+        "translation": "Two hundred grams! Certainly, here is your salami. The quantity is correct! Correct quantity, certified ham-tier precision. My scales approve. Thank you and goodbye!",
+        "narrative": "Mortimer weighs the salami, then your compliment to his efficiency, which nobody remembers making. The scales approve both.",
+        "share": {
+          "tokens": 23,
+          "notInTranslation": 0.61,
+          "canonical": 0.09
+        },
+        "durationMs": 10268
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 5237,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "name_meat",
+              "passed": false,
+              "feedback": "You asked for ham. Request a different meat, naming it in Italian.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "quantity",
+              "passed": false,
+              "feedback": "State how much you want using an Italian number or half together with a weight unit.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Ask for a meat other than ham in Italian, and include a quantity with a weight unit."
+        }
+      },
+      {
+        "durationMs": 5201,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "name_meat",
+              "passed": true,
+              "feedback": "You correctly requested a meat other than ham in Italian.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "salame",
+                  "evidence": "salame",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "quantity",
+              "passed": false,
+              "feedback": "State how much you want using an Italian number or half together with a unit of weight.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your meat request is correct. Add the quantity you want in Italian, including a unit of weight."
+        }
+      },
+      {
+        "durationMs": 4621,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "quantity",
+              "passed": false,
+              "feedback": "You named a weight unit, but you still need an Italian number or half to say how much you want.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "chilo",
+                  "evidence": "Chilo",
+                  "quality": 1
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Add an Italian number or half before the weight unit to state your order."
+        }
+      },
+      {
+        "durationMs": 5989,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "quantity",
+              "passed": true,
+              "feedback": "You correctly stated the amount you want with a number and a weight unit.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "etto",
+                  "evidence": "etti",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct! Your order clearly specifies the quantity."
+        }
+      }
+    ]
+  },
+  "conversation": {
+    "location": "market_entrance",
+    "sceneLocation": "market_entrance",
+    "encounterId": "mortimer_tasting",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": false,
+    "generationCalls": 5,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "Buongiorno! Questo è prosciutto. Anche questo. Welcome! Everything here is certified ham. My hat? A ham-tier vibe.",
+        "translation": "Good morning! This is ham. This too. Welcome! Everything here is certified ham. My hat? A ham-tier vibe.",
+        "narrative": "At the Market Entrance, Mortimer weighs his hat. The scales offer no objection, which he takes as professional agreement.",
+        "share": {
+          "tokens": 18,
+          "notInTranslation": 0.33,
+          "canonical": 0
+        },
+        "durationMs": 14352
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "Volentieri! Un'altra fetta per te. More ham: approved. Ti piace questa fetta? Your request passed; your personal verdict remains tragically unweighed.",
+        "translation": "Gladly! Another slice for you. More ham: approved. Do you like this slice? Your request passed; your personal verdict remains tragically unweighed.",
+        "narrative": "Mortimer grants another slice, then places an empty saucer on his scales. Your opinion apparently requires crockery.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.43,
+          "canonical": 0
+        },
+        "durationMs": 14907
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "Grazie! Ti piace molto! Sono contento. Questo prosciutto è per te. Your verdict: certified ham. Your Italian passes. My hat endorses both.",
+        "translation": "Thank you! You like it very much! I’m happy. This ham is for you. Your verdict: certified ham. Your Italian passes. My hat endorses both.",
+        "narrative": "Mortimer weighs your compliment. The scales approve, having no jurisdiction over taste.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.5,
+          "canonical": 0
+        },
+        "durationMs": 9267
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 8192,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "like_it",
+              "passed": false,
+              "feedback": "Say in Italian that you like the slice, using the singular form.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "ask_more",
+              "passed": true,
+              "feedback": "You correctly asked for more in Italian.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "ancora",
+                  "evidence": "Ancora un po', per favore!",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Your request for more is correct. Also give your own positive verdict on the slice in Italian."
+        }
+      },
+      {
+        "durationMs": 5164,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "like_it",
+              "passed": true,
+              "feedback": "You clearly gave your own positive verdict on the slice.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "mi_piace",
+                  "evidence": "Mi piace molto, Mortimer!",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct! You said you like the slice using the singular form."
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Vorrei del prosciutto, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Ask for a meat other than ham in Italian, and include a quantity with a weight unit."
+    },
+    {
+      "name": "say \"Vorrei del salame, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "salame",
+              "evidence": "salame",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meat request is correct. Add the quantity you want in Italian, including a unit of weight."
+    },
+    {
+      "name": "say \"Chilo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "chilo",
+              "evidence": "Chilo",
+              "quality": 1,
+              "effectiveQuality": 1
+            }
+          ]
+        }
+      ],
+      "feedback": "Add an Italian number or half before the weight unit to state your order."
+    },
+    {
+      "name": "say \"Due etti, per favore.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "etto",
+              "evidence": "etti",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! Your order clearly specifies the quantity."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "butchers_stall_charcutier",
+        "completed": true,
+        "characterName": "Mortimer",
+        "characterId": "charcutier_mortimer_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "recruit butchers_stall_charcutier",
+      "ok": true,
+      "party": [
+        {
+          "characterId": "charcutier_mortimer_001",
+          "name": "Mortimer",
+          "encounterId": "butchers_stall_charcutier",
+          "locationId": "butchers_stall",
+          "locationName": "The Butcher's Stall",
+          "joinedAt": "2026-11-05T20:58:46.501Z",
+          "conversations": 0,
+          "conversationId": "mortimer_tasting",
+          "nextStoryAt": 3,
+          "storiesTold": 0
+        }
+      ],
+      "joined": true
+    },
+    {
+      "name": "move to market_entrance",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Ancora un po', per favore!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "like_it",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "ask_more",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "ancora",
+              "evidence": "Ancora un po', per favore!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Your request for more is correct. Also give your own positive verdict on the slice in Italian."
+    },
+    {
+      "name": "say \"Mi piace molto, Mortimer!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "like_it",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "mi_piace",
+              "evidence": "Mi piace molto, Mortimer!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! You said you like the slice using the singular form."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": false,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    }
+  ]
+}

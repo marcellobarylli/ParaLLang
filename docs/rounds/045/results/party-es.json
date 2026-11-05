@@ -1,0 +1,525 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "party": true,
+  "recruited": true,
+  "resolved": true,
+  "completedOnMap": true,
+  "conversationOffMap": true,
+  "conversations": 1,
+  "generationCalls": 14,
+  "home": {
+    "location": "butchers_stall",
+    "sceneLocation": "butchers_stall",
+    "encounterId": "butchers_stall_charcutier",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": true,
+    "generationCalls": 9,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "¡Hola! Todo es jamón. Even the hat. Certified ham-tier quality! ¿Qué desea? My scales are honest; the hat has been evasive.",
+        "translation": "Hello! Everything is ham. Even the hat. Certified ham-tier quality! What would you like? My scales are honest; the hat has been evasive.",
+        "narrative": "Mortimer’s stall leans into the market’s general collapse. He places his hat on the scales with professional confidence.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.27,
+          "canonical": 0.05
+        },
+        "durationMs": 9657
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "¡Jamón, claro! Pero necesito otro nombre. That's my label for everything, not a different meat. ¿Qué carne quiere? My hat remains certified ham.",
+        "translation": "Ham, of course! But I need another name. That's my label for everything, not a different meat. What meat would you like? My hat remains certified ham.",
+        "narrative": "Mortimer gestures across the entire stall, then at his hat. Neither provides a useful distinction.",
+        "share": {
+          "tokens": 23,
+          "notInTranslation": 0.39,
+          "canonical": 0.04
+        },
+        "durationMs": 10917
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "¡Chorizo, correcto! You know my jamón personally. Me gusta. ¿Qué cantidad quiere? Include the weight unit; my scales reject vague vibes.",
+        "translation": "Chorizo, correct! You know my ham personally. I like that. What quantity would you like? Include the weight unit; my scales reject vague vibes.",
+        "narrative": "Mortimer weighs your correct answer. The scales register a compliment, which he reluctantly allows you to keep.",
+        "share": {
+          "tokens": 21,
+          "notInTranslation": 0.33,
+          "canonical": 0.1
+        },
+        "durationMs": 8146
+      },
+      {
+        "turn": 3,
+        "requestedRatio": 0.45,
+        "native": "¡Casi! Falta la cantidad. ¿Cuánto chorizo quiere? My scales need a number with that unit. El jamón exige precisión. Certified ham bureaucracy!",
+        "translation": "Almost! The quantity is missing. How much chorizo would you like? My scales need a number with that unit. The ham demands precision. Certified ham bureaucracy!",
+        "narrative": "Mortimer places a solitary weight on the scales. They remain unimpressed, professionally.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.45,
+          "canonical": 0.09
+        },
+        "durationMs": 6106
+      },
+      {
+        "turn": 4,
+        "requestedRatio": 0.5,
+        "native": "¡Medio kilo, perfecto! Aquí tiene su jamón. Certified ham, accurately weighed! Gracias por su compra. My scales approve; absolute ham-tier precision.",
+        "translation": "Half a kilo, perfect! Here is your ham. Certified ham, accurately weighed! Thank you for your purchase. My scales approve; absolute ham-tier precision.",
+        "narrative": "Mortimer weighs out the chorizo, then places a satisfied nod on the scales. Professional pride costs extra.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.45,
+          "canonical": 0.14
+        },
+        "durationMs": 6478
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 4767,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "name_meat",
+              "passed": false,
+              "feedback": "You asked for ham. Ask for a different meat, naming it in Spanish.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "quantity",
+              "passed": false,
+              "feedback": "State how much you want using a Spanish number or half together with a unit of weight.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Request a meat other than ham in Spanish and include the amount you want with a Spanish weight unit."
+        }
+      },
+      {
+        "durationMs": 7621,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "name_meat",
+              "passed": true,
+              "feedback": "You correctly requested a meat other than ham in Spanish.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "chorizo",
+                  "evidence": "chorizo",
+                  "quality": 5
+                }
+              ]
+            },
+            {
+              "objective_id": "quantity",
+              "passed": false,
+              "feedback": "State how much you want using a Spanish number or half together with a unit of weight.",
+              "vocabulary_evidence": []
+            }
+          ],
+          "overall_feedback": "Your meat request is correct. Add the amount you want in Spanish, including a unit of weight."
+        }
+      },
+      {
+        "durationMs": 4725,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "quantity",
+              "passed": false,
+              "feedback": "Include a Spanish number or half with the weight unit to say how much you want.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "kilo",
+                  "evidence": "Kilo",
+                  "quality": 1
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "You named the weight unit, but still need to specify an amount in Spanish."
+        }
+      },
+      {
+        "durationMs": 4346,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "quantity",
+              "passed": true,
+              "feedback": "You correctly stated the amount you want with a weight unit.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "kilo",
+                  "evidence": "kilo",
+                  "quality": 5
+                },
+                {
+                  "vocabulary_id": "medio",
+                  "evidence": "Medio",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Correct—you ordered half a kilogram."
+        }
+      }
+    ]
+  },
+  "conversation": {
+    "location": "market_entrance",
+    "sceneLocation": "market_entrance",
+    "encounterId": "mortimer_tasting",
+    "companionBriefing": null,
+    "resolved": true,
+    "completedOnMap": false,
+    "generationCalls": 5,
+    "lines": [
+      {
+        "turn": 0,
+        "requestedRatio": 0.3,
+        "native": "¡Hola! Soy Mortimer. Todo es jamón. Certified ham, including the hat. What brings you to my stall?",
+        "translation": "Hello! I’m Mortimer. Everything is ham. Certified ham, including the hat. What brings you to my stall?",
+        "narrative": "At the market entrance, Mortimer weighs his hat. The scales offer no opinion on its species.",
+        "share": {
+          "tokens": 17,
+          "notInTranslation": 0.29,
+          "canonical": 0
+        },
+        "durationMs": 10501
+      },
+      {
+        "turn": 1,
+        "requestedRatio": 0.35,
+        "native": "¡Claro! Más jamón para ti. Extra slice secured; certified ham-tier appetite! Pero dime, ¿te gusta? My honest scales cannot weigh a request as a review.",
+        "translation": "Of course! More ham for you. Extra slice secured; certified ham-tier appetite! But tell me, do you like it? My honest scales cannot weigh a request as a review.",
+        "narrative": "Mortimer cuts another slice, then places an empty plate on his scales. Apparently, your verdict has yet to register.",
+        "share": {
+          "tokens": 26,
+          "notInTranslation": 0.35,
+          "canonical": 0
+        },
+        "durationMs": 11432
+      },
+      {
+        "turn": 2,
+        "requestedRatio": 0.4,
+        "native": "¡Perfecto! Te gusta mucho. ¡Gracias! Este jamón es para ti. Certified ham, certified taste. My scales approve; frankly, their standards are brutal.",
+        "translation": "Perfect! You like it a lot. Thank you! This ham is for you. Certified ham, certified taste. My scales approve; frankly, their standards are brutal.",
+        "narrative": "Mortimer weighs your compliment. The scales confirm it is substantial, though unsuitable for sandwiches.",
+        "share": {
+          "tokens": 22,
+          "notInTranslation": 0.45,
+          "canonical": 0
+        },
+        "durationMs": 6826
+      }
+    ],
+    "grading": [
+      {
+        "durationMs": 4881,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "like_it",
+              "passed": false,
+              "feedback": "You still need to say in Spanish that you like the slice.",
+              "vocabulary_evidence": []
+            },
+            {
+              "objective_id": "ask_more",
+              "passed": true,
+              "feedback": "You correctly asked for a little more.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "un_poco_mas",
+                  "evidence": "Un poco más",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Your request for more is correct. Also give your own verdict in Spanish that you like the slice."
+        }
+      },
+      {
+        "durationMs": 4313,
+        "output": {
+          "objective_results": [
+            {
+              "objective_id": "like_it",
+              "passed": true,
+              "feedback": "You correctly said that you like the slice.",
+              "vocabulary_evidence": [
+                {
+                  "vocabulary_id": "me_gusta",
+                  "evidence": "Me gusta",
+                  "quality": 5
+                }
+              ]
+            }
+          ],
+          "overall_feedback": "Well done! You gave your own positive verdict in Spanish."
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Quiero jamón, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Request a meat other than ham in Spanish and include the amount you want with a Spanish weight unit."
+    },
+    {
+      "name": "say \"Quiero chorizo, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "chorizo",
+              "evidence": "chorizo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meat request is correct. Add the amount you want in Spanish, including a unit of weight."
+    },
+    {
+      "name": "say \"Kilo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "kilo",
+              "evidence": "Kilo",
+              "quality": 1,
+              "effectiveQuality": 1
+            }
+          ]
+        }
+      ],
+      "feedback": "You named the weight unit, but still need to specify an amount in Spanish."
+    },
+    {
+      "name": "say \"Medio kilo, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "kilo",
+              "evidence": "kilo",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "medio",
+              "evidence": "Medio",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you ordered half a kilogram."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "butchers_stall_charcutier",
+        "completed": true,
+        "characterName": "Mortimer",
+        "characterId": "charcutier_mortimer_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "recruit butchers_stall_charcutier",
+      "ok": true,
+      "party": [
+        {
+          "characterId": "charcutier_mortimer_001",
+          "name": "Mortimer",
+          "encounterId": "butchers_stall_charcutier",
+          "locationId": "butchers_stall",
+          "locationName": "The Butcher's Stall",
+          "joinedAt": "2026-11-05T21:00:41.804Z",
+          "conversations": 0,
+          "conversationId": "mortimer_tasting",
+          "nextStoryAt": 3,
+          "storiesTold": 0
+        }
+      ],
+      "joined": true
+    },
+    {
+      "name": "move to market_entrance",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Un poco más, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "like_it",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "ask_more",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "un_poco_mas",
+              "evidence": "Un poco más",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Your request for more is correct. Also give your own verdict in Spanish that you like the slice."
+    },
+    {
+      "name": "say \"¡Me gusta mucho!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "like_it",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "me_gusta",
+              "evidence": "Me gusta",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Well done! You gave your own positive verdict in Spanish."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": false,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    }
+  ]
+}
