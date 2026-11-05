@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 028, containment files in the Spellbook (autonomous)
+
+The Spellbook now keeps a deadpan SCP-style containment file for each infohazard the player has dealt with
+(backlog B4, LORE.md): CM-001 for Flick's jingle at the Cracked Fountain and CM-002 for Errata at the Rift. Each file
+has a class, virulence, harm, incubation, vector, containment and notes. A file is added when its encounter is
+completed, not on a visit, so it never explains a hazard before the player has met it. A test checks that no file
+contains an answer. The build also fixed a resolving turn that returned stale progress. Server 142/142, mobile 47/47.
+Not yet seen in the Simulator ([open items](docs/rounds/028/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 027, the philosophy statement on first launch (autonomous)
 
 The app now greets a first-time player with the game's philosophy statement before the map (backlog C2). The
@@ -308,6 +317,7 @@ Newest first.
 | 025 | 11-05 | The Cracked Fountain's infohazard: Flick's jingle, a containment notice (backlog B3, Fountain part) (autonomous) | [025](docs/rounds/025/architecture.md) | [findings](docs/rounds/025/findings.md) | `07ef542` (pre-run record) to round 025 close |
 | 026 | 11-05 | A concrete language-mix rule in the shared prompt (backlog E1, template round) (autonomous) | [026](docs/rounds/026/architecture.md) | [findings](docs/rounds/026/findings.md) | pre-run record |
 | 027 | 11-05 | The philosophy statement on first launch: content, `GET /api/onboarding`, app screen shown once (backlog C2) (autonomous) | [027](docs/rounds/027/architecture.md) | [findings](docs/rounds/027/findings.md) | `88b223b` (pre-run record) to round 027 close |
+| 028 | 11-05 | Containment files in the Spellbook: the Fountain jingle and Errata, filed on completion (backlog B4) (autonomous) | [028](docs/rounds/028/architecture.md) | [findings](docs/rounds/028/findings.md) | `09248d5` (pre-run record) to round 028 close |
 | 019 | 11-05 | Portia's own words: ambient vocabulary so the tutorial speaks its share of target language (backlog E1, E2) (autonomous) | [019](docs/rounds/019/architecture.md) | [findings](docs/rounds/019/findings.md) | `55eacb2` (pre-run record) to round 019 close |
 | 018 | 11-05 | claude-cli accepts a subscription OAuth token from the environment (supervisor note) (autonomous) | [018](docs/rounds/018/architecture.md) | [findings](docs/rounds/018/findings.md) | `b6fbd9e` (pre-run record) to round 018 close |
 | 017 | 11-05 | The Spellbook stops giving answers away: no meanings or reviews during an encounter, due cards hide theirs, notes shown (backlog D3) (autonomous) | [017](docs/rounds/017/architecture.md) | [findings](docs/rounds/017/findings.md) | `7657879` (pre-run record) to round 017 close |

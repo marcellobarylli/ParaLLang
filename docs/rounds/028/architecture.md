@@ -97,3 +97,20 @@ covers the encounter's own vocabulary, and Errata's two copies are held equal.
 - Mobile (`spellbook.test.js`): a file renders heading, class, the five properties and notes, also during an
   encounter; no section without files.
 - Full suites, expo-doctor, iOS export.
+
+## Amendment 1 (2026-11-05): the resolving turn records progress before building its response
+
+The live-flow test found that the turn resolving the Fountain returned a spellbook without CM-001: `submitDialogue`
+built its response (and the spellbook in it) before pushing the encounter into `completedEncounterIds` (and, for a
+party conversation, before raising the member's count). The bookkeeping now runs first, inside the same serialized
+write, so the response reflects the saved state. Nothing else in the response depends on the order; the stored
+replay response is the same object. Decision 3 (no refresh) rests on this.
+
+## Outcome (2026-11-05)
+
+Built as designed, with Amendment 1. Completing the Cracked Fountain files CM-001 ("Dopo, dopo, domani!" /
+"¡Después, después, mañana!") in the Spellbook, and completing the Rift files CM-002 (Errata). Each file has a
+class, the five LORE properties and two notes, and is listed during later encounters too. No file holds an
+objective's answer: a test checks every pack target and the encounter's own words, and a planted-word case shows
+the check is live. Server 142/142 (4 new, 1 extended), mobile 47/47 (2 new), web client 12/12 and build,
+expo-doctor 20/20, iOS export ok. Not checked in the Simulator. See [findings](findings.md).

@@ -25,7 +25,7 @@ again at 8:35 PM"). Steps to close it, in order:
 3. Findings, Outcome, close. If the tours fail or show new answer lines, revert by Amendment.
 
 Without Codex (before the reset), do only work that needs neither live runs nor a critique. Iteration 9 closed
-round 027 (C2) meanwhile, with a Claude subagent as the critic.
+rounds 027 (C2) and 028 (B4) meanwhile, with a Claude subagent as the critic.
 
 ## Backlog
 
@@ -76,9 +76,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **B3. Infohazards.** (Fountain part: round 025, closed 2026-11-05: Flick's jingle, containment notice, plaque) Infohazard flavour in the Rift and Fountain content (LORE.md). The Rift part is done
   (round 015, Errata); the Fountain part is open.
 
-- [ ] **B4. Containment files.** The Spellbook keeps a deadpan SCP-style file for each infohazard met (LORE.md
-  gameplay hook): Errata (round 015) and the Fountain jingle (round 025). Needs a Spellbook/app change; the
-  companion briefings hold the text today.
+- [x] **B4. Containment files.** (round 028, closed 2026-11-05) CM-001 (Fountain jingle) and CM-002 (Errata) in the
+  Spellbook, filed on the encounter's completion (`containment_file` on the encounter, both packs).
 
 ### C. prototype.md Phase 4: Polish & Audio
 
@@ -134,6 +133,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Round 028: check the Spellbook's Containment files section (long lists, during encounters, VoiceOver) and review
+  both files' texts ([open items](../rounds/028/findings.md#open-items)).
 - Round 027: check the first-launch statement screen in the Simulator (clear the app's storage), VoiceOver focus,
   and review the two authored notes and the title ([open items](../rounds/027/findings.md#open-items)).
 
@@ -260,9 +261,18 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-05, iteration 9: round 026 Amendment 2 built (no live check yet: Codex limit until 20:35 UTC). Round 027
   (C2) planned, critiqued by a Claude subagent (10 findings: 8 accepted, 2 in part), built and closed: the philosophy
   statement on first launch; server 138/138, mobile 45/45, client 12/12, expo-doctor 20/20.
+- 2026-11-05, iteration 9: round 028 (B4) planned, critiqued by a Claude subagent (9 findings: 7 accepted, 2 in
+  part), built and closed: containment files in the Spellbook, filed on completion; fixed the resolving turn
+  returning stale progress; server 142/142, mobile 47/47, client 12/12.
 
 ## Handoff notes and traps
 
+- **A resolving turn's response now reflects its own progress** (round 028): `submitDialogue` records the
+  completion (or the party member's count) before building the response. Before, the resolving turn's spellbook
+  and anything derived from `completedEncounterIds` were one step stale.
+- **Containment files** (round 028): `containment_file` on a location encounter (never a party conversation),
+  `CM-NNN` designations unique per pack; `server/test/containment.test.js` checks no file contains a pack target or
+  a word of its own encounter. Errata's file must stay identical in both packs (tested).
 - **Mobile tests and the onboarding flag** (round 027): the store reads `parallang.onboardingSeen` at startup; a
   test without it is a first launch and fetches `/api/onboarding`. The existing fakes seed the flag (returning
   player); first-launch cases live in `mobile/src/__tests__/onboarding.test.js`. A missing `getOnboarding` in a
