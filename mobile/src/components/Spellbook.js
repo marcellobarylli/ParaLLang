@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
-import { Button, colors, type } from './ui.js';
+import { Button, colors, type, leading } from './ui.js';
 
 export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to the map', now = Date.now() }) {
   const inEncounter = Boolean(spellbook.inEncounter);
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   body: { color: colors.ink, fontSize: type.subhead },
   hidden: { color: colors.muted, fontSize: type.subhead, fontStyle: 'italic' },
   example: { color: colors.ink, fontSize: type.subhead },
-  passage: { color: colors.ink, fontSize: type.callout, lineHeight: 23, fontStyle: 'italic' },
+  passage: { color: colors.ink, fontSize: type.callout, lineHeight: leading.callout, fontStyle: 'italic' },
   translation: { gap: 4, marginTop: 4 },
   strong: { fontWeight: '700' },
   small: { color: colors.muted, fontSize: type.footnote },

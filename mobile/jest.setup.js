@@ -5,3 +5,7 @@ jest.mock('expo-speech', () => ({
   stop: jest.fn(async () => {}),
 }));
 jest.mock('react-native-safe-area-context', () => require('react-native-safe-area-context/jest/mock').default);
+
+// Round 035 (critique 1.6): tests run with Reduce Motion on, so nothing animates unless a test turns it off.
+const { AccessibilityInfo } = require('react-native');
+jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(() => Promise.resolve(true));

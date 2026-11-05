@@ -20,6 +20,9 @@ export const type = Object.freeze({
   caption2: 11, caption1: 12, footnote: 13, subhead: 15, callout: 16, body: 17, title3: 20, title2: 22, title1: 24, largeTitle: 32,
 });
 
+// Round 035 (round 034 critique 1.7): line heights for reading text, by type size (about 1.4–1.5).
+export const leading = Object.freeze({ subhead: 21, callout: 23, body: 25 });
+
 // Round 034 (critique 1.3): `dim` fades a disabled button; the map turns it off, since its node labels carry information.
 export function Button({ label, accessibleName, onPress, disabled = false, dim = true, variant = 'secondary', style, children, expanded }) {
   return (

@@ -3,9 +3,17 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import BilingualText from './BilingualText.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 import { colors, type } from './ui.js';
+import { FadeIn, useReduceMotion } from '../motion.js';
 
 export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
+  const reduced = useReduceMotion();
+  // Round 035: lines already there when this encounter session is first shown (opening line, a resumed transcript,
+  // a restart) appear as they are; a line that arrives later fades in on its first render only, so a recycled
+  // FlatList cell does not fade again (critique 1.2, 1.3).
+  const shown = useRef({ sessionId: null, ids: new Set() });
+  if (encounter && shown.current.sessionId !== encounter.id) shown.current = { sessionId: encounter.id, ids: new Set(encounter.transcript.map((m) => m.id)) };
+  const firstShowing = (id) => { const first = !shown.current.ids.has(id); shown.current.ids.add(id); return first; };
   if (!encounter) return <View style={styles.panel}><Text style={styles.muted}>Preparing the encounter…</Text></View>;
   const resolved = encounter.state === 'resolved';
   const name = encounter.character?.name ?? 'Your opponent';
@@ -27,11 +35,11 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
   const footer = (
     <View style={styles.footer}>
       {isLoading && <Text role="status" style={styles.thinking}>{name} is considering the linguistic implications…</Text>}
-      {assessment && <View style={styles.assessment} aria-live="polite">
+      {assessment && <FadeIn key={assessmentKey(assessment)} style={styles.assessment} aria-live="polite">
         <Text style={styles.strong}>Assessment</Text><Text style={styles.body}>{assessment.overallFeedback}</Text>
         {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</Text>)}
-      </View>}
-      {resolved && <Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}{fragmentNote(fragments, encounter)}</Text>}
+      </FadeIn>}
+      {resolved && <FadeIn><Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}{fragmentNote(fragments, encounter)}</Text></FadeIn>}
       {resolved && encounter.character?.saveable && !encounter.partyConversation && onRecruit && <PartyOffer
         name={name} joined={inParty(party, encounter.character.id)} isLoading={isLoading}
         onSave={() => onRecruit(encounter.encounterId)} onLeave={onLeave}
@@ -50,9 +58,9 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       ListHeaderComponent={objective}
       ListFooterComponent={footer}
       // Round 009: the first screen (briefing, objective, opening line) stays at the top; later turns scroll down.
-      onContentSizeChange={() => { if (encounter.transcript.length > 1) listRef.current?.scrollToEnd?.({ animated: true }); }}
+      onContentSizeChange={() => { if (encounter.transcript.length > 1) listRef.current?.scrollToEnd?.({ animated: !reduced }); }}
       keyboardShouldPersistTaps="handled"
-      renderItem={({ item: message }) => message.role === 'npc' ? (
+      renderItem={({ item: message }) => <FadeIn animate={firstShowing(message.id)}>{message.role === 'npc' ? (
         <View style={styles.npc}>
           <Text style={styles.narrative}>{message.narrative}</Text>
           <Text style={styles.speaker}>{message.dialogue.speaker}</Text>
@@ -60,10 +68,13 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
         </View>
       ) : (
         <Text style={styles.player}>{message.text}</Text>
-      )}
+      )}</FadeIn>}
     />
   );
 }
+
+// Round 035 (critique 1.4): a new assessment replaces the old one in place, so the box is keyed by its content.
+const assessmentKey = (assessment) => [assessment.overallFeedback, ...assessment.objectiveResults.map((r) => `${r.objectiveId}:${r.passed}:${r.feedback}`)].join('|');
 
 // Round 030 (backlog A9): a fragment of The Journey that this encounter's completion filed. Worded to stay true on
 // replays (critique 1.6); part of the victory status so it is announced with it. Round 032: a fragment unlocked by

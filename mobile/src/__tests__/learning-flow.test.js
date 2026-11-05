@@ -192,7 +192,7 @@ test('the tutorial shows the companion briefing, Gerald does not, and the first 
   expect(scroll).not.toHaveBeenCalled();
   await view.rerender(<DialoguePanel encounter={{ ...tutorial, transcript: [...tutorial.transcript, { id: 'player-1', role: 'player', text: 'Ciao!' }] }} language={language} isLoading={false} onHelp={() => {}} />);
   fireEvent(screen.getByLabelText('Conversation with Portia'), 'contentSizeChange', 320, 1200);
-  expect(scroll).toHaveBeenCalled();
+  expect(scroll).toHaveBeenCalledWith({ animated: false }); // round 035: jest runs with Reduce Motion on
   await view.unmount();
   await render(<DialoguePanel encounter={{ ...encounter(), companionBriefing: null }} language={language} isLoading={false} onHelp={() => {}} />);
   expect(screen.queryByLabelText('Your companion')).not.toBeOnTheScreen();

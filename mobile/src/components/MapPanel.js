@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, colors, type } from './ui.js';
+import { Button, colors, type, leading } from './ui.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 
 const NODE = 18;
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   nodeNameKnown: { color: colors.muted, fontStyle: 'italic' },
   card: { backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border, padding: 16, gap: 10 },
   title: { fontSize: type.title3, fontWeight: '800', color: colors.ink },
-  body: { fontSize: type.subhead, lineHeight: 21, color: colors.ink },
+  body: { fontSize: type.subhead, lineHeight: leading.subhead, color: colors.ink },
   muted: { fontSize: type.subhead, color: colors.muted, padding: 16 },
   focus: { fontSize: type.footnote, color: colors.muted, fontStyle: 'italic' },
   done: { fontSize: type.subhead, fontWeight: '600', color: colors.success },

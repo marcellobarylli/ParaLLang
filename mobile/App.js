@@ -14,6 +14,7 @@ import PartyPanel from './src/components/PartyPanel.js';
 import OnboardingPanel from './src/components/OnboardingPanel.js';
 import SavesPanel from './src/components/SavesPanel.js';
 import { colors, type } from './src/components/ui.js';
+import { FadeIn } from './src/motion.js';
 
 export default function App() {
   const state = useGameStore();
@@ -36,6 +37,8 @@ export default function App() {
         {state.error && <ErrorBanner message={state.error} onDismiss={state.clearError} />}
         {state.notice && <Text role="status" style={styles.notice}>{state.notice}</Text>}
 
+        {/* Round 035: a screen change fades the new screen in (Reduce Motion: no fade). */}
+        <FadeIn key={state.view} style={styles.shell}>
         {state.view === 'onboarding' && state.onboarding && <OnboardingPanel onboarding={state.onboarding} onBegin={state.finishOnboarding} />}
         {state.view === 'map' && <MapPanel
           drill={state.spellbook.drill ?? null} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null}
@@ -60,6 +63,7 @@ export default function App() {
             loading={state.isLoading} resolved={resolved} speaker={state.encounter?.character?.name} disabled={state.isLoading || !state.encounter || resolved}
           />
         </KeyboardAvoidingView>}
+        </FadeIn>
       </SafeAreaView>
     </SafeAreaProvider>
   );

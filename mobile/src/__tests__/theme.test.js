@@ -1,7 +1,7 @@
 // Round 034 (backlog C3a): one type scale and one palette, and text that stays readable on its backgrounds.
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { colors, type } from '../components/ui.js';
+import { colors, leading, type } from '../components/ui.js';
 
 const root = join(__dirname, '..', '..');
 // Critique 1.5: App.js and every source file under src/ except tests, with comments stripped.
@@ -22,6 +22,7 @@ test('no source sets a literal font size or colour outside ui.js', () => {
   for (const file of sources) {
     const text = code(file);
     expect([file, text.match(/fontSize\s*:\s*[\d.]/g)]).toEqual([file, null]);
+    expect([file, text.match(/lineHeight\s*:\s*[\d.]/g)]).toEqual([file, null]); // round 035
     if (!isUi(file)) expect([file, text.match(COLOUR)]).toEqual([file, null]);
   }
   expect(colors.successSurface).toBe('#e7f3e8');
@@ -36,6 +37,11 @@ test('every text style names a size from the scale, except modifiers of a sized 
   const used = sources.flatMap((file) => [...code(file).matchAll(/fontSize:\s*type\.(\w+)/g)].map(([, name]) => name));
   expect(used.length).toBeGreaterThan(40);
   expect(used.filter((name) => !(name in type))).toEqual([]);
+  // Round 035 (critique 1.8): a line height sits with the size it was made for.
+  const mismatched = sources.flatMap((file) => [...code(file).matchAll(/\{([^{}]*lineHeight:[^{}]*)\}/g)]
+    .map(([, body]) => [body.match(/fontSize:\s*type\.(\w+)/)?.[1], body.match(/lineHeight:\s*leading\.(\w+)/)?.[1]])
+    .filter(([size, height]) => !size || size !== height));
+  expect(mismatched).toEqual([]);
 });
 
 test('the type scale is increasing and unique, from 11 points', () => {
@@ -43,6 +49,8 @@ test('the type scale is increasing and unique, from 11 points', () => {
   expect(sizes).toEqual([...sizes].sort((a, b) => a - b));
   expect(new Set(sizes).size).toBe(sizes.length);
   expect(sizes[0]).toBe(11);
+  // Round 035: each line height belongs to a size of the scale and is 1.3–1.6 times it.
+  for (const [name, height] of Object.entries(leading)) expect([name, height / type[name] >= 1.3 && height / type[name] <= 1.6]).toEqual([name, true]);
 });
 
 // WCAG 2 relative luminance and contrast ratio.

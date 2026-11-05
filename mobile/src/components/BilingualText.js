@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, colors, type } from './ui.js';
+import { Button, colors, type, leading } from './ui.js';
 
 export default function BilingualText({ message, onHelp, disabled = false }) {
   const { dialogue, protected: isProtected } = message;
@@ -32,7 +32,7 @@ export default function BilingualText({ message, onHelp, disabled = false }) {
 
 const styles = StyleSheet.create({
   block: { gap: 8 },
-  native: { fontSize: type.body, color: colors.ink, lineHeight: 25 },
+  native: { fontSize: type.body, color: colors.ink, lineHeight: leading.body },
   words: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   word: { alignItems: 'flex-start', gap: 2 },
   chip: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 16 },
