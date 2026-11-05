@@ -1,0 +1,2070 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "tour": true,
+  "riftSealedBefore": true,
+  "riftOpenAfter": true,
+  "drillCards": [],
+  "resolved": true,
+  "generationCalls": 60,
+  "encounters": [
+    {
+      "location": "market_entrance",
+      "sceneLocation": "market_entrance",
+      "encounterId": "market_entrance_tutorial",
+      "companionBriefing": [
+        "Portia only lets in people who greet her properly. Answer in Spanish; mixing in English is fine while you learn.",
+        "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance.",
+        "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+      ],
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 7,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.2,
+          "native": "Bienvenido. Welcome to el mercado. A greeting and your name before entry, please. Manners are load-bearing here.",
+          "translation": "Welcome. Welcome to the market. A greeting and your name before entry, please. Manners are load-bearing here.",
+          "narrative": "A visitors’ book slides from the archway’s keystone. Above it, a half-translated sign appears to be awaiting departmental approval.",
+          "share": {
+            "tokens": 18,
+            "notInTranslation": 0.17,
+            "canonical": 0.11
+          },
+          "durationMs": 9831
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.25,
+          "native": "¡Hola! Bienvenido al mercado. Your greeting is approved. Who are you? The visitors' book cannot file a cheerful noise.",
+          "translation": "Hello! Welcome to the market. Your greeting is approved. Who are you? The visitors' book cannot file a cheerful noise.",
+          "narrative": "A visitors' book slides from the archway's keystone. The greeting receives a tick; the name field remains administratively barren.",
+          "share": {
+            "tokens": 19,
+            "notInTranslation": 0.21,
+            "canonical": 0.16
+          },
+          "durationMs": 9648
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.30000000000000004,
+          "native": "Mucho gusto, Sam. Bienvenido al mercado. Your introduction is approved. Will you ask my name, or file me under infrastructure?",
+          "translation": "Pleased to meet you, Sam. Welcome to the market. Your introduction is approved. Will you ask my name, or file me under infrastructure?",
+          "narrative": "Portia enters Sam in the visitors’ book. Her pen hovers over her own blank name field with conspicuous patience.",
+          "share": {
+            "tokens": 20,
+            "notInTranslation": 0.25,
+            "canonical": 0.2
+          },
+          "durationMs": 8756
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.35000000000000003,
+          "native": "Me llamo Portia. ¡Mucho gusto, Sam! You asked my name. How terribly considerate. Bienvenido al mercado. Entry approved; please disregard the blushing masonry.",
+          "translation": "My name is Portia. Nice to meet you, Sam! You asked my name. How terribly considerate. Welcome to the market. Entry approved; please disregard the blushing masonry.",
+          "narrative": "The archway blushes a faint terracotta. A visitors’ book snaps shut in her keystone, having witnessed an unprecedented interest in the staff.",
+          "share": {
+            "tokens": 23,
+            "notInTranslation": 0.3,
+            "canonical": 0.26
+          },
+          "durationMs": 7729
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 5513,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "greet",
+                "passed": true,
+                "feedback": "You greeted Portia correctly.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "hola",
+                    "evidence": "Hola",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "introduce",
+                "passed": false,
+                "feedback": "Introduce yourself in Spanish by saying your name.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "ask_back",
+                "passed": false,
+                "feedback": "Ask Portia her name in Spanish.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Good greeting! Now introduce yourself and ask Portia her name in Spanish."
+          }
+        },
+        {
+          "durationMs": 5002,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "introduce",
+                "passed": true,
+                "feedback": "You correctly introduced yourself by name.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "me_llamo",
+                    "evidence": "Me llamo",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "ask_back",
+                "passed": false,
+                "feedback": "Now ask Portia her name in Spanish.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your introduction is correct. Ask Portia her name in return."
+          }
+        },
+        {
+          "durationMs": 4713,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "ask_back",
+                "passed": true,
+                "feedback": "You correctly ask Portia her name in return.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "y_tu",
+                    "evidence": "Y tú",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct! Your question naturally asks Portia to introduce herself."
+          }
+        }
+      ]
+    },
+    {
+      "location": "coffee_cart",
+      "sceneLocation": "coffee_cart",
+      "encounterId": "imp_coffee_greeting",
+      "companionBriefing": null,
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 5,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.25,
+          "native": "Hola. ¿Qué necesitas? I’m Gerald. Five espresso shots for this cart. Your taste is still under review.",
+          "translation": "Hello. What do you need? I’m Gerald. Five espresso shots for this cart. Your taste is still under review.",
+          "narrative": "Gerald peers over the cart’s counter. Behind him, the market crumbles with the confidence of a public institution.",
+          "share": {
+            "tokens": 18,
+            "notInTranslation": 0.17,
+            "canonical": 0
+          },
+          "durationMs": 9409
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.3,
+          "native": "Un café, perfecto. Three espresso shots for a functional request. ¿Cómo lo quieres? Your position on milk remains suspiciously unclear.",
+          "translation": "A coffee, perfect. Three espresso shots for a functional request. How do you want it? Your position on milk remains suspiciously unclear.",
+          "narrative": "Gerald positions a cup beneath the machine. The milk jug remains under ideological surveillance.",
+          "share": {
+            "tokens": 20,
+            "notInTranslation": 0.3,
+            "canonical": 0.05
+          },
+          "durationMs": 9152
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.35,
+          "native": "Sin leche. Muy bien. Tu café está listo. Five espresso shots for your judgment. No milk, no war crimes. No notes.",
+          "translation": "Without milk. Very good. Your coffee is ready. Five espresso shots for your judgment. No milk, no war crimes. No notes.",
+          "narrative": "Gerald lowered the milk jug as though disarming a particularly tasteless bomb.",
+          "share": {
+            "tokens": 21,
+            "notInTranslation": 0.38,
+            "canonical": 0.14
+          },
+          "durationMs": 5554
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 5229,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order_coffee",
+                "passed": true,
+                "feedback": "You clearly requested coffee for yourself.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "quiero",
+                    "evidence": "Quiero",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "cafe",
+                    "evidence": "café",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "no_milk",
+                "passed": false,
+                "feedback": "Specify in Spanish that your coffee is without milk or black.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your coffee order is clear. Add a Spanish expression specifying no milk or black coffee."
+          }
+        },
+        {
+          "durationMs": 4743,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "no_milk",
+                "passed": true,
+                "feedback": "You clearly ordered your coffee without milk.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "sin_leche",
+                    "evidence": "Sin leche",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct and natural—your no-milk preference is clear."
+          }
+        }
+      ]
+    },
+    {
+      "location": "butchers_stall",
+      "sceneLocation": "butchers_stall",
+      "encounterId": "butchers_stall_charcutier",
+      "companionBriefing": null,
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 9,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.3,
+          "native": "¡Hola! Todo es jamón. ¿Qué quieres? Everything here is certified ham, including my hat. These scales keep me humble. Allegedly.",
+          "translation": "Hello! Everything is ham. What would you like? Everything here is certified ham, including my hat. These scales keep me humble. Allegedly.",
+          "narrative": "Mortimer towers behind the butcher’s stall, weighing his hat. The scales have declined to comment.",
+          "share": {
+            "tokens": 20,
+            "notInTranslation": 0.3,
+            "canonical": 0.05
+          },
+          "durationMs": 10248
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.35,
+          "native": "¡Jamón, claro! Pero todo es jamón. ¿Qué carne quieres? I need a meat beyond ham. My hat already answers to that, and it is not for sale.",
+          "translation": "Ham, of course! But everything is ham. What meat do you want? I need a meat beyond ham. My hat already answers to that, and it is not for sale.",
+          "narrative": "Mortimer weighs your request. The scales confirm that it is polite, but insufficiently specific.",
+          "share": {
+            "tokens": 27,
+            "notInTranslation": 0.33,
+            "canonical": 0.07
+          },
+          "durationMs": 10184
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.4,
+          "native": "¡Chorizo, correcto! Es un jamón especial. ¿Cuánto quieres? Give these honest scales a quantity with a weight unit. They demand ham-tier precision.",
+          "translation": "Chorizo, correct! It is a special ham. How much do you want? Give these honest scales a quantity with a weight unit. They demand ham-tier precision.",
+          "narrative": "Mortimer beams, briefly wounded by your accuracy. He places a congratulatory thumb on the scales, then removes it in deference to their integrity.",
+          "share": {
+            "tokens": 23,
+            "notInTranslation": 0.3,
+            "canonical": 0.09
+          },
+          "durationMs": 9472
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.45,
+          "native": "¡Casi! Falta la cantidad. ¿Cuánto quieres? Mis balanzas necesitan más. A weight unit alone? Not certified ham-tier precision.",
+          "translation": "Almost! The quantity is missing. How much do you want? My scales need more. A weight unit alone? Not certified ham-tier precision.",
+          "narrative": "Mortimer weighs the word on his scales. The needle declines to become involved.",
+          "share": {
+            "tokens": 19,
+            "notInTranslation": 0.53,
+            "canonical": 0
+          },
+          "durationMs": 6203
+        },
+        {
+          "turn": 4,
+          "requestedRatio": 0.5,
+          "native": "¡Medio kilo, perfecto! Aquí tienes tu chorizo. ¡Gracias! The scales approve. Certified ham, despite your suspiciously accurate naming.",
+          "translation": "Half a kilo, perfect! Here is your chorizo. Thank you! The scales approve. Certified ham, despite your suspiciously accurate naming.",
+          "narrative": "Mortimer weighs the chorizo, then your courtesy. Both meet his standards; only one goes in the parcel.",
+          "share": {
+            "tokens": 18,
+            "notInTranslation": 0.33,
+            "canonical": 0.17
+          },
+          "durationMs": 5676
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 5037,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name_meat",
+                "passed": false,
+                "feedback": "You asked for ham. Ask for a different meat, naming it in Spanish.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "quantity",
+                "passed": false,
+                "feedback": "State how much you want in Spanish, using a number or half together with a unit of weight.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Request a meat other than ham in Spanish and include a Spanish quantity with a unit of weight."
+          }
+        },
+        {
+          "durationMs": 6077,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name_meat",
+                "passed": true,
+                "feedback": "You correctly requested a meat other than ham in Spanish.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "chorizo",
+                    "evidence": "Quiero chorizo, por favor.",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "quantity",
+                "passed": false,
+                "feedback": "State how much you want using a Spanish number or half together with a unit of weight.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your meat request is correct. Add the amount you want in Spanish, including a unit of weight."
+          }
+        },
+        {
+          "durationMs": 4770,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "quantity",
+                "passed": false,
+                "feedback": "A weight unit alone is not enough. Add a number or a half in Spanish to say how much you want.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "kilo",
+                    "evidence": "Kilo",
+                    "quality": 1
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "State the amount you want using a Spanish quantity and a weight unit."
+          }
+        },
+        {
+          "durationMs": 4905,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "quantity",
+                "passed": true,
+                "feedback": "You clearly stated the amount you want with a weight unit.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "kilo",
+                    "evidence": "kilo",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "medio",
+                    "evidence": "Medio",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct—you requested half a kilogram."
+          }
+        }
+      ]
+    },
+    {
+      "location": "cracked_fountain",
+      "sceneLocation": "cracked_fountain",
+      "encounterId": "cracked_fountain_letharger",
+      "companionBriefing": [
+        "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high.",
+        "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations.",
+        "Containment procedure: do not hum along."
+      ],
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 13,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.3,
+          "native": "¡Hola! ¿Qué es eso? A riddle! What has—oh, something moved. Just one more minute. Your attention span? Solid three. ¡Después, después, mañana!",
+          "translation": "Hello! What is that? A riddle! What has—oh, something moved. Just one more minute. Your attention span? Solid three. Later, later, tomorrow!",
+          "narrative": "The Cracked Fountain drips with municipal confidence. Flick appears at the edge of your vision; a tiny firecracker files a complaint about your attention.",
+          "share": {
+            "tokens": 23,
+            "notInTranslation": 0.3,
+            "canonical": 0.13
+          },
+          "durationMs": 8307
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.35,
+          "native": "¡Sí, miro! Pero sigo en movimiento. Looking isn't stopping, bestie. Can you make me stop? ¿Una adivinanza? What has—ooh, dust. ¡Después, después, mañana!",
+          "translation": "Yes, I'm looking! But I'm still moving. Looking isn't stopping, bestie. Can you make me stop? A riddle? What has—ooh, dust. Later, later, tomorrow!",
+          "narrative": "Flick follows your instruction by looking somewhere else. A tiny firecracker pops at the edge of your vision; apparently, attention has a maintenance fee.",
+          "share": {
+            "tokens": 24,
+            "notInTranslation": 0.46,
+            "canonical": 0.13
+          },
+          "durationMs": 7734
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.4,
+          "native": "¡Vale, no me muevo! Stopping: ten out of ten. ¿Por dónde voy? A riddle: which way—wait, five more minutes. ¡Después, después, mañana!",
+          "translation": "All right, I'm not moving! Stopping: ten out of ten. Which way do I go? A riddle: which way—wait, five more minutes. Later, later, tomorrow!",
+          "narrative": "Flick stops at the edge of your vision. A tiny firecracker continues without it; apparently nobody briefed the fireworks.",
+          "share": {
+            "tokens": 23,
+            "notInTranslation": 0.43,
+            "canonical": 0.13
+          },
+          "durationMs": 6534
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.45,
+          "native": "¿En español, por favor? Necesito una dirección en español. Your meaning landed; the language missed. A riddle: what turns—ooh, dust. ¿Por dónde voy? ¡Después, después, mañana!",
+          "translation": "In Spanish, please? I need a direction in Spanish. Your meaning landed; the language missed. A riddle: what turns—ooh, dust. Which way do I go? Later, later, tomorrow!",
+          "narrative": "A tiny firecracker pops beside your shoe. Flick remains in the corner of your vision, apparently employed there.",
+          "share": {
+            "tokens": 27,
+            "notInTranslation": 0.56,
+            "canonical": 0.11
+          },
+          "durationMs": 10693
+        },
+        {
+          "turn": 4,
+          "requestedRatio": 0.5,
+          "native": "¡A la izquierda, sí! Muy bien, esa dirección es correcta. Navigation: ten out of ten. Pero, ¿podemos esperar? ¿Tienes prisa? A riddle: what waits—ooh, dust. Just five more minutes. ¡Después, después, mañana!",
+          "translation": "To the left, yes! Very good, that direction is correct. Navigation: ten out of ten. But can we wait? Are you in a hurry? A riddle: what waits—ooh, dust. Just five more minutes. Later, later, tomorrow!",
+          "narrative": "A tiny firecracker snaps at the edge of your vision. Flick veers left, then stops to give a dust particle right of way.",
+          "share": {
+            "tokens": 33,
+            "notInTranslation": 0.52,
+            "canonical": 0.12
+          },
+          "durationMs": 10351
+        },
+        {
+          "turn": 5,
+          "requestedRatio": 0.55,
+          "native": "¡Mañana, sí! Eso es esperar. Aceptas mi plan. ¿Cuándo quieres hacerlo? A riddle: what never starts—ooh, dust. Just one more minute. ¡Después, después, mañana!",
+          "translation": "Tomorrow, yes! That means waiting. You're accepting my plan. When do you want to do it? A riddle: what never starts—ooh, dust. Just one more minute. Later, later, tomorrow!",
+          "narrative": "A tiny firecracker pops beside your shoe. Flick remains in the corner of your vision, where responsibility has no jurisdiction. Your agreement has encouraged it.",
+          "share": {
+            "tokens": 25,
+            "notInTranslation": 0.52,
+            "canonical": 0.16
+          },
+          "durationMs": 10656
+        },
+        {
+          "turn": 6,
+          "requestedRatio": 0.6000000000000001,
+          "native": "¡Ahora, sí! No mañana. Entiendo: vamos ahora. Your timing? Ten out of ten. ¿Una adivinanza? ¿Qué tiene—ugh, fine. ¡Después, después, mañana! Pero ahora vamos.",
+          "translation": "Now, yes! Not tomorrow. I understand: let's go now. Your timing? Ten out of ten. A riddle? What has—ugh, fine. Later, later, tomorrow! But now let's go.",
+          "narrative": "A tiny firecracker pops at the edge of your vision. Flick has finally encountered a deadline without a tomorrow attached. It takes this personally.",
+          "share": {
+            "tokens": 25,
+            "notInTranslation": 0.68,
+            "canonical": 0.28
+          },
+          "durationMs": 7183
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 6100,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "stop",
+                "passed": false,
+                "feedback": "Your command tells Flick to look, not to stop. Give a Spanish command to stop or keep still.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "direction",
+                "passed": false,
+                "feedback": "Tell Flick to go left or right in Spanish.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "Insist on doing it now in Spanish rather than putting it off.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "You gave a command to look. Instead, tell Flick to stop, give a direction, and insist on acting now—all in Spanish."
+          }
+        },
+        {
+          "durationMs": 5509,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "stop",
+                "passed": true,
+                "feedback": "You correctly commanded Flick to keep still.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "quieto",
+                    "evidence": "¡Quieto!",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "direction",
+                "passed": false,
+                "feedback": "Give Flick a direction, left or right, in Spanish.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "Insist on doing it now in Spanish.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your stop command is correct. Still missing: a direction and an insistence on now, both in Spanish."
+          }
+        },
+        {
+          "durationMs": 5502,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "direction",
+                "passed": false,
+                "feedback": "Give Flick a direction in Spanish, not English.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "Insist on doing it now in Spanish rather than putting it off.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Tell Flick left or right in Spanish, and insist on doing it now in Spanish."
+          }
+        },
+        {
+          "durationMs": 5386,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "direction",
+                "passed": true,
+                "feedback": "You correctly told Flick to go left in Spanish.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "izquierda",
+                    "evidence": "¡A la izquierda!",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "You still need to insist on doing it now in Spanish.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your direction is correct. Also tell Flick to act now rather than put it off, using Spanish."
+          }
+        },
+        {
+          "durationMs": 4271,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "now",
+                "passed": false,
+                "feedback": "You agreed to tomorrow. Refuse the delay and insist on now in Spanish.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Insist on doing it now rather than tomorrow, using Spanish."
+          }
+        },
+        {
+          "durationMs": 4506,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "now",
+                "passed": true,
+                "feedback": "You clearly refuse to wait and insist on doing it now in Spanish.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "ahora",
+                    "evidence": "¡No, ahora!",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct! You reject the delay and insist on now."
+          }
+        }
+      ]
+    },
+    {
+      "location": "old_bookshop",
+      "sceneLocation": "old_bookshop",
+      "encounterId": "old_bookshop_bookworm",
+      "companionBriefing": null,
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 11,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.35,
+          "native": "I'm Marginalia. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. I sell books only to people who understand them. Lowkey judging, yes. The teeth marks are peer review. Now, a reading check, not a quest for spoilers: ¿Adónde va Journathan?",
+          "translation": "¿Adónde va Journathan? means “Where is Journathan going?”",
+          "narrative": "At The Old Bookshop, a bookworm emerges from a neatly chewed dictionary. She annotates your arrival with a small question mark.",
+          "share": {
+            "tokens": 50,
+            "notInTranslation": 0.92,
+            "canonical": 0.08
+          },
+          "durationMs": 12040
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.39999999999999997,
+          "native": "Un libro es una cosa, no un lugar. That names an object, not his destination. Reading comprehension: pending. The book remains aggressively unsold. Lee el pasaje otra vez: ¿adónde va Journathan?",
+          "translation": "A book is a thing, not a place. That names an object, not his destination. Reading comprehension: pending. The book remains aggressively unsold. Read the passage again: where is Journathan going?",
+          "narrative": "Marginalia pencils a small correction in the air beside you. Apparently, customers have margins.",
+          "share": {
+            "tokens": 31,
+            "notInTranslation": 0.48,
+            "canonical": 0
+          },
+          "durationMs": 8568
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.44999999999999996,
+          "native": "La idea es correcta, pero tu respuesta está en inglés. Necesito una respuesta en español. Meaning understood; language requirement unmet. Reading comprehension: partial credit, no book. ¿Adónde va Journathan? The passage has the evidence; my teeth have spared that bit.",
+          "translation": "The idea is correct, but your answer is in English. I need an answer in Spanish. Meaning understood; language requirement unmet. Reading comprehension: partial credit, no book. Where is Journathan going? The passage has the evidence; my teeth have spared that bit.",
+          "narrative": "Marginalia pencils a small correction in the air. Apparently, you are now an annotated edition.",
+          "share": {
+            "tokens": 40,
+            "notInTranslation": 0.4,
+            "canonical": 0
+          },
+          "durationMs": 8120
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.5,
+          "native": "¡Correcto! Journathan va a casa. Reading comprehension: approved. The book is one step closer to becoming your problem. Ahora escucha: El Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.» The first recorded translation trick. Scholarly footnote: the Cyclops rated it poorly. ¿Qué nombre le da Journathan al Cíclope?",
+          "translation": "Reading check: What name does Journathan give the Cyclops?",
+          "narrative": "Marginalia ticks your margin in approving ink, then turns to a page whose missing corner has apparently passed peer review.",
+          "share": {
+            "tokens": 51,
+            "notInTranslation": 0.84,
+            "canonical": 0.1
+          },
+          "durationMs": 13007
+        },
+        {
+          "turn": 4,
+          "requestedRatio": 0.55,
+          "native": "Journathan es su nombre real, pero no es el nombre que da al Cíclope. Lee el pasaje otra vez: ¿qué nombre usa? Reading comprehension: pending. No spoilers from me. The book remains unsold; commerce will have to be brave.",
+          "translation": "Journathan is his real name, but it is not the name he gives the Cyclops. Read the passage again: what name does he use? Reading comprehension: pending. No spoilers from me. The book remains unsold; commerce will have to be brave.",
+          "narrative": "Marginalia pencils a small correction in the air beside you. Apparently, you now have margins.",
+          "share": {
+            "tokens": 39,
+            "notInTranslation": 0.49,
+            "canonical": 0.08
+          },
+          "durationMs": 9328
+        },
+        {
+          "turn": 5,
+          "requestedRatio": 0.6,
+          "native": "¡Correcto! Usa el nombre Nadie. Has entendido el pasaje; el libro es tuyo. Reading comprehension: approved. No refunds for tragic endings.",
+          "translation": "Correct! He uses the name Nobody. You have understood the passage; the book is yours. Reading comprehension: approved. No refunds for tragic endings.",
+          "narrative": "Marginalia stamps the receipt and nudges the book across the counter. One corner has been eaten; the argument remains intact.",
+          "share": {
+            "tokens": 21,
+            "notInTranslation": 0.62,
+            "canonical": 0.1
+          },
+          "durationMs": 6229
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 5006,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "home",
+                "passed": false,
+                "feedback": "Your answer names a book, not Journathan's destination. Answer in Spanish where he is going.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "name",
+                "passed": false,
+                "feedback": "You have not given the Spanish name Journathan told the Cyclops.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Answer the reading questions in Spanish, giving the destination and the name rather than an unrelated object."
+          }
+        },
+        {
+          "durationMs": 5484,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "home",
+                "passed": false,
+                "feedback": "You identified the destination in English. Answer in Spanish.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "name",
+                "passed": false,
+                "feedback": "Give the name Journathan told the Cyclops, in Spanish.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Use Spanish to answer the destination question. The Cyclops name answer is also still missing."
+          }
+        },
+        {
+          "durationMs": 6242,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "home",
+                "passed": true,
+                "feedback": "Correct—you answered in Spanish that Journathan is going home.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "casa",
+                    "evidence": "¡A casa!",
+                    "quality": 3
+                  }
+                ]
+              },
+              {
+                "objective_id": "name",
+                "passed": false,
+                "feedback": "You have not yet given, in Spanish, the name Journathan told the Cyclops.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your destination answer passes. The Cyclops-name objective remains unanswered."
+          }
+        },
+        {
+          "durationMs": 4795,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name",
+                "passed": false,
+                "feedback": "You gave his real name. Answer in Spanish with the name he told the Cyclops.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Look again at his reply in the passage: what name did he give the Cyclops?"
+          }
+        },
+        {
+          "durationMs": 4975,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "name",
+                "passed": true,
+                "feedback": "Correct! You identified the name he gave the Cyclops.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "nadie",
+                    "evidence": "Nadie",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct Spanish answer to the reading question."
+          }
+        }
+      ]
+    },
+    {
+      "location": "the_rift",
+      "sceneLocation": "the_rift",
+      "encounterId": "the_rift_errata",
+      "companionBriefing": [
+        "Careful. That thing is made of both our languages and neither.",
+        "It can only hurt you if you understand it, and you understand quite a lot now.",
+        "Everything you learned in the market works here. Use it."
+      ],
+      "resolved": true,
+      "completedOnMap": true,
+      "generationCalls": 15,
+      "lines": [
+        {
+          "turn": 0,
+          "requestedRatio": 0.5,
+          "native": "Hola. ¿Qué necesitas? Tengo hambre. Contäinment procedùre: please complëte ŧhe förm.",
+          "translation": "Hello. What do you need? I am hungry. Containment procedure: please complete the form.",
+          "narrative": "At the Rift, a seam in the air develops teeth and the patient expression of an unfinished form. This is Errata.",
+          "share": {
+            "tokens": 11,
+            "notInTranslation": 0.91,
+            "canonical": 0.09
+          },
+          "durationMs": 9054
+        },
+        {
+          "turn": 1,
+          "requestedRatio": 0.5,
+          "native": "Necesito dos cosas: una bebida y una comida. Todo en español, por favor. Contäinment nòte: yoùù requested coffee only. Ŧhe meat is missing; English remains indigestïble.",
+          "translation": "I need two things: a drink and a food. Everything in Spanish, please. Containment note: you requested coffee only. The meat is missing; English remains indigestible.",
+          "narrative": "Errata stamps your request INCOMPLETE. The stamp has teeth, for administrative reasons.",
+          "share": {
+            "tokens": 26,
+            "notInTranslation": 0.69,
+            "canonical": 0.04
+          },
+          "durationMs": 10210
+        },
+        {
+          "turn": 2,
+          "requestedRatio": 0.5,
+          "native": "El café está bien. Falta la comida. ¿Qué más quieres? Contäinment nòte: yoùù have supplied önly half a lùnch.",
+          "translation": "The coffee is fine. The food is missing. What else do you want? Containment note: you have supplied only half a lunch.",
+          "narrative": "Errata checks one box. The second box opens a small, disappointed mouth.",
+          "share": {
+            "tokens": 19,
+            "notInTranslation": 0.79,
+            "canonical": 0.05
+          },
+          "durationMs": 5815
+        },
+        {
+          "turn": 3,
+          "requestedRatio": 0.5,
+          "native": "El café y el chorizo están bien. Tengo hambre todavía. Contäinment procedùre: intérrupt më. Yoùù are becöming legïble.",
+          "translation": "The coffee and chorizo are fine. I am still hungry. Containment procedure: interrupt me. You are becoming legible.",
+          "narrative": "The order is accepted. Errata swallows the receipt, then begins reading the outline of your thoughts. It needs stopping immediately, in Spanish; a complaint submitted tomorrow would merely feed the filing cabinet.",
+          "share": {
+            "tokens": 18,
+            "notInTranslation": 0.89,
+            "canonical": 0.11
+          },
+          "durationMs": 11066
+        },
+        {
+          "turn": 4,
+          "requestedRatio": 0.5,
+          "native": "Mañana no. Sigo aquí. ¿Cuándo tengo que parar? Contäinment nòte: yoùù have schëduled safety; ŧhe reading contïnues.",
+          "translation": "Not tomorrow. I am still here. When do I have to stop? Containment note: you have scheduled safety; the reading continues.",
+          "narrative": "Errata continued advancing. Your instruction had been filed under tomorrow, a department notorious for its relaxed deadlines.",
+          "share": {
+            "tokens": 17,
+            "notInTranslation": 0.82,
+            "canonical": 0.06
+          },
+          "durationMs": 8240
+        },
+        {
+          "turn": 5,
+          "requestedRatio": 0.5,
+          "native": "Está bien. Paro ahora. ¿Cómo te llamas? Necesito tu nombre. Contäinment procedùre: sign hëre; yoùù remain unread, för nöw.",
+          "translation": "All right. I stop now. What is your name? I need your name. Containment procedure: sign here; you remain unread, for now.",
+          "narrative": "Errata stops. A blank signature line opens across its face. Apparently, even predation has paperwork.",
+          "share": {
+            "tokens": 19,
+            "notInTranslation": 0.84,
+            "canonical": 0.26
+          },
+          "durationMs": 9076
+        },
+        {
+          "turn": 6,
+          "requestedRatio": 0.5,
+          "native": "Sam. Ese nombre es tuyo. Necesito otro nombre. ¿Cómo te llamas aquí? Contäinment nöte: real näme detected. Yoùù are becöming legïble. Signatùre nö​​t yet accëpted.",
+          "translation": "Sam. That name is yours. I need another name. What are you called here? Containment note: real name detected. You are becoming legible. Signature not yet accepted.",
+          "narrative": "Errata studies the signature. Letters begin arranging themselves into a table of contents. Unfortunately, it appears to be yours.",
+          "share": {
+            "tokens": 26,
+            "notInTranslation": 0.81,
+            "canonical": 0.19
+          },
+          "durationMs": 13509
+        },
+        {
+          "turn": 7,
+          "requestedRatio": 0.5,
+          "native": "Te llamas Nadie. No conozco a Nadie. No puedo leer tu nombre. Contäinment resùlt: yoùù pass. Item cläss: nöbody höme. Bitte—no, adiós.",
+          "translation": "Your name is Nobody. I don't know Nobody. I can't read your name. Containment result: you pass. Item class: nobody home. Please—no, goodbye.",
+          "narrative": "Errata searches its records for Nobody. The filing cabinet closes from the inside. Your signature is accepted; the form appears to regret this.",
+          "share": {
+            "tokens": 23,
+            "notInTranslation": 0.78,
+            "canonical": 0.13
+          },
+          "durationMs": 6902
+        }
+      ],
+      "grading": [
+        {
+          "durationMs": 5359,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order",
+                "passed": false,
+                "feedback": "Request both a coffee and a meat in Spanish.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "stop_now",
+                "passed": false,
+                "feedback": "Tell Errata to stop and insist on now, both in Spanish.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "Introduce yourself in Spanish as Nobody using the required introduction pattern.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your answer is English-only. Complete all three objectives in Spanish."
+          }
+        },
+        {
+          "durationMs": 11547,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order",
+                "passed": false,
+                "feedback": "You requested a coffee in Spanish, but you still need to include a meat in the same order.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "quiero",
+                    "evidence": "Quiero",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "cafe",
+                    "evidence": "café",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "stop_now",
+                "passed": false,
+                "feedback": "Give your own command in Spanish to stop, and insist on now.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "Introduce yourself in Spanish as Nobody using the required introduction pattern.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your coffee request is correct. Add a meat, give the stop-now command, and introduce yourself as Nobody."
+          }
+        },
+        {
+          "durationMs": 6338,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "order",
+                "passed": true,
+                "feedback": "You correctly requested both a coffee and a meat in Spanish.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "quiero",
+                    "evidence": "Quiero",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "cafe",
+                    "evidence": "café",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "chorizo",
+                    "evidence": "chorizo",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "stop_now",
+                "passed": false,
+                "feedback": "You still need to command Errata to stop and insist on now, both in Spanish.",
+                "vocabulary_evidence": []
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "You still need to introduce yourself in Spanish as Nobody using the required introduction pattern.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your order is complete. The stop-now command and introduction as Nobody are still missing."
+          }
+        },
+        {
+          "durationMs": 5375,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "stop_now",
+                "passed": false,
+                "feedback": "You gave a Spanish stop command, but postponed it until tomorrow. Insist on stopping now in Spanish.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "quieto",
+                    "evidence": "Quieto",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "Introduce yourself in Spanish using the required introduction pattern and the name Nobody.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your stop command needs immediate timing, and you still need to introduce yourself as Nobody in Spanish."
+          }
+        },
+        {
+          "durationMs": 5817,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "stop_now",
+                "passed": true,
+                "feedback": "You correctly command Errata to stop immediately in Spanish.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "basta",
+                    "evidence": "Basta",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "ahora",
+                    "evidence": "ahora",
+                    "quality": 5
+                  }
+                ]
+              },
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "You still need to introduce yourself in Spanish using the name Nobody and the required introduction pattern.",
+                "vocabulary_evidence": []
+              }
+            ],
+            "overall_feedback": "Your stop command is correct. Now introduce yourself in Spanish as Nobody."
+          }
+        },
+        {
+          "durationMs": 4421,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "nobody",
+                "passed": false,
+                "feedback": "You introduced yourself correctly, but used Sam. Introduce yourself with the name Nobody instead.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "me_llamo",
+                    "evidence": "Me llamo",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Use the name Nobody rather than your real name in your Spanish introduction."
+          }
+        },
+        {
+          "durationMs": 4555,
+          "output": {
+            "objective_results": [
+              {
+                "objective_id": "nobody",
+                "passed": true,
+                "feedback": "You correctly introduced yourself with the name Nobody in Spanish.",
+                "vocabulary_evidence": [
+                  {
+                    "vocabulary_id": "me_llamo",
+                    "evidence": "Me llamo",
+                    "quality": 5
+                  },
+                  {
+                    "vocabulary_id": "nadie",
+                    "evidence": "Nadie",
+                    "quality": 5
+                  }
+                ]
+              }
+            ],
+            "overall_feedback": "Correct introduction with the intended name."
+          }
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "start Portia",
+      "ok": true
+    },
+    {
+      "name": "say \"¡Hola!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "greet",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "hola",
+              "evidence": "Hola",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "introduce",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Good greeting! Now introduce yourself and ask Portia her name in Spanish."
+    },
+    {
+      "name": "say \"Me llamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "introduce",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "me_llamo",
+              "evidence": "Me llamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your introduction is correct. Ask Portia her name in return."
+    },
+    {
+      "name": "say \"¿Y tú?\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "ask_back",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "y_tu",
+              "evidence": "Y tú",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! Your question naturally asks Portia to introduce herself."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": true,
+        "characterName": "Portia",
+        "characterId": "archway_portia_001",
+        "saveable": false
+      }
+    },
+    {
+      "name": "move to coffee_cart",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "start Gerald",
+      "ok": true
+    },
+    {
+      "name": "say \"Quiero un café, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order_coffee",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "quiero",
+              "evidence": "Quiero",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "cafe",
+              "evidence": "café",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "no_milk",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee order is clear. Add a Spanish expression specifying no milk or black coffee."
+    },
+    {
+      "name": "say \"Sin leche, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "no_milk",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "sin_leche",
+              "evidence": "Sin leche",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct and natural—your no-milk preference is clear."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "coffee_cart",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:current",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ],
+      "locationEncounter": {
+        "id": "imp_coffee_greeting",
+        "completed": true,
+        "characterName": "Gerald",
+        "characterId": "imp_coffee_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Mortimer",
+      "ok": true
+    },
+    {
+      "name": "say \"Quiero jamón, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Request a meat other than ham in Spanish and include a Spanish quantity with a unit of weight."
+    },
+    {
+      "name": "say \"Quiero chorizo, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name_meat",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "chorizo",
+              "evidence": "Quiero chorizo, por favor.",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your meat request is correct. Add the amount you want in Spanish, including a unit of weight."
+    },
+    {
+      "name": "say \"Kilo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "kilo",
+              "evidence": "Kilo",
+              "quality": 1,
+              "effectiveQuality": 1
+            }
+          ]
+        }
+      ],
+      "feedback": "State the amount you want using a Spanish quantity and a weight unit."
+    },
+    {
+      "name": "say \"Medio kilo, por favor.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "quantity",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "kilo",
+              "evidence": "kilo",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "medio",
+              "evidence": "Medio",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct—you requested half a kilogram."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "butchers_stall_charcutier",
+        "completed": true,
+        "characterName": "Mortimer",
+        "characterId": "charcutier_mortimer_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"¡Mira!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "You gave a command to look. Instead, tell Flick to stop, give a direction, and insist on acting now—all in Spanish."
+    },
+    {
+      "name": "say \"¡Quieto!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "quieto",
+              "evidence": "¡Quieto!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command is correct. Still missing: a direction and an insistence on now, both in Spanish."
+    },
+    {
+      "name": "say \"Left.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Tell Flick left or right in Spanish, and insist on doing it now in Spanish."
+    },
+    {
+      "name": "say \"¡A la izquierda!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "izquierda",
+              "evidence": "¡A la izquierda!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your direction is correct. Also tell Flick to act now rather than put it off, using Spanish."
+    },
+    {
+      "name": "say \"Mañana.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Insist on doing it now rather than tomorrow, using Spanish."
+    },
+    {
+      "name": "say \"¡No, ahora!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "ahora",
+              "evidence": "¡No, ahora!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! You reject the delay and insist on now."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "cracked_fountain_letharger",
+        "completed": true,
+        "characterName": "Flick",
+        "characterId": "letharger_flick_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "move to old_bookshop",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ]
+    },
+    {
+      "name": "move to the_rift before the last encounter (expect SEALED)",
+      "ok": false,
+      "code": "SEALED",
+      "message": "The Rift is sealed. Finish the other encounters first (4 of 5 done)."
+    },
+    {
+      "name": "start Marginalia",
+      "ok": true
+    },
+    {
+      "name": "say \"Un libro.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Answer the reading questions in Spanish, giving the destination and the name rather than an unrelated object."
+    },
+    {
+      "name": "say \"Home.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Use Spanish to answer the destination question. The Cyclops name answer is also still missing."
+    },
+    {
+      "name": "say \"¡A casa!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "home",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "casa",
+              "evidence": "¡A casa!",
+              "quality": 3,
+              "effectiveQuality": 3
+            }
+          ]
+        },
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your destination answer passes. The Cyclops-name objective remains unanswered."
+    },
+    {
+      "name": "say \"Journathan.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Look again at his reply in the passage: what name did he give the Cyclops?"
+    },
+    {
+      "name": "say \"¡Nadie!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "name",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "nadie",
+              "evidence": "Nadie",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct Spanish answer to the reading question."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "old_bookshop",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:current",
+        "the_rift:known"
+      ],
+      "locationEncounter": {
+        "id": "old_bookshop_bookworm",
+        "completed": true,
+        "characterName": "Marginalia",
+        "characterId": "bookworm_marginalia_001",
+        "saveable": true
+      }
+    },
+    {
+      "name": "move to the_rift after every other encounter (expect success)",
+      "ok": true,
+      "current": "the_rift",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:current"
+      ],
+      "gate": {
+        "sealed": false,
+        "required": 5,
+        "completed": 5
+      }
+    },
+    {
+      "name": "review the drill before the Rift",
+      "ok": true,
+      "drillCards": []
+    },
+    {
+      "name": "start Errata",
+      "ok": true
+    },
+    {
+      "name": "say \"A coffee, please.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your answer is English-only. Complete all three objectives in Spanish."
+    },
+    {
+      "name": "say \"Quiero un café.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "quiero",
+              "evidence": "Quiero",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "cafe",
+              "evidence": "café",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your coffee request is correct. Add a meat, give the stop-now command, and introduce yourself as Nobody."
+    },
+    {
+      "name": "say \"Quiero un café y chorizo.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "order",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "quiero",
+              "evidence": "Quiero",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "cafe",
+              "evidence": "café",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "chorizo",
+              "evidence": "chorizo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your order is complete. The stop-now command and introduction as Nobody are still missing."
+    },
+    {
+      "name": "say \"Quieto mañana.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop_now",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "quieto",
+              "evidence": "Quieto",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command needs immediate timing, and you still need to introduce yourself as Nobody in Spanish."
+    },
+    {
+      "name": "say \"¡Basta, ahora!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop_now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "basta",
+              "evidence": "Basta",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "ahora",
+              "evidence": "ahora",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command is correct. Now introduce yourself in Spanish as Nobody."
+    },
+    {
+      "name": "say \"Me llamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "nobody",
+          "passed": false,
+          "evidence": [
+            {
+              "vocabularyId": "me_llamo",
+              "evidence": "Me llamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Use the name Nobody rather than your real name in your Spanish introduction."
+    },
+    {
+      "name": "say \"Me llamo Nadie.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "nobody",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "me_llamo",
+              "evidence": "Me llamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            },
+            {
+              "vocabularyId": "nadie",
+              "evidence": "Nadie",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct introduction with the intended name."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "the_rift",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:visited",
+        "cracked_fountain:visited",
+        "market_entrance:visited",
+        "old_bookshop:visited",
+        "the_rift:current"
+      ],
+      "locationEncounter": {
+        "id": "the_rift_errata",
+        "completed": true,
+        "characterName": "Errata",
+        "characterId": "rift_errata_001",
+        "saveable": false
+      }
+    }
+  ]
+}

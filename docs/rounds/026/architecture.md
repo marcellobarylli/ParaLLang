@@ -147,3 +147,10 @@ script gained `--only id,id` to replay a subset. Server 135/135, mobile 37/37, w
 open-answer lines with `replay-leaks.mjs`; the bar is 0 greet-answer lines from Portia under the amended rule and
 mean gaps no worse than the round's first replays. Then the after-build tours as in Amendment 1. If the check fails,
 the rule is reverted by Amendment.
+
+## Outcome (2026-11-05)
+
+Kept, with Amendment 2. The replays and the after-build tours bring lines nearer the requested share: the tour gap
+fell from 0.12 to 0.07 (it) and from 0.15 to 0.14 (es). By hand, every greeting is within 0.07 of its target, and
+Portia now reaches it. Both tours passed with no new kind of open-answer line. Amendment 2's check passed (0/4
+greet-answer lines from Portia). E1 is closed. See [findings](findings.md).

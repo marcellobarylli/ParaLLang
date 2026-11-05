@@ -131,7 +131,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ### E. Follow-ups from live data
 
-- [ ] **E1. Opening-line language share.** Round 009: first NPC lines carry 0.05–0.24 target language against
+- [x] **E1. Opening-line language share.** (round 026, closed 2026-11-05: rule kept with Amendment 2; tour gap it 0.12 → 0.07, es 0.15 → 0.14; greetings within 0.07 by hand) Round 009: first NPC lines carry 0.05–0.24 target language against
   0.20 requested (Gerald 0.19 vs 0.25). Round 014's tour: only Portia is short (mean 0.11 vs 0.28, greeting 0.07 vs
   0.20); Gerald 0.26/0.30, Mortimer, Flick and Marginalia at or above. Start with Portia's character sheet or
   encounter (content), not the shared template. **Round 019:** ambient words did not raise it (lines 0.17 → 0.16,

@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 026 closed, the language-mix rule kept (autonomous)
+
+The shared prompt's language-mix rule ("in a 20-word line, about K words", without "greetings" after Amendment 2)
+stays. After-build tours against the baseline: the mean line gap fell from 0.12 to 0.07 (it) and from 0.15 to 0.14
+(es). By hand, every greeting is within 0.07 of its target, and Portia, short since round 009, now reaches hers. Both
+tours passed (6/6, gate held and opened, 60 calls each). Reading them found no new kind of open-answer line. Backlog
+E1 is closed ([open items](docs/rounds/026/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 044, a leak scan over every live report (autonomous)
 
 `server/scripts/leak-scan.js` flags NPC lines that give away an open objective's answer, including words inside

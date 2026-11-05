@@ -56,3 +56,18 @@ Target-language words over all words, the names Errata and Rift left out, counte
 
 Errata's gap against 0.50 by hand: es old 0.13, new 0.04; it old 0.085, new 0.015. With Errata by hand, the
 three-encounter mean gap is es old 0.083, new 0.027; it old 0.082, new 0.022 (Gerald and Portia by estimate).
+
+## After-build tours (2026-11-05, iteration 12): every greeting by hand
+
+Target-language words over all words, names (Portia, Gerald, Marginalia, Journathan, Errata) left out.
+
+| Encounter (req) | it estimate | it by hand | es estimate | es by hand |
+|---|---|---|---|---|
+| Portia (0.20) | 0.19 | 3/16 = 0.19 | 0.17 | 3/17 = 0.18 |
+| Gerald (0.25) | 0.25 | 4/16 = 0.25 | 0.17 | 3/16 = 0.19 |
+| Mortimer (0.30) | 0.33 | 6/18 = 0.33 | 0.30 | 6/20 = 0.30 |
+| Flick (0.30) | 0.30 | 6/20 = 0.30 | 0.30 | 7/24 = 0.29 |
+| Marginalia (0.35) | 0.38 | 18/43 = 0.42 | 0.92 | 19/47 = 0.40 (the `translation` was again a one-line gloss) |
+| Errata (0.50) | 0.64 | 5/10 = 0.50 | 0.91 | 5/11 = 0.45 |
+
+Mean absolute greeting gap by hand: it 0.018, es 0.032.
