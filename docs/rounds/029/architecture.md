@@ -125,3 +125,13 @@ Changes:
 3. `createReviewChallenge(null)` picks only cards with a current content version.
 4. Tests: a restart of an active Rift session with due cards succeeds; the clock-advance case; a stale due card
    beside a due target; `drill_before: "yes"` is refused; `clearDrill` reports the cards it reviewed.
+
+## Outcome (2026-11-05)
+
+Built as designed, with Amendment 1. The Rift now runs a drill before the first fight against Errata, for every
+Spellbook card that is due in one of its six answer slots. The drill takes at most one card per slot, chosen and
+counted by the server, and every review response carries the updated drill. The map shows the drill with a review
+button, or names the encounter that must be finished first. A review started without an id serves the drill's cards
+first. An active Rift session resumes and restarts as before. `play-market.js --tour` clears the drill before the
+Rift and reports `drillCards`. Server 148/148 (6 new), mobile 51/51 (4 new), web client 12/12 and build, expo-doctor
+20/20, iOS export ok. Not yet seen in the Simulator or in a live tour. See [findings](findings.md).

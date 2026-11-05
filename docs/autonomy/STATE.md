@@ -25,7 +25,9 @@ again at 8:35 PM"). Steps to close it, in order:
 3. Findings, Outcome, close. If the tours fail or show new answer lines, revert by Amendment.
 
 Without Codex (before the reset), do only work that needs neither live runs nor a critique. Iteration 9 closed
-rounds 027 (C2) and 028 (B4) meanwhile, with a Claude subagent as the critic.
+rounds 027 (C2), 028 (B4) and 029 (C1) meanwhile, with a Claude subagent as the critic. **The tours in step 2
+now pass through round 029's drill**: the tour must report `drillCards` as an array (exit-code criterion); record
+its length in round 029's findings as well (round 029 open item 1).
 
 ## Backlog
 
@@ -81,7 +83,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ### C. prototype.md Phase 4: Polish & Audio
 
-- [ ] **C1. Forced repetition.** Pre-encounter Spellbook drill before the Rift boss.
+- [x] **C1. Forced repetition.** (round 029, closed 2026-11-05) Drill before the Rift's first fight: one due card
+  per required target group, `DRILL_REQUIRED`, map note; `play-market.js --tour` clears it (`drillCards`).
 - [x] **C2. Onboarding.** (round 027, closed 2026-11-05) Philosophy statement screen before the map, once per
   device; `content/narration/onboarding.yaml`, `GET /api/onboarding`.
 - [ ] **C3. Visual polish.** Typography, palette, transitions in the app.
@@ -133,6 +136,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Round 029: check the Rift's drill note, the review loop from the map and back, the finish-first case; decide
+  whether a reveal counts as a drill review and whether replays should drill
+  ([open items](../rounds/029/findings.md#open-items)).
 - Round 028: check the Spellbook's Containment files section (long lists, during encounters, VoiceOver) and review
   both files' texts ([open items](../rounds/028/findings.md#open-items)).
 - Round 027: check the first-launch statement screen in the Simulator (clear the app's storage), VoiceOver focus,
@@ -264,9 +270,19 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-05, iteration 9: round 028 (B4) planned, critiqued by a Claude subagent (9 findings: 7 accepted, 2 in
   part), built and closed: containment files in the Spellbook, filed on completion; fixed the resolving turn
   returning stale progress; server 142/142, mobile 47/47, client 12/12.
+- 2026-11-05, iteration 9: round 029 (C1) planned, critiqued by a Claude subagent (two reports: 8 findings, all
+  accepted; 11 more after the freeze, by Amendment), built and closed: forced repetition before the Rift; server
+  148/148, mobile 51/51, client 12/12. Iteration 9 ends here (Amendment 2 of round 026 built; rounds 027–029 closed;
+  no Codex calls: limit until 20:35 UTC).
 
 ## Handoff notes and traps
 
+- **The Rift drill** (round 029): a test or script that starts the Rift with due Spellbook cards in its target groups
+  gets 409 `DRILL_REQUIRED`; clear it with `clearDrill(service, learnerId)` from `play-market.js`. The drill lives in
+  `spellbook.drill` (only at the Rift, not completed). `createReviewChallenge(null)` serves drill cards first and
+  skips stale cards.
+- **A subagent critic can return twice**: the same background agent sent a second, different report after the freeze
+  (round 029). Keep it as `critique-2.md` and dispose of it by Amendment.
 - **A resolving turn's response now reflects its own progress** (round 028): `submitDialogue` records the
   completion (or the party member's count) before building the response. Before, the resolving turn's spellbook
   and anything derived from `completedEncounterIds` were one step stale.
