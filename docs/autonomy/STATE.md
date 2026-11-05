@@ -7,32 +7,16 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-**Round 026 (E1, template round) is open**, built and committed. Codex hit its usage limit at 18:17 UTC ("try
-again at 8:35 PM"; a probe at 19:40 UTC was still refused). Iteration 11 ended at 20:01 UTC, before the reset, so
-**the next iteration starts here**: probe Codex once (`codex exec --skip-git-repo-check --sandbox read-only "Reply
-OK" < /dev/null` from /tmp), then run these steps in order:
-
-1. **Amendment 2 is built and committed** (iteration 9, journal row 16): "greetings" dropped from the rule's
-   phrase list, golden r026 regenerated, tests green. Still to do, after Codex's reset: the Amendment's check.
-   Paired replays for Portia, Gerald and Errata in both languages:
-   `TARGET_LANGUAGE=it node docs/rounds/026/results/greeting-replay.mjs --provider codex-cli --reps 2 --only market_entrance_tutorial,imp_coffee_greeting,the_rift_errata --out docs/rounds/026/results/replay2-it.json`
-   (then `es`; 24 calls in all). Read them with `replay-leaks.mjs` and `replay-summary.py` (both take report paths; the
-   language is read from the report). The bar: 0 greet-answer lines from Portia
-   under the amended rule, and mean gaps no worse than the first replays. `variants()` still finds the old line
-   (`check-variants.mjs` passes).
-2. **The after-build tours** (`play-market.js --tour`, it and es, 60 calls each). Measure with `tour-measure.mjs`
-   against `baseline-tour-*.json`, and read every flagged line and every greeting (Amendment 1's integration
-   check: both tours pass, with no new open-answer line). Hand-count the greetings into `results/hand-count.md`.
-   The `limit-after-tour-*.json` files are failed runs, not results.
-3. Findings, Outcome, close. If the tours fail or show new answer lines, revert by Amendment.
-
-Without Codex (before the reset), do only work that needs neither live runs nor a critique. Iterations 9 and 10
-closed rounds 027–032 meanwhile, with a Claude subagent as the critic. **After round 026 closes**, the queued live
-checks of rounds 030–032 are optional: they change no prompt, so the after-build tours already exercise them
-(record in round 030's findings that the tour's resolving turns at the Bookshop, Fountain and Rift returned
-`journeyFragments`, if you read them). **The tours in step 2
-now pass through round 029's drill**: the tour must report `drillCards` as an array (exit-code criterion); record
-its length in round 029's findings as well (round 029 open item 1).
+**Iteration 12 (from 20:02 UTC)** closed rounds 041–044 without live calls, then Codex came back at 20:36.
+- **Round 026** (E1): Amendment 2's check passed (journal rows 17–18). After-build tours (it, then es) are
+  running/queued: `play-market.js --tour --out docs/rounds/026/results/after-tour-<lang>.json`. Then measure with
+  `tour-measure.mjs` against `baseline-tour-*.json`, read flagged lines and greetings (now also with
+  `server/scripts/leak-scan.js`), hand-count greetings into `results/hand-count.md`, and record `drillCards` (round
+  029 open item 1) and `journeyFragments` on resolving turns (round 030). Then Findings, Outcome, close.
+- **Round 045** (G3, unordered objectives): built and frozen. Live runs still to do:
+  `TARGET_LANGUAGE=it node server/scripts/play-market.js --provider codex-cli --party --member butchers_stall --lines "Ancora un po', per favore!|Mi piace molto, Mortimer!" --out docs/rounds/045/results/party-it.json`
+  and es with `"Un poco más, por favor.|¡Me gusta mucho!"`. Bar: both resolve; the first turn closes `ask_more` while
+  `like_it` stays current. Then findings and close.
 
 ## Backlog
 
