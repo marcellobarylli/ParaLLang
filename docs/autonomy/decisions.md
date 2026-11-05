@@ -140,3 +140,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 044 | Critique 1: 12 of 14 accepted, 1.5 and 1.12 in part | — | See round 044 Second opinion table | Yes |
 | 2026-11-05 | 045 | `objectives_unordered` on an encounter; Mortimer's tasting is the first (like it / ask for more in either order); help caps every graded objective there; Codex critique | Keep every encounter ordered; make all party conversations unordered | The order was arbitrary at the tasting; the other scenes have a natural sequence | Yes |
 | 2026-11-05 | 045 | Critique 1: 5 of 9 accepted, 2 in part, 2 rejected | — | See round 045 Second opinion table | Yes |
+| 2026-11-05 | 046 | A second share estimate, `folded` (glitch-folded tokens; abstains when the translation is under 60% of the line), beside the unchanged old one; Codex critique | Replace the old estimate; a dictionary-based estimate | Keeps earlier reports comparable; no English lexicon in the sandbox | Yes |
+| 2026-11-05 | 046 | Critique 1: 5 of 9 accepted, 4 in part | — | See round 046 Second opinion table | Yes |
