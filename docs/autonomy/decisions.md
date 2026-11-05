@@ -122,3 +122,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 035 | Critique 1: 6 of 8 accepted, 1.5 and 1.6 in part | — | See round 035 Second opinion table | Yes |
 | 2026-11-05 | 036 | Spellbook fragments show "Told by X" / "Found at Y" (also during encounters), file order kept; critique by a Claude subagent | Grouping by member or place; hiding the line during encounters | Seven items; the line names no answer | Yes |
 | 2026-11-05 | 036 | Critique 1: 3 findings accepted, 4 checks noted | — | See round 036 Second opinion table | Yes |
+| 2026-11-05 | 037 | UI sounds (C4a): two cues synthesized by a committed script (pass, resolve), none on a miss; switch on the Saves screen (default on); silent switch mutes; expo-audio plugin without microphone or background audio; critique by a Claude subagent | Third-party sound packs; a miss sound; a separate settings screen | No licence question; minimal per prototype.md; the Saves screen is the only settings-like page | Yes |
+| 2026-11-05 | 037 | Critique 1: 9 of 9 accepted | — | See round 037 Second opinion table | Yes |
