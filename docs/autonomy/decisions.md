@@ -41,3 +41,7 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 013 | Passages live in each objective's `intent`, with an instruction to read them first | A new passage field in the engine | Content only; the intent already reaches the narration prompt | Yes |
 | 2026-11-05 | 013 | Reading-context exception to the grader's third-person rule, in the encounter's constraints | Change grading.txt for all encounters | Only reading comprehension needs it | Yes |
 | 2026-11-05 | 013 | Codex critique 1: 1.1–1.4 accepted, 1.5 rejected | Accept all | See round 013 Second opinion table | Yes |
+| 2026-11-05 | 014 | Split A7: the Rift gate and a live full-market tour first, the boss next (A7b) | One round for gate and boss | Gate needs engine and app changes; the boss needs content and a review design; small rounds stay green | Yes |
+| 2026-11-05 | 014 | The gate lists the five encounter ids explicitly (`requires_completed`) | A keyword "all other encounters" | A later encounter (party, lore fragments) would silently tighten the gate | Yes |
+| 2026-11-05 | 014 | A save already standing in the Rift (allowed in rounds 005–013) is not thrown out; only moves in are refused | Move such players back to the Old Bookshop | It holds nothing yet; A7b's encounter start checks the gate | Yes |
+| 2026-11-05 | 014 | Codex critique 1: 1.1, 1.2, 1.3, 1.5 accepted, 1.4 rejected | Accept all | See round 014 Second opinion table | Yes |

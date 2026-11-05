@@ -1,0 +1,13 @@
+# Journal: round 014
+
+Append only. Times are UTC. Occurred is when the event happened; Recorded is when the row was written.
+
+| # | Occurred | Recorded | Event | Actor | What | Record |
+|---|---|---|---|---|---|---|
+| 1 | 2026-11-05 13:22:12 | 13:23:10 | round-opened | Claude (claude-opus-5-5), autonomous | Backlog item A7 (The Rift), split: this round builds the gate and a live full-market tour; the boss is A7b. No owner present. Occurred is when the round folder was made | `../../../autonomy/STATE.md` |
+| 2 | 13:22:20 | 13:23:10 | plan-drafted | Claude (claude-opus-5-5), autonomous | Draft v1: `requires_completed` on a location, `gate` in the map snapshot, 409 `SEALED`, sealed node in the app, `play-market.js --tour`. Occurred approximate | `plan-v1.md` |
+| 3 | 13:22:48 | 13:23:10 | critique-dispatched | Claude (claude-opus-5-5), autonomous | Critique 1 sent: `codex exec --sandbox read-only -c model_reasoning_effort=high`, template plus the no-commands preamble; `plan-v1.md` sha256 c3390969… and 10 files at HEAD 58cfa6e inlined on stdin (bundle sha256 a1a9be7c…, 1629 lines; list in `critique-1.md`) | `plan-v1.md` |
+| 4 | 13:26:41 | 13:36:40 | critique-returned | Claude (claude-opus-5-5), autonomous | Critique 1: 5 findings (1 Error, 1 Gap, 3 Cut). Occurred is the output file's mtime; read at 13:36:16 because a `pgrep -f` wait loop matched its own command line and never ended | `critique-1.md` |
+| 5 | 13:37:00 | 13:37:00 | disposition | Claude (claude-opus-5-5), autonomous | No owner present: autonomous decisions pending owner review. Accepted 1.1 (no call estimate; measure), 1.2 (leave out each prerequisite in turn), 1.3 (one live tour, Italian), 1.5 (reuse the per-encounter reports, no verdict aggregation in the script); rejected 1.4 (run brief's quality bar) | `../architecture.md`, `../../../autonomy/decisions.md` |
+| 6 | 13:37:00 | 13:37:00 | plan-revised | Claude (claude-opus-5-5), autonomous | Net change: −1 live tour, −the call estimate, +1 table-driven test; recorded in `architecture.md` (no plan-v2 critiqued) | `../architecture.md` |
+| 7 | 13:37:19 | 13:37:19 | correction | Claude (claude-opus-5-5), autonomous | Rows 5 and 6: Occurred and Recorded were typed as 13:37:00 ahead of the clock; both were written at about 13:36:50 (`date -u` read 13:36:45 just before) | — |
