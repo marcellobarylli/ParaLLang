@@ -26,3 +26,6 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 009 | Narration word matching scoped to the played encounter's vocabulary files | Pack-wide matching (round 006) | New greetings and pronouns would otherwise appear in Gerald's lines and Spellbook | Yes |
 | 2026-11-05 | 009 | Spanish ask-back target is the phrase `y tú`, not bare `tú` or `usted` | Bare `tú`; formal `usted` (Codex) | Accent folding would gloss possessive tu as "you"; informal you in both packs | Yes |
 | 2026-11-05 | 009 | Codex critique 1: 1.1–1.3, 1.6, 1.7 accepted; 1.4, 1.5 with other fixes; 1.8, 1.9 in part | Accept all | See round 009 Second opinion table | Yes |
+| 2026-11-05 | 010 | Butcher's Stall NPC is Mortimer the Charcutier; objectives: name a meat that is not ham, then a quantity with a unit | Bernard (the round 006 test fixture's name); a price objective | prototype.md §8.2; prices left for a later round | Yes |
+| 2026-11-05 | 010 | No Italian `due` entry and no `chili` variant | Author them | Both are English words that narration matching would chip in Mortimer's English | Yes |
+| 2026-11-05 | 010 | Codex critique 1: 1.1–1.5 accepted; 1.6, 1.7 in part | Accept all | See round 010 Second opinion table | Yes |
