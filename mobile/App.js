@@ -13,17 +13,19 @@ import MapPanel from './src/components/MapPanel.js';
 import PartyPanel from './src/components/PartyPanel.js';
 import OnboardingPanel from './src/components/OnboardingPanel.js';
 import SavesPanel from './src/components/SavesPanel.js';
-import { colors, type } from './src/components/ui.js';
+import { DisplayFont, colors, type, useDisplayFont } from './src/components/ui.js';
 import { FadeIn } from './src/motion.js';
 
 export default function App() {
   const state = useGameStore();
+  const fontReady = useDisplayFont(); // round 042: titles switch to Literata once it loads; nothing waits for it
   useEffect(() => { state.initialize(); }, [state.initialize]);
   const resolved = state.encounter?.state === 'resolved';
   const here = state.world?.locations.find((location) => location.id === state.world.currentLocationId);
   const returnLabel = state.returnView === 'dialogue' && state.encounter ? `Return to ${state.encounter.character?.name ?? 'the encounter'}` : 'Return to the map';
 
   return (
+    <DisplayFont.Provider value={fontReady}>
     <SafeAreaProvider>
       <SafeAreaView style={styles.shell}>
         <StatusBar style="dark" />
@@ -67,6 +69,7 @@ export default function App() {
         </FadeIn>
       </SafeAreaView>
     </SafeAreaProvider>
+    </DisplayFont.Provider>
   );
 }
 

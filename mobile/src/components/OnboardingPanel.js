@@ -1,12 +1,12 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
-import { Button, colors, type, leading } from './ui.js';
+import { Button, colors, type, leading, Title } from './ui.js';
 
 // Round 027 (backlog C2): the game's philosophy statement, shown once before the map. The text is content
 // (content/narration/onboarding.yaml), served by GET /api/onboarding.
 export default function OnboardingPanel({ onboarding, onBegin }) {
   return (
     <ScrollView style={styles.panel} contentContainerStyle={styles.content}>
-      <Text role="heading" style={styles.title}>{onboarding.title}</Text>
+      <Title style={styles.title}>{onboarding.title}</Title>
       <Text style={styles.statement}>{onboarding.statement}</Text>
       {onboarding.notes.map((note) => <Text key={note} style={styles.paragraph}>{note}</Text>)}
       <Button label={onboarding.beginLabel} accessibleName={`${onboarding.beginLabel}: open the map`} variant="primary" onPress={onBegin} style={styles.begin} />

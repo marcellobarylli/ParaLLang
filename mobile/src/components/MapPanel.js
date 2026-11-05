@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, colors, type, leading } from './ui.js';
+import { Button, colors, type, leading, Title } from './ui.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 
 const NODE = 18;
@@ -71,7 +71,7 @@ export default function MapPanel({ drill = null, ongoing = null, onDrill, onRetu
         {world.locations.map((location) => <Node key={location.id} location={location} size={size} onMove={onMove} disabled={isLoading} />)}
       </View>
       {here && <View style={styles.card} aria-live="polite">
-        <Text role="heading" style={styles.title}>{here.name}</Text>
+        <Title style={styles.title}>{here.name}</Title>
         <Text style={styles.body}>{here.description}</Text>
         {here.vocabularyFocus?.length > 0 && <Text style={styles.focus}>Words here: {here.vocabularyFocus.join(', ')}</Text>}
         {here.encounter && drillHere && <DrillNote drill={drillHere} ongoing={ongoing} isLoading={isLoading} onDrill={onDrill} onReturnToEncounter={onReturnToEncounter} />}

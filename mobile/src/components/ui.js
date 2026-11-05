@@ -1,4 +1,7 @@
+import { createContext, useContext } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
+import { useFonts } from 'expo-font';
+import { Literata_700Bold } from '@expo-google-fonts/literata/700Bold';
 
 export const colors = {
   background: '#f6f1e7',
@@ -22,6 +25,27 @@ export const type = Object.freeze({
 
 // Round 035 (round 034 critique 1.7): line heights for reading text, by type size (about 1.4–1.5).
 export const leading = Object.freeze({ subhead: 21, callout: 23, body: 25 });
+
+// Round 042 (C3 remainder): titles in Literata Bold (SIL Open Font License 1.1, @expo-google-fonts/literata), body text
+// in the system font. Only the 700 file is bundled. The font loads at runtime (Expo Go ignores config plugins) and
+// the app never waits for it: until it is ready, or if it fails, titles keep the system font at their own weight.
+export const fonts = Object.freeze({ display: 'Literata_700Bold' });
+
+// Critique 1.4: readiness is React context set by App (no module state); outside a provider titles use the system font.
+export const DisplayFont = createContext(false);
+
+// Called once by App: loads the font; true once it has loaded, false while loading or after a failure.
+export function useDisplayFont() {
+  const [loaded] = useFonts({ [fonts.display]: Literata_700Bold });
+  return Boolean(loaded);
+}
+
+// A heading (role "heading" unless given) in the display font once it is ready. `style` carries the size, colour
+// and the system font's weight; with Literata the weight is dropped (one upright face; critique 1.1).
+export function Title({ style, children, role = 'heading', ...props }) {
+  const ready = useContext(DisplayFont);
+  return <Text role={role} {...props} style={[style, ready && styles.display]}>{children}</Text>;
+}
 
 // Round 034 (critique 1.3): `dim` fades a disabled button; the map turns it off, since its node labels carry information.
 export function Button({ label, accessibleName, onPress, disabled = false, dim = true, variant = 'secondary', style, children, expanded }) {
@@ -50,4 +74,5 @@ const styles = StyleSheet.create({
   label: { color: colors.ink, fontSize: type.subhead, fontWeight: '600' },
   primaryLabel: { color: colors.accentInk },
   textLabel: { color: colors.accent },
+  display: { fontFamily: fonts.display, fontWeight: 'normal', fontStyle: 'normal' },
 });

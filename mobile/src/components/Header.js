@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, colors, type } from './ui.js';
+import { Button, colors, type, Title } from './ui.js';
 
 // Round 027: hideNav hides every action (the onboarding statement has only its own button).
 export default function Header({ hideNav = false, place, dueCount, partyCount = 0, isLoading, onSpellbook, onParty, onMap, onRestart, onSaves }) {
   return (
     <View style={styles.header}>
       <View style={styles.titles}>
-        <Text role="heading" style={styles.title}>ParaLLang</Text>
+        <Title style={styles.title}>ParaLLang</Title>
         <Text style={styles.subtitle}>The Crumbling Market{place ? ` — ${place}` : ''}</Text>
       </View>
       {!hideNav && <View style={styles.nav} aria-label="Learning navigation">

@@ -15,7 +15,7 @@ const code = (file) => readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '
 const isUi = (file) => file.endsWith(join('components', 'ui.js'));
 const COLOUR = /['"]#[0-9a-fA-F]{3,8}['"]|\b(?:rgba?|hsla?)\(|\b(?:color|backgroundColor|borderColor|borderLeftColor|tintColor|shadowColor)\s*:\s*['"](?!#)[a-z]+['"]/g;
 // Styles that only modify a sized style they are combined with or nested in (critique 1.2).
-const MODIFIERS = new Set(['Spellbook.js:strong', 'ReviewPanel.js:emphasis', 'MapPanel.js:nodeNameKnown', 'MapPanel.js:nodeNameUnreachable', 'SavesPanel.js:switchOn', 'ui.js:primaryLabel', 'ui.js:textLabel']);
+const MODIFIERS = new Set(['Spellbook.js:strong', 'ReviewPanel.js:emphasis', 'MapPanel.js:nodeNameKnown', 'MapPanel.js:nodeNameUnreachable', 'SavesPanel.js:switchOn', 'ui.js:primaryLabel', 'ui.js:textLabel', 'ui.js:display']);
 
 test('no source sets a literal font size or colour outside ui.js', () => {
   expect(sources.length).toBeGreaterThan(15);

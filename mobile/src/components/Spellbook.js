@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
-import { Button, colors, type, leading } from './ui.js';
+import { Button, colors, type, leading, Title } from './ui.js';
 
 export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to the map', now = Date.now() }) {
   const inEncounter = Boolean(spellbook.inEncounter);
   return (
     <ScrollView aria-label="Spellbook" contentContainerStyle={styles.content}>
       <View style={styles.heading}>
-        <View><Text role="heading" style={styles.title}>Spellbook</Text><Text style={styles.muted}>{spellbook.dueCount} due for review</Text></View>
+        <View style={styles.headingText}><Title style={styles.title}>Spellbook</Title><Text style={styles.muted}>{spellbook.dueCount} due for review</Text></View>
         <Button label={returnLabel} onPress={onReturn} />
       </View>
       {inEncounter && spellbook.cards.length > 0 && <Text style={styles.hidden}>Meanings are hidden and reviews wait while an encounter is under way. Ask your companion for a hint instead.</Text>}
@@ -17,11 +17,11 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
       ) : spellbook.cards.map((card) => <Card key={card.vocabularyId} card={card} state={cardState(card, { inEncounter, now })} language={language} isLoading={isLoading} onReview={onReview} />)}
       {!inEncounter && spellbook.cards.length > 0 && spellbook.dueCount === 0 && <Text style={styles.muted}>Nothing is due. Your next review times are shown on each card.</Text>}
       {spellbook.containmentFiles?.length > 0 && <>
-        <Text role="heading" style={styles.section}>Containment files</Text>
+        <Title style={styles.section}>Containment files</Title>
         {spellbook.containmentFiles.map((file) => <ContainmentFile key={file.designation} file={file} language={language} />)}
       </>}
       {spellbook.journeyFragments?.length > 0 && <>
-        <Text role="heading" style={styles.section}>Fragments of The Journey</Text>
+        <Title style={styles.section}>Fragments of The Journey</Title>
         {spellbook.journeyFragments.map((fragment) => <Fragment key={fragment.id} fragment={fragment} language={language} />)}
       </>}
     </ScrollView>
@@ -111,6 +111,7 @@ function Card({ card, state, language, isLoading, onReview }) {
 const styles = StyleSheet.create({
   content: { padding: 16, gap: 12 },
   heading: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  headingText: { flexShrink: 1 }, // round 042 (critique 1.6): a wider serif title wraps instead of pushing the button
   title: { fontSize: type.title1, fontWeight: '700', color: colors.ink },
   section: { fontSize: type.title3, fontWeight: '700', color: colors.ink, marginTop: 8 },
   card: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },

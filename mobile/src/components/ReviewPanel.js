@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
-import { Button, colors, type } from './ui.js';
+import { Button, colors, type, Title } from './ui.js';
 
 export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to the map' }) {
   const [answer, setAnswer] = useState('');
   const name = language?.name ?? 'Target-language';
   if (result) return (
     <ScrollView aria-label="Review feedback" contentContainerStyle={styles.content}>
-      <Text role="heading" style={styles.title}>Review feedback</Text>
+      <Title style={styles.title}>Review feedback</Title>
       <Text role="status" style={styles.body}>{result.feedback}</Text>
       <Text style={styles.body}>Answer: <Text style={styles.emphasis}>{result.canonicalAnswer}</Text></Text>
       <Text style={styles.small}>Quality {result.effectiveQuality}/5 · Next review: {new Date(result.nextReviewAt).toLocaleString()}</Text>

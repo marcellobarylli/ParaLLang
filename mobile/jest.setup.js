@@ -18,3 +18,6 @@ jest.mock('expo-audio', () => ({
 
 // Round 040 (critique 1.3): tests do not pick up a developer's EXPO_PUBLIC_PARALLANG_TOKEN.
 delete process.env.EXPO_PUBLIC_PARALLANG_TOKEN;
+
+// Round 042 (critique 1.3): no font loading under jest; titles use the system font unless a test provides it.
+jest.mock('expo-font', () => ({ useFonts: jest.fn(() => [false, null]) }));

@@ -1,12 +1,12 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, colors, type } from './ui.js';
+import { Button, colors, type, Title } from './ui.js';
 
 // Round 021: the party, in join order. Round 022: a member with an authored conversation can be talked to anywhere.
 // `ongoing` is the encounter under way, if any: Talk resumes it for its own member and is unavailable for the others.
 export default function PartyPanel({ party, isLoading = false, ongoing = null, onTalk, onReturn, returnLabel }) {
   return (
     <ScrollView style={styles.panel} contentContainerStyle={styles.content}>
-      <Text role="heading" style={styles.title}>Your party</Text>
+      <Title style={styles.title}>Your party</Title>
       {party.length === 0
         ? <Text style={styles.muted}>No one has joined you yet. Win someone over who is worth keeping.</Text>
         : party.map((member) => (
