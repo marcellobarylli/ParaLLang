@@ -7,7 +7,7 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **A2** (multi-encounter engine), then B1 with the dictated-answer rule (see Handoff).
+- Round 006 (A2, multi-encounter engine): plan v1 drafted and sent to Codex (`docs/rounds/006/trail/`). Then B1 with the dictated-answer rule (see Handoff).
 
 ## Backlog
 

@@ -12,3 +12,7 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 005 | Optional PARALLANG_TOKEN; test servers and verify:cli use a random token | No token (Codex cut 2.7) | Sandbox rule for servers bound in this run | Yes |
 | 2026-11-05 | 005 | Codex critique 2 dispositions: 2.1–2.5 accepted (2.4 narrower, 2.5 keeps completion), 2.6 in part, 2.7–2.9 rejected | Accept all | See round 005 Second opinion table | Yes |
 | 2026-11-05 | 005 | Codex runs without its shell sandbox: code inlined on stdin | Run with sandbox bypass | bwrap cannot mount in Apptainer; read-only is required | Yes |
+| 2026-11-05 | 006 | Merge all pack vocabulary files; cards validated against their own file's version | One vocabulary file per encounter | Words are shared across encounters; the Spellbook is per pack | Yes |
+| 2026-11-05 | 006 | One active encounter per learner; entering another replaces the session | Several sessions | The app shows one encounter at a time; transcripts were never durable | Yes |
+| 2026-11-05 | 006 | `default_encounter` in language.yaml for requests without an encounter id (web client), no location check for those | Enforce location for all | Keeps the frozen web client working | Yes |
+| 2026-11-05 | 006 | Codex critique 1: all 10 findings accepted | — | See round 006 Second opinion table | Yes |
