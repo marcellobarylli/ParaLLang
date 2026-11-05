@@ -49,9 +49,9 @@ Lines by kind and round (`results/by-round.txt`). "Leak" excludes the espresso-o
 | Rounds | Lines | Leak | Espresso only | Near | Quoted | Echo |
 |---|---|---|---|---|---|---|
 | 005–010 (it, es) | 80 | 24 | 5 | 4 | 0 | 5 |
-| 011–015 | 185 | 17 | 5 | 1 | 26 | 6 |
+| 011–015 | 185 | 17 | 4 | 1 | 26 | 6 |
 | 019–026 | 346 | 18 | 10 | 1 | 18 | 5 |
-| **all** | **611** | **59** | **20** | **6** | **44** | **16** |
+| **all** | **611** | **59** | **19** | **6** | **44** | **16** |
 
 From round 020 on, 18 leak lines remain:
 - 13 are greetings in round 026's 80 greeting replays (Portia, and Errata's "Sono Errata");

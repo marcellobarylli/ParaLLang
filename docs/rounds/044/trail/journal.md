@@ -17,3 +17,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 11 | 20:29:30 | 20:29:30 | result | Claude (claude-opus-5-5), autonomous | Near-leaks are topic words (5 Gerald "latte", 1 Mortimer "más"); exact leaks fell after rounds 007 and 012; since round 020 only greetings and Errata's frame words; no prompt change | `../results/by-round.txt` |
 | 12 | 20:29:30 | 20:29:30 | outcome | Claude (claude-opus-5-5), autonomous | Built as designed; G2 done | `../findings.md` |
 | 13 | 20:29:30 | 20:29:30 | closed | Claude (claude-opus-5-5), autonomous | Round 044 closed | `../findings.md` |
+| 14 | 20:29:49 | 20:29:49 | note | Claude (claude-opus-5-5), autonomous | Correction to row 10: leak 78 lines (59 plus 19 espresso-only), not 79 (20); the findings table's 011–015 and total espresso cells corrected from a sum check of `by-round.txt` | `../results/by-round.txt` |
