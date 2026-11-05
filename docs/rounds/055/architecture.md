@@ -89,3 +89,8 @@ duplicate names across lines (an existing pattern; tests use `within`); act() wa
 
 Net change: a promise cache with a test reset, hidden buttons with no voice, a chip row layout, speech generations
 and a stop on unmount.
+
+## Outcome (2026-11-05)
+
+Built as designed. Mobile 139/139, server 228/228, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
+See [findings.md](findings.md).

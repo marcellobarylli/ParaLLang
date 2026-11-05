@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 055, hear the words of an encounter line (autonomous)
+
+Each word chip under an NPC line now has a 🔊 that speaks the chip's word in the pack's voice, as Spellbook cards
+and reviews already did. It is free: it costs no hint and reveals no meaning, and it stays enabled when the chip is
+not. When no voice is installed, the chip rows have no speaker. Voices are looked up once per language, a late
+callback no longer raises the ambience under the next word, and leaving the encounter stops the voice. Checked by
+jest only; the sound, layout and VoiceOver need the Simulator
+([open items](docs/rounds/055/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 054, typographic apostrophes (autonomous)
 
 An iPhone types ’ with Smart Punctuation, and the server compared apostrophes exactly. A correct "È l’una" could
@@ -550,6 +559,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 055 | 11-05 | A 🔊 per word chip in encounter lines, free of hints (backlog C5) (autonomous) | [055](docs/rounds/055/architecture.md) | [findings](docs/rounds/055/findings.md) | pre-run record to round 055 close |
 | 054 | 11-05 | Typographic apostrophes fold to ' in the matcher, reviews and the grader-evidence check (backlog F2) (autonomous) | [054](docs/rounds/054/architecture.md) | [findings](docs/rounds/054/findings.md) | pre-run record to round 054 close |
 | 053 | 11-05 | An LLM atmosphere line under each location's description, off by default (backlog A10) (autonomous) | [053](docs/rounds/053/architecture.md) | [findings](docs/rounds/053/findings.md) | pre-run record |
 | 052 | 11-05 | Numbers 2–12 in Flick's slow walk: a bargaining objective, reinforcement for the hours (backlog H2) (autonomous) | [052](docs/rounds/052/architecture.md) | [findings](docs/rounds/052/findings.md) | pre-run record |

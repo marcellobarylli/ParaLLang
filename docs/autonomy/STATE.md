@@ -100,7 +100,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `mobile/scripts/gen-ui-sounds.js`, switch on the Saves screen). **C4b** ambient loops per location (round 041,
   closed 2026-11-05: `mobile/scripts/gen-ambient.js`, `mobile/src/ambience.js`, ducked under speech).
 
-- [ ] **C5. Hear the words of an encounter line** (round 055): a pronounce button per word chip under NPC lines
+- [x] **C5. Hear the words of an encounter line** (round 055, closed 2026-11-05): a pronounce button per word chip under NPC lines
   (TTS was only in the Spellbook and reviews; prototype.md Phase 4). No live calls.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
@@ -391,6 +391,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Speech** (round 055): `PronounceButton` looks voices up through `voiceFor(tag)` (in-flight promise cached per
+  tag, misses dropped); `findVoice` stays pure. `mobile/jest.after-env.js` (`setupFilesAfterEnv`) resets the cache
+  before every test. `speak` only lets the latest utterance restore the ambience; `stopSpeech()` runs when
+  `DialoguePanel` unmounts. Chip rows pass `hideWhenUnavailable`. The chip row's label is "Words" (was "Word
+  translations").
 - **Numbers in Flick's slow walk** (round 052): `minutes` targets it `due` … `dodici` with Mortimer's `tre`, es
   Mortimer's `dos`, `tres` and `cuatro` … `doce` (cross-file ids: Mortimer's whole butcher file is chipped in this
   conversation). `minuti` / `minutos` are non-target entries in `flick_party.yaml`. English-word forms among the

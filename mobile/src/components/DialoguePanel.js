@@ -1,13 +1,16 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import BilingualText from './BilingualText.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 import { colors, type } from './ui.js';
 import { FadeIn, useReduceMotion } from '../motion.js';
+import { stopSpeech } from '../speech.js';
 
 export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
   const reduced = useReduceMotion();
+  // Round 055 (critique 1.8): a word still being spoken stops when the encounter screen goes.
+  useEffect(() => () => { stopSpeech(); }, []);
   // Round 035: lines already there when this encounter session is first shown (opening line, a resumed transcript,
   // a restart) appear as they are; a line that arrives later fades in on its first render only, so a recycled
   // FlatList cell does not fade again (critique 1.2, 1.3).
@@ -64,7 +67,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
         <View style={styles.npc}>
           <Text style={styles.narrative}>{message.narrative}</Text>
           <Text style={styles.speaker}>{message.dialogue.speaker}</Text>
-          <BilingualText message={message} onHelp={onHelp} disabled={isLoading || (message.protected && !encounter.hints_available)} />
+          <BilingualText message={message} language={language} onHelp={onHelp} disabled={isLoading || (message.protected && !encounter.hints_available)} />
         </View>
       ) : (
         <Text style={styles.player}>{message.text}</Text>
