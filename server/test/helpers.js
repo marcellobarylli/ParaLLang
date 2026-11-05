@@ -111,10 +111,10 @@ export class FixtureProvider {
   }
 }
 
-export async function createRuntime({ provider = new FixtureProvider(), clock = () => fixedNow, storage, language = 'es', saveDir: baseSaveDir } = {}) {
+export async function createRuntime({ provider = new FixtureProvider(), clock = () => fixedNow, storage, language = 'es', saveDir: baseSaveDir, content: givenContent } = {}) {
   const saveDir = baseSaveDir ?? await makeTempDir('parallang-test-');
   const actualStorage = storage ?? new JsonLearningStorage({ saveDir });
-  const content = loadGameContent({ language });
+  const content = givenContent ?? loadGameContent({ language }); // round 045: a test may pass edited content
   const service = new LearningService({ provider, storage: actualStorage, content, clock });
   // Test servers bind 127.0.0.1 and are protected by a random PARALLANG_TOKEN-style secret.
   const token = randomUUID();

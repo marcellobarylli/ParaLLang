@@ -11,6 +11,8 @@ max_turns: 20
 resolved_message: Mortimer weighs your appetite and declares it certified ham-tier.
 escalation:
   target_ratio_increase_per_turn: 0.05
+# Round 045 (backlog G3): saying you like it and asking for more may come in either order.
+objectives_unordered: true
 objectives:
   - id: like_it
     prompt: Mortimer, now in your party, offers you a slice from his travelling hamper. Tell him you like it, using Italian.

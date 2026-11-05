@@ -86,6 +86,8 @@ const encounterSchema = z.object({
   // Round 019: authored words the NPC may use in any line; never the target of one of the encounter's objectives.
   ambient_vocabulary_ids: z.array(z.string().min(1)).min(1).optional(),
   objectives: z.array(objectiveSchema).min(1),
+  // Round 045 (backlog G3): objectives that may be met in any order; every passed one closes. Default: in order.
+  objectives_unordered: z.boolean().optional(),
 }).strict().superRefine((encounter, context) => {
   if (Boolean(encounter.location) === Boolean(encounter.party_of)) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'An encounter has either a location or party_of, not both or neither' });

@@ -78,7 +78,16 @@ export class LearningService {
     );
   }
 
-  activeObjectives(session) { return this.definition(session).encounter.objectives.slice(session.objectiveIndex); }
+  // Round 045 (backlog G3): the objectives still open, in authored order. In order (the default), those from the index
+  // on; unordered, every objective not yet passed. The current objective is the first open one.
+  activeObjectives(session) {
+    const { objectives, objectives_unordered: unordered } = this.definition(session).encounter;
+    if (!unordered) return objectives.slice(session.objectiveIndex);
+    const passed = new Set(session.passedObjectiveIds ?? []);
+    return objectives.filter((objective) => !passed.has(objective.id));
+  }
+
+  currentObjective(session) { return this.activeObjectives(session)[0] ?? null; }
 
   locationName(definition) { return this.content.world.locationsById.get(definition.encounter.location)?.name ?? definition.encounter.location; }
 
@@ -252,13 +261,13 @@ export class LearningService {
   }
 
   currentRevealKeys(encounter) {
-    const objective = this.definition(encounter).encounter.objectives[encounter.objectiveIndex];
+    const objective = this.currentObjective(encounter);
     return objective ? (encounter.reveals[objective.id] ?? []) : [];
   }
 
   serializeEncounter(encounter) {
     const definition = this.definition(encounter);
-    const objective = definition.encounter.objectives[encounter.objectiveIndex] ?? null;
+    const objective = this.currentObjective(encounter);
     const currentNpc = [...encounter.transcript].reverse().find((message) => message.role === 'npc');
     const revealKeys = this.currentRevealKeys(encounter);
     const transcript = encounter.transcript.map((message) => {
@@ -373,7 +382,7 @@ export class LearningService {
       const stagedEnvelope = clone(envelope);
       this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
       const encounter = {
-        id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0,
+        id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0, passedObjectiveIds: [],
         committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
         ...(locationId ? { locationId } : {}),
       };
@@ -400,7 +409,7 @@ export class LearningService {
       const current = this.encounters.get(learnerId);
       this.validateVersion(current, request.encounterId, request.version);
       if (current.state !== 'ongoing') throw validationError('This encounter no longer has an active learning objective.');
-      const objective = this.definition(current).encounter.objectives[current.objectiveIndex];
+      const objective = this.currentObjective(current);
       const activeMessage = [...current.transcript].reverse().find((message) => message.role === 'npc');
       if (!activeMessage || request.messageId !== activeMessage.id) throw conflictError(`Help is only available for the current ${this.definition(current).character.name} message.`, 'STALE_MESSAGE');
       let key;
@@ -486,19 +495,26 @@ export class LearningService {
       }), gradingResponseSchema, 'dialogue_assessment', 'The language assessor');
       const assessment = this.validateAssessment(gradingRaw, objectives, message);
 
-      let passedCount = 0;
+      // In order: the leading run of passes closes. Unordered (round 045): every passed open objective closes.
+      const passedOf = (objective) => assessment.objective_results.find((item) => item.objective_id === objective.id)?.passed === true;
+      const unordered = definition.encounter.objectives_unordered === true;
+      const closing = [];
       for (const objective of objectives) {
-        const result = assessment.objective_results.find((item) => item.objective_id === objective.id);
-        if (!result.passed) break;
-        passedCount += 1;
+        if (passedOf(objective)) closing.push(objective);
+        else if (!unordered) break;
       }
+      const passedCount = closing.length;
       const nextObjectiveIndex = current.objectiveIndex + passedCount;
-      const resolved = nextObjectiveIndex >= definition.encounter.objectives.length;
+      const nextPassedIds = [...(current.passedObjectiveIds ?? []), ...closing.map((objective) => objective.id)];
+      const remaining = unordered
+        ? definition.encounter.objectives.filter((objective) => !nextPassedIds.includes(objective.id))
+        : definition.encounter.objectives.slice(nextObjectiveIndex);
+      const resolved = remaining.length === 0;
       const nextTurns = current.committedPlayerTurns + 1;
       const decision = {
         objectiveResults: assessment.objective_results.map(({ objective_id, passed }) => ({ objectiveId: objective_id, passed })),
         encounterState: resolved ? 'resolved' : 'ongoing',
-        nextObjectiveId: definition.encounter.objectives[nextObjectiveIndex]?.id ?? null,
+        nextObjectiveId: remaining[0]?.id ?? null,
       };
       const history = current.transcript.map((item) => item.role === 'player'
         ? { role: 'user', content: item.text }
@@ -508,7 +524,7 @@ export class LearningService {
         character: definition.character,
         styleGuide: this.content.styleGuide,
         locationName: this.sceneName(current),
-        objectives: definition.encounter.objectives.slice(nextObjectiveIndex),
+        objectives: remaining,
         vocabularyById: this.content.vocabularyById,
         conversationHistory: history,
         playerInput: message,
@@ -520,9 +536,12 @@ export class LearningService {
       const stagedEnvelope = clone(envelope);
       const stagedEncounter = clone(current);
       const timestamp = nowIso(this.clock);
-      const advancedObjectiveIds = new Set(objectives.slice(0, passedCount).map((objective) => objective.id));
+      const advancedObjectiveIds = new Set(closing.map((objective) => objective.id));
+      // Round 045 (critique 1.5): in an unordered encounter, help taken on the current objective may serve any open
+      // objective, so a reveal caps the quality of every objective graded this turn.
+      const anyReveal = objectives.some((objective) => (current.reveals[objective.id] ?? []).length > 0);
       for (const result of assessment.objective_results) {
-        const assisted = (current.reveals[result.objective_id] ?? []).length > 0;
+        const assisted = unordered ? anyReveal : (current.reveals[result.objective_id] ?? []).length > 0;
         for (const evidence of result.vocabulary_evidence) {
           this.discover(stagedEnvelope, [evidence.vocabulary_id], timestamp, 'dialogue_assessment');
           const item = this.findItem(stagedEnvelope, evidence.vocabulary_id);
@@ -538,6 +557,7 @@ export class LearningService {
       this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
       stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
       stagedEncounter.objectiveIndex = nextObjectiveIndex;
+      stagedEncounter.passedObjectiveIds = nextPassedIds;
       stagedEncounter.committedPlayerTurns = nextTurns;
       stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
       stagedEncounter.version += 1;
