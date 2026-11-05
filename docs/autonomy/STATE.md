@@ -100,6 +100,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `mobile/scripts/gen-ui-sounds.js`, switch on the Saves screen). **C4b** ambient loops per location (round 041,
   closed 2026-11-05: `mobile/scripts/gen-ambient.js`, `mobile/src/ambience.js`, ducked under speech).
 
+- [ ] **C5. Hear the words of an encounter line** (round 055): a pronounce button per word chip under NPC lines
+  (TTS was only in the Spellbook and reviews; prototype.md Phase 4). No live calls.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
 - [ ] **D1.** (claude-cli preflight accepts an OAuth token since round 018; still blocked: no token in the shell)
