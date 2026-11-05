@@ -1,0 +1,11 @@
+# Round 027 (backlog C2): the philosophy statement the app shows once, before the map (parallang.md, Hub: "The
+# players should be greeted by the game's philosophy"). `statement` is the owner's text verbatim (a test checks it
+# against parallang.md). `notes` are authored: the first follows the owner's sub-note "Repetition should still be a
+# structured element"; the second hands over to the Market Entrance in its own description's words.
+# Shared by every language pack.
+title: "Before you enter"
+statement: "We believe that language learning shouldn't be too rigid or even necessarily structured. Learning should happen organically, with the learner picking up knowledge almost passively and accumulating it over time. Immersion is important for engagement and retention. This is how children learn their mother tongue, by being thrown into scenarios and exposed to the language passively."
+notes:
+  - "One thing stays structured: repetition. The words you meet in conversation are written into your Spellbook, which brings them back for review when they are due."
+  - "The Crumbling Market is through the archway, which has not decided which language it is in."
+begin_label: "Enter the market"

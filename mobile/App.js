@@ -11,6 +11,7 @@ import Spellbook from './src/components/Spellbook.js';
 import ReviewPanel from './src/components/ReviewPanel.js';
 import MapPanel from './src/components/MapPanel.js';
 import PartyPanel from './src/components/PartyPanel.js';
+import OnboardingPanel from './src/components/OnboardingPanel.js';
 import { colors } from './src/components/ui.js';
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
       <SafeAreaView style={styles.shell}>
         <StatusBar style="dark" />
         <Header
+          hideNav={state.view === 'onboarding'}
           place={here?.name} dueCount={state.spellbook.dueCount} partyCount={state.party.length} isLoading={state.isLoading}
           onSpellbook={state.openSpellbook} onParty={state.view === 'party' ? null : state.openParty} onMap={state.view === 'map' ? null : state.openMap}
           onRestart={state.view === 'dialogue' ? state.restartEncounter : null}
@@ -32,6 +34,7 @@ export default function App() {
         {state.error && <ErrorBanner message={state.error} onDismiss={state.clearError} />}
         {state.notice && <Text role="status" style={styles.notice}>{state.notice}</Text>}
 
+        {state.view === 'onboarding' && state.onboarding && <OnboardingPanel onboarding={state.onboarding} onBegin={state.finishOnboarding} />}
         {state.view === 'map' && <MapPanel world={state.world} isLoading={state.isLoading} onMove={state.moveTo} onEnterEncounter={state.enterEncounter} party={state.party} onRecruit={state.recruit} />}
         {state.view === 'party' && <PartyPanel party={state.party} isLoading={state.isLoading} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}

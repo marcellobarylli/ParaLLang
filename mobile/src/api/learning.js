@@ -39,6 +39,7 @@ export function createLearningApi({ baseUrl = API_URL, fetch: fetchImpl = (...ar
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),
     revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),
+    getOnboarding: () => request('/api/onboarding'),
     getWorld: (learnerId) => request('/api/world', { learnerId }),
     moveTo: (learnerId, locationId) => request('/api/world/move', { learnerId, method: 'POST', body: { locationId } }),
     getParty: (learnerId) => request('/api/party', { learnerId }),

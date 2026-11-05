@@ -115,8 +115,9 @@ describe('the store', () => {
 
 test('in the app, saving Gerald fills the Party screen and Leave returns to the map with the invitation', async () => {
   await AsyncStorage.clear();
+  await AsyncStorage.setItem('parallang.onboardingSeen', '1');
   useGameStore.setState({
-    learnerId: null, language: null, encounter: null, spellbook, world: null, party: [], notice: null, view: 'map', returnView: 'map',
+    learnerId: null, language: null, encounter: null, spellbook, world: null, onboarding: null, party: [], notice: null, view: 'map', returnView: 'map',
     reviewChallenge: null, reviewResult: null, assessment: null, draft: '', pendingInput: null, isLoading: false, error: null,
   });
   let party = [];

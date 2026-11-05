@@ -465,6 +465,12 @@ export class LearningService {
     });
   }
 
+  // Round 027: the philosophy statement; the same for every learner, so no learner id is needed.
+  getOnboarding() {
+    const { title, statement, notes, beginLabel } = this.content.onboarding;
+    return { onboarding: { title, statement, notes: [...notes], beginLabel } };
+  }
+
   async getWorld(learnerId) {
     const envelope = await this.loadEnvelope(learnerId);
     return { world: worldSnapshot(this.content.world, envelope.world, this.content.encounters) };

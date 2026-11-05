@@ -45,9 +45,11 @@ const pathOf = (url) => new URL(String(url)).pathname;
 
 beforeEach(async () => {
   await AsyncStorage.clear();
+  // Round 027: a returning player; first launch (the philosophy statement) is tested in onboarding.test.js.
+  await AsyncStorage.setItem('parallang.onboardingSeen', '1');
   useGameStore.setState({
     learnerId: null, language: null, encounter: null, spellbook: { cards: [], dueCount: 0, contentVersion: null },
-    world: null, party: [], notice: null, view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null,
+    world: null, onboarding: null, party: [], notice: null, view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null,
     draft: '', pendingInput: null, isLoading: false, error: null,
   });
 });

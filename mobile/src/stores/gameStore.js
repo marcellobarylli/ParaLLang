@@ -3,6 +3,8 @@ import { create } from 'zustand';
 import { learningApi } from '../api/learning.js';
 
 const LEARNER_KEY = 'parallang.learnerId';
+// Round 027: set once the player has entered the market from the philosophy statement (per device).
+export const ONBOARDING_KEY = 'parallang.onboardingSeen';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
 const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now()}-${Math.random()}`;
 
@@ -18,6 +20,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
     language: null,
     encounter: null,
     world: null,
+    onboarding: null,
     party: [],
     notice: null,
     spellbook: emptySpellbook,
@@ -41,6 +44,10 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
       initializationPromise = (async () => {
         set({ isLoading: true, error: null });
         try {
+          // Round 027: the statement is fetched beside startup, never inside it: a failure only skips the screen.
+          const seen = await Promise.resolve(storage?.getItem?.(ONBOARDING_KEY)).catch(() => null);
+          const onboardingPromise = seen ? Promise.resolve(null)
+            : Promise.resolve().then(() => api.getOnboarding()).then((data) => data?.onboarding ?? null, () => null);
           const storedId = (await storage?.getItem?.(LEARNER_KEY)) || null;
           const identity = await api.createLearner(storedId);
           if (epoch !== requestEpoch) return;
@@ -48,15 +55,28 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage } = 
           const [{ world }, spellbook, { party }] = await Promise.all([
             api.getWorld(identity.learnerId), api.getSpellbook(identity.learnerId), api.getParty(identity.learnerId),
           ]);
+          const onboarding = await onboardingPromise;
           if (epoch !== requestEpoch) return;
           snapshots.set(identity.learnerId, { encounter: null, spellbook });
-          set({ learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, party, isLoading: false });
+          // Shown only over the map: a screen the player opened during startup is not replaced (the flag stays unset).
+          const showOnboarding = Boolean(onboarding) && get().view === 'map';
+          set({
+            learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, party, isLoading: false,
+            ...(showOnboarding ? { onboarding, view: 'onboarding' } : {}),
+          });
         } catch (error) {
           if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
           initializationPromise = null;
         }
       })();
       return initializationPromise;
+    },
+
+    // Round 027: leaving the statement always lands on the map, never in a dialogue (returnView is left as 'map').
+    // The view changes first, so a failed flag write cannot keep the player on the statement.
+    finishOnboarding: async () => {
+      set({ view: 'map', onboarding: null });
+      try { await storage?.setItem?.(ONBOARDING_KEY, '1'); } catch { /* shown again next launch */ }
     },
 
     // Round 005: the app opens on the Crumbling Market map; encounters are entered from their location.

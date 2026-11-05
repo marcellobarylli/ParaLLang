@@ -18,8 +18,9 @@ const atCart = {
   paths: [],
 };
 
+// Round 027: a returning player by default (the onboarding flag is set); onboarding.test.js covers first launch.
 function memoryStorage(initial) {
-  const values = new Map(initial ? [['parallang.learnerId', initial]] : []);
+  const values = new Map([['parallang.onboardingSeen', '1'], ...(initial ? [['parallang.learnerId', initial]] : [])]);
   return { getItem: jest.fn(async (key) => values.get(key) ?? null), setItem: jest.fn(async (key, value) => { values.set(key, value); }) };
 }
 
@@ -30,6 +31,7 @@ function fakeApi(overrides = {}) {
     getWorld: jest.fn(async () => ({ world })),
     getSpellbook: jest.fn(async () => spellbook),
     getParty: jest.fn(async () => ({ party: [] })),
+    getOnboarding: jest.fn(async () => { throw new Error('the onboarding flag is set in these tests'); }),
     moveTo: jest.fn(async () => ({ world: atCart })),
     sendDialogue: jest.fn(), revealHelp: jest.fn(), createReview: jest.fn(), submitReview: jest.fn(),
     ...overrides,
@@ -55,6 +57,7 @@ test('recovers the stored identity from async storage and deduplicates startup',
   expect(api.createLearner).toHaveBeenCalledWith(identity.learnerId);
   expect(api.startEncounter).not.toHaveBeenCalled();
   expect(api.getWorld).toHaveBeenCalledTimes(1);
+  expect(api.getOnboarding).not.toHaveBeenCalled();
   expect(storage.setItem).toHaveBeenCalledWith('parallang.learnerId', identity.learnerId);
   expect(store.getState().view).toBe('map');
   expect(store.getState().world).toEqual(world);

@@ -103,6 +103,14 @@ const styleGuideSchema = z.object({
   rules: z.array(z.string().min(1)).min(1),
 }).strict();
 
+// Round 027: the philosophy statement shown once before the map (content/narration/onboarding.yaml).
+const onboardingSchema = z.object({
+  title: z.string().min(1),
+  statement: z.string().min(1),
+  notes: z.array(z.string().min(1)).min(1).max(4),
+  begin_label: z.string().min(1),
+}).strict();
+
 const locationIdSchema = z.string().regex(/^[a-z][a-z0-9_]*$/);
 const locationSchema = z.object({
   id: locationIdSchema,
@@ -150,6 +158,8 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const { default_encounter: defaultEncounterId, ...language } = languageSchema.parse(parseYaml(contentDir, `${pack}/language.yaml`));
   if (language.code !== code) throw new Error(`content/${pack}/language.yaml must declare code ${code}`);
   const styleGuide = styleGuideSchema.parse(parseYaml(contentDir, 'narration/style_guide.yaml'));
+  const { begin_label: beginLabel, ...onboardingText } = onboardingSchema.parse(parseYaml(contentDir, 'narration/onboarding.yaml'));
+  const onboarding = Object.freeze({ ...onboardingText, notes: Object.freeze(onboardingText.notes), beginLabel });
 
   // Round 006: every vocabulary file of the pack is merged; each entry keeps its own file's version.
   const vocabularyFiles = yamlFiles(contentDir, `${pack}/vocabulary`)
@@ -201,7 +211,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
 
   const world = loadWorld(contentDir, encounters);
   return Object.freeze({
-    language, styleGuide, vocabulary, vocabularyById, world, encounters,
+    language, styleGuide, onboarding, vocabulary, vocabularyById, world, encounters,
     defaultEncounterId,
     // The default encounter, for callers that know only one (the web client's start, verify:cli).
     encounter, character,

@@ -30,6 +30,7 @@ export function createApp({ service, logger = console, token = null }) {
     catch (error) { next(error); }
   });
   app.use('/api/encounter', createEncounterRouter(service));
+  app.get('/api/onboarding', (req, res) => res.json(service.getOnboarding()));
 
   app.get('/api/world', async (req, res, next) => {
     try { res.json(await service.getWorld(req.get('X-Learner-Id'))); }
