@@ -1,0 +1,444 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "it",
+  "location": "cracked_fountain",
+  "encounterId": "cracked_fountain_letharger",
+  "companionBriefing": null,
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 13,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "move to butchers_stall",
+      "ok": true,
+      "current": "butchers_stall",
+      "visible": [
+        "butchers_stall:current",
+        "coffee_cart:known",
+        "cracked_fountain:known",
+        "market_entrance:visited"
+      ]
+    },
+    {
+      "name": "move to cracked_fountain",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ]
+    },
+    {
+      "name": "start Flick",
+      "ok": true
+    },
+    {
+      "name": "say \"Guarda!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your command means “Look!” The objectives require stopping Flick, giving a direction, and insisting on now in Italian."
+    },
+    {
+      "name": "say \"Fermati!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "stop",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "fermati",
+              "evidence": "Fermati",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your stop command is correct. You still need an Italian direction and an insistence on now."
+    },
+    {
+      "name": "say \"Left.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Use Italian to give a direction and insist on acting now."
+    },
+    {
+      "name": "say \"A sinistra!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "direction",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "sinistra",
+              "evidence": "A sinistra!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Direction correct! Now add that you want to act immediately, in Italian."
+    },
+    {
+      "name": "say \"Domani.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Refuse the delay and say you want to do it now, in Italian."
+    },
+    {
+      "name": "say \"No, adesso!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "now",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "adesso",
+              "evidence": "No, adesso!",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct! You refuse the delay and insist on acting now."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "cracked_fountain",
+      "visible": [
+        "butchers_stall:visited",
+        "coffee_cart:known",
+        "cracked_fountain:current",
+        "market_entrance:visited",
+        "old_bookshop:known"
+      ],
+      "locationEncounter": {
+        "id": "cracked_fountain_letharger",
+        "completed": true,
+        "characterName": "Flick"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.3,
+      "native": "Ciao! Sono Flick. Hai tempo? A riddle: what has—ooh, a leaf. Just one more minute. Come ti chiami?",
+      "translation": "Hello! I'm Flick. Do you have time? A riddle: what has—ooh, a leaf. Just one more minute. What's your name?",
+      "narrative": "The Cracked Fountain leaks with municipal confidence. Flick darts through the corner of your vision; a tiny firecracker pops where he ought to be.",
+      "share": {
+        "tokens": 19,
+        "notInTranslation": 0.37,
+        "canonical": 0
+      },
+      "durationMs": 7839
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.35,
+      "native": "Guardo! Che cosa? Una foglia? Ooh, distraction: ten out of ten. Mi chiedi di guardare, ma io continuo a muovermi! Can you make me stop? A riddle: what never stays—wait, another leaf.",
+      "translation": "I'm looking! At what? A leaf? Ooh, distraction: ten out of ten. You're asking me to look, but I keep moving! Can you make me stop? A riddle: what never stays—wait, another leaf.",
+      "narrative": "A tiny firecracker pops beside your shoe. Flick remains at the edge of your vision, where supervision is largely theoretical.",
+      "share": {
+        "tokens": 33,
+        "notInTranslation": 0.39,
+        "canonical": 0
+      },
+      "durationMs": 8797
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.4,
+      "native": "Mi fermo! Va bene. A riddle: where does a stopped Letharger—oh, a moth. Dove vado? Indicami la direzione! Then five more minutes. Your attention span is getting suspiciously good.",
+      "translation": "I’m stopping! All right. A riddle: where does a stopped Letharger—oh, a moth. Where do I go? Show me the direction! Then five more minutes. Your attention span is getting suspiciously good.",
+      "narrative": "Flick stops at the edge of your vision. A tiny firecracker lands beside your shoe, apparently to commemorate the achievement of doing nothing.",
+      "share": {
+        "tokens": 30,
+        "notInTranslation": 0.3,
+        "canonical": 0.03
+      },
+      "durationMs": 9176
+    },
+    {
+      "turn": 3,
+      "requestedRatio": 0.45,
+      "native": "“Left”? In inglese! Non capisco la direzione. Dove vado? In italiano, per favore! A riddle: which road—ooh, wings. Just five more minutes. No rush.",
+      "translation": "“Left”? In English! I don't understand the direction. Where do I go? In Italian, please! A riddle: which road—ooh, wings. Just five more minutes. No rush.",
+      "narrative": "A tiny firecracker pops beside your shoe. Flick is already at the edge of your vision, inspecting a moth with no apparent qualifications.",
+      "share": {
+        "tokens": 25,
+        "notInTranslation": 0.4,
+        "canonical": 0
+      },
+      "durationMs": 9573
+    },
+    {
+      "turn": 4,
+      "requestedRatio": 0.5,
+      "native": "A sinistra, sì! La direzione è giusta. Ma partiamo domani, va bene? Prima una pausa! A riddle: what has no hurry and—ooh, smoke. Just five more minutes. Poi andiamo, promesso!",
+      "translation": "To the left, yes! The direction is correct. But let's leave tomorrow, okay? First, a break! A riddle: what has no hurry and—ooh, smoke. Just five more minutes. Then we'll go, promise!",
+      "narrative": "Flick drifts left at the edge of your vision. A tiny firecracker announces a delay nobody requested.",
+      "share": {
+        "tokens": 31,
+        "notInTranslation": 0.55,
+        "canonical": 0.06
+      },
+      "durationMs": 11828
+    },
+    {
+      "turn": 5,
+      "requestedRatio": 0.55,
+      "native": "Domani? Sì! Domani va bene! Ma vuoi partire oggi? Io preferisco aspettare. A riddle: what comes after—ooh, sparks. Just five more minutes. Vuoi partire o vuoi aspettare?",
+      "translation": "Tomorrow? Yes! Tomorrow is fine! But do you want to leave today? I prefer to wait. A riddle: what comes after—ooh, sparks. Just five more minutes. Do you want to leave or do you want to wait?",
+      "narrative": "A tiny firecracker pops beside your shoe. Flick is elsewhere, having mistaken the fuse for a destination.",
+      "share": {
+        "tokens": 28,
+        "notInTranslation": 0.61,
+        "canonical": 0.07
+      },
+      "durationMs": 8990
+    },
+    {
+      "turn": 6,
+      "requestedRatio": 0.6000000000000001,
+      "native": "Adesso? Sì, hai ragione! Non domani. Andiamo a sinistra, adesso! You win. A riddle: what finally moves when—oh, that's me. This is so random.",
+      "translation": "Now? Yes, you're right! Not tomorrow. Let's go left, now! You win. A riddle: what finally moves when—oh, that's me. This is so random.",
+      "narrative": "A tiny firecracker pops beside your shoe. Flick remains at the edge of your vision, apparently hoping the present will leave without him.",
+      "share": {
+        "tokens": 25,
+        "notInTranslation": 0.36,
+        "canonical": 0.16
+      },
+      "durationMs": 8608
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 6575,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "stop",
+            "passed": false,
+            "feedback": "You gave a command to look, not to stop. Tell Flick to stop or keep still in Italian.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "direction",
+            "passed": false,
+            "feedback": "Give Flick a direction in Italian: left, right, or straight ahead.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "now",
+            "passed": false,
+            "feedback": "Insist on doing it now in Italian rather than waiting.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your command means “Look!” The objectives require stopping Flick, giving a direction, and insisting on now in Italian."
+      }
+    },
+    {
+      "durationMs": 6893,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "stop",
+            "passed": true,
+            "feedback": "You correctly commanded Flick to stop.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "fermati",
+                "evidence": "Fermati",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "direction",
+            "passed": false,
+            "feedback": "Give Flick a direction in Italian: left, right, or straight ahead.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "now",
+            "passed": false,
+            "feedback": "Insist on doing it now, using Italian.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your stop command is correct. You still need an Italian direction and an insistence on now."
+      }
+    },
+    {
+      "durationMs": 5283,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "direction",
+            "passed": false,
+            "feedback": "Give Flick a direction in Italian, not English.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "now",
+            "passed": false,
+            "feedback": "Insist on doing it now using Italian.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Use Italian to give a direction and insist on acting now."
+      }
+    },
+    {
+      "durationMs": 5354,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "direction",
+            "passed": true,
+            "feedback": "You correctly told Flick to go left in Italian.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "sinistra",
+                "evidence": "A sinistra!",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "now",
+            "passed": false,
+            "feedback": "Also insist on doing it now, in Italian, rather than waiting.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Direction correct! Now add that you want to act immediately, in Italian."
+      }
+    },
+    {
+      "durationMs": 7302,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "now",
+            "passed": false,
+            "feedback": "You agreed to tomorrow. Insist on doing it now, in Italian.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Refuse the delay and say you want to do it now, in Italian."
+      }
+    },
+    {
+      "durationMs": 5898,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "now",
+            "passed": true,
+            "feedback": "You clearly insist on leaving now rather than waiting.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "adesso",
+                "evidence": "No, adesso!",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Correct! You refuse the delay and insist on acting now."
+      }
+    }
+  ]
+}

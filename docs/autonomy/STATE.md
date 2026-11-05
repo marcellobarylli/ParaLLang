@@ -7,8 +7,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-- Nothing. Next: **A5** (The Cracked Fountain, content only; see the "Adding an encounter" note below), or
-  **E3** (narration rule against listing an open objective's answers) if a smaller round fits.
+- Nothing. Next: **E3** (narration rule against listing an open objective's answers; now seen with Mortimer 3/3 and
+  Flick 1/4), then **A6** (The Old Bookshop, content only; see the "Adding an encounter" note below; it ties in B2,
+  Journathan).
 
 ## Backlog
 
@@ -25,8 +26,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   ask back), companion briefing card, Italian and Spanish packs.
 - [x] **A4. The Butcher's Stall.** (round 010, closed 2026-11-05) Mortimer the Charcutier (name a meat that is not
   ham, a quantity with a unit); also fixed the grading rubric, which never showed surface forms.
-- [ ] **A5. The Cracked Fountain.** A Letharger with riddles (time, directions, commands). Tie in the notes'
-  Lethargers (attention, brainrot as a mild infohazard).
+- [x] **A5. The Cracked Fountain.** (round 011, closed 2026-11-05) Flick the Letharger (stop, a direction, now not
+  later); brainrot flavour in the character sheet only. Telling the time deferred.
 - [ ] **A6. The Old Bookshop.** Lore-heavy NPC with advanced passages (abstract nouns, reading).
 - [ ] **A7. The Rift.** Mini-boss in corrupted mixed language, reviewing all learned vocabulary; gated on the
   other encounters.
@@ -91,6 +92,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - Round 009: check the Market Entrance tutorial in the Simulator (companion card, first screen at the top, later
   turns scroll), review Portia's content and reference URLs, and decide whether Portia may model "come ti chiami"
   before the ask-back objective ([open items](../rounds/009/findings.md#open-items)).
+- Round 011: review Flick's content and reference URLs, and the dropped Spanish `detente` / `recto` (no Spanish
+  "straight on") ([open items](../rounds/011/findings.md#open-items)).
 - Round 010: review Mortimer's content and reference URLs, the dropped Italian `due` entry, and whether NPCs may
   list an open objective's answers as options ([open items](../rounds/010/findings.md#open-items)).
 
@@ -111,6 +114,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-05, iteration 2: round 010 (A4) built and closed: Mortimer at The Butcher's Stall; live runs found that
   the grading rubric never showed surface forms (plurals failed evidence); fixed by Amendment; server 85/85, mobile
   20/20, client 12/12; butcher 3/3 resolved after the fix, verify:cli 9/9. Iteration 2 ends here (rounds 009–010).
+- 2026-11-05, iteration 3: round 011 (A5) built and closed: Flick the Letharger at The Cracked Fountain; server
+  88/88, mobile 20/20, client 12/12; live 4/4 resolved (it ×3 incl. a variant run, es ×1), 24/24 verdicts as
+  intended, 0/60 feedback leaks.
 
 ## Handoff notes and traps
 
@@ -134,6 +140,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (e.g. reviewing all words in the Rift, A7), target an entry of each file from an objective.
 - **Spellbook `contentVersion`** (the aggregate) changes whenever a vocabulary file is added; cards use the per-file
   `entryVersion(id)`. Tests must not compare a card's version with `content.vocabulary.version`.
+- `play-market.js` walks the shortest route to `--location` (round 011, exported `route()`), and `--lines 'a|b|c'`
+  replaces the scripted player lines: use it for surface-variant runs instead of editing the script table.
+- Codex critique on a content-only encounter takes ~9 minutes and checks English collisions with web search; run it
+  in the background and draft the content meanwhile (do not commit before the freeze).
 - `play-market.js --location market_entrance` plays the tutorial (7 calls, ~50 s); add a script entry in its
   `scripts` table for each new encounter.
 - The web client's tests: `npm exec --workspace client -- vitest run` (no `npm test` script in `client/`).

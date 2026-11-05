@@ -18,9 +18,10 @@ The entry point for agents: the current state, how the project is logged, and th
   tested in the iOS Simulator against the local server (`npm run dev:server`, `npm run dev:ios`). The web client in
   `client/` is frozen: it is kept working, but new features go to the app ([round 004](docs/rounds/004/architecture.md)).
 - **World.** The app opens on the Crumbling Market map (six locations, fog of war, saved position;
-  [round 005](docs/rounds/005/architecture.md)). Three locations have encounters: the Market Entrance tutorial with
+  [round 005](docs/rounds/005/architecture.md)). Four locations have encounters: the Market Entrance tutorial with
   Portia the Archway and a companion briefing ([round 009](docs/rounds/009/architecture.md)), Gerald at The Coffee
-  Cart, and Mortimer the Charcutier at The Butcher's Stall ([round 010](docs/rounds/010/architecture.md)). New encounters are content only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
+  Cart, Mortimer the Charcutier at The Butcher's Stall ([round 010](docs/rounds/010/architecture.md)) and Flick the
+  Letharger at The Cracked Fountain ([round 011](docs/rounds/011/architecture.md)). New encounters are content only ([round 006](docs/rounds/006/architecture.md)). The autonomous run's backlog
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
 - **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and neither NPCs nor the
   grader's feedback give the answer away ([round 007](docs/rounds/007/architecture.md),
@@ -28,6 +29,17 @@ The entry point for agents: the current state, how the project is logged, and th
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-05: round 011, The Cracked Fountain (autonomous)
+
+The Cracked Fountain has its encounter: Flick the Letharger, a corner-of-the-eye creature from the owner's notes who
+farms brainrot and wants everything done later. The player tells it to stop, tells it which way to go and insists on
+now, in Italian or Spanish (content only). `play-market.js` now walks the shortest route and takes `--lines`. Codex
+critique 1 (4 findings: Spanish `detente` and `recto` dropped as English words; two Cuts rejected) was decided
+autonomously. Tests: server 88/88, mobile 20/20, web client 12/12 and build. Live codex-cli: 4/4 runs resolved, 24/24
+scripted verdicts as intended (a surface variant included), 0/60 feedback leaks; Flick listed both directions once
+(1/4), as Mortimer lists meats (backlog E3). Not checked in the iOS Simulator. See
+[findings](docs/rounds/011/findings.md).
 
 ## Addendum 2026-11-05: round 010, The Butcher's Stall (autonomous)
 
@@ -131,6 +143,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 011 | 11-05 | The Cracked Fountain: Flick the Letharger (commands, directions, now not later); play-market route and `--lines` (autonomous) | [011](docs/rounds/011/architecture.md) | [findings](docs/rounds/011/findings.md) | `f078d3e` (pre-run record) to round 011 close |
 | 010 | 11-05 | The Butcher's Stall: Mortimer the Charcutier (meats, quantities); grading rubric shows surface forms (autonomous) | [010](docs/rounds/010/architecture.md) | [findings](docs/rounds/010/findings.md) | `a90ff32` (pre-run record) to round 010 close |
 | 009 | 11-05 | Market Entrance tutorial: Portia the Archway (greetings, pronouns), companion briefing, per-encounter narration matching (autonomous) | [009](docs/rounds/009/architecture.md) | [findings](docs/rounds/009/findings.md) | `a59f548` (pre-run record) to round 009 close |
 | 008 | 11-05 | Grader feedback stops giving the answer away (autonomous) | [008](docs/rounds/008/architecture.md) | [findings](docs/rounds/008/findings.md) | `e525608` (pre-run record) to round 008 close |

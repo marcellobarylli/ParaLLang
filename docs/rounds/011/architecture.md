@@ -96,3 +96,23 @@ Net change from plan v1: −2 Spanish entries (stop and direction groups narrowe
 3. Live, codex-cli: `play-market.js --location cracked_fountain` twice in Italian and once in Spanish. Findings: the
    verdict on each scripted line, resolution, share, dictation and answer listing (backlog E3), feedback leaks,
    representative lines.
+
+## Amendment 2026-11-05: a surface-variant run (autonomous, after the first live runs)
+
+**Why.** The three planned runs scripted only canonical forms (fermati, sinistra, adesso; quieto, izquierda, ahora),
+which is the gap that hid round 010's rubric bug for nine rounds (STATE.md trap).
+
+**Change.** `play-market.js` takes `--lines 'a|b|c'`, a one-off replacement for the scripted player lines, and one
+more Italian run plays "Sempre diritto!" (the authored variant of `dritto`) in place of "A sinistra!". No content
+change.
+
+**Decision.** Autonomous, pending owner review: a flag rather than a second script table entry, so later rounds can
+probe variants without editing the script.
+
+## Outcome (2026-11-05)
+
+Built as designed, plus the Amendment. Flick resolved in 4/4 live codex-cli runs (three Italian, one Spanish), and
+every scripted line was graded as intended (24/24 assessments): "look", the English "Left." and "tomorrow" failed;
+stop, a direction (including the variant "diritto") and now passed with evidence at quality 5. No feedback string
+named a target form. Tests: server 88/88, mobile 20/20, web client 12/12 and build. Found: Flick offered both
+directions as a choice once in Spanish (1/4), the answer-listing pattern of backlog E3. See [findings](findings.md).

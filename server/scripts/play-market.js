@@ -1,7 +1,8 @@
 // Live playthrough of the Crumbling Market through a CLI provider, in-process (no port is opened).
-//   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall|cracked_fountain] [--out <file.json>]
-// It uses a temporary learner save, removes it afterwards and prints a JSON report: each step, the LLM's raw
-// outputs, grading verdicts, timings and an estimate of the target-language share of each NPC line.
+//   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall|cracked_fountain] [--lines 'a|b|c'] [--out <file.json>]
+// --lines 'a|b|c' replaces the scripted player lines (round 011: a surface-variant run). It uses a temporary learner
+// save, removes it afterwards and prints a JSON report: each step, the LLM's raw outputs, grading verdicts, timings
+// and an estimate of the target-language share of each NPC line.
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -106,7 +107,9 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
     const definition = content.encounters.get(encounterId);
     let encounter = (await step(`start ${definition.character.name}`, async () => ({ encounter: (await service.startEncounter(learnerId, { encounterId })).encounter })))?.encounter;
     const companionBriefing = encounter?.companionBriefing ?? null;
-    for (const message of scripts[locationId][content.language.code]) {
+    const linesIndex = args.indexOf('--lines');
+    const playerLines = linesIndex >= 0 ? args[linesIndex + 1].split('|') : scripts[locationId][content.language.code];
+    for (const message of playerLines) {
       if (!encounter || encounter.state !== 'ongoing') break;
       const result = await step(`say "${message}"`, async () => {
         const response = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: crypto.randomUUID(), message });
