@@ -1,7 +1,10 @@
-import { API_URL } from '../config.js';
+import { API_TOKEN, API_URL, validToken } from '../config.js';
 
-export function createLearningApi({ baseUrl = API_URL, fetch: fetchImpl = (...args) => globalThis.fetch(...args) } = {}) {
+export function createLearningApi({ baseUrl = API_URL, token = API_TOKEN, fetch: fetchImpl = (...args) => globalThis.fetch(...args) } = {}) {
   async function request(path, { learnerId, method = 'GET', body, signal } = {}) {
+    if (token && !validToken(token)) {
+      throw Object.assign(new Error('EXPO_PUBLIC_PARALLANG_TOKEN holds characters a header cannot carry (spaces or control characters). Set it to the server\'s PARALLANG_TOKEN and restart Expo.'), { code: 'BAD_TOKEN_SETTING' });
+    }
     let response;
     try {
       response = await fetchImpl(`${baseUrl}${path}`, {
@@ -9,6 +12,7 @@ export function createLearningApi({ baseUrl = API_URL, fetch: fetchImpl = (...ar
         headers: {
           ...(body ? { 'Content-Type': 'application/json' } : {}),
           ...(learnerId ? { 'X-Learner-Id': learnerId } : {}),
+          ...(token ? { 'X-ParaLLang-Token': token } : {}),
         },
         body: body ? JSON.stringify(body) : undefined,
         signal,
@@ -24,7 +28,13 @@ export function createLearningApi({ baseUrl = API_URL, fetch: fetchImpl = (...ar
     try { data = await response.json(); }
     catch { throw Object.assign(new Error(`The server returned an unreadable response (${response.status}).`), { status: response.status }); }
     if (!response.ok) {
-      throw Object.assign(new Error(data.error?.message || `Request failed (${response.status}).`), {
+      // Round 040: the server's 401 names its header; the player needs the app setting.
+      // Critique 1.4: a missing token and a wrong one get their own message; neither shows the value.
+      const unauthorized = response.status === 401 && data.error?.code === 'UNAUTHORIZED';
+      const message = !unauthorized ? data.error?.message || `Request failed (${response.status}).`
+        : token ? 'The app\'s EXPO_PUBLIC_PARALLANG_TOKEN does not match the server\'s PARALLANG_TOKEN.'
+          : 'The ParaLLang server needs its token. Start Expo with EXPO_PUBLIC_PARALLANG_TOKEN set to the server\'s PARALLANG_TOKEN.';
+      throw Object.assign(new Error(message), {
         status: response.status,
         code: data.error?.code,
         retryable: data.error?.retryable,

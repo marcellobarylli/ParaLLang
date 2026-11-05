@@ -15,3 +15,6 @@ jest.mock('expo-audio', () => ({
   createAudioPlayer: jest.fn(() => ({ seekTo: jest.fn(async () => {}), play: jest.fn(), remove: jest.fn() })),
   setAudioModeAsync: jest.fn(async () => {}),
 }));
+
+// Round 040 (critique 1.3): tests do not pick up a developer's EXPO_PUBLIC_PARALLANG_TOKEN.
+delete process.env.EXPO_PUBLIC_PARALLANG_TOKEN;

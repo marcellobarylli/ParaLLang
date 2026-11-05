@@ -103,7 +103,7 @@ The app opens on the map of the Crumbling Market (round 005): six locations from
 
 ### Optional API token
 
-Set `PARALLANG_TOKEN` in the root `.env` to require the header `X-ParaLLang-Token: <value>` on every `/api` route except `/api/health`. It is unset by default; the app and the web client do not send it, so leave it unset to play. `verify:cli` and the tests protect their temporary servers with a random token.
+Set `PARALLANG_TOKEN` in the root `.env` to require the header `X-ParaLLang-Token: <value>` on every `/api` route except `/api/health`. It is unset by default. The iPhone app sends it when Expo is started with the same value in `EXPO_PUBLIC_PARALLANG_TOKEN` (for example `EXPO_PUBLIC_PARALLANG_TOKEN=<value> npm run dev:ios`; restart Expo after changing it). Expo reads `.env` files from `mobile/` only, so the root `.env` does not reach the app: pass the variable on the command line as shown (run `expo start --clear` if an old value seems to stick). An `EXPO_PUBLIC_` value is bundled into the app, which is fine for a local Simulator session but is no secret in a shipped build. The server never logs the token. The frozen web client does not send it, so leave the token unset to play in the browser. `verify:cli` and the tests protect their temporary servers with a random token.
 
 ### Live Crumbling Market playthrough
 

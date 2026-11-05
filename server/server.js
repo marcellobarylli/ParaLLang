@@ -17,7 +17,8 @@ const storage = new JsonLearningStorage({
   saveDir: saveDirForLanguage(process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'), content.language.code),
 });
 const service = new LearningService({ provider, storage, content });
-const app = createApp({ service, token: process.env.PARALLANG_TOKEN || null });
+// Round 040 (critique 1.2): the ends are trimmed, as fetch trims header values.
+const app = createApp({ service, token: (process.env.PARALLANG_TOKEN || '').trim() || null });
 
 if (process.env.NODE_ENV !== 'test') {
   const server = app.listen(port, host, () => {
