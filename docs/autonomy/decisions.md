@@ -50,3 +50,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 015 | "Il mio nome è Nessuno." / "Mi nombre es Nadie." fail at the Rift (the review asks for mi chiamo / sono, me llamo / soy) | Accept them | Otherwise a run can skip the entrance's words (critique 1.2) | Yes |
 | 2026-11-05 | 015 | The Rift's target-language ratio is fixed at 0.5 (no escalation) | 0.05 per turn as elsewhere | Escalation reaches 100% after ten turns and removes the corrupted mix (critique 1.4) | Yes |
 | 2026-11-05 | 015 | Codex critique 1: 1.1–1.5 accepted, 1.6–1.7 rejected | Accept all | See round 015 Second opinion table | Yes |
+| 2026-11-05 | 016 | Fix expo-doctor 19/20 with `npx expo install --fix` (expo 58.0.23, jest-expo 58.0.14, safe-area-context 5.11.x) | Pin by hand; exclude the packages from the check | The SDK's own expected versions; least surprise | Yes |
+| 2026-11-05 | 016 | No Codex critique for the dependency update | Wait for the usage limit and critique | No design choice to test; Codex quota kept for round 015's live runs | Yes |
