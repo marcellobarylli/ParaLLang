@@ -90,3 +90,28 @@ authored notes are separate fields, the header hides its nav explicitly, and the
 - Existing fakes seed the flag or serve the route. Full suites: server, mobile, web client and build; expo-doctor;
   iOS export.
 - Not here: the screen in the iOS Simulator (layout, scrolling, VoiceOver focus, Dynamic Type) → owner.
+
+## Amendment 1 (2026-11-05): Second opinion rows renumbered for the log check
+
+The pre-run table numbers critique 1's findings 1–10; `tools/round_log_check.py` expects `1.n`. The same rows with
+the check's ids, unchanged in substance (dispositions are autonomous, pending owner review):
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| 1.1 | Error | Startup ordering and failure handling | 0 | Accept | **Accepted** (autonomous) | Design 3 |
+| 1.2 | Error | Onboarding view replaces a screen opened during startup | 0 | Accept in part | **Accepted in part** (autonomous) | Design 3 |
+| 1.3 | Error | Fakes test only the swallowed failure path | 0 | Accept | **Accepted** (autonomous) | Tests |
+| 1.4 | Risk | Failed flag write strands the player | 0 | Accept | **Accepted** (autonomous) | Design 3 |
+| 1.5 | Risk | Authored lines read as the owner's | 0 | Accept | **Accepted** (autonomous) | Design 1 |
+| 1.6 | Risk | Token test; mobile sends no token | 0 | Accept | **Accepted** (autonomous) | Design 2 |
+| 1.7 | Risk | Header change affects every screen | 0 | Accept | **Accepted** (autonomous) | Design 4 |
+| 1.8 | Suggestion | Accessibility | 0 | Accept in part | **Accepted in part** (autonomous) | Design 4, Open items |
+| 1.9 | Suggestion | Never into a dialogue | 0 | Accept | **Accepted** (autonomous) | Design 3 |
+| 1.10 | Suggestion | Missing tests | 0 | Accept | **Accepted** (autonomous) | Tests |
+
+## Outcome (2026-11-05)
+
+Built as designed. A first launch of the app shows "Before you enter" (the owner's statement verbatim, two authored
+notes, "Enter the market"); the button opens the map and the flag keeps it from showing again on that device. A
+failed fetch or flag write never blocks play. Server 138/138 (3 new), mobile 45/45 (8 new), web client 12/12 and
+build, expo-doctor 20/20, iOS export ok. Not checked in the iOS Simulator. See [findings](findings.md).

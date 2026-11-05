@@ -10,22 +10,22 @@ skill), and updates this file before stopping. Decisions an owner would normally
 **Round 026 (E1, template round) is open**, built and committed. Codex hit its usage limit at 18:17 UTC ("try
 again at 8:35 PM"). Steps to close it, in order:
 
-1. **Amendment 2: drop "greetings" from the rule's list of phrases** (`prompts/system/base.txt` line "- Reach it
-   with short, whole … phrases (greetings, questions, reactions, remarks)…"; also `NEW_RULE` in
-   `docs/rounds/026/results/greeting-replay.mjs` and the assertion in `server/test/language-mix.test.js`).
-   Regenerate the golden fixture with `node docs/rounds/026/results/gen-golden.mjs`. Why: `replay-leaks.mjs` found
-   Portia's greeting saying her open greet answer in 2/4 new-rule replays ("Buongiorno." / "Hola.") against 0/4 old.
-   Then re-run the replays (`greeting-replay.mjs`; at least Portia, Gerald and Errata, or all 80 calls) and
-   compare with `replay-summary.py` and `replay-leaks.mjs` against the stored old-variant data. Note that the
-   replay's old variant is the HEAD template text. After Amendment 2, `variants()` must still find the old line;
-   it swaps the new lines for the old line by exact text, so keep `NEW_RULE` identical to the template.
+1. **Amendment 2 is built and committed** (iteration 9, journal row 16): "greetings" dropped from the rule's
+   phrase list, golden r026 regenerated, tests green. Still to do, after Codex's reset: the Amendment's check.
+   Paired replays for Portia, Gerald and Errata in both languages:
+   `TARGET_LANGUAGE=it node docs/rounds/026/results/greeting-replay.mjs --provider codex-cli --reps 2 --only market_entrance_tutorial,imp_coffee_greeting,the_rift_errata --out docs/rounds/026/results/replay2-it.json`
+   (then `es`; 24 calls in all). Read them with `replay-leaks.mjs` and `replay-summary.py` (both take report paths; the
+   language is read from the report). The bar: 0 greet-answer lines from Portia
+   under the amended rule, and mean gaps no worse than the first replays. `variants()` still finds the old line
+   (`check-variants.mjs` passes).
 2. **The after-build tours** (`play-market.js --tour`, it and es, 60 calls each). Measure with `tour-measure.mjs`
    against `baseline-tour-*.json`, and read every flagged line and every greeting (Amendment 1's integration
    check: both tours pass, with no new open-answer line). Hand-count the greetings into `results/hand-count.md`.
    The `limit-after-tour-*.json` files are failed runs, not results.
 3. Findings, Outcome, close. If the tours fail or show new answer lines, revert by Amendment.
 
-Without Codex (before the reset), do only work that needs neither live runs nor a critique.
+Without Codex (before the reset), do only work that needs neither live runs nor a critique. Iteration 9 closed
+round 027 (C2) meanwhile, with a Claude subagent as the critic.
 
 ## Backlog
 
@@ -83,7 +83,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 ### C. prototype.md Phase 4: Polish & Audio
 
 - [ ] **C1. Forced repetition.** Pre-encounter Spellbook drill before the Rift boss.
-- [ ] **C2. Onboarding.** Philosophy statement screen before the tutorial.
+- [x] **C2. Onboarding.** (round 027, closed 2026-11-05) Philosophy statement screen before the map, once per
+  device; `content/narration/onboarding.yaml`, `GET /api/onboarding`.
 - [ ] **C3. Visual polish.** Typography, palette, transitions in the app.
 - [ ] **C4. Sound design.** Ambient and UI sounds (needs assets; check licensing).
 
@@ -132,6 +133,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- Round 027: check the first-launch statement screen in the Simulator (clear the app's storage), VoiceOver focus,
+  and review the two authored notes and the title ([open items](../rounds/027/findings.md#open-items)).
 
 - Round 025: review Flick's jingle, the Fountain's containment notice and plaque, and whether the refrain should be
   on every line; check the Fountain's companion card in the Simulator ([open items](../rounds/025/findings.md#open-items)).
@@ -253,7 +257,20 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   closed: Flick's jingle as an infohazard; server 133/133, mobile 37/37, client 12/12; live 5 runs (2 baseline),
   65 calls, all resolved as scripted, refrain 21/21 lines, share displaced (E1).
 
+- 2026-11-05, iteration 9: round 026 Amendment 2 built (no live check yet: Codex limit until 20:35 UTC). Round 027
+  (C2) planned, critiqued by a Claude subagent (10 findings: 8 accepted, 2 in part), built and closed: the philosophy
+  statement on first launch; server 138/138, mobile 45/45, client 12/12, expo-doctor 20/20.
+
 ## Handoff notes and traps
+
+- **Mobile tests and the onboarding flag** (round 027): the store reads `parallang.onboardingSeen` at startup; a
+  test without it is a first launch and fetches `/api/onboarding`. The existing fakes seed the flag (returning
+  player); first-launch cases live in `mobile/src/__tests__/onboarding.test.js`. A missing `getOnboarding` in a
+  fake is swallowed silently, so seed the flag in new store tests. `render` is async here: `await render(<App />)`,
+  or the test ends before the render and jest fails with "require a file outside of the scope of the test code".
+- **Critique without Codex** (round 027): a fresh general-purpose subagent with repo read access, given the plan
+  path and file list only, returned a useful critique in ~70 s. Number the Second opinion rows `1.n` from the start
+  (the log check needs them; round 027 needed an Amendment for it).
 
 - **The share estimate `notInTranslation` overcounts** in two cases (round 026 hand counts): glitched English
   (Errata: 0.67 by estimate, 0.33 by hand) and a `translation` field holding a summary, not a translation (0.93 vs

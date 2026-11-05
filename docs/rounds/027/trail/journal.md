@@ -11,3 +11,6 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 18:25:39 | 18:25:39 | disposition | Claude (claude-opus-5-5), autonomous | 1, 3, 4, 5, 6, 7, 9, 10 accepted; 2, 8 in part (autonomous decisions, pending owner review) | `../architecture.md` |
 | 6 | 18:25:39 | 18:25:39 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed (round 027: pre-run record) | `../architecture.md` |
 | 7 | 18:29:19 | 18:29:19 | built | Claude (claude-opus-5-5), autonomous | onboarding.yaml (statement + notes), loader, `GET /api/onboarding`, store (flag read first, isolated fetch, guarded view, finishOnboarding), OnboardingPanel, Header `hideNav`; existing fakes seed the flag. Server 138/138, mobile 45/45, web client 12/12 and build, expo-doctor 20/20, iOS export ok | `../architecture.md` |
+| 8 | 18:29:57 | 18:29:57 | amended | Claude (claude-opus-5-5), autonomous | Amendment 1: Second opinion rows restated with 1.n ids for the log check | `../architecture.md` |
+| 9 | 18:29:57 | 18:29:57 | outcome | Claude (claude-opus-5-5), autonomous | Built as designed; C2 done apart from the Simulator check | `../findings.md` |
+| 10 | 18:29:57 | 18:29:57 | closed | Claude (claude-opus-5-5), autonomous | Round 027 closed | `../findings.md` |
