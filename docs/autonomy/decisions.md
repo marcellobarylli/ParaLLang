@@ -82,3 +82,7 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 022 | Gerald's coffee break grades adjective agreement with the coffee | Accept any form | Beginners should not be taught "il caffè è buona" | Yes |
 | 2026-11-05 | 022 | Talk is disabled in the app while another encounter is under way | Let it replace the session | A tap should not throw away an ongoing encounter | Yes |
 | 2026-11-05 | 022 | Codex critique 1: 1.1, 1.2, 1.5, 1.6, 1.8 accepted; 1.3, 1.4, 1.7, 1.9, 1.10 in part | Accept all | See round 022 Second opinion table | Yes |
+| 2026-11-05 | 023 | Party conversations for Mortimer (tasting: like it, ask for more), Flick (slow walk: let's go, together), Marginalia (fragment: praise the story, read again) | Other scenes; no conversations for them | Each fits the character and teaches everyday phrases | Yes |
+| 2026-11-05 | 023 | Spanish "more" is the phrase un poco más; "together" is juntos only; Italian ancora and insieme stay bare | Bare más; juntas; phrases in Italian too | más folds to English "mas", juntas is English; ancora and insieme are not English words | Yes |
+| 2026-11-05 | 023 | Each conversation's intent tells the NPC not to say the pending answers | Rely on the global style rule | The natural questions ("Vuoi ancora?") would give the answer | Yes |
+| 2026-11-05 | 023 | Codex critique 1: 1.1, 1.2, 1.4–1.7, 1.10 accepted; 1.8, 1.9, 1.11 in part; 1.3 rejected | Accept all | See round 023 Second opinion table | Yes |
