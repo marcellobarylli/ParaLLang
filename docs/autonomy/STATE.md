@@ -7,16 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-**Iteration 12 (from 20:02 UTC)** closed rounds 041–044 without live calls, then Codex came back at 20:36.
-- **Round 026** (E1): Amendment 2's check passed (journal rows 17–18). After-build tours (it, then es) are
-  running/queued: `play-market.js --tour --out docs/rounds/026/results/after-tour-<lang>.json`. Then measure with
-  `tour-measure.mjs` against `baseline-tour-*.json`, read flagged lines and greetings (now also with
-  `server/scripts/leak-scan.js`), hand-count greetings into `results/hand-count.md`, and record `drillCards` (round
-  029 open item 1) and `journeyFragments` on resolving turns (round 030). Then Findings, Outcome, close.
-- **Round 045** (G3, unordered objectives): built and frozen. Live runs still to do:
-  `TARGET_LANGUAGE=it node server/scripts/play-market.js --provider codex-cli --party --member butchers_stall --lines "Ancora un po', per favore!|Mi piace molto, Mortimer!" --out docs/rounds/045/results/party-it.json`
-  and es with `"Un poco más, por favor.|¡Me gusta mucho!"`. Bar: both resolve; the first turn closes `ask_more` while
-  `like_it` stays current. Then findings and close.
+Nothing open. Iteration 12 ended with every round closed (026, 041–045). **Next:** backlog G4 (relationship tiers
+that change a party conversation, live runs) or G5 (telling the time at the Fountain, content plus live runs); A10
+(LLM location atmosphere) is optional. Codex served about 175 calls between 20:36 and 21:01 UTC without hitting its
+limit; pace a new window the same way (single-location runs before tours, no parallel live runs).
 
 ## Backlog
 
@@ -305,6 +299,12 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings), built and closed; server 156/156, mobile 68/68, client 12/12, expo-doctor 20/20. No Codex calls
   (limit until about 20:35 UTC); round 026 still open with its live steps queued.
 
+- 2026-11-05, iteration 12 (20:02–21:05 UTC): rounds 041 (C4b, ambient loops), 042 (C3c, Literata titles), 043 (G1,
+  Party-screen story hint) and 044 (G2, leak scan over every live report) planned, critiqued by Claude subagents and
+  closed while Codex was at its limit. After the reset (20:36): round 026 closed (Amendment 2 check passed; tours
+  gap it 0.12 → 0.07, es 0.15 → 0.14; E1 done), round 045 (G3, unordered objectives, Codex critique) built and closed
+  with live runs. Server 176/176, mobile 120/120, web 12/12, expo-doctor 20/20. Seeded backlog G.
+
 - 2026-11-05, iteration 11: rounds 033–040 planned, critiqued by Claude subagents, built and closed, all without
   live LLM calls (Codex limit until 20:35 UTC). The rounds:
   - 033 (A12b): Journey fragments for Mortimer, Flick and Marginalia; a wider stem check.
@@ -320,6 +320,16 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Handoff notes and traps
 
+- **Leak scan** (round 044): `node server/scripts/leak-scan.js <reports...>` reads every play-market report shape
+  (tour, party, single, rounds 005–008, greeting replays). Kinds: leak, near, quoted, echo. Known noise: Gerald's
+  English "espresso", Errata's frame words (*sono*, *nome*, *nombre*), Portia's greeting word (about half of her
+  greetings, since round 009). Run it on every new live report and read the leak and near lines.
+- **Unordered objectives** (round 045): `objectives_unordered: true` on an encounter; only `mortimer_tasting` sets it
+  (a test checks). Use `service.activeObjectives` / `currentObjective`, never `objectives[objectiveIndex]`. Help caps
+  every graded objective in unordered encounters. `createRuntime({ content })` takes edited content for tests (see
+  `server/test/unordered-objectives.test.js`, `contentWith`).
+- **Tour reports do not record `journeyFragments`** (round 026): to check fragments on resolving turns, add them to
+  play-market's report or read the save.
 - **Ambience** (round 041): `mobile/src/ambience.js` (`setAmbience`, `duckAmbience`), injected into the store
   (`createGameStore({ ambience })`), which calls it only when the wanted location changes. Store tests that count
   `createAudioPlayer` calls must pass `ambience: jest.fn()` (see `sounds.test.js`). A new map location needs a loop:
