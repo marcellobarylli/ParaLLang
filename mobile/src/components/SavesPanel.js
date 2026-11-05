@@ -1,11 +1,18 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, colors, type } from './ui.js';
 import { MAX_SAVES } from '../stores/saveSlots.js';
 
 // Round 031 (backlog A11): the device's saves. Each is a learner on the server; the current one shows where it
 // stands, the others can be continued, and a new one can be started while fewer than MAX_SAVES exist.
-export default function SavesPanel({ saves, activeId, place, dueCount = 0, isLoading, onContinue, onNew, onReturn, soundsOn = true, onToggleSounds }) {
+export default function SavesPanel({ saves, activeId, place, dueCount = 0, isLoading, onContinue, onNew, onReturn, soundsOn = true, onToggleSounds, onRemove }) {
   const full = saves.length >= MAX_SAVES;
+  // Round 038 (critique 1.5): the question is the system's alert, which takes VoiceOver focus and has a destructive
+  // button; the wording says only what is true (the server keeps the file, critique 1.3).
+  const confirmRemove = (save) => Alert.alert(
+    `Remove ${save.label}?`,
+    `This device forgets ${save.label}. You cannot open it again from this app.`,
+    [{ text: `Keep ${save.label}`, style: 'cancel' }, { text: 'Remove', style: 'destructive', onPress: () => onRemove(save.learnerId) }],
+  );
   return (
     <ScrollView aria-label="Saves" contentContainerStyle={styles.content}>
       <View style={styles.heading}>
@@ -18,9 +25,11 @@ export default function SavesPanel({ saves, activeId, place, dueCount = 0, isLoa
           <View key={save.learnerId} style={[styles.card, current && styles.current]} aria-selected={current} aria-label={current ? `${save.label}, current save` : save.label}>
             <Text role="heading" style={styles.cardTitle}>{save.label}</Text>
             {current
-              ? <Text style={styles.body}>Current save{place ? ` · ${place}` : ''} · {dueCount} due for review</Text>
+              ? <><Text style={styles.body}>Current save{place ? ` · ${place}` : ''} · {dueCount} due for review</Text>
+                {onRemove && saves.length > 1 && <Text style={styles.small}>To remove this save, continue another one first.</Text>}</>
               : <Button label="Continue" accessibleName={`Continue ${save.label}`} variant="primary" disabled={isLoading} onPress={() => onContinue(save.learnerId)} style={styles.action} />}
             <Text style={styles.small}>Started {new Date(save.createdAt).toLocaleDateString()}</Text>
+            {!current && onRemove && <Button label="Remove" accessibleName={`Remove ${save.label}`} variant="text" disabled={isLoading} onPress={() => confirmRemove(save)} style={styles.remove} />}
           </View>
         );
       })}
@@ -42,6 +51,7 @@ const styles = StyleSheet.create({
   title: { fontSize: type.title1, fontWeight: '700', color: colors.ink },
   card: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   current: { borderColor: colors.accent },
+  remove: { alignSelf: 'flex-start', paddingHorizontal: 0 },
   switch: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, marginTop: 8 },
   switchLabel: { fontSize: type.callout, fontWeight: '600', color: colors.ink },
   switchState: { fontSize: type.callout, fontWeight: '700', color: colors.muted },

@@ -212,3 +212,84 @@ describe('the screen', () => {
     expect(screen.queryByRole('button', { name: 'Saves' })).toBeNull();
   });
 });
+
+// Round 038 (A11b): the device forgets a save that is not the current one, after the system's confirmation.
+describe('removing a save', () => {
+  const three = (extra = {}) => memoryStorage({ [SLOTS_KEY]: JSON.stringify({ version: 1, activeId: A, slots: [slot(A, 'Save 1'), slot(B, 'Save 2'), slot(C, 'Save 3')] }), ...extra });
+
+  test('removes a non-current slot; refuses the current one, an unknown id, no learner, and while loading', async () => {
+    const storage = three();
+    const store = createGameStore({ api: fakeApi([D]), storage });
+    expect(await store.getState().removeSave(B)).toBe(false); // no learner yet
+    await store.getState().initialize();
+    store.getState().snapshotsByLearner.set(B, { encounter: null, spellbook: null });
+    expect(await store.getState().removeSave(A)).toBe(false);
+    expect(await store.getState().removeSave(D)).toBe(false);
+    store.setState({ isLoading: true });
+    expect(await store.getState().removeSave(B)).toBe(false);
+    store.setState({ isLoading: false });
+    expect(store.getState().saves.map((s) => s.label)).toEqual(['Save 1', 'Save 2', 'Save 3']);
+
+    expect(await store.getState().removeSave(B)).toBe(true);
+    expect(store.getState().saves.map((s) => s.label)).toEqual(['Save 1', 'Save 3']);
+    expect(record(storage)).toEqual({ version: 1, activeId: A, slots: [slot(A, 'Save 1'), slot(C, 'Save 3')], nextNumber: 3 });
+    expect(store.getState().snapshotsByLearner.has(B)).toBe(false);
+    expect(store.getState()).toMatchObject({ isLoading: false, notice: 'Save 2 was removed from this device.' });
+
+    // Critique 1.4: the removed number is not given out again, also after a restart.
+    await store.getState().newSave();
+    expect(store.getState().saves.map((s) => s.label)).toEqual(['Save 1', 'Save 3', 'Save 4']);
+    expect(parseSlots(storage.values.get(SLOTS_KEY)).nextNumber).toBe(3);
+  });
+
+  test('the store is locked while it forgets; a switch or new save meanwhile is refused and nothing comes back', async () => {
+    const storage = three();
+    let finish;
+    const store = createGameStore({ api: fakeApi([D]), storage });
+    await store.getState().initialize();
+    storage.setItem.mockImplementationOnce((key, value) => new Promise((resolve) => { finish = () => { storage.values.set(key, value); resolve(); }; }));
+    const removing = store.getState().removeSave(B);
+    expect(store.getState().isLoading).toBe(true);
+    expect(store.getState().switchSave(B)).toBeUndefined();
+    await store.getState().newSave();
+    finish();
+    expect(await removing).toBe(true);
+    expect(record(storage).slots.map((s) => s.learnerId)).toEqual([A, C]);
+    // A load of a slot that is no longer listed does nothing.
+    store.setState({ isLoading: true });
+    await store.getState()._loadSave(B, 0);
+    expect(store.getState().saves.map((s) => s.learnerId)).toEqual([A, C]);
+  });
+
+  test('a failed write puts the slot back and says so; the legacy key never points at a removed save', async () => {
+    const storage = three({ 'parallang.learnerId': C });
+    const store = createGameStore({ api: fakeApi(), storage });
+    await store.getState().initialize();
+    storage.values.set('parallang.learnerId', C); // as if a switch's second write had failed
+    storage.setItem.mockImplementationOnce(async () => { throw new Error('disk full'); });
+    expect(await store.getState().removeSave(C)).toBe(false);
+    expect(store.getState().saves).toHaveLength(3);
+    expect(store.getState()).toMatchObject({ isLoading: false });
+    expect(store.getState().error).toMatch(/could not forget that save: disk full/);
+    expect(await store.getState().removeSave(C)).toBe(true);
+    expect(storage.values.get('parallang.learnerId')).toBe(A);
+  });
+
+  test('the Saves screen asks through the system alert; only Remove removes; the current save has none', async () => {
+    const { Alert } = require('react-native');
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    const user = userEvent.setup();
+    const onRemove = jest.fn();
+    await render(<SavesPanel saves={[slot(A, 'Save 1'), slot(B, 'Save 2')]} activeId={A} isLoading={false} onContinue={jest.fn()} onNew={jest.fn()} onReturn={jest.fn()} onRemove={onRemove} />);
+    expect(screen.queryByRole('button', { name: 'Remove Save 1' })).not.toBeOnTheScreen();
+    expect(screen.getByText('To remove this save, continue another one first.')).toBeOnTheScreen();
+    await user.press(screen.getByRole('button', { name: 'Remove Save 2' }));
+    const [title, message, buttons] = alert.mock.calls[0];
+    expect([title, message]).toEqual(['Remove Save 2?', 'This device forgets Save 2. You cannot open it again from this app.']);
+    expect(buttons.map((b) => [b.text, b.style])).toEqual([['Keep Save 2', 'cancel'], ['Remove', 'destructive']]);
+    expect(onRemove).not.toHaveBeenCalled();
+    buttons[1].onPress();
+    expect(onRemove).toHaveBeenCalledWith(B);
+    alert.mockRestore();
+  });
+});

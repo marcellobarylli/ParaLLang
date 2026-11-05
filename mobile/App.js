@@ -47,7 +47,7 @@ export default function App() {
         {state.view === 'saves' && <SavesPanel
           saves={state.saves} activeId={state.learnerId} place={here?.name} dueCount={state.spellbook.dueCount} isLoading={state.isLoading}
           onContinue={state.switchSave} onNew={state.newSave} onReturn={state.openMap}
-          soundsOn={state.soundsOn} onToggleSounds={state.setSoundsOn}
+          soundsOn={state.soundsOn} onToggleSounds={state.setSoundsOn} onRemove={state.removeSave}
         />}
         {state.view === 'party' && <PartyPanel party={state.party} isLoading={state.isLoading} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}

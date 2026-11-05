@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { learningApi } from '../api/learning.js';
-import { MAX_SAVES, SLOTS_KEY, parseSlots, withActive } from './saveSlots.js';
+import { MAX_SAVES, SLOTS_KEY, parseSlots, withActive, withoutSlot } from './saveSlots.js';
 import { playCue } from '../sounds.js';
 
 const LEARNER_KEY = 'parallang.learnerId';
@@ -29,6 +29,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     party: [],
     notice: null,
     spellbook: emptySpellbook,
+    savesFloor: undefined, // Round 038: the lowest number a new save may take (record.nextNumber)
     saves: [], // Round 031: the device's save slots ({ learnerId, label, createdAt }), active one = learnerId
     snapshotsByLearner: snapshots,
     view: 'map',
@@ -82,7 +83,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           const showOnboarding = Boolean(onboarding) && get().view === 'map';
           set({
             learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, party, isLoading: false,
-            saves: slots.slots,
+            saves: slots.slots, savesFloor: slots.nextNumber,
             ...(showOnboarding ? { onboarding, view: 'onboarding' } : {}),
           });
         } catch (error) {
@@ -295,7 +296,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       try {
         const identity = await api.createLearner(null);
         // Critique 1.8: the new slot is recorded (still inactive) before it loads, so a failure leaves no orphan.
-        const record = withActive({ slots: get().saves }, identity.learnerId);
+        const record = withActive({ slots: get().saves, nextNumber: get().savesFloor }, identity.learnerId);
         const kept = { ...record, activeId: learnerId };
         await storage?.setItem?.(SLOTS_KEY, JSON.stringify(kept));
         if (epoch !== requestEpoch) return;
@@ -304,6 +305,30 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       } catch (error) {
         if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
       }
+    },
+    // Round 038 (A11b): the device forgets a save that is not the current one. It locks the store like a switch
+    // (isLoading, a new epoch), so no switch or new save can run against the old list (critique 1.1). The list is
+    // updated first and put back if the write fails. The record always keeps the current save, so it never becomes
+    // empty. The server's file for that learner stays, unreachable from this app (critique 1.3).
+    removeSave: async (target) => {
+      const { saves, isLoading, learnerId, savesFloor } = get();
+      if (!learnerId || isLoading || target === learnerId || !saves.some((save) => save.learnerId === target)) return false;
+      ++requestEpoch;
+      const record = withoutSlot({ activeId: learnerId, slots: saves, nextNumber: savesFloor }, target);
+      const label = saves.find((save) => save.learnerId === target).label;
+      set({ isLoading: true, error: null, notice: null, saves: record.slots, savesFloor: record.nextNumber });
+      try {
+        await storage?.setItem?.(SLOTS_KEY, JSON.stringify(record));
+        // Critique 1.2: the legacy key must not lead back to the removed save.
+        const legacy = await Promise.resolve(storage?.getItem?.(LEARNER_KEY)).catch(() => null);
+        if (legacy === target) await Promise.resolve(storage?.setItem?.(LEARNER_KEY, learnerId)).catch(() => {});
+      } catch (error) {
+        set({ saves, savesFloor, isLoading: false, error: `This device could not forget that save: ${error.message}` });
+        return false;
+      }
+      snapshots.delete(target);
+      set({ isLoading: false, notice: `${label} was removed from this device.` });
+      return true;
     },
     switchSave: (target) => {
       const { saves, isLoading, learnerId } = get();
@@ -315,13 +340,16 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     // Loads a known slot from the server (createLearner recreates a save the server lost, critique 1.5; the encounter
     // and spellbook are the server's, not the in-app snapshot, critique 1.3) and resets every per-save field (1.4).
     _loadSave: async (target, epoch) => {
+      // Round 038 (critique 1.1): a slot no longer on the list is not loaded (and so never added back).
+      if (!get().saves.some((save) => save.learnerId === target)) { if (epoch === requestEpoch) set({ isLoading: false }); return; }
       try {
         const identity = await api.createLearner(target);
         const [{ world }, current, { party }] = await Promise.all([
           api.getWorld(identity.learnerId), api.currentEncounter(identity.learnerId), api.getParty(identity.learnerId),
         ]);
         if (epoch !== requestEpoch) return;
-        const record = withActive({ slots: get().saves }, identity.learnerId);
+        if (!get().saves.some((save) => save.learnerId === identity.learnerId)) { set({ isLoading: false }); return; }
+        const record = withActive({ slots: get().saves, nextNumber: get().savesFloor }, identity.learnerId);
         await storage?.setItem?.(SLOTS_KEY, JSON.stringify(record));
         await storage?.setItem?.(LEARNER_KEY, identity.learnerId);
         if (epoch !== requestEpoch) return;
