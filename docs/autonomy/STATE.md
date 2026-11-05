@@ -86,7 +86,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Add a rule to `prompts/language/grading.txt` (feedback may name what is missing in English, never the
   target-language answer to an open objective); re-run `verify:cli` (verdicts must stay 9/9) and `play-market.js`
   3 times; feedback only, verdicts unchanged.
-- [ ] **D4.** `expo-doctor` 19/20 since 2026-11-05: wants expo ~58.0.23 and react-native-safe-area-context ~5.11.1
+- [x] **D4.** (round 016, closed 2026-11-05) `expo-doctor` 19/20 since 2026-11-05: wants expo ~58.0.23 and react-native-safe-area-context ~5.11.1
   (new upstream releases; nothing in the repo changed; 3 packages out of date by round 014). `npx expo install --fix` in `mobile/`, then re-run jest,
   expo-doctor and the iOS export. Simulator check of the update goes to "Needs owner".
 
@@ -117,6 +117,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - Round 009: check the Market Entrance tutorial in the Simulator (companion card, first screen at the top, later
   turns scroll), review Portia's content and reference URLs, and decide whether Portia may model "come ti chiami"
   before the ask-back objective ([open items](../rounds/009/findings.md#open-items)).
+- Round 016: open the app after the Expo update (expo 58.0.23, safe-area-context 5.11.1); check safe-area insets
+  on the map and encounter screens ([open items](../rounds/016/findings.md#open-items)).
 - Round 014: check the sealed Rift on the map in the Simulator (lock mark, "Sealed 4/5" caption, disabled tap,
   VoiceOver label) and review the explicit five-id gate and keeping old saves in the Rift
   ([open items](../rounds/014/findings.md#open-items)).
@@ -162,6 +164,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-05, iteration 4: round 015 (A7b) planned, critiqued (7 findings: 5 accepted, 2 rejected), frozen and
   built: Errata at the Rift; server 101/101, mobile 22/22, client 12/12. Live: Italian 2/2 resolved, then Codex's
   usage limit; round left open. Iteration 4 ends here (round 014 closed, 015 open).
+- 2026-11-05, iteration 5: round 016 (D4) built and closed while Codex's limit lasted: `npx expo install --fix`,
+  expo-doctor 20/20; mobile 22/22, server 101/101, client 12/12.
 
 ## Handoff notes and traps
 

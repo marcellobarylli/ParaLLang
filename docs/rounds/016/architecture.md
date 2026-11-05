@@ -39,3 +39,9 @@ None (decision 2).
 - `node --test server/test/*.test.js` 101/101 and `npm exec --workspace client -- vitest run` 12/12 plus the
   client build, unchanged (shared root lockfile).
 - Not here: the updated app in the iOS Simulator (owner).
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendment. `npx expo install --fix` moved `expo`, `jest-expo` and
+`react-native-safe-area-context` to SDK 58's expected versions; expo-doctor 20/20, mobile 22/22, iOS export ok,
+server 101/101, web client 12/12 and build. Not checked in the iOS Simulator. See [findings](findings.md).
