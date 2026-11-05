@@ -8,7 +8,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 ## In progress
 
 **Two rounds open, built and committed, waiting only for live runs** (iteration 16; Codex hit its usage limit at about
-23:14 UTC, reset given as **01:36 UTC 2026-11-06**). Run these first, in order, then close each round (findings.md,
+23:14 UTC, reset given as **01:36 UTC 2026-11-06**; still limited at 23:27, checked in iteration 17). Iteration 17
+closed rounds 054–058 without live calls; they do not change what these runs test, except that NPC words now carry
+`spans` (round 057) and the matcher sorts forms across entries (round 058, output unchanged on 1,021 saved lines). Run these first, in order, then close each round (findings.md,
 Outcome, `round_log_check.py`, STATUS addendum):
 
 1. **Round 052 (H2, numbers 2–12 in Flick's slow walk).** The scripted runs passed (it, es; `results/walk-*.json`).
@@ -22,6 +24,14 @@ Outcome, `round_log_check.py`, STATUS addendum):
    and the same for es (12 calls each, in-process, no port). Success: at least 5 of 6 lines kept per pack, English, at
    most 40 words, consistent with the description. A read-only code review of 052–053 returned no serious bugs; its
    two gaps are fixed (Amendment 1 of round 053).
+3. **Round 054 open item 2 (no new round needed):** one live answer with a typographic apostrophe, e.g.
+   `TARGET_LANGUAGE=it node server/scripts/play-market.js --provider codex-cli --location cracked_fountain --lines 'Guarda!|Fermati!|Left.|A sinistra!|Adesso!|È l’una, Flick.|Domani.|No, adesso!' --out docs/rounds/054/results/live-apostrophe-it.json`
+   (eight Fountain lines); expect the time objective to pass on the `’` line. Record it in round 054's findings as a
+   dated addendum.
+
+After those, the backlog is empty except D1 (blocked). Next candidates, none needing the owner: the word class
+(`wordClass`, round 056) on Spellbook cards and in reviews; a live tour (`play-market.js --tour`) as a regression run
+after rounds 051–058; re-measure language share (E1) with the new rounds' content.
 
 ## Backlog
 
@@ -185,6 +195,13 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Rounds 055–057 (Simulator): the 🔊 beside each encounter chip (it, es voices, late voices on a cold start), chips
+  coloured and labelled by class (dashed verbs, narrow screens), words marked in the NPC line, VoiceOver. Decide: may
+  the class show on the active line before a hint; R/G/B as the palette; ink underlines for other classes
+  ([055](../rounds/055/findings.md#open-items), [056](../rounds/056/findings.md#open-items),
+  [057](../rounds/057/findings.md#open-items)).
+- Round 054 (Simulator): type "È l'una" and "Ancora un po'" with Smart Punctuation on; both should pass
+  ([open items](../rounds/054/findings.md#open-items)).
 - Round 051: should an early correct use be recorded in the Spellbook though it does not close (the grader now fails
   it); check the "…" mark in the Simulator ([open items](../rounds/051/findings.md#open-items)).
 - Round 050: review the Fountain's time objective and its ten entries (it, es), the four constructions and no number
@@ -394,6 +411,12 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   - 040: the app sends `PARALLANG_TOKEN`.
   Server 163/163 (after round 039's Amendment 1, from a read-only review of the eight rounds by a Claude
   subagent: no serious bugs), mobile 95/95, client 12/12, expo-doctor 20/20. Iteration 11 ended at 20:01 UTC.
+- 2026-11-05, iteration 17 (23:26–23:58 UTC, Codex limited throughout; critiques by Claude subagents): rounds 054
+  (F2, typographic apostrophes folded in the matcher, reviews and the evidence check), 055 (C5, a 🔊 per encounter
+  chip, voice cache, speech generations), 056 (C6, chips coloured and labelled by class), 057 (C7, chip words marked
+  in the line at the server's `spans`), 058 (F3, matcher sorts every form longest first across entries; a latent
+  stealing bug found by the critique; 0 differences on 1,021 saved lines). All closed: server 238/238, mobile
+  146/146, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
 
 ## Handoff notes and traps
 
