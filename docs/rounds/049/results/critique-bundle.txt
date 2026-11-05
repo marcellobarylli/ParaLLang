@@ -1,0 +1,286 @@
+=== docs/rounds/049/trail/plan-v1.md
+     1	# Round 049 plan v1: foreign targets in the leak scan (backlog G7, measurement part)
+     2	
+     3	Autonomous round (no owner), no live LLM calls. Round 048 found NPCs saying other party conversations' targets:
+     4	Flick (it) "Eccomi, sono sveglio!" (Marginalia's folded-page target), Mortimer "amico mio" in nearly every line
+     5	(Gerald's confidence target), Marginalia "Possiamo leggere insieme" (Flick's slow-walk target). The player hears a
+     6	word before the conversation that teaches it. Before deciding on a content or prompt rule, measure how often it
+     7	happens across every live report so far.
+     8	
+     9	## Design
+    10	
+    11	1. `server/scripts/leak-scan.js` gains `foreignFormsFor(content, encounterId)`: the whole surface forms (target and
+    12	   `surface_variants`) of every vocabulary entry targeted by a **party conversation** objective, minus the entries
+    13	   targeted by any objective of the scene's own encounter. Each form carries its owner conversation id and entry id.
+    14	2. `scanReport` adds, per scene, `foreign: [{ line, hits: [{ owner, id, form }] }]` and `foreignLines`, from exact
+    15	   whole-form matches (the same `fold` / `holds` as today). Word-inside-phrase hits are not counted (exact only).
+    16	   Echo: a form the player said earlier in the scene is marked `echo` and not counted in `foreignLines`.
+    17	3. Foreign hits are **separate from the four exclusive kinds** (leak, near, quoted, echo): existing counts,
+    18	   totals and outputs do not change; `summarize` adds `foreignLines` per language; `main` prints `foreign` rows and
+    19	   adds "foreign N" to the summary line.
+    20	4. Scope: every scene (home encounters too: Gerald's home lines may say "grazie", a coffee-break target). Content is
+    21	   today's (as for the other kinds), so a report from before a conversation existed is still scanned against
+    22	   today's party targets: the measure is "how often would this line teach a party word early today".
+    23	5. A results script `docs/rounds/049/results/measure.mjs` runs the scan over every `docs/rounds/*/results/*.json`
+    24	   and tabulates foreign lines by scene encounter and by owner, per language.
+    25	
+    26	## Tests (`server/test/leak-scan.test.js`)
+    27	
+    28	- A flick_lotus scene whose line says "Eccomi" gives one foreign hit, owner `marginalia_folded_page`; its own
+    29	  "coraggio" is not foreign; the leak/near/quoted/echo counts are unchanged by foreign hits.
+    30	- An `imp_coffee_greeting` scene line with "Grazie!" is foreign (owner `gerald_coffee_break`); a gerald_coffee_break
+    31	  scene with the same line is not (its own target).
+    32	- A foreign form the player said earlier is echo and not counted.
+    33	- `summarize` carries `foreignLines`.
+    34	
+    35	## Decision rule for the next step (recorded now)
+    36	
+    37	If foreign lines are under 5% of party-conversation lines, close G7 with no content change. Otherwise a follow-up
+    38	round adds a narration rule (in content: a party conversation's intents list the other members' targets to avoid,
+    39	or in the shared template) and measures it live.
+=== server/scripts/leak-scan.js
+     1	#!/usr/bin/env node
+     2	// Round 044 (backlog G2): scans live reports for NPC lines that give away an open objective's answer.
+     3	//   exact: the line holds a whole surface form of a target of an objective still open at that line;
+     4	//   word:  it holds a content word from inside a multi-word form ("más" from "un poco más"), not the whole form.
+     5	// Each hit is also marked `echo` (the player said it earlier in the scene) or `quoted` (the objective's own
+     6	// authored intent holds it, e.g. a passage read aloud). A line is `leak` (a fresh exact hit), `near` (fresh word
+     7	// hits only), `quoted` or `echo`. Hits are flags for reading, not verdicts. Reports are read against today's
+     8	// content, and the word scan is a lower bound (no inflection: "chiamo" never hits "chiami").
+     9	//   node server/scripts/leak-scan.js <report.json ...> [--json <out.json>]
+    10	import { readFileSync, writeFileSync } from 'node:fs';
+    11	import { fileURLToPath } from 'node:url';
+    12	import { loadGameContent } from '../src/content-loader.js';
+    13	
+    14	// Function words that never count as a word hit (articles, prepositions, conjunctions, clitics, a few auxiliaries).
+    15	export const FUNCTION_WORDS = Object.freeze({
+    16	  it: new Set('il lo la i gli le un una uno l di del della dello dei degli delle da dal dalla in nel nella con su sul sulla per tra fra e ed o a al alla ai che non mi ti si ci vi ne me te se ce ve è sono ho ha'.split(' ')),
+    17	  es: new Set('el la lo los las un una unos unas de del a al en con por para y e o u que no me te se nos os le les es son soy he ha'.split(' ')),
+    18	});
+    19	// Critique 1.6: Errata speaks glitched English; these English words are not word hits in its lines.
+    20	export const ENGLISH_COLLISIONS = new Set('come solo sin no me he son dia mas more'.split(' '));
+    21	const ENGLISH_SPEAKERS = new Set(['the_rift_errata']);
+    22	
+    23	// The game's own folding (matchCanonicalVocabulary: NFD, marks stripped, lowercase), then everything but letters
+    24	// and digits to spaces, so whole words can be found by padding (critique 1.8, 1.12: "po’" and "po'" fold alike).
+    25	export const fold = (text) => ` ${String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()} `;
+    26	const holds = (haystack, needle) => needle.trim() !== '' && haystack.includes(` ${needle.trim()} `);
+    27	
+    28	// Played scenes: objects with `lines` and `grading` arrays (an `encounterId`, or none in rounds 005–008, where the
+    29	// scene is the default encounter), and round 026's greeting replays (`results[]` with `encounterId` and `native`).
+    30	export function scenesOf(report) {
+    31	  const found = [];
+    32	  const walk = (node, top) => {
+    33	    if (Array.isArray(node)) { node.forEach((each) => walk(each, false)); return; }
+    34	    if (!node || typeof node !== 'object') return;
+    35	    if (Array.isArray(node.lines) && Array.isArray(node.grading) && (typeof node.encounterId === 'string' || top)) {
+    36	      found.push({ encounterId: node.encounterId ?? null, inferred: typeof node.encounterId !== 'string', lines: node.lines });
+    37	      return;
+    38	    }
+    39	    for (const [key, value] of Object.entries(node)) if (key !== 'steps') walk(value, false);
+    40	  };
+    41	  walk(report, true);
+    42	  if (!found.length && Array.isArray(report.results)) {
+    43	    for (const r of report.results) {
+    44	      if (typeof r?.encounterId === 'string' && typeof r.native === 'string') found.push({ encounterId: r.encounterId, inferred: false, replay: true, lines: [{ native: r.native }] });
+    45	    }
+    46	  }
+    47	  return found;
+    48	}
+    49	
+    50	// The validated verdicts of every successful `say "..."` step, in order (critique 1.2: a grading whose step failed
+    51	// moved nothing and was answered by no line). Each step that succeeded is answered by exactly one line.
+    52	export function playerTurns(report) {
+    53	  return (report.steps ?? []).filter((step) => step.ok && typeof step.name === 'string' && step.name.startsWith('say "'))
+    54	    .map((step) => ({ message: step.name.slice(5, -1), verdicts: Array.isArray(step.verdicts) ? step.verdicts : [] }));
+    55	}
+    56	
+    57	// Objectives still open at line k, replayed as the server advances (critique 1.1): after each turn the index moves
+    58	// over the leading passes of that turn's verdicts and stops at the first fail.
+    59	export function openObjectives(objectives, turns, k) {
+    60	  let index = 0;
+    61	  for (const { verdicts } of turns.slice(0, k)) {
+    62	    for (const verdict of verdicts) {
+    63	      if (verdict.objective !== objectives[index]?.id || !verdict.passed) break;
+    64	      index += 1;
+    65	    }
+    66	  }
+    67	  return objectives.slice(index);
+    68	}
+    69	
+    70	// forms: [{ objective, form }]. A whole form is an exact hit; a word of a multi-word form, absent as a whole, a word hit.
+    71	export function scanLine(native, forms, language, { english = false } = {}) {
+    72	  const line = fold(native);
+    73	  const stop = FUNCTION_WORDS[language] ?? new Set();
+    74	  const exact = [];
+    75	  const words = [];
+    76	  for (const { objective, form } of forms) {
+    77	    const folded = fold(form).trim();
+    78	    if (holds(line, folded)) { exact.push({ objective, form }); continue; }
+    79	    const parts = folded.split(' ');
+    80	    if (parts.length < 2) continue;
+    81	    for (const word of parts) {
+    82	      if (word.length < 3 || stop.has(word) || (english && ENGLISH_COLLISIONS.has(word))) continue;
+    83	      if (holds(line, word)) words.push({ objective, form, word });
+    84	    }
+    85	  }
+    86	  const exactObjectives = new Set(exact.map((hit) => hit.objective));
+    87	  const seen = new Set();
+    88	  return {
+    89	    exact,
+    90	    // One word hit per (objective, word); none for an objective that already hit exactly.
+    91	    words: words.filter((hit) => !exactObjectives.has(hit.objective) && !seen.has(`${hit.objective}:${hit.word}`) && seen.add(`${hit.objective}:${hit.word}`)),
+    92	  };
+    93	}
+    94	
+    95	export function formsFor(objectives, vocabularyById) {
+    96	  return objectives.flatMap((objective) => objective.target_vocabulary_ids.flatMap((id) => {
+    97	    const entry = vocabularyById.get(id);
+    98	    return [...new Set([entry?.target, ...(entry?.surface_variants ?? [])].filter(Boolean))].map((form) => ({ objective: objective.id, form }));
+    99	  }));
+   100	}
+   101	
+   102	// Passages an objective's intent quotes for the NPC to read (five words or more between quotes): a form inside one is
+   103	// quoted, not leaked. Short quoted forms are prohibitions ("He does not say "me gusta"") and do not count.
+   104	export function passagesOf(objectives, id) {
+   105	  const intent = objectives.find((objective) => objective.id === id)?.intent ?? '';
+   106	  return [...intent.matchAll(/"([^"]+)"|«([^»]+)»|“([^”]+)”/g)].map((m) => fold(m[1] ?? m[2] ?? m[3])).filter((passage) => passage.trim().split(' ').length >= 5);
+   107	}
+   108	
+   109	export function scanReport(report, content) {
+   110	  const found = scenesOf(report);
+   111	  const turns = playerTurns(report);
+   112	  const skipped = [];
+   113	  const scenes = [];
+   114	  // Scenes take their turns in order: lines − 1 each (critique 1.2); a report whose counts do not add up is skipped.
+   115	  const needed = found.reduce((sum, scene) => sum + Math.max(0, scene.lines.length - 1), 0);
+   116	  if (needed !== turns.length) {
+   117	    skipped.push({ reason: `turns do not match lines (${turns.length} successful says, ${needed} replies)`, scenes: found.length });
+   118	    return { scenes, skipped };
+   119	  }
+   120	  let at = 0;
+   121	  for (const scene of found) {
+   122	    const mine = turns.slice(at, at + Math.max(0, scene.lines.length - 1));
+   123	    at += mine.length;
+   124	    const encounterId = scene.encounterId ?? content.defaultEncounterId; // critique 1.3: rounds 005–008
+   125	    const definition = content.encounters.get(encounterId);
+   126	    if (!definition) { skipped.push({ reason: `unknown encounter ${encounterId}`, scenes: 1 }); continue; }
+   127	    const objectives = definition.encounter.objectives;
+   128	    const ids = new Set(objectives.map((objective) => objective.id));
+   129	    if (mine.some(({ verdicts }) => verdicts.some((verdict) => !ids.has(verdict.objective)))) {
+   130	      skipped.push({ reason: `${encounterId}: verdicts name objectives today's content lacks`, scenes: 1 }); // critique 1.11
+   131	      continue;
+   132	    }
+   133	    const english = ENGLISH_SPEAKERS.has(encounterId);
+   134	    const hits = [];
+   135	    scene.lines.forEach((line, k) => {
+   136	      const open = openObjectives(objectives, mine, k);
+   137	      const closed = objectives.filter((objective) => !open.includes(objective));
+   138	      // Critique 1.5: a word that is a whole form of a closed objective's target is not a hit (already passed).
+   139	      const closedForms = new Set(formsFor(closed, content.vocabularyById).map(({ form }) => fold(form).trim()));
+   140	      const { exact, words } = scanLine(line.native ?? '', formsFor(open, content.vocabularyById), content.language.code, { english });
+   141	      const before = fold(mine.slice(0, k).map((turn) => turn.message).join(' '));
+   142	      const mark = (hit, text) => ({ ...hit, echo: holds(before, fold(text)), quoted: passagesOf(objectives, hit.objective).some((passage) => holds(passage, fold(text))) });
+   143	      const marked = {
+   144	        exact: exact.map((hit) => mark(hit, hit.form)),
+   145	        words: words.filter((hit) => !closedForms.has(hit.word)).map((hit) => mark(hit, hit.word)),
+   146	      };
+   147	      if (!marked.exact.length && !marked.words.length) return;
+   148	      const fresh = (hit) => !hit.echo && !hit.quoted;
+   149	      const kind = marked.exact.some(fresh) ? 'leak'
+   150	        : !marked.exact.length && marked.words.some(fresh) ? 'near'
+   151	          : [...marked.exact, ...marked.words].some((hit) => hit.quoted) ? 'quoted' : 'echo';
+   152	      hits.push({ line: k, kind, ...marked, native: line.native });
+   153	    });
+   154	    const count = (kind) => hits.filter((hit) => hit.kind === kind).length;
+   155	    scenes.push({
+   156	      encounterId, inferred: scene.inferred, replay: Boolean(scene.replay), lines: scene.lines.length,
+   157	      leakLines: count('leak'), nearLines: count('near'), quotedLines: count('quoted'), echoLines: count('echo'), hits,
+   158	    });
+   159	  }
+   160	  return { scenes, skipped };
+   161	}
+   162	
+   163	const KINDS = ['leak', 'near', 'quoted', 'echo'];
+   164	
+   165	export function summarize(results) {
+   166	  const total = {};
+   167	  const files = {};
+   168	  for (const r of results) {
+   169	    if (r.error) { files[r.error] = (files[r.error] ?? 0) + 1; continue; }
+   170	    if (!r.scenes.length && !r.skipped.length) { files['no scenes'] = (files['no scenes'] ?? 0) + 1; continue; }
+   171	    files.scanned = (files.scanned ?? 0) + 1;
+   172	    const t = (total[r.language] ??= { reports: 0, scenes: 0, inferred: 0, replays: 0, skippedScenes: 0, lines: 0, leakLines: 0, nearLines: 0, quotedLines: 0, echoLines: 0 });
+   173	    t.reports += 1;
+   174	    t.skippedScenes += r.skipped.reduce((sum, s) => sum + s.scenes, 0);
+   175	    for (const s of r.scenes) {
+   176	      t.scenes += 1; t.lines += s.lines; if (s.inferred) t.inferred += 1; if (s.replay) t.replays += 1;
+   177	      for (const kind of KINDS) t[`${kind}Lines`] += s[`${kind}Lines`];
+   178	    }
+   179	  }
+   180	  return { files, total };
+   181	}
+   182	
+   183	async function main(args = process.argv.slice(2)) {
+   184	  const jsonAt = args.indexOf('--json');
+   185	  const out = jsonAt >= 0 ? args[jsonAt + 1] : null;
+   186	  const paths = args.filter((_, i) => jsonAt < 0 || (i !== jsonAt && i !== jsonAt + 1));
+   187	  const contents = new Map();
+   188	  const results = [];
+   189	  for (const path of paths) {
+   190	    let report;
+   191	    try { report = JSON.parse(readFileSync(path, 'utf8')); } catch { results.push({ path, error: 'not JSON' }); continue; }
+   192	    if (!report.language) { results.push({ path, error: 'no language' }); continue; }
+   193	    if (!contents.has(report.language)) contents.set(report.language, loadGameContent({ language: report.language }));
+   194	    results.push({ path, language: report.language, ...scanReport(report, contents.get(report.language)) });
+   195	  }
+   196	  for (const r of results.filter((x) => !x.error)) {
+   197	    for (const s of r.skipped) console.log(`skipped\t${r.path}\t${s.reason}`);
+   198	    for (const s of r.scenes) {
+   199	      for (const h of s.hits) {
+   200	        const tag = (x) => `${x.echo ? ' (echo)' : ''}${x.quoted ? ' (quoted)' : ''}`;
+   201	        const what = [...h.exact.map((x) => `${x.objective}:${x.form}${tag(x)}`), ...h.words.map((x) => `${x.objective}:${x.word}<${x.form}>${tag(x)}`)];
+   202	        console.log(`${h.kind}\t${r.path}\t${s.encounterId}\tline ${h.line}\t[${what.join(', ')}]\t${String(h.native).replace(/\s+/g, ' ').slice(0, 160)}`);
+   203	      }
+   204	    }
+   205	  }
+   206	  const { files, total } = summarize(results);
+   207	  console.log(`== files: ${Object.entries(files).map(([k, v]) => `${k} ${v}`).join(', ')} (of ${paths.length})`);
+   208	  for (const [language, t] of Object.entries(total)) {
+   209	    console.log(`== ${language}: ${t.reports} reports, ${t.scenes} scenes (${t.inferred} inferred, ${t.replays} replay greetings, ${t.skippedScenes} skipped), ${t.lines} lines; leak ${t.leakLines}, near ${t.nearLines}, quoted ${t.quotedLines}, echo ${t.echoLines}`);
+   210	  }
+   211	  if (out) writeFileSync(out, `${JSON.stringify({ files, total, results }, null, 2)}\n`);
+   212	}
+   213	
+   214	if (process.argv[1] === fileURLToPath(import.meta.url)) main().catch((error) => { console.error(error); process.exitCode = 1; });
+=== server/test/leak-scan.test.js lines 1-30
+     1	// Round 044 (backlog G2): the leak scanner for live reports (server/scripts/leak-scan.js).
+     2	import test from 'node:test';
+     3	import assert from 'node:assert/strict';
+     4	import { loadGameContent } from '../src/content-loader.js';
+     5	import { fold, openObjectives, playerTurns, scanLine, scanReport, scenesOf, summarize } from '../scripts/leak-scan.js';
+     6	
+     7	const es = loadGameContent({ language: 'es' });
+     8	const it = loadGameContent({ language: 'it' });
+     9	const say = (message, verdicts, ok = true) => ({ name: `say "${message}"`, ok, ...(ok ? { verdicts } : { code: 'PROVIDER_FAILURE' }) });
+    10	const v = (objective, passed) => ({ objective, passed, evidence: [] });
+    11	
+    12	test('a word inside an open multi-word form is a near hit; the whole form is exact and not counted twice', () => {
+    13	  const forms = [{ objective: 'ask_more', form: 'un poco más' }];
+    14	  assert.deepEqual(scanLine('¿Quieres más?', forms, 'es'), { exact: [], words: [{ objective: 'ask_more', form: 'un poco más', word: 'mas' }] });
+    15	  assert.deepEqual(scanLine('Aquí tienes un poco más.', forms, 'es'), { exact: [{ objective: 'ask_more', form: 'un poco más' }], words: [] });
+    16	  assert.deepEqual(scanLine('Una mascota de la casa.', forms, 'es').words, [], 'whole words only; function words never hit');
+    17	  // Real Italian forms with an apostrophe, straight or curly (critique 1.8, 1.10).
+    18	  const ancora = [{ objective: 'ask_more', form: "ancora un po'" }];
+    19	  assert.equal(scanLine('Ne vuoi ancora un po’?', ancora, 'it').exact.length, 1);
+    20	  assert.deepEqual(scanLine('Ancora?', ancora, 'it').words.map((w) => w.word), ['ancora']);
+    21	  assert.equal(fold("l'ho"), ' l ho ');
+    22	});
+    23	
+    24	test('Errata\'s English words are not word hits in its lines (critique 1.6)', () => {
+    25	  const forms = [{ objective: 'x', form: 'come ti chiami' }];
+    26	  assert.deepEqual(scanLine('Cøntainment: come here.', forms, 'it', { english: true }).words, []);
+    27	  assert.deepEqual(scanLine('Come stai?', forms, 'it').words.map((w) => w.word), ['come']);
+    28	});
+    29	
+    30	test('objectives close as the server advances: leading passes only, in order (critique 1.1)', () => {
