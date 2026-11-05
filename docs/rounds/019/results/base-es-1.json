@@ -1,0 +1,273 @@
+{
+  "provider": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "language": "es",
+  "location": "market_entrance",
+  "encounterId": "market_entrance_tutorial",
+  "companionBriefing": [
+    "Portia only lets in people who greet her properly. Answer in Spanish; mixing in English is fine while you learn.",
+    "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance.",
+    "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+  ],
+  "resolved": true,
+  "completedOnMap": true,
+  "generationCalls": 7,
+  "steps": [
+    {
+      "name": "world at start",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ]
+    },
+    {
+      "name": "move to the_rift (expect NOT_ADJACENT)",
+      "ok": false,
+      "code": "NOT_ADJACENT",
+      "message": "You can't get to The Rift from here."
+    },
+    {
+      "name": "start Portia",
+      "ok": true
+    },
+    {
+      "name": "say \"¡Hola!\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "greet",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "hola",
+              "evidence": "Hola",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "introduce",
+          "passed": false,
+          "evidence": []
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Good greeting! Now introduce yourself and ask Portia her name in Spanish."
+    },
+    {
+      "name": "say \"Me llamo Sam.\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "introduce",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "me_llamo",
+              "evidence": "Me llamo",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        },
+        {
+          "objective": "ask_back",
+          "passed": false,
+          "evidence": []
+        }
+      ],
+      "feedback": "Your introduction is correct. Now ask Portia her name in return in Spanish."
+    },
+    {
+      "name": "say \"¿Y tú?\"",
+      "ok": true,
+      "verdicts": [
+        {
+          "objective": "ask_back",
+          "passed": true,
+          "evidence": [
+            {
+              "vocabularyId": "y_tu",
+              "evidence": "Y tú",
+              "quality": 5,
+              "effectiveQuality": 5
+            }
+          ]
+        }
+      ],
+      "feedback": "Correct and natural."
+    },
+    {
+      "name": "world after the encounter",
+      "ok": true,
+      "current": "market_entrance",
+      "visible": [
+        "butchers_stall:known",
+        "coffee_cart:known",
+        "market_entrance:current"
+      ],
+      "locationEncounter": {
+        "id": "market_entrance_tutorial",
+        "completed": true,
+        "characterName": "Portia"
+      }
+    }
+  ],
+  "lines": [
+    {
+      "turn": 0,
+      "requestedRatio": 0.2,
+      "native": "Hola. ¿Quién eres? Your greeting and name, please. We have standards. Also, a ledger.",
+      "translation": "Hello. Who are you? Your greeting and name, please. We have standards. Also, a ledger.",
+      "narrative": "A visitors’ book slides from the archway’s keystone. Apparently, even entrances have paperwork.",
+      "share": {
+        "tokens": 14,
+        "notInTranslation": 0.21,
+        "canonical": 0.07
+      },
+      "durationMs": 15902
+    },
+    {
+      "turn": 1,
+      "requestedRatio": 0.25,
+      "native": "¡Hola! Your greeting is accepted. Your name, however, remains unfiled. ¿Quién eres?",
+      "translation": "Hello! Your greeting is accepted. Your name, however, remains unfiled. Who are you?",
+      "narrative": "A visitors’ book slides out of Portia’s keystone. The space for your name remains pointedly empty.",
+      "share": {
+        "tokens": 12,
+        "notInTranslation": 0.25,
+        "canonical": 0.08
+      },
+      "durationMs": 7026
+    },
+    {
+      "turn": 2,
+      "requestedRatio": 0.30000000000000004,
+      "native": "Mucho gusto, Sam. Your introduction is officially filed. Now, ¿tienes una pregunta para mí? I am more than load-bearing infrastructure, you know.",
+      "translation": "Nice to meet you, Sam. Your introduction is officially filed. Now, do you have a question for me? I am more than load-bearing infrastructure, you know.",
+      "narrative": "A visitors’ book opens in Portia’s keystone. She records Sam with the solemnity normally reserved for international borders, then leaves a conspicuous blank beside her own entry.",
+      "share": {
+        "tokens": 23,
+        "notInTranslation": 0.3,
+        "canonical": 0
+      },
+      "durationMs": 11302
+    },
+    {
+      "turn": 3,
+      "requestedRatio": 0.35000000000000003,
+      "native": "¿Yo? Me llamo Portia. Mucho gusto, Sam. How considerate. Your paperwork is complete; you may enter the market. I shall record this as a conversation. Rather than a traffic incident.",
+      "translation": "Me? My name is Portia. Nice to meet you, Sam. How considerate. Your paperwork is complete; you may enter the market. I shall record this as a conversation. Rather than a traffic incident.",
+      "narrative": "A visitors’ book slides from the keystone. Portia turns to her own entry with the flustered dignity of an official unexpectedly counted as a person.",
+      "share": {
+        "tokens": 30,
+        "notInTranslation": 0.13,
+        "canonical": 0.1
+      },
+      "durationMs": 9530
+    }
+  ],
+  "grading": [
+    {
+      "durationMs": 5846,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "greet",
+            "passed": true,
+            "feedback": "You greeted Portia correctly.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "hola",
+                "evidence": "Hola",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "introduce",
+            "passed": false,
+            "feedback": "Introduce yourself in Spanish by saying your name.",
+            "vocabulary_evidence": []
+          },
+          {
+            "objective_id": "ask_back",
+            "passed": false,
+            "feedback": "Ask Portia her name in Spanish.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Good greeting! Now introduce yourself and ask Portia her name in Spanish."
+      }
+    },
+    {
+      "durationMs": 6440,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "introduce",
+            "passed": true,
+            "feedback": "You correctly introduced yourself by name.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "me_llamo",
+                "evidence": "Me llamo",
+                "quality": 5
+              }
+            ]
+          },
+          {
+            "objective_id": "ask_back",
+            "passed": false,
+            "feedback": "Ask Portia her name in Spanish, or ask “and you?” in Spanish.",
+            "vocabulary_evidence": []
+          }
+        ],
+        "overall_feedback": "Your introduction is correct. Now ask Portia her name in return in Spanish."
+      }
+    },
+    {
+      "durationMs": 9953,
+      "output": {
+        "objective_results": [
+          {
+            "objective_id": "ask_back",
+            "passed": true,
+            "feedback": "You correctly ask Portia her name in return.",
+            "vocabulary_evidence": [
+              {
+                "vocabulary_id": "y_tu",
+                "evidence": "Y tú",
+                "quality": 5
+              }
+            ]
+          }
+        ],
+        "overall_feedback": "Correct and natural."
+      }
+    }
+  ]
+}
