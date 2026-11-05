@@ -37,10 +37,11 @@ const scripts = {
     it: ['Vorrei del prosciutto, per favore.', 'Vorrei del salame, per favore.', 'Chilo.', 'Due etti, per favore.'],
     es: ['Quiero jamón, por favor.', 'Quiero chorizo, por favor.', 'Kilo.', 'Medio kilo, por favor.'],
   },
-  // Round 011: a wrong command, an English direction and agreeing to later first (all should fail).
+  // Round 011: a wrong command, an English direction and agreeing to later first (all should fail). Round 050: "now"
+  // without a time first (should fail the time objective), then a singular hour.
   cracked_fountain: {
-    it: ['Guarda!', 'Fermati!', 'Left.', 'A sinistra!', 'Domani.', 'No, adesso!'],
-    es: ['¡Mira!', '¡Quieto!', 'Left.', '¡A la izquierda!', 'Mañana.', '¡No, ahora!'],
+    it: ['Guarda!', 'Fermati!', 'Left.', 'A sinistra!', 'Adesso!', "È l'una, Flick.", 'Domani.', 'No, adesso!'],
+    es: ['¡Mira!', '¡Quieto!', 'Left.', '¡A la izquierda!', '¡Ahora!', 'Es la una, Flick.', 'Mañana.', '¡No, ahora!'],
   },
   // Round 013: an off-topic answer, English and his real name first (all should fail).
   old_bookshop: {

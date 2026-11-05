@@ -1,6 +1,7 @@
 # Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
 # were not opened from the build container; listed for the owner's content review.
-version: fountain-riddles-it-v1
+# Round 050 (backlog G5): telling the time (sono le, l'una, mezzogiorno, mezzanotte) and Flick's question.
+version: fountain-riddles-it-v2
 references:
   - id: treccani-fermare
     title: 'Treccani, Vocabolario: fermare'
@@ -35,6 +36,12 @@ references:
   - id: treccani-domani
     title: 'Treccani, Vocabolario: domani'
     url: https://www.treccani.it/vocabolario/domani/
+  - id: treccani-mezzogiorno
+    title: 'Treccani, Vocabolario: mezzogiorno'
+    url: https://www.treccani.it/vocabolario/mezzogiorno/
+  - id: treccani-mezzanotte
+    title: 'Treccani, Vocabolario: mezzanotte'
+    url: https://www.treccani.it/vocabolario/mezzanotte/
 entries:
   - id: fermati
     kind: word
@@ -213,3 +220,82 @@ entries:
       english: See you tomorrow!
     reference_ids:
       - treccani-domani
+  - id: sono_le
+    kind: phrase
+    target: sono le
+    part_of_speech: verb_phrase
+    accepted_translations:
+      - it is
+      - it is o'clock
+    surface_variants:
+      - sono le
+    accent_insensitive: false
+    example:
+      target: Sono le tre.
+      english: It is three o'clock.
+    note: "Hours are plural: sono le due, sono le tre (le ore, the hours). One o'clock is singular: è l'una."
+    reference_ids:
+      - treccani-ora
+  - id: luna
+    kind: phrase
+    target: è l'una
+    part_of_speech: verb_phrase
+    accepted_translations:
+      - it is one o'clock
+      - one o'clock
+    surface_variants:
+      - è l'una
+      - l'una
+      - è l’una
+      - l’una
+    accent_insensitive: false
+    example:
+      target: È l'una, Flick.
+      english: It is one o'clock, Flick.
+    note: "Singular, because una (one) is one hour: è l'una, but sono le due."
+    reference_ids:
+      - treccani-ora
+  - id: mezzogiorno
+    kind: word
+    target: mezzogiorno
+    part_of_speech: noun
+    accepted_translations:
+      - midday
+      - noon
+    surface_variants:
+      - mezzogiorno
+    accent_insensitive: false
+    example:
+      target: È mezzogiorno.
+      english: It is midday.
+    reference_ids:
+      - treccani-mezzogiorno
+  - id: mezzanotte
+    kind: word
+    target: mezzanotte
+    part_of_speech: noun
+    accepted_translations:
+      - midnight
+    surface_variants:
+      - mezzanotte
+    accent_insensitive: false
+    example:
+      target: È mezzanotte.
+      english: It is midnight.
+    reference_ids:
+      - treccani-mezzanotte
+  - id: che_ore_sono
+    kind: phrase
+    target: che ore sono
+    part_of_speech: question
+    accepted_translations:
+      - what time is it
+    surface_variants:
+      - che ore sono
+      - che ora è
+    accent_insensitive: false
+    example:
+      target: Che ore sono, Flick?
+      english: What time is it, Flick?
+    reference_ids:
+      - treccani-ora

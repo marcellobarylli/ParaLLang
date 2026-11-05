@@ -6,7 +6,7 @@ import { randomUUID } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { loadGameContent } from '../src/content-loader.js';
-import { normalizeAnswer } from '../src/language-engine.js';
+import { matchCanonicalVocabulary, normalizeAnswer } from '../src/language-engine.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { LearningService } from '../src/learning-service.js';
 import { route } from '../scripts/play-market.js';
@@ -14,16 +14,19 @@ import { FixtureProvider, fixedNow } from './helpers.js';
 
 const packs = {
   it: {
-    answers: ['Guarda!', 'Fermati!', 'Left.', 'A sinistra!', 'Domani.', 'No, adesso!'],
-    patterns: { stop: [/fermati|fermo|basta/i, 'fermati'], direction: [/destra|sinistra|dritto/i, 'sinistra'], now: [/adesso|\bora\b/i, 'adesso'] },
+    // Round 050: "now" without a time fails the time objective, then a singular hour passes it.
+    answers: ['Guarda!', 'Fermati!', 'Left.', 'A sinistra!', 'Adesso!', "È l'una, Flick.", 'Domani.', 'No, adesso!'],
+    timeIds: { "è l'una": 'luna', 'sono le': 'sono_le', mezzogiorno: 'mezzogiorno', mezzanotte: 'mezzanotte' },
+    patterns: { stop: [/fermati|fermo|basta/i, 'fermati'], direction: [/destra|sinistra|dritto/i, 'sinistra'], time: [/è l'una|sono le|mezzogiorno|mezzanotte/i, 'luna'], now: [/^(no, )?adesso|\bora\b/i, 'adesso'] },
     line: 'Guarda! Dopo, domani... Prosciutto? Ciao, caffè.',
     chips: ['guarda', 'dopo', 'domani'],
     jingle: 'Dopo, dopo, domani!',
     jingleIds: ['dopo', 'domani'],
   },
   es: {
-    answers: ['¡Mira!', '¡Quieto!', 'Left.', '¡A la izquierda!', 'Mañana.', '¡No, ahora!'],
-    patterns: { stop: [/quiet[oa]s?|basta/i, 'quieto'], direction: [/derecha|izquierda/i, 'izquierda'], now: [/ahora/i, 'ahora'] },
+    answers: ['¡Mira!', '¡Quieto!', 'Left.', '¡A la izquierda!', '¡Ahora!', 'Es la una, Flick.', 'Mañana.', '¡No, ahora!'],
+    timeIds: { 'es la una': 'es_la_una', 'son las': 'son_las', mediodía: 'mediodia', mediodia: 'mediodia', medianoche: 'medianoche' },
+    patterns: { stop: [/quiet[oa]s?|basta/i, 'quieto'], direction: [/derecha|izquierda/i, 'izquierda'], time: [/es la una|son las|mediod[ií]a|medianoche/i, 'es_la_una'], now: [/ahora/i, 'ahora'] },
     line: '¡Mira! Después, mañana... ¿Jamón? Hola, café.',
     chips: ['mira', 'despues', 'manana'],
     jingle: '¡Después, después, mañana!',
@@ -42,8 +45,10 @@ class FountainProvider extends FixtureProvider {
     const answer = JSON.parse(messages.at(-1).content).player_answer;
     return {
       objective_results: ids.map((id) => {
-        const [pattern, vocabularyId] = this.pack.patterns[id];
+        const [pattern, fixedId] = this.pack.patterns[id];
         const match = answer.match(pattern);
+        // Round 050: the time objective has four forms; name the one that matched.
+        const vocabularyId = id === 'time' && match ? this.pack.timeIds[match[0].toLowerCase()] : fixedId;
         return {
           objective_id: id, passed: Boolean(match), feedback: match ? `Passed ${id}.` : `Keep working on ${id}.`,
           vocabulary_evidence: match ? [{ vocabulary_id: vocabularyId, evidence: match[0], quality: 5 }] : [],
@@ -67,7 +72,7 @@ test('the shortest route from the entrance to the fountain takes two moves', () 
 });
 
 for (const code of Object.keys(packs)) {
-  test(`${code}: Flick rejects look, English and tomorrow, accepts stop, a direction and now, and the map marks the fountain complete`, async (t) => {
+  test(`${code}: Flick rejects look, English and tomorrow, accepts stop, a direction, the time and now, and the map marks the fountain complete`, async (t) => {
     const saveDir = await mkdtemp(join(tmpdir(), 'parallang-fountain-'));
     t.after(() => rm(saveDir, { recursive: true, force: true }));
     const content = loadGameContent({ language: code });
@@ -96,13 +101,16 @@ for (const code of Object.keys(packs)) {
       filed.push(turn.spellbook.containmentFiles.map((file) => file.designation).join());
       encounter = turn.encounter;
     }
-    assert.deepEqual(filed, ['', '', '', '', '', 'CM-001'], 'filed by the resolving turn');
+    assert.deepEqual(filed, ['', '', '', '', '', '', '', 'CM-001'], 'filed by the resolving turn');
     assert.deepEqual((await service.getSpellbook(learnerId)).containmentFiles.map((file) => file.name), [packs[code].jingle]);
+    // Round 050: "now" passes its own objective on turn 5 but does not close it while the time is open (in order).
     assert.deepEqual(verdicts, [
-      [['stop', false], ['direction', false], ['now', false]],
-      [['stop', true], ['direction', false], ['now', false]],
-      [['direction', false], ['now', false]],
-      [['direction', true], ['now', false]],
+      [['stop', false], ['direction', false], ['time', false], ['now', false]],
+      [['stop', true], ['direction', false], ['time', false], ['now', false]],
+      [['direction', false], ['time', false], ['now', false]],
+      [['direction', true], ['time', false], ['now', false]],
+      [['time', false], ['now', true]],
+      [['time', true], ['now', false]],
       [['now', false]],
       [['now', true]],
     ]);
@@ -138,5 +146,63 @@ for (const [code, pack] of Object.entries(packs)) {
     const targetForms = objectives.flatMap((objective) => objective.target_vocabulary_ids)
       .flatMap((id) => definition.narrationEntries.find((entry) => entry.id === id).surface_variants.map(fold));
     for (const form of targetForms) assert.ok(!` ${fold(pack.jingle)} `.includes(` ${form} `), `the jingle contains the target form ${form}`);
+  });
+}
+
+// Round 050 (backlog G5): telling the time. One answer can close the time and now together (critique 1.6), and the
+// authored time forms match through the real vocabulary index, typographic apostrophes and missing accents included
+// (critiques 1.2, 1.7, 1.11). Mortimer's quantities already teach tre / tres, which match too.
+const timePacks = {
+  it: {
+    combined: ['Fermati!', 'A sinistra!', 'Adesso, sono le tre!'],
+    matches: [
+      ['È l’una, Flick.', ['luna']], ["e l'una", ['luna']], ['Sono le tre.', ['sono_le', 'tre']], ['Sono le dieci e mezza.', ['sono_le']],
+      ['È mezzogiorno!', ['mezzogiorno']], ['mezzanotte', ['mezzanotte']], ['Che ora è?', ['che_ore_sono']], ['Che ore sono?', ['che_ore_sono']],
+    ],
+  },
+  es: {
+    combined: ['¡Quieto!', '¡A la izquierda!', '¡Ahora, son las tres!'],
+    matches: [
+      ['Es la una, Flick.', ['es_la_una']], ['es la una y media', ['es_la_una']], ['Son las tres y media.', ['son_las', 'tres']],
+      ['¡Es mediodía!', ['mediodia']], ['es mediodia', ['mediodia']], ['¡Es medianoche!', ['medianoche']], ['¿Qué hora es?', ['que_hora_es']],
+    ],
+  },
+};
+
+for (const [code, pack] of Object.entries(timePacks)) {
+  test(`${code}: the time objective sits between direction and now, and its forms match through the real index`, () => {
+    const content = loadGameContent({ language: code });
+    const { objectives } = content.encounters.get('cracked_fountain_letharger').encounter;
+    assert.deepEqual(objectives.map((objective) => [objective.id, objective.next_objective]), [['stop', 'direction'], ['direction', 'time'], ['time', 'now'], ['now', null]]);
+    const time = objectives.find((objective) => objective.id === 'time');
+    assert.equal(time.required_target_groups.length, 1);
+    assert.deepEqual(time.required_target_groups[0], time.target_vocabulary_ids);
+    for (const [text, ids] of pack.matches) {
+      assert.deepEqual(matchCanonicalVocabulary(text, content.vocabulary.entries).map((match) => match.id), ids, text);
+    }
+    // Every accepted example holds a required form; every negative example of the time objective is rejected by
+    // meaning or lacks one (questions and scheduling hold one on purpose, critique 1.5).
+    for (const example of time.accepted_examples) {
+      const ids = matchCanonicalVocabulary(example, content.vocabulary.entries).map((match) => match.id);
+      assert.ok(ids.some((id) => time.target_vocabulary_ids.includes(id)), `accepted example without a time form: ${example}`);
+    }
+  });
+
+  test(`${code}: one answer that says now and the time closes both objectives together`, async (t) => {
+    const saveDir = await mkdtemp(join(tmpdir(), 'parallang-fountain-'));
+    t.after(() => rm(saveDir, { recursive: true, force: true }));
+    const content = loadGameContent({ language: code });
+    const service = new LearningService({ provider: new FountainProvider(code), storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow });
+    const { learnerId } = await service.createOrRecoverLearner();
+    for (const locationId of route(content.world, content.world.start, 'cracked_fountain')) await service.moveTo(learnerId, { locationId });
+    let { encounter } = await service.startEncounter(learnerId, { encounterId: 'cracked_fountain_letharger' });
+    const verdicts = [];
+    for (const message of pack.combined) {
+      const turn = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message });
+      verdicts.push(turn.assessment.objectiveResults.map((r) => [r.objectiveId, r.passed]));
+      encounter = turn.encounter;
+    }
+    assert.deepEqual(verdicts.at(-1), [['time', true], ['now', true]]);
+    assert.equal(encounter.state, 'resolved');
   });
 }

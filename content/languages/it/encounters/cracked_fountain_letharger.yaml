@@ -1,5 +1,6 @@
 # Round 011: The Cracked Fountain (backlog A5). Flick the Letharger distracts the player with riddles; the player
 # takes control: tells it to stop, tells it which way to go, and insists on now rather than later.
+# Round 050 (backlog G5): a fourth objective between direction and now, telling Flick the time.
 id: cracked_fountain_letharger
 character: characters/enemies/letharger_flick.yaml
 location: cracked_fountain
@@ -8,7 +9,7 @@ initial_prompt_template: encounter/greeting.txt
 turn_prompt_template: encounter/dialogue_turn.txt
 defeat_condition:
   type: comprehension_and_response
-  description: "Player tells Flick to stop, tells it which way to go and insists on now, all in Italian"
+  description: "Player tells Flick to stop, tells it which way to go, tells it the time and insists on now, all in Italian"
 max_turns: 20
 resolved_message: "Flick holds still for almost a whole second, points the way you told it, and is gone before you can look straight at it. The fountain is quieter, and the jingle has almost left your head."
 # Round 025 (backlog B3): a containment notice for the Fountain's infohazard, Flick's jingle.
@@ -77,8 +78,41 @@ objectives:
         reason: "A question back is not a direction for Flick."
     reference_meaning: "The player gives Flick a direction."
     hint_limit: 2
-    next_objective: now
+    next_objective: time
     assessment_reference_ids: ["treccani-destra", "treccani-sinistra", "treccani-dritto"]
+  - id: time
+    prompt: "Flick swears it is far too early to do anything. Tell it what time it is, in Italian."
+    intent: "The fountain's clock stopped long ago, and Flick insists it is always far too early to do anything. The player tells Flick what time it is now, in Italian: an hour, or midday, or midnight. Flick may ask what time it is, but never says a time itself."
+    target_vocabulary_ids: ["sono_le", "luna", "mezzogiorno", "mezzanotte"]
+    required_target_groups:
+      - ["sono_le", "luna", "mezzogiorno", "mezzanotte"]
+    grammar_constraints:
+      - "The player's own statement of the current time, in Italian, with one of: sono le and an hour (minutes optional), è l'una, mezzogiorno or mezzanotte. The hour is an Italian number word or digits; a clear hour with an agreement slip passes, and the feedback may name the slip in English."
+      - "Fails: now without a time (that is the next objective), a question back, scheduling something for a time instead of saying what time it is, the bare starter without an hour, an impossible hour, an English number, quotations and English-only times."
+    accepted_examples:
+      - "Sono le tre."
+      - "È l'una, Flick."
+      - "È mezzogiorno!"
+      - "Sono le dieci e mezza."
+    negative_examples:
+      - text: "Adesso!"
+        reason: "It says now, not what time it is."
+      - text: "Che ore sono?"
+        reason: "A question back is not the time."
+      - text: "Sono le tre?"
+        reason: "A question back, even with a time in it, is not telling Flick the time."
+      - text: "Lo faccio a mezzogiorno."
+        reason: "It schedules something for midday; it does not say what time it is now."
+      - text: "Sono le three."
+        reason: "The hour is an English number."
+      - text: "Sono le."
+        reason: "The starter alone gives no hour."
+      - text: "It is three o'clock."
+        reason: "English-only; the time must be in Italian."
+    reference_meaning: "The player tells Flick what time it is."
+    hint_limit: 2
+    next_objective: now
+    assessment_reference_ids: ["treccani-ora", "treccani-mezzogiorno", "treccani-mezzanotte"]
   - id: now
     prompt: "Flick says you can do it later. Insist on now, in Italian."
     intent: "The player refuses to put it off and says now, in Italian. Flick keeps humming its jingle, \"Dopo, dopo, domani!\" (later, later, tomorrow), a mild brainrot infohazard that makes listeners put things off. Repeating the jingle or agreeing to later does not pass; a refusal that names later or tomorrow and insists on now passes."
@@ -101,6 +135,8 @@ objectives:
         reason: "English-only; the answer must be in Italian."
       - text: "Dopo, dopo, domani!"
         reason: "Humming Flick's jingle back puts it off; it does not insist on now."
+      - text: "Che ora è?"
+        reason: "Here ora means hour: it asks the time and does not insist on now."
     reference_meaning: "The player insists on doing it now."
     hint_limit: 2
     next_objective: null

@@ -28,5 +28,6 @@ language_profile:
 defeat_condition:
   type: "comprehension_and_response"
   description: >
-    Player must tell Flick to stop, tell it which way to go, and insist on doing it now rather than later.
+    Player must tell Flick to stop, tell it which way to go, tell it the time (round 050), and insist on doing it
+    now rather than later.
 saveable: true

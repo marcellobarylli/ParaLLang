@@ -1,6 +1,7 @@
 # Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
 # were not opened from the build container; listed for the owner's content review.
-version: fountain-riddles-es-v1
+# Round 050 (backlog G5): telling the time (son las, es la una, mediodía, medianoche) and Flick's question.
+version: fountain-riddles-es-v2
 references:
   - id: rae-quieto
     title: 'Real Academia Española, Diccionario de la lengua española: quieto'
@@ -26,6 +27,15 @@ references:
   - id: rae-manana
     title: 'Real Academia Española, Diccionario de la lengua española: mañana'
     url: https://dle.rae.es/ma%C3%B1ana
+  - id: rae-hora
+    title: 'Real Academia Española, Diccionario de la lengua española: hora'
+    url: https://dle.rae.es/hora
+  - id: rae-mediodia
+    title: 'Real Academia Española, Diccionario de la lengua española: mediodía'
+    url: https://dle.rae.es/mediod%C3%ADa
+  - id: rae-medianoche
+    title: 'Real Academia Española, Diccionario de la lengua española: medianoche'
+    url: https://dle.rae.es/medianoche
 entries:
   - id: quieto
     kind: word
@@ -157,3 +167,79 @@ entries:
     note: Mañana also means morning (la mañana).
     reference_ids:
       - rae-manana
+  - id: son_las
+    kind: phrase
+    target: son las
+    part_of_speech: verb_phrase
+    accepted_translations:
+      - it is
+      - it is o'clock
+    surface_variants:
+      - son las
+    accent_insensitive: false
+    example:
+      target: Son las tres.
+      english: It is three o'clock.
+    note: "Hours are plural: son las dos, son las tres (las horas, the hours). One o'clock is singular: es la una."
+    reference_ids:
+      - rae-hora
+  - id: es_la_una
+    kind: phrase
+    target: es la una
+    part_of_speech: verb_phrase
+    accepted_translations:
+      - it is one o'clock
+      - one o'clock
+    surface_variants:
+      - es la una
+      - la una
+    accent_insensitive: false
+    example:
+      target: Es la una, Flick.
+      english: It is one o'clock, Flick.
+    note: "Singular, because una (one) is one hour: es la una, but son las dos."
+    reference_ids:
+      - rae-hora
+  - id: mediodia
+    kind: word
+    target: mediodía
+    part_of_speech: noun
+    accepted_translations:
+      - midday
+      - noon
+    surface_variants:
+      - mediodía
+    accent_insensitive: false
+    example:
+      target: Es mediodía.
+      english: It is midday.
+    reference_ids:
+      - rae-mediodia
+  - id: medianoche
+    kind: word
+    target: medianoche
+    part_of_speech: noun
+    accepted_translations:
+      - midnight
+    surface_variants:
+      - medianoche
+    accent_insensitive: false
+    example:
+      target: Es medianoche.
+      english: It is midnight.
+    reference_ids:
+      - rae-medianoche
+  - id: que_hora_es
+    kind: phrase
+    target: qué hora es
+    part_of_speech: question
+    accepted_translations:
+      - what time is it
+    surface_variants:
+      - qué hora es
+    accent_insensitive: false
+    example:
+      target: ¿Qué hora es, Flick?
+      english: What time is it, Flick?
+    reference_ids:
+      - rae-hora
