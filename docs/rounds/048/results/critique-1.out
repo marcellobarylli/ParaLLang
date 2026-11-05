@@ -1,0 +1,445 @@
+Reading additional input from stdin...
+OpenAI Codex v0.166.0
+--------
+workdir: /work/ParaLLang/docs/rounds/048/results
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: high
+reasoning summaries: none
+session id: 01a1ad9a-c287-7a01-b890-be9272d905b7
+--------
+user
+You are an adversarial reviewer. Do not run any commands; everything you need is in the bundle on stdin (cat -n copies of the plan and the relevant files of the ParaLLang repo, a language-learning game in which LLM-voiced NPCs speak a mix of English and the target language, Italian or Spanish, and the player must say target words to pass objectives). Critique docs/rounds/048/trail/plan-v1.md: three deeper party conversations, content only, reusing round 047's engine. Look for: target words that are wrong, unnatural or ambiguous in Italian or Spanish for the situation; collisions with English words or with other entries; leak risks (an NPC saying the target before the player, especially "sola"); grading ambiguity (negation-required targets, gender, addressee); test gaps; anything that will make the live runs fail or mislead. Number each finding, label it Error (must fix), Risk, or Optional, and give a concrete fix. Be concise.
+
+<stdin>
+=== docs/rounds/048/trail/plan-v1.md
+     1	# Round 048 plan v1: deeper tiers for Mortimer, Flick and Marginalia (backlog G6)
+     2	
+     3	Autonomous round (no owner). Round 047 built relationship tiers: a party conversation with `after_conversations: N`
+     4	is offered by Talk once the member has finished N conversations (deepest wins); Gerald's confidence is the only one
+     5	(at 3, when his Dead Branch fragment is found). This round adds one deeper tier at 3 for each other saveable member,
+     6	in both packs, content only. Each tier picks up the member's own third-conversation fragment of *The Journey*
+     7	(found at the same count), but the intent does not assume the player read it (as round 047, critique 1.6).
+     8	
+     9	## Content (both packs; each: an encounter file with `party_of`, `after_conversations: 3`, and a vocabulary file)
+    10	
+    11	1. **Mortimer's oath** (`mortimer_oath`, party_of `butchers_stall_charcutier`; fragment: the forbidden herd, "whoever
+    12	   cuts meat asks permission"). In his greeting Mortimer (no introduction, an old companion) admits, knife shaking,
+    13	   that he has never once asked a ham for permission and fears he is no better than Journathan's hungry sailors.
+    14	   - `calm_him`: tell him not to worry / to calm down: it *tranquillo* (variants tranquillo, tranquilla, tranquilli),
+    15	     es *tranquilo* (tranquilo, tranquila, tranquilos). Mortimer is male: tranquillo / tranquilo.
+    16	   - `promise`: he asks the player to promise to never touch the sacred herds (only lesser hams): it *prometto*
+    17	     (variants prometto; "lo prometto", "te lo prometto" match through the bare form), es *prometo*.
+    18	2. **Flick's lotus** (`flick_lotus`, party_of `cracked_fountain_letharger`; fragment: the lotus eaters, "five
+    19	   minutes"). In its greeting Flick (old companion) has lain down in the sand of the fountain's basin, eyes closing,
+    20	   murmuring "five minutes" like a lotus eater, and admits it is afraid it will forget the way.
+    21	   - `wake_up`: tell it to wake up: it *svegliati* (svegliati), es *despierta* (despierta, despiértate, despiertate).
+    22	   - `courage`: Flick, upright, says it cannot do it; encourage it: it *coraggio* (coraggio), es *ánimo* (ánimo,
+    23	     animo).
+    24	3. **Marginalia's folded page** (`marginalia_folded_page`, party_of `old_bookshop_bookworm`; fragment: the old dog
+    25	   who waited and recognised Journathan). In her greeting Marginalia (old companion) has closed the book and her
+    26	   eyes, and asks, like the old dog at the door, who is there.
+    27	   - `here_i_am`: answer "here I am": it *eccomi* (eccomi), es *aquí estoy* (aquí estoy, aqui estoy).
+    28	   - `not_alone`: she admits she has waited for a reader for a very long time, alone among the pages; tell her she is
+    29	     not alone: it *sola* in "non sei sola", es *sola* in "no estás sola". The target is *sola*; the negation is
+    30	     required (constraint): "Sei sola" / "Estás sola" fail.
+    31	
+    32	Each objective: grammar constraints (who is addressed, gender), accepted examples including a variant form,
+    33	negative examples (English-only, quotation, talking about the word, negations where they invert the meaning),
+    34	`reference_meaning`, `hint_limit: 2`, an assessment reference URL (Treccani / RAE / Wiktionary). Intents say "in
+    35	his/her/its greeting he/she/it does not introduce himself" (round 047 Amendment 1) and that the NPC does not say the
+    36	target before the player.
+    37	
+    38	Word checks done before drafting: no fragment of either pack holds a word starting with the new stems (it *tran*,
+    39	*prom*, *sveg*, *cora*, *ecco*, *sola*; es *tran*, *prom*, *desp*, *anim*, *aqui*, *esto*, *sola*). Rejected for a
+    40	stem clash with a fragment: *sempre*/*siempre* (Sirens), *ricorda* (old dog: *riconobbero*), *aspetto* (old dog),
+    41	*resto* (first stitch: *restava*), es *me quedo* (*quedaba*), *ti voglio bene* (lotus: *voglia*), *continua*
+    42	(*contento*). Overlap with other entries (party-conversation test): es *sola* vs *café solo* are different whole
+    43	words; *estoy* is a common word, but the form is the whole phrase *aquí estoy*.
+    44	
+    45	## Tests
+    46	
+    47	- `party-conversation.test.js`: the deeper tiers are now four (`gerald_confidence`, `mortimer_oath`, `flick_lotus`,
+    48	  `marginalia_folded_page`, each at 3 on its home); the conversation id list; party entries 11 → 17 per pack; the
+    49	  overlap and English-word checks cover the new forms; the NOT_IN_PARTY loop includes the new ids.
+    50	- `lore-fragments.test.js`: the stems list gains the new stems; every fragment still passes.
+    51	- `encounters.test.js`, `language-engine.test.js`: encounter key list and aggregate vocabulary version pins.
+    52	- `party-tiers.test.js`: for each of the three members, count 2 offers the first tier, count 3 the new one
+    53	  (`conversationTier` 3), and a scripted resolution with a fixture grader counts one conversation.
+    54	- Gerald's golden prompts unchanged (no template change).
+    55	
+    56	## Live runs
+    57	
+    58	codex-cli, `play-market.js --party --member <home> --tier 3`, it and es for each member (6 runs, about 12 calls
+    59	each). Scripts: an English line (should fail), a variant form (it *tranquilla*? no: Mortimer is addressed, so
+    60	*Tranquillo, Mortimer.*; Flick: es *¡Despiértate!*; Marginalia: es *¡Aqui estoy!* without accent), then the second
+    61	target. The bar: all resolve; the English line fails; the variant passes; each greeting is not a first meeting and
+    62	carries the tier's opening; `leak-scan.js` and a reading of every NPC line find no target form before its objective
+    63	is met (especially *sola*, which an NPC may say about herself: "sono sola").
+=== content/languages/it/encounters/gerald_confidence.yaml (round 047 template)
+     1	id: gerald_confidence
+     2	character: characters/enemies/imp_coffee.yaml
+     3	party_of: imp_coffee_greeting
+     4	# Round 047 (backlog G4): offered instead of the coffee break once Gerald has finished three conversations, after
+     5	# he has recited the Dead Branch passage.
+     6	after_conversations: 3
+     7	type: dialogue
+     8	initial_prompt_template: encounter/greeting.txt
+     9	turn_prompt_template: encounter/dialogue_turn.txt
+    10	defeat_condition:
+    11	  type: comprehension_and_response
+    12	  description: "Player tells Gerald he is a friend and raises a toast with him, in Italian"
+    13	max_turns: 20
+    14	resolved_message: "Gerald says the coffee is too bitter today. His eyes are a little wet. It is the steam, he says."
+    15	escalation:
+    16	  target_ratio_increase_per_turn: 0.05
+    17	objectives:
+    18	  - id: call_friend
+    19	    prompt: "Gerald is brooding over the word that died with the Dead Branch. Tell him he is your friend, using Italian."
+    20	    intent: "Gerald has travelled with the player for several coffee breaks, so in his greeting he does not introduce himself or describe the place: he greets the player as an old companion. Tonight he is quietly morose: in his greeting, in a line or two, he mentions a dark, bitter drink from the Dead Branch, his old home, whose name died with it, so nobody remembers the word. The player may not know the story. He would never admit he wants to hear that the player considers him a friend, and he does not suggest the word for friend."
+    21	    target_vocabulary_ids: [amico]
+    22	    required_target_groups:
+    23	      - [amico]
+    24	    grammar_constraints:
+    25	      - "The player says, in their own words, with an Italian word for friend, one of: Gerald is their friend (amico, as Gerald is male); the player is Gerald's friend (amico or amica, by the player's own gender); the two of them are friends (amici)."
+    26	      - "Reject English-only lines, negations (non sei mio amico), quotations, definitions of the word, and lines about someone other than Gerald and the player."
+    27	    accepted_examples:
+    28	      - "Sei mio amico."
+    29	      - "Gerald, sei un amico."
+    30	      - "Siamo amici, Gerald."
+    31	      - "Sono tua amica."
+    32	      - "You are my amico."
+    33	    negative_examples:
+    34	      - text: "You are my friend."
+    35	        reason: "English-only; it does not use an Italian word for friend."
+    36	      - text: "Non sei mio amico."
+    37	        reason: "A negation is not what the player is asked to say."
+    38	      - text: "Gerald, sei mia amica."
+    39	        reason: "Gerald is male; amica does not describe him."
+    40	      - text: "Amico means friend."
+    41	        reason: "It discusses the word rather than telling Gerald."
+    42	    reference_meaning: "The player tells Gerald that he is their friend."
+    43	    hint_limit: 2
+    44	    next_objective: raise_toast
+    45	    assessment_reference_ids: [treccani-amico]
+    46	  - id: raise_toast
+    47	    prompt: "Raise your cups together. Make the toast, using Italian."
+    48	    intent: "Gerald lifts his surgically attached espresso cup towards the player's cup, to the friendship and to the dead word, and waits for the player to make the toast. He does not say the toast first."
+    49	    target_vocabulary_ids: [cin_cin]
+    50	    required_target_groups:
+    51	      - [cin_cin]
+    52	    grammar_constraints:
+    53	      - "The player makes an Italian toast as the cups touch, in their own words."
+    54	      - "Reject English-only toasts, quotations, and lines that only describe toasting."
+    55	    accepted_examples:
+    56	      - "Cin cin!"
+    57	      - "Cin cin, Gerald."
+    58	      - "Cincin, to the dead word."
+    59	    negative_examples:
+    60	      - text: "Cheers!"
+    61	        reason: "English-only; it does not use the Italian toast."
+    62	      - text: "In Italy they say cin cin."
+    63	        reason: "It describes the toast rather than making it."
+    64	    reference_meaning: "The player makes a toast with Gerald."
+    65	    hint_limit: 2
+    66	    next_objective: null
+    67	    assessment_reference_ids: [wiktionary-cin-cin]
+=== content/languages/es/vocabulary/gerald_confidence.yaml
+     1	version: gerald-confidence-es-v1
+     2	references:
+     3	  - id: rae-amigo
+     4	    title: "RAE, Diccionario de la lengua española: amigo"
+     5	    url: "https://dle.rae.es/amigo"
+     6	  - id: rae-salud
+     7	    title: "RAE, Diccionario de la lengua española: salud"
+     8	    url: "https://dle.rae.es/salud"
+     9	entries:
+    10	  - id: amigo
+    11	    kind: word
+    12	    target: "amigo"
+    13	    part_of_speech: noun
+    14	    accepted_translations: ["friend"]
+    15	    surface_variants: ["amigo", "amiga", "amigos"]
+    16	    accent_insensitive: false
+    17	    example: { target: "Eres mi amigo, Gerald.", english: "You are my friend, Gerald." }
+    18	    note: "Amigo for a man, amiga for a woman, amigos for several. 'Eres mi amigo' means 'you are my friend'."
+    19	    reference_ids: [rae-amigo]
+    20	  - id: salud
+    21	    kind: word
+    22	    target: "salud"
+    23	    part_of_speech: interjection
+    24	    accepted_translations: ["cheers"]
+    25	    surface_variants: ["salud"]
+    26	    accent_insensitive: false
+    27	    example: { target: "¡Salud, Gerald!", english: "Cheers, Gerald!" }
+    28	    note: "Literally 'health'. Said as a toast, when the glasses (or cups) touch."
+    29	    reference_ids: [rae-salud]
+=== content/languages/es/lore/fragments.yaml
+     1	# Round 030 (backlog A9): fragments of The Journey, found after an encounter and kept in the Spellbook. Optional to
+     2	# translate (parallang_obsidian/CHARACTERS.md, Journathan). Authored, not generated. No fragment contains an
+     3	# objective target of the pack (server test), so the Spellbook may show them at any time. `title`, `found` and
+     4	# `translation` are the same English text in every pack (tested). Pending a native speaker's review.
+     5	# Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
+     6	fragments:
+     7	  - id: journey_first_stitch
+     8	    title: The first stitch
+     9	    found_after: old_bookshop_bookworm
+    10	    found: "Folded inside the battered copy of The Journey that Marginalia sold you, in a hand that changes language halfway through a word."
+    11	    text: >-
+    12	      Cada vez que Journathan pasaba de una rama a la siguiente, un hilo se quedaba detrás de él. Veinte inviernos de travesías:
+    13	      veinte inviernos de hilos. Dicen que los más antiguos todavía sostienen la trama del mundo. Quizá la primera
+    14	      puntada fue suya.
+    15	    translation: >-
+    16	      Each time Journathan passed from one branch to another, a thread stayed behind him. Twenty winters of crossings:
+    17	      twenty winters of threads. They say the oldest still hold up the weave of the world. Perhaps the first stitch
+    18	      was his.
+    19	    glossary:
+    20	      - { word: "rama", meaning: "branch" }
+    21	      - { word: "hilo", meaning: "thread" }
+    22	      - { word: "travesías", meaning: "crossings" }
+    23	      - { word: "todavía", meaning: "even now, yet" }
+    24	      - { word: "sostienen", meaning: "they hold up" }
+    25	      - { word: "trama", meaning: "weave; also plot" }
+    26	      - { word: "puntada", meaning: "stitch" }
+    27	  - id: journey_sirens
+    28	    title: The Sirens
+    29	    found_after: cracked_fountain_letharger
+    30	    found: "Scratched into the rim of the fountain, under the plaque, at exactly the height of the corner of your eye."
+    31	    text: >-
+    32	      Las sirenas cantaban en los márgenes de la vista, donde el ojo nunca llega del todo. Journathan se hizo atar
+    33	      al mástil del barco: deseaba escuchar sin desviarse hacia ellas. Los marineros, con cera en los oídos, remaban
+    34	      y no oían nada. El canto, dicen, era siempre el mismo estribillo, repetido sin fin.
+    35	    translation: >-
+    36	      The Sirens sang at the edges of sight, where the eye never quite reaches. Journathan had himself tied to the
+    37	      ship's mast: he wanted to listen without steering towards them. The sailors, wax in their ears, rowed and
+    38	      heard nothing. The song, they say, was always the same refrain, repeated forever.
+    39	    glossary:
+    40	      - { word: "márgenes", meaning: "edges" }
+    41	      - { word: "se hizo atar", meaning: "had himself tied" }
+    42	      - { word: "mástil", meaning: "mast" }
+    43	      - { word: "desviarse", meaning: "to turn aside, to steer off" }
+    44	      - { word: "cera", meaning: "wax" }
+    45	      - { word: "remaban", meaning: "they rowed" }
+    46	      - { word: "estribillo", meaning: "refrain" }
+    47	  - id: journey_shroud
+    48	    title: The shroud
+    49	    found_after: the_rift_errata
+    50	    found: "Left behind when the Rift narrowed to a hairline: a loose thread, and the words that were stitched along it."
+    51	    text: >-
+    52	      En su isla, la esposa de Journathan tejía un sudario de día y lo deshacía de noche. Los pretendientes creían
+    53	      que ganaba tiempo. En verdad mantenía separadas las ramas del mundo, puntada a puntada, hasta que él
+    54	      volviera.
+    55	    translation: >-
+    56	      On her island, Journathan's wife wove a shroud by day and unpicked it by night. The suitors believed she was
+    57	      buying time. In truth she was holding the branches of the world apart, stitch by stitch, until he came
+    58	      back.
+    59	    glossary:
+    60	      - { word: "tejía", meaning: "she wove" }
+    61	      - { word: "sudario", meaning: "shroud" }
+    62	      - { word: "deshacía", meaning: "she undid, unpicked" }
+    63	      - { word: "pretendientes", meaning: "suitors" }
+    64	      - { word: "ganaba tiempo", meaning: "she was buying time" }
+    65	      - { word: "separadas", meaning: "apart, separated" }
+    66	      - { word: "hasta que", meaning: "until" }
+    67	  - id: journey_dead_branch
+    68	    title: The word for it
+    69	    found_after: imp_coffee_greeting
+    70	    after_conversations: 3
+    71	    found: "On your third coffee break, Gerald recites a passage he swears he learned as a barista in the Dead Branch."
+    72	    text: >-
+    73	      En la Rama Muerta, Journathan bebió algo oscuro y amargo, servido en tazas diminutas. Quien lo probaba lloraba.
+    74	      La palabra para decirlo ya no existe: murió con la rama, y hoy no la recuerda ni un diccionario.
+    75	    translation: >-
+    76	      In the Dead Branch, Journathan drank something dark and bitter, served in very small cups. Whoever tasted it
+    77	      wept. The word for it no longer exists: it died with the branch, and today not even a dictionary remembers it.
+    78	    glossary:
+    79	      - { word: "Rama Muerta", meaning: "Dead Branch" }
+    80	      - { word: "bebió", meaning: "he drank (pretérito of beber)" }
+    81	      - { word: "amargo", meaning: "bitter" }
+    82	      - { word: "tazas", meaning: "cups" }
+    83	      - { word: "probaba", meaning: "tasted" }
+    84	      - { word: "lloraba", meaning: "wept" }
+    85	      - { word: "ni", meaning: "not even" }
+    86	      - { word: "diccionario", meaning: "dictionary" }
+    87	  - id: journey_forbidden_herd
+    88	    title: The forbidden herd
+    89	    found_after: butchers_stall_charcutier
+    90	    after_conversations: 3
+    91	    found: "On your third tasting, Mortimer lowers his voice and recites the one passage of The Journey he refuses to slice."
+    92	    text: >-
+    93	      En la isla del Sol pastaban rebaños sagrados. Journathan dijo a sus compañeros que no los tocaran. Pero el hambre
+    94	      venció al juramento: asaron las reses, y la carne mugía en el asador. Desde entonces, quien corta la carne
+    95	      pide permiso.
+    96	    translation: >-
+    97	      On the island of the Sun grazed sacred herds. Journathan told his companions not to touch them. But hunger was
+    98	      stronger than the oath: they roasted the beasts, and the meat lowed on the spit. Since then, whoever cuts meat
+    99	      asks permission.
+   100	    glossary:
+   101	      - { word: "pastaban", meaning: "grazed" }
+   102	      - { word: "rebaños", meaning: "herds" }
+   103	      - { word: "juramento", meaning: "oath" }
+   104	      - { word: "asaron", meaning: "they roasted" }
+   105	      - { word: "mugía", meaning: "lowed, mooed" }
+   106	      - { word: "asador", meaning: "spit (for roasting)" }
+   107	      - { word: "permiso", meaning: "permission" }
+   108	  - id: journey_lotus
+   109	    title: The lotus
+   110	    found_after: cracked_fountain_letharger
+   111	    after_conversations: 3
+   112	    found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
+   113	    text: >-
+   114	      En una playa tibia, algunos marineros de Journathan comieron la flor del loto. Olvidaron el rumbo, el regreso,
+   115	      hasta las ganas de partir. «Cinco minutos», decían, tumbados en la arena, y luego otros cinco. Journathan tuvo
+   116	      que arrastrarlos a las naves, y ellos lloraban.
+   117	    translation: >-
+   118	      On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
+   119	      the wish to leave. "Five minutes," they said, lying on the sand, and then five more. Journathan had to drag them
+   120	      to the ships, and they wept.
+   121	    glossary:
+   122	      - { word: "tibia", meaning: "lukewarm" }
+   123	      - { word: "loto", meaning: "lotus" }
+   124	      - { word: "rumbo", meaning: "course, heading" }
+   125	      - { word: "hasta", meaning: "even; also until" }
+   126	      - { word: "tumbados", meaning: "lying down" }
+   127	      - { word: "arena", meaning: "sand" }
+   128	      - { word: "arrastrarlos", meaning: "to drag them" }
+   129	  - id: journey_old_dog
+   130	    title: The old dog
+   131	    found_after: old_bookshop_bookworm
+   132	    after_conversations: 3
+   133	    found: "On your third reading, Marginalia turns to a page she keeps folded down and reads it without looking."
+   134	    text: >-
+   135	      Journathan volvió a su isla vestido de mendigo, y los suyos no lo reconocieron. Solo un perro viejo, echado sobre
+   136	      el estiércol delante de la puerta, levantó las orejas y movió la cola. Lo había esperado todo aquel tiempo. Luego
+   137	      cerró los ojos, contento.
+   138	    translation: >-
+   139	      Journathan came back to his island dressed as a beggar, and his own people did not know him. Only an old dog,
+   140	      lying on the dung heap before the door, raised its ears and moved its tail. It had waited for him all that time.
+   141	      Then it closed its eyes, content.
+   142	    glossary:
+   143	      - { word: "mendigo", meaning: "beggar" }
+   144	      - { word: "reconocieron", meaning: "they recognised" }
+   145	      - { word: "perro", meaning: "dog" }
+   146	      - { word: "estiércol", meaning: "dung heap" }
+   147	      - { word: "levantó", meaning: "raised" }
+   148	      - { word: "cola", meaning: "tail" }
+   149	      - { word: "contento", meaning: "content, happy" }
+=== server/test/party-conversation.test.js lines 200-245
+     1	});
+     2	
+     3	// Round 023: every saveable character has one party conversation, and their words do not collide.
+     4	const fold = (form) => form.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}' ]/gu, ' ').replace(/\s+/g, ' ').trim();
+     5	// Round 023: the one known overlap. Gerald's "buon" (round 022, "un buon caffè") is the same word as the "buon" of
+     6	// Portia's "buon giorno" (es: "buen" in "buen día"); a "good" chip on it is correct, and dropping it would refuse "Un buon caffè!".
+     7	const ALLOWED_OVERLAPS = new Set(['it:buono:buon:buongiorno:buon giorno', 'es:bueno:buen:buenos_dias:buen dia']);
+     8	const ENGLISH = ['mas', 'juntas', 'rico', 'rica', 'bella', 'bonito', 'lee', 'piano', 'chili', 'soy', 'due', 'media', 'more', 'go'];
+     9	
+    10	test('each saveable character has exactly one first party conversation and the others none; Gerald has a deeper one at 3', () => {
+    11	  for (const code of ['it', 'es']) {
+    12	    const { encounters } = loadGameContent({ language: code });
+    13	    const conversations = [...encounters.values()].filter(({ encounter }) => encounter.party_of);
+    14	    for (const home of [...encounters.values()].filter(({ encounter }) => !encounter.party_of)) {
+    15	      const own = conversations.filter(({ encounter }) => encounter.party_of === home.encounter.id && encounter.after_conversations === undefined);
+    16	      assert.equal(own.length, home.character.saveable ? 1 : 0, `${code} ${home.encounter.id}`);
+    17	    }
+    18	    // Round 047 (backlog G4): the only deeper tier so far.
+    19	    assert.deepEqual(conversations.filter(({ encounter }) => encounter.after_conversations !== undefined)
+    20	      .map(({ encounter }) => [encounter.id, encounter.party_of, encounter.after_conversations]), [['gerald_confidence', 'imp_coffee_greeting', 3]]);
+    21	    assert.deepEqual(conversations.map(({ encounter }) => encounter.id).sort(), ['flick_slow_walk', 'gerald_coffee_break', 'gerald_confidence', 'marginalia_fragment', 'mortimer_tasting']);
+    22	  }
+    23	});
+    24	
+    25	test('party vocabulary has no English-word forms and does not overlap other entries in its pack', () => {
+    26	  for (const code of ['it', 'es']) {
+    27	    const { encounters, vocabulary } = loadGameContent({ language: code });
+    28	    const partyIds = new Set([...encounters.values()].filter(({ encounter }) => encounter.party_of)
+    29	      .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
+    30	    const formsOf = (entry) => entry.surface_variants.map(fold);
+    31	    const party = vocabulary.entries.filter((entry) => partyIds.has(entry.id));
+    32	    assert.equal(party.length, 11, `${code}: five conversations' targets (3 + 2 + 2 + 2 + 2)`);
+    33	    for (const entry of party) {
+    34	      for (const form of formsOf(entry)) {
+    35	        // Whole forms: the matcher matches a phrase as a whole, so "un poco más" is safe where bare "más" is not.
+    36	        assert.ok(!ENGLISH.includes(form), `${code} ${entry.id}: "${form}" is an English word`);
+    37	        for (const other of vocabulary.entries.filter((candidate) => candidate.id !== entry.id)) {
+    38	          for (const otherForm of formsOf(other)) {
+    39	            const clash = ` ${form} `.includes(` ${otherForm} `) || ` ${otherForm} `.includes(` ${form} `);
+    40	            if (ALLOWED_OVERLAPS.has(`${code}:${entry.id}:${form}:${other.id}:${otherForm}`)) continue;
+    41	            assert.ok(!clash, `${code}: ${entry.id} "${form}" overlaps ${other.id} "${otherForm}"`);
+    42	          }
+    43	        }
+    44	      }
+    45	    }
+    46	  }
+=== server/test/lore-fragments.test.js lines 50-85
+     1	    assert.deepEqual(leaks(content, glossed).meanings, [fragment.glossary[0].word], `${code} planted meaning`);
+     2	  }
+     3	});
+     4	
+     5	// Round 032 (critique 1.5): a conversation fragment shows during later conversations with its member, so its text
+     6	// and glossary hold no word starting with a stem (first 4 folded letters) of a party conversation's targets. Round 033
+     7	// (critique 1.2, 1.3): every word of 4 letters or more of a multi-word form gives a stem, and every fragment is checked
+     8	// against every party conversation, since the Spellbook shows all found texts during any of them.
+     9	function partyStems(content) {
+    10	  const ids = [...content.encounters.values()].filter(({ encounter }) => encounter.party_of)
+    11	    .flatMap(({ encounter }) => encounter.objectives.flatMap((o) => o.target_vocabulary_ids));
+    12	  return [...new Set(ids.flatMap((id) => content.vocabularyById.get(id).surface_variants)
+    13	    .flatMap((form) => foldWords(form).trim().split(' ')).filter((word) => word.length >= 4).map((word) => word.slice(0, 4)))];
+    14	}
+    15	function stemLeaks(content, fragment) {
+    16	  const words = foldWords([fragment.text, ...fragment.glossary.map((entry) => entry.word)].join(' ')).trim().split(' ');
+    17	  return partyStems(content).filter((stem) => words.some((word) => word.startsWith(stem)));
+    18	}
+    19	
+    20	test('no fragment holds a stem of any party conversation\'s targets; the check is live', () => {
+    21	  const expected = {
+    22	    it: ['buon', 'otti', 'graz', 'mill', 'piac', 'anco', 'andi', 'insi', 'mera', 'nuov', 'amic', 'cinc'],
+    23	    es: ['buen', 'deli', 'grac', 'much', 'gust', 'poco', 'vamo', 'junt', 'prec', 'otra', 'amig', 'salu'],
+    24	  };
+    25	  for (const code of ['it', 'es']) {
+    26	    const content = loadGameContent({ language: code });
+    27	    assert.deepEqual(partyStems(content).sort(), expected[code].sort(), `${code} stems, multi-word forms split`);
+    28	    assert.equal(content.fragments.filter((f) => f.after_conversations !== undefined).length, 4, 'round 033: Gerald, Mortimer, Flick, Marginalia');
+    29	    for (const each of content.fragments) assert.deepEqual(stemLeaks(content, each), [], `${code} ${each.id}`);
+    30	    const herd = content.fragments.find((f) => f.id === 'journey_forbidden_herd');
+    31	    const planted = code === 'it' ? [['Era buonissimo.', 'buon'], ['Insistevano.', 'insi']] : [['Era buenísimo.', 'buen'], ['Le gustaba.', 'gust'], ['Se juntaron.', 'junt']];
+    32	    for (const [sentence, stem] of planted) assert.deepEqual(stemLeaks(content, { ...herd, text: `${herd.text} ${sentence}` }), [stem], `${code} planted ${stem}`);
+    33	  }
+    34	});
+    35	
+    36	test('foldWords splits elisions and punctuation, folds accents and case', () => {
+</stdin>
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+I’ll review the supplied bundle only, focusing on language, grading ambiguity, leaks, and live-run coverage.
+codex
+1. **Risk — `sola` practically invites a leak (lines 28–36).** Marginalia can naturally say “Sono sola” / “Estoy sola” while explaining her loneliness. Specify an English opening such as “I’ve waited so long for someone to read with me,” and explicitly prohibit target forms in dialogue **and narration**, including the transition after `here_i_am`.
+
+2. **Risk — negation presence does not establish the intended meaning (lines 29–30).** “Non so perché sei sola” / “No sé por qué estás sola” contain negation but still assert that she is alone. Require the player to deny **Marginalia’s being alone**. Add those negatives, wrong-speaker negatives (“Non sono sola” / “No estoy sola”), and wrong-gender negatives alongside the positive examples.
+
+3. **Risk — the oath needs careful negation and commitment grading (lines 16–17).** “Prometto di non toccare…” / “Prometo no tocar…” must pass; “Non prometto…” / “No prometo…” and promises **to touch** the herds must fail. Explicitly permit a bare “Prometto” / “Prometo” as an answer to Mortimer’s request, while requiring any expanded promise to preserve that commitment.
+
+4. **Risk — Mortimer’s registered variants include inappropriate answers (lines 14–15).** `tranquilla` / `tranquila` address a female; the plurals change the addressee. The plan acknowledges this, but vocabulary recognition alone will still find them. Remove unsupported forms or make them explicit grading negatives. The proposed “Tranquillo, Mortimer” live input exercises the canonical form, so it cannot demonstrate alternate-form acceptance.
+
+5. **Risk — leaks can come from earlier objectives (lines 35–36, 62–63).** Flick may encourage itself with `coraggio` / `ánimo` before the second objective; Mortimer may say `prometto` / `prometo` while discussing his oath. Each intent should prohibit **all still-unmet targets**, not merely its own. Inspect greetings, failure replies, and objective-transition replies.
+
+6. **Risk — the tests can pass while semantic grading fails (lines 45–63).** Fixture graders prove progression wiring; the live scripts test an English rejection only before the first target. Add live probes at the second objective: affirmative “Sei sola” / “Estás sola,” misplaced negation, wrong speaker/gender, and an inverted oath. Verify each fails **without advancing**, then submit the valid answer. Test accented and unaccented Spanish forms explicitly.
+
+The supplied base translations are otherwise natural; the bundle demonstrates no actual whole-form collision among these new targets.
+tokens used
+13,203
+1. **Risk — `sola` practically invites a leak (lines 28–36).** Marginalia can naturally say “Sono sola” / “Estoy sola” while explaining her loneliness. Specify an English opening such as “I’ve waited so long for someone to read with me,” and explicitly prohibit target forms in dialogue **and narration**, including the transition after `here_i_am`.
+
+2. **Risk — negation presence does not establish the intended meaning (lines 29–30).** “Non so perché sei sola” / “No sé por qué estás sola” contain negation but still assert that she is alone. Require the player to deny **Marginalia’s being alone**. Add those negatives, wrong-speaker negatives (“Non sono sola” / “No estoy sola”), and wrong-gender negatives alongside the positive examples.
+
+3. **Risk — the oath needs careful negation and commitment grading (lines 16–17).** “Prometto di non toccare…” / “Prometo no tocar…” must pass; “Non prometto…” / “No prometo…” and promises **to touch** the herds must fail. Explicitly permit a bare “Prometto” / “Prometo” as an answer to Mortimer’s request, while requiring any expanded promise to preserve that commitment.
+
+4. **Risk — Mortimer’s registered variants include inappropriate answers (lines 14–15).** `tranquilla` / `tranquila` address a female; the plurals change the addressee. The plan acknowledges this, but vocabulary recognition alone will still find them. Remove unsupported forms or make them explicit grading negatives. The proposed “Tranquillo, Mortimer” live input exercises the canonical form, so it cannot demonstrate alternate-form acceptance.
+
+5. **Risk — leaks can come from earlier objectives (lines 35–36, 62–63).** Flick may encourage itself with `coraggio` / `ánimo` before the second objective; Mortimer may say `prometto` / `prometo` while discussing his oath. Each intent should prohibit **all still-unmet targets**, not merely its own. Inspect greetings, failure replies, and objective-transition replies.
+
+6. **Risk — the tests can pass while semantic grading fails (lines 45–63).** Fixture graders prove progression wiring; the live scripts test an English rejection only before the first target. Add live probes at the second objective: affirmative “Sei sola” / “Estás sola,” misplaced negation, wrong speaker/gender, and an inverted oath. Verify each fails **without advancing**, then submit the valid answer. Test accented and unaccented Spanish forms explicitly.
+
+The supplied base translations are otherwise natural; the bundle demonstrates no actual whole-form collision among these new targets.
