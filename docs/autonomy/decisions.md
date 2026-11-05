@@ -134,3 +134,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-05 | 041 | Critique 1: 9 of 10 accepted, 1.7 in part | — | See round 041 Second opinion table | Yes |
 | 2026-11-05 | 042 | Literata Bold (OFL 1.1, @expo-google-fonts) for screen and section titles only, loaded at runtime, never waited for; system font for everything else; notice in mobile/THIRD_PARTY_NOTICES.md; critique by a Claude subagent | No custom font; a serif for body text too; another OFL face | A book-themed accent at 256 KB with no licence question; body legibility unchanged | Yes |
 | 2026-11-05 | 042 | Critique 1: 8 of 9 accepted, 1.9 in part | — | See round 042 Second opinion table | Yes |
+| 2026-11-05 | 043 | The Party screen counts down to each member's next Journey fragment ("N more finished conversations until <Name> tells you a story."), never naming it; then "has told you a story"; critique by a Claude subagent | No hint (rounds 032–033); showing the fragment's title | The unlock was invisible; a count without the title keeps the surprise | Yes |
+| 2026-11-05 | 043 | Critique 1: 7 of 8 accepted, 1.5 in part | — | See round 043 Second opinion table | Yes |
