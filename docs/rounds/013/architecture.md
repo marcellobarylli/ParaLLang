@@ -99,3 +99,17 @@ Net change from plan v1: −1 Spanish entry, −1 constraint (blanket recitation
 3. Live, codex-cli: `play-market.js --location old_bookshop` in Italian (scripted), in Italian with `--lines` ending
    "Ha detto «Nessuno»." and once in Spanish. Findings: whether she reads each passage before asking (required),
    the verdict on each line, resolution, share, menus and dictation, feedback leaks.
+
+## Amendment 2026-11-05: she reads the first passage in her greeting (autonomous, after the first live runs)
+
+**Why.** In 3/3 first runs Marginalia's greeting only introduced the shop ("I sell books to people who understand
+them. No spoilers: there will be a reading check.") and read the first passage only after the player's first
+answer, so the first turn had nothing to answer and the app's objective ("Marginalia reads you the opening…") was
+untrue at that point. The greeting template asks for a concise introduction, which outweighed the intent.
+
+**Change.** Content only: the `home` intent now says she reads the passage "in her greeting, right after introducing
+herself". The greeting template is unchanged (it would change Gerald's pinned prompts and every encounter). Re-run
+the three live runs.
+
+**Decision.** Autonomous, pending owner review: content rather than the shared template, because only this
+encounter needs a passage up front.

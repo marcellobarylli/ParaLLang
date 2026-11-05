@@ -18,9 +18,9 @@ objectives:
   - id: home
     prompt: "Marginalia reads you the opening of The Journey. Where is Journathan going? Answer in Italian."
     intent: >
-      Marginalia first reads this passage aloud, word for word, in her dialogue: "Questa è la storia di Journathan,
-      l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni." Only then does she ask her question: where
-      is Journathan going? The player answers in Italian that he is going home.
+      Marginalia reads this passage aloud, word for word, in her greeting, right after introducing herself: "Questa è
+      la storia di Journathan, l'uomo dalle molte lingue. Il suo viaggio verso casa dura vent'anni." Only then does
+      she ask her question: where is Journathan going? The player answers in Italian that he is going home.
     target_vocabulary_ids: ["casa"]
     required_target_groups:
       - ["casa"]
