@@ -18,17 +18,25 @@ export function storyHint(member) {
   return null;
 }
 
+// Round 047 (backlog G4): while Talk offers a deeper conversation (a tier above the first), the card says so. It
+// stays as long as that tier is offered; servers without the field show nothing.
+export function tierNote(member) {
+  return Number.isInteger(member.conversationTier) && member.conversationTier > 0 && member.conversationId
+    ? `${member.name} trusts you with a deeper conversation now.` : null;
+}
+
 export default function PartyPanel({ party, isLoading = false, ongoing = null, onTalk, onReturn, returnLabel }) {
   return (
     <ScrollView style={styles.panel} contentContainerStyle={styles.content}>
       <Title style={styles.title}>Your party</Title>
       {party.length === 0
         ? <Text style={styles.muted}>No one has joined you yet. Win someone over who is worth keeping.</Text>
-        : party.map((member) => { const hint = storyHint(member); return (
+        : party.map((member) => { const hint = storyHint(member); const tier = tierNote(member); return (
           <View key={member.characterId} style={styles.member} aria-label={`${member.name}, met at ${member.locationName}`}>
             <Text style={styles.name}>{member.name}</Text>
             <Text style={styles.muted}>Met at {member.locationName} · Conversations: {member.conversations ?? 0}</Text>
             {hint && <Text style={styles.hint}>{hint}</Text>}
+            {tier && <Text style={styles.hint}>{tier}</Text>}
             {member.conversationId && onTalk && <Button
               label={`Talk to ${member.name}`} variant="primary"
               disabled={isLoading || Boolean(ongoing && ongoing.encounterId !== member.conversationId)}

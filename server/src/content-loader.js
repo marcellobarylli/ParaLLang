@@ -88,7 +88,13 @@ const encounterSchema = z.object({
   objectives: z.array(objectiveSchema).min(1),
   // Round 045 (backlog G3): objectives that may be met in any order; every passed one closes. Default: in order.
   objectives_unordered: z.boolean().optional(),
+  // Round 047 (backlog G4): a deeper party conversation, offered once the member has finished this many
+  // conversations (the first tier has none). Party conversations only.
+  after_conversations: z.number().int().min(1).optional(),
 }).strict().superRefine((encounter, context) => {
+  if (encounter.after_conversations !== undefined && !encounter.party_of) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'Only a party conversation can set after_conversations' });
+  }
   if (Boolean(encounter.location) === Boolean(encounter.party_of)) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'An encounter has either a location or party_of, not both or neither' });
   }
@@ -289,8 +295,14 @@ function validatePartyConversations(encounters) {
   const homes = new Set();
   for (const { encounter, character } of encounters.values()) {
     if (!encounter.party_of) continue;
-    if (homes.has(encounter.party_of)) throw new Error(`Encounter ${encounter.party_of} has more than one party conversation`);
-    homes.add(encounter.party_of);
+    // Round 047: one first tier per home (no after_conversations) and distinct thresholds for the deeper ones.
+    const key = `${encounter.party_of}:${encounter.after_conversations ?? 0}`;
+    if (homes.has(key)) {
+      throw new Error(encounter.after_conversations === undefined
+        ? `Encounter ${encounter.party_of} has more than one party conversation without after_conversations`
+        : `Encounter ${encounter.party_of} has more than one party conversation at after_conversations ${encounter.after_conversations}`);
+    }
+    homes.add(key);
     const home = encounters.get(encounter.party_of);
     if (!home) throw new Error(`Party conversation ${encounter.id} names unknown encounter ${encounter.party_of}`);
     if (home.encounter.party_of) throw new Error(`Party conversation ${encounter.id} must name a location encounter, not ${encounter.party_of}`);
@@ -298,6 +310,10 @@ function validatePartyConversations(encounters) {
       throw new Error(`Party conversation ${encounter.id} must use the character of ${encounter.party_of} (${home.encounter.character})`);
     }
     if (character.saveable !== true) throw new Error(`Party conversation ${encounter.id} needs a saveable character; ${character.name} is not`);
+  }
+  for (const key of homes) {
+    const [homeId, tier] = key.split(':');
+    if (tier !== '0' && !homes.has(`${homeId}:0`)) throw new Error(`Encounter ${homeId} has a deeper party conversation but no first one`);
   }
 }
 

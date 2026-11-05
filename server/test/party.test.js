@@ -8,7 +8,7 @@ import { api, createRuntime } from './helpers.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { retryableError } from '../src/errors.js';
 
-const gerald = { characterId: 'imp_coffee_001', name: 'Gerald', encounterId: 'imp_coffee_greeting', locationId: 'coffee_cart', locationName: 'The Coffee Cart', joinedAt: '2026-01-15T12:00:00.000Z', conversations: 0, conversationId: 'gerald_coffee_break', nextStoryAt: 3, storiesTold: 0 };
+const gerald = { characterId: 'imp_coffee_001', name: 'Gerald', encounterId: 'imp_coffee_greeting', locationId: 'coffee_cart', locationName: 'The Coffee Cart', joinedAt: '2026-01-15T12:00:00.000Z', conversations: 0, conversationId: 'gerald_coffee_break', conversationTier: 0, nextStoryAt: 3, storiesTold: 0 };
 
 async function newLearner(runtime) {
   return (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;

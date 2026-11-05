@@ -4,7 +4,7 @@ import { render, screen, userEvent } from '@testing-library/react-native';
 import App from '../../App.js';
 import DialoguePanel from '../components/DialoguePanel.js';
 import MapPanel from '../components/MapPanel.js';
-import PartyPanel, { storyHint } from '../components/PartyPanel.js';
+import PartyPanel, { storyHint, tierNote } from '../components/PartyPanel.js';
 import { createGameStore, useGameStore } from '../stores/gameStore.js';
 
 const language = { code: 'it', name: 'Italian', tag: 'it-IT' };
@@ -240,5 +240,21 @@ describe('story hint', () => {
     release({ party: [base] });
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(store.getState().party).toEqual([]);
+  });
+});
+
+// Round 047 (backlog G4): the tier line, while a deeper conversation is offered.
+describe('tier note', () => {
+  test('shown for a tier above the first, with Talk starting it', async () => {
+    const onTalk = jest.fn();
+    const member = { ...gerald, conversations: 4, conversationId: 'gerald_confidence', conversationTier: 3, nextStoryAt: null, storiesTold: 1 };
+    await render(<PartyPanel party={[member]} onTalk={onTalk} onReturn={jest.fn()} returnLabel="Return" />);
+    expect(screen.getByText('Gerald trusts you with a deeper conversation now.')).toBeOnTheScreen();
+    await userEvent.press(screen.getByText('Talk to Gerald'));
+    expect(onTalk).toHaveBeenCalledWith('gerald_confidence');
+  });
+
+  test.each([[{ conversationId: 'gerald_coffee_break', conversationTier: 0 }], [{ conversationId: 'gerald_coffee_break' }], [{ conversationId: null, conversationTier: 3 }]])('no line for %j', (fields) => {
+    expect(tierNote({ ...gerald, ...fields })).toBeNull();
   });
 });

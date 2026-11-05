@@ -96,8 +96,13 @@ export class LearningService {
 
   sceneName(session) { return this.content.world.locationsById.get(this.sceneLocationId(session))?.name ?? this.sceneLocationId(session); }
 
-  partyConversationFor(encounterId) {
-    return [...this.content.encounters.values()].find((definition) => definition.encounter.party_of === encounterId) ?? null;
+  // Round 047 (backlog G4): a home may have deeper party conversations (`after_conversations`). With `count`
+  // finished conversations, the deepest one unlocked is offered; count 0 gives the first tier.
+  partyConversationFor(encounterId, count = 0) {
+    const tier = (definition) => definition.encounter.after_conversations ?? 0;
+    return [...this.content.encounters.values()]
+      .filter((definition) => definition.encounter.party_of === encounterId && tier(definition) <= count)
+      .reduce((best, definition) => (!best || tier(definition) > tier(best) ? definition : best), null);
   }
 
   discover(envelope, vocabularyIds, discoveredAt, source) {
@@ -224,7 +229,7 @@ export class LearningService {
       const member = party.find((m) => this.isHomeMember(m, homeId));
       return member ? (member.conversations ?? 0) : null;
     };
-    const conversationOf = (homeId) => [...this.content.encounters.values()].find(({ encounter }) => encounter.party_of === homeId).encounter.id;
+    const conversationOf = (homeId) => this.partyConversationFor(homeId).encounter.id;
     const found = (fragment) => (fragment.after_conversations === undefined
       ? completed.has(fragment.found_after)
       : (memberCount(fragment.found_after) ?? 0) >= fragment.after_conversations);
@@ -338,8 +343,14 @@ export class LearningService {
       const here = currentLocationId(this.content.world, envelope.world);
       if (definition.encounter.party_of) {
         // Round 022: a party member travels with the player, so their conversation starts anywhere once they have joined.
-        if (!envelope.party.some((member) => member.characterId === definition.character.id)) {
+        // Round 047 (critique 1.3): the member met at the conversation's home, as the snapshot matches them.
+        const member = envelope.party.find((candidate) => this.isHomeMember(candidate, definition.encounter.party_of));
+        if (!member) {
           throw conflictError(`${definition.character.name} is not in your party yet.`, 'NOT_IN_PARTY');
+        }
+        // Round 047: a deeper conversation waits for its count of finished conversations.
+        if ((definition.encounter.after_conversations ?? 0) > (member.conversations ?? 0)) {
+          throw conflictError(`${definition.character.name} is not ready for that conversation yet.`, 'NOT_YET');
         }
       } else {
         if (encounterId !== null && here !== definition.encounter.location) {
@@ -565,7 +576,7 @@ export class LearningService {
       // holds the encounter's containment file.
       if (resolved && definition.encounter.party_of) {
         // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
-        const member = stagedEnvelope.party.find((candidate) => candidate.characterId === definition.character.id);
+        const member = stagedEnvelope.party.find((candidate) => this.isHomeMember(candidate, definition.encounter.party_of));
         if (member) member.conversations = (member.conversations ?? 0) + 1;
       } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
         stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
@@ -619,6 +630,7 @@ export class LearningService {
 
   // Round 021: the party. Members whose encounter is not in the loaded pack stay in the save but are not shown.
   partySnapshot(envelope) {
+    const active = this.encounters.get(envelope.learnerId);
     return (envelope.party ?? []).flatMap((member) => {
       const definition = this.content.encounters.get(member.encounterId);
       if (!definition || definition.character.id !== member.characterId) return [];
@@ -630,10 +642,22 @@ export class LearningService {
         locationName: this.locationName(definition),
         joinedAt: member.joinedAt,
         conversations: member.conversations ?? 0,
-        conversationId: this.partyConversationFor(member.encounterId)?.encounter.id ?? null,
+        ...this.conversationOffer(member, active),
         ...this.storyProgress(member),
       }];
     });
+  }
+
+  // Round 047 (backlog G4): the conversation Talk starts and its tier (the threshold, 0 for the first): the deepest
+  // unlocked one, unless an unresolved party conversation of this member is under way (critique 1.1: Talk resumes it).
+  conversationOffer(member, active) {
+    const ongoing = this.inEncounter(active) && this.definition(active).encounter.party_of === member.encounterId
+      ? this.definition(active) : null;
+    const definition = ongoing ?? this.partyConversationFor(member.encounterId, member.conversations ?? 0);
+    return {
+      conversationId: definition?.encounter.id ?? null,
+      conversationTier: definition?.encounter.after_conversations ?? 0,
+    };
   }
 
   // Round 043 (critique 1.1): one rule for "this party member was met at that encounter", shared by the Spellbook's

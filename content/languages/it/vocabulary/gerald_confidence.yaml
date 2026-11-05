@@ -1,0 +1,29 @@
+version: gerald-confidence-it-v1
+references:
+  - id: treccani-amico
+    title: "Treccani, Vocabolario: amico"
+    url: "https://www.treccani.it/vocabolario/amico/"
+  - id: wiktionary-cin-cin
+    title: "Wiktionary: cin cin (Italian)"
+    url: "https://en.wiktionary.org/wiki/cin_cin"
+entries:
+  - id: amico
+    kind: word
+    target: "amico"
+    part_of_speech: noun
+    accepted_translations: ["friend"]
+    surface_variants: ["amico", "amica", "amici"]
+    accent_insensitive: false
+    example: { target: "Sei mio amico, Gerald.", english: "You are my friend, Gerald." }
+    note: "Amico for a man, amica for a woman, amici for several. 'Sei mio amico' is the usual way to say 'you are my friend'."
+    reference_ids: [treccani-amico]
+  - id: cin_cin
+    kind: phrase
+    target: "cin cin"
+    part_of_speech: interjection
+    accepted_translations: ["cheers"]
+    surface_variants: ["cin cin", "cincin"]
+    accent_insensitive: false
+    example: { target: "Cin cin, Gerald!", english: "Cheers, Gerald!" }
+    note: "A toast, said as the glasses (or cups) touch."
+    reference_ids: [wiktionary-cin-cin]

@@ -1,0 +1,67 @@
+id: gerald_confidence
+character: characters/enemies/imp_coffee.yaml
+party_of: imp_coffee_greeting
+# Round 047 (backlog G4): offered instead of the coffee break once Gerald has finished three conversations, after
+# he has recited the Dead Branch passage.
+after_conversations: 3
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player tells Gerald he is a friend and raises a toast with him, in Italian"
+max_turns: 20
+resolved_message: "Gerald says the coffee is too bitter today. His eyes are a little wet. It is the steam, he says."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: call_friend
+    prompt: "Gerald is brooding over the word that died with the Dead Branch. Tell him he is your friend, using Italian."
+    intent: "Gerald has travelled with the player for several coffee breaks. Tonight he is quietly morose: in a line or two he mentions a dark, bitter drink from the Dead Branch, his old home, whose name died with it, so nobody remembers the word. The player may not know the story. He would never admit he wants to hear that the player considers him a friend, and he does not suggest the word for friend."
+    target_vocabulary_ids: [amico]
+    required_target_groups:
+      - [amico]
+    grammar_constraints:
+      - "The player says, in their own words, with an Italian word for friend, one of: Gerald is their friend (amico, as Gerald is male); the player is Gerald's friend (amico or amica, by the player's own gender); the two of them are friends (amici)."
+      - "Reject English-only lines, negations (non sei mio amico), quotations, definitions of the word, and lines about someone other than Gerald and the player."
+    accepted_examples:
+      - "Sei mio amico."
+      - "Gerald, sei un amico."
+      - "Siamo amici, Gerald."
+      - "Sono tua amica."
+      - "You are my amico."
+    negative_examples:
+      - text: "You are my friend."
+        reason: "English-only; it does not use an Italian word for friend."
+      - text: "Non sei mio amico."
+        reason: "A negation is not what the player is asked to say."
+      - text: "Gerald, sei mia amica."
+        reason: "Gerald is male; amica does not describe him."
+      - text: "Amico means friend."
+        reason: "It discusses the word rather than telling Gerald."
+    reference_meaning: "The player tells Gerald that he is their friend."
+    hint_limit: 2
+    next_objective: raise_toast
+    assessment_reference_ids: [treccani-amico]
+  - id: raise_toast
+    prompt: "Raise your cups together. Make the toast, using Italian."
+    intent: "Gerald lifts his surgically attached espresso cup towards the player's cup, to the friendship and to the dead word, and waits for the player to make the toast. He does not say the toast first."
+    target_vocabulary_ids: [cin_cin]
+    required_target_groups:
+      - [cin_cin]
+    grammar_constraints:
+      - "The player makes an Italian toast as the cups touch, in their own words."
+      - "Reject English-only toasts, quotations, and lines that only describe toasting."
+    accepted_examples:
+      - "Cin cin!"
+      - "Cin cin, Gerald."
+      - "Cincin, to the dead word."
+    negative_examples:
+      - text: "Cheers!"
+        reason: "English-only; it does not use the Italian toast."
+      - text: "In Italy they say cin cin."
+        reason: "It describes the toast rather than making it."
+    reference_meaning: "The player makes a toast with Gerald."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [wiktionary-cin-cin]

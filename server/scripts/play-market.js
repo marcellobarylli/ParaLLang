@@ -3,6 +3,7 @@
 //   node server/scripts/play-market.js --provider codex-cli --tour [--out <file.json>]
 // --party (round 022) wins Gerald, recruits him, walks to the Market Entrance and plays his party conversation
 // (gerald_coffee_break) there; the report's `party` part holds that conversation and the member's count.
+// --tier N (round 047) sets the member's count to N first and plays the tier then offered (gerald_confidence at 3).
 // --member <home location> (round 023) does the same for another member (butchers_stall, cracked_fountain,
 // old_bookshop); the conversation is played at the start location, or at a neighbour if home is the start.
 // --recruit (round 021) saves the defeated NPC to the party after a single-location run and reports the party;
@@ -62,6 +63,11 @@ const partyScripts = {
   gerald_coffee_break: {
     it: ['Delicious!', 'È buonissimo!', 'Grazie mille!'],
     es: ['Delicious!', '¡Está buenísimo!', '¡Muchas gracias!'],
+  },
+  // Round 047: Gerald's confidence (--party --tier 3). An English line first, then a plural form, then the toast.
+  gerald_confidence: {
+    it: ['You are my friend.', 'Siamo amici, Gerald.', 'Cin cin!'],
+    es: ['You are my friend.', 'Somos amigos, Gerald.', '¡Salud!'],
   },
   // Round 023.
   mortimer_tasting: {
@@ -282,10 +288,20 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       const memberIndex = args.indexOf('--member');
       const homeLocation = memberIndex >= 0 ? args[memberIndex + 1] : 'coffee_cart';
       const homeEncounter = content.world.locationsById.get(homeLocation)?.encounter;
-      const conversationId = [...content.encounters.values()].find(({ encounter }) => encounter.party_of === homeEncounter)?.encounter.id;
+      // Round 047: --tier N sets the member's finished conversations to N after recruiting (a harness shortcut, reported
+      // as tierCount) and plays the conversation Talk would then offer.
+      const tierIndex = args.indexOf('--tier');
+      const tierCount = tierIndex >= 0 ? Number(args[tierIndex + 1]) : 0;
+      if (!Number.isInteger(tierCount) || tierCount < 0) throw new Error('--tier needs a whole number of conversations.');
+      const conversationId = service.partyConversationFor(homeEncounter, tierCount)?.encounter.id;
       if (!conversationId || !partyScripts[conversationId]) throw new Error(`play-market has no party conversation script for --member ${homeLocation}.`);
       const home = await playAt(homeLocation, scripts[homeLocation][content.language.code]);
       const recruited = await step(`recruit ${homeEncounter}`, async () => service.recruit(learnerId, { encounterId: homeEncounter }));
+      if (tierCount > 0) {
+        const saved = await storage.load(learnerId);
+        saved.party.find((member) => member.encounterId === homeEncounter).conversations = tierCount;
+        await storage.save(saved);
+      }
       const linesIndex = args.indexOf('--lines');
       const conversationLines = linesIndex >= 0 ? args[linesIndex + 1].split('|') : partyScripts[conversationId][content.language.code];
       const away = homeLocation === content.world.start ? content.world.neighbours.get(homeLocation)[0] : content.world.start;
@@ -293,7 +309,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       const { party } = await service.getParty(learnerId);
       strip();
       return {
-        provider: preflight, language: content.language.code, party: true,
+        provider: preflight, language: content.language.code, party: true, conversationId, tierCount,
         recruited: recruited?.joined === true,
         resolved: home.resolved && conversation.resolved,
         // The conversation must not mark anything on the map; the member's count goes up instead.
@@ -341,7 +357,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     if (outIndex > 0) await writeFile(process.argv[outIndex + 1], text);
     process.stdout.write(text);
     const ok = report.tour ? report.resolved && report.riftSealedBefore && report.riftOpenAfter && Array.isArray(report.drillCards)
-      : report.party === true ? report.recruited && report.resolved && report.conversationOffMap && report.conversations === 1
+      : report.party === true ? report.recruited && report.resolved && report.conversationOffMap && report.conversations === (report.tierCount ?? 0) + 1
       : report.resolved && report.completedOnMap && (!report.party || report.party.joined);
     process.exitCode = ok ? 0 : 1;
   }).catch((error) => { console.error(error.message); process.exitCode = 1; });

@@ -1,0 +1,29 @@
+version: gerald-confidence-es-v1
+references:
+  - id: rae-amigo
+    title: "RAE, Diccionario de la lengua española: amigo"
+    url: "https://dle.rae.es/amigo"
+  - id: rae-salud
+    title: "RAE, Diccionario de la lengua española: salud"
+    url: "https://dle.rae.es/salud"
+entries:
+  - id: amigo
+    kind: word
+    target: "amigo"
+    part_of_speech: noun
+    accepted_translations: ["friend"]
+    surface_variants: ["amigo", "amiga", "amigos"]
+    accent_insensitive: false
+    example: { target: "Eres mi amigo, Gerald.", english: "You are my friend, Gerald." }
+    note: "Amigo for a man, amiga for a woman, amigos for several. 'Eres mi amigo' means 'you are my friend'."
+    reference_ids: [rae-amigo]
+  - id: salud
+    kind: word
+    target: "salud"
+    part_of_speech: interjection
+    accepted_translations: ["cheers"]
+    surface_variants: ["salud"]
+    accent_insensitive: false
+    example: { target: "¡Salud, Gerald!", english: "Cheers, Gerald!" }
+    note: "Literally 'health'. Said as a toast, when the glasses (or cups) touch."
+    reference_ids: [rae-salud]
