@@ -106,9 +106,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **C3. Visual polish.** (rounds 034–035, closed 2026-11-05) C3a type scale, palette tokens, contrast test; C3b
   fades that respect Reduce Motion (`mobile/src/motion.js`), line-height tokens. Not done: a custom font (asset and
   licence check).
-- [ ] **C4. Sound design.** **C4a** UI cues (round 037, closed 2026-11-05: `pass`, `resolve`, synthesized by
-  `mobile/scripts/gen-ui-sounds.js`, switch on the Saves screen). **C4b** ambient audio per location: open (same
-  approach: synthesize or record your own; loop, low level, the same switch).
+- [x] **C4. Sound design.** **C4a** UI cues (round 037, closed 2026-11-05: `pass`, `resolve`, synthesized by
+  `mobile/scripts/gen-ui-sounds.js`, switch on the Saves screen). **C4b** ambient loops per location (round 041,
+  closed 2026-11-05: `mobile/scripts/gen-ambient.js`, `mobile/src/ambience.js`, ducked under speech).
 
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 

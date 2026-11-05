@@ -105,3 +105,9 @@ AppState reconcile, a race-safe reconcile, ducking under speech, and `soundsKnow
     off that arrives after the world plays nothing; the statement screen is silent until the market is entered.
 - `pronunciation.test.js`: the speak call carries the callbacks (`objectContaining`).
 - All suites, expo-doctor, the iOS export with all six WAVs bundled (md5).
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. Six synthesized loops follow the current location behind the Sounds switch,
+and they duck under speech. Mobile 105/105, server 163/163, web client 12/12 and build, expo-doctor 20/20, iOS export
+with all six loops. See [findings](findings.md).
