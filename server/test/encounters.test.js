@@ -12,7 +12,7 @@ import { buildNarrationMessages } from '../src/llm/prompt-builder.js';
 import { FixtureProvider, fixedNow } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r007.json'), 'utf8'));
+const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r012.json'), 'utf8'));
 
 const character = {
   id: 'charcutier_fixture', name: 'Bernard', species: 'Charcutier',
@@ -92,14 +92,16 @@ async function runtime(t, contentDir) {
   return { content, provider, storage, service: new LearningService({ provider, storage, content, clock: () => fixedNow }) };
 }
 
-// Regenerated in round 007, when the style guide entered the prompt on purpose (round 006 pinned the round 005 text).
-test("Gerald's narration prompts match the round 007 fixture and carry the style guide", () => {
+// Regenerated in round 007, when the style guide entered the prompt on purpose (round 006 pinned the round 005 text),
+// and in round 012 for the no-menu rule.
+test("Gerald's narration prompts match the round 012 fixture and carry the style guide", () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
     const base = { language: c.language, character: c.character, styleGuide: c.styleGuide, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };
     const greeting = buildNarrationMessages({ ...base, objectives: c.encounter.objectives, targetRatio: 0.25 });
     assert.deepEqual(greeting, golden[code].greeting);
     assert.match(greeting[0].content, /- Never tell the player what to say or how to phrase it/);
+    assert.match(greeting[0].content, /- Never offer an open objective's target words as options to choose from/);
     assert.match(greeting[0].content, /meme-culture texture/);
     assert.match(greeting[0].content, /Rates translations like a food critic/);
     assert.doesNotMatch(greeting[0].content, /word-level breakdowns/);

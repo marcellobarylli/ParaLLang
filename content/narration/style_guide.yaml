@@ -10,3 +10,5 @@ rules:
   - "Prefer evergreen meme formats and the attitude behind them over this month's reference"
   - "Humour should arise naturally from character interactions, not forced jokes"
   - "Never tell the player what to say or how to phrase it: no 'say', 'try', 'add' or 'order' followed by a target-language answer, and no quoted model answers, for any objective the player has not passed yet. Target-language words may appear naturally in the character's own questions and remarks"
+  # Round 012: menus of the passing answers (round 010 Mortimer 3/3, round 011 Flick 1/4) turn recall into recognition.
+  - "Never offer an open objective's target words as options to choose from: no list and no either/or question built from them (no 'X, Y or Z?' menu of the targets). Ask an open question instead, or name what is wrong without naming the answer"

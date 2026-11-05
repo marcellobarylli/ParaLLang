@@ -10,3 +10,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 12:45:33 | 12:45:33 | correction | Claude (claude-opus-5-5), autonomous | Rows 1–3: Recorded 12:46:30 was written ahead of the clock (actual about 12:45:28); row 3 occurred at 12:45:15, not 12:46:00; row 2 at 12:45:10 | — |
 | 5 | 12:47:33 | 12:48:01 | critique-returned | Claude (claude-opus-5-5), autonomous | Critique 1: 1 finding (1 Cut); no Errors or Gaps | `critique-1.md` |
 | 6 | 12:48:01 | 12:48:01 | disposition | Claude (claude-opus-5-5), autonomous | No owner present: autonomous decision pending owner review. Rejected 1.1 (drop the frontend suites): the run brief requires every suite before a non-wip commit | `../architecture.md`, `../../../autonomy/decisions.md` |
+| 7 | 12:48:01 | 12:48:01 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed: "round 012: pre-run record" | `../architecture.md` |
