@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-05: round 043, the Party screen's story hint (autonomous)
+
+Each party member's card now counts down to the member's next *Journey* fragment ("2 more finished conversations
+until Gerald tells you a story."), without naming it. Once the story is found, the card points to the Spellbook. The
+server derives the count with the same rule that files the fragment. Opening the Party screen refreshes the party.
+Critiqued by a Claude subagent (8 findings: 7 accepted, 1 in part). Server 165/165, mobile 120/120
+([open items](docs/rounds/043/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 042, a display font for titles (autonomous)
 
 Screen and section titles now use Literata Bold (SIL Open Font License 1.1, from `@expo-google-fonts/literata`; one
@@ -447,6 +455,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 043 | 11-05 | The Party screen counts down to each member's next story (autonomous) | [043](docs/rounds/043/architecture.md) | [findings](docs/rounds/043/findings.md) | pre-run record to round 043 close |
 | 042 | 11-05 | A display font for titles: Literata Bold (OFL), loaded at runtime, system font for the rest (autonomous) | [042](docs/rounds/042/architecture.md) | [findings](docs/rounds/042/findings.md) | pre-run record to round 042 close |
 | 041 | 11-05 | Ambient audio per location: six synthesized loops behind the Sounds switch, ducked under speech (autonomous) | [041](docs/rounds/041/architecture.md) | [findings](docs/rounds/041/findings.md) | pre-run record to round 041 close |
 | 040 | 11-05 | The app sends the optional server token (`EXPO_PUBLIC_PARALLANG_TOKEN`) (autonomous) | [040](docs/rounds/040/architecture.md) | [findings](docs/rounds/040/findings.md) | pre-run record to round 040 close |

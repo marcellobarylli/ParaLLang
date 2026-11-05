@@ -83,3 +83,8 @@ wording, and tests over both packs.
   - no line without the fields, for null with 0 told, or when `nextStoryAt` is at or below the count;
   - `openParty` refreshes, and drops a reply for another save.
 - All suites.
+
+## Outcome (2026-11-05)
+
+Built as designed, with no Amendments. The Party screen counts down to each member's next story and then points to
+the Spellbook. Server 165/165, mobile 120/120, web client 12/12 and build. See [findings](findings.md).

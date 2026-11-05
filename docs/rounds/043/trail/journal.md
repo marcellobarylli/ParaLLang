@@ -12,3 +12,6 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 6 | 20:20:43 | 20:20:43 | disposition | Claude (claude-opus-5-5), autonomous | 7 accepted, 1.5 in part (autonomous decisions, pending owner review) | `../architecture.md` |
 | 7 | 20:20:43 | 20:20:43 | plan-revised | Claude (claude-opus-5-5), autonomous | Net change: shared isHomeMember, refresh on opening the Party screen, "finished" and plural wording, tests over both packs | `../architecture.md` |
 | 8 | 20:20:43 | 20:20:43 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed (round 043: pre-run record); the draft with the accepted fixes was already in the working tree, tested (server 165/165, mobile 120/120), and is committed separately | `../architecture.md` |
+| 9 | 20:21:01 | 20:21:01 | built | Claude (claude-opus-5-5), autonomous | round 043: isHomeMember and storyProgress in partySnapshot; storyHint in PartyPanel; openParty refresh; tests. Server 165/165, mobile 120/120, web 12/12 and build | `../../../../server/src/learning-service.js`, `../../../../mobile/src/components/PartyPanel.js` |
+| 10 | 20:21:01 | 20:21:01 | outcome | Claude (claude-opus-5-5), autonomous | Built as designed; G1 done | `../findings.md` |
+| 11 | 20:21:01 | 20:21:01 | closed | Claude (claude-opus-5-5), autonomous | Round 043 closed | `../findings.md` |

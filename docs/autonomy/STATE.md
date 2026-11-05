@@ -128,7 +128,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ### G. Follow-ups seeded in iteration 12 (from deferred items of rounds 011, 023, 032–033)
 
-- [ ] **G1. Party-screen hint.** Show how many conversations remain until a member's next fragment (rounds 032–033
+- [x] **G1. Party-screen hint.** (round 043, closed 2026-11-05: `storyProgress`, `storyHint`) Show how many conversations remain until a member's next fragment (rounds 032–033
   left it as an owner question: decide autonomously, record it). No live calls needed.
 - [ ] **G2. Leak check for bare target words inside authored phrases** (round 023: "¿Quieres más?"): a test or
   `replay-leaks.mjs`-style scan over authored content and live reports. No live calls needed for the content part.
