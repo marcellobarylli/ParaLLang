@@ -303,7 +303,25 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings), built and closed; server 156/156, mobile 68/68, client 12/12, expo-doctor 20/20. No Codex calls
   (limit until about 20:35 UTC); round 026 still open with its live steps queued.
 
+- 2026-11-05, iteration 11: rounds 033 (A12b, Journey fragments for Mortimer, Flick, Marginalia after three
+  conversations; wider stem check), 034 (C3a, type scale, palette tokens, contrast test), 035 (C3b, fades that respect
+  Reduce Motion, line-height tokens) and 036 (fragment source line in the Spellbook) planned, critiqued by Claude
+  subagents (7, 8, 8 and 7 findings), built and closed; server 157/157, mobile 79/79, client 12/12, expo-doctor 20/20.
+
 ## Handoff notes and traps
+
+- **Motion** (round 035): `mobile/src/motion.js` holds one app-wide Reduce Motion value; `<FadeIn>` decides once at
+  mount and never fades while the value is unknown. Jest runs with Reduce Motion **on** (`jest.setup.js`); a test
+  that wants a fade must turn it off, render a probe, settle, unmount, then render (see `motion.test.js`, `known()`),
+  and call `resetReduceMotionForTests()` in `beforeEach`. **`screen.unmount()` is async**: await it, or later queries
+  miss text with "overlapping act()" errors.
+- **Theme test** (round 034): no literal `fontSize`, `lineHeight` or colour outside `mobile/src/components/ui.js`;
+  every style with `color`/`fontWeight`/`fontStyle` names a `type.*` size unless it is listed in `MODIFIERS` (styles
+  only combined with or nested in a sized one). A new text/background pair goes into the contrast list.
+- **Map nodes are not dimmed** (`Button dim={false}`); unreachable labels use `colors.muted`.
+- **Stem check** (round 033): every word of 4+ letters of every party conversation's target forms gives a 4-letter
+  stem; no fragment (any kind) may hold a word starting with one. 3-letter words ("más", "più", "vez") are not
+  caught: check by hand.
 
 - **Second opinion rows are numbered by critique, `K.n`** (critique-1 → `1.1`…), even in a new round: round 032 wrote
   `2.n` in its pre-run table and needed Amendment 1. Run `round_log_check.py NNN` right after the freeze commit.
