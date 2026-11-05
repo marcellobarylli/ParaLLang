@@ -1,0 +1,86 @@
+# Round 011: The Cracked Fountain (backlog A5). Flick the Letharger distracts the player with riddles; the player
+# takes control: tells it to stop, tells it which way to go, and insists on now rather than later.
+id: cracked_fountain_letharger
+character: characters/enemies/letharger_flick.yaml
+location: cracked_fountain
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player tells Flick to stop, tells it which way to go and insists on now, all in Italian"
+max_turns: 20
+resolved_message: "Flick holds still for almost a whole second, points the way you told it, and is gone before you can look straight at it. The fountain is quieter."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: stop
+    prompt: "Flick will not hold still. Tell it to stop, in Italian."
+    intent: "The player tells Flick to stop or keep still, as a command in Italian."
+    target_vocabulary_ids: ["fermati", "fermo", "basta"]
+    required_target_groups:
+      - ["fermati", "fermo", "basta"]
+    grammar_constraints:
+      - "The player's own command to stop, keep still or that's enough, in Italian."
+      - "Other commands (look, listen) do not pass; reject quotations, remarks about Flick and English-only commands."
+    accepted_examples:
+      - "Fermati!"
+      - "Basta, Flick!"
+      - "Stai fermo, per favore."
+    negative_examples:
+      - text: "Guarda!"
+        reason: "A command, but it tells Flick to look, not to stop."
+      - text: "Stop!"
+        reason: "English-only; the command must be in Italian."
+      - text: "Flick never says basta."
+        reason: "A remark about Flick is not the player's own command."
+    reference_meaning: "The player commands Flick to stop moving."
+    hint_limit: 2
+    next_objective: direction
+    assessment_reference_ids: ["treccani-fermare", "treccani-fermo", "treccani-bastare"]
+  - id: direction
+    prompt: "Flick has lost its way again. Tell it which way to go, in Italian."
+    intent: "The player tells Flick a direction to go: left, right or straight on, in Italian."
+    target_vocabulary_ids: ["destra", "sinistra", "dritto"]
+    required_target_groups:
+      - ["destra", "sinistra", "dritto"]
+    grammar_constraints:
+      - "The player's own direction for Flick, in Italian; any of left, right or straight on passes."
+      - "Reject a question back, quotations and English-only directions."
+    accepted_examples:
+      - "A sinistra!"
+      - "Vai a destra."
+      - "Sempre dritto, Flick."
+    negative_examples:
+      - text: "Left."
+        reason: "English-only; the direction must be in Italian."
+      - text: "Destra o sinistra?"
+        reason: "A question back is not a direction for Flick."
+    reference_meaning: "The player gives Flick a direction."
+    hint_limit: 2
+    next_objective: now
+    assessment_reference_ids: ["treccani-destra", "treccani-sinistra", "treccani-dritto"]
+  - id: now
+    prompt: "Flick says you can do it later. Insist on now, in Italian."
+    intent: "The player refuses to put it off and says now, in Italian."
+    target_vocabulary_ids: ["adesso", "ora"]
+    required_target_groups:
+      - ["adesso", "ora"]
+    grammar_constraints:
+      - "The player's own insistence on now, in Italian."
+      - "Agreeing to later or tomorrow does not pass; reject quotations and English-only answers."
+    accepted_examples:
+      - "No, adesso!"
+      - "Ora, Flick."
+      - "Adesso, non domani."
+    negative_examples:
+      - text: "Domani."
+        reason: "It agrees to put it off until tomorrow, which is what Flick wants."
+      - text: "Va bene, dopo."
+        reason: "It agrees to later."
+      - text: "Now!"
+        reason: "English-only; the answer must be in Italian."
+    reference_meaning: "The player insists on doing it now."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["treccani-adesso", "treccani-ora"]

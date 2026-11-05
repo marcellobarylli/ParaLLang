@@ -1,0 +1,159 @@
+# Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+version: fountain-riddles-es-v1
+references:
+  - id: rae-quieto
+    title: 'Real Academia Española, Diccionario de la lengua española: quieto'
+    url: https://dle.rae.es/quieto
+  - id: rae-bastar
+    title: 'Real Academia Española, Diccionario de la lengua española: bastar'
+    url: https://dle.rae.es/bastar
+  - id: rae-mirar
+    title: 'Real Academia Española, Diccionario de la lengua española: mirar'
+    url: https://dle.rae.es/mirar
+  - id: rae-derecho
+    title: 'Real Academia Española, Diccionario de la lengua española: derecho'
+    url: https://dle.rae.es/derecho
+  - id: rae-izquierdo
+    title: 'Real Academia Española, Diccionario de la lengua española: izquierdo'
+    url: https://dle.rae.es/izquierdo
+  - id: rae-ahora
+    title: 'Real Academia Española, Diccionario de la lengua española: ahora'
+    url: https://dle.rae.es/ahora
+  - id: rae-despues
+    title: 'Real Academia Española, Diccionario de la lengua española: después'
+    url: https://dle.rae.es/despu%C3%A9s
+  - id: rae-manana
+    title: 'Real Academia Española, Diccionario de la lengua española: mañana'
+    url: https://dle.rae.es/ma%C3%B1ana
+entries:
+  - id: quieto
+    kind: word
+    target: quieto
+    part_of_speech: adjective
+    accepted_translations:
+      - still
+      - keep still
+      - stop
+    surface_variants:
+      - quieto
+      - quieta
+      - quietos
+    accent_insensitive: false
+    example:
+      target: ¡Estate quieto!
+      english: Keep still!
+    note: '¡Quieto! on its own works as a command: hold still. Feminine quieta, plural quietos.'
+    reference_ids:
+      - rae-quieto
+  - id: basta
+    kind: word
+    target: basta
+    part_of_speech: interjection
+    accepted_translations:
+      - enough
+      - stop
+      - that is enough
+    surface_variants:
+      - basta
+    accent_insensitive: false
+    example:
+      target: ¡Basta, por favor!
+      english: Enough, please!
+    reference_ids:
+      - rae-bastar
+  - id: mira
+    kind: word
+    target: mira
+    part_of_speech: verb
+    accepted_translations:
+      - look
+    surface_variants:
+      - mira
+    accent_insensitive: false
+    example:
+      target: ¡Mira la fuente!
+      english: Look at the fountain!
+    note: Imperative of mirar, informal tú form.
+    reference_ids:
+      - rae-mirar
+  - id: derecha
+    kind: word
+    target: derecha
+    part_of_speech: noun
+    accepted_translations:
+      - right
+      - the right
+    surface_variants:
+      - derecha
+    accent_insensitive: false
+    example:
+      target: Gira a la derecha.
+      english: Turn right.
+    note: 'A la derecha: to the right.'
+    reference_ids:
+      - rae-derecho
+  - id: izquierda
+    kind: word
+    target: izquierda
+    part_of_speech: noun
+    accepted_translations:
+      - left
+      - the left
+    surface_variants:
+      - izquierda
+    accent_insensitive: false
+    example:
+      target: Ve a la izquierda.
+      english: Go left.
+    note: 'A la izquierda: to the left.'
+    reference_ids:
+      - rae-izquierdo
+  - id: ahora
+    kind: word
+    target: ahora
+    part_of_speech: adverb
+    accepted_translations:
+      - now
+      - right now
+    surface_variants:
+      - ahora
+    accent_insensitive: false
+    example:
+      target: Ahora, no mañana.
+      english: Now, not tomorrow.
+    reference_ids:
+      - rae-ahora
+  - id: despues
+    kind: word
+    target: después
+    part_of_speech: adverb
+    accepted_translations:
+      - later
+      - afterwards
+      - after
+    surface_variants:
+      - después
+      - despues
+    accent_insensitive: true
+    example:
+      target: Lo hago después.
+      english: I'll do it later.
+    reference_ids:
+      - rae-despues
+  - id: manana
+    kind: word
+    target: mañana
+    part_of_speech: adverb
+    accepted_translations:
+      - tomorrow
+    surface_variants:
+      - mañana
+      - manana
+    accent_insensitive: true
+    example:
+      target: ¡Hasta mañana!
+      english: See you tomorrow!
+    note: Mañana also means morning (la mañana).
+    reference_ids:
+      - rae-manana

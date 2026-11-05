@@ -1,0 +1,215 @@
+# Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+version: fountain-riddles-it-v1
+references:
+  - id: treccani-fermare
+    title: 'Treccani, Vocabolario: fermare'
+    url: https://www.treccani.it/vocabolario/fermare/
+  - id: treccani-fermo
+    title: 'Treccani, Vocabolario: fermo'
+    url: https://www.treccani.it/vocabolario/fermo/
+  - id: treccani-bastare
+    title: 'Treccani, Vocabolario: bastare'
+    url: https://www.treccani.it/vocabolario/bastare/
+  - id: treccani-guardare
+    title: 'Treccani, Vocabolario: guardare'
+    url: https://www.treccani.it/vocabolario/guardare/
+  - id: treccani-destra
+    title: 'Treccani, Vocabolario: destra'
+    url: https://www.treccani.it/vocabolario/destra/
+  - id: treccani-sinistra
+    title: 'Treccani, Vocabolario: sinistra'
+    url: https://www.treccani.it/vocabolario/sinistra/
+  - id: treccani-dritto
+    title: 'Treccani, Vocabolario: dritto'
+    url: https://www.treccani.it/vocabolario/dritto/
+  - id: treccani-adesso
+    title: 'Treccani, Vocabolario: adesso'
+    url: https://www.treccani.it/vocabolario/adesso/
+  - id: treccani-ora
+    title: 'Treccani, Vocabolario: ora'
+    url: https://www.treccani.it/vocabolario/ora/
+  - id: treccani-dopo
+    title: 'Treccani, Vocabolario: dopo'
+    url: https://www.treccani.it/vocabolario/dopo/
+  - id: treccani-domani
+    title: 'Treccani, Vocabolario: domani'
+    url: https://www.treccani.it/vocabolario/domani/
+entries:
+  - id: fermati
+    kind: word
+    target: fermati
+    part_of_speech: verb
+    accepted_translations:
+      - stop
+      - stop it
+      - hold still
+    surface_variants:
+      - fermati
+    accent_insensitive: false
+    example:
+      target: Fermati, Flick!
+      english: Stop, Flick!
+    note: Imperative of fermarsi (to stop oneself), informal tu form.
+    reference_ids:
+      - treccani-fermare
+  - id: fermo
+    kind: word
+    target: fermo
+    part_of_speech: adjective
+    accepted_translations:
+      - still
+      - stop
+      - keep still
+    surface_variants:
+      - fermo
+      - ferma
+      - fermi
+    accent_insensitive: false
+    example:
+      target: Stai fermo!
+      english: Keep still!
+    note: 'Fermo! on its own works as a command: hold still. Feminine ferma, plural fermi.'
+    reference_ids:
+      - treccani-fermo
+  - id: basta
+    kind: word
+    target: basta
+    part_of_speech: interjection
+    accepted_translations:
+      - enough
+      - stop
+      - that is enough
+    surface_variants:
+      - basta
+    accent_insensitive: false
+    example:
+      target: Basta, per favore!
+      english: Enough, please!
+    reference_ids:
+      - treccani-bastare
+  - id: guarda
+    kind: word
+    target: guarda
+    part_of_speech: verb
+    accepted_translations:
+      - look
+    surface_variants:
+      - guarda
+    accent_insensitive: false
+    example:
+      target: Guarda la fontana!
+      english: Look at the fountain!
+    note: Imperative of guardare, informal tu form.
+    reference_ids:
+      - treccani-guardare
+  - id: destra
+    kind: word
+    target: destra
+    part_of_speech: noun
+    accepted_translations:
+      - right
+      - the right
+    surface_variants:
+      - destra
+    accent_insensitive: false
+    example:
+      target: Gira a destra.
+      english: Turn right.
+    note: 'A destra: to the right.'
+    reference_ids:
+      - treccani-destra
+  - id: sinistra
+    kind: word
+    target: sinistra
+    part_of_speech: noun
+    accepted_translations:
+      - left
+      - the left
+    surface_variants:
+      - sinistra
+    accent_insensitive: false
+    example:
+      target: Vai a sinistra.
+      english: Go left.
+    note: 'A sinistra: to the left.'
+    reference_ids:
+      - treccani-sinistra
+  - id: dritto
+    kind: word
+    target: dritto
+    part_of_speech: adverb
+    accepted_translations:
+      - straight
+      - straight on
+      - straight ahead
+    surface_variants:
+      - dritto
+      - diritto
+    accent_insensitive: false
+    example:
+      target: Sempre dritto.
+      english: Straight on.
+    note: Also diritto; sempre dritto is straight ahead.
+    reference_ids:
+      - treccani-dritto
+  - id: adesso
+    kind: word
+    target: adesso
+    part_of_speech: adverb
+    accepted_translations:
+      - now
+      - right now
+    surface_variants:
+      - adesso
+    accent_insensitive: false
+    example:
+      target: Adesso, non domani.
+      english: Now, not tomorrow.
+    reference_ids:
+      - treccani-adesso
+  - id: ora
+    kind: word
+    target: ora
+    part_of_speech: adverb
+    accepted_translations:
+      - now
+    surface_variants:
+      - ora
+    accent_insensitive: false
+    example:
+      target: Ora basta.
+      english: That is enough now.
+    note: Ora also means hour, as in che ora è? (what time is it?).
+    reference_ids:
+      - treccani-ora
+  - id: dopo
+    kind: word
+    target: dopo
+    part_of_speech: adverb
+    accepted_translations:
+      - later
+      - afterwards
+      - after
+    surface_variants:
+      - dopo
+    accent_insensitive: false
+    example:
+      target: Lo faccio dopo.
+      english: I'll do it later.
+    reference_ids:
+      - treccani-dopo
+  - id: domani
+    kind: word
+    target: domani
+    part_of_speech: adverb
+    accepted_translations:
+      - tomorrow
+    surface_variants:
+      - domani
+    accent_insensitive: false
+    example:
+      target: A domani!
+      english: See you tomorrow!
+    reference_ids:
+      - treccani-domani

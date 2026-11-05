@@ -1,5 +1,5 @@
 // Live playthrough of the Crumbling Market through a CLI provider, in-process (no port is opened).
-//   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall] [--out <file.json>]
+//   node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall|cracked_fountain] [--out <file.json>]
 // It uses a temporary learner save, removes it afterwards and prints a JSON report: each step, the LLM's raw
 // outputs, grading verdicts, timings and an estimate of the target-language share of each NPC line.
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
@@ -25,11 +25,31 @@ const scripts = {
     it: ['Vorrei del prosciutto, per favore.', 'Vorrei del salame, per favore.', 'Chilo.', 'Due etti, per favore.'],
     es: ['Quiero jamón, por favor.', 'Quiero chorizo, por favor.', 'Kilo.', 'Medio kilo, por favor.'],
   },
+  // Round 011: a wrong command, an English direction and agreeing to later first (all should fail).
+  cracked_fountain: {
+    it: ['Guarda!', 'Fermati!', 'Left.', 'A sinistra!', 'Domani.', 'No, adesso!'],
+    es: ['¡Mira!', '¡Quieto!', 'Left.', '¡A la izquierda!', 'Mañana.', '¡No, ahora!'],
+  },
   market_entrance: {
     it: ['Ciao!', 'Mi chiamo Sam.', 'E tu?'],
     es: ['¡Hola!', 'Me llamo Sam.', '¿Y tú?'],
   },
 };
+
+// The shortest walk from one location to another over the map's paths (round 011: the fountain is two steps away).
+export function route(world, from, to) {
+  const previous = new Map([[from, null]]);
+  const queue = [from];
+  while (queue.length) {
+    const here = queue.shift();
+    if (here === to) break;
+    for (const next of world.neighbours.get(here) ?? []) if (!previous.has(next)) { previous.set(next, here); queue.push(next); }
+  }
+  if (!previous.has(to)) throw new Error(`No path from ${from} to ${to}.`);
+  const path = [];
+  for (let at = to; at !== from; at = previous.get(at)) path.unshift(at);
+  return path;
+}
 
 const tokens = (text) => text.toLocaleLowerCase().match(/[\p{L}']+/gu) ?? [];
 
@@ -79,7 +99,9 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
 
     await step('world at start', async () => summary((await service.getWorld(learnerId)).world));
     await step('move to the_rift (expect NOT_ADJACENT)', async () => summary((await service.moveTo(learnerId, { locationId: 'the_rift' })).world));
-    if (locationId !== content.world.start) await step(`move to ${locationId}`, async () => summary((await service.moveTo(learnerId, { locationId })).world));
+    for (const next of route(content.world, content.world.start, locationId)) {
+      await step(`move to ${next}`, async () => summary((await service.moveTo(learnerId, { locationId: next })).world));
+    }
     const encounterId = content.world.locationsById.get(locationId).encounter;
     const definition = content.encounters.get(encounterId);
     let encounter = (await step(`start ${definition.character.name}`, async () => ({ encounter: (await service.startEncounter(learnerId, { encounterId })).encounter })))?.encounter;

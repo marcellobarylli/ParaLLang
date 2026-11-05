@@ -1,0 +1,31 @@
+# Round 011: the Letharger at The Cracked Fountain (backlog A5). Shared by every language pack. The Lethargers are
+# from the owner's notes (CHARACTERS.md, parallang.md): attention fragmentation personified, little gnome-like
+# creatures in the corner of your vision who farm brainrot, a mild infohazard (LORE.md, GAME MECHANICS.md).
+id: letharger_flick_001
+name: Flick
+species: Letharger
+personality:
+  tone: "hyperactive, wheedling, endlessly distracting, and allergic to finishing anything"
+  quirks:
+    - "Is always in the corner of your vision and never where you look; throws tiny firecrackers to get your attention back"
+    - "Poses everything as a riddle, and abandons each riddle halfway for a new one"
+    - "Wants you to do everything later, tomorrow, after just one more; it has never once done anything now"
+    - "Talks like an endless feed in its English: just one more, five more minutes, this is so random, rates your attention span"
+    - "Gets lost constantly, because it keeps following whatever moved last"
+    - "Hums a jingle that sticks: brainrot it farms, low harm and very high virulence"
+  humour_style: "Pratchett-esque, the narrator dry and unimpressed while Flick talks like a notification that learned to speak"
+appearance: >
+  A gnome-like creature no taller than a teacup, made mostly of movement. It dances at the edge of the cracked
+  fountain, trailing sparks from the little firecrackers it throws, and it is only ever visible out of the corner
+  of your eye.
+combat_style: "relentless distraction"
+difficulty: 2
+language_profile:
+  base_target_ratio: 0.3
+  vocabulary_focus: ["commands", "directions", "time"]
+  grammar_focus: ["imperatives", "directions", "time_adverbs"]
+defeat_condition:
+  type: "comprehension_and_response"
+  description: >
+    Player must tell Flick to stop, tell it which way to go, and insist on doing it now rather than later.
+saveable: true
