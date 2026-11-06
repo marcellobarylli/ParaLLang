@@ -93,6 +93,22 @@ export function matchCanonicalVocabulary(text, vocabulary) {
   return matches.sort((a, b) => a.start - b.start);
 }
 
+// Round 078 (prototype.md §11, "checks the ratio and retries"): a line with no target language at all. Every folded
+// word of `native` occurs in `translation`, and no vocabulary entry of the encounter matches `native`. Lines under four
+// words are not flagged (critique 1.1: "No, Sam." is valid Italian and Spanish). A heuristic for one failure kind: an
+// English line that rewords its translation is not caught (critique 1.2).
+export const TARGET_CHECK_MIN_WORDS = 4;
+function foldedWords(text) {
+  return normalizeAnswer(text, { stripAccents: true }).split(/[^\p{L}\p{N}']+/u).filter(Boolean);
+}
+export function lacksTargetLanguage(native, translation, vocabulary) {
+  const words = foldedWords(native);
+  if (words.length < TARGET_CHECK_MIN_WORDS) return false;
+  const translated = new Set(foldedWords(translation));
+  if (!words.every((word) => translated.has(word))) return false;
+  return matchCanonicalVocabulary(native, vocabulary).length === 0;
+}
+
 // Round 058 (backlog F3): every variant of every entry, read alone, must be matched as that entry, whole. Returns the
 // failures (an equal folded form in another entry, or a form taken by another entry's).
 export function vocabularyFormConflicts(entries) {

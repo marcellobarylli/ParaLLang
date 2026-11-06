@@ -296,6 +296,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         drillCards,
         resolved: encounters.every((e) => e.resolved && e.completedOnMap),
         generationCalls: raw.length,
+        narrationStats: { ...service.narrationStats }, // round 078: the no-target-language guard
         encounters,
         steps,
       };
@@ -334,6 +335,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         conversationOffMap: !(await storage.load(learnerId)).world.completedEncounterIds.includes(conversationId),
         conversations: party.find((member) => member.encounterId === homeEncounter)?.conversations ?? null,
         generationCalls: raw.length,
+        narrationStats: { ...service.narrationStats }, // round 078: the no-target-language guard
         home, conversation, steps,
       };
     }
@@ -360,7 +362,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
     }
     strip();
     const { lines, grading, generationCalls, ...head } = played;
-    return { provider: preflight, language: content.language.code, ...head, ...(party ? { party } : {}), generationCalls, steps, lines, grading };
+    return { provider: preflight, language: content.language.code, ...head, ...(party ? { party } : {}), generationCalls, narrationStats: { ...service.narrationStats }, steps, lines, grading };
   } finally {
     await provider.shutdown?.();
     await rm(saveDir, { recursive: true, force: true });

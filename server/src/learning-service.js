@@ -3,7 +3,7 @@ import { gradingResponseSchema, encounterResponseSchema, locationAtmosphereSchem
 import { buildAtmosphereMessages, buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
 import {
   calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
-  foldEvidenceText, isDue, masteryLabel, matchCanonicalVocabulary, scheduleReview,
+  foldEvidenceText, isDue, lacksTargetLanguage, masteryLabel, matchCanonicalVocabulary, scheduleReview,
 } from './language-engine.js';
 import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
@@ -12,6 +12,14 @@ import { applyMove, currentLocationId, gateFor, sealedMessage, worldSnapshot } f
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
 export const HELD_NOTE = 'A held objective was said correctly but does not count: an earlier objective comes first. Do not celebrate it or treat it as done, and do not give its answer; the player must say it again after the earlier objective.';
+
+// Round 078: appended once, after the rejected reply, when a narration line had no target language (see narrate). It
+// asks for the turn's share and demands no English, since the share can reach 100% (critique 1.4).
+export const NARRATION_RETRY_MS = 20_000;
+const TIMED_OUT = Symbol('timed out');
+export function correctionNote(language, ratio) {
+  return `CORRECTION: in your reply above, dialogue.native has no ${language.name} in it: every word is also in its translation. Write the reply again for the same turn, following every rule above; dialogue.native must be about ${Math.round(ratio * 100)}% ${language.name}, as the LANGUAGE RULES require.`;
+}
 
 export const ATMOSPHERE_MAX_LENGTH = 300;
 export const ATMOSPHERE_RETRY_MS = 10 * 60_000;
@@ -52,7 +60,7 @@ export const PREFETCH_MAX_GREETINGS = 100;
 const greetingKey = (learnerId, definitionId) => `${learnerId}\u0000${definitionId}`;
 
 export class LearningService {
-  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false, prefetch = false, prefetchDwellMs = PREFETCH_DWELL_MS, prefetchRetries = PREFETCH_RETRIES }) {
+  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false, prefetch = false, prefetchDwellMs = PREFETCH_DWELL_MS, prefetchRetries = PREFETCH_RETRIES, narrationRetryMs = NARRATION_RETRY_MS }) {
     this.provider = provider;
     // Round 076: the greeting written while the player reads the map card (off unless switched on). One arrival per
     // learner; greetings by learner and encounter until a start takes them; counters only.
@@ -65,6 +73,9 @@ export class LearningService {
     this.starting = new Set();
     this.stopping = false;
     this.prefetchStats = { scheduled: 0, calls: 0, used: 0, fallback: 0, failed: 0, busy: 0, skipped: 0, evicted: 0 };
+    // Round 078: narration lines checked for target language, and what the one retry did (memory only).
+    this.narrationStats = { checked: 0, flagged: 0, retryPassed: 0, kept: 0, timedOut: 0 };
+    this.narrationRetryMs = narrationRetryMs;
     // Round 053 (backlog A10): atmosphere lines by state key, and the calls under way for a key.
     this.atmosphereEnabled = atmosphere;
     this.atmosphereLines = new Map();
@@ -429,6 +440,34 @@ export class LearningService {
     finally { this.providerCallsInFlight -= 1; }
   }
 
+  // Round 078 (prototype.md §11): an NPC line with no target language at all is written again, once: the same
+  // messages, the rejected reply and a correction. A retry that fails, is still flagged or takes longer than
+  // narrationRetryMs keeps the first line, so the guard never turns a playable turn into an error. A timed-out retry
+  // is not cancelled (the CLI runner cannot); its result and error are dropped.
+  async narrate(messages, definition, ratio) {
+    const first = await this.callProvider(messages, encounterResponseSchema, 'encounter_narration', definition.character.name);
+    this.narrationStats.checked += 1;
+    if (!this.lacksTarget(first, definition)) return first;
+    this.narrationStats.flagged += 1;
+    const retry = this.callProvider([
+      ...messages,
+      { role: 'assistant', content: JSON.stringify(first) },
+      { role: 'user', content: correctionNote(this.content.language, ratio) },
+    ], encounterResponseSchema, 'encounter_narration', definition.character.name).catch(() => null);
+    let timer;
+    const deadline = new Promise((resolve) => { timer = setTimeout(() => resolve(TIMED_OUT), this.narrationRetryMs); });
+    const second = await Promise.race([retry, deadline]);
+    clearTimeout(timer);
+    if (second === TIMED_OUT) { this.narrationStats.timedOut += 1; return first; }
+    if (second && !this.lacksTarget(second, definition)) { this.narrationStats.retryPassed += 1; return second; }
+    this.narrationStats.kept += 1;
+    return first;
+  }
+
+  lacksTarget(generated, definition) {
+    return lacksTargetLanguage(generated.dialogue.native, generated.dialogue.translation, definition.narrationEntries);
+  }
+
   // Without an encounterId the default encounter starts anywhere (the frozen web client); with one, the player
   // must be at that encounter's location.
   async startEncounter(learnerId, { restart = false, encounterId = null } = {}) {
@@ -486,7 +525,7 @@ export class LearningService {
         }
       }
       const generated = await this.prefetchedGreeting(learnerId, definition)
-        ?? await this.callProvider(this.greetingMessages(definition, locationId), encounterResponseSchema, 'encounter_narration', definition.character.name);
+        ?? await this.narrate(this.greetingMessages(definition, locationId), definition, this.ratioFor(0, definition));
       const npcMessage = this.canonicalizeNarration(generated, definition);
       const stagedEnvelope = clone(envelope);
       this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
@@ -574,7 +613,7 @@ export class LearningService {
     }
     this.endArrival(learnerId, arrival, null);
     this.prefetchStats.calls += 1;
-    const call = this.callProvider(this.greetingMessages(definition, undefined), encounterResponseSchema, 'encounter_narration', definition.character.name)
+    const call = this.narrate(this.greetingMessages(definition, undefined), definition, this.ratioFor(0, definition))
       .catch(() => { this.prefetchStats.failed += 1; return null; });
     this.greetings.set(key, call);
     while (this.greetings.size > PREFETCH_MAX_GREETINGS) {
@@ -777,7 +816,7 @@ export class LearningService {
         const history = current.transcript.map((item) => item.role === 'player'
           ? { role: 'user', content: item.text }
           : { role: 'assistant', content: item.dialogue.native });
-        const generated = await this.callProvider(buildNarrationMessages({
+        const generated = await this.narrate(buildNarrationMessages({
           language: this.content.language,
           character: definition.character,
           styleGuide: this.content.styleGuide,
@@ -789,7 +828,7 @@ export class LearningService {
           targetRatio: this.ratioFor(nextTurns, definition),
           decision,
           ambientEntries: definition.ambientEntries,
-        }), encounterResponseSchema, 'encounter_narration', definition.character.name);
+        }), definition, this.ratioFor(nextTurns, definition));
 
         const stagedEnvelope = clone(envelope);
         const stagedEncounter = clone(current);
