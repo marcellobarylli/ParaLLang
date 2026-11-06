@@ -17,3 +17,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 11 | 23:33:11 | 23:33:11 | closed | Claude (claude-opus-5-5), autonomous | Round 054 closed | `../findings.md` |
 | 12 | 2026-11-06 01:53 (approx.) | 01:50:24 | run | Claude (claude-opus-5-5), autonomous | Open item 2: Fountain live (it, codex-cli, --lines with "È l’una, Flick."): time passed on the ’ line (luna, evidence "È l’una"), resolved | `../results/live-apostrophe-it.json` |
 | 13 | 01:50:24 | 01:50:24 | result | Claude (claude-opus-5-5), autonomous | Dated addendum in findings.md; open item 2 done | `../findings.md` |
+| 14 | unknown | 01:50:32 | amended | Claude (claude-opus-5-5), autonomous | Correction: row 12's Occurred (01:53) was a guess and is later than the record; the run ran between about 01:47 and 01:50 UTC | — |
