@@ -7,7 +7,14 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 33 (2026-11-06, 09:20–09:40 UTC) closed one offline content round:
+Nothing open. Iteration 34 (2026-11-06, 09:32–09:50 UTC) closed one offline content round:
+- **110** (backlog B7): "Spores" (`journey_spores`), a Journey fragment on LORE.md's mushrooms and spores (Journathan
+  breathes them on the Dead Branch's roots and wakes in a world that speaks his dream's tongue), filed on the
+  Butcher's Stall's first completion, after the Dead Branch in story order. Every location encounter now files a
+  fragment on first completion. A new test: no fragment's English title or `found` holds an accepted translation of
+  any objective target (five earlier hits allowlisted by name).
+
+Iteration 33 (2026-11-06, 09:20–09:40 UTC) closed one offline content round:
 - **109** (owner-notes audit, backlog B6): every character and lore element of `parallang_obsidian/` against
   `content/` (table in [findings](../rounds/109/findings.md)). Two fragments of *The Journey* filled the clearest
   gap: "The archway's telling" (`journey_proem`, the Entrance tutorial, first in story order) and "Still on his way"
@@ -55,7 +62,8 @@ fixes (review resend replays, starts keep the screen), play-market's retried lin
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
-Next candidates, none needing the owner (B7, mushrooms and spores, is the next content item):
+Next candidates, none needing the owner (the offline backlog is nearly empty; B8 is a sketch that needs a design
+critique before a build):
 - **Offline.** Every area has had an in-depth review (rounds 086–097), 093–098 a second (099), 100–103 one (104),
   and the web client a contract test (103). Small items left: a persisted "encounter ongoing" flag so the
   Spellbook payload stays withheld after a server restart (106 R1.1, low value); round 090's *caffè nero* question (owner); the footnote rule over other
@@ -78,6 +86,17 @@ Next candidates, none needing the owner (B7, mushrooms and spores, is the next c
     (round 101 open item); in the first new report, check `uncommittedLines` carry a `step` and read any
     `unmatchedLines` (round 107).
 
+**Traps (iteration 34):**
+- The Butcher's Stall's first completion now files `journey_spores`: a test that seeds or resolves
+  `butchers_stall_charcutier` sees it in `journeyFragments` (story order: after the Dead Branch, before the
+  forbidden herd). `content.fragments` has ten entries.
+- `lore-fragments.test.js`'s English check (`ENGLISH_ALLOWED`): a new fragment's title or `found` text may not hold a
+  whole-word accepted translation of any objective target (e.g. "three", "coffee", "now"); an allowlisted word that
+  stops being a hit fails the test too. `foldWords` pads with spaces: trim before comparing.
+- The same check over inscriptions' `where` and the containment files finds hits (*half*, *nobody*, *you*, *three*,
+  *now*, *name*…); not made a test (low value: the English does not give the target form). Do it only with a reason.
+- One full server `npm test` again had one unidentified failure (the iteration 31 trap) that did not recur in four
+  more runs; the output was not captured. Next time, run with `> /tmp/srv.log` the first time.
 **Traps (iteration 33):**
 - The Entrance tutorial and Gerald's encounter now file a fragment on first completion: a test that seeds
   `completedEncounterIds` with them, or resolves them, sees `journey_proem` / `journey_still_on_his_way` in
@@ -230,8 +249,16 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - [x] **B6. Owner-notes audit** (round 109, closed 2026-11-06): the notes' characters and lore against content;
   two Journey fragments (the archway's telling, Journathan still on his way).
-- [ ] **B7. Mushrooms and spores** (seeded in round 109 from LORE.md, "the consumer dreams of another language,
-  creating a new world from it"): a fragment or inscription, content only, answer check; no live run.
+- [x] **B7. Mushrooms and spores** (round 110, closed 2026-11-06): the "Spores" fragment, after the Butcher's
+  Stall's first completion; an English give-away check over fragment titles and `found` texts.
+- [ ] **B8. A redacted infohazard passage** (seeded in iteration 34 from LORE.md, Infohazards, "Gameplay hooks":
+  "some untranslated passages are infohazards. Translating them gives juicy lore, but at a cost" and "the companion
+  can redact or blur a hazard, but it is limited during certain events"). Not started: it is a new mechanic (server
+  state for "read it anyway", a route, the map card or Spellbook UI, a cost) and wants a design critique first
+  (Codex after 11-09, or a subagent). Sketch: one passage, shown redacted by the companion ("I have blacked this one
+  out. Trust me."); the player may read it anyway; the cost could be an earworm (its words become due Spellbook
+  cards, reusing SM-2) or a deadpan containment file entry naming the reader. Every location already has its one
+  inscription, so the passage needs a new carrier (a second kind of text, or a containment file's attachment).
 
 ### C. prototype.md Phase 4: Polish & Audio
 
@@ -751,6 +778,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Errors each, fixed (095: the wrapper hid `serial`). Round 098: stale temp-dir sweep. Server 366/366, client 12/12,
   mobile 279/279, iOS export bundles. No live calls.
 
+- 2026-11-06, iteration 34 (09:32–09:50 UTC): round 110 (B7) closed, offline: the "Spores" fragment in both packs
+  (Butcher's Stall, first completion), a subagent review (0 Error, 7 findings, 6 accepted), an English give-away
+  check over fragment titles and `found` texts. Server 397/397, client 21/21, mobile 305/305. No live calls.
 ## Handoff notes and traps
 
 - **Starting encounters** (round 091): a named start (`encounterId`) while another conversation is ongoing is 409
