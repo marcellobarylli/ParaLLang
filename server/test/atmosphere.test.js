@@ -70,14 +70,32 @@ test('completing the encounter, moving or a party member joining asks for a new 
   assert.match(provider.atmosphereCalls[3][0].content, /WITH THE PLAYER: Gerald \(Imp\)\n/);
 });
 
-test('a pack form drops the line, English words and the description\'s own words do not', async (t) => {
+test('a pack form drops the line, the description\'s own words do not', async (t) => {
   const { provider, learnerId, service } = await setup(t);
   provider.lines.push('Somebody mutters quiero at the stones.');
   assert.deepEqual(await service.getAtmosphere(learnerId), { atmosphere: null }, 'pack form (es quiero)');
   assert.deepEqual(service.atmosphereStats.drops.at(-1), { reason: 'vocabulary', locationId: 'market_entrance', excerpt: 'quiero' });
   const { learnerId: other, service: fresh, provider: second } = await setup(t);
-  second.lines.push('Once again, the sign flickers between MERCATO and MARKET, and a kilo of dust settles.');
-  assert.equal((await fresh.getAtmosphere(other)).atmosphere.text, 'Once again, the sign flickers between MERCATO and MARKET, and a kilo of dust settles.');
+  second.lines.push('The sign flickers between MERCATO and MARKET, and dust settles.');
+  assert.equal((await fresh.getAtmosphere(other)).atmosphere.text, 'The sign flickers between MERCATO and MARKET, and dust settles.');
+});
+
+// Round 089 (review R1.1): round 053's "English" exemptions were answers (es once, kilo; it basta, sei), so they drop.
+test('a pack form that is also an English word drops the line (no exemptions)', async (t) => {
+  for (const [language, locationId, line, excerpt] of [
+    ['es', 'coffee_cart', 'Once again, the steam flickers and dust settles.', 'Once'],
+    ['es', 'butchers_stall', 'A kilo of dust settles on the counter.', 'kilo'],
+    ['it', 'cracked_fountain', 'Someone by the dry basin sighs "Basta!" at the stopped clock.', 'Basta'],
+    ['it', 'coffee_cart', 'The steam rises sei times and gives up.', 'sei'],
+  ]) {
+    const provider = new AtmosphereProvider();
+    const runtime = await createRuntime({ provider, language });
+    t.after(runtime.close);
+    const location = runtime.service.content.world.locationsById.get(locationId);
+    provider.lines.push(line);
+    assert.deepEqual(await runtime.service.writeAtmosphere(location, 'open', null, []), { text: null, aborted: false }, `${language} ${line}`);
+    assert.deepEqual(runtime.service.atmosphereStats.drops.at(-1), { reason: 'vocabulary', locationId, excerpt });
+  }
 });
 
 test('too long, schema and provider failures give null, are traced, and are not retried for ten minutes', async (t) => {
@@ -129,7 +147,7 @@ test('every location description of both packs passes the vocabulary filter', as
       const runtime = await createRuntime({ provider, language });
       t.after(runtime.close);
       provider.lines.push(location.description.trim().replace(/\s+/g, ' ').slice(0, ATMOSPHERE_MAX_LENGTH));
-      const text = await runtime.service.writeAtmosphere(location, 'none', null, []);
+      const { text } = await runtime.service.writeAtmosphere(location, 'none', null, []);
       assert.ok(text, `${language} ${location.id}: ${JSON.stringify(runtime.service.atmosphereStats.drops)}`);
     }
   }

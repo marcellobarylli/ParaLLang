@@ -39,6 +39,18 @@ test('a newer word during the wait: only the newer one speaks', async () => {
   expect(second.speak).toHaveBeenCalledWith('cornetto', expect.anything());
 });
 
+// Round 089 (review R1.4 of rounds 040–053): a throw from the speech call, or no voice, restores the ambience.
+test('a speak that throws, or has no voice, does not leave the ambience lowered', async () => {
+  for (const [voice, speech] of [
+    [alice, { stop: jest.fn(async () => {}), speak: jest.fn(() => { throw new Error('native speech error'); }) }],
+    [null, { stop: jest.fn(async () => {}), speak: jest.fn() }],
+  ]) {
+    const duck = jest.fn();
+    await expect(speak('caffè', { tag: 'it-IT', voice }, speech, duck)).resolves.toBeUndefined();
+    expect(duck.mock.calls).toEqual([[true], [false]]);
+  }
+});
+
 beforeEach(() => { jest.clearAllMocks(); resetAmbienceForTests(); Speech.getAvailableVoicesAsync.mockResolvedValue([alice]); });
 afterEach(() => { resetAmbienceForTests(); });
 

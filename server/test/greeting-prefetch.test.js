@@ -371,3 +371,77 @@ test('a delete and a shutdown abort a greeting being written', async (t) => {
   assert.equal(runtime.provider.held[1].signal.aborted, true);
   assert.equal(runtime.service.greetings.size, 0);
 });
+
+// Round 089 (review R1.2 of rounds 040–053): on a serial (CLI) provider a player's call aborts the atmosphere calls in
+// flight; the greeting prefetch never does and waits as for busy; an aborted call is not a cached failure.
+async function heldAtmosphere(t, { serial = true, ...options } = {}) {
+  const runtime = await setup(t, { atmosphere: true, prefetch: false, ...options });
+  runtime.provider.serial = serial;
+  const gate = runtime.provider.hold('location_atmosphere');
+  const learnerId = await atCart(runtime);
+  const pending = [runtime.service.getAtmosphere(learnerId), runtime.service.getAtmosphere(learnerId), runtime.service.getAtmosphere(learnerId)];
+  await gate.arrived;
+  return { runtime, learnerId, gate, pending, held: runtime.provider.held.at(-1) };
+}
+const narration = [{ role: 'user', content: '{}' }];
+
+test('a start on a serial provider aborts the atmosphere call; all who share it are told to ask again', async (t) => {
+  const { runtime, learnerId, pending, held } = await heldAtmosphere(t);
+  const started = await runtime.service.startEncounter(learnerId, { encounterId: 'imp_coffee_greeting' });
+  assert.equal(started.encounter.state, 'ongoing');
+  assert.equal(held.signal.aborted, true);
+  for (const reply of await Promise.all(pending)) assert.deepEqual(reply, { atmosphere: null, retryAfterMs: 15_000 });
+  assert.equal(runtime.service.atmosphereStats.aborted, 1);
+  assert.equal(runtime.service.atmosphereStats.drops.at(-1).reason, 'aborted');
+  assert.equal(runtime.service.atmosphereAborts.size, 0);
+  // Not cached as a failure: the next request (once nothing is in flight) writes the line.
+  assert.equal((await runtime.service.getAtmosphere(learnerId)).atmosphere.locationId, 'coffee_cart');
+});
+
+test('a valid line that arrives after the abort is kept and cached (critique 1.3)', async (t) => {
+  const { runtime, learnerId, gate, pending, held } = await heldAtmosphere(t);
+  // The line is released first, then the abort comes before the service has read it (the child had already closed).
+  const calls = runtime.provider.calls.length;
+  gate.open();
+  runtime.service.abortAtmosphere();
+  assert.equal(held.signal.aborted, true);
+  for (const reply of await Promise.all(pending)) assert.equal(reply.atmosphere.locationId, 'coffee_cart');
+  assert.equal(runtime.service.atmosphereStats.aborted, 0);
+  assert.ok((await runtime.service.getAtmosphere(learnerId)).atmosphere);
+  assert.equal(runtime.provider.calls.length, calls + 1, 'one atmosphere call, then the cache');
+});
+
+test('no abort on a provider that is not serial, nor from a background call', async (t) => {
+  const http = await heldAtmosphere(t, { serial: false });
+  await http.runtime.service.callProvider(narration, { parse: (value) => value }, 'encounter_narration', 'Test');
+  assert.equal(http.held.signal.aborted, false, 'HTTP provider');
+  http.gate.open();
+  assert.ok((await Promise.all(http.pending))[0].atmosphere);
+  const cli = await heldAtmosphere(t);
+  await cli.runtime.service.callProvider(narration, { parse: (value) => value }, 'encounter_narration', 'Test', { background: true });
+  assert.equal(cli.held.signal.aborted, false, 'background call');
+  cli.gate.open();
+  assert.ok((await Promise.all(cli.pending))[0].atmosphere);
+});
+
+test('the greeting prefetch waits while an atmosphere call is in flight and does not abort it (critique 1.1)', async (t) => {
+  const { runtime, gate, pending, held } = await heldAtmosphere(t, { prefetch: true });
+  await waitFor(() => runtime.service.prefetchStats.busy >= 1);
+  assert.equal(held.signal.aborted, false);
+  assert.equal(greetings(runtime).length, 0);
+  gate.open();
+  assert.ok((await Promise.all(pending))[0].atmosphere);
+  await waitFor(() => greetings(runtime).length === 1);
+  assert.equal(speaker(greetings(runtime)[0]), 'Gerald');
+});
+
+test('the CLI adapters are serial; the HTTP ones are not', async () => {
+  const { CodexCLIAdapter } = await import('../src/llm/adapters/codex-cli.js');
+  const { ClaudeCLIAdapter } = await import('../src/llm/adapters/claude-cli.js');
+  const { OpenAIAdapter } = await import('../src/llm/adapters/openai.js');
+  const { OllamaAdapter } = await import('../src/llm/adapters/ollama.js');
+  assert.equal(CodexCLIAdapter.prototype.serial, true);
+  assert.equal(ClaudeCLIAdapter.prototype.serial, true);
+  assert.equal(OpenAIAdapter.prototype.serial, undefined);
+  assert.equal(OllamaAdapter.prototype.serial, undefined);
+});

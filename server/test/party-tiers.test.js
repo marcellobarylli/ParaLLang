@@ -123,6 +123,25 @@ test('the deepest unlocked tier wins whatever the file order', async (t) => {
   }
 });
 
+// Round 089 (review R1.3): a fragment is filed under the conversation offered at N − 1, so the app announces it when a
+// deeper tier's resolution reaches the count; at 3 with the tier at 3 it stays the first tier's (critique 1.7).
+test('a conversation fragment names the tier whose resolution reached its count', async (t) => {
+  const dir = await makeTempDir('parallang-tiers-');
+  await cp(contentRoot, dir, { recursive: true });
+  const file = join(dir, 'languages/es/lore/fragments.yaml');
+  await writeFile(file, (await readFile(file, 'utf8')).replace('found_after: imp_coffee_greeting\n    after_conversations: 3', 'found_after: imp_coffee_greeting\n    after_conversations: 4'));
+  const content = loadGameContent({ contentDir: dir, language: 'es' });
+  assert.equal(content.fragments.find((f) => f.id === 'journey_dead_branch').after_conversations, 4);
+  const fragments = async (count, given) => {
+    const { runtime, learnerId } = await withGerald(t, count, given);
+    const spellbook = (await api(runtime, '/api/spellbook', { learnerId })).data;
+    return (spellbook.journeyFragments ?? spellbook.spellbook?.journeyFragments).map((f) => [f.id, f.encounterId, f.unlockedAt]);
+  };
+  assert.deepEqual(await fragments(4, content), [['journey_dead_branch', 'gerald_confidence', 4]]);
+  assert.deepEqual(await fragments(3, content), []);
+  assert.deepEqual(await fragments(3), [['journey_dead_branch', 'gerald_coffee_break', 3]], 'shipped content: fragment and tier at 3');
+});
+
 // Round 048 (backlog G6): every other saveable member offers a deeper tier at 3, which resolves and counts like
 // Gerald's.
 const MEMBERS = [

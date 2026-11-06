@@ -41,9 +41,8 @@ export function inflectsAnswer(text, objectives, vocabularyById) {
 export const LINE_ENTRY_CACHE = 500; // round 088: natives whose entry ids are remembered
 export const ATMOSPHERE_RETRY_MS = 10 * 60_000;
 export const ATMOSPHERE_BUSY_RETRY_MS = 15_000;
-// Round 053 (critique 1.1): pack forms that are also English words; the atmosphere line may use them in English.
-export const ATMOSPHERE_ENGLISH = new Set(['once', 'kilo', 'kilos', 'cafe', 'sola', 'pollo', 'basta', 'io', 'due', 'otto', 'nove', 'sei',
-  'salami', 'chorizo', 'chorizos', 'mezzo', 'cento', 'soy', 'media', 'piano', 'chili']);
+// Round 089 (review R1.1): no English exemptions in the atmosphere filter. Round 053's list (once, kilo, basta, sei, …)
+// held only forms that are objective answers in their pack (docs/rounds/089/results/exempt.txt).
 // Round 068 (backlog A10b, critique 1.2): one kind of detail per line, fixed by the location's index in the pack's world
 // and the state (none 0, open 1, complete 2): (3i + s) mod 5. A pure function of what the cache key already holds, so
 // a cached line always matches its detail for the server's lifetime (critique 1.6).
@@ -99,7 +98,10 @@ export class LearningService {
     this.atmosphereLines = new Map();
     this.atmosphereCalls = new Map();
     this.atmosphereFailures = new Map();
-    this.atmosphereStats = { calls: 0, drops: [] };
+    this.atmosphereStats = { calls: 0, aborted: 0, drops: [] };
+    // Round 089 (review R1.2): controllers of the atmosphere calls in flight; a player's call on a serial provider
+    // aborts them, so a cosmetic line never holds the one CLI slot ahead of an encounter.
+    this.atmosphereAborts = new Set();
     this.providerCallsInFlight = 0;
     this.storage = storage;
     this.content = content;
@@ -380,7 +382,8 @@ export class LearningService {
       const member = party.find((m) => this.isHomeMember(m, homeId));
       return member ? (member.conversations ?? 0) : null;
     };
-    const conversationOf = (homeId) => this.partyConversationFor(homeId).encounter.id;
+    // Round 089 (review R1.3): the conversation offered at N − 1, whose resolution reached the count N.
+    const conversationOf = (homeId, unlockedAt) => this.partyConversationFor(homeId, unlockedAt - 1).encounter.id;
     const found = (fragment) => (fragment.after_conversations === undefined
       ? completed.has(fragment.found_after)
       : (memberCount(fragment.found_after) ?? 0) >= fragment.after_conversations);
@@ -389,7 +392,7 @@ export class LearningService {
       const byConversation = fragment.after_conversations !== undefined;
       return {
         id: fragment.id, title: fragment.title, found: fragment.found,
-        encounterId: byConversation ? conversationOf(encounter.id) : encounter.id,
+        encounterId: byConversation ? conversationOf(encounter.id, fragment.after_conversations) : encounter.id,
         // Round 036: a conversation fragment names who told it (shown in English, also during encounters).
         ...(byConversation ? { unlockedAt: fragment.after_conversations, conversations: memberCount(encounter.id), toldBy: character.name } : {}),
         locationName: this.content.world.locationsById.get(encounter.location).name, text: fragment.text,
@@ -497,7 +500,9 @@ export class LearningService {
     };
   }
 
-  async callProvider(messages, schema, schemaName, label, { signal } = {}) {
+  async callProvider(messages, schema, schemaName, label, { signal, background = false } = {}) {
+    // Round 089 (decision 2): a player's call (not the greeting prefetch) on a serial provider aborts atmosphere calls.
+    if (!background && this.provider.serial === true) this.abortAtmosphere();
     this.providerCallsInFlight += 1; // round 053: no atmosphere call starts meanwhile
     try {
       const response = await this.provider.structuredChat(messages, schema, { schemaName, temperature: 0.2, ...(signal ? { signal } : {}) });
@@ -516,8 +521,8 @@ export class LearningService {
   // (review 1): at the deadline the retry is aborted (the CLI runner frees its one slot); no retry while stopping.
   // Round 087 (critique 1.4, 1.5): a caller's signal (a prefetch) reaches the first call and the retry; no retry once
   // it is aborted.
-  async narrate(messages, definition, ratio, { signal } = {}) {
-    const first = await this.callProvider(messages, encounterResponseSchema, 'encounter_narration', definition.character.name, signal ? { signal } : {});
+  async narrate(messages, definition, ratio, { signal, background = false } = {}) {
+    const first = await this.callProvider(messages, encounterResponseSchema, 'encounter_narration', definition.character.name, { ...(signal ? { signal } : {}), background });
     this.narrationStats.checked += 1;
     if (!this.lacksTarget(first, definition)) return first;
     this.narrationStats.flagged += 1;
@@ -528,7 +533,7 @@ export class LearningService {
       { role: 'assistant', content: JSON.stringify(first) },
       { role: 'user', content: correctionNote(this.content.language, ratio) },
     ], encounterResponseSchema, 'encounter_narration', definition.character.name,
-    { signal: signal ? AbortSignal.any([signal, abort.signal]) : abort.signal }).catch(() => null);
+    { signal: signal ? AbortSignal.any([signal, abort.signal]) : abort.signal, background }).catch(() => null);
     let timer;
     const deadline = new Promise((resolve) => { timer = setTimeout(() => resolve(TIMED_OUT), this.narrationRetryMs); });
     timer.unref?.();
@@ -705,7 +710,8 @@ export class LearningService {
       this.endArrival(learnerId, arrival, 'skipped');
       return;
     }
-    if (this.providerCallsInFlight > 0) {
+    // Round 089 (critique 1.1): the prefetch never aborts an atmosphere call; one in flight counts as busy.
+    if (this.providerCallsInFlight > 0 || this.atmosphereAborts.size > 0) {
       this.prefetchStats.busy += 1;
       if (arrival.tries < this.prefetchRetries) { arrival.tries += 1; this.armArrival(learnerId, arrival); }
       else this.endArrival(learnerId, arrival, null);
@@ -716,7 +722,7 @@ export class LearningService {
     // Round 087 (critique 1.2, 1.4): the entry never rejects and keeps its error; an aborted call is not a failure.
     const controller = new AbortController();
     const entry = { controller, settled: false };
-    entry.promise = this.narrate(this.greetingMessages(definition, undefined), definition, this.ratioFor(0, definition), { signal: controller.signal })
+    entry.promise = this.narrate(this.greetingMessages(definition, undefined), definition, this.ratioFor(0, definition), { signal: controller.signal, background: true })
       .then((generated) => ({ generated }), (error) => {
         if (!controller.signal.aborted) this.prefetchStats.failed += 1;
         return { error };
@@ -1049,16 +1055,26 @@ export class LearningService {
     if (!this.atmosphereCalls.has(key)) {
       // Review 1: busy is not cached, so the reply says when to ask again.
       if (this.providerCallsInFlight > 0) { this.dropAtmosphere('busy', locationId); return { ...result(null), retryAfterMs: ATMOSPHERE_BUSY_RETRY_MS }; }
-      const call = this.writeAtmosphere(location, state, encounter?.character ?? null, party)
-        .then((text) => {
-          if (text) { this.atmosphereLines.set(key, text); this.atmosphereFailures.delete(key); }
-          else this.atmosphereFailures.set(key, new Date(this.clock()).getTime() + ATMOSPHERE_RETRY_MS);
-          return text;
+      // Round 089 (decision 3): a valid line is kept even if the abort came late; an aborted call without one is
+      // not a failure, and every request sharing it is told when to ask again.
+      const controller = new AbortController();
+      this.atmosphereAborts.add(controller);
+      const call = this.writeAtmosphere(location, state, encounter?.character ?? null, party, controller.signal)
+        .then((outcome) => {
+          if (outcome.text) { this.atmosphereLines.set(key, outcome.text); this.atmosphereFailures.delete(key); }
+          else if (!outcome.aborted) this.atmosphereFailures.set(key, new Date(this.clock()).getTime() + ATMOSPHERE_RETRY_MS);
+          return outcome;
         })
-        .finally(() => this.atmosphereCalls.delete(key));
+        .finally(() => { this.atmosphereCalls.delete(key); this.atmosphereAborts.delete(controller); });
       this.atmosphereCalls.set(key, call);
     }
-    return result(await this.atmosphereCalls.get(key));
+    const outcome = await this.atmosphereCalls.get(key);
+    return outcome.aborted && !outcome.text ? { ...result(null), retryAfterMs: ATMOSPHERE_BUSY_RETRY_MS } : result(outcome.text);
+  }
+
+  abortAtmosphere() {
+    for (const controller of this.atmosphereAborts) controller.abort();
+    this.atmosphereAborts.clear();
   }
 
   dropAtmosphere(reason, locationId, excerpt) {
@@ -1066,7 +1082,12 @@ export class LearningService {
     if (this.atmosphereStats.drops.length > 50) this.atmosphereStats.drops.shift();
   }
 
-  async writeAtmosphere(location, state, character, party) {
+  async writeAtmosphere(location, state, character, party, signal) {
+    const outcome = await this.atmosphereLine(location, state, character, party, signal);
+    return { text: outcome, aborted: signal?.aborted === true };
+  }
+
+  async atmosphereLine(location, state, character, party, signal) {
     const who = character ? `${character.name}, ${/^[aeiou]/i.test(character.species) ? 'an' : 'a'} ${character.species},` : null;
     const facts = {
       none: 'Nobody here wants to talk to the player.',
@@ -1079,17 +1100,21 @@ export class LearningService {
     catch { this.dropAtmosphere('build', location.id); return null; } // review 1: never a 500
     this.atmosphereStats.calls += 1;
     let reply;
-    try { reply = await this.provider.structuredChat(messages, locationAtmosphereSchema, { schemaName: 'location_atmosphere', temperature: 0.7 }); }
-    catch { this.dropAtmosphere('provider', location.id); return null; }
+    try { reply = await this.provider.structuredChat(messages, locationAtmosphereSchema, { schemaName: 'location_atmosphere', temperature: 0.7, ...(signal ? { signal } : {}) }); }
+    catch {
+      if (signal?.aborted) { this.atmosphereStats.aborted += 1; this.dropAtmosphere('aborted', location.id); }
+      else this.dropAtmosphere('provider', location.id);
+      return null;
+    }
     const parsed = locationAtmosphereSchema.safeParse(reply);
     if (!parsed.success) { this.dropAtmosphere('schema', location.id); return null; }
     const text = parsed.data.atmosphere.trim().replace(/\s+/g, ' ');
     if (!text || text.length > ATMOSPHERE_MAX_LENGTH) { this.dropAtmosphere('length', location.id); return null; }
-    // No form of a pack entry (it teaches nothing and gives nothing away), unless it is also an English word or a
-    // word of the location's own description (critique 1.1).
+    // No form of a pack entry (it teaches nothing and gives nothing away), unless it is a word of the location's own
+    // description (round 053 critique 1.1), which the map card already shows. Round 089: no English exemptions.
     const ownWords = new Set(foldForAtmosphere(location.description).split(' '));
     const hit = matchCanonicalVocabulary(text, this.content.vocabulary.entries)
-      .find((match) => { const folded = foldForAtmosphere(match.excerpt); return !ATMOSPHERE_ENGLISH.has(folded) && !folded.split(' ').every((word) => ownWords.has(word)); });
+      .find((match) => !foldForAtmosphere(match.excerpt).split(' ').every((word) => ownWords.has(word)));
     if (hit) { this.dropAtmosphere('vocabulary', location.id, hit.excerpt); return null; }
     return text;
   }

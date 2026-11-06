@@ -56,6 +56,9 @@ export class BaseCLIAdapter {
     this.lastResolvedModel = null;
   }
 
+  // Round 089: one CLI process at a time (the runner's slot); the service aborts cosmetic calls for a player's call.
+  get serial() { return true; }
+
   async ensurePreflight() {
     if (!this.preflightPromise) {
       this.preflightPromise = this.preflight().catch((error) => {

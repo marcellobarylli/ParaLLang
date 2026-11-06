@@ -70,7 +70,9 @@ export async function speak(text, { tag, voice }, speech = Speech, duck = duckAm
   if (mine !== generation) return; // round 063 (critique 1.1): a stop or a newer word came during the wait
   const restore = () => { if (mine === generation) duck(false); };
   duck(true);
-  speech.speak(text, { language: tag, voice: voice.identifier, onDone: restore, onStopped: restore, onError: restore });
+  // Round 089 (review R1.4): a throw (no voice, a native error) must not leave the ambience lowered.
+  try { speech.speak(text, { language: tag, voice: voice.identifier, onDone: restore, onStopped: restore, onError: restore }); }
+  catch { restore(); }
 }
 
 // Round 055 (critique 1.8): leaving the encounter silences the voice and restores the ambience.
