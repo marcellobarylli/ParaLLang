@@ -8,6 +8,8 @@
 // content, and the word scan is a lower bound (no inflection: "chiamo" never hits "chiami").
 // Round 049 (backlog G7): `foreign` lines, counted apart from the four kinds, hold a whole surface form of a target that
 // a party conversation teaches and the scene's own encounter does not (Flick saying Marginalia's "eccomi").
+// Round 100 (round 097 review R1.5): `extras`, counted apart from all of the above, are the line's English
+// `narrative` and the grader's feedback holding a whole form of an objective still open when the player reads them.
 //   node server/scripts/leak-scan.js <report.json ...> [--json <out.json>]
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -35,7 +37,7 @@ export function scenesOf(report) {
     if (Array.isArray(node)) { node.forEach((each) => walk(each, false)); return; }
     if (!node || typeof node !== 'object') return;
     if (Array.isArray(node.lines) && Array.isArray(node.grading) && (typeof node.encounterId === 'string' || top)) {
-      found.push({ encounterId: node.encounterId ?? null, inferred: typeof node.encounterId !== 'string', lines: node.lines });
+      found.push({ encounterId: node.encounterId ?? null, inferred: typeof node.encounterId !== 'string', lines: node.lines, grading: node.grading });
       return;
     }
     for (const [key, value] of Object.entries(node)) if (key !== 'steps') walk(value, false);
@@ -53,7 +55,7 @@ export function scenesOf(report) {
 // moved nothing and was answered by no line). Each step that succeeded is answered by exactly one line.
 export function playerTurns(report) {
   return (report.steps ?? []).filter((step) => step.ok && typeof step.name === 'string' && step.name.startsWith('say "'))
-    .map((step) => ({ message: step.name.slice(5, -1), verdicts: Array.isArray(step.verdicts) ? step.verdicts : [] }));
+    .map((step) => ({ message: step.name.slice(5, -1), verdicts: Array.isArray(step.verdicts) ? step.verdicts : [], feedback: typeof step.feedback === 'string' ? step.feedback : null }));
 }
 
 // Objectives still open at line k, replayed as the server advances (critique 1.1). Round 097 (review R1.3): as
@@ -133,6 +135,64 @@ export function foreignFormsFor(content, encounterId) {
   return forms;
 }
 
+// Round 100 (critique 1.2): single-word pack forms that are also English words. In English text a hit on one is
+// marked `english` and its text counted apart (it may still give the answer away: "Gerald pours an espresso").
+export const ENGLISH_FORMS = Object.freeze({
+  es: new Set('once kilo kilos cafe chorizo hola amigo amigos yo dos'.split(' ')),
+  it: new Set('due espresso salami salame prosciutto ciao basta otto chilo'.split(' ')),
+});
+
+// Round 100: one English text against the open objectives' forms; hits per (text, objective), the first form found.
+function scanText(text, forms, language, earlier, { passages = null } = {}) {
+  const folded = fold(text);
+  const english = ENGLISH_FORMS[language] ?? new Set();
+  const byObjective = new Map();
+  for (const { objective, form } of forms) {
+    const f = fold(form).trim();
+    if (byObjective.has(objective) || !holds(folded, f)) continue;
+    byObjective.set(objective, {
+      objective, form,
+      echo: earlier.some((message) => holds(message, f)),
+      english: english.has(f),
+      ...(passages ? { quoted: passages(objective).some((passage) => holds(passage, f)) } : {}),
+    });
+  }
+  const hits = [...byObjective.values()];
+  const fresh = hits.some((hit) => !hit.echo && !hit.english && !hit.quoted);
+  const englishOnly = !fresh && hits.some((hit) => hit.english && !hit.echo && !hit.quoted);
+  return { hits, fresh, englishOnly };
+}
+
+// Round 100 (decisions 4-6): the scene's narratives and feedback. `mine` are the scene's turns.
+export function scanExtras(scene, mine, definition, content) {
+  const objectives = definition.encounter.objectives;
+  const unordered = definition.encounter.objectives_unordered === true;
+  const language = content.language.code;
+  const out = { texts: [], narratives: 0, feedbackTurns: 0, feedbackUnmatched: 0 };
+  const folded = mine.map((turn) => fold(turn.message));
+  scene.lines.forEach((line, k) => {
+    if (typeof line.narrative !== 'string' || !line.narrative.trim()) return;
+    out.narratives += 1;
+    const forms = formsFor(openObjectives(objectives, mine, k, { unordered }), content.vocabularyById);
+    const result = scanText(line.narrative, forms, language, folded.slice(0, k), { passages: (id) => passagesOf(objectives, id) });
+    if (result.hits.length) out.texts.push({ field: 'narrative', line: k, ...result, text: line.narrative });
+  });
+  const gradings = Array.isArray(scene.grading) ? scene.grading : [];
+  const used = new Set();
+  mine.forEach((turn, j) => {
+    if (turn.feedback === null) return;
+    out.feedbackTurns += 1;
+    const at = gradings.findIndex((grading, i) => !used.has(i) && grading?.output?.overall_feedback === turn.feedback);
+    if (at >= 0) used.add(at); else out.feedbackUnmatched += 1;
+    const parts = [turn.feedback, ...(at >= 0 ? (gradings[at].output.objective_results ?? []).map((result) => result?.feedback).filter((each) => typeof each === 'string') : [])];
+    const forms = formsFor(openObjectives(objectives, mine, j + 1, { unordered }), content.vocabularyById);
+    const text = parts.join(' | ');
+    const result = scanText(text, forms, language, folded.slice(0, j + 1));
+    if (result.hits.length) out.texts.push({ field: 'feedback', turn: j, ...result, text });
+  });
+  return out;
+}
+
 // Critique 1.2: party forms that English has borrowed ("amigo", round 047 critique 1.4); marked, never counted.
 export const FOREIGN_ENGLISH = new Set(['amigo', 'amigos']);
 
@@ -189,7 +249,9 @@ export function scanReport(report, content) {
       hits.push({ line: k, kind, ...marked, native: line.native });
     });
     const count = (kind) => hits.filter((hit) => hit.kind === kind).length;
+    const extras = scanExtras(scene, mine, definition, content); // round 100
     scenes.push({
+      extras,
       encounterId, inferred: scene.inferred, replay: Boolean(scene.replay), lines: scene.lines.length,
       leakLines: count('leak'), nearLines: count('near'), quotedLines: count('quoted'), echoLines: count('echo'), hits,
       party: Boolean(definition.encounter.party_of),
@@ -201,9 +263,17 @@ export function scanReport(report, content) {
 
 const KINDS = ['leak', 'near', 'quoted', 'echo'];
 
+// Round 100 (critique 1.5): the round folder a report sits in, before or from round 051 (the grader's order rule).
+export function eraOf(path) {
+  const m = /docs\/rounds\/(\d{3})\//.exec(String(path ?? ''));
+  if (!m) return 'other';
+  return Number(m[1]) < 51 ? 'before 051' : 'from 051';
+}
+
 export function summarize(results) {
   const total = {};
   const files = {};
+  const extras = {};
   for (const r of results) {
     if (r.error) { files[r.error] = (files[r.error] ?? 0) + 1; continue; }
     if (!r.scenes.length && !r.skipped.length) { files['no scenes'] = (files['no scenes'] ?? 0) + 1; continue; }
@@ -216,9 +286,19 @@ export function summarize(results) {
       for (const kind of KINDS) t[`${kind}Lines`] += s[`${kind}Lines`];
       t.foreignLines += s.foreignLines;
       if (s.party) { t.partyLines += s.lines; t.partyForeignLines += s.foreignLines; }
+      if (!s.extras) continue;
+      const e = ((extras[r.language] ??= {})[eraOf(r.path)] ??= { narratives: 0, freshNarratives: 0, englishNarratives: 0, feedbackTurns: 0, freshFeedback: 0, englishFeedback: 0, feedbackUnmatched: 0 });
+      e.narratives += s.extras.narratives;
+      e.feedbackTurns += s.extras.feedbackTurns;
+      e.feedbackUnmatched += s.extras.feedbackUnmatched;
+      for (const text of s.extras.texts) {
+        const field = text.field === 'narrative' ? 'Narratives' : 'Feedback';
+        if (text.fresh) e[`fresh${field}`] += 1;
+        else if (text.englishOnly) e[`english${field}`] += 1;
+      }
     }
   }
-  return { files, total };
+  return { files, total, extras };
 }
 
 async function main(args = process.argv.slice(2)) {
@@ -242,18 +322,28 @@ async function main(args = process.argv.slice(2)) {
         const what = [...h.exact.map((x) => `${x.objective}:${x.form}${tag(x)}`), ...h.words.map((x) => `${x.objective}:${x.word}<${x.form}>${tag(x)}`)];
         console.log(`${h.kind}\t${r.path}\t${s.encounterId}\tline ${h.line}\t[${what.join(', ')}]\t${String(h.native).replace(/\s+/g, ' ').slice(0, 160)}`);
       }
+      for (const x of s.extras?.texts ?? []) {
+        if (!x.fresh && !x.englishOnly) continue;
+        const what = x.hits.map((hit) => `${hit.objective}:${hit.form}${hit.echo ? ' (echo)' : ''}${hit.english ? ' (english)' : ''}${hit.quoted ? ' (quoted)' : ''}`);
+        console.log(`extra-${x.field}${x.fresh ? '' : '-english'}\t${r.path}\t${s.encounterId}\t${x.field === 'narrative' ? `line ${x.line}` : `turn ${x.turn}`}\t[${what.join(', ')}]\t${String(x.text).replace(/\s+/g, ' ').slice(0, 200)}`);
+      }
       for (const f of s.foreign) {
         const what = f.hits.map((x) => `${x.owner}:${x.form}${x.echo ? ' (echo)' : ''}${x.english ? ' (english)' : ''}`);
         console.log(`foreign\t${r.path}\t${s.encounterId}\tline ${f.line}\t[${what.join(', ')}]\t${String(f.native).replace(/\s+/g, ' ').slice(0, 160)}`);
       }
     }
   }
-  const { files, total } = summarize(results);
+  const { files, total, extras } = summarize(results);
   console.log(`== files: ${Object.entries(files).map(([k, v]) => `${k} ${v}`).join(', ')} (of ${paths.length})`);
   for (const [language, t] of Object.entries(total)) {
     console.log(`== ${language}: ${t.reports} reports, ${t.scenes} scenes (${t.inferred} inferred, ${t.replays} replay greetings, ${t.skippedScenes} skipped), ${t.lines} lines; leak ${t.leakLines}, near ${t.nearLines}, quoted ${t.quotedLines}, echo ${t.echoLines}; foreign ${t.foreignLines} (party conversations: ${t.partyForeignLines} of ${t.partyLines} lines)`);
   }
-  if (out) writeFileSync(out, `${JSON.stringify({ files, total, results }, null, 2)}\n`);
+  for (const [language, eras] of Object.entries(extras)) {
+    for (const [era, e] of Object.entries(eras).sort()) {
+      console.log(`== extras ${language} ${era}: narratives ${e.narratives} (fresh ${e.freshNarratives}, english ${e.englishNarratives}); feedback turns ${e.feedbackTurns} (fresh ${e.freshFeedback}, english ${e.englishFeedback}, unmatched gradings ${e.feedbackUnmatched})`);
+    }
+  }
+  if (out) writeFileSync(out, `${JSON.stringify({ files, total, extras, results }, null, 2)}\n`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) main().catch((error) => { console.error(error); process.exitCode = 1; });

@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 100, narratives and grader feedback do not give answers away (autonomous)
+
+The tool that checks live playthroughs for answers given away now also reads the narrator's English text and the
+grader's feedback. Over all 149 committed playthrough reports, no narrative and no feedback since round 008 names
+an answer the player still has to find; the only cases are the eight no-milk hints round 008 fixed
+([findings](docs/rounds/100/findings.md)).
+
 ## Addendum 2026-11-06: round 099, fixes from a second review of rounds 093–098 (autonomous)
 
 A second review found one bug a player can hit: asking for help after an answer whose reply was lost reloaded the

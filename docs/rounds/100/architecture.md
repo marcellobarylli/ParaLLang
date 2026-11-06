@@ -96,3 +96,10 @@ scope: taken (Decisions 1–3).
 - the four existing kinds: the printed kind lines over every committed report equal round 100's
   `results/scan-before.txt`.
 - Mutations; full suites.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. The scan now reports narratives and grader feedback apart from the four kinds,
+whose lines are unchanged over every committed report. Over the 149 committed reports: no narrative of 1166 gives an
+open answer; 8 of 942 feedback turns do, all in rounds 005–007, before round 008's feedback rule; one more names
+*once* in English only ([findings](findings.md)).

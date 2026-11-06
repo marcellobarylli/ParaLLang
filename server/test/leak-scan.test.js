@@ -160,3 +160,75 @@ test('a form split over two earlier messages is not an echo', () => {
   assert.equal(exact.length, 1, JSON.stringify(scene.hits));
   assert.equal(exact[0].echo, false);
 });
+
+// Round 100 (round 097 review R1.5; critique 1.1-1.7): narratives and grader feedback, counted apart.
+const gerald = (steps, lines, grading = []) => ({ language: 'it', steps, encounters: [{ encounterId: 'imp_coffee_greeting', grading, lines }] });
+const fb = (message, verdicts, feedback) => ({ ok: true, name: `say "${message}"`, verdicts, feedback });
+const grade = (overall, ...parts) => ({ output: { overall_feedback: overall, objective_results: parts.map((feedback, i) => ({ objective_id: `o${i}`, feedback })) } });
+const extrasOf = (report, content = it) => scanReport(report, content).scenes[0].extras;
+
+test('a narrative naming an open form is fresh; a closed one\'s form is not; a replay greeting adds no narrative', () => {
+  const report = gerald([fb('Vorrei un caffè.', [v('order_coffee', true), v('no_milk', false)], 'Good.')], [
+    { native: 'Ciao.', narrative: 'Gerald mutters "senza latte" to the cups.' },
+    { native: 'Bene.', narrative: 'He hums "vorrei", then frowns.' },
+  ]);
+  const extras = extrasOf(report);
+  assert.equal(extras.narratives, 2);
+  const narratives = extras.texts.filter((x) => x.field === 'narrative');
+  assert.deepEqual(narratives.map((x) => [x.line, x.fresh]), [[0, true]], JSON.stringify(extras.texts));
+  assert.equal(narratives[0].hits[0].objective, 'no_milk');
+  const replay = scanReport({ language: 'it', results: [{ encounterId: 'imp_coffee_greeting', native: 'Ciao.' }] }, it).scenes[0].extras;
+  assert.equal(replay.narratives, 0);
+});
+
+test('feedback: the objective passed in that turn is no hit, a later open one is fresh, a held pass the player wrote is echo', () => {
+  const passed = gerald([fb('Vorrei un caffè.', [v('order_coffee', true), v('no_milk', false)], 'Vorrei works. Now say senza latte.')], [{ native: 'Ciao.' }, { native: 'Bene.' }]);
+  const [text] = extrasOf(passed).texts;
+  assert.deepEqual(text.hits.map((hit) => [hit.objective, hit.echo]), [['no_milk', false]]);
+  assert.equal(text.fresh, true);
+  // A held pass: no_milk passed early, order_coffee failed, so no_milk stays open; the grader quotes the player.
+  const held = gerald([fb('Senza latte.', [v('order_coffee', false), v('no_milk', true)], 'You said senza latte; order first.')], [{ native: 'Ciao.' }, { native: 'Hmm.' }]);
+  const [quote] = extrasOf(held).texts;
+  assert.deepEqual(quote.hits.map((hit) => [hit.objective, hit.echo]), [['no_milk', true]]);
+  assert.equal(quote.fresh, false);
+});
+
+test('feedback on the resolving turn names nothing open; an unordered encounter closes what passed', () => {
+  const resolved = gerald([fb('Vorrei un caffè senza latte.', [v('order_coffee', true), v('no_milk', true)], 'Vorrei un caffè senza latte: perfect.')], [{ native: 'Ciao.' }, { native: 'Ecco.' }]);
+  assert.deepEqual(extrasOf(resolved).texts, []);
+  const tasting = {
+    language: 'it',
+    steps: [fb('Ancora!', [v('like_it', false), v('ask_more', true)], 'Ancora is right; now say mi piace.')],
+    encounters: [{ encounterId: 'mortimer_tasting', grading: [], lines: [{ native: 'Assaggia.' }, { native: 'Bene.' }] }],
+  };
+  const [text] = extrasOf(tasting).texts;
+  assert.deepEqual(text.hits.map((hit) => hit.objective), ['like_it']);
+});
+
+test('an English form is marked and counted apart, not fresh', () => {
+  const report = gerald([], [{ native: 'Ciao.', narrative: 'Gerald pours an espresso nobody ordered.' }]);
+  const [text] = extrasOf(report).texts;
+  assert.deepEqual([text.fresh, text.englishOnly, text.hits[0].english], [false, true, true]);
+  const { extras } = summarize([{ path: 'docs/rounds/100/results/x.json', language: 'it', ...scanReport(report, it) }]);
+  assert.deepEqual(extras.it['from 051'], { narratives: 1, freshNarratives: 0, englishNarratives: 1, feedbackTurns: 0, freshFeedback: 0, englishFeedback: 0, feedbackUnmatched: 0 });
+});
+
+test('per-objective feedback comes from the first unused grading with the step\'s feedback; none is unmatched', () => {
+  const steps = [
+    fb('Ciao.', [v('order_coffee', false), v('no_milk', false)], 'Try again.'),
+    fb('Ciao!', [v('order_coffee', false), v('no_milk', false)], 'Try again.'),
+    fb('Hm.', [v('order_coffee', false), v('no_milk', false)], 'Something else.'),
+  ];
+  const lines = [{ native: 'Ciao.' }, { native: 'No.' }, { native: 'No.' }, { native: 'No.' }];
+  // A failed attempt's grading first, then two with identical feedback: the first names a form, the second does not.
+  const grading = [grade('Other.', 'say senza latte'), grade('Try again.', 'Ask with senza latte.'), grade('Try again.', 'Ask for coffee.')];
+  const extras = extrasOf(gerald(steps, lines, grading));
+  assert.equal(extras.feedbackTurns, 3);
+  assert.equal(extras.feedbackUnmatched, 1);
+  assert.deepEqual(extras.texts.map((x) => x.turn), [0], JSON.stringify(extras.texts));
+});
+
+test('eraOf: before 051, from 051, other', async () => {
+  const { eraOf } = await import('../scripts/leak-scan.js');
+  assert.deepEqual(['docs/rounds/007/results/a.json', 'docs/rounds/051/results/b.json', '/tmp/c.json'].map(eraOf), ['before 051', 'from 051', 'other']);
+});
