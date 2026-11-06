@@ -102,3 +102,8 @@ the evidence stands in the answer at word boundaries (some occurrence neither st
 `atWordBoundaries`), and, as before, its own text matches the entry. "pane" quoted from "panettone" is still refused;
 a quoted phrase around the form is accepted. The entry-alone match is gone with it, so the *caffè nero* test of the
 pre-run Tests is replaced by `atWordBoundaries('un caffè nero', 'caffè')`. The substring check is part of the new one.
+
+## Outcome (2026-11-06)
+
+Built as designed with Amendment 1. Every fix has a test that fails without it; full suites pass
+([findings](findings.md)). The word-boundary rule awaits a live check (queued).

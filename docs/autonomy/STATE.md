@@ -7,7 +7,7 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 27 (2026-11-06, 05:53–06:45 UTC) closed three offline review rounds:
+Nothing open. Iteration 27 (2026-11-06, 05:53–06:55 UTC) closed four offline review rounds:
 - **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
   *sei*; es *once*, *kilo*), so the list is gone (0/72 live lines used one). On a serial (CLI) provider a player's
   call (`callProvider` without `background`) aborts atmosphere calls in flight; the greeting prefetch is `background`
@@ -22,27 +22,35 @@ Nothing open. Iteration 27 (2026-11-06, 05:53–06:45 UTC) closed three offline 
   409 `CONVERSATION_UNDER_WAY` (after the drill check); the map card shows "Return to X" and "Leave X and talk to Y"
   (`leaveAndEnter`, a restart start); a 409 makes the store take the server's conversation; a restart of the held
   conversation skips `NOT_HERE`. The web client's default start (no id) still replaces.
+- **092** (F14): review of the core server paths (rounds 001–016) at HEAD. **The token check was bypassable** by the
+  URL's case (`/API/world`; Express 5 is case-insensitive): it is now an allowlist of the health check
+  (`isHealth`), and unknown paths are 401 without the token. Grader evidence must stand at word boundaries
+  (`atWordBoundaries`; Amendment 1, since graders quote words around the form); a reveal caps every objective an
+  ordered turn grades. Rejected as designed: R1.3, R1.4, R1.7 (owner questions). Deferred: receipts pruning (F13).
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09. Review passes have now covered rounds 017–064 and 076–091 (086–091 each found
-  real gaps, 088–090 answer leaks, 091 a lost conversation; ~3 subagent runs a round; yield is falling: 091 had no
-  Error). Rounds 065 and 070–073 had post-build reviews; 066–069 and 074 are docs, content or live runs. Remaining
-  unreviewed code: rounds 001–016 (the core loop, map, multi-encounter engine, tutorial, CLI providers; `git diff`
-  from the repo's start to f264de7, large: scope it to `server/src` first). Round 090's known leak (a readable
-  *caffè* and *nero* answer a due *caffè nero*) could be its own small round if wanted. Other
+- **Offline work only** until 11-09. Review passes have now covered every round's code (086–092 each found real
+  gaps; 092 a security bug in the core). Not yet reviewed in depth: the CLI adapters and runner
+  (`server/src/llm/`, rounds 002 and 018 to 087's abort fixes), the prompt builder, the mobile store as a whole, and
+  `server/scripts/` (`play-market.js`, `verify:cli`). Next small items: **F13** (receipts grow the save; measure
+  first), round 090's known leak (a readable *caffè* and *nero* answer a due *caffè nero*) if wanted. Other
   options: the footnote rule could also cover other encounters' answers (critique 1.4 of round 086, measure first
   with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said they are wanted).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
   greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure,
   counting footnotes dropped by round 086's inflection rule; round 087's prefetch walk-on check (findings open
-  items); round 089's tour with atmosphere and prefetch on (drops by reason, Talk wait); the rest of round 081's
+  items); round 089's tour with atmosphere and prefetch on (drops by reason, Talk wait); **round 092's
+  `verify:cli` it + es (9/9 each) and a tour counting INVALID_GRADING retries** (the word-boundary evidence rule);
+  the rest of round 081's
   Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
 
-**Traps (iteration 27):** startup now calls `api.currentEncounter` before world/party: a test mock that holds
+**Traps (iteration 27):** with `PARALLANG_TOKEN` set, every path but the health check is 401 without the token, so
+a test probing an unknown route gets 401, not 404. Grading stubs may quote words around the form; evidence only has to
+stand at word boundaries. Startup now calls `api.currentEncounter` before world/party: a test mock that holds
 `currentEncounter` on a deferred hangs `initialize` (give the first call an answer, `mockResolvedValueOnce`). In
 RNTL, two `render`s in one test with `screen.unmount()` between gave a false failure; use one render per test. An
 atmosphere test line may use a word of its location's own description (allowed): the
@@ -245,6 +253,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **F13. Dialogue receipts grow the save** (round 092 review R1.5): every receipt keeps the full transcript and
   cards, never pruned. Measure save sizes over a long scripted play first; pruning must keep replays of recent attempts
   safe. No live calls.
+- [x] **F14. Review of the core server paths** (round 092, closed 2026-11-06): token allowlist (the case bypass),
+  evidence at word boundaries, the ordered reveal cap.
 - [x] **F12. Review of rounds 017–028** (round 091, closed 2026-11-06): a named start never replaces a conversation
   under way (409); the map card's Return and Leave; restart away from the place.
 - [x] **F11. Review of rounds 029–039** (round 090, closed 2026-11-06): startup knows the server's encounter, card
@@ -284,6 +294,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 092 (decision):** whether earlier NPC lines stay protected while their objective is open (R1.4), and
+  whether a review reveal should score like a wrong answer (R1.7) ([open items](../rounds/092/findings.md#open-items)).
 - **Round 091 (Simulator, decision):** the map card's note, "Return to …", "Leave … and talk to …" with a party
   conversation under way, VoiceOver on the disabled Talk; whether leaving should ask for confirmation
   ([open items](../rounds/091/findings.md#open-items)).
@@ -615,13 +627,15 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings), critiqued (10, all accepted), built and closed: server 314/314, client 12/12, mobile 242/242. Round 088
   (F9) from a review of rounds 054–064 (3 findings, 1 Error), critiqued (8, all accepted), built and closed: server
   316/316, client 12/12, mobile 244/244, iOS export bundles. No live calls (Codex limited).
-- 2026-11-06, iteration 27 (05:53–06:45 UTC): round 089 (F10) from a subagent review of rounds 040–053 (4
+- 2026-11-06, iteration 27 (05:53–06:55 UTC): round 089 (F10) from a subagent review of rounds 040–053 (4
   findings, 1 Error: atmosphere exemptions were answers), critiqued (9, 2 Errors in the abort design, all accepted),
   built and closed: server 323/323, client 12/12, mobile 245/245, iOS export bundles. No live calls (Codex limited).
   Round 090 (F11) from a review of rounds 029–039 (5 findings, 2 Errors), critiqued (11, 3 Errors, all accepted;
   R1.4 rejected), built and closed: server 327/327, client 12/12, mobile 257/257, iOS export bundles. Round 091
   (F12) from a review of rounds 017–028 (2 findings, 1 rejected), critiqued (9, 1 Error, all accepted), built and
-  closed: server 330/330, client 12/12, mobile 263/263, iOS export bundles. No live calls (Codex limited).
+  closed: server 330/330, client 12/12, mobile 263/263, iOS export bundles. Round 092 (F14) from a review of the
+  core server paths (7 findings, 1 Error: the token bypass), critiqued (6, 1 Error), Amendment 1, built and closed:
+  server 334/334, client 12/12, mobile 263/263. No live calls (Codex limited).
 
 ## Handoff notes and traps
 

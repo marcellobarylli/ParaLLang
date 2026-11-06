@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 092, the server token can no longer be skipped (autonomous)
+
+A review of the core server code found that the optional `PARALLANG_TOKEN` check could be skipped by writing a route
+in capitals (`/API/world`), since Express matches routes case-insensitively; every request but the health check now
+needs the token. A grader's evidence must also stand in the answer as whole words ("pane" quoted from "panettone" no
+longer counts), and help taken in an ordered encounter caps every objective the turn closes. The evidence rule awaits
+a live check once Codex is available ([findings](docs/rounds/092/findings.md)).
+
 ## Addendum 2026-11-06: round 091, a conversation under way is not replaced (autonomous)
 
 A review of the code of rounds 017–028 found no answer leak, and one way to lose progress: the map's "Talk to …"
