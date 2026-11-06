@@ -33,6 +33,11 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 077, the greeting prefetch over HTTP (autonomous)
+
+Through `server.js` and the app's routes, with `PARALLANG_PREFETCH=on`, Talk after a 10 s stay took 4.06 s and 0.03 s,
+against 16.7 s after a 0.3 s stay ([findings](docs/rounds/077/findings.md)).
+
 ## Addendum 2026-11-06: round 076, the greeting written while the player reads (autonomous)
 
 With `PARALLANG_PREFETCH=on` (off by default), the server writes an open encounter's greeting once the player has
@@ -740,7 +745,7 @@ Newest first.
 | 074 | 11-06 | A live regression tour (es) after rounds 069–073 (autonomous) | [074](docs/rounds/074/architecture.md) | [findings](docs/rounds/074/findings.md) | pre-run record to round 074 close |
 | 075 | 11-06 | Three minor notes from the review of rounds 070–073: a reconciled replay, a "Counted." line, progress ids (autonomous) | [075](docs/rounds/075/architecture.md) | [findings](docs/rounds/075/findings.md) | pre-run record to round 075 close |
 | 076 | 11-06 | The greeting prefetched on arrival, behind `PARALLANG_PREFETCH` (autonomous) | [076](docs/rounds/076/architecture.md) | [findings](docs/rounds/076/findings.md) | pre-run record to round 076 close |
-| 077 | 11-06 | The greeting prefetch over HTTP through `server.js` (autonomous) | [077](docs/rounds/077/architecture.md) | [findings](docs/rounds/077/findings.md) | pre-run record |
+| 077 | 11-06 | The greeting prefetch over HTTP through `server.js` (autonomous) | [077](docs/rounds/077/architecture.md) | [findings](docs/rounds/077/findings.md) | pre-run record to round 077 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |

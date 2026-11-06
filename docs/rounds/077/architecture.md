@@ -44,3 +44,8 @@ A provider failure is re-run once, and both reports are kept.
 ## Claim boundary (pre-run)
 
 One run, one pack, one provider, three starts. The app itself is not run (no Simulator).
+
+## Outcome (2026-11-06)
+
+All four criteria met: 401 without the token and 200/201 with it; starts after a 10 s stay 4.06 s and 0.03 s,
+against 16.7 s after 0.3 s; the server exited cleanly. See [findings.md](findings.md).

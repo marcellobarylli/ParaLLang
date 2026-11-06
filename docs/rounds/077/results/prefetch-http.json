@@ -1,0 +1,109 @@
+{
+  "startedAt": "2026-11-06T03:28:48.149Z",
+  "port": 32871,
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/world",
+      "withToken": false,
+      "status": 401,
+      "ms": 28
+    },
+    {
+      "method": "POST",
+      "path": "/api/learner",
+      "withToken": true,
+      "status": 201,
+      "ms": 11
+    },
+    {
+      "method": "POST",
+      "path": "/api/world/move",
+      "withToken": true,
+      "status": 200,
+      "ms": 3
+    },
+    {
+      "method": "POST",
+      "path": "/api/encounter/start",
+      "withToken": true,
+      "status": 200,
+      "ms": 4063
+    },
+    {
+      "method": "POST",
+      "path": "/api/world/move",
+      "withToken": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "method": "POST",
+      "path": "/api/encounter/start",
+      "withToken": true,
+      "status": 200,
+      "ms": 31
+    },
+    {
+      "method": "POST",
+      "path": "/api/world/move",
+      "withToken": true,
+      "status": 200,
+      "ms": 6
+    },
+    {
+      "method": "POST",
+      "path": "/api/encounter/start",
+      "withToken": true,
+      "status": 200,
+      "ms": 16697
+    }
+  ],
+  "starts": [
+    {
+      "locationId": "coffee_cart",
+      "encounterId": "imp_coffee_greeting",
+      "stayMs": 10000,
+      "moveStatus": 200,
+      "status": 200,
+      "startMs": 4063,
+      "greeting": "Buongiorno. Sono Gerald. Come stai? My coffee gets five espresso shots. This market gets one. What can I get you?",
+      "error": null
+    },
+    {
+      "locationId": "market_entrance",
+      "encounterId": "market_entrance_tutorial",
+      "stayMs": 10000,
+      "moveStatus": 200,
+      "status": 200,
+      "startMs": 31,
+      "greeting": "Benvenuto! Piacere. A greeting and your name, please. Entry requires manners. Apparently.",
+      "error": null
+    },
+    {
+      "locationId": "butchers_stall",
+      "encounterId": "butchers_stall_charcutier",
+      "stayMs": 300,
+      "moveStatus": 200,
+      "status": 200,
+      "startMs": 16697,
+      "greeting": "Buongiorno! Tutto è prosciutto! Even my hat: certified ham. Only these scales can judge me. Che cosa desidera?",
+      "error": null
+    }
+  ],
+  "listening": true,
+  "withoutToken": 401,
+  "exit": {
+    "code": 0,
+    "signal": null
+  },
+  "serverLog": [
+    "ParaLLang server listening on http://127.0.0.1:32871",
+    "LLM provider: codex-cli",
+    "Target language: Italian (it)",
+    "Spellbook saves: /tmp/parallang-http-grWPqu/it",
+    "[b5e9ac1c-e155-4d0a-915a-8efa6f29e01d] UNAUTHORIZED",
+    ""
+  ],
+  "finishedAt": "2026-11-06T03:29:29.616Z"
+}

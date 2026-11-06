@@ -7,15 +7,14 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 21 (2026-11-06, 02:55–03:40 UTC) closed rounds 074–076: a Spanish regression tour (074, no
+Nothing open. Iteration 21 (2026-11-06, 02:55–03:35 UTC) closed rounds 074–077: a Spanish regression tour (074, no
 regression), the three minor review notes (075: a reconciled replay clears its verdict, a "Counted." line with one
 VoiceOver announcement, progress ids compared as strings), and the greeting prefetch (076, I4, `PARALLANG_PREFETCH=on`,
-off by default: mean Talk wait 12.1 s → 4.4 s live with a 10 s stay). Codex use this iteration: about 77 game calls
+off by default: mean Talk wait 12.1 s → 4.4 s live with a 10 s stay). Round 077 checked the prefetch over HTTP
+through `server.js` (4.06 s and 0.03 s after a 10 s stay, 16.7 s after 0.3 s). Codex use this iteration: about 80 game calls
 and 2 critiques, from 02:56 to 03:23, no usage limit hit.
 
 Next candidates, none needing the owner:
-- **The app over HTTP with prefetch on** (round 076 measured in-process only): a short live HTTP run through
-  `createApp` (127.0.0.1, token) that moves, waits and starts, to check the route path and the "getting ready" wait.
 - **Atmosphere repetition within a place** (round 068): low value while the cache shows one line per place and state.
 - **Kept lines from free translations** and other owner questions are listed under Needs owner.
 
@@ -492,6 +491,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   notes; Codex 3 findings; Amendment 1 from a subagent review); mobile 218/218. Round 076 closed (I4, greeting
   prefetch; Codex 12 findings); server 271/271; live 11/12 starts (one control-arm CLI_INVALID_RESPONSE at 120 s).
   A subagent review of round 076 found no bug; two tests made strict (Amendment 1).
+  Round 077 closed: the prefetch over HTTP through server.js, all four criteria met (3 calls);
+  `docs/rounds/077/results/prefetch-http.mjs` starts the real server on 127.0.0.1 with a token and stops it.
 
 ## Handoff notes and traps
 
