@@ -18,8 +18,10 @@ export const HELD_NOTE = 'A held objective was said correctly but does not count
 // asks for the turn's share and demands no English, since the share can reach 100% (critique 1.4).
 export const NARRATION_RETRY_MS = 20_000;
 const TIMED_OUT = Symbol('timed out');
+// Round 097 (critique 1.4): the correction's first word, which play-market uses to tell a retry from a first call.
+export const CORRECTION_PREFIX = 'CORRECTION:';
 export function correctionNote(language, ratio) {
-  return `CORRECTION: in your reply above, dialogue.native has no ${language.name} in it: every word is also in its translation. Write the reply again for the same turn, following every rule above; dialogue.native must be about ${Math.round(ratio * 100)}% ${language.name}, as the LANGUAGE RULES require.`;
+  return `${CORRECTION_PREFIX} in your reply above, dialogue.native has no ${language.name} in it: every word is also in its translation. Write the reply again for the same turn, following every rule above; dialogue.native must be about ${Math.round(ratio * 100)}% ${language.name}, as the LANGUAGE RULES require.`;
 }
 
 export const ATMOSPHERE_MAX_LENGTH = 300;

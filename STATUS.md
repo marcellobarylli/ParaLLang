@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 097, the live-run tools report what happened (autonomous)
+
+A review of the scripts that produce the live data found that a line the server writes again (when it has no
+target language) would have shown up twice in a playthrough report, shifting every later turn and making the leak
+scan skip the report. No committed report has such a line yet. Reports now show the line the player saw, with the
+retry beside it. The leak scan now treats objectives that may be met in any order as the server does, and
+`verify-cli` no longer depends on the order the grader lists its verdicts in ([findings](docs/rounds/097/findings.md)).
+
 ## Addendum 2026-11-06: round 096, fixes from a review of the app's state (autonomous)
 
 A review of the app's store as a whole found three bugs a player can hit. A review answered on a bad connection

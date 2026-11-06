@@ -121,3 +121,11 @@ deferrals of R1.6–R1.8: agreed.
 - `verify-cli`: `observedVerdicts` gives `[true, false]` for results listed in reverse.
 - The scan over every committed report before and after the change: only the stated hit differs.
 - Mutations; full suites.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. Play-market records every call in order and reports one line per NPC line the
+player saw, with any retry beside it; the leak scan closes objectives as the server does and counts an echo only
+from one earlier message; `verify-cli` reads verdicts by objective. Over all 149 committed reports the scan changes
+in exactly the one hit stated in Decision 3 ([before](results/scan-before.txt), [after](results/scan-after.txt)).
+Each fix broken in turn fails a test; full suites pass ([findings](findings.md)).

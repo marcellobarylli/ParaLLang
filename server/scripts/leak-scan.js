@@ -56,17 +56,21 @@ export function playerTurns(report) {
     .map((step) => ({ message: step.name.slice(5, -1), verdicts: Array.isArray(step.verdicts) ? step.verdicts : [] }));
 }
 
-// Objectives still open at line k, replayed as the server advances (critique 1.1): after each turn the index moves
-// over the leading passes of that turn's verdicts and stops at the first fail.
-export function openObjectives(objectives, turns, k) {
-  let index = 0;
+// Objectives still open at line k, replayed as the server advances (critique 1.1). Round 097 (review R1.3): as
+// `submitDialogue` closes them. Ordered: each turn closes the leading run of still-open objectives, in authored
+// order, that passed in that turn (verdicts by id, so the grader's order does not matter; a held early pass stays
+// open). Unordered: every objective that passed in an earlier turn is closed.
+export function openObjectives(objectives, turns, k, { unordered = false } = {}) {
+  const closed = new Set();
   for (const { verdicts } of turns.slice(0, k)) {
-    for (const verdict of verdicts) {
-      if (verdict.objective !== objectives[index]?.id || !verdict.passed) break;
-      index += 1;
+    const passed = new Set(verdicts.filter((verdict) => verdict.passed).map((verdict) => verdict.objective));
+    if (unordered) { for (const id of passed) closed.add(id); continue; }
+    for (const objective of objectives.filter((candidate) => !closed.has(candidate.id))) {
+      if (!passed.has(objective.id)) break;
+      closed.add(objective.id);
     }
   }
-  return objectives.slice(index);
+  return objectives.filter((objective) => !closed.has(objective.id));
 }
 
 // forms: [{ objective, form }]. A whole form is an exact hit; a word of a multi-word form, absent as a whole, a word hit.
@@ -161,18 +165,18 @@ export function scanReport(report, content) {
     const foreignForms = foreignFormsFor(content, encounterId);
     const foreign = [];
     scene.lines.forEach((line, k) => {
-      const open = openObjectives(objectives, mine, k);
+      const open = openObjectives(objectives, mine, k, { unordered: definition.encounter.objectives_unordered === true });
       const closed = objectives.filter((objective) => !open.includes(objective));
       // Critique 1.5: a word that is a whole form of a closed objective's target is not a hit (already passed).
       const closedForms = new Set(formsFor(closed, content.vocabularyById).map(({ form }) => fold(form).trim()));
       const { exact, words } = scanLine(line.native ?? '', formsFor(open, content.vocabularyById), content.language.code, { english });
-      const before = fold(mine.slice(0, k).map((turn) => turn.message).join(' '));
-      // Critique 1.7: echo only if one earlier message holds the whole form by itself.
+      // Critique 1.7: echo only if one earlier message holds the whole form by itself (round 097, review R1.9: for
+      // the objectives' own hits too, not the messages joined).
       const messages = mine.slice(0, k).map((turn) => fold(turn.message));
       const strange = foreignForms.filter(({ form }) => holds(fold(line.native ?? ''), fold(form).trim()))
         .map((hit) => ({ ...hit, echo: messages.some((message) => holds(message, fold(hit.form))), english: FOREIGN_ENGLISH.has(fold(hit.form).trim()) }));
       if (strange.length) foreign.push({ line: k, hits: strange, native: line.native });
-      const mark = (hit, text) => ({ ...hit, echo: holds(before, fold(text)), quoted: passagesOf(objectives, hit.objective).some((passage) => holds(passage, fold(text))) });
+      const mark = (hit, text) => ({ ...hit, echo: messages.some((message) => holds(message, fold(text))), quoted: passagesOf(objectives, hit.objective).some((passage) => holds(passage, fold(text))) });
       const marked = {
         exact: exact.map((hit) => mark(hit, hit.form)),
         words: words.filter((hit) => !closedForms.has(hit.word)).map((hit) => mark(hit, hit.word)),

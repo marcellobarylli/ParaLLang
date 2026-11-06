@@ -20,7 +20,7 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { CLI_PROVIDERS, loadRootEnv, resolveTargetLanguage } from '../src/config.js';
 import { loadGameContent } from '../src/content-loader.js';
-import { LearningService } from '../src/learning-service.js';
+import { CORRECTION_PREFIX, LearningService, NARRATION_RETRY_MS } from '../src/learning-service.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { createLLMAdapter } from '../src/llm/index.js';
 import { matchCanonicalVocabulary } from '../src/language-engine.js';
@@ -173,6 +173,77 @@ export async function clearDrill(service, learnerId) {
   throw new Error('the drill did not clear after 12 reviews');
 }
 
+// Round 097 (review R1.1, critique 1.2, 1.4): every provider call in call order. An entry is pushed when the call
+// starts and gets its output (or error) and duration when it ends; a narration call whose last message is the
+// guard's correction is tagged `retry`.
+export function recordCalls(provider, raw) {
+  const structuredChat = provider.structuredChat.bind(provider);
+  provider.structuredChat = async (messages, schema, options) => {
+    const entry = { schema: options?.schemaName, retry: String(messages.at(-1)?.content ?? '').startsWith(CORRECTION_PREFIX) };
+    raw.push(entry);
+    const started = performance.now();
+    try {
+      const output = await structuredChat(messages, schema, options);
+      entry.output = output;
+      return output;
+    } catch (error) {
+      entry.error = error?.code ?? error?.category ?? 'error';
+      throw error;
+    } finally {
+      entry.durationMs = Math.round(performance.now() - started);
+    }
+  };
+  return provider;
+}
+
+// Round 097 (review R1.1, critique 1.2, 1.3, 1.6, 1.8): one line per NPC line the player saw. Narration calls come
+// only from starts (the greeting) and says here (prefetch and atmosphere are off; recruit and the drill make none).
+// Each narration call is grouped with the retry that follows it; groups are matched in order to the committed
+// transcript's NPC natives. When both of a group's natives equal it, the service's rule decides (the retry is kept if
+// it has an output, no error, came within the retry deadline and does not lack target language). A group with no
+// committed line goes to `uncommitted`.
+export function narrationLines(calls, committedNatives, { ratioFor, share, lacksTarget, retryMs = NARRATION_RETRY_MS }) {
+  const groups = [];
+  for (const call of calls.filter((item) => item.schema === 'encounter_narration')) {
+    const open = call.retry ? [...groups].reverse().find((group) => !group.retry) : null;
+    if (open) open.retry = call;
+    else groups.push({ first: call, retry: null });
+  }
+  const nativeOf = (call) => (call?.output ? String(call.output.dialogue.native).trim() : null);
+  const lines = [];
+  const uncommitted = [];
+  let next = 0;
+  for (const group of groups) {
+    const want = committedNatives[next] === undefined ? undefined : String(committedNatives[next]).trim();
+    const firstMatches = want !== undefined && nativeOf(group.first) === want;
+    const retryMatches = want !== undefined && nativeOf(group.retry) === want;
+    if (!firstMatches && !retryMatches) { uncommitted.push(group); continue; }
+    const retryKept = retryMatches && (!firstMatches
+      || (!group.retry.error && group.retry.durationMs <= retryMs && !lacksTarget(group.retry.output)));
+    const kept = retryKept ? group.retry : group.first;
+    const other = retryKept ? group.first : group.retry;
+    const turn = next;
+    next += 1;
+    lines.push({
+      turn,
+      requestedRatio: ratioFor(turn),
+      native: kept.output.dialogue.native,
+      translation: kept.output.dialogue.translation,
+      narrative: kept.output.narrative,
+      footnote: kept.output.footnote ?? null, // round 081: as written, before the server's filter
+      share: share(kept.output.dialogue.native, kept.output.dialogue.translation),
+      durationMs: (group.first.durationMs ?? 0) + (group.retry?.durationMs ?? 0),
+      ...(group.retry ? {
+        retried: { kept: retryKept ? 'retry' : 'first', rejectedNative: other?.output?.dialogue.native ?? null, durationMs: group.retry.durationMs ?? null, ...(group.retry.error ? { error: group.retry.error } : {}) },
+      } : {}),
+    });
+  }
+  return {
+    lines,
+    uncommitted: uncommitted.map((group) => ({ native: group.first.output?.dialogue.native ?? null, error: group.first.error ?? null, retried: Boolean(group.retry) })),
+  };
+}
+
 export async function playMarket({ args = process.argv.slice(2), env = process.env } = {}) {
   loadRootEnv({ env });
   const providerName = providerArgument(args) ?? env.LLM_PROVIDER;
@@ -184,13 +255,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
   if (!tour && !scripts[locationId]) throw new Error(`play-market has no script for --location ${locationId}; use ${Object.keys(scripts).join(' or ')}.`);
   const provider = createLLMAdapter({}, env);
   const raw = [];
-  const structuredChat = provider.structuredChat.bind(provider);
-  provider.structuredChat = async (messages, schema, options) => {
-    const started = performance.now();
-    const output = await structuredChat(messages, schema, options);
-    raw.push({ schema: options?.schemaName, durationMs: Math.round(performance.now() - started), output });
-    return output;
-  };
+  recordCalls(provider, raw); // round 097
   const saveDir = await mkdtemp(join(tmpdir(), 'parallang-play-'));
   const steps = [];
   const step = async (name, run) => {
@@ -240,17 +305,15 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         ...summary(finalWorld),
         locationEncounter: finalWorld.locations.find((l) => l.id === target)?.encounter ?? null,
       }));
-      const calls = raw.slice(firstCall);
-      const lines = calls.filter((item) => item.schema === 'encounter_narration').map((item, turn) => ({
-        turn,
-        requestedRatio: service.ratioFor(turn, definition),
-        native: item.output.dialogue.native,
-        translation: item.output.dialogue.translation,
-        narrative: item.output.narrative,
-        footnote: item.output.footnote ?? null, // round 081: as written, before the server's filter
-        share: languageShare(item.output.dialogue.native, item.output.dialogue.translation, definition.narrationEntries),
-        durationMs: item.durationMs,
-      }));
+      // Round 097: completed calls only for the counts (as before); every call, in order, for the lines.
+      const allCalls = raw.slice(firstCall);
+      const calls = allCalls.filter((item) => item.output);
+      const committedNatives = (encounter?.transcript ?? []).filter((message) => message.role === 'npc').map((message) => message.dialogue.native);
+      const { lines, uncommitted } = narrationLines(allCalls, committedNatives, {
+        ratioFor: (turn) => service.ratioFor(turn, definition),
+        share: (native, translation) => languageShare(native, translation, definition.narrationEntries),
+        lacksTarget: (output) => service.lacksTarget(output, definition),
+      });
       return {
         location: target,
         sceneLocation: encounter?.location ?? null,
@@ -260,6 +323,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         completedOnMap: finalWorld.locations.find((l) => l.id === target)?.encounter?.completed === true,
         generationCalls: calls.length,
         lines,
+        ...(uncommitted.length ? { uncommittedLines: uncommitted } : {}),
         grading: calls.filter((item) => item.schema === 'dialogue_assessment').map((item) => ({ durationMs: item.durationMs, output: item.output })),
       };
     };
@@ -296,7 +360,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         // Round 029: the forced repetition before Errata (null if the step failed).
         drillCards,
         resolved: encounters.every((e) => e.resolved && e.completedOnMap),
-        generationCalls: raw.length,
+        generationCalls: raw.filter((item) => item.output).length,
         narrationStats: { ...service.narrationStats }, // round 078: the no-target-language guard
         encounters,
         steps,
@@ -335,7 +399,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         completedOnMap: home.completedOnMap,
         conversationOffMap: !(await storage.load(learnerId)).world.completedEncounterIds.includes(conversationId),
         conversations: party.find((member) => member.encounterId === homeEncounter)?.conversations ?? null,
-        generationCalls: raw.length,
+        generationCalls: raw.filter((item) => item.output).length,
         narrationStats: { ...service.narrationStats }, // round 078: the no-target-language guard
         home, conversation, steps,
       };

@@ -120,3 +120,43 @@ test('summarize: foreign lines overall and in party conversations only (critique
   const { total } = summarize([{ language: 'it', ...party }, { language: 'it', ...home }]);
   assert.deepEqual([total.it.lines, total.it.foreignLines, total.it.partyLines, total.it.partyForeignLines, total.it.leakLines], [3, 2, 2, 1, 0]);
 });
+
+// Round 097 (review R1.3, R1.9; critique 1.9): objectives close as `submitDialogue` closes them; echo needs one message.
+test('the scan closes objectives as the server does: unordered, out of authored order, a held early pass', () => {
+  const objectives = [{ id: 'a' }, { id: 'b' }];
+  const early = [{ verdicts: [v('a', false), v('b', true)] }, { verdicts: [v('a', true)] }];
+  assert.deepEqual(openObjectives(objectives, early, 1, { unordered: true }).map((o) => o.id), ['a'], 'unordered: b closed at once');
+  assert.deepEqual(openObjectives(objectives, early, 2, { unordered: true }), []);
+  assert.deepEqual(openObjectives(objectives, early, 1).map((o) => o.id), ['a', 'b'], 'ordered: b is held, still open');
+  assert.deepEqual(openObjectives(objectives, early, 2).map((o) => o.id), ['b'], 'ordered: a closes, the held b does not');
+  const reversed = [{ verdicts: [v('b', false), v('a', true)] }];
+  assert.deepEqual(openObjectives(objectives, reversed, 1).map((o) => o.id), ['b'], 'the grader\'s order does not matter');
+});
+
+test('Mortimer\'s tasting (unordered) in a report: a passed ask_more is no longer open', () => {
+  const content = loadGameContent({ language: 'es' });
+  const report = {
+    language: 'es',
+    steps: [{ ok: true, name: 'say "Un poco más, por favor."', verdicts: [v('like_it', false), v('ask_more', true)] }],
+    encounters: [{ encounterId: 'mortimer_tasting', grading: [], lines: [{ native: 'Prueba esto.' }, { native: 'Más jamón. ¿Quieres un poco más? ¿Te gusta?' }] }],
+  };
+  const [scene] = scanReport(report, content).scenes;
+  const hits = scene.hits.flatMap((hit) => [...hit.exact, ...hit.words]).map((hit) => hit.objective);
+  assert.ok(!hits.includes('ask_more'), JSON.stringify(scene.hits));
+});
+
+test('a form split over two earlier messages is not an echo', () => {
+  const content = loadGameContent({ language: 'it' });
+  const report = {
+    language: 'it',
+    steps: [
+      { ok: true, name: 'say "Vorrei senza"', verdicts: [v('order_coffee', false), v('no_milk', false)] },
+      { ok: true, name: 'say "latte macchiato"', verdicts: [v('order_coffee', false), v('no_milk', false)] },
+    ],
+    encounters: [{ encounterId: 'imp_coffee_greeting', grading: [], lines: [{ native: 'Ciao.' }, { native: 'Hmm.' }, { native: 'Allora, senza latte?' }] }],
+  };
+  const [scene] = scanReport(report, content).scenes;
+  const exact = scene.hits.flatMap((hit) => hit.exact).filter((hit) => hit.form === 'senza latte');
+  assert.equal(exact.length, 1, JSON.stringify(scene.hits));
+  assert.equal(exact[0].echo, false);
+});

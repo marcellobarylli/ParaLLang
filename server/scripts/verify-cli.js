@@ -61,6 +61,12 @@ async function request(baseUrl, path, { learnerId, body } = {}) {
   return data;
 }
 
+// Round 097 (review R1.4): verdicts in the order of the objectives asked, whatever order the grader listed them in
+// (`validateAssessment` guarantees one verdict per objective).
+export function observedVerdicts(objectives, results) {
+  return objectives.map((objective) => results.find((result) => result.objective_id === objective.id).passed);
+}
+
 function timed(clock = performance) {
   const start = clock.now();
   return () => Math.round(clock.now() - start);
@@ -95,7 +101,7 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
         playerInput: item.answer,
       }), gradingResponseSchema, { schemaName: 'dialogue_assessment' });
       const validated = service.validateAssessment(raw, objectives, item.answer);
-      const observed = validated.objective_results.map((result) => result.passed);
+      const observed = observedVerdicts(objectives, validated.objective_results);
       grading.push({
         case: item.name,
         expected: item.expected,

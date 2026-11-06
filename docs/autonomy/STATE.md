@@ -20,6 +20,10 @@ R1.9 a temp-dir sweep. **Round 096** (review of the mobile store) closed: review
 id (`reviewAttempt`, `_sendReview`); a start keeps the screen the player opened (`returnView: 'dialogue'`);
 `restartEncounter` is a restart `_startNamed`; `placeWrites` drops world/party reads that began before a write;
 `revealHelp` reloads on STALE_VERSION/STALE_ENCOUNTER via `_reloadStale` (shared with the send); `SAVE_LOST`.
+**Round 097** (review of `server/scripts/` and the prompt builder) closed: play-market's `recordCalls` /
+`narrationLines` report one line per committed NPC line (a guard retry beside it as `retried`); `openObjectives`
+follows `objectives_unordered`; echo needs one earlier message; `verify-cli`'s `observedVerdicts` by id. Deferred to a
+live round: frame earlier player turns, speakers in the grader context, no `accepted_examples` for the narrator.
 
 Nothing open. Iteration 27 (2026-11-06, 05:53–06:50 UTC) closed four offline review rounds:
 - **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
@@ -62,7 +66,9 @@ Next candidates, none needing the owner:
   the rest of round 081's
   Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
 
-**Traps (iteration 28):** `restartEncounter` now returns `_startNamed`'s promise and does nothing while
+**Traps (iteration 28):** play-market's `raw` now holds every call (failed ones too, with `error`); count
+completed calls with `raw.filter((c) => c.output)`. A stub narrator answering the guard's retry must read the turn
+from `messages.slice(0, -2)` (the last message is the correction). `restartEncounter` now returns `_startNamed`'s promise and does nothing while
 `isLoading`; a store test that restarts during a load gets no request. A start that settles while another screen is
 open leaves `view` alone (tests that expect 'dialogue' must not change the view meanwhile). the service must be given providers through `createLLMAdapter` in any test that
 claims server behaviour (the wrapper, not the adapter, is what `server.js` passes). Hard-killed runs (a `timeout`

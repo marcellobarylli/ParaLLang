@@ -44,3 +44,102 @@ test('the tour visits every encounter once, the Old Bookshop just before The Rif
     assert.deepEqual([...world.locationsById.get('the_rift').requires_completed].sort(), tourOrder.slice(0, -1).map((id) => world.locationsById.get(id).encounter).sort());
   }
 });
+
+// Round 097 (review R1.1, R1.2; critique 1.2-1.6): a retried narration is one report line, the one the player saw.
+import { FixtureProvider, createRuntime } from './helpers.js';
+import { narrationLines, recordCalls } from '../scripts/play-market.js';
+import { scanReport } from '../scripts/leak-scan.js';
+import { ProviderError } from '../src/llm/provider-error.js';
+
+const ENGLISH = 'Hello there, friend. Coffee?';
+class EnglishGreeting extends FixtureProvider {
+  constructor({ hangRetry = false } = {}) { super(); this.greeted = false; this.hangRetry = hangRetry; }
+  async structuredChat(messages, schema, options) {
+    if (options.schemaName === 'encounter_narration' && !this.greeted) {
+      this.greeted = true;
+      this.calls.push({ messages, options });
+      return { ...this.narrate(messages), dialogue: { speaker: 'Gerald', native: ENGLISH, translation: ENGLISH, words: [] } };
+    }
+    if (this.hangRetry && options.schemaName === 'encounter_narration' && String(messages.at(-1).content).startsWith('CORRECTION:')) {
+      return new Promise((_, reject) => options.signal?.addEventListener('abort', () => reject(new ProviderError('interrupted', { provider: 'codex-cli' })), { once: true }));
+    }
+    // The guard's retry ends with the correction; the fixture narrates from the turn message before it.
+    if (options.schemaName === 'encounter_narration' && String(messages.at(-1).content).startsWith('CORRECTION:')) {
+      this.calls.push({ messages, options });
+      return this.narrate(messages.slice(0, -2));
+    }
+    return super.structuredChat(messages, schema, options);
+  }
+}
+
+async function played(t, provider, serviceOptions = {}) {
+  const raw = [];
+  recordCalls(provider, raw);
+  const runtime = await createRuntime({ provider, serviceOptions });
+  t.after(runtime.close);
+  const { service, content } = runtime;
+  const definition = content.encounters.get(content.defaultEncounterId);
+  const { learnerId } = await service.createOrRecoverLearner();
+  const started = await service.startEncounter(learnerId);
+  const message = 'Hola, no sé.';
+  const said = await service.submitDialogue(learnerId, { encounterId: started.encounter.id, version: started.encounter.version, attemptId: crypto.randomUUID(), message });
+  const natives = said.encounter.transcript.filter((item) => item.role === 'npc').map((item) => item.dialogue.native);
+  const result = narrationLines(raw, natives, {
+    ratioFor: (turn) => service.ratioFor(turn, definition), share: () => null, lacksTarget: (output) => service.lacksTarget(output, definition),
+    retryMs: serviceOptions.narrationRetryMs,
+  });
+  const verdicts = said.assessment.objectiveResults.map((r) => ({ objective: r.objectiveId, passed: r.passed, evidence: r.vocabularyEvidence }));
+  return { raw, natives, result, definition, content, message, verdicts, service };
+}
+
+test('a greeting written again by the guard is one line on turn 0, the retry kept and the English beside it; the scan reads it', async (t) => {
+  const { raw, natives, result, definition, content, message, verdicts, service } = await played(t, new EnglishGreeting());
+  assert.equal(service.narrationStats.retryPassed, 1);
+  assert.deepEqual(raw.filter((c) => c.schema === 'encounter_narration').map((c) => c.retry), [false, true, false]);
+  assert.equal(result.lines.length, 2);
+  assert.deepEqual(result.uncommitted, []);
+  const [greeting, reply] = result.lines;
+  assert.equal(greeting.turn, 0);
+  assert.equal(greeting.native, natives[0]);
+  assert.equal(greeting.requestedRatio, service.ratioFor(0, definition));
+  assert.deepEqual({ kept: greeting.retried.kept, rejectedNative: greeting.retried.rejectedNative }, { kept: 'retry', rejectedNative: ENGLISH });
+  const [first, retry] = raw.filter((c) => c.schema === 'encounter_narration');
+  assert.equal(greeting.durationMs, first.durationMs + retry.durationMs);
+  assert.equal(reply.turn, 1);
+  assert.equal(reply.native, natives[1]);
+  assert.equal(reply.retried, undefined);
+  const scanned = scanReport({ language: 'es', steps: [{ ok: true, name: `say "${message}"`, verdicts }], encounters: [{ encounterId: definition.encounter.id, grading: [], lines: result.lines }] }, content);
+  assert.deepEqual(scanned.skipped, []);
+  assert.equal(scanned.scenes.length, 1);
+});
+
+test('a retry that times out keeps the first line, marked so', async (t) => {
+  const { result, natives } = await played(t, new EnglishGreeting({ hangRetry: true }), { narrationRetryMs: 50 });
+  assert.equal(natives[0], ENGLISH);
+  assert.equal(result.lines.length, 2);
+  assert.equal(result.lines[0].native, ENGLISH);
+  assert.equal(result.lines[0].retried.kept, 'first');
+  assert.equal(result.lines[0].retried.rejectedNative, null);
+  assert.equal(result.lines[0].retried.error, 'CLI_INTERRUPTED');
+});
+
+test('narrationLines: a call with no committed line is set aside; identical natives follow the service rule', () => {
+  const call = (native, extra = {}) => ({ schema: 'encounter_narration', retry: false, durationMs: 10, output: { narrative: '', dialogue: { native, translation: native } }, ...extra });
+  const options = { ratioFor: (turn) => turn, share: () => null, lacksTarget: () => false, retryMs: 1000 };
+  const drift = narrationLines([call('A'), call('lost'), call('B')], ['A', 'B'], options);
+  assert.deepEqual(drift.lines.map((line) => [line.turn, line.native]), [[0, 'A'], [1, 'B']]);
+  assert.deepEqual(drift.uncommitted.map((group) => group.native), ['lost']);
+  const same = [call('X'), call('X', { retry: true, output: { narrative: '', dialogue: { native: 'X', translation: 'ecks' } } })];
+  assert.equal(narrationLines(same, ['X'], options).lines[0].retried.kept, 'retry');
+  assert.equal(narrationLines(same, ['X'], options).lines[0].durationMs, 20, 'the player waited for both calls');
+  assert.equal(narrationLines(same, ['X'], options).lines[0].retried.durationMs, 10);
+  assert.equal(narrationLines(same, ['X'], { ...options, lacksTarget: () => true }).lines[0].retried.kept, 'first');
+  assert.equal(narrationLines([same[0], { ...same[1], durationMs: 5000 }], ['X'], options).lines[0].retried.kept, 'first', 'past the deadline');
+});
+
+// Round 097 (review R1.4): verify-cli compares verdicts by objective, not in the grader's order.
+test('verify-cli: verdicts listed in reverse are read in the objectives\' order', async () => {
+  const { observedVerdicts } = await import('../scripts/verify-cli.js');
+  const objectives = [{ id: 'order_coffee' }, { id: 'no_milk' }];
+  assert.deepEqual(observedVerdicts(objectives, [{ objective_id: 'no_milk', passed: false }, { objective_id: 'order_coffee', passed: true }]), [true, false]);
+});
