@@ -8,10 +8,12 @@ skill), and updates this file before stopping. Decisions an owner would normally
 ## In progress
 
 **Two rounds open, built and committed, waiting only for live runs** (iteration 16; Codex hit its usage limit at about
-23:14 UTC, reset given as **01:36 UTC 2026-11-06**; still limited at 23:27, checked in iteration 17). Iteration 17
-closed rounds 054–058 without live calls; they do not change what these runs test, except that NPC words now carry
-`spans` (round 057) and the matcher sorts forms across entries (round 058, output unchanged on 1,021 saved lines). Run these first, in order, then close each round (findings.md,
-Outcome, `round_log_check.py`, STATUS addendum):
+23:14 UTC, reset given as **01:36 UTC 2026-11-06**; still limited at 23:58 UTC, checked in iteration 18). Iterations
+17–18 closed rounds 054–064 without live calls. None of them changes what these runs test. Three things differ: NPC
+words now carry `spans` (round 057); the matcher sorts forms across entries (round 058, output unchanged on 1,021
+saved lines); and a paid sentence reveal now writes `lines` to the save (round 060; the play script's reveals will keep
+lines, which is harmless). Run these first, in order, then close each round (findings.md, Outcome,
+`round_log_check.py`, STATUS addendum):
 
 1. **Round 052 (H2, numbers 2–12 in Flick's slow walk).** The scripted runs passed (it, es; `results/walk-*.json`).
    Queued, as in its Live section: the variant runs, with codex-cli:
@@ -29,9 +31,13 @@ Outcome, `round_log_check.py`, STATUS addendum):
    (eight Fountain lines); expect the time objective to pass on the `’` line. Record it in round 054's findings as a
    dated addendum.
 
-After those, the backlog is empty except D1 (blocked). Next candidates, none needing the owner: the word class
-(`wordClass`, round 056) on Spellbook cards and in reviews; a live tour (`play-market.js --tour`) as a regression run
-after rounds 051–058; re-measure language share (E1) with the new rounds' content.
+After those, the backlog is empty except D1 (blocked). Next candidates, none needing the owner:
+- a live tour (`play-market.js --tour`, it and es) as a regression run after rounds 051–064;
+- re-measuring the language share (E1) with the new rounds' content;
+- a live check that the play script's sentence reveals now leave `lines` in the save (round 060), by reading the
+  save after a run;
+- offline: a loading line instead of the brief "No due review is available." flash during "Continue reviews"
+  (round 063 critique, cosmetic).
 
 ## Backlog
 
@@ -210,6 +216,20 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Rounds 059–064 (Simulator):
+  - the class word on Spellbook cards and the review's class tag;
+  - the "Lines you translated" section;
+  - "Hear the narrator", "Hear the place" and "Hear the briefing": the voice, MERCATO and capitals, the row layout;
+  - speech stopping when you leave a screen or the app.
+  Decide:
+  - whether the review prompt may show the class;
+  - whether to keep the lines from free translations too, and whether hiding a line until its cards are reviewed is
+    right;
+  - whether the narrator should read automatically, and with its own rate or pitch;
+  - whether descriptions should avoid capitals and target words for the voice.
+  ([059](../rounds/059/findings.md#open-items), [060](../rounds/060/findings.md#open-items),
+  [061](../rounds/061/findings.md#open-items), [062](../rounds/062/findings.md#open-items),
+  [063](../rounds/063/findings.md#open-items), [064](../rounds/064/findings.md#open-items)).
 - Rounds 055–057 (Simulator): the 🔊 beside each encounter chip (it, es voices, late voices on a cold start), chips
   coloured and labelled by class (dashed verbs, narrow screens), words marked in the NPC line, VoiceOver. Decide: may
   the class show on the active line before a hint; R/G/B as the palette; ink underlines for other classes
@@ -432,8 +452,35 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   in the line at the server's `spans`), 058 (F3, matcher sorts every form longest first across entries; a latent
   stealing bug found by the critique; 0 differences on 1,021 saved lines). All closed: server 238/238, mobile
   146/146, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
+- 2026-11-06, iteration 18: Codex limited (reset 01:36 UTC). Six rounds closed offline, each critiqued by a Claude
+  subagent standing in for Codex:
+  - 059 (C8): the word class on Spellbook cards and reviews;
+  - 060 (C9): lines you translated;
+  - 061 (C10): hear the narrator;
+  - 062 (C10b): the narrator on the map and the briefing;
+  - 063 (C10c): the Spellbook and Review screens stop speech; fixed a race in `speak`;
+  - 064 (C10d): speech stops in the background.
+  Also F4 (`npm test`). Server 244/244, mobile 176/176, client 12/12, expo-doctor 20/20. The live queue (rounds
+  052–054) is untouched.
 
 ## Handoff notes and traps
+
+- **Run every test with `npm test`** at the root (about 20 s; round F4). A bare `node --test` inside `server/` hangs:
+  it also runs `server/test/fixtures/fake-*.mjs`, which wait on stdin. `node --test server/test/*.test.js` from the
+  root works too.
+- **`jest.mock` of a module that `speech.js` imports does not apply** (round 061): `jest.after-env.js` loads
+  `speech.js` before the test file's mocks. To watch the ambience under speech, use the real `ambience.js` and read
+  the mocked player's `.volume` (`createAudioPlayer.mock.results.at(-1).value`), as `narrator.test.js` and
+  `speech-stops.test.js` do. `resetVoiceCacheForTests` also drops speech's AppState listener (round 064).
+- **`font.test.js` counts `<Title style={styles.x}>` literally** (rounds 060, 062): a new section title raises the
+  count, and an array style breaks the match, so put extra layout rules in the title's own style.
+- **Kept lines** (round 060): `envelope.lines` (optional, at most 50, 500 characters per text); invalid entries are
+  dropped on load; receipts are stored without `spellbook.lines` (`withoutLines`), and replays re-attach the current
+  ones (`replayWithLines`). A line stays hidden while any of its cards is due, so new lines start hidden.
+- **Narrator** (rounds 061–064): `NARRATOR` (en-GB) in `speech.js`; `findVoice` skips Apple's novelty and Eloquence
+  voices and folds `_`. `NarratorButton` and `speechText` are in `components/NarratorButton.js`. `speak` returns
+  without speaking when a stop or a newer word arrives during its wait. The encounter, map, Spellbook and Review
+  screens stop speech on unmount, and the app stops it on `background`. The jest mock has `isSpeakingAsync`.
 
 - **Matcher order** (round 058): `matchCanonicalVocabulary` tries (entry, variant) pairs longest folded form first
   across all entries (stable: ties keep load order). `vocabularyFormConflicts(entries)` is the pack-wide check in
