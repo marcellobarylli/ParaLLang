@@ -122,3 +122,36 @@ contract note (taken into Design 7).
   an encounter (both signals), the store action (applies, drops an older refresh, error, refused locally, another
   save), the dialogue note.
 - Full suites: server, client, mobile.
+
+## Amendment 1 (2026-11-06, after the build): the review's dispositions
+
+A fresh read-only subagent reviewed commit 848b4f6 ([`trail/review-1.md`](trail/review-1.md): 0 Error, 6 Minor,
+5 Gap, 2 Style; R1.1–R1.13 in the review's order). Each disposition is an **autonomous decision, pending owner
+review**.
+
+| # | Severity | Finding | Recommendation | Change | Disposition | Decision |
+|---|---|---|---|---|---|---|
+| R1.1 | Minor | es ending stiff ("no tiene final … tiene regreso") | Fix | "no tiene fin: únicamente tiene un regreso" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.2 | Minor | es "la encuentra" against the English "finds it again" | Fix | "la vuelve a encontrar", glossed "finds it again" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.3 | Minor | it glossary lacks the verse's "chi" | Fix | "chi la legge" glossed; "soltanto" dropped (cap 10) | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.4 | Minor | it "un estraneo" leans "outsider" | Fix | "uno sconosciuto" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.5 | Minor | An IN_ENCOUNTER the app does not know leaves the button to fail again | Fix | The store refreshes the Spellbook on IN_ENCOUNTER (tested) | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.6 | Minor | "task" where the app says "objective" | Fix | "objective" in the redaction, the alert and the recovering note | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.7 | Gap | Only the first objective is checked strained | Test | The coffee break's second objective at limit − 1 (`party-conversation.test.js`); unordered not added (same `hintLimit` call) | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.8 | Gap | A party conversation's spend untested | Test | Same test: spent as `gerald_coffee_break`, the next one unstrained | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.9 | Gap | A prefetched-greeting start under strain untested | Defer | None: the strain is set from the start's own save after the greeting, on the one session-building line the review checked | **Deferred** (autonomous, pending owner review) | Amendment 1 |
+| R1.10 | Gap | The save-switch snapshot untested | Test | Read, switch away and back: the annex stays read; fails without the snapshot write (checked by mutation) | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.11 | Gap | Re-reading during a conversation untested | Test | IN_ENCOUNTER after a read, in `annex.test.js` | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.12 | Style | `pendingStrainIds` computed twice | Fix | Once, into `strainedBy` | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.13 | Style | Labels on non-accessible Views; bars as an image | Fix in part | Bars `role="image"`; the card-level labels kept as the containment card has them (an iOS check for the owner) | **Accepted** in part (autonomous, pending owner review) | Amendment 1 |
+
+Optional items not taken: a stricter id pattern in the save, refusing a read at the 20-record cap (one annex
+exists), `baseLimit`, an accessibility hint (the shared `Button` does not pass one through), the Spanish "quien"
+register (kept "el que", clear of the *quieto*/*quiero* stem).
+
+## Outcome (2026-11-06)
+
+Built as designed with Amendment 1. CM-001 now carries "Annex A: the second verse" in both packs, clean under the
+answer check, with "I"/"you" allowed by name in the English check. Read anyway, it costs a hint per objective in the
+next finished conversation, for a location encounter or a party conversation; a replay or a failed save spends
+nothing. Server 406/406, client 21/21, mobile 317/317; the web client builds. Findings: [`findings.md`](findings.md).

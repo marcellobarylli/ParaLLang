@@ -116,14 +116,14 @@ function Annex({ annex, language, inEncounter, isLoading, onRead }) {
   const name = language?.name ?? 'the target language';
   const confirmRead = () => Alert.alert(
     `Read ${annex.title}?`,
-    'Your companion will need a while to recover: a hint fewer for each task of the next conversation you finish.',
+    'Your companion will need a while to recover: a hint fewer for each objective of the next conversation you finish.',
     [{ text: 'Leave it redacted', style: 'cancel' }, { text: 'Read it', style: 'destructive', onPress: () => onRead(annex.id) }],
   );
   if (!annex.read || !annex.text) {
     return (
       <View style={styles.annex} aria-label={`${annex.title}, redacted`}>
         <Text role="heading" style={styles.annexTitle}>{annex.title}</Text>
-        <View accessible aria-label="Redacted text" style={styles.bars}>
+        <View accessible role="image" aria-label="Redacted text" style={styles.bars}>
           {REDACTED_BARS.map((width) => <View key={width} style={[styles.bar, { width: `${width * 100}%` }]} />)}
         </View>
         <Text style={styles.body}>{annex.redaction}</Text>
@@ -149,7 +149,7 @@ function Annex({ annex, language, inEncounter, isLoading, onRead }) {
         </View>}
       </>}
       {annex.exposureNote && <Text style={styles.small}>{annex.exposureNote}</Text>}
-      {annex.strainPending && <Text style={styles.hidden}>Your companion is still recovering: a hint fewer for each task of your next conversation.</Text>}
+      {annex.strainPending && <Text style={styles.hidden}>Your companion is still recovering: a hint fewer for each objective of your next conversation.</Text>}
     </View>
   );
 }

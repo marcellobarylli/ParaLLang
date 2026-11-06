@@ -327,3 +327,24 @@ test('the third tasting files Mortimer\'s fragment under his party conversation;
   assert.deepEqual([fragment.encounterId, fragment.locationName, fragment.unlockedAt, fragment.conversations, fragment.toldBy],
     ['mortimer_tasting', "The Butcher's Stall", 3, 3, 'Mortimer']);
 });
+
+// Round 111 (review R1.7, R1.8): a strained party conversation has a hint fewer on every objective, the second too,
+// and its resolution spends the strain under its own id (decision 4).
+test('a strained coffee break: a hint fewer on each objective; finishing it spends the strain', async (t) => {
+  const { runtime, learnerId } = await recruitedGerald(t);
+  const envelope = await runtime.storage.load(learnerId);
+  envelope.world.completedEncounterIds.push('cracked_fountain_letharger');
+  await runtime.storage.save(envelope);
+  const read = await api(runtime, '/api/spellbook/annex/read', { learnerId, method: 'POST', body: { annexId: 'cm001_second_verse' } });
+  assert.equal(read.data.charged, true);
+  const limits = runtime.content.encounters.get('gerald_coffee_break').encounter.objectives.map((o) => o.hint_limit);
+  let encounter = (await start(runtime, learnerId, 'gerald_coffee_break')).data.encounter;
+  assert.deepEqual([encounter.currentObjective.id, encounter.hints.limit, encounter.hints.strained], ['praise_coffee', Math.max(0, limits[0] - 1), true]);
+  let turn = await say(runtime, learnerId, encounter, '¡Está buenísimo!');
+  assert.deepEqual([turn.encounter.currentObjective.id, turn.encounter.hints.limit], ['thank_gerald', Math.max(0, limits[1] - 1)]);
+  turn = await say(runtime, learnerId, turn.encounter, '¡Muchas gracias!');
+  assert.equal(turn.encounter.state, 'resolved');
+  assert.deepEqual((await runtime.storage.load(learnerId)).annexes.map((r) => r.strainSpentOn), ['gerald_coffee_break']);
+  encounter = (await start(runtime, learnerId, 'gerald_coffee_break')).data.encounter;
+  assert.equal(encounter.hints.strained, false);
+});

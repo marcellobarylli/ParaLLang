@@ -741,12 +741,13 @@ export class LearningService {
       const npcMessage = this.canonicalizeNarration(generated, definition);
       const stagedEnvelope = clone(envelope);
       this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
+      const strainedBy = this.pendingStrainIds(envelope); // round 111 (review R1.12): once
       const encounter = {
         id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0, passedObjectiveIds: [],
         committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
         ...(locationId ? { locationId } : {}),
         // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
-        ...(this.pendingStrainIds(envelope).length ? { strained: true, strainedBy: this.pendingStrainIds(envelope) } : {}),
+        ...(strainedBy.length ? { strained: true, strainedBy } : {}),
       };
       await this.storage.save(stagedEnvelope);
       this.encounters.set(learnerId, encounter);

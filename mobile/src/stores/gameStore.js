@@ -309,7 +309,12 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         if (fresh) snapshots.set(learnerId, { ...(snapshots.get(learnerId) ?? { encounter: get().encounter }), spellbook: fresh });
         set({ ...(fresh ? { spellbook: fresh } : {}), isLoading: false });
       } catch (error) {
-        if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false });
+        if (epoch === requestEpoch && get().learnerId === learnerId) {
+          set({ error: error.message, isLoading: false });
+          // Review R1.5: a conversation the app does not hold (another device, a lost session); the server's
+          // Spellbook then says so and the read button goes.
+          if (error.code === 'IN_ENCOUNTER') get().refreshSpellbook();
+        }
       }
     },
 

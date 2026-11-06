@@ -37,7 +37,7 @@ test('unread: bars, the companion\'s line, and the read asks first; only "Read i
   await user.press(screen.getByRole('button', { name: 'Read it anyway' }));
   const [title, message, buttons] = alert.mock.calls[0];
   expect(title).toBe('Read Annex A: the second verse?');
-  expect(message).toMatch(/a hint fewer for each task of the next conversation you finish/);
+  expect(message).toMatch(/a hint fewer for each objective of the next conversation you finish/);
   expect(buttons.map((b) => [b.text, b.style])).toEqual([['Leave it redacted', 'cancel'], ['Read it', 'destructive']]);
   expect(onReadAnnex).not.toHaveBeenCalled();
   buttons[1].onPress();
@@ -116,6 +116,27 @@ describe('the store', () => {
     store.setState({ encounter: { id: 'e', state: 'ongoing' } });
     await store.getState().readAnnex('cm001_second_verse');
     expect(api.readAnnex).toHaveBeenCalledTimes(1);
+  });
+
+  test('a refused IN_ENCOUNTER read refreshes the Spellbook, so the server\'s inEncounter removes the button', async () => {
+    const { api, store } = setup();
+    await store.getState().initialize();
+    api.readAnnex.mockRejectedValueOnce(Object.assign(new Error('Your companion keeps the redaction in place while a conversation is under way.'), { status: 409, code: 'IN_ENCOUNTER' }));
+    api.getSpellbook.mockResolvedValueOnce(book(unread, true));
+    await store.getState().readAnnex('cm001_second_verse');
+    await flush();
+    expect(store.getState().spellbook.inEncounter).toBe(true);
+  });
+
+  // Review R1.10: the read Spellbook is the save's snapshot, so switching away and back keeps it.
+  test('switching saves away and back keeps the read annex', async () => {
+    const { store } = setup();
+    await store.getState().initialize();
+    await store.getState().readAnnex('cm001_second_verse');
+    store.getState().switchLearnerForTest('22222222-2222-4222-8222-222222222222');
+    expect(store.getState().spellbook.containmentFiles ?? []).toEqual([]);
+    store.getState().switchLearnerForTest(A);
+    expect(store.getState().spellbook.containmentFiles[0].annex.read).toBe(true);
   });
 
   test('a reply for a save the player has left is dropped', async () => {

@@ -7,7 +7,14 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 34 (2026-11-06, 09:32–09:50 UTC) closed one offline content round:
+Nothing open. Iteration 35 (2026-11-06, 09:43–10:05 UTC) closed one offline round:
+- **111** (backlog B8): "Annex A: the second verse" (`cm001_second_verse`) on containment file CM-001, blacked out
+  by the companion. "Read it anyway" in the Spellbook (system alert) → `POST /api/spellbook/annex/read`; the verse
+  shows, its translation behind the toggle, an exposure note; the cost: the next conversation the player finishes
+  has a hint fewer per objective (`envelope.annexes`, session `strained`/`strainedBy`, `hints.strained`). Design
+  critique and build review by fresh subagents (Codex limited).
+
+Iteration 34 (2026-11-06, 09:32–09:50 UTC) closed one offline content round:
 - **110** (backlog B7): "Spores" (`journey_spores`), a Journey fragment on LORE.md's mushrooms and spores (Journathan
   breathes them on the Dead Branch's roots and wakes in a world that speaks his dream's tongue), filed on the
   Butcher's Stall's first completion, after the Dead Branch in story order. Every location encounter now files a
@@ -62,8 +69,10 @@ fixes (review resend replays, starts keep the screen), play-market's retried lin
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
-Next candidates, none needing the owner (the offline backlog is nearly empty; B8 is a sketch that needs a design
-critique before a build):
+Next candidates, none needing the owner (the offline backlog is nearly empty; B8 closed in round 111):
+- **Offline, new from round 111.** An annex on CM-002 (Errata; the same mechanic, content only plus a test); the
+  lore's "the companion's redaction is limited during certain events" (a design round); `baseLimit` in the hints line
+  ("1/1, 2 when your companion has recovered"); round 111 R1.9's prefetched-greeting test.
 - **Offline.** Every area has had an in-depth review (rounds 086–097), 093–098 a second (099), 100–103 one (104),
   and the web client a contract test (103). Small items left: a persisted "encounter ongoing" flag so the
   Spellbook payload stays withheld after a server restart (106 R1.1, low value); round 090's *caffè nero* question (owner); the footnote rule over other
@@ -86,6 +95,14 @@ critique before a build):
     (round 101 open item); in the first new report, check `uncommittedLines` carry a `step` and read any
     `unmatchedLines` (round 107).
 
+**Traps (iteration 35):**
+- `containment_file.annex` is taken out of `properties` in `containmentFiles`: a new key on a containment file goes
+  into `properties` unless destructured too (critique 1.1), and `containment.test.js` deepEquals CM-001's payload.
+- Hint limits go through `hintLimit(session, objective)`; a new use of `objective.hint_limit` would ignore the strain.
+- A test that reads an annex and then starts any encounter gets `hints.limit` one lower; finishing it spends the
+  strain (`envelope.annexes[].strainSpentOn`). Reading is 409 `IN_ENCOUNTER` during a held conversation.
+- `font.test.js` lists `Spellbook.js:annexTitle` among the system-font headings.
+- The annex English check allows exactly "i" (it, es) and "you" (it); rewording the redaction changes the expected list.
 **Traps (iteration 34):**
 - The Butcher's Stall's first completion now files `journey_spores`: a test that seeds or resolves
   `butchers_stall_charcutier` sees it in `journeyFragments` (story order: after the Dead Branch, before the
@@ -251,14 +268,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   two Journey fragments (the archway's telling, Journathan still on his way).
 - [x] **B7. Mushrooms and spores** (round 110, closed 2026-11-06): the "Spores" fragment, after the Butcher's
   Stall's first completion; an English give-away check over fragment titles and `found` texts.
-- [ ] **B8. A redacted infohazard passage** (seeded in iteration 34 from LORE.md, Infohazards, "Gameplay hooks":
-  "some untranslated passages are infohazards. Translating them gives juicy lore, but at a cost" and "the companion
-  can redact or blur a hazard, but it is limited during certain events"). Not started: it is a new mechanic (server
-  state for "read it anyway", a route, the map card or Spellbook UI, a cost) and wants a design critique first
-  (Codex after 11-09, or a subagent). Sketch: one passage, shown redacted by the companion ("I have blacked this one
-  out. Trust me."); the player may read it anyway; the cost could be an earworm (its words become due Spellbook
-  cards, reusing SM-2) or a deadpan containment file entry naming the reader. Every location already has its one
-  inscription, so the passage needs a new carrier (a second kind of text, or a containment file's attachment).
+- [x] **B8. A redacted infohazard passage** (round 111, closed 2026-11-06; seeded in iteration 34 from LORE.md,
+  Infohazards, "Gameplay hooks"): "Annex A: the second verse" on CM-001, blacked out by the companion; read anyway
+  from the Spellbook (system alert), it costs a hint per objective in the next conversation the player finishes
+  (`envelope.annexes`, `POST /api/spellbook/annex/read`, `hints.strained`). Open: more annexes (CM-002); a strain
+  that also limits the companion "during certain events".
 
 ### C. prototype.md Phase 4: Polish & Audio
 
@@ -781,6 +795,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-06, iteration 34 (09:32–09:50 UTC): round 110 (B7) closed, offline: the "Spores" fragment in both packs
   (Butcher's Stall, first completion), a subagent review (0 Error, 7 findings, 6 accepted), an English give-away
   check over fragment titles and `found` texts. Server 397/397, client 21/21, mobile 305/305. No live calls.
+- 2026-11-06, iteration 35 (09:43–10:05 UTC): round 111 (B8) closed, offline: a redacted annex on CM-001, read
+  anyway at the cost of a hint per objective in the next finished conversation; subagent design critique (11, 10
+  accepted) and build review (13, 0 Error). Server 406/406, client 21/21, mobile 317/317. No live calls.
 ## Handoff notes and traps
 
 - **Starting encounters** (round 091): a named start (`encounterId`) while another conversation is ongoing is 409

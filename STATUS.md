@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 111, a redacted infohazard (autonomous)
+
+The Fountain's containment file now has an annex the companion has blacked out: the jingle's second verse. The
+player may read it anyway from the Spellbook, after a warning. The verse then shows in the target language with its
+translation, and the file logs the reader as a new host. The price follows the owner's lore ("translating them gives
+juicy lore, but at a cost"): the companion needs to recover, so the next conversation the player finishes has one
+hint fewer per objective ([findings](docs/rounds/111/findings.md)).
+
 ## Addendum 2026-11-06: round 110, the spores (autonomous)
 
 The owner's mushrooms-and-spores lore is in the game as a page of The Journey, "Spores", found at Mortimer's stall

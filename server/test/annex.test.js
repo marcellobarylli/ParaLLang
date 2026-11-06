@@ -107,6 +107,11 @@ test('reading the annex: not filed, in an encounter, unknown; then read once, wi
 
   response = await read(runtime, learnerId);
   assert.equal(response.data.charged, false);
+  // Review R1.11: during a conversation even an annex already read is refused (the encounter check comes first).
+  await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { restart: true } });
+  response = await read(runtime, learnerId);
+  assert.equal(response.status, 409);
+  assert.equal(response.data.error.code, 'IN_ENCOUNTER');
   const saved = await runtime.storage.load(learnerId);
   assert.deepEqual(saved.annexes, [{ id: ANNEX, readAt: '2026-01-15T12:00:00.000Z', strainSpentOn: null }]);
 });
