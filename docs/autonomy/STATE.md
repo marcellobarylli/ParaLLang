@@ -7,20 +7,21 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 29 (2026-11-06, 07:51–08:25 UTC) closed three offline rounds:
-- **099** (second review of 093–098, two fresh reviewers): **help after a lost send no longer reloads** (the next
-  Send graded the answer twice); it keeps the conversation and says `STALE_HELP_PENDING`, so the resend replays.
-  Also `lostSaves` (SAVE_LOST after a failed load), `worldWrites` / `partyWrites` (replacing `placeWrites`), a review
-  reply after leaving the screen lands quietly (`onCard`), ReviewPanel's "No review is loaded." with Try again, any
-  runner exit is final for later timeouts/cancels, Codex `pickFailure` (first coded failure event). Rejected R1.3
-  (probe before group kill); deferred R1.4 (play-market per-step matching), critique 1.3 (replay after a server
-  restart shows a phantom conversation).
-- **100** (097 R1.5): `leak-scan.js` `scanExtras` reads narratives and grader feedback (exact open forms; feedback's
-  echo includes the graded message; `ENGLISH_FORMS` counted apart; by era). Over 149 reports: 0 of 1166 narratives,
-  8 of 942 feedback turns, all rounds 005–007 (fixed in 008). Footnotes not scanned (recorded before the filter).
-- **101** (044 open item 2): a fifth NPC-line kind `soft` (listed `FRAME_TARGETS` by entry id, and `espresso`):
-  65 lines leak → soft; leaks since round 051: it 6 (Flick's *ora* as "hour" ×3, Errata's *sono* ×2, *basta*), es 0.
-  The printed line keeps `old leak` = leak + soft.
+Nothing open. Iteration 30 (2026-11-06, 08:22–08:50 UTC) closed three offline rounds:
+- **102** (099 critique 1.3): after a replayed send whose encounter is ongoing, a `currentEncounter` read with no
+  conversation (a server restart) goes to the map with `STALE_CLOSED` (only from the dialogue view), one with another
+  id is shown with `STALE_REPLAY_OTHER`; only while the store still shows the replay (a start or help reload during
+  the read wins). `_applyLatest` is shared with `_reloadStale`.
+- **103** (the web client): `server/test/web-client.test.js` plays the frozen client's own store and API module
+  against the in-process server and asserts the fields its components read (5 of 5 server field renames caught). The
+  web Spellbook now hides meanings during encounters and on due cards (round 017's rule). The web client sends no
+  token (open, Needs owner).
+- **104** (review of 100–103 by a fresh subagent, 8 findings): leak-scan *espresso* soft only in "espresso shot(s)";
+  any fresh word hit is `near`; `oldLeak` counted by the pre-101 rule (printed `old leak K`); English texts keep every
+  form per objective; the web Spellbook hides a card due by time. No committed number changed.
+
+Iteration 29 (07:51–08:25 UTC) closed 099–101 (help after a lost send, the leak scan over narratives and feedback,
+the `soft` kind).
 
 Iteration 28 (06:50–07:52 UTC) closed 093–098: receipts pruned to 20 (no Spellbook in them), card evidence to 20,
 the adapter forwards `serial`, CLI failure categories kept, the runner settles a child holding its pipes, store
@@ -31,12 +32,11 @@ autonomous run. No live LLM data is possible for the rest of the run (claude-cli
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline.** Every area has had an in-depth review (rounds 086–097), and 093–098 a second one (099). Possible next
-  passes: the web client (`client/`, frozen, never reviewed: only keep it working); round 090's known leak (a
-  readable *caffè* and *nero* answer a due *caffè nero*: hiding *caffè* whenever *caffè nero* is due over-hides, so
-  it reads as an owner question); 099's deferred phantom after a server restart (round 071's send path: after a
-  replay, a `currentEncounter` with no encounter or another id should go through `_reloadStale`'s closed branch);
-  the footnote rule over other encounters' answers (measure first with `docs/rounds/086/results/rule.mjs`).
+- **Offline.** Every area has had an in-depth review (rounds 086–097), 093–098 a second (099), 100–103 one (104),
+  and the web client a contract test (103). Small items left: `STALE_CLOSED` says "Return to it on the map", which
+  does not fit a party conversation (102 open item); meanings in the server's Spellbook payload during encounters
+  (104 R1.7, both clients hide them); round 090's *caffè nero* question (owner); the footnote rule over other
+  encounters' answers (low value until footnotes appear live); play-market per-step matching (099 R1.4).
 - **Queued live (after 11-09 17:32 UTC):**
   - round 081's firmer footnote rule by Amendment ("write a footnote on the greeting and on about one reply in
     three; a footnote adds what the narrative did not say") and a re-measure, counting footnotes dropped by round
@@ -52,6 +52,16 @@ Next candidates, none needing the owner:
   - read the `extra-*` and `soft` lines of every new report's leak scan (rounds 100–101); Flick's *ora* as "hour"
     (round 101 open item); play-market per-step matching (099 R1.4).
 
+**Traps (iteration 30):**
+- `leak-scan.js`: `NPC_ENGLISH_FORMS` is now a list of `{ form, context }` (use `npcEnglish(language, form, line)`);
+  the printed `old leak` is counted (`oldLeakLines`), no longer leak + soft; `byEra` entries have `oldLeakLines`.
+- `server/test/web-client.test.js` imports `client/src/stores/gameStore.js`; zustand and react resolve from the root
+  `node_modules`. A server field the web client reads that is renamed fails it: update the frozen client or the
+  test on purpose.
+- The web Spellbook hides a card whose `nextReviewAt` is past: test cards that should show their meaning need a
+  future `nextReviewAt`.
+- Mobile race tests on the replay read: hold `currentEncounter` with `mockImplementationOnce` after `ready()` and
+  check its call count before the player's action.
 **Traps (iteration 29):**
 - `leak-scan.js`: `leak` was redefined in round 101 (old leak = leak + soft); compare earlier rounds' numbers with the
   printed `old leak`. `formsFor` and exact hits now carry the entry `id`. A new encounter's optional words are not
@@ -325,6 +335,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (`ambient_vocabulary_ids`): benvenuto, piacere, mercato; bienvenido, mucho gusto, mercado. Chipped in 12/12 lines.
 
 ## Needs owner
+
+- **Round 103:** should the web client (its Vite proxy) and the app send `PARALLANG_TOKEN`? Today neither can reach a
+  token-protected server. **Round 102 (Simulator):** stop the server during a send, restart it, send the same answer
+  again: the map with "This conversation is no longer open…".
 
 - **Round 099 (Simulator):** after a lost send, tap a word chip for help: the line "Your last answer may have
   reached the server…", then Send shows the verdict; the review screen's "Try again" after dismissing an error.
