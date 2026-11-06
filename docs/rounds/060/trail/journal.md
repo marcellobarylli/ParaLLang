@@ -11,3 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 00:20:34 | 00:20:34 | disposition | Claude (claude-opus-5-5), autonomous | 9 findings: 7 accepted, 2 in part (autonomous, pending owner review); rows 1.1–1.9 | `../architecture.md` |
 | 6 | 00:20:34 | 00:20:34 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: hidden while cards due, out of receipts, tolerant validation, scene place, normalised dedupe, toggle, caps | `../architecture.md` |
 | 7 | 00:20:34 | 00:20:34 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
+| 8 | 00:23:55 | 00:23:55 | built | Claude (claude-opus-5-5), autonomous | lines in the save (learning-storage.js: tolerant validation, caps); keepLine, keptLines, withoutLines, replayWithLines in learning-service.js; Spellbook "Lines you translated" with toggle and lineHiddenBy; kept-lines tests (server 6, mobile 4); font test title count 10 | — |
+| 9 | 00:23:55 | 00:23:55 | result | Claude (claude-opus-5-5), autonomous | Server 244/244, mobile 157/157, client 12/12; expo-doctor 20/20; iOS export built | — |
+| 10 | 00:23:55 | 00:23:55 | outcome | Claude (claude-opus-5-5), autonomous | C9 done: paid sentence reveals kept and shown, hidden during encounters and while their cards are due | `../findings.md` |
+| 11 | 00:23:55 | 00:23:55 | closed | Claude (claude-opus-5-5), autonomous | Round 060 closed | `../findings.md` |

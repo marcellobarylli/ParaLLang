@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 060, lines you translated (autonomous)
+
+When the player pays to translate an NPC line, the line is now kept in the save, up to the 50 newest. The Spellbook
+lists these lines under "Lines you translated", each with a 🔊 and its translation behind a toggle. This follows the
+owner's note that translated sentences should be kept for retrieval. The translation is withheld during encounters
+and while any card in the line is due, since the line would give that card's answer. Stored receipts no longer copy
+the lines. Checked by tests only ([open items](docs/rounds/060/findings.md#open-items)).
+
 ## Addendum 2026-11-06: round 059, word class on Spellbook cards and in reviews (autonomous)
 
 The word class now looks the same on Spellbook cards and on the review prompt as on the encounter chips. On a card,
@@ -591,6 +599,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 060 | 11-06 | Lines the player paid to translate kept in the save and shown in the Spellbook, hidden while their cards are due (backlog C9) (autonomous) | [060](docs/rounds/060/architecture.md) | [findings](docs/rounds/060/findings.md) | pre-run record to round 060 close |
 | 059 | 11-06 | Word class on Spellbook cards (class word coloured) and on the review prompt (backlog C8) (autonomous) | [059](docs/rounds/059/architecture.md) | [findings](docs/rounds/059/findings.md) | pre-run record to round 059 close |
 | 058 | 11-05 | The matcher tries every form longest first across entries; every form matches its own entry (backlog F3) (autonomous) | [058](docs/rounds/058/architecture.md) | [findings](docs/rounds/058/findings.md) | pre-run record to round 058 close |
 | 057 | 11-05 | Chip words marked inside the NPC line at the server's spans, by class (backlog C7) (autonomous) | [057](docs/rounds/057/architecture.md) | [findings](docs/rounds/057/findings.md) | pre-run record to round 057 close |

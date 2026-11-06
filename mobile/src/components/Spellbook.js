@@ -17,6 +17,10 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
         <View style={styles.card}><Text style={styles.cardTitle}>No vocabulary yet</Text><Text style={styles.body}>Words and phrases appear here after you encounter them.</Text></View>
       ) : spellbook.cards.map((card) => <Card key={card.vocabularyId} card={card} state={cardState(card, { inEncounter, now })} language={language} isLoading={isLoading} onReview={onReview} />)}
       {!inEncounter && spellbook.cards.length > 0 && spellbook.dueCount === 0 && <Text style={styles.muted}>Nothing is due. Your next review times are shown on each card.</Text>}
+      {spellbook.lines?.length > 0 && <>
+        <Title style={styles.section}>Lines you translated</Title>
+        {spellbook.lines.map((line) => <KeptLine key={line.id} line={line} hiddenBy={lineHiddenBy(line, spellbook, now)} language={language} />)}
+      </>}
       {spellbook.containmentFiles?.length > 0 && <>
         <Title style={styles.section}>Containment files</Title>
         {spellbook.containmentFiles.map((file) => <ContainmentFile key={file.designation} file={file} language={language} />)}
@@ -36,6 +40,39 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
 export function cardState(card, { inEncounter = false, now = Date.now() } = {}) {
   if (inEncounter) return 'inEncounter';
   return card.due || new Date(card.nextReviewAt).getTime() <= now ? 'due' : 'reference';
+}
+
+// Round 060 (backlog C9): why a kept line's translation is withheld, or null. The server withholds it during an
+// encounter and while a card in the line is due; the app checks the cards by the clock too, for a stale snapshot.
+export function lineHiddenBy(line, spellbook, now = Date.now()) {
+  if (spellbook.inEncounter) return 'encounter';
+  const ids = new Set(line.vocabularyIds ?? []);
+  if (line.hidden || !line.translation) return 'review';
+  return spellbook.cards.some((card) => ids.has(card.vocabularyId) && cardState(card, { now }) === 'due') ? 'review' : null;
+}
+
+const LINE_WAIT = {
+  encounter: 'The translation waits until the encounter is over.',
+  review: 'The translation waits until you review its words.',
+};
+
+function KeptLine({ line, hiddenBy, language }) {
+  const [open, setOpen] = useState(false);
+  const name = language?.name ?? 'the target language';
+  const source = [line.speaker, line.locationName].filter(Boolean).join(', at ');
+  return (
+    <View style={styles.card} aria-label={`Line from ${line.speaker}`}>
+      <Text style={styles.source}>{source}</Text>
+      <View style={styles.cardRow}>
+        <Text style={[styles.passage, styles.lineText]} accessibilityLanguage={language?.tag}>{line.native}</Text>
+        <PronounceButton text={line.native} language={language} label={`Hear the line in ${name}`} />
+      </View>
+      {hiddenBy ? <Text style={styles.hidden}>{LINE_WAIT[hiddenBy]}</Text> : <>
+        <Button label={open ? 'Hide translation' : 'Show translation'} expanded={open} onPress={() => setOpen(!open)} style={styles.review} />
+        {open && <Text style={styles.example}>{line.translation}</Text>}
+      </>}
+    </View>
+  );
 }
 
 // Round 028 (backlog B4): the deadpan file for each infohazard met (LORE.md). No file holds an objective's answer
@@ -133,6 +170,7 @@ const styles = StyleSheet.create({
   source: { color: colors.accent, fontSize: type.footnote, fontWeight: '600' },
   passage: { color: colors.ink, fontSize: type.callout, lineHeight: leading.callout, fontStyle: 'italic' },
   translation: { gap: 4, marginTop: 4 },
+  lineText: { flexShrink: 1 },
   strong: { fontWeight: '700' },
   classWord: { fontWeight: '600' },
   small: { color: colors.muted, fontSize: type.footnote },

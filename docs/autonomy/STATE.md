@@ -116,6 +116,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   MECHANICS note, "R/G/B for noun/verb/adjective"). No live calls.
 - [x] **C7. Chip words marked in the line** (round 057, closed 2026-11-05): the server's match spans, coloured and underlined by
   class inside the NPC line. No live calls.
+- [x] **C9. Lines you translated** (round 060, closed 2026-11-06): paid sentence reveals kept in the save (`lines`, 50,
+  500 characters) and shown in the Spellbook, hidden during encounters and while a card in the line is due. No live calls.
 - [x] **C8. Word class on Spellbook cards and in reviews** (round 059, closed 2026-11-06): the class word in its chip
   colour on cards (frames stay neutral), a class tag under the review word, from the Spellbook card. No live calls.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner

@@ -101,3 +101,8 @@ tests run, removal with the save (`remove` deletes the file; noted in findings).
 
 Net change: lines hidden while their cards are due, kept out of receipts, tolerant validation, scene place, normalised
 dedupe, a toggle and size caps.
+
+## Outcome (2026-11-06)
+
+Built as designed. Server 244/244, mobile 157/157, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
+See [findings.md](findings.md).

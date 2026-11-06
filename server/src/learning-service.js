@@ -5,7 +5,7 @@ import {
   calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
   foldEvidenceText, isDue, masteryLabel, matchCanonicalVocabulary, scheduleReview,
 } from './language-engine.js';
-import { assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
+import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, worldSnapshot } from './world.js';
@@ -24,6 +24,14 @@ const foldForAtmosphere = (text) => text.normalize('NFD').replace(/\p{M}/gu, '')
 function clone(value) { return structuredClone(value); }
 function payloadHash(value) { return createHash('sha256').update(JSON.stringify(value)).digest('hex'); }
 function nowIso(clock) { return new Date(clock()).toISOString(); }
+// Round 060: the dedupe key of a kept line (critique 1.7): normalised text plus speaker.
+const lineKey = (line) => `${line.speaker}\u0000${line.native.normalize('NFC').toLowerCase().replace(/\s+/gu, ' ').trim()}`;
+// Round 060 (critiques 1.2, 1.3): receipts store responses without the kept lines; a replay gets the current ones.
+function withoutLines(response) {
+  if (!response?.spellbook || !('lines' in response.spellbook)) return response;
+  const { lines, ...spellbook } = response.spellbook;
+  return { ...response, spellbook };
+}
 
 export class LearningService {
   constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false }) {
@@ -215,7 +223,36 @@ export class LearningService {
       cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version,
       inEncounter, containmentFiles: this.containmentFiles(envelope),
       journeyFragments: this.journeyFragments(envelope, inEncounter), drill: this.pendingDrill(envelope),
+      lines: this.keptLines(envelope, inEncounter, cards),
     };
+  }
+
+  // Round 060 (backlog C9): the lines the player paid to translate, newest first. The translation is withheld during
+  // an encounter and while any card the line contains is due (decision 2): the line is that card's answer in context.
+  keptLines(envelope, inEncounter, cards) {
+    const due = new Set(cards.filter((card) => card.due).map((card) => card.vocabularyId));
+    return (envelope.lines ?? []).map((line) => {
+      const hidden = inEncounter || line.vocabularyIds.some((id) => due.has(id));
+      return {
+        id: line.id, speaker: line.speaker, native: line.native, translation: hidden ? null : line.translation,
+        locationName: (line.locationId && this.content.world.locationsById.get(line.locationId)?.name) ?? null,
+        vocabularyIds: [...line.vocabularyIds], savedAt: line.savedAt, hidden,
+      };
+    });
+  }
+
+  // Round 060: keeps a paid sentence reveal in the staged envelope only (critique 1.6), deduped and capped.
+  keepLine(envelope, session, message) {
+    const cap = (value) => String(value ?? '').slice(0, LINE_TEXT_LIMIT);
+    const line = {
+      id: cap(message.id), encounterId: cap(this.definition(session).encounter.id),
+      locationId: this.sceneLocationId(session) ?? null, speaker: cap(message.dialogue.speaker),
+      native: cap(message.dialogue.native), translation: cap(message.dialogue.translation),
+      vocabularyIds: message.dialogue.words.map((word) => word.vocabularyId), savedAt: nowIso(this.clock),
+    };
+    if (![line.id, line.encounterId, line.speaker, line.native, line.translation].every(Boolean)) return;
+    const key = lineKey(line);
+    envelope.lines = [line, ...(envelope.lines ?? []).filter((kept) => lineKey(kept) !== key)].slice(0, LINE_LIMIT);
   }
 
   // Round 028 (backlog B4): a containment file is filed once its encounter is completed (world progress; no save
@@ -442,6 +479,16 @@ export class LearningService {
     if (encounter.version !== version) throw conflictError('This encounter changed in another tab. Refresh before retrying.', 'STALE_VERSION');
   }
 
+  // Round 060 (critique 1.3): a replayed receipt carries the kept lines as they are now, not as they were.
+  replayWithLines(response, envelope) {
+    const replay = { ...response, replayed: true };
+    if (replay.spellbook) {
+      const current = this.spellbookSnapshot(envelope);
+      replay.spellbook = { ...replay.spellbook, lines: current.lines };
+    }
+    return replay;
+  }
+
   async revealEncounterHelp(learnerId, request) {
     return this.serialized(learnerId, async () => {
       const envelope = await this.loadEnvelope(learnerId);
@@ -473,6 +520,7 @@ export class LearningService {
       staged.version += 1;
       const stagedEnvelope = clone(envelope);
       if (request.kind === 'word') this.discover(stagedEnvelope, [request.vocabularyId], nowIso(this.clock), 'companion_reveal');
+      else this.keepLine(stagedEnvelope, current, activeMessage);
       await this.storage.save(stagedEnvelope);
       this.encounters.set(learnerId, staged);
       return { reveal, charged: true, encounter: this.serializeEncounter(staged), spellbook: this.spellbookSnapshot(stagedEnvelope) };
@@ -520,7 +568,7 @@ export class LearningService {
       const existing = envelope.spellbook.processedAssessments[request.attemptId];
       if (existing) {
         if (existing.payloadHash !== fingerprint) throw conflictError('This attempt ID was already used for different input.', 'ATTEMPT_REUSE');
-        return { ...existing.response, replayed: true };
+        return this.replayWithLines(existing.response, envelope);
       }
       const current = this.encounters.get(learnerId);
       this.validateVersion(current, request.encounterId, request.version);
@@ -633,7 +681,7 @@ export class LearningService {
         replayed: false,
       };
       stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
-        kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response,
+        kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response: withoutLines(response),
       };
       await this.storage.save(stagedEnvelope);
       this.encounters.set(learnerId, stagedEncounter);
@@ -858,7 +906,7 @@ export class LearningService {
       const existing = envelope.spellbook.processedAssessments[request.attemptId];
       if (existing) {
         if (existing.payloadHash !== fingerprint) throw conflictError('This attempt ID was already used for different review input.', 'ATTEMPT_REUSE');
-        return { ...existing.response, replayed: true };
+        return this.replayWithLines(existing.response, envelope);
       }
       const challenge = this.reviewChallenges.get(learnerId)?.get(request.challengeId);
       if (!challenge) throw conflictError('That review challenge is stale. Fetch a new due review.', 'STALE_CHALLENGE');
@@ -890,7 +938,7 @@ export class LearningService {
         replayed: false,
       };
       stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
-        kind: 'review', payloadHash: fingerprint, committedAt: timestamp, response,
+        kind: 'review', payloadHash: fingerprint, committedAt: timestamp, response: withoutLines(response),
       };
       await this.storage.save(stagedEnvelope);
       this.reviewChallenges.get(learnerId).delete(request.challengeId);

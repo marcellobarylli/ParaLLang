@@ -46,6 +46,19 @@ function validParty(party) {
     && !seen.has(member.characterId) && seen.add(member.characterId));
 }
 
+// Round 060 (backlog C9): NPC lines the player paid to translate. Only the container is strict (critique 1.4): an
+// invalid entry is dropped and the save kept.
+export const LINE_LIMIT = 50;
+export const LINE_TEXT_LIMIT = 500;
+const text = (value) => typeof value === 'string' && value.length > 0 && value.length <= LINE_TEXT_LIMIT;
+function validLine(line) {
+  return Boolean(line) && typeof line === 'object' && !Array.isArray(line)
+    && ['id', 'encounterId', 'speaker', 'native', 'translation'].every((key) => text(line[key]))
+    && (line.locationId === null || typeof line.locationId === 'string')
+    && Array.isArray(line.vocabularyIds) && line.vocabularyIds.every((id) => typeof id === 'string')
+    && typeof line.savedAt === 'string' && Number.isFinite(Date.parse(line.savedAt));
+}
+
 function validWorld(world) {
   const ids = (list) => Array.isArray(list) && list.every((id) => typeof id === 'string');
   return Boolean(world) && typeof world === 'object' && !Array.isArray(world)
@@ -90,6 +103,10 @@ function validateEnvelope(value, learnerId) {
   }
   if (!validParty(value.party)) {
     throw retryableError('The learner save contains an invalid party. The original file was preserved.', 'SAVE_UNREADABLE');
+  }
+  if (value.lines !== undefined) {
+    if (!Array.isArray(value.lines)) throw retryableError('The learner save contains invalid translated lines. The original file was preserved.', 'SAVE_UNREADABLE');
+    value.lines = value.lines.filter(validLine).slice(0, LINE_LIMIT);
   }
   return value;
 }
