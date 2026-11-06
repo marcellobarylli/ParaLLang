@@ -156,8 +156,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ### I. Follow-ups seeded in iteration 20 (live timings)
 
-- [ ] **I1. The verdict before the reply** (round 070): show the grader's verdict while the NPC's reply is written
-  (grading ~5 s, narration ~8.6 s per turn in round 067); progress route, app polling, provisional box.
+- [x] **I1. The verdict before the reply** (round 070, closed 2026-11-06): `GET /api/encounter/progress`, app polls
+  every second, provisional Assessment box; live: verdict at 5.3–6.8 s vs response 11.8–16.1 s, 6/6 equal.
 
 ### F. Maintenance
 
@@ -197,6 +197,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Round 070 (Simulator): the waiting line "{name} is replying…" and the provisional Assessment box (answer,
+  verdict, "Not counted until…"), in a long conversation and with VoiceOver. Decide: may a verdict show before the turn
+  commits ([open items](../rounds/070/findings.md#open-items)).
 - **Atmosphere** (rounds 053, 068): read some lines in `docs/rounds/068/results/` and decide whether it should be on
   by default (`PARALLANG_ATMOSPHERE=on`).
 - **Playtesting (prototype.md Phase 4's last task):** run [`docs/playtest/guide.md`](../playtest/guide.md) with
@@ -456,9 +459,16 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   the owner (`docs/playtest/guide.md`) and a README refresh, docs only.
 - 2026-11-06, iteration 20: round 069 closed: kept lines (C9) live, it 30/30 and es 28/28 checks, 28 calls;
   `docs/rounds/069/results/kept-lines-live.mjs` is a ~2-minute regression check.
+- 2026-11-06, iteration 20: round 067 addendum (share on target by `folded`: it 0.43, es 0.44 vs 0.44; Rift 0.50).
+  Round 070 closed (I1): the verdict before the NPC's reply; server 256/256, client 12/12, mobile 192/192; live 6/6.
 
 ## Handoff notes and traps
 
+- **Turn progress** (round 070): `submitDialogue` builds the response's `assessment` block (and every
+  `effective_quality`) before the narration call and keeps it in `turnProgress` until the turn ends; change it there,
+  not in the staging code. `progress()` is deliberately not serialized. Mobile fakes without `getTurnProgress` skip
+  the poll; a test that wants it uses fake timers and `PROGRESS_INTERVAL_MS` (`turn-progress.test.js`).
+- **`pgrep -af server/server.js` matches its own shell**: use `pgrep -af "[n]ode server/server.js"`.
 - **Codex critique needs a bundle on stdin** (again in round 068): without it, bwrap fails and the critique is void.
   Build the bundle with `cat -n` of the plan and files, and tell Codex not to run commands. It returned in about 2
   minutes this time.

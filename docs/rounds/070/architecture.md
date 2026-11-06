@@ -144,3 +144,9 @@ Decision 2).
 
 Net change: the progress entry holds only a validated assessment, is cleaned inside the lock by its own run, and is
 applied by the app only while its own send is unsettled. It shows as provisional under the pending line.
+
+## Outcome (2026-11-06)
+
+All pass criteria met. In the live HTTP run (it, codex-cli), 6 of 6 turns had an early verdict, all equal to the
+response's, with no NPC text in progress. The verdict came at 5.3–6.8 s and the response at 11.8–16.1 s. All suites
+are green (server 256, client 12, mobile 192). No amendments. See [findings.md](findings.md).

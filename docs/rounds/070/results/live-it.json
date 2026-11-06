@@ -1,0 +1,113 @@
+{
+  "port": 35047,
+  "turns": [
+    {
+      "encounterId": "imp_coffee_greeting",
+      "message": "Vorrei un caffè, per favore.",
+      "polls": 54,
+      "earlyMs": 5552,
+      "responseMs": 13866,
+      "savedMs": 8314,
+      "earlyEqual": true,
+      "npcTextInProgress": false,
+      "verdicts": [
+        "order_coffee:true",
+        "no_milk:false"
+      ],
+      "feedback": "Your coffee order is correct. Now add an Italian expression specifying no milk or black coffee.",
+      "state": "ongoing"
+    },
+    {
+      "encounterId": "imp_coffee_greeting",
+      "message": "Senza latte, per favore.",
+      "polls": 47,
+      "earlyMs": 6045,
+      "responseMs": 11837,
+      "savedMs": 5792,
+      "earlyEqual": true,
+      "npcTextInProgress": false,
+      "verdicts": [
+        "no_milk:true"
+      ],
+      "feedback": "Correct and natural—your coffee order clearly excludes milk.",
+      "state": "resolved"
+    },
+    {
+      "encounterId": "butchers_stall_charcutier",
+      "message": "Vorrei del prosciutto, per favore.",
+      "polls": 63,
+      "earlyMs": 5787,
+      "responseMs": 16109,
+      "savedMs": 10322,
+      "earlyEqual": true,
+      "npcTextInProgress": false,
+      "verdicts": [
+        "name_meat:false",
+        "quantity:false"
+      ],
+      "feedback": "Ask for a meat other than ham in Italian first, then specify how much you want using an Italian quantity and weight unit.",
+      "state": "ongoing"
+    },
+    {
+      "encounterId": "butchers_stall_charcutier",
+      "message": "Vorrei del salame, per favore.",
+      "polls": 53,
+      "earlyMs": 6290,
+      "responseMs": 13587,
+      "savedMs": 7297,
+      "earlyEqual": true,
+      "npcTextInProgress": false,
+      "verdicts": [
+        "name_meat:true",
+        "quantity:false"
+      ],
+      "feedback": "Your meat request is correct. Now specify the quantity in Italian, including a unit of weight.",
+      "state": "ongoing"
+    },
+    {
+      "encounterId": "butchers_stall_charcutier",
+      "message": "Chilo.",
+      "polls": 61,
+      "earlyMs": 5287,
+      "responseMs": 15607,
+      "savedMs": 10320,
+      "earlyEqual": true,
+      "npcTextInProgress": false,
+      "verdicts": [
+        "quantity:false"
+      ],
+      "feedback": "You named a weight unit, but still need to specify an amount in Italian.",
+      "state": "ongoing"
+    },
+    {
+      "encounterId": "butchers_stall_charcutier",
+      "message": "Due etti, per favore.",
+      "polls": 53,
+      "earlyMs": 6794,
+      "responseMs": 13589,
+      "savedMs": 6795,
+      "earlyEqual": true,
+      "npcTextInProgress": false,
+      "verdicts": [
+        "quantity:true"
+      ],
+      "feedback": "Correct: your order includes a clear quantity and weight unit.",
+      "state": "resolved"
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "turns": 6,
+    "withEarly": 6,
+    "allEqual": true,
+    "npcTextLeaked": false,
+    "medianSavedMs": 8314
+  },
+  "passed": true,
+  "serverLog": [
+    "ParaLLang server listening on http://127.0.0.1:35047",
+    "LLM provider: codex-cli",
+    "Target language: Italian (it)",
+    "Spellbook saves: /tmp/parallang-progress-ZpDyFY/it"
+  ]
+}

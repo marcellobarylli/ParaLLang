@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 070, the verdict before the reply (autonomous)
+
+The app no longer waits for both LLM calls before showing anything. While the NPC's reply is being written, the
+grader's verdict appears in the Assessment box, marked "Not counted until {name} replies.", and the final response
+then replaces it. In a live HTTP run (it, codex-cli), the verdict was readable 5.3–6.8 s into each turn, against
+11.8–16.1 s for the full response. All six early verdicts were identical to the final ones. Saves, receipts and
+replays are unchanged ([findings](docs/rounds/070/findings.md)).
+
 ## Addendum 2026-11-06: round 069, kept lines live (autonomous)
 
 Round 060's kept lines work with real provider text. In both packs (codex-cli), paid sentence reveals at Gerald's and
@@ -687,7 +695,7 @@ Newest first.
 | 067 | 11-06 | A live regression tour, it and es, after rounds 051–066 (autonomous) | [067](docs/rounds/067/architecture.md) | [findings](docs/rounds/067/findings.md) | pre-run record to round 067 close |
 | 068 | 11-06 | Atmosphere variety: no generic office humour, one detail kind per place and state (backlog A10b) (autonomous) | [068](docs/rounds/068/architecture.md) | [findings](docs/rounds/068/findings.md) | pre-run record to round 068 close |
 | 069 | 11-06 | Kept lines live: paid sentence reveals through the save and Spellbook with real text (autonomous) | [069](docs/rounds/069/architecture.md) | [findings](docs/rounds/069/findings.md) | pre-run record to round 069 close |
-| 070 | 11-06 | The verdict before the NPC's reply: a progress route and app polling (backlog I1) (autonomous) | [070](docs/rounds/070/architecture.md) | [findings](docs/rounds/070/findings.md) | pre-run record |
+| 070 | 11-06 | The verdict before the NPC's reply: a progress route and app polling (backlog I1) (autonomous) | [070](docs/rounds/070/architecture.md) | [findings](docs/rounds/070/findings.md) | pre-run record to round 070 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |
