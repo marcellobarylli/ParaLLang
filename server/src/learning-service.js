@@ -44,9 +44,27 @@ function withoutLines(response) {
   return { ...response, spellbook };
 }
 
+// Round 076: how long the player stays at a place before its greeting is written, how often a busy provider is
+// waited out, and how many greetings are kept in all.
+export const PREFETCH_DWELL_MS = 1500;
+export const PREFETCH_RETRIES = 3;
+export const PREFETCH_MAX_GREETINGS = 100;
+const greetingKey = (learnerId, definitionId) => `${learnerId}\u0000${definitionId}`;
+
 export class LearningService {
-  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false }) {
+  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false, prefetch = false, prefetchDwellMs = PREFETCH_DWELL_MS, prefetchRetries = PREFETCH_RETRIES }) {
     this.provider = provider;
+    // Round 076: the greeting written while the player reads the map card (off unless switched on). One arrival per
+    // learner; greetings by learner and encounter until a start takes them; counters only.
+    this.prefetchEnabled = prefetch;
+    this.prefetchDwellMs = prefetchDwellMs;
+    this.prefetchRetries = prefetchRetries;
+    this.arrivals = new Map();
+    this.arrivalSeq = 0;
+    this.greetings = new Map();
+    this.starting = new Set();
+    this.stopping = false;
+    this.prefetchStats = { scheduled: 0, calls: 0, used: 0, fallback: 0, failed: 0, busy: 0, skipped: 0, evicted: 0 };
     // Round 053 (backlog A10): atmosphere lines by state key, and the calls under way for a key.
     this.atmosphereEnabled = atmosphere;
     this.atmosphereLines = new Map();
@@ -82,6 +100,7 @@ export class LearningService {
         envelope = createLearnerEnvelope(learnerId);
         await this.storage.save(envelope);
       }
+      this.scheduleArrival(learnerId, currentLocationId(this.content.world, envelope.world));
       return { learnerId, recovered, language: this.content.language };
     });
   }
@@ -95,6 +114,7 @@ export class LearningService {
       const existed = await this.storage.remove(learnerId);
       this.encounters.delete(learnerId);
       this.reviewChallenges.delete(learnerId);
+      this.forgetPrefetch(learnerId);
       return { deleted: true, existed };
     });
   }
@@ -414,6 +434,15 @@ export class LearningService {
   async startEncounter(learnerId, { restart = false, encounterId = null } = {}) {
     assertLearnerId(learnerId);
     return this.serialized(learnerId, async () => {
+      // Round 076 (critique 1.2): no prefetch starts while a start runs, saving included.
+      this.starting.add(learnerId);
+      try { return await this._startEncounter(learnerId, restart, encounterId); }
+      finally { this.starting.delete(learnerId); }
+    });
+  }
+
+  async _startEncounter(learnerId, restart, encounterId) {
+    {
       const envelope = await this.loadEnvelope(learnerId);
       const definitionId = encounterId ?? this.content.defaultEncounterId;
       const definition = this.content.encounters.get(definitionId);
@@ -456,17 +485,8 @@ export class LearningService {
             { status: 409, code: 'DRILL_REQUIRED', details: { vocabularyIds: drill.vocabularyIds } });
         }
       }
-      const ratio = this.ratioFor(0, definition);
-      const generated = await this.callProvider(buildNarrationMessages({
-        language: this.content.language,
-        character: definition.character,
-        styleGuide: this.content.styleGuide,
-        locationName: this.sceneName({ definitionId: definition.encounter.id, locationId }),
-        objectives: definition.encounter.objectives,
-        vocabularyById: this.content.vocabularyById,
-        targetRatio: ratio,
-        ambientEntries: definition.ambientEntries,
-      }), encounterResponseSchema, 'encounter_narration', definition.character.name);
+      const generated = await this.prefetchedGreeting(learnerId, definition)
+        ?? await this.callProvider(this.greetingMessages(definition, locationId), encounterResponseSchema, 'encounter_narration', definition.character.name);
       const npcMessage = this.canonicalizeNarration(generated, definition);
       const stagedEnvelope = clone(envelope);
       this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
@@ -478,7 +498,114 @@ export class LearningService {
       await this.storage.save(stagedEnvelope);
       this.encounters.set(learnerId, encounter);
       return { encounter: this.serializeEncounter(encounter), spellbook: this.spellbookSnapshot(stagedEnvelope) };
+    }
+  }
+
+  // Round 076 (critique 1.6): the greeting's prompt, the same for a start and a prefetch. It depends on content only,
+  // which is loaded once for the service's lifetime, so a prefetched greeting is the one the start would ask for.
+  greetingMessages(definition, locationId) {
+    return buildNarrationMessages({
+      language: this.content.language,
+      character: definition.character,
+      styleGuide: this.content.styleGuide,
+      locationName: this.sceneName({ definitionId: definition.encounter.id, locationId }),
+      objectives: definition.encounter.objectives,
+      vocabularyById: this.content.vocabularyById,
+      targetRatio: this.ratioFor(0, definition),
+      ambientEntries: definition.ambientEntries,
     });
+  }
+
+  // Round 076: a greeting written on arrival, taken once (ready or still being written); null when there is none or
+  // its call failed, and the start then asks the provider as before. Never for a party conversation.
+  async prefetchedGreeting(learnerId, definition) {
+    if (definition.encounter.party_of) return null;
+    const key = greetingKey(learnerId, definition.encounter.id);
+    const pending = this.greetings.get(key);
+    if (!pending) return null;
+    this.greetings.delete(key);
+    const generated = await pending;
+    this.prefetchStats[generated ? 'used' : 'fallback'] += 1;
+    return generated;
+  }
+
+  // Round 076 (critiques 1.3, 1.7): each committed move (and each launch) replaces the learner's arrival; its timer
+  // fires after the dwell.
+  scheduleArrival(learnerId, locationId) {
+    if (!this.prefetchEnabled || this.stopping) return;
+    const previous = this.arrivals.get(learnerId);
+    if (previous?.timer) clearTimeout(previous.timer);
+    const arrival = { seq: (this.arrivalSeq += 1), locationId, tries: 0, timer: null };
+    this.arrivals.set(learnerId, arrival);
+    this.prefetchStats.scheduled += 1;
+    this.armArrival(learnerId, arrival);
+  }
+
+  armArrival(learnerId, arrival) {
+    arrival.timer = setTimeout(() => { this.fireArrival(learnerId, arrival).catch(() => {}); }, this.prefetchDwellMs);
+    arrival.timer.unref?.();
+  }
+
+  endArrival(learnerId, arrival, outcome) {
+    if (this.arrivals.get(learnerId) === arrival) this.arrivals.delete(learnerId);
+    if (outcome) this.prefetchStats[outcome] += 1;
+  }
+
+  // Round 076 (critiques 1.2, 1.5): the arrival must still be the latest; the save is read again and checked as a
+  // start would check it; no start running, no session of it, no greeting held; a busy provider is waited out.
+  async fireArrival(learnerId, arrival) {
+    const latest = () => !this.stopping && this.arrivals.get(learnerId) === arrival;
+    if (!latest()) return;
+    arrival.timer = null;
+    const definition = await this.prefetchTarget(learnerId, arrival.locationId);
+    if (!latest()) return;
+    if (!definition) { this.endArrival(learnerId, arrival, 'skipped'); return; }
+    const key = greetingKey(learnerId, definition.encounter.id);
+    const active = this.encounters.get(learnerId);
+    if (this.starting.has(learnerId) || this.greetings.has(key) || (active && this.definition(active) === definition)) {
+      this.endArrival(learnerId, arrival, 'skipped');
+      return;
+    }
+    if (this.providerCallsInFlight > 0) {
+      this.prefetchStats.busy += 1;
+      if (arrival.tries < this.prefetchRetries) { arrival.tries += 1; this.armArrival(learnerId, arrival); }
+      else this.endArrival(learnerId, arrival, null);
+      return;
+    }
+    this.endArrival(learnerId, arrival, null);
+    this.prefetchStats.calls += 1;
+    const call = this.callProvider(this.greetingMessages(definition, undefined), encounterResponseSchema, 'encounter_narration', definition.character.name)
+      .catch(() => { this.prefetchStats.failed += 1; return null; });
+    this.greetings.set(key, call);
+    while (this.greetings.size > PREFETCH_MAX_GREETINGS) {
+      this.greetings.delete(this.greetings.keys().next().value);
+      this.prefetchStats.evicted += 1;
+    }
+  }
+
+  // The encounter a start at this location could open now, or null.
+  async prefetchTarget(learnerId, locationId) {
+    let envelope;
+    try { envelope = await this.storage.load(learnerId); } catch { return null; }
+    if (!envelope) return null;
+    const { world } = this.content;
+    if (currentLocationId(world, envelope.world) !== locationId) return null;
+    const location = world.locationsById.get(locationId);
+    const definition = location?.encounter ? this.content.encounters.get(location.encounter) : null;
+    if (!definition || definition.encounter.party_of) return null;
+    if ((envelope.world?.completedEncounterIds ?? []).includes(location.encounter)) return null;
+    if (gateFor(location, envelope.world)?.sealed) return null;
+    if (definition.encounter.drill_before && this.pendingDrill(envelope)?.encounterId === location.encounter) return null;
+    return definition;
+  }
+
+  // Round 076 (critique 1.4): a removed learner's arrival and greetings go; a call already running is not stopped.
+  forgetPrefetch(learnerId) {
+    const arrival = this.arrivals.get(learnerId);
+    if (arrival?.timer) clearTimeout(arrival.timer);
+    this.arrivals.delete(learnerId);
+    const prefix = greetingKey(learnerId, '');
+    for (const key of [...this.greetings.keys()]) if (key.startsWith(prefix)) this.greetings.delete(key);
   }
 
   async currentEncounter(learnerId) {
@@ -743,6 +870,7 @@ export class LearningService {
       const stagedEnvelope = clone(envelope);
       stagedEnvelope.world = progress;
       await this.storage.save(stagedEnvelope);
+      this.scheduleArrival(learnerId, progress.currentLocationId);
       return { world: worldSnapshot(this.content.world, progress, this.content.encounters) };
     });
   }
@@ -982,5 +1110,11 @@ export class LearningService {
     });
   }
 
-  async shutdown() { await this.provider.shutdown?.(); }
+  async shutdown() {
+    // Round 076 (critique 1.4): no prefetch timer outlives the service, and none is scheduled after this.
+    this.stopping = true;
+    for (const arrival of this.arrivals.values()) if (arrival.timer) clearTimeout(arrival.timer);
+    this.arrivals.clear();
+    await this.provider.shutdown?.();
+  }
 }

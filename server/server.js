@@ -17,7 +17,10 @@ const storage = new JsonLearningStorage({
   saveDir: saveDirForLanguage(process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'), content.language.code),
 });
 // Round 053: PARALLANG_ATMOSPHERE=on turns the map's LLM atmosphere line on (off by default: the CLI runner is serial).
-const service = new LearningService({ provider, storage, content, atmosphere: (process.env.PARALLANG_ATMOSPHERE || '').trim().toLowerCase() === 'on' });
+// Round 076: PARALLANG_PREFETCH=on writes an open encounter's greeting while the player reads the map card (off by
+// default: one call per arrival where the player stays 1.5 s).
+const flag = (name) => (process.env[name] || '').trim().toLowerCase() === 'on';
+const service = new LearningService({ provider, storage, content, atmosphere: flag('PARALLANG_ATMOSPHERE'), prefetch: flag('PARALLANG_PREFETCH') });
 // Round 040 (critique 1.2): the ends are trimmed, as fetch trims header values.
 const app = createApp({ service, token: (process.env.PARALLANG_TOKEN || '').trim() || null });
 
