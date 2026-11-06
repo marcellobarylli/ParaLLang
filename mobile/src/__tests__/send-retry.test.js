@@ -294,3 +294,8 @@ describe('a replay the server no longer holds (round 102)', () => {
     expect(api.currentEncounter.mock.calls.length).toBe(before);
   });
 });
+
+test('the closed line names both ways back: the map and the Party screen (round 102 open item)', () => {
+  expect(STALE_CLOSED).toMatch(/map/);
+  expect(STALE_CLOSED).toMatch(/Party screen/);
+});

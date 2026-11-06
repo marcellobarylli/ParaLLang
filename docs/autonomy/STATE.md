@@ -33,8 +33,8 @@ Needs owner). Work only on items that need no live calls (code, tests, content, 
 
 Next candidates, none needing the owner:
 - **Offline.** Every area has had an in-depth review (rounds 086–097), 093–098 a second (099), 100–103 one (104),
-  and the web client a contract test (103). Small items left: `STALE_CLOSED` says "Return to it on the map", which
-  does not fit a party conversation (102 open item); meanings in the server's Spellbook payload during encounters
+  and the web client a contract test (103). Small items left (`STALE_CLOSED` now names the map and the Party
+  screen, no round, 102's open item): meanings in the server's Spellbook payload during encounters
   (104 R1.7, both clients hide them); round 090's *caffè nero* question (owner); the footnote rule over other
   encounters' answers (low value until footnotes appear live); play-market per-step matching (099 R1.4).
 - **Queued live (after 11-09 17:32 UTC):**

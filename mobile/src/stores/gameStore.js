@@ -13,7 +13,8 @@ export const SOUNDS_KEY = 'parallang.soundsOn';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
 // Round 071: what the player reads when a resend found the conversation changed or closed.
 export const STALE_RELOADED = 'This conversation had moved on, so it was reloaded. Your answer was not sent; it is still in the box.';
-export const STALE_CLOSED = 'This conversation is no longer open. Return to it on the map to start again.';
+// No round (round 102 open item): a party conversation starts from the Party screen, not the map.
+export const STALE_CLOSED = 'This conversation is no longer open. Start it again from the map or the Party screen.';
 // Round 096 (review R1.5, R1.1, R1.9): what the player reads when help found the conversation changed, when a review
 // card was already answered or expired, and when the server no longer had a save.
 export const STALE_HELP = 'This conversation had moved on, so it was reloaded. Ask for help again.';
