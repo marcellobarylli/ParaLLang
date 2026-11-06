@@ -186,22 +186,37 @@ test('nothing for a completed encounter, a sealed Rift, an active session, or a 
   assert.ok(service.prefetchStats.skipped >= 4);
 });
 
-test('a launch schedules the current place; a restart takes a held greeting', async (t) => {
+test('a launch schedules the current place; a restart over an active session takes a held greeting', async (t) => {
   const runtime = await setup(t);
   const { learnerId } = await runtime.service.createOrRecoverLearner();
   await waitFor(() => greetings(runtime).length === 1);
   assert.equal(speaker(greetings(runtime)[0]), 'Portia');
   await wait(5);
-  await runtime.service.startEncounter(learnerId, { encounterId: 'market_entrance_tutorial', restart: true });
+  const first = await runtime.service.startEncounter(learnerId, { encounterId: 'market_entrance_tutorial' });
   assert.equal(greetings(runtime).length, 1);
   assert.equal(runtime.service.prefetchStats.used, 1);
+  // Amendment 1: a greeting held for this encounter while its session is active (written directly; the arrival
+  // itself skips an active session) is taken by the restart, which makes no call.
+  const definition = runtime.content.encounters.get('market_entrance_tutorial');
+  const held = await runtime.provider.narrate(runtime.service.greetingMessages(definition, undefined));
+  runtime.service.greetings.set(`${learnerId}\u0000market_entrance_tutorial`, Promise.resolve(held));
+  const before = greetings(runtime).length;
+  const again = await runtime.service.startEncounter(learnerId, { encounterId: 'market_entrance_tutorial', restart: true });
+  assert.notEqual(again.encounter.id, first.encounter.id);
+  assert.equal(runtime.service.prefetchStats.used, 2);
+  assert.equal(greetings(runtime).length, before, 'the restart made no call');
+  assert.equal(runtime.service.greetings.size, 0);
 });
 
 test('a party conversation never takes a prefetched greeting', async (t) => {
   const runtime = await setup(t);
   const definition = runtime.content.encounters.get('gerald_coffee_break');
   assert.ok(definition.encounter.party_of);
+  // Amendment 1: a greeting held under the conversation's own key is still not taken.
+  const key = `anyone\u0000${definition.encounter.id}`;
+  runtime.service.greetings.set(key, Promise.resolve({ held: true }));
   assert.equal(await runtime.service.prefetchedGreeting('anyone', definition), null);
+  assert.equal(runtime.service.greetings.has(key), true);
 });
 
 test('a deleted learner\'s greeting in flight is dropped; shutdown clears the timers (critique 1.4)', async (t) => {

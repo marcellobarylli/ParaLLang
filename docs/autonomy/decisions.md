@@ -212,3 +212,4 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-06 | 076 | Prefetch the greeting after a 1.5 s stay at an open encounter, off by default (`PARALLANG_PREFETCH=on`) | On by default; no prefetch | One call per arrival the player never talks at; the owner decides on the cost, as for the atmosphere line | Yes |
 | 2026-11-06 | 076 | A prefetch may delay another learner's call by up to one greeting (serial CLI runner) | A priority queue with cancellation | Local, single-player server; recorded, not built | Yes |
 | 2026-11-06 | 076 | Critique 1 (Codex, bundle on stdin): 12 findings, 7 accepted, 4 in part, 1 rejected | — | See round 076 Second opinion table | Yes |
+| 2026-11-06 | 076 | Amendment 1: two prefetch tests made strict; eviction of a greeting in flight and two weaker checks kept | Rework eviction to skip calls in flight | Over 100 held greetings on a local server is not reachable in play | Yes |

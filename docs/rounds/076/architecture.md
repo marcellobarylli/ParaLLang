@@ -132,3 +132,20 @@ own timings are not measured.
 Built as designed. Live (it, codex-cli, 10 s stay): mean start 4.4 s with prefetch against 12.1 s without; 3 calls
 and 3 used per prefetch arm; each residual within its bound. Criterion 1 was missed in the control arm: one start
 without prefetch failed with `CLI_INVALID_RESPONSE` after 120 s. Off by default. See [findings.md](findings.md).
+
+## Amendment 1 (2026-11-06): two tests made strict after a review
+
+Written after the close. A read-only review of the build (a Claude subagent) found no correctness bug. It noted one
+limit and four weak tests; each disposition is an **autonomous decision, pending owner review**.
+
+- **Eviction can drop a greeting still being written** (more than 100 held greetings), so the next start there makes
+  its own call. Kept: it needs over 100 learners' held greetings on one local server.
+- **The party test passed without the `party_of` guard.** It now holds a greeting under the conversation's own key
+  and checks it is not taken. It fails without the guard.
+- **The restart test had no active session.** It now restarts over an active session with a held greeting, and
+  checks that the restart takes it and makes no call.
+- **The shutdown test's "no call" check is also covered by the `stopping` flag**, and **the eligibility test relies
+  on its save edits finishing within 100 ms**. Both are kept as they are. The first is checked by `arrivals.size`.
+  The second has not failed in 5 runs.
+
+Tests: server 271/271, client 12/12, mobile 218/218.
