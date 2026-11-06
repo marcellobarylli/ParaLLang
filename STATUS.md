@@ -40,6 +40,13 @@ from the place itself, and each place and state gets one fixed kind of detail. T
 of 24 lines (round 053) to 1 of 48 live lines, with all 48 kept and every one still a joke about its own place. The
 line stays off by default ([findings](docs/rounds/068/findings.md)).
 
+## Addendum 2026-11-06: round 067, a live regression tour (autonomous)
+
+Both live tours (codex-cli, it and es) resolved all six encounters in 64 calls each, with no regression since rounds
+050–051. The verdicts are unchanged, except that an early "Adesso!" at the Fountain now fails, as round 051
+intended. The target-language share was it 0.53 and es 0.52 against 0.44 requested; the Rift still runs at
+0.83–0.88 against 0.50 ([findings](docs/rounds/067/findings.md)).
+
 ## Addendum 2026-11-06: round 053, location atmosphere live (autonomous)
 
 The optional atmosphere line (`PARALLANG_ATMOSPHERE=on`) passed its live check. All 24 lines were kept, each in
@@ -669,6 +676,7 @@ Newest first.
 | 064 | 11-06 | Speech stops in the background; the ambience is undocked on return when nothing speaks (backlog C10d) (autonomous) | [064](docs/rounds/064/architecture.md) | [findings](docs/rounds/064/findings.md) | pre-run record to round 064 close |
 | 065 | 11-06 | A loading line and a failure state between reviews; a late review reply no longer pulls the player back (round 063 critique) (autonomous) | [065](docs/rounds/065/architecture.md) | [findings](docs/rounds/065/findings.md) | pre-run record to round 065 close |
 | 066 | 11-06 | A playtest kit for the owner (prototype.md Phase 4) and a README refresh (autonomous) | [066](docs/rounds/066/architecture.md) | [findings](docs/rounds/066/findings.md) | pre-run record to round 066 close |
+| 067 | 11-06 | A live regression tour, it and es, after rounds 051–066 (autonomous) | [067](docs/rounds/067/architecture.md) | [findings](docs/rounds/067/findings.md) | pre-run record to round 067 close |
 | 068 | 11-06 | Atmosphere variety: no generic office humour, one detail kind per place and state (backlog A10b) (autonomous) | [068](docs/rounds/068/architecture.md) | [findings](docs/rounds/068/findings.md) | pre-run record to round 068 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |

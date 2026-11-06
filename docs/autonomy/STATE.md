@@ -7,18 +7,17 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-**Round 067 (live regression tour, it and es) is running or measured; see its journal.** Iteration 19 ran the whole
-live queue after Codex's reset (01:36 UTC 2026-11-06) and closed round 052 (H2: all four slow-walk runs as
-scripted), round 053 (A10: 24/24 atmosphere lines kept, but 23/24 tell the same bureaucratic joke, so A10b) and
-round 054's open item 2 (a live `’` answer passes).
+Nothing open. Iteration 19 (2026-11-06, 00:45–02:15 UTC) ran the whole live queue after Codex's reset (01:36 UTC)
+and closed rounds 052, 053, 065–068 (see Progress).
 
 Next candidates, none needing the owner:
-- **A10b** (below): vary the atmosphere line's joke; offline prompt work, then one live run of
-  `docs/rounds/053/results/atmosphere-live.mjs` per pack, measured by the motif count (baseline 23/24).
-- re-measuring the language share (E1) with the new content (round 067's tour gives a first number);
-- kept lines (round 060) live: `play-market.js` makes **no** help reveals at all (the earlier note here was wrong), so
-  checking that a paid sentence reveal leaves `lines` in the save needs a small in-process script (like
-  `atmosphere-live.mjs`) that calls `revealHelp` with `kind: 'sentence'` and reads the save.
+- **Kept lines live** (round 060): `play-market.js` makes **no** help reveals at all (an earlier note here was wrong),
+  so checking that a paid sentence reveal leaves `lines` in the save needs a small in-process script, like
+  `docs/rounds/068/results/atmosphere-live.mjs`, that calls `revealHelp` with `kind: 'sentence'` and reads the save.
+- **E1 language share** with round 067's tours as the new baseline (it 0.53, es 0.52, against
+  0.44 requested; the Rift runs at 0.83 against 0.50, as before).
+- **Atmosphere repetition within a place** (round 068): across runs a place's line returns to the same idea
+  (Portia "leaving someone on read"). Low value while the cache shows one line per place and state per server run.
 
 ## Backlog
 
@@ -66,8 +65,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   deleted on the server first (`DELETE /api/learner`). Open (owner): renaming; the app sending `PARALLANG_TOKEN`.
 - [x] **A10. LLM-enhanced location atmosphere** (round 053, closed 2026-11-06: 24/24 live lines kept; `PARALLANG_ATMOSPHERE=on`,
   `GET /api/world/atmosphere`, a line under the description on the map card).
-- [ ] **A10b. Atmosphere variety** (round 053 findings): 23 of 24 live lines lean on one bureaucratic joke
-  ("approval" in 9). Vary the kind of detail or pass the session's earlier lines; measure the motif count.
+- [x] **A10b. Atmosphere variety** (round 068, closed 2026-11-06): no generic office humour; one detail kind per place
+  and state (`atmosphereDetail`); motif 20/24 → 1/48 live, 48/48 kept.
 - [x] **A11. Save slots.** (round 031, closed 2026-11-05) Up to three learners per device, Saves screen from the
   map; delete and rename deferred (owner question).
 
@@ -199,6 +198,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Atmosphere** (rounds 053, 068): read some lines in `docs/rounds/068/results/` and decide whether it should be on
+  by default (`PARALLANG_ATMOSPHERE=on`).
 - **Playtesting (prototype.md Phase 4's last task):** run [`docs/playtest/guide.md`](../playtest/guide.md) with
   3–5 testers at the Mac (round 066); file the results as a round.
 - Rounds 059–064 (Simulator):
@@ -449,12 +450,22 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   052–054) is untouched.
 - 2026-11-06, iteration 19 (from 00:45 UTC; Codex limited until 01:36): round 065 (round 063's cosmetic item): a
   loading line and a failure state with Try again between reviews; `startReview` drops a reply that arrives after the
-  view changed (a pre-existing race the critique found). Mobile 182/182. A read-only review of rounds 059–065 found
+  view changed (a pre-existing race the critique found). Mobile 182/182. After Codex's reset: round 052 closed (four
+  slow-walk runs as scripted), round 053 closed (24/24 atmosphere lines), round 054 item 2 (a live ’ answer passes),
+  round 067 (live regression tour it/es) and round 068 (A10b, Codex critique with a bundle on stdin). A read-only review of rounds 059–065 found
   nothing serious; two minor races fixed as round 065's Amendment 1 (mobile 185/185). Round 066: a playtest kit for
   the owner (`docs/playtest/guide.md`) and a README refresh, docs only.
 
 ## Handoff notes and traps
 
+- **Codex critique needs a bundle on stdin** (again in round 068): without it, bwrap fails and the critique is void.
+  Build the bundle with `cat -n` of the plan and files, and tell Codex not to run commands. It returned in about 2
+  minutes this time.
+- **Keyword counts over LLM lines: use whole words** (round 068 critique 1.4): substring stems hit "apparently" and
+  "feet". `docs/rounds/068/results/motif.mjs` is the whole-word scan.
+- **Atmosphere detail kinds** (round 068): `atmosphereDetail(world, locationId, state)` = `ATMOSPHERE_DETAILS[(3i+s) %
+  5]` by the location's index in `world.locations` (file order). A new location shifts nothing before it; the test
+  derives the expected kinds from the same formula.
 - **App-level jest tests and `initialize`** (round 065): `initialize()` caches its promise per module, so a second
   `render(<App />)` in the same test file never refetches. Either keep one App test per file, or seed the store's
   `beforeEach` with the loaded state (learnerId, language, world, spellbook), as `review-loading.test.js` does.

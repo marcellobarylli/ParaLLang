@@ -43,3 +43,9 @@ A failure of 1 or 2 is a regression to fix next; 3 or 4 alone is a note.
 ## Claim boundary (pre-run)
 
 One run per pack on one provider: LLM variation alone can move 3 and 4.
+
+## Outcome (2026-11-06)
+
+No regression. Both tours resolved (64 calls each); verdicts as before, except Italian's early "Adesso!", which
+now fails by round 051's design; share it 0.53 and es 0.52; leak lines within the limits and of known kinds. See
+[findings.md](findings.md).
