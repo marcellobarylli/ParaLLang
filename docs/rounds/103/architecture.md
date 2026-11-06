@@ -87,3 +87,11 @@ in place of Codex; raw text in [`trail/critique-1.md`](trail/critique-1.md).
   a due card's meanings hidden with Review shown, a card not due shows its meanings.
 - Mutations: the field drop (Decision 7); the Spellbook's two hides removed in turn.
 - Full suites; `npm run build` in `client/`.
+
+## Outcome (2026-11-06)
+
+Built as designed, with two departures in form: the Spellbook test went into the existing
+`client/src/components/__tests__/learning-flow.test.jsx` (no new file), and the field-drop mutation was run by hand
+on `learning-service.js` (5 fields, 5 of 5 caught) rather than as a test, since a test that drops a field and then
+checks it only tests the helper. The web client plays against today's server; its Spellbook now hides meanings
+during encounters and on due cards; the missing token stays open ([findings](findings.md)).

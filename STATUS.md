@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 103, the frozen web client still plays against today's server (autonomous)
+
+A new test runs the web client's own code against the real server: it still plays Gerald's encounter, the
+Spellbook and reviews. Its Spellbook showed word meanings during an encounter, which could give answers away; they
+are now hidden, as in the app. The web client sends no access token, so it cannot reach a protected server; that is
+left for the owner ([findings](docs/rounds/103/findings.md)).
+
 ## Addendum 2026-11-06: round 102, a replayed answer after a server restart goes to the map (autonomous)
 
 If the server restarted while an answer's reply was lost, sending the answer again showed its verdict in a
