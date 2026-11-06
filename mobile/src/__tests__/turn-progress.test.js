@@ -213,6 +213,40 @@ describe('counted', () => {
     expect(announce).toHaveBeenCalledTimes(1);
   });
 
+  test('a remount with the same counted verdict (a return from the map) does not announce again (Amendment 1)', async () => {
+    const v = verdict('Once.');
+    const props = { encounter: { ...encounter, version: 2 }, language, isLoading: false, assessment: v, assessmentCounted: true, earlyAssessment: null, pendingInput: null, onHelp: () => {} };
+    const first = await render(<DialoguePanel {...props} />);
+    expect(announce).toHaveBeenCalledTimes(1);
+    await first.unmount();
+    await render(<DialoguePanel {...props} />);
+    expect(screen.getByText(COUNTED)).toBeOnTheScreen();
+    expect(announce).toHaveBeenCalledTimes(1);
+  });
+
+  test('a counted turn, then a failed one: the first verdict shows again without "Counted." (Amendment 1)', async () => {
+    const first = verdict('First counted.');
+    const second = deferred();
+    const progress = jest.fn(async () => ({ progress: { assessment: first } }));
+    const post = jest.fn().mockResolvedValueOnce({ encounter: { ...encounter, version: 2 }, spellbook, assessment: first, replayed: false }).mockImplementationOnce(() => second.promise);
+    const { store } = setup({ sendDialogue: jest.fn(async (...args) => { if (post.mock.calls.length === 0) await tick(); return post(...args); }), getTurnProgress: progress });
+    await ready(store);
+    await store.getState().sendMessage('Vorrei un caffè.');
+    expect(store.getState().assessmentCounted).toBe(true);
+    progress.mockImplementation(async () => ({ progress: { assessment: verdict('Second provisional.') } }));
+    const sending = store.getState().sendMessage('Senza latte.');
+    await tick();
+    expect(store.getState().earlyAssessment.overallFeedback).toBe('Second provisional.');
+    second.reject(new Error('The NPC is temporarily unavailable.'));
+    await sending;
+    const s = store.getState();
+    expect(s.assessment).toEqual(first);
+    expect(s.assessmentCounted).toBe(false);
+    await render(<DialoguePanel encounter={s.encounter} language={language} isLoading={s.isLoading} assessment={s.assessment} assessmentCounted={s.assessmentCounted} earlyAssessment={s.earlyAssessment} pendingInput={s.pendingInput} onHelp={() => {}} />);
+    expect(screen.getByText('First counted.')).toBeOnTheScreen();
+    expect(screen.queryByText(COUNTED)).not.toBeOnTheScreen();
+  });
+
   test('an unmarked verdict shows no "Counted." and announces nothing', async () => {
     await render(<DialoguePanel encounter={encounter} language={language} isLoading={false} assessment={verdict('Old.')} earlyAssessment={null} pendingInput={null} onHelp={() => {}} />);
     expect(screen.getByText('Old.')).toBeOnTheScreen();

@@ -13,12 +13,11 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
   // Round 055 (critique 1.8): a word still being spoken stops when the encounter screen goes.
   useEffect(() => () => { stopSpeech(); }, []);
   // Round 075 (critique 1.2): iOS has no live regions, so the switch from provisional to counted is announced, once
-  // per committed verdict.
+  // per committed verdict. Amendment 1: remembered outside the component, so a return from the map does not repeat it.
   const counted = Boolean(assessment && assessmentCounted && !isLoading);
-  const announced = useRef(null);
   useEffect(() => {
-    if (!counted || announced.current === assessment) return;
-    announced.current = assessment;
+    if (!counted || announcedVerdict === assessment) return;
+    announcedVerdict = assessment;
     AccessibilityInfo.announceForAccessibility?.(COUNTED);
   }, [counted, assessment]);
   // Round 035: lines already there when this encounter session is first shown (opening line, a resumed transcript,
@@ -109,6 +108,7 @@ function Narration({ text }) {
 // Round 035 (critique 1.4): a new assessment replaces the old one in place, so the box is keyed by its content.
 // Round 075: the phase is part of the key, so the counted box mounts anew (and fades in) after the provisional one.
 export const COUNTED = 'Counted.';
+let announcedVerdict = null; // the store's assessment object last announced as counted
 export const assessmentKey = (assessment, phase = 'final') => [phase, assessment.overallFeedback, ...assessment.objectiveResults.map((r) => `${r.objectiveId}:${r.passed}:${r.held === true}:${r.feedback}`)].join('|');
 // Round 051 (backlog H1): a held result (passed, but an earlier objective comes first) is not a success. It is not
 // banked either, so the player must say it again.

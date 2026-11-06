@@ -68,3 +68,27 @@ Critique 1 (Codex, effort high, bundle on stdin): [raw](trail/critique-1.md), pl
 ## Claim boundary (pre-run)
 
 Tests only. The fade, the "Counted." line and the VoiceOver announcement on an iPhone go to the Simulator open items.
+
+## Amendment 1 (2026-11-06): one announcement per verdict across remounts; replays may be counted
+
+A read-only review of the build diff (a Claude subagent) found no blocking bug and three low findings. Each is an
+**autonomous decision, pending owner review**.
+
+1. **The announcement repeated after a remount.** The announced verdict was held in a `useRef`, so opening the map
+   and coming back announced "Counted." again for the same verdict. It is now held at module level in
+   `DialoguePanel.js` (the store keeps the same assessment object), and a test remounts the panel. The "Counted."
+   line itself stays visible until the next send, as designed.
+2. **A replayed response can be marked counted.** Design 2 said "non-replayed", but the code sets the flag from
+   whether this send's provisional verdict was shown. That is kept: a resend with the same attempt id polls the
+   original run's progress, and the replayed verdict really was committed. If the reconcile finds a newer version,
+   the verdict and the flag are cleared (design 1). Design 2's "non-replayed" is superseded by this sentence.
+3. **The failure test had no previous verdict.** A new test plays a counted turn, then a failed one with a
+   provisional verdict, and checks the first verdict shows again without "Counted.".
+
+Tests: server 258/258, client 12/12, mobile 218/218.
+
+## Outcome (2026-11-06)
+
+Built as designed, with Amendment 1. All three notes are fixed and tested: a reconciled replay clears its verdict,
+the committed verdict after a provisional one says "Counted." (and is announced once), and progress ids are compared
+as strings without trimming. See [findings.md](findings.md).
