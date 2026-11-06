@@ -93,3 +93,9 @@ Source review: [`trail/review-1.md`](trail/review-1.md) (2 findings). Critiqued 
 - mobile store: `leaveAndEnter` starts with `restart: true`; a 409 `CONVERSATION_UNDER_WAY` makes the store take the
   server's encounter (startup's `currentEncounter` had failed).
 - Full suites; each fix removed in turn fails a test.
+
+## Outcome (2026-11-06)
+
+Built as designed, with one change of place: the `CONVERSATION_UNDER_WAY` check runs after the Rift's drill check
+(Design 1 said after the gate), because the drill's own 409 already names the conversation under way and an existing
+drill test pins that message. Every fix has a test that fails without it; full suites pass ([findings](findings.md)).

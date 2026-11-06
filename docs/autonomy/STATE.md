@@ -7,7 +7,7 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 27 (2026-11-06, 05:53–06:45 UTC) closed two offline review rounds:
+Nothing open. Iteration 27 (2026-11-06, 05:53–06:45 UTC) closed three offline review rounds:
 - **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
   *sei*; es *once*, *kilo*), so the list is gone (0/72 live lines used one). On a serial (CLI) provider a player's
   call (`callProvider` without `background`) aborts atmosphere calls in flight; the greeting prefetch is `background`
@@ -18,17 +18,22 @@ Nothing open. Iteration 27 (2026-11-06, 05:53–06:45 UTC) closed two offline re
   phrase's meaning or an example's English back while a card in it is due (*cento*'s "A hundred grams of ham" while
   *prosciutto* is due). After a failed start the Saves screen lists the device's saves (continue, new); removing an
   unreadable save renames its file aside (`<id>.unreadable-…json`).
+- **091** (F12): review of rounds 017–028 (no answer leak). A named start while another conversation is under way is
+  409 `CONVERSATION_UNDER_WAY` (after the drill check); the map card shows "Return to X" and "Leave X and talk to Y"
+  (`leaveAndEnter`, a restart start); a 409 makes the store take the server's conversation; a restart of the held
+  conversation skips `NOT_HERE`. The web client's default start (no id) still replaces.
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09. Review passes have now covered rounds 029–064 and 076–085 (086–090 each found
-  real gaps, 088–090 answer leaks, at ~3 subagent runs a round). Next review candidate: rounds 017–028 (Spellbook
-  hiding, Rift gate and boss, party recruitment and conversations, containment files, onboarding; `git diff` from
-  round 016's close to 4e6f153). Round 090's known leak (a readable *caffè* and *nero* answer a due *caffè nero*)
-  could be its own small round if wanted. Other
+- **Offline work only** until 11-09. Review passes have now covered rounds 017–064 and 076–091 (086–091 each found
+  real gaps, 088–090 answer leaks, 091 a lost conversation; ~3 subagent runs a round; yield is falling: 091 had no
+  Error). Rounds 065 and 070–073 had post-build reviews; 066–069 and 074 are docs, content or live runs. Remaining
+  unreviewed code: rounds 001–016 (the core loop, map, multi-encounter engine, tutorial, CLI providers; `git diff`
+  from the repo's start to f264de7, large: scope it to `server/src` first). Round 090's known leak (a readable
+  *caffè* and *nero* answer a due *caffè nero*) could be its own small round if wanted. Other
   options: the footnote rule could also cover other encounters' answers (critique 1.4 of round 086, measure first
   with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said they are wanted).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
@@ -237,6 +242,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
   remove and after a failed new save or switch.
 
+- [x] **F12. Review of rounds 017–028** (round 091, closed 2026-11-06): a named start never replaces a conversation
+  under way (409); the map card's Return and Leave; restart away from the place.
 - [x] **F11. Review of rounds 029–039** (round 090, closed 2026-11-06): startup knows the server's encounter, card
   answer ids, saves reachable after a failed start, unreadable saves set aside.
 - [x] **F10. Review of rounds 040–053** (round 089, closed 2026-11-06): no exemptions in the atmosphere filter
@@ -274,6 +281,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 091 (Simulator, decision):** the map card's note, "Return to …", "Leave … and talk to …" with a party
+  conversation under way, VoiceOver on the disabled Talk; whether leaving should ask for confirmation
+  ([open items](../rounds/091/findings.md#open-items)).
 - **Round 090 (Simulator, decision):** relaunch during a conversation ("Return to …" on the map, the Rift drill);
   the Spellbook's held-back examples and phrase meanings; whether a phrase answered by its readable words should
   wait too, and whether set-aside unreadable saves need a way back ([open items](../rounds/090/findings.md#open-items)).
@@ -602,14 +612,19 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings), critiqued (10, all accepted), built and closed: server 314/314, client 12/12, mobile 242/242. Round 088
   (F9) from a review of rounds 054–064 (3 findings, 1 Error), critiqued (8, all accepted), built and closed: server
   316/316, client 12/12, mobile 244/244, iOS export bundles. No live calls (Codex limited).
-- 2026-11-06, iteration 27 (05:53–06:10 UTC): round 089 (F10) from a subagent review of rounds 040–053 (4
+- 2026-11-06, iteration 27 (05:53–06:45 UTC): round 089 (F10) from a subagent review of rounds 040–053 (4
   findings, 1 Error: atmosphere exemptions were answers), critiqued (9, 2 Errors in the abort design, all accepted),
   built and closed: server 323/323, client 12/12, mobile 245/245, iOS export bundles. No live calls (Codex limited).
   Round 090 (F11) from a review of rounds 029–039 (5 findings, 2 Errors), critiqued (11, 3 Errors, all accepted;
-  R1.4 rejected), built and closed: server 327/327, client 12/12, mobile 257/257, iOS export bundles.
+  R1.4 rejected), built and closed: server 327/327, client 12/12, mobile 257/257, iOS export bundles. Round 091
+  (F12) from a review of rounds 017–028 (2 findings, 1 rejected), critiqued (9, 1 Error, all accepted), built and
+  closed: server 330/330, client 12/12, mobile 263/263, iOS export bundles. No live calls (Codex limited).
 
 ## Handoff notes and traps
 
+- **Starting encounters** (round 091): a named start (`encounterId`) while another conversation is ongoing is 409
+  `CONVERSATION_UNDER_WAY` unless `restart: true`; tests that walk from one encounter to another mid-conversation
+  must pass `restart: true` (or finish first). The default start (no id, web client) still replaces.
 - **Card answer ids** (round 090): `spellbookSnapshot` adds `formCardIds` / `exampleCardIds` per card from
   `entryAnswerLists(entry)` (per entry, cached, own id removed); the app's `cardWaits(card, spellbook, now)` decides.
   A new card field that shows English (a note, a gloss) must go through `cardWaits` too.

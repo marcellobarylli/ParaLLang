@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 091, a conversation under way is not replaced (autonomous)
+
+A review of the code of rounds 017–028 found no answer leak, and one way to lose progress: the map's "Talk to …"
+silently replaced a conversation under way elsewhere (a party conversation half done). The server now refuses that
+and the map card offers "Return to …" or "Leave … and talk to …" instead; a restart of the conversation works away
+from its place ([findings](docs/rounds/091/findings.md)).
+
 ## Addendum 2026-11-06: round 090, fixes from a review of rounds 029–039 (autonomous)
 
 A review of the code of rounds 029–039 found two bugs a player can hit. After a relaunch the app forgot a
