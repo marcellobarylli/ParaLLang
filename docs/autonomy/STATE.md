@@ -7,26 +7,18 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 20 (2026-11-06, 02:09–03:00 UTC) closed rounds 069–073: kept lines live (069), the verdict
-before the NPC's reply (070, I1), a resent answer replays (071, I2), a live regression tour it (072), a waiting line
-while an encounter starts (073, I3); plus a correction to round 067's share (the Rift is on target by `folded`). A
-read-only review of rounds 070–073 found one regression (round 073 had removed `recruit`'s guard; restored by
-Amendment 1, mobile 209/209). Codex use this iteration:
-about 104 game calls and 4 critiques, from 02:13 to 02:50, with no usage limit hit.
+Nothing open. Iteration 21 (2026-11-06, 02:55–03:40 UTC) closed rounds 074–076: a Spanish regression tour (074, no
+regression), the three minor review notes (075: a reconciled replay clears its verdict, a "Counted." line with one
+VoiceOver announcement, progress ids compared as strings), and the greeting prefetch (076, I4, `PARALLANG_PREFETCH=on`,
+off by default: mean Talk wait 12.1 s → 4.4 s live with a 10 s stay). Codex use this iteration: about 77 game calls
+and 2 critiques, from 02:56 to 03:23, no usage limit hit.
 
 Next candidates, none needing the owner:
-- **A Spanish regression tour** after rounds 070–073 (round 072 played Italian only); 64 calls.
-- **The greeting wait itself** (round 073 only shows a line): the greeting could be generated when the player arrives
-  at a location with an open encounter, at the cost of a call when they never talk. Measure arrivals without a talk
-  first (an owner call on cost; decide autonomously and log it).
-- **Minor notes from the review** (each a one-line fix with a test):
-  - after a replay's reconcile to a newer version, `assessment` still shows the replayed verdict
-    (`gameStore.js`, round 071 design 3);
-  - the provisional and final verdicts share a fade key, so the switch to "counted" is easy to miss (round 070);
-  - `progress()` compares a string attempt id against the raw `request.attemptId`.
+- **A read-only review of round 076** if the iteration-21 review below was not acted on (see Progress).
+- **The app over HTTP with prefetch on** (round 076 measured in-process only): a short live HTTP run through
+  `createApp` (127.0.0.1, token) that moves, waits and starts, to check the route path and the "getting ready" wait.
+- **Atmosphere repetition within a place** (round 068): low value while the cache shows one line per place and state.
 - **Kept lines from free translations** and other owner questions are listed under Needs owner.
-- **Atmosphere repetition within a place** (round 068): across runs a place's line returns to the same idea
-  (Portia "leaving someone on read"). Low value while the cache shows one line per place and state per server run.
 
 ## Backlog
 
@@ -175,6 +167,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   every second, provisional Assessment box; live: verdict at 5.3–6.8 s vs response 11.8–16.1 s, 6/6 equal.
 - [x] **I3. A waiting line while an encounter starts** (round 073, closed 2026-11-06): "{name} is getting ready to
   talk…" under the pressed Talk button; `starting` in the store with a start token.
+- [x] **I4. The greeting written on arrival** (round 076, closed 2026-11-06): `PARALLANG_PREFETCH=on` (off by
+  default), after a 1.5 s stay at an open encounter; live mean Talk wait 12.1 s → 4.4 s with a 10 s stay.
+- [x] **I5. Minor notes from the review of rounds 070–073** (round 075, closed 2026-11-06).
 - [x] **I2. A resent answer replays** (round 071, closed 2026-11-06; round 070 critique 1.2): attempt ids by
   request key, guarded reload on `STALE_VERSION` / `STALE_ENCOUNTER`, back to the map if the conversation closed.
 
@@ -216,6 +211,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 076:** turn `PARALLANG_PREFETCH` on by default or not (one call per arrival where the player stays 1.5 s
+  and never talks); Simulator: with it on, read a card a few seconds and press Talk
+  ([open items](../rounds/076/findings.md#open-items)).
+- Round 075 (Simulator): the provisional box turning into the one ending "Counted.", Reduce Motion on and off;
+  VoiceOver announces "Counted." once, not again after the map ([open items](../rounds/075/findings.md#open-items)).
 - Round 073 (Simulator): the "getting ready to talk…" line on the map and Party screens, and VoiceOver inside the
   map card ([open items](../rounds/073/findings.md#open-items)).
 - Round 071 (Simulator): Wi-Fi off, send, Wi-Fi on, send again: one turn, one reply; read the two new banner
@@ -488,8 +488,22 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Round 072 closed: live tour it, no regression (verdicts 6/6 equal, folded share 0.45, 7 leak lines); round 067
   addendum corrected (Marginalia 0.49). Round 073 closed (I3): a waiting line while an encounter starts; mobile 208/208.
 
+- 2026-11-06, iteration 21: round 074 closed: live tour es, no regression (verdicts 6/6 equal, folded 0.41 vs 0.44,
+  6 leak lines; `docs/rounds/074/results/folded.mjs` is the folded-share measure). Round 075 closed (three review
+  notes; Codex 3 findings; Amendment 1 from a subagent review); mobile 218/218. Round 076 closed (I4, greeting
+  prefetch; Codex 12 findings); server 271/271; live 11/12 starts (one control-arm CLI_INVALID_RESPONSE at 120 s).
+
 ## Handoff notes and traps
 
+- **Greeting prefetch** (round 076): `scheduleArrival` on every committed move and on `createOrRecoverLearner`;
+  `fireArrival` after `prefetchDwellMs` re-reads the save (`prefetchTarget`) and skips while a start runs
+  (`starting`, held by the `startEncounter` wrapper around `_startEncounter`), while a session of it is active, or
+  when a greeting is held; busy → retried `prefetchRetries` times. `prefetchedGreeting` takes the entry once.
+  `greetingMessages` is the one prompt builder: change the greeting prompt there. A test that creates learners with
+  prefetch on gets a Portia prefetch from the launch arrival unless it moves within the dwell.
+- **The fixture provider records a call only if it does not throw** (`FixtureProvider.structuredChat` pushes after
+  the gate in subclasses that throw first): count failures through the service's stats, not `provider.calls`.
+- **`createRuntime({ serviceOptions })`** passes options to `LearningService` (round 076).
 - **Turn progress** (round 070): `submitDialogue` builds the response's `assessment` block (and every
   `effective_quality`) before the narration call and keeps it in `turnProgress` until the turn ends; change it there,
   not in the staging code. `progress()` is deliberately not serialized. Mobile fakes without `getTurnProgress` skip
