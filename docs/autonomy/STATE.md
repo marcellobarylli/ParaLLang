@@ -7,19 +7,21 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 22 (2026-11-06, 03:29–03:50 UTC) closed rounds 078–079. Round 078 is prototype.md §11's
+Nothing open. Iteration 22 (2026-11-06, 03:29–04:00 UTC) closed rounds 078–080. Round 078 is prototype.md §11's
 "check and retry": a line with no target language (4+ words, all in its translation, no encounter vocabulary) is
 written again once. The retry sees the rejected reply and a correction, and the first line is kept if the retry
 fails, is still English or takes over 20 s; a late retry is aborted through a new `signal` in the CLI runner
 (Amendment 1, after a subagent review). The rule flags 2 of 1,218 recorded live lines, both real (round 048). Live:
 0 of 14 lines flagged. Round 079: `verify:cli` in Spanish (codex-cli) passed 9/9 for the first time (D1, codex
-part). Codex use this iteration: about 40 game calls and 1 critique, no usage limit hit.
+part). Round 080: an Italian regression tour after 078, no regression (verdicts 6/6 equal to round 072, folded 0.43,
+8 known-kind leaks), guard 0 of 35 flagged. Codex use this iteration: about 105 game calls and 1 critique, from 03:33
+to 03:58, no usage limit hit.
 
 Next candidates, none needing the owner:
 - **Watch `narrationStats`** in every live report (play-market and verify:cli now carry it). The first `flagged > 0`
   is the first live retry: read both lines and record whether the retry fixed it (round 078 open item).
-- **A regression tour** (it or es) after round 078: the narration path changed (`narrate`), and tours exercise every
-  encounter. About 60 calls.
+- **A Spanish regression tour** after round 078, if wanted (round 080 did Italian; 079's verify:cli covered Spanish
+  grading).
 - **Atmosphere repetition within a place** (round 068): low value while the cache shows one line per place and state.
 - **Kept lines from free translations** and other owner questions are listed under Needs owner.
 
@@ -510,7 +512,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `docs/rounds/077/results/prefetch-http.mjs` starts the real server on 127.0.0.1 with a token and stops it.
 - 2026-11-06, iteration 22: round 078 (J1) planned, critiqued (5 findings: 3 accepted, 2 in part), built, reviewed
   (Amendment 1: the retry aborted at its deadline) and closed: server 284/284, client 12/12, mobile 218/218; offline
-  2/1,218 flagged, live 0/14. Round 079 (D1, Spanish with codex-cli) closed: verify:cli 9/9. Iteration 22 ends here.
+  2/1,218 flagged, live 0/14. Round 079 (D1, Spanish with codex-cli) closed: verify:cli 9/9. Round 080 closed: Italian tour, no
+  regression, guard 0/35. Iteration 22 ends here.
 
 ## Handoff notes and traps
 

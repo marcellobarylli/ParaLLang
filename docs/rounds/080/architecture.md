@@ -42,3 +42,8 @@ called a regression.
 ## Claim boundary (pre-run)
 
 One tour, one pack, one provider, in-process (the app is not run).
+
+## Outcome (2026-11-06)
+
+All five criteria met: resolved with the gate held and opened, verdicts equal 6/6, folded share 0.43 (criterion
+0.35–0.55), 8 leak lines (limit 9), 0 of 35 lines flagged by the guard ([findings](findings.md)).
