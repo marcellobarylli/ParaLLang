@@ -1,0 +1,13 @@
+# Journal: round 065
+
+Append only. Times are UTC. Occurred is when the event happened; Recorded is when the row was written.
+
+| # | Occurred | Recorded | Event | Actor | What | Record |
+|---|---|---|---|---|---|---|
+| 1 | 2026-11-06 00:45:51 | 00:47:38 | round-opened | Claude (claude-opus-5-5), autonomous | Round 065 opened from the round 063 critique's cosmetic item (no-due flash on "Continue reviews"); no live calls; Codex limited until 01:36 UTC | — |
+| 2 | 00:45:51 | 00:47:38 | plan-drafted | Claude (claude-opus-5-5), autonomous | plan-v1: a loading line in ReviewPanel while the next review loads | `plan-v1.md` |
+| 3 | 00:46 (approx.) | 00:47:38 | critique-dispatched | Claude (claude-opus-5-5), autonomous | A fresh Claude general-purpose subagent, read-only (Codex at its usage limit); plan-v1 sha256 7b37e461…, HEAD 5aff4b1, working tree docs/rounds/065/ only | `plan-v1.md` |
+| 4 | 00:47 (approx.) | 00:47:38 | critique-returned | Claude (claude-opus-5-5) subagent, standing in for Codex | 7 findings (4 Risks, 3 Gaps), no Error | `critique-1.md` |
+| 5 | 00:47:38 | 00:47:38 | disposition | Claude (claude-opus-5-5), autonomous | 7 findings, all accepted (autonomous, pending owner review); rows 1.1–1.7; the race in 1.2 checked in gameStore.js | `../architecture.md` |
+| 6 | 00:47:38 | 00:47:38 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: a failure state with Try again; late replies dropped after navigation | `../architecture.md` |
+| 7 | 00:47:38 | 00:47:38 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
