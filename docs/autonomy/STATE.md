@@ -7,43 +7,34 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 26 (2026-11-06, 05:11–06:00 UTC) closed four offline rounds:
-- **085** (F6): the Saves screen's due count refreshes on opening Saves, after a remove and after a failed new save
-  or switch (each Saves action raises the epoch, which drops a refresh in flight).
-- **086** (F7): an independent read-only review of the code of rounds 081–085 (no Errors) and three fixes: a move's
-  Spellbook takes round 084's encounter guard (`leaksMeanings`); a footnote is dropped for an unlisted inflection of
-  an open objective's single-word answer (`inflectsAnswer`, measured over 47k English tokens of live narration in
-  `docs/rounds/086/results/`); the foreground refresh survives `background` → `inactive` → `active`.
-- **087** (F8): the same review pass over rounds 076–080 (no player-facing bugs) and fixes: prefetched greetings no
-  longer needed are aborted and dropped (`dropGreeting(s)`, `prefetchStats.dropped`); a start that took a pending
-  prefetch which timed out rethrows `CLI_TIMEOUT` instead of a second wait; the CLI runner ignores an abort after
-  the child closed; the OpenAI and Ollama adapters honour the signal; `narrate(…, { signal })`.
-- **088** (F9): the same pass over rounds 054–064 found an answer leak: a kept line was withheld only for its chip
-  ids (current encounter's words, non-overlapping), so a line saying *caffè* from Gerald's coffee break showed its
-  translation while *caffe* was due. Snapshot lines now carry `cardIds` (chips + any card found alone or inflected,
-  `lineEntryIds`), and the app checks them by the clock.
-The audit items from iteration 25 are closed: `atmosphere` is keyed by learner (a switch re-asks; covered by
-`atmosphere.test.js`), and the drill note derives from `spellbook.drill`, which reviews return.
+Nothing open. Iteration 27 (2026-11-06, 05:53–06:10 UTC) closed round **089** (F10): an independent read-only review
+of the code of rounds 040–053 (4 findings) and fixes. The atmosphere filter's English exemptions were all answers
+(it *basta*, *sei*; es *once*, *kilo*), so the list is gone (0/72 live lines used one,
+`docs/rounds/089/results/exempt.txt`). On a serial (CLI) provider a player's call (`callProvider` without
+`background`) aborts atmosphere calls in flight; the greeting prefetch is `background` and waits as busy while one
+is in flight; an aborted call is not a cached failure and replies `retryAfterMs`. A party fragment is filed under the
+tier offered at N − 1 (latent); `speak` restores the ambience on a throw. Iteration 26 closed 085–088 (see Progress).
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09. Review passes have covered rounds 054–064 and 076–085 (086–088 each found real
-  gaps, 088 an answer leak, at ~3 subagent runs a round). Rounds 065 and 070–073 had post-build reviews; 066–069 and
-  074 are docs, content or live runs. Next review candidates, older code never reviewed after its build: rounds
-  040–053 (token, ambience, font, Party hints, leak scan, unordered objectives, `folded`, tiers, time objective,
-  atmosphere; 053 had a review), then 029–039 (drill, fragments, save slots, unlocks, polish, sounds, save removal).
-  Other options: the footnote rule could also cover other encounters' answers (critique 1.4 of round
-  086, measure first with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said
-  they are wanted).
+- **Offline work only** until 11-09. Review passes have now covered rounds 040–064 and 076–085 (086–089 each found
+  real gaps, 088 and 089 answer leaks, at ~3 subagent runs a round). Next review candidate: rounds 029–039 (drill,
+  fragments, save slots, unlocks, polish, sounds, save removal; `git diff` from round 028's close to b0a87e9). Then
+  rounds 017–028 (Spellbook hiding, party recruitment and conversations, containment files, onboarding). Other
+  options: the footnote rule could also cover other encounters' answers (critique 1.4 of round 086, measure first
+  with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said they are wanted).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
   greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure,
   counting footnotes dropped by round 086's inflection rule; round 087's prefetch walk-on check (findings open
-  items); the rest of round 081's Italian tour (Fountain,
-  Bookshop, Rift); watch `narrationStats` for the first live retry.
+  items); round 089's tour with atmosphere and prefetch on (drops by reason, Talk wait); the rest of round 081's
+  Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
 
+**Traps (iteration 27):** an atmosphere test line may use a word of its location's own description (allowed): the
+Entrance's description holds "once". `GatedProvider` in `greeting-prefetch.test.js` ends a held call on abort; to
+test "a line that arrives after the abort", `gate.open()` then abort synchronously (the release wins the race).
 **Traps (iteration 26):** `/tmp` is a 64 MB tmpfs and filled to 7 MB free from jest's cache (`/tmp/jest_s2`, 36 MB)
 and metro's; `npx jest --clearCache` in `mobile/` and `rm -rf /tmp/metro-cache` free it (both regenerate). The
 round check wants a `R<K>.n` row for every finding of a `review-K.md`, also when the review is the round's source:
@@ -238,6 +229,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
   remove and after a failed new save or switch.
 
+- [x] **F10. Review of rounds 040–053** (round 089, closed 2026-11-06): no exemptions in the atmosphere filter
+  (answers), atmosphere calls aborted by a player's call on a CLI provider, fragment tier, `speak` restores.
 - [x] **F9. Review of rounds 054–064** (round 088, closed 2026-11-06): kept lines withheld for any due card in them
   (`cardIds`), span sort, surrogate-safe cap.
 - [x] **F8. Review of rounds 076–080** (round 087, closed 2026-11-06): stale prefetches aborted, one timeout at
@@ -594,9 +587,16 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings), critiqued (10, all accepted), built and closed: server 314/314, client 12/12, mobile 242/242. Round 088
   (F9) from a review of rounds 054–064 (3 findings, 1 Error), critiqued (8, all accepted), built and closed: server
   316/316, client 12/12, mobile 244/244, iOS export bundles. No live calls (Codex limited).
+- 2026-11-06, iteration 27 (05:53–06:10 UTC): round 089 (F10) from a subagent review of rounds 040–053 (4
+  findings, 1 Error: atmosphere exemptions were answers), critiqued (9, 2 Errors in the abort design, all accepted),
+  built and closed: server 323/323, client 12/12, mobile 245/245, iOS export bundles. No live calls (Codex limited).
 
 ## Handoff notes and traps
 
+- **Atmosphere calls** (rounds 053, 089): each has a controller in `atmosphereAborts`; `callProvider` aborts them
+  on a serial provider (`provider.serial`, a getter on `BaseCLIAdapter`) unless called with `background: true` (the
+  greeting prefetch, through `narrate`). `writeAtmosphere` returns `{ text, aborted }`; only a non-aborted null is a
+  cached failure. A new player-facing LLM call must go through `callProvider`.
 - **Kept lines** (rounds 060, 088): the save stores chip ids (`vocabularyIds`); the snapshot adds `cardIds` from
   `lineEntryIds(native)` (every pack entry alone or inflected, a 500-native map on the service). Hide by `cardIds`.
   A test of an inflection must use a form that is not listed in `surface_variants` (*ottima* is listed for *ottimo*).

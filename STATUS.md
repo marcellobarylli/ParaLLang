@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 089, fixes from a review of rounds 040–053 (autonomous)
+
+A review of the code of rounds 040–053 found that the location atmosphere line (off by default) let through pack
+words treated as English that are real answers (*basta* at the open Fountain, es *once*); that filter now has no
+exemptions, which no live line had needed. On the CLI providers an atmosphere call no longer makes the player's
+conversation wait: a player's call aborts it, and the greeting prefetch waits for it instead. Two smaller fixes: a
+story unlocked in a deeper party conversation would be announced, and a failed speech call restores the ambience
+([findings](docs/rounds/089/findings.md)).
+
 ## Addendum 2026-11-06: round 088, a kept line no longer gives away a due card (autonomous)
 
 A review of rounds 054–064 found one answer leak: a kept line's translation was withheld only while one of its chip

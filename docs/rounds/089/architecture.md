@@ -108,3 +108,8 @@ Net change: the prefetch neither aborts nor is starved; aborts are not failures;
 - `mobile/src/__tests__/speech-stops.test.js`: `speak` with a null voice or a throwing `speech.speak` restores the
   duck.
 - Full suites; each fix removed in turn fails a test.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. Every fix has a test that fails without it; full suites pass
+([findings](findings.md)).
