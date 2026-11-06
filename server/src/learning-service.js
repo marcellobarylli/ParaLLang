@@ -5,6 +5,7 @@ import {
   calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
   foldEvidenceText, isDue, lacksTargetLanguage, masteryLabel, matchCanonicalVocabulary, scheduleReview,
 } from './language-engine.js';
+import { foldWords } from './content-loader.js';
 import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
@@ -23,6 +24,16 @@ export function correctionNote(language, ratio) {
 
 export const ATMOSPHERE_MAX_LENGTH = 300;
 export const FOOTNOTE_MAX_LENGTH = 200; // round 081
+
+// Round 086: does the text hold an inflection of a single-word form (4+ letters) of the objectives' targets?
+export function inflectsAnswer(text, objectives, vocabularyById) {
+  const forms = new Set(objectives.flatMap((objective) => objective.target_vocabulary_ids)
+    .flatMap((id) => vocabularyById.get(id)?.surface_variants ?? [])
+    .map((form) => foldWords(form).trim()).filter((form) => form.length >= 4 && !form.includes(' ')));
+  if (!forms.size) return false;
+  return foldWords(text).trim().split(' ').some((word) => !forms.has(word) && [...forms].some((form) =>
+    word.length >= form.length && word.length <= form.length + 2 && word.startsWith(form.slice(0, -1))));
+}
 export const ATMOSPHERE_RETRY_MS = 10 * 60_000;
 export const ATMOSPHERE_BUSY_RETRY_MS = 15_000;
 // Round 053 (critique 1.1): pack forms that are also English words; the atmosphere line may use them in English.
@@ -366,14 +377,19 @@ export class LearningService {
   // Round 081 (backlog B5): a footnote is kept when it is a short string, the previous NPC line of the session kept
   // none, and no pack vocabulary form is in it. Amendment 2: no English-homograph exemptions (the atmosphere list holds
   // encounter answers such as basta, sei, soy), so "once" or "cafe" drops a footnote too.
-  keptFootnote(generated, previousNpc) {
+  // Round 086: nor an unlisted inflection of an open objective's single-word answer (it *buoni* for *buono*): a word
+  // that is not itself a form but starts with a form of 4+ letters minus its last letter and is 0–2 letters longer.
+  // Measured over 47k English tokens of live narration (docs/rounds/086/results): full recall on synthetic
+  // inflections, few English collisions (a dropped footnote is optional flavour).
+  keptFootnote(generated, previousNpc, open = []) {
     if (typeof generated.footnote !== 'string' || previousNpc?.footnote) return undefined;
     const text = generated.footnote.trim().replace(/\s+/g, ' ');
     if (!text || text.length > FOOTNOTE_MAX_LENGTH) return undefined;
-    return matchCanonicalVocabulary(text, this.content.vocabulary.entries).length ? undefined : text;
+    if (matchCanonicalVocabulary(text, this.content.vocabulary.entries).length) return undefined;
+    return inflectsAnswer(text, open, this.content.vocabularyById) ? undefined : text;
   }
 
-  canonicalizeNarration(generated, definition, previousNpc) {
+  canonicalizeNarration(generated, definition, previousNpc, open = definition.encounter.objectives) {
     const matches = matchCanonicalVocabulary(generated.dialogue.native, definition.narrationEntries);
     // Round 057 (backlog C7): every span the matcher gave an id, so the app can mark the word in the line where the
     // server found it (critique 1.1); the first match still sets the order and `target`.
@@ -390,7 +406,7 @@ export class LearningService {
       meaning: entry.accepted_translations[0],
       spans: wordSpans,
     }));
-    const footnote = this.keptFootnote(generated, previousNpc);
+    const footnote = this.keptFootnote(generated, previousNpc, open);
     return {
       id: randomUUID(), role: 'npc', narrative: generated.narrative,
       ...(footnote ? { footnote } : {}),
@@ -878,7 +894,7 @@ export class LearningService {
           }
         }
         const previousNpc = [...current.transcript].reverse().find((item) => item.role === 'npc');
-        const npcMessage = this.canonicalizeNarration(generated, definition, previousNpc);
+        const npcMessage = this.canonicalizeNarration(generated, definition, previousNpc, remaining);
         this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
         stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
         stagedEncounter.objectiveIndex = nextObjectiveIndex;

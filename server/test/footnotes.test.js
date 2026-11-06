@@ -93,3 +93,45 @@ test('a resent answer (same attempt id) replays the same footnote, with no new c
   assert.equal(again.encounter.transcript.at(-1).footnote, 'A second aside.');
   assert.equal(runtime.provider.calls.length, calls);
 });
+
+// Round 086: an unlisted inflection of an open objective's single-word answer drops the footnote too; English words
+// that merely begin like an answer, multi-word forms and passed objectives do not.
+test('a greeting footnote with an unlisted inflection of an open answer is dropped (it vorresti, es quieres)', async (t) => {
+  assert.equal('footnote' in (await play(t, ['Nobody: / The Imp: vorresti, but louder.'], { language: 'it' })).npc[0], false, 'it vorresti');
+  assert.equal('footnote' in (await play(t, ['POV: the Imp asks if you quieres anything.'])).npc[0], false, 'es quieres');
+  assert.equal('footnote' in (await play(t, ['Nobody: / The Imp: two espressi, emotionally.'], { language: 'it' })).npc[0], false, 'it espressi');
+  const english = 'The Imp is quietly obsessed with translation, grammar and the cafeteria.';
+  assert.equal((await play(t, [english])).npc[0].footnote, english, 'es English kept');
+  assert.equal((await play(t, [english], { language: 'it' })).npc[0].footnote, english, 'it English kept');
+});
+
+test('after its objective passes, an inflection of that answer is kept on the next line (es)', async (t) => {
+  const runtime = await createRuntime({ provider: new FootnoteProvider([null, 'POV: the Imp asks if you quieres more.']), language: 'es' });
+  t.after(runtime.close);
+  const { learnerId } = await runtime.service.createOrRecoverLearner();
+  const { encounter } = await runtime.service.startEncounter(learnerId);
+  const { encounter: after } = await runtime.service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: 'a1', message: 'Un café, por favor.' });
+  assert.equal(after.state, 'ongoing');
+  assert.equal(after.transcript.at(-1).footnote, 'POV: the Imp asks if you quieres more.');
+});
+
+test('party conversations and the Rift: inflections of their open answers dropped, English kept (direct calls)', async (t) => {
+  const keep = ['A translation of a translation is still a child of chaos.', 'Nobody: / Errata: century of silence.'];
+  for (const [language, encounterId, inflected] of [['it', 'gerald_coffee_break', 'POV: everything is buoni.'], ['es', 'gerald_coffee_break', 'POV: todo is buenos today.'],
+    ['it', 'the_rift_errata', null], ['es', 'the_rift_errata', null]]) {
+    const runtime = await createRuntime({ language });
+    t.after(runtime.close);
+    const { service } = runtime;
+    const { objectives } = service.content.encounters.get(encounterId).encounter;
+    if (inflected) assert.equal(service.keptFootnote({ footnote: inflected }, undefined, objectives), undefined, `${language} ${inflected}`);
+    // The Rift: an inflection of one of its own single-word targets.
+    if (!inflected) {
+      const form = objectives.flatMap((o) => o.target_vocabulary_ids).flatMap((id) => service.content.vocabularyById.get(id).surface_variants)
+        .find((f) => !f.includes(' ') && f.length >= 5 && /[aeio]$/.test(f));
+      const variant = `${form.slice(0, -1)}${form.endsWith('i') ? 'e' : 'i'}`;
+      assert.equal(service.keptFootnote({ footnote: `Nobody: / Errata: ${variant}.` }, undefined, objectives), undefined, `${language} rift ${variant}`);
+    }
+    for (const text of keep) assert.equal(service.keptFootnote({ footnote: text }, undefined, objectives), text, `${language} ${encounterId} ${text}`);
+    assert.equal(service.keptFootnote({ footnote: 'POV: everything is buoni.' }, undefined, []), 'POV: everything is buoni.', 'no open objectives');
+  }
+});

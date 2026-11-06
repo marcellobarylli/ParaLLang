@@ -21,14 +21,14 @@ export default function App() {
   const fontReady = useDisplayFont(); // round 042: titles switch to Literata once it loads; nothing waits for it
   useEffect(() => { state.initialize(); }, [state.initialize]);
   // Round 084: back from the background (not from inactive: Control Center, Face ID, alerts), the Spellbook is
-  // fetched again, since cards fall due by the clock.
+  // fetched again, since cards fall due by the clock. Round 086 (review 3): also when inactive comes between.
   useEffect(() => {
-    let last = AppState.currentState;
+    let fromBackground = AppState.currentState === 'background';
     let subscription = null;
     try {
       subscription = AppState.addEventListener('change', (next) => {
-        if (next === 'active' && last === 'background') useGameStore.getState().refreshSpellbook();
-        last = next;
+        if (next === 'background') fromBackground = true;
+        else if (next === 'active' && fromBackground) { fromBackground = false; useGameStore.getState().refreshSpellbook(); }
       });
     } catch { /* no AppState: no foreground refresh */ }
     return () => subscription?.remove?.();

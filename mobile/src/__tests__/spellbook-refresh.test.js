@@ -178,6 +178,53 @@ describe('the app back from the background', () => {
     await unmount();
     expect(remove).toHaveBeenCalled();
   });
+
+  // Round 086 (review 3, critique 1.7): inactive between background and active; a launch while in the background.
+  test('background → inactive → active refreshes once; mounted in the background, the first active refreshes', async () => {
+    const change = (next) => act(() => { handlers.filter((h) => h.type === 'change').forEach((h) => h.fn(next)); });
+    const refresh = useGameStore.getState().refreshSpellbook;
+    const first = await render(<App />);
+    await change('background');
+    await change('inactive');
+    await change('active');
+    expect(refresh).toHaveBeenCalledTimes(1);
+    await change('inactive');
+    await change('active');
+    expect(refresh).toHaveBeenCalledTimes(1);
+    await first.unmount();
+    handlers = [];
+    const real = AppState.currentState;
+    Object.defineProperty(AppState, 'currentState', { value: 'background', configurable: true, writable: true });
+    try {
+      const second = await render(<App />);
+      await change('active');
+      expect(refresh).toHaveBeenCalledTimes(2);
+      await second.unmount();
+    } finally {
+      Object.defineProperty(AppState, 'currentState', { value: real, configurable: true, writable: true });
+    }
+  });
+});
+
+// Round 086 (review 1): a move's Spellbook takes the same encounter guard; the world is applied either way.
+test('a move during an encounter the server forgot keeps the Spellbook and its snapshot, and applies the world', async () => {
+  const { api, store } = setup();
+  const moved = { ...world, currentLocationId: 'coffee_cart', locations: [...world.locations, { ...world.locations[0], id: 'coffee_cart', name: 'The Coffee Cart' }] };
+  api.moveTo = jest.fn(async () => ({ world: moved, spellbook: book(true) })); // inEncounter false: a restarted server
+  await store.getState().initialize();
+  const before = { ...book(false), inEncounter: true };
+  store.setState({ encounter: { id: 'e1', state: 'ongoing', version: 2 }, spellbook: before });
+  const snapshot = store.getState().snapshotsByLearner.get(A);
+  await store.getState().moveTo('coffee_cart');
+  expect(store.getState().world).toBe(moved);
+  expect(store.getState().spellbook).toBe(before);
+  expect(store.getState().snapshotsByLearner.get(A)).toBe(snapshot);
+  expect(store.getState().isLoading).toBe(false);
+  const known = book(true, { inEncounter: true });
+  api.moveTo.mockResolvedValueOnce({ world, spellbook: known });
+  await store.getState().moveTo('market_entrance');
+  expect(store.getState().spellbook).toBe(known);
+  expect(store.getState().snapshotsByLearner.get(A).spellbook).toBe(known);
 });
 
 // Round 085: the Saves screen shows the current save's due count; it refreshes on opening, at the end of a remove

@@ -17,6 +17,9 @@ export const STALE_CLOSED = 'This conversation is no longer open. Return to it o
 // Round 070 (backlog I1): the verdict poll while a turn's reply is written: every second, at most a minute.
 export const PROGRESS_INTERVAL_MS = 1000;
 export const PROGRESS_POLLS = 60;
+// Round 084 (critique 1.1), shared in round 086: a Spellbook that does not know of the encounter the app holds
+// (a restarted server forgets in-memory encounters) would show meanings during it, so it is not applied.
+const leaksMeanings = (state, spellbook) => state.encounter?.state === 'ongoing' && spellbook.inEncounter !== true;
 const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now()}-${Math.random()}`;
 
 // Ported from client/src/stores/gameStore.js (round 004). Storage is async (AsyncStorage) and the store keeps the
@@ -134,8 +137,10 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         // Round 082: the move carries the Spellbook (a new place's inscription, the Rift's drill); older servers do not.
         const { world, spellbook } = await api.moveTo(learnerId, locationId);
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return; // round 082 Amendment 1 (review R1.3)
-        if (spellbook) snapshots.set(learnerId, { ...(snapshots.get(learnerId) ?? { encounter: get().encounter }), spellbook });
-        set({ world, ...(spellbook ? { spellbook } : {}), isLoading: false });
+        // Round 086 (review 1): round 084's encounter guard; the world is applied either way.
+        const fresh = spellbook && !leaksMeanings(get(), spellbook) ? spellbook : null;
+        if (fresh) snapshots.set(learnerId, { ...(snapshots.get(learnerId) ?? { encounter: get().encounter }), spellbook: fresh });
+        set({ world, ...(fresh ? { spellbook: fresh } : {}), isLoading: false });
       } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
 
@@ -186,7 +191,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         const state = get();
         if (seq !== refreshSeq || epoch !== requestEpoch || state.learnerId !== learnerId || state.spellbook !== before) return;
         if (!spellbook || typeof spellbook !== 'object' || !Array.isArray(spellbook.cards)) return;
-        if (state.encounter?.state === 'ongoing' && spellbook.inEncounter !== true) return;
+        if (leaksMeanings(state, spellbook)) return;
         set({ spellbook });
       }, () => {});
     },
@@ -381,6 +386,8 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       view: state.returnView === 'dialogue' && state.encounter ? 'dialogue' : 'map', reviewChallenge: null, reviewResult: null, error: null,
     })),
 
+    // Round 086 (critique Optional): the review actions apply their Spellbooks unguarded. Reviews are closed by the
+    // server during an encounter, and the Spellbook screen they start from is kept free of meanings by the guards.
     startReview: async (vocabularyId) => {
       const { learnerId, isLoading } = get();
       if (!learnerId || isLoading) return; // round 065 Amendment 1: no second request from a double tap
