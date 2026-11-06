@@ -135,3 +135,9 @@ usage limit at about 23:14 UTC, on the Fountain's last line, so Flick was never 
 `results/variant-it-provider-limit.json`). Codex's message gives the reset as 01:36 UTC on 2026-11-06. The round
 stays open. The variant runs (it, es) are queued for the next iteration, with the same `--lines` as in Live. Nothing
 else in the design changes.
+
+## Outcome (2026-11-06)
+
+All four live runs met the success criteria: every conversation resolved with the scripted verdicts, no Flick
+number or *andiamo* / *vamos* came before the player's, and the slow walk had no leaks. See
+[findings.md](findings.md).
