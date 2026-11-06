@@ -19,6 +19,17 @@ export const ATMOSPHERE_BUSY_RETRY_MS = 15_000;
 // Round 053 (critique 1.1): pack forms that are also English words; the atmosphere line may use them in English.
 export const ATMOSPHERE_ENGLISH = new Set(['once', 'kilo', 'kilos', 'cafe', 'sola', 'pollo', 'basta', 'io', 'due', 'otto', 'nove', 'sei',
   'salami', 'chorizo', 'chorizos', 'mezzo', 'cento', 'soy', 'media', 'piano', 'chili']);
+// Round 068 (backlog A10b, critique 1.2): one kind of detail per line, fixed by the location's index in the pack's world
+// and the state (none 0, open 1, complete 2): (3i + s) mod 5. A pure function of what the cache key already holds, so
+// a cached line always matches its detail for the server's lifetime (critique 1.6).
+export const ATMOSPHERE_DETAILS = Object.freeze(['a sound', 'a smell', 'a movement', 'the light', 'the air or the temperature']);
+const ATMOSPHERE_STATES = ['none', 'open', 'complete'];
+export function atmosphereDetail(world, locationId, state) {
+  const index = world.locations.findIndex((location) => location.id === locationId);
+  const s = ATMOSPHERE_STATES.indexOf(state);
+  if (index < 0 || s < 0) return ATMOSPHERE_DETAILS[0];
+  return ATMOSPHERE_DETAILS[(3 * index + s) % ATMOSPHERE_DETAILS.length];
+}
 const foldForAtmosphere = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 
 function clone(value) { return structuredClone(value); }
@@ -762,7 +773,8 @@ export class LearningService {
       complete: `The player has already won over ${who} here.`,
     };
     let messages;
-    try { messages = buildAtmosphereMessages({ language: this.content.language, styleGuide: this.content.styleGuide, location, state: facts[state], partyNames: party }); }
+    const detail = atmosphereDetail(this.content.world, location.id, state);
+    try { messages = buildAtmosphereMessages({ language: this.content.language, styleGuide: this.content.styleGuide, location, state: facts[state], partyNames: party, detail }); }
     catch { this.dropAtmosphere('build', location.id); return null; } // review 1: never a 500
     this.atmosphereStats.calls += 1;
     let reply;

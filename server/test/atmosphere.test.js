@@ -186,3 +186,51 @@ test('it: a pack form written with ʼ drops the line; an English line with ’ i
   second.lines.push('The archway’s keystone hums; nobody’s listening.');
   assert.equal((await fresh.getAtmosphere(other)).atmosphere.text, 'The archway’s keystone hums; nobody’s listening.');
 });
+
+// Round 068 (backlog A10b): one kind of detail per place and state, and no generic office humour.
+test('the detail kind is fixed per place and state: (3i + s) mod 5, all five kinds, open differs from complete (critique 1.6, 1.7)', async () => {
+  const { ATMOSPHERE_DETAILS, atmosphereDetail } = await import('../src/learning-service.js');
+  for (const language of ['it', 'es']) {
+    const { world } = loadGameContent({ language });
+    assert.equal(world.locations.length, 6);
+    const used = new Set();
+    world.locations.forEach((location, i) => {
+      ['none', 'open', 'complete'].forEach((state, s) => {
+        const detail = atmosphereDetail(world, location.id, state);
+        assert.equal(detail, ATMOSPHERE_DETAILS[(3 * i + s) % 5], `${location.id} ${state}`);
+        assert.equal(atmosphereDetail(world, location.id, state), detail); // repeatable, so the cache stays right
+        if (state !== 'none') used.add(detail);
+      });
+      assert.notEqual(atmosphereDetail(world, location.id, 'open'), atmosphereDetail(world, location.id, 'complete'));
+    });
+    assert.equal(used.size, 5);
+    assert.equal(atmosphereDetail(world, 'nowhere', 'open'), 'a sound');
+  }
+});
+
+test('the service sends the place\'s detail kind and the no-office rule, not the old fixed list (critique 1.7)', async (t) => {
+  const { atmosphereDetail } = await import('../src/learning-service.js');
+  const { runtime, provider, learnerId, service } = await setup(t);
+  await service.getAtmosphere(learnerId);
+  const envelope = await runtime.storage.load(learnerId);
+  envelope.world = { ...envelope.world, completedEncounterIds: ['market_entrance_tutorial'] };
+  await runtime.storage.save(envelope);
+  await service.getAtmosphere(learnerId);
+  const [open, complete] = provider.atmosphereCalls.map((messages) => messages[0].content);
+  const rules = (text) => text.slice(text.indexOf('RULES:'));
+  for (const [text, state] of [[open, 'open'], [complete, 'complete']]) {
+    const detail = atmosphereDetail(service.content.world, 'market_entrance', state);
+    assert.ok(rules(text).includes(`passing detail of this moment: ${detail}, drawn from`), state);
+    assert.match(rules(text), /If that kind of detail does not fit this place, use a sound instead\./);
+    assert.match(rules(text), /Avoid generic office humour: no approvals, complaints, forms, applications, fees, budgets or paperwork\./);
+    assert.doesNotMatch(text, /\(a sound, a smell, a movement\)/);
+  }
+  assert.notEqual(open, complete);
+});
+
+test('buildAtmosphereMessages without a detail asks for a sound', () => {
+  const content = loadGameContent({ language: 'es' });
+  const location = content.world.locationsById.get('old_bookshop');
+  const [system] = buildAtmosphereMessages({ language: content.language, styleGuide: content.styleGuide, location, state: 'x', partyNames: [] });
+  assert.match(system.content, /passing detail of this moment: a sound, drawn from/);
+});

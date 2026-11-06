@@ -9,7 +9,8 @@ WITH THE PLAYER: {{party}}
 RULES:
 - One or two sentences, at most 40 words, in English only. Write no word of {{language.name}} or of any language other than English, not even a greeting, and do not repeat a non-English word from the description.
 - Narration only: no dialogue, no quotations, no signs or plaques read aloud.
-- Add a small, passing detail of this moment (a sound, a smell, a movement). Do not repeat the description, and do not contradict it or the facts under NOW and WITH THE PLAYER.
+- Add one small, passing detail of this moment: {{detail}}, drawn from something already in the description or under NOW. If that kind of detail does not fit this place, use a sound instead. Do not repeat the description, and do not contradict it or the facts under NOW and WITH THE PLAYER.
+- Find the joke in this place itself: its objects, its trade, its keeper, or a comparison in the spirit of its description. Avoid generic office humour: no approvals, complaints, forms, applications, fees, budgets or paperwork.
 - Bring in no new characters, places or objects that matter; name no one who is not in NOW or WITH THE PLAYER.
 - Say nothing about what the player should say, translate or answer.
 
