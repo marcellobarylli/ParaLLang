@@ -215,6 +215,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Playtesting (prototype.md Phase 4's last task):** run [`docs/playtest/guide.md`](../playtest/guide.md) with
+  3–5 testers at the Mac (round 066); file the results as a round.
 - Rounds 059–064 (Simulator):
   - the class word on Spellbook cards and the review's class tag;
   - the "Lines you translated" section;
@@ -463,7 +465,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   052–054) is untouched.
 - 2026-11-06, iteration 19 (from 00:45 UTC; Codex limited until 01:36): round 065 (round 063's cosmetic item): a
   loading line and a failure state with Try again between reviews; `startReview` drops a reply that arrives after the
-  view changed (a pre-existing race the critique found). Mobile 182/182.
+  view changed (a pre-existing race the critique found). Mobile 182/182. A read-only review of rounds 059–065 found
+  nothing serious; two minor races fixed as round 065's Amendment 1 (mobile 185/185). Round 066: a playtest kit for
+  the owner (`docs/playtest/guide.md`) and a README refresh, docs only.
 
 ## Handoff notes and traps
 
