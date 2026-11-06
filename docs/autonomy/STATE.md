@@ -7,13 +7,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 19 (2026-11-06, 00:45–02:15 UTC) ran the whole live queue after Codex's reset (01:36 UTC)
-and closed rounds 052, 053, 065–068 (see Progress).
+Iteration 20 (2026-11-06, from 02:09 UTC) closed round 069 (kept lines live) and is working on the next candidate.
 
 Next candidates, none needing the owner:
-- **Kept lines live** (round 060): `play-market.js` makes **no** help reveals at all (an earlier note here was wrong),
-  so checking that a paid sentence reveal leaves `lines` in the save needs a small in-process script, like
-  `docs/rounds/068/results/atmosphere-live.mjs`, that calls `revealHelp` with `kind: 'sentence'` and reads the save.
 - **E1 language share** with round 067's tours as the new baseline (it 0.53, es 0.52, against
   0.44 requested; the Rift runs at 0.83 against 0.50, as before).
 - **Atmosphere repetition within a place** (round 068): across runs a place's line returns to the same idea
@@ -455,6 +451,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   round 067 (live regression tour it/es) and round 068 (A10b, Codex critique with a bundle on stdin). A read-only review of rounds 059–065 found
   nothing serious; two minor races fixed as round 065's Amendment 1 (mobile 185/185). Round 066: a playtest kit for
   the owner (`docs/playtest/guide.md`) and a README refresh, docs only.
+- 2026-11-06, iteration 20: round 069 closed: kept lines (C9) live, it 30/30 and es 28/28 checks, 28 calls;
+  `docs/rounds/069/results/kept-lines-live.mjs` is a ~2-minute regression check.
 
 ## Handoff notes and traps
 

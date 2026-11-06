@@ -1,0 +1,602 @@
+{
+  "language": "it",
+  "provider": "codex-cli",
+  "runs": [
+    {
+      "run": "it:coffee_cart",
+      "revealed": [
+        {
+          "id": "1dcb94e7-0835-4aec-8bf4-04d55816375f",
+          "native": "Buongiorno! Sono Gerald. My cart gets five espresso shots. Milk is a war crime, obviously. Come posso aiutarti?",
+          "translation": "Good morning! I'm Gerald. My cart gets five espresso shots. Milk is a war crime, obviously. How can I help you?",
+          "vocabularyIds": [
+            "espresso"
+          ]
+        },
+        {
+          "id": "51c2c9f2-d13c-43d0-8cdf-402b7246d879",
+          "native": "Bene, un caffè. Four espresso shots for politeness. Your milk preference remains suspiciously unstated. Come lo vuoi?",
+          "translation": "Good, a coffee. Four espresso shots for politeness. Your milk preference remains suspiciously unstated. How would you like it?",
+          "vocabularyIds": [
+            "caffe",
+            "espresso"
+          ]
+        }
+      ],
+      "refused": [],
+      "turns": [
+        {
+          "say": "Vorrei un caffè, per favore.",
+          "passed": [
+            "order_coffee:true",
+            "no_milk:false"
+          ],
+          "state": "ongoing"
+        },
+        {
+          "say": "Senza latte, per favore.",
+          "passed": [
+            "no_milk:true"
+          ],
+          "state": "resolved"
+        }
+      ],
+      "atStart": [],
+      "afterResolve": [
+        {
+          "id": "51c2c9f2-d13c-43d0-8cdf-402b7246d879",
+          "speaker": "Gerald",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "caffe",
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "1dcb94e7-0835-4aec-8bf4-04d55816375f",
+          "speaker": "Gerald",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "reviewed": [
+        {
+          "id": "espresso",
+          "answer": "espresso",
+          "correct": true,
+          "dueAfter": false
+        }
+      ],
+      "afterReview": [
+        {
+          "id": "51c2c9f2-d13c-43d0-8cdf-402b7246d879",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Good, a coffee. Four espresso shots for politeness. Your milk preference remains suspiciously unstated. How would you like it?",
+          "vocabularyIds": [
+            "caffe",
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "1dcb94e7-0835-4aec-8bf4-04d55816375f",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Good morning! I'm Gerald. My cart gets five espresso shots. Milk is a war crime, obviously. How can I help you?",
+          "vocabularyIds": [
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "hiddenThenShown": [
+        "51c2c9f2-d13c-43d0-8cdf-402b7246d879",
+        "1dcb94e7-0835-4aec-8bf4-04d55816375f"
+      ],
+      "noCard": []
+    },
+    {
+      "run": "it:butchers_stall",
+      "revealed": [
+        {
+          "id": "06834c0d-e8ce-4e8f-b5a9-9a2a8f69148e",
+          "native": "Buongiorno! Tutto prosciutto! Even the hat. Certified ham-tier quality, my friend. Che cosa desidera?",
+          "translation": "Good morning! All ham! Even the hat. Certified ham-tier quality, my friend. What would you like?",
+          "vocabularyIds": [
+            "prosciutto"
+          ]
+        },
+        {
+          "id": "21eaab33-2251-4078-8096-ff1997f2d747",
+          "native": "Salame, esatto! Per me è prosciutto. Correct identification; certified ham-tier expertise! Quanto ne vuole? My scales need an actual amount.",
+          "translation": "Salami, exactly! To me, it is ham. Correct identification; certified ham-tier expertise! How much would you like? My scales need an actual amount.",
+          "vocabularyIds": [
+            "salame",
+            "prosciutto"
+          ]
+        },
+        {
+          "id": "f9f87189-a696-412f-879a-b4e92fea5575",
+          "native": "Un momento! Manca la quantità. My scales need a number with that unit. Quanto prosciutto vuole? The salame is listening.",
+          "translation": "One moment! The quantity is missing. My scales need a number with that unit. How much ham would you like? The salami is listening.",
+          "vocabularyIds": [
+            "prosciutto",
+            "salame"
+          ]
+        }
+      ],
+      "refused": [
+        {
+          "messageId": "25684152-507e-4fa3-94b0-821d01729520",
+          "code": "HINTS_EXHAUSTED"
+        }
+      ],
+      "turns": [
+        {
+          "say": "Vorrei del prosciutto, per favore.",
+          "passed": [
+            "name_meat:false",
+            "quantity:false"
+          ],
+          "state": "ongoing"
+        },
+        {
+          "say": "Vorrei del salame, per favore.",
+          "passed": [
+            "name_meat:true",
+            "quantity:false"
+          ],
+          "state": "ongoing"
+        },
+        {
+          "say": "Chilo.",
+          "passed": [
+            "quantity:false"
+          ],
+          "state": "ongoing"
+        },
+        {
+          "say": "Due etti, per favore.",
+          "passed": [
+            "quantity:true"
+          ],
+          "state": "resolved"
+        }
+      ],
+      "atStart": [
+        {
+          "id": "51c2c9f2-d13c-43d0-8cdf-402b7246d879",
+          "speaker": "Gerald",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "caffe",
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "1dcb94e7-0835-4aec-8bf4-04d55816375f",
+          "speaker": "Gerald",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "afterResolve": [
+        {
+          "id": "f9f87189-a696-412f-879a-b4e92fea5575",
+          "speaker": "Mortimer",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "prosciutto",
+            "salame"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "21eaab33-2251-4078-8096-ff1997f2d747",
+          "speaker": "Mortimer",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "salame",
+            "prosciutto"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "06834c0d-e8ce-4e8f-b5a9-9a2a8f69148e",
+          "speaker": "Mortimer",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "prosciutto"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "51c2c9f2-d13c-43d0-8cdf-402b7246d879",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Good, a coffee. Four espresso shots for politeness. Your milk preference remains suspiciously unstated. How would you like it?",
+          "vocabularyIds": [
+            "caffe",
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "1dcb94e7-0835-4aec-8bf4-04d55816375f",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Good morning! I'm Gerald. My cart gets five espresso shots. Milk is a war crime, obviously. How can I help you?",
+          "vocabularyIds": [
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "reviewed": [
+        {
+          "id": "prosciutto",
+          "answer": "ham",
+          "correct": true,
+          "dueAfter": false
+        }
+      ],
+      "afterReview": [
+        {
+          "id": "f9f87189-a696-412f-879a-b4e92fea5575",
+          "speaker": "Mortimer",
+          "hidden": false,
+          "translation": "One moment! The quantity is missing. My scales need a number with that unit. How much ham would you like? The salami is listening.",
+          "vocabularyIds": [
+            "prosciutto",
+            "salame"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "21eaab33-2251-4078-8096-ff1997f2d747",
+          "speaker": "Mortimer",
+          "hidden": false,
+          "translation": "Salami, exactly! To me, it is ham. Correct identification; certified ham-tier expertise! How much would you like? My scales need an actual amount.",
+          "vocabularyIds": [
+            "salame",
+            "prosciutto"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "06834c0d-e8ce-4e8f-b5a9-9a2a8f69148e",
+          "speaker": "Mortimer",
+          "hidden": false,
+          "translation": "Good morning! All ham! Even the hat. Certified ham-tier quality, my friend. What would you like?",
+          "vocabularyIds": [
+            "prosciutto"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "51c2c9f2-d13c-43d0-8cdf-402b7246d879",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Good, a coffee. Four espresso shots for politeness. Your milk preference remains suspiciously unstated. How would you like it?",
+          "vocabularyIds": [
+            "caffe",
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "1dcb94e7-0835-4aec-8bf4-04d55816375f",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Good morning! I'm Gerald. My cart gets five espresso shots. Milk is a war crime, obviously. How can I help you?",
+          "vocabularyIds": [
+            "espresso"
+          ],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "hiddenThenShown": [
+        "f9f87189-a696-412f-879a-b4e92fea5575",
+        "21eaab33-2251-4078-8096-ff1997f2d747",
+        "06834c0d-e8ce-4e8f-b5a9-9a2a8f69148e"
+      ],
+      "noCard": []
+    }
+  ],
+  "checks": [
+    {
+      "run": "it:coffee_cart",
+      "name": "greeting reveal charged",
+      "ok": true
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "response line matches the greeting, hidden",
+      "ok": true,
+      "detail": {
+        "id": "1dcb94e7-0835-4aec-8bf4-04d55816375f",
+        "speaker": "Gerald",
+        "hidden": true,
+        "translation": null,
+        "vocabularyIds": [
+          "espresso"
+        ],
+        "locationName": "The Coffee Cart"
+      }
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "save holds the provider text unchanged",
+      "ok": true,
+      "detail": {
+        "nativeLength": 111,
+        "translationLength": 111
+      }
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "second reveal not charged, not stored again",
+      "ok": true
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "word reveal keeps no line",
+      "ok": true,
+      "detail": {
+        "word": "espresso",
+        "charged": true
+      }
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "a later reveal is newest first, its text as the provider returned it",
+      "ok": true
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "encounter resolved",
+      "ok": true,
+      "detail": {
+        "state": "resolved"
+      }
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "after resolve: not in encounter",
+      "ok": true
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "after resolve: a line is hidden exactly when one of its cards is due",
+      "ok": true
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "review of espresso correct and no longer due",
+      "ok": true
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "after review: every line shown with its saved translation",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "kept lines are newest first and none lost",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "at the start: every earlier line hidden",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "greeting reveal charged",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "response line matches the greeting, hidden",
+      "ok": true,
+      "detail": {
+        "id": "06834c0d-e8ce-4e8f-b5a9-9a2a8f69148e",
+        "speaker": "Mortimer",
+        "hidden": true,
+        "translation": null,
+        "vocabularyIds": [
+          "prosciutto"
+        ],
+        "locationName": "The Butcher's Stall"
+      }
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "save holds the provider text unchanged",
+      "ok": true,
+      "detail": {
+        "nativeLength": 101,
+        "translationLength": 96
+      }
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "second reveal not charged, not stored again",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "word reveal keeps no line",
+      "ok": true,
+      "detail": {
+        "word": "prosciutto",
+        "charged": true
+      }
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "a refused reveal leaves the save unchanged",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "a later reveal is newest first, its text as the provider returned it",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "a later reveal is newest first, its text as the provider returned it",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "encounter resolved",
+      "ok": true,
+      "detail": {
+        "state": "resolved"
+      }
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "after resolve: not in encounter",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "after resolve: a line is hidden exactly when one of its cards is due",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "review of prosciutto correct and no longer due",
+      "ok": true
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "after review: every line shown with its saved translation",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "run": "it:butchers_stall",
+      "name": "kept lines are newest first and none lost",
+      "ok": true
+    },
+    {
+      "run": "it:restart",
+      "name": "a new service returns the same lines",
+      "ok": true,
+      "detail": {
+        "lines": 5
+      }
+    },
+    {
+      "run": "it:coverage",
+      "name": "at least one later line kept",
+      "ok": true
+    },
+    {
+      "run": "it:coverage",
+      "name": "at least one line hidden after the resolve and shown after review",
+      "ok": true
+    }
+  ],
+  "calls": 14,
+  "coverage": {
+    "laterLinesKept": 3,
+    "hiddenThenShown": 5
+  },
+  "kept": [
+    {
+      "id": "f9f87189-a696-412f-879a-b4e92fea5575",
+      "encounterId": "butchers_stall_charcutier",
+      "locationId": "butchers_stall",
+      "speaker": "Mortimer",
+      "native": "Un momento! Manca la quantità. My scales need a number with that unit. Quanto prosciutto vuole? The salame is listening.",
+      "translation": "One moment! The quantity is missing. My scales need a number with that unit. How much ham would you like? The salami is listening.",
+      "vocabularyIds": [
+        "prosciutto",
+        "salame"
+      ],
+      "savedAt": "2026-11-06T02:15:45.664Z",
+      "nativeLength": 120,
+      "translationLength": 130
+    },
+    {
+      "id": "21eaab33-2251-4078-8096-ff1997f2d747",
+      "encounterId": "butchers_stall_charcutier",
+      "locationId": "butchers_stall",
+      "speaker": "Mortimer",
+      "native": "Salame, esatto! Per me è prosciutto. Correct identification; certified ham-tier expertise! Quanto ne vuole? My scales need an actual amount.",
+      "translation": "Salami, exactly! To me, it is ham. Correct identification; certified ham-tier expertise! How much would you like? My scales need an actual amount.",
+      "vocabularyIds": [
+        "salame",
+        "prosciutto"
+      ],
+      "savedAt": "2026-11-06T02:15:32.809Z",
+      "nativeLength": 140,
+      "translationLength": 146
+    },
+    {
+      "id": "06834c0d-e8ce-4e8f-b5a9-9a2a8f69148e",
+      "encounterId": "butchers_stall_charcutier",
+      "locationId": "butchers_stall",
+      "speaker": "Mortimer",
+      "native": "Buongiorno! Tutto prosciutto! Even the hat. Certified ham-tier quality, my friend. Che cosa desidera?",
+      "translation": "Good morning! All ham! Even the hat. Certified ham-tier quality, my friend. What would you like?",
+      "vocabularyIds": [
+        "prosciutto"
+      ],
+      "savedAt": "2026-11-06T02:14:58.833Z",
+      "nativeLength": 101,
+      "translationLength": 96
+    },
+    {
+      "id": "51c2c9f2-d13c-43d0-8cdf-402b7246d879",
+      "encounterId": "imp_coffee_greeting",
+      "locationId": "coffee_cart",
+      "speaker": "Gerald",
+      "native": "Bene, un caffè. Four espresso shots for politeness. Your milk preference remains suspiciously unstated. Come lo vuoi?",
+      "translation": "Good, a coffee. Four espresso shots for politeness. Your milk preference remains suspiciously unstated. How would you like it?",
+      "vocabularyIds": [
+        "caffe",
+        "espresso"
+      ],
+      "savedAt": "2026-11-06T02:14:39.684Z",
+      "nativeLength": 117,
+      "translationLength": 126
+    },
+    {
+      "id": "1dcb94e7-0835-4aec-8bf4-04d55816375f",
+      "encounterId": "imp_coffee_greeting",
+      "locationId": "coffee_cart",
+      "speaker": "Gerald",
+      "native": "Buongiorno! Sono Gerald. My cart gets five espresso shots. Milk is a war crime, obviously. Come posso aiutarti?",
+      "translation": "Good morning! I'm Gerald. My cart gets five espresso shots. Milk is a war crime, obviously. How can I help you?",
+      "vocabularyIds": [
+        "espresso"
+      ],
+      "savedAt": "2026-11-06T02:14:23.963Z",
+      "nativeLength": 111,
+      "translationLength": 111
+    }
+  ],
+  "passed": true
+}

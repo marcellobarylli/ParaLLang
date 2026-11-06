@@ -1,0 +1,555 @@
+{
+  "language": "es",
+  "provider": "codex-cli",
+  "runs": [
+    {
+      "run": "es:coffee_cart",
+      "revealed": [
+        {
+          "id": "b6dc4e64-18f6-46f9-976b-5bf83e52fa30",
+          "native": "Hola. Buenos días. I’m Gerald. ¿Qué necesitas? This market gets one espresso shot out of five. The dust lacks ambition.",
+          "translation": "Hello. Good morning. I’m Gerald. What do you need? This market gets one espresso shot out of five. The dust lacks ambition.",
+          "vocabularyIds": []
+        },
+        {
+          "id": "65066a42-286d-492a-8b76-72e4b0f0acb8",
+          "native": "Un café, muy bien. Three espresso shots for manners. You haven’t settled the milk situation. ¿Cómo lo quieres?",
+          "translation": "A coffee, very good. Three espresso shots for manners. You haven’t settled the milk situation. How do you want it?",
+          "vocabularyIds": [
+            "cafe"
+          ]
+        }
+      ],
+      "refused": [],
+      "turns": [
+        {
+          "say": "Quiero un café, por favor.",
+          "passed": [
+            "order_coffee:true",
+            "no_milk:false"
+          ],
+          "state": "ongoing"
+        },
+        {
+          "say": "Sin leche, por favor.",
+          "passed": [
+            "no_milk:true"
+          ],
+          "state": "resolved"
+        }
+      ],
+      "atStart": [],
+      "afterResolve": [
+        {
+          "id": "65066a42-286d-492a-8b76-72e4b0f0acb8",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "A coffee, very good. Three espresso shots for manners. You haven’t settled the milk situation. How do you want it?",
+          "vocabularyIds": [
+            "cafe"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "b6dc4e64-18f6-46f9-976b-5bf83e52fa30",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Hello. Good morning. I’m Gerald. What do you need? This market gets one espresso shot out of five. The dust lacks ambition.",
+          "vocabularyIds": [],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "reviewed": [],
+      "afterReview": [
+        {
+          "id": "65066a42-286d-492a-8b76-72e4b0f0acb8",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "A coffee, very good. Three espresso shots for manners. You haven’t settled the milk situation. How do you want it?",
+          "vocabularyIds": [
+            "cafe"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "b6dc4e64-18f6-46f9-976b-5bf83e52fa30",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Hello. Good morning. I’m Gerald. What do you need? This market gets one espresso shot out of five. The dust lacks ambition.",
+          "vocabularyIds": [],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "hiddenThenShown": [],
+      "noCard": [
+        "b6dc4e64-18f6-46f9-976b-5bf83e52fa30"
+      ]
+    },
+    {
+      "run": "es:butchers_stall",
+      "revealed": [
+        {
+          "id": "edfc589e-231f-4b51-8358-d3929b7d63ee",
+          "native": "¡Hola! Todo es jamón. Even my hat. Certified ham-tier quality. My scales never lie. ¿Qué desea?",
+          "translation": "Hello! Everything is ham. Even my hat. Certified ham-tier quality. My scales never lie. What would you like?",
+          "vocabularyIds": [
+            "jamon"
+          ]
+        },
+        {
+          "id": "ec8d655b-7f36-40c1-862a-23ca0e6bb4e3",
+          "native": "¡Chorizo, correcto! Para mí, es jamón. A correct cut! Certified ham-adjacent. ¿Qué cantidad desea? My scales await greatness.",
+          "translation": "Chorizo, correct! To me, it is ham. A correct cut! Certified ham-adjacent. What quantity would you like? My scales await greatness.",
+          "vocabularyIds": [
+            "chorizo",
+            "jamon"
+          ]
+        },
+        {
+          "id": "43c34d47-ab8b-4e4a-b883-6a23a4a8babb",
+          "native": "¡Falta un número! My scales need an amount, not a weight-unit's personal brand. ¿Qué cantidad de jamón desea?",
+          "translation": "A number is missing! My scales need an amount, not a weight-unit's personal brand. What quantity of ham would you like?",
+          "vocabularyIds": [
+            "jamon"
+          ]
+        }
+      ],
+      "refused": [
+        {
+          "messageId": "d04c0805-c7de-430f-b63b-ae17f7bc45fa",
+          "code": "HINTS_EXHAUSTED"
+        }
+      ],
+      "turns": [
+        {
+          "say": "Quiero jamón, por favor.",
+          "passed": [
+            "name_meat:false",
+            "quantity:false"
+          ],
+          "state": "ongoing"
+        },
+        {
+          "say": "Quiero chorizo, por favor.",
+          "passed": [
+            "name_meat:true",
+            "quantity:false"
+          ],
+          "state": "ongoing"
+        },
+        {
+          "say": "Kilo.",
+          "passed": [
+            "quantity:false"
+          ],
+          "state": "ongoing"
+        },
+        {
+          "say": "Medio kilo, por favor.",
+          "passed": [
+            "quantity:true"
+          ],
+          "state": "resolved"
+        }
+      ],
+      "atStart": [
+        {
+          "id": "65066a42-286d-492a-8b76-72e4b0f0acb8",
+          "speaker": "Gerald",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "cafe"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "b6dc4e64-18f6-46f9-976b-5bf83e52fa30",
+          "speaker": "Gerald",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "afterResolve": [
+        {
+          "id": "43c34d47-ab8b-4e4a-b883-6a23a4a8babb",
+          "speaker": "Mortimer",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "jamon"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "ec8d655b-7f36-40c1-862a-23ca0e6bb4e3",
+          "speaker": "Mortimer",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "chorizo",
+            "jamon"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "edfc589e-231f-4b51-8358-d3929b7d63ee",
+          "speaker": "Mortimer",
+          "hidden": true,
+          "translation": null,
+          "vocabularyIds": [
+            "jamon"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "65066a42-286d-492a-8b76-72e4b0f0acb8",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "A coffee, very good. Three espresso shots for manners. You haven’t settled the milk situation. How do you want it?",
+          "vocabularyIds": [
+            "cafe"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "b6dc4e64-18f6-46f9-976b-5bf83e52fa30",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Hello. Good morning. I’m Gerald. What do you need? This market gets one espresso shot out of five. The dust lacks ambition.",
+          "vocabularyIds": [],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "reviewed": [
+        {
+          "id": "jamon",
+          "answer": "ham",
+          "correct": true,
+          "dueAfter": false
+        }
+      ],
+      "afterReview": [
+        {
+          "id": "43c34d47-ab8b-4e4a-b883-6a23a4a8babb",
+          "speaker": "Mortimer",
+          "hidden": false,
+          "translation": "A number is missing! My scales need an amount, not a weight-unit's personal brand. What quantity of ham would you like?",
+          "vocabularyIds": [
+            "jamon"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "ec8d655b-7f36-40c1-862a-23ca0e6bb4e3",
+          "speaker": "Mortimer",
+          "hidden": false,
+          "translation": "Chorizo, correct! To me, it is ham. A correct cut! Certified ham-adjacent. What quantity would you like? My scales await greatness.",
+          "vocabularyIds": [
+            "chorizo",
+            "jamon"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "edfc589e-231f-4b51-8358-d3929b7d63ee",
+          "speaker": "Mortimer",
+          "hidden": false,
+          "translation": "Hello! Everything is ham. Even my hat. Certified ham-tier quality. My scales never lie. What would you like?",
+          "vocabularyIds": [
+            "jamon"
+          ],
+          "locationName": "The Butcher's Stall"
+        },
+        {
+          "id": "65066a42-286d-492a-8b76-72e4b0f0acb8",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "A coffee, very good. Three espresso shots for manners. You haven’t settled the milk situation. How do you want it?",
+          "vocabularyIds": [
+            "cafe"
+          ],
+          "locationName": "The Coffee Cart"
+        },
+        {
+          "id": "b6dc4e64-18f6-46f9-976b-5bf83e52fa30",
+          "speaker": "Gerald",
+          "hidden": false,
+          "translation": "Hello. Good morning. I’m Gerald. What do you need? This market gets one espresso shot out of five. The dust lacks ambition.",
+          "vocabularyIds": [],
+          "locationName": "The Coffee Cart"
+        }
+      ],
+      "hiddenThenShown": [
+        "43c34d47-ab8b-4e4a-b883-6a23a4a8babb",
+        "ec8d655b-7f36-40c1-862a-23ca0e6bb4e3",
+        "edfc589e-231f-4b51-8358-d3929b7d63ee"
+      ],
+      "noCard": [
+        "b6dc4e64-18f6-46f9-976b-5bf83e52fa30"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "run": "es:coffee_cart",
+      "name": "greeting reveal charged",
+      "ok": true
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "response line matches the greeting, hidden",
+      "ok": true,
+      "detail": {
+        "id": "b6dc4e64-18f6-46f9-976b-5bf83e52fa30",
+        "speaker": "Gerald",
+        "hidden": true,
+        "translation": null,
+        "vocabularyIds": [],
+        "locationName": "The Coffee Cart"
+      }
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "save holds the provider text unchanged",
+      "ok": true,
+      "detail": {
+        "nativeLength": 119,
+        "translationLength": 123
+      }
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "second reveal not charged, not stored again",
+      "ok": true
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "a later reveal is newest first, its text as the provider returned it",
+      "ok": true
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "encounter resolved",
+      "ok": true,
+      "detail": {
+        "state": "resolved"
+      }
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "after resolve: not in encounter",
+      "ok": true
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "after resolve: a line is hidden exactly when one of its cards is due",
+      "ok": true
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "after review: every line shown with its saved translation",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "run": "es:coffee_cart",
+      "name": "kept lines are newest first and none lost",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "at the start: every earlier line hidden",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "greeting reveal charged",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "response line matches the greeting, hidden",
+      "ok": true,
+      "detail": {
+        "id": "edfc589e-231f-4b51-8358-d3929b7d63ee",
+        "speaker": "Mortimer",
+        "hidden": true,
+        "translation": null,
+        "vocabularyIds": [
+          "jamon"
+        ],
+        "locationName": "The Butcher's Stall"
+      }
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "save holds the provider text unchanged",
+      "ok": true,
+      "detail": {
+        "nativeLength": 95,
+        "translationLength": 108
+      }
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "second reveal not charged, not stored again",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "word reveal keeps no line",
+      "ok": true,
+      "detail": {
+        "word": "jamon",
+        "charged": true
+      }
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "a refused reveal leaves the save unchanged",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "a later reveal is newest first, its text as the provider returned it",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "a later reveal is newest first, its text as the provider returned it",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "encounter resolved",
+      "ok": true,
+      "detail": {
+        "state": "resolved"
+      }
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "after resolve: not in encounter",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "after resolve: a line is hidden exactly when one of its cards is due",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "review of jamon correct and no longer due",
+      "ok": true
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "after review: every line shown with its saved translation",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "run": "es:butchers_stall",
+      "name": "kept lines are newest first and none lost",
+      "ok": true
+    },
+    {
+      "run": "es:restart",
+      "name": "a new service returns the same lines",
+      "ok": true,
+      "detail": {
+        "lines": 5
+      }
+    },
+    {
+      "run": "es:coverage",
+      "name": "at least one later line kept",
+      "ok": true
+    },
+    {
+      "run": "es:coverage",
+      "name": "at least one line hidden after the resolve and shown after review",
+      "ok": true
+    }
+  ],
+  "calls": 14,
+  "coverage": {
+    "laterLinesKept": 3,
+    "hiddenThenShown": 3
+  },
+  "kept": [
+    {
+      "id": "43c34d47-ab8b-4e4a-b883-6a23a4a8babb",
+      "encounterId": "butchers_stall_charcutier",
+      "locationId": "butchers_stall",
+      "speaker": "Mortimer",
+      "native": "¡Falta un número! My scales need an amount, not a weight-unit's personal brand. ¿Qué cantidad de jamón desea?",
+      "translation": "A number is missing! My scales need an amount, not a weight-unit's personal brand. What quantity of ham would you like?",
+      "vocabularyIds": [
+        "jamon"
+      ],
+      "savedAt": "2026-11-06T02:17:51.227Z",
+      "nativeLength": 109,
+      "translationLength": 119
+    },
+    {
+      "id": "ec8d655b-7f36-40c1-862a-23ca0e6bb4e3",
+      "encounterId": "butchers_stall_charcutier",
+      "locationId": "butchers_stall",
+      "speaker": "Mortimer",
+      "native": "¡Chorizo, correcto! Para mí, es jamón. A correct cut! Certified ham-adjacent. ¿Qué cantidad desea? My scales await greatness.",
+      "translation": "Chorizo, correct! To me, it is ham. A correct cut! Certified ham-adjacent. What quantity would you like? My scales await greatness.",
+      "vocabularyIds": [
+        "chorizo",
+        "jamon"
+      ],
+      "savedAt": "2026-11-06T02:17:34.568Z",
+      "nativeLength": 125,
+      "translationLength": 131
+    },
+    {
+      "id": "edfc589e-231f-4b51-8358-d3929b7d63ee",
+      "encounterId": "butchers_stall_charcutier",
+      "locationId": "butchers_stall",
+      "speaker": "Mortimer",
+      "native": "¡Hola! Todo es jamón. Even my hat. Certified ham-tier quality. My scales never lie. ¿Qué desea?",
+      "translation": "Hello! Everything is ham. Even my hat. Certified ham-tier quality. My scales never lie. What would you like?",
+      "vocabularyIds": [
+        "jamon"
+      ],
+      "savedAt": "2026-11-06T02:16:57.518Z",
+      "nativeLength": 95,
+      "translationLength": 108
+    },
+    {
+      "id": "65066a42-286d-492a-8b76-72e4b0f0acb8",
+      "encounterId": "imp_coffee_greeting",
+      "locationId": "coffee_cart",
+      "speaker": "Gerald",
+      "native": "Un café, muy bien. Three espresso shots for manners. You haven’t settled the milk situation. ¿Cómo lo quieres?",
+      "translation": "A coffee, very good. Three espresso shots for manners. You haven’t settled the milk situation. How do you want it?",
+      "vocabularyIds": [
+        "cafe"
+      ],
+      "savedAt": "2026-11-06T02:16:36.046Z",
+      "nativeLength": 110,
+      "translationLength": 114
+    },
+    {
+      "id": "b6dc4e64-18f6-46f9-976b-5bf83e52fa30",
+      "encounterId": "imp_coffee_greeting",
+      "locationId": "coffee_cart",
+      "speaker": "Gerald",
+      "native": "Hola. Buenos días. I’m Gerald. ¿Qué necesitas? This market gets one espresso shot out of five. The dust lacks ambition.",
+      "translation": "Hello. Good morning. I’m Gerald. What do you need? This market gets one espresso shot out of five. The dust lacks ambition.",
+      "vocabularyIds": [],
+      "savedAt": "2026-11-06T02:16:20.112Z",
+      "nativeLength": 119,
+      "translationLength": 123
+    }
+  ],
+  "passed": true
+}

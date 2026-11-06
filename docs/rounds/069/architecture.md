@@ -104,3 +104,10 @@ inconclusive outcome.
 
 No product code, so no new unit tests; the full server, client and mobile suites must stay green. The script is the
 check; it must parse (`node --check`).
+
+## Outcome (2026-11-06)
+
+Pass on the pre-run criteria: it 30/30 and es 28/28 checks, all four encounters resolved, 3 later lines kept and 5
+(it) / 3 (es) lines opened by review, one refused reveal per pack with the save unchanged. The first Italian attempt
+stopped on a script bug (it read a withheld translation from the serialized transcript); the fixed script is the
+one in `results/`. No product change. See [findings.md](findings.md).

@@ -1,0 +1,41 @@
+{
+  "language": "it",
+  "provider": "codex-cli",
+  "runs": [
+    {
+      "run": "it:coffee_cart",
+      "revealed": [],
+      "refused": [],
+      "turns": [],
+      "atStart": []
+    }
+  ],
+  "checks": [
+    {
+      "run": "it:coffee_cart",
+      "name": "greeting reveal charged",
+      "ok": true
+    },
+    {
+      "run": "it:coffee_cart",
+      "name": "response line matches the greeting, hidden",
+      "ok": true,
+      "detail": {
+        "id": "cba2aa4b-56e3-42b1-a66d-607d85ee539a",
+        "speaker": "Gerald",
+        "hidden": true,
+        "translation": null,
+        "vocabularyIds": [
+          "espresso"
+        ],
+        "locationName": "The Coffee Cart"
+      }
+    }
+  ],
+  "calls": 1,
+  "error": {
+    "code": null,
+    "message": "Cannot read properties of undefined (reading 'slice')"
+  },
+  "passed": false
+}
