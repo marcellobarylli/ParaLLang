@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 087, fixes from a review of rounds 076–080 (autonomous)
+
+A second review pass, over the greeting prefetch and the no-target-language retry, found no bug a player hits in
+normal play and four gaps, now closed. A prefetched greeting the player no longer needs (they walked on, started
+another conversation, removed the save) is aborted instead of holding the one CLI slot; a start waiting on a
+prefetch that times out fails once instead of waiting a second timeout; the CLI runner no longer signals a process
+that already exited; the OpenAI and Ollama adapters honour aborts ([findings](docs/rounds/087/findings.md)).
+
 ## Addendum 2026-11-06: round 086, three fixes from a review of rounds 081–085 (autonomous)
 
 An independent review of the code built while Codex was limited found no bugs a player hits in normal play and three
@@ -820,7 +828,7 @@ Newest first.
 | 084 | 11-06 | The Spellbook refreshed on opening it, the map, and the return from the background (autonomous) | [084](docs/rounds/084/architecture.md) | [findings](docs/rounds/084/findings.md) | pre-run record to round 084 close |
 | 085 | 11-06 | The Saves screen's due count refreshed on opening it, after a remove and after a failed switch (autonomous) | [085](docs/rounds/085/architecture.md) | [findings](docs/rounds/085/findings.md) | pre-run record to round 085 close |
 | 086 | 11-06 | Three fixes from a review of rounds 081–085: a move's Spellbook guarded, footnote inflections, the foreground refresh (autonomous) | [086](docs/rounds/086/architecture.md) | [findings](docs/rounds/086/findings.md) | pre-run record to round 086 close |
-| 087 | 11-06 | Fixes from a review of rounds 076–080: stale prefetches aborted, one timeout at most, runner and adapter aborts (autonomous) | [087](docs/rounds/087/architecture.md) | [findings](docs/rounds/087/findings.md) | pre-run record |
+| 087 | 11-06 | Fixes from a review of rounds 076–080: stale prefetches aborted, one timeout at most, runner and adapter aborts (autonomous) | [087](docs/rounds/087/architecture.md) | [findings](docs/rounds/087/findings.md) | pre-run record to round 087 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |

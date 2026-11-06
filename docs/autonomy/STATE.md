@@ -7,13 +7,17 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 26 (2026-11-06, 05:11–05:35 UTC) closed two offline rounds:
+Nothing open. Iteration 26 (2026-11-06, 05:11–05:50 UTC) closed three offline rounds:
 - **085** (F6): the Saves screen's due count refreshes on opening Saves, after a remove and after a failed new save
   or switch (each Saves action raises the epoch, which drops a refresh in flight).
 - **086** (F7): an independent read-only review of the code of rounds 081–085 (no Errors) and three fixes: a move's
   Spellbook takes round 084's encounter guard (`leaksMeanings`); a footnote is dropped for an unlisted inflection of
   an open objective's single-word answer (`inflectsAnswer`, measured over 47k English tokens of live narration in
   `docs/rounds/086/results/`); the foreground refresh survives `background` → `inactive` → `active`.
+- **087** (F8): the same review pass over rounds 076–080 (no player-facing bugs) and fixes: prefetched greetings no
+  longer needed are aborted and dropped (`dropGreeting(s)`, `prefetchStats.dropped`); a start that took a pending
+  prefetch which timed out rethrows `CLI_TIMEOUT` instead of a second wait; the CLI runner ignores an abort after
+  the child closed; the OpenAI and Ollama adapters honour the signal; `narrate(…, { signal })`.
 The audit items from iteration 25 are closed: `atmosphere` is keyed by learner (a switch re-asks; covered by
 `atmosphere.test.js`), and the drill note derives from `spellbook.drill`, which reviews return.
 
@@ -22,14 +26,15 @@ autonomous run. No live LLM data is possible for the rest of the run (claude-cli
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09. The app and server are well covered; remaining ideas are thin. Options: a
-  second review pass like round 086 over rounds 076–080 (prefetch, guard, verify-es: the review of 081–085 was
-  cheap and found real gaps); the footnote rule could also cover other encounters' answers (critique 1.4 of round
+- **Offline work only** until 11-09. The app and server are well covered; remaining ideas are thin. Options: the
+  same review pass over rounds 065–075 (rounds 086–087 each found real gaps at ~3 subagent runs a round; 070–073 had
+  one review already in round 075, so prefer 065–069 and 074–075); the footnote rule could also cover other encounters' answers (critique 1.4 of round
   086, measure first with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said
   they are wanted).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
   greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure,
-  counting footnotes dropped by round 086's inflection rule; the rest of round 081's Italian tour (Fountain,
+  counting footnotes dropped by round 086's inflection rule; round 087's prefetch walk-on check (findings open
+  items); the rest of round 081's Italian tour (Fountain,
   Bookshop, Rift); watch `narrationStats` for the first live retry.
 
 **Traps (iteration 26):** `/tmp` is a 64 MB tmpfs and filled to 7 MB free from jest's cache (`/tmp/jest_s2`, 36 MB)
@@ -226,6 +231,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
   remove and after a failed new save or switch.
 
+- [x] **F8. Review of rounds 076–080** (round 087, closed 2026-11-06): stale prefetches aborted, one timeout at
+  most, runner and adapter aborts.
 - [x] **F7. Review of rounds 081–085** (round 086, closed 2026-11-06): a move's Spellbook guarded, footnote
   inflections of open answers, the foreground refresh across `inactive`.
 
@@ -572,10 +579,18 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-06, iteration 26 (05:11–05:35 UTC): round 085 (F6, the Saves screen's due count) critiqued by a subagent
   (5 findings, all accepted), built and closed: mobile 240/240. Round 086 (F7) from a subagent review of rounds
   081–085 (3 findings), critiqued (7: 5 accepted, 1 in part by measurement, 1 rejected), built and closed: server
-  304/304, client 12/12, mobile 242/242, iOS export bundles. No live calls (Codex limited).
+  304/304, client 12/12, mobile 242/242, iOS export bundles. Round 087 (F8) from a review of rounds 076–080 (6
+  findings), critiqued (10, all accepted), built and closed: server 314/314, client 12/12, mobile 242/242. No live
+  calls (Codex limited).
 
 ## Handoff notes and traps
 
+- **Prefetched greetings** (rounds 076, 087): `this.greetings` holds `{ promise, controller, settled }` by
+  `greetingKey`; the promise never rejects (`{ generated }` or `{ error }`). Drop entries only through
+  `dropGreeting(key, counter)` / `dropGreetings(learnerId, keepKey)`, which abort the call. Tests that seed the map
+  use `heldEntry()` in `greeting-prefetch.test.js`; `GatedProvider.held` records held calls (its `calls` records only
+  those that pass the gate). A test of an abort must not let a deadline end the call first (give it a long deadline
+  and a time bound).
 - **Footnote filter** (rounds 081, 086): `keptFootnote(generated, previousNpc, open)` drops pack forms and, through
   `inflectsAnswer` (exported from `learning-service.js`), inflections of the open objectives' single-word forms of 4+
   letters (form minus last letter, 0–2 letters longer). `canonicalizeNarration` takes `open` (default: every

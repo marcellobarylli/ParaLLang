@@ -105,3 +105,9 @@ helper everywhere; `dropped` counter; safer runner test.
 - `server/test/llm-contracts.test.js`: the OpenAI adapter passes `signal` in the request options; the Ollama adapter
   aborts its fetch on the caller's signal with the interruption message and makes one request only.
 - Full suite.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. Every change has a test that fails without it (the `AbortSignal.any` test was
+tightened during the build); four existing prefetch tests were updated to the new entry shape. Full suites pass
+([findings](findings.md)).
