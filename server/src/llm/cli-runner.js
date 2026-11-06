@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { lstat, mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { ProviderError } from './provider-error.js';
 
 export const DEFAULT_STDOUT_LIMIT = 1024 * 1024;
@@ -17,6 +17,35 @@ function killProcessGroup(child, signal) {
   }
 }
 
+// Round 098 (round 095 review R1.9): a hard kill skips the `finally` that removes a run's temp dir, leaving a copy of
+// its prompt. Once per temp root per process, the first run sweeps this user's run dirs (the exact mkdtemp name;
+// real directories only) whose mtime is STALE_TEMP_MS or more in the past. Safe: a run lasts at most its timeout
+// (capped at 300 s by config) plus the kill grace, and a dir's mtime only gets newer while a run uses it.
+export const STALE_TEMP_MS = 3_600_000;
+export const MIN_STALE_TEMP_MS = 600_000;
+const RUN_DIR = /^parallang-cli-[A-Za-z0-9]{6}$/;
+const sweeps = new Map();
+
+export async function sweepStaleTempDirs(tempRoot, { staleMs = STALE_TEMP_MS, now = Date.now() } = {}) {
+  const removed = [];
+  let entries;
+  try { entries = await readdir(tempRoot); } catch { return removed; }
+  const uid = typeof process.getuid === 'function' ? process.getuid() : null;
+  for (const name of entries) {
+    if (!RUN_DIR.test(name)) continue;
+    const path = join(tempRoot, name);
+    try {
+      const stat = await lstat(path);
+      if (!stat.isDirectory() || (uid !== null && stat.uid !== uid)) continue;
+      const age = now - stat.mtimeMs;
+      if (age < staleMs) continue; // also a future mtime (negative age)
+      await rm(path, { recursive: true, force: true });
+      removed.push(name);
+    } catch { /* one entry never stops the sweep */ }
+  }
+  return removed;
+}
+
 export class CLIProcessRunner {
   constructor({
     spawnImpl = spawn,
@@ -25,7 +54,13 @@ export class CLIProcessRunner {
     stderrLimit = DEFAULT_STDERR_LIMIT,
     killGraceMs = 2_000,
     tempRoot = tmpdir(),
+    staleTempMs = STALE_TEMP_MS,
+    sweepTemp = true,
   } = {}) {
+    if (!(staleTempMs >= MIN_STALE_TEMP_MS)) throw new TypeError('staleTempMs must be at least 10 minutes (no live run may lose its dir).');
+    this.staleTempMs = staleTempMs;
+    this.sweepTemp = sweepTemp;
+    this.sweep = null;
     this.spawnImpl = spawnImpl;
     this.maxQueue = maxQueue;
     this.stdoutLimit = stdoutLimit;
@@ -38,7 +73,16 @@ export class CLIProcessRunner {
     this.idleWaiters = [];
   }
 
+  // Round 098: the background sweep of this runner's temp root, once per root per process; never fails a run.
+  #sweepOnce() {
+    if (!this.sweepTemp || this.sweep) return;
+    const root = resolve(this.tempRoot);
+    if (!sweeps.has(root)) sweeps.set(root, sweepStaleTempDirs(root, { staleMs: this.staleTempMs }).catch(() => []));
+    this.sweep = sweeps.get(root);
+  }
+
   run(spec) {
+    this.#sweepOnce();
     const timeoutMs = spec.timeoutMs;
     if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new TypeError('A positive process timeout is required.');
     if (this.shuttingDown) return Promise.reject(new ProviderError('interrupted', { provider: spec.provider }));

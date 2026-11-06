@@ -33,6 +33,11 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 098, stale CLI temp dirs are swept (autonomous)
+
+A server, script or test killed mid-run left its CLI temp dir (a copy of the prompt) behind. The first CLI run of a
+process now removes such dirs once they are an hour old, and nothing else ([findings](docs/rounds/098/findings.md)).
+
 ## Addendum 2026-11-06: round 097, the live-run tools report what happened (autonomous)
 
 A review of the scripts that produce the live data found that a line the server writes again (when it has no

@@ -10,3 +10,6 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | about 07:47:50 | 07:48:31 | critique-returned | Claude (general-purpose subagent, claude-opus-5-5), read-only | 7 findings (2 Error: the prefix matches a test root, the uncaught promise; 4 Gap; 1 Cut) and 2 Optional | `critique-1.md` |
 | 5 | 07:48:31 | 07:48:31 | disposition | Claude (claude-opus-5-5), autonomous | All seven accepted; both Optionals rejected | `../architecture.md` |
 | 6 | 07:48:31 | 07:48:31 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, decisions row, index row | `../architecture.md` |
+| 7 | 07:49:51 | 07:50:06 | built | Claude (claude-opus-5-5), autonomous | Built: `sweepStaleTempDirs`, once per root (`sweeps` map), `staleTempMs` floor; `cli-temp-sweep.test.js` 3/3; 7 mutations each fail a test; server 366/366, client 12/12, mobile 279/279 | `../architecture.md` |
+| 8 | 07:50:06 | 07:50:06 | outcome | Claude (claude-opus-5-5), autonomous | Criteria met offline | `../findings.md` |
+| 9 | 07:50:06 | 07:50:06 | closed | Claude (claude-opus-5-5), autonomous | Round 098 closed; status addendum and index row | `../architecture.md` |

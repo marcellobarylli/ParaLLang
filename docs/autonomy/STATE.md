@@ -7,74 +7,67 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Iteration 28 (2026-11-06, from 06:50 UTC): **round 093** (F13) closed: a save keeps its 20 newest assessment
-receipts (the one just written always), pruned in `JsonLearningStorage.save`; receipts hold no Spellbook, a replay
-carries the current one (`replay`); attempt ids looked up by own property. Fixture save after 240 turns: 2.50 MB →
-158 KB. **Round 094** (F15) closed: each card keeps its 20 last-written `evidence` entries (`trimEvidence` in
-`save`); the fixture save is flat at 138 KB from turn 250 to 1000. **Round 095** (review of `server/src/llm/`) closed:
-`LLMAdapter` forwards `serial` (round 089's atmosphere abort had never run in the server); Codex and Claude keep a
-runner failure's category (re-map only a non-zero exit, to a stated failure); the runner settles a child that exits
-with its pipes held (grace, group SIGKILL, stdio destroyed) or never ends. Deferred: R1.5 Codex `error` events beside
-`turn.completed` (check raw events live), R1.6 claude-cli error envelopes, R1.7 framing earlier player turns (live),
-R1.9 a temp-dir sweep. **Round 096** (review of the mobile store) closed: review resends reuse their attempt
-id (`reviewAttempt`, `_sendReview`); a start keeps the screen the player opened (`returnView: 'dialogue'`);
-`restartEncounter` is a restart `_startNamed`; `placeWrites` drops world/party reads that began before a write;
-`revealHelp` reloads on STALE_VERSION/STALE_ENCOUNTER via `_reloadStale` (shared with the send); `SAVE_LOST`.
-**Round 097** (review of `server/scripts/` and the prompt builder) closed: play-market's `recordCalls` /
-`narrationLines` report one line per committed NPC line (a guard retry beside it as `retried`); `openObjectives`
-follows `objectives_unordered`; echo needs one earlier message; `verify-cli`'s `observedVerdicts` by id. Deferred to a
-live round: frame earlier player turns, speakers in the grader context, no `accepted_examples` for the narrator.
-
-Nothing open. Iteration 27 (2026-11-06, 05:53–06:50 UTC) closed four offline review rounds:
-- **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
-  *sei*; es *once*, *kilo*), so the list is gone (0/72 live lines used one). On a serial (CLI) provider a player's
-  call (`callProvider` without `background`) aborts atmosphere calls in flight; the greeting prefetch is `background`
-  and waits as busy; an aborted call is not a cached failure and replies `retryAfterMs`. A party fragment is filed
-  under the tier offered at N − 1 (latent); `speak` restores the ambience on a throw.
-- **090** (F11): review of rounds 029–039. Startup asks `currentEncounter` (a relaunch had forgotten the server's
-  conversation: stuck at the Rift drill). Cards carry `formCardIds` / `exampleCardIds`; the app's `cardWaits` holds a
-  phrase's meaning or an example's English back while a card in it is due (*cento*'s "A hundred grams of ham" while
-  *prosciutto* is due). After a failed start the Saves screen lists the device's saves (continue, new); removing an
-  unreadable save renames its file aside (`<id>.unreadable-…json`).
-- **091** (F12): review of rounds 017–028 (no answer leak). A named start while another conversation is under way is
-  409 `CONVERSATION_UNDER_WAY` (after the drill check); the map card shows "Return to X" and "Leave X and talk to Y"
-  (`leaveAndEnter`, a restart start); a 409 makes the store take the server's conversation; a restart of the held
-  conversation skips `NOT_HERE`. The web client's default start (no id) still replaces.
-- **092** (F14): review of the core server paths (rounds 001–016) at HEAD. **The token check was bypassable** by the
-  URL's case (`/API/world`; Express 5 is case-insensitive): it is now an allowlist of the health check
-  (`isHealth`), and unknown paths are 401 without the token. Grader evidence must stand at word boundaries
-  (`atWordBoundaries`; Amendment 1, since graders quote words around the form); a reveal caps every objective an
-  ordered turn grades. Rejected as designed: R1.3, R1.4, R1.7 (owner questions). Deferred: receipts pruning (F13).
+Nothing open. Iteration 28 (2026-11-06, 06:50–07:52 UTC) closed six offline rounds:
+- **093** (F13): a save keeps its 20 newest assessment receipts (the one just written always), pruned in
+  `JsonLearningStorage.save`; receipts hold no Spellbook, a replay carries the current one (`replay`); attempt ids
+  looked up by own property (`receiptOf`). Fixture save after 240 turns: 2.50 MB → 158 KB.
+- **094** (F15): each card keeps its 20 last-written `evidence` entries (`trimEvidence` in `save`); the fixture save
+  is flat at 138 KB from turn 250 to 1000.
+- **095** (review of `server/src/llm/`): `LLMAdapter` forwards `serial` (**round 089's atmosphere abort had never run
+  in the server**); Codex and Claude keep a runner failure's category (re-map only a non-zero exit, to a stated
+  failure); the runner settles a child that exits with its pipes held (grace, group SIGKILL, stdio destroyed) or
+  never ends. Deferred: R1.5 (Codex `error` events beside `turn.completed`: check raw events live), R1.6 (claude-cli
+  error envelopes), R1.7 (frame earlier player turns, live).
+- **096** (review of the mobile store): review resends reuse their attempt id (`reviewAttempt`, `_sendReview`); a
+  start keeps the screen the player opened (`returnView: 'dialogue'`); `restartEncounter` is a restart `_startNamed`;
+  `placeWrites` drops world/party reads that began before a write; `revealHelp` reloads on STALE_VERSION /
+  STALE_ENCOUNTER via `_reloadStale` (shared with the send); `SAVE_LOST`. Deferred: request timeouts (Simulator).
+- **097** (review of `server/scripts/` and the prompt builder): play-market's `recordCalls` / `narrationLines` give
+  one line per committed NPC line (a guard retry beside it as `retried`); the leak scan's `openObjectives` follows
+  `objectives_unordered`; echo needs one earlier message; `verify-cli`'s `observedVerdicts` by id. Deferred to a live
+  round: frame earlier player turns as data, speakers in the grader context, no `accepted_examples` for the
+  narrator (same as 095 R1.7).
+- **098** (095 R1.9): the CLI runner sweeps this user's `parallang-cli-XXXXXX` dirs older than an hour, once per temp
+  root per process, in the background.
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09. Review passes have now covered every round's code (086–092 each found real
-  gaps; 092 a security bug in the core). Not yet reviewed in depth: the CLI adapters and runner
-  (`server/src/llm/`, rounds 002 and 018 to 087's abort fixes), the prompt builder, the mobile store as a whole, and
-  `server/scripts/` (`play-market.js`, `verify:cli`). Next small items: **F13** (receipts grow the save; measure
-  first), round 090's known leak (a readable *caffè* and *nero* answer a due *caffè nero*) if wanted. Other
-  options: the footnote rule could also cover other encounters' answers (critique 1.4 of round 086, measure first
-  with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said they are wanted).
-- **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
-  greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure,
-  counting footnotes dropped by round 086's inflection rule; round 087's prefetch walk-on check (findings open
-  items); round 089's tour with atmosphere and prefetch on (drops by reason, Talk wait); **round 092's
-  `verify:cli` it + es (9/9 each) and a tour counting INVALID_GRADING retries** (the word-boundary evidence rule);
-  the rest of round 081's
-  Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
+- **Offline.** Every area has now had an in-depth review (rounds 086–097; each found real bugs). Possible next
+  passes: a second look at the code changed in 093–098 (receipts, the runner's exit handling, the store's new
+  guards) by a fresh reviewer; the web client (`client/`, frozen, never reviewed: only keep it working); round 090's
+  known leak (a readable *caffè* and *nero* answer a due *caffè nero*) if wanted; round 097 R1.5 (scan narratives,
+  footnotes and feedback as separate, uncounted kinds; offline over committed reports). Other options as before:
+  the footnote rule over other encounters' answers (measure first with `docs/rounds/086/results/rule.mjs`).
+- **Queued live (after 11-09 17:32 UTC):**
+  - round 081's firmer footnote rule by Amendment ("write a footnote on the greeting and on about one reply in
+    three; a footnote adds what the narrative did not say") and a re-measure, counting footnotes dropped by round
+    086's inflection rule;
+  - round 087's prefetch walk-on check (findings open items);
+  - round 089's tour with atmosphere and prefetch on (drops by reason, Talk wait). Since round 095 it actually
+    exercises the abort: count `atmosphereStats.aborted`;
+  - round 092's `verify:cli` it + es (9/9 each), keeping the raw Codex events for 095 R1.5, and a tour counting
+    INVALID_GRADING retries;
+  - the rest of round 081's Italian tour (Fountain, Bookshop, Rift);
+  - watch `narrationStats` and the new `retried` lines (round 097) for the first live retry;
+  - a live round for the three deferred prompt changes (097 R1.6–R1.8).
 
-**Traps (iteration 28):** play-market's `raw` now holds every call (failed ones too, with `error`); count
-completed calls with `raw.filter((c) => c.output)`. A stub narrator answering the guard's retry must read the turn
-from `messages.slice(0, -2)` (the last message is the correction). `restartEncounter` now returns `_startNamed`'s promise and does nothing while
-`isLoading`; a store test that restarts during a load gets no request. A start that settles while another screen is
-open leaves `view` alone (tests that expect 'dialogue' must not change the view meanwhile). the service must be given providers through `createLLMAdapter` in any test that
-claims server behaviour (the wrapper, not the adapter, is what `server.js` passes). Hard-killed runs (a `timeout`
-around a hung test) leave `/tmp/parallang-cli-*` dirs; remove them. a receipt no longer has `response.spellbook` (tests that read it must not expect one);
-`storage.save(envelope, { keepReceiptId })` prunes the envelope in place. A fixed test clock gives every receipt the
-same `committedAt`; ties keep the later entry.
+**Traps (iteration 28):**
+- Receipts no longer have `response.spellbook`; `storage.save(envelope, { keepReceiptId })` prunes receipts and
+  evidence in place. A fixed test clock gives every receipt the same `committedAt`; ties keep the later entry.
+- A test that claims server behaviour must pass providers through `createLLMAdapter`: `server.js` passes the
+  wrapper, not the adapter.
+- Hard-killed runs (a `timeout` around a hung test) leave `/tmp/parallang-cli-*` dirs. Since round 098 the next
+  process sweeps them after an hour; remove them by hand if `/tmp` is tight.
+- `restartEncounter` returns `_startNamed`'s promise and does nothing while `isLoading`. A start that settles while
+  another screen is open leaves `view` alone, so a test expecting 'dialogue' must not change the view meanwhile.
+- play-market's `raw` holds every call (failed ones too, with `error`); count completed calls with
+  `raw.filter((c) => c.output)`.
+- A stub narrator answering the guard's retry must read the turn from `messages.slice(0, -2)`, since the last
+  message is the correction.
+- `pgrep -f` matches its own shell (iteration 26 trap); use `ps -eo pid,cmd | grep "[s]leep 30"`.
 **Traps (iteration 27):** with `PARALLANG_TOKEN` set, every path but the health check is 401 without the token, so
 a test probing an unknown route gets 401, not 404. Grading stubs may quote words around the form; evidence only has to
 stand at word boundaries. Startup now calls `api.currentEncounter` before world/party: a test mock that holds
@@ -467,7 +460,6 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Progress
 
-
 - 2026-11-05, iteration 1: created this file and `decisions.md`; baseline tests green (server 65/65, mobile 15/15,
   client 12/12). Round 005 (A1) built and closed: map, world API, save v2, PARALLANG_TOKEN, `play-market.js`;
   server 73/73, mobile 18/18, client 12/12; live codex-cli map playthrough resolved, `verify:cli` 9/9.
@@ -668,6 +660,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   closed: server 330/330, client 12/12, mobile 263/263, iOS export bundles. Round 092 (F14) from a review of the
   core server paths (7 findings, 1 Error: the token bypass), critiqued (6, 1 Error), Amendment 1, built and closed:
   server 334/334, client 12/12, mobile 263/263. No live calls (Codex limited).
+- 2026-11-06, iteration 28 (06:50–07:52 UTC): rounds 093–098 closed, all offline (Codex limited). Round 093
+  (F13): receipts pruned to 20, no Spellbook in them (2.50 MB → 158 KB). Round 094 (F15): 20 evidence entries per
+  card (flat at 138 KB). Rounds 095–097: reviews of the LLM layer, the mobile store and the live-run scripts, 3
+  Errors each, fixed (095: the wrapper hid `serial`). Round 098: stale temp-dir sweep. Server 366/366, client 12/12,
+  mobile 279/279, iOS export bundles. No live calls.
 
 ## Handoff notes and traps
 

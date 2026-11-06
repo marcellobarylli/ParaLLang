@@ -75,3 +75,9 @@ in place of Codex; raw text in [`trail/critique-1.md`](trail/critique-1.md).
   `mkdtemp` as before) and the sweep promise resolves.
 - `staleTempMs` under 10 minutes throws.
 - Mutations: no age check, the loose prefix, following symlinks, no catch each fail a test. Full suites.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. The first run of any runner on a temp root starts one background sweep of this
+user's run dirs older than an hour; nothing else is touched. Each rule removed in turn fails a test; full suites pass
+([findings](findings.md)).
