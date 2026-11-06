@@ -32,6 +32,10 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
         <Title style={styles.section}>Fragments of The Journey</Title>
         {spellbook.journeyFragments.map((fragment) => <Fragment key={fragment.id} fragment={fragment} language={language} />)}
       </>}
+      {spellbook.inscriptions?.length > 0 && <>
+        <Title style={styles.section}>Inscriptions</Title>
+        {spellbook.inscriptions.map((inscription) => <InscriptionCard key={inscription.id} inscription={inscription} language={language} />)}
+      </>}
     </ScrollView>
   );
 }
@@ -126,6 +130,32 @@ function Fragment({ fragment, language }) {
             <Text key={entry.word} style={styles.body}><Text style={styles.strong} accessibilityLanguage={language?.tag}>{entry.word}</Text>: {entry.meaning}</Text>
           ))}
           <Text style={styles.example}>{fragment.translation}</Text>
+        </View>}
+      </>}
+    </View>
+  );
+}
+
+// Round 082: an inscription found at a visited place. Optional to translate, as a fragment: the glossary and
+// translation stay behind a toggle and the server withholds them during an encounter (`hidden`).
+function InscriptionCard({ inscription, language }) {
+  const [open, setOpen] = useState(false);
+  const name = language?.name ?? 'the target language';
+  return (
+    <View style={styles.card} aria-label={`Inscription at ${inscription.locationName}`}>
+      <View style={styles.cardRow}>
+        <Text role="heading" style={styles.cardTitle}>{inscription.locationName}</Text>
+        <PronounceButton text={inscription.text} language={language} label={`Hear the inscription in ${name}`} />
+      </View>
+      <Text style={styles.small}>{inscription.where}</Text>
+      <Text style={styles.passage} accessibilityLanguage={language?.tag}>{inscription.text}</Text>
+      {inscription.hidden ? <Text style={styles.hidden}>The translation waits until the encounter is over.</Text> : <>
+        <Button label={open ? 'Hide translation' : 'Show translation'} expanded={open} onPress={() => setOpen(!open)} style={styles.review} />
+        {open && <View style={styles.translation}>
+          {inscription.glossary.map((entry) => (
+            <Text key={entry.word} style={styles.body}><Text style={styles.strong} accessibilityLanguage={language?.tag}>{entry.word}</Text>: {entry.meaning}</Text>
+          ))}
+          <Text style={styles.example}>{inscription.translation}</Text>
         </View>}
       </>}
     </View>

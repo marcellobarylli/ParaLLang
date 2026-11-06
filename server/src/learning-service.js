@@ -8,7 +8,7 @@ import {
 import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
-import { applyMove, currentLocationId, gateFor, sealedMessage, worldSnapshot } from './world.js';
+import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
 export const HELD_NOTE = 'A held objective was said correctly but does not count: an earlier objective comes first. Do not celebrate it or treat it as done, and do not give its answer; the player must say it again after the earlier objective.';
@@ -268,8 +268,21 @@ export class LearningService {
       cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version,
       inEncounter, containmentFiles: this.containmentFiles(envelope),
       journeyFragments: this.journeyFragments(envelope, inEncounter), drill: this.pendingDrill(envelope),
-      lines: this.keptLines(envelope, inEncounter, cards),
+      lines: this.keptLines(envelope, inEncounter, cards), inscriptions: this.inscriptions(envelope, inEncounter),
     };
+  }
+
+  // Round 082: the inscriptions of visited locations (the current one included), in file order. Derived from world
+  // progress, no save change. The text holds no answer (server test); translation and glossary wait out an encounter.
+  inscriptions(envelope, inEncounter = false) {
+    const visited = visitedSet(this.content.world, envelope.world);
+    return (this.content.inscriptions ?? []).filter((inscription) => visited.has(inscription.location)).map((inscription) => ({
+      id: inscription.id, locationId: inscription.location,
+      locationName: this.content.world.locationsById.get(inscription.location).name,
+      where: inscription.where, text: inscription.text, hidden: inEncounter,
+      translation: inEncounter ? null : inscription.translation,
+      glossary: inEncounter ? null : inscription.glossary.map((entry) => ({ ...entry })),
+    }));
   }
 
   // Round 060 (backlog C9): the lines the player paid to translate, newest first. The translation is withheld during
@@ -916,19 +929,22 @@ export class LearningService {
 
   async getWorld(learnerId) {
     const envelope = await this.loadEnvelope(learnerId);
-    return { world: worldSnapshot(this.content.world, envelope.world, this.content.encounters) };
+    return { world: this.worldView(envelope.world) };
   }
+
+  worldView(progress) { return worldSnapshot(this.content.world, progress, this.content.encounters, this.content.inscriptionsByLocation ?? new Map()); }
 
   async moveTo(learnerId, request) {
     return this.serialized(learnerId, async () => {
       const envelope = await this.loadEnvelope(learnerId);
       const { progress, changed } = applyMove(this.content.world, envelope.world, request.locationId);
-      if (!changed) return { world: worldSnapshot(this.content.world, envelope.world, this.content.encounters) };
+      // Round 082: the Spellbook comes along (a new place's inscription, the Rift's drill), from the staged save.
+      if (!changed) return { world: this.worldView(envelope.world), spellbook: this.spellbookSnapshot(envelope) };
       const stagedEnvelope = clone(envelope);
       stagedEnvelope.world = progress;
       await this.storage.save(stagedEnvelope);
       this.scheduleArrival(learnerId, progress.currentLocationId);
-      return { world: worldSnapshot(this.content.world, progress, this.content.encounters) };
+      return { world: this.worldView(progress), spellbook: this.spellbookSnapshot(stagedEnvelope) };
     });
   }
 

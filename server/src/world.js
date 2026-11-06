@@ -12,7 +12,7 @@ export function currentLocationId(world, progress) {
   return world.locationsById.has(progress?.currentLocationId) ? progress.currentLocationId : world.start;
 }
 
-function visitedSet(world, progress) {
+export function visitedSet(world, progress) {
   const visited = new Set((progress?.visitedLocationIds ?? []).filter((id) => world.locationsById.has(id)));
   visited.add(currentLocationId(world, progress));
   return visited;
@@ -29,7 +29,10 @@ export function gateFor(location, progress) {
 
 export const sealedMessage = (name, gate) => `${name} is sealed. Finish the other encounters first (${gate.completed} of ${gate.required} done).`;
 
-export function worldSnapshot(world, progress, encounters = new Map()) {
+// Round 082: `inscriptions` (location id → inscription) adds the text, never the translation, to current and visited nodes.
+const inscriptionOnMap = ({ id, where, text }) => ({ id, where, text });
+
+export function worldSnapshot(world, progress, encounters = new Map(), inscriptions = new Map()) {
   const current = currentLocationId(world, progress);
   const visited = visitedSet(world, progress);
   const completed = new Set(progress?.completedEncounterIds ?? []);
@@ -60,6 +63,7 @@ export function worldSnapshot(world, progress, encounters = new Map()) {
         characterId: encounters.get(location.encounter)?.character.id ?? null,
         saveable: encounters.get(location.encounter)?.character.saveable === true,
       } : null,
+      ...(inscriptions.has(location.id) ? { inscription: inscriptionOnMap(inscriptions.get(location.id)) } : {}),
     };
   });
   return {

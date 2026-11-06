@@ -154,6 +154,16 @@ const fragmentSchema = z.object({
   glossary: z.array(z.object({ word: z.string().min(1), meaning: z.string().min(1) }).strict()).min(1).max(10),
 }).strict();
 const fragmentsSchema = z.object({ fragments: z.array(fragmentSchema) }).strict();
+// Round 082: inscriptions, lore hidden in plain sight at a location (content/languages/<code>/lore/inscriptions.yaml).
+const inscriptionSchema = z.object({
+  id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+  location: z.string().min(1),
+  where: z.string().min(1),
+  text: z.string().min(1),
+  translation: z.string().min(1),
+  glossary: z.array(z.object({ word: z.string().min(1), meaning: z.string().min(1) }).strict()).min(1).max(8),
+}).strict();
+const inscriptionsSchema = z.object({ inscriptions: z.array(inscriptionSchema) }).strict();
 
 const locationIdSchema = z.string().regex(/^[a-z][a-z0-9_]*$/);
 const locationSchema = z.object({
@@ -256,8 +266,10 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
 
   const world = loadWorld(contentDir, encounters);
   const fragments = loadFragments(contentDir, pack, encounters);
+  const inscriptions = loadInscriptions(contentDir, pack, world);
   return Object.freeze({
     language, styleGuide, onboarding, vocabulary, vocabularyById, world, encounters, fragments,
+    inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
     defaultEncounterId,
     // The default encounter, for callers that know only one (the web client's start, verify:cli).
     encounter, character,
@@ -288,6 +300,25 @@ function loadFragments(contentDir, pack, encounters) {
     }
   }
   return Object.freeze(fragments.map((fragment) => Object.freeze({ ...fragment, glossary: Object.freeze(fragment.glossary.map((g) => Object.freeze({ ...g }))) })));
+}
+
+// Round 082: one inscription at most per world location, found by visiting it. Each glossary word occurs in the text.
+function loadInscriptions(contentDir, pack, world) {
+  const relativePath = `${pack}/lore/inscriptions.yaml`;
+  if (!existsSync(resolve(contentDir, relativePath))) return Object.freeze([]);
+  const { inscriptions } = inscriptionsSchema.parse(parseYaml(contentDir, relativePath));
+  unique(inscriptions.map((inscription) => inscription.id), 'Inscriptions');
+  const places = new Set();
+  for (const inscription of inscriptions) {
+    if (!world.locationsById.has(inscription.location)) throw new Error(`Inscription ${inscription.id} names unknown location ${inscription.location}`);
+    if (places.has(inscription.location)) throw new Error(`Inscription ${inscription.id}: ${inscription.location} already has an inscription`);
+    places.add(inscription.location);
+    const text = foldWords(inscription.text);
+    for (const { word } of inscription.glossary) {
+      if (!text.includes(foldWords(word))) throw new Error(`Inscription ${inscription.id} glosses "${word}", which is not in its text`);
+    }
+  }
+  return Object.freeze(inscriptions.map((inscription) => Object.freeze({ ...inscription, glossary: Object.freeze(inscription.glossary.map((g) => Object.freeze({ ...g }))) })));
 }
 
 // Round 022: a party conversation continues a saveable character's location encounter, with the same character file.

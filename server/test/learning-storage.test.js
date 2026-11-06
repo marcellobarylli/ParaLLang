@@ -22,7 +22,14 @@ test('discovery is deduplicated, unmastered, durable, and isolated per learner',
   const recoveredService = new LearningService({ provider: new FixtureProvider(), storage: recoveredStorage, content: runtime.content, clock: () => fixedNow });
   const recovered = await recoveredService.getSpellbook(first.learnerId);
   // In-memory encounters are lost on restart, so no encounter is under way any more (round 017); the rest is identical.
-  assert.deepEqual(recovered, { ...duplicateStart.data.spellbook, inEncounter: false });
+  // Round 082: the inscriptions' translations come back with it (withheld during the encounter).
+  const shown = runtime.content.inscriptions.filter((i) => i.location === 'market_entrance').map((i) => ({
+    id: i.id, locationId: i.location, locationName: 'Market Entrance', where: i.where, text: i.text, hidden: false,
+    translation: i.translation, glossary: i.glossary.map((g) => ({ ...g })),
+  }));
+  assert.equal(shown.length, 1);
+  assert.deepEqual(duplicateStart.data.spellbook.inscriptions, shown.map((i) => ({ ...i, hidden: true, translation: null, glossary: null })));
+  assert.deepEqual(recovered, { ...duplicateStart.data.spellbook, inEncounter: false, inscriptions: shown });
 });
 
 test('same-learner mutations serialize, stale tabs conflict, and duplicate delivery replays once', async (t) => {

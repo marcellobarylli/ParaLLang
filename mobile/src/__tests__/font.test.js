@@ -58,5 +58,5 @@ test('screen and section titles go through Title; card titles and the review wor
   const left = readdirSync(dir).flatMap((file) => [...readFileSync(join(dir, file), 'utf8').matchAll(/<Text role="heading" style=\{styles\.(\w+)\}/g)].map(([, name]) => `${file}:${name}`));
   expect([...new Set(left)].sort()).toEqual(['ReviewPanel.js:word', 'SavesPanel.js:cardTitle', 'Spellbook.js:cardTitle']);
   const titles = readdirSync(dir).flatMap((file) => [...readFileSync(join(dir, file), 'utf8').matchAll(/<Title style=\{styles\.(\w+)\}/g)].map(([, name]) => `${file}:${name}`));
-  expect(titles).toHaveLength(10); // round 060: "Lines you translated"
+  expect(titles).toHaveLength(11); // round 060: "Lines you translated"; round 082: "Inscriptions"
 });

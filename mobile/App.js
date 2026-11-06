@@ -42,7 +42,7 @@ export default function App() {
         {/* Round 035: a screen change fades the new screen in (Reduce Motion: no fade). */}
         <FadeIn key={state.view} style={styles.shell}>
         {state.view === 'onboarding' && state.onboarding && <OnboardingPanel onboarding={state.onboarding} onBegin={state.finishOnboarding} />}
-        {state.view === 'map' && <MapPanel atmosphere={state.atmosphere}
+        {state.view === 'map' && <MapPanel language={state.language} atmosphere={state.atmosphere}
           drill={state.spellbook.drill ?? null} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null}
           onDrill={state.startDrill} onReturnToEncounter={state.returnToEncounter}
           world={state.world} starting={state.starting} isLoading={state.isLoading} onMove={state.moveTo} onEnterEncounter={state.enterEncounter} party={state.party} onRecruit={state.recruit} />}

@@ -55,7 +55,7 @@ function Node({ location, size, onMove, disabled }) {
 }
 
 // Round 029: `drill` is the server's pending drill (spellbook.drill); `ongoing` an encounter under way elsewhere.
-export default function MapPanel({ atmosphere = null, drill = null, ongoing = null, starting = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
+export default function MapPanel({ language = null, atmosphere = null, drill = null, ongoing = null, starting = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
   const [size, setSize] = useState(320); // replaced by the measured width on layout
   // Round 062 (critiques 1.1, 1.2): a move or leaving the map stops the narrator; above the early return.
   const currentLocationId = world?.currentLocationId ?? null;
@@ -84,6 +84,7 @@ export default function MapPanel({ atmosphere = null, drill = null, ongoing = nu
         <Text style={styles.body}>{here.description}</Text>
         {atmosphere?.locationId === here.id && atmosphere.text && <Text style={styles.atmosphere}>{atmosphere.text}</Text>}
         {here.vocabularyFocus?.length > 0 && <Text style={styles.focus}>Words here: {here.vocabularyFocus.join(', ')}</Text>}
+        {here.inscription && <Inscription key={here.id} inscription={here.inscription} language={language} />}
         {here.encounter && drillHere && <DrillNote drill={drillHere} ongoing={ongoing} isLoading={isLoading} onDrill={onDrill} onReturnToEncounter={onReturnToEncounter} />}
         {here.encounter
           ? <Button
@@ -100,6 +101,22 @@ export default function MapPanel({ atmosphere = null, drill = null, ongoing = nu
         />}
       </View>}
     </ScrollView>
+  );
+}
+
+// Round 082: lore hidden in plain sight. Keyed by location, so a move closes it; the map shows only where it is
+// written and the text (no answer in it, server test); the translation is in the Spellbook.
+function Inscription({ inscription, language }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <View style={styles.inscription}>
+      <Button label={open ? 'Look away' : 'Look closer'} expanded={open} onPress={() => setOpen(!open)} style={styles.lookCloser} />
+      {open && <>
+        <Text style={styles.focus}>{inscription.where}</Text>
+        <Text style={styles.inscriptionText} accessibilityLanguage={language?.tag}>{inscription.text}</Text>
+        <Text style={styles.focus}>Its translation is in your Spellbook.</Text>
+      </>}
+    </View>
   );
 }
 
@@ -144,5 +161,8 @@ const styles = StyleSheet.create({
   starting: { color: colors.muted, fontStyle: 'italic', fontSize: type.subhead }, // round 073
   focus: { fontSize: type.footnote, color: colors.muted, fontStyle: 'italic' },
   atmosphere: { fontSize: type.subhead, color: colors.muted, fontStyle: 'italic' }, // round 053
+  inscription: { gap: 6 }, // round 082
+  lookCloser: { alignSelf: 'flex-start' },
+  inscriptionText: { fontSize: type.callout, lineHeight: leading.callout, color: colors.ink, fontStyle: 'italic' },
   done: { fontSize: type.subhead, fontWeight: '600', color: colors.success },
 });
