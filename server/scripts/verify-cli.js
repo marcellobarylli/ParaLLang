@@ -143,7 +143,9 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
     });
     const secondTurnMs = secondStop();
     const review = await request(baseUrl, '/api/spellbook/review', { learnerId: learner.learnerId });
-    if (provider.generationCount > 14) throw new Error('Live verification exceeded the 14-call scripted provider budget.');
+    // Round 078 Amendment 1: a narration line retried by the no-target-language guard adds one call.
+    const budget = 14 + service.narrationStats.flagged;
+    if (provider.generationCount > budget) throw new Error(`Live verification exceeded the ${budget}-call scripted provider budget.`);
     return {
       title: 'Playtest ParaLLang through Codex and Claude Code subscriptions',
       passed: grading.every((item) => item.matched) && second.encounter.state === 'resolved',
@@ -168,7 +170,8 @@ export async function verifyCLI({ args = process.argv.slice(2), env = process.en
         dueReviewAvailable: Boolean(review.challenge),
       },
       generationCalls: provider.generationCount,
-      budget: 14,
+      budget,
+      narrationStats: { ...service.narrationStats },
     };
   } catch (error) {
     Object.defineProperty(error, 'verification', {

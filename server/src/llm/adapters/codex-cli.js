@@ -102,7 +102,7 @@ export class CodexCLIAdapter extends BaseCLIAdapter {
     };
   }
 
-  async structuredChat(messages, schema) {
+  async structuredChat(messages, schema, options = {}) {
     await this.ensurePreflight();
     const input = prepareRoleSeparatedInput(messages);
     const jsonSchema = schemaForCLI(schema);
@@ -114,6 +114,7 @@ export class CodexCLIAdapter extends BaseCLIAdapter {
         executable: this.executable,
         env: this.childEnv,
         timeoutMs: this.timeoutMs,
+        signal: options.signal, // round 078: the guard's retry is cancelled at its deadline
         prepare: async (directory) => {
           const files = await writeInvocationFiles(directory, { ...input, jsonSchema });
           return {

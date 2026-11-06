@@ -87,3 +87,28 @@ test('runner shutdown rejects queued work, terminates active work, and reaps bef
   assert.equal(runner.active, null);
   assert.equal(runner.queue.length, 0);
 });
+
+// Round 078 Amendment 1 (review 1): an aborted signal frees the slot, for a running and for a queued task.
+test('runner: an aborted signal cancels the active task and removes a queued one; the next task runs at once', async (t) => {
+  const runner = new CLIProcessRunner({ killGraceMs: 25 });
+  t.after(() => runner.shutdown());
+  const activeAbort = new AbortController();
+  const queuedAbort = new AbortController();
+  const active = runner.run(baseSpec(['delay', '5000'], { timeoutMs: 10_000, signal: activeAbort.signal }));
+  const queued = runner.run(baseSpec(['delay', '5000'], { timeoutMs: 10_000, signal: queuedAbort.signal }));
+  const next = runner.run(baseSpec(['delay', '1'], { timeoutMs: 10_000 }));
+  queuedAbort.abort();
+  await assert.rejects(queued, (error) => error.code === 'CLI_INTERRUPTED');
+  assert.equal(runner.queue.length, 1, 'only the next task waits');
+  await new Promise((resolveWait) => setTimeout(resolveWait, 50));
+  const started = Date.now();
+  activeAbort.abort();
+  await assert.rejects(active, (error) => error.code === 'CLI_INTERRUPTED');
+  await next;
+  assert.ok(Date.now() - started < 2_000, 'the next task did not wait for the aborted one');
+  await assert.rejects(runner.run(baseSpec(['delay', '1'], { signal: AbortSignal.abort() })), (error) => error.code === 'CLI_INTERRUPTED');
+  const done = new AbortController();
+  await runner.run(baseSpec(['delay', '1'], { signal: done.signal }));
+  done.abort(); // after settling: nothing happens
+  assert.equal(runner.active, null);
+});

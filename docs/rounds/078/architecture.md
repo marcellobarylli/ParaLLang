@@ -99,3 +99,31 @@ usage limit, the offline scan stands as the data and the run is queued.
 Catches one failure kind: a line of at least 4 words that all appear in its translation, with no vocabulary of the
 encounter. It does not enforce the ratio, does not catch an all-English line that rewords its translation, and does
 not judge whether the target language is correct.
+
+## Outcome (2026-11-06)
+
+Built as designed, then changed by Amendment 1. The rule flags 2 of 1,218 recorded live lines, both round 048's
+all-English ones, with no false positive. Two live runs (codex-cli; Gerald it, Marginalia's folded page es at tier 3)
+checked 14 narration lines and flagged none, so no extra call was made. The retry branch is tested, not seen live
+([findings](findings.md)).
+
+## Amendment 1 (2026-11-06): the timed-out retry is aborted
+
+A read-only review of the build (a fresh general-purpose subagent, claude-opus-5-5) found one real problem. Design 4
+was wrong to say the CLI runner cannot cancel: it can (`task.cancel`). A retry left running after its 20 s deadline
+kept the runner's one slot, so the player's next call queued behind it, for up to the 120 s CLI timeout. Changes:
+
+1. `CLIProcessRunner.run` takes an optional `signal`. An abort takes a queued task out of the queue, or cancels the
+   running one (`CLI_INTERRUPTED`), and the listener is removed when the task settles. The codex-cli and claude-cli
+   adapters pass `options.signal` through, and `callProvider` forwards a signal. The HTTP adapters ignore it: they do
+   not share a slot.
+2. `narrate` aborts the retry at its deadline, `unref`s the deadline timer, and makes no retry once the service is
+   stopping (review 3).
+3. Tests (review 2): the runner aborts an active and a queued task, and the next task then runs at once. With a
+   one-slot provider, the next turn after a timed-out retry is not blocked; the retry is aborted and
+   `providerCallsInFlight` returns to 0; no retry while stopping. Without the abort, the timeout test fails and the
+   one-slot test hangs.
+4. `verify-cli.js` (found while drafting round 079): its 14-call budget now allows one extra call per flagged line,
+   and its report carries `narrationStats`.
+
+Server 284/284, client 12/12, mobile 218/218. Autonomous decision, pending owner review.

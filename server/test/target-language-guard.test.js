@@ -10,15 +10,23 @@ import { loadGameContent } from '../src/content-loader.js';
 const ENGLISH = { native: 'There you are. I have waited a very long time.', translation: 'There you are. I have waited a very long time.' };
 const MIXED = { native: '¡Hola! ¿Quieres un café?', translation: 'Hello! Do you want a coffee?' };
 
-// Narration replies taken from a queue (then the fixture's); `throw` fails that call, `hold` waits until released.
+// Narration replies taken from a queue (then the fixture's); `throw` fails that call, `hold` waits until its signal
+// aborts. With `oneSlot`, calls run one at a time, as in the CLI runner, and an abort frees the slot.
 class QueuedProvider extends FixtureProvider {
-  constructor(queue = []) { super(); this.queue = queue; this.release = null; }
+  constructor(queue = []) { super(); this.queue = queue; this.aborted = 0; this.oneSlot = false; this.slot = Promise.resolve(); }
   async structuredChat(messages, schema, options) {
+    if (!this.oneSlot) return this.answer(messages, schema, options);
+    const previous = this.slot;
+    let free;
+    this.slot = new Promise((resolve) => { free = resolve; });
+    await previous;
+    try { return await this.answer(messages, schema, options); } finally { free(); }
+  }
+  async answer(messages, schema, options) {
     if (options.schemaName === 'encounter_narration' && this.queue[0] === 'hold') {
       this.queue.shift();
       this.calls.push({ messages, options });
-      await new Promise((resolve) => { this.release = resolve; });
-      return this.narrate(messages);
+      await new Promise((_, reject) => options.signal?.addEventListener('abort', () => { this.aborted += 1; reject(new Error('aborted')); }));
     }
     return super.structuredChat(messages, schema, options);
   }
@@ -145,9 +153,36 @@ test('a retry over the deadline keeps the first line; the turn commits and its p
   assert.equal(runtime.service.narrationStats.timedOut, 1);
   assert.equal(runtime.service.turnProgress.has(learnerId), false);
   assert.equal(runtime.service.progress(learnerId, 'a1').progress.assessment, null);
-  runtime.provider.release(); // the abandoned retry ends; its line is dropped
-  await new Promise((resolve) => setImmediate(resolve));
-  assert.equal((await runtime.service.currentEncounter(learnerId)).encounter.transcript.at(-1).dialogue.native, ENGLISH.native);
+  assert.equal(runtime.provider.aborted, 1, 'the retry was aborted at its deadline (Amendment 1)');
+  assert.equal(runtime.service.providerCallsInFlight, 0);
+});
+
+// Amendment 1 (review 2): with a one-slot provider like the CLI runner, the player's next call does not wait behind
+// the abandoned retry.
+test('after a timed-out retry the next turn is not blocked behind it', async (t) => {
+  const runtime = await setup(t, [null, ENGLISH, 'hold'], { narrationRetryMs: 30 });
+  runtime.provider.oneSlot = true;
+  const { learnerId } = await runtime.service.createOrRecoverLearner();
+  const { encounter } = await runtime.service.startEncounter(learnerId);
+  const first = await runtime.service.submitDialogue(learnerId, {
+    encounterId: encounter.id, version: encounter.version, attemptId: 'a1', message: 'Quiero un café.',
+  });
+  const started = Date.now();
+  const second = await runtime.service.submitDialogue(learnerId, {
+    encounterId: first.encounter.id, version: first.encounter.version, attemptId: 'a2', message: 'Sin leche, por favor.',
+  });
+  assert.ok(Date.now() - started < 1000);
+  assert.equal(second.encounter.committedPlayerTurns, 2);
+});
+
+test('no retry once the service is stopping', async (t) => {
+  const runtime = await setup(t, [ENGLISH, MIXED]);
+  const { learnerId } = await runtime.service.createOrRecoverLearner();
+  runtime.service.stopping = true;
+  const { encounter } = await runtime.service.startEncounter(learnerId);
+  assert.equal(narrations(runtime).length, 1);
+  assert.equal(encounter.transcript[0].dialogue.native, ENGLISH.native);
+  assert.deepEqual(runtime.service.narrationStats, { checked: 1, flagged: 1, retryPassed: 0, kept: 1, timedOut: 0 });
 });
 
 test('the correction at a ratio of 1 asks for 100% and demands no English (critique 1.4)', () => {

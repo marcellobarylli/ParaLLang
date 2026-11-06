@@ -427,10 +427,10 @@ export class LearningService {
     };
   }
 
-  async callProvider(messages, schema, schemaName, label) {
+  async callProvider(messages, schema, schemaName, label, { signal } = {}) {
     this.providerCallsInFlight += 1; // round 053: no atmosphere call starts meanwhile
     try {
-      const response = await this.provider.structuredChat(messages, schema, { schemaName, temperature: 0.2 });
+      const response = await this.provider.structuredChat(messages, schema, { schemaName, temperature: 0.2, ...(signal ? { signal } : {}) });
       return schema.parse(response);
     }
     catch (error) {
@@ -442,23 +442,26 @@ export class LearningService {
 
   // Round 078 (prototype.md §11): an NPC line with no target language at all is written again, once: the same
   // messages, the rejected reply and a correction. A retry that fails, is still flagged or takes longer than
-  // narrationRetryMs keeps the first line, so the guard never turns a playable turn into an error. A timed-out retry
-  // is not cancelled (the CLI runner cannot); its result and error are dropped.
+  // narrationRetryMs keeps the first line, so the guard never turns a playable turn into an error. Amendment 1
+  // (review 1): at the deadline the retry is aborted (the CLI runner frees its one slot); no retry while stopping.
   async narrate(messages, definition, ratio) {
     const first = await this.callProvider(messages, encounterResponseSchema, 'encounter_narration', definition.character.name);
     this.narrationStats.checked += 1;
     if (!this.lacksTarget(first, definition)) return first;
     this.narrationStats.flagged += 1;
+    if (this.stopping) { this.narrationStats.kept += 1; return first; }
+    const abort = new AbortController();
     const retry = this.callProvider([
       ...messages,
       { role: 'assistant', content: JSON.stringify(first) },
       { role: 'user', content: correctionNote(this.content.language, ratio) },
-    ], encounterResponseSchema, 'encounter_narration', definition.character.name).catch(() => null);
+    ], encounterResponseSchema, 'encounter_narration', definition.character.name, { signal: abort.signal }).catch(() => null);
     let timer;
     const deadline = new Promise((resolve) => { timer = setTimeout(() => resolve(TIMED_OUT), this.narrationRetryMs); });
+    timer.unref?.();
     const second = await Promise.race([retry, deadline]);
     clearTimeout(timer);
-    if (second === TIMED_OUT) { this.narrationStats.timedOut += 1; return first; }
+    if (second === TIMED_OUT) { abort.abort(); this.narrationStats.timedOut += 1; return first; }
     if (second && !this.lacksTarget(second, definition)) { this.narrationStats.retryPassed += 1; return second; }
     this.narrationStats.kept += 1;
     return first;

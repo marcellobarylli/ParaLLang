@@ -43,8 +43,28 @@ export class CLIProcessRunner {
     if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new TypeError('A positive process timeout is required.');
     if (this.shuttingDown) return Promise.reject(new ProviderError('interrupted', { provider: spec.provider }));
 
-    return new Promise((resolve, reject) => {
+    // Round 078 (review 1): an optional AbortSignal takes a queued task out of the queue or cancels the running one,
+    // so a caller that stopped waiting does not hold the one slot.
+    const { signal } = spec;
+    if (signal?.aborted) return Promise.reject(new ProviderError('interrupted', { provider: spec.provider }));
+
+    return new Promise((outerResolve, outerReject) => {
+      let onAbort = null;
+      const settle = (fn) => (value) => { if (onAbort) signal.removeEventListener('abort', onAbort); fn(value); };
+      const resolve = settle(outerResolve);
+      const reject = settle(outerReject);
       const task = { spec, resolve, reject, deadline: Date.now() + timeoutMs, queueTimer: null };
+      if (signal) {
+        onAbort = () => {
+          const index = this.queue.indexOf(task);
+          if (index >= 0) {
+            this.queue.splice(index, 1);
+            clearTimeout(task.queueTimer);
+            reject(new ProviderError('interrupted', { provider: spec.provider }));
+          } else if (this.active === task) task.cancel?.();
+        };
+        signal.addEventListener('abort', onAbort, { once: true });
+      }
       if (!this.active) this.#start(task);
       else if (this.queue.length >= this.maxQueue) reject(new ProviderError('busy', { provider: spec.provider }));
       else {

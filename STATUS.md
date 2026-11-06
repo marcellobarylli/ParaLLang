@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 078, a line with no target language is written again (autonomous)
+
+If an NPC line has no target language at all (4 or more words, all in its translation, none of the encounter's
+vocabulary), the server asks once more. The model sees the rejected line and a correction. If the retry fails, is
+still English or takes over 20 s, the first line is kept, and a late retry is cancelled. The rule flags 2 of 1,218
+recorded live lines, both real (round 048). Two live runs flagged 0 of 14 lines, so they made no extra call
+([findings](docs/rounds/078/findings.md)).
+
 ## Addendum 2026-11-06: round 077, the greeting prefetch over HTTP (autonomous)
 
 Through `server.js` and the app's routes, with `PARALLANG_PREFETCH=on`, Talk after a 10 s stay took 4.06 s and 0.03 s,
@@ -746,7 +754,7 @@ Newest first.
 | 075 | 11-06 | Three minor notes from the review of rounds 070–073: a reconciled replay, a "Counted." line, progress ids (autonomous) | [075](docs/rounds/075/architecture.md) | [findings](docs/rounds/075/findings.md) | pre-run record to round 075 close |
 | 076 | 11-06 | The greeting prefetched on arrival, behind `PARALLANG_PREFETCH` (autonomous) | [076](docs/rounds/076/architecture.md) | [findings](docs/rounds/076/findings.md) | pre-run record to round 076 close |
 | 077 | 11-06 | The greeting prefetch over HTTP through `server.js` (autonomous) | [077](docs/rounds/077/architecture.md) | [findings](docs/rounds/077/findings.md) | pre-run record to round 077 close |
-| 078 | 11-06 | An NPC line with no target language is written again once (autonomous) | [078](docs/rounds/078/architecture.md) | [findings](docs/rounds/078/findings.md) | pre-run record |
+| 078 | 11-06 | An NPC line with no target language is written again once (autonomous) | [078](docs/rounds/078/architecture.md) | [findings](docs/rounds/078/findings.md) | pre-run record to round 078 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |
