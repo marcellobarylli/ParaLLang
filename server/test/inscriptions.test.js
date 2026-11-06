@@ -5,39 +5,17 @@ import assert from 'node:assert/strict';
 import { cp, readFile, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import yaml from 'js-yaml';
-import { foldWords, loadGameContent } from '../src/content-loader.js';
+import { loadGameContent } from '../src/content-loader.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { LearningService } from '../src/learning-service.js';
 import { randomUUID } from 'node:crypto';
+import { ALLOWED as ALLOWLISTS, answerLeaks } from './answer-check.js';
 import { api, createLearnerAndEncounter, createRuntime, FixtureProvider, fixedNow, makeTempDir } from './helpers.js';
 
 const root = resolve(import.meta.dirname, '..', '..');
 const IDS = ['keystone', 'menu_board', 'chopping_block', 'plaque_back', 'flyleaf', 'seam'];
 const PLACES = ['market_entrance', 'coffee_cart', 'butchers_stall', 'cracked_fountain', 'old_bookshop', 'the_rift'];
-
-// Decision 3: checked false positives, each with its reason. es "las" is the article in "son las"; es "quien" shares
-// its first four letters with "quieto" and "quiero" only.
-const ALLOWED = { it: [], es: ['las', 'quien'] };
-const words = (inscription) => foldWords([inscription.text, ...inscription.glossary.map((g) => g.word)].join(' ')).trim().split(' ');
-const meaningKey = (meaning) => meaning.replace(/\([^)]*\)/g, ' ').trim().toLowerCase().replace(/^to /, '').replace(/\s+/g, ' ').trim();
-
-// Every way an inscription could hand over an answer: a pack form, a word or 4-letter stem of any objective target's
-// forms (every target, location and party), or a glossary meaning that is a target's accepted translation.
-export function answerLeaks(content, inscription, allowed = []) {
-  const body = foldWords([inscription.text, ...inscription.glossary.map((g) => g.word)].join(' '));
-  const forms = content.vocabulary.entries.flatMap((entry) => entry.surface_variants.map((form) => [entry.id, foldWords(form)]));
-  const targetIds = [...new Set([...content.encounters.values()].flatMap(({ encounter }) => encounter.objectives.flatMap((o) => o.target_vocabulary_ids)))];
-  const targetWords = [...new Set(targetIds.flatMap((id) => content.vocabularyById.get(id).surface_variants)
-    .flatMap((form) => foldWords(form).trim().split(' ')).filter((word) => word.length >= 3))];
-  const meanings = new Set(targetIds.flatMap((id) => content.vocabularyById.get(id).accepted_translations.map(meaningKey)));
-  const own = words(inscription).filter((word) => !allowed.includes(word));
-  return {
-    forms: [...new Set(forms.filter(([, form]) => body.includes(form)).map(([id]) => id))],
-    targetWords: targetWords.filter((target) => own.some((word) => word === target
-      || (target.length >= 4 && word.length >= 4 && word.slice(0, 4) === target.slice(0, 4)))),
-    meanings: inscription.glossary.filter((entry) => entry.meaning.split(/[,;]/).some((m) => meanings.has(meaningKey(m)))).map((entry) => entry.word),
-  };
-}
+const ALLOWED = ALLOWLISTS.inscriptions; // round 083: the check lives in answer-check.js
 
 test('both packs hold the same six inscriptions, one per location, with the same English', () => {
   const [it, es] = ['it', 'es'].map((code) => loadGameContent({ language: code }));

@@ -3,6 +3,8 @@
 # objective target of the pack (server test), so the Spellbook may show them at any time. `title`, `found` and
 # `translation` are the same English text in every pack (tested). Pending a native speaker's review.
 # Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
+# Round 083: every fragment also passes the inscriptions' answer check (server/test/answer-check.js: no word or 4-letter
+# stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
 fragments:
   - id: journey_first_stitch
     title: The first stitch
@@ -29,7 +31,7 @@ fragments:
     found: "Scratched into the rim of the fountain, under the plaque, at exactly the height of the corner of your eye."
     text: >-
       Le sirene cantavano ai margini della vista, dove l'occhio non arriva mai del tutto. Journathan si fece legare
-      all'albero della nave: desiderava ascoltare senza sterzare verso di loro. I marinai, con la cera nelle orecchie,
+      all'albero della nave: desiderava ascoltare, ma non sterzare verso di loro. I marinai, con la cera nelle orecchie,
       remavano e non sentivano niente. Il canto, dicono, era sempre lo stesso ritornello, ripetuto all'infinito.
     translation: >-
       The Sirens sang at the edges of sight, where the eye never quite reaches. Journathan had himself tied to the
@@ -48,7 +50,7 @@ fragments:
     found_after: the_rift_errata
     found: "Left behind when the Rift narrowed to a hairline: a loose thread, and the words that were stitched along it."
     text: >-
-      Sulla sua isola, la moglie di Journathan tesseva un sudario di giorno e lo disfaceva di notte. I pretendenti
+      Sulla sua isola, la moglie di Journathan tesseva un sudario dall'alba al tramonto e lo disfaceva di notte. I pretendenti
       credevano che prendesse tempo. In verità teneva separati i rami del mondo, punto per punto, finché lui non
       fosse tornato.
     translation: >-

@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 083, fragments under the answer check (autonomous)
+
+The fragments of *The Journey* now pass round 082's answer check too. Six small target-language rewrites removed
+words of real answers: it *senza* and *giorno*; es *sin*, *día*, *solo*, *vez* and *más*. The English is unchanged.
+Articles and one stem false positive are allowed by name ([findings](docs/rounds/083/findings.md)).
+
 ## Addendum 2026-11-06: round 082, inscriptions (autonomous)
 
 Each location now carries a short authored inscription in the target language (it, es), "lore hidden in plain

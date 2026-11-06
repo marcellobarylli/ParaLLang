@@ -6,6 +6,7 @@ import { cp, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import yaml from 'js-yaml';
 import { foldWords, loadGameContent } from '../src/content-loader.js';
+import { ALLOWED, answerLeaks } from './answer-check.js';
 import { api, createLearnerAndEncounter, createRuntime, finishEncounter, makeTempDir } from './helpers.js';
 
 const root = resolve(import.meta.dirname, '..', '..');
@@ -13,6 +14,7 @@ const IDS = ['journey_first_stitch', 'journey_sirens', 'journey_shroud', 'journe
 
 // Every vocabulary form of the pack found in a fragment's text or glossary words, and every glossary meaning that
 // is an accepted translation of an objective target (critique 1.1, 1.2, 1.10).
+// Round 083: kept as the round 030 check; the wider answer check (answer-check.js) runs over every fragment too.
 function leaks(content, fragment) {
   const body = foldWords([fragment.text, ...fragment.glossary.map((entry) => entry.word)].join(' '));
   const forms = content.vocabulary.entries.flatMap((entry) => entry.surface_variants.map((form) => [entry.id, foldWords(form)]));
@@ -23,6 +25,27 @@ function leaks(content, fragment) {
     meanings: fragment.glossary.filter((entry) => entry.meaning.split(/[,;]/).some((m) => meanings.has(m.toLowerCase().trim()))).map((entry) => entry.word),
   };
 }
+
+// Round 083: every fragment also passes the inscriptions' answer check (answer-check.js): no pack form, no word or
+// 4-letter stem of any objective target's forms, no target meaning, bar the fragments' allowlist.
+test('every fragment passes the answer check; each allowed word matters and the time phrases stay caught', () => {
+  for (const code of ['it', 'es']) {
+    const content = loadGameContent({ language: code });
+    const allowed = ALLOWED.fragments[code];
+    for (const fragment of content.fragments) {
+      assert.deepEqual(answerLeaks(content, fragment, allowed), { forms: [], targetWords: [], meanings: [] }, `${code} ${fragment.id}`);
+    }
+    const [first] = content.fragments;
+    const plant = (sentence, list) => answerLeaks(content, { ...first, text: `${first.text} ${sentence}` }, list);
+    for (const word of allowed) {
+      const sentence = word[0].toUpperCase() + word.slice(1) + '.';
+      assert.ok(plant(sentence, []).targetWords.length > 0, `${code} "${word}" is a hit without the allowlist`);
+      assert.deepEqual(plant(sentence, allowed).targetWords, [], `${code} "${word}" is let through by it`);
+    }
+    const phrases = code === 'it' ? [["È l'una.", 'luna']] : [['A la una.', 'es_la_una'], ['Son las tres.', 'son_las']];
+    for (const [sentence, id] of phrases) assert.ok(plant(sentence, allowed).forms.includes(id), `${code} ${sentence} is still a pack form`);
+  }
+});
 
 test('both packs hold the same seven fragments, after the same encounters, with the same English text', () => {
   const [it, es] = ['it', 'es'].map((code) => loadGameContent({ language: code }).fragments);

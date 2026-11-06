@@ -3,14 +3,16 @@
 # objective target of the pack (server test), so the Spellbook may show them at any time. `title`, `found` and
 # `translation` are the same English text in every pack (tested). Pending a native speaker's review.
 # Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
+# Round 083: every fragment also passes the inscriptions' answer check (server/test/answer-check.js: no word or 4-letter
+# stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
 fragments:
   - id: journey_first_stitch
     title: The first stitch
     found_after: old_bookshop_bookworm
     found: "Folded inside the battered copy of The Journey that Marginalia sold you, in a hand that changes language halfway through a word."
     text: >-
-      Cada vez que Journathan pasaba de una rama a la siguiente, un hilo se quedaba detrás de él. Veinte inviernos de travesías:
-      veinte inviernos de hilos. Dicen que los más antiguos todavía sostienen la trama del mundo. Quizá la primera
+      Siempre que Journathan pasaba de una rama a la siguiente, un hilo se quedaba detrás de él. Veinte inviernos de travesías:
+      veinte inviernos de hilos. Dicen que los primeros hilos todavía sostienen la trama del mundo. Quizá la primera
       puntada fue suya.
     translation: >-
       Each time Journathan passed from one branch to another, a thread stayed behind him. Twenty winters of crossings:
@@ -30,8 +32,8 @@ fragments:
     found: "Scratched into the rim of the fountain, under the plaque, at exactly the height of the corner of your eye."
     text: >-
       Las sirenas cantaban en los márgenes de la vista, donde el ojo nunca llega del todo. Journathan se hizo atar
-      al mástil del barco: deseaba escuchar sin desviarse hacia ellas. Los marineros, con cera en los oídos, remaban
-      y no oían nada. El canto, dicen, era siempre el mismo estribillo, repetido sin fin.
+      al mástil del barco: deseaba escuchar, pero no desviarse hacia ellas. Los marineros, con cera en los oídos, remaban
+      y no oían nada. El canto, dicen, era siempre el mismo estribillo, repetido hasta el infinito.
     translation: >-
       The Sirens sang at the edges of sight, where the eye never quite reaches. Journathan had himself tied to the
       ship's mast: he wanted to listen without steering towards them. The sailors, wax in their ears, rowed and
@@ -49,7 +51,7 @@ fragments:
     found_after: the_rift_errata
     found: "Left behind when the Rift narrowed to a hairline: a loose thread, and the words that were stitched along it."
     text: >-
-      En su isla, la esposa de Journathan tejía un sudario de día y lo deshacía de noche. Los pretendientes creían
+      En su isla, la esposa de Journathan tejía un sudario del alba al ocaso y lo deshacía de noche. Los pretendientes creían
       que ganaba tiempo. En verdad mantenía separadas las ramas del mundo, puntada a puntada, hasta que él
       volviera.
     translation: >-
@@ -133,7 +135,7 @@ fragments:
     after_conversations: 3
     found: "On your third reading, Marginalia turns to a page she keeps folded down and reads it without looking."
     text: >-
-      Journathan volvió a su isla vestido de mendigo, y los suyos no lo reconocieron. Solo un perro viejo, echado sobre
+      Journathan volvió a su isla vestido de mendigo, y los suyos no lo reconocieron. Únicamente un perro viejo, echado sobre
       el estiércol delante de la puerta, levantó las orejas y movió la cola. Lo había esperado todo aquel tiempo. Luego
       cerró los ojos, contento.
     translation: >-

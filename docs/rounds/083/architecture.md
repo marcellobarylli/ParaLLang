@@ -90,3 +90,8 @@ Net change: two better Spanish rewrites, per-surface allowlists with tests that 
 Shows that no fragment or inscription holds a word or stem of any objective target's forms (bar the named allowlist)
 or a pack form. It does not cover target-language words outside the pack, kept lines or cards, or whether the
 reworded texts read naturally (native speaker).
+
+## Outcome (2026-11-06)
+
+Built as designed. The six rewrites cleared the check in both packs, and every allowed word is tested to matter.
+Inscriptions behave as before. No amendment was needed ([findings](findings.md)).

@@ -10,3 +10,6 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 04:54 | 04:54:36 | critique-returned | Claude (general-purpose subagent, claude-opus-5-5), read-only | 8 findings (2 Errors, 3 Gaps, 1 allowlist review, 1 Optional, 1 Cut) | `critique-1.md` |
 | 5 | 04:54:36 | 04:54:36 | disposition | Claude (claude-opus-5-5), autonomous | 7 accepted, 1.6 rejected (old checks stay) | `../architecture.md` |
 | 6 | 04:54:36 | 04:54:36 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, decisions rows, index row | `../architecture.md` |
+| 7 | 04:56:03 | 04:56:03 | built | Claude (claude-opus-5-5), autonomous | Built as designed: answer-check.js (per-surface allowlists), the fragment test, six rewrites, header comments; server 301/301, client 12/12, mobile 227/227 | `../architecture.md` |
+| 8 | 04:56:03 | 04:56:03 | outcome | Claude (claude-opus-5-5), autonomous | Criteria met offline | `../findings.md` |
+| 9 | 04:56:03 | 04:56:03 | closed | Claude (claude-opus-5-5), autonomous | Round 083 closed; status addendum and index row | `../architecture.md` |
