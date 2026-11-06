@@ -202,6 +202,9 @@ export function recordCalls(provider, raw) {
 // transcript's NPC natives. When both of a group's natives equal it, the service's rule decides (the retry is kept if
 // it has an output, no error, came within the retry deadline and does not lack target language). A group with no
 // committed line goes to `uncommitted`.
+// Round 099 (review 1 R1.4, deferred to a live round): matching is by text only, so an uncommitted call whose native
+// equals the next committed one takes that line (only its `durationMs` / `retried` can be wrong); matching within
+// the step that made each call would fix it.
 export function narrationLines(calls, committedNatives, { ratioFor, share, lacksTarget, retryMs = NARRATION_RETRY_MS }) {
   const groups = [];
   for (const call of calls.filter((item) => item.schema === 'encounter_narration')) {

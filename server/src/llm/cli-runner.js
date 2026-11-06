@@ -186,6 +186,10 @@ export class CLIProcessRunner {
           for (const stream of [child?.stdin, child?.stdout, child?.stderr]) { try { stream?.destroy(); } catch { /* gone */ } }
         };
         let forced = false;
+        // Round 099 (review R1.3, rejected): after `exit` the child is reaped, but Linux keeps its PID allocated while
+        // it is the id of a process group with members, so the group kill below reaches only that group; with no
+        // member left it reaches a process only if one took the PID and made itself a group leader within
+        // killGraceMs. A `kill(-pid, 0)` probe first would race the same way.
         const forceKill = () => {
           if (forced || closed) return;
           forced = true;
@@ -195,9 +199,11 @@ export class CLIProcessRunner {
         };
 
         // Round 087 (review R1.3): once the child has closed, an abort (e.g. during collect) sends nothing.
-        // Round 095 (critique 1.4): nor once it has exited 0; the run finished.
+        // Round 095 (critique 1.4): nor once it has exited 0; the run finished. Round 099 (review R1.1): nor once it
+        // has exited at all: a timeout or cancel in the exit grace would replace the exit's `process` failure, whose
+        // stated events the adapters map. The grace timer still force-kills a group that holds the pipes.
         const failAndTerminate = (error) => {
-          if (failure || closed || (exited && exitCode === 0)) return;
+          if (failure || closed || exited) return;
           failure = error;
           killProcessGroup(child, 'SIGTERM');
           forceTimer = setTimeout(forceKill, this.killGraceMs);

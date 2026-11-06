@@ -40,8 +40,8 @@ function parseCodexEvents(stdout, provider) {
     // Round 095: a failure the events state beats the bad line.
     throw codexFailure(stdout, provider) ?? new ProviderError('invalid-response', { provider });
   }
-  const failure = events.find((event) => event.type === 'error' || event.type === 'turn.failed');
-  if (failure) throw providerErrorFromMachineCode(failure.error?.code ?? failure.code, { provider });
+  const failure = pickFailure(events, provider);
+  if (failure) throw failure;
   if (events.filter((event) => event.type === 'turn.completed').length !== 1) {
     throw new ProviderError('invalid-response', { provider });
   }
@@ -54,13 +54,21 @@ function parseCodexEvents(stdout, provider) {
 // Round 095 (review R1.2, critique 1.9): the failure a non-zero exit's events state, or null. Lines parsed one by one,
 // bad lines skipped anywhere (a crash may cut the last one).
 function codexFailure(stdout, provider) {
+  const events = [];
   for (const line of stdout.split(/\r?\n/)) {
     if (!line.trim()) continue;
-    let event;
-    try { event = JSON.parse(line); } catch { continue; }
-    if (event?.type === 'error' || event?.type === 'turn.failed') return providerErrorFromMachineCode(event.error?.code ?? event.code, { provider });
+    try { events.push(JSON.parse(line)); } catch { /* skipped */ }
   }
-  return null;
+  return pickFailure(events, provider);
+}
+
+// Round 099 (review R1.2, critique 1.9): of the failure events, the first whose code names a category (a code-less
+// `error` before a coded `turn.failed` must not hide it), else the first; null when there is none.
+function pickFailure(events, provider) {
+  const failures = events
+    .filter((event) => event?.type === 'error' || event?.type === 'turn.failed')
+    .map((event) => providerErrorFromMachineCode(event.error?.code ?? event.code, { provider }));
+  return failures.find((error) => error.category !== 'provider') ?? failures[0] ?? null;
 }
 
 export class CodexCLIAdapter extends BaseCLIAdapter {

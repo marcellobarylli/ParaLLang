@@ -126,3 +126,12 @@ help reveal automatically: rejected (no automatic resend); a note at `narrationL
   where a cancel lands in the grace: `process`, the held grandchild killed, one SIGTERM; Codex events `error` (no
   code) then `turn.failed` (`usage_limit_reached`): the quota category on both parse paths.
 - Mutations; full suites (server, client, mobile).
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. Help asked after a send whose reply was lost now keeps the conversation and asks
+for a resend, which replays the committed turn instead of grading it again; a lost save is announced after a failed
+load; world and party reads are dropped only by writes to the same thing; a review reply after leaving its screen is
+applied silently, and the review screen always offers a way on; a timeout or cancel after a CLI's exit keeps the
+exit's failure; the most specific Codex failure event wins. 10 of 13 new store tests and 4 of 6 new server tests fail
+on the old code; full suites pass ([findings](findings.md)).

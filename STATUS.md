@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 099, fixes from a second review of rounds 093–098 (autonomous)
+
+A second review found one bug a player can hit: asking for help after an answer whose reply was lost reloaded the
+conversation, and sending the answer again graded it twice. The app now keeps the conversation and asks for a
+resend, which shows the verdict the server already gave. Smaller fixes: a lost save is announced even after a failed
+load, a recruit no longer drops the map's refresh after a win, a review reply after leaving the screen lands
+quietly, the review screen always has a way on, and a CLI failure after its exit keeps its real cause
+([findings](docs/rounds/099/findings.md)).
+
 ## Addendum 2026-11-06: round 098, stale CLI temp dirs are swept (autonomous)
 
 A server, script or test killed mid-run left its CLI temp dir (a copy of the prompt) behind. The first CLI run of a

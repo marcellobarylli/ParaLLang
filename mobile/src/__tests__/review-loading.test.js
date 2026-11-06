@@ -15,7 +15,7 @@ const cards = [
 const spellbook = { cards, dueCount: 2, contentVersion: 'gerald-coffee-v1' };
 const world = { currentLocationId: 'market_entrance', locations: [{ id: 'market_entrance', name: 'Market Entrance', state: 'current', adjacent: false, map: { x: 0.5, y: 0.9 }, description: 'An archway.', vocabularyFocus: ['greetings'], encounter: null }], paths: [] };
 const response = (status, data) => ({ ok: status >= 200 && status < 300, status, json: async () => data });
-const NO_DUE = 'No due review is available.';
+const NO_DUE = 'No review is loaded.'; // round 099 (review 2 R2.4)
 const LOADING = 'Finding the next review…';
 const FAILED = 'The next review could not load.';
 
@@ -131,8 +131,10 @@ test('the panel without a challenge: loading, failed, or nothing due', async () 
   await userEvent.setup().press(screen.getByRole('button', { name: 'Try again' }));
   expect(onContinue).toHaveBeenCalledTimes(1);
   await view.rerender(<ReviewPanel {...props} />);
+  // Round 099 (review 2 R2.4): after a dismissed error the screen still offers a way on.
   expect(screen.getByText(NO_DUE)).toBeOnTheScreen();
-  expect(screen.queryByRole('button', { name: 'Try again' })).not.toBeOnTheScreen();
+  await userEvent.setup().press(screen.getByRole('button', { name: 'Try again' }));
+  expect(onContinue).toHaveBeenCalledTimes(2);
 });
 
 test('Try again twice sends one request (round 065 Amendment 1)', async () => {

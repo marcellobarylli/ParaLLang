@@ -35,8 +35,16 @@ export default function ReviewPanel({ challenge, partOfSpeech = null, result, la
       </View>
     </View>
   );
+  // Round 099 (review 2 R2.4, critique 1.6): reached after a review error was dismissed (a null challenge opens the
+  // Spellbook instead), so the screen always offers a way on.
   if (!challenge) return (
-    <View style={styles.content}><Text style={styles.body}>No due review is available.</Text><Button label={returnLabel} onPress={onReturn} /></View>
+    <View style={styles.content}>
+      <Text role="status" style={styles.body}>No review is loaded.</Text>
+      <View style={styles.buttons}>
+        <Button label="Try again" variant="primary" onPress={onContinue} />
+        <Button label={returnLabel} onPress={onReturn} />
+      </View>
+    </View>
   );
   const classLabel = wordClassText(challenge.partOfSpeech ?? partOfSpeech);
   return (
