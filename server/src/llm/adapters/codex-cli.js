@@ -37,7 +37,8 @@ function parseCodexEvents(stdout, provider) {
   try {
     for (const line of lines) events.push(JSON.parse(line));
   } catch {
-    throw new ProviderError('invalid-response', { provider });
+    // Round 095: a failure the events state beats the bad line.
+    throw codexFailure(stdout, provider) ?? new ProviderError('invalid-response', { provider });
   }
   const failure = events.find((event) => event.type === 'error' || event.type === 'turn.failed');
   if (failure) throw providerErrorFromMachineCode(failure.error?.code ?? failure.code, { provider });
@@ -48,6 +49,18 @@ function parseCodexEvents(stdout, provider) {
     ?? events.find((event) => typeof event.item?.model === 'string')?.item.model
     ?? null;
   return { model };
+}
+
+// Round 095 (review R1.2, critique 1.9): the failure a non-zero exit's events state, or null. Lines parsed one by one,
+// bad lines skipped anywhere (a crash may cut the last one).
+function codexFailure(stdout, provider) {
+  for (const line of stdout.split(/\r?\n/)) {
+    if (!line.trim()) continue;
+    let event;
+    try { event = JSON.parse(line); } catch { continue; }
+    if (event?.type === 'error' || event?.type === 'turn.failed') return providerErrorFromMachineCode(event.error?.code ?? event.code, { provider });
+  }
+  return null;
 }
 
 export class CodexCLIAdapter extends BaseCLIAdapter {
@@ -128,15 +141,19 @@ export class CodexCLIAdapter extends BaseCLIAdapter {
             ],
           };
         },
+        // Round 095 (review R1.4, critique 1.8): a missing result is null, so the events' failure maps first below.
         collect: async (directory) => {
           try { return await readFile(`${directory}/result.json`, 'utf8'); }
-          catch { throw new ProviderError('invalid-response', { provider: this.providerName }); }
+          catch { return null; }
         },
       });
     } catch (error) {
+      // Round 095 (review R1.2): only a non-zero exit is re-mapped, and only to a failure its events state; a timeout,
+      // an abort or an output limit keeps its category.
       const stdout = error?.internal?.stdout;
-      if (typeof stdout === 'string' && stdout) {
-        try { parseCodexEvents(stdout, this.providerName); } catch (mapped) { throw mapped; }
+      if (error?.category === 'process' && typeof stdout === 'string') {
+        const mapped = codexFailure(stdout, this.providerName);
+        if (mapped) throw mapped;
       }
       throw error;
     }

@@ -39,6 +39,9 @@ export class LLMAdapter {
 
   async shutdown() { await this.provider.shutdown?.(); }
 
+  // Round 095 (review R1.1): the service asks the wrapper; without this round 089's abort never ran in the server.
+  get serial() { return this.provider.serial === true; }
+
   get providerName() { return this.provider.providerName ?? this.providerNameValue; }
 
   get model() { return this.provider.model; }

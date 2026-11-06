@@ -26,6 +26,13 @@ function parseClaudeEnvelope(stdout, provider) {
   return { value: envelope.structured_output, model: models.length === 1 ? models[0] : null };
 }
 
+// Round 095 (critique 1.6): the failure a non-zero exit's envelope states, or null (unparsable, or a success).
+function claudeFailure(stdout, provider) {
+  try { parseClaudeEnvelope(stdout, provider); }
+  catch (mapped) { return mapped.category === 'invalid-response' ? null : mapped; }
+  return null;
+}
+
 export class ClaudeCLIAdapter extends BaseCLIAdapter {
   constructor(config = {}) {
     super({
@@ -117,9 +124,11 @@ export class ClaudeCLIAdapter extends BaseCLIAdapter {
         },
       });
     } catch (error) {
+      // Round 095 (critique 1.6): as for Codex, only a non-zero exit is re-mapped, to the failure its envelope states.
       const stdout = error?.internal?.stdout;
-      if (typeof stdout === 'string' && stdout) {
-        try { parseClaudeEnvelope(stdout, this.providerName); } catch (mapped) { throw mapped; }
+      if (error?.category === 'process' && typeof stdout === 'string') {
+        const mapped = claudeFailure(stdout, this.providerName);
+        if (mapped) throw mapped;
       }
       throw error;
     }

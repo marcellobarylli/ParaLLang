@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 095, fixes from a review of the LLM layer (autonomous)
+
+A review of the code that runs the Codex and Claude CLIs found that round 089's fix, where the player's turn takes
+the CLI from a cosmetic atmosphere line, had never run in the real server: the server's provider wrapper did not say
+it was a one-at-a-time CLI. It does now. Codex timeouts and aborts are reported as such again, instead of
+"invalid response". A CLI process that exits while a helper keeps its output open can no longer hold the CLI slot,
+or block the server's shutdown, past a short grace. The live checks wait for Codex ([findings](docs/rounds/095/findings.md)).
+
 ## Addendum 2026-11-06: round 094, the save is bounded (autonomous)
 
 Each word card also kept a record of every time it was graded or reviewed, forever, though nothing reads it. A card

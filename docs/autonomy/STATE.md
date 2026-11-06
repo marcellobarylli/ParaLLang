@@ -11,7 +11,12 @@ Iteration 28 (2026-11-06, from 06:50 UTC): **round 093** (F13) closed: a save ke
 receipts (the one just written always), pruned in `JsonLearningStorage.save`; receipts hold no Spellbook, a replay
 carries the current one (`replay`); attempt ids looked up by own property. Fixture save after 240 turns: 2.50 MB →
 158 KB. **Round 094** (F15) closed: each card keeps its 20 last-written `evidence` entries (`trimEvidence` in
-`save`); the fixture save is flat at 138 KB from turn 250 to 1000.
+`save`); the fixture save is flat at 138 KB from turn 250 to 1000. **Round 095** (review of `server/src/llm/`) closed:
+`LLMAdapter` forwards `serial` (round 089's atmosphere abort had never run in the server); Codex and Claude keep a
+runner failure's category (re-map only a non-zero exit, to a stated failure); the runner settles a child that exits
+with its pipes held (grace, group SIGKILL, stdio destroyed) or never ends. Deferred: R1.5 Codex `error` events beside
+`turn.completed` (check raw events live), R1.6 claude-cli error envelopes, R1.7 framing earlier player turns (live),
+R1.9 a temp-dir sweep.
 
 Nothing open. Iteration 27 (2026-11-06, 05:53–06:50 UTC) closed four offline review rounds:
 - **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
@@ -54,7 +59,9 @@ Next candidates, none needing the owner:
   the rest of round 081's
   Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
 
-**Traps (iteration 28):** a receipt no longer has `response.spellbook` (tests that read it must not expect one);
+**Traps (iteration 28):** the service must be given providers through `createLLMAdapter` in any test that
+claims server behaviour (the wrapper, not the adapter, is what `server.js` passes). Hard-killed runs (a `timeout`
+around a hung test) leave `/tmp/parallang-cli-*` dirs; remove them. a receipt no longer has `response.spellbook` (tests that read it must not expect one);
 `storage.save(envelope, { keepReceiptId })` prunes the envelope in place. A fixed test clock gives every receipt the
 same `committedAt`; ties keep the later entry.
 **Traps (iteration 27):** with `PARALLANG_TOKEN` set, every path but the health check is 401 without the token, so

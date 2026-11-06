@@ -120,3 +120,18 @@ rejected (one grace for both keeps one path).
 - Runner, real child: `/bin/sh -c 'sleep 30 & echo $!; exit 0'` resolves within 3 s and the printed pid is gone
   within 2 s (polling `process.kill(pid, 0)`).
 - Mutations: each fix removed in turn fails a test. Full suites.
+
+## Amendment 1 (2026-11-06, during the build): a stated failure beats a bad line on exit 0 too
+
+The R1.4 test (exit 0, a bad line, then `turn.failed`, no result file) still gave `invalid-response`: on the success
+path `parseCodexEvents` rejected the bad line before looking for the failure. It now throws the failure the events
+state (`codexFailure`) when a line does not parse, else `invalid-response` as before. Same rule as Decision 2's
+non-zero path; a test fails without it.
+
+## Outcome (2026-11-06)
+
+Built as designed with Amendment 1. The wrapper forwards `serial`, so round 089's abort reaches the real adapter; both
+CLI adapters keep a runner failure's category and map only a failure the output states; the runner settles a child
+that exits but holds its pipes (a real `/bin/sh` with a background `sleep` resolves in well under 3 s and the
+`sleep` is killed), and a child that never ends after SIGKILL. Each fix removed in turn fails a test; full suites pass
+([findings](findings.md)).

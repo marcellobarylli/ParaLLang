@@ -129,13 +129,34 @@ export class CLIProcessRunner {
         const stdout = [];
         const stderr = [];
         let forceTimer;
+        // Round 095 (review R1.3, critique 1.1-1.5): a child may exit and leave its pipes open (a grandchild holds
+        // them), or never end at all. `close` alone still settles (a spawn ENOENT gives no `exit`). After `exit`, a
+        // grace; then the group gets SIGKILL and the stdio is destroyed, so Node emits `close` and `finish` settles.
+        // If nothing at all comes after a SIGKILL, a last fallback settles. A setsid escapee is not reached by the
+        // group kill; destroying the stdio still frees the slot.
+        let exited = false;
+        let exitCode = null;
+        let exitGraceTimer;
+        let fallbackTimer;
+        const releaseStdio = () => {
+          for (const stream of [child?.stdin, child?.stdout, child?.stderr]) { try { stream?.destroy(); } catch { /* gone */ } }
+        };
+        let forced = false;
+        const forceKill = () => {
+          if (forced || closed) return;
+          forced = true;
+          killProcessGroup(child, 'SIGKILL');
+          releaseStdio();
+          fallbackTimer = setTimeout(() => finish(exited ? exitCode : null, exited ? null : 'SIGKILL'), this.killGraceMs);
+        };
 
         // Round 087 (review R1.3): once the child has closed, an abort (e.g. during collect) sends nothing.
+        // Round 095 (critique 1.4): nor once it has exited 0; the run finished.
         const failAndTerminate = (error) => {
-          if (failure || closed) return;
+          if (failure || closed || (exited && exitCode === 0)) return;
           failure = error;
           killProcessGroup(child, 'SIGTERM');
-          forceTimer = setTimeout(() => killProcessGroup(child, 'SIGKILL'), this.killGraceMs);
+          forceTimer = setTimeout(forceKill, this.killGraceMs);
         };
         const timeoutTimer = setTimeout(() => failAndTerminate(new ProviderError('timeout', {
           provider: spec.provider, elapsedMs: Date.now() - startedAt,
@@ -147,6 +168,8 @@ export class CLIProcessRunner {
           task.cancel = () => {};
           clearTimeout(timeoutTimer);
           clearTimeout(forceTimer);
+          clearTimeout(exitGraceTimer);
+          clearTimeout(fallbackTimer);
           const result = {
             stdout: Buffer.concat(stdout).toString('utf8'),
             stderr: Buffer.concat(stderr).toString('utf8'),
@@ -203,6 +226,11 @@ export class CLIProcessRunner {
         child.once('error', (error) => failAndTerminate(new ProviderError(error?.code === 'ENOENT' ? 'missing-cli' : 'process', {
           provider: spec.provider, elapsedMs: Date.now() - startedAt,
         })));
+        child.once('exit', (code) => {
+          exited = true;
+          exitCode = code;
+          if (!closed) exitGraceTimer = setTimeout(forceKill, this.killGraceMs);
+        });
         child.once('close', finish);
         child.stdin.on('error', () => {});
         child.stdin.end(input);
