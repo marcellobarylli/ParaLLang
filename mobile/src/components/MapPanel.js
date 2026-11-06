@@ -55,7 +55,7 @@ function Node({ location, size, onMove, disabled }) {
 }
 
 // Round 029: `drill` is the server's pending drill (spellbook.drill); `ongoing` an encounter under way elsewhere.
-export default function MapPanel({ atmosphere = null, drill = null, ongoing = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
+export default function MapPanel({ atmosphere = null, drill = null, ongoing = null, starting = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
   const [size, setSize] = useState(320); // replaced by the measured width on layout
   // Round 062 (critiques 1.1, 1.2): a move or leaving the map stops the narrator; above the early return.
   const currentLocationId = world?.currentLocationId ?? null;
@@ -91,6 +91,8 @@ export default function MapPanel({ atmosphere = null, drill = null, ongoing = nu
               variant={drillHere ? 'secondary' : 'primary'} onPress={onEnterEncounter} disabled={isLoading || Boolean(drillHere)}
             />
           : <Text style={styles.muted}>Nothing here wants to talk to you yet.</Text>}
+        {here.encounter && starting?.encounterId === here.encounter.id
+          && <Text role="status" style={styles.starting}>{here.encounter.characterName || 'Someone'} is getting ready to talk…</Text>}
         {here.encounter?.completed && <Text style={styles.done}>✓ Encounter complete</Text>}
         {here.encounter?.completed && here.encounter.saveable && onRecruit && <PartyOffer
           name={here.encounter.characterName} joined={inParty(party, here.encounter.characterId)} isLoading={isLoading}
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
   title: { flexGrow: 1, flexShrink: 1, fontSize: type.title3, fontWeight: '800', color: colors.ink },
   body: { fontSize: type.subhead, lineHeight: leading.subhead, color: colors.ink },
   muted: { fontSize: type.subhead, color: colors.muted, padding: 16 },
+  starting: { color: colors.muted, fontStyle: 'italic', fontSize: type.subhead }, // round 073
   focus: { fontSize: type.footnote, color: colors.muted, fontStyle: 'italic' },
   atmosphere: { fontSize: type.subhead, color: colors.muted, fontStyle: 'italic' }, // round 053
   done: { fontSize: type.subhead, fontWeight: '600', color: colors.success },

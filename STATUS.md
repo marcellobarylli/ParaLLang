@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 073, a waiting line while an encounter starts (autonomous)
+
+The NPC's greeting takes about 9 s to write. While it does, the pressed Talk button on the map or the Party screen
+now shows "{name} is getting ready to talk…" instead of nothing. Checked by tests only
+([findings](docs/rounds/073/findings.md)).
+
 ## Addendum 2026-11-06: round 072, a live regression tour (autonomous)
 
 A full Italian tour (codex-cli) after rounds 069–071 resolved all six encounters. The verdicts matched round 067's
@@ -711,7 +717,7 @@ Newest first.
 | 070 | 11-06 | The verdict before the NPC's reply: a progress route and app polling (backlog I1) (autonomous) | [070](docs/rounds/070/architecture.md) | [findings](docs/rounds/070/findings.md) | pre-run record to round 070 close |
 | 071 | 11-06 | A resent answer replays a committed turn; a stale session reloads (round 070, critique 1.2) (autonomous) | [071](docs/rounds/071/architecture.md) | [findings](docs/rounds/071/findings.md) | pre-run record to round 071 close |
 | 072 | 11-06 | A live regression tour (it) after rounds 069–071 (autonomous) | [072](docs/rounds/072/architecture.md) | [findings](docs/rounds/072/findings.md) | pre-run record to round 072 close |
-| 073 | 11-06 | A waiting line while an encounter starts (backlog I3) (autonomous) | [073](docs/rounds/073/architecture.md) | [findings](docs/rounds/073/findings.md) | pre-run record |
+| 073 | 11-06 | A waiting line while an encounter starts (backlog I3) (autonomous) | [073](docs/rounds/073/architecture.md) | [findings](docs/rounds/073/findings.md) | pre-run record to round 073 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |

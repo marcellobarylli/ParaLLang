@@ -29,6 +29,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
   // Round 071: attempt ids of sends that did not succeed, by learner, encounter, version and text, so resending the
   // same answer replays a turn the server committed but whose response was lost (critique 1.5: A → B → A keeps A).
   const retryIds = new Map();
+  let startSeq = 0; // round 073: the latest encounter start; an older start's late settle leaves `starting` alone
   const STALE_CODES = new Set(['STALE_VERSION', 'STALE_ENCOUNTER']);
   let soundsTouched = false;
   const snapshots = new Map();
@@ -51,6 +52,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     reviewChallenge: null,
     reviewResult: null,
     assessment: null,
+    starting: null, // Round 073 (backlog I3): { encounterId, seq } while an encounter's greeting is generated
     earlyAssessment: null, // Round 070 (backlog I1): the grader's verdict while the NPC's reply is written
     draft: '',
     pendingInput: null,
@@ -72,6 +74,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     initialize: () => {
       if (initializationPromise) return initializationPromise;
       const epoch = ++requestEpoch;
+      set({ starting: null }); // Round 073 (critique 1.2): a reset drops a start's indicator
       initializationPromise = (async () => {
         set({ isLoading: true, error: null });
         try {
@@ -144,7 +147,11 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const { learnerId, isLoading } = get();
       if (!learnerId || isLoading) return;
       const epoch = requestEpoch;
-      set({ isLoading: true, error: null });
+      startSeq += 1;
+      const seq = startSeq;
+      set({ isLoading: true, error: null, starting: encounterId ? { encounterId, seq } : null });
+      // Round 073 (critique 1.1): only this start's own settle clears its indicator.
+      const mine = () => epoch === requestEpoch && get().learnerId === learnerId && get().starting?.seq === seq;
       try {
         const started = await api.startEncounter(learnerId, false, encounterId);
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
@@ -152,9 +159,10 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         const fresh = started.encounter.id !== get().encounter?.id;
         set({
           encounter: started.encounter, spellbook: started.spellbook, isLoading: false, view: 'dialogue',
+          ...(mine() ? { starting: null } : {}),
           ...(fresh ? { assessment: null, earlyAssessment: null, draft: '', pendingInput: null } : {}),
         });
-      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
+      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, ...(mine() ? { starting: null } : {}) }); }
     },
 
     openMap: async () => {
@@ -171,7 +179,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     // nothing, so the invitation stays open on the map.
     recruit: async (encounterId) => {
       const { learnerId, isLoading } = get();
-      if (!learnerId || isLoading || !encounterId) return;
+      if (!learnerId || isLoading) return;
       const epoch = requestEpoch;
       set({ isLoading: true, error: null, notice: null });
       try {
@@ -389,6 +397,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const { saves, isLoading, learnerId } = get();
       if (!learnerId || isLoading || saves.length >= MAX_SAVES) return;
       const epoch = ++requestEpoch;
+      set({ starting: null }); // Round 073 (critique 1.2): a reset drops a start's indicator
       set({ isLoading: true, error: null, notice: null });
       try {
         const identity = await api.createLearner(null);
@@ -411,6 +420,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const { saves, isLoading, learnerId, savesFloor } = get();
       if (!learnerId || isLoading || target === learnerId || !saves.some((save) => save.learnerId === target)) return false;
       ++requestEpoch;
+      set({ starting: null }); // Round 073 (critique 1.2)
       const record = withoutSlot({ activeId: learnerId, slots: saves, nextNumber: savesFloor }, target);
       const label = saves.find((save) => save.learnerId === target).label;
       set({ isLoading: true, error: null, notice: null, saves: record.slots, savesFloor: record.nextNumber });
@@ -440,6 +450,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const { saves, isLoading, learnerId } = get();
       if (!learnerId || isLoading || target === learnerId || !saves.some((save) => save.learnerId === target)) return undefined;
       const epoch = ++requestEpoch;
+      set({ starting: null }); // Round 073 (critique 1.2): a reset drops a start's indicator
       set({ isLoading: true, error: null, notice: null });
       return get()._loadSave(target, epoch);
     },
@@ -475,6 +486,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     switchLearnerForTest: (learnerId) => {
       requestEpoch += 1;
       sendSeq += 1;
+      set({ starting: null }); // Round 073 (critique 1.2)
       initializationPromise = null;
       const snapshot = snapshots.get(learnerId) ?? { encounter: null, spellbook: emptySpellbook };
       set({ learnerId, ...snapshot, party: [], notice: null, draft: '', pendingInput: null, assessment: null, earlyAssessment: null, isLoading: false });

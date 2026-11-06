@@ -25,7 +25,7 @@ export function tierNote(member) {
     ? `${member.name} trusts you with a deeper conversation now.` : null;
 }
 
-export default function PartyPanel({ party, isLoading = false, ongoing = null, onTalk, onReturn, returnLabel }) {
+export default function PartyPanel({ party, isLoading = false, ongoing = null, starting = null, onTalk, onReturn, returnLabel }) {
   return (
     <ScrollView style={styles.panel} contentContainerStyle={styles.content}>
       <Title style={styles.title}>Your party</Title>
@@ -42,6 +42,8 @@ export default function PartyPanel({ party, isLoading = false, ongoing = null, o
               disabled={isLoading || Boolean(ongoing && ongoing.encounterId !== member.conversationId)}
               onPress={() => onTalk(member.conversationId)}
             />}
+            {member.conversationId && starting?.encounterId === member.conversationId
+              && <Text role="status" style={styles.starting}>{member.name || 'Someone'} is getting ready to talk…</Text>}
             {member.conversationId && ongoing && ongoing.encounterId !== member.conversationId
               && <Text style={styles.muted}>Finish your conversation with {ongoing.character?.name ?? 'them'} first.</Text>}
           </View>
@@ -58,5 +60,6 @@ const styles = StyleSheet.create({
   member: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 6 },
   name: { fontSize: type.callout, fontWeight: '700', color: colors.ink },
   muted: { color: colors.muted, fontSize: type.subhead },
+  starting: { color: colors.muted, fontStyle: 'italic', fontSize: type.subhead }, // round 073
   hint: { color: colors.ink, fontSize: type.subhead, fontStyle: 'italic' },
 });

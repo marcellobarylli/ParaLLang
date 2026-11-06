@@ -76,3 +76,8 @@ Critiqued draft: `trail/plan-v1.md`, sha256 ba1e36af…; Codex, effort high; raw
 | 1.7 | Risk (Optional) | Storing the name duplicates state | + | Accept: store id and token only | **Accepted** (autonomous, pending owner review) | Design 1, 2 |
 
 Net change: a start token, atomic set and clear, names from the cards, App wiring and an integration test.
+
+## Outcome (2026-11-06)
+
+Built to the pre-run design. All 7 planned tests pass, and they fail without the change. All suites are green. No
+amendments. See [findings.md](findings.md).

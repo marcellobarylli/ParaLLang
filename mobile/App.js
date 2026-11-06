@@ -45,13 +45,13 @@ export default function App() {
         {state.view === 'map' && <MapPanel atmosphere={state.atmosphere}
           drill={state.spellbook.drill ?? null} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null}
           onDrill={state.startDrill} onReturnToEncounter={state.returnToEncounter}
-          world={state.world} isLoading={state.isLoading} onMove={state.moveTo} onEnterEncounter={state.enterEncounter} party={state.party} onRecruit={state.recruit} />}
+          world={state.world} starting={state.starting} isLoading={state.isLoading} onMove={state.moveTo} onEnterEncounter={state.enterEncounter} party={state.party} onRecruit={state.recruit} />}
         {state.view === 'saves' && <SavesPanel
           saves={state.saves} activeId={state.learnerId} place={here?.name} dueCount={state.spellbook.dueCount} isLoading={state.isLoading}
           onContinue={state.switchSave} onNew={state.newSave} onReturn={state.openMap}
           soundsOn={state.soundsOn} onToggleSounds={state.setSoundsOn} onRemove={state.removeSave}
         />}
-        {state.view === 'party' && <PartyPanel party={state.party} isLoading={state.isLoading} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
+        {state.view === 'party' && <PartyPanel party={state.party} starting={state.starting} isLoading={state.isLoading} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'review' && <ReviewPanel
           key={state.reviewChallenge?.id ?? 'result'}

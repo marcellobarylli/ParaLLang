@@ -10,3 +10,8 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 02:48:48 | 02:49:26 | critique-returned | Codex, effort high | 7 findings (1 Error, 3 Risks, 3 Gaps; 7 Optional) | `critique-1.md` |
 | 5 | 02:49:26 | 02:49:26 | disposition | Claude (claude-opus-5-5), autonomous | 7 findings: 5 accepted, 1.5 and 1.6 in part | `../architecture.md` |
 | 6 | 02:49:26 | 02:49:26 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: a start token, atomic set and clear, names from the cards, App wiring and an integration test | `../architecture.md` |
+| 7 | 02:49:26 | 02:49:26 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows, index row | `../architecture.md` |
+| 8 | 02:52:11 | 02:52:11 | built | Claude (claude-opus-5-5), autonomous | gameStore.js: `starting` with a start token, set and cleared with isLoading, cleared at every epoch reset; MapPanel and PartyPanel status lines; App.js wiring; starting.test.js (7; all fail without the change); server 257/257, client 12/12, mobile 208/208, expo-doctor 20/20, iOS export built | — |
+| 9 | 02:52:11 | 02:52:11 | result | Claude (claude-opus-5-5), autonomous | Every pre-run test passes, the App-level one included; no live run (none planned) | `../findings.md` |
+| 10 | 02:52:11 | 02:52:11 | outcome | Claude (claude-opus-5-5), autonomous | I3 done | `../findings.md` |
+| 11 | 02:52:11 | 02:52:11 | closed | Claude (claude-opus-5-5), autonomous | Round 073 closed | `../findings.md` |

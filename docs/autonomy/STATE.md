@@ -160,8 +160,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - [x] **I1. The verdict before the reply** (round 070, closed 2026-11-06): `GET /api/encounter/progress`, app polls
   every second, provisional Assessment box; live: verdict at 5.3–6.8 s vs response 11.8–16.1 s, 6/6 equal.
-- [ ] **I3. A waiting line while an encounter starts** (round 073): the greeting takes ~8.6 s with only a disabled
-  button on the map or Party screen.
+- [x] **I3. A waiting line while an encounter starts** (round 073, closed 2026-11-06): "{name} is getting ready to
+  talk…" under the pressed Talk button; `starting` in the store with a start token.
 - [x] **I2. A resent answer replays** (round 071, closed 2026-11-06; round 070 critique 1.2): attempt ids by
   request key, guarded reload on `STALE_VERSION` / `STALE_ENCOUNTER`, back to the map if the conversation closed.
 
@@ -203,6 +203,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Round 073 (Simulator): the "getting ready to talk…" line on the map and Party screens, and VoiceOver inside the
+  map card ([open items](../rounds/073/findings.md#open-items)).
 - Round 071 (Simulator): Wi-Fi off, send, Wi-Fi on, send again: one turn, one reply; read the two new banner
   messages ([open items](../rounds/071/findings.md#open-items)).
 - Round 070 (Simulator): the waiting line "{name} is replying…" and the provisional Assessment box (answer,
@@ -470,6 +472,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-06, iteration 20: round 067 addendum (share on target by `folded`: it 0.43, es 0.44 vs 0.44; Rift 0.50).
   Round 070 closed (I1): the verdict before the NPC's reply; server 256/256, client 12/12, mobile 192/192; live 6/6.
   Round 071 closed (I2): a resent answer reuses its attempt id and replays; stale sessions reload; mobile 201/201.
+  Round 072 closed: live tour it, no regression (verdicts 6/6 equal, folded share 0.45, 7 leak lines); round 067
+  addendum corrected (Marginalia 0.49). Round 073 closed (I3): a waiting line while an encounter starts; mobile 208/208.
 
 ## Handoff notes and traps
 
