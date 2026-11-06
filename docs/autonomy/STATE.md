@@ -7,30 +7,36 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 25 (2026-11-06, 04:56–05:25 UTC) closed round 084 (backlog F5): the app's Spellbook is
-fetched again behind the screen on opening the Spellbook, the map, and the return from the background (cards fall
-due by the clock; before, only startup and a save switch fetched it). Offline. Critique by a fresh read-only
-subagent in place of Codex. Iteration 24 closed rounds 082 (inscriptions) and 083 (fragments under the answer check).
+Nothing open. Iteration 26 (2026-11-06, 05:11–05:35 UTC) closed two offline rounds:
+- **085** (F6): the Saves screen's due count refreshes on opening Saves, after a remove and after a failed new save
+  or switch (each Saves action raises the epoch, which drops a refresh in flight).
+- **086** (F7): an independent read-only review of the code of rounds 081–085 (no Errors) and three fixes: a move's
+  Spellbook takes round 084's encounter guard (`leaksMeanings`); a footnote is dropped for an unlisted inflection of
+  an open objective's single-word answer (`inflectsAnswer`, measured over 47k English tokens of live narration in
+  `docs/rounds/086/results/`); the foreground refresh survives `background` → `inactive` → `active`.
+The audit items from iteration 25 are closed: `atmosphere` is keyed by learner (a switch re-asks; covered by
+`atmosphere.test.js`), and the drill note derives from `spellbook.drill`, which reviews return.
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09: test gaps, content checks with `leak-scan.js`, docs. Round 084's audit of
-  `gameStore.js` found world, party and Party hints refreshed where they change; still unchecked: the `atmosphere`
-  key after a save switch, `drill` after a review from the Spellbook (the review returns the Spellbook, so likely
-  fine). The Saves screen's "N due" uses the same Spellbook but `openSaves` does not refresh it (it opens from the
-  map, which does; only a long stay on the map leaves it stale): a one-line follow-up if a round touches the store.
-  Ideas: more inscriptions (party conversations, a second line after completion), but prototype.md §11 warns against
-  scope creep, and the owner has not said whether inscriptions are wanted; prefer test gaps and fixes.
+- **Offline work only** until 11-09. The app and server are well covered; remaining ideas are thin. Options: a
+  second review pass like round 086 over rounds 076–080 (prefetch, guard, verify-es: the review of 081–085 was
+  cheap and found real gaps); the footnote rule could also cover other encounters' answers (critique 1.4 of round
+  086, measure first with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said
+  they are wanted).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
-  greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure; the
-  rest of round 081's Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
+  greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure,
+  counting footnotes dropped by round 086's inflection rule; the rest of round 081's Italian tour (Fountain,
+  Bookshop, Rift); watch `narrationStats` for the first live retry.
 
-**Traps (iteration 25):** in a mutation loop, `pgrep -f "<pattern>"` inside an `until` matches its own shell and
-never ends; use a plain `timeout` per run. A refresh test of "the older reply is dropped" must resolve the older
-reply first, or the object check hides a missing sequence check.
+**Traps (iteration 26):** `/tmp` is a 64 MB tmpfs and filled to 7 MB free from jest's cache (`/tmp/jest_s2`, 36 MB)
+and metro's; `npx jest --clearCache` in `mobile/` and `rm -rf /tmp/metro-cache` free it (both regenerate). The
+round check wants a `R<K>.n` row for every finding of a `review-K.md`, also when the review is the round's source:
+put the table in the pre-run record. In a mutation loop, `pgrep -f "<pattern>"` inside an `until` matches its own
+shell; use a plain `timeout` per run.
 
 ## Backlog
 
@@ -220,6 +226,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
   remove and after a failed new save or switch.
 
+- [x] **F7. Review of rounds 081–085** (round 086, closed 2026-11-06): a move's Spellbook guarded, footnote
+  inflections of open answers, the foreground refresh across `inactive`.
+
 - [x] **F4. One test command** (2026-11-06, no round): root `npm test` (server, client, mobile), `npm run test:server`;
   bare `node --test` in `server/` hangs on the fake CLIs in `test/fixtures/`.
 
@@ -246,6 +255,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 086 (Simulator):** background and foreground via the app switcher and via Notification Centre; the
+  header badge updates after a card fell due ([open items](../rounds/086/findings.md#open-items)).
 - **Round 085 (Simulator):** open Saves after a card fell due while the map was open; remove a save and check the
   count ([open items](../rounds/085/findings.md#open-items)).
 - **Round 084 (Simulator):** a card falling due while the app is in the background shows on the header badge on
@@ -556,8 +567,19 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   and closed: server 300/300, client 12/12, mobile 227/227, expo-doctor 20/20. No live calls (Codex limited).
   Round 083 (fragments under round 082's answer check) planned, critiqued by a subagent (8 findings: 7 accepted, 1
   rejected), built and closed: six it/es rewrites; server 301/301, client 12/12, mobile 227/227.
+- 2026-11-06, iteration 25 (04:56–05:10 UTC): round 084 (F5, the Spellbook refreshed) critiqued by a subagent,
+  built and closed: server 301/301, client 12/12, mobile 235/235.
+- 2026-11-06, iteration 26 (05:11–05:35 UTC): round 085 (F6, the Saves screen's due count) critiqued by a subagent
+  (5 findings, all accepted), built and closed: mobile 240/240. Round 086 (F7) from a subagent review of rounds
+  081–085 (3 findings), critiqued (7: 5 accepted, 1 in part by measurement, 1 rejected), built and closed: server
+  304/304, client 12/12, mobile 242/242, iOS export bundles. No live calls (Codex limited).
 
 ## Handoff notes and traps
+
+- **Footnote filter** (rounds 081, 086): `keptFootnote(generated, previousNpc, open)` drops pack forms and, through
+  `inflectsAnswer` (exported from `learning-service.js`), inflections of the open objectives' single-word forms of 4+
+  letters (form minus last letter, 0–2 letters longer). `canonicalizeNarration` takes `open` (default: every
+  objective; a turn passes `remaining`). The app's `leaksMeanings` guards both `refreshSpellbook` and `moveTo`.
 
 - **Inscriptions** (round 082): `content/languages/<code>/lore/inscriptions.yaml`, one per location;
   `answerLeaks(content, inscription, allowed)` in `server/test/inscriptions.test.js` is the harder answer check

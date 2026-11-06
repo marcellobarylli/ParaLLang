@@ -106,3 +106,19 @@ foreground flag starts from the current state; the move's snapshot guarded.
   snapshot; with `inEncounter: true` applies it; App: `background` → `inactive` → `active` refreshes once, mounted
   in `background` → `active` refreshes.
 - Full suite.
+
+## Amendment 1 (2026-11-06, at the close): the source review's rows
+
+The pre-run record summarised the source review in its header but gave it no table; the dispositions, taken before
+the plan, are recorded here. Raw text in [`trail/review-1.md`](trail/review-1.md).
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Gap | A move's Spellbook skips round 084's encounter guard: meanings after a server restart mid-encounter | + | Accept: the same guard, world applied either way; test | **Accepted** (autonomous decision, pending owner review) | Decision 4, Design 1 |
+| R1.2 | Gap | The footnote filter misses unlisted inflections of answers (it *buoni*) | + | Accept: a stem check, refined by critique 1.1 and measured | **Accepted** (autonomous, pending owner review) | Decisions 1–3, Design 2 |
+| R1.3 | Minor | The foreground refresh misses background → inactive → active (uncertain on iOS) | 0 | Accept: a flag kept until the next active; test | **Accepted** (autonomous, pending owner review) | Decision 5, Design 3 |
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. Each of the five changes has a test that fails without it; full suites pass
+([findings](findings.md)).
