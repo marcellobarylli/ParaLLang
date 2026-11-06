@@ -2,15 +2,22 @@ import * as Speech from 'expo-speech';
 import { duckAmbience } from './ambience.js';
 
 const primarySubtag = (tag) => String(tag ?? '').split(/[-_]/)[0].toLowerCase();
+// Round 061 (critique 1.5): en_GB and en-GB are the same tag.
+const foldTag = (tag) => String(tag ?? '').replaceAll('_', '-').toLowerCase();
+// Apple's novelty voices (Bubbles, Zarvox…) and Eloquence voices are never picked.
+const NOVELTY = /^com\.apple\.(?:speech\.synthesis\.voice|eloquence)\./;
 
 // A voice for the pack's BCP 47 tag: an exact match first (it-IT), then any voice sharing the primary subtag (it-CH).
 export async function findVoice(tag, speech = Speech) {
   if (!tag) return null;
   let voices;
   try { voices = await speech.getAvailableVoicesAsync(); } catch { return null; }
-  const matches = (voices ?? []).filter((voice) => primarySubtag(voice.language) === primarySubtag(tag));
-  return matches.find((voice) => voice.language.toLowerCase() === tag.toLowerCase()) ?? matches[0] ?? null;
+  const matches = (voices ?? []).filter((voice) => primarySubtag(voice.language) === primarySubtag(tag) && !NOVELTY.test(String(voice.identifier ?? '')));
+  return matches.find((voice) => foldTag(voice.language) === foldTag(tag)) ?? matches[0] ?? null;
 }
+
+// Round 061 (backlog C10): the narrator reads the English narration, in a British voice where there is one.
+export const NARRATOR = Object.freeze({ tag: 'en-GB', name: 'English' });
 
 // Round 055 (critiques 1.1, 1.2): one lookup per tag, shared by every button mounted in the same render (the
 // in-flight promise is cached). A miss is dropped, so the next mount looks again (voices can arrive late on iOS).

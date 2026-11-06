@@ -4,7 +4,8 @@ import BilingualText from './BilingualText.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 import { colors, type } from './ui.js';
 import { FadeIn, useReduceMotion } from '../motion.js';
-import { stopSpeech } from '../speech.js';
+import { NARRATOR, stopSpeech } from '../speech.js';
+import PronounceButton from './PronounceButton.js';
 
 export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
@@ -65,7 +66,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       keyboardShouldPersistTaps="handled"
       renderItem={({ item: message }) => <FadeIn animate={firstShowing(message.id)}>{message.role === 'npc' ? (
         <View style={styles.npc}>
-          <Text style={styles.narrative}>{message.narrative}</Text>
+          <Narration text={message.narrative} />
           <Text style={styles.speaker}>{message.dialogue.speaker}</Text>
           <BilingualText message={message} language={language} onHelp={onHelp} disabled={isLoading || (message.protected && !encounter.hints_available)} />
         </View>
@@ -73,6 +74,18 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
         <Text style={styles.player}>{message.text}</Text>
       )}</FadeIn>}
     />
+  );
+}
+
+// Round 061 (backlog C10): the narration with a 🔊 that reads it in English, on demand (decision 1). A missing or
+// blank narration renders nothing (critique 1.3); no voice, no button (critique 1.7).
+function Narration({ text }) {
+  if (typeof text !== 'string' || !text.trim()) return null;
+  return (
+    <View style={styles.narrationRow}>
+      <Text style={[styles.narrative, styles.narrationText]}>{text}</Text>
+      <PronounceButton text={text} language={NARRATOR} label="Hear the narrator" hideWhenUnavailable />
+    </View>
   );
 }
 
@@ -100,6 +113,8 @@ const styles = StyleSheet.create({
   companion: { backgroundColor: colors.surface, borderColor: colors.accent, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   objective: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
   npc: { backgroundColor: colors.surface, borderRadius: 12, padding: 12, gap: 6 },
+  narrationRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 4 },
+  narrationText: { flexGrow: 1, flexShrink: 1 },
   narrative: { color: colors.muted, fontStyle: 'italic', fontSize: type.subhead },
   speaker: { color: colors.accent, fontWeight: '700', fontSize: type.subhead },
   player: { alignSelf: 'flex-end', backgroundColor: colors.accent, color: colors.accentInk, borderRadius: 12, padding: 10, maxWidth: '85%', overflow: 'hidden', fontSize: type.callout },

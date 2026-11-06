@@ -82,3 +82,8 @@ at its usage limit until 01:36 UTC), read-only; raw text in `trail/critique-1.md
 short); Simulator checks (open items). Taken: decisions rows.
 
 Net change: no empty buttons, novelty voices skipped, `_` folded, stated row layout, one test changed on purpose.
+
+## Outcome (2026-11-06)
+
+Built as designed. Mobile 163/163, server 244/244, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
+See [findings.md](findings.md).

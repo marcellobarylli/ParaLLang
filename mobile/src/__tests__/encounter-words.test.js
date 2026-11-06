@@ -36,8 +36,9 @@ test('every chip has its own speaker; pressing one says the chip\'s word with th
   expect(within(words).getByRole('button', { name: 'Hear caffè in Italian' })).toBeEnabled();
   expect(Speech.speak).toHaveBeenCalledWith('cornetto', expect.objectContaining({ language: 'it-IT', voice: alice.identifier }));
   expect(onHelp).not.toHaveBeenCalled();
-  // One voice lookup for both buttons, mounted in the same render (critique 1.2).
-  expect(Speech.getAvailableVoicesAsync).toHaveBeenCalledTimes(1);
+  // One voice lookup for both buttons, mounted in the same render (critique 1.2); round 061: one more for the
+  // narrator's tag (en-GB), one lookup per tag.
+  expect(Speech.getAvailableVoicesAsync).toHaveBeenCalledTimes(2);
 });
 
 test('the speaker stays enabled while its chip is disabled: loading, meaning shown, no hints left (critique 1.9)', async () => {

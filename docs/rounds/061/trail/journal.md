@@ -11,3 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 00:28:12 | 00:28:12 | disposition | Claude (claude-opus-5-5), autonomous | 8 findings: 6 accepted, 2 in part (1.1, 1.5) (autonomous, pending owner review); rows 1.1–1.8 | `../architecture.md` |
 | 6 | 00:28:12 | 00:28:12 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: no empty buttons, novelty voices skipped, _ folded, row layout stated, one test changed on purpose | `../architecture.md` |
 | 7 | 00:28:12 | 00:28:12 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
+| 8 | 00:30:57 | 00:30:57 | built | Claude (claude-opus-5-5), autonomous | NARRATOR, novelty filter and tag folding in speech.js; Narration row in DialoguePanel; narrator.test.js (6); encounter-words lookup count 2 | — |
+| 9 | 00:30:57 | 00:30:57 | result | Claude (claude-opus-5-5), autonomous | Mobile 163/163, server 244/244, client 12/12; expo-doctor 20/20; iOS export built | — |
+| 10 | 00:30:57 | 00:30:57 | outcome | Claude (claude-opus-5-5), autonomous | C10 done on demand: the narration heard in an English voice; auto-read an owner question | `../findings.md` |
+| 11 | 00:30:57 | 00:30:57 | closed | Claude (claude-opus-5-5), autonomous | Round 061 closed | `../findings.md` |
