@@ -76,3 +76,17 @@ test('a throwing addEventListener does not stop speak', async () => {
   await speak('caffè', { tag: 'it-IT', voice: alice });
   expect(Speech.speak).toHaveBeenCalledWith('caffè', expect.anything());
 });
+
+test('a word started while the return query is pending keeps its duck (round 065 Amendment 1)', async () => {
+  await setAmbience('coffee_cart');
+  const player = createAudioPlayer.mock.results.at(-1).value;
+  await speak('caffè', { tag: 'it-IT', voice: alice });
+  let answer;
+  Speech.isSpeakingAsync.mockImplementationOnce(() => new Promise((done) => { answer = done; }));
+  speechListener()('active');
+  await flush();
+  await speak('cornetto', { tag: 'it-IT', voice: alice });
+  answer(false); // the stale "not speaking" lands after the new word ducked
+  await flush();
+  expect(player.volume).toBe(DUCKED_VOLUME);
+});

@@ -60,3 +60,11 @@ has gone, is unverified (critique 1.6).
 1. **Owner, Simulator:** review a word, press "Continue reviews" and check the loading line on a slow connection.
    With VoiceOver on, check that the line is announced or easy to reach. Also stop the server during the wait: you
    should see "The next review could not load." and "Try again".
+
+## Addendum 2026-11-06: review 1 and Amendment 1
+
+A read-only review of rounds 059–065 found nothing serious ([review 1](trail/review-1.md)). It did find that this
+round's check did not stop an older review reply from overtaking a newer request on the same screen, and that
+"Try again" had no guard against a double tap. Both are fixed now, along with a rare case where the ambience was
+raised over a word spoken just after the app came back ([Amendment 1](architecture.md#amendment-1-2026-11-06-review-1-latest-request-only-and-a-guard)).
+Mobile 185/185 (3 new tests, all failing without the fix), server 244/244, client 12/12.

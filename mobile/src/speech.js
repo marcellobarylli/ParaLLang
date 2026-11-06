@@ -41,10 +41,11 @@ function listen() {
     subscription = AppState.addEventListener('change', (state) => {
       if (state === 'background') { stopSpeech(); return; }
       if (state !== 'active') return;
+      const asked = generation; // round 065 Amendment 1: a word started meanwhile keeps its duck
       Promise.resolve()
         .then(() => Speech.isSpeakingAsync())
         .catch(() => false)
-        .then((speaking) => { if (!speaking) duckAmbience(false); });
+        .then((speaking) => { if (!speaking && asked === generation) duckAmbience(false); });
     });
   } catch { subscription = null; }
 }

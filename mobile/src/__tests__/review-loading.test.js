@@ -134,3 +134,27 @@ test('the panel without a challenge: loading, failed, or nothing due', async () 
   expect(screen.getByText(NO_DUE)).toBeOnTheScreen();
   expect(screen.queryByRole('button', { name: 'Try again' })).not.toBeOnTheScreen();
 });
+
+test('Try again twice sends one request (round 065 Amendment 1)', async () => {
+  const user = userEvent.setup();
+  await toContinue(user);
+  await act(async () => { held[0](response(503, { error: { message: 'Reviews are temporarily unavailable.' } })); });
+  const tryAgain = await screen.findByRole('button', { name: 'Try again' });
+  await act(async () => { useGameStore.getState().startReview(); useGameStore.getState().startReview(); });
+  expect(held).toHaveLength(2);
+  expect(tryAgain).toBeTruthy();
+  await act(async () => { held[1](response(200, challenge(3, cards[1]))); });
+  expect(await screen.findByRole('heading', { name: 'senza latte' })).toBeOnTheScreen();
+});
+
+test('an older reply never overtakes a newer request on the same screen (round 065 Amendment 1)', async () => {
+  const user = userEvent.setup();
+  await toContinue(user); // request A held, on the review view
+  await act(async () => { useGameStore.setState({ isLoading: false }); useGameStore.getState().startReview(); }); // B
+  expect(held).toHaveLength(2);
+  await act(async () => { held[1](response(200, challenge(3, cards[1]))); });
+  expect(await screen.findByRole('heading', { name: 'senza latte' })).toBeOnTheScreen();
+  await act(async () => { held[0](response(200, challenge(2, cards[0]))); });
+  expect(screen.getByRole('heading', { name: 'senza latte' })).toBeOnTheScreen();
+  expect(useGameStore.getState().reviewChallenge.id).toBe('challenge-3');
+});

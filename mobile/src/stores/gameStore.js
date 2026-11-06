@@ -18,6 +18,7 @@ const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now
 export function createGameStore({ api = learningApi, storage = AsyncStorage, cue = playCue, ambience = setAmbience } = {}) {
   let initializationPromise = null;
   let requestEpoch = 0;
+  let reviewRequest = 0; // round 065 Amendment 1: the latest startReview
   let soundsTouched = false;
   const snapshots = new Map();
 
@@ -262,18 +263,19 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     })),
 
     startReview: async (vocabularyId) => {
-      const { learnerId } = get();
-      if (!learnerId) return;
+      const { learnerId, isLoading } = get();
+      if (!learnerId || isLoading) return; // round 065 Amendment 1: no second request from a double tap
       set({ isLoading: true, error: null, reviewResult: null });
       const epoch = requestEpoch; // Round 031: a reply after a save switch is dropped (critique 1.1).
       const from = get().view; // Round 065 (critique 1.2): a reply after the player left the screen does not pull them back.
+      const mine = ++reviewRequest; // Amendment 1: and an older reply never overtakes a newer request.
       try {
         const result = await api.createReview(learnerId, vocabularyId);
-        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        if (epoch !== requestEpoch || get().learnerId !== learnerId || mine !== reviewRequest) return;
         if (get().view !== from) { set({ spellbook: result.spellbook, isLoading: false }); return; }
         set({ reviewChallenge: result.challenge, spellbook: result.spellbook, view: result.challenge ? 'review' : 'spellbook', isLoading: false });
       } catch (error) {
-        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        if (epoch !== requestEpoch || get().learnerId !== learnerId || mine !== reviewRequest) return;
         set(get().view === from ? { error: error.message, isLoading: false } : { isLoading: false });
       }
     },

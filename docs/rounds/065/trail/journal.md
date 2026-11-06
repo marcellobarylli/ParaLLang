@@ -15,3 +15,6 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 9 | 00:50:48 | 00:51:15 | result | Claude (claude-opus-5-5), autonomous | Mobile 182/182, server 244/244, client 12/12; expo-doctor 20/20; iOS export built; the 6 new tests fail without the change | — |
 | 10 | 00:51:15 | 00:51:15 | outcome | Claude (claude-opus-5-5), autonomous | Done: no false no-due text while loading or after a failure; late replies do not pull the player back | `../findings.md` |
 | 11 | 00:51:15 | 00:51:15 | closed | Claude (claude-opus-5-5), autonomous | Round 065 closed | `../findings.md` |
+| 12 | 00:52 (approx.) | 00:55:34 | review-dispatched | Claude (claude-opus-5-5), autonomous | Read-only code review of rounds 059–065 by a Claude subagent (Codex limited); HEAD 1e2c140 | `review-1.md` |
+| 13 | 00:55 (approx.) | 00:55:34 | review-returned | Claude (claude-opus-5-5) subagent, standing in for Codex | 3 minor findings, nothing serious | `review-1.md` |
+| 14 | 00:55:34 | 00:55:34 | amended | Claude (claude-opus-5-5), autonomous | Amendment 1: startReview guard and latest-request counter; speech undock skipped when a word started during the query; 3 tests; mobile 185/185 | `../architecture.md` |

@@ -78,3 +78,25 @@ Net change: a failure state with Try again, and late replies dropped after navig
 
 Built as designed. Mobile 182/182 (6 new, all failing without the change), server 244/244, client 12/12, expo-doctor
 20/20, iOS export built. No live runs. See [findings.md](findings.md).
+
+## Amendment 1 (2026-11-06): review 1, latest request only and a guard
+
+A read-only review of rounds 059–065 ([review 1](trail/review-1.md), a Claude subagent standing in for Codex) found
+3 minor issues. Two are fixed here (autonomous decision, pending owner review):
+
+1. **`startReview`** returns at once while `isLoading` (a double "Try again" sends one request), and a module
+   counter `reviewRequest` drops any reply, success or failure, that is not the latest request's, so an older
+   reply cannot overtake a newer one on the same view.
+2. **`speech.js`**: on `active`, the undock after `isSpeakingAsync` is skipped when a word started (or a stop ran)
+   during the query (`generation` captured before it).
+
+Not changed: a dropped late reply still clears `isLoading` (as before round 065; otherwise the lock would stick),
+and `keepLine`'s 500-character `slice` may split a surrogate pair (cosmetic; authored lines are far shorter).
+Tests: 3 new (two in `review-loading.test.js`, one in `speech-background.test.js`), all failing without the change.
+Mobile 185/185, server 244/244, client 12/12.
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Risk | An older review reply can overtake a newer request; Try again has no guard | + | Accept: counter and `isLoading` guard | **Accepted** (autonomous, pending owner review) | Amendment 1, item 1 |
+| R1.2 | Risk | The return-to-app undock can land over a word started meanwhile | + | Accept: compare `generation` | **Accepted** (autonomous, pending owner review) | Amendment 1, item 2 |
+| R1.3 | Risk | `keepLine`'s slice may split a surrogate pair | 0 | Reject: cosmetic, lines far under 500 characters | **Rejected** (autonomous, pending owner review) | Amendment 1, not changed |
