@@ -7,39 +7,35 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 28 (2026-11-06, 06:50–07:52 UTC) closed six offline rounds:
-- **093** (F13): a save keeps its 20 newest assessment receipts (the one just written always), pruned in
-  `JsonLearningStorage.save`; receipts hold no Spellbook, a replay carries the current one (`replay`); attempt ids
-  looked up by own property (`receiptOf`). Fixture save after 240 turns: 2.50 MB → 158 KB.
-- **094** (F15): each card keeps its 20 last-written `evidence` entries (`trimEvidence` in `save`); the fixture save
-  is flat at 138 KB from turn 250 to 1000.
-- **095** (review of `server/src/llm/`): `LLMAdapter` forwards `serial` (**round 089's atmosphere abort had never run
-  in the server**); Codex and Claude keep a runner failure's category (re-map only a non-zero exit, to a stated
-  failure); the runner settles a child that exits with its pipes held (grace, group SIGKILL, stdio destroyed) or
-  never ends. Deferred: R1.5 (Codex `error` events beside `turn.completed`: check raw events live), R1.6 (claude-cli
-  error envelopes), R1.7 (frame earlier player turns, live).
-- **096** (review of the mobile store): review resends reuse their attempt id (`reviewAttempt`, `_sendReview`); a
-  start keeps the screen the player opened (`returnView: 'dialogue'`); `restartEncounter` is a restart `_startNamed`;
-  `placeWrites` drops world/party reads that began before a write; `revealHelp` reloads on STALE_VERSION /
-  STALE_ENCOUNTER via `_reloadStale` (shared with the send); `SAVE_LOST`. Deferred: request timeouts (Simulator).
-- **097** (review of `server/scripts/` and the prompt builder): play-market's `recordCalls` / `narrationLines` give
-  one line per committed NPC line (a guard retry beside it as `retried`); the leak scan's `openObjectives` follows
-  `objectives_unordered`; echo needs one earlier message; `verify-cli`'s `observedVerdicts` by id. Deferred to a live
-  round: frame earlier player turns as data, speakers in the grader context, no `accepted_examples` for the
-  narrator (same as 095 R1.7).
-- **098** (095 R1.9): the CLI runner sweeps this user's `parallang-cli-XXXXXX` dirs older than an hour, once per temp
-  root per process, in the background.
+Nothing open. Iteration 29 (2026-11-06, 07:51–08:25 UTC) closed three offline rounds:
+- **099** (second review of 093–098, two fresh reviewers): **help after a lost send no longer reloads** (the next
+  Send graded the answer twice); it keeps the conversation and says `STALE_HELP_PENDING`, so the resend replays.
+  Also `lostSaves` (SAVE_LOST after a failed load), `worldWrites` / `partyWrites` (replacing `placeWrites`), a review
+  reply after leaving the screen lands quietly (`onCard`), ReviewPanel's "No review is loaded." with Try again, any
+  runner exit is final for later timeouts/cancels, Codex `pickFailure` (first coded failure event). Rejected R1.3
+  (probe before group kill); deferred R1.4 (play-market per-step matching), critique 1.3 (replay after a server
+  restart shows a phantom conversation).
+- **100** (097 R1.5): `leak-scan.js` `scanExtras` reads narratives and grader feedback (exact open forms; feedback's
+  echo includes the graded message; `ENGLISH_FORMS` counted apart; by era). Over 149 reports: 0 of 1166 narratives,
+  8 of 942 feedback turns, all rounds 005–007 (fixed in 008). Footnotes not scanned (recorded before the filter).
+- **101** (044 open item 2): a fifth NPC-line kind `soft` (listed `FRAME_TARGETS` by entry id, and `espresso`):
+  65 lines leak → soft; leaks since round 051: it 6 (Flick's *ora* as "hour" ×3, Errata's *sono* ×2, *basta*), es 0.
+  The printed line keeps `old leak` = leak + soft.
+
+Iteration 28 (06:50–07:52 UTC) closed 093–098: receipts pruned to 20 (no Spellbook in them), card evidence to 20,
+the adapter forwards `serial`, CLI failure categories kept, the runner settles a child holding its pipes, store
+fixes (review resend replays, starts keep the screen), play-market's retried lines, the temp-dir sweep.
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline.** Every area has now had an in-depth review (rounds 086–097; each found real bugs). Possible next
-  passes: a second look at the code changed in 093–098 (receipts, the runner's exit handling, the store's new
-  guards) by a fresh reviewer; the web client (`client/`, frozen, never reviewed: only keep it working); round 090's
-  known leak (a readable *caffè* and *nero* answer a due *caffè nero*) if wanted; round 097 R1.5 (scan narratives,
-  footnotes and feedback as separate, uncounted kinds; offline over committed reports). Other options as before:
+- **Offline.** Every area has had an in-depth review (rounds 086–097), and 093–098 a second one (099). Possible next
+  passes: the web client (`client/`, frozen, never reviewed: only keep it working); round 090's known leak (a
+  readable *caffè* and *nero* answer a due *caffè nero*: hiding *caffè* whenever *caffè nero* is due over-hides, so
+  it reads as an owner question); 099's deferred phantom after a server restart (round 071's send path: after a
+  replay, a `currentEncounter` with no encounter or another id should go through `_reloadStale`'s closed branch);
   the footnote rule over other encounters' answers (measure first with `docs/rounds/086/results/rule.mjs`).
 - **Queued live (after 11-09 17:32 UTC):**
   - round 081's firmer footnote rule by Amendment ("write a footnote on the greeting and on about one reply in
@@ -52,8 +48,22 @@ Next candidates, none needing the owner:
     INVALID_GRADING retries;
   - the rest of round 081's Italian tour (Fountain, Bookshop, Rift);
   - watch `narrationStats` and the new `retried` lines (round 097) for the first live retry;
-  - a live round for the three deferred prompt changes (097 R1.6–R1.8).
+  - a live round for the three deferred prompt changes (097 R1.6–R1.8);
+  - read the `extra-*` and `soft` lines of every new report's leak scan (rounds 100–101); Flick's *ora* as "hour"
+    (round 101 open item); play-market per-step matching (099 R1.4).
 
+**Traps (iteration 29):**
+- `leak-scan.js`: `leak` was redefined in round 101 (old leak = leak + soft); compare earlier rounds' numbers with the
+  printed `old leak`. `formsFor` and exact hits now carry the entry `id`. A new encounter's optional words are not
+  `soft` until listed in `FRAME_TARGETS` (a content test checks each listed id is outside the required groups).
+  `ENGLISH_FORMS` is for English texts (narrative, feedback) only; NPC lines use `NPC_ENGLISH_FORMS` (`espresso`).
+- In leak-scan tests a scene with N lines needs N−1 successful say steps, or the report is skipped (no scene).
+- The store's `placeWrites` is gone: use `worldWrites` (move, loads, resolve) or `partyWrites` (recruit, loads,
+  resolve). `revealHelp` with a pending answer at the same version and a stale code sets `STALE_HELP_PENDING` and
+  never calls `currentEncounter`.
+- Runner errors keep `exitCode` only in `error.internal`, not on the ProviderError itself.
+- Subagent reviewers' Dispatched/Returned times: take them from `date -u` at the moment, not by estimate (round
+  099–101 journals needed correction rows).
 **Traps (iteration 28):**
 - Receipts no longer have `response.spellbook`; `storage.save(envelope, { keepReceiptId })` prunes receipts and
   evidence in place. A fixed test clock gives every receipt the same `committedAt`; ties keep the later entry.
@@ -316,6 +326,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 099 (Simulator):** after a lost send, tap a word chip for help: the line "Your last answer may have
+  reached the server…", then Send shows the verdict; the review screen's "Try again" after dismissing an error.
+- **Round 101 (question):** does the frame of an answer (Errata's "Sono Errata", the *sono* of "Sono Nessuno") give
+  it away? Today the scan counts it as a leak.
 - **Round 096 (Simulator):** a slow start with the Spellbook opened ("Return to X" leads back); a review
   answered offline then resent (the verdict shows); the new banner texts; request timeouts (R1.7)
   ([open items](../rounds/096/findings.md#open-items)).
