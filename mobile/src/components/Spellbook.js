@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
-import { Button, colors, type, leading, Title } from './ui.js';
+import { Button, colors, type, leading, Title, wordClassStyle } from './ui.js';
+import { wordClassText } from '../wordClass.js';
 
 export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to the map', now = Date.now() }) {
   const inEncounter = Boolean(spellbook.inEncounter);
@@ -91,6 +92,14 @@ function Fragment({ fragment, language }) {
   );
 }
 
+// Round 059 (backlog C8): the card's class in the chip's colour (noun, verb, adjective), muted text otherwise; the
+// card's frame stays neutral (decision 2). Shown in every state: the class is not the meaning.
+function ClassWord({ partOfSpeech }) {
+  const label = wordClassText(partOfSpeech);
+  if (!label) return null;
+  return <><Text style={label.cls ? [styles.classWord, wordClassStyle(label.cls).label] : null}>{label.text}</Text>{' · '}</>;
+}
+
 function Card({ card, state, language, isLoading, onReview }) {
   return (
     <View style={styles.card} aria-label={`Card ${card.target}`}>
@@ -101,7 +110,7 @@ function Card({ card, state, language, isLoading, onReview }) {
         <Text style={styles.example} accessibilityLanguage={language?.tag}>{card.example.target}{state === 'reference' && <Text style={styles.small}>{` (${card.example.english})`}</Text>}</Text>
       )}
       {state === 'reference' && card.note && <Text style={styles.small}>{card.note}</Text>}
-      <Text style={styles.small}>{card.partOfSpeech.replaceAll('_', ' ')} · Mastery: <Text style={styles.strong}>{card.mastery}</Text></Text>
+      <Text style={styles.small}><ClassWord partOfSpeech={card.partOfSpeech} />Mastery: <Text style={styles.strong}>{card.mastery}</Text></Text>
       {state !== 'inEncounter' && <Text style={styles.small}>{state === 'due' ? 'Due now' : `Next review: ${new Date(card.nextReviewAt).toLocaleString()}`}</Text>}
       {state === 'due' && <Button label="Review" variant="primary" disabled={isLoading} onPress={() => onReview(card.vocabularyId)} style={styles.review} />}
     </View>
@@ -125,6 +134,7 @@ const styles = StyleSheet.create({
   passage: { color: colors.ink, fontSize: type.callout, lineHeight: leading.callout, fontStyle: 'italic' },
   translation: { gap: 4, marginTop: 4 },
   strong: { fontWeight: '700' },
+  classWord: { fontWeight: '600' },
   small: { color: colors.muted, fontSize: type.footnote },
   muted: { color: colors.muted, fontSize: type.subhead },
 });

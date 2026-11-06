@@ -10,6 +10,14 @@ export function wordClass(partOfSpeech) {
 export const WORD_CLASS_LABEL = Object.freeze({ noun: 'noun', verb: 'verb', adjective: 'adj.' });
 export const WORD_CLASS_NAME = Object.freeze({ noun: 'noun', verb: 'verb', adjective: 'adjective' });
 
+// Round 059 (backlog C8): the class as text for the Spellbook and reviews: the class name for a coloured class,
+// otherwise the part of speech with spaces ("prepositional phrase"); null when there is none.
+export function wordClassText(partOfSpeech) {
+  if (typeof partOfSpeech !== 'string' || !partOfSpeech) return null;
+  const cls = wordClass(partOfSpeech);
+  return { cls, text: cls ? WORD_CLASS_NAME[cls] : partOfSpeech.replaceAll('_', ' ') };
+}
+
 // Round 057 (backlog C7): the line split at the spans the server matched (UTF-16 offsets into the line), so each
 // chip's word can be marked where it stands. Only well-formed spans count: integers inside the line, in order, not
 // overlapping (decision 1). Lines saved before round 057 have no spans and come back as one plain segment.

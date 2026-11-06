@@ -92,3 +92,8 @@ at its usage limit until 01:36 UTC), read-only; raw text in `trail/critique-1.md
 case, extra `wordClassText` cases.
 
 Net change: no server field, no coloured borders; the class word is coloured on cards and tagged on the review prompt.
+
+## Outcome (2026-11-06)
+
+Built as designed. Mobile 153/153, server 238/238, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
+See [findings.md](findings.md).

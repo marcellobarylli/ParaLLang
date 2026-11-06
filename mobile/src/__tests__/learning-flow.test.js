@@ -150,12 +150,14 @@ test('the app enforces help, retains failed input, resolves, reviews, reveals, a
   await user.press(screen.getAllByRole('button', { name: 'Review' })[0]);
   await screen.findByRole('heading', { name: 'caffè' });
   expect(screen.getByText('Due Italian-to-English recall')).toBeOnTheScreen();
+  expect(screen.getByText('noun')).toBeOnTheScreen(); // round 059: the class from the Spellbook card
   await user.type(screen.getByLabelText('English meaning'), 'coffee');
   await user.press(screen.getByRole('button', { name: 'Check answer' }));
   await screen.findByText('Correct.');
   await user.press(screen.getByRole('button', { name: 'Continue reviews' }));
   await screen.findByRole('heading', { name: 'senza latte' });
   expect(screen.getByLabelText('English meaning')).toHaveDisplayValue(''); // previous answer must not carry over
+  expect(screen.getByText('prepositional phrase')).toBeOnTheScreen();
   await user.press(screen.getByRole('button', { name: 'Show answer' }));
   await screen.findByText(/recorded as quality 0/);
   expect(screen.getByText(/^Answer:/)).toHaveTextContent('Answer: without milk');

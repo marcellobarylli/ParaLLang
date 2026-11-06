@@ -15,7 +15,7 @@ const code = (file) => readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '
 const isUi = (file) => file.endsWith(join('components', 'ui.js'));
 const COLOUR = /['"]#[0-9a-fA-F]{3,8}['"]|\b(?:rgba?|hsla?)\(|\b(?:color|backgroundColor|borderColor|borderLeftColor|tintColor|shadowColor)\s*:\s*['"](?!#)[a-z]+['"]/g;
 // Styles that only modify a sized style they are combined with or nested in (critique 1.2).
-const MODIFIERS = new Set(['Spellbook.js:strong', 'ReviewPanel.js:emphasis', 'MapPanel.js:nodeNameKnown', 'MapPanel.js:nodeNameUnreachable', 'SavesPanel.js:switchOn', 'ui.js:primaryLabel', 'ui.js:textLabel', 'ui.js:display', 'ui.js:mark']); // round 057: mark is nested in the line's sized Text
+const MODIFIERS = new Set(['Spellbook.js:strong', 'ReviewPanel.js:emphasis', 'MapPanel.js:nodeNameKnown', 'MapPanel.js:nodeNameUnreachable', 'SavesPanel.js:switchOn', 'ui.js:primaryLabel', 'ui.js:textLabel', 'ui.js:display', 'ui.js:mark', 'Spellbook.js:classWord']); // round 059: classWord is nested in the card's sized small Text // round 057: mark is nested in the line's sized Text
 
 test('no source sets a literal font size or colour outside ui.js', () => {
   expect(sources.length).toBeGreaterThan(15);
@@ -65,6 +65,7 @@ test('every text colour meets 4.5:1 on the backgrounds it is used on', () => {
   const pairs = [
     ...['ink', 'muted', 'accent', 'success', 'danger'].flatMap((fg) => [[fg, 'background'], [fg, 'surface']]),
     ['wordNoun', 'surface'], ['wordVerb', 'surface'], ['wordAdjective', 'surface'], // round 056: chips sit on surface
+    ['wordNoun', 'background'], ['wordVerb', 'background'], ['wordAdjective', 'background'], // round 059: the review's class tag
     ['accentInk', 'accent'], ['danger', 'dangerSurface'], ['muted', 'dangerSurface'], ['accent', 'dangerSurface'], ['success', 'successSurface'],
   ];
   // No text sits on the dot colours (border, muted, ink, success, accent fills on the map); disabled and pressed

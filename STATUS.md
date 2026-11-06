@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 059, word class on Spellbook cards and in reviews (autonomous)
+
+The word class now looks the same on Spellbook cards and on the review prompt as on the encounter chips. On a card,
+the class word is in its chip colour (nouns blue, verbs red, adjectives green); other classes stay in muted text, and
+card frames stay neutral. The review prompt shows the class under the word. The app takes it from the Spellbook card,
+so the server is unchanged. Meanings stay hidden wherever round 017 hides them. Showing the class on a recall prompt is
+an owner question. Checked by tests only ([open items](docs/rounds/059/findings.md#open-items)).
+
 ## Addendum 2026-11-05: round 058, every vocabulary form matches its own entry (autonomous)
 
 The matcher used to sort entries by their longest variant. An entry with one long variant could then take another
@@ -583,6 +591,7 @@ Newest first.
 | 037 | 11-05 | Two synthesized UI cues on progress only, and a sound switch (backlog C4a) (autonomous) | [037](docs/rounds/037/architecture.md) | [findings](docs/rounds/037/findings.md) | pre-run record to round 037 close |
 | 038 | 11-05 | Remove a non-current save from the device after a system alert; no label reuse (backlog A11b) (autonomous) | [038](docs/rounds/038/architecture.md) | [findings](docs/rounds/038/findings.md) | pre-run record to round 038 close |
 | 039 | 11-05 | Removing a save deletes it on the server too (`DELETE /api/learner`) (autonomous) | [039](docs/rounds/039/architecture.md) | [findings](docs/rounds/039/findings.md) | pre-run record to round 039 close |
+| 059 | 11-06 | Word class on Spellbook cards (class word coloured) and on the review prompt (backlog C8) (autonomous) | [059](docs/rounds/059/architecture.md) | [findings](docs/rounds/059/findings.md) | pre-run record to round 059 close |
 | 058 | 11-05 | The matcher tries every form longest first across entries; every form matches its own entry (backlog F3) (autonomous) | [058](docs/rounds/058/architecture.md) | [findings](docs/rounds/058/findings.md) | pre-run record to round 058 close |
 | 057 | 11-05 | Chip words marked inside the NPC line at the server's spans, by class (backlog C7) (autonomous) | [057](docs/rounds/057/architecture.md) | [findings](docs/rounds/057/findings.md) | pre-run record to round 057 close |
 | 056 | 11-05 | Word chips coloured and labelled by class: noun, verb, adjective (backlog C6) (autonomous) | [056](docs/rounds/056/architecture.md) | [findings](docs/rounds/056/findings.md) | pre-run record to round 056 close |

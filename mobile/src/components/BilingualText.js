@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, colors, type, leading, wordClassStyle } from './ui.js';
-import { WORD_CLASS_LABEL, WORD_CLASS_NAME, segmentLine, wordClass } from '../wordClass.js';
+import { WORD_CLASS_LABEL, WORD_CLASS_NAME, segmentLine, wordClass, wordClassText } from '../wordClass.js';
 import PronounceButton from './PronounceButton.js';
 
 // Round 055 (backlog C5): each chip can be heard (its canonical form, the chip's label), free of hints and outside
@@ -35,7 +35,7 @@ export default function BilingualText({ message, onHelp, disabled = false, langu
                 />
                 <PronounceButton text={word.canonicalTarget} language={language} hideWhenUnavailable />
               </View>
-              {word.meaning && <Text role="status" style={styles.meaning}>{word.meaning}{cls ? null : <Text style={styles.small}> ({word.partOfSpeech.replaceAll('_', ' ')})</Text>}</Text>}
+              {word.meaning && <Text role="status" style={styles.meaning}>{word.meaning}{cls ? null : <ClassNote partOfSpeech={word.partOfSpeech} />}</Text>}
             </View>
           );
         })}
@@ -48,6 +48,12 @@ export default function BilingualText({ message, onHelp, disabled = false, langu
       {isProtected && <Text style={styles.small}>Active-message translations use your companion hint allowance.</Text>}
     </View>
   );
+}
+
+// Round 059 (critique 1.7): the class after a revealed meaning, only for uncoloured classes; nothing when unknown.
+function ClassNote({ partOfSpeech }) {
+  const label = wordClassText(partOfSpeech);
+  return label ? <Text style={styles.small}> ({label.text})</Text> : null;
 }
 
 const styles = StyleSheet.create({

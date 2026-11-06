@@ -55,7 +55,7 @@ export default function App() {
         {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'review' && <ReviewPanel
           key={state.reviewChallenge?.id ?? 'result'}
-          challenge={state.reviewChallenge} result={state.reviewResult} language={state.language} isLoading={state.isLoading}
+          challenge={state.reviewChallenge} partOfSpeech={reviewPartOfSpeech(state)} result={state.reviewResult} language={state.language} isLoading={state.isLoading}
           onSubmit={state.submitReview} onReveal={state.revealReviewAnswer}
           onContinue={() => state.startReview()} onReturn={state.returnToDialogue} returnLabel={returnLabel}
         />}
@@ -71,6 +71,12 @@ export default function App() {
     </SafeAreaProvider>
     </DisplayFont.Provider>
   );
+}
+
+// Round 059 (critique 1.1): the review's word class, from the Spellbook card the server sent with the challenge.
+export function reviewPartOfSpeech(state) {
+  const id = state.reviewChallenge?.vocabularyId;
+  return id ? state.spellbook?.cards?.find((card) => card.vocabularyId === id)?.partOfSpeech ?? null : null;
 }
 
 const styles = StyleSheet.create({

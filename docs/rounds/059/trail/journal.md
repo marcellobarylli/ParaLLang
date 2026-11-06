@@ -11,3 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 00:01:16 | 00:01:16 | disposition | Claude (claude-opus-5-5), autonomous | 10 findings, all accepted (1.9 moot after 1.1) (autonomous, pending owner review); rows 1.1–1.10 | `../architecture.md` |
 | 6 | 00:01:16 | 00:01:16 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: no server field, no coloured borders; class word coloured on cards and tagged on the review prompt | `../architecture.md` |
 | 7 | 00:01:16 | 00:01:16 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
+| 8 | 00:05:02 | 00:05:02 | built | Claude (claude-opus-5-5), autonomous | wordClassText in wordClass.js; Spellbook ClassWord; ReviewPanel class tag; reviewPartOfSpeech in App.js; BilingualText ClassNote; theme pairs and modifier; word-class-cards.test.js (7), learning-flow review assertions | — |
+| 9 | 00:15:44 | 00:15:44 | result | Claude (claude-opus-5-5), autonomous | Mobile 153/153 (146 before; 7 new), server 238/238, client 12/12; expo-doctor 20/20; iOS export built | — |
+| 10 | 00:15:44 | 00:15:44 | outcome | Claude (claude-opus-5-5), autonomous | C8 done: class word coloured on Spellbook cards, class tag on the review prompt; owner questions on the review hint and frames | `../findings.md` |
+| 11 | 00:15:44 | 00:15:44 | closed | Claude (claude-opus-5-5), autonomous | Round 059 closed | `../findings.md` |

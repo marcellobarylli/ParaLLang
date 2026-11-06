@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
-import { Button, colors, type, Title } from './ui.js';
+import { Button, colors, type, Title, wordClassStyle } from './ui.js';
+import { wordClassText } from '../wordClass.js';
 
-export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to the map' }) {
+export default function ReviewPanel({ challenge, partOfSpeech = null, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to the map' }) {
   const [answer, setAnswer] = useState('');
   const name = language?.name ?? 'Target-language';
   if (result) return (
@@ -21,10 +22,13 @@ export default function ReviewPanel({ challenge, result, language, isLoading, on
   if (!challenge) return (
     <View style={styles.content}><Text style={styles.body}>No due review is available.</Text><Button label={returnLabel} onPress={onReturn} /></View>
   );
+  const classLabel = wordClassText(challenge.partOfSpeech ?? partOfSpeech);
   return (
     <ScrollView aria-label={`${name} vocabulary review`} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
       <Text style={styles.muted}>{challenge.practice ? 'Optional practice (schedule will not change)' : `Due ${name}-to-English recall`}</Text>
       <View style={styles.prompt}><Text role="heading" style={styles.word} accessibilityLanguage={language?.tag}>{challenge.target}</Text><PronounceButton text={challenge.target} language={language} /></View>
+      {/* Round 059 (backlog C8, decision 1): the word's class, read in English (no language tag; critique 1.5). */}
+      {classLabel && <Text style={[styles.classTag, classLabel.cls ? wordClassStyle(classLabel.cls).label : null]}>{classLabel.text}</Text>}
       <Text style={styles.strong}>English meaning</Text>
       <TextInput
         aria-label="English meaning"
@@ -51,6 +55,7 @@ const styles = StyleSheet.create({
   title: { fontSize: type.title1, fontWeight: '700', color: colors.ink },
   prompt: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   word: { fontSize: type.largeTitle, fontWeight: '700', color: colors.ink },
+  classTag: { fontSize: type.subhead, fontWeight: '600', color: colors.muted },
   input: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: type.callout, color: colors.ink },
   buttons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   body: { color: colors.ink, fontSize: type.callout },
