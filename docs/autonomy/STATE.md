@@ -7,23 +7,28 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 27 (2026-11-06, 05:53–06:10 UTC) closed round **089** (F10): an independent read-only review
-of the code of rounds 040–053 (4 findings) and fixes. The atmosphere filter's English exemptions were all answers
-(it *basta*, *sei*; es *once*, *kilo*), so the list is gone (0/72 live lines used one,
-`docs/rounds/089/results/exempt.txt`). On a serial (CLI) provider a player's call (`callProvider` without
-`background`) aborts atmosphere calls in flight; the greeting prefetch is `background` and waits as busy while one
-is in flight; an aborted call is not a cached failure and replies `retryAfterMs`. A party fragment is filed under the
-tier offered at N − 1 (latent); `speak` restores the ambience on a throw. Iteration 26 closed 085–088 (see Progress).
+Nothing open. Iteration 27 (2026-11-06, 05:53–06:45 UTC) closed two offline review rounds:
+- **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
+  *sei*; es *once*, *kilo*), so the list is gone (0/72 live lines used one). On a serial (CLI) provider a player's
+  call (`callProvider` without `background`) aborts atmosphere calls in flight; the greeting prefetch is `background`
+  and waits as busy; an aborted call is not a cached failure and replies `retryAfterMs`. A party fragment is filed
+  under the tier offered at N − 1 (latent); `speak` restores the ambience on a throw.
+- **090** (F11): review of rounds 029–039. Startup asks `currentEncounter` (a relaunch had forgotten the server's
+  conversation: stuck at the Rift drill). Cards carry `formCardIds` / `exampleCardIds`; the app's `cardWaits` holds a
+  phrase's meaning or an example's English back while a card in it is due (*cento*'s "A hundred grams of ham" while
+  *prosciutto* is due). After a failed start the Saves screen lists the device's saves (continue, new); removing an
+  unreadable save renames its file aside (`<id>.unreadable-…json`).
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09. Review passes have now covered rounds 040–064 and 076–085 (086–089 each found
-  real gaps, 088 and 089 answer leaks, at ~3 subagent runs a round). Next review candidate: rounds 029–039 (drill,
-  fragments, save slots, unlocks, polish, sounds, save removal; `git diff` from round 028's close to b0a87e9). Then
-  rounds 017–028 (Spellbook hiding, party recruitment and conversations, containment files, onboarding). Other
+- **Offline work only** until 11-09. Review passes have now covered rounds 029–064 and 076–085 (086–090 each found
+  real gaps, 088–090 answer leaks, at ~3 subagent runs a round). Next review candidate: rounds 017–028 (Spellbook
+  hiding, Rift gate and boss, party recruitment and conversations, containment files, onboarding; `git diff` from
+  round 016's close to 4e6f153). Round 090's known leak (a readable *caffè* and *nero* answer a due *caffè nero*)
+  could be its own small round if wanted. Other
   options: the footnote rule could also cover other encounters' answers (critique 1.4 of round 086, measure first
   with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said they are wanted).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
@@ -32,7 +37,10 @@ Next candidates, none needing the owner:
   items); round 089's tour with atmosphere and prefetch on (drops by reason, Talk wait); the rest of round 081's
   Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
 
-**Traps (iteration 27):** an atmosphere test line may use a word of its location's own description (allowed): the
+**Traps (iteration 27):** startup now calls `api.currentEncounter` before world/party: a test mock that holds
+`currentEncounter` on a deferred hangs `initialize` (give the first call an answer, `mockResolvedValueOnce`). In
+RNTL, two `render`s in one test with `screen.unmount()` between gave a false failure; use one render per test. An
+atmosphere test line may use a word of its location's own description (allowed): the
 Entrance's description holds "once". `GatedProvider` in `greeting-prefetch.test.js` ends a held call on abort; to
 test "a line that arrives after the abort", `gate.open()` then abort synchronously (the release wins the race).
 **Traps (iteration 26):** `/tmp` is a 64 MB tmpfs and filled to 7 MB free from jest's cache (`/tmp/jest_s2`, 36 MB)
@@ -229,6 +237,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
   remove and after a failed new save or switch.
 
+- [x] **F11. Review of rounds 029–039** (round 090, closed 2026-11-06): startup knows the server's encounter, card
+  answer ids, saves reachable after a failed start, unreadable saves set aside.
 - [x] **F10. Review of rounds 040–053** (round 089, closed 2026-11-06): no exemptions in the atmosphere filter
   (answers), atmosphere calls aborted by a player's call on a CLI provider, fragment tier, `speak` restores.
 - [x] **F9. Review of rounds 054–064** (round 088, closed 2026-11-06): kept lines withheld for any due card in them
@@ -264,6 +274,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 090 (Simulator, decision):** relaunch during a conversation ("Return to …" on the map, the Rift drill);
+  the Spellbook's held-back examples and phrase meanings; whether a phrase answered by its readable words should
+  wait too, and whether set-aside unreadable saves need a way back ([open items](../rounds/090/findings.md#open-items)).
+- **Round 089 (decision):** whether an English *once* or *due* may come back in atmosphere lines where it is no
+  answer of the place ([open items](../rounds/089/findings.md#open-items)).
 - **Round 088 (Simulator, decision):** a kept line with *caffè* from Gerald's coffee break waits while *caffe* is
   due; are homograph false hides acceptable ([open items](../rounds/088/findings.md#open-items)).
 - **Round 086 (Simulator):** background and foreground via the app switcher and via Notification Centre; the
@@ -590,9 +605,14 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - 2026-11-06, iteration 27 (05:53–06:10 UTC): round 089 (F10) from a subagent review of rounds 040–053 (4
   findings, 1 Error: atmosphere exemptions were answers), critiqued (9, 2 Errors in the abort design, all accepted),
   built and closed: server 323/323, client 12/12, mobile 245/245, iOS export bundles. No live calls (Codex limited).
+  Round 090 (F11) from a review of rounds 029–039 (5 findings, 2 Errors), critiqued (11, 3 Errors, all accepted;
+  R1.4 rejected), built and closed: server 327/327, client 12/12, mobile 257/257, iOS export bundles.
 
 ## Handoff notes and traps
 
+- **Card answer ids** (round 090): `spellbookSnapshot` adds `formCardIds` / `exampleCardIds` per card from
+  `entryAnswerLists(entry)` (per entry, cached, own id removed); the app's `cardWaits(card, spellbook, now)` decides.
+  A new card field that shows English (a note, a gloss) must go through `cardWaits` too.
 - **Atmosphere calls** (rounds 053, 089): each has a controller in `atmosphereAborts`; `callProvider` aborts them
   on a serial provider (`provider.serial`, a getter on `BaseCLIAdapter`) unless called with `background: true` (the
   greeting prefetch, through `narrate`). `writeAtmosphere` returns `{ text, aborted }`; only a non-aborted null is a

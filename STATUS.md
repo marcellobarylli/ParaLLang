@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 090, fixes from a review of rounds 029–039 (autonomous)
+
+A review of the code of rounds 029–039 found two bugs a player can hit. After a relaunch the app forgot a
+conversation the server still held, which could leave the player stuck at the Rift's drill; startup now asks the
+server. And a readable Spellbook card gave away a due one through its example or a phrase's meaning (*cento*'s
+example "A hundred grams of ham" while *prosciutto* is due); that English now waits for the review. A save the server
+cannot read no longer locks the player out of the others, and removing it keeps its file aside
+([findings](docs/rounds/090/findings.md)).
+
 ## Addendum 2026-11-06: round 089, fixes from a review of rounds 040–053 (autonomous)
 
 A review of the code of rounds 040–053 found that the location atmosphere line (off by default) let through pack

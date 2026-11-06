@@ -119,3 +119,10 @@ the new id as active (accepted).
 - server `delete-learner.test.js`: an unreadable save is renamed aside, a readable one deleted; `turnProgress`
   cleared.
 - Full suites; each fix removed in turn fails a test.
+
+## Outcome (2026-11-06)
+
+Built as designed, with two small departures: the set-aside file's name also carries a random suffix
+(`<id>.unreadable-<ms>-<8 hex>.json`), so two removals in one millisecond cannot overwrite each other; and a phrase
+whose meaning waits also holds back its note (the note explains the meaning). Every fix has a test that fails
+without it; full suites pass ([findings](findings.md)).
