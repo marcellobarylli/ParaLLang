@@ -6,12 +6,15 @@ import { AppError } from './errors.js';
 
 const digest = (value) => createHash('sha256').update(String(value)).digest();
 
-// Optional shared secret (PARALLANG_TOKEN): when set, every /api route except /api/health needs the
-// X-ParaLLang-Token header with that value.
+// Optional shared secret (PARALLANG_TOKEN): when set, every request except the health check needs the
+// X-ParaLLang-Token header with that value. Round 092 (review R1.1): an allowlist of one path, compared as the router
+// matches it (Express 5 is case-insensitive and ignores a trailing slash), so /API/world is not a way around it.
+// Unknown paths are 401 without the token, not 404. CORS preflights are answered by cors() before this check.
+const isHealth = (path) => path.toLowerCase().replace(/\/+$/, '') === '/api/health';
 function requireToken(token) {
   const expected = digest(token);
   return (req, res, next) => {
-    if (req.path === '/api/health' || !req.path.startsWith('/api/')) return next();
+    if (isHealth(req.path)) return next();
     const given = req.get('X-ParaLLang-Token');
     if (given && timingSafeEqual(digest(given), expected)) return next();
     return next(new AppError('A valid X-ParaLLang-Token header is required.', { status: 401, code: 'UNAUTHORIZED' }));

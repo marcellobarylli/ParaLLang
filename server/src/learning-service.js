@@ -56,6 +56,18 @@ export function atmosphereDetail(world, locationId, state) {
 }
 const foldForAtmosphere = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 
+// Round 092 (Amendment 1): some occurrence of `needle` in `text` neither starts nor ends inside a word.
+const WORD_CHAR = /[\p{L}\p{N}\p{M}]/u;
+export function atWordBoundaries(text, needle) {
+  if (!needle) return false;
+  for (let at = text.indexOf(needle); at >= 0; at = text.indexOf(needle, at + 1)) {
+    const before = at > 0 && WORD_CHAR.test(text[at - 1]) && WORD_CHAR.test(needle[0]);
+    const after = at + needle.length < text.length && WORD_CHAR.test(text[at + needle.length]) && WORD_CHAR.test(needle.at(-1));
+    if (!before && !after) return true;
+  }
+  return false;
+}
+
 function clone(value) { return structuredClone(value); }
 function payloadHash(value) { return createHash('sha256').update(JSON.stringify(value)).digest('hex'); }
 function nowIso(clock) { return new Date(clock()).toISOString(); }
@@ -868,9 +880,13 @@ export class LearningService {
       for (const evidence of result.vocabulary_evidence) {
         if (!objective.target_vocabulary_ids.includes(evidence.vocabulary_id)) throw retryableError('The grader returned evidence for an unrelated vocabulary item.', 'INVALID_GRADING');
         const excerptIds = new Set(matchCanonicalVocabulary(evidence.evidence, this.content.vocabulary.entries).map((match) => match.id));
+        // Round 092 (review R1.2; Amendment 1): the evidence must stand in the answer at word boundaries ("pane"
+        // quoted from "panettone" does not); graders may quote words around the form ("No estás sola" for sola).
+        const folded = foldEvidenceText(evidence.evidence);
+        const inContext = atWordBoundaries(foldEvidenceText(playerInput), folded);
         if (evidenceIds.has(evidence.vocabulary_id)
-          || !foldEvidenceText(playerInput).includes(foldEvidenceText(evidence.evidence))
-          || !excerptIds.has(evidence.vocabulary_id)) {
+          || !excerptIds.has(evidence.vocabulary_id)
+          || !inContext) {
           throw retryableError('The grader returned vocabulary evidence that is not present in the answer.', 'INVALID_GRADING');
         }
         evidenceIds.add(evidence.vocabulary_id);
@@ -939,11 +955,13 @@ export class LearningService {
         ...(heldIds.size ? { held_note: HELD_NOTE } : {}),
       };
       // Round 045 (critique 1.5): in an unordered encounter, help taken on the current objective may serve any open
-      // objective, so a reveal caps the quality of every objective graded this turn. Round 070 (critique 1.8): the
+      // objective, so a reveal caps the quality of every objective graded this turn (round 092: ordered ones too). Round 070 (critique 1.8): the
       // effective qualities and the response's assessment block are computed before the reply, once.
       const anyReveal = objectives.some((objective) => (current.reveals[objective.id] ?? []).length > 0);
       for (const result of assessment.objective_results) {
-        const assisted = unordered ? anyReveal : (current.reveals[result.objective_id] ?? []).length > 0;
+        // Round 092 (review R1.6): in an ordered encounter only the current objective can have reveals, and help on its
+        // line helps every objective the turn closes, so the cap is the same condition for both kinds.
+        const assisted = anyReveal;
         for (const evidence of result.vocabulary_evidence) evidence.effective_quality = capAssistedQuality(evidence.quality, assisted);
       }
       const responseAssessment = {

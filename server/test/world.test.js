@@ -189,3 +189,23 @@ test('PARALLANG_TOKEN guards every API route except health', async (t) => {
   const ok = await api(runtime, '/api/learner', { method: 'POST', body: {} });
   assert.equal(ok.status, 201);
 });
+
+// Round 092 (review R1.1): Express 5 routes case-insensitively and ignores a trailing slash, so the check is an
+// allowlist of the health check alone, compared the same way.
+test('PARALLANG_TOKEN: other spellings of a route need it too; only the health check is open', async (t) => {
+  const runtime = await createRuntime();
+  t.after(runtime.close);
+  const learnerId = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
+  const bare = (path, init = {}) => fetch(`${runtime.baseUrl}${path}`, { ...init, headers: { 'X-Learner-Id': learnerId, ...(init.headers ?? {}) } });
+  for (const path of ['/API/world', '/Api/onboarding', '/api/world/', '/API/WORLD/', '/nope']) {
+    const response = await bare(path);
+    assert.equal(response.status, 401, path);
+    assert.equal((await response.json()).error.code, 'UNAUTHORIZED', path);
+  }
+  assert.equal((await bare('/API/world', { method: 'HEAD' })).status, 401, 'HEAD');
+  for (const path of ['/api/health', '/api/health/', '/API/HEALTH/']) assert.equal((await bare(path)).status, 200, path);
+  const preflight = await bare('/API/world', { method: 'OPTIONS', headers: { Origin: 'http://127.0.0.1:5173', 'Access-Control-Request-Method': 'GET' } });
+  assert.equal(preflight.status, 204, 'cors answers preflights first');
+  const withToken = await bare('/API/world', { headers: { 'X-ParaLLang-Token': runtime.token } });
+  assert.equal(withToken.status, 200, 'with the token the same spelling passes');
+});

@@ -92,3 +92,13 @@ routing).
 - server: an ordered encounter, a sentence reveal on the first objective, one turn closing the first and second: both
   capped at 2.
 - Full suites; each fix removed in turn fails a test.
+
+## Amendment 1 (2026-11-06, during the build): evidence at word boundaries, not equal to a match
+
+Decision 2 (critique 1.1) required the evidence to equal a match of its entry in the answer. Two existing grading
+stubs failed with it, both quoting words around the form ("No estás sola" for *sola*, "No, adesso" for *adesso*); a
+live grader may quote the same way, and every such turn would have been a retryable INVALID_GRADING. The rule is now:
+the evidence stands in the answer at word boundaries (some occurrence neither starts nor ends inside a word,
+`atWordBoundaries`), and, as before, its own text matches the entry. "pane" quoted from "panettone" is still refused;
+a quoted phrase around the form is accepted. The entry-alone match is gone with it, so the *caffè nero* test of the
+pre-run Tests is replaced by `atWordBoundaries('un caffè nero', 'caffè')`. The substring check is part of the new one.
