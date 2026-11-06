@@ -7,14 +7,19 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 21 (2026-11-06, 02:55–03:35 UTC) closed rounds 074–077: a Spanish regression tour (074, no
-regression), the three minor review notes (075: a reconciled replay clears its verdict, a "Counted." line with one
-VoiceOver announcement, progress ids compared as strings), and the greeting prefetch (076, I4, `PARALLANG_PREFETCH=on`,
-off by default: mean Talk wait 12.1 s → 4.4 s live with a 10 s stay). Round 077 checked the prefetch over HTTP
-through `server.js` (4.06 s and 0.03 s after a 10 s stay, 16.7 s after 0.3 s). Codex use this iteration: about 80 game calls
-and 2 critiques, from 02:56 to 03:23, no usage limit hit.
+Nothing open. Iteration 22 (2026-11-06, 03:29–03:50 UTC) closed rounds 078–079. Round 078 is prototype.md §11's
+"check and retry": a line with no target language (4+ words, all in its translation, no encounter vocabulary) is
+written again once. The retry sees the rejected reply and a correction, and the first line is kept if the retry
+fails, is still English or takes over 20 s; a late retry is aborted through a new `signal` in the CLI runner
+(Amendment 1, after a subagent review). The rule flags 2 of 1,218 recorded live lines, both real (round 048). Live:
+0 of 14 lines flagged. Round 079: `verify:cli` in Spanish (codex-cli) passed 9/9 for the first time (D1, codex
+part). Codex use this iteration: about 40 game calls and 1 critique, no usage limit hit.
 
 Next candidates, none needing the owner:
+- **Watch `narrationStats`** in every live report (play-market and verify:cli now carry it). The first `flagged > 0`
+  is the first live retry: read both lines and record whether the retry fixed it (round 078 open item).
+- **A regression tour** (it or es) after round 078: the narration path changed (`narrate`), and tours exercise every
+  encounter. About 60 calls.
 - **Atmosphere repetition within a place** (round 068): low value while the cache shows one line per place and state.
 - **Kept lines from free translations** and other owner questions are listed under Needs owner.
 
@@ -118,7 +123,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 ### D. Open items from rounds 003 and 004 doable without the Simulator or the owner
 
 - [ ] **D1.** (claude-cli preflight accepts an OAuth token since round 018; still blocked: no token in the shell)
-  `verify:cli` for `claude-cli` in Italian and for either provider in Spanish (round 003 item 3).
+  `verify:cli` for `claude-cli` in Italian and for either provider in Spanish (round 003 item 3). **Spanish with
+  codex-cli done** (round 079, closed 2026-11-06: 9/9); only claude-cli remains.
 - [x] **D2.** Grader caps echoed phrases at quality 2 (round 003 item 4): explained by rounds 007–008 (the echoes
   were prompted; unprompted, the same answer scores 5).
 - [x] **D3.** (round 017, closed 2026-11-05) Show vocabulary notes; the Spellbook meaning leak from round 001 (round 003 item 5).
@@ -171,6 +177,12 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **I2. A resent answer replays** (round 071, closed 2026-11-06; round 070 critique 1.2): attempt ids by
   request key, guarded reload on `STALE_VERSION` / `STALE_ENCOUNTER`, back to the map if the conversation closed.
 
+### J. Follow-ups seeded in iteration 22
+
+- [x] **J1. The no-target-language guard** (round 078, closed 2026-11-06; prototype.md §11): one retry for a line with
+  no target language, the first kept on failure or after 20 s; `narrationStats`. Open: retry lines merely under the
+  ratio (owner question).
+
 ### F. Maintenance
 
 - [x] **F1. Test temp dirs.** (round 024, closed 2026-11-05: `makeTempDir` in helpers.js, removed at process exit) Server tests `mkdtemp` save dirs under `/tmp` and never remove them; `/tmp` is a 64 MB
@@ -209,6 +221,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 078:** should a line merely under the ratio (not only one with no target language) also be written again
+  ([open items](../rounds/078/findings.md#open-items)); review the guard's correction text.
 - **Round 076:** turn `PARALLANG_PREFETCH` on by default or not (one call per arrival where the player stays 1.5 s
   and never talks); Simulator: with it on, read a card a few seconds and press Talk
   ([open items](../rounds/076/findings.md#open-items)).
@@ -324,6 +338,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   list an open objective's answers as options ([open items](../rounds/010/findings.md#open-items)).
 
 ## Progress
+
 
 - 2026-11-05, iteration 1: created this file and `decisions.md`; baseline tests green (server 65/65, mobile 15/15,
   client 12/12). Round 005 (A1) built and closed: map, world API, save v2, PARALLANG_TOKEN, `play-market.js`;
@@ -493,6 +508,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   A subagent review of round 076 found no bug; two tests made strict (Amendment 1).
   Round 077 closed: the prefetch over HTTP through server.js, all four criteria met (3 calls);
   `docs/rounds/077/results/prefetch-http.mjs` starts the real server on 127.0.0.1 with a token and stops it.
+- 2026-11-06, iteration 22: round 078 (J1) planned, critiqued (5 findings: 3 accepted, 2 in part), built, reviewed
+  (Amendment 1: the retry aborted at its deadline) and closed: server 284/284, client 12/12, mobile 218/218; offline
+  2/1,218 flagged, live 0/14. Round 079 (D1, Spanish with codex-cli) closed: verify:cli 9/9. Iteration 22 ends here.
 
 ## Handoff notes and traps
 
@@ -709,6 +727,17 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   path and file list only, returned a useful critique in ~70 s. Number the Second opinion rows `1.n` from the start
   (the log check needs them; round 027 needed an Amendment for it).
 
+- **Narration goes through `narrate()`** (round 078), not `callProvider` directly: the start's greeting, the
+  prefetch and the turn reply. A new narration call should use it too. A flagged line adds one provider call, so a
+  script with a fixed call budget must allow `narrationStats.flagged` more (verify-cli does). Test providers that
+  parse the turn from `messages.at(-1)` must skip the last two messages on a retry (the rejected reply and the
+  `CORRECTION:` note); see `QueuedProvider` in `server/test/target-language-guard.test.js`.
+- **`CLIProcessRunner.run({ signal })`** (round 078): an abort removes a queued task or cancels the running one. Use it
+  for any call the service stops waiting for; an abandoned call otherwise holds the one slot for up to 120 s.
+- **`*.log` is gitignored**: results logs stay local. Save what findings cite as `.json` (round 079 parsed the JSON
+  out of verify:cli's log).
+- **`docs/rounds/078/results/offline-scan.mjs`** walks every recorded live report and finds each line's encounter
+  (`encounterId` or `definitionId`). Reuse it for any new rule over past NPC lines.
 - **Quote the `folded` share, not `notInTranslation`** (round 067 addendum): by `folded` the tours are it 0.43 / es
   0.44 against 0.44 and the Rift 0.50 / 0.50; round 067's "Rift at 0.83" was the glitch artifact again.
 - **The share estimate `notInTranslation` overcounts** in two cases (round 026 hand counts): glitched English

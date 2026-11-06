@@ -39,3 +39,8 @@ is re-run once, and both reports are kept.
 ## Claim boundary (pre-run)
 
 One run, one provider, Gerald's encounter only.
+
+## Outcome (2026-11-06)
+
+All three criteria met: 9/9 verdicts as expected, the encounter resolved, no feedback gives a Spanish answer, 14
+calls ([findings](findings.md)).
