@@ -1,0 +1,34 @@
+== 074es (es): tour resolved=true sealedBefore=true openAfter=true calls=64
+  market_entrance_tutorial     resolved=true lines=4 share=0.22 req=0.28 greeting=0.14/0.20 gap=0.06 under=1 over=0 leakLines=0 verdicts=P.. P. P
+  imp_coffee_greeting          resolved=true lines=3 share=0.35 req=0.30 greeting=0.20/0.25 gap=0.08 under=0 over=1 leakLines=0 verdicts=P. P
+  butchers_stall_charcutier    resolved=true lines=5 share=0.35 req=0.40 greeting=0.31/0.30 gap=0.05 under=1 over=0 leakLines=0 verdicts=.. P. . P
+  cracked_fountain_letharger   resolved=true lines=9 share=0.50 req=0.50 greeting=0.25/0.30 gap=0.04 under=0 over=0 leakLines=0 verdicts=.... P... ... P.. .. P. . P
+  old_bookshop_bookworm        resolved=true lines=6 share=0.61 req=0.48 greeting=0.89/0.35 gap=0.21 under=0 over=2 leakLines=2 verdicts=.. .. P. . P
+      leak? L0 [home:casa] I'm Marginalia. Esta es la historia de Journathan, el hombre de muchas lenguas. Su viaje a casa dura veinte años. I sell books only to people who understand them. Apparently this is considered gatekeeping rather than basic maintenance. No spoilers, just reading comprehension: ¿Adónde va Journathan?
+      leak? L3 [name:nadie] ¡Correcto! Va a casa. Reading comprehension: upgraded. Now, the first recorded translation trick. No spoilers; the Cyclops suffered enough.
+
+El Cíclope le pregunta su nombre. Journathan responde: «Mi nombre es Nadie.»
+
+¿Qué nombre le da Journathan al Cíclope? Your next book depends on this. Basic maintenance, not gatekeeping.
+  the_rift_errata              resolved=true lines=8 share=0.78 req=0.50 greeting=0.81/0.50 gap=0.28 under=0 over=8 leakLines=4 verdicts=... ... P.. .. P. . P
+      leak? L2 [order:cafe, order:cafe] El café está bien. Falta la carne. ¿Qué más quieres? Còntainment pròcedure: yoùr request remains incòmplete. Hùnger has filed an appèal.
+      leak? L3 [nobody:nombre] El café y el chorizo están bien. Gracias. Voy a leer tu nombre. ¿Me dejas continuar? Còntainment pròcedure: interrupt rèading immediately. Yoùr silence counts as a signatùre, which is vèry convenient for mè.
+      leak? L5 [nobody:nombre] Ahora paro. No leo más. Está bien. Pero necesito tu nombre. ¿Cómo te llamas? Còntainment pròcedure: pàuse ŧhe rèading. Yoùr signatùre is still rèquired. Bureaucràcy has tèeth.
+      leak? L6 [nobody:nombre] Ese nombre es tuyo. No sirve. Recuerda a Journathan. ¿Cómo te llamas? Còntainment pròcedure: ùse his trìck, not yoùr rèal identity. Hòw nùtritious.
+  TOTAL lines=35 share=0.52 req=0.44 gap=0.13 under=2 over=11 leakLines=6
+== 067es
+  market_entrance_tutorial     folded=0.24 req=0.28 lines=4/4
+  imp_coffee_greeting          folded=0.33 req=0.30 lines=3/3
+  butchers_stall_charcutier    folded=0.37 req=0.40 lines=5/5
+  cracked_fountain_letharger   folded=0.52 req=0.50 lines=9/9
+  old_bookshop_bookworm        folded=0.48 req=0.48 lines=6/6
+  the_rift_errata              folded=0.50 req=0.50 lines=8/8
+  ALL folded=0.44 req=0.44 lines=35
+== 074es
+  market_entrance_tutorial     folded=0.22 req=0.28 lines=4/4
+  imp_coffee_greeting          folded=0.35 req=0.30 lines=3/3
+  butchers_stall_charcutier    folded=0.35 req=0.40 lines=5/5
+  cracked_fountain_letharger   folded=0.50 req=0.50 lines=9/9
+  old_bookshop_bookworm        folded=0.47 req=0.50 lines=4/6
+  the_rift_errata              folded=0.46 req=0.50 lines=8/8
+  ALL folded=0.41 req=0.44 lines=33

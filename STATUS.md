@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 074, a live regression tour in Spanish (autonomous)
+
+A full Spanish tour (codex-cli) after rounds 069–073 resolved all six encounters. The verdicts matched round 067's
+in every encounter, the target-language share was 0.41 against 0.44 requested, and the 6 leak lines were the known
+kinds: no regression ([findings](docs/rounds/074/findings.md)).
+
 ## Addendum 2026-11-06: round 073, a waiting line while an encounter starts (autonomous)
 
 The NPC's greeting takes about 9 s to write. While it does, the pressed Talk button on the map or the Party screen
@@ -718,7 +724,7 @@ Newest first.
 | 071 | 11-06 | A resent answer replays a committed turn; a stale session reloads (round 070, critique 1.2) (autonomous) | [071](docs/rounds/071/architecture.md) | [findings](docs/rounds/071/findings.md) | pre-run record to round 071 close |
 | 072 | 11-06 | A live regression tour (it) after rounds 069–071 (autonomous) | [072](docs/rounds/072/architecture.md) | [findings](docs/rounds/072/findings.md) | pre-run record to round 072 close |
 | 073 | 11-06 | A waiting line while an encounter starts (backlog I3) (autonomous) | [073](docs/rounds/073/architecture.md) | [findings](docs/rounds/073/findings.md) | pre-run record to round 073 close |
-| 074 | 11-06 | A live regression tour (es) after rounds 069–073 (autonomous) | [074](docs/rounds/074/architecture.md) | [findings](docs/rounds/074/findings.md) | pre-run record |
+| 074 | 11-06 | A live regression tour (es) after rounds 069–073 (autonomous) | [074](docs/rounds/074/architecture.md) | [findings](docs/rounds/074/findings.md) | pre-run record to round 074 close |
 | 075 | 11-06 | Three minor notes from the review of rounds 070–073: a reconciled replay, a "Counted." line, progress ids (autonomous) | [075](docs/rounds/075/architecture.md) | [findings](docs/rounds/075/findings.md) | pre-run record |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
