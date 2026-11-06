@@ -7,23 +7,21 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 22 (2026-11-06, 03:29–04:00 UTC) closed rounds 078–080. Round 078 is prototype.md §11's
-"check and retry": a line with no target language (4+ words, all in its translation, no encounter vocabulary) is
-written again once. The retry sees the rejected reply and a correction, and the first line is kept if the retry
-fails, is still English or takes over 20 s; a late retry is aborted through a new `signal` in the CLI runner
-(Amendment 1, after a subagent review). The rule flags 2 of 1,218 recorded live lines, both real (round 048). Live:
-0 of 14 lines flagged. Round 079: `verify:cli` in Spanish (codex-cli) passed 9/9 for the first time (D1, codex
-part). Round 080: an Italian regression tour after 078, no regression (verdicts 6/6 equal to round 072, folded 0.43,
-8 known-kind leaks), guard 0 of 35 flagged. Codex use this iteration: about 105 game calls and 1 critique, from 03:33
-to 03:58, no usage limit hit.
+Nothing open. Iteration 23 (2026-11-06, 04:00–04:30 UTC) closed round 081 (backlog B5, narrator footnotes): an
+optional `footnote` field, a style rule ("about one reply in three"), a server filter (200 characters, no pack
+vocabulary bar English homographs, never two in a row) and a "*" line in the app. Live (codex-cli, 21 lines, it and
+es) the model wrote **no** footnote: the criterion failed, the feature is inert, no regression where the runs reached.
+
+**Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
+autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
+Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Watch `narrationStats`** in every live report (play-market and verify:cli now carry it). The first `flagged > 0`
-  is the first live retry: read both lines and record whether the retry fixed it (round 078 open item).
-- **A Spanish regression tour** after round 078, if wanted (round 080 did Italian; 079's verify:cli covered Spanish
-  grading).
-- **Atmosphere repetition within a place** (round 068): low value while the cache shows one line per place and state.
-- **Kept lines from free translations** and other owner questions are listed under Needs owner.
+- **Offline work only** until 11-09: review-type rounds (a read-only subagent review of rounds 076–081), test gaps,
+  content checks with `leak-scan.js`, docs.
+- **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
+  greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure; the
+  rest of round 081's Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
 
 ## Backlog
 
@@ -90,6 +88,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - [x] **B4. Containment files.** (round 028, closed 2026-11-05) CM-001 (Fountain jingle) and CM-002 (Errata) in the
   Spellbook, filed on the encounter's completion (`containment_file` on the encounter, both packs).
+
+- [ ] **B5. Narrator footnotes** (round 081 built and closed 2026-11-06, seeded in iteration 23 from GAME MECHANICS.md:
+  "the footnotes can turn into meme formats"): field, filter and app line built; live 0 of 21 lines had a footnote.
+  Open: a firmer rule, measured live (Codex limited until 2026-11-09 17:32 UTC).
 
 ### C. prototype.md Phase 4: Polish & Audio
 
@@ -223,6 +225,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 081:** whether narrator footnotes (and meme formats in them) are wanted; Codex's usage limit runs to
+  2026-11-09 17:32 UTC, past the run, so the firmer rule is unmeasured ([open items](../rounds/081/findings.md#open-items)).
 - **Round 078:** should a line merely under the ratio (not only one with no target language) also be written again
   ([open items](../rounds/078/findings.md#open-items)); review the guard's correction text.
 - **Round 076:** turn `PARALLANG_PREFETCH` on by default or not (one call per arrival where the player stays 1.5 s
@@ -514,9 +518,21 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (Amendment 1: the retry aborted at its deadline) and closed: server 284/284, client 12/12, mobile 218/218; offline
   2/1,218 flagged, live 0/14. Round 079 (D1, Spanish with codex-cli) closed: verify:cli 9/9. Round 080 closed: Italian tour, no
   regression, guard 0/35. Iteration 22 ends here.
+- 2026-11-06, iteration 23 (04:00–04:30 UTC): round 081 (B5, narrator footnotes) planned, critiqued by Codex (9
+  findings: 4 accepted, 4 in part, 1 rejected), built (Amendment 1: reports carry the raw footnote) and closed: server
+  291/291, client 12/12, mobile 221/221. Live 0 of 21 lines had a footnote (criterion failed; inert). Codex hit its
+  usage limit at 04:17 UTC, until 2026-11-09 17:32 UTC. About 30 game calls and 1 critique.
 
 ## Handoff notes and traps
 
+- **Footnotes** (round 081): `keptFootnote(generated, previousNpc)` in `learning-service.js`; the start passes no
+  previous line, the turn the last NPC message. `FOOTNOTE_MAX_LENGTH` 200; the vocabulary bar reuses
+  `ATMOSPHERE_ENGLISH` (es *café* folds to "cafe" and is exempt: test with *con leche*). play-market `lines` carry the
+  raw `footnote`; `docs/rounds/081/results/footnotes.mjs` counts offered and kept. Golden prompts are
+  `gerald-prompts-r081.json`. **`.describe()` on a nullable zod field does not reach the CLI schema** (zod-to-json-schema
+  openAi target drops it): put instructions in the prompt.
+- **Background shell lists lose variables**: `R=x && cmd1 & cmd2 &` runs the assignment inside the first background
+  list, so `cmd2` sees no `$R` (round 081's Spanish run wrote to `/`). Assign before, on its own line.
 - **Greeting prefetch** (round 076): `scheduleArrival` on every committed move and on `createOrRecoverLearner`;
   `fireArrival` after `prefetchDwellMs` re-reads the save (`prefetchTarget`) and skips while a start runs
   (`starting`, held by the `startEncounter` wrapper around `_startEncounter`), while a session of it is active, or

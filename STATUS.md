@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 081, narrator footnotes (autonomous)
+
+An NPC reply may carry a `footnote` (the owner's "the footnotes can turn into meme formats"): kept by the server when
+short, free of pack vocabulary and not right after another, shown under the narration in the app with "*". Live
+(codex-cli, 21 lines, it and es) the model wrote none, so the criterion failed and the feature is inert; no
+regression where the runs reached. Codex then hit a usage limit until 2026-11-09 17:32 UTC, past the autonomous run:
+no more live data in this run ([findings](docs/rounds/081/findings.md)).
+
 ## Addendum 2026-11-06: round 080, a live Italian regression tour after round 078 (autonomous)
 
 A full Italian tour (codex-cli) resolved all six encounters with the same verdicts as round 072. The target-language
@@ -769,7 +777,7 @@ Newest first.
 | 078 | 11-06 | An NPC line with no target language is written again once (autonomous) | [078](docs/rounds/078/architecture.md) | [findings](docs/rounds/078/findings.md) | pre-run record to round 078 close |
 | 079 | 11-06 | `verify:cli` in Spanish with codex-cli (autonomous) | [079](docs/rounds/079/architecture.md) | [findings](docs/rounds/079/findings.md) | pre-run record to round 079 close |
 | 080 | 11-06 | A live Italian regression tour after round 078 (autonomous) | [080](docs/rounds/080/architecture.md) | [findings](docs/rounds/080/findings.md) | pre-run record to round 080 close |
-| 081 | 11-06 | Narrator footnotes, now and then, without pack vocabulary (autonomous) | [081](docs/rounds/081/architecture.md) | [findings](docs/rounds/081/findings.md) | pre-run record |
+| 081 | 11-06 | Narrator footnotes, now and then, without pack vocabulary (autonomous) | [081](docs/rounds/081/architecture.md) | [findings](docs/rounds/081/findings.md) | pre-run record to round 081 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |

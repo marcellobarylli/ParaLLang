@@ -109,3 +109,23 @@ Shows that the model writes footnotes at some rate, that the server keeps out pa
 homographs) and never keeps two in a row, and that the app renders them in jest. It does not show that a footnote
 is English (a target word outside the pack passes), that footnotes are funny (owner), or how they look on an iPhone
 (Simulator).
+
+## Amendment 1 (2026-11-06): the report carries the footnote as written
+
+Design 6 was wrong: play-market's `lines` keep only `native`, `translation` and `narrative` of each raw output, so
+a footnote the server drops would not be in the report. Found at 04:13 UTC, two minutes into the first live runs,
+which were stopped (no results kept) and restarted. Change: each line carries `footnote` as the model wrote it (or
+`null`); kept footnotes are read from the serialized transcripts in the report's steps. No other change.
+
+## Note (2026-11-06): the critique prompt
+
+The exact prompt sent to Codex for critique 1 is in [`trail/critique-1-prompt.txt`](trail/critique-1-prompt.txt)
+(the codex-critique template, adapted for a bundle on stdin).
+
+## Outcome (2026-11-06)
+
+Built as designed, with Amendment 1 (the report carries the raw footnote). Live, the model wrote no footnote in 21
+lines (it 14, es 7; codex-cli): the success criterion failed in both packs, and the feature is inert in play. The
+runs that completed showed no regression (10/10 verdicts equal to round 080). The Italian tour was cut at the
+Fountain by Codex's usage limit, which lasts until 2026-11-09 17:32 UTC, past the autonomous run. The build is kept;
+a firmer rule waits for the next live window ([findings](findings.md)).

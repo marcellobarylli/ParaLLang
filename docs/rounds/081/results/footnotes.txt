@@ -1,0 +1,30 @@
+
+docs/rounds/081/results/tour-it.json (it)
+market_entrance_tutorial t0 folded=0.15 -
+market_entrance_tutorial t1 folded=0.27 -
+market_entrance_tutorial t2 folded=0.24 -
+market_entrance_tutorial t3 folded=0.30 -
+imp_coffee_greeting t0 folded=0.21 -
+imp_coffee_greeting t1 folded=0.30 -
+imp_coffee_greeting t2 folded=0.32 -
+butchers_stall_charcutier t0 folded=0.44 -
+butchers_stall_charcutier t1 folded=0.40 -
+butchers_stall_charcutier t2 folded=0.38 -
+butchers_stall_charcutier t3 folded=0.42 -
+butchers_stall_charcutier t4 folded=0.65 -
+cracked_fountain_letharger t0 folded=0.33 -
+cracked_fountain_letharger t1 folded=0.38 -
+lines 14, offered 0 (0.00), kept 0, steps without transcripts are not counted
+
+docs/rounds/081/results/gerald-es.json (es)
+imp_coffee_greeting t0 folded=0.20 -
+imp_coffee_greeting t1 folded=0.45 -
+imp_coffee_greeting t2 folded=0.38 -
+lines 3, offered 0 (0.00), kept 0, steps without transcripts are not counted
+
+docs/rounds/081/results/entrance-es.json (es)
+market_entrance_tutorial t0 folded=0.20 -
+market_entrance_tutorial t1 folded=0.22 -
+market_entrance_tutorial t2 folded=0.21 -
+market_entrance_tutorial t3 folded=0.30 -
+lines 4, offered 0 (0.00), kept 0, steps without transcripts are not counted

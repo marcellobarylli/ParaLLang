@@ -247,6 +247,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         native: item.output.dialogue.native,
         translation: item.output.dialogue.translation,
         narrative: item.output.narrative,
+        footnote: item.output.footnote ?? null, // round 081: as written, before the server's filter
         share: languageShare(item.output.dialogue.native, item.output.dialogue.translation, definition.narrationEntries),
         durationMs: item.durationMs,
       }));
