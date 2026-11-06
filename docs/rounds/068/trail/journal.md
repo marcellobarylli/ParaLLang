@@ -19,3 +19,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 13 | 02:06:32 | 02:06:32 | result | Claude (claude-opus-5-5), autonomous | 48/48 kept, 16–33 words, motif 1/48 (baseline 20/24), detail kinds followed; my read: 48/48 joke and grounded; repetition remains within a place across runs | `../findings.md` |
 | 14 | 02:06:32 | 02:06:32 | outcome | Claude (claude-opus-5-5), autonomous | A10b done | `../findings.md` |
 | 15 | 02:06:32 | 02:06:32 | closed | Claude (claude-opus-5-5), autonomous | Round 068 closed | `../findings.md` |
+| 16 | 02:06:48 | 02:06:48 | amended | Claude (claude-opus-5-5), autonomous | Correction in findings.md, minutes after the close: the smell count was 12 of 48 (exactly the lines assigned a smell), not 8; counted from the reports | `../findings.md` |

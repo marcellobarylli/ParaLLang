@@ -21,8 +21,8 @@ grounded and within round 053's rules? In round 053, 20 of 24 lines carried the 
   - books that "make being bought seem slightly beneath them";
   - roots "increasing their share of nowhere".
 
-  The kinds were rotated by place and state. Smells now open only the lines assigned a smell, 8 of 48; in round 053,
-  7 of 24 lines contained a smell.
+  The kinds were rotated by place and state. 12 of 48 lines mention a smell, and they are exactly the 12 assigned one; in
+  round 053, 7 of 24 lines did, wherever the model chose.
 - **By my reading, 48 of 48 lines have a joke and 48 of 48 are grounded in their place.** None turned bland.
 - **The remaining repetition is within a place.** Across the two runs, one place's line often returns to the same
   idea: Portia "leaving someone on read" (twice in es, and once in round 053), hams turning, books unwilling to be
