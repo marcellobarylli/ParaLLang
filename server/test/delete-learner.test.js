@@ -99,3 +99,33 @@ test('a failed delete keeps the learner\'s session in memory', async (t) => {
   assert.equal(failed.data.error.code, 'STORAGE_FAILURE');
   assert.equal(runtime.service.encounters.has(learnerId), true);
 });
+
+// Round 090 (critique 1.1): every SAVE_UNREADABLE message says the file was preserved, so a removal keeps it aside.
+test('storage.remove sets an unreadable save aside instead of deleting it; a readable one is deleted', async () => {
+  const saveDir = await makeTempDir('parallang-delete-');
+  const storage = new JsonLearningStorage({ saveDir });
+  const id = '33333333-3333-4333-8333-333333333333';
+  for (const raw of ['{not json', JSON.stringify({ schemaVersion: 99, learnerId: id })]) {
+    await writeFile(join(saveDir, `${id}.json`), raw);
+    await writeFile(join(saveDir, `.${id}.0000.tmp`), '{}');
+    await assert.rejects(() => storage.load(id), (error) => error.code === 'SAVE_UNREADABLE');
+    assert.equal(await storage.remove(id), true);
+    const names = await readdir(saveDir);
+    assert.equal(names.includes(`${id}.json`), false);
+    assert.equal(names.includes(`.${id}.0000.tmp`), false, 'temp copies still go');
+    const aside = names.filter((name) => name.startsWith(`${id}.unreadable-`) && name.endsWith('.json'));
+    assert.equal(aside.length >= 1, true, names.join(','));
+    assert.equal(await storage.load(id), null, 'never loaded again');
+  }
+  const kept = await readdir(saveDir);
+  assert.equal(kept.length, 2, 'both unreadable files kept aside');
+});
+
+test('a delete clears the turn progress kept for the learner (review R1.5)', async (t) => {
+  const runtime = await createRuntime();
+  t.after(() => runtime.close());
+  const { learnerId } = await createLearnerAndEncounter(runtime);
+  runtime.service.turnProgress.set(learnerId, { attemptId: 'x' });
+  await runtime.service.deleteLearner(learnerId);
+  assert.equal(runtime.service.turnProgress.has(learnerId), false);
+});

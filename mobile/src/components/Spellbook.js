@@ -18,7 +18,7 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
       {inEncounter && spellbook.cards.length > 0 && <Text style={styles.hidden}>Meanings are hidden and reviews wait while an encounter is under way. Ask your companion for a hint instead.</Text>}
       {spellbook.cards.length === 0 ? (
         <View style={styles.card}><Text style={styles.cardTitle}>No vocabulary yet</Text><Text style={styles.body}>Words and phrases appear here after you encounter them.</Text></View>
-      ) : spellbook.cards.map((card) => <Card key={card.vocabularyId} card={card} state={cardState(card, { inEncounter, now })} language={language} isLoading={isLoading} onReview={onReview} />)}
+      ) : spellbook.cards.map((card) => <Card key={card.vocabularyId} card={card} state={cardState(card, { inEncounter, now })} waits={cardWaits(card, spellbook, now)} language={language} isLoading={isLoading} onReview={onReview} />)}
       {!inEncounter && spellbook.cards.length > 0 && spellbook.dueCount === 0 && <Text style={styles.muted}>Nothing is due. Your next review times are shown on each card.</Text>}
       {spellbook.lines?.length > 0 && <>
         <Title style={styles.section}>Lines you translated</Title>
@@ -47,6 +47,15 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
 export function cardState(card, { inEncounter = false, now = Date.now() } = {}) {
   if (inEncounter) return 'inEncounter';
   return card.due || new Date(card.nextReviewAt).getTime() <= now ? 'due' : 'reference';
+}
+
+// Round 090 (review R1.2 of rounds 029–039): a readable card must not answer a due one. Its meaning waits while a card
+// in its own form is due (a phrase's word), its example's English while a card in the form or the example is due.
+// Checked by the clock, like the cards themselves; an older server sends no lists, so nothing more waits.
+export function cardWaits(card, spellbook, now = Date.now()) {
+  const due = new Set((spellbook.cards ?? []).filter((other) => cardState(other, { now }) === 'due').map((other) => other.vocabularyId));
+  const meaning = (card.formCardIds ?? []).some((id) => due.has(id));
+  return { meaning, example: meaning || (card.exampleCardIds ?? []).some((id) => due.has(id)) };
 }
 
 // Round 060 (backlog C9): why a kept line's translation is withheld, or null. The server withholds it during an
@@ -170,16 +179,17 @@ function ClassWord({ partOfSpeech }) {
   return <><Text style={label.cls ? [styles.classWord, wordClassStyle(label.cls).label] : null}>{label.text}</Text>{' · '}</>;
 }
 
-function Card({ card, state, language, isLoading, onReview }) {
+function Card({ card, state, waits = { meaning: false, example: false }, language, isLoading, onReview }) {
   return (
     <View style={styles.card} aria-label={`Card ${card.target}`}>
       <View style={styles.cardRow}><Text role="heading" style={styles.cardTitle} accessibilityLanguage={language?.tag}>{card.target}</Text><PronounceButton text={card.target} language={language} /></View>
-      {state === 'reference' && <Text style={styles.body}>{card.meanings.join(' · ')}</Text>}
+      {state === 'reference' && !waits.meaning && <Text style={styles.body}>{card.meanings.join(' · ')}</Text>}
+      {state === 'reference' && waits.meaning && <Text style={styles.hidden}>Meaning hidden until you review its words.</Text>}
       {state === 'due' && <Text style={styles.hidden}>Meaning hidden until you review it.</Text>}
       {state !== 'inEncounter' && card.example && (
-        <Text style={styles.example} accessibilityLanguage={language?.tag}>{card.example.target}{state === 'reference' && <Text style={styles.small}>{` (${card.example.english})`}</Text>}</Text>
+        <Text style={styles.example} accessibilityLanguage={language?.tag}>{card.example.target}{state === 'reference' && !waits.example && <Text style={styles.small}>{` (${card.example.english})`}</Text>}</Text>
       )}
-      {state === 'reference' && card.note && <Text style={styles.small}>{card.note}</Text>}
+      {state === 'reference' && !waits.meaning && card.note && <Text style={styles.small}>{card.note}</Text>}
       <Text style={styles.small}><ClassWord partOfSpeech={card.partOfSpeech} />Mastery: <Text style={styles.strong}>{card.mastery}</Text></Text>
       {state !== 'inEncounter' && <Text style={styles.small}>{state === 'due' ? 'Due now' : `Next review: ${new Date(card.nextReviewAt).toLocaleString()}`}</Text>}
       {state === 'due' && <Button label="Review" variant="primary" disabled={isLoading} onPress={() => onReview(card.vocabularyId)} style={styles.review} />}

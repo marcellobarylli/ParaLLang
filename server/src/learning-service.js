@@ -145,6 +145,7 @@ export class LearningService {
       const existed = await this.storage.remove(learnerId);
       this.encounters.delete(learnerId);
       this.reviewChallenges.delete(learnerId);
+      this.turnProgress.delete(learnerId); // round 090 (review R1.5)
       this.forgetPrefetch(learnerId);
       return { deleted: true, existed };
     });
@@ -282,6 +283,14 @@ export class LearningService {
       })
       .filter(Boolean)
       .sort((a, b) => a.discoveredAt.localeCompare(b.discoveredAt) || a.vocabularyId.localeCompare(b.vocabularyId));
+    // Round 090 (decision 2): the learner's other cards whose form stands in a card's own target or its example, so
+    // the app keeps that meaning or the example's English back while one of them is due.
+    const order = cards.map((card) => card.vocabularyId);
+    for (const card of cards) {
+      const lists = this.entryAnswerLists(this.content.vocabularyById.get(card.vocabularyId));
+      card.formCardIds = order.filter((id) => lists.form.has(id));
+      card.exampleCardIds = order.filter((id) => lists.example.has(id));
+    }
     const inEncounter = this.inEncounter(encounter);
     return {
       cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version,
@@ -330,12 +339,32 @@ export class LearningService {
     this.lineEntries ??= new Map();
     const known = this.lineEntries.get(native);
     if (known) return known;
-    const found = new Set(this.content.vocabulary.entries
-      .filter((entry) => matchCanonicalVocabulary(native, [entry]).length || inflectsForms(native, entry.surface_variants))
-      .map((entry) => entry.id));
+    const found = this.entryIdsIn(native);
     this.lineEntries.set(native, found);
     if (this.lineEntries.size > LINE_ENTRY_CACHE) this.lineEntries.delete(this.lineEntries.keys().next().value);
     return found;
+  }
+
+  entryIdsIn(text) {
+    return new Set(this.content.vocabulary.entries
+      .filter((entry) => matchCanonicalVocabulary(text, [entry]).length || inflectsForms(text, entry.surface_variants))
+      .map((entry) => entry.id));
+  }
+
+  // Round 090 (review R1.2 of rounds 029–039): the pack entries in an entry's own target and in its example, without
+  // itself, computed once per entry (content is fixed for the service's life; critique 1.8).
+  entryAnswerLists(entry) {
+    this.entryLists ??= new Map();
+    let lists = this.entryLists.get(entry.id);
+    if (!lists) {
+      const without = (set) => { set.delete(entry.id); return set; };
+      lists = {
+        form: without(this.entryIdsIn(entry.target)),
+        example: without(entry.example?.target ? this.entryIdsIn(entry.example.target) : new Set()),
+      };
+      this.entryLists.set(entry.id, lists);
+    }
+    return lists;
   }
 
   // Round 060: keeps a paid sentence reveal in the staged envelope only (critique 1.6), deduped and capped.

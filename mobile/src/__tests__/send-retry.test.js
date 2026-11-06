@@ -131,7 +131,8 @@ test('a closed conversation returns to the map; a failed reload keeps the origin
 
 test('a reload that answers after a save switch is ignored (critique 1.3)', async () => {
   const reload = deferred();
-  const { store } = setup({ sendDialogue: jest.fn().mockRejectedValueOnce(stale()), currentEncounter: jest.fn(() => reload.promise) });
+  // Round 090: startup asks for the current encounter first; the held reload is the second call.
+  const { store } = setup({ sendDialogue: jest.fn().mockRejectedValueOnce(stale()), currentEncounter: jest.fn().mockResolvedValueOnce({ encounter, spellbook }).mockImplementation(() => reload.promise) });
   await ready(store);
   const sending = store.getState().sendMessage('Vorrei un caffè.');
   await Promise.resolve();

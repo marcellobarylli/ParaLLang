@@ -310,3 +310,89 @@ describe('removing a save', () => {
     alert.mockRestore();
   });
 });
+
+// Round 090 (review R1.1 and R1.3 of rounds 029–039).
+describe('startup', () => {
+  test('knows the encounter the server holds and takes its snapshot\'s Spellbook; a resolved one is kept, not ongoing', async () => {
+    const storage = memoryStorage({ [SLOTS_KEY]: JSON.stringify({ version: 1, activeId: A, slots: [slot(A, 'Save 1')] }) });
+    const api = fakeApi();
+    const store = createGameStore({ api, storage });
+    await store.getState().initialize();
+    expect(store.getState().encounter).toEqual(encounterFor(A));
+    expect(store.getState().view).toBe('map');
+    expect(api.getSpellbook).not.toHaveBeenCalled();
+    expect(store.getState().spellbook).toEqual(spellbookFor(A));
+
+    const resolved = { ...encounterFor(A), state: 'resolved' };
+    const done = createGameStore({ api: fakeApi(undefined, { currentEncounter: jest.fn(async () => ({ encounter: resolved, spellbook: spellbookFor(A) })) }), storage });
+    await done.getState().initialize();
+    expect(done.getState().encounter.state).toBe('resolved');
+  });
+
+  test('without currentEncounter, or when it fails, the Spellbook comes from getSpellbook and no encounter is held', async () => {
+    for (const currentEncounter of [undefined, jest.fn(async () => { throw new Error('down'); })]) {
+      const api = fakeApi(undefined, { currentEncounter });
+      const store = createGameStore({ api, storage: memoryStorage({ [SLOTS_KEY]: JSON.stringify({ version: 1, activeId: A, slots: [slot(A, 'Save 1')] }) }) });
+      await store.getState().initialize();
+      expect(store.getState().learnerId).toBe(A);
+      expect(store.getState().encounter).toBeNull();
+      expect(api.getSpellbook).toHaveBeenCalledWith(A);
+    }
+  });
+
+  const unreadable = () => Object.assign(new Error('This learner save contains invalid JSON. The original file was preserved.'), { code: 'SAVE_UNREADABLE' });
+  const failingFor = (badId) => jest.fn(async (id) => { if (id === badId) throw unreadable(); return { learnerId: id ?? C, recovered: Boolean(id), language }; });
+
+  test('a save that cannot be loaded leaves the others reachable: Saves, continue another, no Remove without a save', async () => {
+    const storage = memoryStorage({ [SLOTS_KEY]: JSON.stringify({ version: 1, activeId: A, slots: [slot(A, 'Save 1'), slot(B, 'Save 2')] }) });
+    const api = fakeApi(undefined, { createLearner: failingFor(A) });
+    const store = createGameStore({ api, storage });
+    await store.getState().initialize();
+    expect(store.getState().learnerId).toBeNull();
+    expect(store.getState().error).toMatch(/invalid JSON/);
+    expect(store.getState().saves.map((save) => save.learnerId)).toEqual([A, B]);
+    expect(await store.getState().removeSave(B)).toBe(false);
+    expect(api.deleteLearner).not.toHaveBeenCalled();
+    await store.getState().switchSave(B);
+    expect(store.getState().learnerId).toBe(B);
+    expect(record(storage).activeId).toBe(B);
+    // Now the broken save is not the current one and can be removed (the server keeps its file aside).
+    expect(await store.getState().removeSave(A)).toBe(true);
+  });
+
+  test('a device with only the broken save (or a legacy id) can start a new save, recorded as the active one', async () => {
+    for (const entries of [
+      { [SLOTS_KEY]: JSON.stringify({ version: 1, activeId: A, slots: [slot(A, 'Save 1')] }) },
+      { 'parallang.learnerId': A },
+    ]) {
+      const storage = memoryStorage(entries);
+      const api = fakeApi(undefined, { createLearner: failingFor(A) });
+      const store = createGameStore({ api, storage });
+      await store.getState().initialize();
+      expect(store.getState().saves.map((save) => save.learnerId)).toEqual([A]);
+      await store.getState().newSave();
+      expect(store.getState().learnerId).toBe(C);
+      expect(record(storage).activeId).toBe(C);
+      expect(record(storage).slots.map((save) => save.learnerId)).toEqual([A, C]);
+    }
+  });
+
+  test('a new save from the failed state is recorded as active even if loading it fails (critique 1.2)', async () => {
+    const storage = memoryStorage({ [SLOTS_KEY]: JSON.stringify({ version: 1, activeId: A, slots: [slot(A, 'Save 1')] }) });
+    const api = fakeApi(undefined, { createLearner: failingFor(A), getWorld: jest.fn(async (id) => { if (id === C) throw new Error('down'); return { world: worldFor(id) }; }) });
+    const store = createGameStore({ api, storage });
+    await store.getState().initialize();
+    await store.getState().newSave();
+    expect(store.getState().learnerId).toBeNull();
+    expect(record(storage).activeId).toBe(C);
+  });
+
+  test('a failed start with no saved id lists nothing (the server was not reached for a fresh install)', async () => {
+    const api = fakeApi(undefined, { createLearner: jest.fn(async () => { throw new Error('unreachable'); }) });
+    const store = createGameStore({ api, storage: memoryStorage() });
+    await store.getState().initialize();
+    expect(store.getState().saves).toEqual([]);
+    await store.getState().newSave();
+    expect(api.createLearner).toHaveBeenCalledTimes(1);
+  });
+});

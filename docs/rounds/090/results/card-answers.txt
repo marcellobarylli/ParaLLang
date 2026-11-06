@@ -1,0 +1,10 @@
+it: 77 entries, 42 with a list; form {"alone":3,"inflected":2}, example {"alone":57,"inflected":2}
+  inflected only: fermati form "fermati" ← fermo (fermo)
+  inflected only: fermati example "Fermati, Flick!" ← fermo (fermo)
+  inflected only: ottimo form "ottimo" ← otto (otto)
+  inflected only: ottimo example "È un ottimo caffè." ← otto (otto)
+es: 72 entries, 38 with a list; form {"alone":2,"inflected":2}, example {"alone":42,"inflected":2}
+  inflected only: buenos_dias form "buenos días" ← bueno (bueno)
+  inflected only: buenos_dias example "Buenos días, señora." ← bueno (bueno)
+  inflected only: cafe_solo form "café solo" ← sola (sola)
+  inflected only: cafe_solo example "Un café solo, por favor." ← sola (sola)

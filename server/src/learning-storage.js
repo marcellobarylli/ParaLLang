@@ -150,6 +150,18 @@ export class JsonLearningStorage {
     try { leftovers = (await this.io.readdir(this.saveDir)).filter((name) => name.startsWith(`.${learnerId}.`) && name.endsWith('.tmp')); }
     catch (error) { if (error.code !== 'ENOENT') throw retryableError(`The learner save could not be deleted: ${error.message}`, 'STORAGE_FAILURE'); }
     for (const name of leftovers) await unlinkQuietly(resolve(this.saveDir, name));
+    // Round 090 (critique 1.1): a save this server cannot read is kept aside, never loaded again, so "The original
+    // file was preserved" stays true (it may be a newer server's save).
+    let unreadable = false;
+    try { await this.load(learnerId); }
+    catch (error) { if (error.code === 'SAVE_UNREADABLE') unreadable = true; }
+    if (unreadable) {
+      try { await this.io.rename(filePath, resolve(this.saveDir, `${learnerId}.unreadable-${Date.now()}-${randomUUID().slice(0, 8)}.json`)); return true; }
+      catch (error) {
+        if (error.code === 'ENOENT') return false;
+        throw retryableError(`The learner save could not be set aside: ${error.message}`, 'STORAGE_FAILURE');
+      }
+    }
     return unlinkQuietly(filePath);
   }
 

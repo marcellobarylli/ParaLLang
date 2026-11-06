@@ -76,3 +76,44 @@ test('no containment section without files', async () => {
     expect(screen.queryByRole('heading', { name: 'Containment files' })).not.toBeOnTheScreen();
   }
 });
+
+// Round 090 (review R1.2 of rounds 029–039): a readable card does not answer a due one through its example or form.
+describe('answers in other cards', () => {
+  const cento = card('cento', 'cento', 'a hundred', { partOfSpeech: 'numeral', example: { target: 'Cento grammi di prosciutto.', english: 'A hundred grams of ham.' }, note: null, exampleCardIds: ['prosciutto'], formCardIds: [] });
+  const nero = card('caffe_nero', 'caffè nero', 'black coffee', { kind: 'phrase', example: { target: 'Prendo il caffè nero.', english: 'I take black coffee.' }, note: 'nero is black.', exampleCardIds: ['caffe'], formCardIds: ['caffe'] });
+  const prosciutto = (due) => card('prosciutto', 'prosciutto', 'ham', due ? { due: true, nextReviewAt: '2026-01-15T11:00:00Z' } : {});
+  const caffe = (extra) => card('caffe', 'caffè', 'coffee', extra);
+  const show = (cards) => render(<Spellbook spellbook={{ inEncounter: false, dueCount: 0, cards }} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} now={now} />);
+
+  test('an example holding a due card keeps its English back; the meaning shows', async () => {
+    await show([cento, prosciutto(true)]);
+    expect(screen.getByText('a hundred')).toBeOnTheScreen();
+    expect(screen.getByText(/Cento grammi di prosciutto\./)).toBeOnTheScreen();
+    expect(screen.queryByText(/A hundred grams of ham/)).not.toBeOnTheScreen();
+  });
+
+  test('a phrase holding a due word keeps meaning, note and example English back, with no Review of its own', async () => {
+    await show([nero, caffe({ due: true, nextReviewAt: '2026-01-15T11:00:00Z' })]);
+    expect(screen.getByText('Meaning hidden until you review its words.')).toBeOnTheScreen();
+    for (const hidden of ['black coffee', 'nero is black.']) expect(screen.queryByText(hidden)).not.toBeOnTheScreen();
+    expect(screen.queryByText(/I take black coffee/)).not.toBeOnTheScreen();
+    expect(screen.getAllByRole('button', { name: 'Review' })).toHaveLength(1);
+  });
+
+  test('due by the clock in a stale snapshot hides too', async () => {
+    await show([nero, caffe({ due: false, nextReviewAt: '2026-01-15T11:59:00Z' })]);
+    expect(screen.queryByText('black coffee')).not.toBeOnTheScreen();
+  });
+
+  test('nothing due shows everything', async () => {
+    await show([cento, prosciutto(false)]);
+    expect(screen.getByText(/A hundred grams of ham/)).toBeOnTheScreen();
+  });
+
+  test('an older server sends no lists: nothing more waits', async () => {
+    const { exampleCardIds, formCardIds, ...old } = nero;
+    await show([old, caffe({ due: true, nextReviewAt: '2026-01-15T11:00:00Z' })]);
+    expect(screen.getByText('black coffee')).toBeOnTheScreen();
+    expect(screen.getByText(/I take black coffee/)).toBeOnTheScreen();
+  });
+});

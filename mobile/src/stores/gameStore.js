@@ -83,6 +83,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       set({ starting: null }); // Round 073 (critique 1.2): a reset drops a start's indicator
       initializationPromise = (async () => {
         set({ isLoading: true, error: null });
+        let deviceSlots = null;
         try {
           // Round 027: the statement is fetched beside startup, never inside it: a failure only skips the screen.
           const seen = await Promise.resolve(storage?.getItem?.(ONBOARDING_KEY)).catch(() => null);
@@ -94,26 +95,35 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           // Round 031: the active save slot's id; without a valid slot record, the legacy key's (round 004).
           const record = parseSlots(await Promise.resolve(storage?.getItem?.(SLOTS_KEY)).catch(() => null));
           const storedId = record?.activeId ?? ((await storage?.getItem?.(LEARNER_KEY)) || null);
+          // Round 090 (review R1.3): if this save cannot be loaded, the Saves screen still lists the device's saves.
+          deviceSlots = storedId ? withActive(record, storedId) : record;
           const identity = await api.createLearner(storedId);
           if (epoch !== requestEpoch) return;
           const slots = withActive(record, identity.learnerId);
           await storage?.setItem?.(LEARNER_KEY, identity.learnerId);
           await storage?.setItem?.(SLOTS_KEY, JSON.stringify(slots));
+          // Round 090 (review R1.1, critique 1.5): the server's encounter and its Spellbook from one snapshot, as a
+          // switch loads them, so a relaunch knows a conversation still under way (the Rift's drill note).
+          const current = typeof api.currentEncounter === 'function'
+            ? await Promise.resolve().then(() => api.currentEncounter(identity.learnerId)).catch(() => null) : null;
           const [{ world }, spellbook, { party }] = await Promise.all([
-            api.getWorld(identity.learnerId), api.getSpellbook(identity.learnerId), api.getParty(identity.learnerId),
+            api.getWorld(identity.learnerId), current?.spellbook ?? api.getSpellbook(identity.learnerId), api.getParty(identity.learnerId),
           ]);
+          const encounter = current?.encounter ?? null;
           const onboarding = await onboardingPromise;
           if (epoch !== requestEpoch) return;
-          snapshots.set(identity.learnerId, { encounter: null, spellbook });
+          snapshots.set(identity.learnerId, { encounter, spellbook });
           // Shown only over the map: a screen the player opened during startup is not replaced (the flag stays unset).
           const showOnboarding = Boolean(onboarding) && get().view === 'map';
           set({
-            learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, party, isLoading: false,
+            learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, party, encounter, isLoading: false,
             saves: slots.slots, savesFloor: slots.nextNumber,
             ...(showOnboarding ? { onboarding, view: 'onboarding' } : {}),
           });
         } catch (error) {
-          if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
+          if (epoch === requestEpoch) {
+            set({ error: error.message, isLoading: false, ...(deviceSlots && !get().learnerId ? { saves: deviceSlots.slots, savesFloor: deviceSlots.nextNumber } : {}) });
+          }
           initializationPromise = null;
         }
       })();
@@ -442,7 +452,8 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     },
     newSave: async () => {
       const { saves, isLoading, learnerId } = get();
-      if (!learnerId || isLoading || saves.length >= MAX_SAVES) return;
+      // Round 090 (review R1.3): also after a failed start (no learner), to leave a save that cannot be loaded.
+      if ((!learnerId && saves.length === 0) || isLoading || saves.length >= MAX_SAVES) return;
       const epoch = ++requestEpoch;
       set({ starting: null }); // Round 073 (critique 1.2): a reset drops a start's indicator
       set({ isLoading: true, error: null, notice: null });
@@ -450,7 +461,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         const identity = await api.createLearner(null);
         // Critique 1.8: the new slot is recorded (still inactive) before it loads, so a failure leaves no orphan.
         const record = withActive({ slots: get().saves, nextNumber: get().savesFloor }, identity.learnerId);
-        const kept = { ...record, activeId: learnerId };
+        const kept = { ...record, activeId: learnerId ?? identity.learnerId }; // critique 1.2: never a null active id
         await storage?.setItem?.(SLOTS_KEY, JSON.stringify(kept));
         if (epoch !== requestEpoch) return;
         set({ saves: kept.slots });
@@ -498,7 +509,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     },
     switchSave: (target) => {
       const { saves, isLoading, learnerId } = get();
-      if (!learnerId || isLoading || target === learnerId || !saves.some((save) => save.learnerId === target)) return undefined;
+      if (isLoading || target === learnerId || !saves.some((save) => save.learnerId === target)) return undefined;
       const epoch = ++requestEpoch;
       set({ starting: null }); // Round 073 (critique 1.2): a reset drops a start's indicator
       set({ isLoading: true, error: null, notice: null });
