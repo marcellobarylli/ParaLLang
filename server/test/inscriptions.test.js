@@ -8,7 +8,8 @@ import yaml from 'js-yaml';
 import { foldWords, loadGameContent } from '../src/content-loader.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { LearningService } from '../src/learning-service.js';
-import { api, createRuntime, FixtureProvider, fixedNow, makeTempDir } from './helpers.js';
+import { randomUUID } from 'node:crypto';
+import { api, createLearnerAndEncounter, createRuntime, FixtureProvider, fixedNow, makeTempDir } from './helpers.js';
 
 const root = resolve(import.meta.dirname, '..', '..');
 const IDS = ['keystone', 'menu_board', 'chopping_block', 'plaque_back', 'flyleaf', 'seam'];
@@ -136,7 +137,10 @@ test('the Spellbook keeps visited places\' inscriptions in file order; a move re
   const again = await service.moveTo(learnerId, { locationId: 'coffee_cart' });
   assert.deepEqual(again.spellbook.inscriptions.map((i) => i.id), ['keystone', 'menu_board'], 'an unchanged move returns it too');
   await service.moveTo(learnerId, { locationId: 'market_entrance' });
-  assert.deepEqual((await service.getSpellbook(learnerId)).inscriptions.map((i) => i.id), ['keystone', 'menu_board'], 'file order, not visit order');
+  // Amendment 1 (review R1.1): another learner visits the butcher's before the cart; the list is in file order.
+  const { learnerId: other } = await service.createOrRecoverLearner();
+  for (const locationId of ['butchers_stall', 'market_entrance', 'coffee_cart']) await service.moveTo(other, { locationId });
+  assert.deepEqual((await service.getSpellbook(other)).inscriptions.map((i) => i.id), ['keystone', 'menu_board', 'chopping_block'], 'file order, not visit order');
 });
 
 test('during an encounter the translation and glossary are withheld; over HTTP the move carries the Spellbook', async (t) => {
@@ -174,4 +178,21 @@ test('a move to the Rift returns its pending drill; walking away clears it (crit
   assert.equal(there.spellbook.inscriptions.at(-1).id, 'seam');
   const away = await service.moveTo(learnerId, { locationId: 'old_bookshop' });
   assert.equal(away.spellbook.drill, null);
+});
+
+test('receipts hold no inscriptions; a replay after a move carries the current ones (Amendment 1, review R1.2)', async (t) => {
+  const runtime = await createRuntime();
+  t.after(() => runtime.close());
+  const { learnerId, started } = await createLearnerAndEncounter(runtime);
+  const request = { encounterId: started.encounter.id, version: started.encounter.version, attemptId: randomUUID(), message: 'Quiero un café negro.' };
+  const result = await runtime.service.submitDialogue(learnerId, request);
+  assert.equal(result.encounter.state, 'resolved');
+  assert.deepEqual(result.spellbook.inscriptions.map((i) => i.id), ['keystone']);
+  const envelope = JSON.parse(await readFile(runtime.storage.filePath(learnerId), 'utf8'));
+  assert.equal('inscriptions' in envelope.spellbook.processedAssessments[request.attemptId].response.spellbook, false);
+  await runtime.service.moveTo(learnerId, { locationId: 'coffee_cart' });
+  const replay = await runtime.service.submitDialogue(learnerId, request);
+  assert.equal(replay.replayed, true);
+  assert.deepEqual(replay.spellbook.inscriptions.map((i) => i.id), ['keystone', 'menu_board']);
+  assert.equal(replay.spellbook.drill, null);
 });

@@ -47,9 +47,10 @@ function nowIso(clock) { return new Date(clock()).toISOString(); }
 // Round 060: the dedupe key of a kept line (critique 1.7): normalised text plus speaker.
 const lineKey = (line) => `${line.speaker}\u0000${line.native.normalize('NFC').toLowerCase().replace(/\s+/gu, ' ').trim()}`;
 // Round 060 (critiques 1.2, 1.3): receipts store responses without the kept lines; a replay gets the current ones.
+// Round 082 Amendment 1 (review R1.2): the inscriptions too; they follow the world, not the turn.
 function withoutLines(response) {
-  if (!response?.spellbook || !('lines' in response.spellbook)) return response;
-  const { lines, ...spellbook } = response.spellbook;
+  if (!response?.spellbook || !('lines' in response.spellbook || 'inscriptions' in response.spellbook)) return response;
+  const { lines, inscriptions, ...spellbook } = response.spellbook;
   return { ...response, spellbook };
 }
 
@@ -693,7 +694,8 @@ export class LearningService {
     const replay = { ...response, replayed: true };
     if (replay.spellbook) {
       const current = this.spellbookSnapshot(envelope);
-      replay.spellbook = { ...replay.spellbook, lines: current.lines };
+      // Round 082 Amendment 1 (review R1.2): the inscriptions and the drill follow the current place.
+      replay.spellbook = { ...replay.spellbook, lines: current.lines, inscriptions: current.inscriptions, drill: current.drill };
     }
     return replay;
   }

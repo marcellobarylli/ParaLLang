@@ -7,18 +7,20 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 23 (2026-11-06, 04:00–04:30 UTC) closed round 081 (backlog B5, narrator footnotes): an
-optional `footnote` field, a style rule ("about one reply in three"), a server filter (200 characters, no pack
-vocabulary bar English homographs, never two in a row) and a "*" line in the app. Live (codex-cli, 21 lines, it and
-es) the model wrote **no** footnote: the criterion failed, the feature is inert, no regression where the runs reached.
+Nothing open. Iteration 24 (2026-11-06, 04:29–05:00 UTC) closed round 082 (backlog A13, inscriptions): one authored
+target-language text per location (it, es), found by visiting, "Look closer" on the map card, an Inscriptions
+section in the Spellbook; a move returns the Spellbook (fixing a stale Rift drill note). Offline. Critique and
+review by fresh read-only subagents in place of Codex.
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09: review-type rounds (a read-only subagent review of rounds 076–081), test gaps,
-  content checks with `leak-scan.js`, docs.
+- **Offline work only** until 11-09: test gaps, content checks with `leak-scan.js`, docs. Ideas: other app state that
+  goes stale after a move or a completion (round 082 found the drill; check `party`, the Party hint, `storyProgress`);
+  apply round 082's harder answer check (every target word and stem) to fragments and containment files, which only
+  have the round 030 checks; more inscriptions (party conversations, a second line after completion).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
   greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure; the
   rest of round 081's Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
@@ -71,6 +73,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `GET /api/world/atmosphere`, a line under the description on the map card).
 - [x] **A10b. Atmosphere variety** (round 068, closed 2026-11-06): no generic office humour; one detail kind per place
   and state (`atmosphereDetail`); motif 20/24 → 1/48 live, 48/48 kept.
+- [x] **A13. Inscriptions** (round 082, closed 2026-11-06; seeded in iteration 24 from prototype.md "discoverable
+  items" and GAME MECHANICS "lore hidden in plain sight"): one target-language text per location (it, es), found by
+  visiting; "Look closer" on the map card, an Inscriptions section in the Spellbook; the move returns the Spellbook
+  (also fixes the Rift's stale drill note). Offline, no live calls.
 - [x] **A11. Save slots.** (round 031, closed 2026-11-05) Up to three learners per device, Saves screen from the
   map; delete and rename deferred (owner question).
 
@@ -523,9 +529,23 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   291/291, client 12/12, mobile 221/221. Live 0 of 21 lines had a footnote (criterion failed; inert). Codex hit its
   usage limit at 04:17 UTC, until 2026-11-09 17:32 UTC. About 30 game calls and 1 critique.
   A post-close review (subagent) found the homograph exemptions leak encounter answers: Amendment 2 removed them.
+- 2026-11-06, iteration 24 (04:29–05:00 UTC): round 082 (A13, inscriptions) planned, critiqued by a subagent (8
+  findings, all accepted; the extended answer check reworded twelve drafts), built, reviewed (3 low notes, Amendment 1)
+  and closed: server 300/300, client 12/12, mobile 227/227, expo-doctor 20/20. No live calls (Codex limited).
 
 ## Handoff notes and traps
 
+- **Inscriptions** (round 082): `content/languages/<code>/lore/inscriptions.yaml`, one per location;
+  `answerLeaks(content, inscription, allowed)` in `server/test/inscriptions.test.js` is the harder answer check
+  (pack forms, every objective target's words of 3+ letters and 4-letter stems, meanings without parentheses);
+  allowlist `ALLOWED` (es *las*, *quien*). Adding a vocabulary entry or target can make an inscription fail it.
+  `worldSnapshot` takes the inscriptions map as a 4th argument (`LearningService.worldView`). **A move returns
+  `{ world, spellbook }`** now; receipts strip `lines` and `inscriptions`, and a replay takes `lines`,
+  `inscriptions` and `drill` from the current snapshot.
+- **A critic without Codex** (rounds 082): a fresh `general-purpose` subagent, told read-only and given the plan's
+  path and the files to read, returns in ~4–5 minutes; save its last message verbatim from the task output (JSONL,
+  last assistant text) into `trail/critique-K.md`. The round check wants 7-column disposition tables, also for
+  `RK.n` rows in an Amendment.
 - **Footnotes** (round 081): `keptFootnote(generated, previousNpc)` in `learning-service.js`; the start passes no
   previous line, the turn the last NPC message. `FOOTNOTE_MAX_LENGTH` 200; any pack form drops a footnote,
   with no exemptions (Amendment 2: `ATMOSPHERE_ENGLISH` holds encounter answers such as *basta*, *soy*). play-market `lines` carry the

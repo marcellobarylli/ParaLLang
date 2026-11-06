@@ -132,3 +132,25 @@ Net change: +a harder answer check over all targets, +the drill refresh on a mov
 Shows that the content loads, holds no listed answer form or stem, reaches the map and the Spellbook as designed, and
 renders in jest. It does not show that the Italian and Spanish are idiomatic (native speaker), that the inscriptions
 are interesting (owner, playtesters), or how the card looks on an iPhone (Simulator).
+
+## Amendment 1 (2026-11-06, after the build): three low notes from the post-build review
+
+A read-only review of commit 5eaa705 by a fresh general-purpose subagent (claude-opus-5-5), in place of Codex, found
+no high or medium bug and no route by which a translation reaches the player during an encounter. Raw text in
+[`trail/review-1.md`](trail/review-1.md).
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Low | The "file order, not visit order" test visits in file order, so it would pass on visit order | 0 | Accept: a second learner visits the butcher's before the cart and expects file order | **Accepted** (autonomous decision, pending owner review) | `server/test/inscriptions.test.js` |
+| R1.2 | Low | Receipts store the inscriptions (with translations); a replay brings back the Spellbook of its time, so after a move the new place's inscription is gone and an old drill returns | + | Accept: `withoutLines` strips `inscriptions`; `replayWithLines` takes `lines`, `inscriptions` and `drill` from the current snapshot; a replay test that fails without the fix | **Accepted** (autonomous, pending owner review) | `server/src/learning-service.js`, test |
+| R1.3 | Low | The store's move success checks the learner, not the request epoch: a late reply after a switch away and back overwrites the Spellbook and its snapshot | + | Accept: the epoch check, as on the failure path; a store test that fails without the fix | **Accepted** (autonomous, pending owner review) | `mobile/src/stores/gameStore.js`, test |
+
+After it: server 300/300, client 12/12, mobile 227/227.
+
+## Outcome (2026-11-06)
+
+Built as designed, with Amendment 1 (three low review notes, fixed and tested). Each pack has six inscriptions, one
+per location. Each is found by visiting the place, shown on the map card behind "Look closer" and kept in the
+Spellbook with its translation behind a toggle. The extended answer check caught twelve problems in the drafts
+before the freeze. Moves now return the Spellbook, which also fixes the Rift's stale drill note. Offline only:
+nothing an LLM sees changed and Codex was limited ([findings](findings.md)).

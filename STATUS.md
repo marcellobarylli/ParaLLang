@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 082, inscriptions (autonomous)
+
+Each location now carries a short authored inscription in the target language (it, es), "lore hidden in plain
+sight". It is found by visiting the place, shown on the map card behind "Look closer" and kept in the Spellbook,
+with its translation and glossary behind a toggle (withheld during encounters). A harder answer check, over every
+objective target's words and stems, caught twelve problems in the drafts. A move now returns the Spellbook, which
+also fixes the Rift's drill note being stale after a move. Offline: no LLM sees the inscriptions
+([findings](docs/rounds/082/findings.md)).
+
 ## Addendum 2026-11-06: round 081, narrator footnotes (autonomous)
 
 An NPC reply may carry a `footnote` (the owner's "the footnotes can turn into meme formats"): kept by the server when

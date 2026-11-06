@@ -132,7 +132,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       try {
         // Round 082: the move carries the Spellbook (a new place's inscription, the Rift's drill); older servers do not.
         const { world, spellbook } = await api.moveTo(learnerId, locationId);
-        if (get().learnerId !== learnerId) return;
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return; // round 082 Amendment 1 (review R1.3)
         if (spellbook) snapshots.set(learnerId, { ...(snapshots.get(learnerId) ?? { encounter: get().encounter }), spellbook });
         set({ world, ...(spellbook ? { spellbook } : {}), isLoading: false });
       } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }

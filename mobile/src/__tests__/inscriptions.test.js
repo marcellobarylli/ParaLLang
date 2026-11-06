@@ -99,3 +99,17 @@ test('the store takes the Spellbook a move sends (with its drill) and keeps its 
   expect(older.getState().spellbook).toBe(before);
   expect(older.getState().world.currentLocationId).toBe('cart');
 });
+
+test('a move reply that lands after a switch away and back is dropped (Amendment 1, review R1.3)', async () => {
+  let resolve;
+  const store = storeWith(jest.fn(() => new Promise((done) => { resolve = done; })));
+  await store.getState().initialize();
+  const before = store.getState().spellbook;
+  const moving = store.getState().moveTo('rift');
+  store.getState().switchLearnerForTest('22222222-2222-4222-8222-222222222222');
+  store.getState().switchLearnerForTest(A);
+  resolve({ world: worldAt('rift'), spellbook: book([]) });
+  await moving;
+  expect(store.getState().spellbook).toEqual(before);
+  expect(store.getState().world.currentLocationId).not.toBe('rift');
+});
