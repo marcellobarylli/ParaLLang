@@ -7,7 +7,15 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 30 (2026-11-06, 08:22–08:50 UTC) closed three offline rounds:
+Nothing open. Iteration 31 (2026-11-06, 08:47–09:10 UTC) closed two offline rounds:
+- **105** (round 103's token question, decided autonomously): the web client's Vite dev proxy adds `PARALLANG_TOKEN`
+  server-side (`client/proxy.config.js`; read as the server reads it: environment first, then the root `.env` by
+  plain dotenv; target follows `PORT`). The app already sent it (round 040).
+- **106** (104 R1.7): `spellbookSnapshot` withholds meanings, note and example English during encounters, on due
+  cards and under round 090's waits (`withheld: { meaning, example }`); clients render null safely. Limit: after a
+  server restart mid-encounter the payload has them again (only the app's guard hides them).
+
+Iteration 30 (2026-11-06, 08:22–08:50 UTC) closed three offline rounds:
 - **102** (099 critique 1.3): after a replayed send whose encounter is ongoing, a `currentEncounter` read with no
   conversation (a server restart) goes to the map with `STALE_CLOSED` (only from the dialogue view), one with another
   id is shown with `STALE_REPLAY_OTHER`; only while the store still shows the replay (a start or help reload during
@@ -33,9 +41,8 @@ Needs owner). Work only on items that need no live calls (code, tests, content, 
 
 Next candidates, none needing the owner:
 - **Offline.** Every area has had an in-depth review (rounds 086–097), 093–098 a second (099), 100–103 one (104),
-  and the web client a contract test (103). Small items left (`STALE_CLOSED` now names the map and the Party
-  screen, no round, 102's open item): meanings in the server's Spellbook payload during encounters
-  (104 R1.7, both clients hide them); round 090's *caffè nero* question (owner); the footnote rule over other
+  and the web client a contract test (103). Small items left: a persisted "encounter ongoing" flag so the
+  Spellbook payload stays withheld after a server restart (106 R1.1, low value); round 090's *caffè nero* question (owner); the footnote rule over other
   encounters' answers (low value until footnotes appear live); play-market per-step matching (099 R1.4).
 - **Queued live (after 11-09 17:32 UTC):**
   - round 081's firmer footnote rule by Amendment ("write a footnote on the greeting and on about one reply in
@@ -52,6 +59,14 @@ Next candidates, none needing the owner:
   - read the `extra-*` and `soft` lines of every new report's leak scan (rounds 100–101); Flick's *ora* as "hour"
     (round 101 open item); play-market per-step matching (099 R1.4).
 
+**Traps (iteration 31):**
+- Spellbook cards may now have `meanings: null`, `note: null`, `example.english: null` (see `card.withheld`). A test
+  that reads a card's meaning must use a snapshot outside an encounter with the card and its `formCardIds` not due
+  (fresh cards are due at once: set `schedule.dueAt` in the future and call `spellbookSnapshot(envelope, null)`).
+- `client/vite.config.js` builds the proxy only for `serve` outside mode `test`; its tests start a real Vite server
+  (`optimizeDeps: { noDiscovery: true }` or `vite.close()` hangs; close upstream keep-alive connections).
+- One full `npm test` had one unidentified server failure that did not recur in five more runs; if it recurs,
+  capture the output.
 **Traps (iteration 30):**
 - `leak-scan.js`: `NPC_ENGLISH_FORMS` is now a list of `{ form, context }` (use `npcEnglish(language, form, line)`);
   the printed `old leak` is counted (`oldLeakLines`), no longer leak + soft; `byEra` entries have `oldLeakLines`.
