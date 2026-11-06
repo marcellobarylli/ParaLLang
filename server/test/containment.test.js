@@ -41,7 +41,11 @@ test('both packs hold the two files; Errata\'s is the same English text in both'
   }
   assert.equal(files.it.cracked_fountain_letharger.name, 'Dopo, dopo, domani!');
   assert.equal(files.es.cracked_fountain_letharger.name, '¡Después, después, mañana!');
-  assert.deepEqual(files.it.the_rift_errata, files.es.the_rift_errata);
+  // Round 112: Errata's annex is in each pack's language; the file without it is the same, the annex's English too.
+  const { annex: itAnnex, ...itRift } = files.it.the_rift_errata;
+  const { annex: esAnnex, ...esRift } = files.es.the_rift_errata;
+  assert.deepEqual(itRift, esRift);
+  for (const key of ['id', 'title', 'redaction', 'translation', 'exposure_note']) assert.equal(itAnnex[key], esAnnex[key], key);
 });
 
 test('no file contains an objective target of its pack or a word of its own encounter (the jingle\'s name aside)', () => {
@@ -107,5 +111,10 @@ test('files are filed on completion only, sorted, through the API too; a party c
       strainPending: false, hidden: false, text: null, translation: null, glossary: null, exposureNote: null,
     },
   });
-  assert.equal(Object.hasOwn(filed[1], 'annex'), false, 'Errata\'s file has no annex');
+  // Round 112: Errata's file has an unread annex too.
+  const rift = runtime.content.encounters.get('the_rift_errata').encounter.containment_file.annex;
+  assert.deepEqual(filed[1].annex, {
+    id: 'cm002_seam_minutes', title: rift.title, redaction: rift.redaction, read: false, readAt: null,
+    strainPending: false, hidden: false, text: null, translation: null, glossary: null, exposureNote: null,
+  });
 });

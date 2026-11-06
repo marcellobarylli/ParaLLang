@@ -22,25 +22,38 @@ async function seedFountain(runtime, learnerId) {
 }
 const read = (runtime, learnerId, annexId = ANNEX) => api(runtime, '/api/spellbook/annex/read', { learnerId, method: 'POST', body: { annexId } });
 
-test('both packs hold the annex with the same English, and its text passes the answer check', () => {
+// Round 112 (critique optional): every annex of the pack, so a new one is checked without a new test. The English
+// shown (title, redaction, exposure note) and, after reading, the translation (critique 1.4) name no accepted
+// translation of an objective target, except the companion's "I"/"you" in a redaction (round 111, decision 5).
+const ENGLISH_ALLOWED = {
+  it: { cm001_second_verse: ['i', 'you'], cm002_seam_minutes: ['i', 'you'] },
+  es: { cm001_second_verse: ['i'], cm002_seam_minutes: ['i'] },
+};
+// CM-001's "finds it again" (round 111) names "again" (it Marginalia's *di nuovo* and Mortimer's *ancora*, es *otra vez*);
+// the verse's *la ritrova* / *la vuelve a encontrar* gives no target form, and the translation is withheld during
+// encounters. Allowed by name.
+const TRANSLATION_ALLOWED = { it: { cm001_second_verse: ['again'] }, es: { cm001_second_verse: ['again'] } };
+test('both packs hold the same annexes with the same English, and every text passes the answer check', () => {
   const annexes = {};
   for (const code of ['it', 'es']) {
     const content = loadGameContent({ language: code });
-    const annex = annexOf(content);
-    annexes[code] = annex;
-    assert.equal(annex.id, ANNEX);
-    assert.deepEqual(answerLeaks(content, annex, ALLOWED.fragments[code]), { forms: [], targetWords: [], meanings: [] }, code);
-    // The English shown before and after reading names no accepted translation of an objective target.
+    annexes[code] = Object.fromEntries([...content.encounters.values()].filter(({ encounter }) => encounter.containment_file?.annex)
+      .map(({ encounter }) => [encounter.containment_file.annex.id, encounter.containment_file.annex]));
+    assert.deepEqual(Object.keys(annexes[code]).sort(), ['cm001_second_verse', 'cm002_seam_minutes'], code);
     const ids = new Set([...content.encounters.values()].flatMap(({ encounter }) => encounter.objectives.flatMap((o) => o.target_vocabulary_ids)));
     const meanings = new Set([...ids].flatMap((id) => content.vocabularyById.get(id).accepted_translations.map((m) => foldWords(m).trim())));
-    const english = ` ${foldWords(`${annex.title} ${annex.redaction} ${annex.exposure_note}`).trim()} `;
-    // "I" and "you" (it io, tu; es yo) are the companion speaking to the player, not an answer (as round 110's
-    // ENGLISH_ALLOWED); each must still be a hit, so the list stays honest.
-    const hits = [...meanings].filter((m) => m && english.includes(` ${m} `)).sort();
-    assert.deepEqual(hits, { it: ['i', 'you'], es: ['i'] }[code], `${code} English`);
+    const hitsIn = (text) => { const english = ` ${foldWords(text).trim()} `; return [...meanings].filter((m) => m && english.includes(` ${m} `)).sort(); };
+    for (const annex of Object.values(annexes[code])) {
+      assert.deepEqual(answerLeaks(content, annex, ALLOWED.fragments[code]), { forms: [], targetWords: [], meanings: [] }, `${code} ${annex.id}`);
+      // Each allowed word must still be a hit, so the list stays honest.
+      assert.deepEqual(hitsIn(`${annex.title} ${annex.redaction} ${annex.exposure_note}`), ENGLISH_ALLOWED[code][annex.id], `${code} ${annex.id} English`);
+      assert.deepEqual(hitsIn(annex.translation), TRANSLATION_ALLOWED[code][annex.id] ?? [], `${code} ${annex.id} translation`);
+    }
   }
-  for (const key of ['id', 'title', 'redaction', 'translation', 'exposure_note']) assert.equal(annexes.it[key], annexes.es[key], key);
-  assert.equal(annexes.it.glossary.length, annexes.es.glossary.length);
+  for (const id of Object.keys(annexes.it)) {
+    for (const key of ['id', 'title', 'redaction', 'translation', 'exposure_note']) assert.equal(annexes.it[id][key], annexes.es[id][key], `${id} ${key}`);
+    assert.equal(annexes.it[id].glossary.length, annexes.es[id].glossary.length, id);
+  }
 });
 
 test('the loader rejects a malformed annex', async () => {
@@ -129,7 +142,7 @@ test('the strain: the next conversation has a hint fewer per objective until one
   const start = async (restart = false) => (await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { restart } })).data;
   let started = await start();
   let encounter = started.encounter;
-  assert.deepEqual(encounter.hints, { used: 0, remaining: limit - 1, limit: limit - 1, strained: true });
+  assert.deepEqual(encounter.hints, { used: 0, remaining: limit - 1, limit: limit - 1, baseLimit: limit, strained: true });
   // During the conversation the read annex keeps its text but not its translation.
   assert.equal(fileOf(started.spellbook).annex.translation, null);
   assert.equal(fileOf(started.spellbook).annex.text, annexOf(runtime.content).text);
@@ -164,7 +177,7 @@ test('the strain: the next conversation has a hint fewer per objective until one
   assert.deepEqual(saved.annexes, [{ id: ANNEX, readAt: '2026-01-15T12:00:00.000Z', strainSpentOn: 'imp_coffee_greeting' }]);
 
   started = await start(true);
-  assert.deepEqual(started.encounter.hints, { used: 0, remaining: limit, limit, strained: false });
+  assert.deepEqual(started.encounter.hints, { used: 0, remaining: limit, limit, baseLimit: limit, strained: false });
 });
 
 test('a save drops malformed and repeated annex records and refuses a non-array', async (t) => {
@@ -236,10 +249,81 @@ test('a strained objective with one hint has none: no hints available, the first
   await seedFountain(runtime, learnerId);
   await read(runtime, learnerId);
   const { encounter } = (await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: {} })).data;
-  assert.deepEqual(encounter.hints, { used: 0, remaining: 0, limit: 0, strained: true });
+  assert.deepEqual(encounter.hints, { used: 0, remaining: 0, limit: 0, baseLimit: 1, strained: true });
   assert.equal(encounter.hints_available, false);
   const active = encounter.transcript.at(-1);
   const refused = await api(runtime, '/api/encounter/help', { learnerId, method: 'POST', body: { encounterId: encounter.id, version: encounter.version, messageId: active.id, kind: 'sentence' } });
   assert.equal(refused.status, 409);
   assert.equal(refused.data.error.code, 'HINTS_EXHAUSTED');
+});
+
+// Round 112: the annex on CM-002 (Errata), filed with the Rift, not with the Fountain.
+const RIFT_ANNEX = 'cm002_seam_minutes';
+const others = ['market_entrance_tutorial', 'imp_coffee_greeting', 'butchers_stall_charcutier', 'cracked_fountain_letharger', 'old_bookshop_bookworm'];
+async function seedWorld(runtime, learnerId, completedEncounterIds, currentLocationId = 'market_entrance') {
+  const envelope = await runtime.storage.load(learnerId);
+  envelope.world = { ...envelope.world, currentLocationId, visitedLocationIds: [...new Set([...envelope.world.visitedLocationIds, 'market_entrance', currentLocationId])], completedEncounterIds };
+  await runtime.storage.save(envelope);
+}
+
+test('CM-002\'s annex: not filed with only the Fountain done; refused during a Rift restart; read after', async (t) => {
+  const runtime = await createRuntime();
+  t.after(runtime.close);
+  const { learnerId } = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data;
+  await seedWorld(runtime, learnerId, others);
+  let response = await read(runtime, learnerId, RIFT_ANNEX);
+  assert.equal(response.status, 409);
+  assert.equal(response.data.error.code, 'NOT_FILED');
+
+  await seedWorld(runtime, learnerId, [...others, 'the_rift_errata'], 'the_rift');
+  const started = await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { restart: true, encounterId: 'the_rift_errata' } });
+  assert.equal(started.status, 200);
+  assert.equal(started.data.encounter.encounterId, 'the_rift_errata');
+  const rift = started.data.spellbook.containmentFiles.find((file) => file.designation === 'CM-002');
+  assert.equal(rift.annex.read, false);
+  assert.equal(rift.annex.text, null);
+  response = await read(runtime, learnerId, RIFT_ANNEX);
+  assert.equal(response.status, 409);
+  assert.equal(response.data.error.code, 'IN_ENCOUNTER');
+
+  runtime.service.encounters.delete(learnerId); // as after a server restart: no conversation is held
+  response = await read(runtime, learnerId, RIFT_ANNEX);
+  assert.equal(response.status, 200);
+  assert.equal(response.data.charged, true);
+  const annex = response.data.spellbook.containmentFiles.find((file) => file.designation === 'CM-002').annex;
+  const source = runtime.content.encounters.get('the_rift_errata').encounter.containment_file.annex;
+  assert.equal(annex.text, source.text);
+  assert.equal(annex.translation, source.translation);
+  assert.equal(fileOf(response.data.spellbook).annex.read, false, 'CM-001\'s annex stays unread');
+});
+
+// Critique 1.5: two reads pending strain one conversation each, oldest first; never two hints fewer.
+test('two annexes read: each strains its own finished conversation, the oldest first, without stacking', async (t) => {
+  const runtime = await createRuntime();
+  t.after(runtime.close);
+  const { learnerId } = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data;
+  await seedWorld(runtime, learnerId, [...others, 'the_rift_errata'], 'coffee_cart');
+  assert.equal((await read(runtime, learnerId, RIFT_ANNEX)).data.charged, true);
+  assert.equal((await read(runtime, learnerId, ANNEX)).data.charged, true);
+  const limit = runtime.content.encounters.get('imp_coffee_greeting').encounter.objectives[0].hint_limit;
+
+  const play = async () => {
+    const { encounter } = (await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { restart: true, encounterId: 'imp_coffee_greeting' } })).data;
+    const hints = encounter.hints;
+    const strainedBy = runtime.service.encounters.get(learnerId).strainedBy ?? [];
+    const resolved = await runtime.service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message: 'Quiero un café negro.' });
+    assert.equal(resolved.encounter.state, 'resolved');
+    return { hints, strainedBy, spent: (await runtime.storage.load(learnerId)).annexes.map((r) => [r.id, r.strainSpentOn]) };
+  };
+  let result = await play();
+  assert.deepEqual(result.hints, { used: 0, remaining: limit - 1, limit: limit - 1, baseLimit: limit, strained: true });
+  assert.deepEqual(result.strainedBy, [RIFT_ANNEX]);
+  assert.deepEqual(result.spent, [[RIFT_ANNEX, 'imp_coffee_greeting'], [ANNEX, null]]);
+  result = await play();
+  assert.equal(result.hints.limit, limit - 1);
+  assert.deepEqual(result.strainedBy, [ANNEX]);
+  assert.deepEqual(result.spent, [[RIFT_ANNEX, 'imp_coffee_greeting'], [ANNEX, 'imp_coffee_greeting']]);
+  result = await play();
+  assert.deepEqual(result.hints, { used: 0, remaining: limit, limit, baseLimit: limit, strained: false });
+  assert.deepEqual(result.strainedBy, []);
 });

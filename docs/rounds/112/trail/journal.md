@@ -11,3 +11,6 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 10:05:29 | 10:09:00 | critique-returned | Claude (claude-opus-5-5), autonomous | Correction to row 4: it was recorded at 10:05:29, not 10:07:30 | — |
 | 6 | 10:08:00 | 10:09:00 | disposition | Claude (claude-opus-5-5), autonomous | All 12 accepted (1.6 in part); one read per finished conversation, oldest first; autonomous, pending owner review | `../architecture.md` |
 | 7 | 10:08:30 | 10:09:00 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: clean texts, "This is the thing itself talking", one strain per read, `baseLimit` with a fallback, the English check over translations, more tests | `../architecture.md` |
+| 8 | 10:06:15 | 10:06:15 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed (goal, design, decisions, second opinion, tests) | `../architecture.md` |
+| 9 | 10:06:29 | 10:06:29 | freeze | Claude (claude-opus-5-5), autonomous | Correction: rows 5–7 were recorded at about 10:06, before the freeze, not at 10:09 (times written ahead of the clock) | — |
+| 10 | 10:09:23 | 10:09:23 | built | Claude (claude-opus-5-5), autonomous | CM-002 annex (it, es), oldest-first strain, `baseLimit`, the app's "N fewer than usual"; CM-001's translation hits "again", allowed by name; server 408/408, client 21/21, mobile 319/319, web build ok | — |

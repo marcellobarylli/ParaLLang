@@ -159,9 +159,47 @@ test('the dialogue panel says the companion is recovering only while a strained 
   });
   const props = { language, isLoading: false, onSend: () => {}, onHelp: () => {}, onRestart: () => {} };
   const { rerender } = await render(<DialoguePanel encounter={encounter('ongoing', true)} {...props} />);
+  // Round 112: no `baseLimit` (a receipt from before round 112): round 111's wording.
   expect(screen.getByText(/Hints: 1\/1 \(your companion is recovering\)/)).toBeOnTheScreen();
   await rerender(<DialoguePanel encounter={encounter('resolved', true)} {...props} />);
   expect(screen.queryByText(/recovering/)).toBeNull();
   await rerender(<DialoguePanel encounter={encounter('ongoing', false)} {...props} />);
   expect(screen.queryByText(/recovering/)).toBeNull();
+});
+
+// Round 112: the line says how many fewer, from the objective's own limit; never "0 fewer".
+test('the hints line says how many fewer than usual when the server sends the base limit', async () => {
+  const encounter = (state, hints) => ({
+    id: 'e', state, encounter_state: state, difficulty: 0.3, currentObjective: state === 'ongoing' ? { id: 'o', prompt: 'Order a coffee.' } : null,
+    hints: { used: 0, remaining: 1, limit: 1, strained: true, ...hints }, hints_available: true, transcript: [], character: { name: 'Gerald' }, companionBriefing: null,
+  });
+  const props = { language, isLoading: false, onSend: () => {}, onHelp: () => {}, onRestart: () => {} };
+  const { rerender } = await render(<DialoguePanel encounter={encounter('ongoing', { baseLimit: 2 })} {...props} />);
+  expect(screen.getByText(/Hints: 1\/1 \(your companion is recovering: 1 fewer than usual\)/)).toBeOnTheScreen();
+  // At the floor (an objective with no hints) nothing is fewer: the plain note.
+  await rerender(<DialoguePanel encounter={encounter('ongoing', { limit: 0, remaining: 0, baseLimit: 0 })} {...props} />);
+  expect(screen.getByText(/Hints: 0\/0 \(your companion is recovering\)/)).toBeOnTheScreen();
+  expect(screen.queryByText(/fewer than usual/)).toBeNull();
+  await rerender(<DialoguePanel encounter={encounter('resolved', { baseLimit: 2 })} {...props} />);
+  expect(screen.queryByText(/recovering/)).toBeNull();
+});
+
+// Round 112 (critique optional): two annexed files in one Spellbook, one read, one unread, keep apart.
+test('two files with annexes: each shows its own state and reads its own id', async () => {
+  const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  const onReadAnnex = jest.fn();
+  const user = userEvent.setup();
+  const rift = {
+    ...file({ ...unread, id: 'cm002_seam_minutes', title: 'Annex A: minutes of the seam' }),
+    encounterId: 'the_rift_errata', locationName: 'The Rift', designation: 'CM-002', name: 'Errata', class: 'Rift-born (corruption)',
+  };
+  await show({ ...book(readAnnex), containmentFiles: [file(readAnnex), rift] }, { onReadAnnex });
+  expect(screen.getByText(readAnnex.text)).toBeOnTheScreen();
+  expect(screen.getAllByLabelText('Redacted text')).toHaveLength(1);
+  const buttons = screen.getAllByRole('button', { name: 'Read it anyway' });
+  expect(buttons).toHaveLength(1);
+  await user.press(buttons[0]);
+  expect(alert.mock.calls[0][0]).toBe('Read Annex A: minutes of the seam?');
+  alert.mock.calls[0][2][1].onPress();
+  expect(onReadAnnex).toHaveBeenCalledWith('cm002_seam_minutes');
 });

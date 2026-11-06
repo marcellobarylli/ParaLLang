@@ -7,6 +7,15 @@ import { FadeIn, useReduceMotion } from '../motion.js';
 import { stopSpeech } from '../speech.js';
 import NarratorButton, { speechText } from './NarratorButton.js';
 
+// Round 111: while a strained conversation is ongoing. Round 112: how many fewer, when the server sent the objective's
+// own limit (`baseLimit`; a receipt from before round 112 has none, critique 1.8).
+export function recoveringNote(encounter) {
+  const { strained, limit, baseLimit } = encounter.hints ?? {};
+  if (!strained || encounter.state !== 'ongoing') return '';
+  const fewer = typeof baseLimit === 'number' && typeof limit === 'number' ? baseLimit - limit : 0;
+  return fewer > 0 ? ` (your companion is recovering: ${fewer} fewer than usual)` : ' (your companion is recovering)';
+}
+
 export default function DialoguePanel({ encounter, language, isLoading, assessment, assessmentCounted = false, earlyAssessment = null, pendingInput = null, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
   const reduced = useReduceMotion();
@@ -41,7 +50,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       {encounter.currentObjective
         ? <><Text style={styles.strong}>Current objective</Text><Text style={styles.body}>{encounter.currentObjective.prompt}</Text></>
         : <Text style={styles.strong}>Encounter complete</Text>}
-      <Text style={styles.small}>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}{encounter.hints.strained && encounter.state === 'ongoing' ? ' (your companion is recovering)' : ''}</Text>
+      <Text style={styles.small}>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}{recoveringNote(encounter)}</Text>
     </View></>
   );
   // Round 070 (backlog I1): while the reply is written, the grader's verdict shows as provisional under the pending

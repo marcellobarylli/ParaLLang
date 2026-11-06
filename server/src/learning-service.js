@@ -616,7 +616,8 @@ export class LearningService {
       difficulty: this.ratioFor(encounter.committedPlayerTurns, definition),
       must_translate: encounter.state === 'ongoing' && Boolean(objective),
       hints_available: encounter.state === 'ongoing' && revealKeys.length < limit,
-      hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit, strained: Boolean(encounter.strained) },
+      // Round 112: `baseLimit` is the objective's own limit, so the app can say how many fewer the strain leaves.
+      hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit, baseLimit: objective?.hint_limit ?? 0, strained: Boolean(encounter.strained) },
       currentObjective: objective ? { id: objective.id, prompt: objective.prompt } : null,
       transcript,
     };
@@ -741,7 +742,9 @@ export class LearningService {
       const npcMessage = this.canonicalizeNarration(generated, definition);
       const stagedEnvelope = clone(envelope);
       this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
-      const strainedBy = this.pendingStrainIds(envelope); // round 111 (review R1.12): once
+      // Round 111 (review R1.12): computed once. Round 112 (critique 1.5): only the oldest pending read strains a
+      // session, so with two reads pending each costs its own finished conversation (no stacking, none free).
+      const strainedBy = this.pendingStrainIds(envelope).slice(0, 1);
       const encounter = {
         id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0, passedObjectiveIds: [],
         committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
