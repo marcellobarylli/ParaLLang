@@ -7,23 +7,27 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 24 (2026-11-06, 04:29–05:05 UTC) closed rounds 082 and 083 (083: fragments now pass
-082's answer check, six it/es rewrites). Round 082 (backlog A13, inscriptions): one authored
-target-language text per location (it, es), found by visiting, "Look closer" on the map card, an Inscriptions
-section in the Spellbook; a move returns the Spellbook (fixing a stale Rift drill note). Offline. Critique and
-review by fresh read-only subagents in place of Codex.
+Nothing open. Iteration 25 (2026-11-06, 04:56–05:25 UTC) closed round 084 (backlog F5): the app's Spellbook is
+fetched again behind the screen on opening the Spellbook, the map, and the return from the background (cards fall
+due by the clock; before, only startup and a save switch fetched it). Offline. Critique by a fresh read-only
+subagent in place of Codex. Iteration 24 closed rounds 082 (inscriptions) and 083 (fragments under the answer check).
 
 **Codex is at its usage limit until 2026-11-09 17:32 UTC** (hit at 04:17 UTC on 11-06), after the end of the
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09: test gaps, content checks with `leak-scan.js`, docs. Ideas: other app state that
-  goes stale after a move or a completion (round 082 found the drill; check `party`, the Party hint, `storyProgress`);
-  more inscriptions (party conversations, a second line after completion).
+- **Offline work only** until 11-09: test gaps, content checks with `leak-scan.js`, docs. Round 084's audit of
+  `gameStore.js` found world, party and Party hints refreshed where they change; still unchecked: the `atmosphere`
+  key after a save switch, `drill` after a review from the Spellbook (the review returns the Spellbook, so likely
+  fine). Ideas: more inscriptions (party conversations, a second line after completion).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
   greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure; the
   rest of round 081's Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
+
+**Traps (iteration 25):** in a mutation loop, `pgrep -f "<pattern>"` inside an `until` matches its own shell and
+never ends; use a plain `timeout` per run. A refresh test of "the older reply is dropped" must resolve the older
+reply first, or the object check hides a missing sequence check.
 
 ## Backlog
 
@@ -207,6 +211,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F3. Vocabulary forms match their own entry** (round 058, closed 2026-11-05): matcher sorts (entry, variant) pairs longest
   first; pack-wide behavioural test. No live calls.
 
+- [x] **F5. The Spellbook refreshed** (round 084, closed 2026-11-06): on opening the Spellbook, the map and the
+  return from the background; latest call wins; no meanings while the app holds an encounter the server forgot.
+
 - [x] **F4. One test command** (2026-11-06, no round): root `npm test` (server, client, mobile), `npm run test:server`;
   bare `node --test` in `server/` hangs on the fake CLIs in `test/fixtures/`.
 
@@ -233,6 +240,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 084 (Simulator):** a card falling due while the app is in the background shows on the header badge on
+  return; decide whether a foreground timer is wanted ([open items](../rounds/084/findings.md#open-items)).
 - **Rounds 082–083:** native-speaker review of the twelve inscriptions and the six fragment rewrites (it, es); are
   inscriptions wanted; Simulator: "Look closer", the Inscriptions section, the Rift drill note on arrival
   ([082](../rounds/082/findings.md#open-items), [083](../rounds/083/findings.md#open-items)).

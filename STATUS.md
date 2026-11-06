@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 084, the Spellbook refreshed (autonomous)
+
+The app fetched the Spellbook only at startup and on a save switch, so cards falling due by the clock (SM-2 days)
+never showed until an action returned one. It is now fetched again behind the screen when the Spellbook or the map
+opens and when the app returns from the background. A late reply never overwrites a newer Spellbook, and none
+showing meanings is applied while the player is in a conversation the server forgot ([findings](docs/rounds/084/findings.md)).
+
 ## Addendum 2026-11-06: round 083, fragments under the answer check (autonomous)
 
 The fragments of *The Journey* now pass round 082's answer check too. Six small target-language rewrites removed

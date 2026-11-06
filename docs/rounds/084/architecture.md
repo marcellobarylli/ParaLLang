@@ -92,3 +92,9 @@ Full suite (`npm test`).
 
 Offline, jest only. Shows the store applies a fresh Spellbook on the three triggers under the guards above. Not
 shown: the iOS `AppState` sequence on a device or Simulator (owner).
+
+## Outcome (2026-11-06)
+
+Built as designed. Each of the four guards (sequence, epoch, object, encounter) has a test that fails without it;
+the order test was strengthened during the build to resolve the older reply first. Full suites pass; no amendment
+([findings](findings.md)).
