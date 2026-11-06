@@ -9,7 +9,7 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 **Two rounds open, built and committed, waiting only for live runs** (iteration 16; Codex hit its usage limit at about
 23:14 UTC, reset given as **01:36 UTC 2026-11-06**; still limited at 23:58 UTC, checked in iteration 18). Iterations
-17–18 closed rounds 054–064 without live calls. None of them changes what these runs test. Three things differ: NPC
+17–19 closed rounds 054–065 without live calls. None of them changes what these runs test. Three things differ: NPC
 words now carry `spans` (round 057); the matcher sorts forms across entries (round 058, output unchanged on 1,021
 saved lines); and a paid sentence reveal now writes `lines` to the save (round 060; the play script's reveals will keep
 lines, which is harmless). Run these first, in order, then close each round (findings.md, Outcome,
@@ -36,8 +36,7 @@ After those, the backlog is empty except D1 (blocked). Next candidates, none nee
 - re-measuring the language share (E1) with the new rounds' content;
 - a live check that the play script's sentence reveals now leave `lines` in the save (round 060), by reading the
   save after a run;
-- offline: a loading line instead of the brief "No due review is available." flash during "Continue reviews"
-  (round 063 critique, cosmetic).
+- (done offline in round 065: the loading line between reviews.)
 
 ## Backlog
 
@@ -462,9 +461,18 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   - 064 (C10d): speech stops in the background.
   Also F4 (`npm test`). Server 244/244, mobile 176/176, client 12/12, expo-doctor 20/20. The live queue (rounds
   052–054) is untouched.
+- 2026-11-06, iteration 19 (from 00:45 UTC; Codex limited until 01:36): round 065 (round 063's cosmetic item): a
+  loading line and a failure state with Try again between reviews; `startReview` drops a reply that arrives after the
+  view changed (a pre-existing race the critique found). Mobile 182/182.
 
 ## Handoff notes and traps
 
+- **App-level jest tests and `initialize`** (round 065): `initialize()` caches its promise per module, so a second
+  `render(<App />)` in the same test file never refetches. Either keep one App test per file, or seed the store's
+  `beforeEach` with the loaded state (learnerId, language, world, spellbook), as `review-loading.test.js` does.
+- **`startReview` drops late replies** (round 065): it remembers `get().view` and, if the view changed by the reply,
+  only updates `spellbook` and clears `isLoading`. A new screen that starts a review must stay on the view it started
+  from until the reply, or it loses the challenge.
 - **Run every test with `npm test`** at the root (about 20 s; round F4). A bare `node --test` inside `server/` hangs:
   it also runs `server/test/fixtures/fake-*.mjs`, which wait on stdin. `node --test server/test/*.test.js` from the
   root works too.
