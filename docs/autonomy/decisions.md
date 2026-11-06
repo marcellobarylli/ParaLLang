@@ -185,3 +185,5 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-06 | 062 | Critique 1 (a Claude subagent, Codex at its limit): 7 findings, all accepted | — | See round 062 Second opinion table | Yes |
 | 2026-11-06 | 063 | The Spellbook and Review screens stop the voice when they go; `speak` gives way to a stop that arrives while it waits | Leave words playing across screens | A fragment read over the map or an encounter, with the ambience lowered, is a bug; the critique found the race | Yes |
 | 2026-11-06 | 063 | Critique 1 (a Claude subagent, Codex at its limit): 5 findings, all accepted (the Error included) | — | See round 063 Second opinion table | Yes |
+| 2026-11-06 | 064 | The voice stops when the app goes to the background (not on `inactive`); on return, the ambience is undocked if nothing speaks | Stop on `inactive` too; leave speech to iOS | A peek at Control Centre should not cut a word; an interruption must not leave the ambience lowered | Yes |
+| 2026-11-06 | 064 | Critique 1 (a Claude subagent, Codex at its limit): 5 findings, all accepted | — | See round 064 Second opinion table | Yes |
