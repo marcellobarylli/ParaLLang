@@ -2,6 +2,9 @@ import PronounceButton from './PronounceButton.jsx';
 
 // Round 103 (round 017's rule, as the app keeps it): no meanings while an encounter is under way or on a due card
 // (its review asks for them), and no Review in an encounter (the server refuses it).
+// Round 104 (review R1.6): a card that fell due while the Spellbook is open is hidden too; Review waits for the server.
+const dueNow = (card) => card.due || Date.parse(card.nextReviewAt) <= Date.now();
+
 export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn }) {
   const inEncounter = Boolean(spellbook.inEncounter);
   return (
@@ -18,7 +21,7 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
           {spellbook.cards.map((card) => (
             <article className="vocabulary-card" key={card.vocabularyId}>
               <div className="card-title"><h3 lang={language?.tag}>{card.target}</h3><PronounceButton text={card.target} language={language} /></div>
-              <p>{inEncounter || card.due ? <em>Meaning hidden</em> : card.meanings.join(' · ')}</p>
+              <p>{inEncounter || dueNow(card) ? <em>Meaning hidden</em> : card.meanings.join(' · ')}</p>
               <p><small>{card.partOfSpeech.replaceAll('_', ' ')} · Mastery: <strong>{card.mastery}</strong></small></p>
               <p><small>{card.due ? 'Due now' : `Next review: ${new Date(card.nextReviewAt).toLocaleString()}`}</small></p>
               {card.due && !inEncounter && <button type="button" className="primary-button" disabled={isLoading} onClick={() => onReview(card.vocabularyId)}>Review</button>}

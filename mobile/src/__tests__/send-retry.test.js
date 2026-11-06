@@ -209,9 +209,11 @@ describe('a replay the server no longer holds (round 102)', () => {
 
   test('a screen the player opened during the read stays (critique 1.4)', async () => {
     const read = deferred();
-    const { store } = await replayWith(() => read.promise);
+    const { api, store } = await replayWith(() => read.promise);
+    const reads = api.currentEncounter.mock.calls.length;
     const sending = store.getState().sendMessage('A');
     await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(api.currentEncounter.mock.calls.length).toBe(reads + 1); // round 104 (review R1.8): the read is under way
     store.getState().openSpellbook();
     read.resolve({ encounter: null, spellbook });
     await sending;
@@ -246,8 +248,10 @@ describe('a replay the server no longer holds (round 102)', () => {
     const read = deferred();
     const started = { ...encounter, id: 'enc-8', encounterId: 'gerald_coffee_break', version: 1 };
     const { api, store } = await replayWith(() => read.promise);
+    const reads = api.currentEncounter.mock.calls.length;
     const sending = store.getState().sendMessage('A');
     await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(api.currentEncounter.mock.calls.length).toBe(reads + 1); // round 104 (review R1.8): the read is under way
     api.startEncounter.mockResolvedValueOnce({ encounter: started, spellbook });
     await store.getState().talkTo('gerald_coffee_break');
     read.resolve({ encounter: null, spellbook });
@@ -262,8 +266,10 @@ describe('a replay the server no longer holds (round 102)', () => {
     const { api, store } = await replayWith(() => read.promise);
     api.revealHelp.mockRejectedValueOnce(stale('STALE_ENCOUNTER'));
     api.currentEncounter.mockImplementationOnce(async () => ({ encounter: reloaded, spellbook }));
+    const reads = api.currentEncounter.mock.calls.length;
     const sending = store.getState().sendMessage('A');
     await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(api.currentEncounter.mock.calls.length).toBe(reads + 1); // round 104 (review R1.8): the read is under way
     await store.getState().revealHelp({ kind: 'sentence', messageId: 'm1' });
     expect(store.getState().error).toBe(STALE_HELP);
     read.resolve({ encounter: null, spellbook });

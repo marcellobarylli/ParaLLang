@@ -146,19 +146,26 @@ test('loading plus empty and no-due states remain understandable', () => {
 
 // Round 103: round 017's rule in the web Spellbook.
 test('the Spellbook hides meanings during an encounter and on due cards, and reviews wait', () => {
-  const during = render(<Spellbook spellbook={{ cards: [cards[0], { ...cards[1], due: false }], dueCount: 1, inEncounter: true }} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
+  const during = render(<Spellbook spellbook={{ cards: [cards[0], { ...cards[1], due: false, nextReviewAt: '2999-01-01T00:00:00Z' }], dueCount: 1, inEncounter: true }} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
   expect(screen.getByText(/Meanings are hidden and reviews wait/)).toBeTruthy();
   expect(screen.getAllByText('Meaning hidden').length).toBe(2);
   expect(screen.queryByText('coffee')).toBeNull();
   expect(screen.queryByText(/without milk/)).toBeNull();
   expect(screen.queryByRole('button', { name: 'Review' })).toBeNull();
   during.unmount();
-  render(<Spellbook spellbook={{ cards: [cards[0], { ...cards[1], due: false }], dueCount: 1, inEncounter: false }} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
+  render(<Spellbook spellbook={{ cards: [cards[0], { ...cards[1], due: false, nextReviewAt: '2999-01-01T00:00:00Z' }], dueCount: 1, inEncounter: false }} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
   expect(screen.queryByText(/Meanings are hidden/)).toBeNull();
   expect(screen.getAllByText('Meaning hidden').length).toBe(1);
   expect(screen.queryByText('coffee')).toBeNull();
   expect(screen.getByText('without milk · no milk')).toBeTruthy();
   expect(screen.getAllByRole('button', { name: 'Review' }).length).toBe(1);
+});
+
+test('a card that fell due while the Spellbook is open hides its meaning (round 104)', () => {
+  render(<Spellbook spellbook={{ cards: [{ ...cards[0], due: false, nextReviewAt: '2000-01-01T00:00:00Z' }, { ...cards[1], due: false, nextReviewAt: '2999-01-01T00:00:00Z' }], dueCount: 0 }} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
+  expect(screen.getAllByText('Meaning hidden').length).toBe(1);
+  expect(screen.queryByText('coffee')).toBeNull();
+  expect(screen.getByText('without milk · no milk')).toBeTruthy();
 });
 
 test('CLI provider error is actionable, clears pending state, and retains input', async () => {

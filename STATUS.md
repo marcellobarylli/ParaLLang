@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 104, fixes from a review of rounds 100–103 (autonomous)
+
+A review of the last four rounds found no bug a player meets. It found five ways the tool that checks playthroughs
+for answers given away could miscount future reports, for example by treating Gerald's "espresso" as English even
+when it is the answer. These are fixed. None of the published numbers change. The web Spellbook now also hides a word
+that falls due while it is open ([findings](docs/rounds/104/findings.md)).
+
 ## Addendum 2026-11-06: round 103, the frozen web client still plays against today's server (autonomous)
 
 A new test runs the web client's own code against the real server: it still plays Gerald's encounter, the

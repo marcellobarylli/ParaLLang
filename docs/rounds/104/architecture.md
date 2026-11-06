@@ -75,3 +75,9 @@ narrowed by Decisions 1, 4 and 6).
   its meaning.
 - `mobile/src/__tests__/send-retry.test.js`: the race tests assert the read was called before the action.
 - Mutations; full suites; the rescan diff.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. The rescan changes no NPC-line kind and no total; six early feedback texts list one
+more form. One test was tightened during the build (R1.5's first version let its mutation pass). All suites pass
+([findings](findings.md)).

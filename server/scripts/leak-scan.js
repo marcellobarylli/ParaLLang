@@ -123,7 +123,10 @@ export const isFrame = (encounterId, objective, id) => (FRAME_TARGETS[encounterI
 // Round 101 (decision 2, critique 1.1): English words among whole target forms in NPC lines. Only *espresso*
 // (Gerald's "five espresso shots"): round 100's ENGLISH_FORMS, for English texts, would hide real leaks here (*basta*,
 // *ciao*, *hola*). Errata's ENGLISH_COLLISIONS cover word hits inside multi-word forms only.
-export const NPC_ENGLISH_FORMS = Object.freeze({ it: new Set(['espresso']), es: new Set() });
+// Round 104 (review R1.1): English only in an English phrase ("espresso shots"); "Vuoi un espresso?" is a leak.
+export const NPC_ENGLISH_FORMS = Object.freeze({ it: [{ form: 'espresso', context: /\bespresso shots?\b/ }], es: [] });
+export const npcEnglish = (language, form, line) => (NPC_ENGLISH_FORMS[language] ?? [])
+  .some((entry) => entry.form === fold(form).trim() && entry.context.test(fold(line)));
 
 // Passages an objective's intent quotes for the NPC to read (five words or more between quotes): a form inside one is
 // quoted, not leaked. Short quoted forms are prohibitions ("He does not say "me gusta"") and do not count.
@@ -160,15 +163,16 @@ export const ENGLISH_FORMS = Object.freeze({
   it: new Set('due espresso salami salame prosciutto ciao basta otto chilo'.split(' ')),
 });
 
-// Round 100: one English text against the open objectives' forms; hits per (text, objective), the first form found.
+// Round 100: one English text against the open objectives' forms. Round 104 (review R1.4): one hit per (objective,
+// folded form), so an echoed or English form found first does not hide a fresh one of the same objective.
 function scanText(text, forms, language, earlier, { passages = null } = {}) {
   const folded = fold(text);
   const english = ENGLISH_FORMS[language] ?? new Set();
   const byObjective = new Map();
   for (const { objective, form } of forms) {
     const f = fold(form).trim();
-    if (byObjective.has(objective) || !holds(folded, f)) continue;
-    byObjective.set(objective, {
+    if (byObjective.has(`${objective}|${f}`) || !holds(folded, f)) continue;
+    byObjective.set(`${objective}|${f}`, {
       objective, form,
       echo: earlier.some((message) => holds(message, f)),
       english: english.has(f),
@@ -247,7 +251,9 @@ export function scanReport(report, content) {
       const closed = objectives.filter((objective) => !open.includes(objective));
       // Critique 1.5: a word that is a whole form of a closed objective's target is not a hit (already passed).
       const closedForms = new Set(formsFor(closed, content.vocabularyById).map(({ form }) => fold(form).trim()));
-      const { exact, words } = scanLine(line.native ?? '', formsFor(open, content.vocabularyById), content.language.code, { english, soft: (hit) => isFrame(encounterId, hit.objective, hit.id) });
+      // Round 104 (review R1.5): an English *espresso* stops no word hits either, like a frame word.
+      const isEnglish = (hit) => npcEnglish(content.language.code, hit.form, line.native ?? '');
+      const { exact, words } = scanLine(line.native ?? '', formsFor(open, content.vocabularyById), content.language.code, { english, soft: (hit) => isFrame(encounterId, hit.objective, hit.id) || isEnglish(hit) });
       // Critique 1.7: echo only if one earlier message holds the whole form by itself (round 097, review R1.9: for
       // the objectives' own hits too, not the messages joined).
       const messages = mine.slice(0, k).map((turn) => fold(turn.message));
@@ -255,28 +261,28 @@ export function scanReport(report, content) {
         .map((hit) => ({ ...hit, echo: messages.some((message) => holds(message, fold(hit.form))), english: FOREIGN_ENGLISH.has(fold(hit.form).trim()) }));
       if (strange.length) foreign.push({ line: k, hits: strange, native: line.native });
       const mark = (hit, text) => ({ ...hit, echo: messages.some((message) => holds(message, fold(text))), quoted: passagesOf(objectives, hit.objective).some((passage) => holds(passage, fold(text))) });
-      const npcEnglish = NPC_ENGLISH_FORMS[content.language.code] ?? new Set();
-      const soften = (hit) => ({ ...hit, frame: isFrame(encounterId, hit.objective, hit.id), english: npcEnglish.has(fold(hit.form).trim()) });
+      const soften = (hit) => ({ ...hit, frame: isFrame(encounterId, hit.objective, hit.id), english: isEnglish(hit) });
       const marked = {
         exact: exact.map((hit) => soften(mark(hit, hit.form))),
         words: words.filter((hit) => !closedForms.has(hit.word)).map((hit) => mark(hit, hit.word)),
       };
       if (!marked.exact.length && !marked.words.length) return;
       const fresh = (hit) => !hit.echo && !hit.quoted;
-      // Round 101 (decision 3): leak > near > soft > quoted > echo.
+      // Round 101 (decision 3): leak > near > soft > quoted > echo. Round 104 (review R1.3): any fresh word hit is near.
       const key = (hit) => fresh(hit) && !hit.frame && !hit.english;
       const kind = marked.exact.some(key) ? 'leak'
-        : marked.words.some(fresh) && (marked.exact.some(fresh) || !marked.exact.length) ? 'near'
+        : marked.words.some(fresh) ? 'near'
           : marked.exact.some(fresh) ? 'soft'
             : [...marked.exact, ...marked.words].some((hit) => hit.quoted) ? 'quoted' : 'echo';
-      hits.push({ line: k, kind, ...marked, native: line.native });
+      // Round 104 (review R1.2): the pre-101 rule, for comparison with earlier rounds: any fresh exact hit.
+      hits.push({ line: k, kind, oldLeak: marked.exact.some(fresh), ...marked, native: line.native });
     });
     const count = (kind) => hits.filter((hit) => hit.kind === kind).length;
     const extras = scanExtras(scene, mine, definition, content); // round 100
     scenes.push({
       extras,
       encounterId, inferred: scene.inferred, replay: Boolean(scene.replay), lines: scene.lines.length,
-      leakLines: count('leak'), nearLines: count('near'), softLines: count('soft'), quotedLines: count('quoted'), echoLines: count('echo'), hits,
+      leakLines: count('leak'), nearLines: count('near'), softLines: count('soft'), oldLeakLines: hits.filter((hit) => hit.oldLeak).length, quotedLines: count('quoted'), echoLines: count('echo'), hits,
       party: Boolean(definition.encounter.party_of),
       foreignLines: foreign.filter((entry) => entry.hits.some((hit) => !hit.echo && !hit.english)).length, foreign,
     });
@@ -301,14 +307,15 @@ export function summarize(results) {
     if (r.error) { files[r.error] = (files[r.error] ?? 0) + 1; continue; }
     if (!r.scenes.length && !r.skipped.length) { files['no scenes'] = (files['no scenes'] ?? 0) + 1; continue; }
     files.scanned = (files.scanned ?? 0) + 1;
-    const t = (total[r.language] ??= { reports: 0, scenes: 0, inferred: 0, replays: 0, skippedScenes: 0, lines: 0, leakLines: 0, nearLines: 0, softLines: 0, quotedLines: 0, echoLines: 0, foreignLines: 0, partyLines: 0, partyForeignLines: 0 });
+    const t = (total[r.language] ??= { reports: 0, scenes: 0, inferred: 0, replays: 0, skippedScenes: 0, lines: 0, leakLines: 0, nearLines: 0, softLines: 0, oldLeakLines: 0, quotedLines: 0, echoLines: 0, foreignLines: 0, partyLines: 0, partyForeignLines: 0 });
     t.reports += 1;
     t.skippedScenes += r.skipped.reduce((sum, s) => sum + s.scenes, 0);
     for (const s of r.scenes) {
       t.scenes += 1; t.lines += s.lines; if (s.inferred) t.inferred += 1; if (s.replay) t.replays += 1;
       for (const kind of KINDS) t[`${kind}Lines`] += s[`${kind}Lines`] ?? 0;
-      const era = ((t.byEra ??= {})[eraOf(r.path)] ??= { leakLines: 0, softLines: 0 }); // round 101
-      era.leakLines += s.leakLines; era.softLines += s.softLines ?? 0;
+      t.oldLeakLines += s.oldLeakLines ?? 0; // round 104
+      const era = ((t.byEra ??= {})[eraOf(r.path)] ??= { leakLines: 0, softLines: 0, oldLeakLines: 0 }); // round 101
+      era.leakLines += s.leakLines; era.softLines += s.softLines ?? 0; era.oldLeakLines += s.oldLeakLines ?? 0;
       t.foreignLines += s.foreignLines;
       if (s.party) { t.partyLines += s.lines; t.partyForeignLines += s.foreignLines; }
       if (!s.extras) continue;
@@ -361,10 +368,10 @@ async function main(args = process.argv.slice(2)) {
   const { files, total, extras } = summarize(results);
   console.log(`== files: ${Object.entries(files).map(([k, v]) => `${k} ${v}`).join(', ')} (of ${paths.length})`);
   for (const [language, t] of Object.entries(total)) {
-    console.log(`== ${language}: ${t.reports} reports, ${t.scenes} scenes (${t.inferred} inferred, ${t.replays} replay greetings, ${t.skippedScenes} skipped), ${t.lines} lines; leak ${t.leakLines} (+soft ${t.softLines} = old leak ${t.leakLines + t.softLines}), near ${t.nearLines}, quoted ${t.quotedLines}, echo ${t.echoLines}; foreign ${t.foreignLines} (party conversations: ${t.partyForeignLines} of ${t.partyLines} lines)`);
+    console.log(`== ${language}: ${t.reports} reports, ${t.scenes} scenes (${t.inferred} inferred, ${t.replays} replay greetings, ${t.skippedScenes} skipped), ${t.lines} lines; leak ${t.leakLines} (+soft ${t.softLines}; old leak ${t.oldLeakLines}), near ${t.nearLines}, quoted ${t.quotedLines}, echo ${t.echoLines}; foreign ${t.foreignLines} (party conversations: ${t.partyForeignLines} of ${t.partyLines} lines)`);
   }
   for (const [language, t] of Object.entries(total)) {
-    for (const [era, e] of Object.entries(t.byEra ?? {}).sort()) console.log(`== ${language} ${era}: leak ${e.leakLines}, soft ${e.softLines}`);
+    for (const [era, e] of Object.entries(t.byEra ?? {}).sort()) console.log(`== ${language} ${era}: leak ${e.leakLines}, soft ${e.softLines}, old leak ${e.oldLeakLines}`);
   }
   for (const [language, eras] of Object.entries(extras)) {
     for (const [era, e] of Object.entries(eras).sort()) {

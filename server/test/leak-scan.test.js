@@ -266,7 +266,7 @@ test('a soft form the player wrote earlier is echo; summarize counts soft lines'
   const { total } = summarize([{ path: 'docs/rounds/101/results/x.json', language: 'it', ...scanReport(report, it) }]);
   assert.equal(total.it.softLines, 1);
   assert.equal(total.it.leakLines, 0);
-  assert.deepEqual(total.it.byEra, { 'from 051': { leakLines: 0, softLines: 1 } });
+  assert.deepEqual(total.it.byEra, { 'from 051': { leakLines: 0, softLines: 1, oldLeakLines: 1 } }); // round 104: counted, not summed
 });
 
 test('content: every frame word is a target of its objective, outside its required groups, and shares no form with a required entry', async () => {
@@ -287,4 +287,40 @@ test('content: every frame word is a target of its objective, outside its requir
       }
     }
   }
+});
+
+// Round 104 (review of rounds 100-103, R1.1-R1.5).
+test('espresso is English only in "espresso shots"; as a word of the line it is a leak (R1.1)', () => {
+  assert.deepEqual(kindsOf('it', 'imp_coffee_greeting', ['Vuoi un espresso?', 'Five espresso shots, then.', 'One espresso shot. Un espresso?']), ['leak', 'soft', 'soft']);
+  assert.deepEqual(kindsOf('it', 'the_rift_errata', ['Un espresso, per favore.']), ['leak']);
+});
+
+test('an echoed frame word does not hide a fresh word hit (R1.3); the old leak is counted by the pre-101 rule (R1.2)', () => {
+  const step = { ok: true, name: 'say "Nome."', verdicts: [v('order', false), v('nobody', false)] };
+  const errata = (lines, steps) => ({ language: 'it', steps, encounters: [{ encounterId: 'the_rift_errata', grading: [], lines: lines.map((native) => ({ native })) }] });
+  const echoed = scanReport(errata(['Ciao.', 'Il tuo nome? Come ti chiamano? Chiamo io.'], [step]), it).scenes[0];
+  assert.deepEqual(echoed.hits.map((hit) => [hit.line, hit.kind, hit.oldLeak]), [[1, 'near', false]]);
+  // Fresh frame word plus a fresh word hit: near now, a leak before round 101.
+  const fresh = scanReport(errata(['Il tuo nome? Come ti chiamano? Chiamo io.'], []), it);
+  assert.deepEqual(fresh.scenes[0].hits.map((hit) => [hit.kind, hit.oldLeak]), [['near', true]]);
+  const { total } = summarize([{ path: 'docs/rounds/104/results/x.json', language: 'it', ...fresh }]);
+  assert.deepEqual([total.it.leakLines, total.it.softLines, total.it.nearLines, total.it.oldLeakLines], [0, 0, 1, 1]);
+});
+
+test('an English espresso stops no word hit of its objective (R1.5)', () => {
+  // "nero" is a word of caffè nero, in order_coffee and no_milk: beside the English "espresso shots", order_coffee's
+  // word hit counts too (before, the espresso hit stopped it and only no_milk's remained).
+  assert.deepEqual(kindsOf('it', 'imp_coffee_greeting', ['Five espresso shots, all nero.']), ['near']);
+  const report = { language: 'it', steps: [], encounters: [{ encounterId: 'imp_coffee_greeting', grading: [], lines: [{ native: 'Five espresso shots, all nero.' }] }] };
+  const [hit] = scanReport(report, it).scenes[0].hits;
+  assert.deepEqual(hit.words.map((w) => `${w.objective}:${w.word}`).sort(), ['no_milk:nero', 'order_coffee:nero']);
+});
+
+test('feedback: a fresh form is found beside an echoed one of the same objective (R1.4)', () => {
+  const report = gerald([fb('Vorrei.', [v('order_coffee', false), v('no_milk', false)], 'You said vorrei, but where is the caffè?')], [{ native: 'Ciao.' }, { native: 'Hmm.' }]);
+  const [text] = extrasOf(report).texts;
+  assert.equal(text.fresh, true, JSON.stringify(text.hits));
+  assert.deepEqual(text.hits.map((hit) => [hit.objective, hit.echo]).sort(), [['order_coffee', false], ['order_coffee', true]]);
+  const narrative = gerald([], [{ native: 'Ciao.', narrative: 'Gerald pours an espresso, then a caffè.' }]);
+  assert.equal(extrasOf(narrative).texts[0].fresh, true);
 });
