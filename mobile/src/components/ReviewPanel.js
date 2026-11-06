@@ -5,7 +5,7 @@ import { Button, colors, type, Title, wordClassStyle } from './ui.js';
 import { wordClassText } from '../wordClass.js';
 import { stopSpeech } from '../speech.js';
 
-export default function ReviewPanel({ challenge, partOfSpeech = null, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to the map' }) {
+export default function ReviewPanel({ challenge, partOfSpeech = null, result, language, isLoading, error = null, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to the map' }) {
   const [answer, setAnswer] = useState('');
   // Round 063 (backlog C10c): the word stops when the review screen goes (also between challenges: App keys it).
   useEffect(() => () => { stopSpeech(); }, []);
@@ -21,6 +21,19 @@ export default function ReviewPanel({ challenge, partOfSpeech = null, result, la
         <Button label={returnLabel} onPress={onReturn} />
       </View>
     </ScrollView>
+  );
+  // Round 065: between two reviews the screen says it is loading, or that the load failed; never that nothing is due.
+  if (!challenge && isLoading) return (
+    <View style={styles.content}><Text role="status" style={styles.body}>Finding the next review…</Text><Button label={returnLabel} onPress={onReturn} /></View>
+  );
+  if (!challenge && error) return (
+    <View style={styles.content}>
+      <Text role="status" style={styles.body}>The next review could not load.</Text>
+      <View style={styles.buttons}>
+        <Button label="Try again" variant="primary" onPress={onContinue} />
+        <Button label={returnLabel} onPress={onReturn} />
+      </View>
+    </View>
   );
   if (!challenge) return (
     <View style={styles.content}><Text style={styles.body}>No due review is available.</Text><Button label={returnLabel} onPress={onReturn} /></View>

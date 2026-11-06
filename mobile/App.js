@@ -55,7 +55,7 @@ export default function App() {
         {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'review' && <ReviewPanel
           key={state.reviewChallenge?.id ?? 'result'}
-          challenge={state.reviewChallenge} partOfSpeech={reviewPartOfSpeech(state)} result={state.reviewResult} language={state.language} isLoading={state.isLoading}
+          challenge={state.reviewChallenge} partOfSpeech={reviewPartOfSpeech(state)} result={state.reviewResult} language={state.language} isLoading={state.isLoading} error={state.error}
           onSubmit={state.submitReview} onReveal={state.revealReviewAnswer}
           onContinue={() => state.startReview()} onReturn={state.returnToDialogue} returnLabel={returnLabel}
         />}

@@ -73,3 +73,8 @@ header's Spellbook and Party buttons while loading (2 now drops the late reply);
 practice; a ScrollView for the empty branch.
 
 Net change: a failure state with Try again, and late replies dropped after navigation.
+
+## Outcome (2026-11-06)
+
+Built as designed. Mobile 182/182 (6 new, all failing without the change), server 244/244, client 12/12, expo-doctor
+20/20, iOS export built. No live runs. See [findings.md](findings.md).

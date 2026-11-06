@@ -266,11 +266,16 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       if (!learnerId) return;
       set({ isLoading: true, error: null, reviewResult: null });
       const epoch = requestEpoch; // Round 031: a reply after a save switch is dropped (critique 1.1).
+      const from = get().view; // Round 065 (critique 1.2): a reply after the player left the screen does not pull them back.
       try {
         const result = await api.createReview(learnerId, vocabularyId);
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        if (get().view !== from) { set({ spellbook: result.spellbook, isLoading: false }); return; }
         set({ reviewChallenge: result.challenge, spellbook: result.spellbook, view: result.challenge ? 'review' : 'spellbook', isLoading: false });
-      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
+      } catch (error) {
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        set(get().view === from ? { error: error.message, isLoading: false } : { isLoading: false });
+      }
     },
 
     submitReview: async (answer) => {

@@ -11,3 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 00:47:38 | 00:47:38 | disposition | Claude (claude-opus-5-5), autonomous | 7 findings, all accepted (autonomous, pending owner review); rows 1.1–1.7; the race in 1.2 checked in gameStore.js | `../architecture.md` |
 | 6 | 00:47:38 | 00:47:38 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: a failure state with Try again; late replies dropped after navigation | `../architecture.md` |
 | 7 | 00:47:38 | 00:47:38 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
+| 8 | 00:50:00 (approx.) | 00:51:15 | built | Claude (claude-opus-5-5), autonomous | ReviewPanel loading and failure states (error prop from App), startReview drops a reply after the view changed; review-loading.test.js (6) | — |
+| 9 | 00:50:48 | 00:51:15 | result | Claude (claude-opus-5-5), autonomous | Mobile 182/182, server 244/244, client 12/12; expo-doctor 20/20; iOS export built; the 6 new tests fail without the change | — |
+| 10 | 00:51:15 | 00:51:15 | outcome | Claude (claude-opus-5-5), autonomous | Done: no false no-due text while loading or after a failure; late replies do not pull the player back | `../findings.md` |
+| 11 | 00:51:15 | 00:51:15 | closed | Claude (claude-opus-5-5), autonomous | Round 065 closed | `../findings.md` |
