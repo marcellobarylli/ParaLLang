@@ -7,6 +7,8 @@
 # stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
 # Round 109: the proem (after the Entrance tutorial, first in story order) and Journathan today, an ageing hero still
 # on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
+# Round 110: spores on the Dead Branch's roots (LORE.md: the consumer dreams of another language, creating a new
+# world from it), after the Butcher's Stall's first completion, after the Dead Branch in story order.
 fragments:
   - id: journey_proem
     title: The archway's telling
@@ -106,6 +108,29 @@ fragments:
       - { word: "piangeva", meaning: "wept" }
       - { word: "nemmeno", meaning: "not even" }
       - { word: "vocabolario", meaning: "dictionary" }
+  - id: journey_spores
+    title: Spores
+    found_after: butchers_stall_charcutier
+    found: "Folded around a jar of dried mushrooms at the back of Mortimer's stall, labelled NOT FOR SALE in several different hands."
+    text: >-
+      Sulle radici del Ramo Morto crescevano funghi pallidi, che divoravano il mondo ormai finito per farne terra.
+      Journathan ne respirò le spore e sognò in un idioma mai parlato da anima viva. Al risveglio, intorno a lui c'era
+      un mondo appena nato che lo parlava già. Qualcuno dice che anche questo libro è nato così.
+    translation: >-
+      On the roots of the Dead Branch grew pale mushrooms, which devoured the finished world to make soil of it.
+      Journathan breathed in their spores and dreamed in a tongue no living soul had ever spoken. When he woke, around him
+      stood a world just born, and it already spoke it. Some say this book was born the same way.
+    glossary:
+      - { word: "radici", meaning: "roots" }
+      - { word: "crescevano", meaning: "grew" }
+      - { word: "funghi pallidi", meaning: "pale mushrooms" }
+      - { word: "divoravano", meaning: "devoured" }
+      - { word: "respirò", meaning: "breathed in" }
+      - { word: "spore", meaning: "spores" }
+      - { word: "sognò", meaning: "dreamed" }
+      - { word: "da anima viva", meaning: "by a living soul" }
+      - { word: "al risveglio", meaning: "on waking" }
+      - { word: "è nato così", meaning: "was born the same way" }
   - id: journey_forbidden_herd
     title: The forbidden herd
     found_after: butchers_stall_charcutier

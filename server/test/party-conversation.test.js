@@ -313,13 +313,17 @@ test('the third tasting files Mortimer\'s fragment under his party conversation;
   const filed = [];
   let turn;
   for (let n = 1; n <= 3; n += 1) {
-    const encounter = (await start(runtime, learnerId, 'mortimer_tasting')).data.encounter;
+    const started = (await start(runtime, learnerId, 'mortimer_tasting')).data;
+    const { encounter } = started;
+    // Round 110 (review R1.7): the spores, filed by the stall, are listed during each tasting with no translation.
+    assert.deepEqual(started.spellbook.journeyFragments.filter((f) => f.id === 'journey_spores').map((f) => [f.hidden, f.translation, f.glossary]), [[true, null, null]], `tasting ${n} start`);
     turn = await say(runtime, learnerId, encounter, 'Me gusta mucho. ¿Un poco más?');
     assert.equal(turn.encounter.state, 'resolved', `tasting ${n}`);
     filed.push(turn.spellbook.journeyFragments.map((f) => f.id));
   }
-  assert.deepEqual(filed, [[], [], ['journey_forbidden_herd']]);
-  const [fragment] = turn.spellbook.journeyFragments;
+  // Round 110: the stall's first completion (seeded) already filed the spores, first in story order.
+  assert.deepEqual(filed, [['journey_spores'], ['journey_spores'], ['journey_spores', 'journey_forbidden_herd']]);
+  const fragment = turn.spellbook.journeyFragments.find((f) => f.id === 'journey_forbidden_herd');
   assert.deepEqual([fragment.encounterId, fragment.locationName, fragment.unlockedAt, fragment.conversations, fragment.toldBy],
     ['mortimer_tasting', "The Butcher's Stall", 3, 3, 'Mortimer']);
 });

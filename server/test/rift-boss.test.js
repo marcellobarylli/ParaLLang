@@ -141,8 +141,8 @@ for (const code of Object.keys(packs)) {
     assert.equal(encounter.state, 'resolved');
     // Round 030: earlier fragments are hidden during the fight; the resolving turn files the shroud and shows all.
     // Round 109: the proem (Entrance) and Journathan today (Gerald) are filed by the five earlier completions too.
-    assert.deepEqual(fragmentLog[0], [['journey_proem', true, true], ['journey_first_stitch', true, true], ['journey_sirens', true, true], ['journey_still_on_his_way', true, true]]);
-    assert.deepEqual(fragmentLog.at(-1), [['journey_proem', false, false], ['journey_first_stitch', false, false], ['journey_sirens', false, false], ['journey_shroud', false, false], ['journey_still_on_his_way', false, false]]);
+    assert.deepEqual(fragmentLog[0], [['journey_proem', true, true], ['journey_first_stitch', true, true], ['journey_sirens', true, true], ['journey_spores', true, true], ['journey_still_on_his_way', true, true]]);
+    assert.deepEqual(fragmentLog.at(-1), [['journey_proem', false, false], ['journey_first_stitch', false, false], ['journey_sirens', false, false], ['journey_shroud', false, false], ['journey_spores', false, false], ['journey_still_on_his_way', false, false]]);
     assert.match(encounter.resolvedMessage, /^Errata cannot read Nobody/);
     const { world } = await service.getWorld(learnerId);
     assert.deepEqual(world.locations.find((l) => l.id === 'the_rift').encounter, { id: 'the_rift_errata', completed: true, characterName: 'Errata', characterId: 'rift_errata_001', saveable: false });

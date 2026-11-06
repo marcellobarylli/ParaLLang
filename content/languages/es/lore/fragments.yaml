@@ -7,6 +7,8 @@
 # stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
 # Round 109: the proem (after the Entrance tutorial, first in story order) and Journathan today, an ageing hero still
 # on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
+# Round 110: spores on the Dead Branch's roots (LORE.md: the consumer dreams of another language, creating a new
+# world from it), after the Butcher's Stall's first completion, after the Dead Branch in story order.
 fragments:
   - id: journey_proem
     title: The archway's telling
@@ -107,6 +109,29 @@ fragments:
       - { word: "lloraba", meaning: "wept" }
       - { word: "ni", meaning: "not even" }
       - { word: "diccionario", meaning: "dictionary" }
+  - id: journey_spores
+    title: Spores
+    found_after: butchers_stall_charcutier
+    found: "Folded around a jar of dried mushrooms at the back of Mortimer's stall, labelled NOT FOR SALE in several different hands."
+    text: >-
+      En las raíces de la Rama Muerta crecían hongos pálidos, que devoraban el mundo acabado para hacer tierra con
+      él. Journathan respiró aquellas esporas y soñó en un idioma que jamás había hablado alma viva. Al abrir los
+      ojos, a su alrededor había un mundo recién nacido que ya lo hablaba. Hay quien dice que este libro nació así.
+    translation: >-
+      On the roots of the Dead Branch grew pale mushrooms, which devoured the finished world to make soil of it.
+      Journathan breathed in their spores and dreamed in a tongue no living soul had ever spoken. When he woke, around him
+      stood a world just born, and it already spoke it. Some say this book was born the same way.
+    glossary:
+      - { word: "raíces", meaning: "roots" }
+      - { word: "crecían", meaning: "grew" }
+      - { word: "hongos pálidos", meaning: "pale mushrooms" }
+      - { word: "devoraban", meaning: "devoured" }
+      - { word: "respiró", meaning: "breathed in" }
+      - { word: "esporas", meaning: "spores" }
+      - { word: "soñó", meaning: "dreamed" }
+      - { word: "alma viva", meaning: "a living soul" }
+      - { word: "al abrir los ojos", meaning: "on opening his eyes" }
+      - { word: "nació así", meaning: "was born the same way" }
   - id: journey_forbidden_herd
     title: The forbidden herd
     found_after: butchers_stall_charcutier

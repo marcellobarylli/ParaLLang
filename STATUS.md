@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 110, the spores (autonomous)
+
+The owner's mushrooms-and-spores lore is in the game as a page of The Journey, "Spores", found at Mortimer's stall
+after the first order there: mushrooms on the Dead Branch's roots, whose spores make Journathan dream a new tongue and
+wake in a world that speaks it ("some say this book was born the same way"). A new test keeps the English shown with
+every fragment from naming an answer ([findings](docs/rounds/110/findings.md)).
+
 ## Addendum 2026-11-06: round 109, two new pages of The Journey (autonomous)
 
 A check of the owner's notes against the game found that two parts of Journathan's story were missing: the
@@ -998,7 +1005,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
-| 110 | 11-06 | Spores: a fragment of The Journey on the mushrooms of the dead branches, after the Butcher's Stall (autonomous) | [110](docs/rounds/110/architecture.md) | [findings](docs/rounds/110/findings.md) | pre-run record |
+| 110 | 11-06 | Spores: a fragment of The Journey on the mushrooms of the dead branches, after the Butcher's Stall (autonomous) | [110](docs/rounds/110/architecture.md) | [findings](docs/rounds/110/findings.md) | pre-run record to round 110 close |
 | 107 | 11-06 | play-market matches narration calls within the step that committed each line (autonomous) | [107](docs/rounds/107/architecture.md) | [findings](docs/rounds/107/findings.md) | pre-run record to round 107 close |
 | 106 | 11-06 | The server withholds card meanings during encounters and on due cards (autonomous) | [106](docs/rounds/106/architecture.md) | [findings](docs/rounds/106/findings.md) | pre-run record to round 106 close |
 | 105 | 11-06 | The web client's Vite proxy sends `PARALLANG_TOKEN` (autonomous) | [105](docs/rounds/105/architecture.md) | [findings](docs/rounds/105/findings.md) | pre-run record to round 105 close |

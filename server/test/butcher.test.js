@@ -72,11 +72,19 @@ for (const code of Object.keys(packs)) {
     assert.deepEqual(encounter.transcript[0].dialogue.words.map((word) => word.vocabularyId), packs[code].chips, 'only his own words are chips');
 
     const verdicts = [];
+    const filed = []; // Round 110: the spores are filed by the resolving turn only, then shown with their text.
+    let lastTurn;
     for (const message of packs[code].answers) {
       const turn = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message });
       verdicts.push(turn.assessment.objectiveResults.map((r) => [r.objectiveId, r.passed]));
+      filed.push(turn.spellbook.journeyFragments.map((f) => f.id));
       encounter = turn.encounter;
+      lastTurn = turn;
     }
+    assert.deepEqual(filed, [[], [], ['journey_spores']]);
+    const [spores] = lastTurn.spellbook.journeyFragments;
+    assert.deepEqual([spores.encounterId, spores.locationName, spores.hidden, spores.title], ['butchers_stall_charcutier', "The Butcher's Stall", false, 'Spores']);
+    assert.match(spores.translation, /^On the roots of the Dead Branch grew pale mushrooms/);
     assert.deepEqual(verdicts, [
       [['name_meat', false], ['quantity', false]],
       [['name_meat', true], ['quantity', false]],

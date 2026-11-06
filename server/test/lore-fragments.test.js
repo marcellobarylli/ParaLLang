@@ -10,7 +10,7 @@ import { ALLOWED, answerLeaks } from './answer-check.js';
 import { api, createLearnerAndEncounter, createRuntime, finishEncounter, makeTempDir } from './helpers.js';
 
 const root = resolve(import.meta.dirname, '..', '..');
-const IDS = ['journey_proem', 'journey_first_stitch', 'journey_sirens', 'journey_shroud', 'journey_dead_branch', 'journey_forbidden_herd', 'journey_lotus', 'journey_old_dog', 'journey_still_on_his_way'];
+const IDS = ['journey_proem', 'journey_first_stitch', 'journey_sirens', 'journey_shroud', 'journey_dead_branch', 'journey_spores', 'journey_forbidden_herd', 'journey_lotus', 'journey_old_dog', 'journey_still_on_his_way'];
 
 // Every vocabulary form of the pack found in a fragment's text or glossary words, and every glossary meaning that
 // is an accepted translation of an objective target (critique 1.1, 1.2, 1.10).
@@ -25,6 +25,38 @@ function leaks(content, fragment) {
     meanings: fragment.glossary.filter((entry) => entry.meaning.split(/[,;]/).some((m) => meanings.has(m.toLowerCase().trim()))).map((entry) => entry.word),
   };
 }
+
+// Round 110 (review R1.6): a fragment's title and `found` text are English shown during any encounter (the
+// translation is withheld then), so neither holds, as a whole word, an accepted translation of any objective target.
+// Hits that predate round 110, each a common word, a homonym or shown only after its own encounter: "you" (it tu, a
+// target in Italian only) in two `found` texts; "left" (it sinistra, es izquierda) as "left behind"; "coffee" in the
+// Dead Branch's "third coffee break", shown after Gerald's third break; "Still" (it fermo, es quieto) in "Still on
+// his way".
+const ENGLISH_ALLOWED = {
+  journey_proem: ['you'], journey_first_stitch: ['you'], journey_shroud: ['left'], journey_dead_branch: ['coffee'], journey_still_on_his_way: ['still'],
+};
+function englishGiveaways(content, fragment) {
+  const ids = [...content.encounters.values()].flatMap(({ encounter }) => encounter.objectives.flatMap((o) => o.target_vocabulary_ids));
+  const meanings = new Set(ids.flatMap((id) => content.vocabularyById.get(id).accepted_translations.map((m) => foldWords(m).trim())));
+  const body = ` ${foldWords(`${fragment.title} ${fragment.found}`).trim()} `;
+  return [...meanings].filter((m) => m && body.includes(` ${m} `));
+}
+
+test('no fragment\'s title or found text gives away a target in English; the check is live', () => {
+  const used = new Set();
+  for (const code of ['it', 'es']) {
+    const content = loadGameContent({ language: code });
+    for (const fragment of content.fragments) {
+      const hits = englishGiveaways(content, fragment);
+      assert.deepEqual(hits.filter((m) => !(ENGLISH_ALLOWED[fragment.id] ?? []).includes(m)), [], `${code} ${fragment.id}`);
+      for (const m of hits) used.add(`${fragment.id}:${m}`);
+    }
+    const spores = content.fragments.find((f) => f.id === 'journey_spores');
+    assert.deepEqual(englishGiveaways(content, { ...spores, found: spores.found.replace('several', 'three') }), ['three'], `${code} planted`);
+  }
+  const allowed = Object.entries(ENGLISH_ALLOWED).flatMap(([id, words]) => words.map((m) => `${id}:${m}`));
+  assert.deepEqual(allowed.filter((entry) => !used.has(entry)), [], 'every allowed word is a hit in some pack');
+});
 
 // Round 083: every fragment also passes the inscriptions' answer check (answer-check.js): no pack form, no word or
 // 4-letter stem of any objective target's forms, no target meaning, bar the fragments' allowlist.
@@ -47,11 +79,11 @@ test('every fragment passes the answer check; each allowed word matters and the 
   }
 });
 
-test('both packs hold the same nine fragments, after the same encounters, with the same English text', () => {
+test('both packs hold the same ten fragments, after the same encounters, with the same English text', () => {
   const [it, es] = ['it', 'es'].map((code) => loadGameContent({ language: code }).fragments);
   assert.deepEqual(it.map((f) => f.id), IDS);
-  assert.deepEqual(it.map((f) => f.found_after), ['market_entrance_tutorial', 'old_bookshop_bookworm', 'cracked_fountain_letharger', 'the_rift_errata', 'imp_coffee_greeting', 'butchers_stall_charcutier', 'cracked_fountain_letharger', 'old_bookshop_bookworm', 'imp_coffee_greeting']);
-  assert.deepEqual(it.map((f) => f.after_conversations), [undefined, undefined, undefined, undefined, 3, 3, 3, 3, undefined], 'rounds 032, 033: after three party conversations; round 109: the proem and Journathan today on first completion');
+  assert.deepEqual(it.map((f) => f.found_after), ['market_entrance_tutorial', 'old_bookshop_bookworm', 'cracked_fountain_letharger', 'the_rift_errata', 'imp_coffee_greeting', 'butchers_stall_charcutier', 'butchers_stall_charcutier', 'cracked_fountain_letharger', 'old_bookshop_bookworm', 'imp_coffee_greeting']);
+  assert.deepEqual(it.map((f) => f.after_conversations), [undefined, undefined, undefined, undefined, 3, undefined, 3, 3, 3, undefined], 'rounds 032, 033: after three party conversations; round 109: the proem and Journathan today on first completion; round 110: the spores');
   const english = (fragments) => fragments.map(({ id, title, found_after, after_conversations, found, translation }) => ({ id, title, found_after, after_conversations, found, translation }));
   assert.deepEqual(english(es), english(it));
   for (const fragment of [...it, ...es]) assert.ok(fragment.glossary.length >= 4 && fragment.text !== fragment.translation, fragment.id);

@@ -114,3 +114,14 @@ test('Gerald\'s completion fragment and his conversation fragment each get their
   expect(fragmentNote([today], resolved('imp_coffee_greeting'))).toBe(' A fragment of The Journey from here is in your Spellbook: Still on his way.');
   expect(fragmentNote([today, { ...dead, conversations: 4 }], coffeeBreak)).toBe('');
 });
+
+// Round 110: Mortimer's stall now files the spores on first completion; his third tasting still notes only the
+// forbidden herd, and his defeat only the spores.
+test('Mortimer\'s completion fragment and his tasting fragment each get their own note', () => {
+  const spores = fragment({ id: 'journey_spores', title: 'Spores', encounterId: 'butchers_stall_charcutier' });
+  const herd = fragment({ id: 'journey_forbidden_herd', title: 'The forbidden herd', encounterId: 'mortimer_tasting', unlockedAt: 3, conversations: 3 });
+  const tasting = { ...resolved('mortimer_tasting'), partyConversation: true, character: { name: 'Mortimer', saveable: true } };
+  expect(fragmentNote([spores, herd], tasting)).toBe(' A fragment of The Journey from Mortimer is in your Spellbook: The forbidden herd.');
+  expect(fragmentNote([spores], resolved('butchers_stall_charcutier'))).toBe(' A fragment of The Journey from here is in your Spellbook: Spores.');
+  expect(fragmentNote([spores, { ...herd, conversations: 4 }], tasting)).toBe('');
+});

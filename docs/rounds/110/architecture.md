@@ -54,3 +54,26 @@ No owner was present; each is an **autonomous decision, pending owner review**, 
 - A test that completing the Butcher's Stall the first time files `journey_spores` (and not the forbidden herd), and
   any test that assumed the stall's first completion files nothing, updated to the full lists.
 - Full suites: server, client, mobile.
+
+## Amendment 1 (2026-11-06, after the build): the review's dispositions
+
+A fresh read-only subagent reviewed the build ([`trail/review-1.md`](trail/review-1.md): 0 Error, 2 Minor, 2 Gap,
+3 Style; numbered R1.1–R1.7 in the review's order, its section in brackets). Each disposition is an **autonomous
+decision, pending owner review**.
+
+| # | Severity | Finding (review §) | Recommendation | Change | Disposition | Decision |
+|---|---|---|---|---|---|---|
+| R1.1 | Minor | es "nació igual" can read "anyway"; too casual (§1.1) | Fix | "Hay quien dice que este libro nació así"; gloss *nació así* | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.2 | Minor | it "il mondo finito" first reads "the finite world" (§1.2) | Fix | "il mondo ormai finito" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.3 | Style | es "respiró sus esporas" could be his own spores (§1.3) | Fix | "respiró aquellas esporas" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.4 | Style | Same shape as the lotus (§2.1) | Keep, note it | Kept: the lotus makes the sailors forget, the spores make Journathan dream a new tongue; noted in findings | **Rejected** (no change; autonomous, pending owner review) | Amendment 1 |
+| R1.5 | Style | `found` says "three", the accepted translation of *tre* / *tres* (§3.1) | Keep or reword | "in several different hands" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.6 | Gap | Decision 4 (no English target meaning in `found`) is unchecked (§4.2) | Test | `lore-fragments.test.js`: no fragment's title or `found` holds a whole-word accepted translation of any objective target, bar a named allowlist of five earlier hits (*you*, *left*, *coffee*, *still*), each used; planting "three" is caught | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.7 | Gap | No test that the spores are withheld during a later tasting (§4.3) | Test | `party-conversation.test.js`: each tasting's start lists the spores hidden, translation and glossary null | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+
+## Outcome (2026-11-06)
+
+Built as designed with Amendment 1. "Spores" (`journey_spores`) is in both packs after the Dead Branch in story order,
+filed by the Butcher's Stall's first completion, clean under the answer check and the new English check. The new
+English check found five earlier `found`/title hits, all kept by name (allowlist). Server 397/397, client 21/21,
+mobile 305/305. Findings: [`findings.md`](findings.md).
