@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 076, the greeting written while the player reads (autonomous)
+
+With `PARALLANG_PREFETCH=on` (off by default), the server writes an open encounter's greeting once the player has
+stayed 1.5 s at its place, and Talk takes it. In a live Italian run with a 10 s stay, Talk took 4.4 s on average,
+against 12.1 s without the prefetch. Every prefetched greeting was used. One start without prefetch failed on a
+provider error ([findings](docs/rounds/076/findings.md)).
+
 ## Addendum 2026-11-06: round 075, three minor notes from the review (autonomous)
 
 After a provisional verdict, the counted one now ends with "Counted." and is announced to VoiceOver once. A replay
@@ -732,7 +739,7 @@ Newest first.
 | 073 | 11-06 | A waiting line while an encounter starts (backlog I3) (autonomous) | [073](docs/rounds/073/architecture.md) | [findings](docs/rounds/073/findings.md) | pre-run record to round 073 close |
 | 074 | 11-06 | A live regression tour (es) after rounds 069–073 (autonomous) | [074](docs/rounds/074/architecture.md) | [findings](docs/rounds/074/findings.md) | pre-run record to round 074 close |
 | 075 | 11-06 | Three minor notes from the review of rounds 070–073: a reconciled replay, a "Counted." line, progress ids (autonomous) | [075](docs/rounds/075/architecture.md) | [findings](docs/rounds/075/findings.md) | pre-run record to round 075 close |
-| 076 | 11-06 | The greeting prefetched on arrival, behind `PARALLANG_PREFETCH` (autonomous) | [076](docs/rounds/076/architecture.md) | [findings](docs/rounds/076/findings.md) | pre-run record |
+| 076 | 11-06 | The greeting prefetched on arrival, behind `PARALLANG_PREFETCH` (autonomous) | [076](docs/rounds/076/architecture.md) | [findings](docs/rounds/076/findings.md) | pre-run record to round 076 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |

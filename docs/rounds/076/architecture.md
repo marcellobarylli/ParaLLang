@@ -126,3 +126,9 @@ The report records each start's time, each prefetch's generation time, and the s
 
 One provider, one pack, a scripted walk with a fixed dwell. Real reading times, concurrent learners and the app's
 own timings are not measured.
+
+## Outcome (2026-11-06)
+
+Built as designed. Live (it, codex-cli, 10 s stay): mean start 4.4 s with prefetch against 12.1 s without; 3 calls
+and 3 used per prefetch arm; each residual within its bound. Criterion 1 was missed in the control arm: one start
+without prefetch failed with `CLI_INVALID_RESPONSE` after 120 s. Off by default. See [findings.md](findings.md).

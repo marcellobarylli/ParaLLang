@@ -1,0 +1,276 @@
+{
+  "language": "it",
+  "provider": "codex-cli",
+  "dwellMs": 10000,
+  "startedAt": "2026-11-06T03:17:55.209Z",
+  "arms": [
+    {
+      "index": 0,
+      "arm": "off",
+      "starts": [
+        {
+          "locationId": "coffee_cart",
+          "encounterId": "imp_coffee_greeting",
+          "ok": true,
+          "greeting": "Buongiorno! I'm Gerald. Five espresso shots for this cart; milk is a war crime. Come posso aiutarti?",
+          "startMs": 11511,
+          "callsDuringStart": 1
+        },
+        {
+          "locationId": "cracked_fountain",
+          "encounterId": "cracked_fountain_letharger",
+          "ok": true,
+          "greeting": "Ciao! Sono Flick. What's quick, shiny, and—oh, something moved. Just one more lap, then introductions. You can stop me later. Dopo, dopo, domani!",
+          "startMs": 13933,
+          "callsDuringStart": 1
+        },
+        {
+          "locationId": "butchers_stall",
+          "encounterId": "butchers_stall_charcutier",
+          "ok": true,
+          "greeting": "Buongiorno! Tutto prosciutto! Even the hat: certified ham. Only my scales can judge me. Che cosa desideri?",
+          "startMs": 11986,
+          "callsDuringStart": 1
+        }
+      ],
+      "calls": [
+        {
+          "schema": "encounter_narration",
+          "speaker": "Gerald",
+          "durationMs": 11502
+        },
+        {
+          "schema": "encounter_narration",
+          "speaker": "Flick",
+          "durationMs": 13883
+        },
+        {
+          "schema": "encounter_narration",
+          "speaker": "Mortimer",
+          "durationMs": 11978
+        }
+      ],
+      "stats": {
+        "scheduled": 0,
+        "calls": 0,
+        "used": 0,
+        "fallback": 0,
+        "failed": 0,
+        "busy": 0,
+        "skipped": 0,
+        "evicted": 0
+      },
+      "heldAtEnd": 0
+    },
+    {
+      "index": 1,
+      "arm": "on",
+      "starts": [
+        {
+          "locationId": "coffee_cart",
+          "encounterId": "imp_coffee_greeting",
+          "ok": true,
+          "greeting": "Buongiorno! Come va? I’m Gerald. This market gets two espresso shots out of five. Your standards?",
+          "startMs": 4,
+          "callsDuringStart": 0,
+          "prefetchDelayMs": 1503,
+          "prefetchGenerationMs": 6404,
+          "allowedResidualMs": 1000
+        },
+        {
+          "locationId": "cracked_fountain",
+          "encounterId": "cracked_fountain_letharger",
+          "ok": true,
+          "greeting": "Ciao! Sono qui! Riddle me this: how do you keep me in one—wait, something moved. Just one more look. Dopo, dopo, domani!",
+          "startMs": 4488,
+          "callsDuringStart": 0,
+          "prefetchDelayMs": 1502,
+          "prefetchGenerationMs": 12987,
+          "allowedResidualMs": 5489
+        },
+        {
+          "locationId": "butchers_stall",
+          "encounterId": "butchers_stall_charcutier",
+          "ok": true,
+          "greeting": "Buongiorno! Tutto prosciutto! Even the hat. Certified ham, exceptional quality, terrible in the rain. Che cosa desideri?",
+          "startMs": 4768,
+          "callsDuringStart": 0,
+          "prefetchDelayMs": 1502,
+          "prefetchGenerationMs": 13268,
+          "allowedResidualMs": 5770
+        }
+      ],
+      "calls": [
+        {
+          "schema": "encounter_narration",
+          "speaker": "Gerald",
+          "durationMs": 6404
+        },
+        {
+          "schema": "encounter_narration",
+          "speaker": "Flick",
+          "durationMs": 12987
+        },
+        {
+          "schema": "encounter_narration",
+          "speaker": "Mortimer",
+          "durationMs": 13268
+        }
+      ],
+      "stats": {
+        "scheduled": 4,
+        "calls": 3,
+        "used": 3,
+        "fallback": 0,
+        "failed": 0,
+        "busy": 0,
+        "skipped": 0,
+        "evicted": 0
+      },
+      "heldAtEnd": 0
+    },
+    {
+      "index": 2,
+      "arm": "on",
+      "starts": [
+        {
+          "locationId": "coffee_cart",
+          "encounterId": "imp_coffee_greeting",
+          "ok": true,
+          "greeting": "Buongiorno! Come stai? I'm Gerald. This cart: five espresso shots. Milk in coffee: a war crime. Cosa desideri?",
+          "startMs": 8586,
+          "callsDuringStart": 0,
+          "prefetchDelayMs": 1502,
+          "prefetchGenerationMs": 17083,
+          "allowedResidualMs": 9585
+        },
+        {
+          "locationId": "cracked_fountain",
+          "encounterId": "cracked_fountain_letharger",
+          "ok": true,
+          "greeting": "Ciao! A riddle: why finish anything when—oh, a leaf. Dove vai? Just one more distraction. Dopo, dopo, domani!",
+          "startMs": 2877,
+          "callsDuringStart": 0,
+          "prefetchDelayMs": 1502,
+          "prefetchGenerationMs": 11382,
+          "allowedResidualMs": 3884
+        },
+        {
+          "locationId": "butchers_stall",
+          "encounterId": "butchers_stall_charcutier",
+          "ok": true,
+          "greeting": "Buongiorno! Tutto prosciutto! Certified ham, even the hat. My scales alone deserve your trust. Che desidera?",
+          "startMs": 5530,
+          "callsDuringStart": 0,
+          "prefetchDelayMs": 1502,
+          "prefetchGenerationMs": 14030,
+          "allowedResidualMs": 6532
+        }
+      ],
+      "calls": [
+        {
+          "schema": "encounter_narration",
+          "speaker": "Gerald",
+          "durationMs": 17083
+        },
+        {
+          "schema": "encounter_narration",
+          "speaker": "Flick",
+          "durationMs": 11382
+        },
+        {
+          "schema": "encounter_narration",
+          "speaker": "Mortimer",
+          "durationMs": 14030
+        }
+      ],
+      "stats": {
+        "scheduled": 4,
+        "calls": 3,
+        "used": 3,
+        "fallback": 0,
+        "failed": 0,
+        "busy": 0,
+        "skipped": 0,
+        "evicted": 0
+      },
+      "heldAtEnd": 0
+    },
+    {
+      "index": 3,
+      "arm": "off",
+      "starts": [
+        {
+          "locationId": "coffee_cart",
+          "encounterId": "imp_coffee_greeting",
+          "ok": false,
+          "error": "CLI_INVALID_RESPONSE The selected CLI returned an invalid structured response. Your progress was not changed; retry when ready.",
+          "startMs": 120362,
+          "callsDuringStart": 1
+        },
+        {
+          "locationId": "cracked_fountain",
+          "encounterId": "cracked_fountain_letharger",
+          "ok": true,
+          "greeting": "Ciao! Dove sei? Riddle: what moves—oh, shiny. Just one more lap, then introductions. Dopo, dopo, domani!",
+          "startMs": 13229,
+          "callsDuringStart": 1
+        },
+        {
+          "locationId": "butchers_stall",
+          "encounterId": "butchers_stall_charcutier",
+          "ok": true,
+          "greeting": "Buongiorno! Tutto prosciutto! Certified ham, even the hat. Only my scales deserve your trust. Che desidera?",
+          "startMs": 9657,
+          "callsDuringStart": 1
+        }
+      ],
+      "calls": [
+        {
+          "schema": "encounter_narration",
+          "speaker": "Gerald",
+          "durationMs": 120361
+        },
+        {
+          "schema": "encounter_narration",
+          "speaker": "Flick",
+          "durationMs": 13227
+        },
+        {
+          "schema": "encounter_narration",
+          "speaker": "Mortimer",
+          "durationMs": 9655
+        }
+      ],
+      "stats": {
+        "scheduled": 0,
+        "calls": 0,
+        "used": 0,
+        "fallback": 0,
+        "failed": 0,
+        "busy": 0,
+        "skipped": 0,
+        "evicted": 0
+      },
+      "heldAtEnd": 0
+    }
+  ],
+  "preflight": {
+    "provider": "codex-cli",
+    "version": "0.166.0",
+    "authentication": "chatgpt-subscription",
+    "requestedModel": "CLI default",
+    "isolation": [
+      "ignored user configuration",
+      "ignored project rules",
+      "ephemeral session",
+      "shared daemon disabled",
+      "read-only sandbox",
+      "no approvals",
+      "OpenAI provider forced",
+      "ChatGPT login forced",
+      "coding/external features disabled"
+    ]
+  },
+  "finishedAt": "2026-11-06T03:23:22.521Z"
+}
