@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
 import { Button, colors, type, Title, wordClassStyle } from './ui.js';
 import { wordClassText } from '../wordClass.js';
+import { stopSpeech } from '../speech.js';
 
 export default function ReviewPanel({ challenge, partOfSpeech = null, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Return to the map' }) {
   const [answer, setAnswer] = useState('');
+  // Round 063 (backlog C10c): the word stops when the review screen goes (also between challenges: App keys it).
+  useEffect(() => () => { stopSpeech(); }, []);
   const name = language?.name ?? 'Target-language';
   if (result) return (
     <ScrollView aria-label="Review feedback" contentContainerStyle={styles.content}>

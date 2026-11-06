@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
 import { Button, colors, type, leading, Title, wordClassStyle } from './ui.js';
 import { wordClassText } from '../wordClass.js';
+import { stopSpeech } from '../speech.js';
 
 export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to the map', now = Date.now() }) {
+  // Round 063 (backlog C10c): a word, fragment or line still being read stops when the Spellbook goes.
+  useEffect(() => () => { stopSpeech(); }, []);
   const inEncounter = Boolean(spellbook.inEncounter);
   return (
     <ScrollView aria-label="Spellbook" contentContainerStyle={styles.content}>

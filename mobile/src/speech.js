@@ -41,6 +41,7 @@ export async function speak(text, { tag, voice }, speech = Speech, duck = duckAm
   generation += 1;
   const mine = generation;
   await speech.stop();
+  if (mine !== generation) return; // round 063 (critique 1.1): a stop or a newer word came during the wait
   const restore = () => { if (mine === generation) duck(false); };
   duck(true);
   speech.speak(text, { language: tag, voice: voice.identifier, onDone: restore, onStopped: restore, onError: restore });

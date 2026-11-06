@@ -67,3 +67,8 @@ unmount); stopping speech when the app goes to the background (backlog C10d); a 
 review" flash (cosmetic, backlog note).
 
 Net change: the race in `speak` is fixed, and the tests hold the stop open.
+
+## Outcome (2026-11-06)
+
+Built as designed. Mobile 172/172, server 244/244, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
+See [findings.md](findings.md).

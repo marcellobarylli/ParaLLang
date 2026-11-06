@@ -11,3 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 00:37:55 | 00:37:55 | disposition | Claude (claude-opus-5-5), autonomous | 5 findings, all accepted (autonomous, pending owner review); rows 1.1–1.5 | `../architecture.md` |
 | 6 | 00:37:55 | 00:37:55 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: race in speak fixed; tests hold the stop open | `../architecture.md` |
 | 7 | 00:37:55 | 00:37:55 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
+| 8 | 00:40:24 | 00:40:24 | built | Claude (claude-opus-5-5), autonomous | speak gives way after its wait (speech.js); stopSpeech on unmount in Spellbook and ReviewPanel; speech-stops.test.js (4) | — |
+| 9 | 00:40:24 | 00:40:24 | result | Claude (claude-opus-5-5), autonomous | Mobile 172/172, server 244/244, client 12/12; expo-doctor 20/20; iOS export built | — |
+| 10 | 00:40:24 | 00:40:24 | outcome | Claude (claude-opus-5-5), autonomous | C10c done: no voice outlives its screen; the speak race fixed; C10d (background) seeded | `../findings.md` |
+| 11 | 00:40:24 | 00:40:24 | closed | Claude (claude-opus-5-5), autonomous | Round 063 closed | `../findings.md` |
