@@ -15,3 +15,5 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 9 | 02:52:11 | 02:52:11 | result | Claude (claude-opus-5-5), autonomous | Every pre-run test passes, the App-level one included; no live run (none planned) | `../findings.md` |
 | 10 | 02:52:11 | 02:52:11 | outcome | Claude (claude-opus-5-5), autonomous | I3 done | `../findings.md` |
 | 11 | 02:52:11 | 02:52:11 | closed | Claude (claude-opus-5-5), autonomous | Round 073 closed | `../findings.md` |
+| 12 | 02:55:23 | 02:55:23 | review-returned | Claude (claude-opus-5-5) subagent, read-only | Review of rounds 070–073's product code: one low-severity defect. When round 073 removed its own null-id guard in `_startNamed`, the edit also removed `recruit`'s identical guard. 3 minor notes | `../architecture.md` |
+| 13 | 02:55:23 | 02:55:23 | amended | Claude (claude-opus-5-5), autonomous | Amendment 1: `recruit`'s `!encounterId` guard restored, with a test that fails without it; mobile 209/209, server 257/257, client 12/12 | `../architecture.md` |

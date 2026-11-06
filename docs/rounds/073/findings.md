@@ -60,3 +60,9 @@ Jest only: no Simulator, no VoiceOver.
 
 - Owner (Simulator): press "Talk to Gerald" and "Talk to {member}" and watch the line during the greeting. Check
   what VoiceOver announces inside the map card's live region, and whether it repeats the card (critique 1.5).
+
+## Addendum 2026-11-06: Amendment 1
+
+After the close, a review found that round 073's build had removed `recruit`'s guard against a missing encounter id,
+by accident. The guard is restored with a test ([architecture.md](architecture.md#amendment-1-2026-11-06-recruits-guard-restored)).
+Mobile is now 209/209.

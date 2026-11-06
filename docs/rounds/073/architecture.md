@@ -81,3 +81,13 @@ Net change: a start token, atomic set and clear, names from the cards, App wirin
 
 Built to the pre-run design. All 7 planned tests pass, and they fail without the change. All suites are green. No
 amendments. See [findings.md](findings.md).
+
+## Amendment 1 (2026-11-06): `recruit`'s guard restored
+
+A read-only review of rounds 070–073 (a Claude subagent) found a regression. During the build, I took back my own
+`!encounterId` guard in `_startNamed` with a text replace, and the replace also removed the identical guard in
+`recruit`. Without it, `recruit(undefined)` made a server round trip and showed "Unknown encounter." where it had
+done nothing before. The guard is restored, and a test in `starting.test.js` fails without it. Mobile is now 209/209.
+The review's other findings were minor and are recorded in STATE.md: an assessment that can stay after a
+replay's reconcile, the same fade key for the provisional and final verdicts, and an attempt id compared as a
+string.

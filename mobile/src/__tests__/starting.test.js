@@ -107,6 +107,14 @@ test('an older start settling late leaves a newer start\'s indicator (the reques
   expect(store.getState().starting).toBeNull();
 });
 
+test('recruit without an encounter id does nothing (round 073 Amendment 1: the guard a replace removed)', async () => {
+  const { api, store } = setup({ recruit: jest.fn() });
+  await store.getState().initialize();
+  await store.getState().recruit(undefined);
+  expect(api.recruit).not.toHaveBeenCalled();
+  expect(store.getState().isLoading).toBe(false);
+});
+
 test('MapPanel shows the line for the current location\'s encounter only, with a fallback name', async () => {
   const props = { world: world(), isLoading: true, onMove: () => {}, onEnterEncounter: () => {} };
   const view = await render(<MapPanel {...props} starting={{ encounterId: 'imp_coffee_greeting', seq: 1 }} />);

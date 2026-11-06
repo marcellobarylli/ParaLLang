@@ -179,7 +179,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     // nothing, so the invitation stays open on the map.
     recruit: async (encounterId) => {
       const { learnerId, isLoading } = get();
-      if (!learnerId || isLoading) return;
+      if (!learnerId || isLoading || !encounterId) return; // restored in round 073 Amendment 1
       const epoch = requestEpoch;
       set({ isLoading: true, error: null, notice: null });
       try {

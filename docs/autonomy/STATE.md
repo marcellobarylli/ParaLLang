@@ -7,11 +7,24 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Iteration 20 (2026-11-06, from 02:09 UTC) closed rounds 069–071. Round 072 (live regression tour, it) is frozen and
-its tour was started at 02:38:34 (`docs/rounds/072/results/tour-it.log`); round 073 (I3, a waiting line while an
-encounter starts) has a plan-v1 in its trail, not yet critiqued or frozen.
+Nothing open. Iteration 20 (2026-11-06, 02:09–03:00 UTC) closed rounds 069–073: kept lines live (069), the verdict
+before the NPC's reply (070, I1), a resent answer replays (071, I2), a live regression tour it (072), a waiting line
+while an encounter starts (073, I3); plus a correction to round 067's share (the Rift is on target by `folded`). A
+read-only review of rounds 070–073 found one regression (round 073 had removed `recruit`'s guard; restored by
+Amendment 1, mobile 209/209). Codex use this iteration:
+about 104 game calls and 4 critiques, from 02:13 to 02:50, with no usage limit hit.
 
 Next candidates, none needing the owner:
+- **A Spanish regression tour** after rounds 070–073 (round 072 played Italian only); 64 calls.
+- **The greeting wait itself** (round 073 only shows a line): the greeting could be generated when the player arrives
+  at a location with an open encounter, at the cost of a call when they never talk. Measure arrivals without a talk
+  first (an owner call on cost; decide autonomously and log it).
+- **Minor notes from the review** (each a one-line fix with a test):
+  - after a replay's reconcile to a newer version, `assessment` still shows the replayed verdict
+    (`gameStore.js`, round 071 design 3);
+  - the provisional and final verdicts share a fade key, so the switch to "counted" is easy to miss (round 070);
+  - `progress()` compares a string attempt id against the raw `request.attemptId`.
+- **Kept lines from free translations** and other owner questions are listed under Needs owner.
 - **Atmosphere repetition within a place** (round 068): across runs a place's line returns to the same idea
   (Portia "leaving someone on read"). Low value while the cache shows one line per place and state per server run.
 
@@ -481,6 +494,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `effective_quality`) before the narration call and keeps it in `turnProgress` until the turn ends; change it there,
   not in the staging code. `progress()` is deliberately not serialized. Mobile fakes without `getTurnProgress` skip
   the poll; a test that wants it uses fake timers and `PROGRESS_INTERVAL_MS` (`turn-progress.test.js`).
+- **Text replaces in edit scripts hit every match**: round 073 removed a guard in `recruit` with a `str.replace` meant
+  for `_startNamed`. Assert the count (`s.count(a) == 1`) before replacing.
 - **Send guards** (round 071): `sendMessage`'s `owns()` (send sequence, epoch, learner, encounter id and version)
   decides whether a response or reload applies; `retryIds` is cleared on success and on reload. Mobile fakes without
   `currentEncounter` skip the reload.
