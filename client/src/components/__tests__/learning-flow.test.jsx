@@ -168,6 +168,11 @@ test('a card that fell due while the Spellbook is open hides its meaning (round 
   expect(screen.getByText('without milk · no milk')).toBeTruthy();
 });
 
+test('a card the server withheld (round 106) renders as hidden, not as a crash', () => {
+  render(<Spellbook spellbook={{ cards: [{ ...cards[1], due: false, nextReviewAt: '2999-01-01T00:00:00Z', meanings: null, note: null, withheld: { meaning: true, example: true } }], dueCount: 0, inEncounter: false }} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
+  expect(screen.getAllByText('Meaning hidden').length).toBe(1);
+});
+
 test('CLI provider error is actionable, clears pending state, and retains input', async () => {
   const user = userEvent.setup();
   let resolveDialogue;

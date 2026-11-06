@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 106, the server no longer sends hidden word meanings (autonomous)
+
+The app and the web client hide a word's meaning during a conversation and while the word is due for review, but
+the server still sent the meanings, where a curious player could read them from the network. The server now leaves
+them out in the same cases. Nothing on screen changes. After a server restart mid-conversation the server no longer
+knows about it and sends them again; the app still hides them ([findings](docs/rounds/106/findings.md)).
+
 ## Addendum 2026-11-06: round 105, the web client reaches a protected server (autonomous)
 
 When the server is started with an access token, the browser version of the game could not talk to it. Its

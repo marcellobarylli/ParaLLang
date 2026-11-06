@@ -51,3 +51,26 @@ No owner was present; each is an **autonomous decision, pending owner review**, 
 - Mobile and web: a card with `meanings: null` in the reference state does not throw.
 - Mutation: dropping the encounter condition fails a test.
 - Full suites: server, client, mobile.
+
+## Second opinion (review 1, after the build)
+
+A fresh read-only subagent reviewed the build (Codex limited); raw text in [`trail/review-1.md`](trail/review-1.md).
+It found no Error: every path that returns a Spellbook goes through `spellbookSnapshot`, receipts hold none, the
+resolving turn shows meanings, and nothing else reads the blanked fields. Each disposition is an **autonomous
+decision, pending owner review**.
+
+| # | Severity | Finding | Recommendation | Change | Disposition | Decision |
+|---|---|---|---|---|---|---|
+| R1.1 | Gap | After a server restart mid-encounter the server knows no encounter, so the payload carries meanings again (the app's `leaksMeanings` guard blocks the display) | Record as a limit, or persist an "encounter ongoing" flag | Recorded in findings' claim boundary and open items; no persisted flag (in-memory encounters are a standing design, round 090) | **Declined** (autonomous, pending owner review) | Round 106 decisions row |
+| R1.2 | Gap | The resume and help paths are untested | Accept | The test resumes the start and asks for a word help, and checks both payloads | **Accepted** (autonomous, pending owner review) | Round 106 decisions row |
+| R1.3 | Gap | The JSON leak check matched only a card's own meanings in quotes | Accept | Every string of the payload (ids and versions aside) is checked for any card's accepted translation as a whole word | **Accepted** (autonomous, pending owner review) | Round 106 decisions row |
+| R1.4 | Minor | A card the server withheld but the app would show leaves a blank line | Accept | `cardWaits` also waits on `card.withheld`, so the card says "Meaning hidden until you review its words." | **Accepted** (autonomous, pending owner review) | Round 106 decisions row |
+| R1.5 | Minor | The web client says only "Meaning hidden" for a form wait | Leave (frozen client) | none | **Declined** (autonomous, pending owner review) | Round 106 decisions row |
+
+## Outcome (2026-11-06)
+
+Built as designed, with the review's R1.2–R1.4. During an encounter, on a due card and under round 090's waits, the
+Spellbook payload has no meanings, note or example English (`withheld` says which); after the resolving turn they
+are back. Mutations (no encounter condition, no example wait, no form wait, meanings kept, no mobile guard, no web
+guard) each fail a test. Server 392/392, client 20/20, mobile 303/303. Limit: after a server restart during an
+encounter, the server no longer knows it and sends meanings; only the app's guard hides them (R1.1).

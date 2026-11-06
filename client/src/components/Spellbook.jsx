@@ -21,7 +21,7 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
           {spellbook.cards.map((card) => (
             <article className="vocabulary-card" key={card.vocabularyId}>
               <div className="card-title"><h3 lang={language?.tag}>{card.target}</h3><PronounceButton text={card.target} language={language} /></div>
-              <p>{inEncounter || dueNow(card) ? <em>Meaning hidden</em> : card.meanings.join(' · ')}</p>
+              <p>{inEncounter || dueNow(card) || !card.meanings ? <em>Meaning hidden</em> : card.meanings.join(' · ')}</p>
               <p><small>{card.partOfSpeech.replaceAll('_', ' ')} · Mastery: <strong>{card.mastery}</strong></small></p>
               <p><small>{card.due ? 'Due now' : `Next review: ${new Date(card.nextReviewAt).toLocaleString()}`}</small></p>
               {card.due && !inEncounter && <button type="button" className="primary-button" disabled={isLoading} onClick={() => onReview(card.vocabularyId)}>Review</button>}

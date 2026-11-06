@@ -54,8 +54,9 @@ export function cardState(card, { inEncounter = false, now = Date.now() } = {}) 
 // Checked by the clock, like the cards themselves; an older server sends no lists, so nothing more waits.
 export function cardWaits(card, spellbook, now = Date.now()) {
   const due = new Set((spellbook.cards ?? []).filter((other) => cardState(other, { now }) === 'due').map((other) => other.vocabularyId));
-  const meaning = (card.formCardIds ?? []).some((id) => due.has(id));
-  return { meaning, example: meaning || (card.exampleCardIds ?? []).some((id) => due.has(id)) };
+  // Round 106 (review R1.4): what the server withheld waits too, so the card says why instead of a blank.
+  const meaning = (card.formCardIds ?? []).some((id) => due.has(id)) || card.withheld?.meaning === true;
+  return { meaning, example: meaning || (card.exampleCardIds ?? []).some((id) => due.has(id)) || card.withheld?.example === true };
 }
 
 // Round 060 (backlog C9): why a kept line's translation is withheld, or null. The server withholds it during an
@@ -183,11 +184,11 @@ function Card({ card, state, waits = { meaning: false, example: false }, languag
   return (
     <View style={styles.card} aria-label={`Card ${card.target}`}>
       <View style={styles.cardRow}><Text role="heading" style={styles.cardTitle} accessibilityLanguage={language?.tag}>{card.target}</Text><PronounceButton text={card.target} language={language} /></View>
-      {state === 'reference' && !waits.meaning && <Text style={styles.body}>{card.meanings.join(' · ')}</Text>}
+      {state === 'reference' && !waits.meaning && card.meanings && <Text style={styles.body}>{card.meanings.join(' · ')}</Text>}
       {state === 'reference' && waits.meaning && <Text style={styles.hidden}>Meaning hidden until you review its words.</Text>}
       {state === 'due' && <Text style={styles.hidden}>Meaning hidden until you review it.</Text>}
       {state !== 'inEncounter' && card.example && (
-        <Text style={styles.example} accessibilityLanguage={language?.tag}>{card.example.target}{state === 'reference' && !waits.example && <Text style={styles.small}>{` (${card.example.english})`}</Text>}</Text>
+        <Text style={styles.example} accessibilityLanguage={language?.tag}>{card.example.target}{state === 'reference' && !waits.example && card.example.english != null && <Text style={styles.small}>{` (${card.example.english})`}</Text>}</Text>
       )}
       {state === 'reference' && !waits.meaning && card.note && <Text style={styles.small}>{card.note}</Text>}
       <Text style={styles.small}><ClassWord partOfSpeech={card.partOfSpeech} />Mastery: <Text style={styles.strong}>{card.mastery}</Text></Text>

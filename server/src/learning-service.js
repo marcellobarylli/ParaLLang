@@ -312,6 +312,17 @@ export class LearningService {
       card.exampleCardIds = order.filter((id) => lists.example.has(id));
     }
     const inEncounter = this.inEncounter(encounter);
+    // Round 106 (round 104 R1.7): the payload withholds what the screens hide (the app's cardState and cardWaits,
+    // at snapshot time): no meanings or note during an encounter, on a due card, or while a card in its own form is
+    // due; no example English then either, or while a card in the example is due. The clients keep their clock checks.
+    const due = new Set(cards.filter((card) => card.due).map((card) => card.vocabularyId));
+    for (const card of cards) {
+      const meaning = inEncounter || card.due || card.formCardIds.some((id) => due.has(id));
+      const example = meaning || card.exampleCardIds.some((id) => due.has(id));
+      card.withheld = { meaning, example };
+      if (meaning) { card.meanings = null; card.note = null; }
+      if (example && card.example) card.example = { ...card.example, english: null };
+    }
     return {
       cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version,
       inEncounter, containmentFiles: this.containmentFiles(envelope),

@@ -40,10 +40,15 @@ test('cards carry the authored note', async (t) => {
   const runtime = await createRuntime();
   t.after(runtime.close);
   const { learnerId, started } = await createLearnerAndEncounter(runtime);
-  for (const card of started.spellbook.cards) assert.equal(card.note, runtime.content.vocabularyById.get(card.vocabularyId).note ?? null);
+  // Round 106: during the encounter the note is withheld (spellbook-withheld.test.js).
+  for (const card of started.spellbook.cards) assert.equal(card.note, null);
   const noted = [...runtime.content.vocabularyById.values()].find((entry) => entry.note);
   assert.ok(noted, 'the pack has an entry with a note');
   const envelope = structuredClone(await runtime.service.loadEnvelope(learnerId));
   runtime.service.discover(envelope, [noted.id], new Date().toISOString(), 'test');
-  assert.equal(runtime.service.spellbookSnapshot(envelope).cards.find((card) => card.vocabularyId === noted.id).note, noted.note);
+  // Round 106: outside an encounter and not due (a fresh card is due at once), the note is in the payload.
+  for (const item of [...Object.values(envelope.spellbook.words), ...Object.values(envelope.spellbook.phrases)]) item.schedule.dueAt = '2099-01-01T00:00:00.000Z';
+  const card = runtime.service.spellbookSnapshot(envelope, null).cards.find((c) => c.vocabularyId === noted.id);
+  assert.equal(card.withheld.meaning, false);
+  assert.equal(card.note, noted.note);
 });

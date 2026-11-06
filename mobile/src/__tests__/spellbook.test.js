@@ -117,3 +117,15 @@ describe('answers in other cards', () => {
     expect(screen.getByText(/I take black coffee/)).toBeOnTheScreen();
   });
 });
+
+// Round 106: the server sends null meanings, note and example English when it withholds them. Today the app hides
+// every such card by its own rules; one it would not (a future server rule) says it waits instead of a blank.
+test('a withheld card from the server renders without meanings, note or example English', async () => {
+  const withheld = card('d', 'sale', 'salt', { meanings: null, note: null, example: { target: 'Il sale.', english: null }, withheld: { meaning: true, example: true } });
+  await render(<Spellbook spellbook={{ inEncounter: false, dueCount: 0, cards: [withheld] }} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} now={now} />);
+  expect(screen.getByText('sale')).toBeOnTheScreen();
+  expect(screen.getByText('Il sale.')).toBeOnTheScreen();
+  expect(screen.getByText('Meaning hidden until you review its words.')).toBeOnTheScreen();
+  expect(screen.queryByText(/salt/)).not.toBeOnTheScreen();
+  expect(screen.queryByText(/null/)).not.toBeOnTheScreen();
+});
