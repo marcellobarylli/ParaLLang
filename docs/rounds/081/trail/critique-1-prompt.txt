@@ -1,0 +1,12 @@
+Read-only: do not run any commands and do not edit, create or delete any files. Everything you need is on stdin: a plan (docs/rounds/081/trail/plan-v1.md) and excerpts of the code it changes, each with line numbers. Critique the plan against that code. Its goal: an NPC reply may carry one short English narrator footnote (a Pratchett aside, sometimes an evergreen meme format), shown under the narration in the iPhone app now and then, never carrying target-language words. The owner values simplicity: the best plan is the smallest one that meets the goal correctly.
+
+Report three kinds of finding:
+1. Error: something that would make the plan fail or give a wrong result. That covers a false claim about the code or data (check it and cite file:line), an internal contradiction, a step that does not serve the goal as written, or an unverified assumption the plan rests on.
+2. Gap: something the goal needs that the plan lacks.
+3. Cut: a step, component, check or output the goal does not need.
+
+Simplicity limits the fixes, not the search: check every part of the plan, including its checks and acceptance criteria, and report every Error you find.
+
+For each finding give: type, severity (critical/high/medium), evidence, the concrete failure (what input leads to what wrong outcome), and the smallest fix. Prefer fixes that remove, narrow or reuse existing code over fixes that add. Mark each fix as making the plan larger (+), smaller (−) or neither (0).
+
+Leave out hardening, extra controls, extra reporting and style unless leaving them out causes a concrete failure. If you still want to suggest any, list at most three, one line each, under "Optional" at the end. If the plan is sound, say so: no findings is a valid answer. Do not soften.
