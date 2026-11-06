@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text } from 'react-native';
+import { AppState, KeyboardAvoidingView, StyleSheet, Text } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useGameStore } from './src/stores/gameStore.js';
@@ -20,6 +20,19 @@ export default function App() {
   const state = useGameStore();
   const fontReady = useDisplayFont(); // round 042: titles switch to Literata once it loads; nothing waits for it
   useEffect(() => { state.initialize(); }, [state.initialize]);
+  // Round 084: back from the background (not from inactive: Control Center, Face ID, alerts), the Spellbook is
+  // fetched again, since cards fall due by the clock.
+  useEffect(() => {
+    let last = AppState.currentState;
+    let subscription = null;
+    try {
+      subscription = AppState.addEventListener('change', (next) => {
+        if (next === 'active' && last === 'background') useGameStore.getState().refreshSpellbook();
+        last = next;
+      });
+    } catch { /* no AppState: no foreground refresh */ }
+    return () => subscription?.remove?.();
+  }, []);
   const resolved = state.encounter?.state === 'resolved';
   const here = state.world?.locations.find((location) => location.id === state.world.currentLocationId);
   const returnLabel = state.returnView === 'dialogue' && state.encounter ? `Return to ${state.encounter.character?.name ?? 'the encounter'}` : 'Return to the map';

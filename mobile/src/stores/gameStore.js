@@ -32,6 +32,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
   let startSeq = 0; // round 073: the latest encounter start; an older start's late settle leaves `starting` alone
   const STALE_CODES = new Set(['STALE_VERSION', 'STALE_ENCOUNTER']);
   let soundsTouched = false;
+  let refreshSeq = 0; // round 084: the latest Spellbook refresh; an older reply is dropped (critique 1.2)
   const snapshots = new Map();
 
   const store = create((set, get) => ({
@@ -169,10 +170,32 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, ...(mine() ? { starting: null } : {}) }); }
     },
 
+    // Round 084: cards fall due by the clock (SM-2 days), so the Spellbook is fetched again behind the screen when
+    // the Spellbook or the map opens and when the app returns from the background. Never loading, never an error.
+    // A reply applies only if it is the latest refresh, for the same learner and epoch (load-bearing: a save switch
+    // may restore an older Spellbook object, critique 1.4), no action wrote a Spellbook since (every write is a new
+    // object), and it does not show meanings while the app holds an ongoing encounter (critique 1.1: a restarted
+    // server forgets in-memory encounters).
+    refreshSpellbook: () => {
+      const { learnerId, spellbook: before } = get();
+      if (!learnerId || typeof api.getSpellbook !== 'function') return undefined;
+      const epoch = requestEpoch;
+      refreshSeq += 1;
+      const seq = refreshSeq;
+      return Promise.resolve().then(() => api.getSpellbook(learnerId)).then((spellbook) => {
+        const state = get();
+        if (seq !== refreshSeq || epoch !== requestEpoch || state.learnerId !== learnerId || state.spellbook !== before) return;
+        if (!spellbook || typeof spellbook !== 'object' || !Array.isArray(spellbook.cards)) return;
+        if (state.encounter?.state === 'ongoing' && spellbook.inEncounter !== true) return;
+        set({ spellbook });
+      }, () => {});
+    },
+
     openMap: async () => {
       const { learnerId } = get();
       set({ view: 'map', reviewChallenge: null, reviewResult: null, error: null, notice: null });
       if (!learnerId) return;
+      get().refreshSpellbook();
       try {
         const { world } = await api.getWorld(learnerId);
         if (get().learnerId === learnerId) set({ world });
@@ -339,10 +362,13 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     },
 
     // The Spellbook and review return to the screen they were opened from (the map or the encounter).
-    openSpellbook: () => set((state) => ({
-      view: 'spellbook', returnView: ['map', 'dialogue'].includes(state.view) ? state.view : state.returnView,
-      reviewChallenge: null, reviewResult: null, error: null,
-    })),
+    openSpellbook: () => {
+      set((state) => ({
+        view: 'spellbook', returnView: ['map', 'dialogue'].includes(state.view) ? state.view : state.returnView,
+        reviewChallenge: null, reviewResult: null, error: null,
+      }));
+      get().refreshSpellbook(); // round 084
+    },
     // Round 029: the Rift's drill starts from the map and returns to it; the encounter under way elsewhere is
     // reopened when it blocks the reviews.
     startDrill: (vocabularyId) => {
