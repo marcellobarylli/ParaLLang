@@ -1,0 +1,115 @@
+{
+  "provider": "codex-cli",
+  "language": "es",
+  "calls": 12,
+  "rows": [
+    {
+      "locationId": "butchers_stall",
+      "completed": false,
+      "detail": "a smell",
+      "text": "The smell of cured ham drifted past Mortimer, who remained considerably less cured of his suspicions. The scales balanced with the quiet arrogance of something that had never needed to develop a personality.",
+      "words": 33,
+      "durationMs": 6628,
+      "drop": null
+    },
+    {
+      "locationId": "butchers_stall",
+      "completed": true,
+      "detail": "a movement",
+      "text": "One ham turned slowly beneath the awning, maintaining the quiet dignity of something whose worst day was now being sold by weight.",
+      "words": 22,
+      "durationMs": 7242,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": false,
+      "detail": "the air or the temperature",
+      "text": "Warm steam drifted past Gerald, who regarded it as the machine getting emotional again. Bitterness was the house specialty, although only the coffee had to work at it.",
+      "words": 28,
+      "durationMs": 8877,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": true,
+      "detail": "a sound",
+      "text": "The machine gave a small hiss, lest anyone mistake Gerald’s good mood for a drop in standards. His welcome now extended to you; the coffee remained under suspicion.",
+      "words": 28,
+      "durationMs": 7124,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": false,
+      "detail": "a movement",
+      "text": "Flick edged away from the basin. A fountain that had diversified into rumours could no longer be trusted not to splash your business everywhere.",
+      "words": 24,
+      "durationMs": 10575,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": true,
+      "detail": "the light",
+      "text": "The light in the crack briefly steadies, as though one of the rumours has accidentally turned out to be true.",
+      "words": 20,
+      "durationMs": 8750,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": false,
+      "detail": "a sound",
+      "text": "Portia gave a small stone creak, the architectural equivalent of leaving someone on read. For an entrance, she had a remarkable talent for making arrival feel premature.",
+      "words": 27,
+      "durationMs": 5524,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": true,
+      "detail": "a smell",
+      "text": "The arch smelled faintly singed, which was impressive for stone. Friendship had settled its feelings about you, but apparently not its feelings about spelling.",
+      "words": 24,
+      "durationMs": 9201,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": false,
+      "detail": "the light",
+      "text": "A thin gleam rested on a book spine, which managed to look out of print and out of patience. Even the light seemed reluctant to ask whether it was for sale.",
+      "words": 31,
+      "durationMs": 6272,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": true,
+      "detail": "the air or the temperature",
+      "text": "The air between the shelves was cool with the confidence of books that knew they would outlive their readers. None appeared willing to offer a discount on this advantage.",
+      "words": 29,
+      "durationMs": 6898,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": false,
+      "detail": "a smell",
+      "text": "The roots smelled faintly of damp wood. Decay was evidently unwilling to let a small thing like the end of the market interrupt business.",
+      "words": 24,
+      "durationMs": 9325,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": true,
+      "detail": "a movement",
+      "text": "One exposed root curled slightly, testing whether the end of the world offered better growing conditions. It had already tried being dead, with limited results.",
+      "words": 25,
+      "durationMs": 7559,
+      "drop": null
+    }
+  ]
+}

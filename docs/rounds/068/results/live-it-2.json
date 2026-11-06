@@ -1,0 +1,115 @@
+{
+  "provider": "codex-cli",
+  "language": "it",
+  "calls": 12,
+  "rows": [
+    {
+      "locationId": "butchers_stall",
+      "completed": false,
+      "detail": "a smell",
+      "text": "A salty smell drifted from the hams; apparently, even after death, flesh was expected to keep improving itself.",
+      "words": 18,
+      "durationMs": 11443,
+      "drop": null
+    },
+    {
+      "locationId": "butchers_stall",
+      "completed": true,
+      "detail": "a movement",
+      "text": "A hanging ham turned slightly, presenting its better side. Even here, being dead did not excuse anyone from looking marketable.",
+      "words": 20,
+      "durationMs": 10177,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": false,
+      "detail": "the air or the temperature",
+      "text": "The machine breathed a little warmth into the air; Gerald declined to contribute. Bitterness was clearly a craft here, and the coffee was still learning.",
+      "words": 25,
+      "durationMs": 9380,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": true,
+      "detail": "a sound",
+      "text": "The machine gave a self-important hiss. Gerald let it finish; winning his friendship had apparently been easier for you than for something that had worked beside him for years.",
+      "words": 29,
+      "durationMs": 7244,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": false,
+      "detail": "a movement",
+      "text": "Flick edged away from the crack, apparently unwilling to be illuminated by anything with such a poor record of holding water.",
+      "words": 21,
+      "durationMs": 6399,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": true,
+      "detail": "the light",
+      "text": "The light briefly brightens, then dims with the discretion of a rumour that has discovered it might be true.",
+      "words": 19,
+      "durationMs": 6976,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": false,
+      "detail": "a sound",
+      "text": "Portia gave a faint stone-on-stone creak, achieving the rare architectural feat of looking down on someone while remaining an entrance. Being open was evidently not the same as being welcoming.",
+      "words": 30,
+      "durationMs": 7334,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": true,
+      "detail": "a smell",
+      "text": "The smoke smelled faintly of scorched certainty. Having warmed to you, the archway now confined its identity crisis to the space above your head, which counted as hospitality.",
+      "words": 28,
+      "durationMs": 5127,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": false,
+      "detail": "the light",
+      "text": "A sliver of light settled on a book spine, which immediately looked less available. The shop understood that the first rule of selling books was to make being bought seem slightly beneath them.",
+      "words": 33,
+      "durationMs": 7078,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": true,
+      "detail": "the air or the temperature",
+      "text": "A cool draft slipped between the books, which made no effort to look available. Being bought was apparently something that happened to lesser literature.",
+      "words": 24,
+      "durationMs": 6985,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": false,
+      "detail": "a smell",
+      "text": "A faint smell of dry wood rose from the roots. The branch was dead, but apparently that was no excuse for lying down.",
+      "words": 23,
+      "durationMs": 7986,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": true,
+      "detail": "a movement",
+      "text": "A root nudged the edge of the light, claiming another inch. The market had ended, but this had done nothing to discourage expansion.",
+      "words": 23,
+      "durationMs": 10692,
+      "drop": null
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "provider": "codex-cli",
+  "language": "es",
+  "calls": 12,
+  "rows": [
+    {
+      "locationId": "butchers_stall",
+      "completed": false,
+      "detail": "a smell",
+      "text": "The hams gave off a faint, salty smell. Curing had done wonders for the meat, though Mortimer’s disposition evidently required a different process.",
+      "words": 23,
+      "durationMs": 9732,
+      "drop": null
+    },
+    {
+      "locationId": "butchers_stall",
+      "completed": true,
+      "detail": "a movement",
+      "text": "A ham turned slightly beneath the awning, presenting its better side. Death had done little to cure its vanity.",
+      "words": 19,
+      "durationMs": 6481,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": false,
+      "detail": "the air or the temperature",
+      "text": "Steam warmed the air around Gerald, who remained personally unthawed. The machine endured considerable pressure, though nothing compared with being expected to produce coffee worthy of him.",
+      "words": 27,
+      "durationMs": 10041,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": true,
+      "detail": "a sound",
+      "text": "The machine gave a thin, superior hiss. Gerald had warmed to you, but the coffee still considered itself out of your league.",
+      "words": 22,
+      "durationMs": 7391,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": false,
+      "detail": "a movement",
+      "text": "The light in the crack twitched, suggesting the fountain had received another rumour. Unlike water, these could circulate indefinitely without ever becoming clear.",
+      "words": 23,
+      "durationMs": 8961,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": true,
+      "detail": "the light",
+      "text": "The light briefly brightened, lending the fountain an air of credibility. This was how rumours became history, provided nobody checked whether the plumbing worked.",
+      "words": 24,
+      "durationMs": 6521,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": false,
+      "detail": "a sound",
+      "text": "Portia gave a small, stony creak. It was impressive how much refusal could be fitted into a structure whose entire purpose was to let people through.",
+      "words": 26,
+      "durationMs": 8616,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": true,
+      "detail": "a smell",
+      "text": "The archway gave off a faint smell of hot stone. Winning its affection had apparently been easier than persuading it that a name was not a structural commitment.",
+      "words": 28,
+      "durationMs": 11747,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": false,
+      "detail": "the light",
+      "text": "Light caught on a book’s spine and was made to feel it was browsing without buying. Marginalia remained unimpressed, a difficult distinction to maintain in a room full of professionally closed minds.",
+      "words": 32,
+      "durationMs": 6360,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": true,
+      "detail": "the air or the temperature",
+      "text": "The air between the books was cool with the confidence of stock that had no intention of moving. Selling was tolerated here, but only as a lapse in judgment.",
+      "words": 29,
+      "durationMs": 9848,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": false,
+      "detail": "a smell",
+      "text": "The roots smelled faintly of dry wood, which was reassuring; at least something here was decaying in the usual direction.",
+      "words": 20,
+      "durationMs": 11420,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": true,
+      "detail": "a movement",
+      "text": "A root of the dead branch twitched toward the light, displaying the sort of optimism usually confined to fresh produce priced to sell tomorrow.",
+      "words": 24,
+      "durationMs": 13078,
+      "drop": null
+    }
+  ]
+}

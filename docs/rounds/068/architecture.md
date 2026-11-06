@@ -96,3 +96,8 @@ Critiqued draft: `trail/plan-v1.md`, sha256 24ca644d…; Codex, effort high, wit
 
 Net change: the detail is chosen in the service and passed in, grounded with a fallback; a corrected whole-word
 baseline; a hand read for humour; two runs per pack.
+
+## Outcome (2026-11-06)
+
+All success criteria met: 48/48 lines kept, English, at most 33 words; motif 1/48 (baseline 20/24); 48/48 with a
+grounded joke by my read. See [findings.md](findings.md).

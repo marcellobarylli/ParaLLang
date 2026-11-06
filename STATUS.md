@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 068, atmosphere variety (autonomous)
+
+The optional atmosphere line no longer tells the same office joke everywhere. Its prompt asks for the joke to come
+from the place itself, and each place and state gets one fixed kind of detail. The bureaucratic motif fell from 20
+of 24 lines (round 053) to 1 of 48 live lines, with all 48 kept and every one still a joke about its own place. The
+line stays off by default ([findings](docs/rounds/068/findings.md)).
+
 ## Addendum 2026-11-06: round 053, location atmosphere live (autonomous)
 
 The optional atmosphere line (`PARALLANG_ATMOSPHERE=on`) passed its live check. All 24 lines were kept, each in
@@ -662,6 +669,7 @@ Newest first.
 | 064 | 11-06 | Speech stops in the background; the ambience is undocked on return when nothing speaks (backlog C10d) (autonomous) | [064](docs/rounds/064/architecture.md) | [findings](docs/rounds/064/findings.md) | pre-run record to round 064 close |
 | 065 | 11-06 | A loading line and a failure state between reviews; a late review reply no longer pulls the player back (round 063 critique) (autonomous) | [065](docs/rounds/065/architecture.md) | [findings](docs/rounds/065/findings.md) | pre-run record to round 065 close |
 | 066 | 11-06 | A playtest kit for the owner (prototype.md Phase 4) and a README refresh (autonomous) | [066](docs/rounds/066/architecture.md) | [findings](docs/rounds/066/findings.md) | pre-run record to round 066 close |
+| 068 | 11-06 | Atmosphere variety: no generic office humour, one detail kind per place and state (backlog A10b) (autonomous) | [068](docs/rounds/068/architecture.md) | [findings](docs/rounds/068/findings.md) | pre-run record to round 068 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |

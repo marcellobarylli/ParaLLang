@@ -1,0 +1,115 @@
+{
+  "provider": "codex-cli",
+  "language": "it",
+  "calls": 12,
+  "rows": [
+    {
+      "locationId": "butchers_stall",
+      "completed": false,
+      "detail": "a smell",
+      "text": "A salty smell drifted from the hams, which had outlasted their original owners and were being remarkably tactful about it.",
+      "words": 20,
+      "durationMs": 11476,
+      "drop": null
+    },
+    {
+      "locationId": "butchers_stall",
+      "completed": true,
+      "detail": "a movement",
+      "text": "A ham turned slightly beneath the awning, showing off its other side. This was the full extent of its range, though the labels suggested even that was excessive.",
+      "words": 28,
+      "durationMs": 7771,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": false,
+      "detail": "the air or the temperature",
+      "text": "The air beside the machine was warm enough to soften everything except Gerald’s opinion of customers. The copper maintained a spotless reputation by keeping its insides out of sight.",
+      "words": 29,
+      "durationMs": 8921,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": true,
+      "detail": "a sound",
+      "text": "The machine gave a small, superior hiss. Gerald let you pass without looking disappointed, which, by the standards of the coffee trade, was practically a hug.",
+      "words": 26,
+      "durationMs": 7622,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": false,
+      "detail": "a movement",
+      "text": "Flick leaned away from the fountain, a sensible precaution around a water feature that had discovered it could get more attention without water.",
+      "words": 23,
+      "durationMs": 9827,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": true,
+      "detail": "the light",
+      "text": "The light briefly brightened, giving the fountain the air of a rumour that had just discovered it could cite itself.",
+      "words": 20,
+      "durationMs": 8071,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": false,
+      "detail": "a sound",
+      "text": "Portia gave a small, stony creak. It was a remarkably judgmental sound from someone whose chief qualification was having a hole in the middle.",
+      "words": 24,
+      "durationMs": 8968,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": true,
+      "detail": "a smell",
+      "text": "The air smelled faintly of scorched certainty. Having accepted you, the archway now reserved its structural doubts for itself, which was considerate of it and less reassuring than it probably intended.",
+      "words": 31,
+      "durationMs": 8679,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": false,
+      "detail": "the light",
+      "text": "A little light caught a book’s spine; the book managed to look unavailable. In this shop, even being visible was not a commitment.",
+      "words": 23,
+      "durationMs": 9849,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": true,
+      "detail": "the air or the temperature",
+      "text": "A thin draught slipped between the books; apparently, browsing was free only if you were air.",
+      "words": 16,
+      "durationMs": 9073,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": false,
+      "detail": "a smell",
+      "text": "The exposed roots smelled faintly of damp wood. Even here, where reality had given up maintaining a continuous surface, a dead branch was managing to make the situation about itself.",
+      "words": 30,
+      "durationMs": 6705,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": true,
+      "detail": "a movement",
+      "text": "A root edged sideways in the light, quietly increasing its share of nowhere. There was no market for nowhere yet, but the roots were clearly getting in early.",
+      "words": 28,
+      "durationMs": 11915,
+      "drop": null
+    }
+  ]
+}
