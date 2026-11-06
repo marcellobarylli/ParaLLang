@@ -60,6 +60,8 @@ export class LearningService {
     this.encounters = new Map();
     this.reviewChallenges = new Map();
     this.locks = new Map();
+    // Round 070 (backlog I1): per learner, the validated assessment of the turn whose reply is being written.
+    this.turnProgress = new Map();
   }
 
   async serialized(learnerId, operation) {
@@ -622,82 +624,103 @@ export class LearningService {
         nextObjectiveId: remaining[0]?.id ?? null,
         ...(heldIds.size ? { held_note: HELD_NOTE } : {}),
       };
-      const history = current.transcript.map((item) => item.role === 'player'
-        ? { role: 'user', content: item.text }
-        : { role: 'assistant', content: item.dialogue.native });
-      const generated = await this.callProvider(buildNarrationMessages({
-        language: this.content.language,
-        character: definition.character,
-        styleGuide: this.content.styleGuide,
-        locationName: this.sceneName(current),
-        objectives: remaining,
-        vocabularyById: this.content.vocabularyById,
-        conversationHistory: history,
-        playerInput: message,
-        targetRatio: this.ratioFor(nextTurns, definition),
-        decision,
-        ambientEntries: definition.ambientEntries,
-      }), encounterResponseSchema, 'encounter_narration', definition.character.name);
-
-      const stagedEnvelope = clone(envelope);
-      const stagedEncounter = clone(current);
-      const timestamp = nowIso(this.clock);
-      const advancedObjectiveIds = new Set(closing.map((objective) => objective.id));
       // Round 045 (critique 1.5): in an unordered encounter, help taken on the current objective may serve any open
-      // objective, so a reveal caps the quality of every objective graded this turn.
+      // objective, so a reveal caps the quality of every objective graded this turn. Round 070 (critique 1.8): the
+      // effective qualities and the response's assessment block are computed before the reply, once.
       const anyReveal = objectives.some((objective) => (current.reveals[objective.id] ?? []).length > 0);
       for (const result of assessment.objective_results) {
         const assisted = unordered ? anyReveal : (current.reveals[result.objective_id] ?? []).length > 0;
-        for (const evidence of result.vocabulary_evidence) {
-          this.discover(stagedEnvelope, [evidence.vocabulary_id], timestamp, 'dialogue_assessment');
-          const item = this.findItem(stagedEnvelope, evidence.vocabulary_id);
-          const effectiveQuality = capAssistedQuality(evidence.quality, assisted);
-          item.evidence.push({ at: timestamp, kind: 'dialogue', objectiveId: result.objective_id, quality: effectiveQuality, passed: result.passed });
-          if (advancedObjectiveIds.has(result.objective_id) && result.passed && isDue(item.schedule, this.clock())) {
-            item.schedule = scheduleReview(item.schedule, effectiveQuality, this.clock());
-          }
-          evidence.effective_quality = effectiveQuality;
-        }
+        for (const evidence of result.vocabulary_evidence) evidence.effective_quality = capAssistedQuality(evidence.quality, assisted);
       }
-      const npcMessage = this.canonicalizeNarration(generated, definition);
-      this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
-      stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
-      stagedEncounter.objectiveIndex = nextObjectiveIndex;
-      stagedEncounter.passedObjectiveIds = nextPassedIds;
-      stagedEncounter.committedPlayerTurns = nextTurns;
-      stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
-      stagedEncounter.version += 1;
-      // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
-      // holds the encounter's containment file.
-      if (resolved && definition.encounter.party_of) {
-        // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
-        const member = stagedEnvelope.party.find((candidate) => this.isHomeMember(candidate, definition.encounter.party_of));
-        if (member) member.conversations = (member.conversations ?? 0) + 1;
-      } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
-        stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
-      }
-      const response = {
-        encounter: this.serializeEncounter(stagedEncounter),
-        assessment: {
-          overallFeedback: assessment.overall_feedback,
-          objectiveResults: assessment.objective_results.map((result) => ({
-            objectiveId: result.objective_id, passed: result.passed, ...heldMark(result.objective_id), feedback: result.feedback,
-            vocabularyEvidence: result.vocabulary_evidence.map((evidence) => ({
-              vocabularyId: evidence.vocabulary_id, evidence: evidence.evidence,
-              quality: evidence.quality, effectiveQuality: evidence.effective_quality,
-            })),
+      const responseAssessment = {
+        overallFeedback: assessment.overall_feedback,
+        objectiveResults: assessment.objective_results.map((result) => ({
+          objectiveId: result.objective_id, passed: result.passed, ...heldMark(result.objective_id), feedback: result.feedback,
+          vocabularyEvidence: result.vocabulary_evidence.map((evidence) => ({
+            vocabularyId: evidence.vocabulary_id, evidence: evidence.evidence,
+            quality: evidence.quality, effectiveQuality: evidence.effective_quality,
           })),
-        },
-        spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
-        replayed: false,
+        })),
       };
-      stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
-        kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response: withoutLines(response),
-      };
-      await this.storage.save(stagedEnvelope);
-      this.encounters.set(learnerId, stagedEncounter);
-      return response;
+      // Round 070: the verdict is readable through progress() while the reply is written; this run removes only its
+      // own entry, inside the lock (critique 1.4).
+      const run = {};
+      this.turnProgress.set(learnerId, { run, attemptId: request.attemptId, assessment: clone(responseAssessment) });
+      try {
+        const history = current.transcript.map((item) => item.role === 'player'
+          ? { role: 'user', content: item.text }
+          : { role: 'assistant', content: item.dialogue.native });
+        const generated = await this.callProvider(buildNarrationMessages({
+          language: this.content.language,
+          character: definition.character,
+          styleGuide: this.content.styleGuide,
+          locationName: this.sceneName(current),
+          objectives: remaining,
+          vocabularyById: this.content.vocabularyById,
+          conversationHistory: history,
+          playerInput: message,
+          targetRatio: this.ratioFor(nextTurns, definition),
+          decision,
+          ambientEntries: definition.ambientEntries,
+        }), encounterResponseSchema, 'encounter_narration', definition.character.name);
+
+        const stagedEnvelope = clone(envelope);
+        const stagedEncounter = clone(current);
+        const timestamp = nowIso(this.clock);
+        const advancedObjectiveIds = new Set(closing.map((objective) => objective.id));
+        for (const result of assessment.objective_results) {
+          for (const evidence of result.vocabulary_evidence) {
+            this.discover(stagedEnvelope, [evidence.vocabulary_id], timestamp, 'dialogue_assessment');
+            const item = this.findItem(stagedEnvelope, evidence.vocabulary_id);
+            const effectiveQuality = evidence.effective_quality;
+            item.evidence.push({ at: timestamp, kind: 'dialogue', objectiveId: result.objective_id, quality: effectiveQuality, passed: result.passed });
+            if (advancedObjectiveIds.has(result.objective_id) && result.passed && isDue(item.schedule, this.clock())) {
+              item.schedule = scheduleReview(item.schedule, effectiveQuality, this.clock());
+            }
+          }
+        }
+        const npcMessage = this.canonicalizeNarration(generated, definition);
+        this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
+        stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
+        stagedEncounter.objectiveIndex = nextObjectiveIndex;
+        stagedEncounter.passedObjectiveIds = nextPassedIds;
+        stagedEncounter.committedPlayerTurns = nextTurns;
+        stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
+        stagedEncounter.version += 1;
+        // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
+        // holds the encounter's containment file.
+        if (resolved && definition.encounter.party_of) {
+          // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
+          const member = stagedEnvelope.party.find((candidate) => this.isHomeMember(candidate, definition.encounter.party_of));
+          if (member) member.conversations = (member.conversations ?? 0) + 1;
+        } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
+          stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
+        }
+        const response = {
+          encounter: this.serializeEncounter(stagedEncounter),
+          assessment: responseAssessment,
+          spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
+          replayed: false,
+        };
+        stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
+          kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response: withoutLines(response),
+        };
+        await this.storage.save(stagedEnvelope);
+        this.encounters.set(learnerId, stagedEncounter);
+        return response;
+      } finally {
+        if (this.turnProgress.get(learnerId)?.run === run) this.turnProgress.delete(learnerId);
+      }
     });
+  }
+
+  // Round 070 (backlog I1): the validated verdict of the turn under way, while its reply is written. Not serialized:
+  // it answers while the turn holds the learner's lock. No save, no provider; null unless the attempt id matches.
+  progress(learnerId, attemptId) {
+    const id = String(attemptId ?? '').trim();
+    if (!id) throw validationError('An attempt ID is required.');
+    const entry = this.turnProgress.get(learnerId);
+    return { progress: { attemptId: id, assessment: entry && entry.attemptId === id ? clone(entry.assessment) : null } };
   }
 
   // Round 027: the philosophy statement; the same for every learner, so no learner id is needed.

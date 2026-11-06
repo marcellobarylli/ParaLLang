@@ -50,6 +50,7 @@ export function createLearningApi({ baseUrl = API_URL, token = API_TOKEN, fetch:
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),
     revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),
+    getTurnProgress: (learnerId, attemptId) => request(`/api/encounter/progress?attemptId=${encodeURIComponent(attemptId)}`, { learnerId }), // round 070
     getOnboarding: () => request('/api/onboarding'),
     getWorld: (learnerId) => request('/api/world', { learnerId }),
     getAtmosphere: (learnerId) => request('/api/world/atmosphere', { learnerId }), // round 053

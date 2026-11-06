@@ -11,6 +11,9 @@ export const ONBOARDING_KEY = 'parallang.onboardingSeen';
 // Round 037: the sound switch (per device); anything but 'off' means on.
 export const SOUNDS_KEY = 'parallang.soundsOn';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
+// Round 070 (backlog I1): the verdict poll while a turn's reply is written: every second, at most a minute.
+export const PROGRESS_INTERVAL_MS = 1000;
+export const PROGRESS_POLLS = 60;
 const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now()}-${Math.random()}`;
 
 // Ported from client/src/stores/gameStore.js (round 004). Storage is async (AsyncStorage) and the store keeps the
@@ -19,6 +22,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
   let initializationPromise = null;
   let requestEpoch = 0;
   let reviewRequest = 0; // round 065 Amendment 1: the latest startReview
+  let sendSeq = 0; // round 070: the latest send; a progress poll from an older one is ignored (critique 1.1)
   let soundsTouched = false;
   const snapshots = new Map();
 
@@ -40,6 +44,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     reviewChallenge: null,
     reviewResult: null,
     assessment: null,
+    earlyAssessment: null, // Round 070 (backlog I1): the grader's verdict while the NPC's reply is written
     draft: '',
     pendingInput: null,
     isLoading: false,
@@ -140,7 +145,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         const fresh = started.encounter.id !== get().encounter?.id;
         set({
           encounter: started.encounter, spellbook: started.spellbook, isLoading: false, view: 'dialogue',
-          ...(fresh ? { assessment: null, draft: '', pendingInput: null } : {}),
+          ...(fresh ? { assessment: null, earlyAssessment: null, draft: '', pendingInput: null } : {}),
         });
       } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
@@ -207,12 +212,31 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const encounterId = state.encounter.id;
       const version = state.encounter.version;
       const epoch = requestEpoch;
-      set({ isLoading: true, error: null, pendingInput: text, draft: text });
+      const attempt = attemptId();
+      sendSeq += 1;
+      const seq = sendSeq;
+      const send = { settled: false };
+      set({ isLoading: true, error: null, pendingInput: text, draft: text, earlyAssessment: null });
+      // Round 070: while the POST runs, one sequential poll loop asks for the verdict (critique 1.1: applied only while
+      // this send is unsettled and still the latest). A poll error is ignored; the POST decides.
+      const current = () => !send.settled && seq === sendSeq && epoch === requestEpoch && get().learnerId === learnerId;
+      const poll = async () => {
+        for (let count = 0; count < PROGRESS_POLLS && current(); count += 1) {
+          await new Promise((resolve) => setTimeout(resolve, PROGRESS_INTERVAL_MS));
+          if (!current()) return;
+          try {
+            const { progress } = await api.getTurnProgress(learnerId, attempt);
+            if (current() && progress?.assessment) { set({ earlyAssessment: progress.assessment }); return; }
+          } catch { /* the POST decides */ }
+        }
+      };
+      if (typeof api.getTurnProgress === 'function') poll();
       try {
-        const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text });
+        const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attempt, message: text });
+        send.settled = true;
         if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
         snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
-        set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
+        set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, earlyAssessment: null, isLoading: false, pendingInput: null, draft: '' });
         // Round 037: a cue for progress only: the encounter resolved, or the current objective was met (critique
         // 1.1: a later objective passing alone advances nothing). Nothing on a miss or a replayed attempt.
         if (!result.replayed) {
@@ -227,6 +251,8 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           } catch { /* the map refreshes again when it is opened */ }
         }
       } catch (error) {
+        send.settled = true;
+        if (seq === sendSeq) set({ earlyAssessment: null });
         if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
       }
     },
@@ -387,7 +413,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         set({
           learnerId: identity.learnerId, language: identity.language ?? get().language, world, party, saves: record.slots,
           encounter: current.encounter ?? null, spellbook: current.spellbook,
-          view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null, draft: '',
+          view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null, earlyAssessment: null, draft: '',
           pendingInput: null, error: null, onboarding: null, isLoading: false, notice: `Now playing ${label}.`,
         });
       } catch (error) {
@@ -397,9 +423,10 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
 
     switchLearnerForTest: (learnerId) => {
       requestEpoch += 1;
+      sendSeq += 1;
       initializationPromise = null;
       const snapshot = snapshots.get(learnerId) ?? { encounter: null, spellbook: emptySpellbook };
-      set({ learnerId, ...snapshot, party: [], notice: null, draft: '', pendingInput: null, assessment: null, isLoading: false });
+      set({ learnerId, ...snapshot, party: [], notice: null, draft: '', pendingInput: null, assessment: null, earlyAssessment: null, isLoading: false });
     },
   }));
 

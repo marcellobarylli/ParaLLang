@@ -7,7 +7,7 @@ import { FadeIn, useReduceMotion } from '../motion.js';
 import { stopSpeech } from '../speech.js';
 import NarratorButton, { speechText } from './NarratorButton.js';
 
-export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
+export default function DialoguePanel({ encounter, language, isLoading, assessment, earlyAssessment = null, pendingInput = null, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
   const reduced = useReduceMotion();
   // Round 055 (critique 1.8): a word still being spoken stops when the encounter screen goes.
@@ -36,12 +36,19 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       <Text style={styles.small}>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</Text>
     </View></>
   );
+  // Round 070 (backlog I1): while the reply is written, the grader's verdict shows as provisional under the pending
+  // answer, in place of the previous turn's assessment (critique 1.5).
+  const early = Boolean(isLoading && pendingInput && earlyAssessment);
+  const verdict = early ? earlyAssessment : assessment;
   const footer = (
     <View style={styles.footer}>
-      {isLoading && <Text role="status" style={styles.thinking}>{name} is considering the linguistic implications…</Text>}
-      {assessment && <FadeIn key={assessmentKey(assessment)} style={styles.assessment} aria-live="polite">
-        <Text style={styles.strong}>Assessment</Text><Text style={styles.body}>{assessment.overallFeedback}</Text>
-        {assessment.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{resultMark(result)} {result.feedback}{result.held ? HELD_SUFFIX : ''}</Text>)}
+      {isLoading && <Text role="status" style={styles.thinking}>{early ? `${name} is replying…` : `${name} is considering the linguistic implications…`}</Text>}
+      {verdict && <FadeIn key={assessmentKey(verdict)} style={styles.assessment} aria-live="polite">
+        <Text style={styles.strong}>Assessment</Text>
+        {early && <Text style={styles.body}>Your answer: “{pendingInput}”</Text>}
+        <Text style={styles.body}>{verdict.overallFeedback}</Text>
+        {verdict.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{resultMark(result)} {result.feedback}{result.held ? HELD_SUFFIX : ''}</Text>)}
+        {early && <Text style={styles.small}>Not counted until {name} replies.</Text>}
       </FadeIn>}
       {resolved && <FadeIn><Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}{fragmentNote(fragments, encounter)}</Text></FadeIn>}
       {resolved && encounter.character?.saveable && !encounter.partyConversation && onRecruit && <PartyOffer

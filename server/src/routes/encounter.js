@@ -22,6 +22,11 @@ export function createEncounterRouter(service) {
     try { res.json(await service.submitDialogue(learnerId(req), req.body ?? {})); }
     catch (error) { next(error); }
   });
+  // Round 070 (backlog I1): the verdict of a turn under way, by its attempt id.
+  router.get('/progress', (req, res, next) => {
+    try { res.json(service.progress(learnerId(req), req.query.attemptId)); }
+    catch (error) { next(error); }
+  });
   router.post('/help', async (req, res, next) => {
     try { res.json(await service.revealEncounterHelp(learnerId(req), req.body ?? {})); }
     catch (error) { next(error); }
