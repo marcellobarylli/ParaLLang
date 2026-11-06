@@ -274,7 +274,7 @@ test('the third coffee break files Gerald\'s fragment; it is withheld during the
   }
   // Round 109: Gerald's defeat files Journathan today (last in story order); his own fragment waits for the breaks.
   const today = 'journey_still_on_his_way';
-  assert.deepEqual(filed, [[today], [today], ['journey_dead_branch', today]], 'not on Gerald\'s defeat, nor the first two breaks');
+  assert.deepEqual(filed, [[today], [today], ['journey_dead_branch', today]], 'Dead Branch: not on Gerald\'s defeat, nor the first two breaks');
   const [fragment] = turn.spellbook.journeyFragments;
   assert.deepEqual([fragment.encounterId, fragment.locationName, fragment.hidden, fragment.unlockedAt, fragment.conversations, fragment.toldBy],
     ['gerald_coffee_break', 'The Coffee Cart', false, 3, 3, 'Gerald']);

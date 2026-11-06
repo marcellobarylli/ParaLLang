@@ -103,3 +103,14 @@ test('a fragment names the member who told it or the place it was found', async 
   expect(fragmentSource(old)).toBeNull();
   expect(fragmentSource({ ...dog, toldBy: undefined })).toBeNull(); // an older server's conversation fragment
 });
+
+// Round 109 (review 4.4): Gerald's defeat now files a fragment too (Journathan today); his third break still notes
+// only the Dead Branch, and his defeat only its own.
+test('Gerald\'s completion fragment and his conversation fragment each get their own note', () => {
+  const today = fragment({ id: 'journey_still_on_his_way', title: 'Still on his way', encounterId: 'imp_coffee_greeting' });
+  const dead = fragment({ id: 'journey_dead_branch', title: 'The word for it', encounterId: 'gerald_coffee_break', unlockedAt: 3, conversations: 3 });
+  const coffeeBreak = { ...resolved('gerald_coffee_break'), partyConversation: true, character: { name: 'Gerald', saveable: true } };
+  expect(fragmentNote([dead, today], coffeeBreak)).toBe(' A fragment of The Journey from Gerald is in your Spellbook: The word for it.');
+  expect(fragmentNote([today], resolved('imp_coffee_greeting'))).toBe(' A fragment of The Journey from here is in your Spellbook: Still on his way.');
+  expect(fragmentNote([today, { ...dead, conversations: 4 }], coffeeBreak)).toBe('');
+});

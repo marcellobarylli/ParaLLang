@@ -53,3 +53,37 @@ subagent ([`trail/review-1.md`](trail/review-1.md)).
 | GAME MECHANICS | Fog of war, levels unlocked by progress | Map (005), Rift gate (014) | — |
 | PLOT & QUESTS | Begin in the home country | None (the game opens at the market) | Later |
 | LOCATIONS | A self-contained Painted World level | The Crumbling Market | Angkor Wat, the Bone Dome: later levels |
+
+## Results
+
+- Two fragments in both packs, the same English, 9 and 10 glossary entries; the answer check finds no form, target
+  word or stem, or target meaning in either (allowlists unchanged).
+- The review found two Errors in the first texts (a Spanish misreading, "kneeling"; "never arrived" against the old
+  dog's homecoming) and both are fixed (architecture Amendment 1). No give-away found beyond the check.
+- Tests: the tutorial's resolving turn files the proem (it, es); Gerald's defeat files Journathan today (an API
+  resolution and the party tests' full lists); both are withheld during the Rift fight and Gerald's fourth break;
+  the app notes each where it was filed. Moving the proem off the tutorial fails the tutorial test.
+- Suites: server 396/396, client 21/21, mobile 304/304.
+
+## Decision
+
+Keep both fragments and the audit's gap list (autonomous decision, pending owner review; decisions row for round
+109). The next content gaps that need no live run: a fragment or inscription on the mushrooms and spores; those with
+a character need live runs (the Wizard of Just in Case, the Trepanners).
+
+## Evidence
+
+[`trail/review-1.md`](trail/review-1.md); `content/languages/{it,es}/lore/fragments.yaml`;
+`server/test/lore-fragments.test.js`, `server/test/tutorial.test.js`, `server/test/party-tiers.test.js`,
+`server/test/party-conversation.test.js`, `server/test/rift-boss.test.js`, `mobile/src/__tests__/fragments.test.js`.
+
+## Claim boundary
+
+The audit is by reading and `grep`, one row per element, not a check of how each element plays live. The texts were
+reviewed by a model, not by a native speaker (as every fragment: pending a native speaker's review). No LLM call.
+
+## Open items
+
+- A native speaker's review of both texts (owner).
+- Next gaps: mushrooms and spores (content only); the Wizard of Just in Case, the Trepanners, Orwell, the Inflection
+  Point (live runs).

@@ -9,7 +9,7 @@
 # on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
 fragments:
   - id: journey_proem
-    title: The first lines
+    title: The archway's telling
     found_after: market_entrance_tutorial
     found: "Painted on the inside of the archway, where you only see it after you have walked through."
     text: >-
@@ -25,7 +25,7 @@ fragments:
       - { word: "inverni", meaning: "winters" }
       - { word: "di ramo in ramo", meaning: "from branch to branch" }
       - { word: "eroe", meaning: "hero" }
-      - { word: "racconta", meaning: "tells of" }
+      - { word: "lo racconta", meaning: "tells of him" }
       - { word: "neppure", meaning: "not even" }
   - id: journey_first_stitch
     title: The first stitch
@@ -175,20 +175,21 @@ fragments:
     found_after: imp_coffee_greeting
     found: "Pinned under Gerald's tip jar, on the back of an unpaid bill signed with a flourish."
     text: >-
-      Journathan non è mai arrivato. Oggi è un vecchio eroe dalle ginocchia che scricchiolano, tecnicamente sempre in
-      cammino. A chi gli chiede dove va, risponde che conta il percorso, non la meta. Poi sospira: anche lui è stanco
-      di sentirlo.
+      Il libro lo fa tornare sulla sua isola; lui giura di non essere mai arrivato. Oggi è un vecchio eroe a cui
+      scricchiolano le ginocchia, tecnicamente tuttora in cammino. A chi gli chiede dove va, risponde che conta il
+      percorso, non la meta. Poi sospira: anche lui è stanco di sentirlo.
     translation: >-
-      Journathan never arrived. Today he is an old hero with creaking knees, still technically on his way. Ask him
-      where he is going and he says it is about the journey, not the destination. Then he sighs: he is tired of
-      hearing it too.
+      The book has him come back to his island; he swears he never arrived. Today he is an old hero with creaking
+      knees, technically still on his way. Ask him where he is going and he says it is about the journey, not the
+      destination. Then he sighs: he is tired of hearing it too.
     glossary:
+      - { word: "giura", meaning: "he swears" }
       - { word: "mai arrivato", meaning: "never arrived" }
       - { word: "ginocchia", meaning: "knees" }
       - { word: "scricchiolano", meaning: "creak" }
       - { word: "in cammino", meaning: "on his way" }
       - { word: "conta", meaning: "matters, counts" }
-      - { word: "percorso", meaning: "path, route" }
+      - { word: "percorso", meaning: "path, route; here the journey" }
       - { word: "meta", meaning: "destination" }
       - { word: "sospira", meaning: "he sighs" }
       - { word: "stanco", meaning: "tired" }

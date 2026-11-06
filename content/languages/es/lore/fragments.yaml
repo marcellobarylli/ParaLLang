@@ -9,7 +9,7 @@
 # on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
 fragments:
   - id: journey_proem
-    title: The first lines
+    title: The archway's telling
     found_after: market_entrance_tutorial
     found: "Painted on the inside of the archway, where you only see it after you have walked through."
     text: >-
@@ -176,20 +176,21 @@ fragments:
     found_after: imp_coffee_greeting
     found: "Pinned under Gerald's tip jar, on the back of an unpaid bill signed with a flourish."
     text: >-
-      Journathan nunca llegó. Hoy es un viejo héroe de rodillas que crujen, técnicamente todavía en camino. Si le
-      preguntas adónde va, responde que lo que importa es el camino, no el destino. Luego suspira: él también está
-      cansado de oírlo.
+      El libro lo hace volver a su isla; él jura que nunca llegó. Hoy es un viejo héroe al que le crujen las
+      rodillas, técnicamente todavía en camino. Si le preguntas adónde va, responde que lo que importa es el camino,
+      no el destino. Luego suspira: él también está cansado de oírlo.
     translation: >-
-      Journathan never arrived. Today he is an old hero with creaking knees, still technically on his way. Ask him
-      where he is going and he says it is about the journey, not the destination. Then he sighs: he is tired of
-      hearing it too.
+      The book has him come back to his island; he swears he never arrived. Today he is an old hero with creaking
+      knees, technically still on his way. Ask him where he is going and he says it is about the journey, not the
+      destination. Then he sighs: he is tired of hearing it too.
     glossary:
+      - { word: "jura", meaning: "he swears" }
       - { word: "nunca llegó", meaning: "never arrived" }
       - { word: "rodillas", meaning: "knees" }
       - { word: "crujen", meaning: "creak" }
       - { word: "en camino", meaning: "on the way" }
       - { word: "lo que importa", meaning: "what matters" }
-      - { word: "camino", meaning: "road, way" }
+      - { word: "camino", meaning: "road, way; here the journey" }
       - { word: "destino", meaning: "destination" }
       - { word: "suspira", meaning: "he sighs" }
       - { word: "cansado", meaning: "tired" }

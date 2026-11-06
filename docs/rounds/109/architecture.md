@@ -57,3 +57,28 @@ No owner was present; each is an **autonomous decision, pending owner review**, 
 - A test: completing the Entrance tutorial files `journey_proem`; completing Gerald's encounter files
   `journey_still_on_his_way`; both withheld during an encounter.
 - Full suites: server, client, mobile.
+
+## Amendment 1 (2026-11-06, after the build): the review's dispositions
+
+A fresh read-only subagent reviewed the build ([`trail/review-1.md`](trail/review-1.md): 2 Error, 3 Minor, 2 Gap,
+3 Style; numbered R1.1–R1.10 in the review's order, its section in brackets). Each disposition is an **autonomous decision, pending owner review**.
+
+| # | Severity | Finding (review §) | Recommendation | Change | Disposition | Decision |
+|---|---|---|---|---|---|---|
+| R1.1 | Error | es "un viejo héroe de rodillas que crujen" reads as "kneeling" (§1.1) | Fix | "un viejo héroe al que le crujen las rodillas" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.2 | Minor | it "tecnicamente sempre in cammino" reads as "always" (§1.2) | Fix | "tecnicamente tuttora in cammino" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.3 | Style | "vagò venti inverni" without *per* / *durante* (§1.3) | Keep as written | The bare duration is the epic register the proem wants | **Rejected** (autonomous, pending owner review) | Amendment 1 |
+| R1.4 | Style | Glosses: es *camino* means the journey in the motto; it/es "tells of" differ (§1.4) | Fix | *camino* / *percorso* "…; here the journey"; it gloss *lo racconta* "tells of him" as es | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.5 | Error | "Journathan never arrived" contradicts `journey_old_dog` (he comes home) (§2.1) | Fix | First sentence: "The book has him come back to his island; he swears he never arrived" (it *Il libro lo fa tornare sulla sua isola; lui giura di non essere mai arrivato*, es *El libro lo hace volver a su isla; él jura que nunca llegó*); *giura* / *jura* glossed (10 entries, the cap) | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.6 | Minor | "The first lines" is a second opening beside the one Marginalia reads (§2.2) | Fix | Title "The archway's telling": another telling, painted on the archway | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.7 | Style | A party-conversation test message now misleads (§4.1) | Fix | "Dead Branch: not on Gerald's defeat, …" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.8 | Minor | party-tiers filtered on `unlockedAt`, weakening two assertions (§4.2) | Fix | Full lists asserted again, with Journathan today | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.9 | Gap | No test resolves the tutorial and sees the proem filed (§4.3) | Fix | `tutorial.test.js` (it, es): the resolving turn files `journey_proem`, earlier turns none; moving the proem off the tutorial fails it | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+| R1.10 | Gap | No mobile test of Gerald's two notes (§4.4) | Fix | `mobile/src/__tests__/fragments.test.js`: the third break notes the Dead Branch, the defeat "Still on his way" | **Accepted** (autonomous, pending owner review) | Amendment 1 |
+
+## Outcome (2026-11-06)
+
+Built as designed with Amendment 1. The audit is in [`findings.md`](findings.md). Two fragments in both packs:
+"The archway's telling" (`journey_proem`, the Entrance tutorial, first in story order) and "Still on his way"
+(`journey_still_on_his_way`, Gerald's encounter, last), both clean under the answer check. Tests that assumed those
+encounters file nothing were updated to the full lists. Server 396/396, client 21/21, mobile 304/304.

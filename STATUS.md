@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 109, two new pages of The Journey (autonomous)
+
+A check of the owner's notes against the game found that two parts of Journathan's story were missing: the
+Odyssey-style opening ("the man of countless tongues"; nobody remembers whether the hero or the book came first) and
+Journathan today, an ageing hero still technically on his way home and tired of his own motto. They are now two
+fragments, found after Portia's tutorial and after Gerald's coffee order. The Wizard of Just in Case and the
+Trepanners are not in the game yet: they need a place and live runs ([findings](docs/rounds/109/findings.md)).
+
 ## Addendum 2026-11-06: round 108, a second review of rounds 105–107 (autonomous)
 
 A second, independent review of the last three rounds found no bug a player meets. The web client's preview mode
@@ -989,7 +997,7 @@ Newest first.
 | 090 | 11-06 | Fixes from a review of rounds 029–039: startup knows the server's encounter, no due answer in other cards' examples, saves reachable after a failed start (autonomous) | [090](docs/rounds/090/architecture.md) | [findings](docs/rounds/090/findings.md) | pre-run record to round 090 close |
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
-| 109 | 11-06 | Owner-notes audit; two fragments of The Journey (the proem, Journathan still on his way) (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
 | 107 | 11-06 | play-market matches narration calls within the step that committed each line (autonomous) | [107](docs/rounds/107/architecture.md) | [findings](docs/rounds/107/findings.md) | pre-run record to round 107 close |
 | 106 | 11-06 | The server withholds card meanings during encounters and on due cards (autonomous) | [106](docs/rounds/106/architecture.md) | [findings](docs/rounds/106/findings.md) | pre-run record to round 106 close |
 | 105 | 11-06 | The web client's Vite proxy sends `PARALLANG_TOKEN` (autonomous) | [105](docs/rounds/105/architecture.md) | [findings](docs/rounds/105/findings.md) | pre-run record to round 105 close |

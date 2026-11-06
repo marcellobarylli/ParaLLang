@@ -81,11 +81,14 @@ for (const code of Object.keys(packs)) {
 
     let encounter = started;
     const passed = [];
+    const filed = []; // Round 109: the fragments each turn's Spellbook holds, and whether they are hidden.
     for (const message of packs[code].answers) {
       const turn = await service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message });
       passed.push(...turn.assessment.objectiveResults.filter((r) => r.passed).map((r) => r.objectiveId));
+      filed.push(turn.spellbook.journeyFragments.map((f) => [f.id, f.encounterId, f.hidden]));
       encounter = turn.encounter;
     }
+    assert.deepEqual(filed, [[], [], [['journey_proem', 'market_entrance_tutorial', false]]], 'round 109: the resolving turn files the proem');
     assert.deepEqual(passed, ['greet', 'introduce', 'ask_back']);
     assert.equal(encounter.state, 'resolved');
     assert.equal(encounter.resolvedMessage, 'Portia sighs with relief, unlocks herself and lets you into the market.');
