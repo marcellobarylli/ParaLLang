@@ -20,7 +20,10 @@ Next candidates, none needing the owner:
 - **Offline work only** until 11-09: test gaps, content checks with `leak-scan.js`, docs. Round 084's audit of
   `gameStore.js` found world, party and Party hints refreshed where they change; still unchecked: the `atmosphere`
   key after a save switch, `drill` after a review from the Spellbook (the review returns the Spellbook, so likely
-  fine). Ideas: more inscriptions (party conversations, a second line after completion).
+  fine). The Saves screen's "N due" uses the same Spellbook but `openSaves` does not refresh it (it opens from the
+  map, which does; only a long stay on the map leaves it stale): a one-line follow-up if a round touches the store.
+  Ideas: more inscriptions (party conversations, a second line after completion), but prototype.md §11 warns against
+  scope creep, and the owner has not said whether inscriptions are wanted; prefer test gaps and fixes.
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
   greeting and on about one reply in three; a footnote adds what the narrative did not say") and a re-measure; the
   rest of round 081's Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
