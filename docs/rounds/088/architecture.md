@@ -103,3 +103,8 @@ Net change: inflections and a per-native bounded cache; homograph false hides ac
   `cardIds`; without `cardIds` it falls back to `vocabularyIds`. `word-class` test: two same-start spans keep the
   longer.
 - Full suite.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. Every change has a test that fails without it (the inflection test was moved to an
+unlisted form during the build). Full suites pass ([findings](findings.md)).

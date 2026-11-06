@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 088, a kept line no longer gives away a due card (autonomous)
+
+A review of rounds 054–064 found one answer leak: a kept line's translation was withheld only while one of its chip
+words was due, so a line from Gerald's coffee break that says *caffè* showed its translation while the *caffe* card
+(from another encounter) was due. A line now waits while any of the player's cards stands in it, alone or inflected,
+from any encounter; an English homograph of a due card may make it wait too ([findings](docs/rounds/088/findings.md)).
+
 ## Addendum 2026-11-06: round 087, fixes from a review of rounds 076–080 (autonomous)
 
 A second review pass, over the greeting prefetch and the no-target-language retry, found no bug a player hits in
@@ -829,7 +836,7 @@ Newest first.
 | 085 | 11-06 | The Saves screen's due count refreshed on opening it, after a remove and after a failed switch (autonomous) | [085](docs/rounds/085/architecture.md) | [findings](docs/rounds/085/findings.md) | pre-run record to round 085 close |
 | 086 | 11-06 | Three fixes from a review of rounds 081–085: a move's Spellbook guarded, footnote inflections, the foreground refresh (autonomous) | [086](docs/rounds/086/architecture.md) | [findings](docs/rounds/086/findings.md) | pre-run record to round 086 close |
 | 087 | 11-06 | Fixes from a review of rounds 076–080: stale prefetches aborted, one timeout at most, runner and adapter aborts (autonomous) | [087](docs/rounds/087/architecture.md) | [findings](docs/rounds/087/findings.md) | pre-run record to round 087 close |
-| 088 | 11-06 | Fixes from a review of rounds 054–064: a kept line hidden while any due card stands in it (autonomous) | [088](docs/rounds/088/architecture.md) | [findings](docs/rounds/088/findings.md) | pre-run record |
+| 088 | 11-06 | Fixes from a review of rounds 054–064: a kept line hidden while any due card stands in it (autonomous) | [088](docs/rounds/088/architecture.md) | [findings](docs/rounds/088/findings.md) | pre-run record to round 088 close |
 | 063 | 11-06 | Speech stops when the Spellbook or Review screen goes; `speak` gives way to a stop during its wait (backlog C10c) (autonomous) | [063](docs/rounds/063/architecture.md) | [findings](docs/rounds/063/findings.md) | pre-run record to round 063 close |
 | 062 | 11-06 | The narrator on the map card ("Hear the place") and the companion card ("Hear the briefing") (backlog C10b) (autonomous) | [062](docs/rounds/062/architecture.md) | [findings](docs/rounds/062/findings.md) | pre-run record to round 062 close |
 | 061 | 11-06 | Hear the narrator: a 🔊 per NPC narration, English device voice, on demand (backlog C10) (autonomous) | [061](docs/rounds/061/architecture.md) | [findings](docs/rounds/061/findings.md) | pre-run record to round 061 close |

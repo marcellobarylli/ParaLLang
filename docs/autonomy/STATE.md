@@ -7,7 +7,7 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 26 (2026-11-06, 05:11–05:50 UTC) closed three offline rounds:
+Nothing open. Iteration 26 (2026-11-06, 05:11–06:00 UTC) closed four offline rounds:
 - **085** (F6): the Saves screen's due count refreshes on opening Saves, after a remove and after a failed new save
   or switch (each Saves action raises the epoch, which drops a refresh in flight).
 - **086** (F7): an independent read-only review of the code of rounds 081–085 (no Errors) and three fixes: a move's
@@ -18,6 +18,10 @@ Nothing open. Iteration 26 (2026-11-06, 05:11–05:50 UTC) closed three offline 
   longer needed are aborted and dropped (`dropGreeting(s)`, `prefetchStats.dropped`); a start that took a pending
   prefetch which timed out rethrows `CLI_TIMEOUT` instead of a second wait; the CLI runner ignores an abort after
   the child closed; the OpenAI and Ollama adapters honour the signal; `narrate(…, { signal })`.
+- **088** (F9): the same pass over rounds 054–064 found an answer leak: a kept line was withheld only for its chip
+  ids (current encounter's words, non-overlapping), so a line saying *caffè* from Gerald's coffee break showed its
+  translation while *caffe* was due. Snapshot lines now carry `cardIds` (chips + any card found alone or inflected,
+  `lineEntryIds`), and the app checks them by the clock.
 The audit items from iteration 25 are closed: `atmosphere` is keyed by learner (a switch re-asks; covered by
 `atmosphere.test.js`), and the drill note derives from `spellbook.drill`, which reviews return.
 
@@ -26,9 +30,12 @@ autonomous run. No live LLM data is possible for the rest of the run (claude-cli
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
 Next candidates, none needing the owner:
-- **Offline work only** until 11-09. The app and server are well covered; remaining ideas are thin. Options: the
-  same review pass over rounds 065–075 (rounds 086–087 each found real gaps at ~3 subagent runs a round; 070–073 had
-  one review already in round 075, so prefer 065–069 and 074–075); the footnote rule could also cover other encounters' answers (critique 1.4 of round
+- **Offline work only** until 11-09. Review passes have covered rounds 054–064 and 076–085 (086–088 each found real
+  gaps, 088 an answer leak, at ~3 subagent runs a round). Rounds 065 and 070–073 had post-build reviews; 066–069 and
+  074 are docs, content or live runs. Next review candidates, older code never reviewed after its build: rounds
+  040–053 (token, ambience, font, Party hints, leak scan, unordered objectives, `folded`, tiers, time objective,
+  atmosphere; 053 had a review), then 029–039 (drill, fragments, save slots, unlocks, polish, sounds, save removal).
+  Other options: the footnote rule could also cover other encounters' answers (critique 1.4 of round
   086, measure first with `docs/rounds/086/results/rule.mjs`); more inscriptions (scope creep, owner has not said
   they are wanted).
 - **Queued live (after 11-09 17:32 UTC):** round 081's firmer footnote rule by Amendment ("write a footnote on the
@@ -231,6 +238,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
   remove and after a failed new save or switch.
 
+- [x] **F9. Review of rounds 054–064** (round 088, closed 2026-11-06): kept lines withheld for any due card in them
+  (`cardIds`), span sort, surrogate-safe cap.
 - [x] **F8. Review of rounds 076–080** (round 087, closed 2026-11-06): stale prefetches aborted, one timeout at
   most, runner and adapter aborts.
 - [x] **F7. Review of rounds 081–085** (round 086, closed 2026-11-06): a move's Spellbook guarded, footnote
@@ -262,6 +271,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 088 (Simulator, decision):** a kept line with *caffè* from Gerald's coffee break waits while *caffe* is
+  due; are homograph false hides acceptable ([open items](../rounds/088/findings.md#open-items)).
 - **Round 086 (Simulator):** background and foreground via the app switcher and via Notification Centre; the
   header badge updates after a card fell due ([open items](../rounds/086/findings.md#open-items)).
 - **Round 085 (Simulator):** open Saves after a card fell due while the map was open; remove a save and check the
@@ -580,11 +591,15 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   (5 findings, all accepted), built and closed: mobile 240/240. Round 086 (F7) from a subagent review of rounds
   081–085 (3 findings), critiqued (7: 5 accepted, 1 in part by measurement, 1 rejected), built and closed: server
   304/304, client 12/12, mobile 242/242, iOS export bundles. Round 087 (F8) from a review of rounds 076–080 (6
-  findings), critiqued (10, all accepted), built and closed: server 314/314, client 12/12, mobile 242/242. No live
-  calls (Codex limited).
+  findings), critiqued (10, all accepted), built and closed: server 314/314, client 12/12, mobile 242/242. Round 088
+  (F9) from a review of rounds 054–064 (3 findings, 1 Error), critiqued (8, all accepted), built and closed: server
+  316/316, client 12/12, mobile 244/244, iOS export bundles. No live calls (Codex limited).
 
 ## Handoff notes and traps
 
+- **Kept lines** (rounds 060, 088): the save stores chip ids (`vocabularyIds`); the snapshot adds `cardIds` from
+  `lineEntryIds(native)` (every pack entry alone or inflected, a 500-native map on the service). Hide by `cardIds`.
+  A test of an inflection must use a form that is not listed in `surface_variants` (*ottima* is listed for *ottimo*).
 - **Prefetched greetings** (rounds 076, 087): `this.greetings` holds `{ promise, controller, settled }` by
   `greetingKey`; the promise never rejects (`{ generated }` or `{ error }`). Drop entries only through
   `dropGreeting(key, counter)` / `dropGreetings(learnerId, keepKey)`, which abort the call. Tests that seed the map
