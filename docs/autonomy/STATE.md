@@ -627,7 +627,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings), critiqued (10, all accepted), built and closed: server 314/314, client 12/12, mobile 242/242. Round 088
   (F9) from a review of rounds 054–064 (3 findings, 1 Error), critiqued (8, all accepted), built and closed: server
   316/316, client 12/12, mobile 244/244, iOS export bundles. No live calls (Codex limited).
-- 2026-11-06, iteration 27 (05:53–06:55 UTC): round 089 (F10) from a subagent review of rounds 040–053 (4
+- 2026-11-06, iteration 27 (05:53–06:50 UTC): round 089 (F10) from a subagent review of rounds 040–053 (4
   findings, 1 Error: atmosphere exemptions were answers), critiqued (9, 2 Errors in the abort design, all accepted),
   built and closed: server 323/323, client 12/12, mobile 245/245, iOS export bundles. No live calls (Codex limited).
   Round 090 (F11) from a review of rounds 029–039 (5 findings, 2 Errors), critiqued (11, 3 Errors, all accepted;
