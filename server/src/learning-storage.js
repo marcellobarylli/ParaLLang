@@ -59,6 +59,27 @@ function validLine(line) {
     && typeof line.savedAt === 'string' && Number.isFinite(Date.parse(line.savedAt));
 }
 
+// Round 093 (backlog F13): a save keeps its RECEIPT_LIMIT newest assessment receipts. The one just written is always
+// kept (critique 1.2: the injected clock may step back); the rest go by committedAt, ties by later entry (critique 1.3:
+// integer-like attempt ids enumerate first, so that order is only write order for the usual UUID ids). Safe for any limit: every path that writes a receipt
+// makes its input unreplayable once committed (a turn raises the encounter's version, an answered review challenge is
+// deleted), so a resend whose receipt is gone is refused as stale, never applied twice. A new receipt writer must keep
+// that rule.
+export const RECEIPT_LIMIT = 20;
+export function pruneReceipts(processed, { keepId, limit = RECEIPT_LIMIT } = {}) {
+  const ids = Object.keys(processed);
+  if (ids.length <= limit) return processed;
+  const keep = keepId !== undefined && Object.hasOwn(processed, String(keepId)) ? String(keepId) : null;
+  const time = (id) => { const at = Date.parse(processed[id]?.committedAt); return Number.isFinite(at) ? at : -Infinity; };
+  // Equal times: the later entry first (write order for UUID ids; integer-like ids enumerate first, critique 1.3).
+  const position = new Map(ids.map((id, index) => [id, index]));
+  const others = ids.filter((id) => id !== keep).sort((a, b) => time(b) - time(a) || position.get(b) - position.get(a));
+  const kept = new Set(others.slice(0, Math.max(0, limit - (keep === null ? 0 : 1))));
+  if (keep !== null) kept.add(keep);
+  for (const id of ids) if (!kept.has(id)) delete processed[id];
+  return processed;
+}
+
 function validWorld(world) {
   const ids = (list) => Array.isArray(list) && list.every((id) => typeof id === 'string');
   return Boolean(world) && typeof world === 'object' && !Array.isArray(world)
@@ -165,9 +186,11 @@ export class JsonLearningStorage {
     return unlinkQuietly(filePath);
   }
 
-  async save(envelope) {
+  // Round 093: every save prunes the receipts (critique 1.6: an old save shrinks on its next write of any kind).
+  async save(envelope, { keepReceiptId } = {}) {
     assertLearnerId(envelope.learnerId);
     validateEnvelope(envelope, envelope.learnerId);
+    pruneReceipts(envelope.spellbook.processedAssessments, { keepId: keepReceiptId });
     try { await this.io.mkdir(this.saveDir, { recursive: true }); }
     catch (error) { throw retryableError(`Progress could not be saved: ${error.message}`, 'STORAGE_FAILURE'); }
     const destination = this.filePath(envelope.learnerId);

@@ -101,3 +101,19 @@ compact JSON: rejected; `evidence` arrays: deferred to backlog F15 (Decision 5).
 - Mutations: the prune call removed from `save` fails a test; `keepId` ignored fails the backward-clock test;
   the Spellbook kept in receipts fails a test.
 - Re-measure with `measure.mjs`; full suites (server, client, mobile).
+
+## Amendment 1 (2026-11-06, during the build): equal times keep the later entry
+
+Decision 1 left ties in an arbitrary order. The first service test (fixed test clock, so every receipt has the same
+`committedAt`) showed that a plain stable sort then keeps the *oldest* 19, since the sort keeps entry order. Ties now
+go to the later entry (`position` in `pruneReceipts`), which is write order for the UUID attempt ids the app and web
+client send; integer-like ids still enumerate first (critique 1.3), so for them the tie order stays arbitrary, and the
+receipt just written is kept in every case. A test for it (removing the tie rule fails a test).
+
+## Outcome (2026-11-06)
+
+Built as designed with Amendment 1, plus a test for the review path under a clock that steps back (the review's
+`keepReceiptId` had no failing test without it). In the fixture measurement the save after 240 turns and reviews is
+158 KB instead of 2.50 MB and holds 20 receipts from turn 20 on; what still grows (about 500 bytes per turn on disk) is
+the cards' `evidence` arrays (backlog F15). Each fix removed in turn fails a test; full suites pass
+([findings](findings.md)).

@@ -167,7 +167,8 @@ test('receipts hold no inscriptions; a replay after a move carries the current o
   assert.equal(result.encounter.state, 'resolved');
   assert.deepEqual(result.spellbook.inscriptions.map((i) => i.id), ['keystone']);
   const envelope = JSON.parse(await readFile(runtime.storage.filePath(learnerId), 'utf8'));
-  assert.equal('inscriptions' in envelope.spellbook.processedAssessments[request.attemptId].response.spellbook, false);
+  // Round 093: receipts hold no Spellbook at all (so no inscriptions).
+  assert.equal('spellbook' in envelope.spellbook.processedAssessments[request.attemptId].response, false);
   await runtime.service.moveTo(learnerId, { locationId: 'coffee_cart' });
   const replay = await runtime.service.submitDialogue(learnerId, request);
   assert.equal(replay.replayed, true);

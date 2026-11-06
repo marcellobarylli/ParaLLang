@@ -1,0 +1,9 @@
+one dialogue receipt: {"total":4806,"encounter":4091,"transcript":3558,"assessment":517,"spellbook":4}
+one review receipt: {"total":426,"spellbook":4}
+save without receipts: 18832
+{"cycle":1,"turns":5,"reviews":1,"bytes":40452,"receipts":6}
+{"cycle":10,"turns":50,"reviews":10,"bytes":133609,"receipts":20}
+{"cycle":20,"turns":100,"reviews":20,"bytes":141759,"receipts":20}
+{"cycle":30,"turns":150,"reviews":30,"bytes":149907,"receipts":20}
+{"cycle":40,"turns":200,"reviews":40,"bytes":158057,"receipts":20}
+bytes per turn ~ 503

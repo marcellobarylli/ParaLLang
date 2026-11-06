@@ -7,7 +7,10 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-**Round 093 (F13, receipts pruned) in progress, iteration 28.**
+Iteration 28 (2026-11-06, from 06:50 UTC): **round 093** (F13) closed: a save keeps its 20 newest assessment
+receipts (the one just written always), pruned in `JsonLearningStorage.save`; receipts hold no Spellbook, a replay
+carries the current one (`replay`); attempt ids looked up by own property. Fixture save after 240 turns: 2.50 MB →
+158 KB. Next growth: card `evidence` (F15).
 
 Nothing open. Iteration 27 (2026-11-06, 05:53–06:50 UTC) closed four offline review rounds:
 - **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
@@ -50,6 +53,9 @@ Next candidates, none needing the owner:
   the rest of round 081's
   Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
 
+**Traps (iteration 28):** a receipt no longer has `response.spellbook` (tests that read it must not expect one);
+`storage.save(envelope, { keepReceiptId })` prunes the envelope in place. A fixed test clock gives every receipt the
+same `committedAt`; ties keep the later entry.
 **Traps (iteration 27):** with `PARALLANG_TOKEN` set, every path but the health check is 401 without the token, so
 a test probing an unknown route gets 401, not 404. Grading stubs may quote words around the form; evidence only has to
 stand at word boundaries. Startup now calls `api.currentEncounter` before world/party: a test mock that holds
@@ -252,7 +258,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
   remove and after a failed new save or switch.
 
-- [ ] **F13. Dialogue receipts grow the save** (round 092 review R1.5): every receipt keeps the full transcript and
+- [x] **F13. Dialogue receipts grow the save** (round 093, closed 2026-11-06: 20 newest kept, no Spellbook in them) (round 092 review R1.5): every receipt keeps the full transcript and
   cards, never pruned. Measure save sizes over a long scripted play first; pruning must keep replays of recent attempts
   safe. No live calls.
 - [ ] **F15. Card evidence grows the save** (round 093): every turn and review appends to a card's `evidence`, never

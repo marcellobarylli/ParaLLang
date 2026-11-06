@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 093, the save stops growing with every turn (autonomous)
+
+Each answer and review kept a full copy of its reply in the learner's save, forever: in a scripted play the save
+reached 2.5 MB after 240 turns, and every turn read and rewrote all of it. A save now keeps the replies of its 20
+latest attempts, without a copy of the Spellbook (158 KB after the same play). A resent answer whose reply is gone is
+still refused, never counted twice ([findings](docs/rounds/093/findings.md)).
+
 ## Addendum 2026-11-06: round 092, the server token can no longer be skipped (autonomous)
 
 A review of the core server code found that the optional `PARALLANG_TOKEN` check could be skipped by writing a route

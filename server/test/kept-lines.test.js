@@ -130,7 +130,7 @@ test('receipts hold no lines; a replay carries the current ones (critiques 1.2, 
   const result = await runtime.service.submitDialogue(session.learnerId, request);
   assert.equal(result.spellbook.lines.length, 1);
   const receipt = (await saved(runtime, session.learnerId)).spellbook.processedAssessments[request.attemptId];
-  assert.equal('lines' in receipt.response.spellbook, false);
+  assert.equal('spellbook' in receipt.response, false); // round 093: no Spellbook, so no lines
   // A new encounter is under way: the replay's lines are the current ones, hidden.
   await runtime.service.startEncounter(session.learnerId, { restart: true });
   const replay = await runtime.service.submitDialogue(session.learnerId, request);

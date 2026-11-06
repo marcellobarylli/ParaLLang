@@ -74,12 +74,18 @@ function nowIso(clock) { return new Date(clock()).toISOString(); }
 // Round 060: the dedupe key of a kept line (critique 1.7): normalised text plus speaker.
 const lineKey = (line) => `${line.speaker}\u0000${line.native.normalize('NFC').toLowerCase().replace(/\s+/gu, ' ').trim()}`;
 // Round 060 (critiques 1.2, 1.3): receipts store responses without the kept lines; a replay gets the current ones.
-// Round 082 Amendment 1 (review R1.2): the inscriptions too; they follow the world, not the turn.
-function withoutLines(response) {
-  if (!response?.spellbook || !('lines' in response.spellbook || 'inscriptions' in response.spellbook)) return response;
-  const { lines, inscriptions, ...spellbook } = response.spellbook;
-  return { ...response, spellbook };
+// Round 082 Amendment 1 (review R1.2): the inscriptions too. Round 093 (critique 1.4): the whole Spellbook, which
+// grows with the cards; a replay carries the Spellbook as it is now.
+function forReceipt(response) {
+  if (!response || !('spellbook' in response)) return response;
+  const { spellbook, ...rest } = response;
+  return rest;
 }
+// Round 093 (critique Optional): only a receipt of the save's own, never an inherited property ("constructor").
+const receiptOf = (envelope, attemptId) => {
+  const processed = envelope.spellbook.processedAssessments;
+  return Object.hasOwn(processed, String(attemptId)) ? processed[String(attemptId)] : undefined;
+};
 
 // Round 076: how long the player stays at a place before its greeting is written, how often a busy provider is
 // waited out, and how many greetings are kept in all.
@@ -818,14 +824,10 @@ export class LearningService {
   }
 
   // Round 060 (critique 1.3): a replayed receipt carries the kept lines as they are now, not as they were.
-  replayWithLines(response, envelope) {
-    const replay = { ...response, replayed: true };
-    if (replay.spellbook) {
-      const current = this.spellbookSnapshot(envelope);
-      // Round 082 Amendment 1 (review R1.2): the inscriptions and the drill follow the current place.
-      replay.spellbook = { ...replay.spellbook, lines: current.lines, inscriptions: current.inscriptions, drill: current.drill };
-    }
-    return replay;
+  // Round 082 Amendment 1: the inscriptions and the drill too. Round 093 (critique 1.4): receipts hold no Spellbook,
+  // so a replay carries the whole Spellbook as it is now (also for older receipts that still hold one).
+  replay(response, envelope) {
+    return { ...response, spellbook: this.spellbookSnapshot(envelope), replayed: true };
   }
 
   async revealEncounterHelp(learnerId, request) {
@@ -908,10 +910,10 @@ export class LearningService {
     return this.serialized(learnerId, async () => {
       const envelope = await this.loadEnvelope(learnerId);
       const fingerprint = payloadHash({ kind: 'dialogue', encounterId: request.encounterId, version: request.version, message });
-      const existing = envelope.spellbook.processedAssessments[request.attemptId];
+      const existing = receiptOf(envelope, request.attemptId);
       if (existing) {
         if (existing.payloadHash !== fingerprint) throw conflictError('This attempt ID was already used for different input.', 'ATTEMPT_REUSE');
-        return this.replayWithLines(existing.response, envelope);
+        return this.replay(existing.response, envelope);
       }
       const current = this.encounters.get(learnerId);
       this.validateVersion(current, request.encounterId, request.version);
@@ -1036,9 +1038,9 @@ export class LearningService {
           replayed: false,
         };
         stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
-          kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response: withoutLines(response),
+          kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response: forReceipt(response),
         };
-        await this.storage.save(stagedEnvelope);
+        await this.storage.save(stagedEnvelope, { keepReceiptId: request.attemptId });
         this.encounters.set(learnerId, stagedEncounter);
         return response;
       } finally {
@@ -1295,10 +1297,10 @@ export class LearningService {
       this.assertNoEncounter(learnerId);
       const envelope = await this.loadEnvelope(learnerId);
       const fingerprint = payloadHash({ kind: 'review', challengeId: request.challengeId, action: request.action, answer });
-      const existing = envelope.spellbook.processedAssessments[request.attemptId];
+      const existing = receiptOf(envelope, request.attemptId);
       if (existing) {
         if (existing.payloadHash !== fingerprint) throw conflictError('This attempt ID was already used for different review input.', 'ATTEMPT_REUSE');
-        return this.replayWithLines(existing.response, envelope);
+        return this.replay(existing.response, envelope);
       }
       const challenge = this.reviewChallenges.get(learnerId)?.get(request.challengeId);
       if (!challenge) throw conflictError('That review challenge is stale. Fetch a new due review.', 'STALE_CHALLENGE');
@@ -1330,9 +1332,9 @@ export class LearningService {
         replayed: false,
       };
       stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
-        kind: 'review', payloadHash: fingerprint, committedAt: timestamp, response: withoutLines(response),
+        kind: 'review', payloadHash: fingerprint, committedAt: timestamp, response: forReceipt(response),
       };
-      await this.storage.save(stagedEnvelope);
+      await this.storage.save(stagedEnvelope, { keepReceiptId: request.attemptId });
       this.reviewChallenges.get(learnerId).delete(request.challengeId);
       return response;
     });
