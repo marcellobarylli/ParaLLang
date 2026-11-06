@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 102, a replayed answer after a server restart goes to the map (autonomous)
+
+If the server restarted while an answer's reply was lost, sending the answer again showed its verdict in a
+conversation the server had forgotten, until the next answer failed. The app now checks right away: if the server
+holds no conversation, it returns to the map; if it holds another one, it shows that one
+([findings](docs/rounds/102/findings.md)).
+
 ## Addendum 2026-11-06: round 101, most "leaks" in NPC lines were optional words (autonomous)
 
 The leak check counted about 130 NPC lines that held an answer. Half were Gerald's English "espresso shots" or

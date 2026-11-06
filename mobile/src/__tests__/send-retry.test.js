@@ -1,6 +1,6 @@
 // Round 071: resending the same answer reuses its attempt id, so the server replays a committed turn whose response
 // was lost; a stale session is reloaded (or, if closed, the player returns to the map), and the answer stays unsent.
-import { STALE_CLOSED, STALE_RELOADED, createGameStore } from '../stores/gameStore.js';
+import { STALE_CLOSED, STALE_HELP, STALE_RELOADED, STALE_REPLAY_OTHER, createGameStore } from '../stores/gameStore.js';
 
 const language = { code: 'it', name: 'Italian', tag: 'it-IT' };
 const identity = { learnerId: '11111111-1111-4111-8111-111111111111', recovered: true, language };
@@ -181,4 +181,110 @@ test('a response that arrives after the conversation was replaced by another of 
   post.resolve({ encounter: advanced(2), spellbook, assessment, replayed: false });
   await sending;
   expect(store.getState().encounter).toEqual(another);
+});
+
+// Round 102 (round 099 critique 1.3): a replay after a server restart. Encounters live in the server's memory and
+// receipts in the save, so the resend replays a conversation the server no longer holds.
+describe('a replay the server no longer holds (round 102)', () => {
+  const replayOf = (extra = {}) => jest.fn().mockRejectedValueOnce(lost()).mockResolvedValueOnce({ encounter: advanced(2, extra), spellbook, assessment, replayed: true });
+  async function replayWith(latest, extra) {
+    const env = setup({ sendDialogue: replayOf(extra) });
+    await ready(env.store);
+    await env.store.getState().sendMessage('A');
+    env.api.currentEncounter.mockImplementationOnce(typeof latest === 'function' ? latest : async () => latest);
+    return env;
+  }
+
+  test('an ongoing replay and no conversation on the server: back to the map, closed', async () => {
+    const { store } = await replayWith({ encounter: null, spellbook });
+    await store.getState().sendMessage('A');
+    const state = store.getState();
+    expect(state.encounter).toBeNull();
+    expect(state.view).toBe('map');
+    expect(state.error).toBe(STALE_CLOSED);
+    expect(state.assessment).toBeNull();
+    expect(state.draft).toBe('');
+    expect(state.isLoading).toBe(false);
+  });
+
+  test('a screen the player opened during the read stays (critique 1.4)', async () => {
+    const read = deferred();
+    const { store } = await replayWith(() => read.promise);
+    const sending = store.getState().sendMessage('A');
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    store.getState().openSpellbook();
+    read.resolve({ encounter: null, spellbook });
+    await sending;
+    expect(store.getState().view).toBe('spellbook');
+    expect(store.getState().encounter).toBeNull();
+    expect(store.getState().error).toBe(STALE_CLOSED);
+    store.getState().returnToDialogue();
+    expect(store.getState().view).toBe('map');
+  });
+
+  test.each(['ongoing', 'resolved'])('another conversation (%s) on the server is shown with its own line (critique 1.5)', async (otherState) => {
+    const other = { ...encounter, id: 'enc-7', encounterId: 'butcher', version: 3, state: otherState };
+    const { store } = await replayWith({ encounter: other, spellbook });
+    await store.getState().sendMessage('A');
+    expect(store.getState().encounter).toEqual(other);
+    expect(store.getState().error).toBe(STALE_REPLAY_OTHER);
+    expect(store.getState().assessment).toBeNull();
+    expect(store.getState().view).toBe('dialogue');
+  });
+
+  test('a resolved replay stands with its verdict, and the map is refreshed (critique 1.7, 1.9)', async () => {
+    const { api, store } = await replayWith({ encounter: null, spellbook }, { state: 'resolved' });
+    await store.getState().sendMessage('A');
+    expect(store.getState().encounter).toEqual(advanced(2, { state: 'resolved' }));
+    expect(store.getState().view).toBe('dialogue');
+    expect(store.getState().assessment).toEqual(assessment);
+    expect(store.getState().error).toBeNull();
+    expect(api.getWorld).toHaveBeenCalledTimes(2);
+  });
+
+  test('a start during the read wins (critique 1.1)', async () => {
+    const read = deferred();
+    const started = { ...encounter, id: 'enc-8', encounterId: 'gerald_coffee_break', version: 1 };
+    const { api, store } = await replayWith(() => read.promise);
+    const sending = store.getState().sendMessage('A');
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    api.startEncounter.mockResolvedValueOnce({ encounter: started, spellbook });
+    await store.getState().talkTo('gerald_coffee_break');
+    read.resolve({ encounter: null, spellbook });
+    await sending;
+    expect(store.getState().encounter).toEqual(started);
+    expect(store.getState().error).toBeNull();
+  });
+
+  test('a help reload during the read keeps its own line (critique 1.1)', async () => {
+    const read = deferred();
+    const reloaded = { ...encounter, id: 'enc-9', version: 5 };
+    const { api, store } = await replayWith(() => read.promise);
+    api.revealHelp.mockRejectedValueOnce(stale('STALE_ENCOUNTER'));
+    api.currentEncounter.mockImplementationOnce(async () => ({ encounter: reloaded, spellbook }));
+    const sending = store.getState().sendMessage('A');
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await store.getState().revealHelp({ kind: 'sentence', messageId: 'm1' });
+    expect(store.getState().error).toBe(STALE_HELP);
+    read.resolve({ encounter: null, spellbook });
+    await sending;
+    expect(store.getState().encounter).toEqual(reloaded);
+    expect(store.getState().error).toBe(STALE_HELP);
+  });
+
+  test('a failed read keeps the replayed state (critique 1.3)', async () => {
+    const { store } = await replayWith(async () => { throw lost(); });
+    await store.getState().sendMessage('A');
+    expect(store.getState().encounter).toEqual(advanced(2));
+    expect(store.getState().assessment).toEqual(assessment);
+    expect(store.getState().error).toBeNull();
+  });
+
+  test('a send that is not replayed makes no read (critique 1.3)', async () => {
+    const { api, store } = setup({ sendDialogue: jest.fn(async () => ({ encounter: advanced(2), spellbook, assessment, replayed: false })) });
+    await ready(store);
+    const before = api.currentEncounter.mock.calls.length;
+    await store.getState().sendMessage('A');
+    expect(api.currentEncounter.mock.calls.length).toBe(before);
+  });
 });

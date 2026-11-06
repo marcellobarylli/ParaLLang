@@ -90,3 +90,10 @@ written once: accepted (Decision 3).
 - a send that is not replayed does not change `currentEncounter`'s call count.
 - Mutations: drop the null branch; drop the ongoing condition; drop the still-shown check; force the map view.
 - Full suites (server, client, mobile).
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. After an ongoing replay, a read with no conversation goes to the map (from the
+dialogue only) with `STALE_CLOSED`, and a read with another conversation shows it with `STALE_REPLAY_OTHER`, both
+only while the store still shows the replay. 9 new tests, 5 of 5 mutations caught; all suites pass
+([findings](findings.md)).

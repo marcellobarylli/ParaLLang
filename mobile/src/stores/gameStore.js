@@ -19,6 +19,8 @@ export const STALE_CLOSED = 'This conversation is no longer open. Return to it o
 export const STALE_HELP = 'This conversation had moved on, so it was reloaded. Ask for help again.';
 export const STALE_REVIEW = 'This card was already answered or has expired. Try again for the next one.';
 export const SAVE_LOST = 'This save was not found on the server, so it starts again from the beginning.';
+// Round 102: after a replayed answer, the server holds another conversation than the one replayed.
+export const STALE_REPLAY_OTHER = 'Your answer was graded, but the server now holds another conversation, shown here.';
 // Round 099 (review 2 R2.1): help after a send whose reply was lost keeps the conversation; the resend replays.
 export const STALE_HELP_PENDING = 'Your last answer may have reached the server. Send it again to see its verdict.';
 // Round 070 (backlog I1): the verdict poll while a turn's reply is written: every second, at most a minute.
@@ -326,20 +328,18 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       }
       if (!owns()) return;
       if (clearRetries) retryIds.clear();
-      const keep = draft !== undefined ? { draft } : {};
-      if (latest?.encounter) {
-        snapshots.set(learnerId, { encounter: latest.encounter, spellbook: latest.spellbook });
-        set({
-          encounter: latest.encounter, spellbook: latest.spellbook ?? get().spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null,
-          pendingInput: null, ...keep, isLoading: false, error: message,
-        });
-      } else {
-        snapshots.set(learnerId, { encounter: null, spellbook: latest?.spellbook ?? get().spellbook });
-        set({
-          encounter: null, spellbook: latest?.spellbook ?? get().spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null,
-          pendingInput: null, ...keep, isLoading: false, view: 'map', error: STALE_CLOSED,
-        });
-      }
+      get()._applyLatest(learnerId, latest, { message, keep: draft !== undefined ? { draft } : {} });
+    },
+
+    // Round 102 (critique 1.4, 1.8): the conversation the server holds, or none (back to the map, STALE_CLOSED).
+    // `leaveView` keeps a screen the player opened meanwhile; the map is taken only from the dialogue.
+    _applyLatest: (learnerId, latest, { message, keep = {}, leaveView = false }) => {
+      const spellbook = latest?.spellbook ?? get().spellbook;
+      const encounter = latest?.encounter ?? null;
+      snapshots.set(learnerId, { encounter, spellbook });
+      const cleared = { encounter, spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null, pendingInput: null, ...keep, isLoading: false };
+      if (encounter) set({ ...cleared, error: message });
+      else set({ ...cleared, ...(!leaveView || get().view === 'dialogue' ? { view: 'map' } : {}), error: STALE_CLOSED });
     },
 
     sendMessage: async (providedText) => {
@@ -389,11 +389,17 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           try {
             const latest = await api.currentEncounter(learnerId);
             const now = get().encounter;
-            if (seq === sendSeq && epoch === requestEpoch && get().learnerId === learnerId && !get().isLoading
-              && latest?.encounter?.id === now?.id && latest.encounter.version > now.version) {
+            const live = seq === sendSeq && epoch === requestEpoch && get().learnerId === learnerId && !get().isLoading;
+            if (live && latest?.encounter?.id === now?.id && latest.encounter.version > now.version) {
               snapshots.set(learnerId, { encounter: latest.encounter, spellbook: latest.spellbook });
               // Round 075: the replayed verdict belongs to an older turn than the one now shown.
               set({ encounter: latest.encounter, spellbook: latest.spellbook, assessment: null, assessmentCounted: false });
+            } else if (live && result.encounter.state === 'ongoing' && now?.id === result.encounter.id
+              && now?.version === result.encounter.version && latest && latest.encounter?.id !== result.encounter.id) {
+              // Round 102 (round 099 critique 1.3; critique 1.1): the server no longer holds the replayed conversation
+              // (a restart: encounters live in memory, receipts in the save) or holds another one. Only while the
+              // store still shows the replay, so a start or help reload during the read wins. A resolved replay stands.
+              get()._applyLatest(learnerId, latest, { message: STALE_REPLAY_OTHER, leaveView: true });
             }
           } catch { /* the replayed state stands */ }
         }
