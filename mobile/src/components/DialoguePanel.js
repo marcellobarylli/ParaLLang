@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { AccessibilityInfo, FlatList, StyleSheet, Text, View } from 'react-native';
 import BilingualText from './BilingualText.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 import { colors, type } from './ui.js';
@@ -7,11 +7,20 @@ import { FadeIn, useReduceMotion } from '../motion.js';
 import { stopSpeech } from '../speech.js';
 import NarratorButton, { speechText } from './NarratorButton.js';
 
-export default function DialoguePanel({ encounter, language, isLoading, assessment, earlyAssessment = null, pendingInput = null, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
+export default function DialoguePanel({ encounter, language, isLoading, assessment, assessmentCounted = false, earlyAssessment = null, pendingInput = null, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
   const reduced = useReduceMotion();
   // Round 055 (critique 1.8): a word still being spoken stops when the encounter screen goes.
   useEffect(() => () => { stopSpeech(); }, []);
+  // Round 075 (critique 1.2): iOS has no live regions, so the switch from provisional to counted is announced, once
+  // per committed verdict.
+  const counted = Boolean(assessment && assessmentCounted && !isLoading);
+  const announced = useRef(null);
+  useEffect(() => {
+    if (!counted || announced.current === assessment) return;
+    announced.current = assessment;
+    AccessibilityInfo.announceForAccessibility?.(COUNTED);
+  }, [counted, assessment]);
   // Round 035: lines already there when this encounter session is first shown (opening line, a resumed transcript,
   // a restart) appear as they are; a line that arrives later fades in on its first render only, so a recycled
   // FlatList cell does not fade again (critique 1.2, 1.3).
@@ -43,12 +52,13 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
   const footer = (
     <View style={styles.footer}>
       {isLoading && <Text role="status" style={styles.thinking}>{early ? `${name} is replying…` : `${name} is considering the linguistic implications…`}</Text>}
-      {verdict && <FadeIn key={assessmentKey(verdict)} style={styles.assessment} aria-live="polite">
+      {verdict && <FadeIn key={assessmentKey(verdict, early ? 'provisional' : counted ? 'counted' : 'final')} style={styles.assessment} aria-live="polite">
         <Text style={styles.strong}>Assessment</Text>
         {early && <Text style={styles.body}>Your answer: “{pendingInput}”</Text>}
         <Text style={styles.body}>{verdict.overallFeedback}</Text>
         {verdict.objectiveResults.map((result) => <Text style={styles.body} key={result.objectiveId}>{resultMark(result)} {result.feedback}{result.held ? HELD_SUFFIX : ''}</Text>)}
         {early && <Text style={styles.small}>Not counted until {name} replies.</Text>}
+        {!early && counted && <Text role="status" style={styles.small}>{COUNTED}</Text>}
       </FadeIn>}
       {resolved && <FadeIn><Text role="status" style={styles.victory}>{encounter.resolvedMessage ?? `${name} is satisfied. Encounter complete.`}{fragmentNote(fragments, encounter)}</Text></FadeIn>}
       {resolved && encounter.character?.saveable && !encounter.partyConversation && onRecruit && <PartyOffer
@@ -97,7 +107,9 @@ function Narration({ text }) {
 }
 
 // Round 035 (critique 1.4): a new assessment replaces the old one in place, so the box is keyed by its content.
-const assessmentKey = (assessment) => [assessment.overallFeedback, ...assessment.objectiveResults.map((r) => `${r.objectiveId}:${r.passed}:${r.held === true}:${r.feedback}`)].join('|');
+// Round 075: the phase is part of the key, so the counted box mounts anew (and fades in) after the provisional one.
+export const COUNTED = 'Counted.';
+export const assessmentKey = (assessment, phase = 'final') => [phase, assessment.overallFeedback, ...assessment.objectiveResults.map((r) => `${r.objectiveId}:${r.passed}:${r.held === true}:${r.feedback}`)].join('|');
 // Round 051 (backlog H1): a held result (passed, but an earlier objective comes first) is not a success. It is not
 // banked either, so the player must say it again.
 export const HELD_SUFFIX = ' (say it again after the earlier objective)';

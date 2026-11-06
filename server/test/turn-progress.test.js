@@ -193,6 +193,27 @@ test('only the matching attempt of the same learner sees it; two learners at onc
   assert.throws(() => runtime.service.progress(one.learnerId, '  '), (error) => error.status === 400);
 });
 
+// Round 075 (critique 1.1): ids are compared as strings, untrimmed.
+test('a numeric attempt id is readable as its string; a spaced id only by the same spaced string', async (t) => {
+  const runtime = await setup(t);
+  const session = await begin(runtime);
+  let reply = runtime.provider.hold('encounter_narration');
+  let turn = submit(runtime, session, 'Quiero un café.', 12345);
+  await reply.arrived;
+  assert.equal(progressOf(runtime, session.learnerId, '12345').objectiveResults[0].passed, true);
+  reply.open();
+  const first = await turn.done;
+  assert.equal(progressOf(runtime, session.learnerId, '12345'), null);
+  reply = runtime.provider.hold('encounter_narration');
+  turn = submit(runtime, { ...session, encounter: first.encounter }, 'Sin leche, por favor.', ' abc ');
+  await reply.arrived;
+  assert.equal(progressOf(runtime, session.learnerId, 'abc'), null);
+  assert.notEqual(progressOf(runtime, session.learnerId, ' abc '), null);
+  reply.open();
+  await turn.done;
+  assert.throws(() => runtime.service.progress(session.learnerId, ' '), (error) => error.status === 400);
+});
+
 test('a duplicate of the attempt queued behind it replays and never sets progress', async (t) => {
   const runtime = await setup(t);
   const session = await begin(runtime);

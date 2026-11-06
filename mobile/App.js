@@ -60,7 +60,7 @@ export default function App() {
           onContinue={() => state.startReview()} onReturn={state.returnToDialogue} returnLabel={returnLabel}
         />}
         {state.view === 'dialogue' && <KeyboardAvoidingView style={styles.shell} behavior="padding">
-          <DialoguePanel encounter={state.encounter} language={state.language} isLoading={state.isLoading} assessment={state.assessment} earlyAssessment={state.earlyAssessment} pendingInput={state.pendingInput} onHelp={state.revealHelp} party={state.party} onRecruit={state.recruit} onLeave={state.openMap} fragments={state.spellbook?.journeyFragments} />
+          <DialoguePanel encounter={state.encounter} language={state.language} isLoading={state.isLoading} assessment={state.assessment} assessmentCounted={state.assessmentCounted} earlyAssessment={state.earlyAssessment} pendingInput={state.pendingInput} onHelp={state.revealHelp} party={state.party} onRecruit={state.recruit} onLeave={state.openMap} fragments={state.spellbook?.journeyFragments} />
           <InputBar
             value={state.draft} onChange={state.setDraft} onSend={state.sendMessage}
             loading={state.isLoading} resolved={resolved} speaker={state.encounter?.character?.name} disabled={state.isLoading || !state.encounter || resolved}

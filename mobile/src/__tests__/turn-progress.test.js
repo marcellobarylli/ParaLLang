@@ -153,3 +153,77 @@ test('while grading, the panel keeps the waiting line and the previous assessmen
   expect(screen.getByText('Gerald is considering the linguistic implications…')).toBeOnTheScreen();
   expect(screen.getByText('The previous turn.')).toBeOnTheScreen();
 });
+
+// Round 075 (critiques 1.2, 1.3): the counted verdict is marked, announced once, and never after a failed send.
+describe('counted', () => {
+  const { AccessibilityInfo } = require('react-native');
+  const { COUNTED, assessmentKey } = require('../components/DialoguePanel.js');
+  let announce;
+  beforeEach(() => { announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility').mockImplementation(() => {}); });
+  afterEach(() => { announce.mockRestore(); });
+
+  async function provisionalThen(settle) {
+    const post = deferred();
+    const early = verdict('Good order.');
+    const { store } = setup({ sendDialogue: jest.fn(() => post.promise), getTurnProgress: jest.fn(async () => ({ progress: { assessment: early } })) });
+    await ready(store);
+    const sending = store.getState().sendMessage('Vorrei un caffè.');
+    await tick();
+    expect(store.getState().earlyAssessment).toEqual(early);
+    expect(store.getState().assessmentCounted).toBe(false);
+    settle(post, early);
+    await sending;
+    return { store, early };
+  }
+
+  test('the store marks the committed verdict of a send whose provisional verdict was shown, and a new send clears it', async () => {
+    const { store } = await provisionalThen((post, early) => post.resolve({ encounter: { ...encounter, version: 2 }, spellbook, assessment: early, replayed: false }));
+    expect(store.getState().assessmentCounted).toBe(true);
+    const next = store.getState().sendMessage('Senza latte.');
+    expect(store.getState().assessmentCounted).toBe(false);
+    await next.catch(() => {});
+  });
+
+  test('a success with no provisional verdict is not marked', async () => {
+    const { store } = setup({ sendDialogue: jest.fn(async () => ({ encounter: { ...encounter, version: 2 }, spellbook, assessment: verdict('Quick.'), replayed: false })) });
+    await ready(store);
+    await store.getState().sendMessage('Vorrei un caffè.');
+    expect(store.getState().assessment.overallFeedback).toBe('Quick.');
+    expect(store.getState().assessmentCounted).toBe(false);
+  });
+
+  test('a failed POST after a provisional verdict leaves the previous verdict unmarked (critique 1.3)', async () => {
+    const { store } = await provisionalThen((post) => post.reject(new Error('The NPC is temporarily unavailable.')));
+    expect(store.getState().assessmentCounted).toBe(false);
+    expect(store.getState().earlyAssessment).toBeNull();
+  });
+
+  test('the panel shows "Counted." after the provisional box, in a new box, and announces it once', async () => {
+    const early = verdict('Good order.');
+    await render(<DialoguePanel encounter={encounter} language={language} isLoading assessment={null} earlyAssessment={early} pendingInput="Vorrei un caffè." onHelp={() => {}} />);
+    expect(screen.queryByText(COUNTED)).not.toBeOnTheScreen();
+    const provisionalBox = screen.getByText('Not counted until Gerald replies.').parent;
+    await screen.rerender(<DialoguePanel encounter={{ ...encounter, version: 2 }} language={language} isLoading={false} assessment={early} assessmentCounted earlyAssessment={null} pendingInput={null} onHelp={() => {}} />);
+    expect(screen.getByText(COUNTED)).toBeOnTheScreen();
+    expect(screen.queryByText('Not counted until Gerald replies.')).not.toBeOnTheScreen();
+    expect(screen.getByText(COUNTED).parent).not.toBe(provisionalBox);
+    expect(announce).toHaveBeenCalledTimes(1);
+    expect(announce).toHaveBeenCalledWith(COUNTED);
+    await screen.rerender(<DialoguePanel encounter={{ ...encounter, version: 2 }} language={language} isLoading={false} assessment={early} assessmentCounted earlyAssessment={null} pendingInput={null} onHelp={() => {}} party={[]} />);
+    expect(announce).toHaveBeenCalledTimes(1);
+  });
+
+  test('an unmarked verdict shows no "Counted." and announces nothing', async () => {
+    await render(<DialoguePanel encounter={encounter} language={language} isLoading={false} assessment={verdict('Old.')} earlyAssessment={null} pendingInput={null} onHelp={() => {}} />);
+    expect(screen.getByText('Old.')).toBeOnTheScreen();
+    expect(screen.queryByText(COUNTED)).not.toBeOnTheScreen();
+    expect(announce).not.toHaveBeenCalled();
+  });
+
+  test('the key differs by phase for the same verdict and is equal for equal verdicts in a phase', () => {
+    const v = verdict('Same.');
+    expect(assessmentKey(v, 'provisional')).not.toBe(assessmentKey(v, 'counted'));
+    expect(assessmentKey(v, 'counted')).not.toBe(assessmentKey(v, 'final'));
+    expect(assessmentKey(v, 'final')).toBe(assessmentKey(verdict('Same.')));
+  });
+});

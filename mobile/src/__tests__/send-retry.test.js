@@ -154,6 +154,20 @@ test('after a replay, a newer server version of the same conversation is applied
   await store.getState().sendMessage('A');
   await store.getState().sendMessage('A');
   expect(store.getState().encounter.version).toBe(4);
+  // Round 075: the replayed verdict belongs to an older turn than the one now shown.
+  expect(store.getState().assessment).toBeNull();
+});
+
+test('a replay whose reconcile finds the same version keeps the replayed verdict (round 075)', async () => {
+  const { store } = setup({
+    sendDialogue: jest.fn().mockRejectedValueOnce(lost()).mockResolvedValueOnce({ encounter: advanced(2), spellbook, assessment, replayed: true }),
+    currentEncounter: jest.fn(async () => ({ encounter: advanced(2), spellbook })),
+  });
+  await ready(store);
+  await store.getState().sendMessage('A');
+  await store.getState().sendMessage('A');
+  expect(store.getState().encounter.version).toBe(2);
+  expect(store.getState().assessment).toEqual(assessment);
 });
 
 test('a response that arrives after the conversation was replaced by another of the same version is not applied (critique 1.2)', async () => {

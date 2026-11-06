@@ -53,6 +53,8 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     reviewResult: null,
     assessment: null,
     starting: null, // Round 073 (backlog I3): { encounterId, seq } while an encounter's greeting is generated
+    // Round 075: true when the verdict on screen is the committed one of a send whose provisional verdict was shown.
+    assessmentCounted: false,
     earlyAssessment: null, // Round 070 (backlog I1): the grader's verdict while the NPC's reply is written
     draft: '',
     pendingInput: null,
@@ -160,7 +162,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         set({
           encounter: started.encounter, spellbook: started.spellbook, isLoading: false, view: 'dialogue',
           ...(mine() ? { starting: null } : {}),
-          ...(fresh ? { assessment: null, earlyAssessment: null, draft: '', pendingInput: null } : {}),
+          ...(fresh ? { assessment: null, assessmentCounted: false, earlyAssessment: null, draft: '', pendingInput: null } : {}),
         });
       } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, ...(mine() ? { starting: null } : {}) }); }
     },
@@ -210,7 +212,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const { learnerId } = get();
       if (!learnerId) return;
       const epoch = requestEpoch;
-      set({ isLoading: true, error: null, assessment: null });
+      set({ isLoading: true, error: null, assessment: null, assessmentCounted: false });
       try {
         const result = await api.startEncounter(learnerId, true, get().encounter?.encounterId ?? null);
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
@@ -235,7 +237,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const send = { settled: false };
       const owns = () => seq === sendSeq && epoch === requestEpoch && get().learnerId === learnerId
         && get().encounter?.id === encounterId && get().encounter?.version === version;
-      set({ isLoading: true, error: null, pendingInput: text, draft: text, earlyAssessment: null });
+      set({ isLoading: true, error: null, pendingInput: text, draft: text, earlyAssessment: null, assessmentCounted: false });
       // Round 070: while the POST runs, one sequential poll loop asks for the verdict (critique 1.1: applied only while
       // this send is unsettled and still the latest). A poll error is ignored; the POST decides.
       const current = () => !send.settled && seq === sendSeq && epoch === requestEpoch && get().learnerId === learnerId;
@@ -257,7 +259,10 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         if (!owns()) return;
         retryIds.clear();
         snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
-        set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, earlyAssessment: null, isLoading: false, pendingInput: null, draft: '' });
+        // Round 075 (critiques 1.2, 1.3): counted only when this send's own provisional verdict was on screen; a
+        // failed send never sets it, so an older verdict shown again is not marked counted.
+        const counted = Boolean(get().earlyAssessment);
+        set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, assessmentCounted: counted, earlyAssessment: null, isLoading: false, pendingInput: null, draft: '' });
         // Round 071 (critique 1.1): a replay is the turn as committed then; another client may have moved on since.
         if (result.replayed && typeof api.currentEncounter === 'function') {
           try {
@@ -266,7 +271,8 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
             if (seq === sendSeq && epoch === requestEpoch && get().learnerId === learnerId && !get().isLoading
               && latest?.encounter?.id === now?.id && latest.encounter.version > now.version) {
               snapshots.set(learnerId, { encounter: latest.encounter, spellbook: latest.spellbook });
-              set({ encounter: latest.encounter, spellbook: latest.spellbook });
+              // Round 075: the replayed verdict belongs to an older turn than the one now shown.
+              set({ encounter: latest.encounter, spellbook: latest.spellbook, assessment: null, assessmentCounted: false });
             }
           } catch { /* the replayed state stands */ }
         }
@@ -300,13 +306,13 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           if (latest?.encounter) {
             snapshots.set(learnerId, { encounter: latest.encounter, spellbook: latest.spellbook });
             set({
-              encounter: latest.encounter, spellbook: latest.spellbook ?? get().spellbook, assessment: null, earlyAssessment: null,
+              encounter: latest.encounter, spellbook: latest.spellbook ?? get().spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null,
               pendingInput: null, draft: text, isLoading: false, error: STALE_RELOADED,
             });
           } else {
             snapshots.set(learnerId, { encounter: null, spellbook: latest?.spellbook ?? get().spellbook });
             set({
-              encounter: null, spellbook: latest?.spellbook ?? get().spellbook, assessment: null, earlyAssessment: null,
+              encounter: null, spellbook: latest?.spellbook ?? get().spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null,
               pendingInput: null, draft: text, isLoading: false, view: 'map', error: STALE_CLOSED,
             });
           }
@@ -475,7 +481,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         set({
           learnerId: identity.learnerId, language: identity.language ?? get().language, world, party, saves: record.slots,
           encounter: current.encounter ?? null, spellbook: current.spellbook,
-          view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null, earlyAssessment: null, draft: '',
+          view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null, assessmentCounted: false, earlyAssessment: null, draft: '',
           pendingInput: null, error: null, onboarding: null, isLoading: false, notice: `Now playing ${label}.`,
         });
       } catch (error) {
@@ -489,7 +495,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       set({ starting: null }); // Round 073 (critique 1.2)
       initializationPromise = null;
       const snapshot = snapshots.get(learnerId) ?? { encounter: null, spellbook: emptySpellbook };
-      set({ learnerId, ...snapshot, party: [], notice: null, draft: '', pendingInput: null, assessment: null, earlyAssessment: null, isLoading: false });
+      set({ learnerId, ...snapshot, party: [], notice: null, draft: '', pendingInput: null, assessment: null, assessmentCounted: false, earlyAssessment: null, isLoading: false });
     },
   }));
 

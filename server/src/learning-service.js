@@ -645,7 +645,7 @@ export class LearningService {
       // Round 070: the verdict is readable through progress() while the reply is written; this run removes only its
       // own entry, inside the lock (critique 1.4).
       const run = {};
-      this.turnProgress.set(learnerId, { run, attemptId: request.attemptId, assessment: clone(responseAssessment) });
+      this.turnProgress.set(learnerId, { run, attemptId: String(request.attemptId), assessment: clone(responseAssessment) });
       try {
         const history = current.transcript.map((item) => item.role === 'player'
           ? { role: 'user', content: item.text }
@@ -717,8 +717,9 @@ export class LearningService {
   // Round 070 (backlog I1): the validated verdict of the turn under way, while its reply is written. Not serialized:
   // it answers while the turn holds the learner's lock. No save, no provider; null unless the attempt id matches.
   progress(learnerId, attemptId) {
-    const id = String(attemptId ?? '').trim();
-    if (!id) throw validationError('An attempt ID is required.');
+    // Round 075 (critique 1.1): compared as a string, untrimmed, so a numeric id matches and " abc " is not "abc".
+    const id = String(attemptId ?? '');
+    if (!id.trim()) throw validationError('An attempt ID is required.');
     const entry = this.turnProgress.get(learnerId);
     return { progress: { attemptId: id, assessment: entry && entry.attemptId === id ? clone(entry.assessment) : null } };
   }
