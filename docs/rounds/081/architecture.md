@@ -129,3 +129,17 @@ lines (it 14, es 7; codex-cli): the success criterion failed in both packs, and 
 runs that completed showed no regression (10/10 verdicts equal to round 080). The Italian tour was cut at the
 Fountain by Codex's usage limit, which lasts until 2026-11-09 17:32 UTC, past the autonomous run. The build is kept;
 a firmer rule waits for the next live window ([findings](findings.md)).
+
+## Amendment 2 (2026-11-06, after the close): no homograph exemptions for footnotes
+
+A read-only review of the build by a fresh general-purpose subagent (claude-opus-5-5), after the round closed, found
+one real problem and two minor ones. Nothing changes the live result (no footnote was written).
+
+| # | Finding | Disposition (autonomous, pending owner review) |
+|---|---|---|
+| R1.1 | Medium: `ATMOSPHERE_ENGLISH` holds encounter answers (it *basta*, *sei*, *io*, *due*; es *soy*, *sola*, *media*), so a footnote such as "Nobody: / The Letharger: basta." would be kept on the protected line and give an open answer away; the atmosphere line is never shown inside an encounter, a footnote is | **Accepted:** footnotes get no exemptions; any pack form drops them ("once", "café" too). Decision 3's exemption is withdrawn |
+| R1.2 | Low: an English footnote could paraphrase the protected line's translation before the reveal is paid for | **Recorded:** the same exposure as `narrative`; the prompt rule is the only guard |
+| R1.3 | Low: no test of a replayed attempt or the retry path with a footnote | **Accepted in part:** a replay test added (same attempt id, same footnote, no new call); the retry path canonicalizes after `narrate`, as the review checked |
+
+Tests: `footnotes.test.js` now drops "once", "café", "basta", "sei" and "soy" footnotes, plus the replay test; server
+292/292, client 12/12, mobile 221/221.

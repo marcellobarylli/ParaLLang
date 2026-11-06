@@ -18,3 +18,6 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 12 | 04:19 | 04:18:35 | result | Claude (claude-opus-5-5), autonomous | Codex usage limit until 2026-11-09 17:32 UTC (direct codex exec); footnotes offered 0 of 21 lines, kept 0; 10/10 verdicts equal to round 080 | `../results/footnotes.txt` |
 | 13 | 04:18:35 | 04:18:35 | outcome | Claude (claude-opus-5-5), autonomous | Criterion failed (no footnote written); build kept, inert; firmer rule queued for the next live window | `../findings.md` |
 | 14 | 04:18:35 | 04:18:35 | closed | Claude (claude-opus-5-5), autonomous | Round 081 closed; status addendum and index row | `../architecture.md` |
+| 15 | 04:31 | 04:29:19 | review-dispatched | Claude (claude-opus-5-5), autonomous | A fresh general-purpose subagent (claude-opus-5-5), read-only, reviews the build commits against the design | — |
+| 16 | 04:39 | 04:29:19 | review-returned | Claude (general-purpose subagent, claude-opus-5-5), read-only | Nothing serious; one medium (homograph exemptions include encounter answers), two low | `../architecture.md` |
+| 17 | 04:29:19 | 04:29:19 | amended | Claude (claude-opus-5-5), autonomous | Amendment 2: no exemptions for footnotes; replay test; server 292/292, client 12/12, mobile 221/221 | `../architecture.md` |

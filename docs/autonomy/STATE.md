@@ -522,12 +522,13 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   findings: 4 accepted, 4 in part, 1 rejected), built (Amendment 1: reports carry the raw footnote) and closed: server
   291/291, client 12/12, mobile 221/221. Live 0 of 21 lines had a footnote (criterion failed; inert). Codex hit its
   usage limit at 04:17 UTC, until 2026-11-09 17:32 UTC. About 30 game calls and 1 critique.
+  A post-close review (subagent) found the homograph exemptions leak encounter answers: Amendment 2 removed them.
 
 ## Handoff notes and traps
 
 - **Footnotes** (round 081): `keptFootnote(generated, previousNpc)` in `learning-service.js`; the start passes no
-  previous line, the turn the last NPC message. `FOOTNOTE_MAX_LENGTH` 200; the vocabulary bar reuses
-  `ATMOSPHERE_ENGLISH` (es *café* folds to "cafe" and is exempt: test with *con leche*). play-market `lines` carry the
+  previous line, the turn the last NPC message. `FOOTNOTE_MAX_LENGTH` 200; any pack form drops a footnote,
+  with no exemptions (Amendment 2: `ATMOSPHERE_ENGLISH` holds encounter answers such as *basta*, *soy*). play-market `lines` carry the
   raw `footnote`; `docs/rounds/081/results/footnotes.mjs` counts offered and kept. Golden prompts are
   `gerald-prompts-r081.json`. **`.describe()` on a nullable zod field does not reach the CLI schema** (zod-to-json-schema
   openAi target drops it): put instructions in the prompt.

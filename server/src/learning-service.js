@@ -350,14 +350,13 @@ export class LearningService {
   }
 
   // Round 081 (backlog B5): a footnote is kept when it is a short string, the previous NPC line of the session kept
-  // none, and no pack vocabulary form is in it (the atmosphere line's English homographs exempt; Decision 3).
+  // none, and no pack vocabulary form is in it. Amendment 2: no English-homograph exemptions (the atmosphere list holds
+  // encounter answers such as basta, sei, soy), so "once" or "cafe" drops a footnote too.
   keptFootnote(generated, previousNpc) {
     if (typeof generated.footnote !== 'string' || previousNpc?.footnote) return undefined;
     const text = generated.footnote.trim().replace(/\s+/g, ' ');
     if (!text || text.length > FOOTNOTE_MAX_LENGTH) return undefined;
-    const hit = matchCanonicalVocabulary(text, this.content.vocabulary.entries)
-      .some((match) => !ATMOSPHERE_ENGLISH.has(foldForAtmosphere(match.excerpt)));
-    return hit ? undefined : text;
+    return matchCanonicalVocabulary(text, this.content.vocabulary.entries).length ? undefined : text;
   }
 
   canonicalizeNarration(generated, definition, previousNpc) {
