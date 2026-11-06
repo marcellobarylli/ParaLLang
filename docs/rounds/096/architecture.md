@@ -119,3 +119,11 @@ older lines: deferred (Decision 8); a held restart while the Party screen opens:
 - R1.9: launch with a stored id and `recovered: false` shows the notice; a first launch does not; a switch to a lost
   slot shows the combined line; a new save does not.
 - Mutations: each fix removed fails a test. Full suites.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. Review resends replay; a start keeps the player's screen and the return button
+leads back; Restart is a restart start; one write counter keeps stale world and party reads from undoing a recruit or
+a move; a stale help reveal reloads (not on `STALE_MESSAGE`); a save the server lost is announced at launch and on a
+switch. Each fix reverted in turn fails a test; full suites pass and the iOS export bundles
+([findings](findings.md)). Not checked: any of it in the Simulator.

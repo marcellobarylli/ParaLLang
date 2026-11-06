@@ -14,6 +14,11 @@ const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
 // Round 071: what the player reads when a resend found the conversation changed or closed.
 export const STALE_RELOADED = 'This conversation had moved on, so it was reloaded. Your answer was not sent; it is still in the box.';
 export const STALE_CLOSED = 'This conversation is no longer open. Return to it on the map to start again.';
+// Round 096 (review R1.5, R1.1, R1.9): what the player reads when help found the conversation changed, when a review
+// card was already answered or expired, and when the server no longer had a save.
+export const STALE_HELP = 'This conversation had moved on, so it was reloaded. Ask for help again.';
+export const STALE_REVIEW = 'This card was already answered or has expired. Try again for the next one.';
+export const SAVE_LOST = 'This save was not found on the server, so it starts again from the beginning.';
 // Round 070 (backlog I1): the verdict poll while a turn's reply is written: every second, at most a minute.
 export const PROGRESS_INTERVAL_MS = 1000;
 export const PROGRESS_POLLS = 60;
@@ -37,6 +42,17 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
   let soundsTouched = false;
   let refreshSeq = 0; // round 084: the latest Spellbook refresh; an older reply is dropped (critique 1.2)
   const snapshots = new Map();
+  // Round 096 (review R1.1, critique 1.3): review attempt ids by learner, challenge, action and answer, so resending
+  // after a lost reply replays the review the server committed. Cleared on a success.
+  const reviewRetryIds = new Map();
+  const reviewAttempt = (learnerId, challengeId, action, answer) => {
+    const key = [learnerId, challengeId, action, answer].join('|');
+    if (!reviewRetryIds.has(key)) reviewRetryIds.set(key, attemptId());
+    return reviewRetryIds.get(key);
+  };
+  // Round 096 (review R1.4, critique 1.5): raised when a world or party write is applied; a read that began before
+  // a write is dropped, so it never undoes a recruit or a move.
+  let placeWrites = 0;
 
   const store = create((set, get) => ({
     learnerId: null,
@@ -115,10 +131,13 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           snapshots.set(identity.learnerId, { encounter, spellbook });
           // Shown only over the map: a screen the player opened during startup is not replaced (the flag stays unset).
           const showOnboarding = Boolean(onboarding) && get().view === 'map';
+          placeWrites += 1; // round 096
           set({
             learnerId: identity.learnerId, language: identity.language ?? null, world, spellbook, party, encounter, isLoading: false,
             saves: slots.slots, savesFloor: slots.nextNumber,
             ...(showOnboarding ? { onboarding, view: 'onboarding' } : {}),
+            // Round 096 (review R1.9): the app asked for a save the server no longer had.
+            ...(storedId && identity.recovered === false ? { notice: SAVE_LOST } : {}),
           });
         } catch (error) {
           if (epoch === requestEpoch) {
@@ -150,6 +169,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         // Round 086 (review 1): round 084's encounter guard; the world is applied either way.
         const fresh = spellbook && !leaksMeanings(get(), spellbook) ? spellbook : null;
         if (fresh) snapshots.set(learnerId, { ...(snapshots.get(learnerId) ?? { encounter: get().encounter }), spellbook: fresh });
+        placeWrites += 1; // round 096
         set({ world, ...(fresh ? { spellbook: fresh } : {}), isLoading: false });
       } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
     },
@@ -176,6 +196,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const epoch = requestEpoch;
       startSeq += 1;
       const seq = startSeq;
+      const from = get().view; // Round 096 (review R1.2): a start never takes the player off a screen they opened
       set({ isLoading: true, error: null, starting: encounterId ? { encounterId, seq } : null });
       // Round 073 (critique 1.1): only this start's own settle clears its indicator.
       const mine = () => epoch === requestEpoch && get().learnerId === learnerId && get().starting?.seq === seq;
@@ -184,8 +205,11 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         snapshots.set(learnerId, { encounter: started.encounter, spellbook: started.spellbook });
         const fresh = started.encounter.id !== get().encounter?.id;
+        // Critique 1.2: the screen opened meanwhile returns to the conversation ("Return to X").
+        const stay = get().view !== from;
         set({
-          encounter: started.encounter, spellbook: started.spellbook, isLoading: false, view: 'dialogue',
+          encounter: started.encounter, spellbook: started.spellbook, isLoading: false,
+          ...(stay ? { returnView: 'dialogue' } : { view: 'dialogue' }),
           ...(mine() ? { starting: null } : {}),
           ...(fresh ? { assessment: null, assessmentCounted: false, earlyAssessment: null, draft: '', pendingInput: null } : {}),
         });
@@ -231,10 +255,12 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       set({ view: 'map', reviewChallenge: null, reviewResult: null, error: null, notice: null });
       if (!learnerId) return;
       get().refreshSpellbook();
+      const epoch = requestEpoch;
+      const writes = placeWrites; // round 096 (review R1.4): a move applied meanwhile wins
       try {
         const { world } = await api.getWorld(learnerId);
-        if (get().learnerId === learnerId) set({ world });
-      } catch (error) { if (get().learnerId === learnerId) set({ error: error.message }); }
+        if (get().learnerId === learnerId && epoch === requestEpoch && writes === placeWrites) set({ world });
+      } catch (error) { if (get().learnerId === learnerId && epoch === requestEpoch) set({ error: error.message }); }
     },
 
     // Round 021: a defeated, saveable NPC joins the party (from the resolved encounter or the map). Leaving writes
@@ -248,6 +274,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         const { party, joined } = await api.recruit(learnerId, encounterId);
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         const member = party.find((candidate) => candidate.encounterId === encounterId);
+        placeWrites += 1; // round 096
         set({ party, isLoading: false, notice: joined && member ? `${member.name} joined your party.` : null });
       } catch (error) {
         if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false });
@@ -263,22 +290,46 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       // after a failed refresh. A late reply for another save is dropped.
       const { learnerId } = get();
       if (!learnerId || !api.getParty) return;
+      const epoch = requestEpoch;
+      const writes = placeWrites; // round 096 (review R1.4): a recruit applied meanwhile wins
       Promise.resolve().then(() => api.getParty(learnerId)).then(({ party }) => {
-        if (get().learnerId === learnerId && Array.isArray(party)) set({ party });
+        if (get().learnerId === learnerId && epoch === requestEpoch && writes === placeWrites && Array.isArray(party)) set({ party });
       }, () => {});
     },
 
-    restartEncounter: async () => {
-      const { learnerId } = get();
-      if (!learnerId) return;
-      const epoch = requestEpoch;
-      set({ isLoading: true, error: null, assessment: null, assessmentCounted: false });
-      try {
-        const result = await api.startEncounter(learnerId, true, get().encounter?.encounterId ?? null);
-        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
-        snapshots.set(learnerId, result);
-        set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false, draft: '', pendingInput: null, view: 'dialogue' });
-      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
+    // Round 096 (review R1.3, critique 1.4): a restart start: the loading guard, `starting`, the screen guard, and the
+    // verdict cleared only on success (a restart's encounter always has a new id).
+    restartEncounter: () => {
+      const { learnerId, encounter } = get();
+      if (!learnerId) return undefined;
+      return get()._startNamed(encounter?.encounterId ?? null, { restart: true });
+    },
+
+    // Round 096 (review R1.5, critique 1.7): the reload after a stale send or help reveal, under the caller's own
+    // guard. Loading stays on until it settles; the conversation the server holds, or back to the map if it closed.
+    _reloadStale: async ({ learnerId, owns, error, message, draft, clearRetries = false }) => {
+      let latest = null;
+      try { latest = await api.currentEncounter(learnerId); }
+      catch {
+        if (owns()) set({ error: error.message, isLoading: false, ...(draft !== undefined ? { pendingInput: draft, draft } : {}) });
+        return;
+      }
+      if (!owns()) return;
+      if (clearRetries) retryIds.clear();
+      const keep = draft !== undefined ? { draft } : {};
+      if (latest?.encounter) {
+        snapshots.set(learnerId, { encounter: latest.encounter, spellbook: latest.spellbook });
+        set({
+          encounter: latest.encounter, spellbook: latest.spellbook ?? get().spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null,
+          pendingInput: null, ...keep, isLoading: false, error: message,
+        });
+      } else {
+        snapshots.set(learnerId, { encounter: null, spellbook: latest?.spellbook ?? get().spellbook });
+        set({
+          encounter: null, spellbook: latest?.spellbook ?? get().spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null,
+          pendingInput: null, ...keep, isLoading: false, view: 'map', error: STALE_CLOSED,
+        });
+      }
     },
 
     sendMessage: async (providedText) => {
@@ -343,10 +394,14 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           else if (result.encounter.currentObjective?.id !== state.encounter.currentObjective?.id) get()._cue('pass');
         }
         if (result.encounter.state === 'resolved') {
+          // Round 096 (review R1.4, critique 1.5): the resolve is a write; a recruit applied before these reads come
+          // back wins over them.
+          placeWrites += 1;
+          const writes = placeWrites;
           try {
             // Round 022: a resolved party conversation raises the member's count, so the party is refreshed too.
             const [{ world }, { party }] = await Promise.all([api.getWorld(learnerId), api.getParty(learnerId)]);
-            if (get().learnerId === learnerId) set({ world, party });
+            if (get().learnerId === learnerId && epoch === requestEpoch && writes === placeWrites) set({ world, party });
           } catch { /* the map refreshes again when it is opened */ }
         }
       } catch (error) {
@@ -355,27 +410,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         // Round 071 (critiques 1.3, 1.4, 1.6, 1.7): a stale session is reloaded while loading stays on, under the
         // send's own guards; a closed one returns to the map. The answer stays in the box, unsent.
         if (STALE_CODES.has(error.code) && owns() && typeof api.currentEncounter === 'function') {
-          let latest = null;
-          try { latest = await api.currentEncounter(learnerId); }
-          catch {
-            if (owns()) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
-            return;
-          }
-          if (!owns()) return;
-          retryIds.clear();
-          if (latest?.encounter) {
-            snapshots.set(learnerId, { encounter: latest.encounter, spellbook: latest.spellbook });
-            set({
-              encounter: latest.encounter, spellbook: latest.spellbook ?? get().spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null,
-              pendingInput: null, draft: text, isLoading: false, error: STALE_RELOADED,
-            });
-          } else {
-            snapshots.set(learnerId, { encounter: null, spellbook: latest?.spellbook ?? get().spellbook });
-            set({
-              encounter: null, spellbook: latest?.spellbook ?? get().spellbook, assessment: null, assessmentCounted: false, earlyAssessment: null,
-              pendingInput: null, draft: text, isLoading: false, view: 'map', error: STALE_CLOSED,
-            });
-          }
+          await get()._reloadStale({ learnerId, owns, error, message: STALE_RELOADED, draft: text, clearRetries: true });
           return;
         }
         if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
@@ -385,15 +420,25 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
     revealHelp: async ({ kind, messageId, vocabularyId }) => {
       const { learnerId, encounter, isLoading } = get();
       if (!learnerId || !encounter || isLoading) return;
-      const version = encounter.version;
+      const { id: encounterId, version } = encounter;
       set({ isLoading: true, error: null });
       const epoch = requestEpoch;
+      // Round 096 (review R1.6): the same save, epoch and conversation at the same version.
+      const owns = () => epoch === requestEpoch && get().learnerId === learnerId && get().encounter?.id === encounterId && get().encounter?.version === version;
       try {
-        const result = await api.revealHelp(learnerId, { encounterId: encounter.id, version, kind, messageId, vocabularyId });
-        if (get().learnerId !== learnerId || get().encounter?.version !== version) return;
+        const result = await api.revealHelp(learnerId, { encounterId, version, kind, messageId, vocabularyId });
+        if (!owns()) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ isLoading: false }); return; }
         snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
         set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false });
-      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
+      } catch (error) {
+        // Round 096 (review R1.5, critique 1.1): a stale conversation reloads (STALE_MESSAGE is an older line's chip
+        // while the version is current: the server's text stands).
+        if (STALE_CODES.has(error.code) && owns() && typeof api.currentEncounter === 'function') {
+          await get()._reloadStale({ learnerId, owns, error, message: STALE_HELP });
+          return;
+        }
+        if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false });
+      }
     },
 
     // The Spellbook and review return to the screen they were opened from (the map or the encounter).
@@ -436,29 +481,38 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       }
     },
 
-    submitReview: async (answer) => {
-      const { learnerId, reviewChallenge, isLoading } = get();
-      if (!learnerId || !reviewChallenge || isLoading || !String(answer).trim()) return;
-      set({ isLoading: true, error: null });
-      const epoch = requestEpoch; // Round 031: a reply after a save switch is dropped (critique 1.1).
-      try {
-        const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'answer', answer: String(answer).trim() });
-        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
-        set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
-        if (result.result?.correct) get()._cue('pass'); // Round 037 (critique 1.2)
-      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
+    submitReview: (answer) => {
+      const text = String(answer ?? '').trim();
+      return text ? get()._sendReview('answer', text) : undefined;
     },
 
-    revealReviewAnswer: async () => {
+    revealReviewAnswer: () => get()._sendReview('reveal', ''),
+
+    // Round 096 (review R1.1, critique 1.3): one path for both review actions. A resend after a lost reply reuses the
+    // attempt id and shows the replayed verdict (no cue); a card already answered or expired leaves the review
+    // screen's "Try again" to fetch the next one.
+    _sendReview: async (action, answer) => {
       const { learnerId, reviewChallenge, isLoading } = get();
       if (!learnerId || !reviewChallenge || isLoading) return;
       set({ isLoading: true, error: null });
       const epoch = requestEpoch; // Round 031: a reply after a save switch is dropped (critique 1.1).
+      const attempt = reviewAttempt(learnerId, reviewChallenge.id, action, answer);
       try {
-        const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'reveal', answer: '' });
+        const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attempt, action, answer });
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        reviewRetryIds.clear();
         set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
-      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false }); }
+        if (action === 'answer' && result.result?.correct && !result.replayed) get()._cue('pass'); // Round 037 (critique 1.2)
+      } catch (error) {
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        if (error.code === 'STALE_CHALLENGE') {
+          for (const key of [...reviewRetryIds.keys()]) if (key.startsWith(`${learnerId}|${reviewChallenge.id}|`)) reviewRetryIds.delete(key);
+          set({ reviewChallenge: null, error: STALE_REVIEW, isLoading: false });
+          get().refreshSpellbook();
+          return;
+        }
+        set({ error: error.message, isLoading: false });
+      }
     },
 
     // Round 031 (backlog A11): the Saves screen, a new save and switching between saves. A switch drops every response
@@ -553,11 +607,14 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         if (epoch !== requestEpoch) return;
         snapshots.set(identity.learnerId, { encounter: current.encounter ?? null, spellbook: current.spellbook });
         const label = record.slots.find((slot) => slot.learnerId === identity.learnerId).label;
+        placeWrites += 1; // round 096
+        // Round 096 (review R1.9, critique 1.8): a switch to a save the server no longer had says so on the same line.
+        const lost = identity.recovered === false ? ` ${SAVE_LOST}` : '';
         set({
           learnerId: identity.learnerId, language: identity.language ?? get().language, world, party, saves: record.slots,
           encounter: current.encounter ?? null, spellbook: current.spellbook,
           view: 'map', returnView: 'map', reviewChallenge: null, reviewResult: null, assessment: null, assessmentCounted: false, earlyAssessment: null, draft: '',
-          pendingInput: null, error: null, onboarding: null, isLoading: false, notice: `Now playing ${label}.`,
+          pendingInput: null, error: null, onboarding: null, isLoading: false, notice: `Now playing ${label}.${lost}`,
         });
       } catch (error) {
         if (epoch === requestEpoch) { set({ error: error.message, isLoading: false }); get().refreshSpellbook(); }

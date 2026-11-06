@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 096, fixes from a review of the app's state (autonomous)
+
+A review of the app's store as a whole found three bugs a player can hit. A review answered on a bad connection
+could never be finished, because the resend was refused; it now replays the verdict. A slow conversation start
+pulled the player out of the Spellbook; it now stays put, with a way back to the conversation. And a recruit could
+be undone on screen by an older read. Help on a conversation the server had moved on now reloads it, and a save the
+server lost is announced. All checked in jest; the Simulator checks are listed for the owner
+([findings](docs/rounds/096/findings.md)).
+
 ## Addendum 2026-11-06: round 095, fixes from a review of the LLM layer (autonomous)
 
 A review of the code that runs the Codex and Claude CLIs found that round 089's fix, where the player's turn takes

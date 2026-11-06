@@ -16,7 +16,10 @@ carries the current one (`replay`); attempt ids looked up by own property. Fixtu
 runner failure's category (re-map only a non-zero exit, to a stated failure); the runner settles a child that exits
 with its pipes held (grace, group SIGKILL, stdio destroyed) or never ends. Deferred: R1.5 Codex `error` events beside
 `turn.completed` (check raw events live), R1.6 claude-cli error envelopes, R1.7 framing earlier player turns (live),
-R1.9 a temp-dir sweep.
+R1.9 a temp-dir sweep. **Round 096** (review of the mobile store) closed: review resends reuse their attempt
+id (`reviewAttempt`, `_sendReview`); a start keeps the screen the player opened (`returnView: 'dialogue'`);
+`restartEncounter` is a restart `_startNamed`; `placeWrites` drops world/party reads that began before a write;
+`revealHelp` reloads on STALE_VERSION/STALE_ENCOUNTER via `_reloadStale` (shared with the send); `SAVE_LOST`.
 
 Nothing open. Iteration 27 (2026-11-06, 05:53–06:50 UTC) closed four offline review rounds:
 - **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
@@ -59,7 +62,9 @@ Next candidates, none needing the owner:
   the rest of round 081's
   Italian tour (Fountain, Bookshop, Rift); watch `narrationStats` for the first live retry.
 
-**Traps (iteration 28):** the service must be given providers through `createLLMAdapter` in any test that
+**Traps (iteration 28):** `restartEncounter` now returns `_startNamed`'s promise and does nothing while
+`isLoading`; a store test that restarts during a load gets no request. A start that settles while another screen is
+open leaves `view` alone (tests that expect 'dialogue' must not change the view meanwhile). the service must be given providers through `createLLMAdapter` in any test that
 claims server behaviour (the wrapper, not the adapter, is what `server.js` passes). Hard-killed runs (a `timeout`
 around a hung test) leave `/tmp/parallang-cli-*` dirs; remove them. a receipt no longer has `response.spellbook` (tests that read it must not expect one);
 `storage.save(envelope, { keepReceiptId })` prunes the envelope in place. A fixed test clock gives every receipt the
@@ -312,6 +317,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 096 (Simulator):** a slow start with the Spellbook opened ("Return to X" leads back); a review
+  answered offline then resent (the verdict shows); the new banner texts; request timeouts (R1.7)
+  ([open items](../rounds/096/findings.md#open-items)).
 - **Round 092 (decision):** whether earlier NPC lines stay protected while their objective is open (R1.4), and
   whether a review reveal should score like a wrong answer (R1.7) ([open items](../rounds/092/findings.md#open-items)).
 - **Round 091 (Simulator, decision):** the map card's note, "Return to …", "Leave … and talk to …" with a party
