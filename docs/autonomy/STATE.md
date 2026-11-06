@@ -7,6 +7,8 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
+**Round 093 (F13, receipts pruned) in progress, iteration 28.**
+
 Nothing open. Iteration 27 (2026-11-06, 05:53–06:50 UTC) closed four offline review rounds:
 - **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
   *sei*; es *once*, *kilo*), so the list is gone (0/72 live lines used one). On a serial (CLI) provider a player's
@@ -253,6 +255,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **F13. Dialogue receipts grow the save** (round 092 review R1.5): every receipt keeps the full transcript and
   cards, never pruned. Measure save sizes over a long scripted play first; pruning must keep replays of recent attempts
   safe. No live calls.
+- [ ] **F15. Card evidence grows the save** (round 093): every turn and review appends to a card's `evidence`, never
+  pruned (much slower than receipts were). Measure over a long play; SM-2 needs only the schedule. No live calls.
 - [x] **F14. Review of the core server paths** (round 092, closed 2026-11-06): token allowlist (the case bypass),
   evidence at word boundaries, the ordered reveal cap.
 - [x] **F12. Review of rounds 017–028** (round 091, closed 2026-11-06): a named start never replaces a conversation
