@@ -426,7 +426,13 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
 
     // Round 031 (backlog A11): the Saves screen, a new save and switching between saves. A switch drops every response
     // still in flight for the old save (requestEpoch) and writes the device record only once the new save loaded.
-    openSaves: () => set({ view: 'saves', returnView: 'map', reviewChallenge: null, reviewResult: null, error: null, notice: null }),
+    // Round 085: the Saves screen shows the current save's due count, so it refreshes the Spellbook as round 084's
+    // screens do; so do the ends of a remove and of a failed new save or switch (each raised the epoch, which drops
+    // a refresh in flight).
+    openSaves: () => {
+      set({ view: 'saves', returnView: 'map', reviewChallenge: null, reviewResult: null, error: null, notice: null });
+      get().refreshSpellbook();
+    },
     newSave: async () => {
       const { saves, isLoading, learnerId } = get();
       if (!learnerId || isLoading || saves.length >= MAX_SAVES) return;
@@ -443,7 +449,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         set({ saves: kept.slots });
         await get()._loadSave(identity.learnerId, epoch);
       } catch (error) {
-        if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
+        if (epoch === requestEpoch) { set({ error: error.message, isLoading: false }); get().refreshSpellbook(); }
       }
     },
     // Round 038 (A11b): the device forgets a save that is not the current one. It locks the store like a switch
@@ -462,6 +468,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       try { await api.deleteLearner(target); }
       catch (error) {
         set({ saves, savesFloor, isLoading: false, error: `The server could not delete ${label}, so it is still here: ${error.message}` });
+        get().refreshSpellbook();
         return false;
       }
       try {
@@ -474,10 +481,12 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
         // stores the list without it.
         snapshots.delete(target);
         set({ isLoading: false, error: `${label} was deleted, but this device could not record it yet: ${error.message}` });
+        get().refreshSpellbook();
         return true;
       }
       snapshots.delete(target);
       set({ isLoading: false, notice: `${label} was removed from this device.` });
+      get().refreshSpellbook();
       return true;
     },
     switchSave: (target) => {
@@ -513,7 +522,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           pendingInput: null, error: null, onboarding: null, isLoading: false, notice: `Now playing ${label}.`,
         });
       } catch (error) {
-        if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
+        if (epoch === requestEpoch) { set({ error: error.message, isLoading: false }); get().refreshSpellbook(); }
       }
     },
 

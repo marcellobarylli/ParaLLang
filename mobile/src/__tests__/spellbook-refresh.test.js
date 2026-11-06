@@ -6,6 +6,7 @@ import { act, render } from '@testing-library/react-native';
 import { AppState } from 'react-native';
 import App from '../../App.js';
 import { createGameStore, useGameStore } from '../stores/gameStore.js';
+import { SLOTS_KEY } from '../stores/saveSlots.js';
 
 const A = '11111111-1111-4111-8111-111111111111';
 const language = { code: 'it', name: 'Italian', tag: 'it-IT' };
@@ -176,5 +177,112 @@ describe('the app back from the background', () => {
     expect(refresh).toHaveBeenCalledTimes(1);
     await unmount();
     expect(remove).toHaveBeenCalled();
+  });
+});
+
+// Round 085: the Saves screen shows the current save's due count; it refreshes on opening, at the end of a remove
+// and after a failed new save or switch (each of those raised the epoch, which drops a refresh in flight).
+describe('the Saves screen (round 085)', () => {
+  const B = '22222222-2222-4222-8222-222222222222';
+  const C = '33333333-3333-4333-8333-333333333333';
+  const slot = (learnerId, label) => ({ learnerId, label, createdAt: '2026-11-05T12:00:00.000Z' });
+  const bookOf = (id, due) => ({ ...book(due), contentVersion: `book-${id.slice(0, 1)}` });
+  function saves(slots = [slot(A, 'Save 1'), slot(B, 'Save 2'), slot(C, 'Save 3')]) {
+    const values = new Map([['parallang.onboardingSeen', '1'], [SLOTS_KEY, JSON.stringify({ version: 1, activeId: A, slots })]]);
+    const storage = { values, getItem: jest.fn(async (key) => values.get(key) ?? null), setItem: jest.fn(async (key, value) => { values.set(key, value); }) };
+    const api = {
+      createLearner: jest.fn(async (id) => ({ learnerId: id ?? C, language })),
+      getWorld: jest.fn(async () => ({ world })),
+      getSpellbook: jest.fn(async (id) => bookOf(id, false)),
+      getParty: jest.fn(async () => ({ party: [] })),
+      currentEncounter: jest.fn(async (id) => ({ encounter: null, spellbook: bookOf(id, false) })),
+      getOnboarding: jest.fn(async () => ({ onboarding: null })),
+      deleteLearner: jest.fn(async () => ({ deleted: true, existed: true })),
+    };
+    const store = createGameStore({ api, storage, cue: () => {}, ambience: () => {} });
+    return { api, storage, store };
+  }
+
+  test('opening it refreshes once, behind the screen, and shows a card that fell due', async () => {
+    const { api, store } = saves();
+    await store.getState().initialize();
+    store.setState({ error: 'old', notice: 'old', returnView: 'spellbook' });
+    const calls = api.getSpellbook.mock.calls.length;
+    api.getSpellbook.mockResolvedValueOnce(bookOf(A, true));
+    store.getState().openSaves();
+    expect(store.getState()).toMatchObject({ view: 'saves', returnView: 'map', error: null, notice: null, isLoading: false });
+    await flush();
+    expect(api.getSpellbook).toHaveBeenCalledTimes(calls + 1);
+    expect(api.getSpellbook).toHaveBeenLastCalledWith(A);
+    expect(store.getState().spellbook.dueCount).toBe(1);
+    expect(store.getState().isLoading).toBe(false);
+  });
+
+  test.each(['before', 'after'])('a switch with the refresh in flight keeps the new save\'s Spellbook (old reply lands %s the load)', async (when) => {
+    const { api, store } = saves();
+    await store.getState().initialize();
+    const late = deferred();
+    api.getSpellbook.mockReturnValueOnce(late.promise);
+    store.getState().openSaves();
+    await flush();
+    const loaded = deferred();
+    api.currentEncounter.mockImplementationOnce(async (id) => { await loaded.promise; return { encounter: null, spellbook: bookOf(id, false) }; });
+    const switching = store.getState().switchSave(B);
+    if (when === 'before') { late.resolve(bookOf(A, true)); await flush(); }
+    loaded.resolve();
+    await switching;
+    const mine = store.getState().spellbook;
+    expect(store.getState().learnerId).toBe(B);
+    expect(mine.contentVersion).toBe('book-2');
+    if (when === 'after') late.resolve(bookOf(A, true));
+    await flush();
+    expect(store.getState().spellbook).toBe(mine);
+    expect(store.getState().spellbook.dueCount).toBe(0);
+  });
+
+  test('a remove ends with a refresh: removed, refused by the server, or not recorded on the device', async () => {
+    const { api, storage, store } = saves();
+    await store.getState().initialize();
+    store.getState().openSaves();
+    await flush();
+    api.getSpellbook.mockResolvedValueOnce({ ...bookOf(A, true), contentVersion: 'after-remove' });
+    expect(await store.getState().removeSave(C)).toBe(true);
+    await flush();
+    expect(store.getState().spellbook.contentVersion).toBe('after-remove');
+
+    api.deleteLearner.mockRejectedValueOnce(new Error('offline'));
+    api.getSpellbook.mockResolvedValueOnce({ ...bookOf(A, true), contentVersion: 'after-refusal' });
+    expect(await store.getState().removeSave(B)).toBe(false);
+    await flush();
+    expect(store.getState().spellbook.contentVersion).toBe('after-refusal');
+    expect(store.getState().error).toMatch(/could not delete Save 2/);
+
+    storage.setItem.mockRejectedValueOnce(new Error('disk full'));
+    api.getSpellbook.mockResolvedValueOnce({ ...bookOf(A, true), contentVersion: 'after-write-failure' });
+    expect(await store.getState().removeSave(B)).toBe(true);
+    await flush();
+    expect(store.getState().spellbook.contentVersion).toBe('after-write-failure');
+    expect(store.getState().error).toMatch(/could not record it yet/);
+  });
+
+  test('a failed new save or switch refreshes the current save and keeps the error', async () => {
+    const { api, store } = saves([slot(A, 'Save 1'), slot(B, 'Save 2')]);
+    await store.getState().initialize();
+    store.getState().openSaves();
+    await flush();
+    api.createLearner.mockRejectedValueOnce(new Error('no server'));
+    api.getSpellbook.mockResolvedValueOnce({ ...bookOf(A, true), contentVersion: 'after-new' });
+    await store.getState().newSave();
+    await flush();
+    expect(store.getState()).toMatchObject({ learnerId: A, error: 'no server', isLoading: false });
+    expect(store.getState().spellbook.contentVersion).toBe('after-new');
+
+    api.getWorld.mockRejectedValueOnce(new Error('switch failed'));
+    api.getSpellbook.mockResolvedValueOnce({ ...bookOf(A, true), contentVersion: 'after-switch' });
+    await store.getState().switchSave(B);
+    await flush();
+    expect(store.getState()).toMatchObject({ learnerId: A, error: 'switch failed', isLoading: false });
+    expect(store.getState().spellbook.contentVersion).toBe('after-switch');
+    expect(api.getSpellbook).toHaveBeenLastCalledWith(A);
   });
 });
