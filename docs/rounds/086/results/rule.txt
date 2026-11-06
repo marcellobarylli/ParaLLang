@@ -1,0 +1,8 @@
+it prefix4                                            english tokens dropped/enc 13.4 worst 77 | synthetic inflections caught 506/555 | grams grammar century centre destination insists settling inside undiluted settles settled settings
+it prefix5                                            english tokens dropped/enc 0.3 worst 2 | synthetic inflections caught 411/555 | grammar espressos
+it inflection: t minus last letter, len t..t+2        english tokens dropped/enc 2.9 worst 14 | synthetic inflections caught 555/555 | grammar century centre settles settled espressos solemn sold solo solid song case
+it inflection: t minus last letter, len t..t+2, t>=5  english tokens dropped/enc 1.4 worst 14 | synthetic inflections caught 476/555 | grammar century centre settles settled espressos
+es prefix4                                            english tokens dropped/enc 16.3 worst 77 | synthetic inflections caught 446/522 | grams grammar quietly quiet despite delivery delighted delicious salutes precisely precise precision
+es prefix5                                            english tokens dropped/enc 6.6 worst 26 | synthetic inflections caught 323/522 | quietly quiet despite delicious precisely precise precision
+es inflection: t minus last letter, len t..t+2        english tokens dropped/enc 6.9 worst 21 | synthetic inflections caught 522/522 | grams treaty grammar quietly died salutes solemn sold solo solid hold hole
+es inflection: t minus last letter, len t..t+2, t>=5  english tokens dropped/enc 4.5 worst 21 | synthetic inflections caught 416/522 | grams grammar quietly salutes
