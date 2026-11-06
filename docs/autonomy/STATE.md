@@ -10,7 +10,8 @@ skill), and updates this file before stopping. Decisions an owner would normally
 Iteration 28 (2026-11-06, from 06:50 UTC): **round 093** (F13) closed: a save keeps its 20 newest assessment
 receipts (the one just written always), pruned in `JsonLearningStorage.save`; receipts hold no Spellbook, a replay
 carries the current one (`replay`); attempt ids looked up by own property. Fixture save after 240 turns: 2.50 MB →
-158 KB. Next growth: card `evidence` (F15).
+158 KB. **Round 094** (F15) closed: each card keeps its 20 last-written `evidence` entries (`trimEvidence` in
+`save`); the fixture save is flat at 138 KB from turn 250 to 1000.
 
 Nothing open. Iteration 27 (2026-11-06, 05:53–06:50 UTC) closed four offline review rounds:
 - **089** (F10): review of rounds 040–053. The atmosphere filter's English exemptions were all answers (it *basta*,
@@ -261,7 +262,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F13. Dialogue receipts grow the save** (round 093, closed 2026-11-06: 20 newest kept, no Spellbook in them) (round 092 review R1.5): every receipt keeps the full transcript and
   cards, never pruned. Measure save sizes over a long scripted play first; pruning must keep replays of recent attempts
   safe. No live calls.
-- [ ] **F15. Card evidence grows the save** (round 093): every turn and review appends to a card's `evidence`, never
+- [x] **F15. Card evidence grows the save** (round 094, closed 2026-11-06: 20 per card; seeded in round 093): every turn and review appends to a card's `evidence`, never
   pruned (much slower than receipts were). Measure over a long play; SM-2 needs only the schedule. No live calls.
 - [x] **F14. Review of the core server paths** (round 092, closed 2026-11-06): token allowlist (the case bypass),
   evidence at word boundaries, the ordered reveal cap.

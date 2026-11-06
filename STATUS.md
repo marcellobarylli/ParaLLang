@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 094, the save is bounded (autonomous)
+
+Each word card also kept a record of every time it was graded or reviewed, forever, though nothing reads it. A card
+now keeps its 20 latest records; with round 093 the save no longer grows with play (138 KB after 1000 scripted turns,
+flat from turn 250) ([findings](docs/rounds/094/findings.md)).
+
 ## Addendum 2026-11-06: round 093, the save stops growing with every turn (autonomous)
 
 Each answer and review kept a full copy of its reply in the learner's save, forever: in a scripted play the save

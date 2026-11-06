@@ -78,3 +78,11 @@ learner-model rationale: accepted (Decision 1).
   encounter; the trimmed save loads again.
 - Mutations: the call removed from `save`, `slice(0, 20)` (keeping the oldest) and an off-by-one each fail a test.
 - Re-measure (share of receipts vs evidence in the save); full suites.
+
+## Outcome (2026-11-06)
+
+Built as designed. In the fixture measurement (1000 turns, 200 reviews) the save is 138 KB instead of 288 KB and
+flat from turn 250 on (137,827 → 137,833 bytes); 60 evidence entries in place of 800. Compact JSON without receipts is
+8 KB (was 88 KB), so the 20 receipts are now most of the file, as critique 1.4 expected. Each fix removed in turn
+fails a test; full suites pass ([findings](findings.md)). A correction to the pre-run Claim boundary: "20 × 20
+evidence-sized entries per card" should read "20 evidence entries per card".

@@ -1,0 +1,25 @@
+one dialogue receipt: {"total":4806,"encounter":4091,"transcript":3558,"assessment":517,"spellbook":4}
+one review receipt: {"total":426,"spellbook":4}
+save without receipts: 8088
+{"cycle":1,"turns":5,"reviews":1,"bytes":40452,"receipts":6,"cards":4,"evidence":4,"maxEvidence":2}
+{"cycle":10,"turns":50,"reviews":10,"bytes":133609,"receipts":20,"cards":4,"evidence":40,"maxEvidence":20}
+{"cycle":20,"turns":100,"reviews":20,"bytes":137829,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":30,"turns":150,"reviews":30,"bytes":137827,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":40,"turns":200,"reviews":40,"bytes":137827,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":50,"turns":250,"reviews":50,"bytes":137827,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":60,"turns":300,"reviews":60,"bytes":137827,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":70,"turns":350,"reviews":70,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":80,"turns":400,"reviews":80,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":90,"turns":450,"reviews":90,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":100,"turns":500,"reviews":100,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":110,"turns":550,"reviews":110,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":120,"turns":600,"reviews":120,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":130,"turns":650,"reviews":130,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":140,"turns":700,"reviews":140,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":150,"turns":750,"reviews":150,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":160,"turns":800,"reviews":160,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":170,"turns":850,"reviews":170,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":180,"turns":900,"reviews":180,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":190,"turns":950,"reviews":190,"bytes":137831,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+{"cycle":200,"turns":1000,"reviews":200,"bytes":137833,"receipts":20,"cards":4,"evidence":60,"maxEvidence":20}
+bytes per turn ~ 82

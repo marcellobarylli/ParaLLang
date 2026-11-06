@@ -80,6 +80,19 @@ export function pruneReceipts(processed, { keepId, limit = RECEIPT_LIMIT } = {})
   return processed;
 }
 
+// Round 094 (backlog F15): each card keeps its EVIDENCE_LIMIT last-written evidence entries. Entries are appended in
+// write order, so the tail is the newest written whatever the clock said (critique 1.1); never sorted by `at`.
+// Nothing reads the history (SM-2 reads only `schedule`).
+export const EVIDENCE_LIMIT = 20;
+export function trimEvidence(spellbook, limit = EVIDENCE_LIMIT) {
+  for (const bucket of [spellbook.words, spellbook.phrases]) {
+    for (const item of Object.values(bucket)) {
+      if (item.evidence.length > limit) item.evidence.splice(0, item.evidence.length - limit);
+    }
+  }
+  return spellbook;
+}
+
 function validWorld(world) {
   const ids = (list) => Array.isArray(list) && list.every((id) => typeof id === 'string');
   return Boolean(world) && typeof world === 'object' && !Array.isArray(world)
@@ -186,11 +199,13 @@ export class JsonLearningStorage {
     return unlinkQuietly(filePath);
   }
 
-  // Round 093: every save prunes the receipts (critique 1.6: an old save shrinks on its next write of any kind).
+  // Round 093: every save prunes the receipts (critique 1.6: an old save shrinks on its next write of any kind);
+  // round 094: and trims each card's evidence.
   async save(envelope, { keepReceiptId } = {}) {
     assertLearnerId(envelope.learnerId);
     validateEnvelope(envelope, envelope.learnerId);
     pruneReceipts(envelope.spellbook.processedAssessments, { keepId: keepReceiptId });
+    trimEvidence(envelope.spellbook); // round 094
     try { await this.io.mkdir(this.saveDir, { recursive: true }); }
     catch (error) { throw retryableError(`Progress could not be saved: ${error.message}`, 'STORAGE_FAILURE'); }
     const destination = this.filePath(envelope.learnerId);
