@@ -15,3 +15,5 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 9 | 23:32:55 | 23:32:55 | result | Claude (claude-opus-5-5), autonomous | Server 228/228 (214 before; 14 new), mobile 131/131, client 12/12 | — |
 | 10 | 23:33:11 | 23:33:11 | outcome | Claude (claude-opus-5-5), autonomous | F2 done: apostrophes folded on the server; no live runs; open items: Simulator check, a live ’ answer | `../findings.md` |
 | 11 | 23:33:11 | 23:33:11 | closed | Claude (claude-opus-5-5), autonomous | Round 054 closed | `../findings.md` |
+| 12 | 2026-11-06 01:53 (approx.) | 01:50:24 | run | Claude (claude-opus-5-5), autonomous | Open item 2: Fountain live (it, codex-cli, --lines with "È l’una, Flick."): time passed on the ’ line (luna, evidence "È l’una"), resolved | `../results/live-apostrophe-it.json` |
+| 13 | 01:50:24 | 01:50:24 | result | Claude (claude-opus-5-5), autonomous | Dated addendum in findings.md; open item 2 done | `../findings.md` |

@@ -60,3 +60,12 @@ so any future highlight must fold.
    Mortimer's tasting, and confirm both pass (critique 1.7).
 2. Next live run with codex-cli: script one ’ answer (for example `--lines` with "È l’una") to see a real grader
    with it.
+
+## Addendum 2026-11-06: open item 2, one live answer with ’
+
+Played the Fountain live with codex-cli (it, `--lines`, eight answers, the sixth "È l’una, Flick." with a
+typographic apostrophe). The time objective passed on that line. The grader's evidence kept the typed form
+("È l’una"), the matcher folded it to the `luna` entry, and the evidence check accepted it. The other seven verdicts
+were as scripted: an unrelated word fails, stop, an English direction fails, a direction, "Adesso!" too early for
+`now` (time still open), time, "Domani." fails, now. The encounter resolved. Open item 2 is done.
+Evidence: `results/live-apostrophe-it.json` (and `.log`).
