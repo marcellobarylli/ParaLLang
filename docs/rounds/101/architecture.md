@@ -91,3 +91,10 @@ lists: accepted; check the remaining list against the replay: accepted (Decision
 - over every committed report, lines change only from `leak` to `soft` (a before/after diff by report, scene and
   line).
 - Mutations; full suites.
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. The scan moves 65 NPC lines from `leak` to `soft` and changes nothing else. These
+are Gerald's "espresso shots" (32) and Errata's *nome* / *nombre* (33); no listed frame word other than *nome* /
+*nombre* appears in the committed lines. Since round 051, 6 leak lines remain, all Italian: Flick's *ora* used as
+"hour" (3) and Errata's *sono* (2) and *basta* (1). Spanish has none ([findings](findings.md)).

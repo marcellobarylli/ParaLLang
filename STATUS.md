@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 101, most "leaks" in NPC lines were optional words (autonomous)
+
+The leak check counted about 130 NPC lines that held an answer. Half were Gerald's English "espresso shots" or
+Errata's word for "name", which the answer does not need; they are now counted apart. Since round 051, six real ones
+remain, all Italian: Flick using *ora* to mean "hour" (it is also the answer "now"), and two words in Errata's own
+lines ([findings](docs/rounds/101/findings.md)).
+
 ## Addendum 2026-11-06: round 100, narratives and grader feedback do not give answers away (autonomous)
 
 The tool that checks live playthroughs for answers given away now also reads the narrator's English text and the

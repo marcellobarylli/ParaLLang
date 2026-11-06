@@ -232,3 +232,59 @@ test('eraOf: before 051, from 051, other', async () => {
   const { eraOf } = await import('../scripts/leak-scan.js');
   assert.deepEqual(['docs/rounds/007/results/a.json', 'docs/rounds/051/results/b.json', '/tmp/c.json'].map(eraOf), ['before 051', 'from 051', 'other']);
 });
+
+// Round 101 (round 044 open item 2; critique 1.1-1.6): optional frame words and *espresso* are `soft`, not `leak`.
+// Without turns, each native is its own one-line scene (all objectives open); with turns, one scene.
+const kindsOf = (language, encounterId, natives, steps = []) => {
+  const scan = (lines, turns) => {
+    const report = { language, steps: turns, encounters: [{ encounterId, grading: [], lines: lines.map((native) => ({ native })) }] };
+    const [scene] = scanReport(report, language === 'it' ? it : es).scenes;
+    return lines.map((_, k) => scene.hits.find((hit) => hit.line === k)?.kind ?? null);
+  };
+  return steps.length ? scan(natives, steps) : natives.flatMap((native) => scan([native], []));
+};
+
+test('Errata: a frame word alone is soft; the key answer beside it is a leak; a fresh word of a required form is near', () => {
+  assert.deepEqual(kindsOf('es', 'the_rift_errata', ['Tu nombre, por favor.', 'Tu nombre: nadie.']), ['soft', 'leak']);
+  // "chiamo" from the required "mi chiamo" beside the frame word "nome": the word hit is the stronger hint.
+  assert.deepEqual(kindsOf('it', 'the_rift_errata', ['Il tuo nome? Come ti chiamano? Chiamo io.']), ['near']);
+  assert.deepEqual(kindsOf('it', 'the_rift_errata', ['Non basta.']), ['leak'], 'basta is a required answer');
+});
+
+test('Gerald: espresso shots and vorrei are soft; caffè is a leak; Portia\'s Ciao and Mortimer\'s tre stay leaks', () => {
+  assert.deepEqual(kindsOf('it', 'imp_coffee_greeting', ['This cart gets five espresso shots.', 'Vorrei? Dimmi.', 'Un caffè?']), ['soft', 'soft', 'leak']);
+  assert.deepEqual(kindsOf('it', 'market_entrance_tutorial', ['Ciao! Benvenuto.']), ['leak']);
+  // Mortimer's numbers are outside the required groups, but the quantity constraint needs one (critique 1.2).
+  const step = { ok: true, name: 'say "Prosciutto."', verdicts: [v('name_meat', true), v('quantity', false)] };
+  assert.deepEqual(kindsOf('it', 'butchers_stall_charcutier', ['Cosa vuoi?', 'Tre? Quanto?'], [step]), [null, 'leak']);
+});
+
+test('a soft form the player wrote earlier is echo; summarize counts soft lines', () => {
+  const step = { ok: true, name: 'say "Vorrei."', verdicts: [v('order_coffee', false), v('no_milk', false)] };
+  assert.deepEqual(kindsOf('it', 'imp_coffee_greeting', ['Ciao.', 'Vorrei cosa?'], [step]), [null, 'echo']);
+  const report = { language: 'it', steps: [], encounters: [{ encounterId: 'imp_coffee_greeting', grading: [], lines: [{ native: 'Vorrei? Dimmi.' }] }] };
+  const { total } = summarize([{ path: 'docs/rounds/101/results/x.json', language: 'it', ...scanReport(report, it) }]);
+  assert.equal(total.it.softLines, 1);
+  assert.equal(total.it.leakLines, 0);
+  assert.deepEqual(total.it.byEra, { 'from 051': { leakLines: 0, softLines: 1 } });
+});
+
+test('content: every frame word is a target of its objective, outside its required groups, and shares no form with a required entry', async () => {
+  const { FRAME_TARGETS } = await import('../scripts/leak-scan.js');
+  for (const content of [it, es]) {
+    for (const [encounterId, byObjective] of Object.entries(FRAME_TARGETS)) {
+      const objectives = content.encounters.get(encounterId).encounter.objectives;
+      for (const [objectiveId, ids] of Object.entries(byObjective)) {
+        const objective = objectives.find((candidate) => candidate.id === objectiveId);
+        assert.ok(objective, `${encounterId}.${objectiveId}`);
+        const own = ids.filter((id) => objective.target_vocabulary_ids.includes(id));
+        assert.equal(own.length, 1, `${content.language.code} ${encounterId}.${objectiveId}: one listed id per pack`);
+        const required = new Set(objective.required_target_groups.flat());
+        assert.ok(!required.has(own[0]), `${own[0]} is required`);
+        const forms = (id) => { const entry = content.vocabularyById.get(id); return [entry.target, ...(entry.surface_variants ?? [])].map((form) => fold(form).trim()); };
+        const requiredForms = new Set([...required].flatMap(forms));
+        for (const form of forms(own[0])) assert.ok(!requiredForms.has(form), `${form} is also a required form`);
+      }
+    }
+  }
+});
