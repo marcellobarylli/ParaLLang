@@ -73,3 +73,8 @@ saves record):
 - a remove: the count is refreshed after the removal, after a refused delete and after a failed device write;
 - a failed new save and a failed switch: the count is refreshed, the error stays.
 Full suite (`npm test`).
+
+## Outcome (2026-11-06)
+
+Built as designed, no amendment. Each of the store's eight refresh calls has a test that fails without it; full
+suites pass ([findings](findings.md)).

@@ -217,6 +217,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F5. The Spellbook refreshed** (round 084, closed 2026-11-06): on opening the Spellbook, the map and the
   return from the background; latest call wins; no meanings while the app holds an encounter the server forgot.
 
+- [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
+  remove and after a failed new save or switch.
+
 - [x] **F4. One test command** (2026-11-06, no round): root `npm test` (server, client, mobile), `npm run test:server`;
   bare `node --test` in `server/` hangs on the fake CLIs in `test/fixtures/`.
 
@@ -243,6 +246,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 085 (Simulator):** open Saves after a card fell due while the map was open; remove a save and check the
+  count ([open items](../rounds/085/findings.md#open-items)).
 - **Round 084 (Simulator):** a card falling due while the app is in the background shows on the header badge on
   return; decide whether a foreground timer is wanted ([open items](../rounds/084/findings.md#open-items)).
 - **Rounds 082–083:** native-speaker review of the twelve inscriptions and the six fragment rewrites (it, es); are
