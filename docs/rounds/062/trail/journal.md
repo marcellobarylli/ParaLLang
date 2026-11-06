@@ -11,3 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 00:33:48 | 00:33:48 | disposition | Claude (claude-opus-5-5), autonomous | 7 findings, all accepted (autonomous, pending owner review); rows 1.1–1.7 | `../architecture.md` |
 | 6 | 00:33:48 | 00:33:48 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: stop on a move, hook placement, read-at-press, speechText join, distinct labels | `../architecture.md` |
 | 7 | 00:33:48 | 00:33:48 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
+| 8 | 00:35:59 | 00:35:59 | built | Claude (claude-opus-5-5), autonomous | NarratorButton.js (NarratorButton, speechText); MapPanel "Hear the place" and stop on a move; DialoguePanel "Hear the briefing"; narrator-places.test.js (5) | — |
+| 9 | 00:35:59 | 00:35:59 | result | Claude (claude-opus-5-5), autonomous | Mobile 168/168, server 244/244, client 12/12; expo-doctor 20/20; iOS export built | — |
+| 10 | 00:35:59 | 00:35:59 | outcome | Claude (claude-opus-5-5), autonomous | C10b done: the map card and the briefing heard; follow-up C10c (stop on leaving Review and Spellbook) | `../findings.md` |
+| 11 | 00:35:59 | 00:35:59 | closed | Claude (claude-opus-5-5), autonomous | Round 062 closed | `../findings.md` |

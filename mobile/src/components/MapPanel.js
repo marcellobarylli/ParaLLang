@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, colors, type, leading, Title } from './ui.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
+import NarratorButton, { speechText } from './NarratorButton.js';
+import { stopSpeech } from '../speech.js';
 
 const NODE = 18;
 
@@ -55,6 +57,9 @@ function Node({ location, size, onMove, disabled }) {
 // Round 029: `drill` is the server's pending drill (spellbook.drill); `ongoing` an encounter under way elsewhere.
 export default function MapPanel({ atmosphere = null, drill = null, ongoing = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
   const [size, setSize] = useState(320); // replaced by the measured width on layout
+  // Round 062 (critiques 1.1, 1.2): a move or leaving the map stops the narrator; above the early return.
+  const currentLocationId = world?.currentLocationId ?? null;
+  useEffect(() => () => { stopSpeech(); }, [currentLocationId]);
   if (!world) return <View style={styles.panel}><Text style={styles.muted}>Finding the Crumbling Market…</Text></View>;
   const byId = new Map(world.locations.map((location) => [location.id, location]));
   const here = byId.get(world.currentLocationId);
@@ -71,7 +76,11 @@ export default function MapPanel({ atmosphere = null, drill = null, ongoing = nu
         {world.locations.map((location) => <Node key={location.id} location={location} size={size} onMove={onMove} disabled={isLoading} />)}
       </View>
       {here && <View style={styles.card} aria-live="polite">
-        <Title style={styles.title}>{here.name}</Title>
+        <View style={styles.titleRow}>
+          <Title style={styles.title}>{here.name}</Title>
+          {/* Round 062: what the card shows when pressed (decision 1). */}
+          <NarratorButton text={speechText([here.name, here.description, atmosphere?.locationId === here.id ? atmosphere.text : null])} label="Hear the place" />
+        </View>
         <Text style={styles.body}>{here.description}</Text>
         {atmosphere?.locationId === here.id && atmosphere.text && <Text style={styles.atmosphere}>{atmosphere.text}</Text>}
         {here.vocabularyFocus?.length > 0 && <Text style={styles.focus}>Words here: {here.vocabularyFocus.join(', ')}</Text>}
@@ -126,7 +135,8 @@ const styles = StyleSheet.create({
   nodeNameUnreachable: { color: colors.muted },
   nodeNameKnown: { color: colors.muted, fontStyle: 'italic' },
   card: { backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border, padding: 16, gap: 10 },
-  title: { fontSize: type.title3, fontWeight: '800', color: colors.ink },
+  titleRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 4 },
+  title: { flexGrow: 1, flexShrink: 1, fontSize: type.title3, fontWeight: '800', color: colors.ink },
   body: { fontSize: type.subhead, lineHeight: leading.subhead, color: colors.ink },
   muted: { fontSize: type.subhead, color: colors.muted, padding: 16 },
   focus: { fontSize: type.footnote, color: colors.muted, fontStyle: 'italic' },

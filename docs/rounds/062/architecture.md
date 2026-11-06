@@ -78,3 +78,9 @@ at its usage limit until 01:36 UTC), read-only; raw text in `trail/critique-1.md
 first, trimmed parts.
 
 Net change: stop on a move, hook placement, read-at-press, `speechText` join, distinct labels.
+
+## Outcome (2026-11-06)
+
+Built as designed. The map title's flex rules went into its `title` style, not a second style: the font test matches
+`<Title style={styles.x}>`. Mobile 168/168, server 244/244, client 12/12, expo-doctor 20/20, iOS export built. No live
+runs. See [findings.md](findings.md).

@@ -4,8 +4,8 @@ import BilingualText from './BilingualText.js';
 import PartyOffer, { inParty } from './PartyOffer.js';
 import { colors, type } from './ui.js';
 import { FadeIn, useReduceMotion } from '../motion.js';
-import { NARRATOR, stopSpeech } from '../speech.js';
-import PronounceButton from './PronounceButton.js';
+import { stopSpeech } from '../speech.js';
+import NarratorButton, { speechText } from './NarratorButton.js';
 
 export default function DialoguePanel({ encounter, language, isLoading, assessment, onHelp, party = [], onRecruit, onLeave, fragments = [] }) {
   const listRef = useRef(null);
@@ -24,7 +24,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
 
   const briefing = encounter.companionBriefing?.length ? (
     <View style={styles.companion} aria-label="Your companion">
-      <Text style={styles.strong}>Your companion</Text>
+      <View style={styles.narrationRow}><Text style={[styles.strong, styles.narrationText]}>Your companion</Text><NarratorButton text={speechText(encounter.companionBriefing)} label="Hear the briefing" /></View>
       {encounter.companionBriefing.map((line) => <Text style={styles.body} key={line}>{line}</Text>)}
     </View>
   ) : null;
@@ -84,7 +84,7 @@ function Narration({ text }) {
   return (
     <View style={styles.narrationRow}>
       <Text style={[styles.narrative, styles.narrationText]}>{text}</Text>
-      <PronounceButton text={text} language={NARRATOR} label="Hear the narrator" hideWhenUnavailable />
+      <NarratorButton text={text} label="Hear the narrator" />
     </View>
   );
 }
