@@ -50,3 +50,34 @@ No owner was present; each is an **autonomous decision, pending owner review**, 
   - The same Vite server's page and its `/src/api/learning.js` module do not contain the token.
 - A mutation check: dropping the header from `proxyFor` fails a test.
 - Full suites: server, client, mobile.
+
+## Second opinion (review 1, after the build)
+
+A fresh read-only subagent reviewed the build (Codex limited); raw text in [`trail/review-1.md`](trail/review-1.md).
+Each disposition is an **autonomous decision, pending owner review**.
+
+| # | Severity | Finding | Recommendation | Change | Disposition | Decision |
+|---|---|---|---|---|---|---|
+| R1.1 | Error | Vite's `loadEnv` expands `$`: `PARALLANG_TOKEN=ab$cd` in `.env` sent `ab`, the server wants `ab$cd` | Accept | `serverEnv` reads the root `.env` with plain dotenv, as `server/src/config.js` does; test with `ab$cd` | **Accepted** (autonomous, pending owner review) | Round 105 decisions row |
+| R1.2 | Error | `loadEnv` also reads `.env.local` and `.env.<mode>`, which the server never reads | Accept | fixed by R1.1; test with a `.env.development` that must be ignored | **Accepted** (autonomous, pending owner review) | Round 105 decisions row |
+| R1.3 | Gap | A bad token stopped `vite build` and every client test at config load | Accept | the proxy is built only for `serve` outside mode `test`; test loads the config for build and test | **Accepted** (autonomous, pending owner review) | Round 105 decisions row |
+| R1.4 | Gap | The no-token test depended on the developer's real `.env` | Accept | tests set the variable to `''` (set but empty wins over the file) | **Accepted** (autonomous, pending owner review) | Round 105 decisions row |
+| R1.5 | Gap | The end-to-end test proxied only `/api/health`, the one exempt path | Accept | a GET of `/api/world` and a JSON POST also arrive with the token and body | **Accepted** (autonomous, pending owner review) | Round 105 decisions row |
+| R1.6 | Minor | The value rule (`\x21-\x7e`) is stricter than the server's (interior spaces) | Decline | kept equal to the app's rule (round 040), so one token works for both clients | **Declined** (autonomous, pending owner review) | Round 105 decisions row |
+| R1.7 | Minor | `PORT=99999` passed | Accept | 1–65535 | **Accepted** (autonomous, pending owner review) | Round 105 decisions row |
+| R1.8 | Minor | A header sent by the browser would double the proxy's | Accept | the proxy sets the header in `proxyReq` (overwrites); the end-to-end test sends a browser value | **Accepted** (autonomous, pending owner review) | Round 105 decisions row |
+
+## Amendment 1 (2026-11-06, after review 1)
+
+The design's decision 1 said the proxy reads the root `.env` through Vite's `loadEnv`; it now reads it through plain
+dotenv (`serverEnv` in `client/proxy.config.js`), with the process environment first. `devProxy` takes
+`{ env, path }` instead of a mode. The header is set with a `configure` hook on `proxyReq`, not the `headers` option.
+The proxy exists only for `vite` (serve) outside mode `test`.
+
+## Outcome (2026-11-06)
+
+Built as designed with Amendment 1. `npm run dev:client` reaches a server started with `PARALLANG_TOKEN` (shown
+against a stub upstream in `client/src/__tests__/proxy.test.js`, a real Vite dev server on 127.0.0.1); the page,
+`/@vite/env` and the client's modules do not contain the token, nor does `client/dist`. Three mutations (no header,
+no mode gate, append instead of set) each fail a test. Server 389/389, client 19/19, mobile 302/302; one server run
+in four had one failure that did not recur in three reruns (not identified; open item).

@@ -336,8 +336,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
-- **Round 103:** should the web client (its Vite proxy) and the app send `PARALLANG_TOKEN`? Today neither can reach a
-  token-protected server. **Round 102 (Simulator):** stop the server during a send, restart it, send the same answer
+- **Round 105 (decision):** the web client's Vite proxy now adds `PARALLANG_TOKEN` server-side (round 103's question,
+  decided autonomously; the app already sent it since round 040): is that the wanted way. **Round 102 (Simulator):** stop the server during a send, restart it, send the same answer
   again: the map with "This conversation is no longer open…".
 
 - **Round 099 (Simulator):** after a lost send, tap a word chip for help: the line "Your last answer may have

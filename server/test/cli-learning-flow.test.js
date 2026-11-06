@@ -174,6 +174,8 @@ test('CLI service hosts are loopback-only and the Vite proxy targets the same ba
   assert.equal(listenHostForProvider('codex-cli', { HOST: '192.0.2.1' }), '127.0.0.1');
   assert.equal(listenHostForProvider('claude-cli', { HOST: '192.0.2.1' }), '127.0.0.1');
   assert.equal(listenHostForProvider('openai', { HOST: '192.0.2.1' }), '192.0.2.1');
-  const vite = await readFile(resolve(import.meta.dirname, '..', '..', 'client', 'vite.config.js'), 'utf8');
-  assert.match(vite, /http:\/\/127\.0\.0\.1:3001/);
+  // Round 105: the proxy lives in client/proxy.config.js and follows PORT, as server.js does.
+  const { proxyFor } = await import('../../client/proxy.config.js');
+  assert.equal(proxyFor({})['/api'].target, 'http://127.0.0.1:3001');
+  assert.equal(proxyFor({ PORT: '4100' })['/api'].target, 'http://127.0.0.1:4100');
 });

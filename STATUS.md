@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 105, the web client reaches a protected server (autonomous)
+
+When the server is started with an access token, the browser version of the game could not talk to it. Its
+development server now adds the token on the way through, so the token never reaches the browser. The iPhone app
+already sent it ([findings](docs/rounds/105/findings.md)).
+
 ## Addendum 2026-11-06: round 104, fixes from a review of rounds 100–103 (autonomous)
 
 A review of the last four rounds found no bug a player meets. It found five ways the tool that checks playthroughs
@@ -960,8 +966,8 @@ Newest first.
 | 089 | 11-06 | Fixes from a review of rounds 040–053: no answers in the atmosphere line, atmosphere calls give way to the player's on a CLI provider (autonomous) | [089](docs/rounds/089/architecture.md) | [findings](docs/rounds/089/findings.md) | pre-run record to round 089 close |
 | 090 | 11-06 | Fixes from a review of rounds 029–039: startup knows the server's encounter, no due answer in other cards' examples, saves reachable after a failed start (autonomous) | [090](docs/rounds/090/architecture.md) | [findings](docs/rounds/090/findings.md) | pre-run record to round 090 close |
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
-| 104 | 11-06 | Fixes from a review of rounds 100–103: the leak scan's kinds and old count, the web Spellbook's due cards (autonomous) | [104](docs/rounds/104/architecture.md) | [findings](docs/rounds/104/findings.md) | pre-run record to round 104 close |
 | 105 | 11-06 | The web client's Vite proxy sends `PARALLANG_TOKEN` (autonomous) | [105](docs/rounds/105/architecture.md) | [findings](docs/rounds/105/findings.md) | pre-run record to round 105 close |
+| 104 | 11-06 | Fixes from a review of rounds 100–103: the leak scan's kinds and old count, the web Spellbook's due cards (autonomous) | [104](docs/rounds/104/architecture.md) | [findings](docs/rounds/104/findings.md) | pre-run record to round 104 close |
 | 103 | 11-06 | The frozen web client tested against the real server; its Spellbook hides meanings during encounters (autonomous) | [103](docs/rounds/103/architecture.md) | [findings](docs/rounds/103/findings.md) | pre-run record to round 103 close |
 | 102 | 11-06 | A replayed answer after a server restart no longer leaves a conversation the server forgot on screen (autonomous) | [102](docs/rounds/102/architecture.md) | [findings](docs/rounds/102/findings.md) | pre-run record to round 102 close |
 | 101 | 11-06 | The leak scan counts optional frame words and *espresso* apart from leaks in NPC lines (autonomous) | [101](docs/rounds/101/architecture.md) | [findings](docs/rounds/101/findings.md) | pre-run record to round 101 close |
