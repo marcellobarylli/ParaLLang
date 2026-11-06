@@ -242,6 +242,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F6. The Saves screen's due count** (round 085, closed 2026-11-06): refreshed on opening Saves, after a
   remove and after a failed new save or switch.
 
+- [ ] **F13. Dialogue receipts grow the save** (round 092 review R1.5): every receipt keeps the full transcript and
+  cards, never pruned. Measure save sizes over a long scripted play first; pruning must keep replays of recent attempts
+  safe. No live calls.
 - [x] **F12. Review of rounds 017–028** (round 091, closed 2026-11-06): a named start never replaces a conversation
   under way (409); the map card's Return and Leave; restart away from the place.
 - [x] **F11. Review of rounds 029–039** (round 090, closed 2026-11-06): startup knows the server's encounter, card
