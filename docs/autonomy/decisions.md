@@ -202,3 +202,4 @@ decision by Claude (claude-opus-5-5), pending owner review. Newest last.
 | 2026-11-06 | 070 | Critique 1 (Codex, bundle on stdin): 8 findings, 6 accepted, 2 in part; Optional taken | — | See round 070 Second opinion table | Yes |
 | 2026-11-06 | 071 | A resent answer reuses its attempt id (by learner, encounter, version, text; memory only); a stale session reloads, and a closed one returns to the map | Persist uncertain sends; a Retry button; automatic retry | Receipts already replay exact requests; a relaunch reloads the encounter anyway | Yes |
 | 2026-11-06 | 071 | Critique 1 (Codex, bundle on stdin): 9 findings, 7 accepted, 1 in part, 1 deferred | — | See round 071 Second opinion table | Yes |
+| 2026-11-06 | 072 | A live regression tour (it only), no critique, criteria fixed before the run | Both packs; skip it | Round 070 changed submitDialogue; one pack spares Codex's window and the change is not language-specific | Yes |
