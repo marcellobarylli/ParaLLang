@@ -7,7 +7,9 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Iteration 20 (2026-11-06, from 02:09 UTC) closed round 069 (kept lines live) and is working on the next candidate.
+Iteration 20 (2026-11-06, from 02:09 UTC) closed rounds 069–071. Round 072 (live regression tour, it) is frozen and
+its tour was started at 02:38:34 (`docs/rounds/072/results/tour-it.log`); round 073 (I3, a waiting line while an
+encounter starts) has a plan-v1 in its trail, not yet critiqued or frozen.
 
 Next candidates, none needing the owner:
 - **Atmosphere repetition within a place** (round 068): across runs a place's line returns to the same idea
@@ -158,6 +160,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - [x] **I1. The verdict before the reply** (round 070, closed 2026-11-06): `GET /api/encounter/progress`, app polls
   every second, provisional Assessment box; live: verdict at 5.3–6.8 s vs response 11.8–16.1 s, 6/6 equal.
+- [ ] **I3. A waiting line while an encounter starts** (round 073): the greeting takes ~8.6 s with only a disabled
+  button on the map or Party screen.
 - [x] **I2. A resent answer replays** (round 071, closed 2026-11-06; round 070 critique 1.2): attempt ids by
   request key, guarded reload on `STALE_VERSION` / `STALE_ENCOUNTER`, back to the map if the conversation closed.
 
