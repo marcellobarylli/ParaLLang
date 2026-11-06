@@ -1,0 +1,103 @@
+{
+  "provider": "codex-cli",
+  "language": "it",
+  "calls": 12,
+  "rows": [
+    {
+      "locationId": "butchers_stall",
+      "completed": false,
+      "text": "Mortimer breathed out through his nose, a small administrative rejection of the afternoon. The smell of smoked meat lingered with the confidence of something that had never needed approval.",
+      "words": 29,
+      "durationMs": 4788,
+      "drop": null
+    },
+    {
+      "locationId": "butchers_stall",
+      "completed": true,
+      "text": "The awning gave a small creak, as though submitting a complaint it knew would be ignored. The smell of salt and fat continued without waiting for approval.",
+      "words": 27,
+      "durationMs": 5793,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": false,
+      "text": "The machine gave a small, apologetic hiss. Gerald narrowed his eyes at it; apparently even the equipment was struggling to meet the minimum standard of being worth his time.",
+      "words": 29,
+      "durationMs": 5432,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": true,
+      "text": "Gerald gives you a small nod as the machine lets out a weary hiss. Approval has clearly been granted, though the equipment has filed a separate objection.",
+      "words": 27,
+      "durationMs": 5061,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": false,
+      "text": "Flick shifted with a faint scrape, maintaining the careful distance of someone who suspected friendliness came with a subscription fee. A little dust settled between you, apparently satisfied with the arrangement.",
+      "words": 31,
+      "durationMs": 7052,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": true,
+      "text": "A dry click rises from the basin, followed by a faint smell of warm stone. Even the silence here appears to be waiting for someone else to take responsibility.",
+      "words": 29,
+      "durationMs": 4334,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": false,
+      "text": "Portia emitted a tiny grinding noise, the architectural equivalent of leaving someone on read. A little dust settled with the air of paperwork that had successfully become somebody else's problem.",
+      "words": 30,
+      "durationMs": 7432,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": true,
+      "text": "The archway gave a small, companionable creak as you passed beneath it. Structural approval was much like ordinary approval, except that withdrawal involved considerably more rubble.",
+      "words": 26,
+      "durationMs": 6943,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": false,
+      "text": "A page rustled with the weary precision of a complaint being filed. Marginalia remained unimpressed, a position requiring no evidence and therefore admirably easy to maintain.",
+      "words": 26,
+      "durationMs": 7122,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": true,
+      "text": "A page rustled behind you, then stopped, apparently unwilling to provide further evidence. The smell of old paper lingered with the quiet confidence of something exempt from rent.",
+      "words": 28,
+      "durationMs": 5841,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": false,
+      "text": "The air gave a tiny, papery crackle. Even silence here seemed to be awaiting approval, which explained why it had accomplished so little.",
+      "words": 23,
+      "durationMs": 7188,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": true,
+      "text": "A faint crackle followed your footsteps, half a beat late. Even the end of the world apparently had buffering.",
+      "words": 19,
+      "durationMs": 8444,
+      "drop": null
+    }
+  ]
+}

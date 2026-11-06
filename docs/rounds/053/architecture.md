@@ -131,3 +131,8 @@ mobile 131/131.
 |---|---|---|---|---|---|---|
 | R1.1 | Risk | A prompt build error reaches the client as a 500 and is retried on every visit | + | Accept: null with a `build` drop | **Accepted** (autonomous, pending owner review) | Amendment 1, item 1 |
 | R1.2 | Risk | A busy null is never asked again by the app | + | Accept: `retryAfterMs` hint and one store retry | **Accepted** (autonomous, pending owner review) | Amendment 1, item 2 |
+
+## Outcome (2026-11-06)
+
+Live check passed: 24 of 24 lines kept, English, 19–33 words, fitting each place. The lines repeat one bureaucratic
+joke (23 of 24), which is recorded as follow-up A10b. See [findings.md](findings.md).

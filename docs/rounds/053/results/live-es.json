@@ -1,0 +1,103 @@
+{
+  "provider": "codex-cli",
+  "language": "es",
+  "calls": 12,
+  "rows": [
+    {
+      "locationId": "butchers_stall",
+      "completed": false,
+      "text": "Mortimer exhaled through his nose, a small sound with the administrative weight of a rejected application. The smell of smoked meat lingered, having correctly assessed that nobody here would ask it to leave.",
+      "words": 33,
+      "durationMs": 4310,
+      "drop": null
+    },
+    {
+      "locationId": "butchers_stall",
+      "completed": true,
+      "text": "A warm, peppery smell drifted past, making a persuasive argument against having principles before lunch. Mortimer gave a satisfied sniff; goodwill was considerably cheaper to produce than sausage.",
+      "words": 28,
+      "durationMs": 7985,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": false,
+      "text": "The machine gave a small, accusatory hiss. Gerald narrowed his eyes at it; apparently even the equipment needed to earn his respect, and its application was not progressing.",
+      "words": 28,
+      "durationMs": 4170,
+      "drop": null
+    },
+    {
+      "locationId": "coffee_cart",
+      "completed": true,
+      "text": "Gerald acknowledges you with a tiny nod as the machine lets out a weary hiss. You have been exempted from his general disapproval, which continues operating at full capacity around you.",
+      "words": 31,
+      "durationMs": 11227,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": false,
+      "text": "A grain of grit skittered past Flick with the confidence of something that had never been asked to justify its place in the budget.",
+      "words": 24,
+      "durationMs": 6802,
+      "drop": null
+    },
+    {
+      "locationId": "cracked_fountain",
+      "completed": true,
+      "text": "Grit crunched beneath your footsteps beside the fountain. Even the echo was brief, as though anything longer would require approval from someone who had already left.",
+      "words": 26,
+      "durationMs": 7734,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": false,
+      "text": "Portia gave a tiny stone creak, the architectural equivalent of leaving someone on read. Her disapproval had settled into the comfortable permanence usually reserved for temporary restrictions.",
+      "words": 27,
+      "durationMs": 8161,
+      "drop": null
+    },
+    {
+      "locationId": "market_entrance",
+      "completed": true,
+      "text": "Portia gave a small, settling creak as you passed beneath her. Friendship had not stopped the structural complaints, but they were now being filed as suggestions.",
+      "words": 26,
+      "durationMs": 7452,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": false,
+      "text": "Marginalia made a faint chewing noise, with the air of someone whose approval required a processing fee. Dust settled in the silence, apparently content to be the only thing making progress.",
+      "words": 31,
+      "durationMs": 9711,
+      "drop": null
+    },
+    {
+      "locationId": "old_bookshop",
+      "completed": true,
+      "text": "A page turned somewhere behind you with the soft, officious rustle of a rule being introduced after you had broken it. The smell of old paper suggested the appeal had already been declined.",
+      "words": 33,
+      "durationMs": 4521,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": false,
+      "text": "A faint clicking followed your footsteps, half a beat late. Even here, reality preferred to register a complaint rather than fix anything.",
+      "words": 22,
+      "durationMs": 7048,
+      "drop": null
+    },
+    {
+      "locationId": "the_rift",
+      "completed": true,
+      "text": "A dry clicking rose beneath your feet, then stopped with the embarrassed precision of a system discovering that its error had become a feature.",
+      "words": 24,
+      "durationMs": 6966,
+      "drop": null
+    }
+  ]
+}

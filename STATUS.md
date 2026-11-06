@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 053, location atmosphere live (autonomous)
+
+The optional atmosphere line (`PARALLANG_ATMOSPHERE=on`) passed its live check. All 24 lines were kept, each in
+English, 19–33 words, and fitting its place. But 23 of the 24 tell the same bureaucratic joke, so varying it is
+follow-up A10b. The line stays off by default ([findings](docs/rounds/053/findings.md)).
+
 ## Addendum 2026-11-06: round 052, numbers in Flick's slow walk (autonomous)
 
 All four live runs (codex-cli, it and es) resolved with the scripted verdicts. Answers with no number of minutes
@@ -666,7 +672,7 @@ Newest first.
 | 056 | 11-05 | Word chips coloured and labelled by class: noun, verb, adjective (backlog C6) (autonomous) | [056](docs/rounds/056/architecture.md) | [findings](docs/rounds/056/findings.md) | pre-run record to round 056 close |
 | 055 | 11-05 | A 🔊 per word chip in encounter lines, free of hints (backlog C5) (autonomous) | [055](docs/rounds/055/architecture.md) | [findings](docs/rounds/055/findings.md) | pre-run record to round 055 close |
 | 054 | 11-05 | Typographic apostrophes fold to ' in the matcher, reviews and the grader-evidence check (backlog F2) (autonomous) | [054](docs/rounds/054/architecture.md) | [findings](docs/rounds/054/findings.md) | pre-run record to round 054 close |
-| 053 | 11-05 | An LLM atmosphere line under each location's description, off by default (backlog A10) (autonomous) | [053](docs/rounds/053/architecture.md) | [findings](docs/rounds/053/findings.md) | pre-run record |
+| 053 | 11-05 | An LLM atmosphere line under each location's description, off by default (backlog A10) (autonomous) | [053](docs/rounds/053/architecture.md) | [findings](docs/rounds/053/findings.md) | pre-run record to round 053 close |
 | 052 | 11-05 | Numbers 2–12 in Flick's slow walk: a bargaining objective, reinforcement for the hours (backlog H2) (autonomous) | [052](docs/rounds/052/architecture.md) | [findings](docs/rounds/052/findings.md) | pre-run record to round 052 close |
 | 051 | 11-05 | An early pass in an ordered encounter is no longer reported as a success: grading ORDER line, `held` marks (backlog H1) (autonomous) | [051](docs/rounds/051/architecture.md) | [findings](docs/rounds/051/findings.md) | pre-run record to round 051 close |
 | 050 | 11-05 | Telling the time at the Cracked Fountain: a fourth objective for Flick, four authored constructions per pack (backlog G5) (autonomous) | [050](docs/rounds/050/architecture.md) | [findings](docs/rounds/050/findings.md) | pre-run record to round 050 close |
