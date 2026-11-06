@@ -272,15 +272,17 @@ test('the third coffee break files Gerald\'s fragment; it is withheld during the
     assert.equal(turn.encounter.state, 'resolved');
     filed.push(turn.spellbook.journeyFragments.map((f) => f.id));
   }
-  assert.deepEqual(filed, [[], [], ['journey_dead_branch']], 'not on Gerald\'s defeat, nor the first two breaks');
+  // Round 109: Gerald's defeat files Journathan today (last in story order); his own fragment waits for the breaks.
+  const today = 'journey_still_on_his_way';
+  assert.deepEqual(filed, [[today], [today], ['journey_dead_branch', today]], 'not on Gerald\'s defeat, nor the first two breaks');
   const [fragment] = turn.spellbook.journeyFragments;
   assert.deepEqual([fragment.encounterId, fragment.locationName, fragment.hidden, fragment.unlockedAt, fragment.conversations, fragment.toldBy],
     ['gerald_coffee_break', 'The Coffee Cart', false, 3, 3, 'Gerald']);
   const replayed = await say(runtime, learnerId, last.encounter, '¡Un buen café, gracias!', last.attemptId);
   assert.equal(replayed.replayed, true);
-  assert.deepEqual(replayed.spellbook.journeyFragments.map((f) => [f.id, f.conversations]), [['journey_dead_branch', 3]], 'a replay does not count again');
+  assert.deepEqual(replayed.spellbook.journeyFragments.map((f) => [f.id, f.conversations]), [['journey_dead_branch', 3], [today, undefined]], 'a replay does not count again');
   const fourth = await start(runtime, learnerId, 'gerald_coffee_break');
-  assert.deepEqual(fourth.data.spellbook.journeyFragments.map((f) => [f.id, f.hidden, f.translation, f.toldBy]), [['journey_dead_branch', true, null, 'Gerald']], 'round 036: the teller stays shown');
+  assert.deepEqual(fourth.data.spellbook.journeyFragments.map((f) => [f.id, f.hidden, f.translation, f.toldBy]), [['journey_dead_branch', true, null, 'Gerald'], [today, true, null, undefined]], 'round 036: the teller stays shown');
 });
 
 // Round 033 (critique 1.4): Mortimer's fragment through real resolved tastings, counted by the service itself.

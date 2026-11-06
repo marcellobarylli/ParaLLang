@@ -5,7 +5,28 @@
 # Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
 # Round 083: every fragment also passes the inscriptions' answer check (server/test/answer-check.js: no word or 4-letter
 # stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
+# Round 109: the proem (after the Entrance tutorial, first in story order) and Journathan today, an ageing hero still
+# on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
 fragments:
+  - id: journey_proem
+    title: The first lines
+    found_after: market_entrance_tutorial
+    found: "Painted on the inside of the archway, where you only see it after you have walked through."
+    text: >-
+      Cantami, o Musa, l'uomo dagli idiomi innumerevoli, che vagò venti inverni di ramo in ramo del mondo. Chi venne
+      prima, l'eroe o il libro che lo racconta? Neppure il libro lo ricorda.
+    translation: >-
+      Sing to me, Muse, of the man of countless tongues, who wandered twenty winters from branch to branch of the
+      world. Which came first, the hero or the book that tells of him? Not even the book remembers.
+    glossary:
+      - { word: "cantami", meaning: "sing to me" }
+      - { word: "idiomi innumerevoli", meaning: "countless tongues" }
+      - { word: "vagò", meaning: "wandered" }
+      - { word: "inverni", meaning: "winters" }
+      - { word: "di ramo in ramo", meaning: "from branch to branch" }
+      - { word: "eroe", meaning: "hero" }
+      - { word: "racconta", meaning: "tells of" }
+      - { word: "neppure", meaning: "not even" }
   - id: journey_first_stitch
     title: The first stitch
     found_after: old_bookshop_bookworm
@@ -149,3 +170,25 @@ fragments:
       - { word: "alzò", meaning: "raised" }
       - { word: "coda", meaning: "tail" }
       - { word: "contento", meaning: "content, happy" }
+  - id: journey_still_on_his_way
+    title: Still on his way
+    found_after: imp_coffee_greeting
+    found: "Pinned under Gerald's tip jar, on the back of an unpaid bill signed with a flourish."
+    text: >-
+      Journathan non è mai arrivato. Oggi è un vecchio eroe dalle ginocchia che scricchiolano, tecnicamente sempre in
+      cammino. A chi gli chiede dove va, risponde che conta il percorso, non la meta. Poi sospira: anche lui è stanco
+      di sentirlo.
+    translation: >-
+      Journathan never arrived. Today he is an old hero with creaking knees, still technically on his way. Ask him
+      where he is going and he says it is about the journey, not the destination. Then he sighs: he is tired of
+      hearing it too.
+    glossary:
+      - { word: "mai arrivato", meaning: "never arrived" }
+      - { word: "ginocchia", meaning: "knees" }
+      - { word: "scricchiolano", meaning: "creak" }
+      - { word: "in cammino", meaning: "on his way" }
+      - { word: "conta", meaning: "matters, counts" }
+      - { word: "percorso", meaning: "path, route" }
+      - { word: "meta", meaning: "destination" }
+      - { word: "sospira", meaning: "he sighs" }
+      - { word: "stanco", meaning: "tired" }

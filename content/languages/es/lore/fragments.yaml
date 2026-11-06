@@ -5,7 +5,28 @@
 # Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
 # Round 083: every fragment also passes the inscriptions' answer check (server/test/answer-check.js: no word or 4-letter
 # stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
+# Round 109: the proem (after the Entrance tutorial, first in story order) and Journathan today, an ageing hero still
+# on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
 fragments:
+  - id: journey_proem
+    title: The first lines
+    found_after: market_entrance_tutorial
+    found: "Painted on the inside of the archway, where you only see it after you have walked through."
+    text: >-
+      Cántame, oh Musa, al hombre de los idiomas innumerables, que vagó veinte inviernos de rama en rama del mundo.
+      ¿Quién vino primero, el héroe o el libro que lo cuenta? Ni el libro lo recuerda.
+    translation: >-
+      Sing to me, Muse, of the man of countless tongues, who wandered twenty winters from branch to branch of the
+      world. Which came first, the hero or the book that tells of him? Not even the book remembers.
+    glossary:
+      - { word: "cántame", meaning: "sing to me" }
+      - { word: "idiomas innumerables", meaning: "countless tongues" }
+      - { word: "vagó", meaning: "wandered" }
+      - { word: "inviernos", meaning: "winters" }
+      - { word: "de rama en rama", meaning: "from branch to branch" }
+      - { word: "héroe", meaning: "hero" }
+      - { word: "lo cuenta", meaning: "tells of him" }
+      - { word: "ni", meaning: "not even" }
   - id: journey_first_stitch
     title: The first stitch
     found_after: old_bookshop_bookworm
@@ -150,3 +171,25 @@ fragments:
       - { word: "levantó", meaning: "raised" }
       - { word: "cola", meaning: "tail" }
       - { word: "contento", meaning: "content, happy" }
+  - id: journey_still_on_his_way
+    title: Still on his way
+    found_after: imp_coffee_greeting
+    found: "Pinned under Gerald's tip jar, on the back of an unpaid bill signed with a flourish."
+    text: >-
+      Journathan nunca llegó. Hoy es un viejo héroe de rodillas que crujen, técnicamente todavía en camino. Si le
+      preguntas adónde va, responde que lo que importa es el camino, no el destino. Luego suspira: él también está
+      cansado de oírlo.
+    translation: >-
+      Journathan never arrived. Today he is an old hero with creaking knees, still technically on his way. Ask him
+      where he is going and he says it is about the journey, not the destination. Then he sighs: he is tired of
+      hearing it too.
+    glossary:
+      - { word: "nunca llegó", meaning: "never arrived" }
+      - { word: "rodillas", meaning: "knees" }
+      - { word: "crujen", meaning: "creak" }
+      - { word: "en camino", meaning: "on the way" }
+      - { word: "lo que importa", meaning: "what matters" }
+      - { word: "camino", meaning: "road, way" }
+      - { word: "destino", meaning: "destination" }
+      - { word: "suspira", meaning: "he sighs" }
+      - { word: "cansado", meaning: "tired" }

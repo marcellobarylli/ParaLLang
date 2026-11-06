@@ -86,7 +86,8 @@ test('Talk offers the coffee break until three conversations, then Gerald\'s con
   assert.ok(!saved.world.completedEncounterIds.includes('gerald_confidence'), 'off the map');
   // The Dead Branch fragment is still filed under the first tier.
   const spellbook = (await api(runtime, '/api/spellbook', { learnerId })).data;
-  assert.deepEqual((spellbook.journeyFragments ?? spellbook.spellbook?.journeyFragments).map((f) => [f.id, f.encounterId]), [['journey_dead_branch', 'gerald_coffee_break']]);
+  // Round 109: only the conversation fragments (Gerald's defeat also files Journathan today, on completion).
+  assert.deepEqual((spellbook.journeyFragments ?? spellbook.spellbook?.journeyFragments).filter((f) => f.unlockedAt !== undefined).map((f) => [f.id, f.encounterId]), [['journey_dead_branch', 'gerald_coffee_break']]);
 });
 
 test('an earlier tier started over the API at count 3 is what Talk offers while it is under way (critique 1.1)', async (t) => {
@@ -135,7 +136,8 @@ test('a conversation fragment names the tier whose resolution reached its count'
   const fragments = async (count, given) => {
     const { runtime, learnerId } = await withGerald(t, count, given);
     const spellbook = (await api(runtime, '/api/spellbook', { learnerId })).data;
-    return (spellbook.journeyFragments ?? spellbook.spellbook?.journeyFragments).map((f) => [f.id, f.encounterId, f.unlockedAt]);
+    // Round 109: conversation fragments only (Gerald's defeat also files Journathan today).
+    return (spellbook.journeyFragments ?? spellbook.spellbook?.journeyFragments).filter((f) => f.unlockedAt !== undefined).map((f) => [f.id, f.encounterId, f.unlockedAt]);
   };
   assert.deepEqual(await fragments(4, content), [['journey_dead_branch', 'gerald_confidence', 4]]);
   assert.deepEqual(await fragments(3, content), []);

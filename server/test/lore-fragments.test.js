@@ -10,7 +10,7 @@ import { ALLOWED, answerLeaks } from './answer-check.js';
 import { api, createLearnerAndEncounter, createRuntime, finishEncounter, makeTempDir } from './helpers.js';
 
 const root = resolve(import.meta.dirname, '..', '..');
-const IDS = ['journey_first_stitch', 'journey_sirens', 'journey_shroud', 'journey_dead_branch', 'journey_forbidden_herd', 'journey_lotus', 'journey_old_dog'];
+const IDS = ['journey_proem', 'journey_first_stitch', 'journey_sirens', 'journey_shroud', 'journey_dead_branch', 'journey_forbidden_herd', 'journey_lotus', 'journey_old_dog', 'journey_still_on_his_way'];
 
 // Every vocabulary form of the pack found in a fragment's text or glossary words, and every glossary meaning that
 // is an accepted translation of an objective target (critique 1.1, 1.2, 1.10).
@@ -47,11 +47,11 @@ test('every fragment passes the answer check; each allowed word matters and the 
   }
 });
 
-test('both packs hold the same seven fragments, after the same encounters, with the same English text', () => {
+test('both packs hold the same nine fragments, after the same encounters, with the same English text', () => {
   const [it, es] = ['it', 'es'].map((code) => loadGameContent({ language: code }).fragments);
   assert.deepEqual(it.map((f) => f.id), IDS);
-  assert.deepEqual(it.map((f) => f.found_after), ['old_bookshop_bookworm', 'cracked_fountain_letharger', 'the_rift_errata', 'imp_coffee_greeting', 'butchers_stall_charcutier', 'cracked_fountain_letharger', 'old_bookshop_bookworm']);
-  assert.deepEqual(it.map((f) => f.after_conversations), [undefined, undefined, undefined, 3, 3, 3, 3], 'rounds 032, 033: after three party conversations');
+  assert.deepEqual(it.map((f) => f.found_after), ['market_entrance_tutorial', 'old_bookshop_bookworm', 'cracked_fountain_letharger', 'the_rift_errata', 'imp_coffee_greeting', 'butchers_stall_charcutier', 'cracked_fountain_letharger', 'old_bookshop_bookworm', 'imp_coffee_greeting']);
+  assert.deepEqual(it.map((f) => f.after_conversations), [undefined, undefined, undefined, undefined, 3, 3, 3, 3, undefined], 'rounds 032, 033: after three party conversations; round 109: the proem and Journathan today on first completion');
   const english = (fragments) => fragments.map(({ id, title, found_after, after_conversations, found, translation }) => ({ id, title, found_after, after_conversations, found, translation }));
   assert.deepEqual(english(es), english(it));
   for (const fragment of [...it, ...es]) assert.ok(fragment.glossary.length >= 4 && fragment.text !== fragment.translation, fragment.id);
@@ -129,15 +129,15 @@ test('the loader refuses malformed fragments and loads a pack without lore/', as
   const cases = [
     ['unknown encounter', (f) => { f[0].found_after = 'no_such_encounter'; }, /names unknown encounter no_such_encounter/],
     ['party conversation', (f) => { f[0].found_after = 'marginalia_fragment'; }, /must follow a location encounter, not marginalia_fragment/],
-    ['duplicate id', (f) => { f[1].id = f[0].id; }, /Lore fragments contains duplicate IDs: journey_first_stitch/],
+    ['duplicate id', (f) => { f[1].id = f[0].id; }, /Lore fragments contains duplicate IDs: journey_proem/],
     ['absent glossary word', (f) => { f[0].glossary.push({ word: 'ballena', meaning: 'whale' }); }, /glosses "ballena", which is not in its text/],
     ['substring glossary word', (f) => { f[0].text += ' Su nomea creció.'; f[0].glossary.push({ word: 'nome', meaning: 'name' }); }, /glosses "nome"/],
     ['unknown key', (f) => { f[0].colour = 'beige'; }, /colour/],
     ['empty glossary', (f) => { f[0].glossary = []; }, /glossary/],
     // Round 032: conversation counts need a party conversation, and a whole number from 1.
     ['count without a party conversation', (f) => { f[0].found_after = 'market_entrance_tutorial'; f[0].after_conversations = 2; }, /counts conversations, but market_entrance_tutorial has no party conversation/],
-    ['zero conversations', (f) => { f[3].after_conversations = 0; }, /after_conversations/],
-    ['fractional conversations', (f) => { f[3].after_conversations = 1.5; }, /after_conversations/],
+    ['zero conversations', (f) => { f[4].after_conversations = 0; }, /after_conversations/],
+    ['fractional conversations', (f) => { f[4].after_conversations = 1.5; }, /after_conversations/],
   ];
   for (const [name, edit, error] of cases) {
     const dir = await packCopy(editFragments(edit));
@@ -155,8 +155,8 @@ test('fragments appear on completion only, through the API; hidden during an enc
   assert.deepEqual(await fragments(), []);
   const seed = async (world) => { const envelope = await runtime.storage.load(learnerId); envelope.world = { ...envelope.world, ...world }; await runtime.storage.save(envelope); };
 
-  await seed({ visitedLocationIds: ['market_entrance', 'old_bookshop', 'cracked_fountain'], completedEncounterIds: ['marginalia_fragment', 'imp_coffee_greeting'] });
-  assert.deepEqual(await fragments(), [], 'a visit, a party conversation or Gerald\'s completion alone finds nothing');
+  await seed({ visitedLocationIds: ['market_entrance', 'old_bookshop', 'cracked_fountain'], completedEncounterIds: ['marginalia_fragment'] });
+  assert.deepEqual(await fragments(), [], 'a visit or a party conversation alone finds nothing');
   // Round 032: Gerald's fragment counts his member's conversations (two are not enough; a missing count reads as 0).
   const member = (conversations) => ({ characterId: 'imp_coffee_001', encounterId: 'imp_coffee_greeting', joinedAt: '2026-01-15T12:00:00.000Z', conversations });
   for (const [party, ids] of [[[member(undefined)], []], [[member(2)], []], [[member(3)], ['journey_dead_branch']], [[member(9)], ['journey_dead_branch']], [[{ ...member(5), characterId: 'someone_else' }], []]]) {
@@ -179,13 +179,21 @@ test('fragments appear on completion only, through the API; hidden during an enc
   }
   { const envelope = await runtime.storage.load(learnerId); envelope.party = []; await runtime.storage.save(envelope); }
 
+  // Round 109: Gerald's completion files Journathan today (last in story order), the tutorial's the proem (first).
+  await seed({ completedEncounterIds: ['imp_coffee_greeting'] });
+  assert.deepEqual((await fragments()).map((f) => [f.id, f.encounterId, f.locationName]), [['journey_still_on_his_way', 'imp_coffee_greeting', 'The Coffee Cart']]);
+  await seed({ completedEncounterIds: ['imp_coffee_greeting', 'market_entrance_tutorial'] });
+  assert.deepEqual((await fragments()).map((f) => [f.id, f.encounterId, f.locationName]), [
+    ['journey_proem', 'market_entrance_tutorial', 'Market Entrance'], ['journey_still_on_his_way', 'imp_coffee_greeting', 'The Coffee Cart'],
+  ], 'story order, not completion order');
+
   await seed({ completedEncounterIds: ['cracked_fountain_letharger', 'old_bookshop_bookworm'] });
   const found = await fragments();
   assert.deepEqual(found.map((f) => [f.id, f.encounterId, f.locationName]), [
     ['journey_first_stitch', 'old_bookshop_bookworm', 'The Old Bookshop'],
     ['journey_sirens', 'cracked_fountain_letharger', 'The Cracked Fountain'],
   ], 'story order, not completion order');
-  const source = runtime.content.fragments[0];
+  const source = runtime.content.fragments.find((f) => f.id === 'journey_first_stitch');
   assert.deepEqual(found[0], {
     id: source.id, title: source.title, found: source.found, encounterId: 'old_bookshop_bookworm', locationName: 'The Old Bookshop',
     text: source.text, hidden: false, translation: source.translation, glossary: source.glossary.map((g) => ({ ...g })),
@@ -203,11 +211,15 @@ test('during an encounter the translation and glossary are withheld; the resolvi
   const during = (await api(runtime, '/api/spellbook', { learnerId: session.learnerId })).data;
   assert.equal(during.inEncounter, true);
   assert.deepEqual(during.journeyFragments.map((f) => [f.id, f.hidden, f.translation, f.glossary]), [['journey_first_stitch', true, null, null]]);
-  assert.equal(during.journeyFragments[0].text, runtime.content.fragments[0].text, 'the target-language text stays');
+  const stitch = runtime.content.fragments.find((f) => f.id === 'journey_first_stitch');
+  assert.equal(during.journeyFragments[0].text, stitch.text, 'the target-language text stays');
 
   const resolved = await finishEncounter(runtime, session);
   assert.equal(resolved.spellbook.journeyFragments[0].hidden, false);
-  assert.equal(resolved.spellbook.journeyFragments[0].translation, runtime.content.fragments[0].translation);
+  // Round 109: the resolving turn (Gerald's) also files Journathan today, after the first stitch in story order.
+  assert.deepEqual(resolved.spellbook.journeyFragments.map((f) => f.id), ['journey_first_stitch', 'journey_still_on_his_way']);
+  assert.equal(resolved.spellbook.journeyFragments[0].translation, stitch.translation);
+  assert.equal(resolved.spellbook.journeyFragments[1].translation, runtime.content.fragments.at(-1).translation);
 });
 
 // Round 043 (backlog G1): the Party screen's hint agrees with what the Spellbook shows.
