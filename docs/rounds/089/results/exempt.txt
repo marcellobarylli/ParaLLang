@@ -1,0 +1,4 @@
+it exempt words that are answers: sola pollo basta io due otto nove sei salami mezzo cento
+it lines 36
+es exempt words that are answers: once kilo kilos cafe sola pollo basta chorizo chorizos soy
+es lines 36
