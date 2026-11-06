@@ -50,7 +50,7 @@ Keep the guard on (no flag). It costs a call only on a flagged line. It also cov
 ## Evidence
 
 [`results/gerald-it.json`](results/gerald-it.json), [`results/party-old_bookshop-es.json`](results/party-old_bookshop-es.json)
-(with their `.log` files), `server/test/target-language-guard.test.js`, and the scan's output (re-run with
+(their `.log` files stay local: `*.log` is ignored by git), `server/test/target-language-guard.test.js`, and the scan's output (re-run with
 `node docs/rounds/078/results/offline-scan.mjs`).
 
 ## Claim boundary
