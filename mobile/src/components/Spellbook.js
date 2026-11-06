@@ -53,7 +53,7 @@ export function cardState(card, { inEncounter = false, now = Date.now() } = {}) 
 // encounter and while a card in the line is due; the app checks the cards by the clock too, for a stale snapshot.
 export function lineHiddenBy(line, spellbook, now = Date.now()) {
   if (spellbook.inEncounter) return 'encounter';
-  const ids = new Set(line.vocabularyIds ?? []);
+  const ids = new Set(line.cardIds ?? line.vocabularyIds ?? []); // round 088: every card in the line (older servers: its chips)
   if (line.hidden || !line.translation) return 'review';
   return spellbook.cards.some((card) => ids.has(card.vocabularyId) && cardState(card, { now }) === 'due') ? 'review' : null;
 }

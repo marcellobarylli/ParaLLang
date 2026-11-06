@@ -26,14 +26,19 @@ export const ATMOSPHERE_MAX_LENGTH = 300;
 export const FOOTNOTE_MAX_LENGTH = 200; // round 081
 
 // Round 086: does the text hold an inflection of a single-word form (4+ letters) of the objectives' targets?
-export function inflectsAnswer(text, objectives, vocabularyById) {
-  const forms = new Set(objectives.flatMap((objective) => objective.target_vocabulary_ids)
-    .flatMap((id) => vocabularyById.get(id)?.surface_variants ?? [])
-    .map((form) => foldWords(form).trim()).filter((form) => form.length >= 4 && !form.includes(' ')));
+// Round 088: split so kept lines can test one entry's forms (`inflectsForms` takes the surface forms as written).
+const inflectionForms = (surfaceForms) => new Set(surfaceForms.map((form) => foldWords(form).trim()).filter((form) => form.length >= 4 && !form.includes(' ')));
+export function inflectsForms(text, surfaceForms) {
+  const forms = inflectionForms(surfaceForms);
   if (!forms.size) return false;
   return foldWords(text).trim().split(' ').some((word) => !forms.has(word) && [...forms].some((form) =>
     word.length >= form.length && word.length <= form.length + 2 && word.startsWith(form.slice(0, -1))));
 }
+export function inflectsAnswer(text, objectives, vocabularyById) {
+  return inflectsForms(text, objectives.flatMap((objective) => objective.target_vocabulary_ids)
+    .flatMap((id) => vocabularyById.get(id)?.surface_variants ?? []));
+}
+export const LINE_ENTRY_CACHE = 500; // round 088: natives whose entry ids are remembered
 export const ATMOSPHERE_RETRY_MS = 10 * 60_000;
 export const ATMOSPHERE_BUSY_RETRY_MS = 15_000;
 // Round 053 (critique 1.1): pack forms that are also English words; the atmosphere line may use them in English.
@@ -299,21 +304,42 @@ export class LearningService {
 
   // Round 060 (backlog C9): the lines the player paid to translate, newest first. The translation is withheld during
   // an encounter and while any card the line contains is due (decision 2): the line is that card's answer in context.
+  // Round 088 (review R1.1): also while any of the learner's cards stands in the line, from any encounter: its entry
+  // found alone (overlaps do not exclude each other) or an inflection of it. English homographs of a due card hide a
+  // line too (decision 2). `cardIds` lets the app check a stale snapshot by the clock.
   keptLines(envelope, inEncounter, cards) {
     const due = new Set(cards.filter((card) => card.due).map((card) => card.vocabularyId));
+    const order = cards.map((card) => card.vocabularyId);
     return (envelope.lines ?? []).map((line) => {
-      const hidden = inEncounter || line.vocabularyIds.some((id) => due.has(id));
+      const found = this.lineEntryIds(line.native);
+      const cardIds = [...new Set([...line.vocabularyIds, ...order.filter((id) => found.has(id))])];
+      const hidden = inEncounter || cardIds.some((id) => due.has(id));
       return {
         id: line.id, speaker: line.speaker, native: line.native, translation: hidden ? null : line.translation,
         locationName: (line.locationId && this.content.world.locationsById.get(line.locationId)?.name) ?? null,
-        vocabularyIds: [...line.vocabularyIds], savedAt: line.savedAt, hidden,
+        vocabularyIds: [...line.vocabularyIds], cardIds, savedAt: line.savedAt, hidden,
       };
     });
   }
 
+  // Round 088 (decision 3): every pack entry found in a native, alone or inflected; a bounded map, oldest out (the
+  // service's content is fixed for its life, so the native is the whole key).
+  lineEntryIds(native) {
+    this.lineEntries ??= new Map();
+    const known = this.lineEntries.get(native);
+    if (known) return known;
+    const found = new Set(this.content.vocabulary.entries
+      .filter((entry) => matchCanonicalVocabulary(native, [entry]).length || inflectsForms(native, entry.surface_variants))
+      .map((entry) => entry.id));
+    this.lineEntries.set(native, found);
+    if (this.lineEntries.size > LINE_ENTRY_CACHE) this.lineEntries.delete(this.lineEntries.keys().next().value);
+    return found;
+  }
+
   // Round 060: keeps a paid sentence reveal in the staged envelope only (critique 1.6), deduped and capped.
   keepLine(envelope, session, message) {
-    const cap = (value) => String(value ?? '').slice(0, LINE_TEXT_LIMIT);
+    // Round 088 (review R1.3): never a lone high surrogate at the cut.
+    const cap = (value) => String(value ?? '').slice(0, LINE_TEXT_LIMIT).replace(/[\uD800-\uDBFF]$/, '');
     const line = {
       id: cap(message.id), encounterId: cap(this.definition(session).encounter.id),
       locationId: this.sceneLocationId(session) ?? null, speaker: cap(message.dialogue.speaker),

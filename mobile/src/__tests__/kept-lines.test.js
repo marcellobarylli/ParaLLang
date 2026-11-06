@@ -48,6 +48,15 @@ test('a card in the line that has fallen due by the clock hides the translation 
   expect(lineHiddenBy(line({ vocabularyIds: [] }), book([line()], { cards }), now)).toBeNull();
 });
 
+// Round 088 (review R1.1): the server sends every card in the line (`cardIds`); the clock check uses them, and an
+// older server's chips (`vocabularyIds`) when they are missing.
+test('a card due by the clock that is only in cardIds hides the line; without cardIds the chips are checked', () => {
+  const cards = [card('caffe'), card('senza_latte'), card('nero', { nextReviewAt: '2026-01-15T11:59:00Z' })];
+  expect(lineHiddenBy(line({ cardIds: ['caffe', 'senza_latte', 'nero'] }), book([], { cards }), now)).toBe('review');
+  expect(lineHiddenBy(line(), book([], { cards }), now)).toBeNull();
+  expect(lineHiddenBy(line({ vocabularyIds: ['nero'] }), book([], { cards }), now)).toBe('review');
+});
+
 test('no section for an empty or missing list (older server)', async () => {
   const empty = await show(book([]));
   expect(screen.queryByRole('heading', { name: 'Lines you translated' })).not.toBeOnTheScreen();

@@ -25,7 +25,7 @@ test('a paid sentence reveal keeps the line, hidden during the encounter and whi
   assert.equal(helped.charged, true);
   assert.deepEqual(helped.spellbook.lines, [{
     id: session.message.id, speaker: 'Gerald', native: session.message.dialogue.native, translation: null,
-    locationName: 'The Coffee Cart', vocabularyIds: ['cafe', 'sin_leche'], savedAt: fixedNow.toISOString(), hidden: true,
+    locationName: 'The Coffee Cart', vocabularyIds: ['cafe', 'sin_leche'], cardIds: ['cafe', 'sin_leche'], savedAt: fixedNow.toISOString(), hidden: true,
   }]);
   const [kept] = (await saved(runtime, session.learnerId)).lines;
   assert.equal(kept.translation, 'Do you want a coffee? Without milk is the only civilized option.');
@@ -136,4 +136,50 @@ test('receipts hold no lines; a replay carries the current ones (critiques 1.2, 
   const replay = await runtime.service.submitDialogue(session.learnerId, request);
   assert.equal(replay.replayed, true);
   assert.deepEqual(replay.spellbook.lines.map((line) => [line.id, line.hidden]), [[session.message.id, true]]);
+});
+
+// Round 088 (review R1.1): a kept line is hidden while any of the learner's cards stands in it, from any encounter:
+// alone (overlaps do not exclude each other) or inflected; an English homograph of a due card hides it too (decision 2).
+test('a line hides for any due card in it: another encounter\'s word, a word inside a longer chip, an inflection', async (t) => {
+  const runtime = await createRuntime({ language: 'it' });
+  t.after(runtime.close);
+  const { service } = runtime;
+  const card = (vocabularyId, due) => ({ vocabularyId, due });
+  const line = (id, native, vocabularyIds) => ({ id, speaker: 'Gerald', native, translation: `T ${id}`, vocabularyIds, savedAt: fixedNow.toISOString() });
+  const envelope = { lines: [
+    line('a', 'Grazie, il caffè è ottimo.', ['grazie', 'ottimo']),
+    line('b', 'Un caffè nero, subito.', ['caffe_nero']),
+    line('c', 'Un caffè, subito.', ['caffe']),
+    line('d', 'I dolci sono ottimi.', []),
+    line('e', 'The bill is sei days late.', []),
+  ] };
+  const view = (cards) => Object.fromEntries(service.keptLines(envelope, false, cards).map((l) => [l.id, l]));
+  const none = view([card('grazie', false), card('ottimo', false), card('caffe', false), card('caffe_nero', false), card('sei', false)]);
+  assert.deepEqual(Object.values(none).map((l) => l.hidden), [false, false, false, false, false]);
+  assert.deepEqual(none.a.cardIds, ['grazie', 'ottimo', 'caffe']);
+  assert.deepEqual(none.a.vocabularyIds, ['grazie', 'ottimo'], 'the stored ids are unchanged');
+  const caffeDue = view([card('caffe', true), card('caffe_nero', false), card('ottimo', false)]);
+  assert.equal(caffeDue.a.hidden, true, 'another encounter\'s word');
+  assert.equal(caffeDue.a.translation, null);
+  assert.equal(caffeDue.b.hidden, true, 'caffè inside caffè nero');
+  assert.equal(caffeDue.c.hidden, true);
+  const neroDue = view([card('caffe', false), card('caffe_nero', true)]);
+  assert.equal(neroDue.c.hidden, false, 'caffè alone is not caffè nero');
+  assert.equal(neroDue.b.hidden, true);
+  assert.equal(view([card('ottimo', true)]).d.hidden, true, 'ottimi (unlisted) for a due ottimo');
+  assert.equal(view([card('sei', true)]).e.hidden, true, 'an English homograph errs on the side of hiding');
+  assert.equal(view([card('tre', true)]).a.hidden, false, 'a due card not in the line');
+  assert.equal(view([]).a.cardIds.length, 2, 'no cards: the stored ids only');
+});
+
+test('the 500-character cap never leaves a lone surrogate (review R1.3)', async (t) => {
+  const runtime = await createRuntime();
+  t.after(runtime.close);
+  const session = await start(runtime);
+  const envelope = { lines: [] };
+  const encounter = { definitionId: session.encounter.encounterId, locationId: 'coffee_cart' };
+  const native = `${'x'.repeat(LINE_TEXT_LIMIT - 1)}😀 tail`;
+  runtime.service.keepLine(envelope, encounter, { id: 'emoji', dialogue: { speaker: 'Gerald', native, translation: 'Hello.', words: [] } });
+  assert.equal(envelope.lines[0].native, 'x'.repeat(LINE_TEXT_LIMIT - 1));
+  assert.doesNotMatch(envelope.lines[0].native, /[\uD800-\uDBFF]$/);
 });

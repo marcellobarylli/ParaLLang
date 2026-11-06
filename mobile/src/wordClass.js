@@ -26,7 +26,7 @@ export function segmentLine(native, words) {
   const marks = (words ?? []).flatMap((word) => (Array.isArray(word.spans) ? word.spans : [])
     .filter((span) => Array.isArray(span) && Number.isInteger(span[0]) && Number.isInteger(span[1]) && span[0] >= 0 && span[0] < span[1] && span[1] <= text.length)
     .map(([start, end]) => ({ start, end, word })))
-    .sort((a, b) => a.start - b.start || a.end - b.end);
+    .sort((a, b) => a.start - b.start || b.end - a.end); // round 088: the longer of two same-start spans, as the server
   const segments = [];
   let cursor = 0;
   for (const mark of marks) {

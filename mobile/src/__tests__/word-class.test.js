@@ -81,6 +81,11 @@ describe('segmentLine', () => {
       { text: 'Un ', word: null }, { text: 'caffè', word }, { text: '? Sì, ', word: null }, { text: 'caffè', word }, { text: '.', word: null },
     ]);
   });
+  test('of two spans starting together, the longer is kept, as the server matches (round 088)', () => {
+    const short = { ...noun, spans: [[0, 5]] };
+    const long = { vocabularyId: 'caffe_nero', partOfSpeech: 'noun_phrase', spans: [[0, 10]] };
+    expect(segmentLine('caffè nero!', [short, long])).toEqual([{ text: 'caffè nero', word: long }, { text: '!', word: null }]);
+  });
   test('malformed, out-of-range and overlapping spans are dropped', () => {
     const a = { ...noun, spans: [[0, 5], [3, 7], [-1, 2], [2, 2], [4, 99], ['0', 1], null, [1.5, 3]] };
     expect(segmentLine('caffè nero', [a])).toEqual([{ text: 'caffè', word: a }, { text: ' nero', word: null }]);
