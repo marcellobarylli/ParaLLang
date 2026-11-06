@@ -11,6 +11,9 @@ export const ONBOARDING_KEY = 'parallang.onboardingSeen';
 // Round 037: the sound switch (per device); anything but 'off' means on.
 export const SOUNDS_KEY = 'parallang.soundsOn';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
+// Round 071: what the player reads when a resend found the conversation changed or closed.
+export const STALE_RELOADED = 'This conversation had moved on, so it was reloaded. Your answer was not sent; it is still in the box.';
+export const STALE_CLOSED = 'This conversation is no longer open. Return to it on the map to start again.';
 // Round 070 (backlog I1): the verdict poll while a turn's reply is written: every second, at most a minute.
 export const PROGRESS_INTERVAL_MS = 1000;
 export const PROGRESS_POLLS = 60;
@@ -23,6 +26,10 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
   let requestEpoch = 0;
   let reviewRequest = 0; // round 065 Amendment 1: the latest startReview
   let sendSeq = 0; // round 070: the latest send; a progress poll from an older one is ignored (critique 1.1)
+  // Round 071: attempt ids of sends that did not succeed, by learner, encounter, version and text, so resending the
+  // same answer replays a turn the server committed but whose response was lost (critique 1.5: A → B → A keeps A).
+  const retryIds = new Map();
+  const STALE_CODES = new Set(['STALE_VERSION', 'STALE_ENCOUNTER']);
   let soundsTouched = false;
   const snapshots = new Map();
 
@@ -212,10 +219,14 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       const encounterId = state.encounter.id;
       const version = state.encounter.version;
       const epoch = requestEpoch;
-      const attempt = attemptId();
+      const retryKey = [learnerId, encounterId, version, text].join('|');
+      const attempt = retryIds.get(retryKey) ?? attemptId();
+      retryIds.set(retryKey, attempt);
       sendSeq += 1;
       const seq = sendSeq;
       const send = { settled: false };
+      const owns = () => seq === sendSeq && epoch === requestEpoch && get().learnerId === learnerId
+        && get().encounter?.id === encounterId && get().encounter?.version === version;
       set({ isLoading: true, error: null, pendingInput: text, draft: text, earlyAssessment: null });
       // Round 070: while the POST runs, one sequential poll loop asks for the verdict (critique 1.1: applied only while
       // this send is unsettled and still the latest). A poll error is ignored; the POST decides.
@@ -234,9 +245,23 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       try {
         const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attempt, message: text });
         send.settled = true;
-        if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
+        // Round 071 (critique 1.2): also the same encounter and the latest send.
+        if (!owns()) return;
+        retryIds.clear();
         snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
         set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, earlyAssessment: null, isLoading: false, pendingInput: null, draft: '' });
+        // Round 071 (critique 1.1): a replay is the turn as committed then; another client may have moved on since.
+        if (result.replayed && typeof api.currentEncounter === 'function') {
+          try {
+            const latest = await api.currentEncounter(learnerId);
+            const now = get().encounter;
+            if (seq === sendSeq && epoch === requestEpoch && get().learnerId === learnerId && !get().isLoading
+              && latest?.encounter?.id === now?.id && latest.encounter.version > now.version) {
+              snapshots.set(learnerId, { encounter: latest.encounter, spellbook: latest.spellbook });
+              set({ encounter: latest.encounter, spellbook: latest.spellbook });
+            }
+          } catch { /* the replayed state stands */ }
+        }
         // Round 037: a cue for progress only: the encounter resolved, or the current objective was met (critique
         // 1.1: a later objective passing alone advances nothing). Nothing on a miss or a replayed attempt.
         if (!result.replayed) {
@@ -253,6 +278,32 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       } catch (error) {
         send.settled = true;
         if (seq === sendSeq) set({ earlyAssessment: null });
+        // Round 071 (critiques 1.3, 1.4, 1.6, 1.7): a stale session is reloaded while loading stays on, under the
+        // send's own guards; a closed one returns to the map. The answer stays in the box, unsent.
+        if (STALE_CODES.has(error.code) && owns() && typeof api.currentEncounter === 'function') {
+          let latest = null;
+          try { latest = await api.currentEncounter(learnerId); }
+          catch {
+            if (owns()) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
+            return;
+          }
+          if (!owns()) return;
+          retryIds.clear();
+          if (latest?.encounter) {
+            snapshots.set(learnerId, { encounter: latest.encounter, spellbook: latest.spellbook });
+            set({
+              encounter: latest.encounter, spellbook: latest.spellbook ?? get().spellbook, assessment: null, earlyAssessment: null,
+              pendingInput: null, draft: text, isLoading: false, error: STALE_RELOADED,
+            });
+          } else {
+            snapshots.set(learnerId, { encounter: null, spellbook: latest?.spellbook ?? get().spellbook });
+            set({
+              encounter: null, spellbook: latest?.spellbook ?? get().spellbook, assessment: null, earlyAssessment: null,
+              pendingInput: null, draft: text, isLoading: false, view: 'map', error: STALE_CLOSED,
+            });
+          }
+          return;
+        }
         if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
       }
     },

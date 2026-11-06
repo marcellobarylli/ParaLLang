@@ -99,3 +99,8 @@ Critiqued draft: `trail/plan-v1.md`, sha256 17be6ef4…; Codex, effort high; raw
 
 Net change: retry ids by request key, guards on encounter id and send sequence, a guarded reload that also handles
 null and replays, and the not-sent message.
+
+## Outcome (2026-11-06)
+
+Built to the pre-run design. Every planned test passes (mobile 9, of which 8 fail without the change; server 1), and
+all suites are green. As planned, there was no live run. See [findings.md](findings.md).

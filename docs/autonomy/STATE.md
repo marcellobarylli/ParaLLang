@@ -158,6 +158,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 - [x] **I1. The verdict before the reply** (round 070, closed 2026-11-06): `GET /api/encounter/progress`, app polls
   every second, provisional Assessment box; live: verdict at 5.3–6.8 s vs response 11.8–16.1 s, 6/6 equal.
+- [x] **I2. A resent answer replays** (round 071, closed 2026-11-06; round 070 critique 1.2): attempt ids by
+  request key, guarded reload on `STALE_VERSION` / `STALE_ENCOUNTER`, back to the map if the conversation closed.
 
 ### F. Maintenance
 
@@ -197,6 +199,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- Round 071 (Simulator): Wi-Fi off, send, Wi-Fi on, send again: one turn, one reply; read the two new banner
+  messages ([open items](../rounds/071/findings.md#open-items)).
 - Round 070 (Simulator): the waiting line "{name} is replying…" and the provisional Assessment box (answer,
   verdict, "Not counted until…"), in a long conversation and with VoiceOver. Decide: may a verdict show before the turn
   commits ([open items](../rounds/070/findings.md#open-items)).
@@ -461,6 +465,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `docs/rounds/069/results/kept-lines-live.mjs` is a ~2-minute regression check.
 - 2026-11-06, iteration 20: round 067 addendum (share on target by `folded`: it 0.43, es 0.44 vs 0.44; Rift 0.50).
   Round 070 closed (I1): the verdict before the NPC's reply; server 256/256, client 12/12, mobile 192/192; live 6/6.
+  Round 071 closed (I2): a resent answer reuses its attempt id and replays; stale sessions reload; mobile 201/201.
 
 ## Handoff notes and traps
 
@@ -468,6 +473,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   `effective_quality`) before the narration call and keeps it in `turnProgress` until the turn ends; change it there,
   not in the staging code. `progress()` is deliberately not serialized. Mobile fakes without `getTurnProgress` skip
   the poll; a test that wants it uses fake timers and `PROGRESS_INTERVAL_MS` (`turn-progress.test.js`).
+- **Send guards** (round 071): `sendMessage`'s `owns()` (send sequence, epoch, learner, encounter id and version)
+  decides whether a response or reload applies; `retryIds` is cleared on success and on reload. Mobile fakes without
+  `currentEncounter` skip the reload.
 - **`pgrep -af server/server.js` matches its own shell**: use `pgrep -af "[n]ode server/server.js"`.
 - **Codex critique needs a bundle on stdin** (again in round 068): without it, bwrap fails and the critique is void.
   Build the bundle with `cat -n` of the plan and files, and tell Codex not to run commands. It returned in about 2
