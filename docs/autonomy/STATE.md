@@ -176,6 +176,9 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **F3. Vocabulary forms match their own entry** (round 058, closed 2026-11-05): matcher sorts (entry, variant) pairs longest
   first; pack-wide behavioural test. No live calls.
 
+- [x] **F4. One test command** (2026-11-06, no round): root `npm test` (server, client, mobile), `npm run test:server`;
+  bare `node --test` in `server/` hangs on the fake CLIs in `test/fixtures/`.
+
 ### E. Follow-ups from live data
 
 - [x] **E1. Opening-line language share.** (round 026, closed 2026-11-05: rule kept with Amendment 2; tour gap it 0.12 → 0.07, es 0.15 → 0.14; greetings within 0.07 by hand) Round 009: first NPC lines carry 0.05–0.24 target language against

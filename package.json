@@ -8,6 +8,8 @@
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",
     "dev:ios": "npm run ios --prefix mobile",
+    "test": "npm test -w server && npm exec --workspace client -- vitest run && npm test --prefix mobile",
+    "test:server": "npm test -w server",
     "test:mobile": "npm test --prefix mobile",
     "check:provider": "node server/scripts/check-provider.js",
     "verify:cli": "node server/scripts/verify-cli.js"

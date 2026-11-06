@@ -117,6 +117,9 @@ Definitions remain in each pack's `vocabulary/` folder; saves contain canonical 
 
 ## Focused verification
 
+`npm test` runs every server, web-client and app test (`npm run test:server` for the server alone). Do not run a bare
+`node --test` inside `server/`: it also picks up the fake CLIs in `server/test/fixtures/`, which wait on stdin forever.
+
 Round 002 deliberately selects these checks rather than a broad repository suite; round 003 adds the language-pack test (both packs, the Italian encounter and per-language saves), and round 004 adds the iPhone app's tests, its Expo health check and an iOS bundle:
 
 ```sh

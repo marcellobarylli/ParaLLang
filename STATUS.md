@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: one command for every test (autonomous, maintenance)
+
+`npm test` at the root runs the server, web-client and app tests (about 20 s). `npm run test:server` runs the server
+alone. A bare `node --test` inside `server/` hangs, because it also runs the fake CLIs in `server/test/fixtures/` as
+tests and they wait on stdin. The README says so. Backlog F4; no round.
+
 ## Addendum 2026-11-06: round 060, lines you translated (autonomous)
 
 When the player pays to translate an NPC line, the line is now kept in the save, up to the 50 newest. The Spellbook
