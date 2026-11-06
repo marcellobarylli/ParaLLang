@@ -47,7 +47,7 @@ test('the tour visits every encounter once, the Old Bookshop just before The Rif
 
 // Round 097 (review R1.1, R1.2; critique 1.2-1.6): a retried narration is one report line, the one the player saw.
 import { FixtureProvider, createRuntime } from './helpers.js';
-import { narrationLines, recordCalls } from '../scripts/play-market.js';
+import { narrationLines, playMarket, recordCalls } from '../scripts/play-market.js';
 import { scanReport } from '../scripts/leak-scan.js';
 import { ProviderError } from '../src/llm/provider-error.js';
 
@@ -135,6 +135,78 @@ test('narrationLines: a call with no committed line is set aside; identical nati
   assert.equal(narrationLines(same, ['X'], options).lines[0].retried.durationMs, 10);
   assert.equal(narrationLines(same, ['X'], { ...options, lacksTarget: () => true }).lines[0].retried.kept, 'first');
   assert.equal(narrationLines([same[0], { ...same[1], durationMs: 5000 }], ['X'], options).lines[0].retried.kept, 'first', 'past the deadline');
+});
+
+// Round 107 (round 099 review 1 R1.4): a line comes from a call of the step that committed it.
+test('narrationLines with steps: a failed step\'s call with the next line\'s text is uncommitted; retries stay in their step', () => {
+  const call = (native, step, extra = {}) => ({ schema: 'encounter_narration', retry: false, step, durationMs: 10, output: { narrative: '', dialogue: { native, translation: native } }, ...extra });
+  const options = { ratioFor: (turn) => turn, share: () => null, lacksTarget: () => false, retryMs: 1000 };
+  const calls = [call('Ciao.', 0), call('Bene.', 1, { durationMs: 99 }), call('Bene.', 2, { durationMs: 7 })];
+  const stepped = narrationLines(calls, [{ native: 'Ciao.', step: 0 }, { native: 'Bene.', step: 2 }], options);
+  assert.deepEqual(stepped.lines.map((line) => [line.turn, line.native, line.durationMs]), [[0, 'Ciao.', 10], [1, 'Bene.', 7]]);
+  assert.deepEqual(stepped.uncommitted, [{ native: 'Bene.', error: null, retried: false, step: 1 }]);
+  // Without steps the old rule stands: the first call with the text takes the line.
+  const plain = narrationLines(calls, ['Ciao.', 'Bene.'], options);
+  assert.equal(plain.lines[1].durationMs, 99);
+  // Review R1.1, R1.2: a committed line no call matches keeps its turn number out of the lines and is listed.
+  const gap = narrationLines([call('Bene.', undefined)], ['Ciao.', 'Bene.'], options);
+  assert.deepEqual(gap.lines.map((line) => [line.turn, line.native]), [[1, 'Bene.']]);
+  assert.deepEqual(gap.unmatched, [{ turn: 0, native: 'Ciao.' }]);
+  assert.deepEqual(stepped.unmatched, []);
+  const elsewhere = narrationLines([call('Ciao.', null)], [{ native: 'Ciao.', step: 0 }], options);
+  assert.deepEqual(elsewhere.unmatched, [{ turn: 0, native: 'Ciao.', step: 0 }], 'a call outside a step is no line');
+  assert.deepEqual(elsewhere.uncommitted, [{ native: 'Ciao.', error: null, retried: false, step: null }]);
+  // A retry joins its own step's group; one recorded with no first call of its step does not join step 1's group.
+  const retried = narrationLines([call('Bene.', 1), call('Bene.', 2), call('Meglio.', 2, { retry: true })], [{ native: 'Meglio.', step: 2 }], options);
+  assert.deepEqual(retried.lines.map((line) => [line.native, line.retried?.kept]), [['Meglio.', 'retry']]);
+  assert.deepEqual(retried.uncommitted.map((group) => [group.native, group.retried, group.step]), [['Bene.', false, 1]]);
+  const orphan = narrationLines([call('Bene.', 1), call('Meglio.', 2, { retry: true })], [{ native: 'Meglio.', step: 2 }], options);
+  assert.deepEqual(orphan.lines.map((line) => [line.native, line.retried]), [['Meglio.', undefined]]);
+  assert.deepEqual(orphan.uncommitted.map((group) => [group.native, group.retried]), [['Bene.', false]]);
+});
+
+test('recordCalls tags each call with its step when given stepOf', async () => {
+  const raw = [];
+  let current = 3;
+  const provider = recordCalls({ structuredChat: async () => ({ ok: true }) }, raw, { stepOf: () => current });
+  await provider.structuredChat([{ role: 'user', content: 'x' }], null, { schemaName: 'encounter_narration' });
+  current = null;
+  await provider.structuredChat([{ role: 'user', content: 'x' }], null, { schemaName: 'encounter_narration' });
+  assert.deepEqual(raw.map((entry) => entry.step), [3, null]);
+  const untagged = [];
+  await recordCalls({ structuredChat: async () => ({}) }, untagged).structuredChat([], null, {});
+  assert.equal('step' in untagged[0], false);
+});
+
+// Narration call 2 (the first reply) has an empty narrative, so the schema fails and the step fails after the
+// provider answered. Call 3 (the next reply) is all English, so the guard writes it again (call 4). Every reply has
+// the same native, so text alone would give turn 1 the failed call. Each narrative names its call (review R1.3).
+class FailedFirstReply extends FixtureProvider {
+  constructor() { super(); this.narrations = 0; }
+  async structuredChat(messages, schema, options) {
+    if (options.schemaName !== 'encounter_narration') return super.structuredChat(messages, schema, options);
+    this.narrations += 1;
+    this.calls.push({ messages, options });
+    const correction = String(messages.at(-1).content).startsWith('CORRECTION:');
+    const line = { ...this.narrate(correction ? messages.slice(0, -2) : messages), narrative: `call ${this.narrations}` };
+    if (this.narrations === 2) return { ...line, narrative: '' };
+    if (this.narrations === 3) return { ...line, dialogue: { ...line.dialogue, native: ENGLISH, translation: ENGLISH, words: [] } };
+    return line;
+  }
+}
+
+test('playMarket with an injected provider: a failed say is no report line, the next line has its own call', async () => {
+  const lines = 'Quiero un café, por favor.|Quiero un café, por favor.|Sin leche, por favor.';
+  const report = await playMarket({ args: ['--location', 'coffee_cart', '--lines', lines], env: { TARGET_LANGUAGE: 'es' }, provider: new FailedFirstReply() });
+  assert.equal(report.resolved, true);
+  const says = report.steps.map((s, index) => ({ ...s, index })).filter((s) => s.name.startsWith('say '));
+  assert.deepEqual(says.map((s) => s.ok), [false, true, true]);
+  assert.equal(says[0].code, 'PROVIDER_FAILURE');
+  assert.deepEqual(report.lines.map((line) => [line.turn, line.narrative]), [[0, 'call 1'], [1, 'call 4'], [2, 'call 5']]);
+  assert.deepEqual({ kept: report.lines[1].retried.kept, rejectedNative: report.lines[1].retried.rejectedNative }, { kept: 'retry', rejectedNative: ENGLISH });
+  assert.equal(report.narrationStats.retryPassed, 1);
+  assert.deepEqual(report.uncommittedLines, [{ native: 'Bien. Tu café será tomado en serio.', error: null, retried: false, step: says[0].index }]);
+  assert.equal(report.unmatchedLines, undefined);
 });
 
 // Round 097 (review R1.4): verify-cli compares verdicts by objective, not in the grader's order.

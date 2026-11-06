@@ -52,3 +52,23 @@ No owner was present; each is an **autonomous decision, pending owner review**, 
   that of its own step's call.
 - Mutation: dropping the step filter fails a test.
 - Full suites: server, client, mobile.
+
+## Second opinion (review 1, after the build)
+
+A fresh read-only subagent reviewed the build (Codex limited); raw text in [`trail/review-1.md`](trail/review-1.md).
+No Error: step attribution, retry grouping without steps, the CLI path and the readers of the report (leak-scan reads
+only `lines` and `grading`) were checked. Each disposition is an **autonomous decision, pending owner review**.
+
+| # | Severity | Finding | Recommendation | Change | Disposition | Decision |
+|---|---|---|---|---|---|---|
+| R1.1 | Minor | With plain strings, a committed line with no call no longer makes every later call `uncommitted`; `turn` is the committed index | Record it, test it | Kept (the committed index is the service's turn for `ratioFor`); comment, findings and a unit test say so | **Accepted** (autonomous, pending owner review) | Round 107 decisions row |
+| R1.2 | Gap | A committed line no call matches disappears silently | Return the unmatched lines | `narrationLines` returns `unmatched`; a report has `unmatchedLines` when any; tested | **Accepted** (autonomous, pending owner review) | Round 107 decisions row |
+| R1.3 | Minor | The end-to-end test asserted on timing | Stamp each output | Each fixture narrative names its call; the test asserts which call each line came from | **Accepted** (autonomous, pending owner review) | Round 107 decisions row |
+| R1.4 | Gap | No guard retry in a stepped say; no call outside a step; no multi-scene run | Add cases | The end-to-end run's next reply is all English, so the guard retries inside the step (kept); a unit case for a `step: null` call. Multi-scene `--tour` / `--party`: not added (each scene slices its own calls from `firstCall` and matches its own committed lines; step indices are global and unique) | **Accepted in part** (autonomous, pending owner review) | Round 107 decisions row |
+
+## Outcome (2026-11-06)
+
+Built as designed, with the review's fixes. Report lines come from calls of the step that committed them; a failed
+step's call is `uncommittedLines` with its `step`; a committed line no call matches is `unmatchedLines` (both only
+when non-empty). A line's `turn` is its index among the committed NPC lines. Three mutations each fail a test.
+Server 395/395, client 20/20, mobile 303/303. No live report yet uses the new matching.

@@ -7,7 +7,13 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 31 (2026-11-06, 08:47–09:10 UTC) closed two offline rounds:
+Nothing open. Iteration 32 (2026-11-06, 09:05–09:20 UTC) closed one offline round:
+- **107** (099 R1.4): play-market's `narrationLines` matches each line to a call of the step that committed it
+  (`recordCalls(…, { stepOf })`, committed lines `{ native, step }`); failed steps' calls are `uncommittedLines`
+  (with `step`), committed lines with no call `unmatchedLines`; `turn` = index among committed NPC lines.
+  `playMarket({ provider })` is a test hook: a whole scripted encounter now runs in-process in a test.
+
+Iteration 31 (2026-11-06, 08:47–09:10 UTC) closed two offline rounds:
 - **105** (round 103's token question, decided autonomously): the web client's Vite dev proxy adds `PARALLANG_TOKEN`
   server-side (`client/proxy.config.js`; read as the server reads it: environment first, then the root `.env` by
   plain dotenv; target follows `PORT`). The app already sent it (round 040).
@@ -43,7 +49,8 @@ Next candidates, none needing the owner:
 - **Offline.** Every area has had an in-depth review (rounds 086–097), 093–098 a second (099), 100–103 one (104),
   and the web client a contract test (103). Small items left: a persisted "encounter ongoing" flag so the
   Spellbook payload stays withheld after a server restart (106 R1.1, low value); round 090's *caffè nero* question (owner); the footnote rule over other
-  encounters' answers (low value until footnotes appear live); play-market per-step matching (099 R1.4).
+  encounters' answers (low value until footnotes appear live). A review of 104–107 by a fresh subagent would follow
+  the pattern (104 reviewed 100–103).
 - **Queued live (after 11-09 17:32 UTC):**
   - round 081's firmer footnote rule by Amendment ("write a footnote on the greeting and on about one reply in
     three; a footnote adds what the narrative did not say") and a re-measure, counting footnotes dropped by round
@@ -57,8 +64,14 @@ Next candidates, none needing the owner:
   - watch `narrationStats` and the new `retried` lines (round 097) for the first live retry;
   - a live round for the three deferred prompt changes (097 R1.6–R1.8);
   - read the `extra-*` and `soft` lines of every new report's leak scan (rounds 100–101); Flick's *ora* as "hour"
-    (round 101 open item); play-market per-step matching (099 R1.4).
+    (round 101 open item); in the first new report, check `uncommittedLines` carry a `step` and read any
+    `unmatchedLines` (round 107).
 
+**Traps (iteration 32):**
+- `narrationLines` with plain strings no longer sticks on a committed line with no call: it is skipped (listed in
+  `unmatched`) and later calls still match; `turn` is the committed index.
+- `playMarket({ args, env, provider })`: with an injected provider, `--provider` is not required and `env` is not
+  given `LLM_PROVIDER`; preflight is optional (`report.provider` is null for a fixture).
 **Traps (iteration 31):**
 - Spellbook cards may now have `meanings: null`, `note: null`, `example.english: null` (see `card.withheld`). A test
   that reads a card's meaning must use a snapshot outside an encounter with the card and its `formCardIds` not due

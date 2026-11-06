@@ -175,11 +175,12 @@ export async function clearDrill(service, learnerId) {
 
 // Round 097 (review R1.1, critique 1.2, 1.4): every provider call in call order. An entry is pushed when the call
 // starts and gets its output (or error) and duration when it ends; a narration call whose last message is the
-// guard's correction is tagged `retry`.
-export function recordCalls(provider, raw) {
+// guard's correction is tagged `retry`. Round 107: with `stepOf`, each entry also has the step it was made in.
+export function recordCalls(provider, raw, { stepOf } = {}) {
   const structuredChat = provider.structuredChat.bind(provider);
   provider.structuredChat = async (messages, schema, options) => {
     const entry = { schema: options?.schemaName, retry: String(messages.at(-1)?.content ?? '').startsWith(CORRECTION_PREFIX) };
+    if (stepOf) entry.step = stepOf() ?? null;
     raw.push(entry);
     const started = performance.now();
     try {
@@ -202,31 +203,43 @@ export function recordCalls(provider, raw) {
 // transcript's NPC natives. When both of a group's natives equal it, the service's rule decides (the retry is kept if
 // it has an output, no error, came within the retry deadline and does not lack target language). A group with no
 // committed line goes to `uncommitted`.
-// Round 099 (review 1 R1.4, deferred to a live round): matching is by text only, so an uncommitted call whose native
-// equals the next committed one takes that line (only its `durationMs` / `retried` can be wrong); matching within
-// the step that made each call would fix it.
+// Round 107 (round 099 review 1 R1.4): a committed line may be `{ native, step }` (play-market passes these); then only
+// calls made in that step are candidates, and a retry joins only a group of its own step, so a failed step's call
+// whose native equals the next committed one is `uncommitted`. A bare string matches by order and text. A line's
+// `turn` is its index among the committed lines (the service's turn for `ratioFor`); a committed line no call matches
+// is skipped and listed in `unmatched` (review R1.1, R1.2; before, every later call was then `uncommitted`).
 export function narrationLines(calls, committedNatives, { ratioFor, share, lacksTarget, retryMs = NARRATION_RETRY_MS }) {
   const groups = [];
   for (const call of calls.filter((item) => item.schema === 'encounter_narration')) {
-    const open = call.retry ? [...groups].reverse().find((group) => !group.retry) : null;
+    const open = call.retry ? [...groups].reverse().find((group) => !group.retry && group.first.step === call.step) : null;
     if (open) open.retry = call;
-    else groups.push({ first: call, retry: null });
+    else groups.push({ first: call, retry: null, step: call.step });
   }
   const nativeOf = (call) => (call?.output ? String(call.output.dialogue.native).trim() : null);
+  const committed = committedNatives.map((item) => (item !== null && typeof item === 'object'
+    ? { native: String(item.native).trim(), step: Number.isInteger(item.step) ? item.step : undefined }
+    : { native: String(item).trim(), step: undefined }));
   const lines = [];
-  const uncommitted = [];
-  let next = 0;
-  for (const group of groups) {
-    const want = committedNatives[next] === undefined ? undefined : String(committedNatives[next]).trim();
-    const firstMatches = want !== undefined && nativeOf(group.first) === want;
-    const retryMatches = want !== undefined && nativeOf(group.retry) === want;
-    if (!firstMatches && !retryMatches) { uncommitted.push(group); continue; }
+  const used = new Set();
+  const unmatched = [];
+  let cursor = 0;
+  for (const [turn, want] of committed.entries()) {
+    let found = -1;
+    for (let index = cursor; index < groups.length; index += 1) {
+      const group = groups[index];
+      if (want.step !== undefined && group.step !== want.step) continue;
+      if (nativeOf(group.first) === want.native || nativeOf(group.retry) === want.native) { found = index; break; }
+    }
+    if (found < 0) { unmatched.push({ turn, native: want.native, ...(want.step !== undefined ? { step: want.step } : {}) }); continue; }
+    used.add(found);
+    cursor = found + 1;
+    const group = groups[found];
+    const firstMatches = nativeOf(group.first) === want.native;
+    const retryMatches = nativeOf(group.retry) === want.native;
     const retryKept = retryMatches && (!firstMatches
       || (!group.retry.error && group.retry.durationMs <= retryMs && !lacksTarget(group.retry.output)));
     const kept = retryKept ? group.retry : group.first;
     const other = retryKept ? group.first : group.retry;
-    const turn = next;
-    next += 1;
     lines.push({
       turn,
       requestedRatio: ratioFor(turn),
@@ -241,32 +254,42 @@ export function narrationLines(calls, committedNatives, { ratioFor, share, lacks
       } : {}),
     });
   }
+  const uncommitted = groups.filter((_, index) => !used.has(index));
   return {
     lines,
-    uncommitted: uncommitted.map((group) => ({ native: group.first.output?.dialogue.native ?? null, error: group.first.error ?? null, retried: Boolean(group.retry) })),
+    uncommitted: uncommitted.map((group) => ({
+      native: group.first.output?.dialogue.native ?? null, error: group.first.error ?? null, retried: Boolean(group.retry),
+      ...(group.step !== undefined ? { step: group.step } : {}),
+    })),
+    unmatched,
   };
 }
 
-export async function playMarket({ args = process.argv.slice(2), env = process.env } = {}) {
+// Round 107 (decision 4): `provider` is a test hook (an in-process provider instead of the CLI adapter).
+export async function playMarket({ args = process.argv.slice(2), env = process.env, provider: injected = null } = {}) {
   loadRootEnv({ env });
   const providerName = providerArgument(args) ?? env.LLM_PROVIDER;
-  if (!CLI_PROVIDERS.has(providerName)) throw new Error('play-market requires --provider codex-cli or --provider claude-cli.');
-  env.LLM_PROVIDER = providerName;
+  if (!injected && !CLI_PROVIDERS.has(providerName)) throw new Error('play-market requires --provider codex-cli or --provider claude-cli.');
+  if (!injected) env.LLM_PROVIDER = providerName;
   const tour = args.includes('--tour');
   const locationIndex = args.indexOf('--location');
   const locationId = locationIndex >= 0 ? args[locationIndex + 1] : 'coffee_cart';
   if (!tour && !scripts[locationId]) throw new Error(`play-market has no script for --location ${locationId}; use ${Object.keys(scripts).join(' or ')}.`);
-  const provider = createLLMAdapter({}, env);
+  const provider = injected ?? createLLMAdapter({}, env);
   const raw = [];
-  recordCalls(provider, raw); // round 097
+  // Round 107 (decision 1): the index the running step will have in `steps`; null between steps.
+  let currentStep = null;
+  recordCalls(provider, raw, { stepOf: () => currentStep }); // round 097
   const saveDir = await mkdtemp(join(tmpdir(), 'parallang-play-'));
   const steps = [];
   const step = async (name, run) => {
+    currentStep = steps.length;
     try { const result = await run(); steps.push({ name, ok: true, ...result }); return result; }
     catch (error) { steps.push({ name, ok: false, code: error.code ?? null, message: error.message }); return null; }
+    finally { currentStep = null; }
   };
   try {
-    const preflight = await provider.preflight();
+    const preflight = (await provider.preflight?.()) ?? null;
     const content = loadGameContent({ language: resolveTargetLanguage(env) });
     const storage = new JsonLearningStorage({ saveDir });
     const service = new LearningService({ provider, storage, content });
@@ -289,7 +312,14 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       const firstCall = raw.length;
       const encounterId = conversationId ?? content.world.locationsById.get(target).encounter;
       const definition = content.encounters.get(encounterId);
+      // Round 107 (decision 2): each committed NPC line with the step that committed it.
+      const committed = [];
+      const markCommitted = (shown) => {
+        const npc = (shown?.transcript ?? []).filter((message) => message.role === 'npc');
+        for (const message of npc.slice(committed.length)) committed.push({ native: message.dialogue.native, step: steps.length - 1 });
+      };
       let encounter = (await step(`start ${definition.character.name}`, async () => ({ encounter: (await service.startEncounter(learnerId, { encounterId })).encounter })))?.encounter;
+      markCommitted(encounter);
       const companionBriefing = encounter?.companionBriefing ?? null;
       for (const message of playerLines) {
         if (!encounter || encounter.state !== 'ongoing') break;
@@ -301,6 +331,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
             feedback: response.assessment.overallFeedback,
           };
         });
+        if (result?.encounter) markCommitted(result.encounter);
         encounter = result?.encounter ?? encounter;
       }
       const finalWorld = (await service.getWorld(learnerId)).world;
@@ -311,8 +342,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       // Round 097: completed calls only for the counts (as before); every call, in order, for the lines.
       const allCalls = raw.slice(firstCall);
       const calls = allCalls.filter((item) => item.output);
-      const committedNatives = (encounter?.transcript ?? []).filter((message) => message.role === 'npc').map((message) => message.dialogue.native);
-      const { lines, uncommitted } = narrationLines(allCalls, committedNatives, {
+      const { lines, uncommitted, unmatched } = narrationLines(allCalls, committed, {
         ratioFor: (turn) => service.ratioFor(turn, definition),
         share: (native, translation) => languageShare(native, translation, definition.narrationEntries),
         lacksTarget: (output) => service.lacksTarget(output, definition),
@@ -327,6 +357,7 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
         generationCalls: calls.length,
         lines,
         ...(uncommitted.length ? { uncommittedLines: uncommitted } : {}),
+        ...(unmatched.length ? { unmatchedLines: unmatched } : {}), // round 107 (review R1.2)
         grading: calls.filter((item) => item.schema === 'dialogue_assessment').map((item) => ({ durationMs: item.durationMs, output: item.output })),
       };
     };
