@@ -1,6 +1,6 @@
 # ParaLLang
 
-ParaLLang is a conversational language-learning game. It teaches Italian by default, and Spanish is also available. The implemented Phase 2 loop takes place at The Coffee Cart in The Crumbling Market: order from Gerald, use tracked companion help, collect canonical vocabulary, and practise due Spellbook cards.
+ParaLLang is a conversational language-learning game. It teaches Italian by default, and Spanish is also available. The prototype is The Crumbling Market: six places on a map, an encounter at each (Portia's tutorial at the entrance, Gerald, Mortimer, Flick, Marginalia, and Errata in the sealed Rift), tracked companion help, a Spellbook of canonical vocabulary with spaced-repetition reviews, a party of saved NPCs with their own conversations, and fragments of the in-world book *The Journey*. For running a session with testers, see [`docs/playtest/guide.md`](docs/playtest/guide.md).
 
 ## Design notes and project records
 
@@ -26,7 +26,7 @@ For the iPhone app, see [Run the iPhone app](#run-the-iphone-app). The browser c
 
 ### Target language
 
-`TARGET_LANGUAGE` in the root `.env` selects the language Gerald speaks: `it` (Italian, the default) or `es` (Spanish). Each value names a language pack under `content/languages/<code>/`, which holds its `language.yaml` (name and BCP 47 tag), vocabulary and encounter; the character and narration style in `content/characters/` and `content/narration/` are shared. An unknown value stops the server at startup and lists the available packs. To switch, change the value, restart the server, then reload the browser page. The server prints the active language at startup.
+`TARGET_LANGUAGE` in the root `.env` selects the language the market's characters speak: `it` (Italian, the default) or `es` (Spanish). Each value names a language pack under `content/languages/<code>/`, which holds its `language.yaml` (name and BCP 47 tag), vocabulary, encounters and lore fragments; the character and narration style in `content/characters/` and `content/narration/` are shared. An unknown value stops the server at startup and lists the available packs. To switch, change the value, restart the server, then reload the browser page. The server prints the active language at startup.
 
 Choose one narration/grading provider in the root `.env`:
 
@@ -99,7 +99,7 @@ If the server is not running, the app shows "Can't reach the ParaLLang server at
 
 The app keeps its own learner ID (in the app's storage), so its Spellbook is separate from the browser's.
 
-The app opens on the map of the Crumbling Market (round 005): six locations from `content/world/locations/`, joined by the paths in `content/world/connections.yaml`. Unvisited places beyond your neighbours stay hidden; tap a neighbouring place to walk there. Gerald is at The Coffee Cart ("Talk to Gerald"); the other places have no encounter yet. Your position, the places you have visited and the encounters you have completed are saved with your Spellbook.
+The app opens on the map of the Crumbling Market (round 005): six locations from `content/world/locations/`, joined by the paths in `content/world/connections.yaml`. Unvisited places beyond your neighbours stay hidden; tap a neighbouring place to walk there. Each place has its encounter ("Talk to Gerald" at The Coffee Cart); the Rift stays sealed until the other five are complete and asks for a short review drill first. Your position, the places you have visited and the encounters you have completed are saved with your Spellbook.
 
 ### Optional API token
 
@@ -107,7 +107,7 @@ Set `PARALLANG_TOKEN` in the root `.env` to require the header `X-ParaLLang-Toke
 
 ### Live Crumbling Market playthrough
 
-`node server/scripts/play-market.js --provider codex-cli [--location coffee_cart|market_entrance|butchers_stall] [--out report.json]` plays the map and one encounter with scripted answers (Gerald at The Coffee Cart by default; `market_entrance` plays Portia's tutorial, `butchers_stall` Mortimer, with a failing ham request and a bare unit first) in-process (no port) on a temporary save and prints a JSON report: each step, every raw LLM output, grading verdicts, timings and two rough estimates of the target-language share of each NPC line. It exits 1 unless the encounter resolves and the map marks it complete.
+`node server/scripts/play-market.js --provider codex-cli [--location <id>] [--out report.json]` plays the map and one encounter with scripted answers (Gerald at The Coffee Cart by default; any location id from `content/world/locations/`; `--tour` plays all six in order, `--party --member <home location>` a party conversation, `--lines 'a|b|c'` your own answers) in-process (no port) on a temporary save and prints a JSON report: each step, every raw LLM output, grading verdicts, timings and two rough estimates of the target-language share of each NPC line. It exits 1 unless the encounter resolves and the map marks it complete.
 
 ## Learning data and saves
 

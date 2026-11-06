@@ -70,3 +70,8 @@ Critiqued draft: `trail/plan-v1.md`, sha256 2ffe6202…; a Claude general-purpos
 testers that English-only answers fail (Decision 1).
 
 Net change: where testers play, a per-tester checklist, hand counts in a table, the real escalation field.
+
+## Outcome (2026-11-06)
+
+Written as revised. Tests unchanged and passing (server 244/244, client 12/12, mobile 185/185). See
+[findings.md](findings.md).

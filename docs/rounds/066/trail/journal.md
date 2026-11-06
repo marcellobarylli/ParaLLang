@@ -11,3 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 01:00:00 | 01:00:00 | disposition | Claude (claude-opus-5-5), autonomous | All 11 accepted (1.10 corrected: new cards are due on discovery); rows 1.1–1.11; two facts checked by grep (escalation field, 127.0.0.1 binding) | `../architecture.md` |
 | 6 | 01:00:00 | 01:00:00 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: where testers play, per-tester checklist, hand counts, the real escalation field; two unverified claims of mine removed (accent leniency, a call count) | `../architecture.md` |
 | 7 | 01:00:00 | 01:00:00 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
+| 8 | 01:00:43 | 01:00:43 | built | Claude (claude-opus-5-5), autonomous | docs/playtest/guide.md written as revised; README's game description, language switch and play-market.js passages updated | — |
+| 9 | 01:00:43 | 01:00:43 | result | Claude (claude-opus-5-5), autonomous | Server 244/244, client 12/12, mobile 185/185 (unchanged) | — |
+| 10 | 01:00:43 | 01:00:43 | outcome | Claude (claude-opus-5-5), autonomous | The playtest kit is ready for the owner; untried with testers | `../findings.md` |
+| 11 | 01:00:43 | 01:00:43 | closed | Claude (claude-opus-5-5), autonomous | Round 066 closed | `../findings.md` |
