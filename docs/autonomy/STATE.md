@@ -7,36 +7,18 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-**Two rounds open, built and committed, waiting only for live runs** (iteration 16; Codex hit its usage limit at about
-23:14 UTC, reset given as **01:36 UTC 2026-11-06**; still limited at 23:58 UTC, checked in iteration 18). Iterations
-17–19 closed rounds 054–065 without live calls. None of them changes what these runs test. Three things differ: NPC
-words now carry `spans` (round 057); the matcher sorts forms across entries (round 058, output unchanged on 1,021
-saved lines); and a paid sentence reveal now writes `lines` to the save (round 060; the play script's reveals will keep
-lines, which is harmless). Run these first, in order, then close each round (findings.md, Outcome,
-`round_log_check.py`, STATUS addendum):
+**Round 067 (live regression tour, it and es) is running or measured; see its journal.** Iteration 19 ran the whole
+live queue after Codex's reset (01:36 UTC 2026-11-06) and closed round 052 (H2: all four slow-walk runs as
+scripted), round 053 (A10: 24/24 atmosphere lines kept, but 23/24 tell the same bureaucratic joke, so A10b) and
+round 054's open item 2 (a live `’` answer passes).
 
-1. **Round 052 (H2, numbers 2–12 in Flick's slow walk).** The scripted runs passed (it, es; `results/walk-*.json`).
-   Queued, as in its Live section: the variant runs, with codex-cli:
-   `TARGET_LANGUAGE=it node server/scripts/play-market.js --provider codex-cli --party --member cracked_fountain --lines 'Sei stanco.|Non cinque, tre minuti.|Andiamo!|Insieme.' --out docs/rounds/052/results/variant-it.json`
-   and es with `'Tres horas.|Diez minutos, ni uno más.|¡Vamos!|Juntos.'`. Expect: the first line fails, the second
-   passes (it records Mortimer's `tre`), then resolved. Then `leak-scan.js` on all four reports, and write
-   findings.md (scripted results in journal row 10).
-2. **Round 053 (A10, LLM location atmosphere, off by default).** Queued:
-   `TARGET_LANGUAGE=it node docs/rounds/053/results/atmosphere-live.mjs --provider codex-cli > docs/rounds/053/results/live-it.json`
-   and the same for es (12 calls each, in-process, no port). Success: at least 5 of 6 lines kept per pack, English, at
-   most 40 words, consistent with the description. A read-only code review of 052–053 returned no serious bugs; its
-   two gaps are fixed (Amendment 1 of round 053).
-3. **Round 054 open item 2 (no new round needed):** one live answer with a typographic apostrophe, e.g.
-   `TARGET_LANGUAGE=it node server/scripts/play-market.js --provider codex-cli --location cracked_fountain --lines 'Guarda!|Fermati!|Left.|A sinistra!|Adesso!|È l’una, Flick.|Domani.|No, adesso!' --out docs/rounds/054/results/live-apostrophe-it.json`
-   (eight Fountain lines); expect the time objective to pass on the `’` line. Record it in round 054's findings as a
-   dated addendum.
-
-After those, the backlog is empty except D1 (blocked). Next candidates, none needing the owner:
-- a live tour (`play-market.js --tour`, it and es) as a regression run after rounds 051–064;
-- re-measuring the language share (E1) with the new rounds' content;
-- a live check that the play script's sentence reveals now leave `lines` in the save (round 060), by reading the
-  save after a run;
-- (done offline in round 065: the loading line between reviews.)
+Next candidates, none needing the owner:
+- **A10b** (below): vary the atmosphere line's joke; offline prompt work, then one live run of
+  `docs/rounds/053/results/atmosphere-live.mjs` per pack, measured by the motif count (baseline 23/24).
+- re-measuring the language share (E1) with the new content (round 067's tour gives a first number);
+- kept lines (round 060) live: `play-market.js` makes **no** help reveals at all (the earlier note here was wrong), so
+  checking that a paid sentence reveal leaves `lines` in the save needs a small in-process script (like
+  `atmosphere-live.mjs`) that calls `revealHelp` with `kind: 'sentence'` and reads the save.
 
 ## Backlog
 
@@ -82,8 +64,10 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   Open: tiers that change the conversation (needs live runs); a Party-screen hint (owner question).
 - [x] **A11b. Removing saves.** (rounds 038–039, closed 2026-11-05) Non-current saves, system alert, no label reuse;
   deleted on the server first (`DELETE /api/learner`). Open (owner): renaming; the app sending `PARALLANG_TOKEN`.
-- [ ] **A10. LLM-enhanced location atmosphere** (round 053, built, live check queued: `PARALLANG_ATMOSPHERE=on`,
+- [x] **A10. LLM-enhanced location atmosphere** (round 053, closed 2026-11-06: 24/24 live lines kept; `PARALLANG_ATMOSPHERE=on`,
   `GET /api/world/atmosphere`, a line under the description on the map card).
+- [ ] **A10b. Atmosphere variety** (round 053 findings): 23 of 24 live lines lean on one bureaucratic joke
+  ("approval" in 9). Vary the kind of detail or pass the session's earlier lines; measure the motif count.
 - [x] **A11. Save slots.** (round 031, closed 2026-11-05) Up to three learners per device, Saves screen from the
   map; delete and rename deferred (owner question).
 
@@ -172,7 +156,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [x] **H1. Early pass in an ordered encounter.** (round 051, closed 2026-11-05: an ORDER bullet in the grading
   prompt, and the grader now fails the early objective with "say it again" feedback; `held` marks a pass that does
   not close, shown as "…" in the app; Gerald's pinned narration prompts unchanged.)
-- [ ] **H2. Hours 1–12** (round 052, built, variant live runs queued: objective `minutes` first in `flick_slow_walk`,
+- [x] **H2. Hours 1–12** (round 052, closed 2026-11-06: four live runs as scripted; objective `minutes` first in `flick_slow_walk`,
   numbers 2–12 in `flick_party.yaml` v2) (owner question in round 050): a numbers lesson (a party conversation or the Fountain) so
   *sono le* / *son las* has numbers behind it. Mortimer teaches only *tre*/*cento* (it) and *dos*/*tres*/*cien* (es).
   Watch English collisions (it *due*, es *once*).
