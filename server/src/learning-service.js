@@ -85,7 +85,7 @@ export class LearningService {
     this.greetings = new Map();
     this.starting = new Set();
     this.stopping = false;
-    this.prefetchStats = { scheduled: 0, calls: 0, used: 0, fallback: 0, failed: 0, busy: 0, skipped: 0, evicted: 0 };
+    this.prefetchStats = { scheduled: 0, calls: 0, used: 0, fallback: 0, failed: 0, busy: 0, skipped: 0, evicted: 0, dropped: 0 }; // dropped: round 087
     // Round 078: narration lines checked for target language, and what the one retry did (memory only).
     this.narrationStats = { checked: 0, flagged: 0, retryPassed: 0, kept: 0, timedOut: 0 };
     this.narrationRetryMs = narrationRetryMs;
@@ -488,18 +488,21 @@ export class LearningService {
   // messages, the rejected reply and a correction. A retry that fails, is still flagged or takes longer than
   // narrationRetryMs keeps the first line, so the guard never turns a playable turn into an error. Amendment 1
   // (review 1): at the deadline the retry is aborted (the CLI runner frees its one slot); no retry while stopping.
-  async narrate(messages, definition, ratio) {
-    const first = await this.callProvider(messages, encounterResponseSchema, 'encounter_narration', definition.character.name);
+  // Round 087 (critique 1.4, 1.5): a caller's signal (a prefetch) reaches the first call and the retry; no retry once
+  // it is aborted.
+  async narrate(messages, definition, ratio, { signal } = {}) {
+    const first = await this.callProvider(messages, encounterResponseSchema, 'encounter_narration', definition.character.name, signal ? { signal } : {});
     this.narrationStats.checked += 1;
     if (!this.lacksTarget(first, definition)) return first;
     this.narrationStats.flagged += 1;
-    if (this.stopping) { this.narrationStats.kept += 1; return first; }
+    if (this.stopping || signal?.aborted) { this.narrationStats.kept += 1; return first; }
     const abort = new AbortController();
     const retry = this.callProvider([
       ...messages,
       { role: 'assistant', content: JSON.stringify(first) },
       { role: 'user', content: correctionNote(this.content.language, ratio) },
-    ], encounterResponseSchema, 'encounter_narration', definition.character.name, { signal: abort.signal }).catch(() => null);
+    ], encounterResponseSchema, 'encounter_narration', definition.character.name,
+    { signal: signal ? AbortSignal.any([signal, abort.signal]) : abort.signal }).catch(() => null);
     let timer;
     const deadline = new Promise((resolve) => { timer = setTimeout(() => resolve(TIMED_OUT), this.narrationRetryMs); });
     timer.unref?.();
@@ -571,6 +574,8 @@ export class LearningService {
             { status: 409, code: 'DRILL_REQUIRED', details: { vocabularyIds: drill.vocabularyIds } });
         }
       }
+      // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
+      this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));
       const generated = await this.prefetchedGreeting(learnerId, definition)
         ?? await this.narrate(this.greetingMessages(definition, locationId), definition, this.ratioFor(0, definition));
       const npcMessage = this.canonicalizeNarration(generated, definition);
@@ -604,21 +609,43 @@ export class LearningService {
 
   // Round 076: a greeting written on arrival, taken once (ready or still being written); null when there is none or
   // its call failed, and the start then asks the provider as before. Never for a party conversation.
+  // Round 087 (review R1.2, critique 1.1–1.3): a greeting taken while still being written whose call then timed out
+  // fails the start with that timeout (as a plain start's would), instead of a second full wait; one that had already
+  // failed before the tap, or failed otherwise, falls back. Only the CLI runner raises `timeout`.
   async prefetchedGreeting(learnerId, definition) {
     if (definition.encounter.party_of) return null;
     const key = greetingKey(learnerId, definition.encounter.id);
-    const pending = this.greetings.get(key);
-    if (!pending) return null;
+    const entry = this.greetings.get(key);
+    if (!entry) return null;
     this.greetings.delete(key);
-    const generated = await pending;
+    const pending = !entry.settled;
+    const { generated, error } = await entry.promise;
     this.prefetchStats[generated ? 'used' : 'fallback'] += 1;
-    return generated;
+    if (!generated && pending && error instanceof ProviderError && error.category === 'timeout') throw error;
+    return generated ?? null;
+  }
+
+  // Round 087 (review R1.1, critique 1.6, 1.8): every way a held greeting goes aborts its call; counted as dropped.
+  dropGreeting(key, counter = 'dropped') {
+    const entry = this.greetings.get(key);
+    if (!entry) return;
+    this.greetings.delete(key);
+    entry.controller.abort();
+    this.prefetchStats[counter] += 1;
+  }
+
+  dropGreetings(learnerId, keepKey = null) {
+    const prefix = greetingKey(learnerId, '');
+    for (const key of [...this.greetings.keys()]) if (key.startsWith(prefix) && key !== keepKey) this.dropGreeting(key);
   }
 
   // Round 076 (critiques 1.3, 1.7): each committed move (and each launch) replaces the learner's arrival; its timer
   // fires after the dwell.
   scheduleArrival(learnerId, locationId) {
     if (!this.prefetchEnabled || this.stopping) return;
+    // Round 087 (review R1.1): the greetings of places left behind go, their calls aborted.
+    const encounterHere = this.content.world.locationsById.get(locationId)?.encounter;
+    this.dropGreetings(learnerId, encounterHere ? greetingKey(learnerId, encounterHere) : null);
     const previous = this.arrivals.get(learnerId);
     if (previous?.timer) clearTimeout(previous.timer);
     const arrival = { seq: (this.arrivalSeq += 1), locationId, tries: 0, timer: null };
@@ -660,12 +687,18 @@ export class LearningService {
     }
     this.endArrival(learnerId, arrival, null);
     this.prefetchStats.calls += 1;
-    const call = this.narrate(this.greetingMessages(definition, undefined), definition, this.ratioFor(0, definition))
-      .catch(() => { this.prefetchStats.failed += 1; return null; });
-    this.greetings.set(key, call);
+    // Round 087 (critique 1.2, 1.4): the entry never rejects and keeps its error; an aborted call is not a failure.
+    const controller = new AbortController();
+    const entry = { controller, settled: false };
+    entry.promise = this.narrate(this.greetingMessages(definition, undefined), definition, this.ratioFor(0, definition), { signal: controller.signal })
+      .then((generated) => ({ generated }), (error) => {
+        if (!controller.signal.aborted) this.prefetchStats.failed += 1;
+        return { error };
+      })
+      .then((outcome) => { entry.settled = true; return outcome; });
+    this.greetings.set(key, entry);
     while (this.greetings.size > PREFETCH_MAX_GREETINGS) {
-      this.greetings.delete(this.greetings.keys().next().value);
-      this.prefetchStats.evicted += 1;
+      this.dropGreeting(this.greetings.keys().next().value, 'evicted');
     }
   }
 
@@ -685,13 +718,12 @@ export class LearningService {
     return definition;
   }
 
-  // Round 076 (critique 1.4): a removed learner's arrival and greetings go; a call already running is not stopped.
+  // Round 076 (critique 1.4): a removed learner's arrival and greetings go; round 087: a call still running is aborted.
   forgetPrefetch(learnerId) {
     const arrival = this.arrivals.get(learnerId);
     if (arrival?.timer) clearTimeout(arrival.timer);
     this.arrivals.delete(learnerId);
-    const prefix = greetingKey(learnerId, '');
-    for (const key of [...this.greetings.keys()]) if (key.startsWith(prefix)) this.greetings.delete(key);
+    this.dropGreetings(learnerId);
   }
 
   async currentEncounter(learnerId) {
@@ -1206,6 +1238,7 @@ export class LearningService {
     this.stopping = true;
     for (const arrival of this.arrivals.values()) if (arrival.timer) clearTimeout(arrival.timer);
     this.arrivals.clear();
+    for (const key of [...this.greetings.keys()]) this.dropGreeting(key); // round 087
     await this.provider.shutdown?.();
   }
 }

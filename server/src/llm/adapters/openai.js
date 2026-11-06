@@ -1,6 +1,9 @@
 import OpenAI from 'openai';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
+// Round 087 (review R1.4): a caller's AbortSignal reaches the request.
+const requestOptions = (options) => (options.signal ? { signal: options.signal } : undefined);
+
 export class OpenAIAdapter {
   constructor(config = {}) {
     this.model = config.model || 'gpt-4o-mini';
@@ -16,7 +19,7 @@ export class OpenAIAdapter {
       model: this.model, messages,
       temperature: options.temperature ?? 0.8,
       max_tokens: options.maxTokens ?? 1024,
-    });
+    }, requestOptions(options));
     return { content: response.choices[0].message.content, usage: response.usage };
   }
 
@@ -32,7 +35,7 @@ export class OpenAIAdapter {
         type: 'json_schema',
         json_schema: { name, strict: true, schema: jsonSchema },
       },
-    });
+    }, requestOptions(options));
     const content = response.choices?.[0]?.message?.content;
     if (typeof content !== 'string') throw new Error('OpenAI returned no structured response content.');
     let parsed;

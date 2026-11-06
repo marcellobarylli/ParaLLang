@@ -190,3 +190,29 @@ test('the correction at a ratio of 1 asks for 100% and demands no English (criti
   assert.match(note, /about 100% Italian/);
   assert.doesNotMatch(note, /English/);
 });
+
+// Round 087 (critique 1.4, 1.5): a caller's signal reaches the first call and the retry; no retry once it is
+// aborted, and an abort during the retry ends it.
+test('narrate with a signal: no retry when it is already aborted; an abort during the retry ends it', async (t) => {
+  const runtime = await setup(t, [ENGLISH], { narrationRetryMs: 5_000 }); // the deadline must not be what ends it
+  const definition = runtime.content.encounters.get(runtime.content.defaultEncounterId);
+  const messages = runtime.service.greetingMessages(definition, undefined);
+  const done = AbortSignal.abort();
+  // The provider ignores the abort and returns an all-English line: kept, no retry.
+  const kept = await runtime.service.narrate(messages, definition, 0.3, { signal: done });
+  assert.equal(kept.dialogue.native, ENGLISH.native);
+  assert.equal(narrations(runtime).length, 1);
+  assert.equal(narrations(runtime)[0].options.signal, done);
+  // A live signal: the first line is flagged, the retry is held; aborting the caller's signal ends the retry.
+  runtime.provider.queue.push(ENGLISH, 'hold');
+  const controller = new AbortController();
+  const call = runtime.service.narrate(messages, definition, 0.3, { signal: controller.signal });
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  assert.equal(narrations(runtime).length, 3);
+  const aborted = Date.now();
+  controller.abort();
+  const line = await call;
+  assert.ok(Date.now() - aborted < 1_000, 'ended by the abort, not the retry deadline');
+  assert.equal(line.dialogue.native, ENGLISH.native);
+  assert.equal(runtime.provider.aborted, 1);
+});

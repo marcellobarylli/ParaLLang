@@ -9,13 +9,15 @@ export class OllamaAdapter {
     this.maxRetries = config.maxRetries ?? 1;
   }
 
-  async request(body) {
+  // Round 087 (review R1.4): the caller's signal aborts the request too, reported as an abort, not a timeout.
+  async request(body, signal) {
+    if (signal?.aborted) throw new Error('Ollama request was aborted.');
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
     try {
       const response = await this.fetch(`${this.baseUrl}/api/chat`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body), signal: controller.signal,
+        body: JSON.stringify(body), signal: signal ? AbortSignal.any([controller.signal, signal]) : controller.signal,
       });
       if (!response.ok) throw new Error(`Ollama request failed with HTTP ${response.status}.`);
       let data;
@@ -24,6 +26,7 @@ export class OllamaAdapter {
       if (typeof data?.message?.content !== 'string') throw new Error('Ollama returned no response content.');
       return data;
     } catch (error) {
+      if (signal?.aborted) throw new Error('Ollama request was aborted.');
       if (error.name === 'AbortError') throw new Error(`Ollama request timed out after ${this.timeoutMs}ms.`);
       throw error;
     } finally {
@@ -35,7 +38,7 @@ export class OllamaAdapter {
     const data = await this.request({
       model: this.model, messages, stream: false,
       options: { temperature: options.temperature ?? 0.8, num_predict: options.maxTokens ?? 1024 },
-    });
+    }, options.signal);
     return { content: data.message.content, usage: { prompt_tokens: data.prompt_eval_count, completion_tokens: data.eval_count } };
   }
 
@@ -53,7 +56,7 @@ export class OllamaAdapter {
       const data = await this.request({
         model: this.model, messages: attemptMessages, format: jsonSchema, stream: false,
         options: { temperature: attempt ? 0 : (options.temperature ?? 0.2), num_predict: options.maxTokens ?? 1400 },
-      });
+      }, options.signal);
       try {
         const parsed = JSON.parse(data.message.content);
         const result = schema.safeParse(parsed);

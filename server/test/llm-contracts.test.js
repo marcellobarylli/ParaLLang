@@ -93,6 +93,33 @@ test('Ollama bounds retry, reports non-2xx/schema failure, and enforces timeout'
   await assert.rejects(timed.structuredChat(messages, encounterResponseSchema), /timed out/);
 });
 
+// Round 087 (review R1.4): the adapters honour a caller's AbortSignal.
+test('OpenAI passes the signal in the request options; none when not given', async () => {
+  const seen = [];
+  const client = { chat: { completions: { create: async (body, options) => { seen.push(options); return { choices: [{ message: { content: JSON.stringify(narration) } }], usage: {} }; } } } };
+  const adapter = new OpenAIAdapter({ client });
+  const { signal } = new AbortController();
+  await adapter.structuredChat(messages, encounterResponseSchema, { signal });
+  await adapter.chat(messages, { signal });
+  await adapter.structuredChat(messages, encounterResponseSchema);
+  assert.equal(seen[0].signal, signal);
+  assert.equal(seen[1].signal, signal);
+  assert.equal(seen[2], undefined);
+});
+
+test('Ollama aborts its request on the caller\'s signal, as an abort, and makes no further attempt', async () => {
+  let requests = 0;
+  const hanging = (_url, init) => { requests += 1; return new Promise((_resolve, reject) => init.signal.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')))); };
+  const adapter = new OllamaAdapter({ fetch: hanging, timeoutMs: 10_000, maxRetries: 1 });
+  const controller = new AbortController();
+  const call = adapter.structuredChat(messages, encounterResponseSchema, { signal: controller.signal });
+  controller.abort();
+  await assert.rejects(call, /aborted/);
+  assert.equal(requests, 1);
+  await assert.rejects(adapter.structuredChat(messages, encounterResponseSchema, { signal: AbortSignal.abort() }), /aborted/);
+  assert.equal(requests, 1, 'an aborted signal sends nothing');
+});
+
 test('prompt assembly contains one player-message copy and authored constraints', () => {
   const content = loadGameContent({ language: 'es' });
   const playerInput = 'UNIQUE PLAYER ANSWER';

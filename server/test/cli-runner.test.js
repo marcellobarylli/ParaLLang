@@ -112,3 +112,24 @@ test('runner: an aborted signal cancels the active task and removes a queued one
   done.abort(); // after settling: nothing happens
   assert.equal(runner.active, null);
 });
+
+// Round 087 (review R1.3): an abort after the child has closed (here during collect) sends no signal and arms no
+// timer; the run keeps its result. process.kill is mocked, so nothing is signalled for real.
+test('runner: an abort after the child closed sends no kill and the run keeps its result', async (t) => {
+  const runner = new CLIProcessRunner({ killGraceMs: 25 });
+  t.after(() => runner.shutdown());
+  const kill = t.mock.method(process, 'kill', () => true);
+  let reached; let release;
+  const inCollect = new Promise((r) => { reached = r; });
+  const held = new Promise((r) => { release = r; });
+  const controller = new AbortController();
+  const run = runner.run(baseSpec(['delay', '1'], { timeoutMs: 5_000, signal: controller.signal,
+    collect: async () => { reached(); await held; return 'collected'; } }));
+  await inCollect;
+  controller.abort();
+  await new Promise((r) => setTimeout(r, 60)); // past killGraceMs: a stray force timer would have fired
+  release();
+  const result = await run;
+  assert.equal(result.collected, 'collected');
+  assert.equal(kill.mock.calls.filter((call) => call.arguments[0] < 0).length, 0);
+});

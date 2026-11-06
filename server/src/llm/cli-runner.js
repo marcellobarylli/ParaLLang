@@ -130,8 +130,9 @@ export class CLIProcessRunner {
         const stderr = [];
         let forceTimer;
 
+        // Round 087 (review R1.3): once the child has closed, an abort (e.g. during collect) sends nothing.
         const failAndTerminate = (error) => {
-          if (failure) return;
+          if (failure || closed) return;
           failure = error;
           killProcessGroup(child, 'SIGTERM');
           forceTimer = setTimeout(() => killProcessGroup(child, 'SIGKILL'), this.killGraceMs);
@@ -143,6 +144,7 @@ export class CLIProcessRunner {
         const finish = (code, signal) => {
           if (closed) return;
           closed = true;
+          task.cancel = () => {};
           clearTimeout(timeoutTimer);
           clearTimeout(forceTimer);
           const result = {
