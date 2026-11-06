@@ -42,3 +42,8 @@ called a regression.
 ## Claim boundary (pre-run)
 
 One tour, one pack, one provider. The app's changes (rounds 070–071) are not exercised: the tour is in-process.
+
+## Outcome (2026-11-06)
+
+All four criteria met: resolved with the gate held and opened, verdicts equal 6/6, folded share 0.45 (criterion
+0.33–0.53), 7 leak lines (limit 10). See [findings.md](findings.md).

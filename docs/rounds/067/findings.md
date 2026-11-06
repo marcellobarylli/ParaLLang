@@ -85,3 +85,9 @@ So "the Rift still runs far over" and "Errata's lines are mostly target language
 are about half Italian or Spanish and half glitched English, as requested. A hand count of the first Italian line
 agrees: 10 Italian words and 10 English. Every encounter is within 0.07 of its ratio, and Portia is the furthest
 under. Backlog E1 has nothing left to fix on this evidence: one tour per pack, one provider.
+
+## Addendum 2026-11-06 (later): Marginalia's folded share was 0.49, not 0.41
+
+The table in the addendum above averaged Marginalia's Italian lines with the gloss line's missing value counted as 0.
+Without that line, her mean is 0.49 against 0.48. The other cells, and the overall 0.43 and 0.44, already left that
+line out and stand. Found while comparing with round 072's tour.
