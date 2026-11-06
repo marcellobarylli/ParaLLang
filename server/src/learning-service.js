@@ -22,6 +22,7 @@ export function correctionNote(language, ratio) {
 }
 
 export const ATMOSPHERE_MAX_LENGTH = 300;
+export const FOOTNOTE_MAX_LENGTH = 200; // round 081
 export const ATMOSPHERE_RETRY_MS = 10 * 60_000;
 export const ATMOSPHERE_BUSY_RETRY_MS = 15_000;
 // Round 053 (critique 1.1): pack forms that are also English words; the atmosphere line may use them in English.
@@ -348,7 +349,18 @@ export class LearningService {
     });
   }
 
-  canonicalizeNarration(generated, definition) {
+  // Round 081 (backlog B5): a footnote is kept when it is a short string, the previous NPC line of the session kept
+  // none, and no pack vocabulary form is in it (the atmosphere line's English homographs exempt; Decision 3).
+  keptFootnote(generated, previousNpc) {
+    if (typeof generated.footnote !== 'string' || previousNpc?.footnote) return undefined;
+    const text = generated.footnote.trim().replace(/\s+/g, ' ');
+    if (!text || text.length > FOOTNOTE_MAX_LENGTH) return undefined;
+    const hit = matchCanonicalVocabulary(text, this.content.vocabulary.entries)
+      .some((match) => !ATMOSPHERE_ENGLISH.has(foldForAtmosphere(match.excerpt)));
+    return hit ? undefined : text;
+  }
+
+  canonicalizeNarration(generated, definition, previousNpc) {
     const matches = matchCanonicalVocabulary(generated.dialogue.native, definition.narrationEntries);
     // Round 057 (backlog C7): every span the matcher gave an id, so the app can mark the word in the line where the
     // server found it (critique 1.1); the first match still sets the order and `target`.
@@ -365,8 +377,10 @@ export class LearningService {
       meaning: entry.accepted_translations[0],
       spans: wordSpans,
     }));
+    const footnote = this.keptFootnote(generated, previousNpc);
     return {
       id: randomUUID(), role: 'npc', narrative: generated.narrative,
+      ...(footnote ? { footnote } : {}),
       dialogue: { speaker: definition.character.name, native: generated.dialogue.native, translation: generated.dialogue.translation, words },
     };
   }
@@ -387,6 +401,7 @@ export class LearningService {
       const sentenceRevealed = !protectedMessage || revealKeys.includes(`sentence:${message.id}`);
       return {
         id: message.id, role: message.role, narrative: message.narrative,
+        ...(message.footnote ? { footnote: message.footnote } : {}),
         dialogue: {
           speaker: message.dialogue.speaker,
           native: message.dialogue.native,
@@ -848,7 +863,8 @@ export class LearningService {
             }
           }
         }
-        const npcMessage = this.canonicalizeNarration(generated, definition);
+        const previousNpc = [...current.transcript].reverse().find((item) => item.role === 'npc');
+        const npcMessage = this.canonicalizeNarration(generated, definition, previousNpc);
         this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
         stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
         stagedEncounter.objectiveIndex = nextObjectiveIndex;

@@ -19,6 +19,8 @@ export const encounterResponseSchema = z.object({
   difficulty: z.number(),
   hints_available: z.boolean(),
   encounter_state: z.enum(['ongoing', 'resolved', 'failed']),
+  // Round 081 (backlog B5): the narrator's footnote. The server keeps it or drops it (keptFootnote).
+  footnote: z.string().nullable().optional().describe('An optional English narrator footnote, one dry aside; null on most replies'),
 }).strict();
 
 export const gradingResponseSchema = z.object({

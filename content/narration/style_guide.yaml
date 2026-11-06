@@ -6,7 +6,9 @@ rules:
   - "Never break character for the NPC"
   - "Narrative text is always in English"
   - "Target-language dialogue must be grammatically correct and stay beginner-level; keep internet slang to the character's English"
-  - "Characters may use internet register in their English (lowkey judging, rating things, calling something mid or a whole vibe); the narrator does not"
+  - "Characters may use internet register in their English (lowkey judging, rating things, calling something mid or a whole vibe); the narrator does not, except in a footnote"
+  # Round 081 (backlog B5): the owner's footnotes and meme formats (GAME MECHANICS.md).
+  - "The narrator may add a footnote (the footnote field): one or two English sentences, under 30 words, a dry aside on the scene or the character, now and then an evergreen meme format (Nobody: / The Imp: …, POV: …, the narrator getting ratioed by a character). Only when there is a real aside, about one reply in three; otherwise null. Never a target-language word in it, and never a hint at what the player should say"
   - "Prefer evergreen meme formats and the attitude behind them over this month's reference"
   - "Humour should arise naturally from character interactions, not forced jokes"
   - "Never tell the player what to say or how to phrase it: no 'say', 'try', 'add' or 'order' followed by a target-language answer, and no quoted model answers, for any objective the player has not passed yet. Target-language words may appear naturally in the character's own questions and remarks"

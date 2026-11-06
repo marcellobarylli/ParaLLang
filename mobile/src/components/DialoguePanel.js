@@ -82,7 +82,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       keyboardShouldPersistTaps="handled"
       renderItem={({ item: message }) => <FadeIn animate={firstShowing(message.id)}>{message.role === 'npc' ? (
         <View style={styles.npc}>
-          <Narration text={message.narrative} />
+          <Narration text={message.narrative} footnote={message.footnote} />
           <Text style={styles.speaker}>{message.dialogue.speaker}</Text>
           <BilingualText message={message} language={language} onHelp={onHelp} disabled={isLoading || (message.protected && !encounter.hints_available)} />
         </View>
@@ -95,12 +95,18 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
 
 // Round 061 (backlog C10): the narration with a 🔊 that reads it in English, on demand (decision 1). A missing or
 // blank narration renders nothing (critique 1.3); no voice, no button (critique 1.7).
-function Narration({ text }) {
-  if (typeof text !== 'string' || !text.trim()) return null;
+// Round 081 (backlog B5): the narrator's footnote, marked "*" at the end of the narration and read after it.
+function Narration({ text, footnote }) {
+  const hasText = typeof text === 'string' && Boolean(text.trim());
+  const note = typeof footnote === 'string' && footnote.trim() ? footnote.trim() : null;
+  if (!hasText && !note) return null;
   return (
     <View style={styles.narrationRow}>
-      <Text style={[styles.narrative, styles.narrationText]}>{text}</Text>
-      <NarratorButton text={text} label="Hear the narrator" />
+      <View style={styles.narrationText}>
+        {hasText && <Text style={styles.narrative}>{note ? `${text.trim()}*` : text}</Text>}
+        {note && <Text style={styles.footnote} aria-label={`Footnote: ${note}`}>{`* ${note}`}</Text>}
+      </View>
+      <NarratorButton text={note ? speechText([text, note]) : text} label="Hear the narrator" />
     </View>
   );
 }
@@ -135,6 +141,7 @@ const styles = StyleSheet.create({
   narrationRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 4 },
   narrationText: { flexGrow: 1, flexShrink: 1 },
   narrative: { color: colors.muted, fontStyle: 'italic', fontSize: type.subhead },
+  footnote: { color: colors.muted, fontSize: type.footnote, marginTop: 4 },
   speaker: { color: colors.accent, fontWeight: '700', fontSize: type.subhead },
   player: { alignSelf: 'flex-end', backgroundColor: colors.accent, color: colors.accentInk, borderRadius: 12, padding: 10, maxWidth: '85%', overflow: 'hidden', fontSize: type.callout },
   footer: { gap: 12, paddingBottom: 8 },
