@@ -34,11 +34,17 @@ test('with no drill, or at a completed Rift, Talk is enabled and there is no not
 test('an encounter under way elsewhere is named, with a way back instead of the review button', async () => {
   const user = userEvent.setup();
   const onReturnToEncounter = jest.fn();
-  await render(<MapPanel {...props} world={riftHere()} drill={{ ...drill, vocabularyIds: ['ahora'] }} ongoing={{ character: { name: 'Marginalia' } }} onDrill={jest.fn()} onReturnToEncounter={onReturnToEncounter} onEnterEncounter={jest.fn()} />);
+  await render(<MapPanel {...props} world={riftHere()} drill={{ ...drill, vocabularyIds: ['ahora'] }} ongoing={{ encounterId: 'old_bookshop_bookworm', character: { name: 'Marginalia' } }} onDrill={jest.fn()} onReturnToEncounter={onReturnToEncounter} onEnterEncounter={jest.fn()} />);
   expect(screen.getByText('Errata reviews everything you have learned. Finish your conversation with Marginalia first, then review 1 due word.')).toBeOnTheScreen();
   expect(screen.queryByRole('button', { name: /^Review/ })).toBeNull();
   await user.press(screen.getByRole('button', { name: 'Return to Marginalia' }));
   expect(onReturnToEncounter).toHaveBeenCalled();
+});
+// Round 091: with the drill note showing, the card adds no second note or "Return to" of its own.
+test('with the drill note showing, there is one way back only', async () => {
+  await render(<MapPanel {...props} world={riftHere()} drill={{ ...drill, vocabularyIds: ['ahora'] }} ongoing={{ encounterId: 'old_bookshop_bookworm', character: { name: 'Marginalia' } }} onDrill={jest.fn()} onReturnToEncounter={jest.fn()} onLeaveForEncounter={jest.fn()} onEnterEncounter={jest.fn()} />);
+  expect(screen.getAllByRole('button', { name: 'Return to Marginalia' })).toHaveLength(1);
+  expect(screen.queryByText('Finish your conversation with Marginalia first.')).toBeNull();
 });
 
 test('the store starts the drill from the map and returns to it; returnToEncounter reopens the dialogue', async () => {

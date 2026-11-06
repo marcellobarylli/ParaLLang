@@ -165,7 +165,9 @@ test('a second encounter defined only as content plays at its own location, inde
 
   await service.moveTo(learnerId, { locationId: 'market_entrance' });
   await service.moveTo(learnerId, { locationId: 'butchers_stall' });
-  const started = await service.startEncounter(learnerId, { encounterId: 'fixture_butcher' });
+  // Round 091: a named start does not replace Gerald's conversation under way; leaving it is a restart start.
+  await assert.rejects(service.startEncounter(learnerId, { encounterId: 'fixture_butcher' }), { status: 409, code: 'CONVERSATION_UNDER_WAY', message: 'Finish your conversation with Gerald first.' });
+  const started = await service.startEncounter(learnerId, { encounterId: 'fixture_butcher', restart: true });
   const greetingPrompt = provider.calls.at(-1).messages;
   assert.match(greetingPrompt[0].content, /Speak as Bernard, a Charcutier/);
   assert.match(greetingPrompt.at(-1).content, /introduce Bernard at The Butcher's Stall/);
@@ -176,7 +178,7 @@ test('a second encounter defined only as content plays at its own location, inde
   assert.equal(started.encounter.resolvedMessage, null);
   assert.equal(started.encounter.difficulty, 0.4);
   assert.deepEqual(started.encounter.currentObjective, { id: 'buy_ham', prompt: 'Ask Bernard for ham, in Spanish.' });
-  assert.notEqual(started.encounter.id, gerald.encounter.id, 'entering another encounter replaces the session');
+  assert.notEqual(started.encounter.id, gerald.encounter.id, 'leaving Gerald for another encounter replaces the session');
   assert.equal(started.encounter.transcript[0].dialogue.speaker, 'Bernard');
 
   const again = await service.startEncounter(learnerId, { encounterId: 'fixture_butcher' });

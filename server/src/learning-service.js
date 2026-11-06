@@ -597,6 +597,9 @@ export class LearningService {
       const definition = this.content.encounters.get(definitionId);
       if (typeof definitionId !== 'string' || !definition) throw validationError('Unknown encounter.');
       const here = currentLocationId(this.content.world, envelope.world);
+      const active = this.encounters.get(learnerId);
+      // Round 091 (critique 1.2): a restart of the conversation the server holds works away from its place.
+      const restartsHeld = restart && Boolean(active) && this.definition(active) === definition;
       if (definition.encounter.party_of) {
         // Round 022: a party member travels with the player, so their conversation starts anywhere once they have joined.
         // Round 047 (critique 1.3): the member met at the conversation's home, as the snapshot matches them.
@@ -609,7 +612,7 @@ export class LearningService {
           throw conflictError(`${definition.character.name} is not ready for that conversation yet.`, 'NOT_YET');
         }
       } else {
-        if (encounterId !== null && here !== definition.encounter.location) {
+        if (encounterId !== null && here !== definition.encounter.location && !restartsHeld) {
           throw conflictError(`${definition.character.name} is not here. Walk to ${this.locationName(definition)} first.`, 'NOT_HERE');
         }
         // Round 015: a save from rounds 005–013 may already stand in the Rift; its encounter still waits for the gate.
@@ -617,7 +620,6 @@ export class LearningService {
         if (gate?.sealed) throw conflictError(sealedMessage(this.locationName(definition), gate), 'SEALED');
       }
       const locationId = definition.encounter.party_of ? here : undefined;
-      const active = this.encounters.get(learnerId);
       // Round 022: a resolved party conversation is played again from the start; other encounters resume as before.
       const replay = Boolean(definition.encounter.party_of) && active?.state === 'resolved';
       if (!restart && !replay && active && this.definition(active) === definition) {
@@ -633,6 +635,11 @@ export class LearningService {
           throw new AppError(`${definition.character.name} reviews everything you have learned. Review your ${drill.vocabularyIds.length} due ${words} in the Spellbook first.${elsewhere}`,
             { status: 409, code: 'DRILL_REQUIRED', details: { vocabularyIds: drill.vocabularyIds } });
         }
+      }
+      // Round 091 (review R1.1 of rounds 017–028, critique 1.1): a named start never replaces another conversation
+      // under way; leaving it is a restart start. After the drill check, whose message names it too. The web client's default start (no id) still replaces.
+      if (encounterId !== null && !restart && active?.state === 'ongoing' && this.definition(active) !== definition) {
+        throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
       }
       // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
       this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));

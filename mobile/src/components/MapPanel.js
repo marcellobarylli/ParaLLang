@@ -55,7 +55,7 @@ function Node({ location, size, onMove, disabled }) {
 }
 
 // Round 029: `drill` is the server's pending drill (spellbook.drill); `ongoing` an encounter under way elsewhere.
-export default function MapPanel({ language = null, atmosphere = null, drill = null, ongoing = null, starting = null, onDrill, onReturnToEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
+export default function MapPanel({ language = null, atmosphere = null, drill = null, ongoing = null, starting = null, onDrill, onReturnToEncounter, onLeaveForEncounter, world, isLoading, onMove, onEnterEncounter, party = [], onRecruit }) {
   const [size, setSize] = useState(320); // replaced by the measured width on layout
   // Round 062 (critiques 1.1, 1.2): a move or leaving the map stops the narrator; above the early return.
   const currentLocationId = world?.currentLocationId ?? null;
@@ -64,6 +64,11 @@ export default function MapPanel({ language = null, atmosphere = null, drill = n
   const byId = new Map(world.locations.map((location) => [location.id, location]));
   const here = byId.get(world.currentLocationId);
   const drillHere = drill && here?.encounter?.id === drill.encounterId && !here.encounter.completed ? drill : null;
+  // Round 091 (review R1.1 of rounds 017–028): another conversation under way is not replaced by Talk here; the card
+  // offers the way back and a way out (a restart start). The drill note has its own way back.
+  const elsewhere = here?.encounter && ongoing && ongoing.encounterId !== here.encounter.id ? ongoing : null;
+  const otherName = elsewhere?.character?.name ?? null;
+  const talkLabel = here?.encounter ? `Talk to ${here.encounter.characterName}${here.encounter.completed ? ' again' : ''}` : '';
 
   return (
     <ScrollView style={styles.panel} contentContainerStyle={styles.content}>
@@ -86,10 +91,16 @@ export default function MapPanel({ language = null, atmosphere = null, drill = n
         {here.vocabularyFocus?.length > 0 && <Text style={styles.focus}>Words here: {here.vocabularyFocus.join(', ')}</Text>}
         {here.inscription && <Inscription key={here.id} inscription={here.inscription} language={language} />}
         {here.encounter && drillHere && <DrillNote drill={drillHere} ongoing={ongoing} isLoading={isLoading} onDrill={onDrill} onReturnToEncounter={onReturnToEncounter} />}
+        {here.encounter && elsewhere && !drillHere && <View style={styles.drill} aria-live="polite">
+          <Text style={styles.body}>{otherName ? `Finish your conversation with ${otherName} first.` : 'Finish the conversation under way first.'}</Text>
+          <Button label={otherName ? `Return to ${otherName}` : 'Return to the conversation'} variant="primary" onPress={onReturnToEncounter} disabled={isLoading} />
+          {onLeaveForEncounter && <Button label={`Leave ${otherName ?? 'it'} and talk to ${here.encounter.characterName}`} variant="text" onPress={() => onLeaveForEncounter()} disabled={isLoading} />}
+        </View>}
         {here.encounter
           ? <Button
-              label={`Talk to ${here.encounter.characterName}${here.encounter.completed ? ' again' : ''}`}
-              variant={drillHere ? 'secondary' : 'primary'} onPress={onEnterEncounter} disabled={isLoading || Boolean(drillHere)}
+              label={talkLabel}
+              accessibleName={elsewhere ? `${talkLabel}, unavailable: finish your conversation with ${otherName ?? 'the one under way'} first` : undefined}
+              variant={drillHere || elsewhere ? 'secondary' : 'primary'} onPress={onEnterEncounter} disabled={isLoading || Boolean(drillHere) || Boolean(elsewhere)}
             />
           : <Text style={styles.muted}>Nothing here wants to talk to you yet.</Text>}
         {here.encounter && starting?.encounterId === here.encounter.id

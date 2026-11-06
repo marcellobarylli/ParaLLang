@@ -160,10 +160,17 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       return get()._startNamed(world?.locations.find((location) => location.id === world.currentLocationId)?.encounter?.id ?? null);
     },
 
+    // Round 091 (decision 3): leaving the conversation under way for the encounter here (a restart start).
+    leaveAndEnter: () => {
+      const { world } = get();
+      const here = world?.locations.find((location) => location.id === world.currentLocationId)?.encounter?.id ?? null;
+      return here ? get()._startNamed(here, { restart: true }) : undefined;
+    },
+
     // Round 022: a party member's conversation starts from the Party screen, wherever the player is.
     talkTo: (encounterId) => (typeof encounterId === 'string' ? get()._startNamed(encounterId) : undefined),
 
-    _startNamed: async (encounterId) => {
+    _startNamed: async (encounterId, { restart = false } = {}) => {
       const { learnerId, isLoading } = get();
       if (!learnerId || isLoading) return;
       const epoch = requestEpoch;
@@ -173,7 +180,7 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       // Round 073 (critique 1.1): only this start's own settle clears its indicator.
       const mine = () => epoch === requestEpoch && get().learnerId === learnerId && get().starting?.seq === seq;
       try {
-        const started = await api.startEncounter(learnerId, false, encounterId);
+        const started = await api.startEncounter(learnerId, restart, encounterId);
         if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
         snapshots.set(learnerId, { encounter: started.encounter, spellbook: started.spellbook });
         const fresh = started.encounter.id !== get().encounter?.id;
@@ -182,7 +189,20 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
           ...(mine() ? { starting: null } : {}),
           ...(fresh ? { assessment: null, assessmentCounted: false, earlyAssessment: null, draft: '', pendingInput: null } : {}),
         });
-      } catch (error) { if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, ...(mine() ? { starting: null } : {}) }); }
+      } catch (error) {
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        set({ error: error.message, isLoading: false, ...(mine() ? { starting: null } : {}) });
+        // Round 091 (decision 4): the server holds a conversation this app did not know; take it, so the map names it.
+        if (error.code === 'CONVERSATION_UNDER_WAY' && typeof api.currentEncounter === 'function') {
+          try {
+            const current = await api.currentEncounter(learnerId);
+            if (epoch !== requestEpoch || get().learnerId !== learnerId || get().isLoading || !current?.encounter || !current.spellbook) return;
+            snapshots.set(learnerId, { encounter: current.encounter, spellbook: current.spellbook });
+            const fresh = current.encounter.id !== get().encounter?.id;
+            set({ encounter: current.encounter, spellbook: current.spellbook, ...(fresh ? { assessment: null, assessmentCounted: false, earlyAssessment: null, draft: '', pendingInput: null } : {}) });
+          } catch { /* the banner already says what to do */ }
+        }
+      }
     },
 
     // Round 084: cards fall due by the clock (SM-2 days), so the Spellbook is fetched again behind the screen when

@@ -57,7 +57,7 @@ export default function App() {
         {state.view === 'onboarding' && state.onboarding && <OnboardingPanel onboarding={state.onboarding} onBegin={state.finishOnboarding} />}
         {state.view === 'map' && <MapPanel language={state.language} atmosphere={state.atmosphere}
           drill={state.spellbook.drill ?? null} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null}
-          onDrill={state.startDrill} onReturnToEncounter={state.returnToEncounter}
+          onDrill={state.startDrill} onReturnToEncounter={state.returnToEncounter} onLeaveForEncounter={state.leaveAndEnter}
           world={state.world} starting={state.starting} isLoading={state.isLoading} onMove={state.moveTo} onEnterEncounter={state.enterEncounter} party={state.party} onRecruit={state.recruit} />}
         {state.view === 'saves' && <SavesPanel
           saves={state.saves} activeId={state.learnerId} place={here?.name} dueCount={state.spellbook.dueCount} isLoading={state.isLoading}
