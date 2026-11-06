@@ -63,3 +63,25 @@ One run per pack on one provider. The share and the leak counts move with LLM va
 ## Open items
 
 None for the owner beyond the rounds whose features this tour plays.
+
+## Addendum 2026-11-06: by the folded estimate, the share is on target, the Rift included
+
+Written in iteration 20, after the close, from this round's own reports (no new runs). The share above is
+`notInTranslation`, which counts every glitched English word ("Contàinment procedùre") as target language. That is
+the artifact that round 026 found and that round 046 corrected with the `folded` estimate, also in these reports. By
+`folded`, averaged over lines (one Marginalia gloss line in it has none):
+
+| Encounter (requested) | it | es |
+|---|---|---|
+| Portia (0.28) | 0.22 | 0.24 |
+| Gerald (0.30) | 0.34 | 0.33 |
+| Mortimer (0.40) | 0.36 | 0.37 |
+| Flick (0.50) | 0.51 | 0.52 |
+| Marginalia (0.48) | 0.41 | 0.48 |
+| Errata (0.50) | 0.50 | 0.50 |
+| All lines (0.44) | 0.43 | 0.44 |
+
+So "the Rift still runs far over" and "Errata's lines are mostly target language" above are wrong. Errata's lines
+are about half Italian or Spanish and half glitched English, as requested. A hand count of the first Italian line
+agrees: 10 Italian words and 10 English. Every encounter is within 0.07 of its ratio, and Portia is the furthest
+under. Backlog E1 has nothing left to fix on this evidence: one tour per pack, one provider.

@@ -10,8 +10,6 @@ skill), and updates this file before stopping. Decisions an owner would normally
 Iteration 20 (2026-11-06, from 02:09 UTC) closed round 069 (kept lines live) and is working on the next candidate.
 
 Next candidates, none needing the owner:
-- **E1 language share** with round 067's tours as the new baseline (it 0.53, es 0.52, against
-  0.44 requested; the Rift runs at 0.83 against 0.50, as before).
 - **Atmosphere repetition within a place** (round 068): across runs a place's line returns to the same idea
   (Portia "leaving someone on read"). Low value while the cache shows one line per place and state per server run.
 
@@ -650,6 +648,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   path and file list only, returned a useful critique in ~70 s. Number the Second opinion rows `1.n` from the start
   (the log check needs them; round 027 needed an Amendment for it).
 
+- **Quote the `folded` share, not `notInTranslation`** (round 067 addendum): by `folded` the tours are it 0.43 / es
+  0.44 against 0.44 and the Rift 0.50 / 0.50; round 067's "Rift at 0.83" was the glitch artifact again.
 - **The share estimate `notInTranslation` overcounts** in two cases (round 026 hand counts): glitched English
   (Errata: 0.67 by estimate, 0.33 by hand) and a `translation` field holding a summary, not a translation (0.93 vs
   0.37). Errata's "overshoot" in every tour since round 015 is mostly this artifact. Hand-count before acting on
