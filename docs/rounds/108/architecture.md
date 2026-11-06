@@ -43,3 +43,19 @@ No owner was present; each is an **autonomous decision, pending owner review**, 
 - `server/test/spellbook-withheld.test.js`: the new test of R1.3.
 - Mutation: dropping `!isPreview` fails the client test.
 - Full suites: server, client, mobile.
+
+## Amendment 1 (2026-11-06, before the build)
+
+Decision 3's reason for leaving out the replay test is wrong: since round 093 a replay returns the stored response
+with a Spellbook computed now (`replay()` calls `spellbookSnapshot`). The R1.3 test also covers it: the resolving
+turn's attempt replayed after a new start is withheld (the encounter is held again). Party conversations stay out
+(same start path). Autonomous decision, pending owner review.
+
+## Outcome (2026-11-06)
+
+Built as designed with Amendment 1. `vite preview` builds no proxy (`isPreview`); the client declares `dotenv`
+(^16.5.0; 16.6.1 installed, deduped with the server's); the sentence reveal (charged and again), a move (changed and
+not), a replay after a new start and a review challenge and its submit are tested for the withholding, and
+`locationName` (a place name) is left out of the test's leak walk. The comment at `markCommitted` states round 107's
+assumption. Mutations (no `isPreview`; no encounter on the move, reveal or replay snapshot) each fail a test.
+Server 396/396, client 21/21, mobile 303/303; `vite build` passes.

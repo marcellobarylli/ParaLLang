@@ -20,8 +20,9 @@ function assertWithheld(card, { meaning, example }, label) {
 function assertNoMeaningInPayload(runtime, spellbook) {
   const meanings = spellbook.cards.flatMap((card) => runtime.content.vocabularyById.get(card.vocabularyId).accepted_translations.map((m) => m.toLowerCase()));
   const strings = [];
-  // Ids and version strings name content files (gerald-coffee-v1), not meanings.
-  const idKey = (key) => /(^id$|Id$|Ids$|^contentVersion$)/.test(key);
+  // Ids and version strings name content files (gerald-coffee-v1), not meanings; round 108: place names ("The Coffee
+  // Cart", on inscriptions and kept lines) are labels too.
+  const idKey = (key) => /(^id$|Id$|Ids$|^contentVersion$|^locationName$)/.test(key);
   (function walk(value) {
     if (typeof value === 'string') strings.push(value.toLowerCase());
     else if (value && typeof value === 'object') for (const [key, inner] of Object.entries(value)) if (!idKey(key)) walk(inner);
@@ -135,4 +136,59 @@ test('cards that are not due are withheld during an encounter too', async (t) =>
   assert.ok(during.cards.length > 0 && during.cards.every((card) => !card.due));
   for (const card of during.cards) assertWithheld(card, { meaning: true, example: true }, `${card.vocabularyId} during`);
   for (const card of runtime.service.spellbookSnapshot(envelope, null).cards) assertWithheld(card, { meaning: false, example: false }, `${card.vocabularyId} after`);
+});
+
+// Round 108 (review R1.3, Amendment 1): the other responses that carry a Spellbook. During an encounter: the sentence
+// reveal (charged, then already revealed), a move both ways (changed, and to the same place), and a replay of the
+// last encounter's resolving turn. Outside one: the review challenge withholds the challenged due card; the submit's
+// snapshot shows it once a correct answer has scheduled it.
+test('reveals, moves, replays and reviews send the Spellbook withheld by the same rule', async (t) => {
+  const runtime = await createRuntime();
+  t.after(runtime.close);
+  const { service, content } = runtime;
+  const session = await createLearnerAndEncounter(runtime);
+  const { learnerId, started } = session;
+  const attemptId = crypto.randomUUID();
+  const message = 'Quiero un café negro.';
+  const resolving = { encounterId: started.encounter.id, version: started.encounter.version, attemptId, message };
+  const resolved = await service.submitDialogue(learnerId, resolving);
+  assert.equal(resolved.encounter.state, 'resolved');
+
+  // Reviews, outside an encounter: the challenged card is due, so its meaning waits; a correct answer brings it back.
+  const { challenge, spellbook: challenged } = await service.createReviewChallenge(learnerId);
+  assert.ok(challenge, 'a fresh card is due');
+  const card = challenged.cards.find((c) => c.vocabularyId === challenge.vocabularyId);
+  assert.equal(card.due, true);
+  assertWithheld(card, { meaning: true, example: true }, 'the challenged card');
+  assertNoMeaningInPayload(runtime, { cards: [card] });
+  const answer = content.vocabularyById.get(challenge.vocabularyId).accepted_translations[0];
+  const reviewed = await service.submitReview(learnerId, { challengeId: challenge.id, attemptId: crypto.randomUUID(), action: 'answer', answer });
+  const after = reviewed.spellbook.cards.find((c) => c.vocabularyId === challenge.vocabularyId);
+  assert.equal(after.due, false);
+  const due = new Set(reviewed.spellbook.cards.filter((c) => c.due).map((c) => c.vocabularyId));
+  assertWithheld(after, { meaning: after.formCardIds.some((id) => due.has(id)), example: after.formCardIds.some((id) => due.has(id)) || after.exampleCardIds.some((id) => due.has(id)) }, 'after a correct answer');
+
+  // During a new encounter.
+  const { encounter } = await service.startEncounter(learnerId, { restart: true });
+  const greeting = encounter.transcript.at(-1);
+  const help = { encounterId: encounter.id, version: encounter.version, messageId: greeting.id, kind: 'sentence' };
+  const charged = await api(runtime, '/api/encounter/help', { learnerId, method: 'POST', body: help });
+  assert.equal(charged.status, 200, JSON.stringify(charged.data.error ?? {}));
+  assert.equal(charged.data.charged, true);
+  const again = await api(runtime, '/api/encounter/help', { learnerId, method: 'POST', body: { ...help, version: charged.data.encounter.version } });
+  assert.equal(again.status, 200, JSON.stringify(again.data.error ?? {}));
+  assert.equal(again.data.charged, false);
+  const neighbour = content.world.neighbours.get(content.world.start)[0];
+  const moved = await api(runtime, '/api/world/move', { learnerId, method: 'POST', body: { locationId: neighbour } });
+  const stayed = await api(runtime, '/api/world/move', { learnerId, method: 'POST', body: { locationId: neighbour } });
+  assert.equal(moved.status, 200, JSON.stringify(moved.data.error ?? {}));
+  assert.equal(stayed.status, 200, JSON.stringify(stayed.data.error ?? {}));
+  const replayed = await service.submitDialogue(learnerId, resolving);
+  assert.equal(replayed.replayed, true);
+  const responses = { charged: charged.data, again: again.data, moved: moved.data, stayed: stayed.data, replayed };
+  for (const [label, response] of Object.entries(responses)) {
+    assert.equal(response.spellbook.inEncounter, true, label);
+    for (const c of response.spellbook.cards) assertWithheld(c, { meaning: true, example: true }, `${c.vocabularyId} ${label}`);
+    assertNoMeaningInPayload(runtime, response.spellbook);
+  }
 });

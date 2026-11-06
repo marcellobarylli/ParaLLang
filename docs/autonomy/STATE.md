@@ -7,11 +7,14 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 32 (2026-11-06, 09:05–09:20 UTC) closed one offline round:
+Nothing open. Iteration 32 (2026-11-06, 09:05–09:25 UTC) closed two offline rounds:
 - **107** (099 R1.4): play-market's `narrationLines` matches each line to a call of the step that committed it
   (`recordCalls(…, { stepOf })`, committed lines `{ native, step }`); failed steps' calls are `uncommittedLines`
   (with `step`), committed lines with no call `unmatchedLines`; `turn` = index among committed NPC lines.
   `playMarket({ provider })` is a test hook: a whole scripted encounter now runs in-process in a test.
+- **108** (second review of 105–107 by a fresh subagent, 4 findings, no Error): `vite preview` no longer builds the
+  token proxy (`isPreview`); the client declares `dotenv`; reveal, move, replay and review responses are tested for
+  the Spellbook withholding; round 107's success-only tagging is commented.
 
 Iteration 31 (2026-11-06, 08:47–09:10 UTC) closed two offline rounds:
 - **105** (round 103's token question, decided autonomously): the web client's Vite dev proxy adds `PARALLANG_TOKEN`
@@ -49,8 +52,9 @@ Next candidates, none needing the owner:
 - **Offline.** Every area has had an in-depth review (rounds 086–097), 093–098 a second (099), 100–103 one (104),
   and the web client a contract test (103). Small items left: a persisted "encounter ongoing" flag so the
   Spellbook payload stays withheld after a server restart (106 R1.1, low value); round 090's *caffè nero* question (owner); the footnote rule over other
-  encounters' answers (low value until footnotes appear live). A review of 104–107 by a fresh subagent would follow
-  the pattern (104 reviewed 100–103).
+  encounters' answers (low value until footnotes appear live). Rounds 105–107 have had their second review (108).
+  With the offline backlog this thin, consider a content round (no live calls): e.g. an owner-notes check of the
+  characters against `parallang_obsidian/` for anything not yet in content.
 - **Queued live (after 11-09 17:32 UTC):**
   - round 081's firmer footnote rule by Amendment ("write a footnote on the greeting and on about one reply in
     three; a footnote adds what the narrative did not say") and a re-measure, counting footnotes dropped by round
@@ -68,6 +72,10 @@ Next candidates, none needing the owner:
     `unmatchedLines` (round 107).
 
 **Traps (iteration 32):**
+- `client/vite.config.js` reads `isPreview`; a test calls the config function directly (`viteConfig({ command,
+  mode, isPreview })`), so changing its signature breaks `proxy.test.js`.
+- `spellbook-withheld.test.js`'s leak walk skips `locationName` (place names like "The Coffee Cart" hold meanings
+  such as "coffee"); a new label field holding English may need the same.
 - `narrationLines` with plain strings no longer sticks on a committed line with no call: it is skipped (listed in
   `unmatched`) and later calls still match; `turn` is the committed index.
 - `playMarket({ args, env, provider })`: with an injected provider, `--provider` is not required and `env` is not

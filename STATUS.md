@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-06: round 108, a second review of rounds 105–107 (autonomous)
+
+A second, independent review of the last three rounds found no bug a player meets. The web client's preview mode
+(`vite preview`) had picked up the access-token pass-through meant only for its development server; it no longer
+does. The web client now declares a library its config uses, and every server response that carries the Spellbook is
+tested for hiding word meanings during a conversation ([findings](docs/rounds/108/findings.md)).
+
 ## Addendum 2026-11-06: round 107, playthrough reports tie each line to the right call (autonomous)
 
 The tool that plays the market through the live LLM reports, for every line a character said, how long it took and

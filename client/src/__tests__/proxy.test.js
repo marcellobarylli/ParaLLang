@@ -9,6 +9,7 @@ import { afterEach, expect, test } from 'vitest';
 import { EventEmitter } from 'node:events';
 import { createServer, loadConfigFromFile } from 'vite';
 import { devProxy, proxyFor, ROOT_DIR, serverEnv } from '../../proxy.config.js';
+import viteConfig from '../../vite.config.js';
 
 const CLIENT_DIR = resolve(ROOT_DIR, 'client');
 const saved = { PARALLANG_TOKEN: process.env.PARALLANG_TOKEN, PORT: process.env.PORT };
@@ -120,3 +121,13 @@ test('without a token the proxy sends no header', async () => {
   await fetch(`${base}/api/world`);
   expect(seen).toEqual([{ method: 'GET', url: '/api/world', token: undefined, body: '' }]);
 }, 30000);
+
+// Round 108 (review R1.1): only `vite` (dev) gets the proxy; `vite preview`, `vite build` and vitest do not.
+test('the config gives the token proxy to the dev server only', () => {
+  process.env.PARALLANG_TOKEN = 'round108token';
+  const proxied = (env) => Boolean(viteConfig(env).server.proxy);
+  expect(proxied({ command: 'serve', mode: 'development', isPreview: false })).toBe(true);
+  expect(proxied({ command: 'serve', mode: 'production', isPreview: true })).toBe(false);
+  expect(proxied({ command: 'build', mode: 'production', isPreview: false })).toBe(false);
+  expect(proxied({ command: 'serve', mode: 'test', isPreview: false })).toBe(false);
+});

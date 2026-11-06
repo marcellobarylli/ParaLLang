@@ -312,7 +312,9 @@ export async function playMarket({ args = process.argv.slice(2), env = process.e
       const firstCall = raw.length;
       const encounterId = conversationId ?? content.world.locationsById.get(target).encounter;
       const definition = content.encounters.get(encounterId);
-      // Round 107 (decision 2): each committed NPC line with the step that committed it.
+      // Round 107 (decision 2): each committed NPC line with the step that committed it. Round 108 (review R1.4): lines
+      // are claimed only after a successful step, so this assumes a step that throws committed nothing; a start or say
+      // callback that could throw after the service committed would hand its line to the next successful step.
       const committed = [];
       const markCommitted = (shown) => {
         const npc = (shown?.transcript ?? []).filter((message) => message.role === 'npc');
