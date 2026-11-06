@@ -154,6 +154,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   *sono le* / *son las* has numbers behind it. Mortimer teaches only *tre*/*cento* (it) and *dos*/*tres*/*cien* (es).
   Watch English collisions (it *due*, es *once*).
 
+### I. Follow-ups seeded in iteration 20 (live timings)
+
+- [ ] **I1. The verdict before the reply** (round 070): show the grader's verdict while the NPC's reply is written
+  (grading ~5 s, narration ~8.6 s per turn in round 067); progress route, app polling, provisional box.
+
 ### F. Maintenance
 
 - [x] **F1. Test temp dirs.** (round 024, closed 2026-11-05: `makeTempDir` in helpers.js, removed at process exit) Server tests `mkdtemp` save dirs under `/tmp` and never remove them; `/tmp` is a 64 MB
