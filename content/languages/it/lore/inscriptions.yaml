@@ -1,0 +1,74 @@
+# Round 082: inscriptions, lore hidden in plain sight (parallang_obsidian/GAME MECHANICS.md, "Dark souls-like
+# storytelling"; prototype.md Phase 3, "discoverable items"). One per location, found by visiting it. Optional to
+# translate: the map card shows only `where` and `text`; the Spellbook holds the translation and glossary, withheld
+# during encounters. No inscription holds a vocabulary form of the pack or a party conversation's stem (server
+# test), so the text may show at any time. `where` and `translation` are the same English in every pack (tested).
+# Authored, not generated. Pending a native speaker's review.
+inscriptions:
+  - id: keystone
+    location: market_entrance
+    where: "Carved on the keystone of the archway, half worn away by people looking up."
+    text: "Chi entra prende la voce del ramo in cui si trova. Chi esce, se esce, ne porta via qualcosa sotto le unghie."
+    translation: "Whoever enters takes on the voice of the branch they stand in. Whoever leaves, if they leave, takes some of it away under their fingernails."
+    glossary:
+      - { word: "chi", meaning: "whoever" }
+      - { word: "prende la voce", meaning: "takes on the voice" }
+      - { word: "ramo", meaning: "branch" }
+      - { word: "ne porta via", meaning: "takes some of it away" }
+      - { word: "unghie", meaning: "fingernails" }
+  - id: menu_board
+    location: coffee_cart
+    where: "Chalked in a corner of the menu board, the one line nobody ever wipes off."
+    text: "Le ordinazioni di ieri verranno servite il mese scorso. Ci scusiamo per il disagio temporale."
+    translation: "Yesterday's orders will be served last month. We apologise for the temporal inconvenience."
+    glossary:
+      - { word: "ordinazioni", meaning: "orders (in a café)" }
+      - { word: "ieri", meaning: "yesterday" }
+      - { word: "verranno servite", meaning: "will be served" }
+      - { word: "il mese scorso", meaning: "last month" }
+      - { word: "ci scusiamo", meaning: "we apologise" }
+      - { word: "disagio", meaning: "inconvenience" }
+  - id: chopping_block
+    location: butchers_stall
+    where: "Burned into the chopping block, under a century of knife marks."
+    text: "In questo banco si pesa tutto, perfino le scuse. Non esiste scusa che abbia mai pesato quanto dichiarava."
+    translation: "Everything is weighed at this stall, even excuses. There is no excuse that ever weighed what it claimed."
+    glossary:
+      - { word: "si pesa", meaning: "is weighed" }
+      - { word: "non esiste", meaning: "there is no" }
+      - { word: "perfino", meaning: "even" }
+      - { word: "scuse", meaning: "excuses, apologies" }
+      - { word: "banco", meaning: "stall, counter" }
+      - { word: "dichiarava", meaning: "it claimed" }
+  - id: plaque_back
+    location: cracked_fountain
+    where: "On the back of the brass plaque, in letters someone has tried to file away."
+    text: "Si sconsiglia di leggere fino in fondo. Il ritornello comincia dove finisce la frase, e la frase non finisce mai."
+    translation: "Reading to the end is not advised. The refrain begins where the sentence ends, and the sentence never ends."
+    glossary:
+      - { word: "si sconsiglia", meaning: "it is not advised" }
+      - { word: "fino in fondo", meaning: "to the end" }
+      - { word: "ritornello", meaning: "refrain" }
+      - { word: "frase", meaning: "sentence" }
+      - { word: "non finisce mai", meaning: "never ends" }
+  - id: flyleaf
+    location: old_bookshop
+    where: "Pencilled on the flyleaf of a book that will not let itself be opened."
+    text: "Ogni libro di questa bottega è stato scritto da chi l'ha letto per ultimo. Restituitelo con cura: potreste esserci dentro."
+    translation: "Every book in this shop was written by whoever read it last. Return it with care: you may be inside it."
+    glossary:
+      - { word: "bottega", meaning: "shop, workshop" }
+      - { word: "per ultimo", meaning: "last" }
+      - { word: "restituitelo", meaning: "give it back" }
+      - { word: "potreste esserci dentro", meaning: "you may be inside it" }
+  - id: seam
+    location: the_rift
+    where: "Stitched along the seam of light, in thread that hums when you lean close."
+    text: "Qui il ramo è morto, eppure le radici continuano a parlare. Ascoltale finché non capisci, poi tappati le orecchie."
+    translation: "Here the branch is dead, yet its roots keep talking. Listen until you understand, then cover your ears."
+    glossary:
+      - { word: "eppure", meaning: "and yet" }
+      - { word: "radici", meaning: "roots" }
+      - { word: "ascoltale", meaning: "listen to them" }
+      - { word: "finché", meaning: "until" }
+      - { word: "tappati le orecchie", meaning: "cover your ears" }
