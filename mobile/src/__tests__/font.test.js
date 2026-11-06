@@ -56,7 +56,7 @@ test('only the OFL-licensed 700 file is imported (never the package root), and t
 test('screen and section titles go through Title; card titles and the review word stay on the system font', () => {
   const dir = join(root, 'src', 'components');
   const left = readdirSync(dir).flatMap((file) => [...readFileSync(join(dir, file), 'utf8').matchAll(/<Text role="heading" style=\{styles\.(\w+)\}/g)].map(([, name]) => `${file}:${name}`));
-  expect([...new Set(left)].sort()).toEqual(['ReviewPanel.js:word', 'SavesPanel.js:cardTitle', 'Spellbook.js:cardTitle']);
+  expect([...new Set(left)].sort()).toEqual(['ReviewPanel.js:word', 'SavesPanel.js:cardTitle', 'Spellbook.js:annexTitle', 'Spellbook.js:cardTitle']); // round 111: the annex inside a file
   const titles = readdirSync(dir).flatMap((file) => [...readFileSync(join(dir, file), 'utf8').matchAll(/<Title style=\{styles\.(\w+)\}/g)].map(([, name]) => `${file}:${name}`));
   expect(titles).toHaveLength(11); // round 060: "Lines you translated"; round 082: "Inscriptions"
 });

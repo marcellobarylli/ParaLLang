@@ -41,7 +41,7 @@ export default function DialoguePanel({ encounter, language, isLoading, assessme
       {encounter.currentObjective
         ? <><Text style={styles.strong}>Current objective</Text><Text style={styles.body}>{encounter.currentObjective.prompt}</Text></>
         : <Text style={styles.strong}>Encounter complete</Text>}
-      <Text style={styles.small}>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</Text>
+      <Text style={styles.small}>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}{encounter.hints.strained && encounter.state === 'ongoing' ? ' (your companion is recovering)' : ''}</Text>
     </View></>
   );
   // Round 070 (backlog I1): while the reply is written, the grader's verdict shows as provisional under the pending

@@ -101,5 +101,11 @@ test('files are filed on completion only, sorted, through the API too; a party c
     encounterId: 'cracked_fountain_letharger', locationName: 'The Cracked Fountain', designation: 'CM-001', name: source.name,
     class: source.class, notes: source.notes,
     properties: { virulence: source.virulence, harm: source.harm, incubation: source.incubation, vector: source.vector, containment: source.containment },
+    // Round 111: the redacted annex, unread (annex.test.js covers reading it).
+    annex: {
+      id: source.annex.id, title: source.annex.title, redaction: source.annex.redaction, read: false, readAt: null,
+      strainPending: false, hidden: false, text: null, translation: null, glossary: null, exposureNote: null,
+    },
   });
+  assert.equal(Object.hasOwn(filed[1], 'annex'), false, 'Errata\'s file has no annex');
 });

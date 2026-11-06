@@ -76,6 +76,12 @@ export function createApp({ service, logger = console, token = null }) {
     catch (error) { next(error); }
   });
 
+  // Round 111 (backlog B8): read a redacted annex anyway.
+  app.post('/api/spellbook/annex/read', async (req, res, next) => {
+    try { res.json(await service.readAnnex(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
+
   app.use((error, req, res, _next) => {
     const requestId = randomUUID();
     const isAppError = error instanceof AppError;

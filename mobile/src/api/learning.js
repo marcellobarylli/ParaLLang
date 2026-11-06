@@ -60,6 +60,7 @@ export function createLearningApi({ baseUrl = API_URL, token = API_TOKEN, fetch:
     getSpellbook: (learnerId) => request('/api/spellbook', { learnerId }),
     createReview: (learnerId, vocabularyId) => request('/api/spellbook/review', { learnerId, method: 'POST', body: vocabularyId ? { vocabularyId } : {} }),
     submitReview: (learnerId, payload) => request('/api/spellbook/review/submit', { learnerId, method: 'POST', body: payload }),
+    readAnnex: (learnerId, annexId) => request('/api/spellbook/annex/read', { learnerId, method: 'POST', body: { annexId } }), // round 111
   };
 }
 

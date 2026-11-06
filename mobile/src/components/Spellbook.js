@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import PronounceButton from './PronounceButton.js';
 import { Button, colors, type, leading, Title, wordClassStyle } from './ui.js';
 import { wordClassText } from '../wordClass.js';
 import { stopSpeech } from '../speech.js';
 
-export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Return to the map', now = Date.now() }) {
+export default function Spellbook({ spellbook, language, isLoading, onReview, onReadAnnex = () => {}, appInEncounter = false, onReturn, returnLabel = 'Return to the map', now = Date.now() }) {
   // Round 063 (backlog C10c): a word, fragment or line still being read stops when the Spellbook goes.
   useEffect(() => () => { stopSpeech(); }, []);
   const inEncounter = Boolean(spellbook.inEncounter);
@@ -26,7 +26,7 @@ export default function Spellbook({ spellbook, language, isLoading, onReview, on
       </>}
       {spellbook.containmentFiles?.length > 0 && <>
         <Title style={styles.section}>Containment files</Title>
-        {spellbook.containmentFiles.map((file) => <ContainmentFile key={file.designation} file={file} language={language} />)}
+        {spellbook.containmentFiles.map((file) => <ContainmentFile key={file.designation} file={file} language={language} inEncounter={inEncounter || appInEncounter} isLoading={isLoading} onReadAnnex={onReadAnnex} />)}
       </>}
       {spellbook.journeyFragments?.length > 0 && <>
         <Title style={styles.section}>Fragments of The Journey</Title>
@@ -95,13 +95,61 @@ function KeptLine({ line, hiddenBy, language }) {
 // Round 028 (backlog B4): the deadpan file for each infohazard met (LORE.md). No file holds an objective's answer
 // (server test), so files show during encounters too.
 const PROPERTIES = [['virulence', 'Virulence'], ['harm', 'Harm'], ['incubation', 'Incubation'], ['vector', 'Vector'], ['containment', 'Containment']];
-function ContainmentFile({ file, language }) {
+function ContainmentFile({ file, language, inEncounter, isLoading, onReadAnnex }) {
   return (
     <View style={styles.card} aria-label={`Containment file ${file.designation}`}>
       <Text role="heading" style={styles.cardTitle}>{file.designation}: <Text accessibilityLanguage={language?.tag}>{file.name}</Text></Text>
       <Text style={styles.small}>Class: {file.class} · Recovered at {file.locationName}</Text>
       {PROPERTIES.map(([key, label]) => <Text key={key} style={styles.body}><Text style={styles.strong}>{label}: </Text>{file.properties[key]}</Text>)}
       {file.notes.map((note) => <Text key={note} style={styles.small}>{note}</Text>)}
+      {file.annex && <Annex annex={file.annex} language={language} inEncounter={inEncounter} isLoading={isLoading} onRead={onReadAnnex} />}
+    </View>
+  );
+}
+
+// Round 111 (backlog B8): a passage the companion blacked out (LORE.md, Infohazards). Unread, the payload holds no
+// text: black bars stand in for it, with the companion's line, which states the cost. Reading asks first, through
+// the system alert, and waits while an encounter is under way. Read, it is shown as a fragment is.
+const REDACTED_BARS = [0.92, 0.78, 0.86, 0.55];
+function Annex({ annex, language, inEncounter, isLoading, onRead }) {
+  const [open, setOpen] = useState(false);
+  const name = language?.name ?? 'the target language';
+  const confirmRead = () => Alert.alert(
+    `Read ${annex.title}?`,
+    'Your companion will need a while to recover: a hint fewer for each task of the next conversation you finish.',
+    [{ text: 'Leave it redacted', style: 'cancel' }, { text: 'Read it', style: 'destructive', onPress: () => onRead(annex.id) }],
+  );
+  if (!annex.read || !annex.text) {
+    return (
+      <View style={styles.annex} aria-label={`${annex.title}, redacted`}>
+        <Text role="heading" style={styles.annexTitle}>{annex.title}</Text>
+        <View accessible aria-label="Redacted text" style={styles.bars}>
+          {REDACTED_BARS.map((width) => <View key={width} style={[styles.bar, { width: `${width * 100}%` }]} />)}
+        </View>
+        <Text style={styles.body}>{annex.redaction}</Text>
+        {inEncounter ? <Text style={styles.hidden}>Your companion keeps it redacted while a conversation is under way.</Text>
+          : <Button label="Read it anyway" disabled={isLoading} onPress={confirmRead} style={styles.review} />}
+      </View>
+    );
+  }
+  return (
+    <View style={styles.annex} aria-label={annex.title}>
+      <View style={styles.cardRow}>
+        <Text role="heading" style={styles.annexTitle}>{annex.title}</Text>
+        <PronounceButton text={annex.text} language={language} label={`Hear the annex in ${name}`} />
+      </View>
+      <Text style={styles.passage} accessibilityLanguage={language?.tag}>{annex.text}</Text>
+      {annex.hidden || !annex.translation ? <Text style={styles.hidden}>The translation waits until the encounter is over.</Text> : <>
+        <Button label={open ? 'Hide translation' : 'Show translation'} expanded={open} onPress={() => setOpen(!open)} style={styles.review} />
+        {open && <View style={styles.translation}>
+          {(annex.glossary ?? []).map((entry) => (
+            <Text key={entry.word} style={styles.body}><Text style={styles.strong} accessibilityLanguage={language?.tag}>{entry.word}</Text>: {entry.meaning}</Text>
+          ))}
+          <Text style={styles.example}>{annex.translation}</Text>
+        </View>}
+      </>}
+      {annex.exposureNote && <Text style={styles.small}>{annex.exposureNote}</Text>}
+      {annex.strainPending && <Text style={styles.hidden}>Your companion is still recovering: a hint fewer for each task of your next conversation.</Text>}
     </View>
   );
 }
@@ -212,6 +260,11 @@ const styles = StyleSheet.create({
   hidden: { color: colors.muted, fontSize: type.subhead, fontStyle: 'italic' },
   example: { color: colors.ink, fontSize: type.subhead },
   source: { color: colors.accent, fontSize: type.footnote, fontWeight: '600' },
+  // Round 111: a redacted annex inside its containment file.
+  annex: { borderTopColor: colors.border, borderTopWidth: 1, marginTop: 8, paddingTop: 8, gap: 4 },
+  annexTitle: { fontSize: type.subhead, fontWeight: '700', color: colors.ink },
+  bars: { gap: 6, marginVertical: 4 },
+  bar: { height: 12, borderRadius: 2, backgroundColor: colors.ink },
   passage: { color: colors.ink, fontSize: type.callout, lineHeight: leading.callout, fontStyle: 'italic' },
   translation: { gap: 4, marginTop: 4 },
   lineText: { flexShrink: 1 },

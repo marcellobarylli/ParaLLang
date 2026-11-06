@@ -75,3 +75,13 @@ test('config reads and trims EXPO_PUBLIC_PARALLANG_TOKEN at import; blank means 
   }
   delete process.env.EXPO_PUBLIC_PARALLANG_TOKEN;
 });
+
+// Round 111 (backlog B8): reading a redacted annex anyway.
+test('readAnnex posts the annex id to the annex route', async () => {
+  const fetch = jest.fn(async () => response(200, { spellbook: { cards: [] }, charged: true }));
+  const api = createLearningApi({ baseUrl: 'http://127.0.0.1:3001', fetch });
+  await api.readAnnex('learner-1', 'cm001_second_verse');
+  expect(fetch).toHaveBeenCalledWith('http://127.0.0.1:3001/api/spellbook/annex/read', expect.objectContaining({
+    method: 'POST', body: JSON.stringify({ annexId: 'cm001_second_verse' }),
+  }));
+});

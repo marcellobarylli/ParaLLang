@@ -325,7 +325,7 @@ export class LearningService {
     }
     return {
       cards, dueCount: cards.filter((card) => card.due).length, contentVersion: this.content.vocabulary.version,
-      inEncounter, containmentFiles: this.containmentFiles(envelope),
+      inEncounter, containmentFiles: this.containmentFiles(envelope, inEncounter),
       journeyFragments: this.journeyFragments(envelope, inEncounter), drill: this.pendingDrill(envelope),
       lines: this.keptLines(envelope, inEncounter, cards), inscriptions: this.inscriptions(envelope, inEncounter),
     };
@@ -415,18 +415,80 @@ export class LearningService {
 
   // Round 028 (backlog B4): a containment file is filed once its encounter is completed (world progress; no save
   // change). Not on a visit or at the start: the file would explain the hazard before the player met it (critique 1.2).
-  containmentFiles(envelope) {
+  containmentFiles(envelope, inEncounter = false) {
     const completed = new Set(envelope.world?.completedEncounterIds ?? []);
     return [...this.content.encounters.values()]
       .filter(({ encounter }) => encounter.containment_file && completed.has(encounter.id))
       .map(({ encounter }) => {
-        const { designation, name, class: hazardClass, notes, ...properties } = encounter.containment_file;
+        const { designation, name, class: hazardClass, notes, annex, ...properties } = encounter.containment_file;
         return {
           encounterId: encounter.id, locationName: this.content.world.locationsById.get(encounter.location).name,
           designation, name, class: hazardClass, properties, notes: [...notes],
+          ...(annex ? { annex: this.annexSnapshot(envelope, annex, inEncounter) } : {}),
         };
       })
       .sort((a, b) => a.designation.localeCompare(b.designation));
+  }
+
+  // Round 111 (backlog B8): a redacted annex. Unread, the payload holds no text, only the companion's redaction (which
+  // states the cost). Read, the text shows at any time (it holds no answer: server test); the translation and
+  // glossary wait out an encounter, as a fragment's do. `strainPending` while the read's cost is not yet spent.
+  annexSnapshot(envelope, annex, inEncounter) {
+    const record = (envelope.annexes ?? []).find((candidate) => candidate.id === annex.id) ?? null;
+    const read = Boolean(record);
+    return {
+      id: annex.id, title: annex.title, redaction: annex.redaction, read, readAt: record?.readAt ?? null,
+      strainPending: read && record.strainSpentOn === null, hidden: inEncounter,
+      text: read ? annex.text : null,
+      translation: read && !inEncounter ? annex.translation : null,
+      glossary: read && !inEncounter ? annex.glossary.map((entry) => ({ ...entry })) : null,
+      exposureNote: read ? annex.exposure_note : null,
+    };
+  }
+
+  // The annexes of the pack, by id, with the encounter whose containment file holds each.
+  annexById(annexId) {
+    for (const { encounter } of this.content.encounters.values()) {
+      if (encounter.containment_file?.annex?.id === annexId) return { annex: encounter.containment_file.annex, encounter };
+    }
+    return null;
+  }
+
+  // Round 111: the companion's strain is pending while a read annex of this pack has not yet cost a finished
+  // conversation (critique 1.6: an id no longer in the content neither strains nor is spent, so it can never strain
+  // for good). The ids, so a session spends only the reads that strained it (critique 1.7).
+  pendingStrainIds(envelope) {
+    return (envelope.annexes ?? []).filter((record) => record.strainSpentOn === null && this.annexById(record.id)).map((record) => record.id);
+  }
+
+  // Round 111: an objective's hint limit, one fewer (floor 0) in a session started while the strain was pending.
+  hintLimit(session, objective) {
+    const limit = objective?.hint_limit ?? 0;
+    return session?.strained ? Math.max(0, limit - 1) : limit;
+  }
+
+  // Round 111: read a redacted annex anyway. Not during an encounter (the companion holds the redaction then, and
+  // the cost must not land mid-conversation), not before its containment file is filed; a second read changes nothing.
+  async readAnnex(learnerId, request) {
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const annexId = request?.annexId;
+      const found = typeof annexId === 'string' ? this.annexById(annexId) : null;
+      if (!found) throw new AppError('There is no such annex.', { status: 404, code: 'NOT_FOUND' });
+      if (!(envelope.world?.completedEncounterIds ?? []).includes(found.encounter.id)) {
+        throw conflictError('That containment file has not been filed yet.', 'NOT_FILED');
+      }
+      if (this.inEncounter(this.encounters.get(learnerId))) {
+        throw conflictError('Your companion keeps the redaction in place while a conversation is under way.', 'IN_ENCOUNTER');
+      }
+      if ((envelope.annexes ?? []).some((record) => record.id === annexId)) {
+        return { charged: false, spellbook: this.spellbookSnapshot(envelope) };
+      }
+      const staged = clone(envelope);
+      staged.annexes = [...(staged.annexes ?? []), { id: annexId, readAt: nowIso(this.clock), strainSpentOn: null }];
+      await this.storage.save(staged);
+      return { charged: true, spellbook: this.spellbookSnapshot(staged) };
+    });
   }
 
   // Round 030 (backlog A9): fragments of The Journey, found once their encounter is completed (no save change), in
@@ -538,7 +600,7 @@ export class LearningService {
         protected: protectedMessage,
       };
     });
-    const limit = objective?.hint_limit ?? 0;
+    const limit = this.hintLimit(encounter, objective);
     return {
       id: encounter.id,
       encounterId: definition.encounter.id,
@@ -554,7 +616,7 @@ export class LearningService {
       difficulty: this.ratioFor(encounter.committedPlayerTurns, definition),
       must_translate: encounter.state === 'ongoing' && Boolean(objective),
       hints_available: encounter.state === 'ongoing' && revealKeys.length < limit,
-      hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit },
+      hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit, strained: Boolean(encounter.strained) },
       currentObjective: objective ? { id: objective.id, prompt: objective.prompt } : null,
       transcript,
     };
@@ -683,6 +745,8 @@ export class LearningService {
         id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0, passedObjectiveIds: [],
         committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
         ...(locationId ? { locationId } : {}),
+        // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
+        ...(this.pendingStrainIds(envelope).length ? { strained: true, strainedBy: this.pendingStrainIds(envelope) } : {}),
       };
       await this.storage.save(stagedEnvelope);
       this.encounters.set(learnerId, encounter);
@@ -866,7 +930,7 @@ export class LearningService {
 
       const used = current.reveals[objective.id] ?? [];
       const alreadyRevealed = used.includes(key);
-      if (!alreadyRevealed && used.length >= objective.hint_limit) throw conflictError('No translation hints remain for this objective.', 'HINTS_EXHAUSTED');
+      if (!alreadyRevealed && used.length >= this.hintLimit(current, objective)) throw conflictError('No translation hints remain for this objective.', 'HINTS_EXHAUSTED');
       if (alreadyRevealed) return { reveal, charged: false, encounter: this.serializeEncounter(current), spellbook: this.spellbookSnapshot(envelope) };
 
       const staged = clone(current);
@@ -1043,6 +1107,13 @@ export class LearningService {
           if (member) member.conversations = (member.conversations ?? 0) + 1;
         } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
           stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
+        }
+        // Round 111: the conversation that bore the strain spends it, in the same save as its resolution and receipt
+        // (a replay returns the receipt and spends nothing again; a failed save spends nothing). Any finished
+        // conversation spends it, a replayed party conversation or a completed place's restart too (decision 4).
+        if (resolved && stagedEncounter.strained) {
+          const by = new Set(stagedEncounter.strainedBy ?? []);
+          for (const record of stagedEnvelope.annexes ?? []) if (record.strainSpentOn === null && by.has(record.id)) record.strainSpentOn = definition.encounter.id;
         }
         const response = {
           encounter: this.serializeEncounter(stagedEncounter),

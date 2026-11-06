@@ -46,6 +46,17 @@ function validParty(party) {
     && !seen.has(member.characterId) && seen.add(member.characterId));
 }
 
+// Round 111 (backlog B8): the redacted annexes the player read anyway; `strainSpentOn` is null while the
+// companion's strain is pending, then the encounter whose finished conversation spent it. As for lines, only the
+// container is strict: an invalid or repeated entry is dropped and the save kept.
+export const ANNEX_LIMIT = 20;
+function validAnnexRecord(record) {
+  return Boolean(record) && typeof record === 'object' && !Array.isArray(record)
+    && typeof record.id === 'string' && record.id.length > 0 && record.id.length <= 100
+    && typeof record.readAt === 'string' && Number.isFinite(Date.parse(record.readAt))
+    && (record.strainSpentOn === null || (typeof record.strainSpentOn === 'string' && record.strainSpentOn.length > 0));
+}
+
 // Round 060 (backlog C9): NPC lines the player paid to translate. Only the container is strict (critique 1.4): an
 // invalid entry is dropped and the save kept.
 export const LINE_LIMIT = 50;
@@ -141,6 +152,10 @@ function validateEnvelope(value, learnerId) {
   if (value.lines !== undefined) {
     if (!Array.isArray(value.lines)) throw retryableError('The learner save contains invalid translated lines. The original file was preserved.', 'SAVE_UNREADABLE');
     value.lines = value.lines.filter(validLine).slice(0, LINE_LIMIT);
+  }
+  if (value.annexes !== undefined) {
+    if (!Array.isArray(value.annexes)) throw retryableError('The learner save contains invalid annex records. The original file was preserved.', 'SAVE_UNREADABLE');
+    value.annexes = value.annexes.filter(validAnnexRecord).filter((record, index, all) => all.findIndex((other) => other.id === record.id) === index).slice(0, ANNEX_LIMIT);
   }
   return value;
 }

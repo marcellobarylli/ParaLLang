@@ -61,6 +61,17 @@ const containmentFileSchema = z.object({
   vector: z.string().min(1),
   containment: z.string().min(1),
   notes: z.array(z.string().min(1)).min(1).max(3),
+  // Round 111 (backlog B8): a passage the companion has redacted (LORE.md, Infohazards, "Gameplay hooks"). The
+  // player may read it anyway, at a cost (one hint fewer per objective in the next conversation they finish).
+  annex: z.object({
+    id: z.string().regex(/^[a-z0-9_]+$/),
+    title: z.string().min(1),
+    redaction: z.string().min(1),
+    text: z.string().min(1),
+    translation: z.string().min(1),
+    glossary: z.array(z.object({ word: z.string().min(1), meaning: z.string().min(1) }).strict()).min(4).max(10),
+    exposure_note: z.string().min(1),
+  }).strict().optional(),
 }).strict();
 
 const encounterSchema = z.object({
@@ -259,6 +270,15 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   }
   validatePartyConversations(encounters);
   unique([...encounters.values()].flatMap(({ encounter: e }) => (e.containment_file ? [e.containment_file.designation] : [])), 'Containment file designations');
+  // Round 111: annex ids are unique, and each glossary word occurs in its text (as for fragments).
+  const annexes = [...encounters.values()].flatMap(({ encounter: e }) => (e.containment_file?.annex ? [e.containment_file.annex] : []));
+  unique(annexes.map((annex) => annex.id), 'Containment file annexes');
+  for (const annex of annexes) {
+    const text = foldWords(annex.text);
+    for (const { word } of annex.glossary) {
+      if (!text.includes(foldWords(word))) throw new Error(`Annex ${annex.id} glosses "${word}", which is not in its text`);
+    }
+  }
   const defaultDefinition = encounters.get(defaultEncounterId);
   if (!defaultDefinition) throw new Error(`content/${pack}/language.yaml names unknown default_encounter ${defaultEncounterId}`);
   if (defaultDefinition.encounter.party_of) throw new Error(`content/${pack}/language.yaml default_encounter ${defaultEncounterId} is a party conversation`);

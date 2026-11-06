@@ -293,6 +293,26 @@ export function createGameStore({ api = learningApi, storage = AsyncStorage, cue
       }
     },
 
+    // Round 111 (backlog B8): read a redacted annex anyway (the Spellbook asked first). The reply's Spellbook is a new
+    // object, so a refresh that began before it is dropped (refreshSpellbook's rule). Never while the app holds an
+    // ongoing encounter (the server refuses it too).
+    readAnnex: async (annexId) => {
+      const { learnerId, isLoading } = get();
+      if (!learnerId || isLoading || !annexId || get().encounter?.state === 'ongoing') return;
+      const epoch = requestEpoch;
+      set({ isLoading: true, error: null, notice: null });
+      try {
+        const { spellbook } = await api.readAnnex(learnerId, annexId);
+        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+        const fresh = spellbook && Array.isArray(spellbook.cards) && !leaksMeanings(get(), spellbook) ? spellbook : null;
+        // Critique 1.4: the save's snapshot too, so a switch back does not restore the redacted Spellbook.
+        if (fresh) snapshots.set(learnerId, { ...(snapshots.get(learnerId) ?? { encounter: get().encounter }), spellbook: fresh });
+        set({ ...(fresh ? { spellbook: fresh } : {}), isLoading: false });
+      } catch (error) {
+        if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false });
+      }
+    },
+
     openParty: () => {
       set((state) => ({
         view: 'party', returnView: ['map', 'dialogue'].includes(state.view) ? state.view : state.returnView,

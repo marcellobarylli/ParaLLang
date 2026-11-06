@@ -33,6 +33,27 @@ containment_file:
   notes:
     - "Recovered at the Cracked Fountain, whose plaque reads PLEASE DO NOT HUM."
     - "Native speakers of the realm's language are immune. The author of this file is not."
+  # Round 111 (backlog B8): the companion's redaction (LORE.md, Infohazards, "Gameplay hooks"). Read anyway, it costs
+  # a hint per objective in the next conversation finished. The text holds no answer (server test). Authored, not
+  # generated; pending a native speaker's review.
+  annex:
+    id: "cm001_second_verse"
+    title: "Annex A: the second verse"
+    redaction: "Your companion has blacked out every line of it. \"Trust me on this. If you read it, I will need a while to get over it: a hint fewer for each task of the next conversation you finish.\""
+    text: "Segunda estrofa, que no se canta. El que la lee la tararea; el que la tararea la enseña; el que la enseña la olvida, y la encuentra esa misma noche en los labios de un extraño. Esta estrofa no tiene final: únicamente tiene regreso."
+    translation: "Second verse, not to be sung. Whoever reads it hums it; whoever hums it teaches it; whoever teaches it forgets it, and finds it again that same night on the lips of a stranger. This verse has no end: it only has a return."
+    glossary:
+      - { word: "estrofa", meaning: "verse" }
+      - { word: "el que la lee", meaning: "whoever reads it" }
+      - { word: "la tararea", meaning: "hums it" }
+      - { word: "la enseña", meaning: "teaches it" }
+      - { word: "la olvida", meaning: "forgets it" }
+      - { word: "la encuentra", meaning: "finds it" }
+      - { word: "esa misma noche", meaning: "that same night" }
+      - { word: "labios", meaning: "lips" }
+      - { word: "un extraño", meaning: "a stranger" }
+      - { word: "regreso", meaning: "return" }
+    exposure_note: "Exposure log: read in full by the bearer of this Spellbook, who has been added to the list of hosts. Containment of the reader is pending."
 objectives:
   - id: stop
     prompt: "Flick will not hold still. Tell it to stop, in Spanish."

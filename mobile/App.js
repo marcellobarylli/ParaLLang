@@ -65,7 +65,7 @@ export default function App() {
           soundsOn={state.soundsOn} onToggleSounds={state.setSoundsOn} onRemove={state.learnerId ? state.removeSave : null}
         />}
         {state.view === 'party' && <PartyPanel party={state.party} starting={state.starting} isLoading={state.isLoading} ongoing={state.encounter?.state === 'ongoing' ? state.encounter : null} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
-        {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
+        {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} appInEncounter={state.encounter?.state === 'ongoing'} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReadAnnex={state.readAnnex} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
         {state.view === 'review' && <ReviewPanel
           key={state.reviewChallenge?.id ?? 'result'}
           challenge={state.reviewChallenge} partOfSpeech={reviewPartOfSpeech(state)} result={state.reviewResult} language={state.language} isLoading={state.isLoading} error={state.error}

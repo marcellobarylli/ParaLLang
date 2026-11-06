@@ -12,3 +12,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 6 | 09:52 | 09:53:30 | disposition | Claude (claude-opus-5-5), autonomous | All accepted except 1.3 (any finished conversation spends the strain); autonomous, pending owner review | `../architecture.md` |
 | 7 | 09:53 | 09:53:30 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: `strainedBy`, unknown ids ignored, store snapshot and app-held encounter guard, recovering note only while ongoing, more tests | `../architecture.md` |
 | 8 | 09:53:34 | 09:53:34 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed (goal, design, decisions, second opinion, tests); the build follows in its own commit | `../architecture.md` |
+| 9 | 09:53:40 | 09:53:40 | built | Claude (claude-opus-5-5), autonomous | Build with the accepted findings: server 405/405, client 21/21, mobile 315/315 (font test lists the annex heading on purpose) | — |
