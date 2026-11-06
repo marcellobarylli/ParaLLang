@@ -14,7 +14,6 @@ off by default: mean Talk wait 12.1 s → 4.4 s live with a 10 s stay). Codex us
 and 2 critiques, from 02:56 to 03:23, no usage limit hit.
 
 Next candidates, none needing the owner:
-- **A read-only review of round 076** if the iteration-21 review below was not acted on (see Progress).
 - **The app over HTTP with prefetch on** (round 076 measured in-process only): a short live HTTP run through
   `createApp` (127.0.0.1, token) that moves, waits and starts, to check the route path and the "getting ready" wait.
 - **Atmosphere repetition within a place** (round 068): low value while the cache shows one line per place and state.
@@ -492,6 +491,7 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   6 leak lines; `docs/rounds/074/results/folded.mjs` is the folded-share measure). Round 075 closed (three review
   notes; Codex 3 findings; Amendment 1 from a subagent review); mobile 218/218. Round 076 closed (I4, greeting
   prefetch; Codex 12 findings); server 271/271; live 11/12 starts (one control-arm CLI_INVALID_RESPONSE at 120 s).
+  A subagent review of round 076 found no bug; two tests made strict (Amendment 1).
 
 ## Handoff notes and traps
 
