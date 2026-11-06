@@ -7,7 +7,14 @@ skill), and updates this file before stopping. Decisions an owner would normally
 
 ## In progress
 
-Nothing open. Iteration 32 (2026-11-06, 09:05–09:25 UTC) closed two offline rounds:
+Nothing open. Iteration 33 (2026-11-06, 09:20–09:40 UTC) closed one offline content round:
+- **109** (owner-notes audit, backlog B6): every character and lore element of `parallang_obsidian/` against
+  `content/` (table in [findings](../rounds/109/findings.md)). Two fragments of *The Journey* filled the clearest
+  gap: "The archway's telling" (`journey_proem`, the Entrance tutorial, first in story order) and "Still on his way"
+  (`journey_still_on_his_way`, Gerald's encounter, last). Gaps left: mushrooms and spores (content only, next
+  candidate); the Wizard of Just in Case, the Trepanners, Orwell, the Inflection Point (need a place or live runs).
+
+Iteration 32 (2026-11-06, 09:05–09:25 UTC) closed two offline rounds:
 - **107** (099 R1.4): play-market's `narrationLines` matches each line to a call of the step that committed it
   (`recordCalls(…, { stepOf })`, committed lines `{ native, step }`); failed steps' calls are `uncommittedLines`
   (with `step`), committed lines with no call `unmatchedLines`; `turn` = index among committed NPC lines.
@@ -48,7 +55,7 @@ fixes (review resend replays, starts keep the screen), play-market's retried lin
 autonomous run. No live LLM data is possible for the rest of the run (claude-cli has no token in the shell; see
 Needs owner). Work only on items that need no live calls (code, tests, content, docs); queue live checks.
 
-Next candidates, none needing the owner:
+Next candidates, none needing the owner (B7, mushrooms and spores, is the next content item):
 - **Offline.** Every area has had an in-depth review (rounds 086–097), 093–098 a second (099), 100–103 one (104),
   and the web client a contract test (103). Small items left: a persisted "encounter ongoing" flag so the
   Spellbook payload stays withheld after a server restart (106 R1.1, low value); round 090's *caffè nero* question (owner); the footnote rule over other
@@ -71,6 +78,13 @@ Next candidates, none needing the owner:
     (round 101 open item); in the first new report, check `uncommittedLines` carry a `step` and read any
     `unmatchedLines` (round 107).
 
+**Traps (iteration 33):**
+- The Entrance tutorial and Gerald's encounter now file a fragment on first completion: a test that seeds
+  `completedEncounterIds` with them, or resolves them, sees `journey_proem` / `journey_still_on_his_way` in
+  `journeyFragments` (story order: proem first, Journathan today last). `content.fragments[0]` is now the proem.
+- Both new fragments have 10 glossary entries, the schema's cap; a new gloss means dropping one.
+- `round_log_check.py` numbers a review's findings R1.1… in order of appearance, whatever the review's own section
+  numbers; the disposition table needs 7 columns with the disposition in the 6th.
 **Traps (iteration 32):**
 - `client/vite.config.js` reads `isPreview`; a test calls the config function directly (`viteConfig({ command,
   mode, isPreview })`), so changing its signature breaks `proxy.test.js`.
@@ -213,6 +227,11 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 - [ ] **B5. Narrator footnotes** (round 081 built and closed 2026-11-06, seeded in iteration 23 from GAME MECHANICS.md:
   "the footnotes can turn into meme formats"): field, filter and app line built; live 0 of 21 lines had a footnote.
   Open: a firmer rule, measured live (Codex limited until 2026-11-09 17:32 UTC).
+
+- [x] **B6. Owner-notes audit** (round 109, closed 2026-11-06): the notes' characters and lore against content;
+  two Journey fragments (the archway's telling, Journathan still on his way).
+- [ ] **B7. Mushrooms and spores** (seeded in round 109 from LORE.md, "the consumer dreams of another language,
+  creating a new world from it"): a fragment or inscription, content only, answer check; no live run.
 
 ### C. prototype.md Phase 4: Polish & Audio
 
@@ -372,6 +391,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
 
 ## Needs owner
 
+- **Round 109 (content):** a native speaker's read of the two new fragments (it, es), and whether the audit's gap
+  list ([findings](../rounds/109/findings.md)) matches the intended next characters.
 - **Round 105 (decision):** the web client's Vite proxy now adds `PARALLANG_TOKEN` server-side (round 103's question,
   decided autonomously; the app already sent it since round 040): is that the wanted way. **Round 102 (Simulator):** stop the server during a send, restart it, send the same answer
   again: the map with "This conversation is no longer open…".
