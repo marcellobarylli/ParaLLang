@@ -180,6 +180,9 @@ test('the hints line says how many fewer than usual when the server sends the ba
   await rerender(<DialoguePanel encounter={encounter('ongoing', { limit: 0, remaining: 0, baseLimit: 0 })} {...props} />);
   expect(screen.getByText(/Hints: 0\/0 \(your companion is recovering\)/)).toBeOnTheScreen();
   expect(screen.queryByText(/fewer than usual/)).toBeNull();
+  // Review R1.8: an objective with one hint, strained to none.
+  await rerender(<DialoguePanel encounter={encounter('ongoing', { limit: 0, remaining: 0, baseLimit: 1 })} {...props} />);
+  expect(screen.getByText(/Hints: 0\/0 \(your companion is recovering: 1 fewer than usual\)/)).toBeOnTheScreen();
   await rerender(<DialoguePanel encounter={encounter('resolved', { baseLimit: 2 })} {...props} />);
   expect(screen.queryByText(/recovering/)).toBeNull();
 });
@@ -195,6 +198,7 @@ test('two files with annexes: each shows its own state and reads its own id', as
   };
   await show({ ...book(readAnnex), containmentFiles: [file(readAnnex), rift] }, { onReadAnnex });
   expect(screen.getByText(readAnnex.text)).toBeOnTheScreen();
+  expect(screen.getByText(/still recovering: a hint fewer for each objective of your next conversation/)).toBeOnTheScreen();
   expect(screen.getAllByLabelText('Redacted text')).toHaveLength(1);
   const buttons = screen.getAllByRole('button', { name: 'Read it anyway' });
   expect(buttons).toHaveLength(1);
@@ -202,4 +206,13 @@ test('two files with annexes: each shows its own state and reads its own id', as
   expect(alert.mock.calls[0][0]).toBe('Read Annex A: minutes of the seam?');
   alert.mock.calls[0][2][1].onPress();
   expect(onReadAnnex).toHaveBeenCalledWith('cm002_seam_minutes');
+});
+
+// Round 112 (review R1.1): a read queued behind another says a later conversation, not the next one.
+test('a read queued behind another strain names a later conversation', async () => {
+  const { rerender } = await show(book({ ...readAnnex, strainQueue: 1 }));
+  expect(screen.getByText(/a hint fewer for each objective of a later conversation, once the strain it is already under has passed/)).toBeOnTheScreen();
+  expect(screen.queryByText(/of your next conversation/)).toBeNull();
+  await rerender(<Spellbook spellbook={book({ ...readAnnex, strainQueue: 0 })} language={language} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
+  expect(screen.getByText(/of your next conversation/)).toBeOnTheScreen();
 });

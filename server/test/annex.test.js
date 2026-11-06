@@ -94,7 +94,7 @@ test('reading the annex: not filed, in an encounter, unknown; then read once, wi
     { ...fileOf(spellbook).annex },
     {
       id: ANNEX, title: 'Annex A: the second verse', redaction: annexOf(runtime.content).redaction, read: false, readAt: null,
-      strainPending: false, hidden: true, text: null, translation: null, glossary: null, exposureNote: null,
+      strainPending: false, strainQueue: null, hidden: true, text: null, translation: null, glossary: null, exposureNote: null,
     },
   );
   assert.equal(JSON.stringify(spellbook).includes(annexOf(runtime.content).text), false);
@@ -190,6 +190,12 @@ test('a save drops malformed and repeated annex records and refuses a non-array'
   raw.annexes = [good, { ...good, strainSpentOn: 'x' }, { id: '', readAt: good.readAt, strainSpentOn: null }, { id: 'a', readAt: 'never', strainSpentOn: null }, null, 'x'];
   await writeFile(path, JSON.stringify(raw));
   assert.deepEqual((await runtime.storage.load(learnerId)).annexes, [good]);
+  // Round 112 (review optional): the order of reads survives a load (it decides which read strains first), and a
+  // repeat keeps the first record in its place.
+  const rift = { id: 'cm002_seam_minutes', readAt: '2026-01-15T11:00:00.000Z', strainSpentOn: null };
+  raw.annexes = [rift, good, { ...rift, readAt: '2026-01-15T13:00:00.000Z' }];
+  await writeFile(path, JSON.stringify(raw));
+  assert.deepEqual((await runtime.storage.load(learnerId)).annexes, [rift, good]);
   raw.annexes = { [ANNEX]: good };
   await writeFile(path, JSON.stringify(raw));
   await assert.rejects(runtime.storage.load(learnerId), (error) => error.code === 'SAVE_UNREADABLE');
@@ -306,6 +312,8 @@ test('two annexes read: each strains its own finished conversation, the oldest f
   assert.equal((await read(runtime, learnerId, RIFT_ANNEX)).data.charged, true);
   assert.equal((await read(runtime, learnerId, ANNEX)).data.charged, true);
   const limit = runtime.content.encounters.get('imp_coffee_greeting').encounter.objectives[0].hint_limit;
+  const files = async () => (await api(runtime, '/api/spellbook', { learnerId })).data.containmentFiles.map((file) => [file.annex.strainPending, file.annex.strainQueue]);
+  assert.deepEqual(await files(), [[true, 1], [true, 0]], 'CM-002 was read first, so it strains the next conversation');
 
   const play = async () => {
     const { encounter } = (await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { restart: true, encounterId: 'imp_coffee_greeting' } })).data;
@@ -313,17 +321,22 @@ test('two annexes read: each strains its own finished conversation, the oldest f
     const strainedBy = runtime.service.encounters.get(learnerId).strainedBy ?? [];
     const resolved = await runtime.service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message: 'Quiero un café negro.' });
     assert.equal(resolved.encounter.state, 'resolved');
-    return { hints, strainedBy, spent: (await runtime.storage.load(learnerId)).annexes.map((r) => [r.id, r.strainSpentOn]) };
+    // Review R1.3: the Spellbook's pending flags and queue places after each finished conversation, [CM-001, CM-002].
+    const pending = resolved.spellbook.containmentFiles.map((file) => [file.annex.strainPending, file.annex.strainQueue]);
+    return { hints, strainedBy, pending, spent: (await runtime.storage.load(learnerId)).annexes.map((r) => [r.id, r.strainSpentOn]) };
   };
   let result = await play();
   assert.deepEqual(result.hints, { used: 0, remaining: limit - 1, limit: limit - 1, baseLimit: limit, strained: true });
   assert.deepEqual(result.strainedBy, [RIFT_ANNEX]);
   assert.deepEqual(result.spent, [[RIFT_ANNEX, 'imp_coffee_greeting'], [ANNEX, null]]);
+  assert.deepEqual(result.pending, [[true, 0], [false, null]]);
   result = await play();
-  assert.equal(result.hints.limit, limit - 1);
+  assert.deepEqual(result.hints, { used: 0, remaining: limit - 1, limit: limit - 1, baseLimit: limit, strained: true });
+  assert.deepEqual(result.pending, [[false, null], [false, null]]);
   assert.deepEqual(result.strainedBy, [ANNEX]);
   assert.deepEqual(result.spent, [[RIFT_ANNEX, 'imp_coffee_greeting'], [ANNEX, 'imp_coffee_greeting']]);
   result = await play();
   assert.deepEqual(result.hints, { used: 0, remaining: limit, limit, baseLimit: limit, strained: false });
   assert.deepEqual(result.strainedBy, []);
+  assert.deepEqual(result.pending, [[false, null], [false, null]]);
 });

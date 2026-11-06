@@ -439,6 +439,8 @@ export class LearningService {
     return {
       id: annex.id, title: annex.title, redaction: annex.redaction, read, readAt: record?.readAt ?? null,
       strainPending: read && record.strainSpentOn === null, hidden: inEncounter,
+      // Round 112 (review R1.1): 0 when this read strains the next conversation, 1 the one after, …; null if none.
+      strainQueue: read && record.strainSpentOn === null ? this.pendingStrainIds(envelope).indexOf(annex.id) : null,
       text: read ? annex.text : null,
       translation: read && !inEncounter ? annex.translation : null,
       glossary: read && !inEncounter ? annex.glossary.map((entry) => ({ ...entry })) : null,
@@ -462,8 +464,13 @@ export class LearningService {
   }
 
   // Round 111: an objective's hint limit, one fewer (floor 0) in a session started while the strain was pending.
+  // Round 112 (review R1.9): the objective's own limit, shown as `baseLimit`.
+  baseHintLimit(objective) {
+    return objective?.hint_limit ?? 0;
+  }
+
   hintLimit(session, objective) {
-    const limit = objective?.hint_limit ?? 0;
+    const limit = this.baseHintLimit(objective);
     return session?.strained ? Math.max(0, limit - 1) : limit;
   }
 
@@ -617,7 +624,7 @@ export class LearningService {
       must_translate: encounter.state === 'ongoing' && Boolean(objective),
       hints_available: encounter.state === 'ongoing' && revealKeys.length < limit,
       // Round 112: `baseLimit` is the objective's own limit, so the app can say how many fewer the strain leaves.
-      hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit, baseLimit: objective?.hint_limit ?? 0, strained: Boolean(encounter.strained) },
+      hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit, baseLimit: this.baseHintLimit(objective), strained: Boolean(encounter.strained) },
       currentObjective: objective ? { id: objective.id, prompt: objective.prompt } : null,
       transcript,
     };

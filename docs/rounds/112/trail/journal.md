@@ -14,3 +14,5 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 8 | 10:06:15 | 10:06:15 | freeze | Claude (claude-opus-5-5), autonomous | Pre-run record committed (goal, design, decisions, second opinion, tests) | `../architecture.md` |
 | 9 | 10:06:29 | 10:06:29 | freeze | Claude (claude-opus-5-5), autonomous | Correction: rows 5–7 were recorded at about 10:06, before the freeze, not at 10:09 (times written ahead of the clock) | — |
 | 10 | 10:09:23 | 10:09:23 | built | Claude (claude-opus-5-5), autonomous | CM-002 annex (it, es), oldest-first strain, `baseLimit`, the app's "N fewer than usual"; CM-001's translation hits "again", allowed by name; server 408/408, client 21/21, mobile 319/319, web build ok | — |
+| 11 | 10:09:39 | 10:09:39 | review-dispatched | Claude (claude-opus-5-5), autonomous | Commit 8bcac66 to a fresh read-only general-purpose subagent (strain order, spend, baseLimit, leaks, it/es text, tests) | — |
+| 12 | about 10:11 | 10:11:57 | review-returned | general-purpose subagent (Claude), read-only | 0 Error; 3 Gap, 5 Minor, 1 Style; 4 Optional | `review-1.md` |

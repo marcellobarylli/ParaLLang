@@ -46,6 +46,8 @@ test('both packs hold the two files; Errata\'s is the same English text in both'
   const { annex: esAnnex, ...esRift } = files.es.the_rift_errata;
   assert.deepEqual(itRift, esRift);
   for (const key of ['id', 'title', 'redaction', 'translation', 'exposure_note']) assert.equal(itAnnex[key], esAnnex[key], key);
+  // Review optional: every file has an annex in both packs or in neither.
+  for (const id of Object.keys(files.it)) assert.equal(Boolean(files.it[id].annex), Boolean(files.es[id].annex), id);
 });
 
 test('no file contains an objective target of its pack or a word of its own encounter (the jingle\'s name aside)', () => {
@@ -108,13 +110,13 @@ test('files are filed on completion only, sorted, through the API too; a party c
     // Round 111: the redacted annex, unread (annex.test.js covers reading it).
     annex: {
       id: source.annex.id, title: source.annex.title, redaction: source.annex.redaction, read: false, readAt: null,
-      strainPending: false, hidden: false, text: null, translation: null, glossary: null, exposureNote: null,
+      strainPending: false, strainQueue: null, hidden: false, text: null, translation: null, glossary: null, exposureNote: null,
     },
   });
   // Round 112: Errata's file has an unread annex too.
   const rift = runtime.content.encounters.get('the_rift_errata').encounter.containment_file.annex;
   assert.deepEqual(filed[1].annex, {
     id: 'cm002_seam_minutes', title: rift.title, redaction: rift.redaction, read: false, readAt: null,
-    strainPending: false, hidden: false, text: null, translation: null, glossary: null, exposureNote: null,
+    strainPending: false, strainQueue: null, hidden: false, text: null, translation: null, glossary: null, exposureNote: null,
   });
 });

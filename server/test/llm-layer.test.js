@@ -120,9 +120,14 @@ function fakeSpawner() {
 }
 const spec = (overrides = {}) => ({ provider: 'codex-cli', executable: 'fake', args: [], stdin: '', env: {}, timeoutMs: 10_000, ...overrides });
 const tick = () => new Promise((resolve) => setImmediate(resolve));
-async function started(fake, count = 1) {
-  for (let i = 0; i < 200 && fake.children.length < count; i += 1) await tick();
-  return fake.children.at(-1);
+// Round 112: wait by time, not by 200 ticks. Under a loaded full suite the runner's mkdtemp and cleanup of the
+// previous run can outlast 200 setImmediate ticks; the helper then returned the previous (stuck) child, the test
+// closed the wrong child, and the queued run timed out after 10 s (the iteration 31/34 flake, captured in round 112).
+async function started(fake, count = 1, withinMs = 5_000) {
+  const until = Date.now() + withinMs;
+  while (fake.children.length < count && Date.now() < until) await new Promise((resolve) => setTimeout(resolve, 2));
+  assert.ok(fake.children.length >= count, `child ${count} was not spawned within ${withinMs} ms`);
+  return fake.children[count - 1];
 }
 
 test('runner: exit 0 without close resolves with its output after the grace; exit, data, close keeps the data (review R1.3)', async (t) => {

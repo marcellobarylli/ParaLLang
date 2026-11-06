@@ -45,12 +45,12 @@ containment_file:
     translation: "Minutes of the seam. When the branches draw near, words lose their meaning where they touch. A mistake? No. What remains of a tongue, when everyone understands it badly, has this shape. Beneath lies an ancient voice, near the root of the tree. That one never makes mistakes. It waits."
     glossary:
       - { word: "verbale", meaning: "minutes" }
-      - { word: "fessura", meaning: "seam" }
+      - { word: "fessura", meaning: "crack (the seam)" }
       - { word: "rami", meaning: "branches" }
       - { word: "perdono il loro senso", meaning: "lose their meaning" }
-      - { word: "errore", meaning: "mistake" }
+      - { word: "non sbaglia mai", meaning: "never makes mistakes" }
       - { word: "quello che rimane", meaning: "what remains" }
-      - { word: "favella", meaning: "tongue" }
+      - { word: "favella", meaning: "tongue, speech (literary)" }
       - { word: "la capiscono male", meaning: "understand it badly" }
       - { word: "radice", meaning: "root" }
       - { word: "aspetta", meaning: "waits" }

@@ -45,12 +45,12 @@ containment_file:
     translation: "Minutes of the seam. When the branches draw near, words lose their meaning where they touch. A mistake? No. What remains of a tongue, when everyone understands it badly, has this shape. Beneath lies an ancient voice, near the root of the tree. That one never makes mistakes. It waits."
     glossary:
       - { word: "acta", meaning: "minutes" }
-      - { word: "grieta", meaning: "seam" }
+      - { word: "grieta", meaning: "crack (the seam)" }
       - { word: "ramas", meaning: "branches" }
       - { word: "pierden su sentido", meaning: "lose their meaning" }
-      - { word: "error", meaning: "mistake" }
+      - { word: "nunca se equivoca", meaning: "never makes mistakes" }
       - { word: "lo que queda", meaning: "what remains" }
-      - { word: "habla", meaning: "tongue" }
+      - { word: "habla", meaning: "tongue, speech" }
       - { word: "la entienden mal", meaning: "understand it badly" }
       - { word: "raíz", meaning: "root" }
       - { word: "espera", meaning: "waits" }

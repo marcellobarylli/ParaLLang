@@ -149,7 +149,10 @@ function Annex({ annex, language, inEncounter, isLoading, onRead }) {
         </View>}
       </>}
       {annex.exposureNote && <Text style={styles.small}>{annex.exposureNote}</Text>}
-      {annex.strainPending && <Text style={styles.hidden}>Your companion is still recovering: a hint fewer for each objective of your next conversation.</Text>}
+      {/* Round 112 (review R1.1): a read queued behind another strains a later conversation, not the next one. */}
+      {annex.strainPending && <Text style={styles.hidden}>{annex.strainQueue > 0
+        ? 'Your companion is still recovering: a hint fewer for each objective of a later conversation, once the strain it is already under has passed.'
+        : 'Your companion is still recovering: a hint fewer for each objective of your next conversation.'}</Text>}
     </View>
   );
 }
