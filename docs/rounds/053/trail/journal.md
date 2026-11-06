@@ -20,3 +20,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 14 | 01:47:56 | 01:47:56 | result | Claude (claude-opus-5-5), autonomous | 24/24 kept, English, 19–33 words, 0 drops; 23/24 lean on a bureaucratic joke ("approval" 9) | `../findings.md` |
 | 15 | 01:47:56 | 01:47:56 | outcome | Claude (claude-opus-5-5), autonomous | A10 done, off by default; monotony to backlog A10b | `../findings.md` |
 | 16 | 01:47:56 | 01:47:56 | closed | Claude (claude-opus-5-5), autonomous | Round 053 closed | `../findings.md` |
+| 17 | 01:59:11 | 01:59:11 | amended | Claude (claude-opus-5-5), autonomous | Findings addendum: the motif count is 20/24 by whole words (round 068 critique 1.4), not 23/24 | `../findings.md` |

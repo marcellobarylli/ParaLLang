@@ -73,3 +73,12 @@ by a rubric. No Simulator: the italic line on the map card has not been seen on 
 1. **Owner:** decide whether the atmosphere should be on by default, and whether the bureaucratic joke on every line
    is the intended tone (A10b).
 2. **Owner, Simulator:** start the server with `PARALLANG_ATMOSPHERE=on` and check the line under the description.
+
+## Addendum 2026-11-06: the motif count was 20 of 24, not 23
+
+Round 068's Codex critique (1.4) found that the keyword scan above matched substrings: `rent` matched
+"appa*rent*ly" and `fee` matched "*fee*t". Counting whole words with
+[`docs/rounds/068/results/motif.mjs`](../068/results/motif.mjs), **20 of the 24 lines** carry the bureaucratic
+motif. "Approval" (or "disapproval") appears in 7 of them. The four lines without it are it Coffee Cart (open), it
+and es the Rift (complete), and es Butcher's Stall (complete). The finding stands: the line repeats one joke. Round
+068 uses 20/24 as its baseline.
