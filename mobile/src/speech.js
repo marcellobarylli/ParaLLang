@@ -1,3 +1,4 @@
+import { AppState } from 'react-native';
 import * as Speech from 'expo-speech';
 import { duckAmbience } from './ambience.js';
 
@@ -30,7 +31,30 @@ export function voiceFor(tag) {
   }
   return voiceCache.get(tag);
 }
-export function resetVoiceCacheForTests() { voiceCache.clear(); }
+// Round 064 (backlog C10d): one AppState subscription, made by the first speak. Leaving the app (background, not
+// inactive: decision 1) stops the voice; on return the ambience is undocked if nothing is speaking (critique 1.3), so
+// an interruption that cut the voice without a callback cannot leave it lowered. Module defaults only (critique 1.1).
+let subscription = null;
+function listen() {
+  if (subscription) return;
+  try {
+    subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'background') { stopSpeech(); return; }
+      if (state !== 'active') return;
+      Promise.resolve()
+        .then(() => Speech.isSpeakingAsync())
+        .catch(() => false)
+        .then((speaking) => { if (!speaking) duckAmbience(false); });
+    });
+  } catch { subscription = null; }
+}
+
+// Tests start without the cache or the subscription (critique 1.2).
+export function resetVoiceCacheForTests() {
+  voiceCache.clear();
+  subscription?.remove?.();
+  subscription = null;
+}
 
 // expo-speech takes the voice's identifier string, not the voice object.
 // Round 041 (critique 1.8): the location ambience is lowered while the voice speaks.
@@ -38,6 +62,7 @@ export function resetVoiceCacheForTests() { voiceCache.clear(); }
 // bring the ambience back up under the next one.
 let generation = 0;
 export async function speak(text, { tag, voice }, speech = Speech, duck = duckAmbience) {
+  listen(); // round 064 (critique 1.5): before the first await
   generation += 1;
   const mine = generation;
   await speech.stop();

@@ -70,3 +70,8 @@ the handler's stop not awaited.
 
 Net change: undock on return, reset drops the listener, the subscription before the first await, tests on the global
 mocks.
+
+## Outcome (2026-11-06)
+
+Built as designed. Mobile 176/176, server 244/244, client 12/12, expo-doctor 20/20, iOS export built. No live runs.
+See [findings.md](findings.md).

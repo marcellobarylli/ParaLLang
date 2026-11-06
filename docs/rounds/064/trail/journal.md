@@ -11,3 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 00:42:38 | 00:42:38 | disposition | Claude (claude-opus-5-5), autonomous | 5 findings, all accepted (autonomous, pending owner review); rows 1.1–1.5 | `../architecture.md` |
 | 6 | 00:42:38 | 00:42:38 | plan-revised | Claude (claude-opus-5-5), autonomous | Net: undock on return, reset drops the listener, subscribe before the first await, tests on global mocks | `../architecture.md` |
 | 7 | 00:42:38 | 00:42:38 | freeze | Claude (claude-opus-5-5), autonomous | Freeze commit: architecture.md pre-run sections, plan-v1, critique 1, decisions rows | `../architecture.md` |
+| 8 | 00:44:08 | 00:44:08 | built | Claude (claude-opus-5-5), autonomous | AppState subscription in speech.js (background stops, active undocks when silent), reset drops it; isSpeakingAsync in the jest mock; speech-background.test.js (4) | — |
+| 9 | 00:44:08 | 00:44:08 | result | Claude (claude-opus-5-5), autonomous | Mobile 176/176, server 244/244, client 12/12; expo-doctor 20/20; iOS export built | — |
+| 10 | 00:44:08 | 00:44:08 | outcome | Claude (claude-opus-5-5), autonomous | C10d done: the voice stops in the background; no stale duck on return | `../findings.md` |
+| 11 | 00:44:08 | 00:44:08 | closed | Claude (claude-opus-5-5), autonomous | Round 064 closed | `../findings.md` |

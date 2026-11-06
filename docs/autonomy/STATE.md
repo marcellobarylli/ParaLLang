@@ -122,7 +122,8 @@ Priority order. Each item is sized for one round; tick it when its round closes.
   briefing"; a move stops the voice. No live calls.
 - [x] **C10c. Stop speech when the Review or Spellbook view goes** (round 063, closed 2026-11-06); also fixed a race in
   `speak` (a stop during its wait was ignored).
-- [ ] **C10d. Stop speech when the app goes to the background** (`AppState`, from round 063). No live calls.
+- [x] **C10d. Stop speech when the app goes to the background** (round 064, closed 2026-11-06): `background` stops it,
+  `active` undocks the ambience when nothing speaks.
 - [x] **C9. Lines you translated** (round 060, closed 2026-11-06): paid sentence reveals kept in the save (`lines`, 50,
   500 characters) and shown in the Spellbook, hidden during encounters and while a card in the line is due. No live calls.
 - [x] **C8. Word class on Spellbook cards and in reviews** (round 059, closed 2026-11-06): the class word in its chip

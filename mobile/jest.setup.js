@@ -3,6 +3,7 @@ jest.mock('expo-speech', () => ({
   getAvailableVoicesAsync: jest.fn(async () => []),
   speak: jest.fn(),
   stop: jest.fn(async () => {}),
+  isSpeakingAsync: jest.fn(async () => false), // round 064
 }));
 jest.mock('react-native-safe-area-context', () => require('react-native-safe-area-context/jest/mock').default);
 
