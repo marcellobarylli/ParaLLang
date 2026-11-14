@@ -32,7 +32,7 @@ function frondGeometry(origin, yaw, length, rise, droop, width) {
 }
 
 export function palm(b, rng, x, z, opts = {}) {
-  const y = heightAt(x, z);
+  const y = (opts.ground ?? heightAt)(x, z);
   const height = opts.height ?? rng.range(7, 11);
   const lean = opts.lean ?? rng.range(0.04, 0.22);
   const yaw = opts.yaw ?? rng.range(0, Math.PI * 2);
@@ -72,7 +72,7 @@ export function palm(b, rng, x, z, opts = {}) {
 }
 
 /** A lumpy low-poly canopy made of a few flattened, displaced icosahedra. */
-export function canopy(b, rng, x, y, z, radius, blobs = 3) {
+export function canopy(b, rng, x, y, z, radius, blobs = 3, squash = 0.62) {
   const tint = [rng.range(0.8, 1.05), rng.range(0.85, 1.1), rng.range(0.8, 1)];
   for (let i = 0; i < blobs; i++) {
     const g = new IcosahedronGeometry(radius * rng.range(0.6, 0.9), 0);
@@ -83,7 +83,7 @@ export function canopy(b, rng, x, y, z, radius, blobs = 3) {
       const vy = pos.getY(k);
       const vz = pos.getZ(k);
       const s = 0.8 + 0.45 * valueNoise3(vx * 0.9 + 5, vy * 0.9, vz * 0.9, seed);
-      pos.setXYZ(k, vx * s, vy * s * 0.62, vz * s);
+      pos.setXYZ(k, vx * s, vy * s * squash, vz * s);
     }
     const ox = rng.range(-0.6, 0.6) * radius;
     const oz = rng.range(-0.6, 0.6) * radius;
@@ -92,9 +92,9 @@ export function canopy(b, rng, x, y, z, radius, blobs = 3) {
   }
 }
 
-export function jungleTree(b, rng, x, z) {
-  const y = heightAt(x, z);
-  const h = rng.range(9, 17);
+export function jungleTree(b, rng, x, z, opts = {}) {
+  const y = (opts.ground ?? heightAt)(x, z);
+  const h = rng.range(...(opts.height ?? [9, 17]));
   const bend = new Vector3(rng.range(-1, 1), 0, rng.range(-1, 1));
   const curve = new CatmullRomCurve3([
     new Vector3(x, y - 0.3, z),
@@ -106,12 +106,12 @@ export function jungleTree(b, rng, x, z) {
   if (rng.chance(0.5)) canopy(b, rng, x + bend.x * 0.5, y + h * 0.62, z + bend.z * 0.5, rng.range(2.2, 3), 1);
 }
 
-export function bush(b, rng, x, z) {
-  canopy(b, rng, x, heightAt(x, z) + 0.6, z, rng.range(1, 1.8), rng.int(1, 2));
+export function bush(b, rng, x, z, ground = heightAt) {
+  canopy(b, rng, x, ground(x, z) + 0.6, z, rng.range(1, 1.8), rng.int(1, 2));
 }
 
-export function tuft(b, rng, x, z) {
-  const y = heightAt(x, z);
+export function tuft(b, rng, x, z, ground = heightAt) {
+  const y = ground(x, z);
   const s = rng.range(0.7, 1.3);
   const a = rng.range(0, Math.PI);
   for (const r of [0, Math.PI / 2]) {

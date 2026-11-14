@@ -2,21 +2,22 @@
 // DOM controls and pointer input. The scene, pipeline and camera rig come from ../src.
 //
 // URL parameters (for screenshots and comparisons):
-//   ?preset=golden|dawn|day|corrupted  ?t=0.25 (tour position)  ?pause=1  ?ps1=0
+//   ?scene=angkor|taprohm  ?preset=golden|dawn|day|jungle|corrupted  ?t=0.25 (tour position)  ?pause=1  ?ps1=0
 //   ?lines=240|480|0  ?corruption=0.6  ?ui=0  ?orbit=yaw,pitch,distance  ?cam=x,y,z,lookX,lookY,lookZ
 
 import { PerspectiveCamera, Timer, WebGLRenderer } from 'three';
-import { PRESETS, createCameraRig, createPS1Pipeline, createTempleWorld } from '../src/index.js';
+import { PRESETS, WORLDS, createCameraRig, createPS1Pipeline, createWorld } from '../src/index.js';
 
 const params = new URLSearchParams(location.search);
 const canvas = document.getElementById('view');
 const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-const world = createTempleWorld({ seed: 7, preset: params.get('preset') ?? 'golden' });
+const sceneId = WORLDS[params.get('scene')] ? params.get('scene') : 'angkor';
+const world = createWorld(sceneId, { seed: 7, ...(params.get('preset') ? { preset: params.get('preset') } : {}) });
 const camera = new PerspectiveCamera(60, 1, 0.3, 700);
 const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
-const rig = createCameraRig(camera);
+const rig = createCameraRig(camera, { keyframes: world.tour, target: world.orbitTarget });
 
 const ui = {
   ps1: params.get('ps1') !== '0',
@@ -65,6 +66,21 @@ function resize() {
 // ---- controls
 const $ = (id) => document.getElementById(id);
 const press = (el, on) => el.setAttribute('aria-pressed', String(Boolean(on)));
+
+$('subtitle').textContent = `THE DEAD BRANCH · ${WORLDS[sceneId].label.toUpperCase()}`;
+const sceneRow = $('scenes');
+for (const [id, entry] of Object.entries(WORLDS)) {
+  const b = document.createElement('button');
+  b.textContent = entry.label;
+  b.setAttribute('aria-pressed', String(id === sceneId));
+  b.onclick = () => {
+    if (id === sceneId) return;
+    const next = new URLSearchParams();
+    next.set('scene', id);
+    location.search = next.toString();
+  };
+  sceneRow.append(b);
+}
 
 const presetRow = $('presets');
 for (const [key, p] of Object.entries(PRESETS)) {
@@ -127,7 +143,8 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'h') $('toggle-panel').click();
   if (e.key === ' ') $('mode').click();
   const n = Number(e.key);
-  if (n >= 1 && n <= 4) presetRow.querySelectorAll('button')[n - 1].click();
+  const presetButtons = presetRow.querySelectorAll('button');
+  if (n >= 1 && n <= presetButtons.length) presetButtons[n - 1].click();
 });
 
 // ---- pointer input -> camera rig

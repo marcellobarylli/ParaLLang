@@ -3,7 +3,7 @@
 // Not wired into mobile/ yet. To use it there:
 //   cd mobile && npx expo install expo-gl && npm install three@0.186.1
 //   import TempleView from '../aesthetic/native/TempleView';   (or copy this file in)
-//   <TempleView preset="golden" style={{ flex: 1 }} />
+//   <TempleView scene="taprohm" style={{ flex: 1 }} />   (scene: 'angkor' | 'taprohm')
 //
 // Same scene, pipeline and camera rig as the web demo; only the GL context and input differ.
 // Status: written against the expo-gl and three.js APIs but not yet run in the iOS Simulator.
@@ -12,7 +12,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { PanResponder, View } from 'react-native';
 import { GLView } from 'expo-gl';
 import { PerspectiveCamera, WebGLRenderer } from 'three';
-import { createCameraRig, createPS1Pipeline, createTempleWorld } from '../src/index.js';
+import { createCameraRig, createPS1Pipeline, createWorld } from '../src/index.js';
 
 function createRenderer(gl) {
   const width = gl.drawingBufferWidth;
@@ -34,12 +34,13 @@ function createRenderer(gl) {
   return renderer;
 }
 
-export default function TempleView({ preset = 'golden', corruption, style }) {
+export default function TempleView({ scene = 'angkor', preset, corruption, style }) {
   const sceneRef = useRef(null);
-  const world = useMemo(() => createTempleWorld({ seed: 7, preset }), []);
+  // One world per mount: remount (change the component's key) to switch levels.
+  const world = useMemo(() => createWorld(scene, { seed: 7 }), []);
 
   useEffect(() => {
-    world.setPreset(preset);
+    if (preset) world.setPreset(preset);
   }, [preset, world]);
   useEffect(() => {
     if (corruption !== undefined) world.setCorruption(corruption);
@@ -64,7 +65,7 @@ export default function TempleView({ preset = 'golden', corruption, style }) {
     const camera = new PerspectiveCamera(60, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.3, 700);
     const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
     pipeline.resize();
-    const rig = createCameraRig(camera);
+    const rig = createCameraRig(camera, { keyframes: world.tour, target: world.orbitTarget });
     let running = true;
     let last = Date.now();
     const frame = () => {

@@ -345,6 +345,128 @@ function tuft(seed) {
   return c;
 }
 
+
+// Thitpok (Tetrameles) bark: pale, smooth, faint vertical streaks and lichen patches.
+function thitpok(seed) {
+  const W = 32;
+  const c = canvas(W, W);
+  for (let y = 0; y < W; y++) {
+    for (let x = 0; x < W; x++) {
+      let col = add(C.thitpok, (valueNoise2(x / 2, y / 8, 16, seed) - 0.5) * 26);
+      col = add(col, (valueNoise2(x / 4, y / 4, 8, seed + 1) - 0.5) * 12);
+      const lichen = valueNoise2(x / 8, y / 8, 4, seed + 2);
+      if (lichen > 0.68) col = mix(col, C.thitpokLichen, 0.7);
+      if (lichen < 0.2) col = scale(col, 0.86);
+      c.set(x, y, col);
+    }
+  }
+  return c;
+}
+
+/** Embossed relief from a height function h(x, y) with y running top-down; writes upright. */
+function emboss(W, H, h, seed, base, { grain = 18, groove = 0.25, moss = 0.4, mossAt = 0.72 } = {}) {
+  const c = canvas(W, H);
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const v = h(x, y);
+      const slope = h(x - 1, y - 1) - h(x + 1, y + 1);
+      let col = scale(base, 0.62 + 0.32 * Math.min(v, 1.4));
+      col = add(col, slope * 52 + (valueNoise2(x / 4, y / 4, W / 4, seed) - 0.5) * grain);
+      if (v < groove) col = scale(col, 0.82);
+      if (valueNoise2(x / 8, y / 8, W / 8, seed + 3) > mossAt) col = mix(col, C.moss, moss);
+      c.set(x, H - 1 - y, col);
+    }
+  }
+  return c;
+}
+
+// Two niches, each with a standing devata: tiara, head, torso, flared skirt, on a plinth.
+function devata(seed) {
+  const W = 64;
+  const h = (x, y) => {
+    x = wrap(x, W);
+    y = wrap(y, W);
+    const lx = x % 32;
+    const cx = 15.5;
+    if (y >= 58 || lx === 0 || lx === 31) return 0.75; // frame and base course
+    if (y >= 54) return Math.abs(((lx + 2) % 6) - 3) < 1.5 ? 1 : 0.6; // plinth rosettes
+    const arch = Math.hypot(lx - cx, Math.max(0, 14 - y) * 1.2);
+    if (arch > 12.5 || lx < 3 || lx > 28) return 0.8; // the niche's raised border
+    let v = 0.2; // recess
+    const dx = Math.abs(lx - cx);
+    if (y >= 6 && y <= 10 && dx <= 3 && (dx + y) % 2 === 0) v = 1.1; // tiara points
+    if (Math.hypot(lx - cx, y - 13) <= 3) v = 1.2; // head
+    if (y >= 16 && y <= 29 && dx <= 3.5 - (y - 16) * 0.08) v = 1; // torso
+    if (y >= 17 && y <= 23 && lx >= cx + 3 && lx <= cx + 5 - (y - 17) * 0.2) v = 0.95; // raised arm
+    if (y >= 12 && y <= 17 && Math.abs(lx - (cx + 5)) <= 1) v = 1.05; // flower held up
+    if (y >= 29 && y <= 50 && dx <= 3 + (y - 29) * 0.28) v = 0.9 + ((y - 29) % 4 === 0 ? -0.25 : 0); // pleated skirt
+    if (y > 50 && y < 54 && dx <= 4) v = 0.85; // feet
+    return v;
+  };
+  return emboss(W, W, h, seed, C.stoneGrey);
+}
+
+// A serene carved face (Bayon style) for one side of a face tower: diadem, lowered eyelids,
+// broad nose, smiling lips, long earlobes.
+function face(seed) {
+  const W = 64;
+  const h = (x, y) => {
+    x = Math.min(63, Math.max(0, x));
+    y = Math.min(63, Math.max(0, y));
+    const fx = (x - 31.5) / 19;
+    const fy = (y - 33) / 25;
+    const inFace = fx * fx + fy * fy <= 1;
+    if (y < 5) return Math.abs((x % 8) - 4) < 2 - y * 0.3 ? 1.1 : 0.3; // crown points
+    if (y >= 5 && y <= 10) return (x % 6 < 3 ? 1.05 : 0.85) * (Math.abs(x - 31.5) < 26 ? 1 : 0.6); // diadem beads
+    if (!inFace) {
+      const ear = Math.abs(Math.abs(x - 31.5) - 24) <= 2.2 && y >= 22 && y <= 50;
+      return ear ? 0.9 : 0.35;
+    }
+    let v = 0.75 + 0.2 * (1 - fx * fx - fy * fy);
+    const ex = Math.abs(x - 31.5);
+    if (y >= 20 && y <= 21 && ex >= 5 && ex <= 15) v = 1.05; // brows
+    if (y >= 25 && y <= 27 && ex >= 6 && ex <= 14) v = y === 27 ? 0.2 : 1; // lowered lids, slit below
+    if (y >= 22 && y <= 39 && ex <= 1.6 + (y - 22) * 0.12) v = 1.35; // nose ridge
+    else if (y >= 28 && y <= 39 && x > 31.5 && ex <= 3 + (y - 22) * 0.14) v = 0.45; // shadow beside the nose
+    if (y >= 38 && y <= 40 && ex <= 5) v = y === 40 ? 0.3 : 1.1; // nostrils
+    const smile = 46 - (ex * ex) / 18;
+    if (ex <= 9 && Math.abs(y - smile) <= 0.6) v = 0.2; // lip line, corners up
+    if (ex <= 7.5 && y > smile && y <= smile + 2.5) v = 1.05; // lower lip
+    if (ex <= 7.5 && y < smile && y >= smile - 1.8) v = 0.95; // upper lip
+    return v;
+  };
+  return emboss(W, W, h, seed, C.stoneGrey, { grain: 12, moss: 0.3, mossAt: 0.8 });
+}
+
+// Forest floor: leaf litter, moss and bare earth.
+function litter(seed) {
+  const W = 64;
+  const c = canvas(W, W);
+  const r = createRandom(seed);
+  for (let y = 0; y < W; y++) {
+    for (let x = 0; x < W; x++) {
+      const n = valueNoise2(x / 8, y / 8, 8, seed);
+      let col = mix(C.litter, C.moss, smoothstepT(0.55, 0.8, n) * 0.7);
+      col = add(col, (valueNoise2(x / 2, y / 2, 32, seed + 1) - 0.5) * 26);
+      c.set(x, y, col);
+    }
+  }
+  for (let i = 0; i < 160; i++) {
+    const x = r.int(0, W - 1);
+    const y = r.int(0, W - 1);
+    const col = scale(mix(C.litterLight, C.dirt, r.next()), r.range(0.85, 1.15));
+    c.set(x, y, col);
+    c.set(x + 1, y, scale(col, 0.9));
+    if (r.chance(0.5)) c.set(x, y + 1, scale(col, 0.8));
+  }
+  return c;
+}
+
+const smoothstepT = (a, b, x) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
+
 export function createTextures(seed = 7) {
   return {
     sandstone: toTexture(sandstone(seed + 1), 'sandstone'),
@@ -359,5 +481,9 @@ export function createTextures(seed = 7) {
     leaves: toTexture(leaves(seed + 10), 'leaves'),
     frond: toTexture(frond(seed + 11), 'frond'),
     tuft: toTexture(tuft(seed + 12), 'tuft'),
+    thitpok: toTexture(thitpok(seed + 13), 'thitpok'),
+    devata: toTexture(devata(seed + 14), 'devata'),
+    face: toTexture(face(seed + 15), 'face'),
+    litter: toTexture(litter(seed + 16), 'litter'),
   };
 }

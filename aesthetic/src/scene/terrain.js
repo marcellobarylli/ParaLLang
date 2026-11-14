@@ -35,23 +35,28 @@ function geometryFrom(positions) {
   return g;
 }
 
-/** Build ground, water surface and stone banks into the given builders. */
-export function buildTerrain(surface, props) {
-  const { fine, fineHalf, fineFront, coarse, coarseHalf } = LAYOUT.grid;
-  const W = LAYOUT.waterY;
+/**
+ * Ground, water and banks for any level. cfg: { grid, heightAt, isWater, color, key, waterY }.
+ * grid: { fine, fineHalf, fineFront, avenueHalf, coarse, coarseHalf }. Fine cells cover the
+ * square of fineHalf plus an avenue of avenueHalf out to fineFront along +z. Heights must be
+ * zero on the fine region's edge so the coarse cells meet it without cracks.
+ */
+export function buildGround(surface, props, cfg) {
+  const { fine, fineHalf, fineFront, avenueHalf, coarse, coarseHalf } = cfg.grid;
+  const { heightAt: h, isWater: wet = () => false, color, key = 'ground', waterY: W = 0 } = cfg;
   const ground = [];
   const water = [];
   const banks = [];
-  const v = (x, z) => [x, heightAt(x, z), z];
+  const v = (x, z) => [x, h(x, z), z];
 
-  // Fine cells over the temple grounds and the approach avenue; coarse everywhere else.
-  const isFine = (x, z) => x >= -fineHalf && x < fineHalf && z >= -fineHalf && (z < fineHalf || (z < fineFront && Math.abs(x + fine / 2) < 32));
+  const isFine = (x, z) =>
+    x >= -fineHalf && x < fineHalf && z >= -fineHalf && (z < fineHalf || (z < fineFront && Math.abs(x + fine / 2) < avenueHalf));
   for (let x = -fineHalf; x < fineHalf; x += fine) {
     for (let z = -fineHalf; z < fineFront; z += fine) {
       if (!isFine(x, z)) continue;
       const cx = x + fine / 2;
       const cz = z + fine / 2;
-      if (!isWater(cx, cz)) {
+      if (!wet(cx, cz)) {
         pushQuad(ground, v(x, z), v(x, z + fine), v(x + fine, z + fine), v(x + fine, z));
         continue;
       }
@@ -64,7 +69,7 @@ export function buildTerrain(surface, props) {
         [0, 1, [x + fine, z + fine], [x, z + fine]],
       ];
       for (const [dx, dz, p, q] of edges) {
-        if (isWater(cx + dx * fine, cz + dz * fine)) continue;
+        if (wet(cx + dx * fine, cz + dz * fine)) continue;
         pushQuad(banks, [q[0], W - 0.05, q[1]], [q[0], 0, q[1]], [p[0], 0, p[1]], [p[0], W - 0.05, p[1]]);
       }
     }
@@ -76,7 +81,12 @@ export function buildTerrain(surface, props) {
     }
   }
 
-  surface.add('ground', geometryFrom(ground), { uvScale: 1 / 8, jitter: 0.03, color: groundColor });
-  surface.add('water', geometryFrom(water), { uvScale: 1 / 8, jitter: 0 });
-  props.add('laterite', geometryFrom(banks), { uvScale: 0.25, jitter: 0.05, moss: 0.6, color: [0.9, 0.85, 0.8] });
+  surface.add(key, geometryFrom(ground), { uvScale: 1 / 8, jitter: 0.03, color });
+  if (water.length) surface.add('water', geometryFrom(water), { uvScale: 1 / 8, jitter: 0, unshaded: true });
+  if (banks.length) props.add('laterite', geometryFrom(banks), { uvScale: 0.25, jitter: 0.05, moss: 0.6, color: [0.9, 0.85, 0.8] });
+}
+
+/** The Angkor Wat site: moat, pools and the avenue. */
+export function buildTerrain(surface, props) {
+  buildGround(surface, props, { grid: LAYOUT.grid, heightAt, isWater, color: groundColor, waterY: LAYOUT.waterY });
 }

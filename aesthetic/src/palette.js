@@ -24,6 +24,11 @@ export const PALETTE = {
   palmTrunkDark: '#4f402e',
   rachis: '#7d6e3c',
   root: '#6b5642',
+  thitpok: '#b8b2a2',
+  thitpokLichen: '#cfd2b2',
+  litter: '#5f4a31',
+  litterLight: '#8c6e44',
+  stoneGrey: '#9d9a84',
   rootDark: '#3f3226',
 
   // Water

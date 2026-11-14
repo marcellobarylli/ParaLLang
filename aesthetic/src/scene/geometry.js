@@ -96,8 +96,10 @@ export function faceUp(geometry) {
  * scene costs one draw call per material.
  */
 export class MeshBuilder {
-  constructor(rng) {
+  /** `shade(x, y, z)` -> brightness multiplier applied to every vertex (canopy shade). */
+  constructor(rng, { shade = null } = {}) {
     this.rng = rng;
+    this.shade = shade;
     this.buckets = new Map();
   }
 
@@ -122,7 +124,7 @@ export class MeshBuilder {
     if (flat || !g.attributes.normal) g.computeVertexNormals();
     if (uv === 'box') boxUV(g, uvScale);
     else if (!g.attributes.uv) g.setAttribute('uv', new Float32BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
-    paint(g, options, this.rng);
+    paint(g, options, this.rng, options.unshaded ? null : this.shade);
     if (!this.buckets.has(key)) this.buckets.set(key, []);
     this.buckets.get(key).push(g);
     return g;
@@ -151,7 +153,7 @@ export class MeshBuilder {
   }
 }
 
-function paint(g, options, rng) {
+function paint(g, options, rng, shade) {
   const { color = [1, 1, 1], jitter = 0.05, grime = 0, grimeHeight = 3, moss = 0 } = options;
   const pos = g.attributes.position;
   const nrm = g.attributes.normal;
@@ -176,6 +178,10 @@ function paint(g, options, rng) {
         m += moss * 0.6 * (1 - smoothstep(0, 1.6, y)) * n;
         m = Math.min(0.75, m);
         c = [c[0] + (MOSS[0] * 1.3 - c[0]) * m, c[1] + (MOSS[1] * 1.3 - c[1]) * m, c[2] + (MOSS[2] * 1.3 - c[2]) * m];
+      }
+      if (shade) {
+        const s = shade(x, y, z);
+        c = [c[0] * s, c[1] * s, c[2] * s];
       }
       out[k * 3] = c[0];
       out[k * 3 + 1] = c[1];

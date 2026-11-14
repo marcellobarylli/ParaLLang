@@ -15,9 +15,9 @@ const STEM = hexToRgb(PALETTE.mushroomStem);
 const CAP = hexToRgb(PALETTE.mushroomCap);
 
 /** One root along `points`, with its glowing string. */
-export function root(b, points, r0, r1, segments = 16) {
+export function root(b, points, r0, r1, segments = 16, key = 'root', radial = 5) {
   const curve = new CatmullRomCurve3(points, false, 'centripetal');
-  b.add('root', taperedTube(curve, segments, 5, r0, r1, 3), { uv: 'keep', jitter: 0.06, moss: 0.25, grime: 0.2 });
+  b.add(key, taperedTube(curve, segments, radial, r0, r1, 3), { uv: 'keep', jitter: 0.06, moss: 0.25, grime: 0.2 });
   const n = points.length;
   const strand = points.map((p, i) => {
     const prev = points[Math.max(0, i - 1)];

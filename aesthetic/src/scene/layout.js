@@ -19,7 +19,7 @@ export const LAYOUT = {
     { x: 31, z: 47 },
     { x: -33, z: 47 },
   ],
-  grid: { fine: 4, fineHalf: 96, fineFront: 160, coarse: 32, coarseHalf: 480 },
+  grid: { fine: 4, fineHalf: 96, fineFront: 160, avenueHalf: 32, coarse: 32, coarseHalf: 480 },
 };
 
 const inRect = (x, z, r, m = 0) => x > r.x0 - m && x < r.x1 + m && z > r.z0 - m && z < r.z1 + m;

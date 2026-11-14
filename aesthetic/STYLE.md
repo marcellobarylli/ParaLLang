@@ -68,7 +68,30 @@ ruins. The roots represent the strings pulling the worlds together, now strangli
 | Mushrooms | Orange caps where roots meet the ground |
 | Vegetation | Leaning coconut palms with V-folded, alpha-cut fronds that sway; tall jungle trees beyond the moat; grass tufts; lily pads and lotus on the moat |
 
-## 4. Palette
+## 4. Ta Prohm, the temple the jungle kept
+
+The second level. Facts from Wikipedia's Ta Prohm article and the APSARA National Authority's Ta Prohm page, read
+through search results on 2026-11-14 (the pages themselves were blocked by this session's network policy):
+
+- A "flat" temple, not a temple-mountain, oriented to the east. The three inner enclosures are galleried, and the
+  corner towers of the first enclosure form a quincunx with the central sanctuary.
+- Face towers like those of the Bayon were added to the gopuras in the 13th century.
+- Trees grow out of the ruins. The identification is disputed: the larger trees are either silk-cotton (*Ceiba
+  pentandra*) or thitpok (*Tetrameles nudiflora*), the smaller either strangler fig (*Ficus gibbosa*) or gold apple
+  (*Diospyros decandra*). We draw the large ones as thitpok and the small ones as strangler figs.
+
+| Element | How it is built |
+|---|---|
+| Plan | Three galleried enclosures (68x60, 40x36, 18x18 units) around the central sanctuary; a laterite outer wall, broken in places; a library. East is +z, the same approach direction as Angkor Wat |
+| Galleries | Grey-green sandstone; inner walls carry devatas in niches; the outermost gallery has windows with turned stone balusters; roofs are corbelled vaults (stepped courses), not gables |
+| Collapse | About a quarter of the outer gallery's bays have fallen into heaps of blocks, fewer further in; bays under a giant tree stand, because the roots hold them |
+| Face tower | The east gopura of the outer wall: a carved face on each side (diadem, lowered eyelids, smile, long earlobes) under a broken spire |
+| Thitpok | Pale grey trunks 26–34 units tall, buttress fins, limbs and crowns far overhead. On galleries and on the gate, roots lie on the roof, roll over the crest, run down the face at their own radius, meander, fork, and spread across the ground. The gate tree's roots frame the doorway |
+| Strangler fig | Dark roots spiralling around a corner tower, the fig growing out of its top |
+| Light | Canopy shade darkens vertex colours under each crown, with dappled gaps; translucent light shafts fall through the canopy along the sun |
+| Mood | The `jungle` preset: humid green-grey fog from 20 to 175 units |
+
+## 5. Palette
 
 Display-space sRGB; the pipeline does no linear conversion and no tone mapping (`src/palette.js`).
 
@@ -85,17 +108,21 @@ Display-space sRGB; the pipeline does no linear conversion and no tone mapping (
 | root | `#6b5642` | Fig roots |
 | water | `#2f5552` | Moat and pools |
 | stringGlow | `#c08cff` | Corruption |
+| stoneGrey | `#9d9a84` | Ta Prohm's reliefs (devatas, faces) |
+| thitpok / thitpokLichen | `#b8b2a2` / `#cfd2b2` | Thitpok bark |
+| litter / litterLight | `#5f4a31` / `#8c6e44` | Forest floor |
 
-## 5. Times of day
+## 6. Times of day
 
 | Preset | Sun | Fog | Corruption | Mood |
 |---|---|---|---|---|
 | `golden` | Low from the west, on the facade | `#e6bf8c`, 45–235 | 0 | The default: warm, readable |
 | `dawn` | Rising behind the temple | `#cf8f78`, 35–210 | 0 | Silhouetted towers, pink sky |
 | `day` | High | `#c5d6d4`, 55–250 | 0 | Hazy midday |
+| `jungle` | High from the east, through the canopy | `#a3ad8a`, 20–175 | 0 | Ta Prohm's default: humid, green |
 | `corrupted` | Pale violet | `#58446a`, 22–165 | 1 | The dead branch at full corruption |
 
-## 6. Porting checklist
+## 7. Porting checklist
 
 1. Render the 3D scene into a target 240 lines high; upscale with nearest filtering.
 2. Vertex shader: snap clip-space xy to the target's pixel grid; output uv·w and w for affine mapping; compute

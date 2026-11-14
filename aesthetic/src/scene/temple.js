@@ -52,23 +52,27 @@ export function prangGeometry(height, radius, tiers = 6, truncate = 1) {
 /** A prang on its plinth, with a porch and pediment on each side. Returns the top height. */
 export function prang(b, x, y0, z, height, radius, opts = {}) {
   const base = radius * 2.3;
-  box(b, 'laterite', I, x, y0, z, base * 1.1, 0.5, base * 1.1);
-  box(b, 'relief', I, x, y0 + 0.5, z, base, height * 0.12, base);
-  box(b, 'stone', I, x, y0 + 0.5 + height * 0.12, z, base * 1.08, 0.35, base * 1.08);
+  const style = opts.style ?? {};
+  const plinthKey = opts.plinth ?? 'relief';
+  box(b, 'laterite', I, x, y0, z, base * 1.1, 0.5, base * 1.1, style);
+  box(b, plinthKey, I, x, y0 + 0.5, z, base, height * 0.12, base, style);
+  box(b, 'stone', I, x, y0 + 0.5 + height * 0.12, z, base * 1.08, 0.35, base * 1.08, style);
   const ty = y0 + 0.85 + height * 0.12;
   b.add('stone', prangGeometry(height, radius, 6, opts.truncate ?? 1), {
     ...STONE,
     moss: 0.18,
     grime: 0.25,
+    ...style,
     matrix: M(x, ty, z, 0, 1, 1, 1, opts.tiltX ?? 0, opts.tiltZ ?? 0),
   });
   if (opts.porches !== false) {
     for (let k = 0; k < 4; k++) {
       const F = M(x, ty, z, (k * Math.PI) / 2);
       const pz = radius * 0.95;
-      box(b, 'stone', F, 0, 0, pz, radius * 0.95, height * 0.2, radius * 0.7);
-      b.add('relief', gable(radius * 0.7, radius * 1.15, radius * 0.75), {
+      box(b, 'stone', F, 0, 0, pz, radius * 0.95, height * 0.2, radius * 0.7, style);
+      b.add(plinthKey, gable(radius * 0.7, radius * 1.15, radius * 0.75), {
         ...STONE,
+        ...style,
         matrix: chain(F, M(0, height * 0.2, pz, Math.PI / 2)),
       });
       box(b, 'stone', F, 0, 0, pz + radius * 0.36, radius * 0.45, height * 0.14, 0.05, { color: DOOR, moss: 0, grime: 0 });

@@ -18,6 +18,10 @@ const SHOTS = {
   'stele-dawn': 'cam=12,2.4,90,9.5,2,86&preset=dawn',
   'shrine-corrupted': 'cam=-31,4,25,-39,5.5,4&preset=corrupted',
   'aerial-day': 'orbit=0.5,0.32,95&preset=day',
+  'taprohm-face-gopura': 'scene=taprohm&cam=0,2.6,74,0,6.5,57',
+  'taprohm-gate-tree': 'scene=taprohm&cam=-3,2.2,41,0,5,28.7',
+  'taprohm-wall-tree-corrupted': 'scene=taprohm&cam=-24,2.6,14,-33,4.5,6&preset=corrupted',
+  'taprohm-fig-tower-golden': 'scene=taprohm&cam=27,3,27,18.7,5,16.7&preset=golden',
 };
 
 (async () => {
