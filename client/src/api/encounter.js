@@ -39,7 +39,14 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
 
   return {
     createLearner: (learnerId) => request('/api/learner', { method: 'POST', body: learnerId ? { learnerId } : {} }),
-    startEncounter: (learnerId, restart = false) => request('/api/encounter/start', { learnerId, method: 'POST', body: { restart } }),
+    // Round 115: `options` is { restart, dungeonId, encounterId }; a bare boolean is the old `restart` flag. With a
+    // dungeonId the server starts the run's next site.
+    startEncounter: (learnerId, options = {}) => {
+      const { restart = false, dungeonId, encounterId } = typeof options === 'object' && options !== null ? options : { restart: options === true };
+      return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId } : {}), ...(encounterId ? { encounterId } : {}) } });
+    },
+    getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}`, { learnerId }),
+    resetDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/reset`, { learnerId, method: 'POST' }),
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),
     revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import yaml from 'js-yaml';
 import { devProxy } from './proxy.config.js';
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
@@ -18,6 +19,17 @@ export function versionFile(build = BUILD_ID) {
   };
 }
 
+// Round 115: a content YAML file imported as data (src/dungeon.js bundles the dungeon file).
+export function yamlData() {
+  return {
+    name: 'parallang-yaml-data',
+    transform(source, id) {
+      if (!/\.ya?ml$/.test(id.split('?')[0])) return null;
+      return { code: `export default ${JSON.stringify(yaml.load(source))};`, map: null };
+    },
+  };
+}
+
 // Round 105: only the dev server gets the proxy (review 1.3): a bad token in the environment must not stop
 // `vite build` or the client's tests (vitest runs in mode "test"). Round 108 (review R1.1): `vite preview` also
 // resolves with command "serve" and falls back to `server.proxy`, so it is excluded by `isPreview`. Whoever can reach
@@ -25,7 +37,9 @@ export function versionFile(build = BUILD_ID) {
 // Round 114: a relative base, so the build works on GitHub Pages (/ParaLLang/) and any other host (DJ_Graphyla's setup).
 export default defineConfig(({ command, mode, isPreview }) => ({
   base: './',
-  plugins: [react(), versionFile()],
+  plugins: [react(), yamlData(), versionFile()],
+  // three.js and the level are one lazy chunk of about 700 kB (src/scene/levelView.js).
+  build: { chunkSizeWarningLimit: 900 },
   test: {
     environment: 'jsdom',
     globals: true,

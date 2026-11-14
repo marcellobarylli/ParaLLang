@@ -4,7 +4,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test, vi } from 'vitest';
-import viteConfig, { versionFile } from '../../vite.config.js';
+import { searchForWorkspaceRoot } from 'vite';
+import viteConfig, { versionFile, yamlData } from '../../vite.config.js';
 
 const CLIENT_DIR = resolve(import.meta.dirname, '..', '..');
 
@@ -30,4 +31,40 @@ test('the manifest installs to the home screen with icons that exist', () => {
   for (const href of ['./manifest.webmanifest', './parallang-icon.svg', './parallang-icon-apple-touch.png']) expect(html).toContain(`href="${href}"`);
   expect(existsSync(resolve(CLIENT_DIR, 'public/parallang-icon-apple-touch.png'))).toBe(true);
   expect(html).toContain('viewport-fit=cover');
+});
+
+// Round 115: src/dungeon.js imports content/world/dungeons/ta_prohm.yaml, which lies outside client/.
+test('a content YAML file is imported as data, and the dev server may read the repository root', () => {
+  const plugin = yamlData();
+  expect(plugin.transform('id: ta_prohm\nroute:\n  - [0, 96]\n', '/repo/content/world/dungeons/ta_prohm.yaml').code).toBe('export default {"id":"ta_prohm","route":[[0,96]]};');
+  expect(plugin.transform('a: 1', '/repo/content/x.yml?import').code).toBe('export default {"a":1};');
+  expect(plugin.transform('export default 1', '/repo/client/src/dungeon.js')).toBeNull();
+  // Vite's dev server serves files under the workspace root it finds from client/ (server.fs.allow's default).
+  const root = resolve(CLIENT_DIR, '..');
+  expect(searchForWorkspaceRoot(CLIENT_DIR)).toBe(root);
+  expect(existsSync(resolve(root, 'content/world/dungeons/ta_prohm.yaml'))).toBe(true);
+});
+
+// Round 115 (review 1, R1.1): the Dockerfile copied aesthetic/package.json while .dockerignore kept all of aesthetic/
+// out of the build context, which fails every image build. Each COPY source must reach the context.
+test('everything the Dockerfile copies is in the Docker build context', () => {
+  const root = resolve(CLIENT_DIR, '..');
+  const rules = readFileSync(resolve(root, '.dockerignore'), 'utf8').split('\n').map((line) => line.trim()).filter((line) => line && !line.startsWith('#'));
+  // Enough of .dockerignore for this file's rules: a name or path, `dir/*`, a leading `**/`, and `!` exceptions; the last match wins.
+  const matches = (pattern, path) => {
+    if (pattern.startsWith('**/')) return path.split('/').includes(pattern.slice(3));
+    if (pattern.endsWith('/*')) return path.startsWith(pattern.slice(0, -1)) && path.length > pattern.length - 1;
+    if (pattern.startsWith('*.')) return path.endsWith(pattern.slice(1));
+    return path === pattern || path.startsWith(`${pattern}/`);
+  };
+  const ignored = (path) => rules.reduce((out, rule) => (rule.startsWith('!') ? (matches(rule.slice(1), path) ? false : out) : (matches(rule, path) ? true : out)), false);
+  const sources = readFileSync(resolve(root, 'Dockerfile'), 'utf8').split('\n').filter((line) => line.startsWith('COPY ')).flatMap((line) => line.split(/\s+/).slice(1, -1));
+  expect(sources).toContain('aesthetic/package.json');
+  for (const source of sources) {
+    expect(existsSync(resolve(root, source)), source).toBe(true);
+    expect(ignored(source), `${source} is excluded by .dockerignore`).toBe(false);
+  }
+  expect(ignored('aesthetic/src/index.js')).toBe(true);
+  expect(ignored('client/src/App.jsx')).toBe(true);
+  expect(ignored('server/node_modules/express/index.js')).toBe(true);
 });

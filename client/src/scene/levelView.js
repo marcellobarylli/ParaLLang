@@ -1,0 +1,269 @@
+// Round 115: the three.js host of the dungeon screen. It owns the renderer, the level from @parallang/aesthetic, the
+// PS1 pipeline, the route ribbon and the site beacons, and it moves the camera as the director says. Everything
+// that needs WebGL is here, and this module is loaded lazily (it is three.js and the level, about 700 kB).
+import {
+  AdditiveBlending, BufferGeometry, CylinderGeometry, DoubleSide, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial,
+  OctahedronGeometry, PerspectiveCamera, RingGeometry, Vector3, WebGLRenderer,
+} from 'three';
+import { PRESETS, TA_PROHM, createPS1Pipeline, createWorld, taProhmHeightAt } from '@parallang/aesthetic';
+import { createDirector } from './director.js';
+import { freeRect } from './insets.js';
+
+const FOV = 60;
+// What the host needs to know about each aesthetic level a dungeon may name.
+const LEVELS = {
+  taprohm: { heightAt: taProhmHeightAt, box: { minX: -TA_PROHM.outer, maxX: TA_PROHM.outer, minZ: -TA_PROHM.outer, maxZ: TA_PROHM.outer } },
+  angkor: { heightAt: () => 0, box: { minX: -70, maxX: 70, minZ: -70, maxZ: 70 } },
+};
+const GOLD = [1, 0.8, 0.36]; // written as is: the PS1 materials and the post pass do no colour conversion
+const RIBBON = { width: 1.5, lift: 0.4 };
+const ease = (current, target, dt, tau) => current + (target - current) * (1 - Math.exp(-dt / tau));
+const basic = (rgb, options = {}) => {
+  const material = new MeshBasicMaterial({ transparent: true, depthWrite: false, fog: false, side: DoubleSide, ...options });
+  material.color.setRGB(...rgb);
+  return material;
+};
+
+// A flat ribbon along the route: one quad per segment, each run on by half the width so the corners close.
+function ribbonGeometry(route, heightAt) {
+  const positions = [];
+  const half = RIBBON.width / 2;
+  for (let i = 1; i < route.length; i++) {
+    const [x0, z0] = route[i - 1];
+    const [x1, z1] = route[i];
+    const length = Math.hypot(x1 - x0, z1 - z0) || 1;
+    const [dx, dz] = [(x1 - x0) / length, (z1 - z0) / length];
+    const [ax, az, bx, bz] = [x0 - dx * half, z0 - dz * half, x1 + dx * half, z1 + dz * half];
+    const [nx, nz] = [-dz * half, dx * half];
+    const y = Math.max(heightAt(x0, z0), heightAt(x1, z1)) + RIBBON.lift;
+    const corners = [[ax + nx, az + nz], [ax - nx, az - nz], [bx - nx, bz - nz], [bx + nx, bz + nz]];
+    for (const index of [0, 1, 2, 0, 2, 3]) positions.push(corners[index][0], y, corners[index][1]);
+  }
+  const geometry = new BufferGeometry();
+  geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+  return geometry;
+}
+
+// A site's beacon, standing in for the encounter's character until there are assets: a turning crystal, a ring on
+// the ground and a faint shaft of light.
+function beacon([x, z], heightAt) {
+  const group = new Group();
+  const y = heightAt(x, z);
+  const gem = new OctahedronGeometry(0.22, 0);
+  // Flat shades per face, light from above: the scene has no lights, so the facets are painted into vertex colours.
+  const colours = [];
+  const normals = gem.attributes.normal;
+  for (let i = 0; i < normals.count; i++) {
+    const shade = 0.62 + 0.38 * Math.max(0, normals.getX(i) * 0.3 + normals.getY(i) * 0.8 + normals.getZ(i) * 0.5);
+    colours.push(GOLD[0] * shade, GOLD[1] * shade, GOLD[2] * shade);
+  }
+  gem.setAttribute('color', new Float32BufferAttribute(colours, 3));
+  const materials = [basic([1, 1, 1], { vertexColors: true }), basic(GOLD), basic(GOLD, { blending: AdditiveBlending })];
+  const crystal = new Mesh(gem, materials[0]);
+  crystal.scale.y = 1.5;
+  crystal.position.set(x, y + 1.5, z);
+  const ring = new Mesh(new RingGeometry(0.62, 0.7, 14), materials[1]);
+  ring.rotation.x = -Math.PI / 2;
+  ring.position.set(x, y + 0.06, z);
+  const shaft = new Mesh(new CylinderGeometry(0.05, 0.12, 7, 5, 1, true), materials[2]);
+  shaft.position.set(x, y + 3.5, z);
+  group.add(ring, shaft, crystal);
+  group.visible = false;
+  return { group, crystal, ring, materials, opacity: 0, cleared: 0, flare: 0, base: [1, 0.55, 0.1] };
+}
+
+/**
+ * Starts rendering `dungeon`'s level into `canvas`. Throws if WebGL is not available.
+ *
+ *   setPhase({ phase, siteIndex, walkFrom })  the store's phase; the director gets the matching state
+ *   setInsets({ top, right, bottom, left })   what the interface covers, in CSS pixels; the camera frames the rest
+ *   setLabels([element, ...])                 one element per site, placed over its site every frame
+ */
+export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedMotion = false } = {}) {
+  const level = LEVELS[dungeon.level];
+  if (!level) throw new Error(`No level view for "${dungeon.level}"`);
+  const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 2));
+  const world = createWorld(dungeon.level, { seed: 7 });
+  const camera = new PerspectiveCamera(FOV, 1, 0.3, 900);
+  const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
+  const director = createDirector({ dungeon, heightAt: level.heightAt, fov: FOV, levelBox: level.box });
+  director.attract();
+  const fog = { near: PRESETS[world.preset].fogNear, far: PRESETS[world.preset].fogFar };
+
+  const ribbon = new Mesh(ribbonGeometry(dungeon.route, level.heightAt), basic(GOLD, { depthTest: false, opacity: 0 }));
+  ribbon.renderOrder = 20;
+  ribbon.frustumCulled = false;
+  ribbon.visible = false;
+  const beacons = dungeon.sites.map((site) => beacon(site.at, level.heightAt));
+  const markers = new Group();
+  markers.name = 'dungeon-markers';
+  markers.add(ribbon, ...beacons.map((b) => b.group));
+  for (const b of beacons) for (const child of b.group.children) child.renderOrder = 10;
+  world.scene.add(markers);
+  const siteAnchors = dungeon.sites.map((site) => new Vector3(site.at[0], level.heightAt(site.at[0], site.at[1]) + 1.2, site.at[1]));
+
+  const size = { width: 1, height: 1 };
+  const insets = { top: 0, right: 0, bottom: 0, left: 0 };
+  const insetTarget = { ...insets };
+  let insetsSet = false;
+  let labels = [];
+  let phaseKey = 'attract:0:null'; // the director starts in the attract orbit
+  let notified = true;
+  let ribbonOpacity = 0;
+  let clock = 0;
+  let raf = 0;
+  let last = null;
+  let disposed = false;
+  const projected = new Vector3();
+  // Round 116: the conversation at the site the camera holds at.
+  const talk = { resolved: false, beatId: null };
+
+  function resize() {
+    const width = Math.max(1, canvas.clientWidth || canvas.width || 1);
+    const height = Math.max(1, canvas.clientHeight || canvas.height || 1);
+    if (width === size.width && height === size.height) return;
+    Object.assign(size, { width, height });
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    pipeline.resize();
+  }
+
+  // The camera's axis goes to the middle of the area the interface leaves free, and the director frames that area.
+  function applyView(dt) {
+    for (const side of Object.keys(insets)) insets[side] = dt === null ? insetTarget[side] : ease(insets[side], insetTarget[side], dt, 0.35);
+    const free = freeRect(insets, size.width, size.height);
+    director.setView({ aspect: free.width / free.height, scale: free.height / size.height });
+    camera.setViewOffset(size.width, size.height, size.width / 2 - free.centreX, size.height / 2 - free.centreY, size.width, size.height);
+  }
+
+  function placeLabels() {
+    labels.forEach((element, index) => {
+      if (!element || !siteAnchors[index]) return;
+      projected.copy(siteAnchors[index]).project(camera);
+      const visible = projected.z > -1 && projected.z < 1;
+      element.style.display = visible ? '' : 'none';
+      if (visible) element.style.transform = `translate(${((projected.x + 1) / 2 * size.width).toFixed(1)}px, ${((1 - projected.y) / 2 * size.height).toFixed(1)}px)`;
+    });
+  }
+
+  function step(dt) {
+    clock += dt;
+    resize();
+    applyView(dt);
+    const pose = director.update(dt);
+    camera.position.set(...pose.position);
+    camera.lookAt(...pose.target);
+    // The level's fog is set for the ground. From the air it backs off, and it stays short of the ground's edge.
+    const distance = Math.hypot(pose.position[0] - pose.target[0], pose.position[1] - pose.target[1], pose.position[2] - pose.target[2]);
+    const far = Math.min(440, fog.far + Math.max(0, distance - 30) * 1.7);
+    world.uniforms.uFogFar.value = far;
+    world.uniforms.uFogNear.value = Math.min(far - 80, fog.near + Math.max(0, distance - 30) * 0.85);
+    // Vertex snapping opens seams in the ground where its fine and coarse grids meet. They show only from the air.
+    world.uniforms.uJitter.value = distance > 60 ? 0 : 1;
+
+    const mode = director.mode;
+    ribbonOpacity = ease(ribbonOpacity, mode === 'overview' ? 0.9 : 0, dt, 0.4);
+    ribbon.material.opacity = ribbonOpacity;
+    ribbon.visible = ribbonOpacity > 0.02;
+    beacons.forEach((b, index) => {
+      const on = (mode === 'approach' || mode === 'walk') && director.site === index;
+      b.opacity = ease(b.opacity, on ? 1 : 0, dt, 0.5);
+      b.group.visible = b.opacity > 0.02;
+      if (!b.group.visible) return;
+      // A resolved site lets go of its beacon: the crystal rises and fades, the shaft goes, the ring turns green.
+      b.cleared = ease(b.cleared, on && talk.resolved ? 1 : 0, dt, 0.9);
+      b.flare = ease(b.flare, 0, dt, 0.35);
+      const pulse = 0.85 + 0.15 * Math.sin(clock * 2.2) + 0.5 * b.flare;
+      const fade = [1 - 0.85 * b.cleared, 1, 1 - b.cleared];
+      b.materials.forEach((material, i) => { material.opacity = Math.min(1, b.opacity * pulse * b.base[i] * fade[i]); });
+      b.materials[1].color.setRGB(GOLD[0] + (0.5 - GOLD[0]) * b.cleared, GOLD[1] + (0.9 - GOLD[1]) * b.cleared, GOLD[2] + (0.5 - GOLD[2]) * b.cleared);
+      b.crystal.rotation.y = clock * (1.3 + 4 * b.flare);
+      b.crystal.scale.set(1 + 0.5 * b.flare, 1.5 * (1 + 0.5 * b.flare), 1 + 0.5 * b.flare);
+      b.crystal.position.y = siteAnchors[index].y + 0.3 + 0.08 * Math.sin(clock * 1.7) + 1.8 * b.cleared;
+      b.ring.scale.setScalar(1 + 0.35 * b.flare);
+    });
+
+    world.update(dt, camera);
+    pipeline.render(world.scene, camera);
+    placeLabels();
+    if (director.arrived && !notified) {
+      notified = true;
+      onArrive(mode);
+    }
+  }
+
+  function frame(now) {
+    if (disposed) return;
+    raf = requestAnimationFrame(frame);
+    const dt = last === null ? 0 : Math.min((now - last) / 1000, 0.1);
+    last = now;
+    step(dt);
+  }
+
+  const onContextLost = (event) => event.preventDefault();
+  canvas.addEventListener('webglcontextlost', onContextLost);
+  resize();
+  applyView(null);
+  raf = requestAnimationFrame(frame);
+
+  return {
+    director,
+    camera,
+    world,
+    get size() { return { ...size }; },
+    setPhase({ phase, siteIndex = 0, walkFrom = null }) {
+      const key = `${phase}:${siteIndex}:${walkFrom}`;
+      const atSite = (director.mode === 'approach' || director.mode === 'walk') && director.site === siteIndex;
+      if (key === phaseKey || (phase === 'encounter' && atSite)) { phaseKey = key; return; }
+      phaseKey = key;
+      if (phase === 'attract') director.attract();
+      else if (phase === 'overview') director.overview();
+      else if (phase === 'victory') director.victory();
+      else if (phase === 'walk' && walkFrom !== null && walkFrom < siteIndex) director.walk(walkFrom, siteIndex);
+      else director.approach(siteIndex);
+      if (reducedMotion) director.skip();
+      notified = false;
+      Object.assign(talk, { resolved: false });
+    },
+    /**
+     * Round 116: the conversation at the site the camera holds at. `closed` objectives step the camera in, a new
+     * `beatId` is a verdict of `beatKind` ('pass', 'fail' or 'resolved'), and `resolved` releases the beacon and
+     * turns the camera to the way on.
+     */
+    setEncounter({ closed = 0, resolved = false, beatId = null, beatKind = null } = {}) {
+      if (director.mode !== 'approach' && director.mode !== 'walk') return;
+      director.engage(resolved ? 1 : Math.min(0.7, closed * 0.35));
+      director.onward(resolved);
+      talk.resolved = resolved;
+      if (beatId !== null && beatId !== talk.beatId) {
+        if (!reducedMotion) director.beat(beatKind);
+        if (beatKind !== 'fail') { const b = beacons[director.site]; if (b) b.flare = 1; }
+      }
+      talk.beatId = beatId;
+    },
+    setInsets(next) {
+      for (const side of Object.keys(insetTarget)) insetTarget[side] = Math.max(0, Number(next?.[side]) || 0);
+      // The first measurement applies at once: the level must not slide into place when the page opens.
+      if (!insetsSet) Object.assign(insets, insetTarget);
+      insetsSet = true;
+    },
+    setLabels(elements) { labels = elements ?? []; },
+    resize,
+    /** One frame of `dt` seconds, outside the animation loop (screenshots). */
+    step,
+    dispose() {
+      disposed = true;
+      cancelAnimationFrame(raf);
+      canvas.removeEventListener('webglcontextlost', onContextLost);
+      world.scene.traverse((object) => {
+        object.geometry?.dispose?.();
+        for (const material of [].concat(object.material ?? [])) material.dispose?.();
+      });
+      for (const texture of Object.values(world.textures ?? {})) texture?.dispose?.();
+      pipeline.dispose();
+      renderer.dispose();
+      renderer.forceContextLoss();
+    },
+  };
+}

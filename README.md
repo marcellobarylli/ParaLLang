@@ -75,7 +75,7 @@ Live verification uses a temporary learner save and removes it afterward. It is 
 
 ## Run the iPhone app
 
-Development is app-first from round 004: new features go to the Expo / React Native app in `mobile/`, tested in the iOS Simulator on a Mac. The browser client in `client/` is kept working but frozen.
+Development is app-first from round 004: new features go to the Expo / React Native app in `mobile/`, tested in the iOS Simulator on a Mac. The browser client in `client/` was frozen until round 114; since round 115 it is the Ta Prohm dungeon crawl (see "The web client: the Ta Prohm dungeon" below).
 
 One-time setup (needs the Mac App Store and `sudo`):
 
@@ -103,13 +103,43 @@ The app opens on the map of the Crumbling Market (round 005): six locations from
 
 ### Optional API token
 
-Set `PARALLANG_TOKEN` in the root `.env` to require the header `X-ParaLLang-Token: <value>` on every `/api` route except `/api/health`. It is unset by default. The iPhone app sends it when Expo is started with the same value in `EXPO_PUBLIC_PARALLANG_TOKEN` (for example `EXPO_PUBLIC_PARALLANG_TOKEN=<value> npm run dev:ios`; restart Expo after changing it). Expo reads `.env` files from `mobile/` only, so the root `.env` does not reach the app: pass the variable on the command line as shown (run `expo start --clear` if an old value seems to stick). An `EXPO_PUBLIC_` value is bundled into the app, which is fine for a local Simulator session but is no secret in a shipped build. The server never logs the token. The frozen web client's Vite dev proxy (`npm run dev:client`) adds it on the server side, reading `PARALLANG_TOKEN` from the environment or the root `.env`, so the token never reaches the browser; the proxy's target follows `PORT` (default 3001). `verify:cli` and the tests protect their temporary servers with a random token.
+Set `PARALLANG_TOKEN` in the root `.env` to require the header `X-ParaLLang-Token: <value>` on every `/api` route except `/api/health`. It is unset by default. The iPhone app sends it when Expo is started with the same value in `EXPO_PUBLIC_PARALLANG_TOKEN` (for example `EXPO_PUBLIC_PARALLANG_TOKEN=<value> npm run dev:ios`; restart Expo after changing it). Expo reads `.env` files from `mobile/` only, so the root `.env` does not reach the app: pass the variable on the command line as shown (run `expo start --clear` if an old value seems to stick). An `EXPO_PUBLIC_` value is bundled into the app, which is fine for a local Simulator session but is no secret in a shipped build. The server never logs the token. The web client's Vite dev proxy (`npm run dev:client`) adds it on the server side, reading `PARALLANG_TOKEN` from the environment or the root `.env`, so the token never reaches the browser; the proxy's target follows `PORT` (default 3001). `verify:cli` and the tests protect their temporary servers with a random token.
 
 Two optional switches spend extra LLM calls and are off by default. Set them in the root `.env` and restart the server. `PARALLANG_ATMOSPHERE=on` adds a generated line of atmosphere under each place's description on the map (round 053). `PARALLANG_PREFETCH=on` writes an open encounter's greeting once the player has stayed 1.5 s at its place, so Talk answers sooner (round 076: 4.4 s against 12.1 s in a live run). It costs one call for each place where the player stays and never talks.
 
 ### Live Crumbling Market playthrough
 
 `node server/scripts/play-market.js --provider codex-cli [--location <id>] [--out report.json]` plays the map and one encounter with scripted answers (Gerald at The Coffee Cart by default; any location id from `content/world/locations/`; `--tour` plays all six in order, `--party --member <home location>` a party conversation, `--lines 'a|b|c'` your own answers) in-process (no port) on a temporary save and prints a JSON report: each step, every raw LLM output, grading verdicts, timings and two rough estimates of the target-language share of each NPC line. It exits 1 unless the encounter resolves and the map marks it complete.
+
+## The web client: the Ta Prohm dungeon
+
+Since round 115 the web client (`client/`) is one screen, a dungeon crawl through the Ta Prohm level of
+[`aesthetic/`](aesthetic/README.md). Three encounters are played in order: Portia's tutorial at The Face Gate,
+Gerald's coffee order in The Root Court, and Bambieshart Before the Sanctuary. The camera moves through five states:
+a slow orbit of the whole level (the title), a bird's-eye view with the route and the numbered sites, an approach
+down to site 1, a walk at eye height along the route to each next site, and a pull back out to the orbit when the
+last site is cleared. The dialogue is a bottom sheet on a phone and a side panel from 1100 px. A reload resumes the
+run at its next site. Inside a conversation the camera follows the answers (round 116): each objective the player
+closes steps it in towards the site, a verdict is a brief push or pull, and a resolved site turns it to the way on,
+from where "Walk on" starts the walk.
+
+- **Content.** `content/world/dungeons/ta_prohm.yaml` holds the sites and the route in Ta Prohm world units. The
+  client bundles it at build time, so the title and the route show before the server answers. The server serves the
+  run's progress (`GET /api/dungeons/:id`), starts the run's next site (`POST /api/encounter/start` with `dungeonId`)
+  and starts a new run (`POST /api/dungeons/:id/reset`).
+- **Code.** `client/src/scene/director.js` is the camera director (pure, no three.js). `client/src/scene/levelView.js`
+  is the three.js host and loads as its own chunk. `client/src/stores/gameStore.js` holds the flow, and
+  `client/src/components/DungeonScreen.jsx` the screen. Without WebGL a still backdrop stands in and the game stays
+  playable.
+- **Run it.** `npm run dev` starts the server and the client's dev server (http://localhost:5173). The dev server
+  listens on a port: on a shared machine run it inside a job, never on a login node.
+- **Check it.** `npm test` covers the director, the dungeon file against the level's plan, the store, the screen
+  (jsdom), the wiring between the screen and the camera (`camera-wiring.test.jsx`, the three.js host mocked) and the
+  client's store against the real server. `client/scripts/dungeon-shots.mjs` plays the built client
+  through all three sites in headless Chromium against an in-process server with a fixture provider and writes a
+  screenshot of each camera state at a phone and a desktop size. It fails if the gameplay and the camera come apart
+  (a dialogue open while the camera travels, no step in after a closed objective, no turn at a resolve). It needs `puppeteer-core` and a Chrome (see the
+  script's header); round 115's pictures are in [`docs/rounds/115/shots/`](docs/rounds/115/shots/).
 
 ## Web client on GitHub Pages, server on Render
 

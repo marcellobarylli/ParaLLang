@@ -5,13 +5,13 @@ import PronounceButton from './PronounceButton.jsx';
 // Round 104 (review R1.6): a card that fell due while the Spellbook is open is hidden too; Review waits for the server.
 const dueNow = (card) => card.due || Date.parse(card.nextReviewAt) <= Date.now();
 
-export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn }) {
+export default function Spellbook({ spellbook, language, isLoading, onReview, onReturn, returnLabel = 'Back to the temple' }) {
   const inEncounter = Boolean(spellbook.inEncounter);
   return (
     <main className="spellbook" aria-label="Spellbook">
       <div className="panel-heading">
         <div><h2>Spellbook</h2><p>{spellbook.dueCount} due for review</p></div>
-        <button type="button" className="secondary-button" onClick={onReturn}>Return to Gerald</button>
+        <button type="button" className="secondary-button" onClick={onReturn}>{returnLabel}</button>
       </div>
       {inEncounter && spellbook.cards.length > 0 && <p className="empty-state">Meanings are hidden and reviews wait while an encounter is under way.</p>}
       {spellbook.cards.length === 0 ? (

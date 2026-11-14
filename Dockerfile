@@ -11,10 +11,12 @@ ARG CLAUDE_CODE_VERSION=2.1.325
 RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION} && npm cache clean --force
 
 WORKDIR /app
-# The root lockfile pins every workspace; only the server's production dependencies are installed.
+# The root lockfile pins every workspace, so npm ci needs every workspace's manifest (aesthetic joined in round 115);
+# only the server's production dependencies are installed.
 COPY package.json package-lock.json ./
 COPY server/package.json server/package.json
 COPY client/package.json client/package.json
+COPY aesthetic/package.json aesthetic/package.json
 RUN npm ci --omit=dev --workspace server --include-workspace-root=false && npm cache clean --force
 
 COPY server/server.js server/server.js

@@ -7,13 +7,17 @@
 # court, in front of the thitpok astride the second gallery. Site 3 is in the second enclosure's court, facing
 # the central sanctuary through the inner gate. The route enters each enclosure through its east gate passage
 # (|x| < 1.1) and never crosses a wall.
+#
+# Round 115: site 3 stands on the axis, 1.4 m before the inner gate's door. The camera stops 4 m short of a site, so
+# it looks at site 3 from inside the second enclosure's gate passage, with the inner gate and the sanctuary tower
+# behind. (At [2.6, 11] the site stood against the pavilion wall and the camera faced blank stone from 2.4 m.)
 id: ta_prohm
 name: Ta Prohm
 level: taprohm
 sites:
   - { encounter: market_entrance_tutorial, name: The Face Gate, at: [3.5, 63] }
   - { encounter: imp_coffee_greeting, name: The Root Court, at: [6, 21.5] }
-  - { encounter: high_gate_bambieshart, name: Before the Sanctuary, at: [2.6, 11] }
+  - { encounter: high_gate_bambieshart, name: Before the Sanctuary, at: [0.3, 11.2] }
 route:
   - [0, 96]       # the avenue, the entrance
   - [2.5, 70]
@@ -25,6 +29,4 @@ route:
   - [5.5, 25.5]
   - [6, 21.5]     # site 2
   - [0.3, 20.8]
-  - [0.3, 14.3]   # through the second enclosure's gate
-  - [3.5, 14.3]
-  - [2.6, 11]     # site 3
+  - [0.3, 11.2]   # through the second enclosure's gate; site 3

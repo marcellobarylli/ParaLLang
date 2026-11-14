@@ -1,11 +1,11 @@
-// Round 114: the settings sheet edits the server URL and access token; the gear button in the header opens it.
+// Round 114: the settings sheet edits the server URL and access token; the gear button in the top bar opens it.
 import React from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SettingsSheet from '../SettingsSheet.jsx';
 import App from '../../App.jsx';
-import { useGameStore } from '../../stores/gameStore.js';
+import { useGameStore } from '../../stores/useGameStore.js';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
@@ -24,7 +24,7 @@ test('the sheet saves the URL and token it was edited to, and Cancel closes it',
   expect(onClose).toHaveBeenCalledOnce();
 });
 
-test('the header gear opens the sheet over the encounter screen', async () => {
+test('the gear in the top bar opens the sheet over the dungeon screen', async () => {
   const user = userEvent.setup();
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
   useGameStore.setState({ settingsOpen: false, error: null });

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PronounceButton from './PronounceButton.jsx';
 
-export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn }) {
+export default function ReviewPanel({ challenge, result, language, isLoading, onSubmit, onReveal, onContinue, onReturn, returnLabel = 'Back to the temple' }) {
   const [answer, setAnswer] = useState('');
   if (result) return (
     <main className="review-panel" aria-label="Review feedback">
@@ -11,11 +11,11 @@ export default function ReviewPanel({ challenge, result, language, isLoading, on
       <p>Quality {result.effectiveQuality}/5 · Next review: {new Date(result.nextReviewAt).toLocaleString()}</p>
       <div className="button-row">
         <button type="button" className="primary-button" onClick={onContinue}>Continue reviews</button>
-        <button type="button" className="secondary-button" onClick={onReturn}>Return to Gerald</button>
+        <button type="button" className="secondary-button" onClick={onReturn}>{returnLabel}</button>
       </div>
     </main>
   );
-  if (!challenge) return <main className="review-panel"><p>No due review is available.</p><button type="button" onClick={onReturn}>Return to Gerald</button></main>;
+  if (!challenge) return <main className="review-panel"><p>No due review is available.</p><button type="button" className="secondary-button" onClick={onReturn}>{returnLabel}</button></main>;
   return (
     <main className="review-panel" aria-label={`${language?.name ?? 'Target-language'} vocabulary review`}>
       <p>{challenge.practice ? 'Optional practice (schedule will not change)' : `Due ${language?.name ?? 'target-language'}-to-English recall`}</p>
@@ -26,7 +26,7 @@ export default function ReviewPanel({ challenge, result, language, isLoading, on
         <div className="button-row">
           <button type="submit" className="primary-button" disabled={isLoading || !answer.trim()}>Check answer</button>
           <button type="button" className="secondary-button" disabled={isLoading} onClick={onReveal}>Show answer</button>
-          <button type="button" className="text-button" onClick={onReturn}>Return to Gerald</button>
+          <button type="button" className="text-button" onClick={onReturn}>{returnLabel}</button>
         </div>
       </form>
     </main>

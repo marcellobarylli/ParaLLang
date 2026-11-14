@@ -4,7 +4,9 @@
 .github
 .env
 *.log
-aesthetic
+# Round 115: aesthetic is an npm workspace, so npm ci needs its manifest (and nothing else of it).
+aesthetic/*
+!aesthetic/package.json
 client/src
 client/public
 client/dist
