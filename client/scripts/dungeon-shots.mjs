@@ -7,7 +7,8 @@
 //
 // What runs: an in-process server with the fixture provider of the server's tests (no model is called), bound to
 // 127.0.0.1 behind a random access token, and Chromium with software WebGL (SwiftShader). The page is served from
-// client/dist by request interception under https://parallang.test, and its /api requests are passed to the server
+// client/dist by request interception under https://parallang.test/ParaLLang/ (a subpath, as on GitHub Pages), and
+// its /api requests are passed to the server
 // with the token the client sends from its settings. The server listens on a port: on the real-itu cluster run this
 // inside a Slurm job, never on the login node. puppeteer-core is not a dependency of the repo.
 import { createRequire } from 'node:module';
@@ -21,6 +22,8 @@ const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
 const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '115', 'shots'));
 const ORIGIN = 'https://parallang.test';
+const BASE_PATH = '/ParaLLang/'; // the page is served under a subpath, as on GitHub Pages
+const EXTRA = process.env.SHOTS_EXTRA === '1'; // also the in-between and debugging pictures
 const SIZES = [
   { name: 'phone', width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
   { name: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
@@ -76,7 +79,9 @@ async function serveDist(page, runtime) {
         const reply = await fetch(`${runtime.baseUrl}${url.pathname}${url.search}`, { method: request.method(), headers, body: request.postData() });
         return void request.respond({ status: reply.status, contentType: 'application/json', body: await reply.text() });
       }
-      const file = join(DIST, url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname));
+      if (!url.pathname.startsWith(BASE_PATH)) return void request.respond({ status: 404, body: '' });
+      const relative = decodeURIComponent(url.pathname.slice(BASE_PATH.length)) || 'index.html';
+      const file = join(DIST, relative);
       if (!file.startsWith(DIST)) return void request.respond({ status: 403, body: '' });
       const body = await readFile(file).catch(() => null);
       if (!body) return void request.respond({ status: 404, body: '' });
@@ -125,7 +130,7 @@ async function run(browser, runtime, size, log) {
   const shot = async (name, { settle = 900 } = {}) => {
     await sleep(settle);
     const file = join(OUT, `${name}-${size.name}.jpg`);
-    await page.screenshot({ path: file, type: 'jpeg', quality: 82 });
+    await page.screenshot({ path: file, type: 'jpeg', quality: 72 });
     const now = await state(page);
     log.push({ shot: `${name}-${size.name}.jpg`, ...now });
     console.log('shot', `${name}-${size.name}`, JSON.stringify(now.camera), now.phase);
@@ -156,7 +161,7 @@ async function run(browser, runtime, size, log) {
     await waitPhase(page, 'encounter');
   };
 
-  await page.goto(`${ORIGIN}/`, { waitUntil: 'load' });
+  await page.goto(`${ORIGIN}${BASE_PATH}`, { waitUntil: 'load' });
   await waitFor(page, () => Boolean(window.__parallangLevel) && window.__parallang.store.getState().connection === 'ready');
   await shot('1-attract', { settle: 3000 });
 
@@ -168,18 +173,18 @@ async function run(browser, runtime, size, log) {
   await waitPhase(page, 'encounter');
   await shot('3-approach', { settle: 1800 }); // the sheet is up and the camera has slid to the free area
   await answerSite();
-  await shot('3-approach-resolved');
+  if (EXTRA) await shot('x-site-1-resolved');
 
-  await walk('Walk on to', '4-walk', [0.3, 0.62, 0.86]);
+  await walk('Walk on to', '4-walk', EXTRA ? [0.3, 0.62, 0.86] : [0.3, 0.62]); // through the gopura, then the gate tree
   await shot('5-site-2', { settle: 1800 });
   await answerSite();
-  await walk('Walk on to', '6-walk-2', [0.6]);
-  await shot('7-site-3', { settle: 1800 });
+  await walk('Walk on to', 'x-walk-to-site-3', EXTRA ? [0.6] : []);
+  await shot('6-site-3', { settle: 1800 });
   await answerSite();
 
   await clickButton(page, 'Leave the temple');
   await waitArrived(page, 'victory');
-  await shot('8-victory', { settle: 1500 });
+  await shot('7-victory', { settle: 1500 });
 
   // A reload on a finished run stays on the victory screen; a new run returns to the route.
   await page.reload({ waitUntil: 'load' });
@@ -188,9 +193,9 @@ async function run(browser, runtime, size, log) {
   await waitPhase(page, 'overview');
 
   // Not part of a normal run: where a reload in the middle of a run lands (an approach to sites 2 and 3).
-  for (const index of [1, 2]) {
+  for (const index of EXTRA ? [1, 2] : []) {
     await page.evaluate((site) => { const level = window.__parallangLevel; level.setPhase({ phase: 'approach', siteIndex: site }); level.director.skip(); }, index);
-    await shot(`9-resume-site-${index + 1}`, { settle: 1200 });
+    await shot(`x-resume-site-${index + 1}`, { settle: 1200 });
   }
   await context.close();
   return problems;

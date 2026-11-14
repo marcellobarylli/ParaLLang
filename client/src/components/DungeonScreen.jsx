@@ -163,6 +163,9 @@ export default function DungeonScreen({ useStore }) {
   const nextSite = dungeon.sites[siteIndex + 1] ?? null;
   const inEncounter = phase === 'encounter';
   const returnLabel = inEncounter ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the temple';
+  // Meanings stay hidden while a conversation is open or opening, whatever the snapshot says (round 017; review 1, R1.4).
+  const conversing = state.encounter?.state === 'ongoing' || state.encounterLoading;
+  const spellbook = conversing && !state.spellbook.inEncounter ? { ...state.spellbook, inEncounter: true } : state.spellbook;
 
   return (
     <div className={`app-shell phase-${phase}`}>
@@ -195,7 +198,7 @@ export default function DungeonScreen({ useStore }) {
 
       {state.view !== 'dialogue' && (
         <div className="overlay">
-          {state.view === 'spellbook' && <Spellbook spellbook={state.spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
+          {state.view === 'spellbook' && <Spellbook spellbook={spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
           {state.view === 'review' && <ReviewPanel
             key={state.reviewChallenge?.id ?? 'result'}
             challenge={state.reviewChallenge} result={state.reviewResult} language={state.language} isLoading={state.isLoading}

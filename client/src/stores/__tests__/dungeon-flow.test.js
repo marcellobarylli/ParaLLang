@@ -297,3 +297,90 @@ test('opening the Spellbook shows the last snapshot and then the one the server 
   s().returnToDialogue();
   expect(s().view).toBe('dialogue');
 });
+
+// Review 1 (Codex), findings R1.2 to R1.5.
+async function playToVictory(s) {
+  await s().initialize();
+  s().enter();
+  await s().start();
+  for (const answer of ['Ciao!', 'Un caffè.', 'Grazie.']) {
+    s().onCameraArrived();
+    await s().sendMessage(answer);
+    await s().walkOn();
+  }
+  expect(s().phase).toBe('victory');
+}
+
+test('the last answer and Play again: the answer\'s own read of the run is dropped when the reset lands first (R1.2)', async () => {
+  const late = deferred();
+  const { server, api, s } = makeStore({ cleared: 2 });
+  await s().initialize();
+  s().onCameraArrived();
+  expect(s().phase).toBe('encounter');
+  const view = api.getDungeon.getMockImplementation();
+  api.getDungeon.mockImplementationOnce(async () => { const finished = await view(); await late.promise; return finished; });
+  const send = s().sendMessage('Grazie.'); // resolves the run; its read of the progress hangs
+  await vi.waitFor(() => expect(s().encounter.state).toBe('resolved'));
+  expect(server.cleared).toBe(3);
+  // The player leaves (walkOn reads the run itself, which outdates the hanging read) and starts a new run.
+  await s().walkOn();
+  expect(s().phase).toBe('victory');
+  await s().playAgain();
+  expect(s().progress).toMatchObject({ run: 2, clearedEncounterIds: [], complete: false });
+  late.resolve();
+  await send;
+  expect(s().progress).toMatchObject({ run: 2, clearedEncounterIds: [], complete: false });
+  await s().start();
+  expect(s()).toMatchObject({ phase: 'approach', siteIndex: 0 });
+});
+
+test('a reset that answers after new settings changes nothing (R1.3)', async () => {
+  const late = deferred();
+  const { api, s } = makeStore();
+  await playToVictory(s);
+  const reset = api.resetDungeon.getMockImplementation();
+  api.resetDungeon.mockImplementationOnce(async (...args) => { await late.promise; return reset(...args); });
+  const again = s().playAgain();
+  await s().saveSettings({ serverUrl: 'https://other.example.com', token: 'another-token' });
+  expect(s()).toMatchObject({ phase: 'victory', isLoading: false }); // the new server's view of the run
+  const startsBefore = api.startEncounter.mock.calls.length;
+  late.resolve();
+  await again;
+  expect(s()).toMatchObject({ phase: 'victory', isLoading: false, encounterLoading: false });
+  expect(api.startEncounter.mock.calls.length).toBe(startsBefore);
+});
+
+test('a Spellbook read sent before a conversation opened is not applied over the conversation\'s Spellbook (R1.4)', async () => {
+  const late = deferred();
+  const opening = deferred();
+  const { api, s } = makeStore();
+  const started = api.startEncounter.getMockImplementation();
+  api.startEncounter.mockImplementation(async (...args) => { await opening.promise; return { ...(await started(...args)), spellbook: { ...spellbook, inEncounter: true, dueCount: 3 } }; });
+  api.getSpellbook.mockImplementationOnce(() => late.promise);
+  await s().initialize();
+  s().enter();
+  const start = s().start();
+  await vi.waitFor(() => expect(s().encounterLoading).toBe(true));
+  s().openSpellbook(); // the read leaves while the greeting is still being written
+  opening.resolve(); // the conversation opens and brings its own Spellbook
+  await start;
+  expect(s()).toMatchObject({ view: 'spellbook', spellbook: { inEncounter: true, dueCount: 3 } });
+  late.resolve({ ...spellbook, inEncounter: false, dueCount: 9, cards: [{ vocabularyId: 'ciao', meanings: ['hello'] }] });
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(s().spellbook).toMatchObject({ inEncounter: true, dueCount: 3 });
+  expect(s().spellbook.cards).toEqual([]);
+});
+
+test('a Start over that fails says so in the conversation, which stays as it was (R1.5)', async () => {
+  const { api, s } = makeStore();
+  await s().initialize();
+  s().enter();
+  await s().start();
+  s().onCameraArrived();
+  const conversation = s().encounter.id;
+  api.startEncounter.mockImplementationOnce(async () => { throw Object.assign(new Error('The selected CLI timed out.'), { code: 'CLI_TIMEOUT' }); });
+  await s().restartSite();
+  expect(s()).toMatchObject({ phase: 'encounter', siteError: null, encounterLoading: false });
+  expect(s().error).toBe('The conversation could not start over: The selected CLI timed out.');
+  expect(s().encounter.id).toBe(conversation);
+});

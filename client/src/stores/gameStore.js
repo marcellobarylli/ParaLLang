@@ -39,6 +39,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
   let initializationPromise = null;
   let requestEpoch = 0; // a new learner or server: older replies are dropped
   let siteRequest = 0; // the newest site start wins
+  let progressRequest = 0; // the newest read of the run wins, and a reset outdates every read before it
+  let spellbookVersion = 0; // counts the Spellbooks taken from replies, so a slower, older read is not applied over them
 
   return create((set, get) => {
     const api = givenApi ?? createLearningApi({ getSettings: () => get().settings });
@@ -51,13 +53,20 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       if (MOVING.has(s.phase) && s.cameraArrived && s.encounter && s.encounter.encounterId === site?.encounterId) set({ phase: 'encounter' });
     };
 
+    // Review 1 (R1.2): a read that a reset, new settings or a newer read has overtaken is dropped.
     const refreshProgress = async (learnerId) => {
+      const request = ++progressRequest;
+      const epoch = requestEpoch;
       try {
         const view = await api.getDungeon(learnerId, dungeon.id);
-        if (get().learnerId === learnerId) set({ progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon) });
+        if (request !== progressRequest || epoch !== requestEpoch || get().learnerId !== learnerId) return null;
+        set({ progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon) });
         return view.progress;
       } catch { return null; }
     };
+
+    // Every Spellbook from a reply goes through here (review 1, R1.4).
+    const withSpellbook = (spellbook) => { spellbookVersion += 1; return spellbook; };
 
     const showVictory = () => set({ phase: 'victory', encounter: null, encounterLoading: false, siteError: null, assessment: null, cameraArrived: false, view: 'dialogue', draft: '', pendingInput: null });
 
@@ -80,7 +89,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           result = await startSite(true);
         }
         if (stale()) return;
-        const patch = { encounter: result.encounter, spellbook: result.spellbook, encounterLoading: false, assessment: null, draft: '', pendingInput: null };
+        const patch = { encounter: result.encounter, spellbook: withSpellbook(result.spellbook), encounterLoading: false, assessment: null, draft: '', pendingInput: null };
         const index = siteIndexOf(result.encounter.encounterId);
         // Another tab moved the run on: the camera goes to the site the server started.
         if (index >= 0 && index !== get().siteIndex) Object.assign(patch, { siteIndex: index, phase: 'approach', walkFrom: null, cameraArrived: false });
@@ -93,7 +102,10 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           await refreshProgress(learnerId);
           return;
         }
-        set({ siteError: error.message, encounterLoading: false });
+        // A failed start on the way to a site shows in the travel caption, with a retry. A failed Start over leaves the
+        // player in the conversation, where the banner says so (review 1, R1.5).
+        if (get().phase === 'encounter') set({ error: `The conversation could not start over: ${error.message}`, encounterLoading: false });
+        else set({ siteError: error.message, encounterLoading: false });
       }
     };
 
@@ -211,12 +223,16 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       playAgain: async () => {
         const { learnerId, isLoading } = get();
         if (!learnerId || isLoading) return;
+        const epoch = requestEpoch;
+        const current = () => epoch === requestEpoch && get().learnerId === learnerId; // review 1 (R1.3): not after new settings
         set({ isLoading: true, error: null });
         try {
           const view = await api.resetDungeon(learnerId, dungeon.id);
+          if (!current()) return;
           siteRequest += 1;
-          set({ progress: view.progress, phase: 'overview', siteIndex: 0, walkFrom: null, cameraArrived: false, encounter: null, assessment: null, isLoading: false, view: 'dialogue' });
-        } catch (error) { set({ error: error.message, isLoading: false }); }
+          progressRequest += 1; // a read of the finished run still in flight must not undo the reset (R1.2)
+          set({ progress: view.progress, phase: 'overview', siteIndex: 0, walkFrom: null, cameraArrived: false, encounter: null, encounterLoading: false, siteError: null, assessment: null, isLoading: false, view: 'dialogue' });
+        } catch (error) { if (current()) set({ error: error.message, isLoading: false }); }
       },
 
       openSettings: () => set({ settingsOpen: true }),
@@ -226,6 +242,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const settings = persistSettings(values, storage);
         requestEpoch += 1;
         siteRequest += 1;
+        progressRequest += 1;
+        spellbookVersion += 1;
         initializationPromise = null;
         const phase = get().phase === 'attract' ? 'attract' : 'overview';
         set({
@@ -248,7 +266,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         try {
           const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text });
           if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
-          set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
+          set({ encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
           if (result.encounter.state === 'resolved') await refreshProgress(learnerId);
         } catch (error) {
           if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
@@ -263,7 +281,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         try {
           const result = await api.revealHelp(learnerId, { encounterId: encounter.id, version, kind, messageId, vocabularyId });
           if (get().learnerId !== learnerId || get().encounter?.version !== version) return;
-          set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false });
+          set({ encounter: result.encounter, spellbook: withSpellbook(result.spellbook), isLoading: false });
         } catch (error) { set({ error: error.message, isLoading: false }); }
       },
 
@@ -273,8 +291,11 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const { learnerId } = get();
         if (!learnerId || !api.getSpellbook) return;
         const epoch = requestEpoch;
+        const version = spellbookVersion;
         api.getSpellbook(learnerId).then((spellbook) => {
-          if (epoch === requestEpoch && get().learnerId === learnerId && get().view === 'spellbook' && spellbook?.cards) set({ spellbook });
+          // Not over a newer Spellbook: a read sent before a conversation opened would show its meanings (R1.4).
+          const fresh = epoch === requestEpoch && version === spellbookVersion && get().learnerId === learnerId && get().view === 'spellbook';
+          if (fresh && spellbook?.cards) set({ spellbook: withSpellbook(spellbook) });
         }).catch(() => {});
       },
       returnToDialogue: () => set({ view: 'dialogue', reviewChallenge: null, reviewResult: null, error: null }),
@@ -285,7 +306,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({ isLoading: true, error: null, reviewResult: null });
         try {
           const result = await api.createReview(learnerId, vocabularyId);
-          set({ reviewChallenge: result.challenge, spellbook: result.spellbook, view: result.challenge ? 'review' : 'spellbook', isLoading: false });
+          set({ reviewChallenge: result.challenge, spellbook: withSpellbook(result.spellbook), view: result.challenge ? 'review' : 'spellbook', isLoading: false });
         } catch (error) { set({ error: error.message, isLoading: false }); }
       },
 
@@ -295,7 +316,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({ isLoading: true, error: null });
         try {
           const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'answer', answer: String(answer).trim() });
-          set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
+          set({ reviewResult: result.result, spellbook: withSpellbook(result.spellbook), reviewChallenge: null, isLoading: false });
         } catch (error) { set({ error: error.message, isLoading: false }); }
       },
 
@@ -305,7 +326,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({ isLoading: true, error: null });
         try {
           const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'reveal', answer: '' });
-          set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
+          set({ reviewResult: result.result, spellbook: withSpellbook(result.spellbook), reviewChallenge: null, isLoading: false });
         } catch (error) { set({ error: error.message, isLoading: false }); }
       },
     };

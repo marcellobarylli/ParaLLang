@@ -221,6 +221,20 @@ test('a reload in the middle of a run opens the next site, and Start over begins
   expect(screen.getByLabelText('Conversation with Gerald')).toBeTruthy();
 });
 
+// Review 1 (R1.4): round 017's rule holds on the screen even when the store's snapshot says no conversation is open.
+test('the Spellbook hides meanings while a conversation is open, whatever its snapshot says', async () => {
+  const user = userEvent.setup();
+  fakeServer({ cleared: 1 });
+  const store = renderScreen();
+  await screen.findByText('Order a coffee using Italian.');
+  act(() => store.setState({ spellbook: { cards: [{ ...cards[0], due: false, nextReviewAt: '2999-01-01T00:00:00Z' }], dueCount: 0, inEncounter: false } }));
+  vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {}))); // the refresh behind the snapshot never answers
+  await user.click(screen.getByRole('button', { name: /Spellbook/ }));
+  expect(await screen.findByText(/Meanings are hidden and reviews wait/)).toBeTruthy();
+  expect(screen.getByText('Meaning hidden')).toBeTruthy();
+  expect(screen.queryByText('coffee')).toBeNull();
+});
+
 test('with no server the title and the route show, and Start explains and leads to the settings', async () => {
   const user = userEvent.setup();
   const fetchMock = vi.fn();
