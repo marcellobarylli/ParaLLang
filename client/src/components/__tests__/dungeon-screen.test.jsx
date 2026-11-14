@@ -1,12 +1,15 @@
+// Round 115: the dungeon screen through its real components, in jsdom (no WebGL: the still backdrop stands in and
+// the camera arrives at once). The Spellbook and pronunciation checks below are the old single-encounter screen's.
 import React from 'react';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, test, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import App from '../../App.jsx';
+import DungeonScreen from '../DungeonScreen.jsx';
 import DialoguePanel from '../DialoguePanel.jsx';
 import PronounceButton from '../PronounceButton.jsx';
 import Spellbook from '../Spellbook.jsx';
-import { useGameStore } from '../../stores/gameStore.js';
+import { createGameStore } from '../../stores/gameStore.js';
+import { DUNGEON } from '../../dungeon.js';
 
 const spanishLanguage = { code: 'es', name: 'Spanish', tag: 'es-ES' };
 const italianLanguage = { code: 'it', name: 'Italian', tag: 'it-IT' };
@@ -34,44 +37,63 @@ const cards = [
 const spellbook = { cards, dueCount: 2, contentVersion: 'gerald-coffee-v1' };
 const response = (status, data) => ({ ok: status >= 200 && status < 300, status, json: async () => data });
 
-beforeEach(() => {
-  localStorage.clear();
-  useGameStore.setState({
-    learnerId: null, language: null, encounter: null, spellbook: { cards: [], dueCount: 0, contentVersion: null },
-    view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null,
-    draft: '', pendingInput: null, isLoading: false, error: null,
-  });
-});
-afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
-test('actual learning UI enforces help, retains failed input, resolves, reviews, reveals, and returns', async () => {
-  const user = userEvent.setup();
-  let currentEncounter = encounter();
-  let dialogueCalls = 0;
-  let reviewCalls = 0;
+const learnerId = '11111111-1111-4111-8111-111111111111';
+const SITE_IDS = DUNGEON.sites.map((site) => site.encounterId);
+const CAST = [
+  { name: 'Portia', objective: 'Greet Portia in Italian.', resolved: 'Portia sighs with relief, unlocks herself and lets you into the market.', briefing: ['Portia only lets in people who greet her properly.'] },
+  { name: 'Gerald', objective: 'Order a coffee using Italian.', resolved: null, briefing: null },
+  { name: 'Bambieshart', objective: 'Thank Bambieshart.', resolved: 'Bambieshart bows and steps aside.', briefing: null },
+];
+const memoryStorage = () => { const values = new Map(); return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } }; };
+
+// The server in miniature, behind fetch: a run of three sites, one conversation at a time.
+function fakeServer({ cleared = 0, failFirstSend = false, failFirstStart = false } = {}) {
+  const server = { cleared, session: null, sessions: 0, sends: 0, starts: 0, reviews: 0, paths: [] };
+  const siteEncounter = (index, version, options = {}) => ({
+    ...encounter(version, options), id: `encounter-${server.sessions}`, encounterId: SITE_IDS[index], dungeonId: DUNGEON.id,
+    character: { id: CAST[index].name.toLowerCase(), name: CAST[index].name }, resolvedMessage: CAST[index].resolved, companionBriefing: CAST[index].briefing,
+    currentObjective: options.resolved ? null : { id: 'objective', prompt: CAST[index].objective },
+  });
+  const view = () => ({
+    dungeon: { id: DUNGEON.id, name: DUNGEON.name, level: DUNGEON.level, route: DUNGEON.route, sites: DUNGEON.sites.map((site, index) => ({ ...site, characterName: CAST[index].name })) },
+    progress: { run: 1, clearedEncounterIds: SITE_IDS.slice(0, server.cleared), nextSiteIndex: server.cleared < 3 ? server.cleared : null, nextEncounterId: SITE_IDS[server.cleared] ?? null, complete: server.cleared >= 3 },
+  });
   const fetchMock = vi.fn(async (url, init = {}) => {
     const path = String(url);
     const body = init.body ? JSON.parse(init.body) : {};
-    if (path === '/api/learner') return response(201, { learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: spanishLanguage });
-    if (path === '/api/encounter/start') return response(200, { encounter: currentEncounter, spellbook });
+    server.paths.push(path);
+    if (path === '/api/learner') return response(201, { learnerId, recovered: false, language: italianLanguage });
+    if (path === '/api/dungeons/ta_prohm') return response(200, view());
+    if (path === '/api/dungeons/ta_prohm/reset') { server.cleared = 0; server.session = null; return response(200, view()); }
+    if (path === '/api/encounter/start') {
+      server.starts += 1;
+      if (failFirstStart && server.starts === 1) return response(503, { error: { code: 'CLI_TIMEOUT', message: 'The selected CLI timed out. Your progress was not changed.', retryable: true } });
+      expect(body.dungeonId).toBe('ta_prohm');
+      server.sessions += 1;
+      server.session = { index: server.cleared, version: 1 };
+      return response(200, { encounter: siteEncounter(server.cleared, 1), spellbook: { ...spellbook, inEncounter: true } });
+    }
     if (path === '/api/encounter/help') {
-      if (body.kind === 'word') currentEncounter = encounter(2, { cafeMeaning: true });
-      else currentEncounter = encounter(3, { cafeMeaning: true, translated: true, exhausted: true });
-      return response(200, { reveal: { kind: body.kind, value: body.kind === 'word' ? 'coffee' : 'Do you want a coffee?' }, charged: true, encounter: currentEncounter, spellbook });
+      const options = body.kind === 'word' ? { cafeMeaning: true } : { cafeMeaning: true, translated: true, exhausted: true };
+      server.session.version = body.kind === 'word' ? 2 : 3;
+      return response(200, { reveal: { kind: body.kind }, charged: true, encounter: siteEncounter(server.session.index, server.session.version, options), spellbook });
     }
     if (path === '/api/encounter/dialogue') {
-      dialogueCalls += 1;
-      if (dialogueCalls === 1) return response(503, { error: { message: 'Grading is temporarily unavailable; retry your answer.', retryable: true } });
-      currentEncounter = encounter(4, { resolved: true, allVisible: true });
+      server.sends += 1;
+      if (failFirstSend && server.sends === 1) return response(503, { error: { message: 'Grading is temporarily unavailable; retry your answer.', retryable: true } });
+      const index = server.session.index;
+      server.cleared = index + 1;
       return response(200, {
-        encounter: currentEncounter, spellbook,
-        assessment: { overallFeedback: 'Your contextual order passed.', objectiveResults: [{ objectiveId: 'order_coffee', passed: true, feedback: 'Coffee requested.' }, { objectiveId: 'no_milk', passed: true, feedback: 'No milk specified.' }] },
+        encounter: siteEncounter(index, 4, { resolved: true, allVisible: true }), spellbook,
+        assessment: { overallFeedback: `Your answer to ${CAST[index].name} passed.`, objectiveResults: [{ objectiveId: 'objective', passed: true, feedback: 'Well said.' }] },
       });
     }
+    if (path === '/api/spellbook') return response(200, spellbook);
     if (path === '/api/spellbook/review') {
-      reviewCalls += 1;
-      const target = reviewCalls === 1 ? cards[0] : cards[1];
-      return response(200, { challenge: { id: `challenge-${reviewCalls}`, vocabularyId: target.vocabularyId, target: target.target, kind: target.kind, practice: false }, spellbook });
+      server.reviews += 1;
+      const target = server.reviews === 1 ? cards[0] : cards[1];
+      return response(200, { challenge: { id: `challenge-${server.reviews}`, vocabularyId: target.vocabularyId, target: target.target, kind: target.kind, practice: false }, spellbook });
     }
     if (path === '/api/spellbook/review/submit') {
       const revealed = body.action === 'reveal';
@@ -83,40 +105,88 @@ test('actual learning UI enforces help, retains failed input, resolves, reviews,
     throw new Error(`Unexpected fetch ${path}`);
   });
   vi.stubGlobal('fetch', fetchMock);
-  render(<App />);
-  await screen.findByText('Order a coffee using Spanish.');
-  expect(screen.getByText(/Spanish target: 25%/)).toBeTruthy(); // language from /api/learner reaches the labels
+  return server;
+}
+
+function renderScreen(options = {}) {
+  const store = createGameStore({ dungeon: DUNGEON, storage: memoryStorage(), ...options });
+  render(<DungeonScreen useStore={store} />);
+  return store;
+}
+
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+
+test('a whole run on the screen: title, route, three conversations with a walk between them, victory, reviews, a new run', async () => {
+  const user = userEvent.setup();
+  const server = fakeServer({ failFirstSend: true });
+  renderScreen();
+
+  // Attract: the title and Enter. The level is a still backdrop here (no WebGL in jsdom).
+  expect(screen.getByRole('heading', { name: 'ParaLLang' })).toBeTruthy();
+  await screen.findByText(/answer in Italian/); // the language arrives with the learner
+  await user.click(screen.getByRole('button', { name: 'Enter' }));
+
+  // Overview: the three sites in order, with the characters the server named.
+  expect(screen.getByRole('heading', { name: 'Ta Prohm' })).toBeTruthy();
+  const sites = screen.getAllByRole('listitem').filter((item) => item.closest('.site-list'));
+  expect(sites.map((item) => item.textContent)).toEqual(['1The Face GatePortia', '2The Root CourtGerald', '3Before the SanctuaryBambieshart']);
+  expect(screen.getByLabelText('0 of 3 sites cleared')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Start' }));
+
+  // Site 1: Portia's tutorial, with the companion's briefing.
+  await screen.findByText('Greet Portia in Italian.');
+  expect(screen.getByLabelText('Conversation with Portia')).toBeTruthy();
+  expect(screen.getByLabelText("Your companion's briefing").textContent).toContain('Portia only lets in people who greet her properly.');
+  expect(screen.getByText(/Italian target: 25%/)).toBeTruthy();
   expect(screen.queryByText('Do you want a coffee? Without milk is civilized.')).toBeNull();
 
+  // Help is paid from the hint allowance, never given by hover or touch.
   const native = screen.getByText('¿Quieres un café? Sin leche is civilized.');
   fireEvent.mouseEnter(native);
   fireEvent.touchStart(native);
-  expect(fetchMock).toHaveBeenCalledTimes(2); // identity + start; no hover/touch reveal
-
-  const wordButton = screen.getByRole('button', { name: 'Translate word: café' });
-  wordButton.focus();
-  await user.keyboard('{Enter}');
-  expect((await screen.findByRole('status')).textContent).toContain('coffee');
-  expect(screen.getByText(/Hints: 1\/2/)).toBeTruthy();
+  expect(server.paths.filter((path) => path === '/api/encounter/help')).toEqual([]);
+  await user.click(screen.getByRole('button', { name: 'Translate word: café' }));
+  await screen.findByText(/Hints: 1\/2/);
   await user.click(screen.getByRole('button', { name: 'Translate sentence' }));
   await screen.findByText('Do you want a coffee? Without milk is civilized.');
   expect(screen.getByText(/Hints: 0\/2/)).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Translate word: sin leche' }).disabled).toBe(true);
 
+  // A failed send keeps the answer.
   const input = screen.getByLabelText('Your response');
-  await user.type(input, 'Un café sin leche.');
+  expect(input.placeholder).toBe('Reply to Portia…');
+  await user.type(input, 'Ciao, Portia!');
   await user.click(screen.getByRole('button', { name: 'Send' }));
-  await screen.findByRole('alert');
-  expect(input.value).toBe('Un café sin leche.');
+  expect((await screen.findByRole('alert')).textContent).toMatch(/Grading is temporarily unavailable/);
+  expect(input.value).toBe('Ciao, Portia!');
   await user.click(screen.getByRole('button', { name: 'Send' }));
-  await screen.findByText('Your contextual order passed.');
-  expect(screen.getByText(/Gerald grudgingly approves/)).toBeTruthy();
-  expect(screen.getByPlaceholderText('Order accepted. Restart to play again.').disabled).toBe(true);
+  await screen.findByText('Your answer to Portia passed.');
+  expect(screen.getByText(/Portia sighs with relief/)).toBeTruthy();
+  expect(screen.queryByLabelText('Your response')).toBeNull();
+  expect(screen.getByLabelText('1 of 3 sites cleared')).toBeTruthy();
 
-  await user.click(screen.getByRole('button', { name: /Spellbook/ }));
+  // The walk starts when the player says so.
+  await user.click(screen.getByRole('button', { name: 'Walk on to The Root Court' }));
+  await screen.findByText('Order a coffee using Italian.');
+  expect(screen.getByLabelText('Conversation with Gerald')).toBeTruthy();
+  expect(screen.queryByLabelText("Your companion's briefing")).toBeNull();
+  await user.type(screen.getByLabelText('Your response'), 'Un caffè senza latte.');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  await screen.findByText('Your answer to Gerald passed.');
+  expect(screen.getByText('Gerald lets you pass.')).toBeTruthy(); // no authored message: a plain one
+  await user.click(screen.getByRole('button', { name: 'Walk on to Before the Sanctuary' }));
+  await screen.findByText('Thank Bambieshart.');
+  await user.type(screen.getByLabelText('Your response'), 'Grazie!');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  await screen.findByText(/Bambieshart bows/);
+  await user.click(screen.getByRole('button', { name: 'Leave the temple' }));
+
+  // Victory, and the reviews that waited during the conversations.
+  expect(await screen.findByRole('heading', { name: 'Dungeon cleared' })).toBeTruthy();
+  expect(screen.getByLabelText('3 of 3 sites cleared')).toBeTruthy();
+  await user.click(screen.getAllByRole('button', { name: /Spellbook/ })[0]);
   expect(await screen.findByRole('heading', { name: 'Spellbook' })).toBeTruthy();
   expect(screen.getByText('2 due for review')).toBeTruthy();
-  expect(screen.getAllByText('discovered').length).toBe(2);
   await user.click(screen.getAllByRole('button', { name: 'Review' })[0]);
   await screen.findByRole('heading', { name: 'café' });
   await user.type(screen.getByLabelText('English meaning'), 'coffee');
@@ -124,12 +194,57 @@ test('actual learning UI enforces help, retains failed input, resolves, reviews,
   await screen.findByText('Correct.');
   await user.click(screen.getByRole('button', { name: 'Continue reviews' }));
   await screen.findByRole('heading', { name: 'sin leche' });
-  expect(screen.getByLabelText('English meaning').value).toBe(''); // previous answer must not carry over
+  expect(screen.getByLabelText('English meaning').value).toBe(''); // the previous answer does not carry over
   await user.click(screen.getByRole('button', { name: 'Show answer' }));
   await screen.findByText(/recorded as quality 0/);
   expect(screen.getByText('Answer:').parentElement.textContent).toContain('without milk');
-  await user.click(screen.getByRole('button', { name: 'Return to Gerald' }));
-  expect(await screen.findByLabelText('Conversation with Gerald')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Back to the temple' }));
+  expect(screen.queryByRole('heading', { name: 'Review feedback' })).toBeNull();
+
+  await user.click(screen.getByRole('button', { name: 'Play again' }));
+  expect(await screen.findByRole('button', { name: 'Start' })).toBeTruthy();
+  expect(screen.getByLabelText('0 of 3 sites cleared')).toBeTruthy();
+});
+
+test('a reload in the middle of a run opens the next site, and Start over begins its conversation again', async () => {
+  const user = userEvent.setup();
+  const server = fakeServer({ cleared: 1 });
+  renderScreen();
+  await screen.findByText('Order a coffee using Italian.');
+  expect(screen.getByLabelText('1 of 3 sites cleared')).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Enter' })).toBeNull();
+  await user.click(screen.getByRole('button', { name: 'Start over' }));
+  await waitFor(() => expect(server.starts).toBe(2));
+  // The Spellbook says where it returns to while a conversation is open.
+  await user.click(screen.getByRole('button', { name: /Spellbook/ }));
+  await user.click(await screen.findByRole('button', { name: 'Back to Gerald' }));
+  expect(screen.getByLabelText('Conversation with Gerald')).toBeTruthy();
+});
+
+test('with no server the title and the route show, and Start explains and leads to the settings', async () => {
+  const user = userEvent.setup();
+  const fetchMock = vi.fn();
+  vi.stubGlobal('fetch', fetchMock);
+  renderScreen({ sameOrigin: false });
+  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  expect(screen.getByText('The Face Gate')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Start' }));
+  expect((await screen.findByRole('alert')).textContent).toMatch(/No server is set/);
+  expect(fetchMock).not.toHaveBeenCalled();
+  await user.click(screen.getByRole('button', { name: 'Open Settings' }));
+  expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
+});
+
+test('a site that fails to start says why and offers another try', async () => {
+  const user = userEvent.setup();
+  fakeServer({ failFirstStart: true });
+  renderScreen();
+  await screen.findByText(/answer in Italian/);
+  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await user.click(screen.getByRole('button', { name: 'Start' }));
+  expect((await screen.findByRole('alert')).textContent).toMatch(/CLI timed out/);
+  await user.click(screen.getByRole('button', { name: 'Try again' }));
+  await screen.findByText('Greet Portia in Italian.');
 });
 
 test('loading plus empty and no-due states remain understandable', () => {
@@ -171,41 +286,6 @@ test('a card that fell due while the Spellbook is open hides its meaning (round 
 test('a card the server withheld (round 106) renders as hidden, not as a crash', () => {
   render(<Spellbook spellbook={{ cards: [{ ...cards[1], due: false, nextReviewAt: '2999-01-01T00:00:00Z', meanings: null, note: null, withheld: { meaning: true, example: true } }], dueCount: 0, inEncounter: false }} isLoading={false} onReview={() => {}} onReturn={() => {}} />);
   expect(screen.getAllByText('Meaning hidden').length).toBe(1);
-});
-
-test('CLI provider error is actionable, clears pending state, and retains input', async () => {
-  const user = userEvent.setup();
-  let resolveDialogue;
-  const fetchMock = vi.fn(async (url) => {
-    const path = String(url);
-    if (path === '/api/learner') return response(201, { learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: spanishLanguage });
-    if (path === '/api/encounter/start') return response(200, { encounter: encounter(), spellbook });
-    if (path === '/api/encounter/dialogue') return new Promise((resolveRequest) => { resolveDialogue = resolveRequest; });
-    throw new Error(`Unexpected fetch ${path}`);
-  });
-  vi.stubGlobal('fetch', fetchMock);
-  useGameStore.setState({
-    learnerId: '11111111-1111-4111-8111-111111111111',
-    language: spanishLanguage,
-    encounter: encounter(),
-    spellbook,
-    isLoading: false,
-  });
-  render(<App />);
-  await screen.findByText('Order a coffee using Spanish.');
-  const input = screen.getByLabelText('Your response');
-  await user.type(input, 'Un café sin leche.');
-  await user.click(screen.getByRole('button', { name: 'Send' }));
-  expect(screen.getByRole('status').textContent).toMatch(/considering/);
-  expect(input.value).toBe('Un café sin leche.');
-  await act(async () => resolveDialogue(response(503, { error: {
-    code: 'CLI_AUTH_REQUIRED',
-    message: 'The selected CLI is not signed in with its native subscription. Sign in with the official CLI, run npm run check:provider, then retry.',
-    retryable: false,
-  } })));
-  expect((await screen.findByRole('alert')).textContent).toMatch(/Sign in with the official CLI/);
-  expect(input.disabled).toBe(false);
-  expect(input.value).toBe('Un café sin leche.');
 });
 
 describe('pronunciation boundary', () => {

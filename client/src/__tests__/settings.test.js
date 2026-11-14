@@ -52,22 +52,26 @@ test('requests go to the server URL and carry the token header; 401 and no answe
 
 test('the store explains a missing server without a request, and saved settings reconnect with the new URL and token', async () => {
   const storage = memoryStorage();
+  const dungeon = { id: 'ta_prohm', name: 'Ta Prohm', level: 'taprohm', sites: [{ encounterId: 'market_entrance_tutorial', name: 'The Face Gate', at: [3.5, 63], characterName: null }], route: [[0, 96], [3.5, 63]] };
+  const progress = { run: 1, clearedEncounterIds: [], nextSiteIndex: 0, nextEncounterId: 'market_entrance_tutorial', complete: false };
   const fetchImpl = vi.fn(async (url) => (String(url).endsWith('/api/learner')
     ? ok({ learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: { code: 'it', name: 'Italian', tag: 'it-IT' } })
-    : ok({ encounter: { id: 'enc-1', version: 1, state: 'ongoing', transcript: [] }, spellbook: { cards: [], dueCount: 0 } })));
+    : ok({ dungeon: { ...dungeon, sites: [{ ...dungeon.sites[0], characterName: 'Portia' }] }, progress })));
   vi.stubGlobal('fetch', fetchImpl);
-  const store = createGameStore({ storage, sameOrigin: false });
+  const store = createGameStore({ storage, dungeon, sameOrigin: false });
   await store.getState().initialize();
-  expect(store.getState().error).toMatch(/No server is set\. Open Settings/);
+  expect(store.getState().serverProblem).toMatch(/No server is set\. Open Settings/);
+  expect(store.getState().connection).toBe('offline');
   expect(fetchImpl).not.toHaveBeenCalled();
 
   store.getState().openSettings();
   expect(store.getState().settingsOpen).toBe(true);
   await store.getState().saveSettings({ serverUrl: 'https://parallang.example.com/', token: 'secret-token' });
   expect(store.getState().settingsOpen).toBe(false);
-  expect(store.getState().error).toBeNull();
-  expect(store.getState().encounter.id).toBe('enc-1');
-  expect(fetchImpl.mock.calls.map(([url]) => url)).toEqual(['https://parallang.example.com/api/learner', 'https://parallang.example.com/api/encounter/start']);
+  expect(store.getState().serverProblem).toBeNull();
+  expect(store.getState().connection).toBe('ready');
+  expect(store.getState().dungeon.sites[0].characterName).toBe('Portia');
+  expect(fetchImpl.mock.calls.map(([url]) => url)).toEqual(['https://parallang.example.com/api/learner', 'https://parallang.example.com/api/dungeons/ta_prohm']);
   for (const [, init] of fetchImpl.mock.calls) expect(init.headers['X-ParaLLang-Token']).toBe('secret-token');
   expect(loadSettings(storage)).toEqual({ serverUrl: 'https://parallang.example.com', token: 'secret-token' });
 });

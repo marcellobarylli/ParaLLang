@@ -1,4 +1,4 @@
-export default function InputBar({ value, onChange, onSend, disabled, loading, resolved }) {
+export default function InputBar({ value, onChange, onSend, disabled, loading, name = 'them' }) {
   const submit = (event) => {
     event.preventDefault();
     if (!disabled && value.trim()) onSend(value);
@@ -10,8 +10,11 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, r
         id="player-response"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder={resolved ? 'Order accepted. Restart to play again.' : loading ? 'Sending your response…' : 'Reply to Gerald…'}
+        placeholder={loading ? 'Sending your response…' : `Reply to ${name}…`}
         disabled={disabled}
+        autoComplete="off"
+        autoCapitalize="sentences"
+        enterKeyHint="send"
       />
       <button type="submit" className="primary-button" disabled={disabled || !value.trim()}>{loading ? 'Sending…' : 'Send'}</button>
     </form>
