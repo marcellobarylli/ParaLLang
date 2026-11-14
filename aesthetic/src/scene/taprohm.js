@@ -419,8 +419,8 @@ function groundColor(x, _y, z) {
   return [base[0] + (p[0] - base[0]) * path, base[1] + (p[1] - base[1]) * path, base[2] + (p[2] - base[2]) * path];
 }
 
-/** Inside the outer wall, clear of galleries, towers and the giants. */
-function isClear(x, z) {
+/** Inside the outer wall, clear of galleries, towers and the giants. Exported for the game's dungeon (round 115). */
+export function isClear(x, z) {
   const ax = Math.abs(x);
   const az = Math.abs(z);
   for (const ring of TA_PROHM.rings) {
