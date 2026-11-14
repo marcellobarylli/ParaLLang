@@ -1,0 +1,47 @@
+# Round 114: publishes the web client to GitHub Pages on every push to main (DJ_Graphyla's setup).
+# One-time setup: repo Settings → Pages → Source: "GitHub Actions". The build's default server URL is the repository
+# variable VITE_API_BASE (Settings → Secrets and variables → Actions → Variables), for example the Render URL. The
+# access token is never built in: each player enters it once in the app's Settings.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mobile/package-lock.json
+      - run: npm ci
+      - run: npm ci --prefix mobile
+      - run: npm test
+      - run: npm run build -w client
+        env:
+          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: client/dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

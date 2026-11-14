@@ -1,0 +1,17 @@
+# Round 114: the image needs the server, content and prompts only.
+**/node_modules
+.git
+.github
+.env
+*.log
+aesthetic
+client/src
+client/public
+client/dist
+docs
+mobile
+parallang_obsidian
+server/data
+server/test
+server/scripts
+tools

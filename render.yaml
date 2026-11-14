@@ -1,0 +1,28 @@
+# Round 114: Render blueprint for the hosted ParaLLang server (New → Blueprint → this repository).
+# Render asks for the two `sync: false` values when the blueprint is created; they stay in Render's secret store.
+# On the free plan the service sleeps after about 15 idle minutes (the first request then waits about a minute) and
+# saves on its disk are lost on every redeploy. A paid plan with the disk below keeps them.
+services:
+  - type: web
+    name: parallang
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LLM_PROVIDER
+        value: claude-cli
+      - key: TARGET_LANGUAGE
+        value: it
+      - key: CLAUDE_CODE_OAUTH_TOKEN
+        sync: false
+      - key: PARALLANG_TOKEN
+        sync: false
+    # Paid plans only: keeps saves across deploys (PARALLANG_SAVE_DIR is /data/saves in the image).
+    # disk:
+    #   name: parallang-saves
+    #   mountPath: /data
+    #   sizeGB: 1
