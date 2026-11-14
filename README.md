@@ -119,7 +119,9 @@ Gerald's coffee order in The Root Court, and Bambieshart Before the Sanctuary. T
 a slow orbit of the whole level (the title), a bird's-eye view with the route and the numbered sites, an approach
 down to site 1, a walk at eye height along the route to each next site, and a pull back out to the orbit when the
 last site is cleared. The dialogue is a bottom sheet on a phone and a side panel from 1100 px. A reload resumes the
-run at its next site.
+run at its next site. Inside a conversation the camera follows the answers (round 116): each objective the player
+closes steps it in towards the site, a verdict is a brief push or pull, and a resolved site turns it to the way on,
+from where "Walk on" starts the walk.
 
 - **Content.** `content/world/dungeons/ta_prohm.yaml` holds the sites and the route in Ta Prohm world units. The
   client bundles it at build time, so the title and the route show before the server answers. The server serves the
@@ -132,9 +134,11 @@ run at its next site.
 - **Run it.** `npm run dev` starts the server and the client's dev server (http://localhost:5173). The dev server
   listens on a port: on a shared machine run it inside a job, never on a login node.
 - **Check it.** `npm test` covers the director, the dungeon file against the level's plan, the store, the screen
-  (jsdom) and the client's store against the real server. `client/scripts/dungeon-shots.mjs` plays the built client
+  (jsdom), the wiring between the screen and the camera (`camera-wiring.test.jsx`, the three.js host mocked) and the
+  client's store against the real server. `client/scripts/dungeon-shots.mjs` plays the built client
   through all three sites in headless Chromium against an in-process server with a fixture provider and writes a
-  screenshot of each camera state at a phone and a desktop size. It needs `puppeteer-core` and a Chrome (see the
+  screenshot of each camera state at a phone and a desktop size. It fails if the gameplay and the camera come apart
+  (a dialogue open while the camera travels, no step in after a closed objective, no turn at a resolve). It needs `puppeteer-core` and a Chrome (see the
   script's header); round 115's pictures are in [`docs/rounds/115/shots/`](docs/rounds/115/shots/).
 
 ## Web client on GitHub Pages, server on Render
