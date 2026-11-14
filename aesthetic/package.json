@@ -1,0 +1,24 @@
+{
+  "name": "@parallang/aesthetic",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PS1-style 3D look for ParaLLang: a portable Three.js renderer and the Angkor Wat dead-branch scene.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./style": "./src/style.js"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "vite": "6.4.6"
+  }
+}
