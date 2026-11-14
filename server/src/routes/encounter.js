@@ -11,7 +11,12 @@ export function createEncounterRouter(service) {
   const router = Router();
   router.post('/start', async (req, res, next) => {
     // Round 021: the app names the encounter at its location; without encounterId the default encounter starts.
-    try { res.json(await service.startEncounter(learnerId(req), { restart: req.body?.restart === true, encounterId: req.body?.encounterId ?? null })); }
+    // Round 114: with dungeonId, the dungeon run's next site starts (see LearningService.startEncounter).
+    try {
+      res.json(await service.startEncounter(learnerId(req), {
+        restart: req.body?.restart === true, encounterId: req.body?.encounterId ?? null, dungeonId: req.body?.dungeonId ?? null,
+      }));
+    }
     catch (error) { next(error); }
   });
   router.get('/current', async (req, res, next) => {

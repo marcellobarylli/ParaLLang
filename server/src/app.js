@@ -54,6 +54,16 @@ export function createApp({ service, logger = console, token = null }) {
     catch (error) { next(error); }
   });
 
+  // Round 114: a dungeon (its sites and route) with the learner's run, and a new run.
+  app.get('/api/dungeons/:id', async (req, res, next) => {
+    try { res.json(await service.getDungeon(req.get('X-Learner-Id'), req.params.id)); }
+    catch (error) { next(error); }
+  });
+  app.post('/api/dungeons/:id/reset', async (req, res, next) => {
+    try { res.json(await service.resetDungeon(req.get('X-Learner-Id'), req.params.id)); }
+    catch (error) { next(error); }
+  });
+
   app.get('/api/party', async (req, res, next) => {
     try { res.json(await service.getParty(req.get('X-Learner-Id'))); }
     catch (error) { next(error); }

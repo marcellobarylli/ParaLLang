@@ -1,12 +1,19 @@
 import { resolve } from 'node:path';
 import { createLLMAdapter } from './src/llm/index.js';
-import { listenHostForProvider, loadRootEnv, resolveTargetLanguage, saveDirForLanguage } from './src/config.js';
+import { listenHostForProvider, loadRootEnv, productionTokenProblem, resolveTargetLanguage, saveDirForLanguage } from './src/config.js';
 import { loadGameContent } from './src/content-loader.js';
 import { JsonLearningStorage } from './src/learning-storage.js';
 import { LearningService } from './src/learning-service.js';
 import { createApp } from './src/app.js';
 
 loadRootEnv();
+
+// Round 114: a hosted (production) server never starts without its access token.
+const tokenProblem = productionTokenProblem();
+if (tokenProblem) {
+  console.error(`ParaLLang server not started: ${tokenProblem}`);
+  process.exit(1);
+}
 
 const port = Number(process.env.PORT || 3001);
 const selectedProvider = process.env.LLM_PROVIDER || 'openai';

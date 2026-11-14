@@ -19,19 +19,34 @@ export function createLearnerEnvelope(learnerId) {
     spellbook: { words: {}, phrases: {}, processedAssessments: {} },
     world: emptyWorldProgress(),
     party: [],
+    dungeons: {}, // round 114
   };
 }
 
 // Version 1 saves (rounds 001-004) hold only the Spellbook; version 2 (rounds 005-020) adds world progress. Both
 // gain what they lack (empty world progress, an empty party) in memory and are written as version 3 on their next save.
+// Round 114: any save without dungeon progress gains an empty one (`dungeons: {}`). It stays version 3: an older server
+// ignores the field, so a save written now still loads there.
 function migrate(value) {
   if (value && typeof value === 'object' && value.schemaVersion === 1) {
-    return { ...value, schemaVersion: SAVE_SCHEMA_VERSION, world: emptyWorldProgress(), party: [] };
+    return { ...value, schemaVersion: SAVE_SCHEMA_VERSION, world: emptyWorldProgress(), party: [], dungeons: {} };
   }
   if (value && typeof value === 'object' && value.schemaVersion === 2) {
-    return { ...value, schemaVersion: SAVE_SCHEMA_VERSION, party: [] };
+    return { ...value, schemaVersion: SAVE_SCHEMA_VERSION, party: [], dungeons: {} };
+  }
+  if (value && typeof value === 'object' && value.schemaVersion === SAVE_SCHEMA_VERSION && value.dungeons === undefined) {
+    return { ...value, dungeons: {} };
   }
   return value;
+}
+
+// Round 114: per dungeon id, the current run: its number (from 1) and the encounter ids of the sites cleared in it, in
+// play order. As for lines, only the container is strict: an invalid entry is dropped and the save kept.
+function validDungeonRun(run) {
+  return Boolean(run) && typeof run === 'object' && !Array.isArray(run)
+    && Number.isInteger(run.run) && run.run >= 1
+    && Array.isArray(run.cleared) && run.cleared.every((id) => typeof id === 'string' && id.length > 0)
+    && new Set(run.cleared).size === run.cleared.length;
 }
 
 // Round 021: party members are defeated, saveable characters, one entry per character, in join order.
@@ -153,6 +168,11 @@ function validateEnvelope(value, learnerId) {
     if (!Array.isArray(value.lines)) throw retryableError('The learner save contains invalid translated lines. The original file was preserved.', 'SAVE_UNREADABLE');
     value.lines = value.lines.filter(validLine).slice(0, LINE_LIMIT);
   }
+  if (value.dungeons === undefined) value.dungeons = {};
+  if (!value.dungeons || typeof value.dungeons !== 'object' || Array.isArray(value.dungeons)) {
+    throw retryableError('The learner save contains invalid dungeon progress. The original file was preserved.', 'SAVE_UNREADABLE');
+  }
+  for (const [id, run] of Object.entries(value.dungeons)) if (!validDungeonRun(run)) delete value.dungeons[id];
   if (value.annexes !== undefined) {
     if (!Array.isArray(value.annexes)) throw retryableError('The learner save contains invalid annex records. The original file was preserved.', 'SAVE_UNREADABLE');
     value.annexes = value.annexes.filter(validAnnexRecord).filter((record, index, all) => all.findIndex((other) => other.id === record.id) === index).slice(0, ANNEX_LIMIT);

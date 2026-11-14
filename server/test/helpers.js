@@ -7,6 +7,7 @@ import { loadGameContent } from '../src/content-loader.js';
 import { JsonLearningStorage } from '../src/learning-storage.js';
 import { LearningService } from '../src/learning-service.js';
 import { createApp } from '../src/app.js';
+import { matchCanonicalVocabulary } from '../src/language-engine.js';
 
 // Round 024: temp dirs made by the tests are removed when the test process exits (node --test runs each file in its
 // own process). Not on runtime close: tests reopen a runtime's save dir to simulate a server restart.
@@ -111,6 +112,36 @@ export class FixtureProvider {
     if (options.schemaName === 'location_atmosphere') return { atmosphere: 'Dust settles on the stalls like it has opinions.' };
     return options.schemaName === 'dialogue_assessment' ? this.grade(messages) : this.narrate(messages);
   }
+}
+
+// Round 114: grades any encounter in any pack. An objective passes when the answer holds an authored form of a target
+// from each of its required groups (the evidence the service checks); narration is the shared fixture's.
+export class PassingProvider extends FixtureProvider {
+  constructor(content) { super(); this.content = content; }
+
+  grade(messages) {
+    const rubric = objectiveRubric(messages[0].content);
+    const answer = JSON.parse(messages.at(-1).content).player_answer;
+    const matches = matchCanonicalVocabulary(answer, this.content.vocabulary.entries);
+    return {
+      objective_results: rubric.map((objective) => {
+        const targets = new Set(objective.targets.map((target) => target.id));
+        const evidence = [];
+        for (const match of matches) {
+          if (targets.has(match.id) && !evidence.some((item) => item.vocabulary_id === match.id)) evidence.push({ vocabulary_id: match.id, evidence: match.excerpt, quality: 5 });
+        }
+        const found = new Set(evidence.map((item) => item.vocabulary_id));
+        const passed = objective.required_target_groups.every((group) => group.some((id) => found.has(id)));
+        return { objective_id: objective.id, passed, feedback: passed ? `Passed ${objective.id}.` : `Keep working on ${objective.id}.`, vocabulary_evidence: evidence };
+      }),
+      overall_feedback: 'Fixture assessment applied.',
+    };
+  }
+}
+
+// Round 114: one answer per objective that the PassingProvider passes (each objective's first accepted example).
+export function passingAnswers(content, encounterId) {
+  return content.encounters.get(encounterId).encounter.objectives.map((objective) => objective.accepted_examples[0]);
 }
 
 export async function createRuntime({ provider = new FixtureProvider(), clock = () => fixedNow, storage, language = 'es', saveDir: baseSaveDir, content: givenContent, serviceOptions = {} } = {}) {

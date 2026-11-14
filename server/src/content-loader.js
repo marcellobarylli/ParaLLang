@@ -187,6 +187,17 @@ const locationSchema = z.object({
   requires_completed: z.array(z.string().min(1)).default([]),
   map: z.object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) }).strict(),
 }).strict();
+// Round 114: a dungeon, a fixed run of location encounters on one of the 3D levels in aesthetic/ (content/world/dungeons/).
+// The level ids are aesthetic's WORLDS, listed here so the server need not import three.js.
+export const DUNGEON_LEVELS = Object.freeze(['angkor', 'taprohm']);
+const pointSchema = z.tuple([z.number().finite(), z.number().finite()]);
+const dungeonSchema = z.object({
+  id: locationIdSchema,
+  name: z.string().min(1),
+  level: z.string().min(1),
+  sites: z.array(z.object({ encounter: z.string().min(1), name: z.string().min(1), at: pointSchema }).strict()).min(1),
+  route: z.array(pointSchema).min(2),
+}).strict();
 const connectionsSchema = z.object({
   start: locationIdSchema,
   paths: z.array(z.tuple([locationIdSchema, locationIdSchema])).min(1),
@@ -285,16 +296,63 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const { encounter, character } = defaultDefinition;
 
   const world = loadWorld(contentDir, encounters);
+  const dungeons = loadDungeons(contentDir, encounters, code);
   const fragments = loadFragments(contentDir, pack, encounters);
   const inscriptions = loadInscriptions(contentDir, pack, world);
   return Object.freeze({
-    language, styleGuide, onboarding, vocabulary, vocabularyById, world, encounters, fragments,
+    language, styleGuide, onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
     inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
     defaultEncounterId,
     // The default encounter, for callers that know only one (the web client's start, verify:cli).
     encounter, character,
     entryVersion: (id) => versionById.get(id),
   });
+}
+
+// Round 114: the dungeons, shared by every pack. Each site's encounter must be a location encounter in every pack (a
+// dungeon file is shared, so a site missing from one pack would break that language's run), and each site's `at` must be
+// a point of the route, in site order (the camera walks the route between sites).
+function packEncounterKinds(contentDir, code) {
+  const kinds = new Map();
+  for (const file of yamlFiles(contentDir, `languages/${code}/encounters`)) {
+    const value = parseYaml(contentDir, file);
+    if (value && typeof value.id === 'string') kinds.set(value.id, value.party_of ? 'party' : 'location');
+  }
+  return kinds;
+}
+
+function loadDungeons(contentDir, encounters, code) {
+  const relativeDir = 'world/dungeons';
+  if (!existsSync(resolve(contentDir, relativeDir))) return new Map();
+  const otherPacks = availableLanguages(contentDir).filter((other) => other !== code)
+    .map((other) => [other, packEncounterKinds(contentDir, other)]);
+  const dungeons = new Map();
+  for (const file of yamlFiles(contentDir, relativeDir)) {
+    const dungeon = dungeonSchema.parse(parseYaml(contentDir, file));
+    if (`${relativeDir}/${dungeon.id}.yaml` !== file) throw new Error(`content/${file} must declare id ${file.slice(relativeDir.length + 1, -5)}`);
+    if (!DUNGEON_LEVELS.includes(dungeon.level)) throw new Error(`Dungeon ${dungeon.id} names unknown level ${dungeon.level}. Known: ${DUNGEON_LEVELS.join(', ')}`);
+    unique(dungeon.sites.map((site) => site.encounter), `Dungeon ${dungeon.id} sites`);
+    let previous = -1;
+    for (const site of dungeon.sites) {
+      const definition = encounters.get(site.encounter);
+      if (!definition) throw new Error(`Dungeon ${dungeon.id} names unknown encounter ${site.encounter}`);
+      if (definition.encounter.party_of) throw new Error(`Dungeon ${dungeon.id} site ${site.encounter} is a party conversation, not a location encounter`);
+      for (const [other, kinds] of otherPacks) {
+        if (!kinds.has(site.encounter)) throw new Error(`Dungeon ${dungeon.id} site ${site.encounter} is missing from the ${other} pack`);
+        if (kinds.get(site.encounter) !== 'location') throw new Error(`Dungeon ${dungeon.id} site ${site.encounter} is a party conversation in the ${other} pack`);
+      }
+      const index = dungeon.route.findIndex(([x, z], i) => i > previous && x === site.at[0] && z === site.at[1]);
+      if (index < 0) throw new Error(`Dungeon ${dungeon.id} site ${site.encounter} at [${site.at}] is not a later point of the route`);
+      previous = index;
+    }
+    dungeons.set(dungeon.id, deepFreeze(dungeon));
+  }
+  return dungeons;
+}
+
+function deepFreeze(value) {
+  if (value && typeof value === 'object') { for (const item of Object.values(value)) deepFreeze(item); Object.freeze(value); }
+  return value;
 }
 
 // Round 030: a fragment is found once its `found_after` location encounter is complete. Each glossary word must

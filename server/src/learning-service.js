@@ -613,6 +613,7 @@ export class LearningService {
       encounterId: definition.encounter.id,
       location: this.sceneLocationId(encounter),
       partyConversation: Boolean(definition.encounter.party_of),
+      ...(encounter.dungeonId ? { dungeonId: encounter.dungeonId } : {}), // round 114
       character: { id: definition.character.id, name: definition.character.name, saveable: definition.character.saveable === true },
       resolvedMessage: definition.encounter.resolved_message ?? null,
       companionBriefing: definition.encounter.companion_briefing ?? null,
@@ -679,16 +680,104 @@ export class LearningService {
     return lacksTargetLanguage(generated.dialogue.native, generated.dialogue.translation, definition.narrationEntries);
   }
 
-  // Without an encounterId the default encounter starts anywhere (the frozen web client); with one, the player
-  // must be at that encounter's location.
-  async startEncounter(learnerId, { restart = false, encounterId = null } = {}) {
+  // Without an encounterId the default encounter starts anywhere (the old web client, verify:cli); with one, the player
+  // must be at that encounter's location. Round 114: with a dungeonId, the run's next site starts (encounterId, if given,
+  // must be that site), wherever the player stands on the market map.
+  async startEncounter(learnerId, { restart = false, encounterId = null, dungeonId = null } = {}) {
     assertLearnerId(learnerId);
     return this.serialized(learnerId, async () => {
       // Round 076 (critique 1.2): no prefetch starts while a start runs, saving included.
       this.starting.add(learnerId);
-      try { return await this._startEncounter(learnerId, restart, encounterId); }
-      finally { this.starting.delete(learnerId); }
+      try {
+        if (dungeonId !== null) return await this._startDungeonSite(learnerId, restart, encounterId, dungeonId);
+        return await this._startEncounter(learnerId, restart, encounterId);
+      } finally { this.starting.delete(learnerId); }
     });
+  }
+
+  // Round 114: a dungeon and its run in a save (a learner who never entered it is on run 1 with nothing cleared).
+  dungeon(dungeonId) {
+    const dungeon = typeof dungeonId === 'string' ? this.content.dungeons?.get(dungeonId) : null;
+    if (!dungeon) throw new AppError('Unknown dungeon.', { status: 404, code: 'UNKNOWN_DUNGEON' });
+    return dungeon;
+  }
+
+  dungeonRun(envelope, dungeon) {
+    const run = envelope.dungeons?.[dungeon.id] ?? { run: 1, cleared: [] };
+    const sites = dungeon.sites.map((site) => site.encounter);
+    // In play order: the cleared sites are a prefix of the site list (a stale id from edited content is ignored).
+    let next = 0;
+    while (next < sites.length && run.cleared.includes(sites[next])) next += 1;
+    return { run: run.run, cleared: sites.slice(0, next), nextIndex: next < sites.length ? next : null };
+  }
+
+  dungeonView(envelope, dungeon) {
+    const { run, cleared, nextIndex } = this.dungeonRun(envelope, dungeon);
+    return {
+      dungeon: {
+        id: dungeon.id, name: dungeon.name, level: dungeon.level,
+        sites: dungeon.sites.map((site) => {
+          const { character } = this.content.encounters.get(site.encounter);
+          return { encounterId: site.encounter, name: site.name, at: [...site.at], characterName: character.name };
+        }),
+        route: dungeon.route.map((point) => [...point]),
+      },
+      progress: {
+        run,
+        clearedEncounterIds: cleared,
+        nextSiteIndex: nextIndex,
+        nextEncounterId: nextIndex === null ? null : dungeon.sites[nextIndex].encounter,
+        complete: nextIndex === null,
+      },
+    };
+  }
+
+  async getDungeon(learnerId, dungeonId) {
+    const dungeon = this.dungeon(dungeonId);
+    const envelope = await this.loadEnvelope(learnerId);
+    return this.dungeonView(envelope, dungeon);
+  }
+
+  // A new run: the run's cleared sites are forgotten (the market's completed encounters, the Spellbook and fragments
+  // stay), and a conversation this dungeon started is dropped.
+  async resetDungeon(learnerId, dungeonId) {
+    const dungeon = this.dungeon(dungeonId);
+    assertLearnerId(learnerId);
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const staged = clone(envelope);
+      const { run } = this.dungeonRun(envelope, dungeon);
+      staged.dungeons = { ...(staged.dungeons ?? {}), [dungeon.id]: { run: run + 1, cleared: [] } };
+      await this.storage.save(staged);
+      if (this.encounters.get(learnerId)?.dungeonId === dungeon.id) this.encounters.delete(learnerId);
+      return this.dungeonView(staged, dungeon);
+    });
+  }
+
+  // Round 114: the market's location check (NOT_HERE), gates and drills do not apply; the order of the sites does. The
+  // run's own conversation at this site resumes (a reload); any other start of it is a new conversation, also when the
+  // learner finished this encounter before. Another conversation under way is never replaced without restart.
+  async _startDungeonSite(learnerId, restart, encounterId, dungeonId) {
+    const dungeon = this.dungeon(dungeonId);
+    const envelope = await this.loadEnvelope(learnerId);
+    const { nextIndex } = this.dungeonRun(envelope, dungeon);
+    const next = nextIndex === null ? null : dungeon.sites[nextIndex];
+    if (!next || (encounterId !== null && encounterId !== next.encounter)) {
+      throw new AppError(next
+        ? `${dungeon.name}: ${this.content.encounters.get(next.encounter).character.name} at ${next.name} comes first.`
+        : `${dungeon.name} is cleared. Start a new run to play it again.`,
+      { status: 409, code: 'NOT_NEXT_SITE', details: { nextEncounterId: next?.encounter ?? null } });
+    }
+    const definition = this.content.encounters.get(next.encounter);
+    const active = this.encounters.get(learnerId);
+    const ownSession = active && active.dungeonId === dungeon.id && this.definition(active) === definition;
+    if (!restart && ownSession && active.state === 'ongoing') {
+      return { encounter: this.serializeEncounter(active), spellbook: this.spellbookSnapshot(envelope) };
+    }
+    if (!restart && !ownSession && active?.state === 'ongoing') {
+      throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
+    }
+    return this.openSession(learnerId, envelope, definition, { dungeonId: dungeon.id });
   }
 
   async _startEncounter(learnerId, restart, encounterId) {
@@ -742,27 +831,34 @@ export class LearningService {
       if (encounterId !== null && !restart && active?.state === 'ongoing' && this.definition(active) !== definition) {
         throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
       }
-      // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
-      this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));
-      const generated = await this.prefetchedGreeting(learnerId, definition)
-        ?? await this.narrate(this.greetingMessages(definition, locationId), definition, this.ratioFor(0, definition));
-      const npcMessage = this.canonicalizeNarration(generated, definition);
-      const stagedEnvelope = clone(envelope);
-      this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
-      // Round 111 (review R1.12): computed once. Round 112 (critique 1.5): only the oldest pending read strains a
-      // session, so with two reads pending each costs its own finished conversation (no stacking, none free).
-      const strainedBy = this.pendingStrainIds(envelope).slice(0, 1);
-      const encounter = {
-        id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0, passedObjectiveIds: [],
-        committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
-        ...(locationId ? { locationId } : {}),
-        // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
-        ...(strainedBy.length ? { strained: true, strainedBy } : {}),
-      };
-      await this.storage.save(stagedEnvelope);
-      this.encounters.set(learnerId, encounter);
-      return { encounter: this.serializeEncounter(encounter), spellbook: this.spellbookSnapshot(stagedEnvelope) };
+      return this.openSession(learnerId, envelope, definition, { locationId });
     }
+  }
+
+  // A new conversation: its greeting, the words it exposes, and the session held in memory. Round 114: split out of
+  // _startEncounter for the dungeon start; a dungeon's session carries its dungeonId.
+  async openSession(learnerId, envelope, definition, { locationId, dungeonId } = {}) {
+    // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
+    this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));
+    const generated = await this.prefetchedGreeting(learnerId, definition)
+      ?? await this.narrate(this.greetingMessages(definition, locationId), definition, this.ratioFor(0, definition));
+    const npcMessage = this.canonicalizeNarration(generated, definition);
+    const stagedEnvelope = clone(envelope);
+    this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
+    // Round 111 (review R1.12): computed once. Round 112 (critique 1.5): only the oldest pending read strains a
+    // session, so with two reads pending each costs its own finished conversation (no stacking, none free).
+    const strainedBy = this.pendingStrainIds(envelope).slice(0, 1);
+    const encounter = {
+      id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0, passedObjectiveIds: [],
+      committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
+      ...(locationId ? { locationId } : {}),
+      ...(dungeonId ? { dungeonId } : {}),
+      // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
+      ...(strainedBy.length ? { strained: true, strainedBy } : {}),
+    };
+    await this.storage.save(stagedEnvelope);
+    this.encounters.set(learnerId, encounter);
+    return { encounter: this.serializeEncounter(encounter), spellbook: this.spellbookSnapshot(stagedEnvelope) };
   }
 
   // Round 076 (critique 1.6): the greeting's prompt, the same for a start and a prefetch. It depends on content only,
@@ -1119,6 +1215,9 @@ export class LearningService {
         } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
           stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
         }
+        // Round 114: a dungeon's conversation clears its site in the run, if it is still the run's next site (a reset
+        // during the conversation drops the session, so this holds unless content changed).
+        if (resolved && stagedEncounter.dungeonId) this.clearSite(stagedEnvelope, stagedEncounter.dungeonId, definition.encounter.id);
         // Round 111: the conversation that bore the strain spends it, in the same save as its resolution and receipt
         // (a replay returns the receipt and spends nothing again; a failed save spends nothing). Any finished
         // conversation spends it, a replayed party conversation or a completed place's restart too (decision 4).
@@ -1142,6 +1241,14 @@ export class LearningService {
         if (this.turnProgress.get(learnerId)?.run === run) this.turnProgress.delete(learnerId);
       }
     });
+  }
+
+  clearSite(envelope, dungeonId, encounterId) {
+    const dungeon = this.content.dungeons?.get(dungeonId);
+    if (!dungeon) return;
+    const { run, cleared, nextIndex } = this.dungeonRun(envelope, dungeon);
+    if (nextIndex === null || dungeon.sites[nextIndex].encounter !== encounterId) return;
+    envelope.dungeons = { ...(envelope.dungeons ?? {}), [dungeonId]: { run, cleared: [...cleared, encounterId] } };
   }
 
   // Round 070 (backlog I1): the validated verdict of the turn under way, while its reply is written. Not serialized:

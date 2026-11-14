@@ -71,8 +71,25 @@ export function resolveLLMConfig(overrides = {}, env = process.env) {
   };
 }
 
+// A CLI provider spends the owner's subscription, so its server stays on 127.0.0.1. Round 114: the hosted server (a
+// container on Render, NODE_ENV=production) must listen on every interface, and may, because production refuses to
+// start without PARALLANG_TOKEN (productionTokenProblem).
 export function listenHostForProvider(provider, env = process.env) {
-  return CLI_PROVIDERS.has(provider) ? '127.0.0.1' : (nonBlank(env.HOST) ?? '0.0.0.0');
+  const hosted = nonBlank(env.NODE_ENV) === 'production' && Boolean(nonBlank(env.PARALLANG_TOKEN));
+  if (CLI_PROVIDERS.has(provider) && !hosted) return '127.0.0.1';
+  return nonBlank(env.HOST) ?? '0.0.0.0';
+}
+
+// Round 114: in production every route but the health check needs the token, so a public URL never serves the
+// subscription to whoever reaches it. Returns the reason the server must not start, or null.
+export const MIN_PRODUCTION_TOKEN_LENGTH = 16;
+export function productionTokenProblem(env = process.env) {
+  if (nonBlank(env.NODE_ENV) !== 'production') return null;
+  const token = nonBlank(env.PARALLANG_TOKEN);
+  if (!token) return 'NODE_ENV=production requires PARALLANG_TOKEN. Set it in the host\'s secrets.';
+  if (token.length < MIN_PRODUCTION_TOKEN_LENGTH) return `PARALLANG_TOKEN must be at least ${MIN_PRODUCTION_TOKEN_LENGTH} characters in production.`;
+  if (!/^[\x21-\x7e]+$/.test(token)) return 'PARALLANG_TOKEN holds characters a header cannot carry (spaces or control characters).';
+  return null;
 }
 
 export function resolveTargetLanguage(env = process.env) {

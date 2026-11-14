@@ -1,0 +1,30 @@
+# Round 114: the first dungeon, a crawl through Ta Prohm (the 3D level in aesthetic/src/scene/taprohm.js).
+# Shared by every language pack. Coordinates are Ta Prohm world units: x across, z along the east-west axis
+# (+z is east, where the visitor comes in). Sites are played in this order, and each site's `at` is also a
+# point of `route`, so the camera's walk from one site to the next follows the route between them.
+#
+# Site 1 stands before the east face-tower gopura, outside the outer wall. Site 2 is in the third enclosure's
+# court, in front of the thitpok astride the second gallery. Site 3 is in the second enclosure's court, facing
+# the central sanctuary through the inner gate. The route enters each enclosure through its east gate passage
+# (|x| < 1.1) and never crosses a wall.
+id: ta_prohm
+name: Ta Prohm
+level: taprohm
+sites:
+  - { encounter: market_entrance_tutorial, name: The Face Gate, at: [3.5, 63] }
+  - { encounter: imp_coffee_greeting, name: The Root Court, at: [6, 21.5] }
+  - { encounter: high_gate_bambieshart, name: Before the Sanctuary, at: [2.6, 11] }
+route:
+  - [0, 96]       # the avenue, the entrance
+  - [2.5, 70]
+  - [3.5, 63]     # site 1
+  - [0.3, 60.5]
+  - [0.3, 52]     # through the gopura's passage
+  - [0.3, 33]
+  - [0.3, 25.5]   # through the gate tree's door
+  - [5.5, 25.5]
+  - [6, 21.5]     # site 2
+  - [0.3, 20.8]
+  - [0.3, 14.3]   # through the second enclosure's gate
+  - [3.5, 14.3]
+  - [2.6, 11]     # site 3
