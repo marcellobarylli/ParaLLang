@@ -20,7 +20,7 @@ The core mechanic: enemy NPCs speak increasingly more of the target language as 
 
 ## Planned Stack
 
-- **Frontend:** iPhone-first. An Expo / React Native app in `mobile/` (Zustand for state), run in the iOS Simulator through Expo Go; development is app-first from round 004. The React/Vite web client in `client/` is kept working but frozen
+- **Frontend:** iPhone-first. An Expo / React Native app in `mobile/` (Zustand for state), run in the iOS Simulator through Expo Go; development is app-first from round 004. The React/Vite web client in `client/` plays the Ta Prohm dungeon crawl on the three.js level in `aesthetic/` (round 115) and is deployed to GitHub Pages
 - **Backend:** Node.js with Express (or Fastify)
 - **LLM:** Provider-agnostic adapter (OpenAI GPT-4o-mini recommended, Anthropic and Ollama also supported)
 - **Content:** YAML files for world/characters/encounters/vocabulary

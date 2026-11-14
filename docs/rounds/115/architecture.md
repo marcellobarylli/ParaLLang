@@ -149,3 +149,58 @@ the hosted token. Real phones are not tested: frame rate on a phone GPU and iOS 
   walk and victory at 390×844 and 1440×900 into `docs/rounds/115/shots/`.
 - All existing suites keep passing: `npm test` at the root, and `npm run build -w client`.
 - The Dockerfile's install step is run in a scratch copy (Docker cannot run on the cluster).
+
+## Amendment 2026-11-14: site 3 on the axis, later sites approached at eye level (Claude, during the build)
+
+The owner was not asked: these are placements and camera details inside the agreed design, found by the new plan
+test and by reading the first screenshots (journal rows 4 and 6). They change two sentences of the Design above.
+
+- **The route had a flaw.** The committed route ran 0.3 m from the second enclosure's gate pavilion (waypoints at
+  z 14.3). The plan test (`client/src/__tests__/dungeon-file.test.js`) found it.
+- **Site 3 moved from [2.6, 11] to [0.3, 11.2].** At [2.6, 11] the site stood against the inner gate's pavilion wall,
+  and the camera faced blank stone from 2.4 m. On the axis the camera stops inside the second enclosure's gate
+  passage and sees the site before the inner gate. The route is now straight from [0.3, 20.8] to the site, and the
+  two waypoints with the flaw are gone. Round 114 says sites stand on ground that the level's `isClear` accepts.
+  `isClear` is the level's planting rule and calls the axis not clear so that nothing is planted on it. Site 3 now
+  fails `isClear` for that reason only. The plan test checks every site and every route point against the walls,
+  pavilions, the gopura, the sanctuary and the library instead.
+- **Only the first site is approached from above.** Design item 3 says an approach ends 11 m out at about 23°. The
+  build ends the first site's approach 9.5 m back on the route and 2.8 m above eye height. The later sites stand in
+  courts and gate passages with no room above, so an approach to them (a reload in the middle of a run) ends where
+  a walk to them ends: 4 m short of the site, at eye height.
+- **Additions the Design did not name.** The camera frames the part of the screen the dock leaves free
+  (`client/src/scene/insets.js`): the projection's axis moves to the middle of that area, so a site is not hidden
+  behind the bottom sheet. From the air the fog backs off (the level's fog is set for the ground) and vertex snapping
+  is off (it opens seams in the ground). Each site has a beacon (a crystal, a ring, a shaft of light) until the
+  encounters have assets. The route is drawn as a ribbon and only in the overview. The store asks the server for
+  the Spellbook when it opens. `prefers-reduced-motion` skips the camera moves.
+
+## Amendment 2026-11-14: fixes from Codex review 1 (Claude, after the build)
+
+A post-build review by Codex read the diff `40c471d..7c8f24f` and returned five findings; the raw text is in
+[`trail/review-1.md`](trail/review-1.md). All five were real and are fixed. The owner was not asked: each fix keeps
+the design and closes a defect. Each fix has a test that fails on the code as reviewed.
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Error, high | `.dockerignore` excluded all of `aesthetic/`, so the Dockerfile's new `COPY aesthetic/package.json` would fail every image build, and Render's with it | + | Accept: let the manifest alone into the build context | **Accepted** by Claude; the owner was not asked | `.dockerignore`; `client/src/__tests__/pages.test.js` checks every `COPY` source against it |
+| R1.2 | Error, medium | A read of the finished run that answers after "Play again" put the old run's progress back, so "Start" showed the victory screen | + | Accept: the newest read wins, and a reset outdates the reads before it | **Accepted** by Claude; the owner was not asked | `gameStore.js` (`progressRequest`); `dungeon-flow.test.js` |
+| R1.3 | Error, medium | A reset that answers after new settings moved the screen and cancelled the new server's site start | + | Accept: the reset's reply is dropped after new settings | **Accepted** by Claude; the owner was not asked | `gameStore.js` (`playAgain`); `dungeon-flow.test.js` |
+| R1.4 | Error, medium | A Spellbook read sent before a conversation opened could replace the conversation's Spellbook and show meanings during it | + | Accept: a read is not applied over a newer Spellbook, and the screen hides meanings while a conversation is open or opening | **Accepted** by Claude; the owner was not asked | `gameStore.js` (`spellbookVersion`), `DungeonScreen.jsx`; both test files |
+| R1.5 | Error, medium | A failed "Start over" set an error only the travel caption shows | + | Accept in part: the failure shows in the banner over the conversation. A restart whose reply is lost is not detected; the next answer is then refused with the server's message and "Start over" works again | **Accepted in part** by Claude; the owner was not asked | `gameStore.js` (`loadSite`); `dungeon-flow.test.js` |
+
+**Deferred:** none. Codex's closing note: no further defect verified in the camera maths, StrictMode and disposal,
+the Pages chunk and YAML import, or the phone CSS; the iOS keyboard stays unverified.
+
+R1.1 would have stopped the Render deploy on the first push to `main`. The round's own check of the Docker install
+step ran in a scratch copy of the manifests and could not see the build context.
+
+## Outcome (2026-11-14)
+
+Built as designed, with the two Amendments above. The web client's one screen is the Ta Prohm dungeon: the title
+over a slow orbit, the route from above with the three numbered sites, an approach to site 1, a walk at eye height to
+each next site, the dialogue as a bottom sheet (a side panel from 1100 px) and a victory screen with "Play again".
+A reload resumes the run. Every suite passes (server 418, client 62, aesthetic 20, mobile 320), and the built client
+plays the whole run in headless Chromium at 390×844 and 1440×900 with a fixture provider. The claim boundary held:
+nobody played against the live model, and no real phone was used. The work is on the branch `round-115-dungeon` and
+is not merged, because a push to `main` deploys. See [`findings.md`](findings.md) and [`shots/`](shots/).

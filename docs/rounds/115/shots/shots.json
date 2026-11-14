@@ -1,0 +1,362 @@
+[
+ {
+  "shot": "1-attract-phone.jpg",
+  "phase": "attract",
+  "siteIndex": 0,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "arrival": 0,
+   "position": [
+    127.7,
+    128.2,
+    128.3
+   ]
+  }
+ },
+ {
+  "shot": "2-overview-phone.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "arrival": 2.6,
+   "position": [
+    0,
+    216.5,
+    47.5
+   ]
+  }
+ },
+ {
+  "shot": "3-approach-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "arrival": 3.6,
+   "position": [
+    2.5,
+    4.5,
+    72.5
+   ]
+  }
+ },
+ {
+  "shot": "4-walk-1-phone.jpg",
+  "phase": "walk",
+  "siteIndex": 1,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "arrival": 20.24711320535667,
+   "position": [
+    0.3,
+    1.6,
+    57.2
+   ]
+  }
+ },
+ {
+  "shot": "4-walk-2-phone.jpg",
+  "phase": "walk",
+  "siteIndex": 1,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "arrival": 20.24711320535667,
+   "position": [
+    0.3,
+    1.6,
+    38.5
+   ]
+  }
+ },
+ {
+  "shot": "5-site-2-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 1,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "arrival": 20.24711320535667,
+   "position": [
+    5.7,
+    1.7,
+    25.6
+   ]
+  }
+ },
+ {
+  "shot": "6-site-3-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "arrival": 8.479579145051606,
+   "position": [
+    0.5,
+    1.7,
+    15.3
+   ]
+  }
+ },
+ {
+  "shot": "7-victory-phone.jpg",
+  "phase": "victory",
+  "siteIndex": 2,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": null,
+  "camera": {
+   "mode": "victory",
+   "stage": "hold",
+   "arrival": 3.6,
+   "position": [
+    63.2,
+    128.2,
+    171.1
+   ]
+  }
+ },
+ {
+  "shot": "1-attract-desktop.jpg",
+  "phase": "attract",
+  "siteIndex": 0,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "arrival": 0,
+   "position": [
+    91.7,
+    92.7,
+    93.9
+   ]
+  }
+ },
+ {
+  "shot": "2-overview-desktop.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "arrival": 2.6,
+   "position": [
+    0,
+    221,
+    47.9
+   ]
+  }
+ },
+ {
+  "shot": "3-approach-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "arrival": 3.6,
+   "position": [
+    2.5,
+    4.5,
+    72.5
+   ]
+  }
+ },
+ {
+  "shot": "4-walk-1-desktop.jpg",
+  "phase": "walk",
+  "siteIndex": 1,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "arrival": 20.24711320535667,
+   "position": [
+    0.3,
+    1.6,
+    57.2
+   ]
+  }
+ },
+ {
+  "shot": "4-walk-2-desktop.jpg",
+  "phase": "walk",
+  "siteIndex": 1,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "arrival": 20.24711320535667,
+   "position": [
+    0.3,
+    1.6,
+    38.3
+   ]
+  }
+ },
+ {
+  "shot": "5-site-2-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 1,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "arrival": 20.24711320535667,
+   "position": [
+    5.7,
+    1.7,
+    25.6
+   ]
+  }
+ },
+ {
+  "shot": "6-site-3-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "ongoing",
+   "version": 1
+  },
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "arrival": 8.479579145051606,
+   "position": [
+    0.5,
+    1.7,
+    15.3
+   ]
+  }
+ },
+ {
+  "shot": "7-victory-desktop.jpg",
+  "phase": "victory",
+  "siteIndex": 2,
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "encounter": null,
+  "camera": {
+   "mode": "victory",
+   "stage": "hold",
+   "arrival": 3.6,
+   "position": [
+    43.8,
+    88.7,
+    119.2
+   ]
+  }
+ }
+]

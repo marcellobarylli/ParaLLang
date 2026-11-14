@@ -2,8 +2,9 @@
 
 The visual direction for ParaLLang: PlayStation 1-style 3D, demonstrated on the lore's dead branch, where temple ruins
 are strangled by roots (the strings that pulled two worlds together). The package holds the look and two levels:
-**Angkor Wat** and **Ta Prohm**, the temple the jungle kept. It does not touch the game code in `client/`, `server/` or
-`mobile/`.
+**Angkor Wat** and **Ta Prohm**, the temple the jungle kept. It imports nothing from the game code in `client/`,
+`server/` or `mobile/`. Since round 115 it is an npm workspace of the repository, and the web client's dungeon crawl
+renders its Ta Prohm level (`client/src/scene/levelView.js`).
 
 ![Approaching along the avenue at golden hour](docs/shots/approach-golden.png)
 
@@ -40,8 +41,8 @@ are no image assets to load on any platform.
 ## Run it
 
 ```bash
+npm install         # at the repository root: aesthetic is a workspace
 cd aesthetic
-npm install
 npm run dev        # http://localhost:5180
 npm test           # 20 headless checks over both levels: budget, determinism, VRAM rules, presets, dither table
 ```

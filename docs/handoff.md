@@ -1,7 +1,7 @@
-# Handoff (2026-11-14): the hosted setup and the next round
+# Handoff (2026-11-14): the hosted setup and the dungeon
 
-For the next agent. Start at [STATUS.md](../STATUS.md); this file holds what round 114's records do not: the live
-deployment and the brief for round 115.
+For the next agent. Start at [STATUS.md](../STATUS.md); this file holds what the round records do not: the live
+deployment, and how to deploy and work on round 115's dungeon.
 
 ## The live deployment
 
@@ -66,65 +66,49 @@ the owner for the token; it is not in the repo.
 - It cannot see Render's dashboard or logs, run Docker, or start a workflow without a push. Ask the owner for a
   screenshot of the service's Logs tab when the server misbehaves.
 
-## Next: round 115, the Ta Prohm dungeon crawl
+## Round 115: the Ta Prohm dungeon is built, on a branch
 
-The owner agreed the design in round 114 and moved the build to a separate round. The design is round 114's
-[Design section](rounds/114/architecture.md#design-pre-run) (Goal 1), unchanged. Open round 115 with the round-log
-skill and take that section as its design source.
+Round 115 built the dungeon crawl in the web client ([architecture](rounds/115/architecture.md),
+[findings](rounds/115/findings.md), pictures in [`rounds/115/shots/`](rounds/115/shots/)). It is on the branch
+`round-115-dungeon`, not on `main`, and it is not deployed.
 
-In short: the web client's first screen is the Ta Prohm level from `aesthetic/`. There are three sites, played in
-order: Portia's tutorial, Gerald's coffee order and Bambieshart. The camera director moves through five transitions:
+### To deploy it
 
-1. Attract: a slow isometric orbit of the whole level.
-2. Overview: bird's eye, with the route drawn and the sites numbered.
-3. Approach: zoom down to site 1, where the existing dialogue opens over the level.
-4. Walk: at ground level along the route to the next site, twice.
-5. Victory: zoom back out to the orbit, with "Dungeon cleared" and "Play again".
+Merge `round-115-dungeon` into `main` and push. The push runs CI and the Pages deploy and makes Render rebuild the
+image and restart, which wipes the saves on the free plan. The owner decides when. After the push:
 
-### Already committed
+1. Read the Actions run (the public API, as above). The root `npm test` now also runs the `aesthetic` tests.
+2. Check that Render built the image. The Dockerfile now copies `aesthetic/package.json`, and `.dockerignore` lets
+   that one file through; Docker could not be run on the cluster, so this is the first real build.
+3. Play one run on a phone at the Pages URL. `tools/check_hosted.py` still checks the market's start, not a dungeon
+   start.
 
-- `content/world/dungeons/ta_prohm.yaml`: the three sites and the ground route, in Ta Prohm world units.
-- Server: `GET /api/dungeons/:id`, `POST /api/dungeons/:id/reset`, and `POST /api/encounter/start` with `dungeonId`
-  (next uncleared site only, 409 `NOT_NEXT_SITE` otherwise). A resolved site is marked cleared in
-  `envelope.dungeons`. Older saves migrate. Tests: `server/test/dungeon.test.js`.
-- Client infrastructure: `client/src/api/settings.js` (server URL and token), `createLearningApi` in
-  `client/src/api/encounter.js`, `SettingsSheet.jsx`.
+### What nobody has checked
 
-### Not committed: `docs/rounds/114/trail/level-wip.patch`
+- A run against the live model. The playthrough used a fixture provider.
+- A real phone: frame rate, the bottom sheet under the on-screen keyboard in iOS Safari, WebGL after the tab returns
+  from the background.
 
-The patch holds the camera director (`client/src/scene/director.js`), `client/src/dungeon.js`, the dungeon flow in
-`gameStore.js`, and `aesthetic` joined to the root npm workspaces. It no longer applies cleanly. Apply it with
+### Working on the dungeon
 
-```
-git apply --reject --exclude=client/src/api/settings.js --exclude=client/src/api/encounter.js docs/rounds/114/trail/level-wip.patch
-```
+- `client/src/scene/director.js` is the camera (pure, tested in Node). `client/src/scene/levelView.js` is the
+  three.js host. `client/src/stores/gameStore.js` is the flow. `content/world/dungeons/ta_prohm.yaml` holds the sites
+  and the route.
+- `client/src/__tests__/dungeon-file.test.js` checks the sites and the route against the level's wall plan, which
+  it encodes by hand from `aesthetic/src/scene/taprohm.js`. Move a site or change the level, and that test says
+  whether the camera would walk through stone.
+- Pictures and an end-to-end check: `client/scripts/dungeon-shots.mjs`, inside a Slurm job (it starts a server on
+  127.0.0.1 behind a token). It needs `puppeteer-core` and a Chrome; round 115 used
+  `~/.cache/puppeteer/chrome/linux-131.0.6778.204/chrome-linux64/chrome` and the `puppeteer-core` under
+  `~/.npm/_npx/`. `~/workspace/r115-jobs/run.sh` and `shots.sh` are the job scripts. Chromium aborts in a batch job
+  unless `DBUS_SESSION_BUS_ADDRESS` is disabled, which the script does.
+- The server and the client's proxy tests bind 127.0.0.1 ports, so `npm test` runs under `sbatch`. The pure client
+  tests (`src/scene`, `src/stores`, `src/components`) bind none.
 
-and merge `client/src/stores/gameStore.js.rej` by hand into the committed store, which already has the settings
-changes. The patch also deletes `aesthetic/package-lock.json` because the workspace join moves its dependencies into
-the root lockfile. Run `npm install` afterwards and check that `npm test` passes.
+### Next
 
-### Constraints for the build
-
-- Every push to `main` deploys Pages and restarts Render, and `npm test` gates the Pages deploy. Push only green
-  commits, and work on a branch until the dungeon screen is playable.
-- GitHub's runners are slower than the cluster. On 2026-11-14 the mobile Saves screen test hit Jest's 5 s default
-  there (run 43646340054) while it passed on the cluster, so `mobile/package.json` sets `testTimeout` to 20 s. A test
-  that is slow only on GitHub is a timing problem; read the job log before changing the test.
-- Layout is phone first: the level fills the screen and the dialogue is a bottom sheet; at 1100 px and wider it is a
-  side panel. Tap targets are 44 px or larger.
-- Screenshots of each camera state at phone and desktop widths come from a headless browser inside a Slurm job
-  (`sbatch`, logs under `~/workspace`), never on the login node. A dev or preview server listens on a port, so it
-  runs only inside the job, behind a token.
-- The iPhone app is not changed in this round.
-
-### Handoff prompt
-
-```
-New round 115 (round-log skill; start at STATUS.md and docs/handoff.md): build the Ta Prohm dungeon crawl in the web
-client. The design is round 114's Design section (docs/rounds/114/architecture.md: five camera transitions, three
-sites — Portia's tutorial, Gerald, Bambieshart — the existing dialogue at each site, a victory screen). The server
-side is committed (docs/rounds/114/findings.md). Start from docs/rounds/114/trail/level-wip.patch as
-docs/handoff.md says (skip settings.js and encounter.js, merge the gameStore.js reject by hand). Phone-first layout;
-capture each camera state in a headless browser inside a Slurm job. Pushing to main deploys to Pages and Render, so
-work on a branch until it is playable.
-```
+- The owner's verdict on the pictures and on two choices of the build: the walk starts on a button, and only the
+  first site is approached from above.
+- Encounter assets at the sites. Each site has a beacon (a crystal, a ring, a shaft of light) as a stand-in.
+- The dungeon in the iPhone app (`aesthetic/native/TempleView.js` is an untested start).
+- Angkor Wat as a second dungeon: a content file, an entry in `LEVELS` in `levelView.js`, and a plan test.
