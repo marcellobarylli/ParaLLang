@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-14: round 113, Bambieshart and the High Gate
+
+A new optional location, The High Gate, holds Bambieshart from Zanzibart, a wanderer from a screenshot the owner
+shared, with an encounter in both packs (thank him, ask about the mountain). A signpost beside the gate points to
+Micromort Mountain, one chance in a million of death per step, which is the owner's idea of a place to visit. The
+mountain itself is not on the map yet ([findings](docs/rounds/113/findings.md)).
+
 ## Addendum 2026-11-06: round 111, a redacted infohazard (autonomous)
 
 The Fountain's containment file now has an annex the companion has blacked out: the jingle's second verse. The
@@ -1013,6 +1020,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 113 | 11-14 | The High Gate: Bambieshart from Zanzibart and a Micromort Mountain signpost, in both packs | [113](docs/rounds/113/architecture.md) | [findings](docs/rounds/113/findings.md) | this commit |
 | 110 | 11-06 | Spores: a fragment of The Journey on the mushrooms of the dead branches, after the Butcher's Stall (autonomous) | [110](docs/rounds/110/architecture.md) | [findings](docs/rounds/110/findings.md) | pre-run record to round 110 close |
 | 107 | 11-06 | play-market matches narration calls within the step that committed each line (autonomous) | [107](docs/rounds/107/architecture.md) | [findings](docs/rounds/107/findings.md) | pre-run record to round 107 close |
 | 106 | 11-06 | The server withholds card meanings during encounters and on due cards (autonomous) | [106](docs/rounds/106/architecture.md) | [findings](docs/rounds/106/findings.md) | pre-run record to round 106 close |

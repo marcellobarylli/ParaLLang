@@ -1,0 +1,10 @@
+id: the_high_gate
+name: The High Gate
+description: >
+  A gate nobody has ever seen open, with a small shrine to a promise made long ago to an Old Nanny, still unremoved.
+  Beside it stands a signpost with one arm: MICROMORT MOUNTAIN, 14 KM, ONE CHANCE IN A MILLION PER STEP. Someone has
+  added in pencil: that is a lot of steps. A traveller in a faded brocade is waiting under it, as if he has been told
+  you are coming.
+vocabulary_focus: [thanks, places]
+encounter: high_gate_bambieshart
+map: { x: 0.9, y: 0.36 }

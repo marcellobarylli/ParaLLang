@@ -1,0 +1,18 @@
+# Round 113: The High Gate (a place; thanks reuses Gerald's word). Reference URLs follow the existing patterns and were not opened from the
+# build container; listed for the owner's content review.
+version: bambieshart-gate-es-v1
+references:
+  - id: rae-montana
+    title: "Real Academia Española, Diccionario de la lengua española: montaña"
+    url: "https://dle.rae.es/monta%C3%B1a"
+entries:
+  - id: montana
+    kind: word
+    target: "montaña"
+    part_of_speech: noun
+    accepted_translations: ["mountain"]
+    surface_variants: ["montaña", "montañas"]
+    accent_insensitive: false
+    example: { target: "La montaña está lejos.", english: "The mountain is far away." }
+    note: "'Montaña' is feminine: la montaña, plural las montañas."
+    reference_ids: [rae-montana]

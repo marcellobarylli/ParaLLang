@@ -1,0 +1,60 @@
+# Round 113: The High Gate. Bambieshart from Zanzibart gives the player a brocade and a mountain to visit; the player
+# thanks him and asks about Micromort Mountain.
+id: high_gate_bambieshart
+character: characters/enemies/wanderer_bambieshart.yaml
+location: the_high_gate
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player thanks Bambieshart for the Brocade and asks him about the mountain, in Spanish"
+max_turns: 20
+resolved_message: "Bambieshart points at the horizon, nods gravely, and is gone before the nod ends. You will find him later, he assures you, dying."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: thank_him
+    prompt: "Bambieshart has pressed a brocade into your hands. Thank him, using Spanish."
+    intent: "Bambieshart greets the player as the Tarnished, in his half-invented English, and presses Bambieshart's Brocade into their hands with a long and solemn description of its virtues, then waits to be thanked. He never says \"gracias\" (in dialogue or narration) before the player has, and he does not tell the player what to say."
+    target_vocabulary_ids: [gracias]
+    required_target_groups:
+      - [gracias]
+    grammar_constraints:
+      - "The player thanks Bambieshart, in their own words, with the Spanish word for thanks (gracias)."
+      - "Reject English-only thanks, quotations, definitions of the word, and lines that report someone else's thanks."
+    accepted_examples:
+      - "Gracias, Bambieshart."
+      - "Gracias for the brocade."
+    negative_examples:
+      - text: "Thank you, Bambieshart."
+        reason: "English-only; it does not use the Spanish word."
+      - text: "Gracias means thank you."
+        reason: "It discusses the word rather than thanking him."
+      - text: "Bambieshart says gracias."
+        reason: "It reports someone else's words."
+    reference_meaning: "The player thanks Bambieshart for the gift."
+    hint_limit: 2
+    next_objective: ask_mountain
+    assessment_reference_ids: [wiktionary-gracias]
+  - id: ask_mountain
+    prompt: "Bambieshart insists you visit Micromort Mountain, one chance in a million of death per step. Ask him about the mountain, using Spanish."
+    intent: "Pleased, Bambieshart tells the player that they must visit Micromort Mountain, where every step carries one chance in a million of death, and counts the steps in micromorts. He never says the Spanish word for mountain (\"montana\"), in dialogue or narration, before the player has. He does not tell the player what to say."
+    target_vocabulary_ids: [montana]
+    required_target_groups:
+      - [montana]
+    grammar_constraints:
+      - "The player asks Bambieshart about the mountain, in their own words, with the Spanish word for mountain (montaña)."
+      - "Reject English-only questions, quotations, and talk about the word."
+    accepted_examples:
+      - "Háblame de la montaña, Bambieshart."
+      - "¿Cómo es la montaña?"
+    negative_examples:
+      - text: "Tell me about the mountain."
+        reason: "English-only; it does not use the Spanish words."
+      - text: "La montaña es alta."
+        reason: "It states a fact about the mountain instead of asking Bambieshart about it."
+    reference_meaning: "The player asks Bambieshart about Micromort Mountain."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [rae-montana]

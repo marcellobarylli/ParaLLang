@@ -27,7 +27,7 @@ beforeEach(() => {
 test('every map location has a loop, and the app lists exactly those (ids read from the YAML)', () => {
   const dir = join(root, '..', 'content', 'world', 'locations');
   const ids = readdirSync(dir).map((file) => readFileSync(join(dir, file), 'utf8').match(/^id:\s*(\S+)/m)[1]).sort();
-  expect(ids).toHaveLength(6);
+  expect(ids).toHaveLength(7);
   expect([...AMBIENCE_IDS].sort()).toEqual(ids);
   expect([...generator.AMBIENCE_IDS].sort()).toEqual(ids);
 });

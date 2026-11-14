@@ -11,6 +11,7 @@ const SOURCES = {
   butchers_stall: require('../assets/ambience/butchers_stall.wav'),
   cracked_fountain: require('../assets/ambience/cracked_fountain.wav'),
   old_bookshop: require('../assets/ambience/old_bookshop.wav'),
+  the_high_gate: require('../assets/ambience/the_high_gate.wav'),
   the_rift: require('../assets/ambience/the_rift.wav'),
 };
 export const AMBIENCE_IDS = Object.freeze(Object.keys(SOURCES));

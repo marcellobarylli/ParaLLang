@@ -210,7 +210,7 @@ test('the detail kind is fixed per place and state: (3i + s) mod 5, all five kin
   const { ATMOSPHERE_DETAILS, atmosphereDetail } = await import('../src/learning-service.js');
   for (const language of ['it', 'es']) {
     const { world } = loadGameContent({ language });
-    assert.equal(world.locations.length, 6);
+    assert.equal(world.locations.length, 7);
     const used = new Set();
     world.locations.forEach((location, i) => {
       ['none', 'open', 'complete'].forEach((state, s) => {

@@ -35,12 +35,12 @@ async function serviceRuntime(t, { saveDir } = {}) {
   return { service, storage, content, saveDir: dir };
 }
 
-test('the Crumbling Market loads six connected locations with Gerald at The Coffee Cart', () => {
+test('the Crumbling Market loads seven connected locations with Gerald at The Coffee Cart', () => {
   for (const language of ['it', 'es']) {
     const { world, encounter } = loadGameContent({ language });
     assert.equal(world.start, 'market_entrance');
     assert.deepEqual(world.locations.map((location) => location.id).sort(), [
-      'butchers_stall', 'coffee_cart', 'cracked_fountain', 'market_entrance', 'old_bookshop', 'the_rift',
+      'butchers_stall', 'coffee_cart', 'cracked_fountain', 'market_entrance', 'old_bookshop', 'the_high_gate', 'the_rift',
     ]);
     assert.equal(world.locationsById.get('coffee_cart').encounter, encounter.id);
     assert.equal(encounter.location, 'coffee_cart');
@@ -107,7 +107,7 @@ test('moves follow paths, reveal the map and persist; other moves are rejected',
   assert.ok(!atCart.world.locations.some((l) => l.id === 'old_bookshop'));
 
   const fountain = await runtime.service.moveTo(learnerId, { locationId: 'cracked_fountain' });
-  assert.deepEqual(fountain.world.locations.filter((l) => l.adjacent).map((l) => l.id), ['butchers_stall', 'coffee_cart', 'old_bookshop']);
+  assert.deepEqual(fountain.world.locations.filter((l) => l.adjacent).map((l) => l.id), ['butchers_stall', 'coffee_cart', 'old_bookshop', 'the_high_gate']);
 
   const restarted = await serviceRuntime(t, { saveDir: runtime.saveDir });
   const recovered = await restarted.service.getWorld(learnerId);

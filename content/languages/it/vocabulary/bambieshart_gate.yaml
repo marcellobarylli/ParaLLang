@@ -1,0 +1,18 @@
+# Round 113: The High Gate (a place; thanks reuses Gerald's word). Reference URLs follow the existing patterns and were not opened from the
+# build container; listed for the owner's content review.
+version: bambieshart-gate-it-v1
+references:
+  - id: treccani-montagna
+    title: "Treccani, Vocabolario: montagna"
+    url: "https://www.treccani.it/vocabolario/montagna/"
+entries:
+  - id: montagna
+    kind: word
+    target: "montagna"
+    part_of_speech: noun
+    accepted_translations: ["mountain"]
+    surface_variants: ["montagna", "montagne"]
+    accent_insensitive: false
+    example: { target: "La montagna è lontana.", english: "The mountain is far away." }
+    note: "'Montagna' is feminine: la montagna, plural le montagne."
+    reference_ids: [treccani-montagna]

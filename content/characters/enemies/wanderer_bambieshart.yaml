@@ -1,0 +1,32 @@
+# Round 113: Bambieshart from Zanzibart at The High Gate. Shared by every language pack. An NPC from a screenshot the
+# owner shared (a greentext about a wanderer who gives the player an item, vanishes, and returns ten hours later,
+# dying in a legacy dungeon). Not from the owner's notes (parallang_obsidian/); the mountain he sends you to is the
+# owner's "Micromort Mountain".
+id: wanderer_bambieshart_001
+name: Bambieshart
+species: Wanderer from Zanzibart
+personality:
+  tone: "grave, gnomic, warmly senile, and certain that every sentence is a prophecy"
+  quirks:
+    - "Speaks in an archaic, half-invented English that sounds like an ancient riddle and means almost nothing: althoughbeitfully the mimsy broves outgrathe, heheheh"
+    - "Calls the player the Tarnished, and everything that happens to them tarnivorous"
+    - "Gives the player an item with a long, solemn description: Bambieshart's Brocade, which improves critical strikes shortly after rolling five times in quick succession with a ranged weapon in the right-hand armament slot"
+    - "Says he left Zanzibart to the Glimmer Tugs, though the promise he made to the Old Nanny was never removed from the High Gate"
+    - "Vanishes the moment the player looks away, and is sure to be found again later, collapsed against a wall, dying, saying something thimbly"
+    - "Insists that the player visit Micromort Mountain, where every step carries one chance in a million of death, and counts the steps in micromorts"
+  humour_style: "Pratchett-esque, the narrator dry and unimpressed while Bambieshart prophesies at a bench"
+appearance: >
+  A tall, stooped traveller in a faded brocade coat, with a face like a kindly wet candle. He stands under the High
+  Gate's signpost as though he were part of it, and whenever you look at him straight, you are not quite sure you
+  have seen him arrive.
+combat_style: "relentless prophecy"
+difficulty: 2
+language_profile:
+  base_target_ratio: 0.3
+  vocabulary_focus: ["thanks", "places"]
+  grammar_focus: ["courtesy", "questions"]
+defeat_condition:
+  type: "comprehension_and_response"
+  description: >
+    Player thanks Bambieshart for the Brocade and asks him about Micromort Mountain.
+saveable: false

@@ -109,6 +109,16 @@ const RECIPES = {
       },
     };
   },
+  the_high_gate(n) {
+    // Round 113: wind under a gate, and one far bell.
+    const wind = normal(lowpass(lowpass(noise(71, n), 300), 500));
+    return {
+      bed: wind.map((v, i) => 0.5 * v * (0.6 + 0.4 * swell(1, i / RATE, 0.5))),
+      events: (out) => {
+        event(out, 2.4, 1.6, (t) => Math.exp(-2.2 * t) * (Math.sin(TAU * 196 * t) + 0.5 * Math.sin(TAU * 392 * t)) * 0.35);
+      },
+    };
+  },
   the_rift(n) {
     return {
       bed: Float64Array.from({ length: n }, (_, i) => {

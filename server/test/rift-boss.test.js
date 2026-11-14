@@ -90,10 +90,11 @@ test('both packs put Errata in The Rift, reviewing every earlier vocabulary file
       .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
     assert.ok(partyIds.size > 0);
     // Round 052: Flick's minutes objective also targets Mortimer's numbers, which stay location encounter entries.
-    const locationIds = new Set([...encounters.values()].filter(({ encounter }) => !encounter.party_of)
+    const locationIds = new Set([...encounters.values()].filter(({ encounter }) => !encounter.party_of && encounter.id !== 'high_gate_bambieshart')
       .flatMap(({ encounter }) => encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids)));
     // Its non-target word for minutes sits in Flick's party file and is not reviewed either.
-    const reviewed = (entry) => (!partyIds.has(entry.id) || locationIds.has(entry.id)) && !['minuti', 'minutos'].includes(entry.id);
+    // Round 113: The High Gate is an optional side encounter; its word (montagna) is not part of the boss's review.
+    const reviewed = (entry) => (!partyIds.has(entry.id) || locationIds.has(entry.id)) && !['minuti', 'minutos', 'montagna', 'montana'].includes(entry.id);
     assert.equal(definition.narrationEntries.length, vocabulary.entries.filter(reviewed).length, 'its chips cover every location encounter entry');
     for (const file of files) assert.match(vocabulary.version, new RegExp(file.replace('_', '-')), `${file} is still one of the files`);
   }

@@ -8,7 +8,7 @@ import { loadGameContent } from '../src/content-loader.js';
 import { gateFor } from '../src/world.js';
 import { api, createRuntime } from './helpers.js';
 
-// Round 014: The Rift is sealed until the other five encounters are complete.
+// Round 014: The Rift is sealed until the other five encounters are complete (round 113: The High Gate is optional).
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
 const others = ['market_entrance_tutorial', 'imp_coffee_greeting', 'butchers_stall_charcutier', 'cracked_fountain_letharger', 'old_bookshop_bookworm'];
 
@@ -27,7 +27,7 @@ test('both packs gate The Rift on the other five encounters', () => {
   for (const language of ['it', 'es']) {
     const { world, encounters } = loadGameContent({ language });
     const rift = world.locationsById.get('the_rift');
-    assert.deepEqual([...rift.requires_completed].sort(), [...encounters.values()].filter(({ encounter }) => encounter.id !== 'the_rift_errata' && !encounter.party_of).map(({ encounter }) => encounter.id).sort());
+    assert.deepEqual([...rift.requires_completed].sort(), [...encounters.values()].filter(({ encounter }) => encounter.id !== 'the_rift_errata' && encounter.id !== 'high_gate_bambieshart' && !encounter.party_of).map(({ encounter }) => encounter.id).sort());
     assert.deepEqual(world.locationsById.get('coffee_cart').requires_completed, []);
     assert.equal(gateFor(world.locationsById.get('coffee_cart'), {}), null);
     assert.deepEqual(gateFor(rift, { completedEncounterIds: ['imp_coffee_greeting', 'unrelated'] }), { sealed: true, required: 5, completed: 1 });

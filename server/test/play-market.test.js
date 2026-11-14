@@ -37,7 +37,7 @@ test('the folded estimate reads Errata\'s glitched English as English and flags 
 test('the tour visits every encounter once, the Old Bookshop just before The Rift, whose gate lists the others', () => {
   for (const language of ['it', 'es']) {
     const { world } = loadGameContent({ language });
-    const held = world.locations.filter((l) => l.encounter).map((l) => l.id);
+    const held = world.locations.filter((l) => l.encounter && l.id !== 'the_high_gate').map((l) => l.id);
     assert.deepEqual([...tourOrder].sort(), held.sort());
     assert.equal(tourOrder.at(-1), 'the_rift');
     assert.ok(world.neighbours.get(tourOrder.at(-2)).includes('the_rift'));
