@@ -7,7 +7,7 @@ const MOVING = new Set(['approach', 'walk']);
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
-export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, cleared = [], insets, onArrive }) {
+export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, cleared = [], insets, onArrive, closed = 0, resolved = false, beat = null }) {
   const canvasRef = useRef(null);
   const viewRef = useRef(null);
   const labelRefs = useRef([]);
@@ -41,6 +41,11 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, clear
     if (status === 'ready') viewRef.current?.setPhase({ phase, siteIndex, walkFrom });
     else if (status === 'unavailable' && MOVING.has(phase)) arriveRef.current?.(phase);
   }, [status, phase, siteIndex, walkFrom]);
+
+  // Round 116: the conversation moves the camera at its site. After the phase effect, so a new site starts unshaped.
+  useEffect(() => {
+    if (status === 'ready' && phase === 'encounter') viewRef.current?.setEncounter({ closed, resolved, beatId: beat?.id ?? null, beatKind: beat?.kind ?? null });
+  }, [status, phase, siteIndex, closed, resolved, beat]);
 
   useEffect(() => { if (status === 'ready' && insets) viewRef.current?.setInsets(insets); }, [status, insets]);
 

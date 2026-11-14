@@ -68,7 +68,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     // Every Spellbook from a reply goes through here (review 1, R1.4).
     const withSpellbook = (spellbook) => { spellbookVersion += 1; return spellbook; };
 
-    const showVictory = () => set({ phase: 'victory', encounter: null, encounterLoading: false, siteError: null, assessment: null, cameraArrived: false, view: 'dialogue', draft: '', pendingInput: null });
+    const showVictory = () => set({ phase: 'victory', closedObjectives: 0, encounter: null, encounterLoading: false, siteError: null, assessment: null, cameraArrived: false, view: 'dialogue', draft: '', pendingInput: null });
 
     // Starts the run's next site on the server (it decides which site that is) and takes the site from the reply.
     const loadSite = async ({ restart = false } = {}) => {
@@ -89,7 +89,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           result = await startSite(true);
         }
         if (stale()) return;
-        const patch = { encounter: result.encounter, spellbook: withSpellbook(result.spellbook), encounterLoading: false, assessment: null, draft: '', pendingInput: null };
+        const patch = { encounter: result.encounter, spellbook: withSpellbook(result.spellbook), encounterLoading: false, assessment: null, closedObjectives: 0, draft: '', pendingInput: null };
         const index = siteIndexOf(result.encounter.encounterId);
         // Another tab moved the run on: the camera goes to the site the server started.
         if (index >= 0 && index !== get().siteIndex) Object.assign(patch, { siteIndex: index, phase: 'approach', walkFrom: null, cameraArrived: false });
@@ -131,6 +131,10 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       reviewChallenge: null,
       reviewResult: null,
       assessment: null,
+      // Round 116: what the camera follows in a conversation. closedObjectives counts the objectives closed in it,
+      // and beat numbers each verdict ({ id, kind }: 'pass', 'fail' or 'resolved').
+      closedObjectives: 0,
+      beat: null,
       draft: '',
       pendingInput: null,
       isLoading: false,
@@ -216,7 +220,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const after = s.siteIndex + 1 < s.dungeon.sites.length ? s.siteIndex + 1 : null;
         const next = knowsThisSite(progress) ? progress.nextSiteIndex : after;
         if (next == null) { showVictory(); return; }
-        set({ phase: 'walk', walkFrom: s.siteIndex, siteIndex: next, cameraArrived: false, encounter: null, assessment: null, view: 'dialogue', draft: '', pendingInput: null });
+        set({ phase: 'walk', walkFrom: s.siteIndex, siteIndex: next, cameraArrived: false, encounter: null, assessment: null, closedObjectives: 0, view: 'dialogue', draft: '', pendingInput: null });
         await loadSite();
       },
 
@@ -231,7 +235,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           if (!current()) return;
           siteRequest += 1;
           progressRequest += 1; // a read of the finished run still in flight must not undo the reset (R1.2)
-          set({ progress: view.progress, phase: 'overview', siteIndex: 0, walkFrom: null, cameraArrived: false, encounter: null, encounterLoading: false, siteError: null, assessment: null, isLoading: false, view: 'dialogue' });
+          set({ progress: view.progress, phase: 'overview', siteIndex: 0, walkFrom: null, cameraArrived: false, encounter: null, encounterLoading: false, siteError: null, assessment: null, closedObjectives: 0, isLoading: false, view: 'dialogue' });
         } catch (error) { if (current()) set({ error: error.message, isLoading: false }); }
       },
 
@@ -249,7 +253,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({
           settings, settingsOpen: false, learnerId: null, language: null, progress: null, connection: 'idle', serverProblem: null, dungeon,
           phase, siteIndex: 0, walkFrom: null, cameraArrived: false, encounter: null, encounterLoading: false, siteError: null, starting: false,
-          spellbook: emptySpellbook, view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null, isLoading: false, error: null,
+          spellbook: emptySpellbook, view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null, closedObjectives: 0, isLoading: false, error: null,
         });
         await get().initialize();
       },
@@ -266,7 +270,13 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         try {
           const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text });
           if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
-          set({ encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
+          // A held pass (said too early in an ordered encounter) closes nothing (round 051).
+          const closed = (result.assessment?.objectiveResults ?? []).filter((entry) => entry.passed && !entry.held).length;
+          const kind = result.encounter.state === 'resolved' ? 'resolved' : closed > 0 ? 'pass' : 'fail';
+          set({
+            encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: result.assessment, isLoading: false, pendingInput: null, draft: '',
+            closedObjectives: get().closedObjectives + closed, beat: { id: (get().beat?.id ?? 0) + 1, kind },
+          });
           if (result.encounter.state === 'resolved') await refreshProgress(learnerId);
         } catch (error) {
           if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });

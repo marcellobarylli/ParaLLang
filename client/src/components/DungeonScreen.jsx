@@ -169,7 +169,8 @@ export default function DungeonScreen({ useStore }) {
 
   return (
     <div className={`app-shell phase-${phase}`}>
-      <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} cleared={cleared} insets={insets} onArrive={state.onCameraArrived} />
+      <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} cleared={cleared} insets={insets} onArrive={state.onCameraArrived}
+        closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
 
       <header className="hud" ref={hudRef}>
         <div className="hud-title"><strong>ParaLLang</strong><span>{dungeon.name}</span></div>

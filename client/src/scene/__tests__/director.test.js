@@ -4,7 +4,7 @@
 import { describe, expect, test } from 'vitest';
 import { taProhmHeightAt } from '@parallang/aesthetic';
 import { DUNGEON } from '../../dungeon.js';
-import { DURATIONS, EYE, STANDOFF, WALK_SPEED, blendPoses, createDirector, measureRoute, walkFraction } from '../director.js';
+import { DURATIONS, ENGAGE_MAX, EYE, STANDOFF, WALK_SPEED, blendPoses, createDirector, measureRoute, walkFraction } from '../director.js';
 import { dockInsets, freeRect } from '../insets.js';
 
 const FRAME = 1 / 30;
@@ -221,6 +221,119 @@ describe('the five states', () => {
     const mid = blendPoses(a, b, 0.5);
     expect(mid.position[1]).toBeGreaterThan(3);
     expect(mid.position[1]).toBeLessThan(100);
+  });
+});
+
+// Round 116: the conversation shapes the hold at a site.
+describe('the camera follows the conversation', () => {
+  const siteOf = (index) => DUNGEON.sites[index].at;
+  const toSite = (pose, index) => Math.hypot(pose.position[0] - siteOf(index)[0], pose.position[2] - siteOf(index)[1]);
+  // The distance from the camera's position to the line from `a` to the site, on the ground plan.
+  const offLine = (pose, a, index) => {
+    const [bx, bz] = siteOf(index);
+    const [dx, dz] = [bx - a[0], bz - a[2]];
+    return Math.abs((pose.position[0] - a[0]) * dz - (pose.position[2] - a[2]) * dx) / Math.hypot(dx, dz);
+  };
+  // To a site by the way a run gets there: an approach to the first, a walk to the others.
+  function holdAt(index) {
+    const d = director();
+    d.approach(0);
+    run(d, d.arrival + 0.1);
+    for (let to = 1; to <= index; to++) { d.walk(to - 1, to); run(d, d.arrival + 0.1); }
+    return d;
+  }
+
+  test('each closed objective steps the camera in along the line to the site, smoothly and never too near', () => {
+    for (let index = 0; index <= lastSite; index++) {
+      const d = holdAt(index);
+      const rest = d.pose;
+      const start = toSite(rest, index);
+      let previous = start;
+      for (const level of [0.35, 0.7, 1]) {
+        d.engage(level);
+        run(d, 6, (pose, before) => {
+          expect(distance(pose.position, before.position)).toBeLessThan(0.12); // 3.6 m/s at most, drift and all
+          expect(offLine(pose, rest.position, index)).toBeLessThan(0.6); // the drift is the only sideways motion
+        });
+        const now = toSite(d.pose, index);
+        expect(now).toBeLessThan(previous - 0.2);
+        previous = now;
+      }
+      expect(previous).toBeGreaterThan(2);
+      expect(previous / start).toBeGreaterThan(1 - ENGAGE_MAX - 0.12);
+      expect(previous / start).toBeLessThan(1 - ENGAGE_MAX + 0.12);
+      d.engage(0); // Start over: the camera steps back out
+      run(d, 8);
+      expect(toSite(d.pose, index)).toBeGreaterThan(start - 0.6);
+    }
+  });
+
+  test('a verdict is a brief push or pull that dies away', () => {
+    const d = holdAt(1);
+    const quiet = director();
+    quiet.approach(0); run(quiet, quiet.arrival + 0.1); quiet.walk(0, 1); run(quiet, quiet.arrival + 0.1);
+    const gap = () => { const [a, b] = [d.pose, quiet.pose]; return Math.hypot(a.position[0] - siteOf(1)[0], a.position[2] - siteOf(1)[1]) - Math.hypot(b.position[0] - siteOf(1)[0], b.position[2] - siteOf(1)[1]); };
+    for (const [kind, sign] of [['pass', -1], ['fail', 1], ['resolved', -1]]) {
+      d.beat(kind);
+      let peak = 0;
+      for (let t = 0; t < 0.6; t += FRAME) {
+        const before = d.pose;
+        d.update(FRAME); quiet.update(FRAME);
+        expect(distance(d.pose.position, before.position)).toBeLessThan(0.08);
+        if (Math.abs(gap()) > Math.abs(peak)) peak = gap();
+      }
+      expect(Math.sign(peak)).toBe(sign); // a pass comes nearer, a fail backs off
+      expect(Math.abs(peak)).toBeGreaterThan(0.1);
+      expect(Math.abs(peak)).toBeLessThan(0.4);
+      for (let t = 0; t < 3; t += FRAME) { d.update(FRAME); quiet.update(FRAME); }
+      expect(Math.abs(gap())).toBeLessThan(0.01);
+    }
+    d.beat('nonsense');
+    d.update(FRAME); quiet.update(FRAME);
+    expect(Math.abs(gap())).toBeLessThan(0.01);
+  });
+
+  test('a resolved site turns the camera to the way on, and the walk starts from that pose without a jump', () => {
+    for (let index = 0; index <= lastSite; index++) {
+      const d = holdAt(index);
+      d.engage(1);
+      run(d, 5);
+      const facing = d.pose;
+      expect(Math.hypot(facing.target[0] - siteOf(index)[0], facing.target[2] - siteOf(index)[1])).toBeLessThan(0.3);
+      d.onward(true);
+      run(d, 3, (pose, before) => {
+        expect(distance(pose.position, before.position)).toBeLessThan(0.05); // it turns, it does not move
+        expect(distance(pose.target, before.target)).toBeLessThan(0.8); // the look-at point sweeps; at the last site it goes up to the sanctuary
+        expect(distance(pose.position, pose.target)).toBeGreaterThan(2);
+      });
+      const turned = d.pose;
+      expect(distance(turned.position, facing.position)).toBeLessThan(0.8);
+      expect(Math.hypot(turned.target[0] - siteOf(index)[0], turned.target[2] - siteOf(index)[1])).toBeGreaterThan(3);
+      // Onward is further in: the gate ahead on the route, and at the last site the sanctuary in the middle of the
+      // level. Always at about eye level, so a gate's door frames it.
+      expect(turned.target[2]).toBeLessThan(siteOf(index)[1] - 2.5);
+      expect(turned.target[1]).toBeLessThan(2.5);
+      if (index === lastSite) expect(Math.hypot(turned.target[0], turned.target[2])).toBeLessThan(0.5);
+
+      const before = d.pose;
+      if (index < lastSite) d.walk(index, index + 1); else d.victory();
+      expect(distance(d.pose.position, before.position)).toBeLessThan(1e-9);
+      expect(distance(d.pose.target, before.target)).toBeLessThan(1e-9);
+      expect(d.reaction).toMatchObject({ level: 0, engaged: 0, turn: 0, onward: false }); // a new state starts unshaped
+      run(d, d.arrival + 2, (pose, earlier) => expect(distance(pose.position, earlier.position)).toBeLessThan(6));
+      if (index < lastSite) expect(Math.hypot(d.pose.target[0] - siteOf(index + 1)[0], d.pose.target[2] - siteOf(index + 1)[1])).toBeLessThan(0.3);
+    }
+  });
+
+  test('the far states are not shaped', () => {
+    const d = director();
+    d.overview();
+    run(d, 4);
+    const before = d.pose;
+    d.engage(1).onward(true).beat('pass');
+    run(d, 3);
+    expect(distance(d.pose.position, before.position)).toBeLessThan(1e-9);
+    expect(distance(d.pose.target, before.target)).toBeLessThan(1e-9);
   });
 });
 

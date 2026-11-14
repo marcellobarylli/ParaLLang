@@ -77,6 +77,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .dialogue-panel, .spellbook, .review-panel { width: min(760px, 100%); margin: 0 auto; padding: .75rem clamp(1rem, 4vw, 2rem); }
 .objective-card, .assessment-banner, .briefing-card, .empty-state { border: 1px solid var(--edge); background: #19182a; border-radius: .8rem; padding: .9rem 1rem; margin-bottom: 1rem; }
 .objective-card p, .assessment-banner p, .briefing-card p { margin: .35rem 0; }
+.objective-card strong, .objective-card small { display: block; }
 .sheet .objective-card { position: sticky; top: 0; z-index: 1; padding: .6rem .9rem; box-shadow: 0 6px 10px -6px #000; }
 .sheet .objective-card p { margin: .15rem 0; }
 .briefing-card { border-color: #5c5320; background: #211d12; }

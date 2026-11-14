@@ -69,7 +69,7 @@ function beacon([x, z], heightAt) {
   shaft.position.set(x, y + 3.5, z);
   group.add(ring, shaft, crystal);
   group.visible = false;
-  return { group, crystal, materials, opacity: 0, base: [1, 0.55, 0.1] };
+  return { group, crystal, ring, materials, opacity: 0, cleared: 0, flare: 0, base: [1, 0.55, 0.1] };
 }
 
 /**
@@ -116,6 +116,8 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
   let last = null;
   let disposed = false;
   const projected = new Vector3();
+  // Round 116: the conversation at the site the camera holds at.
+  const talk = { resolved: false, beatId: null };
 
   function resize() {
     const width = Math.max(1, canvas.clientWidth || canvas.width || 1);
@@ -169,10 +171,17 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       b.opacity = ease(b.opacity, on ? 1 : 0, dt, 0.5);
       b.group.visible = b.opacity > 0.02;
       if (!b.group.visible) return;
-      const pulse = 0.85 + 0.15 * Math.sin(clock * 2.2);
-      b.materials.forEach((material, i) => { material.opacity = b.opacity * pulse * b.base[i]; });
-      b.crystal.rotation.y = clock * 1.3;
-      b.crystal.position.y = siteAnchors[index].y + 0.3 + 0.08 * Math.sin(clock * 1.7);
+      // A resolved site lets go of its beacon: the crystal rises and fades, the shaft goes, the ring turns green.
+      b.cleared = ease(b.cleared, on && talk.resolved ? 1 : 0, dt, 0.9);
+      b.flare = ease(b.flare, 0, dt, 0.35);
+      const pulse = 0.85 + 0.15 * Math.sin(clock * 2.2) + 0.5 * b.flare;
+      const fade = [1 - 0.85 * b.cleared, 1, 1 - b.cleared];
+      b.materials.forEach((material, i) => { material.opacity = Math.min(1, b.opacity * pulse * b.base[i] * fade[i]); });
+      b.materials[1].color.setRGB(GOLD[0] + (0.5 - GOLD[0]) * b.cleared, GOLD[1] + (0.9 - GOLD[1]) * b.cleared, GOLD[2] + (0.5 - GOLD[2]) * b.cleared);
+      b.crystal.rotation.y = clock * (1.3 + 4 * b.flare);
+      b.crystal.scale.set(1 + 0.5 * b.flare, 1.5 * (1 + 0.5 * b.flare), 1 + 0.5 * b.flare);
+      b.crystal.position.y = siteAnchors[index].y + 0.3 + 0.08 * Math.sin(clock * 1.7) + 1.8 * b.cleared;
+      b.ring.scale.setScalar(1 + 0.35 * b.flare);
     });
 
     world.update(dt, camera);
@@ -215,6 +224,23 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       else director.approach(siteIndex);
       if (reducedMotion) director.skip();
       notified = false;
+      Object.assign(talk, { resolved: false });
+    },
+    /**
+     * Round 116: the conversation at the site the camera holds at. `closed` objectives step the camera in, a new
+     * `beatId` is a verdict of `beatKind` ('pass', 'fail' or 'resolved'), and `resolved` releases the beacon and
+     * turns the camera to the way on.
+     */
+    setEncounter({ closed = 0, resolved = false, beatId = null, beatKind = null } = {}) {
+      if (director.mode !== 'approach' && director.mode !== 'walk') return;
+      director.engage(resolved ? 1 : Math.min(0.7, closed * 0.35));
+      director.onward(resolved);
+      talk.resolved = resolved;
+      if (beatId !== null && beatId !== talk.beatId) {
+        if (!reducedMotion) director.beat(beatKind);
+        if (beatKind !== 'fail') { const b = beacons[director.site]; if (b) b.flare = 1; }
+      }
+      talk.beatId = beatId;
     },
     setInsets(next) {
       for (const side of Object.keys(insetTarget)) insetTarget[side] = Math.max(0, Number(next?.[side]) || 0);

@@ -1,6 +1,8 @@
 // Round 115: plays the built web client through the whole Ta Prohm dungeon in headless Chromium and captures each
 // camera state at a phone and a desktop size. It is the round's end-to-end check and the source of
-// docs/rounds/115/shots/.
+// docs/rounds/115/shots/ and docs/rounds/116/shots/. Round 116: it also asserts that the gameplay and the camera move
+// together (no dialogue while the camera travels, a step in for each closed objective, a turn to the way on at a
+// resolve), and fails if they do not.
 //
 //   npm run build -w client
 //   CHROME_PATH=/path/to/chrome PUPPETEER_CORE=/path/to/node_modules/puppeteer-core node client/scripts/dungeon-shots.mjs [outDir]
@@ -99,7 +101,17 @@ const state = (page) => page.evaluate(() => {
   return {
     phase: s.phase, siteIndex: s.siteIndex, connection: s.connection, isLoading: s.isLoading, error: s.error, siteError: s.siteError,
     encounter: s.encounter && { id: s.encounter.encounterId, state: s.encounter.state, version: s.encounter.version },
-    camera: level && { mode: level.director.mode, stage: level.director.stage, arrival: level.director.arrival, position: level.director.pose.position.map((v) => Math.round(v * 10) / 10) },
+    closedObjectives: s.closedObjectives, beat: s.beat, sheet: Boolean(document.querySelector('.sheet')), caption: document.querySelector('.caption')?.textContent ?? null,
+    camera: level && (() => {
+      const { director } = level;
+      const pose = director.pose;
+      const site = s.dungeon.sites[s.siteIndex].at;
+      const round = (v) => Math.round(v * 100) / 100;
+      return {
+        mode: director.mode, stage: director.stage, site: director.site, arrival: director.arrival, position: pose.position.map(round), target: pose.target.map(round),
+        toSite: round(Math.hypot(pose.position[0] - site[0], pose.position[2] - site[1])), targetToSite: round(Math.hypot(pose.target[0] - site[0], pose.target[2] - site[1])),
+      };
+    })(),
   };
 });
 const waitFor = (page, test, arg, timeout = 90000) => page.waitForFunction(test, { timeout, polling: 100 }, arg);
@@ -135,27 +147,52 @@ async function run(browser, runtime, size, log) {
     log.push({ shot: `${name}-${size.name}.jpg`, ...now });
     console.log('shot', `${name}-${size.name}`, JSON.stringify(now.camera), now.phase);
   };
+  // Round 116: the coupling of gameplay and camera, asserted in the real browser.
+  const check = (ok, message) => { if (!ok) { problems.push(`coupling: ${message}`); console.error('COUPLING FAILED:', message); } };
+  // The dialogue is open at site `index`: the camera must be holding there, looking at the site.
+  const arrivedAt = async (index) => {
+    const now = await state(page);
+    check(now.sheet, `site ${index + 1}: the dialogue sheet is open`);
+    check(now.camera.stage === 'hold' && now.camera.site === index, `site ${index + 1}: the camera holds at the site (${now.camera.mode}/${now.camera.stage}, site ${now.camera.site})`);
+    check(now.camera.toSite < (index === 0 ? 10.5 : 4.5), `site ${index + 1}: the camera stands by the site (${now.camera.toSite} m)`);
+    check(now.camera.targetToSite < 0.5, `site ${index + 1}: the camera looks at the site (${now.camera.targetToSite} m off)`);
+    check(now.closedObjectives === 0, `site ${index + 1}: the conversation starts with nothing closed`);
+  };
   const answerSite = async () => {
-    const { encounter } = await state(page);
-    for (const answer of passingAnswers(runtime.content, encounter.id)) {
+    const start = await state(page);
+    const index = start.siteIndex;
+    let previous = start;
+    for (const answer of passingAnswers(runtime.content, start.encounter.id)) {
       await page.type('#player-response', answer);
-      const before = (await state(page)).encounter.version;
       await clickButton(page, 'Send');
-      await waitFor(page, (version) => { const s = window.__parallang.store.getState(); return !s.isLoading && (s.encounter?.version !== version || s.error); }, before);
+      await waitFor(page, (version) => { const s = window.__parallang.store.getState(); return !s.isLoading && (s.encounter?.version !== version || s.error); }, previous.encounter.version);
+      await sleep(2600); // the step in eases over about two seconds
       const after = await state(page);
       if (after.error) throw new Error(`Send failed: ${after.error}`);
+      check(after.beat?.id === (previous.beat?.id ?? 0) + 1, `site ${index + 1}: the verdict is numbered (${JSON.stringify(after.beat)})`);
+      if (after.closedObjectives > previous.closedObjectives) check(after.camera.toSite < previous.camera.toSite - 0.2, `site ${index + 1}: a closed objective steps the camera in (${previous.camera.toSite} to ${after.camera.toSite} m)`);
+      previous = after;
     }
-    if ((await state(page)).encounter.state !== 'resolved') throw new Error(`${encounter.id} did not resolve`);
+    const end = await state(page);
+    if (end.encounter.state !== 'resolved') throw new Error(`${start.encounter.id} did not resolve`);
+    check(end.camera.toSite < start.camera.toSite * 0.8 && end.camera.toSite > 2, `site ${index + 1}: resolved, the camera has stepped in (${start.camera.toSite} to ${end.camera.toSite} m)`);
+    check(end.camera.targetToSite > 3, `site ${index + 1}: resolved, the camera has turned to the way on (${end.camera.targetToSite} m off the site)`);
+    check(end.camera.mode !== 'victory' && end.phase === 'encounter', `site ${index + 1}: the walk waits for the player`);
   };
   const walk = async (label, name, fractions) => {
+    const before = await state(page);
     await clickButton(page, label);
     await waitFor(page, () => window.__parallangLevel.director.mode === 'walk');
-    const { camera } = await state(page);
+    const { camera, sheet } = await state(page);
+    check(!sheet, 'the dialogue sheet closes when the walk starts');
+    check(Math.hypot(...camera.position.map((v, i) => v - before.camera.position[i])) < 1.5, `the walk starts where the camera stood (${before.camera.position} to ${camera.position})`);
     let waited = 0;
     for (const [index, fraction] of fractions.entries()) {
       const at = camera.arrival * fraction * 1000;
       await sleep(Math.max(0, at - waited));
       waited = at;
+      const now = await state(page);
+      check(now.phase === 'walk' && !now.sheet && /^Walking to /.test(now.caption ?? ''), `no dialogue while the camera walks (${now.phase}, sheet ${now.sheet}, caption ${now.caption})`);
       await shot(`${name}${fractions.length > 1 ? `-${index + 1}` : ''}`, { settle: 0 });
     }
     await waitPhase(page, 'encounter');
@@ -170,17 +207,24 @@ async function run(browser, runtime, size, log) {
   await shot('2-overview', { settle: 2600 }); // the site labels fade in after the camera settles
 
   await clickButton(page, 'Start');
+  await waitFor(page, () => window.__parallangLevel.director.mode === 'approach');
+  const descending = await state(page);
+  check(!descending.sheet && descending.camera.stage === 'transition', `no dialogue while the camera comes down (${descending.camera.stage}, sheet ${descending.sheet})`);
   await waitPhase(page, 'encounter');
+  await arrivedAt(0);
   await shot('3-approach', { settle: 1800 }); // the sheet is up and the camera has slid to the free area
   await answerSite();
-  if (EXTRA) await shot('x-site-1-resolved');
+  await shot('3-resolved', { settle: 600 }); // stepped in, turned to the gate, the beacon released
 
   await walk('Walk on to', '4-walk', EXTRA ? [0.3, 0.62, 0.86] : [0.3, 0.62]); // through the gopura, then the gate tree
+  await arrivedAt(1);
   await shot('5-site-2', { settle: 1800 });
   await answerSite();
   await walk('Walk on to', 'x-walk-to-site-3', EXTRA ? [0.6] : []);
+  await arrivedAt(2);
   await shot('6-site-3', { settle: 1800 });
   await answerSite();
+  await shot('6-resolved', { settle: 600 }); // turned up to the sanctuary
 
   await clickButton(page, 'Leave the temple');
   await waitArrived(page, 'victory');

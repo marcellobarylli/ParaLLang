@@ -384,3 +384,37 @@ test('a Start over that fails says so in the conversation, which stays as it was
   expect(s().error).toBe('The conversation could not start over: The selected CLI timed out.');
   expect(s().encounter.id).toBe(conversation);
 });
+
+// Round 116: what the camera follows in a conversation.
+test('the store counts the objectives a conversation has closed and numbers each verdict', async () => {
+  const { api, s } = makeStore();
+  const turn = (objectiveResults, state = 'ongoing') => async () => ({
+    encounter: { ...s().encounter, version: s().encounter.version + 1, state }, spellbook, assessment: { overallFeedback: '', objectiveResults },
+  });
+  await s().initialize();
+  s().enter();
+  await s().start();
+  s().onCameraArrived();
+  expect(s()).toMatchObject({ closedObjectives: 0, beat: null });
+
+  api.sendDialogue.mockImplementationOnce(turn([{ objectiveId: 'greet', passed: false }]));
+  await s().sendMessage('Hello!');
+  expect(s()).toMatchObject({ closedObjectives: 0, beat: { id: 1, kind: 'fail' } });
+  // A pass said too early is held: it closes nothing, so it is no step in.
+  api.sendDialogue.mockImplementationOnce(turn([{ objectiveId: 'greet', passed: false }, { objectiveId: 'introduce', passed: true, held: true }]));
+  await s().sendMessage('Sono Sam.');
+  expect(s()).toMatchObject({ closedObjectives: 0, beat: { id: 2, kind: 'fail' } });
+  api.sendDialogue.mockImplementationOnce(turn([{ objectiveId: 'greet', passed: true }, { objectiveId: 'introduce', passed: true }]));
+  await s().sendMessage('Ciao, sono Sam.');
+  expect(s()).toMatchObject({ closedObjectives: 2, beat: { id: 3, kind: 'pass' } });
+  api.sendDialogue.mockImplementationOnce(async () => { throw new Error('The selected CLI timed out.'); });
+  await s().sendMessage('E tu?');
+  expect(s()).toMatchObject({ closedObjectives: 2, beat: { id: 3, kind: 'pass' } }); // no verdict, no beat
+
+  await s().restartSite();
+  expect(s()).toMatchObject({ closedObjectives: 0, beat: { id: 3 } }); // the count starts again; the numbering goes on
+  await s().sendMessage('Ciao!'); // the fake server resolves the site
+  expect(s()).toMatchObject({ closedObjectives: 0, beat: { id: 4, kind: 'resolved' } });
+  await s().walkOn();
+  expect(s()).toMatchObject({ phase: 'walk', closedObjectives: 0 });
+});
