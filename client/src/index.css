@@ -45,3 +45,15 @@ input { flex: 1; min-width: 0; background: #181827; color: #ece8da; border: 1px 
 .review-panel form { display: grid; gap: .7rem; }
 .review-prompt { justify-content: flex-start; }
 @media (max-width: 620px) { .app-header { align-items: flex-start; flex-direction: column; } .app-header nav { width: 100%; justify-content: space-between; } .input-bar { width: calc(100% - 1rem); } }
+/* Round 114: phone use (GitHub Pages build): 44 px tap targets, 16 px inputs (no zoom on focus in iOS Safari), safe
+   areas, and the settings sheet (server URL and access token). */
+.primary-button, .secondary-button, .text-button, .icon-button, .error-banner button { min-height: 44px; min-width: 44px; }
+input { font-size: 16px; min-height: 44px; }
+.app-header { padding-top: max(.85rem, env(safe-area-inset-top)); }
+.input-bar { padding-bottom: max(1.2rem, env(safe-area-inset-bottom)); }
+.sheet-backdrop { position: fixed; inset: 0; z-index: 20; background: #05050ccc; display: flex; align-items: flex-end; justify-content: center; }
+.settings-sheet { width: min(520px, 100%); display: grid; gap: .45rem; background: #19182a; border: 1px solid #4a4863; border-radius: 1rem 1rem 0 0; padding: 1.1rem 1rem max(1.1rem, env(safe-area-inset-bottom)); }
+.settings-sheet h2 { margin: 0 0 .3rem; color: #e4b847; }
+.settings-sheet label { margin-top: .4rem; }
+.settings-sheet .button-row { margin-top: .6rem; }
+@media (min-width: 621px) { .sheet-backdrop { align-items: center; } .settings-sheet { border-radius: 1rem; } }

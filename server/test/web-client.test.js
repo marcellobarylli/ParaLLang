@@ -135,3 +135,19 @@ test('the web client sends no token: a token-protected server refuses it (open i
     assert.equal(store.getState().learnerId, null);
   } finally { wrapper.token = true; }
 });
+
+// Round 114: with the access token in its settings (the settings sheet), the web client reaches a token-protected
+// server itself; the test's fetch wrapper adds nothing.
+test('the web client sends the token from its settings', async () => {
+  wrapper.token = false;
+  try {
+    const storage = memoryStorage();
+    storage.setItem('parallang.settings', JSON.stringify({ serverUrl: '', token: runtime.token }));
+    const store = createGameStore({ storage });
+    await store.getState().initialize();
+    assert.equal(store.getState().error, null);
+    assert.equal(store.getState().encounter.state, 'ongoing');
+    await store.getState().saveSettings({ serverUrl: '', token: 'wrong-token' });
+    assert.match(store.getState().error, /refused the access token/);
+  } finally { wrapper.token = true; }
+});
