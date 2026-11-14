@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-14: round 116, the camera follows the conversation; the dungeon is live
+
+The dungeon is deployed at https://marcellobarylli.github.io/ParaLLang/. Inside a conversation the camera now reacts
+to the player: it moves closer each time an objective is met, and when a character lets the player pass it turns to
+the gate ahead before the walk. The deployed page was opened in a headless browser and shows the temple and the
+route; a conversation against the live model has not been played yet, which needs the access token
+([findings](docs/rounds/116/findings.md)).
+
 ## Addendum 2026-11-14: round 115, the Ta Prohm dungeon in the web client (on a branch, not deployed)
 
 The web client is now a dungeon crawl through the 3D Ta Prohm level: a title over a slow orbit of the temple, the
@@ -1045,8 +1053,8 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
-| 116 | 11-14 | The gameplay drives the camera inside an encounter (closed objectives, verdicts, the resolve); the dungeon deployed | [116](docs/rounds/116/architecture.md) | pre-run record | this commit (pre-run record) |
-| 115 | 11-14 | The Ta Prohm dungeon crawl in the web client: three sites, five camera transitions, the dialogue as a bottom sheet, a victory screen (branch `round-115-dungeon`, not merged) | [115](docs/rounds/115/architecture.md) | [findings](docs/rounds/115/findings.md) | `76a59f7` (pre-run record) to round 115 close |
+| 116 | 11-14 | The gameplay drives the camera inside an encounter (closed objectives, verdicts, the resolve); the dungeon deployed | [116](docs/rounds/116/architecture.md) | [findings](docs/rounds/116/findings.md) | `f299da0` (pre-run record) to round 116 close; merge `d01c8a0` |
+| 115 | 11-14 | The Ta Prohm dungeon crawl in the web client: three sites, five camera transitions, the dialogue as a bottom sheet, a victory screen (merged to `main` in round 116) | [115](docs/rounds/115/architecture.md) | [findings](docs/rounds/115/findings.md) | `76a59f7` (pre-run record) to round 115 close |
 | 114 | 11-14 | Infrastructure for the web client on GitHub Pages and a hosted server on Render (the dungeon itself moved to a later round) | [114](docs/rounds/114/architecture.md) | [findings](docs/rounds/114/findings.md) | `4200fe4` (pre-run record) to round 114 close |
 | 113 | 11-14 | The High Gate: Bambieshart from Zanzibart and a Micromort Mountain signpost, in both packs | [113](docs/rounds/113/architecture.md) | [findings](docs/rounds/113/findings.md) | this commit |
 | 110 | 11-06 | Spores: a fragment of The Journey on the mushrooms of the dead branches, after the Butcher's Stall (autonomous) | [110](docs/rounds/110/architecture.md) | [findings](docs/rounds/110/findings.md) | pre-run record to round 110 close |

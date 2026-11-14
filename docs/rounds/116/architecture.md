@@ -87,3 +87,19 @@ the live model stays unplayed unless the owner plays it.
   new conversation, a new run and new settings.
 - **Wiring** and **playthrough** as above.
 - All suites and the build keep passing.
+
+## Amendment 2026-11-14: two corrections to the Design's numbers (Claude, during the build)
+
+- The playthrough's "within 4.5 m of the site" holds for sites 2 and 3. At site 1 the approach ends 9.5 m back on
+  the route (round 115), so the assertion there is 10.5 m.
+- "The sanctuary at the last site" is looked at at eye level, through the inner gate's door. The first build looked
+  up at the tower and met the gate's wall (journal rows 4 and 5).
+
+## Outcome (2026-11-14)
+
+Built as designed, with the Amendment above, and deployed. Inside a conversation the camera steps in for each closed
+objective, answers each verdict with a brief push or pull, and turns to the way on at a resolve, where the beacon
+lets go. The director, the wiring between the screen and the camera, and the real-browser playthrough each test the
+coupling. `round-115-dungeon` is merged to `main` as `d01c8a0`; CI, the Pages deploy and Render's build succeeded,
+and the live site renders the title and the route. The claim boundary held: no conversation against the live model.
+See [`findings.md`](findings.md).
