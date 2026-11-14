@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ParaLLang Dead Branch</title>
+    <style>
+      :root {
+        --ink: #f3e6c8;
+        --ink-dim: #b9a98a;
+        --panel: rgba(18, 14, 10, 0.78);
+        --edge: #8d6a3f;
+        --accent: #e7b45a;
+        --glow: #c08cff;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #000;
+        overflow: hidden;
+        font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+        color: var(--ink);
+        -webkit-font-smoothing: none;
+      }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+      }
+      .title {
+        position: fixed;
+        top: max(14px, env(safe-area-inset-top));
+        left: 16px;
+        pointer-events: none;
+        text-shadow: 2px 2px 0 #000;
+        letter-spacing: 0.12em;
+      }
+      .title b {
+        display: block;
+        font-size: 20px;
+        color: var(--accent);
+      }
+      .title span {
+        font-size: 11px;
+        color: var(--ink);
+      }
+      .panel {
+        position: fixed;
+        left: 16px;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        max-width: calc(100vw - 32px);
+        box-sizing: border-box;
+        background: var(--panel);
+        border: 2px solid var(--edge);
+        box-shadow: 3px 3px 0 #000;
+        padding: 10px 12px;
+        font-size: 11px;
+        display: grid;
+        gap: 8px;
+      }
+      .panel.hidden > :not(.row-toggle) {
+        display: none;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+      .row > label {
+        color: var(--ink-dim);
+        min-width: 70px;
+      }
+      button {
+        font: inherit;
+        color: var(--ink);
+        background: #2a2016;
+        border: 1px solid var(--edge);
+        padding: 4px 8px;
+        cursor: pointer;
+      }
+      button[aria-pressed='true'] {
+        background: var(--accent);
+        color: #1a120a;
+        border-color: #f6d79a;
+      }
+      input[type='range'] {
+        accent-color: var(--glow);
+        width: 140px;
+      }
+      .stats {
+        color: var(--ink-dim);
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="view"></canvas>
+    <div class="title"><b>PARALLANG</b><span id="subtitle">THE DEAD BRANCH</span></div>
+    <div class="panel" id="panel">
+      <div class="row row-toggle">
+        <button id="toggle-panel" aria-pressed="true" title="H">Panel</button>
+        <button id="ps1" aria-pressed="true" title="P">PS1 look</button>
+        <button id="mode" aria-pressed="false" title="Space">Orbit</button>
+      </div>
+      <div class="row" id="scenes"><label>Level</label></div>
+      <div class="row" id="presets"><label>Time</label></div>
+      <div class="row">
+        <label>Effects</label>
+        <button id="jitter" aria-pressed="true">Jitter</button>
+        <button id="affine" aria-pressed="true">Affine</button>
+        <button id="dither" aria-pressed="true">Dither</button>
+        <button id="scan" aria-pressed="false">Scanlines</button>
+      </div>
+      <div class="row" id="res"><label>Lines</label></div>
+      <div class="row">
+        <label>Corruption</label>
+        <input id="corruption" type="range" min="0" max="1" step="0.01" value="0" />
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+    <script type="module" src="/demo/main.js"></script>
+  </body>
+</html>
