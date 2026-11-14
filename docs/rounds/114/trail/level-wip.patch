@@ -1,0 +1,2045 @@
+diff --git a/aesthetic/package-lock.json b/aesthetic/package-lock.json
+deleted file mode 100644
+index 6c1e278..0000000
+--- a/aesthetic/package-lock.json
++++ /dev/null
+@@ -1,1128 +0,0 @@
+-{
+-  "name": "@parallang/aesthetic",
+-  "version": "0.1.0",
+-  "lockfileVersion": 3,
+-  "requires": true,
+-  "packages": {
+-    "": {
+-      "name": "@parallang/aesthetic",
+-      "version": "0.1.0",
+-      "dependencies": {
+-        "three": "0.186.1"
+-      },
+-      "devDependencies": {
+-        "vite": "6.4.6"
+-      }
+-    },
+-    "node_modules/@esbuild/aix-ppc64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.25.12.tgz",
+-      "integrity": "sha512-Hhmwd6CInZ3dwpuGTF8fJG6yoWmsToE+vYgD4nytZVxcu1ulHpUQRAB1UJ8+N1Am3Mz4+xOByoQoSZf4D+CpkA==",
+-      "cpu": [
+-        "ppc64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "aix"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/android-arm": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/android-arm/-/android-arm-0.25.12.tgz",
+-      "integrity": "sha512-VJ+sKvNA/GE7Ccacc9Cha7bpS8nyzVv0jdVgwNDaR4gDMC/2TTRc33Ip8qrNYUcpkOHUT5OZ0bUcNNVZQ9RLlg==",
+-      "cpu": [
+-        "arm"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "android"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/android-arm64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/android-arm64/-/android-arm64-0.25.12.tgz",
+-      "integrity": "sha512-6AAmLG7zwD1Z159jCKPvAxZd4y/VTO0VkprYy+3N2FtJ8+BQWFXU+OxARIwA46c5tdD9SsKGZ/1ocqBS/gAKHg==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "android"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/android-x64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/android-x64/-/android-x64-0.25.12.tgz",
+-      "integrity": "sha512-5jbb+2hhDHx5phYR2By8GTWEzn6I9UqR11Kwf22iKbNpYrsmRB18aX/9ivc5cabcUiAT/wM+YIZ6SG9QO6a8kg==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "android"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/darwin-arm64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.25.12.tgz",
+-      "integrity": "sha512-N3zl+lxHCifgIlcMUP5016ESkeQjLj/959RxxNYIthIg+CQHInujFuXeWbWMgnTo4cp5XVHqFPmpyu9J65C1Yg==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "darwin"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/darwin-x64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.25.12.tgz",
+-      "integrity": "sha512-HQ9ka4Kx21qHXwtlTUVbKJOAnmG1ipXhdWTmNXiPzPfWKpXqASVcWdnf2bnL73wgjNrFXAa3yYvBSd9pzfEIpA==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "darwin"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/freebsd-arm64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/freebsd-arm64/-/freebsd-arm64-0.25.12.tgz",
+-      "integrity": "sha512-gA0Bx759+7Jve03K1S0vkOu5Lg/85dou3EseOGUes8flVOGxbhDDh/iZaoek11Y8mtyKPGF3vP8XhnkDEAmzeg==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "freebsd"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/freebsd-x64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/freebsd-x64/-/freebsd-x64-0.25.12.tgz",
+-      "integrity": "sha512-TGbO26Yw2xsHzxtbVFGEXBFH0FRAP7gtcPE7P5yP7wGy7cXK2oO7RyOhL5NLiqTlBh47XhmIUXuGciXEqYFfBQ==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "freebsd"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-arm": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-arm/-/linux-arm-0.25.12.tgz",
+-      "integrity": "sha512-lPDGyC1JPDou8kGcywY0YILzWlhhnRjdof3UlcoqYmS9El818LLfJJc3PXXgZHrHCAKs/Z2SeZtDJr5MrkxtOw==",
+-      "cpu": [
+-        "arm"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-arm64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.25.12.tgz",
+-      "integrity": "sha512-8bwX7a8FghIgrupcxb4aUmYDLp8pX06rGh5HqDT7bB+8Rdells6mHvrFHHW2JAOPZUbnjUpKTLg6ECyzvas2AQ==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-ia32": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-ia32/-/linux-ia32-0.25.12.tgz",
+-      "integrity": "sha512-0y9KrdVnbMM2/vG8KfU0byhUN+EFCny9+8g202gYqSSVMonbsCfLjUO+rCci7pM0WBEtz+oK/PIwHkzxkyharA==",
+-      "cpu": [
+-        "ia32"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-loong64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-loong64/-/linux-loong64-0.25.12.tgz",
+-      "integrity": "sha512-h///Lr5a9rib/v1GGqXVGzjL4TMvVTv+s1DPoxQdz7l/AYv6LDSxdIwzxkrPW438oUXiDtwM10o9PmwS/6Z0Ng==",
+-      "cpu": [
+-        "loong64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-mips64el": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-mips64el/-/linux-mips64el-0.25.12.tgz",
+-      "integrity": "sha512-iyRrM1Pzy9GFMDLsXn1iHUm18nhKnNMWscjmp4+hpafcZjrr2WbT//d20xaGljXDBYHqRcl8HnxbX6uaA/eGVw==",
+-      "cpu": [
+-        "mips64el"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-ppc64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-ppc64/-/linux-ppc64-0.25.12.tgz",
+-      "integrity": "sha512-9meM/lRXxMi5PSUqEXRCtVjEZBGwB7P/D4yT8UG/mwIdze2aV4Vo6U5gD3+RsoHXKkHCfSxZKzmDssVlRj1QQA==",
+-      "cpu": [
+-        "ppc64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-riscv64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-riscv64/-/linux-riscv64-0.25.12.tgz",
+-      "integrity": "sha512-Zr7KR4hgKUpWAwb1f3o5ygT04MzqVrGEGXGLnj15YQDJErYu/BGg+wmFlIDOdJp0PmB0lLvxFIOXZgFRrdjR0w==",
+-      "cpu": [
+-        "riscv64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-s390x": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-s390x/-/linux-s390x-0.25.12.tgz",
+-      "integrity": "sha512-MsKncOcgTNvdtiISc/jZs/Zf8d0cl/t3gYWX8J9ubBnVOwlk65UIEEvgBORTiljloIWnBzLs4qhzPkJcitIzIg==",
+-      "cpu": [
+-        "s390x"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/linux-x64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.25.12.tgz",
+-      "integrity": "sha512-uqZMTLr/zR/ed4jIGnwSLkaHmPjOjJvnm6TVVitAa08SLS9Z0VM8wIRx7gWbJB5/J54YuIMInDquWyYvQLZkgw==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/netbsd-arm64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/netbsd-arm64/-/netbsd-arm64-0.25.12.tgz",
+-      "integrity": "sha512-xXwcTq4GhRM7J9A8Gv5boanHhRa/Q9KLVmcyXHCTaM4wKfIpWkdXiMog/KsnxzJ0A1+nD+zoecuzqPmCRyBGjg==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "netbsd"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/netbsd-x64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/netbsd-x64/-/netbsd-x64-0.25.12.tgz",
+-      "integrity": "sha512-Ld5pTlzPy3YwGec4OuHh1aCVCRvOXdH8DgRjfDy/oumVovmuSzWfnSJg+VtakB9Cm0gxNO9BzWkj6mtO1FMXkQ==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "netbsd"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/openbsd-arm64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/openbsd-arm64/-/openbsd-arm64-0.25.12.tgz",
+-      "integrity": "sha512-fF96T6KsBo/pkQI950FARU9apGNTSlZGsv1jZBAlcLL1MLjLNIWPBkj5NlSz8aAzYKg+eNqknrUJ24QBybeR5A==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "openbsd"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/openbsd-x64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/openbsd-x64/-/openbsd-x64-0.25.12.tgz",
+-      "integrity": "sha512-MZyXUkZHjQxUvzK7rN8DJ3SRmrVrke8ZyRusHlP+kuwqTcfWLyqMOE3sScPPyeIXN/mDJIfGXvcMqCgYKekoQw==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "openbsd"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/openharmony-arm64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/openharmony-arm64/-/openharmony-arm64-0.25.12.tgz",
+-      "integrity": "sha512-rm0YWsqUSRrjncSXGA7Zv78Nbnw4XL6/dzr20cyrQf7ZmRcsovpcRBdhD43Nuk3y7XIoW2OxMVvwuRvk9XdASg==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "openharmony"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/sunos-x64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/sunos-x64/-/sunos-x64-0.25.12.tgz",
+-      "integrity": "sha512-3wGSCDyuTHQUzt0nV7bocDy72r2lI33QL3gkDNGkod22EsYl04sMf0qLb8luNKTOmgF/eDEDP5BFNwoBKH441w==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "sunos"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/win32-arm64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/win32-arm64/-/win32-arm64-0.25.12.tgz",
+-      "integrity": "sha512-rMmLrur64A7+DKlnSuwqUdRKyd3UE7oPJZmnljqEptesKM8wx9J8gx5u0+9Pq0fQQW8vqeKebwNXdfOyP+8Bsg==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/win32-ia32": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/win32-ia32/-/win32-ia32-0.25.12.tgz",
+-      "integrity": "sha512-HkqnmmBoCbCwxUKKNPBixiWDGCpQGVsrQfJoVGYLPT41XWF8lHuE5N6WhVia2n4o5QK5M4tYr21827fNhi4byQ==",
+-      "cpu": [
+-        "ia32"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@esbuild/win32-x64": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.25.12.tgz",
+-      "integrity": "sha512-alJC0uCZpTFrSL0CCDjcgleBXPnCrEAhTBILpeAp7M/OFgoqtAetfBzX0xM00MUsVVPpVjlPuMbREqnZCXaTnA==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ],
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@rollup/rollup-android-arm-eabi": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.68.3.tgz",
+-      "integrity": "sha512-mqfypgH/liYjaSCoPI4erckUcROgZtmFUUmyOJ05oyayi/tVqOEYAzWP7ufqCoCT3xB31Fw4XIVO/jX42hYvKA==",
+-      "cpu": [
+-        "arm"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "android"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-android-arm64": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-android-arm64/-/rollup-android-arm64-4.68.3.tgz",
+-      "integrity": "sha512-5tY+GC/1gpt79cKS2DQzu6iD824j6BmI4q5Zb6qftZ4kWqIQmvR3DD4eJ2Gclu6/nVMYDk2IVpqxypWOiAuWJg==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "android"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-android-x64": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-android-x64/-/rollup-android-x64-4.68.3.tgz",
+-      "integrity": "sha512-nDBcQ/o3PMmGxmAzGBJFn+n1rb83Va9WSdFIq1AHmlEF3tuibVsyJ3kG5x13r7VIy6WI8SvzCdHVNSlSDIdj8w==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "android"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-darwin-arm64": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.68.3.tgz",
+-      "integrity": "sha512-dra5zl0QWKkIkaMgNDNPC19gkMlPAfAf41yWlkGztXMIvUQrX9XWZFQRw7abhH3nks+XZGQpybINAxT2pKdFew==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "darwin"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-darwin-x64": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-darwin-x64/-/rollup-darwin-x64-4.68.3.tgz",
+-      "integrity": "sha512-xo5xeo/AjEB/ArzQjGn0JRDZuybZicQ5O3VPfko6ocH1li/qNrN4p5+R/WgjavzRz6UwAOaqsau7VvRQA6i6AA==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "darwin"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-freebsd-arm64": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-freebsd-arm64/-/rollup-freebsd-arm64-4.68.3.tgz",
+-      "integrity": "sha512-zdckkcxHDEEKyDbC1t21DeaaiKGymxbkBU9c3zyfaaz+8N96ItJw4nmzHhZF+Mukgt906fnf2tsc90pVyStuHA==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "freebsd"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-freebsd-x64": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-freebsd-x64/-/rollup-freebsd-x64-4.68.3.tgz",
+-      "integrity": "sha512-9oXqI7g/ycEz7TyicdGBC4sL6PfWMXAx8u15f/nd7lYkCLJd8U8VdBfbpc4SSnRBU/e7aPALve3mhzasGDeCYg==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "freebsd"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-arm-gnueabihf": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm-gnueabihf/-/rollup-linux-arm-gnueabihf-4.68.3.tgz",
+-      "integrity": "sha512-hbgT4NlaOELE3D5UUzSqF+OFgwz4Scvo2SQD9nZJUFjdIsg9Kg3FabQauUxkHKY9N5yjNXfXRRmiKNN4JpLmFA==",
+-      "cpu": [
+-        "arm"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-arm-musleabihf": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm-musleabihf/-/rollup-linux-arm-musleabihf-4.68.3.tgz",
+-      "integrity": "sha512-yECcXZ/Bl+JVRhLFgld42rYrXgPdE0LtySGAmmmH6OtkaJM17A4cWG/eCzDymMVb52/jZjW0R54YrTHj4xXlSA==",
+-      "cpu": [
+-        "arm"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-arm64-gnu": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm64-gnu/-/rollup-linux-arm64-gnu-4.68.3.tgz",
+-      "integrity": "sha512-q4Q4/B7wyqM+TFqY5tJYQlaz5+ksGopcRmMeMdu4q6eaPK7N1PymTjIaH5LL32mMJBqIzpRof7BhlYLim5JgNQ==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-arm64-musl": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm64-musl/-/rollup-linux-arm64-musl-4.68.3.tgz",
+-      "integrity": "sha512-Ich3TGl/7GqhQ6G6jVPzgGQGJjd3E5hECxSVanPYchy6Vwcq+WI8wG/gmEMilHNy+ZYCR6U8EN50EejG3TaIgw==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-loong64-gnu": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-loong64-gnu/-/rollup-linux-loong64-gnu-4.68.3.tgz",
+-      "integrity": "sha512-URBmOhwv4Y0Hi5Hhxc3cmqZLtQlx55DOs5PUhhITDC3zu0qwAfhcNAFAIwAhOUdA6NFVEck07CNZX6cBEs1vTg==",
+-      "cpu": [
+-        "loong64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-loong64-musl": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-loong64-musl/-/rollup-linux-loong64-musl-4.68.3.tgz",
+-      "integrity": "sha512-PTdJXuZplRyaE3ECArlbZubI2LlUHWm0oCipCexnE/8LM+L7qIqUiNbU0piBxt46EB5zxXX+cpmDvHX4Z3WwcQ==",
+-      "cpu": [
+-        "loong64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-ppc64-gnu": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-ppc64-gnu/-/rollup-linux-ppc64-gnu-4.68.3.tgz",
+-      "integrity": "sha512-IlSQPDExSm9YdtrWeZIHj87GPXI9lYygRvHVwQ1o9t91JHIiB2CihrvNIASpc/zI28atqm04jS3proaQuaJMww==",
+-      "cpu": [
+-        "ppc64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-ppc64-musl": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-ppc64-musl/-/rollup-linux-ppc64-musl-4.68.3.tgz",
+-      "integrity": "sha512-O2ssyDcBTZkH5v2P/9ZaXJreL0hCKvUA5UwuHn0jCKeMLKi4GhspZJ1I5FT5QsHtJ/dPx4pup7pg/Lw0emeY0Q==",
+-      "cpu": [
+-        "ppc64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-riscv64-gnu": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-riscv64-gnu/-/rollup-linux-riscv64-gnu-4.68.3.tgz",
+-      "integrity": "sha512-fesqagxcnc87lH2+aBWne/tFCmQVIGH+YezjY1wQwbUODuTBBlhHoyxju6umwn8LnjHVanjpoeaQdLsXP8JQSQ==",
+-      "cpu": [
+-        "riscv64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-riscv64-musl": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-riscv64-musl/-/rollup-linux-riscv64-musl-4.68.3.tgz",
+-      "integrity": "sha512-WAjFDtLW3HjJ2RAytKoWdFwlK/hW8rJHrjhRZFw14nR+c9JN//WIlSBkyXUjEYCNOFs2sGLNutOEPQG4iVYHgA==",
+-      "cpu": [
+-        "riscv64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-s390x-gnu": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-s390x-gnu/-/rollup-linux-s390x-gnu-4.68.3.tgz",
+-      "integrity": "sha512-+fZiTeHV/1fy/14dRqE4thjYwUOABL6qQjxElOEQg2oHLkCamO8dxhHphVgD4+pFxtVEUIWxsGVduPtwnAlvbg==",
+-      "cpu": [
+-        "s390x"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-x64-gnu": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.68.3.tgz",
+-      "integrity": "sha512-pfn4Zd9Ic3lEaSwW3GsQhTIDd7929C+eiEkOutsSCT2IHD6rDLblwmMQkgeGOso0oDo9Jk/ERtFdtFr9ElLs+g==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-linux-x64-musl": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.68.3.tgz",
+-      "integrity": "sha512-eUXzaeNQbKXKNqseL3g/usUqOPmRu+DbQsvwr9MXMdV+VQFUNb9bcWSNAAs/TRV95PCbFK46kLzHEOhFSzujsg==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-openbsd-x64": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-openbsd-x64/-/rollup-openbsd-x64-4.68.3.tgz",
+-      "integrity": "sha512-OiUclE7QDU4H/hr3ACRHhVGKWl+gNx+6Emignfq0hmNmzzTkZnT79wzB9NXKd0QH16S4t/wVqlAFBfC17nkZ5A==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "openbsd"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-openharmony-arm64": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-openharmony-arm64/-/rollup-openharmony-arm64-4.68.3.tgz",
+-      "integrity": "sha512-s6EclDWmk6zvIfk1yixgYthk7xHNx0xu5cEF5RDpS4IHNTpfswRX6xOXVG5cHF5xWn0B6EpDGARhPQ520KTlsA==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "openharmony"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-win32-arm64-msvc": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-arm64-msvc/-/rollup-win32-arm64-msvc-4.68.3.tgz",
+-      "integrity": "sha512-G2xnmxGnU8XHLwtjnnXNRcLrub+Af3nm9VQ1QzL2aEiAL7woBdRgTCZBslJl8umA+YMqdEFpUh9kJB/Vyzk2wQ==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-win32-ia32-msvc": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-ia32-msvc/-/rollup-win32-ia32-msvc-4.68.3.tgz",
+-      "integrity": "sha512-Y/4tApNVrMUYWbAHsyRWJgwuuJOfhTNhA2B04Xpa6+G9btkPZ9kU3XagUKzPTwF3hg36NpQk748JsnoTVho67Q==",
+-      "cpu": [
+-        "ia32"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-win32-x64-gnu": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-x64-gnu/-/rollup-win32-x64-gnu-4.68.3.tgz",
+-      "integrity": "sha512-i2vH/OA5BcW+TdNg12ZTRC4rn+vILaPMP9CvHqnv+QEpMjBHGGNLo4k4EnEqzjYvTD6x1Xark9WhsQbH4bTzUQ==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ]
+-    },
+-    "node_modules/@rollup/rollup-win32-x64-msvc": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.68.3.tgz",
+-      "integrity": "sha512-ADb1Uz2MNM0sxVpAlMNdQG16Hw4sgW1aqVL7NeqBMpcZeiHb192d7W6shZdMQs33D+w9ihDYBBPsYqqc4MlD8w==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ]
+-    },
+-    "node_modules/@types/estree": {
+-      "version": "1.0.10",
+-      "resolved": "https://registry.npmjs.org/@types/estree/-/estree-1.0.10.tgz",
+-      "integrity": "sha512-lTyOMnOcmRBzdCv6/4zUZCrEhV0xrqQiUZBZtVcbmLHBXKLnN8q89v/wKRF/Q0HbwVsqbIG3o5HDoFl9sduM+g==",
+-      "dev": true,
+-      "license": "MIT"
+-    },
+-    "node_modules/esbuild": {
+-      "version": "0.25.12",
+-      "resolved": "https://registry.npmjs.org/esbuild/-/esbuild-0.25.12.tgz",
+-      "integrity": "sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==",
+-      "dev": true,
+-      "hasInstallScript": true,
+-      "license": "MIT",
+-      "bin": {
+-        "esbuild": "bin/esbuild"
+-      },
+-      "engines": {
+-        "node": ">=18"
+-      },
+-      "optionalDependencies": {
+-        "@esbuild/aix-ppc64": "0.25.12",
+-        "@esbuild/android-arm": "0.25.12",
+-        "@esbuild/android-arm64": "0.25.12",
+-        "@esbuild/android-x64": "0.25.12",
+-        "@esbuild/darwin-arm64": "0.25.12",
+-        "@esbuild/darwin-x64": "0.25.12",
+-        "@esbuild/freebsd-arm64": "0.25.12",
+-        "@esbuild/freebsd-x64": "0.25.12",
+-        "@esbuild/linux-arm": "0.25.12",
+-        "@esbuild/linux-arm64": "0.25.12",
+-        "@esbuild/linux-ia32": "0.25.12",
+-        "@esbuild/linux-loong64": "0.25.12",
+-        "@esbuild/linux-mips64el": "0.25.12",
+-        "@esbuild/linux-ppc64": "0.25.12",
+-        "@esbuild/linux-riscv64": "0.25.12",
+-        "@esbuild/linux-s390x": "0.25.12",
+-        "@esbuild/linux-x64": "0.25.12",
+-        "@esbuild/netbsd-arm64": "0.25.12",
+-        "@esbuild/netbsd-x64": "0.25.12",
+-        "@esbuild/openbsd-arm64": "0.25.12",
+-        "@esbuild/openbsd-x64": "0.25.12",
+-        "@esbuild/openharmony-arm64": "0.25.12",
+-        "@esbuild/sunos-x64": "0.25.12",
+-        "@esbuild/win32-arm64": "0.25.12",
+-        "@esbuild/win32-ia32": "0.25.12",
+-        "@esbuild/win32-x64": "0.25.12"
+-      }
+-    },
+-    "node_modules/fdir": {
+-      "version": "6.5.0",
+-      "resolved": "https://registry.npmjs.org/fdir/-/fdir-6.5.0.tgz",
+-      "integrity": "sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==",
+-      "dev": true,
+-      "license": "MIT",
+-      "engines": {
+-        "node": ">=12.0.0"
+-      },
+-      "peerDependencies": {
+-        "picomatch": "^3 || ^4"
+-      },
+-      "peerDependenciesMeta": {
+-        "picomatch": {
+-          "optional": true
+-        }
+-      }
+-    },
+-    "node_modules/fsevents": {
+-      "version": "2.3.3",
+-      "resolved": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz",
+-      "integrity": "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==",
+-      "dev": true,
+-      "hasInstallScript": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "os": [
+-        "darwin"
+-      ],
+-      "engines": {
+-        "node": "^8.16.0 || ^10.6.0 || >=11.0.0"
+-      }
+-    },
+-    "node_modules/nanoid": {
+-      "version": "3.3.20",
+-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.20.tgz",
+-      "integrity": "sha512-uKdg2G3GNCKQn9byYOpxbGqrT2fGO5KRt5J/8b3pok8rT6qxGWF6hxMyJiEYtAf+FVyYuD9hRaDqX5uPFYJ4ZQ==",
+-      "dev": true,
+-      "funding": [
+-        {
+-          "type": "github",
+-          "url": "https://github.com/sponsors/ai"
+-        }
+-      ],
+-      "license": "MIT",
+-      "bin": {
+-        "nanoid": "bin/nanoid.cjs"
+-      },
+-      "engines": {
+-        "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
+-      }
+-    },
+-    "node_modules/picocolors": {
+-      "version": "1.1.1",
+-      "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+-      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
+-      "dev": true,
+-      "license": "ISC"
+-    },
+-    "node_modules/picomatch": {
+-      "version": "4.0.7",
+-      "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.7.tgz",
+-      "integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==",
+-      "dev": true,
+-      "license": "MIT",
+-      "engines": {
+-        "node": ">=12"
+-      },
+-      "funding": {
+-        "url": "https://github.com/sponsors/jonschlinkert"
+-      }
+-    },
+-    "node_modules/postcss": {
+-      "version": "8.5.33",
+-      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.33.tgz",
+-      "integrity": "sha512-RVHEU9/Pp1Fnjr/MpAJsZoADukCKhfIi15OunEYiGktIkYLkPVvC1sioWolGDS7XByMTx9m/IGbro0Js13zhnQ==",
+-      "dev": true,
+-      "funding": [
+-        {
+-          "type": "opencollective",
+-          "url": "https://opencollective.com/postcss/"
+-        },
+-        {
+-          "type": "tidelift",
+-          "url": "https://tidelift.com/funding/github/npm/postcss"
+-        },
+-        {
+-          "type": "github",
+-          "url": "https://github.com/sponsors/ai"
+-        }
+-      ],
+-      "license": "MIT",
+-      "dependencies": {
+-        "nanoid": "^3.3.20",
+-        "picocolors": "^1.1.1",
+-        "source-map-js": "^1.2.2"
+-      },
+-      "engines": {
+-        "node": "^10 || ^12 || >=14"
+-      }
+-    },
+-    "node_modules/rollup": {
+-      "version": "4.68.3",
+-      "resolved": "https://registry.npmjs.org/rollup/-/rollup-4.68.3.tgz",
+-      "integrity": "sha512-wd2gavj7CEQv52rdcVqfUupO/KPIKcoJKxyFWl4cOqYZGMQEOSijJRkliz0dRa7gpkj/h4TRqyWa+dJJi6T0OA==",
+-      "dev": true,
+-      "license": "MIT",
+-      "dependencies": {
+-        "@types/estree": "^1.0.10"
+-      },
+-      "bin": {
+-        "rollup": "dist/bin/rollup"
+-      },
+-      "engines": {
+-        "node": ">=18.0.0",
+-        "npm": ">=8.0.0"
+-      },
+-      "optionalDependencies": {
+-        "@rollup/rollup-android-arm-eabi": "4.68.3",
+-        "@rollup/rollup-android-arm64": "4.68.3",
+-        "@rollup/rollup-android-x64": "4.68.3",
+-        "@rollup/rollup-darwin-arm64": "4.68.3",
+-        "@rollup/rollup-darwin-x64": "4.68.3",
+-        "@rollup/rollup-freebsd-arm64": "4.68.3",
+-        "@rollup/rollup-freebsd-x64": "4.68.3",
+-        "@rollup/rollup-linux-arm-gnueabihf": "4.68.3",
+-        "@rollup/rollup-linux-arm-musleabihf": "4.68.3",
+-        "@rollup/rollup-linux-arm64-gnu": "4.68.3",
+-        "@rollup/rollup-linux-arm64-musl": "4.68.3",
+-        "@rollup/rollup-linux-loong64-gnu": "4.68.3",
+-        "@rollup/rollup-linux-loong64-musl": "4.68.3",
+-        "@rollup/rollup-linux-ppc64-gnu": "4.68.3",
+-        "@rollup/rollup-linux-ppc64-musl": "4.68.3",
+-        "@rollup/rollup-linux-riscv64-gnu": "4.68.3",
+-        "@rollup/rollup-linux-riscv64-musl": "4.68.3",
+-        "@rollup/rollup-linux-s390x-gnu": "4.68.3",
+-        "@rollup/rollup-linux-x64-gnu": "4.68.3",
+-        "@rollup/rollup-linux-x64-musl": "4.68.3",
+-        "@rollup/rollup-openbsd-x64": "4.68.3",
+-        "@rollup/rollup-openharmony-arm64": "4.68.3",
+-        "@rollup/rollup-win32-arm64-msvc": "4.68.3",
+-        "@rollup/rollup-win32-ia32-msvc": "4.68.3",
+-        "@rollup/rollup-win32-x64-gnu": "4.68.3",
+-        "@rollup/rollup-win32-x64-msvc": "4.68.3",
+-        "fsevents": "~2.3.2"
+-      }
+-    },
+-    "node_modules/source-map-js": {
+-      "version": "1.2.2",
+-      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
+-      "integrity": "sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==",
+-      "dev": true,
+-      "license": "BSD-3-Clause",
+-      "engines": {
+-        "node": ">=0.10.0"
+-      }
+-    },
+-    "node_modules/three": {
+-      "version": "0.186.1",
+-      "resolved": "https://registry.npmjs.org/three/-/three-0.186.1.tgz",
+-      "integrity": "sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA==",
+-      "license": "MIT"
+-    },
+-    "node_modules/tinyglobby": {
+-      "version": "0.2.17",
+-      "resolved": "https://registry.npmjs.org/tinyglobby/-/tinyglobby-0.2.17.tgz",
+-      "integrity": "sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==",
+-      "dev": true,
+-      "license": "MIT",
+-      "dependencies": {
+-        "fdir": "^6.5.0",
+-        "picomatch": "^4.0.4"
+-      },
+-      "engines": {
+-        "node": ">=12.0.0"
+-      },
+-      "funding": {
+-        "url": "https://github.com/sponsors/SuperchupuDev"
+-      }
+-    },
+-    "node_modules/vite": {
+-      "version": "6.4.6",
+-      "resolved": "https://registry.npmjs.org/vite/-/vite-6.4.6.tgz",
+-      "integrity": "sha512-RtsraAwEG68idOA6iUOoIpOlcSKROnf815aIq9qHTSrDNpLoBrBa12suyfcEd8qn0xwOVQI1Yhm1GbmTjF600A==",
+-      "dev": true,
+-      "license": "MIT",
+-      "dependencies": {
+-        "esbuild": "^0.25.0",
+-        "fdir": "^6.4.4",
+-        "picomatch": "^4.0.2",
+-        "postcss": "^8.5.3",
+-        "rollup": "^4.34.9",
+-        "tinyglobby": "^0.2.13"
+-      },
+-      "bin": {
+-        "vite": "bin/vite.js"
+-      },
+-      "engines": {
+-        "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
+-      },
+-      "funding": {
+-        "url": "https://github.com/vitejs/vite?sponsor=1"
+-      },
+-      "optionalDependencies": {
+-        "fsevents": "~2.3.3"
+-      },
+-      "peerDependencies": {
+-        "@types/node": "^18.0.0 || ^20.0.0 || >=22.0.0",
+-        "jiti": ">=1.21.0",
+-        "less": "*",
+-        "lightningcss": "^1.21.0",
+-        "sass": "*",
+-        "sass-embedded": "*",
+-        "stylus": "*",
+-        "sugarss": "*",
+-        "terser": "^5.16.0",
+-        "tsx": "^4.8.1",
+-        "yaml": "^2.4.2"
+-      },
+-      "peerDependenciesMeta": {
+-        "@types/node": {
+-          "optional": true
+-        },
+-        "jiti": {
+-          "optional": true
+-        },
+-        "less": {
+-          "optional": true
+-        },
+-        "lightningcss": {
+-          "optional": true
+-        },
+-        "sass": {
+-          "optional": true
+-        },
+-        "sass-embedded": {
+-          "optional": true
+-        },
+-        "stylus": {
+-          "optional": true
+-        },
+-        "sugarss": {
+-          "optional": true
+-        },
+-        "terser": {
+-          "optional": true
+-        },
+-        "tsx": {
+-          "optional": true
+-        },
+-        "yaml": {
+-          "optional": true
+-        }
+-      }
+-    }
+-  }
+-}
+diff --git a/aesthetic/src/index.js b/aesthetic/src/index.js
+index 6a60e60..e79413a 100644
+--- a/aesthetic/src/index.js
++++ b/aesthetic/src/index.js
+@@ -6,7 +6,7 @@ export { createPS1Uniforms, createPS1Material } from './ps1/material.js';
+ export { createPS1Pipeline, internalResolution } from './ps1/pipeline.js';
+ export { createTextures } from './ps1/textures.js';
+ export { createTempleWorld, createMaterials, createWorldKit, assembleWorld } from './scene/world.js';
+-export { createTaProhmWorld, TA_PROHM, TA_PROHM_TOUR } from './scene/taprohm.js';
++export { createTaProhmWorld, TA_PROHM, TA_PROHM_TOUR, taProhmHeightAt, isClear as taProhmIsClear } from './scene/taprohm.js';
+ export { createWorld, WORLDS } from './worlds.js';
+ export { MeshBuilder } from './scene/geometry.js';
+ export { createCameraRig, TOUR } from './camera.js';
+diff --git a/aesthetic/src/scene/taprohm.js b/aesthetic/src/scene/taprohm.js
+index 9f5bc81..6c1fe00 100644
+--- a/aesthetic/src/scene/taprohm.js
++++ b/aesthetic/src/scene/taprohm.js
+@@ -419,8 +419,8 @@ function groundColor(x, _y, z) {
+   return [base[0] + (p[0] - base[0]) * path, base[1] + (p[1] - base[1]) * path, base[2] + (p[2] - base[2]) * path];
+ }
+ 
+-/** Inside the outer wall, clear of galleries, towers and the giants. */
+-function isClear(x, z) {
++/** Inside the outer wall, clear of galleries, towers and the giants. Exported for the game's dungeon (round 114). */
++export function isClear(x, z) {
+   const ax = Math.abs(x);
+   const az = Math.abs(z);
+   for (const ring of TA_PROHM.rings) {
+diff --git a/client/package.json b/client/package.json
+index c89d466..297e282 100644
+--- a/client/package.json
++++ b/client/package.json
+@@ -9,8 +9,10 @@
+     "preview": "vite preview"
+   },
+   "dependencies": {
++    "@parallang/aesthetic": "0.1.0",
+     "react": "^19.1.0",
+     "react-dom": "^19.1.0",
++    "three": "0.186.1",
+     "zustand": "^5.0.5"
+   },
+   "devDependencies": {
+@@ -18,6 +20,7 @@
+     "@testing-library/user-event": "^14.6.1",
+     "@vitejs/plugin-react": "^4.4.1",
+     "dotenv": "^16.5.0",
++    "js-yaml": "^4.1.0",
+     "jsdom": "^26.1.0",
+     "vite": "^6.3.1",
+     "vitest": "^3.2.4"
+diff --git a/client/src/api/encounter.js b/client/src/api/encounter.js
+index 0a59be9..e72b113 100644
+--- a/client/src/api/encounter.js
++++ b/client/src/api/encounter.js
+@@ -1,36 +1,61 @@
+-async function request(path, { learnerId, method = 'GET', body, signal } = {}) {
+-  const response = await fetch(path, {
+-    method,
+-    headers: {
+-      ...(body ? { 'Content-Type': 'application/json' } : {}),
+-      ...(learnerId ? { 'X-Learner-Id': learnerId } : {}),
+-    },
+-    body: body ? JSON.stringify(body) : undefined,
+-    signal,
+-  });
+-  let data;
+-  try { data = await response.json(); }
+-  catch { throw Object.assign(new Error(`The server returned an unreadable response (${response.status}).`), { status: response.status }); }
+-  if (!response.ok) {
+-    throw Object.assign(new Error(data.error?.message || `Request failed (${response.status}).`), {
+-      status: response.status,
+-      code: data.error?.code,
+-      retryable: data.error?.retryable,
+-    });
++import { TOKEN_HEADER, loadSettings } from './settings.js';
++
++// Round 114: requests go to the server URL from the settings (empty: this page's origin, as with the dev proxy) and
++// carry the access token, when one is set, as X-ParaLLang-Token.
++export function createLearningApi({ getSettings = () => loadSettings(), fetchImpl } = {}) {
++  async function request(path, { learnerId, method = 'GET', body, signal } = {}) {
++    const { serverUrl, token } = getSettings();
++    const doFetch = fetchImpl ?? globalThis.fetch;
++    let response;
++    try {
++      response = await doFetch(`${serverUrl}${path}`, {
++        method,
++        headers: {
++          ...(body ? { 'Content-Type': 'application/json' } : {}),
++          ...(learnerId ? { 'X-Learner-Id': learnerId } : {}),
++          ...(token ? { [TOKEN_HEADER]: token } : {}),
++        },
++        body: body ? JSON.stringify(body) : undefined,
++        signal,
++      });
++    } catch (error) {
++      if (error?.name === 'AbortError') throw error;
++      throw Object.assign(new Error(`The server did not answer${serverUrl ? ` at ${serverUrl}` : ''}. Check the server URL in Settings, or wait a minute if it was asleep.`), { code: 'UNREACHABLE', retryable: true });
++    }
++    let data;
++    try { data = await response.json(); }
++    catch { throw Object.assign(new Error(`The server returned an unreadable response (${response.status}).`), { status: response.status }); }
++    if (!response.ok) {
++      const message = response.status === 401 ? 'The server refused the access token. Check it in Settings.' : data.error?.message || `Request failed (${response.status}).`;
++      throw Object.assign(new Error(message), {
++        status: response.status,
++        code: data.error?.code,
++        retryable: data.error?.retryable,
++        details: data.error?.details,
++      });
++    }
++    return data;
+   }
+-  return data;
++
++  return {
++    createLearner: (learnerId) => request('/api/learner', { method: 'POST', body: learnerId ? { learnerId } : {} }),
++    // Round 114: `options` may be the old `restart` boolean, or { restart, encounterId, dungeonId }.
++    startEncounter: (learnerId, options = false) => {
++      const { restart = false, encounterId, dungeonId } = typeof options === 'object' && options ? options : { restart: options === true };
++      return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(encounterId ? { encounterId } : {}), ...(dungeonId ? { dungeonId } : {}) } });
++    },
++    currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
++    sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),
++    revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),
++    getSpellbook: (learnerId) => request('/api/spellbook', { learnerId }),
++    createReview: (learnerId, vocabularyId) => request('/api/spellbook/review', { learnerId, method: 'POST', body: vocabularyId ? { vocabularyId } : {} }),
++    submitReview: (learnerId, payload) => request('/api/spellbook/review/submit', { learnerId, method: 'POST', body: payload }),
++    getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}`, { learnerId }),
++    resetDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/reset`, { learnerId, method: 'POST' }),
++  };
+ }
+ 
+-export const learningApi = {
+-  createLearner: (learnerId) => request('/api/learner', { method: 'POST', body: learnerId ? { learnerId } : {} }),
+-  startEncounter: (learnerId, restart = false) => request('/api/encounter/start', { learnerId, method: 'POST', body: { restart } }),
+-  currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
+-  sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),
+-  revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),
+-  getSpellbook: (learnerId) => request('/api/spellbook', { learnerId }),
+-  createReview: (learnerId, vocabularyId) => request('/api/spellbook/review', { learnerId, method: 'POST', body: vocabularyId ? { vocabularyId } : {} }),
+-  submitReview: (learnerId, payload) => request('/api/spellbook/review/submit', { learnerId, method: 'POST', body: payload }),
+-};
++export const learningApi = createLearningApi();
+ 
+ // Phase 1 names remain as small wrappers for callers outside the app.
+ export const startEncounter = learningApi.startEncounter;
+diff --git a/client/src/api/settings.js b/client/src/api/settings.js
+new file mode 100644
+index 0000000..7c14719
+--- /dev/null
++++ b/client/src/api/settings.js
+@@ -0,0 +1,40 @@
++// Round 114: where the web client finds its server. The Pages build takes a default server URL from VITE_API_BASE at
++// build time; the settings sheet can override it and holds the access token (PARALLANG_TOKEN on the server), both in
++// localStorage. An empty URL means the page's own origin (`/api`), which is what the Vite dev proxy serves; the proxy
++// adds the token itself (round 105), so local development needs no settings.
++export const SETTINGS_KEY = 'parallang.settings';
++export const TOKEN_HEADER = 'X-ParaLLang-Token';
++
++const env = import.meta.env ?? {};
++export const DEFAULT_SERVER_URL = String(env.VITE_API_BASE ?? '').trim();
++// A production build with no server URL has no `/api` of its own (GitHub Pages serves files only).
++export const SAME_ORIGIN_API = Boolean(env.DEV);
++
++export function browserStorage() {
++  try { return globalThis.localStorage ?? null; } catch { return null; }
++}
++
++export function normalizeServerUrl(value) {
++  return String(value ?? '').trim().replace(/\/+$/, '');
++}
++
++export function loadSettings(storage = browserStorage()) {
++  let stored = null;
++  try { stored = JSON.parse(storage?.getItem?.(SETTINGS_KEY) ?? 'null'); } catch { stored = null; }
++  const serverUrl = typeof stored?.serverUrl === 'string' ? stored.serverUrl : DEFAULT_SERVER_URL;
++  const token = typeof stored?.token === 'string' ? stored.token : '';
++  return { serverUrl: normalizeServerUrl(serverUrl), token: token.trim() };
++}
++
++export function saveSettings(settings, storage = browserStorage()) {
++  const value = { serverUrl: normalizeServerUrl(settings.serverUrl), token: String(settings.token ?? '').trim() };
++  try { storage?.setItem?.(SETTINGS_KEY, JSON.stringify(value)); } catch { /* private mode: kept for this page only */ }
++  return value;
++}
++
++/** Why no request can be made with these settings, or null. */
++export function settingsProblem({ serverUrl }, { sameOrigin = SAME_ORIGIN_API } = {}) {
++  if (!serverUrl && !sameOrigin) return 'No server is set. Open Settings and enter the server URL and access token.';
++  if (serverUrl && !/^https?:\/\/[^\s/]+/i.test(serverUrl)) return 'The server URL must start with https:// (or http:// for a local server).';
++  return null;
++}
+diff --git a/client/src/dungeon.js b/client/src/dungeon.js
+new file mode 100644
+index 0000000..7e37ba1
+--- /dev/null
++++ b/client/src/dungeon.js
+@@ -0,0 +1,15 @@
++// Round 114: the dungeon the web client plays. The file is bundled at build time (a YAML transform in vite.config.js),
++// so the attract and overview screens show the level, the route and the sites with no server. Progress comes from
++// the server (GET /api/dungeons/:id).
++import taProhm from '../../content/world/dungeons/ta_prohm.yaml';
++
++export const DUNGEON = Object.freeze({
++  id: taProhm.id,
++  name: taProhm.name,
++  level: taProhm.level,
++  sites: taProhm.sites.map((site) => Object.freeze({ encounterId: site.encounter, name: site.name, at: [...site.at], characterName: null })),
++  route: taProhm.route.map((point) => [...point]),
++});
++
++/** The director's view of a dungeon: sites as { at }, the route as points. */
++export const directorDungeon = (dungeon) => ({ sites: dungeon.sites.map((site) => ({ at: site.at })), route: dungeon.route });
+diff --git a/client/src/scene/director.js b/client/src/scene/director.js
+new file mode 100644
+index 0000000..94467f4
+--- /dev/null
++++ b/client/src/scene/director.js
+@@ -0,0 +1,204 @@
++// Round 114: the dungeon's camera director. Pure: no DOM and no three.js, so it is unit-tested in Node. A pose is
++// { position: [x, y, z], target: [x, y, z] }; the host copies it to its camera and calls lookAt.
++//
++// Five states, each a transition with eased position and look-at that starts from the pose the camera holds:
++//   attract  : a slow isometric orbit around the whole level
++//   overview : a bird's-eye view, top-down over the route and the sites
++//   approach : down to a site, framed from a few metres up, then a slow drift
++//   walk     : along the route at eye height above the ground to the next site, then the drift
++//   victory  : back out to the isometric orbit
++
++export const EYE = 1.6; // eye height above the ground, metres
++export const WALK_SPEED = 3.2; // metres per second along the route
++export const STANDOFF = 4; // the camera stands this far before a site, along the route, and looks at it
++export const DURATIONS = Object.freeze({ overview: 2.6, approach: 3.4, descend: 1.6, victory: 3.6 });
++const ORBIT_PERIOD = 100; // seconds per turn of the attract and victory orbits
++const ORBIT_PITCH = 0.62; // about 35 degrees, the isometric look
++const OVERVIEW_PITCH = 1.49; // about 85 degrees: top-down, with a tilt that keeps lookAt's up vector defined
++const APPROACH = { pitch: 0.4, distance: 11 };
++// Ta Prohm's third enclosure (aesthetic's TA_PROHM.rings[0]) plus the outer wall, the default level extent.
++export const TA_PROHM_BOX = Object.freeze({ minX: -56, maxX: 56, minZ: -56, maxZ: 56 });
++
++const lerp = (a, b, u) => a + (b - a) * u;
++const lerp3 = (a, b, u) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u)];
++const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
++export const easeInOut = (u) => (u <= 0 ? 0 : u >= 1 ? 1 : u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2);
++const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
++
++function toSpherical({ position, target }) {
++  const d = [position[0] - target[0], position[1] - target[1], position[2] - target[2]];
++  const distance = Math.hypot(...d) || 1e-6;
++  return { target, distance, yaw: Math.atan2(d[0], d[2]), pitch: Math.asin(clamp(d[1] / distance, -1, 1)) };
++}
++
++function fromSpherical({ target, distance, yaw, pitch }) {
++  const c = Math.cos(pitch);
++  return { position: [target[0] + Math.sin(yaw) * c * distance, target[1] + Math.sin(pitch) * distance, target[2] + Math.cos(yaw) * c * distance], target: [...target] };
++}
++
++// Rotates and zooms: the look-at point moves in a line, yaw the short way round, pitch linearly, distance geometrically.
++export function blendPoses(a, b, u) {
++  if (u <= 0) return clonePose(a);
++  if (u >= 1) return clonePose(b);
++  const sa = toSpherical(a);
++  const sb = toSpherical(b);
++  let dYaw = sb.yaw - sa.yaw;
++  while (dYaw > Math.PI) dYaw -= 2 * Math.PI;
++  while (dYaw < -Math.PI) dYaw += 2 * Math.PI;
++  return fromSpherical({
++    target: lerp3(sa.target, sb.target, u),
++    yaw: sa.yaw + dYaw * u,
++    pitch: lerp(sa.pitch, sb.pitch, u),
++    distance: Math.exp(lerp(Math.log(sa.distance), Math.log(sb.distance), u)),
++  });
++}
++
++const clonePose = (pose) => ({ position: [...pose.position], target: [...pose.target] });
++
++// A slow sway that starts at zero, so the hold joins its transition without a jump.
++function drift(t) {
++  return {
++    position: [0.35 * Math.sin(0.31 * t), 0.12 * Math.sin(0.23 * t), 0.3 * Math.sin(0.17 * t)],
++    target: [0.18 * Math.sin(0.27 * t), 0.06 * Math.sin(0.19 * t), 0.12 * Math.sin(0.21 * t)],
++  };
++}
++const withDrift = (pose, t) => { const d = drift(t); return { position: add3(pose.position, d.position), target: add3(pose.target, d.target) }; };
++
++/** The route as a polyline measured by arc length, and where each site stands on it. */
++export function measureRoute(dungeon) {
++  const points = dungeon.route.map(([x, z]) => [x, z]);
++  const lengths = [0];
++  for (let i = 1; i < points.length; i++) lengths.push(lengths[i - 1] + Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]));
++  let from = 0;
++  const siteS = dungeon.sites.map((site) => {
++    const index = points.findIndex(([x, z], i) => i >= from && x === site.at[0] && z === site.at[1]);
++    if (index < 0) throw new Error(`Site at [${site.at}] is not on the route`);
++    from = index + 1;
++    return lengths[index];
++  });
++  const total = lengths.at(-1);
++  function pointAt(s) {
++    const d = clamp(s, 0, total);
++    let i = 1;
++    while (i < lengths.length - 1 && lengths[i] < d) i++;
++    const span = lengths[i] - lengths[i - 1] || 1;
++    const u = (d - lengths[i - 1]) / span;
++    return [lerp(points[i - 1][0], points[i][0], u), lerp(points[i - 1][1], points[i][1], u)];
++  }
++  return { points, lengths, total, siteS, pointAt };
++}
++
++export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect = 1, levelBox = TA_PROHM_BOX } = {}) {
++  const route = measureRoute(dungeon);
++  const view = { fov, aspect };
++  const halfV = () => (view.fov * Math.PI) / 360;
++  const halfH = () => Math.atan(Math.tan(halfV()) * view.aspect);
++  // The distance at which a box of half-extents (w, h) on screen fills the view.
++  const fitBox = (w, h) => Math.max(w / Math.tan(halfH()), h / Math.tan(halfV()));
++  const fitSphere = (r) => r / Math.sin(Math.min(halfH(), halfV()));
++
++  const xs = [levelBox.minX, levelBox.maxX, ...route.points.map((p) => p[0])];
++  const zs = [levelBox.minZ, levelBox.maxZ, ...route.points.map((p) => p[1])];
++  const box = { minX: Math.min(...xs), maxX: Math.max(...xs), minZ: Math.min(...zs), maxZ: Math.max(...zs) };
++  const centre = [(box.minX + box.maxX) / 2, 0, (box.minZ + box.maxZ) / 2];
++  // The overview frames the route and the enclosures around it, not the whole jungle.
++  const routeXs = route.points.map((p) => p[0]);
++  const routeZs = route.points.map((p) => p[1]);
++  const overviewBox = {
++    minX: Math.min(-40, ...routeXs) - 4, maxX: Math.max(40, ...routeXs) + 4,
++    minZ: Math.min(-36, ...routeZs) - 6, maxZ: Math.max(36, ...routeZs) + 6,
++  };
++
++  const ground = ([x, z], lift = EYE) => [x, heightAt(x, z) + lift, z];
++
++  const orbitPose = (t, yaw0) => fromSpherical({
++    target: [centre[0], 2, centre[2] * 0.5],
++    yaw: yaw0 + (2 * Math.PI * t) / ORBIT_PERIOD,
++    pitch: ORBIT_PITCH,
++    distance: fitSphere(0.62 * Math.hypot(box.maxX - box.minX, box.maxZ - box.minZ) / 2),
++  });
++
++  const overviewPose = () => {
++    const w = (overviewBox.maxX - overviewBox.minX) / 2;
++    const h = (overviewBox.maxZ - overviewBox.minZ) / 2;
++    return fromSpherical({
++      target: [(overviewBox.minX + overviewBox.maxX) / 2, 0, (overviewBox.minZ + overviewBox.maxZ) / 2],
++      yaw: 0, pitch: OVERVIEW_PITCH, distance: 1.04 * fitBox(w, h),
++    });
++  };
++
++  // The walk's pose at arc length s: eye height over the ground, looking STANDOFF ahead, never past the walk's site.
++  const pathPose = (s, end) => ({ position: ground(route.pointAt(s)), target: ground(route.pointAt(Math.min(s + STANDOFF, end))) });
++
++  const approachPose = (index) => {
++    const site = dungeon.sites[index].at;
++    const back = route.pointAt(route.siteS[index] - STANDOFF);
++    const yaw = Math.atan2(back[0] - site[0], back[1] - site[1]);
++    return fromSpherical({ target: ground(site, EYE + 0.3), yaw, pitch: APPROACH.pitch, distance: APPROACH.distance });
++  };
++
++  let time = 0;
++  let mode = null;
++  let pose = null;
++
++  function begin(name, plan) {
++    const from = pose ? clonePose(pose) : null;
++    mode = { name, start: time, from, ...plan };
++    pose = evaluate(0);
++    return api;
++  }
++
++  function evaluate(t) {
++    const m = mode;
++    if (m.name === 'walk') {
++      const { s0, s1, travel } = m;
++      const d = DURATIONS.descend;
++      if (m.from && t < d) return { stage: 'transition', ...blendPoses(m.from, pathPose(s0, s1), easeInOut(t / d)) };
++      const tt = t - (m.from ? d : 0);
++      if (tt < travel) return { stage: 'travel', ...pathPose(s0 + (s1 - s0) * easeInOut(tt / travel), s1) };
++      return { stage: 'hold', ...withDrift(pathPose(s1, s1), tt - travel) };
++    }
++    const hold = m.hold(t);
++    if (m.from && t < m.duration) return { stage: 'transition', ...blendPoses(m.from, hold, easeInOut(t / m.duration)) };
++    return { stage: 'hold', ...hold };
++  }
++
++  const api = {
++    get mode() { return mode?.name ?? null; },
++    get stage() { return pose?.stage ?? null; },
++    get pose() { return pose ? clonePose(pose) : null; },
++    get time() { return time; },
++    /** True once the state's transition (and, for a walk, the travel) is over. */
++    get arrived() { return pose?.stage === 'hold'; },
++    route,
++    setAspect(value) { if (Number.isFinite(value) && value > 0) view.aspect = value; },
++    attract() {
++      const yaw0 = pose ? toSpherical(pose).yaw : 0.6;
++      return begin('attract', { duration: DURATIONS.victory, hold: (t) => orbitPose(t, yaw0) });
++    },
++    overview() { return begin('overview', { duration: DURATIONS.overview, hold: () => overviewPose() }); },
++    approach(index) {
++      const target = approachPose(index);
++      return begin('approach', { site: index, duration: DURATIONS.approach, hold: (t) => withDrift(target, Math.max(0, t - DURATIONS.approach)) });
++    },
++    /** Walks from site `from` to site `to` (from < to). */
++    walk(from, to) {
++      const s1 = Math.max(0, route.siteS[to] - STANDOFF);
++      const s0 = Math.min(s1, Math.max(0, route.siteS[from] - STANDOFF));
++      return begin('walk', { site: to, s0, s1, travel: Math.max(2, (s1 - s0) / WALK_SPEED) });
++    },
++    victory() {
++      const yaw0 = pose ? toSpherical(pose).yaw : 0.6;
++      return begin('victory', { duration: DURATIONS.victory, hold: (t) => orbitPose(t, yaw0) });
++    },
++    /** Advances the clock and returns the pose. */
++    update(dt) {
++      time += Math.max(0, dt);
++      if (mode) pose = evaluate(time - mode.start);
++      return api.pose;
++    },
++    /** The pose `t` seconds into the current state, without advancing the clock (tests, screenshots). */
++    peek(t) { return mode ? clonePose(evaluate(t)) : null; },
++  };
++  return api;
++}
+diff --git a/client/src/stores/gameStore.js b/client/src/stores/gameStore.js
+index 5407068..cb023ba 100644
+--- a/client/src/stores/gameStore.js
++++ b/client/src/stores/gameStore.js
+@@ -1,144 +1,258 @@
+ import { create } from 'zustand';
+ import { learningApi } from '../api/encounter.js';
++import { browserStorage, loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
+ 
++// Round 114: the web client plays a dungeon. Its flow: attract (title) → overview (the route) → approach (site 1) →
++// encounter → walk (to the next site) → encounter → … → victory. The camera moves during approach and walk; the
++// dialogue opens once the camera has arrived (cameraArrived) and the site's encounter has started. The encounter,
++// help, Spellbook and review actions are the old single-encounter client's (rounds 001-017).
+ const LEARNER_KEY = 'parallang.learnerId';
+ const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
+ const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now()}-${Math.random()}`;
++const MOVING = new Set(['approach', 'walk']);
+ 
+-function browserStorage() {
+-  try { return globalThis.localStorage; } catch { return null; }
++// The next site of a run, from the server's progress (or, before any, the first).
++const nextIndexOf = (progress) => (progress ? progress.nextSiteIndex : 0);
++
++// Server sites carry the character's name; the bundled file does not.
++function mergeDungeon(bundled, served) {
++  if (!served) return bundled;
++  return { ...bundled, name: served.name ?? bundled.name, sites: bundled.sites.map((site, index) => ({ ...site, characterName: served.sites?.[index]?.characterName ?? site.characterName })) };
+ }
+ 
+-export function createGameStore({ api = learningApi, storage = browserStorage() } = {}) {
++export function createGameStore({ api = learningApi, storage = browserStorage(), dungeon, sameOrigin = SAME_ORIGIN_API } = {}) {
++  if (!dungeon) throw new Error('createGameStore needs the dungeon (src/dungeon.js)');
+   let initializationPromise = null;
+   let requestEpoch = 0;
+-  const snapshots = new Map();
+-
+-  return create((set, get) => ({
+-    learnerId: null,
+-    language: null,
+-    encounter: null,
+-    spellbook: emptySpellbook,
+-    snapshotsByLearner: snapshots,
+-    view: 'dialogue',
+-    reviewChallenge: null,
+-    reviewResult: null,
+-    assessment: null,
+-    draft: '',
+-    pendingInput: null,
+-    isLoading: false,
+-    error: null,
+-
+-    setDraft: (draft) => set({ draft }),
+-    clearError: () => set({ error: null }),
+-
+-    initialize: () => {
+-      if (initializationPromise) return initializationPromise;
+-      const epoch = ++requestEpoch;
+-      initializationPromise = (async () => {
+-        set({ isLoading: true, error: null });
+-        try {
+-          const storedId = storage?.getItem?.(LEARNER_KEY) || null;
+-          const identity = await api.createLearner(storedId);
+-          if (epoch !== requestEpoch) return;
+-          storage?.setItem?.(LEARNER_KEY, identity.learnerId);
+-          const started = await api.startEncounter(identity.learnerId, false);
+-          if (epoch !== requestEpoch) return;
+-          snapshots.set(identity.learnerId, { encounter: started.encounter, spellbook: started.spellbook });
+-          set({ learnerId: identity.learnerId, language: identity.language ?? null, encounter: started.encounter, spellbook: started.spellbook, isLoading: false });
+-        } catch (error) {
+-          if (epoch === requestEpoch) set({ error: error.message, isLoading: false });
+-          initializationPromise = null;
+-        }
+-      })();
+-      return initializationPromise;
+-    },
++  let siteRequest = 0;
+ 
+-    restartEncounter: async () => {
+-      const { learnerId } = get();
+-      if (!learnerId) return;
+-      const epoch = requestEpoch;
+-      set({ isLoading: true, error: null, assessment: null });
+-      try {
+-        const result = await api.startEncounter(learnerId, true);
+-        if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+-        snapshots.set(learnerId, result);
+-        set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false, draft: '', pendingInput: null, view: 'dialogue' });
+-      } catch (error) { set({ error: error.message, isLoading: false }); }
+-    },
+-
+-    sendMessage: async (providedText) => {
+-      const state = get();
+-      const text = String(providedText ?? state.draft).trim();
+-      if (!text || !state.learnerId || !state.encounter || state.encounter.state !== 'ongoing' || state.isLoading) return;
+-      const learnerId = state.learnerId;
+-      const encounterId = state.encounter.id;
+-      const version = state.encounter.version;
++  return create((set, get) => {
++    // The dialogue opens when the camera is there and the site's encounter is loaded.
++    const maybeOpen = () => {
++      const s = get();
++      const site = s.dungeon.sites[s.siteIndex];
++      if (MOVING.has(s.phase) && s.cameraArrived && s.encounter && s.encounter.encounterId === site?.encounterId) set({ phase: 'encounter' });
++    };
++
++    const loadSite = async () => {
++      const { learnerId, siteIndex } = get();
++      const site = get().dungeon.sites[siteIndex];
++      if (!learnerId || !site) return;
++      const request = ++siteRequest;
+       const epoch = requestEpoch;
+-      set({ isLoading: true, error: null, pendingInput: text, draft: text });
++      set({ encounterLoading: true, error: null });
+       try {
+-        const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text });
+-        if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
+-        snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
+-        set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
++        const result = await api.startEncounter(learnerId, { dungeonId: dungeon.id, encounterId: site.encounterId });
++        if (request !== siteRequest || epoch !== requestEpoch) return;
++        set({ encounter: result.encounter, spellbook: result.spellbook, encounterLoading: false, assessment: null, draft: '', pendingInput: null });
++        maybeOpen();
+       } catch (error) {
+-        if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
++        if (request === siteRequest && epoch === requestEpoch) set({ error: error.message, encounterLoading: false });
+       }
+-    },
++    };
+ 
+-    revealHelp: async ({ kind, messageId, vocabularyId }) => {
+-      const { learnerId, encounter, isLoading } = get();
+-      if (!learnerId || !encounter || isLoading) return;
+-      const version = encounter.version;
+-      set({ isLoading: true, error: null });
+-      try {
+-        const result = await api.revealHelp(learnerId, { encounterId: encounter.id, version, kind, messageId, vocabularyId });
+-        if (get().learnerId !== learnerId || get().encounter?.version !== version) return;
+-        snapshots.set(learnerId, { encounter: result.encounter, spellbook: result.spellbook });
+-        set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false });
+-      } catch (error) { set({ error: error.message, isLoading: false }); }
+-    },
+-
+-    openSpellbook: () => set({ view: 'spellbook', reviewChallenge: null, reviewResult: null, error: null }),
+-    returnToDialogue: () => set({ view: 'dialogue', reviewChallenge: null, reviewResult: null, error: null }),
+-
+-    startReview: async (vocabularyId) => {
+-      const { learnerId } = get();
+-      if (!learnerId) return;
+-      set({ isLoading: true, error: null, reviewResult: null });
+-      try {
+-        const result = await api.createReview(learnerId, vocabularyId);
+-        set({ reviewChallenge: result.challenge, spellbook: result.spellbook, view: result.challenge ? 'review' : 'spellbook', isLoading: false });
+-      } catch (error) { set({ error: error.message, isLoading: false }); }
+-    },
+-
+-    submitReview: async (answer) => {
+-      const { learnerId, reviewChallenge, isLoading } = get();
+-      if (!learnerId || !reviewChallenge || isLoading || !String(answer).trim()) return;
+-      set({ isLoading: true, error: null });
+-      try {
+-        const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'answer', answer: String(answer).trim() });
+-        set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
+-      } catch (error) { set({ error: error.message, isLoading: false }); }
+-    },
+-
+-    revealReviewAnswer: async () => {
+-      const { learnerId, reviewChallenge, isLoading } = get();
+-      if (!learnerId || !reviewChallenge || isLoading) return;
+-      set({ isLoading: true, error: null });
++    const refreshProgress = async (learnerId) => {
+       try {
+-        const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'reveal', answer: '' });
+-        set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
+-      } catch (error) { set({ error: error.message, isLoading: false }); }
+-    },
+-
+-    switchLearnerForTest: (learnerId) => {
+-      requestEpoch += 1;
+-      initializationPromise = null;
+-      const snapshot = snapshots.get(learnerId) ?? { encounter: null, spellbook: emptySpellbook };
+-      set({ learnerId, ...snapshot, draft: '', pendingInput: null, assessment: null });
+-    },
+-  }));
+-}
++        const view = await api.getDungeon(learnerId, dungeon.id);
++        if (get().learnerId === learnerId) set({ progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon) });
++        return view.progress;
++      } catch { return null; }
++    };
++
++    return {
++      learnerId: null,
++      language: null,
++      dungeon,
++      progress: null,
++      phase: 'attract',
++      siteIndex: 0,
++      walkFrom: null,
++      cameraArrived: false,
++      connection: 'idle',
++      serverProblem: null,
++      settings: loadSettings(storage),
++      settingsOpen: false,
++      encounter: null,
++      encounterLoading: false,
++      spellbook: emptySpellbook,
++      view: 'dialogue',
++      reviewChallenge: null,
++      reviewResult: null,
++      assessment: null,
++      draft: '',
++      pendingInput: null,
++      isLoading: false,
++      error: null,
++
++      setDraft: (draft) => set({ draft }),
++      clearError: () => set({ error: null }),
++
++      // Recovers the learner and the run. A run under way resumes at its next site, a finished one on the victory
++      // screen. With no server, the attract and overview screens still work and serverProblem says why.
++      initialize: () => {
++        if (initializationPromise) return initializationPromise;
++        const epoch = ++requestEpoch;
++        initializationPromise = (async () => {
++          const problem = settingsProblem(get().settings, { sameOrigin });
++          if (problem) {
++            set({ connection: 'offline', serverProblem: problem });
++            initializationPromise = null;
++            return;
++          }
++          set({ connection: 'connecting', serverProblem: null });
++          try {
++            const storedId = storage?.getItem?.(LEARNER_KEY) || null;
++            const identity = await api.createLearner(storedId);
++            if (epoch !== requestEpoch) return;
++            try { storage?.setItem?.(LEARNER_KEY, identity.learnerId); } catch { /* private mode */ }
++            const view = await api.getDungeon(identity.learnerId, dungeon.id);
++            if (epoch !== requestEpoch) return;
++            set({ learnerId: identity.learnerId, language: identity.language ?? null, progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon), connection: 'ready' });
++            const { phase } = get();
++            if (view.progress.complete) set({ phase: 'victory', encounter: null });
++            else if (view.progress.clearedEncounterIds.length > 0 && (phase === 'attract' || phase === 'overview')) {
++              set({ phase: 'approach', siteIndex: view.progress.nextSiteIndex, walkFrom: null, cameraArrived: false, encounter: null });
++              await loadSite();
++            }
++          } catch (error) {
++            if (epoch === requestEpoch) set({ connection: 'offline', serverProblem: error.message });
++            initializationPromise = null;
++          }
++        })();
++        return initializationPromise;
++      },
++
++      enter: () => { if (get().phase === 'attract') set({ phase: 'overview' }); },
++
++      start: async () => {
++        if (get().phase !== 'overview') return;
++        if (get().connection !== 'ready') {
++          await get().initialize();
++          if (get().connection !== 'ready' || get().phase !== 'overview') return;
++        }
++        const { progress } = get();
++        if (progress?.complete) { set({ phase: 'victory' }); return; }
++        set({ phase: 'approach', siteIndex: nextIndexOf(progress), walkFrom: null, cameraArrived: false, encounter: null, assessment: null, error: null, view: 'dialogue' });
++        await loadSite();
++      },
++
++      // Called by the 3D view when the camera reaches the site (or at once, with no WebGL).
++      cameraArrived: () => {
++        if (!MOVING.has(get().phase) || get().cameraArrived) return;
++        set({ cameraArrived: true });
++        maybeOpen();
++      },
++
++      retrySite: () => loadSite(),
++
++      // After a site's encounter resolves: walk to the next site, or the victory screen after the last.
++      walkOn: async () => {
++        const s = get();
++        if (s.phase !== 'encounter' || s.encounter?.state !== 'resolved') return;
++        const progress = s.progress ?? await refreshProgress(s.learnerId);
++        if (!progress || progress.complete || progress.nextSiteIndex === null) {
++          set({ phase: 'victory', encounter: null, assessment: null, view: 'dialogue' });
++          return;
++        }
++        set({ phase: 'walk', walkFrom: s.siteIndex, siteIndex: progress.nextSiteIndex, cameraArrived: false, encounter: null, assessment: null, view: 'dialogue', draft: '', pendingInput: null });
++        await loadSite();
++      },
++
++      playAgain: async () => {
++        const { learnerId } = get();
++        if (!learnerId) return;
++        set({ isLoading: true, error: null });
++        try {
++          const view = await api.resetDungeon(learnerId, dungeon.id);
++          siteRequest += 1;
++          set({ progress: view.progress, phase: 'overview', siteIndex: 0, walkFrom: null, cameraArrived: false, encounter: null, assessment: null, isLoading: false, view: 'dialogue' });
++        } catch (error) { set({ error: error.message, isLoading: false }); }
++      },
++
++      openSettings: () => set({ settingsOpen: true }),
++      closeSettings: () => set({ settingsOpen: false }),
++      // New settings reconnect: the learner and the conversation are fetched again from that server.
++      saveSettings: async (values) => {
++        const settings = persistSettings(values, storage);
++        requestEpoch += 1;
++        siteRequest += 1;
++        initializationPromise = null;
++        const phase = ['attract', 'overview'].includes(get().phase) ? get().phase : 'overview';
++        set({ settings, settingsOpen: false, learnerId: null, progress: null, connection: 'idle', serverProblem: null, encounter: null, phase, cameraArrived: false, error: null, view: 'dialogue' });
++        await get().initialize();
++      },
+ 
+-export const useGameStore = createGameStore();
++      sendMessage: async (providedText) => {
++        const state = get();
++        const text = String(providedText ?? state.draft).trim();
++        if (!text || !state.learnerId || !state.encounter || state.encounter.state !== 'ongoing' || state.isLoading) return;
++        const learnerId = state.learnerId;
++        const encounterId = state.encounter.id;
++        const version = state.encounter.version;
++        const epoch = requestEpoch;
++        set({ isLoading: true, error: null, pendingInput: text, draft: text });
++        try {
++          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text });
++          if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
++          set({ encounter: result.encounter, spellbook: result.spellbook, assessment: result.assessment, isLoading: false, pendingInput: null, draft: '' });
++          if (result.encounter.state === 'resolved' && result.encounter.dungeonId) {
++            const progress = await refreshProgress(learnerId);
++            // Without an answer the next site is the one after this (the server checks the order on the next start).
++            if (!progress && get().learnerId === learnerId) {
++              const next = get().siteIndex + 1;
++              const sites = get().dungeon.sites;
++              set({ progress: { ...(get().progress ?? {}), nextSiteIndex: next < sites.length ? next : null, complete: next >= sites.length } });
++            }
++          }
++        } catch (error) {
++          if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
++        }
++      },
++
++      revealHelp: async ({ kind, messageId, vocabularyId }) => {
++        const { learnerId, encounter, isLoading } = get();
++        if (!learnerId || !encounter || isLoading) return;
++        const version = encounter.version;
++        set({ isLoading: true, error: null });
++        try {
++          const result = await api.revealHelp(learnerId, { encounterId: encounter.id, version, kind, messageId, vocabularyId });
++          if (get().learnerId !== learnerId || get().encounter?.version !== version) return;
++          set({ encounter: result.encounter, spellbook: result.spellbook, isLoading: false });
++        } catch (error) { set({ error: error.message, isLoading: false }); }
++      },
++
++      openSpellbook: () => set({ view: 'spellbook', reviewChallenge: null, reviewResult: null, error: null }),
++      returnToDialogue: () => set({ view: 'dialogue', reviewChallenge: null, reviewResult: null, error: null }),
++
++      startReview: async (vocabularyId) => {
++        const { learnerId } = get();
++        if (!learnerId) return;
++        set({ isLoading: true, error: null, reviewResult: null });
++        try {
++          const result = await api.createReview(learnerId, vocabularyId);
++          set({ reviewChallenge: result.challenge, spellbook: result.spellbook, view: result.challenge ? 'review' : 'spellbook', isLoading: false });
++        } catch (error) { set({ error: error.message, isLoading: false }); }
++      },
++
++      submitReview: async (answer) => {
++        const { learnerId, reviewChallenge, isLoading } = get();
++        if (!learnerId || !reviewChallenge || isLoading || !String(answer).trim()) return;
++        set({ isLoading: true, error: null });
++        try {
++          const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'answer', answer: String(answer).trim() });
++          set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
++        } catch (error) { set({ error: error.message, isLoading: false }); }
++      },
++
++      revealReviewAnswer: async () => {
++        const { learnerId, reviewChallenge, isLoading } = get();
++        if (!learnerId || !reviewChallenge || isLoading) return;
++        set({ isLoading: true, error: null });
++        try {
++          const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'reveal', answer: '' });
++          set({ reviewResult: result.result, spellbook: result.spellbook, reviewChallenge: null, isLoading: false });
++        } catch (error) { set({ error: error.message, isLoading: false }); }
++      },
++    };
++  });
++}
+diff --git a/package-lock.json b/package-lock.json
+index ddcf376..29d4c9a 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -9,18 +9,31 @@
+       "version": "0.1.0",
+       "workspaces": [
+         "client",
+-        "server"
++        "server",
++        "aesthetic"
+       ],
+       "devDependencies": {
+         "concurrently": "^9.1.2"
+       }
+     },
++    "aesthetic": {
++      "name": "@parallang/aesthetic",
++      "version": "0.1.0",
++      "dependencies": {
++        "three": "0.186.1"
++      },
++      "devDependencies": {
++        "vite": "6.4.6"
++      }
++    },
+     "client": {
+       "name": "parallang-client",
+       "version": "0.1.0",
+       "dependencies": {
++        "@parallang/aesthetic": "0.1.0",
+         "react": "^19.1.0",
+         "react-dom": "^19.1.0",
++        "three": "0.186.1",
+         "zustand": "^5.0.5"
+       },
+       "devDependencies": {
+@@ -28,6 +41,7 @@
+         "@testing-library/user-event": "^14.6.1",
+         "@vitejs/plugin-react": "^4.4.1",
+         "dotenv": "^16.5.0",
++        "js-yaml": "^4.1.0",
+         "jsdom": "^26.1.0",
+         "vite": "^6.3.1",
+         "vitest": "^3.2.4"
+@@ -953,6 +967,10 @@
+         "@jridgewell/sourcemap-codec": "^1.4.14"
+       }
+     },
++    "node_modules/@parallang/aesthetic": {
++      "resolved": "aesthetic",
++      "link": true
++    },
+     "node_modules/@rolldown/pluginutils": {
+       "version": "1.0.0-beta.27",
+       "resolved": "https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.27.tgz",
+@@ -3790,6 +3808,12 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/three": {
++      "version": "0.186.1",
++      "resolved": "https://registry.npmjs.org/three/-/three-0.186.1.tgz",
++      "integrity": "sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA==",
++      "license": "MIT"
++    },
+     "node_modules/tinybench": {
+       "version": "2.9.0",
+       "resolved": "https://registry.npmjs.org/tinybench/-/tinybench-2.9.0.tgz",
+@@ -4048,9 +4072,9 @@
+       }
+     },
+     "node_modules/vite": {
+-      "version": "6.4.1",
+-      "resolved": "https://registry.npmjs.org/vite/-/vite-6.4.1.tgz",
+-      "integrity": "sha512-+Oxm7q9hDoLMyJOYfUYBuHQo+dkAloi33apOPP56pzj+vsdJDzr+j1NISE5pyaAuKL4A3UD34qd0lx5+kfKp2g==",
++      "version": "6.4.6",
++      "resolved": "https://registry.npmjs.org/vite/-/vite-6.4.6.tgz",
++      "integrity": "sha512-RtsraAwEG68idOA6iUOoIpOlcSKROnf815aIq9qHTSrDNpLoBrBa12suyfcEd8qn0xwOVQI1Yhm1GbmTjF600A==",
+       "dev": true,
+       "license": "MIT",
+       "dependencies": {
+diff --git a/package.json b/package.json
+index 8e76589..912be1d 100644
+--- a/package.json
++++ b/package.json
+@@ -2,7 +2,11 @@
+   "name": "parallang",
+   "version": "0.1.0",
+   "private": true,
+-  "workspaces": ["client", "server"],
++  "workspaces": [
++    "client",
++    "server",
++    "aesthetic"
++  ],
+   "scripts": {
+     "dev": "concurrently -n client,server -c cyan,green \"npm run dev -w client\" \"npm run dev -w server\"",
+     "dev:client": "npm run dev -w client",

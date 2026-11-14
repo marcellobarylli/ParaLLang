@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-14: round 114, the web client on GitHub Pages and a hosted server
+
+The web client can now be served from GitHub Pages (workflows in `.github/workflows/`) and talks to a server URL set
+at build time or in its settings sheet, sending the access token from there. A Dockerfile and `render.yaml` run the
+server on Render with the owner's Claude subscription; in production it refuses to start without `PARALLANG_TOKEN`.
+Nothing is deployed yet: the owner steps are in the README and the [findings](docs/rounds/114/findings.md). The Ta
+Prohm dungeon is designed in round 114's architecture and partly built (server side); the 3D view is the next round.
+
 ## Addendum 2026-11-14: round 113, Bambieshart and the High Gate
 
 A new optional location, The High Gate, holds Bambieshart from Zanzibart, a wanderer from a screenshot the owner
@@ -1020,7 +1028,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
-| 114 | 11-14 | A dungeon crawl on Ta Prohm in the web client (three sites, five camera transitions), GitHub Pages and a hosted server (pre-run record) | [114](docs/rounds/114/architecture.md) | — | pre-run record |
+| 114 | 11-14 | Infrastructure for the web client on GitHub Pages and a hosted server on Render (the dungeon itself moved to a later round) | [114](docs/rounds/114/architecture.md) | [findings](docs/rounds/114/findings.md) | `4200fe4` (pre-run record) to round 114 close |
 | 113 | 11-14 | The High Gate: Bambieshart from Zanzibart and a Micromort Mountain signpost, in both packs | [113](docs/rounds/113/architecture.md) | [findings](docs/rounds/113/findings.md) | this commit |
 | 110 | 11-06 | Spores: a fragment of The Journey on the mushrooms of the dead branches, after the Butcher's Stall (autonomous) | [110](docs/rounds/110/architecture.md) | [findings](docs/rounds/110/findings.md) | pre-run record to round 110 close |
 | 107 | 11-06 | play-market matches narration calls within the step that committed each line (autonomous) | [107](docs/rounds/107/architecture.md) | [findings](docs/rounds/107/findings.md) | pre-run record to round 107 close |

@@ -151,3 +151,24 @@ first deploy. Nobody plays the dungeon against the live model in this round.
 - **Screens:** a headless browser (in a Slurm job) captures attract, overview, approach, walk and victory at phone
   and desktop widths.
 - All existing suites keep passing.
+
+## Amendment (2026-11-14, during the build): infrastructure only
+
+The owner cut the round's scope during the build: "Btw the main implementation is for the next agent, pls stop at
+making the infrastructure. The level implementation will be separate."
+
+This round now builds Goal 2 and Goal 3 only: the GitHub Pages setup (base path, manifest, workflows), the client's
+configurable server URL and token, the Dockerfile, `render.yaml` and the production token check. Goal 1 (the dungeon
+content file, the server's dungeon endpoints and save migration, the camera director and the 3D dungeon view) moves
+to a later round, which takes this round's Design section as its starting point. Any level code already written is
+kept as `trail/level-wip.patch` (uncommitted) or named in the Outcome (committed).
+
+## Outcome (2026-11-14)
+
+Built to the amended scope (infrastructure only). The web client takes its server URL from `VITE_API_BASE` or a
+settings sheet and sends the access token from there. The Pages build and workflows follow DJ_Graphyla. The
+Dockerfile and `render.yaml` run the server with the `claude-cli` adapter, and the server refuses to start in
+production without a 16-character `PARALLANG_TOKEN`. Part of the level work was committed before the scope cut
+(the dungeon content file and the server's dungeon start, progress and reset, in the commit "round 114: Ta Prohm
+dungeon content..."). The rest is in [`trail/level-wip.patch`](trail/level-wip.patch) for the next round. See
+[`findings.md`](findings.md).
