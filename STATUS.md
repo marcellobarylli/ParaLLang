@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-14: the web client is live
+
+The owner did round 114's setup steps. The web client is at https://marcellobarylli.github.io/ParaLLang/ and its
+server at https://parallang.onrender.com, which calls Claude through the owner's subscription. One encounter turn was
+played through the hosted server (`tools/check_hosted.py`). The live setup, its limits and the brief for round 115
+(the Ta Prohm dungeon) are in [`docs/handoff.md`](docs/handoff.md). Every push to `main` now deploys both.
+
 ## Addendum 2026-11-14: round 114, the web client on GitHub Pages and a hosted server
 
 The web client can now be served from GitHub Pages (workflows in `.github/workflows/`) and talks to a server URL set

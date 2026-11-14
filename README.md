@@ -133,7 +133,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   minute. Saves are written to `/data/saves` inside the container and are lost on every redeploy. A paid plan with a
   disk mounted at `/data` keeps them (see the commented `disk` block in `render.yaml`).
 
-Owner steps (they cannot be done from the cluster):
+Live since 2026-11-14: https://marcellobarylli.github.io/ParaLLang/ against https://parallang.onrender.com. The
+deployment, its limits and a chain check (`tools/check_hosted.py`) are in [`docs/handoff.md`](docs/handoff.md).
+
+Owner steps (done once; they cannot be done from the cluster):
 
 1. Make the repository public. Settings → Pages → Source: "GitHub Actions".
 2. Render: New → Blueprint, pick this repository. Set `CLAUDE_CODE_OAUTH_TOKEN` (run `claude setup-token` on your Mac)

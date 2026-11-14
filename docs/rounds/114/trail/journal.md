@@ -19,3 +19,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 13 | 17:52:25 | 17:52:32 | built | Claude (claude-opus-5-5) | `round 114: GitHub Pages build and workflows, Docker image and Render blueprint, README owner steps` (41fbf9c) | `.github/workflows/`, `client/vite.config.js`, `client/public/`, `Dockerfile`, `render.yaml`, `README.md` |
 | 14 | 17:53:25 | 17:53:25 | outcome | Claude (claude-opus-5-5) | findings.md and Outcome written | `../findings.md` |
 | 15 | 17:53:25 | 17:53:25 | closed | Claude (claude-opus-5-5) | Status addendum and index row; round_log_check ok | `../architecture.md` |
+| 16 | 21:40:36 | 22:06:30 | run | Owner | Pages set to "GitHub Actions", Render blueprint created, `VITE_API_BASE` set; deploy re-run by hand (run 43644067625; an earlier dispatch was cancelled by the concurrency group) | — |
+| 17 | 21:41:56 | 22:06:30 | result | Claude (claude-opus-5-5) | Run 43644067625 succeeded (its completion time); site 200, `version.json` 0.1.0+mwgxkvzg, bundle points at parallang.onrender.com; server health 200, 401 without token | — |
+| 18 | 22:05:24 | 22:06:30 | result | Claude (claude-opus-5-5) | `tools/check_hosted.py`: encounter start 15.4 s, one model-answered turn 25.7 s, test learner deleted | `../../../../tools/check_hosted.py` |
+| 19 | 22:06:30 | 22:06:30 | amended | Claude (claude-opus-5-5) | Findings: Deploy check section; handoff for the live setup and round 115; STATUS addendum | `../findings.md`, `../../../handoff.md` |

@@ -43,3 +43,12 @@ health check are unverified. Nobody has played against the hosted server.
 - The free Render plan sleeps when idle and loses saves on redeploy; a paid disk at `/data` keeps them.
 - The next round builds the dungeon: the camera director, the 3D view, aesthetic in the workspaces, screenshots of
   the camera states. It starts from this round's Design and `trail/level-wip.patch`.
+
+## Deploy check (2026-11-14, after close)
+The owner did the setup steps, and the chain works end to end. Pages run 43644067625 deployed the client, whose
+bundle points at `https://parallang.onrender.com`. The first run (43623552819) had failed only at `configure-pages`,
+before Pages was set to "GitHub Actions". On Render, `/api/health` answers and a request without the token gets 401.
+`tools/check_hosted.py` started Gerald's encounter (15.4 s) and got one model-answered turn (25.7 s) through the
+hosted server, then deleted its learner. This lifts the claim boundary above for Actions, the Docker image, the Claude
+CLI inside it and Render's health check. `level-wip.patch` no longer applies cleanly to `gameStore.js`;
+[`docs/handoff.md`](../../handoff.md) gives the command and the brief for round 115.
