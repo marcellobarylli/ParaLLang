@@ -107,6 +107,9 @@ the root lockfile. Run `npm install` afterwards and check that `npm test` passes
 
 - Every push to `main` deploys Pages and restarts Render, and `npm test` gates the Pages deploy. Push only green
   commits, and work on a branch until the dungeon screen is playable.
+- GitHub's runners are slower than the cluster. On 2026-11-14 the mobile Saves screen test hit Jest's 5 s default
+  there (run 43646340054) while it passed on the cluster, so `mobile/package.json` sets `testTimeout` to 20 s. A test
+  that is slow only on GitHub is a timing problem; read the job log before changing the test.
 - Layout is phone first: the level fills the screen and the dialogue is a bottom sheet; at 1100 px and wider it is a
   side panel. Tap targets are 44 px or larger.
 - Screenshots of each camera state at phone and desktop widths come from a headless browser inside a Slurm job
