@@ -570,21 +570,25 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       submitReview: async (answer) => {
         const { learnerId, reviewChallenge, isLoading } = get();
         if (!learnerId || !reviewChallenge || isLoading || !String(answer).trim()) return;
+        const epoch = requestEpoch;
+        const current = () => epoch === requestEpoch && get().learnerId === learnerId; // review R1.3 of round 121
         set({ isLoading: true, error: null });
         try {
           const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'answer', answer: String(answer).trim() });
-          tookReview(result, learnerId);
-        } catch (error) { set({ error: error.message, isLoading: false }); }
+          if (current()) tookReview(result, learnerId);
+        } catch (error) { if (current()) set({ error: error.message, isLoading: false }); }
       },
 
       revealReviewAnswer: async () => {
         const { learnerId, reviewChallenge, isLoading } = get();
         if (!learnerId || !reviewChallenge || isLoading) return;
+        const epoch = requestEpoch;
+        const current = () => epoch === requestEpoch && get().learnerId === learnerId;
         set({ isLoading: true, error: null });
         try {
           const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'reveal', answer: '' });
-          tookReview(result, learnerId);
-        } catch (error) { set({ error: error.message, isLoading: false }); }
+          if (current()) tookReview(result, learnerId);
+        } catch (error) { if (current()) set({ error: error.message, isLoading: false }); }
       },
     };
   });

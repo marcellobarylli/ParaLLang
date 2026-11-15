@@ -1057,3 +1057,23 @@ test('a server that sends no experience (an older one) leaves the level out', as
   await s().sendMessage('Ciao!');
   expect(s()).toMatchObject({ progression: null, xpGained: 0, levelUp: null, encounter: { state: 'resolved' } });
 });
+
+// Review 1 of round 121 (Codex), R1.3.
+test('a review answered after new settings loaded another learner does not bring its experience along', async () => {
+  const slow = deferred();
+  const { api, server, s } = makeStore({ xp: 355, steps: 1 });
+  await s().initialize();
+  s().onCameraArrived();
+  await s().startReview('ciao');
+  const review = api.submitReview.getMockImplementation();
+  api.submitReview.mockImplementationOnce(async (...args) => { const reply = await review(...args); await slow.promise; return reply; });
+  const answered = s().submitReview('hello'); // 360 XP on the old server, level 5
+  await vi.waitFor(() => expect(server.run.xp).toBe(360));
+  server.run.xp = 0; // the server the new settings point at knows a learner with nothing
+  await s().saveSettings({ serverUrl: 'https://other.example.com', token: 'another-token' });
+  expect(s().progression).toMatchObject({ xp: 0, level: 1 });
+  slow.resolve();
+  await answered;
+  expect(s().progression).toMatchObject({ xp: 0, level: 1 });
+  expect(s()).toMatchObject({ reviewResult: null, isLoading: false });
+});

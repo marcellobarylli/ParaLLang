@@ -178,7 +178,8 @@ function validateEnvelope(value, learnerId) {
   }
   for (const [id, run] of Object.entries(value.dungeons)) if (!validDungeonRun(run)) delete value.dungeons[id];
   // Round 121: experience. A save without it, or with anything but a whole number of XP, has none.
-  if (!Number.isInteger(value.progression?.xp) || value.progression.xp < 0) value.progression = { xp: 0 };
+  // Review R1.5: a safe integer, so an edited save with 1e308 XP is not taken for a number of XP.
+  if (!Number.isSafeInteger(value.progression?.xp) || value.progression.xp < 0) value.progression = { xp: 0 };
   else value.progression = { xp: value.progression.xp };
   if (value.annexes !== undefined) {
     if (!Array.isArray(value.annexes)) throw retryableError('The learner save contains invalid annex records. The original file was preserved.', 'SAVE_UNREADABLE');

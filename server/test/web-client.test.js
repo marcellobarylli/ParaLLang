@@ -90,7 +90,7 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
     ['face_gate', 'Portia'], ['buttress_tree', 'Mortimer'], ['root_court', 'Gerald'], ['sunlit_court', null], ['library', null], ['before_sanctuary', null], ['sanctuary', null],
   ]);
   // The bundled file and the server's copy agree on where the sites stand and how the paths run.
-  const served = (await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId: s().learnerId })).data.dungeon;
+  const served = (await api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId: s().learnerId })).data.dungeon;
   assert.deepEqual(served.sites.map((site) => [site.id, site.encounterId, site.at]), dungeon.sites.map((site) => [site.id, site.encounterId, site.at]));
   assert.deepEqual(served.paths, dungeon.paths.map(({ between, via }) => ({ between, via })));
   assert.deepEqual([served.start, served.goal], [dungeon.start, dungeon.goal]);
@@ -121,7 +121,7 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
 
   // Before Portia is answered no walk is offered, and the server refuses one all the same.
   assert.equal(siteStatesOf(s()).root_court.reachable, false);
-  const early = await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId: s().learnerId, method: 'POST', body: { siteId: 'root_court', leave: true } });
+  const early = await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId: s().learnerId, method: 'POST', body: { siteId: 'root_court', leave: true, client: 121 } });
   assert.equal(early.data.error.code, 'BLOCKED');
 
   await answerSite(s);

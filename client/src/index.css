@@ -96,8 +96,9 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .phase-attract .level-chip { visibility: hidden; }
 .xp-line { color: var(--gold); font-weight: 700; letter-spacing: .04em; }
 /* The top bar holds three buttons on a phone. The pips go under the title, the dungeon's name gives way to them, and
-   the buttons give up some padding. */
-@media (max-width: 560px) {
+   the buttons give up some padding. Up to 720 px (review R1.4 of round 121): with the level chip the one-row bar
+   needs more than that. */
+@media (max-width: 720px) {
   .hud { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "title nav" "level nav" "pips nav"; column-gap: .4rem; row-gap: .2rem; align-items: center; }
   .level-chip { grid-area: level; margin: 0; font-size: .72rem; }
   .xp-bar { width: 40px; height: 6px; }

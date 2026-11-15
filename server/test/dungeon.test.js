@@ -39,9 +39,10 @@ async function play(runtime, learnerId, encounter, answers) {
   return current;
 }
 
-const start = (runtime, learnerId, body) => api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body });
-const view = (runtime, learnerId) => api(runtime, '/api/dungeons/ta_prohm/map', { learnerId });
-const move = (runtime, learnerId, body) => api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body });
+// Round 121: a dungeon call names the client's contract, as the web client does.
+const start = (runtime, learnerId, body) => api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: body.dungeonId ? { client: 121, ...body } : body });
+const view = (runtime, learnerId) => api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId });
+const move = (runtime, learnerId, body) => api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body: { client: 121, ...body } });
 // Starts and resolves the encounter of the site the player stands at.
 async function clearHere(runtime, content, learnerId, siteId) {
   const started = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
@@ -274,7 +275,7 @@ test('a reset starts a new run at the gate: the fog is back, the conversation is
   const second = (await start(runtime, learnerId, { dungeonId: 'ta_prohm' })).data.encounter;
   assert.equal(second.encounterId, 'imp_coffee_greeting');
 
-  const reset = await api(runtime, '/api/dungeons/ta_prohm/reset', { learnerId, method: 'POST' });
+  const reset = await api(runtime, '/api/dungeons/ta_prohm/reset', { learnerId, method: 'POST', body: { client: 121 } });
   assert.equal(reset.status, 200);
   const { sites, ...progress } = reset.data.progress;
   assert.deepEqual(progress, { run: 2, at: 'face_gate', complete: false, clearedSiteIds: [], visitedSiteIds: ['face_gate'] });
@@ -303,9 +304,9 @@ test('a market conversation under way is not replaced, a market resolve clears n
   assert.equal(site.data.encounter.state, 'ongoing');
   assert.notEqual(site.data.encounter.id, market.id);
 
-  assert.equal((await api(runtime, '/api/dungeons/atlantis/map', { learnerId })).status, 404);
-  assert.equal((await api(runtime, '/api/dungeons/atlantis/map', { learnerId })).data.error.code, 'UNKNOWN_DUNGEON');
-  assert.equal((await api(runtime, '/api/dungeons/atlantis/move', { learnerId, method: 'POST', body: { siteId: 'face_gate' } })).data.error.code, 'UNKNOWN_DUNGEON');
+  assert.equal((await api(runtime, '/api/dungeons/atlantis/map?client=121', { learnerId })).status, 404);
+  assert.equal((await api(runtime, '/api/dungeons/atlantis/map?client=121', { learnerId })).data.error.code, 'UNKNOWN_DUNGEON');
+  assert.equal((await api(runtime, '/api/dungeons/atlantis/move', { learnerId, method: 'POST', body: { siteId: 'face_gate', client: 121 } })).data.error.code, 'UNKNOWN_DUNGEON');
   assert.equal((await start(runtime, learnerId, { dungeonId: 'atlantis' })).data.error.code, 'UNKNOWN_DUNGEON');
   assert.equal((await view(runtime)).status, 400, 'a learner id is required');
   // Review 1 (R1.1): the path the client of rounds 115 to 118 read tells that page to reload, whatever the dungeon.
@@ -313,8 +314,20 @@ test('a market conversation under way is not replaced, a market resolve clears n
   assert.equal(outdated.status, 426);
   assert.deepEqual([outdated.data.error.code, outdated.data.error.message], ['CLIENT_OUTDATED', 'This page is older than the server. Open Settings and tap "Reload the page".']);
   assert.equal((await api(runtime, '/api/dungeons/ta_prohm', { learnerId, token: null })).status, 401, 'still behind the token');
-  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId, token: null })).status, 401, 'the token is required');
-  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body: { siteId: 'face_gate' }, token: null })).status, 401);
+  // Review 1 of round 121 (R1.2): a page of rounds 119 and 120 names no contract. Its map read, its walk, its new run
+  // and its site start are answered the same way; the app's starts, which name no dungeon, are not asked.
+  const old = [
+    await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId }),
+    await api(runtime, '/api/dungeons/ta_prohm/map?client=120', { learnerId }),
+    await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body: { siteId: 'root_court' } }),
+    await api(runtime, '/api/dungeons/ta_prohm/reset', { learnerId, method: 'POST' }),
+    await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { dungeonId: 'ta_prohm' } }),
+  ];
+  for (const reply of old) assert.deepEqual([reply.status, reply.data.error.code], [426, 'CLIENT_OUTDATED']);
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/map?client=122', { learnerId })).status, 200, 'a newer page is served');
+  assert.equal((await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { encounterId: 'market_entrance_tutorial', restart: true } })).status, 200);
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId, token: null })).status, 401, 'the token is required');
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body: { siteId: 'face_gate', client: 121 }, token: null })).status, 401);
 });
 
 test('older saves gain empty dungeon progress; invalid runs are dropped and a bad container is refused', async (t) => {

@@ -18,11 +18,11 @@ async function levelRuntime(t, language = 'it', clock) {
   const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
   return { runtime, content, learnerId };
 }
-const start = (runtime, learnerId, body) => api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body });
+const start = (runtime, learnerId, body) => api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: body.dungeonId ? { client: 121, ...body } : body });
 const say = (runtime, learnerId, encounter, message, attemptId = randomUUID()) => api(runtime, '/api/encounter/dialogue', {
   learnerId, method: 'POST', body: { encounterId: encounter.id, version: encounter.version, attemptId, message },
 });
-const map = async (runtime, learnerId) => (await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId })).data;
+const map = async (runtime, learnerId) => (await api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId })).data;
 // Sets the learner's experience in the save, as if earned.
 async function setXp(runtime, learnerId, xp) {
   const file = join(runtime.saveDir, `${learnerId}.json`);
@@ -33,6 +33,10 @@ async function setXp(runtime, learnerId, xp) {
 test('the level curve: levels 1 to 6 start at 0, 60, 140, 240, 360 and 500 XP', () => {
   assert.deepEqual([1, 2, 3, 4, 5, 6].map(levelStartsAt), [0, 60, 140, 240, 360, 500]);
   assert.deepEqual([0, 59, 60, 139, 140, 239, 240, 359, 360, 499, 500, 100000].map(levelFor), [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 98]);
+  // Review R1.5: no loop over the levels, whatever the number; and nothing but a positive number has a level above 1.
+  assert.deepEqual([-5, NaN, undefined, Infinity, 1e308].map(levelFor).slice(0, 3), [1, 1, 1]);
+  assert.ok(levelFor(1e308) === levelFor(Number.MAX_SAFE_INTEGER) && levelFor(Infinity) === levelFor(1e308));
+  for (let level = 1; level < 400; level += 1) { assert.equal(levelFor(levelStartsAt(level)), level); assert.equal(levelFor(levelStartsAt(level + 1) - 1), level); }
   assert.deepEqual(progressionView(0), { xp: 0, level: 1, levelStartsAt: 0, nextLevelAt: 60 });
   assert.deepEqual(progressionView(300), { xp: 300, level: 4, levelStartsAt: 240, nextLevelAt: 360 });
   assert.deepEqual([1, 2, 3, 5, 0].map(ratioBonusFor), [0, 0.03, 0.06, 0.12, 0]);
@@ -106,13 +110,16 @@ test('a correct review of a due card earns 5 XP; a wrong one, a revealed one and
 test('a party conversation earns as a site does', async (t) => {
   const { runtime, content, learnerId } = await levelRuntime(t);
   for (const [siteId, encounterId] of [['face_gate', 'market_entrance_tutorial'], ['root_court', 'imp_coffee_greeting']]) {
-    if (siteId !== 'face_gate') await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body: { siteId } });
+    if (siteId !== 'face_gate') await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body: { siteId, client: 121 } });
     let encounter = (await start(runtime, learnerId, { dungeonId: 'ta_prohm' })).data.encounter;
     for (const answer of passingAnswers(content, encounterId)) encounter = (await say(runtime, learnerId, encounter, answer)).data.encounter;
   }
   assert.equal((await map(runtime, learnerId)).progression.xp, 100);
   await api(runtime, '/api/party/recruit', { learnerId, method: 'POST', body: { encounterId: 'imp_coffee_greeting' } });
   let talk = (await start(runtime, learnerId, { encounterId: 'gerald_coffee_break' })).data.encounter;
+  // Review R1.1: at level 2 a party member's conversation still speaks at the content's ratio.
+  const gerald = content.encounters.get('gerald_coffee_break');
+  assert.equal(talk.difficulty, calculateTargetRatio(gerald.character.language_profile.base_target_ratio, gerald.encounter.escalation.target_ratio_increase_per_turn, 0));
   let reply;
   const objectives = content.encounters.get('gerald_coffee_break').encounter.objectives.length;
   for (const answer of passingAnswers(content, 'gerald_coffee_break')) { reply = (await say(runtime, learnerId, talk, answer)).data; talk = reply.encounter; }
@@ -136,6 +143,17 @@ test('a level adds 0.03 to a conversation\'s target ratio, taken at its start an
   assert.match(runtime.provider.calls[calls].messages.map((message) => message.content).join('\n'), new RegExp(`${Math.round((base + 0.06) * 100)}%`));
   const turn = (await say(runtime, learnerId, raised, passingAnswers(content, 'market_entrance_tutorial')[0])).data;
   assert.equal(turn.encounter.difficulty, calculateTargetRatio(base + 0.06, step, 1));
+  // Review R1.6: the reply to that turn was asked for at the raised ratio too, not only shown at it.
+  const prompt = () => runtime.provider.calls.at(-1).messages.map((message) => message.content).join('\n');
+  const percent = (ratio) => new RegExp(`\\b${Math.round(ratio * 100)}%`);
+  assert.match(prompt(), percent(calculateTargetRatio(base + 0.06, step, 1)));
+  assert.doesNotMatch(prompt(), percent(calculateTargetRatio(base, step, 1)));
+  // Review R1.1: the level raises a dungeon site's conversation only. The same encounter started on the market's map
+  // (the iPhone app) keeps the content's ratio, in its prompt and on its sheet.
+  const market = (await start(runtime, learnerId, { encounterId: 'market_entrance_tutorial', restart: true })).data.encounter;
+  assert.equal(market.dungeonId, undefined);
+  assert.equal(market.difficulty, base);
+  assert.match(prompt(), percent(base));
 
   // A conversation started at level 1 that crosses into level 2 keeps its ratio.
   await setXp(runtime, learnerId, 55);
@@ -144,6 +162,7 @@ test('a level adds 0.03 to a conversation\'s target ratio, taken at its start an
   const crossed = (await say(runtime, learnerId, crossing, passingAnswers(content, 'market_entrance_tutorial')[0])).data;
   assert.deepEqual([crossed.progression.xp, crossed.progression.level], [65, 2]);
   assert.equal(crossed.encounter.difficulty, calculateTargetRatio(base, step, 1));
+  assert.match(prompt(), percent(calculateTargetRatio(base, step, 1)));
   // The next conversation starts at level 2.
   crossing = (await start(runtime, learnerId, { dungeonId: 'ta_prohm', restart: true })).data.encounter;
   assert.equal(crossing.difficulty, calculateTargetRatio(base + 0.03, step, 0));
@@ -157,7 +176,7 @@ test('a save without experience, or with anything but a whole number of XP, has 
   const file = join(runtime.saveDir, `${learnerId}.json`);
   const saved = JSON.parse(await readFile(file, 'utf8'));
   assert.deepEqual(saved.progression, { xp: 0 });
-  for (const progression of [undefined, null, { xp: -5 }, { xp: 1.5 }, { xp: '40' }, 'lots', { level: 9 }]) {
+  for (const progression of [undefined, null, { xp: -5 }, { xp: 1.5 }, { xp: '40' }, 'lots', { level: 9 }, { xp: 1e308 }]) {
     const { progression: _gone, ...rest } = saved;
     await writeFile(file, JSON.stringify(progression === undefined ? rest : { ...rest, progression }));
     assert.deepEqual((await runtime.storage.load(learnerId)).progression, { xp: 0 }, JSON.stringify(progression));

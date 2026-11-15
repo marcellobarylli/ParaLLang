@@ -75,9 +75,11 @@ function fakeServer({ steps = 0, stored, xp, failFirstSend = false, failFirstSta
     const body = init.body ? JSON.parse(init.body) : {};
     server.paths.push(path);
     if (path === '/api/learner') return response(201, { learnerId, recovered: false, language: italianLanguage });
-    if (path === '/api/dungeons/ta_prohm/map') return response(200, run.view());
-    if (path === '/api/dungeons/ta_prohm/reset') { server.session = null; return response(200, run.reset()); }
+    if (path === '/api/dungeons/ta_prohm/map?client=121') return response(200, run.view());
+    if (path === '/api/dungeons/ta_prohm/reset') { expect(body.client).toBe(121); server.session = null; return response(200, run.reset()); }
     if (path === '/api/dungeons/ta_prohm/move') {
+      expect(body.client).toBe(121);
+      delete body.client;
       server.moves.push(body);
       // As the server: a conversation under way holds the player unless the move says `leave` (review 1, R1.6).
       if (server.session && !server.session.talk && !server.session.resolved && body.siteId !== run.run.at && body.leave !== true) {
@@ -113,6 +115,7 @@ function fakeServer({ steps = 0, stored, xp, failFirstSend = false, failFirstSta
       server.starts += 1;
       if (failFirstStart && server.starts === 1) return response(503, { error: { code: 'CLI_TIMEOUT', message: 'The selected CLI timed out. Your progress was not changed.', retryable: true } });
       expect(body.dungeonId).toBe('ta_prohm');
+      expect(body.client).toBe(121); // round 121: a dungeon call names the client's contract
       if (server.session?.talk && !server.session.resolved && !body.restart) return response(409, { error: { code: 'CONVERSATION_UNDER_WAY', message: 'Finish your conversation first.' } });
       server.sessions += 1;
       server.session = { siteId: run.run.at, version: 1, resolved: false };

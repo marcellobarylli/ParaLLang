@@ -159,8 +159,15 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
 - **A level seal** is `requires_level` on a site of `content/world/dungeons/ta_prohm.yaml` (The Library 3, The
   Sanctuary 5). `gateFor`, `moveProblem` and `siteStates` in `server/src/dungeon.js` take the level. In a complete
   run no gate is sealed.
-- **The ratio bonus** (`ratioBonusFor`, 0.03 per level above the first) is taken when a conversation starts and
-  kept in the session (`ratioBonus`). The pinned prompt fixtures are at level 1, where nothing changes.
+- **The ratio bonus** (`ratioBonusFor`, 0.03 per level above the first) is taken when a dungeon site's conversation
+  starts and kept in the session (`ratioBonus`). A market conversation (the iPhone app) and a party member's get
+  none, though every conversation earns XP. The pinned prompt fixtures are at level 1, where nothing changes.
+- **The client contract.** The web client names the contract it speaks (`CLIENT_CONTRACT`, 121, in
+  `client/src/api/encounter.js`) on the map read, a move, a reset and a site start. The server
+  (`requireClient` in `server/src/errors.js`) answers an older page, or one that names none, with 426 and "This page
+  is older than the server. Open Settings and tap "Reload the page"." Raise both numbers together when the
+  dungeon's contract changes in a way an older page cannot play by. The owner's installed page keeps old builds
+  (round 118), so this message is what such a page shows.
 - **The client** keeps `progression` highest-wins (`takeProgression` in `gameStore.js`), and a reply that raises
   the level reads the map again, because the client walks by its cached map.
 - The client's fake run (`client/src/__tests__/fakeRun.js`) starts at 5000 XP, above every site's level, so tests

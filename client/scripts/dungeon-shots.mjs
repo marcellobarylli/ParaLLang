@@ -376,6 +376,22 @@ async function run(browser, runtime, size, log) {
     const parts = ['title', 'level', 'pips', 'nav'];
     check(hud.nav.right <= hud.width && parts.every((a, i) => hud[a].left >= 0 && parts.slice(i + 1).every((b) => apart(hud[a], hud[b]))),
       `the top bar holds the title, the level, the pips and three buttons without overlap (${JSON.stringify(hud)})`);
+    // Review 1 of round 121 (R1.4): between a phone and a desktop too, and the title's text must fit its box.
+    for (const width of [600, 720, 760, 1024]) {
+      await page.setViewport({ ...size, width });
+      await sleep(150);
+      const at = await page.evaluate(() => {
+        const box = (selector) => { const r = document.querySelector(selector).getBoundingClientRect(); return { left: Math.round(r.left), right: Math.round(r.right), top: Math.round(r.top), bottom: Math.round(r.bottom) }; };
+        const title = document.querySelector('.hud-title');
+        const range = document.createRange();
+        range.selectNodeContents(document.querySelector('.hud-title strong'));
+        const text = range.getBoundingClientRect();
+        return { title: { left: Math.round(text.left), right: Math.round(text.right), top: Math.round(text.top), bottom: Math.round(text.bottom) }, level: box('.level-chip'), pips: box('.pips'), nav: box('.hud nav'), overflow: title.scrollWidth - title.clientWidth, width: innerWidth };
+      });
+      check(at.nav.right <= at.width && at.overflow <= 0 && parts.every((a, i) => parts.slice(i + 1).every((b) => apart(at[a], at[b]))), `at ${width} px the top bar's title text, level, pips and buttons do not overlap (${JSON.stringify(at)})`);
+    }
+    await page.setViewport(size);
+    await sleep(300);
   }
 
   // Up to the map: the court's neighbours are out of the fog. A walk is picked there, to Mortimer in the outer court.

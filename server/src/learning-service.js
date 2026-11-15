@@ -890,8 +890,9 @@ export class LearningService {
   async openSession(learnerId, envelope, definition, { locationId, dungeonId, siteId } = {}) {
     // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
     this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));
-    // Round 121: the level raises the conversation's target ratio, from its first line to its last.
-    const ratioBonus = ratioBonusFor(this.level(envelope));
+    // Round 121: the level raises the target ratio of a dungeon site's conversation, from its first line to its last.
+    // Review R1.1: only there. The market's conversations (the iPhone app) and a party member's keep the content's.
+    const ratioBonus = dungeonId ? ratioBonusFor(this.level(envelope)) : 0;
     const generated = await this.prefetchedGreeting(learnerId, definition)
       ?? await this.narrate(this.greetingMessages(definition, locationId, ratioBonus), definition, this.ratioFor(0, definition, ratioBonus));
     const npcMessage = this.canonicalizeNarration(generated, definition);
