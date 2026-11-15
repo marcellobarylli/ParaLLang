@@ -1,6 +1,8 @@
 // Round 114: the Ta Prohm dungeon. Its file loads in both packs; a bad site or level is refused; a dungeon start skips
-// the market's location check but not the order of the sites; resolving a site clears it in the run; a reset starts a
-// new run; an older save gains empty dungeon progress.
+// the market's location check; resolving a site clears it in the run; a reset starts a new run; an older save gains
+// empty dungeon progress. Round 119: the dungeon is a map. A move walks it under the pass rule, a start is the
+// encounter of the site the player stands at, and the view carries the fog. The rules themselves are tested in
+// dungeon-rules.test.js.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -12,7 +14,13 @@ import { listenHostForProvider, productionTokenProblem } from '../src/config.js'
 import { PassingProvider, api, createRuntime, makeTempDir, passingAnswers } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const SITES = ['market_entrance_tutorial', 'imp_coffee_greeting', 'high_gate_bambieshart'];
+const SITES = [
+  ['face_gate', 'market_entrance_tutorial', 'Portia'], ['buttress_tree', 'butchers_stall_charcutier', 'Mortimer'],
+  ['root_court', 'imp_coffee_greeting', 'Gerald'], ['sunlit_court', 'cracked_fountain_letharger', 'Flick'],
+  ['library', 'old_bookshop_bookworm', 'Marginalia'], ['before_sanctuary', 'high_gate_bambieshart', 'Bambieshart'],
+  ['sanctuary', 'the_rift_errata', 'Errata'],
+];
+const ENCOUNTER = Object.fromEntries(SITES.map(([id, encounter]) => [id, encounter]));
 
 async function dungeonRuntime(t, language = 'it') {
   const content = loadGameContent({ language });
@@ -32,29 +40,46 @@ async function play(runtime, learnerId, encounter, answers) {
 }
 
 const start = (runtime, learnerId, body) => api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body });
+const view = (runtime, learnerId) => api(runtime, '/api/dungeons/ta_prohm/map', { learnerId });
+const move = (runtime, learnerId, body) => api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body });
+// Starts and resolves the encounter of the site the player stands at.
+async function clearHere(runtime, content, learnerId, siteId) {
+  const started = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
+  assert.equal(started.status, 200, JSON.stringify(started.data.error));
+  assert.equal(started.data.encounter.encounterId, ENCOUNTER[siteId]);
+  assert.equal(started.data.encounter.siteId, siteId);
+  const resolved = await play(runtime, learnerId, started.data.encounter, passingAnswers(content, ENCOUNTER[siteId]));
+  assert.equal(resolved.state, 'resolved', `${siteId} resolves`);
+}
 
-test('the Ta Prohm dungeon loads in both packs: three location encounters on the taprohm level, each on the route', () => {
+test('the Ta Prohm dungeon loads in both packs: seven location encounters on the taprohm level, joined by paths', () => {
   for (const language of ['it', 'es']) {
     const { dungeons, encounters } = loadGameContent({ language });
     const dungeon = dungeons.get('ta_prohm');
     assert.equal(dungeon.level, 'taprohm');
-    assert.deepEqual(dungeon.sites.map((site) => site.encounter), SITES);
-    for (const site of dungeon.sites) {
-      assert.equal(encounters.get(site.encounter).encounter.party_of, undefined);
-      assert.ok(dungeon.route.some(([x, z]) => x === site.at[0] && z === site.at[1]), `${site.encounter} is on the route`);
-    }
-    assert.ok(Object.isFrozen(dungeon.route[0]));
+    assert.deepEqual(dungeon.sites.map((site) => [site.id, site.encounter]), SITES.map(([id, encounter]) => [id, encounter]));
+    for (const site of dungeon.sites) assert.equal(encounters.get(site.encounter).encounter.party_of, undefined);
+    assert.equal(dungeon.paths.length, 8);
+    assert.ok(Object.isFrozen(dungeon.paths[0].via[0]));
+    assert.ok(Object.isFrozen(dungeon.entrance));
   }
 });
 
-test('the loader refuses an unknown encounter, a party conversation, an unknown level, a site off the route and a site one pack lacks', async (t) => {
+test('the loader refuses a bad site, level, start, goal, seal or path, and a site one pack lacks', async (t) => {
   const cases = [
     ['unknown encounter', (d) => { d.sites[1].encounter = 'dragon_lair'; }, /ta_prohm names unknown encounter dragon_lair/],
     ['party conversation', (d) => { d.sites[1].encounter = 'gerald_confidence'; }, /site gerald_confidence is a party conversation/],
     ['unknown level', (d) => { d.level = 'atlantis'; }, /ta_prohm names unknown level atlantis/],
-    ['off the route', (d) => { d.sites[2].at = [40, 40]; }, /high_gate_bambieshart at \[40,40\] is not a later point of the route/],
-    ['out of route order', (d) => { [d.sites[0].at, d.sites[1].at] = [d.sites[1].at, d.sites[0].at]; }, /is not a later point of the route/],
-    ['repeated site', (d) => { d.sites[2].encounter = d.sites[0].encounter; }, /sites contains duplicate IDs: market_entrance_tutorial/],
+    ['repeated encounter', (d) => { d.sites[2].encounter = d.sites[0].encounter; }, /sites contains duplicate IDs: market_entrance_tutorial/],
+    ['repeated site id', (d) => { d.sites[2].id = d.sites[0].id; }, /site ids contains duplicate IDs: face_gate/],
+    ['unknown start', (d) => { d.start = 'the_moon'; }, /names unknown start site the_moon/],
+    ['unknown goal', (d) => { d.goal = 'the_moon'; }, /names unknown goal site the_moon/],
+    ['seal on an unknown site', (d) => { d.sites[6].requires = ['the_moon']; }, /site sanctuary requires the_moon, which is not another site/],
+    ['seal on itself', (d) => { d.sites[6].requires = ['sanctuary']; }, /site sanctuary requires sanctuary, which is not another site/],
+    ['path to an unknown site', (d) => { d.paths[0].between = ['face_gate', 'the_moon']; }, /a path between face_gate and the_moon, which are not two sites/],
+    ['path from a site to itself', (d) => { d.paths[0].between = ['face_gate', 'face_gate']; }, /a path between face_gate and face_gate/],
+    ['the same path twice', (d) => { d.paths[1].between = ['buttress_tree', 'face_gate']; }, /paths contains duplicate IDs: buttress_tree and face_gate/],
+    ['the old route', (d) => { d.route = [[0, 96], [3.5, 63]]; }, /route/],
   ];
   for (const [name, change, error] of cases) {
     const dir = await makeTempDir('parallang-dungeon-');
@@ -72,75 +97,140 @@ test('the loader refuses an unknown encounter, a party conversation, an unknown 
   assert.throws(() => loadGameContent({ contentDir: dir, language: 'it' }), /site high_gate_bambieshart is missing from the es pack/);
 });
 
-test('a dungeon start skips the location check, refuses an out-of-order site, and resolving clears the site', async (t) => {
+test('a new run: the view carries the map and the fog, a start is the gate\'s encounter, and resolving clears the site', async (t) => {
   const { runtime, content, learnerId } = await dungeonRuntime(t);
-  const fresh = await api(runtime, '/api/dungeons/ta_prohm', { learnerId });
+  const fresh = await view(runtime, learnerId);
   assert.equal(fresh.status, 200);
-  assert.deepEqual(fresh.data.dungeon.sites.map((site) => [site.encounterId, site.characterName]), [
-    ['market_entrance_tutorial', 'Portia'], ['imp_coffee_greeting', 'Gerald'], ['high_gate_bambieshart', 'Bambieshart'],
-  ]);
-  assert.deepEqual(fresh.data.progress, { run: 1, clearedEncounterIds: [], nextSiteIndex: 0, nextEncounterId: 'market_entrance_tutorial', complete: false });
+  assert.deepEqual(Object.keys(fresh.data.dungeon).sort(), ['goal', 'id', 'level', 'name', 'paths', 'sites', 'start']);
+  // A hidden site keeps its place but not its character's name.
+  assert.deepEqual(fresh.data.dungeon.sites.map((site) => [site.id, site.encounterId, site.characterName]), SITES.map(([id, encounter, name]) => [id, encounter, ['face_gate', 'buttress_tree', 'root_court'].includes(id) ? name : null]));
+  assert.deepEqual(fresh.data.dungeon.sites[0].at, [3.5, 63]);
+  assert.deepEqual(fresh.data.dungeon.paths[0], { between: ['face_gate', 'buttress_tree'], via: [[0.3, 60.5], [0.3, 52], [0.3, 46]] });
+  const { sites, ...progress } = fresh.data.progress;
+  assert.deepEqual(progress, { run: 1, at: 'face_gate', complete: false, clearedSiteIds: [], visitedSiteIds: ['face_gate'] });
+  assert.deepEqual(sites.face_gate, { state: 'current', cleared: false, reachable: false });
+  assert.deepEqual(sites.root_court, { state: 'known', cleared: false, reachable: false });
+  assert.deepEqual(sites.sanctuary, { state: 'hidden', cleared: false, reachable: false, gate: { sealed: true, required: 6, completed: 0 } });
 
   // The player stands at the Market Entrance; Gerald's cart is elsewhere.
   const named = await start(runtime, learnerId, { encounterId: 'imp_coffee_greeting' });
   assert.equal(named.data.error.code, 'NOT_HERE', 'the market start still checks the location');
-  const early = await start(runtime, learnerId, { dungeonId: 'ta_prohm', encounterId: 'imp_coffee_greeting' });
-  assert.equal(early.status, 409);
-  assert.equal(early.data.error.code, 'NOT_NEXT_SITE');
-  assert.equal(early.data.error.details.nextEncounterId, 'market_entrance_tutorial');
+  const elsewhere = await start(runtime, learnerId, { dungeonId: 'ta_prohm', encounterId: 'imp_coffee_greeting' });
+  assert.equal(elsewhere.status, 409);
+  assert.equal(elsewhere.data.error.code, 'NOT_AT_SITE');
+  assert.deepEqual(elsewhere.data.error.details, { siteId: 'face_gate', encounterId: 'market_entrance_tutorial' });
 
   const first = await start(runtime, learnerId, { dungeonId: 'ta_prohm', encounterId: 'market_entrance_tutorial' });
   assert.equal(first.status, 200);
   assert.equal(first.data.encounter.dungeonId, 'ta_prohm');
+  assert.equal(first.data.encounter.siteId, 'face_gate');
   // A reload resumes the run's conversation under way.
   const again = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
   assert.equal(again.data.encounter.id, first.data.encounter.id);
   const resolved = await play(runtime, learnerId, first.data.encounter, passingAnswers(content, 'market_entrance_tutorial'));
   assert.equal(resolved.state, 'resolved');
-  const after = (await api(runtime, '/api/dungeons/ta_prohm', { learnerId })).data.progress;
-  assert.deepEqual(after.clearedEncounterIds, ['market_entrance_tutorial']);
-  assert.equal(after.nextEncounterId, 'imp_coffee_greeting');
-
-  // Site 2 starts although the player never walked to the Coffee Cart; site 3 still waits.
-  const world = (await api(runtime, '/api/world', { learnerId })).data.world;
-  assert.equal(world.currentLocationId, 'market_entrance');
-  assert.equal((await start(runtime, learnerId, { dungeonId: 'ta_prohm', encounterId: 'high_gate_bambieshart' })).data.error.code, 'NOT_NEXT_SITE');
-  const second = await start(runtime, learnerId, { dungeonId: 'ta_prohm', encounterId: 'imp_coffee_greeting' });
-  assert.equal(second.status, 200);
-  await play(runtime, learnerId, second.data.encounter, passingAnswers(content, 'imp_coffee_greeting'));
-  // Without encounterId, a dungeon start is the next site's.
-  const third = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
-  assert.equal(third.data.encounter.encounterId, 'high_gate_bambieshart');
-  assert.equal((await play(runtime, learnerId, third.data.encounter, passingAnswers(content, 'high_gate_bambieshart'))).state, 'resolved');
-
-  const done = (await api(runtime, '/api/dungeons/ta_prohm', { learnerId })).data.progress;
-  assert.deepEqual(done, { run: 1, clearedEncounterIds: SITES, nextSiteIndex: null, nextEncounterId: null, complete: true });
-  const over = await start(runtime, learnerId, { dungeonId: 'ta_prohm', encounterId: 'market_entrance_tutorial' });
-  assert.equal(over.data.error.code, 'NOT_NEXT_SITE');
-  assert.equal(over.data.error.details.nextEncounterId, null);
-  // The market keeps its record, so fragments and the Spellbook follow as before.
+  const after = (await view(runtime, learnerId)).data.progress;
+  assert.deepEqual(after.clearedSiteIds, ['face_gate']);
+  assert.deepEqual(after.sites.face_gate, { state: 'current', cleared: true, reachable: false });
+  assert.equal(after.sites.root_court.reachable, true);
+  assert.equal(after.sites.buttress_tree.reachable, true);
+  // A cleared site is played again from the start.
+  const replay = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
+  assert.equal(replay.data.encounter.state, 'ongoing');
+  assert.notEqual(replay.data.encounter.id, first.data.encounter.id);
+  // The market keeps its record, and the market's map has not moved.
   const envelope = await runtime.storage.load(learnerId);
-  assert.deepEqual([...envelope.world.completedEncounterIds].sort(), [...SITES].sort());
-  assert.deepEqual(envelope.dungeons.ta_prohm, { run: 1, cleared: SITES });
+  assert.deepEqual(envelope.world.completedEncounterIds, ['market_entrance_tutorial']);
+  assert.deepEqual(envelope.dungeons.ta_prohm, { run: 1, at: 'face_gate', cleared: ['face_gate'], visited: ['face_gate'] });
+  assert.equal((await api(runtime, '/api/world', { learnerId })).data.world.currentLocationId, 'market_entrance');
 });
 
-test('a reset starts a new run: the first site is played again from the start, and the market keeps its record', async (t) => {
+test('moves follow the pass rule, a conversation under way holds the player unless they leave, and the goal completes the run', async (t) => {
+  const { runtime, content, learnerId } = await dungeonRuntime(t);
+  // Before Portia is answered nothing lies open.
+  const blocked = await move(runtime, learnerId, { siteId: 'root_court' });
+  assert.equal(blocked.status, 409);
+  assert.equal(blocked.data.error.code, 'BLOCKED');
+  assert.equal(blocked.data.error.message, 'Portia has not let you pass yet.');
+  assert.equal((await move(runtime, learnerId, { siteId: 'library' })).data.error.code, 'NOT_ADJACENT');
+  assert.equal((await move(runtime, learnerId, { siteId: 'the_moon' })).status, 400);
+  assert.equal((await move(runtime, learnerId, {})).status, 400);
+  const stay = await move(runtime, learnerId, { siteId: 'face_gate' });
+  assert.equal(stay.status, 200);
+  assert.equal(stay.data.progress.at, 'face_gate');
+
+  await clearHere(runtime, content, learnerId, 'face_gate');
+  // Portia's conversation is resolved: a move needs no leave, and the view is the new place.
+  const toTree = await move(runtime, learnerId, { siteId: 'buttress_tree' });
+  assert.equal(toTree.status, 200);
+  assert.deepEqual([toTree.data.progress.at, toTree.data.progress.visitedSiteIds], ['buttress_tree', ['face_gate', 'buttress_tree']]);
+  assert.equal(toTree.data.dungeon.sites[1].characterName, 'Mortimer');
+  // Mortimer has not been answered: the message names him, not Portia (critique 1.2).
+  const past = await move(runtime, learnerId, { siteId: 'root_court' });
+  assert.equal(past.data.error.code, 'BLOCKED');
+  assert.equal(past.data.error.message, 'Mortimer has not let you pass yet.');
+
+  // A conversation under way holds the player; `leave` drops it and walks.
+  const talking = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
+  assert.equal(talking.data.encounter.siteId, 'buttress_tree');
+  const held = await move(runtime, learnerId, { siteId: 'face_gate' });
+  assert.equal(held.data.error.code, 'CONVERSATION_UNDER_WAY');
+  assert.equal((await move(runtime, learnerId, { siteId: 'buttress_tree' })).status, 200, 'a move to the same site changes nothing and keeps the conversation');
+  assert.equal((await api(runtime, '/api/encounter/current', { learnerId })).data.encounter.id, talking.data.encounter.id);
+  const left = await move(runtime, learnerId, { siteId: 'face_gate', leave: true });
+  assert.equal(left.status, 200);
+  assert.equal(left.data.progress.at, 'face_gate');
+  assert.equal((await api(runtime, '/api/encounter/current', { learnerId })).data.encounter, null);
+  assert.deepEqual(left.data.progress.clearedSiteIds, ['face_gate'], 'the left conversation cleared nothing');
+
+  // Critique 1.1: from a cleared site whose conversation is replayed, `leave` also covers a move to an unvisited site.
+  await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
+  assert.equal((await move(runtime, learnerId, { siteId: 'root_court' })).data.error.code, 'CONVERSATION_UNDER_WAY');
+  assert.equal((await move(runtime, learnerId, { siteId: 'root_court', leave: true })).status, 200);
+
+  await clearHere(runtime, content, learnerId, 'root_court');
+  const sealed = await move(runtime, learnerId, { siteId: 'before_sanctuary' });
+  assert.equal(sealed.status, 200);
+  // The seal is named before the character in the way: it is the reason that lasts.
+  assert.equal((await move(runtime, learnerId, { siteId: 'sanctuary' })).data.error.code, 'SEALED');
+  await clearHere(runtime, content, learnerId, 'before_sanctuary');
+  const stillShut = await move(runtime, learnerId, { siteId: 'sanctuary' });
+  assert.equal(stillShut.data.error.code, 'SEALED');
+  assert.match(stillShut.data.error.message, /The Sanctuary is sealed.*3 of 6 done/);
+
+  for (const [to, clear] of [['root_court', false], ['buttress_tree', true], ['root_court', false], ['sunlit_court', true], ['library', true], ['sunlit_court', false], ['before_sanctuary', false], ['sanctuary', true]]) {
+    const walked = await move(runtime, learnerId, { siteId: to });
+    assert.equal(walked.status, 200, `${to}: ${JSON.stringify(walked.data.error)}`);
+    if (clear) await clearHere(runtime, content, learnerId, to);
+  }
+  const done = (await view(runtime, learnerId)).data;
+  assert.equal(done.progress.complete, true);
+  assert.deepEqual(done.progress.clearedSiteIds, SITES.map(([id]) => id));
+  assert.ok(done.dungeon.sites.every((site) => site.characterName));
+  // A complete run stays playable.
+  assert.equal((await start(runtime, learnerId, { dungeonId: 'ta_prohm' })).data.encounter.encounterId, 'the_rift_errata');
+  const envelope = await runtime.storage.load(learnerId);
+  assert.deepEqual([...envelope.world.completedEncounterIds].sort(), SITES.map(([, encounter]) => encounter).sort());
+});
+
+test('a reset starts a new run at the gate: the fog is back, the conversation is dropped, and the market keeps its record', async (t) => {
   const { runtime, content, learnerId } = await dungeonRuntime(t, 'es');
-  const first = (await start(runtime, learnerId, { dungeonId: 'ta_prohm' })).data.encounter;
-  await play(runtime, learnerId, first, passingAnswers(content, 'market_entrance_tutorial'));
+  await clearHere(runtime, content, learnerId, 'face_gate');
+  await move(runtime, learnerId, { siteId: 'root_court' });
   const second = (await start(runtime, learnerId, { dungeonId: 'ta_prohm' })).data.encounter;
   assert.equal(second.encounterId, 'imp_coffee_greeting');
 
   const reset = await api(runtime, '/api/dungeons/ta_prohm/reset', { learnerId, method: 'POST' });
   assert.equal(reset.status, 200);
-  assert.deepEqual(reset.data.progress, { run: 2, clearedEncounterIds: [], nextSiteIndex: 0, nextEncounterId: 'market_entrance_tutorial', complete: false });
+  const { sites, ...progress } = reset.data.progress;
+  assert.deepEqual(progress, { run: 2, at: 'face_gate', complete: false, clearedSiteIds: [], visitedSiteIds: ['face_gate'] });
+  assert.equal(sites.sunlit_court.state, 'hidden');
   // The reset dropped Gerald's conversation, so the tutorial starts without CONVERSATION_UNDER_WAY, as a new session.
   const replay = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
   assert.equal(replay.status, 200);
   assert.equal(replay.data.encounter.encounterId, 'market_entrance_tutorial');
   assert.equal(replay.data.encounter.state, 'ongoing');
   assert.equal(replay.data.encounter.committedPlayerTurns, 0);
-  assert.notEqual(replay.data.encounter.id, first.id);
   const envelope = await runtime.storage.load(learnerId);
   assert.deepEqual(envelope.world.completedEncounterIds, ['market_entrance_tutorial']);
 });
@@ -151,18 +241,25 @@ test('a market conversation under way is not replaced, a market resolve clears n
   assert.equal(market.dungeonId, undefined);
   assert.equal((await start(runtime, learnerId, { dungeonId: 'ta_prohm' })).data.error.code, 'CONVERSATION_UNDER_WAY');
   await play(runtime, learnerId, market, passingAnswers(content, 'market_entrance_tutorial'));
-  const progress = (await api(runtime, '/api/dungeons/ta_prohm', { learnerId })).data.progress;
-  assert.deepEqual(progress.clearedEncounterIds, [], 'only a dungeon start clears a site');
+  const progress = (await view(runtime, learnerId)).data.progress;
+  assert.deepEqual(progress.clearedSiteIds, [], 'only a dungeon start clears a site');
   // A site the learner finished on the market is played again from the start.
   const site = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
   assert.equal(site.data.encounter.state, 'ongoing');
   assert.notEqual(site.data.encounter.id, market.id);
 
-  assert.equal((await api(runtime, '/api/dungeons/atlantis', { learnerId })).status, 404);
-  assert.equal((await api(runtime, '/api/dungeons/atlantis', { learnerId })).data.error.code, 'UNKNOWN_DUNGEON');
+  assert.equal((await api(runtime, '/api/dungeons/atlantis/map', { learnerId })).status, 404);
+  assert.equal((await api(runtime, '/api/dungeons/atlantis/map', { learnerId })).data.error.code, 'UNKNOWN_DUNGEON');
+  assert.equal((await api(runtime, '/api/dungeons/atlantis/move', { learnerId, method: 'POST', body: { siteId: 'face_gate' } })).data.error.code, 'UNKNOWN_DUNGEON');
   assert.equal((await start(runtime, learnerId, { dungeonId: 'atlantis' })).data.error.code, 'UNKNOWN_DUNGEON');
-  assert.equal((await api(runtime, '/api/dungeons/ta_prohm')).status, 400, 'a learner id is required');
-  assert.equal((await api(runtime, '/api/dungeons/ta_prohm', { learnerId, token: null })).status, 401, 'the token is required');
+  assert.equal((await view(runtime)).status, 400, 'a learner id is required');
+  // Review 1 (R1.1): the path the client of rounds 115 to 118 read tells that page to reload, whatever the dungeon.
+  const outdated = await api(runtime, '/api/dungeons/ta_prohm', { learnerId });
+  assert.equal(outdated.status, 426);
+  assert.deepEqual([outdated.data.error.code, outdated.data.error.message], ['CLIENT_OUTDATED', 'This page is older than the server. Open Settings and tap "Reload the page".']);
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm', { learnerId, token: null })).status, 401, 'still behind the token');
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId, token: null })).status, 401, 'the token is required');
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body: { siteId: 'face_gate' }, token: null })).status, 401);
 });
 
 test('older saves gain empty dungeon progress; invalid runs are dropped and a bad container is refused', async (t) => {
@@ -178,11 +275,14 @@ test('older saves gain empty dungeon progress; invalid runs are dropped and a ba
   const migrated = await runtime.storage.load(learnerId);
   assert.equal(migrated.schemaVersion, 3);
   assert.deepEqual(migrated.dungeons, {});
-  const view = await api(runtime, '/api/dungeons/ta_prohm', { learnerId });
-  assert.equal(view.data.progress.nextEncounterId, 'market_entrance_tutorial');
+  assert.equal((await view(runtime, learnerId)).data.progress.at, 'face_gate');
+  // Round 119: a run from rounds 114 to 118 (encounter ids, no position) keeps its cleared sites.
+  await writeFile(file, JSON.stringify({ ...saved, dungeons: { ta_prohm: { run: 2, cleared: ['market_entrance_tutorial', 'imp_coffee_greeting'] } } }));
+  const old = (await view(runtime, learnerId)).data.progress;
+  assert.deepEqual([old.run, old.at, old.clearedSiteIds, old.visitedSiteIds], [2, 'face_gate', ['face_gate', 'root_court'], ['face_gate', 'root_court']]);
 
-  await writeFile(file, JSON.stringify({ ...saved, dungeons: { ta_prohm: { run: 0, cleared: 'x' }, other: { run: 2, cleared: ['a'] } } }));
-  assert.deepEqual((await runtime.storage.load(learnerId)).dungeons, { other: { run: 2, cleared: ['a'] } });
+  await writeFile(file, JSON.stringify({ ...saved, dungeons: { ta_prohm: { run: 0, cleared: 'x' }, other: { run: 2, cleared: ['a'] }, twice: { run: 1, cleared: [], visited: ['a', 'a'] }, nowhere: { run: 1, cleared: [], at: '' }, whole: { run: 1, at: 'a', cleared: [], visited: ['a'] } } }));
+  assert.deepEqual((await runtime.storage.load(learnerId)).dungeons, { other: { run: 2, cleared: ['a'] }, whole: { run: 1, at: 'a', cleared: [], visited: ['a'] } });
   await writeFile(file, JSON.stringify({ ...saved, dungeons: [] }));
   await assert.rejects(runtime.storage.load(learnerId), /invalid dungeon progress/);
 });

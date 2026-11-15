@@ -45,7 +45,11 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
       const { restart = false, dungeonId, encounterId } = typeof options === 'object' && options !== null ? options : { restart: options === true };
       return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId } : {}), ...(encounterId ? { encounterId } : {}) } });
     },
-    getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}`, { learnerId }),
+    // Round 119: the map and the run on it. (The bare path is the one the client of rounds 115 to 118 read; the
+    // server answers it with a note to reload.)
+    getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/map`, { learnerId }),
+    // Round 119: a walk to a neighbouring site; `leave` drops the dungeon's conversation under way.
+    moveDungeon: (learnerId, dungeonId, body) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/move`, { learnerId, method: 'POST', body }),
     resetDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/reset`, { learnerId, method: 'POST' }),
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),

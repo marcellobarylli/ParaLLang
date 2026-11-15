@@ -1,0 +1,2328 @@
+[
+ {
+  "shot": "01-attract-phone.jpg",
+  "phase": "attract",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "site": null,
+   "arrival": 0,
+   "position": [
+    127.1,
+    128.23,
+    128.92
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 140.08,
+   "targetToSite": 57.11
+  }
+ },
+ {
+  "shot": "02-world-phone.jpg",
+  "phase": "world",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "site": null,
+   "arrival": 0,
+   "position": [
+    202.15,
+    192.66,
+    180.51
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 230.81,
+   "targetToSite": 57.11
+  }
+ },
+ {
+  "shot": "03-map-start-phone.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    116.83,
+    43.66
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 20.93,
+   "targetToSite": 29.89
+  }
+ },
+ {
+  "shot": "04-face-gate-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "site": 0,
+   "arrival": 3.6,
+   "position": [
+    2.49,
+    4.46,
+    72.53
+   ],
+   "target": [
+    3.6,
+    1.37,
+    63.05
+   ],
+   "toSite": 9.58,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "04-resolved-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "resolved",
+   "version": 4
+  },
+  "closedObjectives": 3,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "site": 0,
+   "arrival": 3.6,
+   "position": [
+    2.62,
+    3.37,
+    69.31
+   ],
+   "target": [
+    3.52,
+    1.4,
+    63.08
+   ],
+   "toSite": 6.37,
+   "targetToSite": 0.08
+  }
+ },
+ {
+  "shot": "05-walk-1-phone.jpg",
+  "phase": "walk",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": "Walking to The Root Court…",
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "site": 2,
+   "arrival": 19.423398180256775,
+   "position": [
+    0.3,
+    1.6,
+    55.61
+   ],
+   "target": [
+    0.3,
+    1.35,
+    51.61
+   ],
+   "toSite": 34.59,
+   "targetToSite": 30.65
+  }
+ },
+ {
+  "shot": "05-walk-2-phone.jpg",
+  "phase": "walk",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": "Walking to The Root Court…",
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "site": 2,
+   "arrival": 19.423398180256775,
+   "position": [
+    0.3,
+    1.6,
+    37.6
+   ],
+   "target": [
+    0.3,
+    1.35,
+    33.6
+   ],
+   "toSite": 17.08,
+   "targetToSite": 13.38
+  }
+ },
+ {
+  "shot": "06-root-court-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.423398180256775,
+   "position": [
+    5.72,
+    1.66,
+    25.58
+   ],
+   "target": [
+    6.1,
+    1.37,
+    21.55
+   ],
+   "toSite": 4.09,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "s-settings-30-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.423398180256775,
+   "position": [
+    5.78,
+    1.68,
+    25.62
+   ],
+   "target": [
+    6.13,
+    1.38,
+    21.57
+   ],
+   "toSite": 4.12,
+   "targetToSite": 0.15
+  }
+ },
+ {
+  "shot": "s-root-court-opacity-30-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.423398180256775,
+   "position": [
+    5.82,
+    1.69,
+    25.65
+   ],
+   "target": [
+    6.15,
+    1.39,
+    21.58
+   ],
+   "toSite": 4.15,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "07-map-middle-phone.jpg",
+  "phase": "overview",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    168.89,
+    47.88
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 28.39,
+   "targetToSite": 16.48
+  }
+ },
+ {
+  "shot": "08-buttress-tree-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 1,
+  "siteId": "buttress_tree",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "buttress_tree",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2The Buttress Tree",
+   "3",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "butchers_stall_charcutier",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 1,
+   "arrival": 17.46553228181976,
+   "position": [
+    13.32,
+    1.66,
+    41.17
+   ],
+   "target": [
+    17.1,
+    1.37,
+    42.05
+   ],
+   "toSite": 3.77,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "08-site-card-phone.jpg",
+  "phase": "site",
+  "siteIndex": 1,
+  "siteId": "buttress_tree",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "buttress_tree",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": "2The Buttress TreeMortimer has not let you pass yetWalk to The Face Gate · clearedWalk to The Root Court · clearedBack to the conversationMap",
+  "labels": [
+   "1",
+   "2The Buttress Tree",
+   "3",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "butchers_stall_charcutier",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 1,
+   "arrival": 17.46553228181976,
+   "position": [
+    13.39,
+    1.67,
+    41.21
+   ],
+   "target": [
+    17.13,
+    1.38,
+    42.07
+   ],
+   "toSite": 3.7,
+   "targetToSite": 0.15
+  }
+ },
+ {
+  "shot": "09-sunlit-court-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 3,
+  "siteId": "sunlit_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sunlit_court",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4The Sunlit Court",
+   "5",
+   "6"
+  ],
+  "fog": [
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "cracked_fountain_letharger",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 7,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 3,
+   "arrival": 7.689720004430736,
+   "position": [
+    -6.8,
+    1.66,
+    23.26
+   ],
+   "target": [
+    -10.9,
+    1.37,
+    23.55
+   ],
+   "toSite": 4.21,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "10-library-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 4,
+  "siteId": "library",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "library",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5The Library",
+   "6"
+  ],
+  "fog": [
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "old_bookshop_bookworm",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 11,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 4,
+   "arrival": 7.002466544909124,
+   "position": [
+    -21.85,
+    1.65,
+    25.45
+   ],
+   "target": [
+    -25.9,
+    1.37,
+    26.05
+   ],
+   "toSite": 4.19,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "11-before-sanctuary-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 13,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.51,
+    1.66,
+    15.3
+   ],
+   "target": [
+    0.4,
+    1.37,
+    11.25
+   ],
+   "toSite": 4.11,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "11-resolved-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 15,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.42,
+    1.59,
+    14
+   ],
+   "target": [
+    0.44,
+    1.41,
+    11.32
+   ],
+   "toSite": 2.8,
+   "targetToSite": 0.18
+  }
+ },
+ {
+  "shot": "12-sanctuary-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "the_rift_errata",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 15,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 6,
+   "arrival": 3.642857142857143,
+   "position": [
+    0.51,
+    1.66,
+    9.51
+   ],
+   "target": [
+    0.4,
+    1.37,
+    5.45
+   ],
+   "toSite": 4.11,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "12-resolved-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "the_rift_errata",
+   "state": "resolved",
+   "version": 4
+  },
+  "closedObjectives": 3,
+  "beat": {
+   "id": 18,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 6,
+   "arrival": 3.642857142857143,
+   "position": [
+    0.23,
+    1.56,
+    8.19
+   ],
+   "target": [
+    0.32,
+    1.4,
+    5.49
+   ],
+   "toSite": 2.79,
+   "targetToSite": 0.09
+  }
+ },
+ {
+  "shot": "13-victory-phone.jpg",
+  "phase": "victory",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 18,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "victory",
+   "stage": "hold",
+   "site": null,
+   "arrival": 3.6,
+   "position": [
+    53.2,
+    128.23,
+    174.62
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 177.3,
+   "targetToSite": 0.67
+  }
+ },
+ {
+  "shot": "14-map-complete-phone.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    197.66,
+    50.21
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 15.09,
+   "targetToSite": 29.89
+  }
+ },
+ {
+  "shot": "01-attract-desktop.jpg",
+  "phase": "attract",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "site": null,
+   "arrival": 0,
+   "position": [
+    90.96,
+    92.15,
+    93.6
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 92.66,
+   "targetToSite": 57.11
+  }
+ },
+ {
+  "shot": "02-world-desktop.jpg",
+  "phase": "world",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "site": null,
+   "arrival": 0,
+   "position": [
+    195.17,
+    186.57,
+    175.56
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 222.28,
+   "targetToSite": 57.11
+  }
+ },
+ {
+  "shot": "03-map-start-desktop.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    72.15,
+    40.04
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 24.31,
+   "targetToSite": 29.89
+  }
+ },
+ {
+  "shot": "04-face-gate-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "site": 0,
+   "arrival": 3.6,
+   "position": [
+    2.48,
+    4.46,
+    72.52
+   ],
+   "target": [
+    3.6,
+    1.37,
+    63.05
+   ],
+   "toSite": 9.58,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "04-resolved-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "resolved",
+   "version": 4
+  },
+  "closedObjectives": 3,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "site": 0,
+   "arrival": 3.6,
+   "position": [
+    2.63,
+    3.38,
+    69.31
+   ],
+   "target": [
+    3.52,
+    1.4,
+    63.09
+   ],
+   "toSite": 6.37,
+   "targetToSite": 0.09
+  }
+ },
+ {
+  "shot": "05-walk-1-desktop.jpg",
+  "phase": "walk",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": "Walking to The Root Court…",
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "site": 2,
+   "arrival": 19.423889580779665,
+   "position": [
+    0.3,
+    1.6,
+    55.52
+   ],
+   "target": [
+    0.3,
+    1.35,
+    51.52
+   ],
+   "toSite": 34.5,
+   "targetToSite": 30.56
+  }
+ },
+ {
+  "shot": "05-walk-2-desktop.jpg",
+  "phase": "walk",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": "Walking to The Root Court…",
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "site": 2,
+   "arrival": 19.423889580779665,
+   "position": [
+    0.3,
+    1.6,
+    37.28
+   ],
+   "target": [
+    0.3,
+    1.35,
+    33.28
+   ],
+   "toSite": 16.78,
+   "targetToSite": 13.08
+  }
+ },
+ {
+  "shot": "06-root-court-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.423889580779665,
+   "position": [
+    5.71,
+    1.65,
+    25.57
+   ],
+   "target": [
+    6.09,
+    1.37,
+    21.55
+   ],
+   "toSite": 4.08,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "s-settings-30-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.423889580779665,
+   "position": [
+    5.77,
+    1.67,
+    25.61
+   ],
+   "target": [
+    6.13,
+    1.38,
+    21.57
+   ],
+   "toSite": 4.12,
+   "targetToSite": 0.14
+  }
+ },
+ {
+  "shot": "s-root-court-opacity-30-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.423889580779665,
+   "position": [
+    5.82,
+    1.69,
+    25.64
+   ],
+   "target": [
+    6.15,
+    1.39,
+    21.58
+   ],
+   "toSite": 4.14,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "07-map-middle-desktop.jpg",
+  "phase": "overview",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    72.15,
+    40.04
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 21.31,
+   "targetToSite": 16.48
+  }
+ },
+ {
+  "shot": "08-buttress-tree-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 1,
+  "siteId": "buttress_tree",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "buttress_tree",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2The Buttress Tree",
+   "3",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "butchers_stall_charcutier",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 1,
+   "arrival": 17.46553228181976,
+   "position": [
+    13.32,
+    1.65,
+    41.17
+   ],
+   "target": [
+    17.09,
+    1.37,
+    42.05
+   ],
+   "toSite": 3.77,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "08-site-card-desktop.jpg",
+  "phase": "site",
+  "siteIndex": 1,
+  "siteId": "buttress_tree",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "buttress_tree",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": "2The Buttress TreeMortimer has not let you pass yetWalk to The Face Gate · clearedWalk to The Root Court · clearedBack to the conversationMap",
+  "labels": [
+   "1",
+   "2The Buttress Tree",
+   "3",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "butchers_stall_charcutier",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 1,
+   "arrival": 17.46553228181976,
+   "position": [
+    13.38,
+    1.67,
+    41.21
+   ],
+   "target": [
+    17.13,
+    1.38,
+    42.07
+   ],
+   "toSite": 3.7,
+   "targetToSite": 0.14
+  }
+ },
+ {
+  "shot": "09-sunlit-court-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 3,
+  "siteId": "sunlit_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sunlit_court",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4The Sunlit Court",
+   "5",
+   "6"
+  ],
+  "fog": [
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "cracked_fountain_letharger",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 7,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 3,
+   "arrival": 7.689720004430736,
+   "position": [
+    -6.8,
+    1.66,
+    23.25
+   ],
+   "target": [
+    -10.9,
+    1.37,
+    23.55
+   ],
+   "toSite": 4.21,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "10-library-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 4,
+  "siteId": "library",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "library",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5The Library",
+   "6"
+  ],
+  "fog": [
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "old_bookshop_bookworm",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 11,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 4,
+   "arrival": 7.002466544909124,
+   "position": [
+    -21.84,
+    1.66,
+    25.45
+   ],
+   "target": [
+    -25.9,
+    1.37,
+    26.05
+   ],
+   "toSite": 4.2,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "11-before-sanctuary-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 13,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.51,
+    1.66,
+    15.31
+   ],
+   "target": [
+    0.4,
+    1.37,
+    11.25
+   ],
+   "toSite": 4.11,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "11-resolved-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 15,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.41,
+    1.59,
+    14
+   ],
+   "target": [
+    0.43,
+    1.41,
+    11.32
+   ],
+   "toSite": 2.8,
+   "targetToSite": 0.18
+  }
+ },
+ {
+  "shot": "12-sanctuary-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "the_rift_errata",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 15,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 6,
+   "arrival": 3.642857142857143,
+   "position": [
+    0.51,
+    1.65,
+    9.5
+   ],
+   "target": [
+    0.39,
+    1.37,
+    5.45
+   ],
+   "toSite": 4.11,
+   "targetToSite": 0.11
+  }
+ },
+ {
+  "shot": "12-resolved-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "the_rift_errata",
+   "state": "resolved",
+   "version": 4
+  },
+  "closedObjectives": 3,
+  "beat": {
+   "id": 18,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 6,
+   "arrival": 3.642857142857143,
+   "position": [
+    0.23,
+    1.56,
+    8.19
+   ],
+   "target": [
+    0.32,
+    1.4,
+    5.49
+   ],
+   "toSite": 2.79,
+   "targetToSite": 0.09
+  }
+ },
+ {
+  "shot": "13-victory-desktop.jpg",
+  "phase": "victory",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 18,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "victory",
+   "stage": "hold",
+   "site": null,
+   "arrival": 3.6,
+   "position": [
+    36.67,
+    88.18,
+    121.01
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 121.2,
+   "targetToSite": 0.67
+  }
+ },
+ {
+  "shot": "14-map-complete-desktop.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    72.15,
+    40.04
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 24.31,
+   "targetToSite": 29.89
+  }
+ }
+]

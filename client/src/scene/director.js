@@ -3,32 +3,36 @@
 //
 // Five states. Each starts from the pose the camera holds, so states join without a jump:
 //   attract  : a slow isometric orbit around the whole level
-//   overview : a bird's-eye view over the route and the sites, east (the entrance) at the bottom of the screen
-//   approach : down to a site (the first one framed from a few metres up), then a slow drift
-//   walk     : along the route at eye height above the ground to the next site, then the drift
+//   overview : a bird's-eye view over the sites and their paths, east (the entrance) at the bottom of the screen
+//   approach : across to the point above a site and down to it (the start site framed from a few metres up), then a slow drift
+//   walk     : along a path at eye height above the ground to a neighbouring site, then the drift
 //   victory  : back out to the isometric orbit
 //
-// Round 116: at a site the conversation shapes the hold. Each closed objective steps the camera in, a verdict is a
-// brief push or pull, and a resolved site turns the camera to the way on, from where the walk starts.
+// Round 116: at a site the conversation shapes the hold. Each closed objective steps the camera in, and a verdict is
+// a brief push or pull.
+// Round 119: the dungeon is a map. A walk follows the path between two neighbouring sites in either direction. After
+// a resolve the camera keeps looking at the site: the player picks the way on (round 116's turn to it is gone).
 
 export const EYE = 1.6; // eye height above the ground, metres
-export const WALK_SPEED = 2.8; // metres per second along the route, between the ramps
-export const STANDOFF = 4; // a walk stops this far before its site, along the route, and looks at it
-export const LOOK_AHEAD = 4; // while walking the camera looks this far ahead on the route, never past the site
+export const WALK_SPEED = 2.8; // metres per second along a path, between the ramps
+export const STANDOFF = 4; // a walk stops this far before its site, along the path, and looks at it
+export const LOOK_AHEAD = 4; // while walking the camera looks this far ahead on the path, never past the site
 export const DURATIONS = Object.freeze({ overview: 2.6, approach: 3.6, descend: 1.6, orbit: 3.6, ramp: 1.4 });
 const ORBIT_PERIOD = 100; // seconds per turn of the attract and victory orbits
 const ORBIT_PITCH = 0.62; // about 35 degrees, the isometric look
 const ORBIT_START_YAW = 0.6;
 const OVERVIEW_PITCH = 1.49; // about 85 degrees: top-down, with a tilt that keeps lookAt's up vector defined
-// The approach to the first site ends this far back on the route and this far above eye height. The first site is
-// outside the wall, under open sky; the later ones stand in courts and gate passages, where there is no room above.
+// The approach to the start site ends this far back on the entrance and this far above eye height. The start site is
+// outside the wall, under open sky; the others stand in courts and gate passages, where there is no room above.
 const APPROACH = Object.freeze({ back: 9.5, rise: 2.8 });
 const TARGET_LIFT = EYE - 0.25; // where on a site (and on the path ahead) the camera looks
 // Round 116: how the conversation shapes a hold at a site.
 export const ENGAGE_MAX = 0.35; // at a resolved site the camera stands this fraction of the way in to it
 const ENGAGE_TAU = 0.7; // seconds, the ease of a step in
-const ONWARD_AHEAD = 8; // after a resolve the camera looks this far past the site along the route
-const ONWARD_TIME = 1.8; // seconds, the turn from the site to the way on
+const FAR = 25; // a walk that starts further than this from its path (from the overview) comes down as an approach does
+const ON_PATH = 1.5; // a camera this near to the path it is about to walk (the way it came) starts from where it stands
+const LEAD_SPEED = 3; // metres per second, the camera's pace to the start of a path
+const OVERVIEW_MARGIN = 8; // metres around the sites and paths in the overview
 const BEAT = Object.freeze({ pass: 0.045, resolved: 0.045, fail: -0.05, peak: 0.25 }); // a verdict's push or pull, and when it peaks
 // Ta Prohm's outer enclosure (aesthetic's TA_PROHM.outer), the default level extent.
 export const TA_PROHM_BOX = Object.freeze({ minX: -56, maxX: 56, minZ: -56, maxZ: 56 });
@@ -68,6 +72,54 @@ export function blendPoses(a, b, u) {
   });
 }
 
+// Round 119: a turn on the spot, for the start of a walk. The camera goes in a straight line and its line of sight
+// turns the short way round. (blendPoses swings the camera around the point it looks at, which is right for a crane
+// shot from the sky and wrong in a gate passage 2.2 m wide: a half turn would swing it through the piers.)
+export function turnPoses(a, b, u) {
+  if (u <= 0) return clonePose(a);
+  if (u >= 1) return clonePose(b);
+  const sight = ({ position, target }) => {
+    const d = [target[0] - position[0], target[1] - position[1], target[2] - position[2]];
+    const distance = Math.hypot(...d) || 1e-6;
+    return { distance, yaw: Math.atan2(d[0], d[2]), pitch: Math.asin(clamp(d[1] / distance, -1, 1)) };
+  };
+  const [sa, sb] = [sight(a), sight(b)];
+  let dYaw = sb.yaw - sa.yaw;
+  while (dYaw > Math.PI) dYaw -= 2 * Math.PI;
+  while (dYaw < -Math.PI) dYaw += 2 * Math.PI;
+  const [yaw, pitch, distance] = [sa.yaw + dYaw * u, lerp(sa.pitch, sb.pitch, u), lerp(sa.distance, sb.distance, u)];
+  const position = lerp3(a.position, b.position, u);
+  const c = Math.cos(pitch);
+  return { position, target: [position[0] + Math.sin(yaw) * c * distance, position[1] + Math.sin(pitch) * distance, position[2] + Math.cos(yaw) * c * distance] };
+}
+
+// Review 1 of round 119 (R1.2): the way down from the sky to a place on the ground. The camera crosses to the point
+// above where it will stand while it is still above everything (CLEAR), and comes down there. (blendPoses comes down
+// on a slant, which from the map to a court crosses a gallery roof on the way.) A camera that starts below CLEAR
+// goes up first, then across, then down. `u` is the fraction of the time, not eased.
+export const CLEAR = 36; // metres: above every roof and tower, and above the crowns of the giant trees
+const uneased = (v) => (v <= 0 ? 0 : v >= 1 ? 1 : v < 0.5 ? Math.cbrt(v / 4) : 1 - Math.cbrt(2 * (1 - v)) / 2); // easeInOut's inverse
+export function dropPoses(a, b, u) {
+  if (u <= 0) return clonePose(a);
+  if (u >= 1) return clonePose(b);
+  const [ay, by] = [a.position[1], b.position[1]];
+  let across;
+  let y;
+  if (ay > CLEAR && by < CLEAR) {
+    // One descent: the crossing is over by the time the camera is down to CLEAR.
+    y = lerp(ay, by, easeInOut(u));
+    across = easeInOut(Math.min(1, u / uneased((ay - CLEAR) / (ay - by))));
+  } else {
+    const top = Math.max(CLEAR, ay, by);
+    y = u < 0.25 ? lerp(ay, top, easeInOut(u / 0.25)) : u < 0.65 ? top : lerp(top, by, easeInOut((u - 0.65) / 0.35));
+    across = easeInOut(clamp((u - 0.25) / 0.4, 0, 1));
+  }
+  return {
+    position: [lerp(a.position[0], b.position[0], across), y, lerp(a.position[2], b.position[2], across)],
+    target: lerp3(a.target, b.target, easeInOut(u)),
+  };
+}
+
 // A slow sway that starts at zero, so a hold joins its transition without a jump.
 function drift(t) {
   return {
@@ -92,18 +144,11 @@ export function walkFraction(t, total, ramp = DURATIONS.ramp) {
   return cruise * (u - r / 2);
 }
 
-/** The route as a polyline measured by arc length, and where each site stands on it. */
-export function measureRoute(dungeon) {
-  const points = dungeon.route.map(([x, z]) => [x, z]);
+/** A polyline measured by arc length. */
+export function measurePath(polyline) {
+  const points = polyline.map(([x, z]) => [x, z]);
   const lengths = [0];
   for (let i = 1; i < points.length; i++) lengths.push(lengths[i - 1] + Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]));
-  let from = 0;
-  const siteS = dungeon.sites.map((site) => {
-    const index = points.findIndex(([x, z], i) => i >= from && x === site.at[0] && z === site.at[1]);
-    if (index < 0) throw new Error(`Site at [${site.at}] is not on the route`);
-    from = index + 1;
-    return lengths[index];
-  });
   const total = lengths.at(-1);
   function pointAt(s) {
     const d = clamp(s, 0, total);
@@ -113,11 +158,42 @@ export function measureRoute(dungeon) {
     const u = (d - lengths[i - 1]) / span;
     return [lerp(points[i - 1][0], points[i][0], u), lerp(points[i - 1][1], points[i][1], u)];
   }
-  return { points, lengths, total, siteS, pointAt };
+  // The point of the polyline nearest to [x, z]: its arc length and how far away it is.
+  function nearest([x, z]) {
+    let best = { s: 0, distance: Infinity };
+    for (let i = 1; i < points.length; i++) {
+      const [ax, az] = points[i - 1];
+      const [bx, bz] = points[i];
+      const span2 = (bx - ax) ** 2 + (bz - az) ** 2 || 1;
+      const u = clamp(((x - ax) * (bx - ax) + (z - az) * (bz - az)) / span2, 0, 1);
+      const d = Math.hypot(x - (ax + (bx - ax) * u), z - (az + (bz - az) * u));
+      if (d < best.distance) best = { s: lengths[i - 1] + (lengths[i] - lengths[i - 1]) * u, distance: d };
+    }
+    return best;
+  }
+  return { points, lengths, total, pointAt, nearest };
+}
+
+/** The polyline from site `from` to its neighbour `to` (site indices), or null when no path joins them. */
+export function pathPoints(dungeon, from, to) {
+  const [a, b] = [dungeon.sites[from], dungeon.sites[to]];
+  if (!a || !b) return null;
+  for (const { between, via } of dungeon.paths) {
+    if (between[0] === a.id && between[1] === b.id) return [a.at, ...via, b.at];
+    if (between[0] === b.id && between[1] === a.id) return [b.at, ...via, a.at].reverse();
+  }
+  return null;
+}
+
+/** The polyline an approach to site `index` comes in on: the entrance for the start site, else the first path listed for it. */
+export function arrivalPoints(dungeon, index) {
+  const site = dungeon.sites[index];
+  if (site.id === dungeon.start) return [...dungeon.entrance, site.at];
+  const other = dungeon.paths.find(({ between }) => between.includes(site.id)).between.find((id) => id !== site.id);
+  return pathPoints(dungeon, dungeon.sites.findIndex((candidate) => candidate.id === other), index);
 }
 
 export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect = 1, levelBox = TA_PROHM_BOX } = {}) {
-  const route = measureRoute(dungeon);
   // The view the poses are framed for: the part of the screen the interface leaves free. `aspect` is that area's
   // width over height; `scale` is its height as a fraction of the screen's (the host shifts the projection to it).
   const view = { fov, aspect, scale: 1 };
@@ -127,14 +203,15 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
   const fitBox = (w, h) => Math.max(w / Math.tan(halfH()), h / Math.tan(halfV()));
   const fitSphere = (r) => r / Math.sin(Math.min(halfH(), halfV()));
 
-  const routeXs = route.points.map((p) => p[0]);
-  const routeZs = route.points.map((p) => p[1]);
+  const mapPoints = [...dungeon.sites.map((site) => site.at), ...dungeon.paths.flatMap(({ via }) => via)];
+  const mapXs = mapPoints.map((p) => p[0]);
+  const mapZs = mapPoints.map((p) => p[1]);
   const orbitCentre = [(levelBox.minX + levelBox.maxX) / 2, 2, (levelBox.minZ + levelBox.maxZ) / 2 + 6];
   const orbitRadius = Math.max(levelBox.maxX - levelBox.minX, levelBox.maxZ - levelBox.minZ) / 2;
-  // The overview frames the route and the enclosures around it, not the whole jungle.
+  // The overview frames the map: one fixed box around every site and path (round 119, critique 1.5).
   const overviewBox = {
-    minX: Math.min(-40, ...routeXs) - 4, maxX: Math.max(40, ...routeXs) + 4,
-    minZ: Math.min(-36, ...routeZs) - 6, maxZ: Math.max(36, ...routeZs) + 6,
+    minX: Math.min(...mapXs) - OVERVIEW_MARGIN, maxX: Math.max(...mapXs) + OVERVIEW_MARGIN,
+    minZ: Math.min(...mapZs) - OVERVIEW_MARGIN, maxZ: Math.max(...mapZs) + OVERVIEW_MARGIN,
   };
 
   const ground = ([x, z], lift) => [x, heightAt(x, z) + lift, z];
@@ -156,28 +233,23 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
   };
 
   const sitePoint = (index) => ground(dungeon.sites[index].at, TARGET_LIFT);
-  // A walk's pose at arc length s: eye height over the ground, looking ahead on the route but never past the site.
-  const pathPose = (s, siteS) => ({ position: ground(route.pointAt(s), EYE), target: ground(route.pointAt(Math.min(s + LOOK_AHEAD, siteS)), TARGET_LIFT) });
-  // Round 116: where the camera turns when a site is resolved: the way on along the route, or, at the last site, the
-  // middle of the level (the sanctuary).
-  const lastSite = dungeon.sites.length - 1;
-  // At eye level, also at the last site: its gate stands between the camera and the sanctuary, and a look up at
-  // the tower would meet the gate's wall. Through the door the sanctuary shows.
-  const onwardPoint = (index) => (index < lastSite
-    ? ground(route.pointAt(route.siteS[index] + ONWARD_AHEAD), TARGET_LIFT + 0.6)
-    : ground([(levelBox.minX + levelBox.maxX) / 2, (levelBox.minZ + levelBox.maxZ) / 2], TARGET_LIFT + 0.6));
-  // The conversation's hand on a hold: `engaged` eases to `level` (objectives closed), `turn` runs to 1 after a
-  // resolve, and a verdict's beat rises and dies away.
-  const react = { level: 0, engaged: 0, onward: false, turn: 0, beat: 0, beatAge: Infinity };
+  // A walk's pose at arc length s of `path`: eye height over the ground, looking ahead on the path but never past its end (the site).
+  const pathPose = (path, s) => ({ position: ground(path.pointAt(s), EYE), target: ground(path.pointAt(Math.min(s + LOOK_AHEAD, path.total)), TARGET_LIFT) });
+  // The conversation's hand on a hold: `engaged` eases to `level` (objectives closed), and a verdict's beat rises
+  // and dies away.
+  const react = { level: 0, engaged: 0, beat: 0, beatAge: Infinity };
   const beatNow = () => { const x = react.beatAge / BEAT.peak; return Number.isFinite(x) ? react.beat * x * Math.exp(1 - x) : 0; };
   const shaped = (hold, index) => {
-    const site = sitePoint(index);
     const along = clamp(ENGAGE_MAX * react.engaged + beatNow(), -0.08, ENGAGE_MAX + 0.06);
-    return { position: lerp3(hold.position, site, along), target: lerp3(hold.target, onwardPoint(index), easeInOut(react.turn)) };
+    return { position: lerp3(hold.position, sitePoint(index), along), target: hold.target };
   };
-  const approachPose = (index) => (index === 0
-    ? { position: ground(route.pointAt(route.siteS[0] - APPROACH.back), EYE + APPROACH.rise), target: sitePoint(0) }
-    : pathPose(route.siteS[index] - STANDOFF, route.siteS[index]));
+  const standoff = (path) => Math.max(0, path.total - STANDOFF);
+  const approachPose = (index) => {
+    const path = measurePath(arrivalPoints(dungeon, index));
+    return dungeon.sites[index].id === dungeon.start
+      ? { position: ground(path.pointAt(path.total - APPROACH.back), EYE + APPROACH.rise), target: sitePoint(index) }
+      : pathPose(path, standoff(path));
+  };
 
   let time = 0;
   let mode = null;
@@ -185,7 +257,7 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
 
   function begin(name, plan) {
     const from = pose ? clonePose(pose) : null;
-    Object.assign(react, { level: 0, engaged: 0, onward: false, turn: 0, beat: 0, beatAge: Infinity }); // a new state starts unshaped
+    Object.assign(react, { level: 0, engaged: 0, beat: 0, beatAge: Infinity }); // a new state starts unshaped
     mode = { name, start: time, from, ...plan };
     pose = evaluate(0);
     return api;
@@ -194,14 +266,14 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
   function evaluate(t) {
     const m = mode;
     if (m.name === 'walk') {
-      const lead = m.from ? DURATIONS.descend : 0;
-      if (t < lead) return { stage: 'transition', ...blendPoses(m.from, pathPose(m.s0, m.siteS), easeInOut(t / lead)) };
+      const lead = m.lead;
+      if (t < lead) return { stage: 'transition', ...(m.far ? dropPoses(m.from, pathPose(m.path, m.s0), t / lead) : turnPoses(m.from, pathPose(m.path, m.s0), easeInOut(t / lead))) };
       const tt = t - lead;
-      if (tt < m.travel) return { stage: 'travel', ...pathPose(lerp(m.s0, m.s1, walkFraction(tt, m.travel)), m.siteS) };
-      return { stage: 'hold', ...shaped(withDrift(pathPose(m.s1, m.siteS), tt - m.travel), m.site) };
+      if (tt < m.travel) return { stage: 'travel', ...pathPose(m.path, lerp(m.s0, m.s1, walkFraction(tt, m.travel))) };
+      return { stage: 'hold', ...shaped(withDrift(pathPose(m.path, m.s1), tt - m.travel), m.site) };
     }
     const hold = m.hold(t);
-    if (m.from && t < m.duration) return { stage: 'transition', ...blendPoses(m.from, hold, easeInOut(t / m.duration)) };
+    if (m.from && t < m.duration) return { stage: 'transition', ...(m.name === 'approach' ? dropPoses(m.from, hold, t / m.duration) : blendPoses(m.from, hold, easeInOut(t / m.duration))) };
     return { stage: 'hold', ...hold };
   }
 
@@ -222,10 +294,9 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
     /** Seconds from the state's start to its hold. */
     get arrival() {
       if (!mode) return 0;
-      if (mode.name === 'walk') return (mode.from ? DURATIONS.descend : 0) + mode.travel;
+      if (mode.name === 'walk') return mode.lead + mode.travel;
       return mode.from ? mode.duration : 0;
     },
-    route,
     setView({ aspect: nextAspect, scale } = {}) {
       if (Number.isFinite(nextAspect) && nextAspect > 0) view.aspect = nextAspect;
       if (Number.isFinite(scale) && scale > 0) view.scale = Math.min(1, scale);
@@ -236,34 +307,42 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
       const target = approachPose(index);
       return begin('approach', { site: index, duration: DURATIONS.approach, hold: (t) => shaped(withDrift(target, t - DURATIONS.approach), index) });
     },
-    /** Walks from site `from` to site `to` (from < to), ending STANDOFF before `to`. */
+    /** Walks from site `from` to its neighbour `to` along their path, ending STANDOFF before `to`. With no path it is an approach. */
     walk(from, to) {
-      const siteS = route.siteS[to];
-      const s1 = Math.max(0, siteS - STANDOFF);
-      const s0 = Math.min(s1, Math.max(0, route.siteS[from] - STANDOFF));
-      const length = s1 - s0;
+      const points = pathPoints(dungeon, from, to);
+      if (!points) return api.approach(to);
+      const path = measurePath(points);
+      const s1 = standoff(path);
+      // Where the walk starts. From far off (the overview) the camera comes down onto the path's start (dropPoses). From a hold at the site it goes there in a straight line and turns as it goes. When the path is the
+      // way the camera came, it stands on it already and only turns.
+      let [s0, lead, far] = [0, 0, false];
+      if (pose) {
+        const start = pathPose(path, 0).position;
+        const gap = Math.hypot(pose.position[0] - start[0], pose.position[1] - start[1], pose.position[2] - start[2]);
+        far = gap > FAR;
+        const here = path.nearest([pose.position[0], pose.position[2]]);
+        if (!far && here.distance < ON_PATH && here.s < s1 - 0.5) s0 = here.s;
+        lead = far ? DURATIONS.approach : s0 > 0 ? DURATIONS.descend : clamp(gap / LEAD_SPEED, DURATIONS.descend, DURATIONS.approach);
+      }
       // The ramps cost one ramp's time in all, so the steady stretch runs at WALK_SPEED.
-      return begin('walk', { site: to, s0, s1, siteS, travel: Math.max(2, length / WALK_SPEED + DURATIONS.ramp) });
+      return begin('walk', { site: to, path, s0, s1, lead, far, travel: Math.max(2, (s1 - s0) / WALK_SPEED + DURATIONS.ramp) });
     },
     victory() { return orbit('victory'); },
     /** Advances the clock and returns the pose. */
     update(dt) {
       const step = Math.max(0, dt);
       react.engaged += (react.level - react.engaged) * (1 - Math.exp(-step / ENGAGE_TAU));
-      react.turn = clamp(react.turn + (react.onward ? step : -step) / ONWARD_TIME, 0, 1);
       react.beatAge += step;
       time += Math.max(0, dt);
       if (mode) pose = evaluate(time - mode.start);
       return api.pose;
     },
-    // Round 116: the conversation shapes the hold at a site (approach and walk). A new state resets all three.
+    // Round 116: the conversation shapes the hold at a site (approach and walk). A new state resets both.
     /** How far the conversation has come, 0 to 1: the camera steps in to the site. */
     engage(level) { react.level = clamp(Number(level) || 0, 0, 1); return api; },
-    /** After a resolve: the camera turns from the site to the way on. */
-    onward(on = true) { react.onward = Boolean(on); return api; },
     /** A verdict: 'pass' and 'resolved' push in briefly, 'fail' pulls back. */
     beat(kind) { if (BEAT[kind]) Object.assign(react, { beat: BEAT[kind], beatAge: 0 }); return api; },
-    get reaction() { return { level: react.level, engaged: react.engaged, turn: react.turn, onward: react.onward }; },
+    get reaction() { return { level: react.level, engaged: react.engaged }; },
     /** Jumps to the state's hold (reduced motion). */
     skip() {
       if (!mode) return api;

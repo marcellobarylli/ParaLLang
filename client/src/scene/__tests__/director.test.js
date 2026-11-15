@@ -1,16 +1,25 @@
 // @vitest-environment node
-// Round 115: the camera director. States join without a jump, the walk stays on the route at eye height, the camera
-// never looks at itself, and the overview holds the whole route at phone and desktop shapes.
+// Round 115: the camera director. States join without a jump, a walk stays on its path at eye height, the camera
+// never looks at itself, and the overview holds the whole map at phone and desktop shapes.
+// Round 119: the dungeon is a map. Every path is walked in both directions, from every way the camera can have come,
+// and the camera is never inside a wall of the level's plan.
 import { describe, expect, test } from 'vitest';
 import { taProhmHeightAt } from '@parallang/aesthetic';
 import { DUNGEON } from '../../dungeon.js';
-import { DURATIONS, ENGAGE_MAX, EYE, STANDOFF, WALK_SPEED, blendPoses, createDirector, measureRoute, walkFraction } from '../director.js';
+import { CLEAR, DURATIONS, ENGAGE_MAX, EYE, STANDOFF, WALK_SPEED, arrivalPoints, blendPoses, createDirector, dropPoses, measurePath, pathPoints, turnPoses, walkFraction } from '../director.js';
+import { blocked } from '../../__tests__/taProhmPlan.js';
 import { dockInsets, freeRect } from '../insets.js';
 
 const FRAME = 1 / 30;
 const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 const director = (options = {}) => createDirector({ dungeon: DUNGEON, heightAt: taProhmHeightAt, ...options });
 const lastSite = DUNGEON.sites.length - 1;
+const siteIndex = (id) => DUNGEON.sites.findIndex((site) => site.id === id);
+// Every path as a pair of site indices, and each site's neighbours.
+const PAIRS = DUNGEON.paths.map(({ between }) => between.map(siteIndex));
+const neighbours = (index) => PAIRS.flatMap(([a, b]) => (a === index ? [b] : b === index ? [a] : []));
+// The sites a run passes on its way to each site, from the start.
+const WAY = [[0], [0, 1], [0, 2], [0, 2, 3], [0, 2, 3, 4], [0, 2, 5], [0, 2, 5, 6]];
 
 // Runs the current state for `seconds`, checking every frame.
 function run(d, seconds, check = () => {}) {
@@ -22,17 +31,7 @@ function run(d, seconds, check = () => {}) {
   }
 }
 
-function distanceToRoute([x, , z], route) {
-  let best = Infinity;
-  for (let i = 1; i < route.points.length; i++) {
-    const [ax, az] = route.points[i - 1];
-    const [bx, bz] = route.points[i];
-    const length2 = (bx - ax) ** 2 + (bz - az) ** 2;
-    const u = Math.min(1, Math.max(0, ((x - ax) * (bx - ax) + (z - az) * (bz - az)) / length2));
-    best = Math.min(best, Math.hypot(x - (ax + (bx - ax) * u), z - (az + (bz - az) * u)));
-  }
-  return best;
-}
+const distanceToPath = ([x, , z], points) => measurePath(points).nearest([x, z]).distance;
 
 // Where a world point falls in the camera's view, as tangents of the horizontal and vertical angles off its axis.
 function viewTangents(pose, point) {
@@ -46,16 +45,29 @@ function viewTangents(pose, point) {
   return { x: dot(rel, right) / dot(rel, f), y: dot(rel, up) / dot(rel, f), depth: dot(rel, f) };
 }
 
-describe('the route', () => {
-  test('is measured by arc length and every site stands on it, in order', () => {
-    const route = measureRoute(DUNGEON);
-    expect(route.siteS.length).toBe(3);
-    expect(route.siteS[0]).toBeLessThan(route.siteS[1]);
-    expect(route.siteS[1]).toBeLessThan(route.siteS[2]);
-    expect(route.siteS[2]).toBeCloseTo(route.total, 9);
-    DUNGEON.sites.forEach((site, index) => expect(route.pointAt(route.siteS[index])).toEqual(site.at));
-    expect(route.pointAt(-5)).toEqual(DUNGEON.route[0]);
-    expect(() => measureRoute({ sites: [{ at: [9, 9] }], route: [[0, 0], [1, 1]] })).toThrow(/not on the route/);
+describe('the paths', () => {
+  test('a path is measured by arc length and is walked in either direction', () => {
+    const path = measurePath([[0, 0], [3, 4], [3, 10]]);
+    expect(path.total).toBe(11);
+    expect(path.pointAt(5)).toEqual([3, 4]);
+    expect(path.pointAt(-5)).toEqual([0, 0]);
+    expect(path.pointAt(99)).toEqual([3, 10]);
+    expect(path.nearest([5, 7])).toEqual({ s: 8, distance: 2 });
+    for (const [a, b] of PAIRS) {
+      const there = pathPoints(DUNGEON, a, b);
+      expect(there[0]).toEqual(DUNGEON.sites[a].at);
+      expect(there.at(-1)).toEqual(DUNGEON.sites[b].at);
+      expect(pathPoints(DUNGEON, b, a)).toEqual([...there].reverse());
+    }
+    expect(pathPoints(DUNGEON, siteIndex('face_gate'), siteIndex('library'))).toBeNull(); // no path joins them
+    expect(pathPoints(DUNGEON, 0, 99)).toBeNull();
+  });
+
+  test('an approach comes in on the entrance at the start site, and on the first path listed for any other', () => {
+    expect(arrivalPoints(DUNGEON, 0)).toEqual([...DUNGEON.entrance, DUNGEON.sites[0].at]);
+    expect(arrivalPoints(DUNGEON, siteIndex('root_court'))).toEqual(pathPoints(DUNGEON, 0, siteIndex('root_court')));
+    expect(arrivalPoints(DUNGEON, siteIndex('library'))).toEqual(pathPoints(DUNGEON, siteIndex('sunlit_court'), siteIndex('library')));
+    expect(arrivalPoints(DUNGEON, siteIndex('sanctuary'))).toEqual(pathPoints(DUNGEON, siteIndex('before_sanctuary'), siteIndex('sanctuary')));
   });
 
   test('a walk ramps up, holds a steady pace and ramps down', () => {
@@ -77,8 +89,8 @@ describe('the five states', () => {
   test('each state starts at the pose the camera holds, also when it interrupts a transition', () => {
     const d = director();
     const steps = [
-      () => d.attract(), () => d.overview(), () => d.approach(0), () => d.walk(0, 1), () => d.walk(1, 2), () => d.victory(),
-      () => d.overview(), () => d.approach(1), () => d.attract(),
+      () => d.attract(), () => d.overview(), () => d.approach(0), () => d.walk(0, 2), () => d.walk(2, 5), () => d.victory(),
+      () => d.overview(), () => d.approach(3), () => d.walk(3, 4), () => d.walk(4, 3), () => d.attract(),
     ];
     steps.forEach((begin, index) => {
       const before = d.pose;
@@ -103,38 +115,146 @@ describe('the five states', () => {
     d.attract(); run(d, 8, check);
     d.overview(); run(d, 5, check);
     d.approach(0); run(d, 8, check);
-    d.walk(0, 1); run(d, d.arrival + 4, check);
-    d.walk(1, 2); run(d, d.arrival + 4, check);
+    // Every site, with a way back through the Sunlit Court, and a look at the map in the middle.
+    for (const [from, to] of [[0, 1], [1, 2], [2, 3], [3, 4], [4, 3]]) { d.walk(from, to); run(d, d.arrival + 4, check); }
+    d.overview(); run(d, 5, check);
+    d.walk(3, 5); run(d, d.arrival + 4, check); // from the map, down to a walk
+    d.walk(5, 6); run(d, d.arrival + 4, check);
     d.victory(); run(d, 9, check);
   });
 
-  test('the walk keeps to the route at eye height and at walking pace, and stops before its site looking at it', () => {
-    const d = director();
-    d.approach(0);
-    run(d, d.arrival + 2);
-    for (const [from, to] of [[0, 1], [1, 2]]) {
+  test('every walk keeps to its path at eye height and at walking pace, and stops before its site looking at it', () => {
+    for (const [from, to] of [...PAIRS, ...PAIRS.map(([a, b]) => [b, a])]) {
+      const name = `${DUNGEON.sites[from].id} to ${DUNGEON.sites[to].id}`;
+      const points = pathPoints(DUNGEON, from, to);
+      const d = director();
+      d.approach(from);
+      run(d, d.arrival + 2);
       d.walk(from, to);
-      expect(d.arrived).toBe(false);
+      expect(d.arrived, name).toBe(false);
       const travelled = [];
       run(d, d.arrival + 1, (pose, previous) => {
         if (d.stage !== 'travel') return;
         travelled.push(pose);
-        expect(distanceToRoute(pose.position, d.route)).toBeLessThan(1e-6);
+        expect(distanceToPath(pose.position, points), name).toBeLessThan(1e-6);
         expect(pose.position[1] - taProhmHeightAt(pose.position[0], pose.position[2])).toBeCloseTo(EYE, 9);
-        expect(Math.hypot(pose.position[0] - previous.position[0], pose.position[2] - previous.position[2])).toBeLessThan(WALK_SPEED * FRAME * 1.05 + 1e-6);
-        expect(distance(pose.position, pose.target)).toBeGreaterThan(STANDOFF * 0.5); // around a corner the chord is shorter
+        expect(Math.hypot(pose.position[0] - previous.position[0], pose.position[2] - previous.position[2]), name).toBeLessThan(WALK_SPEED * FRAME * 1.05 + 1e-6);
+        expect(distance(pose.position, pose.target), name).toBeGreaterThan(STANDOFF * 0.5); // around a corner the chord is shorter
       });
-      expect(travelled.length).toBeGreaterThan(60);
-      expect(d.arrived).toBe(true);
+      expect(travelled.length, name).toBeGreaterThan(55);
+      expect(d.arrived, name).toBe(true);
       const hold = d.peek(d.arrival);
       const site = DUNGEON.sites[to].at;
-      expect(Math.hypot(hold.target[0] - site[0], hold.target[2] - site[1])).toBeLessThan(1e-6);
-      expect(Math.hypot(hold.position[0] - site[0], hold.position[2] - site[1])).toBeLessThanOrEqual(STANDOFF + 1e-6);
-      expect(Math.hypot(hold.position[0] - site[0], hold.position[2] - site[1])).toBeGreaterThan(STANDOFF * 0.5); // site 3's last leg turns a corner
+      expect(Math.hypot(hold.target[0] - site[0], hold.target[2] - site[1]), name).toBeLessThan(1e-6);
+      expect(Math.hypot(hold.position[0] - site[0], hold.position[2] - site[1]), name).toBeLessThanOrEqual(STANDOFF + 1e-6);
+      expect(Math.hypot(hold.position[0] - site[0], hold.position[2] - site[1]), name).toBeGreaterThan(STANDOFF * 0.5); // a last leg may turn a corner
     }
   });
 
-  test('an approach ends on the route looking at the site: the first from a few metres up, the later ones at eye height', () => {
+  // Round 119: the camera comes to a site by one path and leaves by any, the same one included. Through the turn at
+  // the start, the walk and the hold it is never inside a wall, a pier or the sanctuary.
+  test('whichever way the camera came and whichever way it goes, it never passes through stone', () => {
+    let walks = 0;
+    const clear = (name) => (pose) => expect(blocked(pose.position[0], pose.position[2]), `${name}: the camera at [${pose.position[0].toFixed(2)}, ${pose.position[2].toFixed(2)}]`).toBeNull();
+    for (let at = 0; at <= lastSite; at++) {
+      // By an approach (a reload, or down from the map), and by a walk from each neighbour.
+      for (const cameFrom of [null, ...neighbours(at)]) {
+        for (const goesTo of neighbours(at)) {
+          const name = `${cameFrom === null ? 'an approach' : DUNGEON.sites[cameFrom].id} to ${DUNGEON.sites[at].id} to ${DUNGEON.sites[goesTo].id}`;
+          const d = director();
+          if (cameFrom === null) d.approach(at); else { d.approach(cameFrom); run(d, d.arrival + 0.5); d.walk(cameFrom, at); }
+          run(d, d.arrival + 0.5, clear(name));
+          d.engage(1); // the conversation has stepped the camera in as far as it goes
+          run(d, 4, clear(name));
+          d.walk(at, goesTo);
+          run(d, d.arrival + 3, (pose, previous) => {
+            clear(name)(pose);
+            expect(distance(pose.position, previous.position), name).toBeLessThan(0.35); // no swing: 10 m/s at the very most
+            expect(distance(pose.position, pose.target), name).toBeGreaterThan(1.5);
+          });
+          walks += 1;
+        }
+      }
+    }
+    expect(walks).toBe(60); // 16 directed paths after an approach, 44 after a walk
+  });
+
+  test('a walk back the way the camera came starts where it stands, with a turn on the spot', () => {
+    const d = director();
+    d.approach(0);
+    run(d, d.arrival + 0.5);
+    d.walk(0, 2);
+    run(d, d.arrival + 2);
+    const held = d.pose;
+    d.walk(2, 0);
+    const moves = [];
+    run(d, DURATIONS.descend - FRAME, (pose) => { if (d.stage === 'transition') moves.push(distance(pose.position, held.position)); });
+    expect(moves.length).toBeGreaterThan(40);
+    expect(Math.max(...moves)).toBeLessThan(0.6); // it turns; the drift it stood in is all it sheds
+    expect(d.arrival).toBeLessThan(DURATIONS.descend + (measurePath(pathPoints(DUNGEON, 2, 0)).total - STANDOFF) / WALK_SPEED + DURATIONS.ramp);
+  });
+
+  // Review 1 of round 119 (R1.2): from the map or the orbit down to a site, the camera comes down only over the
+  // spot where it will stand. Below the height of the towers it is nowhere else, so it crosses no roof on the way.
+  test('the way down from the sky comes down over the place the camera will stand, for an approach and for a walk from the map', () => {
+    const TOWERS = 16;
+    const shapes = [{ aspect: 390 / (844 * 0.45), scale: 0.45 }, { aspect: 1000 / 844, scale: 844 / 900 }];
+    const descents = [];
+    for (let to = 0; to <= lastSite; to++) {
+      descents.push([`the map to ${DUNGEON.sites[to].id}`, (d) => d.overview(), (d) => d.approach(to)]);
+      descents.push([`the orbit to ${DUNGEON.sites[to].id}`, (d) => d.attract(), (d) => d.approach(to)]);
+    }
+    for (const [from, to] of [...PAIRS, ...PAIRS.map(([a, b]) => [b, a])]) descents.push([`the map to the walk ${DUNGEON.sites[from].id} to ${DUNGEON.sites[to].id}`, (d) => d.overview(), (d) => d.walk(from, to)]);
+    for (const shape of shapes) {
+      for (const [name, above, down] of descents) {
+        const d = director();
+        d.setView(shape);
+        above(d);
+        run(d, 12.3); // the far state has settled; the orbit is somewhere on its round
+        expect(d.pose.position[1], name).toBeGreaterThan(CLEAR);
+        down(d);
+        expect(d.peek(DURATIONS.approach - 0.05).stage, name).toBe('transition');
+        const landing = d.peek(DURATIONS.approach).position;
+        let low = 0;
+        run(d, DURATIONS.approach, (pose, previous) => {
+          if (d.stage !== 'transition') return; // the hold's drift is not the descent
+          expect(pose.position[1], name).toBeLessThanOrEqual(previous.position[1] + 1e-9); // it only comes down
+          expect(distance(pose.position, previous.position), name).toBeLessThan(15); // no jump: a phone's orbit stands far back, and from its far side the way down is 9 m a frame
+          expect(distance(pose.position, pose.target), name).toBeGreaterThan(1.5);
+          if (pose.position[1] >= TOWERS) return;
+          low += 1;
+          expect(Math.hypot(pose.position[0] - landing[0], pose.position[2] - landing[2]), `${name}: at ${pose.position[1].toFixed(1)} m`).toBeLessThan(0.5);
+        });
+        expect(low, name).toBeGreaterThan(5);
+        expect(d.arrived || d.stage === 'travel', name).toBe(true);
+      }
+    }
+  });
+
+  test('a camera that starts below the roofs goes up before it crosses, and both ways down end on their poses', () => {
+    const sky = { position: [-4, 120, 30], target: [-4, 0, 34] };
+    const court = { position: [6, 1.6, 25.5], target: [6, 1.35, 21.5] };
+    const gate = { position: [0.3, 1.6, 15.2], target: [0.3, 1.35, 11.2] };
+    for (const [a, b] of [[sky, court], [gate, court]]) {
+      expect(dropPoses(a, b, 0)).toEqual(a);
+      expect(dropPoses(a, b, 1)).toEqual(b);
+    }
+    // From the sky the crossing is over when the camera is down to CLEAR.
+    for (let u = 0; u <= 1; u += 0.01) {
+      const pose = dropPoses(sky, court, u);
+      if (pose.position[1] < CLEAR - 1e-6) expect(Math.hypot(pose.position[0] - 6, pose.position[2] - 25.5)).toBeLessThan(1e-6);
+    }
+    // From a gate passage (another tab moved the player): up where it stands, across at CLEAR, down where it will stand.
+    for (let u = 0; u <= 1; u += 0.01) {
+      const pose = dropPoses(gate, court, u);
+      const moved = Math.hypot(pose.position[0] - 0.3, pose.position[2] - 15.2);
+      const left = Math.hypot(pose.position[0] - 6, pose.position[2] - 25.5);
+      if (pose.position[1] < CLEAR - 1e-6) expect(Math.min(moved, left)).toBeLessThan(1e-6);
+    }
+    expect(dropPoses(gate, court, 0.45).position[1]).toBe(CLEAR);
+  });
+
+  test('an approach ends on the way in looking at the site: the start site from a few metres up, the others at eye height', () => {
     for (let index = 0; index <= lastSite; index++) {
       const d = director();
       d.overview();
@@ -146,27 +266,30 @@ describe('the five states', () => {
       const pose = d.peek(DURATIONS.approach);
       const site = DUNGEON.sites[index].at;
       expect(Math.hypot(pose.target[0] - site[0], pose.target[2] - site[1])).toBeLessThan(1e-6);
-      expect(distanceToRoute(pose.position, d.route)).toBeLessThan(1e-6);
+      expect(distanceToPath(pose.position, arrivalPoints(DUNGEON, index))).toBeLessThan(1e-6);
+      expect(blocked(pose.position[0], pose.position[2]), DUNGEON.sites[index].id).toBeNull();
       if (index === 0) {
         expect(pose.position[1]).toBeGreaterThan(EYE + 1.5);
         expect(pose.position[1]).toBeLessThan(EYE + 5);
       } else {
         expect(pose.position[1]).toBeCloseTo(EYE, 9);
-        // Where a walk to this site ends, so a reload and a walk leave the camera in the same place.
+        // Where a walk along that path ends, so a reload and a walk leave the camera in the same place.
+        const from = siteIndex(DUNGEON.paths.find(({ between }) => between.includes(DUNGEON.sites[index].id)).between.find((id) => id !== DUNGEON.sites[index].id));
         const walked = director();
-        walked.walk(index - 1, index);
+        walked.walk(from, index);
         expect(distance(walked.peek(walked.arrival).position, pose.position)).toBeLessThan(1e-6);
       }
     }
   });
 
-  test('the overview is top-down with east at the foot of the screen, and holds the whole route in the free area', () => {
+  test('the overview is top-down with east at the foot of the screen, and holds every site and path in the free area', () => {
     const shapes = [
       { aspect: 390 / 844, scale: 1 }, // a phone, nothing covered
-      { aspect: 390 / (844 * 0.55), scale: 0.55 }, // a phone with the route card over the lower part
+      { aspect: 390 / (844 * 0.45), scale: 0.45 }, // a phone with the map card over the lower part
       { aspect: 1440 / 900, scale: 1 },
       { aspect: 1000 / 844, scale: 844 / 900 }, // a desktop with the top bar
     ];
+    const mapPoints = [...DUNGEON.sites.map((site) => site.at), ...DUNGEON.paths.flatMap(({ via }) => via)];
     for (const shape of shapes) {
       const d = director();
       d.setView(shape);
@@ -174,11 +297,11 @@ describe('the five states', () => {
       const pose = d.pose;
       const half = Math.atan(Math.tan(Math.PI / 6) * shape.scale);
       const [limitX, limitY] = [Math.tan(half) * shape.aspect, Math.tan(half)];
-      expect(pose.position[1]).toBeGreaterThan(60);
-      const entrance = viewTangents(pose, [DUNGEON.route[0][0], 0, DUNGEON.route[0][1]]);
+      expect(pose.position[1]).toBeGreaterThan(40);
+      const gate = viewTangents(pose, [DUNGEON.sites[0].at[0], 0, DUNGEON.sites[0].at[1]]);
       const sanctuary = viewTangents(pose, [DUNGEON.sites[lastSite].at[0], 0, DUNGEON.sites[lastSite].at[1]]);
-      expect(entrance.y).toBeLessThan(sanctuary.y); // the entrance is lower on the screen
-      for (const [x, z] of DUNGEON.route) {
+      expect(gate.y).toBeLessThan(sanctuary.y); // the gate, in the east, is lower on the screen
+      for (const [x, z] of mapPoints) {
         const seen = viewTangents(pose, [x, 0, z]);
         expect(seen.depth).toBeGreaterThan(0);
         expect(Math.abs(seen.x)).toBeLessThan(limitX);
@@ -213,6 +336,21 @@ describe('the five states', () => {
     expect(d.stage).toBe('hold');
   });
 
+  test('a turn ends on each pose, goes in a straight line and keeps the camera off its own line of sight', () => {
+    const a = { position: [0.3, 1.6, 15.2], target: [0.3, 1.35, 11.2] }; // in a gate passage, facing west
+    const b = { position: [0.3, 1.6, 15.2], target: [0.3, 1.35, 19.2] }; // the same place, facing east
+    expect(turnPoses(a, b, 0)).toEqual(a);
+    expect(turnPoses(a, b, 1)).toEqual(b);
+    for (let u = 0.05; u < 1; u += 0.05) {
+      const pose = turnPoses(a, b, u);
+      expect(distance(pose.position, a.position)).toBeLessThan(1e-9); // blendPoses would swing it 4 m to the side
+      expect(distance(pose.position, pose.target)).toBeCloseTo(distance(a.position, a.target), 6);
+    }
+    const c = { position: [6, 1.6, 21.5], target: [2, 1.35, 22] };
+    const mid = turnPoses(a, c, 0.5);
+    expect(mid.position).toEqual([3.15, 1.6, 18.35]);
+  });
+
   test('blending two poses ends on each of them', () => {
     const a = { position: [0, 100, 10], target: [0, 0, 0] };
     const b = { position: [5, 3, 60], target: [3, 1, 63] };
@@ -234,12 +372,12 @@ describe('the camera follows the conversation', () => {
     const [dx, dz] = [bx - a[0], bz - a[2]];
     return Math.abs((pose.position[0] - a[0]) * dz - (pose.position[2] - a[2]) * dx) / Math.hypot(dx, dz);
   };
-  // To a site by the way a run gets there: an approach to the first, a walk to the others.
+  // To a site by a way a run gets there: an approach to the gate, then walks.
   function holdAt(index) {
     const d = director();
     d.approach(0);
     run(d, d.arrival + 0.1);
-    for (let to = 1; to <= index; to++) { d.walk(to - 1, to); run(d, d.arrival + 0.1); }
+    WAY[index].slice(1).forEach((to, i) => { d.walk(WAY[index][i], to); run(d, d.arrival + 0.1); });
     return d;
   }
 
@@ -255,8 +393,10 @@ describe('the camera follows the conversation', () => {
           expect(distance(pose.position, before.position)).toBeLessThan(0.12); // 3.6 m/s at most, drift and all
           expect(offLine(pose, rest.position, index)).toBeLessThan(0.6); // the drift is the only sideways motion
         });
+        // The step itself is exact; the hold's drift (up to 0.46 m) rides on it.
         const now = toSite(d.pose, index);
-        expect(now).toBeLessThan(previous - 0.2);
+        expect(d.reaction.engaged).toBeCloseTo(level, 2);
+        expect(Math.abs(now - start * (1 - ENGAGE_MAX * level))).toBeLessThan(0.5);
         previous = now;
       }
       expect(previous).toBeGreaterThan(2);
@@ -293,35 +433,24 @@ describe('the camera follows the conversation', () => {
     expect(Math.abs(gap())).toBeLessThan(0.01);
   });
 
-  test('a resolved site turns the camera to the way on, and the walk starts from that pose without a jump', () => {
+  // Round 119 (critique 1.4): the player picks the way on, so the camera does not turn to one.
+  test('after a resolve the camera keeps looking at the site, and a walk starts from that pose without a jump', () => {
     for (let index = 0; index <= lastSite; index++) {
       const d = holdAt(index);
       d.engage(1);
       run(d, 5);
       const facing = d.pose;
       expect(Math.hypot(facing.target[0] - siteOf(index)[0], facing.target[2] - siteOf(index)[1])).toBeLessThan(0.3);
-      d.onward(true);
-      run(d, 3, (pose, before) => {
-        expect(distance(pose.position, before.position)).toBeLessThan(0.05); // it turns, it does not move
-        expect(distance(pose.target, before.target)).toBeLessThan(0.8); // the look-at point sweeps; at the last site it goes up to the sanctuary
-        expect(distance(pose.position, pose.target)).toBeGreaterThan(2);
-      });
-      const turned = d.pose;
-      expect(distance(turned.position, facing.position)).toBeLessThan(0.8);
-      expect(Math.hypot(turned.target[0] - siteOf(index)[0], turned.target[2] - siteOf(index)[1])).toBeGreaterThan(3);
-      // Onward is further in: the gate ahead on the route, and at the last site the sanctuary in the middle of the
-      // level. Always at about eye level, so a gate's door frames it.
-      expect(turned.target[2]).toBeLessThan(siteOf(index)[1] - 2.5);
-      expect(turned.target[1]).toBeLessThan(2.5);
-      if (index === lastSite) expect(Math.hypot(turned.target[0], turned.target[2])).toBeLessThan(0.5);
+      run(d, 3, (pose) => expect(Math.hypot(pose.target[0] - siteOf(index)[0], pose.target[2] - siteOf(index)[1])).toBeLessThan(0.3));
 
       const before = d.pose;
-      if (index < lastSite) d.walk(index, index + 1); else d.victory();
+      const to = neighbours(index)[0];
+      d.walk(index, to);
       expect(distance(d.pose.position, before.position)).toBeLessThan(1e-9);
       expect(distance(d.pose.target, before.target)).toBeLessThan(1e-9);
-      expect(d.reaction).toMatchObject({ level: 0, engaged: 0, turn: 0, onward: false }); // a new state starts unshaped
-      run(d, d.arrival + 2, (pose, earlier) => expect(distance(pose.position, earlier.position)).toBeLessThan(6));
-      if (index < lastSite) expect(Math.hypot(d.pose.target[0] - siteOf(index + 1)[0], d.pose.target[2] - siteOf(index + 1)[1])).toBeLessThan(0.3);
+      expect(d.reaction).toEqual({ level: 0, engaged: 0 }); // a new state starts unshaped
+      run(d, d.arrival + 2, (pose, earlier) => expect(distance(pose.position, earlier.position)).toBeLessThan(0.35));
+      expect(Math.hypot(d.pose.target[0] - siteOf(to)[0], d.pose.target[2] - siteOf(to)[1])).toBeLessThan(0.3);
     }
   });
 
@@ -330,7 +459,7 @@ describe('the camera follows the conversation', () => {
     d.overview();
     run(d, 4);
     const before = d.pose;
-    d.engage(1).onward(true).beat('pass');
+    d.engage(1).beat('pass');
     run(d, 3);
     expect(distance(d.pose.position, before.position)).toBeLessThan(1e-9);
     expect(distance(d.pose.target, before.target)).toBeLessThan(1e-9);

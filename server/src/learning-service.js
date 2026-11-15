@@ -10,6 +10,7 @@ import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } f
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
+import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
 export const HELD_NOTE = 'A held objective was said correctly but does not count: an earlier objective comes first. Do not celebrate it or treat it as done, and do not give its answer; the player must say it again after the earlier objective.';
@@ -613,7 +614,7 @@ export class LearningService {
       encounterId: definition.encounter.id,
       location: this.sceneLocationId(encounter),
       partyConversation: Boolean(definition.encounter.party_of),
-      ...(encounter.dungeonId ? { dungeonId: encounter.dungeonId } : {}), // round 114
+      ...(encounter.dungeonId ? { dungeonId: encounter.dungeonId, siteId: encounter.siteId } : {}), // rounds 114, 119
       character: { id: definition.character.id, name: definition.character.name, saveable: definition.character.saveable === true },
       resolvedMessage: definition.encounter.resolved_message ?? null,
       companionBriefing: definition.encounter.companion_briefing ?? null,
@@ -681,8 +682,8 @@ export class LearningService {
   }
 
   // Without an encounterId the default encounter starts anywhere (the old web client, verify:cli); with one, the player
-  // must be at that encounter's location. Round 114: with a dungeonId, the run's next site starts (encounterId, if given,
-  // must be that site), wherever the player stands on the market map.
+  // must be at that encounter's location. Round 114: with a dungeonId, a site of that dungeon starts, wherever the player
+  // stands on the market map. Round 119: it is the site the player stands at in the dungeon (encounterId, if given, must be its encounter).
   async startEncounter(learnerId, { restart = false, encounterId = null, dungeonId = null } = {}) {
     assertLearnerId(learnerId);
     return this.serialized(learnerId, async () => {
@@ -702,33 +703,28 @@ export class LearningService {
     return dungeon;
   }
 
-  dungeonRun(envelope, dungeon) {
-    const run = envelope.dungeons?.[dungeon.id] ?? { run: 1, cleared: [] };
-    const sites = dungeon.sites.map((site) => site.encounter);
-    // In play order: the cleared sites are a prefix of the site list (a stale id from edited content is ignored).
-    let next = 0;
-    while (next < sites.length && run.cleared.includes(sites[next])) next += 1;
-    return { run: run.run, cleared: sites.slice(0, next), nextIndex: next < sites.length ? next : null };
+  // Round 119: the run as the map's rules read it (server/src/dungeon.js), and as the save holds it.
+  dungeonRun(envelope, dungeon) { return readRun(dungeon, envelope.dungeons?.[dungeon.id]); }
+
+  saveRun(envelope, dungeon, run) {
+    envelope.dungeons = { ...(envelope.dungeons ?? {}), [dungeon.id]: { run: run.run, at: run.at, cleared: [...run.cleared], visited: [...run.visited] } };
   }
 
+  // The dungeon's map and what the run shows of it. A hidden site keeps its place (the client bundles the file for
+  // its 3D view) but not its character's name.
   dungeonView(envelope, dungeon) {
-    const { run, cleared, nextIndex } = this.dungeonRun(envelope, dungeon);
+    const run = this.dungeonRun(envelope, dungeon);
+    const sites = siteStates(dungeon, run);
     return {
       dungeon: {
-        id: dungeon.id, name: dungeon.name, level: dungeon.level,
-        sites: dungeon.sites.map((site) => {
-          const { character } = this.content.encounters.get(site.encounter);
-          return { encounterId: site.encounter, name: site.name, at: [...site.at], characterName: character.name };
-        }),
-        route: dungeon.route.map((point) => [...point]),
+        id: dungeon.id, name: dungeon.name, level: dungeon.level, start: dungeon.start, goal: dungeon.goal,
+        sites: dungeon.sites.map((site) => ({
+          id: site.id, encounterId: site.encounter, name: site.name, at: [...site.at],
+          characterName: sites[site.id].state === 'hidden' ? null : this.content.encounters.get(site.encounter).character.name,
+        })),
+        paths: dungeon.paths.map(({ between, via }) => ({ between: [...between], via: via.map((point) => [...point]) })),
       },
-      progress: {
-        run,
-        clearedEncounterIds: cleared,
-        nextSiteIndex: nextIndex,
-        nextEncounterId: nextIndex === null ? null : dungeon.sites[nextIndex].encounter,
-        complete: nextIndex === null,
-      },
+      progress: { run: run.run, at: run.at, complete: isComplete(dungeon, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
     };
   }
 
@@ -738,46 +734,76 @@ export class LearningService {
     return this.dungeonView(envelope, dungeon);
   }
 
-  // A new run: the run's cleared sites are forgotten (the market's completed encounters, the Spellbook and fragments
-  // stay), and a conversation this dungeon started is dropped.
+  // A new run: the cleared and visited sites are forgotten and the player stands at the start (the market's completed
+  // encounters, the Spellbook and fragments stay), and a conversation this dungeon started is dropped.
   async resetDungeon(learnerId, dungeonId) {
     const dungeon = this.dungeon(dungeonId);
     assertLearnerId(learnerId);
     return this.serialized(learnerId, async () => {
       const envelope = await this.loadEnvelope(learnerId);
       const staged = clone(envelope);
-      const { run } = this.dungeonRun(envelope, dungeon);
-      staged.dungeons = { ...(staged.dungeons ?? {}), [dungeon.id]: { run: run + 1, cleared: [] } };
+      this.saveRun(staged, dungeon, freshRun(dungeon, this.dungeonRun(envelope, dungeon).run + 1));
       await this.storage.save(staged);
       if (this.encounters.get(learnerId)?.dungeonId === dungeon.id) this.encounters.delete(learnerId);
       return this.dungeonView(staged, dungeon);
     });
   }
 
-  // Round 114: the market's location check (NOT_HERE), gates and drills do not apply; the order of the sites does. The
-  // run's own conversation at this site resumes (a reload); any other start of it is a new conversation, also when the
-  // learner finished this encounter before. Another conversation under way is never replaced without restart.
+  // Round 119: a walk to a neighbouring site, under the pass rule. While this dungeon's own conversation is under way
+  // the move is refused, unless `leave` is true, which drops that conversation.
+  async moveInDungeon(learnerId, dungeonId, request) {
+    const dungeon = this.dungeon(dungeonId);
+    assertLearnerId(learnerId);
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const run = this.dungeonRun(envelope, dungeon);
+      const siteId = request?.siteId;
+      const problem = moveProblem(dungeon, run, siteId);
+      if (problem === 'UNKNOWN_SITE') throw validationError('Unknown site.');
+      const here = siteOf(dungeon, run.at);
+      const target = siteOf(dungeon, siteId);
+      if (problem === 'NOT_ADJACENT') throw conflictError(`You can't get to ${target.name} from ${here.name}.`, 'NOT_ADJACENT');
+      if (problem === 'SEALED') throw conflictError(sealedMessage(target.name, gateOfSite(target, run)), 'SEALED');
+      if (problem === 'BLOCKED') {
+        throw conflictError(`${this.content.encounters.get(here.encounter).character.name} has not let you pass yet.`, 'BLOCKED');
+      }
+      const active = this.encounters.get(learnerId);
+      const own = active?.dungeonId === dungeon.id;
+      if (siteId !== run.at && own && active.state === 'ongoing' && request?.leave !== true) {
+        throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
+      }
+      if (siteId === run.at) return this.dungeonView(envelope, dungeon);
+      const staged = clone(envelope);
+      this.saveRun(staged, dungeon, moved(dungeon, run, siteId));
+      await this.storage.save(staged);
+      // The conversation belongs to the site the player has left (a resolved one is over; an ongoing one was left).
+      if (own) this.encounters.delete(learnerId);
+      return this.dungeonView(staged, dungeon);
+    });
+  }
+
+  // Round 114: the market's location check (NOT_HERE), gates and drills do not apply. Round 119: the encounter is the
+  // one at the site the player stands at. The run's own conversation at this site resumes (a reload); any other start
+  // of it is a new conversation, also when the site is cleared. Another conversation under way is never replaced
+  // without restart.
   async _startDungeonSite(learnerId, restart, encounterId, dungeonId) {
     const dungeon = this.dungeon(dungeonId);
     const envelope = await this.loadEnvelope(learnerId);
-    const { nextIndex } = this.dungeonRun(envelope, dungeon);
-    const next = nextIndex === null ? null : dungeon.sites[nextIndex];
-    if (!next || (encounterId !== null && encounterId !== next.encounter)) {
-      throw new AppError(next
-        ? `${dungeon.name}: ${this.content.encounters.get(next.encounter).character.name} at ${next.name} comes first.`
-        : `${dungeon.name} is cleared. Start a new run to play it again.`,
-      { status: 409, code: 'NOT_NEXT_SITE', details: { nextEncounterId: next?.encounter ?? null } });
+    const site = siteOf(dungeon, this.dungeonRun(envelope, dungeon).at);
+    const definition = this.content.encounters.get(site.encounter);
+    if (encounterId !== null && encounterId !== site.encounter) {
+      throw new AppError(`${dungeon.name}: you stand at ${site.name}, with ${definition.character.name}.`,
+        { status: 409, code: 'NOT_AT_SITE', details: { siteId: site.id, encounterId: site.encounter } });
     }
-    const definition = this.content.encounters.get(next.encounter);
     const active = this.encounters.get(learnerId);
-    const ownSession = active && active.dungeonId === dungeon.id && this.definition(active) === definition;
+    const ownSession = active && active.dungeonId === dungeon.id && active.siteId === site.id && this.definition(active) === definition;
     if (!restart && ownSession && active.state === 'ongoing') {
       return { encounter: this.serializeEncounter(active), spellbook: this.spellbookSnapshot(envelope) };
     }
     if (!restart && !ownSession && active?.state === 'ongoing') {
       throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
     }
-    return this.openSession(learnerId, envelope, definition, { dungeonId: dungeon.id });
+    return this.openSession(learnerId, envelope, definition, { dungeonId: dungeon.id, siteId: site.id });
   }
 
   async _startEncounter(learnerId, restart, encounterId) {
@@ -837,7 +863,7 @@ export class LearningService {
 
   // A new conversation: its greeting, the words it exposes, and the session held in memory. Round 114: split out of
   // _startEncounter for the dungeon start; a dungeon's session carries its dungeonId.
-  async openSession(learnerId, envelope, definition, { locationId, dungeonId } = {}) {
+  async openSession(learnerId, envelope, definition, { locationId, dungeonId, siteId } = {}) {
     // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
     this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));
     const generated = await this.prefetchedGreeting(learnerId, definition)
@@ -852,7 +878,7 @@ export class LearningService {
       id: randomUUID(), definitionId: definition.encounter.id, version: 1, state: 'ongoing', objectiveIndex: 0, passedObjectiveIds: [],
       committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
       ...(locationId ? { locationId } : {}),
-      ...(dungeonId ? { dungeonId } : {}),
+      ...(dungeonId ? { dungeonId, siteId } : {}),
       // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
       ...(strainedBy.length ? { strained: true, strainedBy } : {}),
     };
@@ -1215,9 +1241,8 @@ export class LearningService {
         } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
           stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
         }
-        // Round 114: a dungeon's conversation clears its site in the run, if it is still the run's next site (a reset
-        // during the conversation drops the session, so this holds unless content changed).
-        if (resolved && stagedEncounter.dungeonId) this.clearSite(stagedEnvelope, stagedEncounter.dungeonId, definition.encounter.id);
+        // Round 114: a dungeon's conversation clears its site in the run (round 119: the site the session was opened at).
+        if (resolved && stagedEncounter.dungeonId) this.clearSite(stagedEnvelope, stagedEncounter.dungeonId, stagedEncounter.siteId);
         // Round 111: the conversation that bore the strain spends it, in the same save as its resolution and receipt
         // (a replay returns the receipt and spends nothing again; a failed save spends nothing). Any finished
         // conversation spends it, a replayed party conversation or a completed place's restart too (decision 4).
@@ -1243,12 +1268,10 @@ export class LearningService {
     });
   }
 
-  clearSite(envelope, dungeonId, encounterId) {
+  clearSite(envelope, dungeonId, siteId) {
     const dungeon = this.content.dungeons?.get(dungeonId);
-    if (!dungeon) return;
-    const { run, cleared, nextIndex } = this.dungeonRun(envelope, dungeon);
-    if (nextIndex === null || dungeon.sites[nextIndex].encounter !== encounterId) return;
-    envelope.dungeons = { ...(envelope.dungeons ?? {}), [dungeonId]: { run, cleared: [...cleared, encounterId] } };
+    if (!dungeon || !siteOf(dungeon, siteId)) return;
+    this.saveRun(envelope, dungeon, clearedSite(dungeon, this.dungeonRun(envelope, dungeon), siteId));
   }
 
   // Round 070 (backlog I1): the validated verdict of the turn under way, while its reply is written. Not serialized:

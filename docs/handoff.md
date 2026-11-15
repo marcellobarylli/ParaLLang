@@ -1,4 +1,4 @@
-# Handoff (2026-11-14): the hosted setup and the dungeon
+# Handoff (2026-11-15): the hosted setup and the dungeon
 
 For the next agent. Start at [STATUS.md](../STATUS.md); this file holds what the round records do not: the live
 deployment, and how to deploy and work on round 115's dungeon.
@@ -66,7 +66,7 @@ the owner for the token; it is not in the repo.
 - It cannot see Render's dashboard or logs, run Docker, or start a workflow without a push. Ask the owner for a
   screenshot of the service's Logs tab when the server misbehaves.
 
-## The Ta Prohm dungeon is live (rounds 115 and 116)
+## The Ta Prohm dungeon is live (rounds 115, 116 and 119)
 
 Round 115 built the dungeon crawl in the web client and round 116 tied the camera to the conversation
 ([115 findings](rounds/115/findings.md), [116 findings](rounds/116/findings.md), pictures in
@@ -81,13 +81,15 @@ Round 115 built the dungeon crawl in the web client and round 116 tied the camer
   `.../deployments/<id>/statuses` gives `in_progress`, then `success` or `failure`. This is the only view of a Render
   build from the cluster.
 - The live page: `client/scripts/live-check.mjs`, inside a Slurm job. It loads the Pages site in headless Chromium,
-  goes from the title to the route and presses Start. Without `PARALLANG_TOKEN` it expects the refusal; with it, it
-  starts the first conversation (one model call). `tools/check_hosted.py` still checks the market's start.
+  goes from the title over the world map to the temple map and presses Start. Without `PARALLANG_TOKEN` it expects
+  the refusal; with it, it starts the conversation of the site the player stands at (one model call).
+  `tools/check_hosted.py` still checks the market's start.
 
 ### What nobody has checked
 
 - A whole run against the live model. The owner has played the first site on an iPhone (round 117); the
-  playthrough on the cluster uses a fixture provider.
+  playthrough on the cluster uses a fixture provider. Since round 119 the run has seven sites; four of them
+  (Mortimer, Flick, Marginalia, Errata) have never been started from the dungeon against the live model.
 - From the cluster, anything on an iPhone. The owner reports by screenshot. Still unreported: frame rate, the
   bottom sheet under the on-screen keyboard, WebGL after the page returns from the background, and whether the strip
   under the dock is gone (round 118).
@@ -110,32 +112,63 @@ A push whose head commit says `[skip render]` deploys the client alone and leave
 CI's logs need a GitHub login, which the cluster lacks; `~/workspace/r115-jobs/node22/` holds Node 22, the version
 CI uses, to rerun the suites under it.
 
+### The dungeon is a map (round 119)
+
+Ta Prohm holds seven sites joined by eight paths, under a world map of places
+([119 architecture](rounds/119/architecture.md), [119 findings](rounds/119/findings.md), pictures in
+[`rounds/119/shots/`](rounds/119/shots/)).
+
+- **Rules** live on the server, in `server/src/dungeon.js` (pure, tested in `server/test/dungeon-rules.test.js`):
+  the fog, the seal on the Sanctuary, and the pass rule (a character lets the player pass once answered; the way
+  back to a visited site is open). `GET /api/dungeons/:id` sends each site's state and whether it can be walked to
+  now (`progress.sites`), and the client shows that. The client holds no rule of its own except the unexplored map
+  it shows before the server answers (`unexploredSites` in `client/src/dungeonModel.js`).
+- **A new site or path** is content: `content/world/dungeons/ta_prohm.yaml`. `client/src/__tests__/dungeon-file.test.js`
+  says whether it stands in a wall, and the director's tests walk the camera along it from every way it can have
+  come. A new place on the world map is `content/world/atlas.yaml`, which only the client reads.
+- **The client's tests keep their fake server by the server's own rules** (`client/src/__tests__/fakeRun.js` imports
+  `server/src/dungeon.js`). A rule change needs no second edit there.
+- **A walk starts with a turn on the spot** (`turnPoses` in `director.js`). `blendPoses` swings the camera around
+  the point it looks at, which sends it through the piers of a gate passage on a half turn.
+- **Two deploys, one push.** For some minutes after a push the new client may talk to the old server, or the
+  reverse. The client names an old server ("The server is being updated") and retries on Start.
+
 ### Working on the dungeon
 
-- `client/src/scene/director.js` is the camera (pure, tested in Node). Its `engage`, `onward` and `beat` are how a
+- `client/src/scene/director.js` is the camera (pure, tested in Node). Its `engage` and `beat` are how a
   conversation moves it (round 116); `client/src/components/__tests__/camera-wiring.test.jsx` tests the path from
   the screen to them. `client/src/scene/levelView.js` is the
   three.js host. `client/src/stores/gameStore.js` is the flow. `content/world/dungeons/ta_prohm.yaml` holds the sites
-  and the route.
+  and the paths.
 - `client/src/index.css` is the PS1 menu look (round 117): grey bevelled windows, no rounded corner (a test fails on
   one), and the panels' opacity from `--panel-alpha`, which the Settings slider sets (`client/src/display.js`).
-- `client/src/__tests__/dungeon-file.test.js` checks the sites and the route against the level's wall plan, which
-  it encodes by hand from `aesthetic/src/scene/taprohm.js`. Move a site or change the level, and that test says
-  whether the camera would walk through stone.
+- `client/src/__tests__/dungeon-file.test.js` checks the sites and the paths against the level's wall plan, which
+  `client/src/__tests__/taProhmPlan.js` encodes by hand from `aesthetic/src/scene/taprohm.js`. Move a site or change
+  the level, and that test says whether the camera would walk through stone.
 - Pictures and an end-to-end check: `client/scripts/dungeon-shots.mjs`, inside a Slurm job (it starts a server on
   127.0.0.1 behind a token). It needs `puppeteer-core` and a Chrome; round 115 used
   `~/.cache/puppeteer/chrome/linux-131.0.6778.204/chrome-linux64/chrome` and the `puppeteer-core` under
   `~/.npm/_npx/`. `~/workspace/r115-jobs/run.sh` and `shots.sh` are the job scripts. Chromium aborts in a batch job
   unless `DBUS_SESSION_BUS_ADDRESS` is disabled, which the script does.
 - The server and the client's proxy tests bind 127.0.0.1 ports, so `npm test` runs under `sbatch`. The pure client
-  tests (`src/scene`, `src/stores`, `src/components`) bind none.
+  tests (`src/scene`, `src/stores`, `src/components`) bind none. `npx vitest run src` in `client/` includes
+  `src/__tests__/proxy.test.js`, which binds one: name the folders. `~/workspace/r119-jobs/run.sh` and `shots.sh`
+  are round 119's job scripts.
 
 ### Next
 
-- The owner's screenshot of Settings in the installed page (round 118), and the verdict on round 117 (the look, the
-  opacity to make the default), and on two choices of the
-  build: the walk starts on a button, and only the first site is approached from above.
-- Start the next site's greeting when a site resolves, to hide the hosted server's 15 s start.
-- Encounter assets at the sites. Each site has a beacon (a crystal, a ring, a shaft of light) as a stand-in.
+- Round 120: the party in the dungeon, as the app has it (the owner's choice in round 119). SAVE or LEAVE after a
+  saveable character's site, a Party panel, Talk outside a conversation. The server already has the party
+  (`GET /api/party`, `POST /api/party/recruit`, party conversations by `encounterId`); a dungeon resolve already
+  writes `world.completedEncounterIds`, which `recruit` checks.
+- Round 121: levels and XP (the owner's choice: levels unlock places and raise difficulty). The seal on The
+  Sanctuary and the closed places of `content/world/atlas.yaml` are where a level gate attaches. The world map has
+  no server state yet.
+- After that: real characters at the sites in place of the beacons (the owner's request in round 119).
+- The owner's phone run of the map (round 119's open items), the screenshot of Settings in the installed page
+  (round 118), and the verdict on round 117 (the look, the opacity to make the default).
+- A site's greeting is requested when the walk to it is picked. On a short walk the hosted server's 15 s start still
+  shows as "… is getting ready to talk".
 - The dungeon in the iPhone app (`aesthetic/native/TempleView.js` is an untested start).
-- Angkor Wat as a second dungeon: a content file, an entry in `LEVELS` in `levelView.js`, and a plan test.
+- Angkor Wat as a second dungeon: a content file, a `dungeon` on its place in `atlas.yaml`, an entry in `LEVELS` in
+  `levelView.js`, and a plan test. The world map then needs a server record of where the player is.

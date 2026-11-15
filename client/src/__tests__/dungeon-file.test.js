@@ -1,69 +1,83 @@
 // @vitest-environment node
 // Round 115: the dungeon file against the level it is played on (aesthetic/src/scene/taprohm.js). Every site stands
-// on clear ground, and the route crosses a gallery or the outer wall only through an east gate passage.
+// on clear ground, and nothing crosses a gallery or the outer wall except through an east gate passage.
+// Round 119: the dungeon is a map: every path is checked, and the world file with its fog.
 import { expect, test } from 'vitest';
 import { TA_PROHM, WORLDS, taProhmHeightAt, taProhmIsClear } from '@parallang/aesthetic';
 import { DUNGEON } from '../dungeon.js';
-
-const G = TA_PROHM.gallery;
-const PASSAGE = 1.1; // half the width of a gate passage: the piers stand from 1.1 to 3.2 either side of the axis
-const SHOULDER = 0.35; // room a walker needs either side
-
-// Where a walker's centre may not be, from the level's plan.
-function blocked(x, z) {
-  const [ax, az] = [Math.abs(x), Math.abs(z)];
-  const inPassage = ax < PASSAGE - SHOULDER && z > 0;
-  for (const ring of TA_PROHM.rings) {
-    const inBand = ax < ring.hx + SHOULDER && az < ring.hz + SHOULDER && (ax > ring.hx - G.depth - SHOULDER || az > ring.hz - G.depth - SHOULDER);
-    if (inBand && !(inPassage && az > ring.hz - G.depth - SHOULDER)) return 'a gallery';
-    // The gate pavilion is deeper than its gallery (G.depth + 1.6, centred on the gallery).
-    if (ax < 3.2 + SHOULDER && z > ring.hz - G.depth - 0.8 - SHOULDER && z < ring.hz + 0.8 + SHOULDER && !inPassage) return 'a gate pavilion';
-  }
-  const W = TA_PROHM.outer;
-  // The east gopura: wings to 10 m either side of the passage, 4.2 m deep, centred G.depth / 2 beyond the wall line.
-  if (ax < 10 + SHOULDER && z > W + G.depth / 2 - 2.1 - SHOULDER && z < W + G.depth / 2 + 2.1 + SHOULDER && !inPassage) return 'the east gopura';
-  if ((Math.abs(ax - W) < 0.6 + SHOULDER && az < W + 1) || (Math.abs(az - W) < 0.6 + SHOULDER && ax < W + 1 && !(z > 0 && ax < 10))) return 'the outer wall';
-  if (ax < 3.7 + SHOULDER && az < 3.7 + SHOULDER) return 'the sanctuary';
-  if (Math.abs(x + 26) < 3.5 + SHOULDER && Math.abs(z - 22) < 2.5 + SHOULDER) return 'the library';
-  return null;
-}
+import { ATLAS, ATLAS_FILE } from '../atlas.js';
+import { atlasView, neighbourIds, unexploredSites } from '../dungeonModel.js';
+import { pathPoints } from '../scene/director.js';
+import { PASSAGE, blocked } from './taProhmPlan.js';
 
 test('the bundled dungeon is the content file in the client shape, on a level aesthetic knows', () => {
   expect(DUNGEON.id).toBe('ta_prohm');
   expect(WORLDS[DUNGEON.level]).toBeTruthy();
-  expect(DUNGEON.sites.map((site) => site.encounterId)).toEqual(['market_entrance_tutorial', 'imp_coffee_greeting', 'high_gate_bambieshart']);
+  expect(DUNGEON.sites.map((site) => [site.id, site.encounterId])).toEqual([
+    ['face_gate', 'market_entrance_tutorial'], ['buttress_tree', 'butchers_stall_charcutier'], ['root_court', 'imp_coffee_greeting'],
+    ['sunlit_court', 'cracked_fountain_letharger'], ['library', 'old_bookshop_bookworm'], ['before_sanctuary', 'high_gate_bambieshart'], ['sanctuary', 'the_rift_errata'],
+  ]);
   for (const site of DUNGEON.sites) expect(site).toMatchObject({ name: expect.any(String), at: [expect.any(Number), expect.any(Number)], characterName: null });
+  expect([DUNGEON.start, DUNGEON.goal]).toEqual(['face_gate', 'sanctuary']);
+  expect(DUNGEON.paths.length).toBe(8);
   expect(Object.isFrozen(DUNGEON)).toBe(true);
-});
-
-test('every site stands on clear, level ground', () => {
-  expect(DUNGEON.sites.filter((site) => taProhmIsClear(...site.at)).length).toBeGreaterThan(0);
-  DUNGEON.sites.forEach((site, index) => {
-    const [x, z] = site.at;
-    // The level's own test (its planting rule) covers the ground inside the outer wall, and it keeps plants off the
-    // axis by calling the axis not clear. Site 1 is outside the wall and site 3 is on the axis; the plan test covers both.
-    if (index > 0 && Math.abs(x) >= 2.5) expect(taProhmIsClear(x, z), site.name).toBe(true);
-    expect(blocked(x, z), site.name).toBeNull();
-    expect(taProhmHeightAt(x, z), site.name).toBe(0);
+  expect(neighbourIds(DUNGEON, 'library')).toEqual(['sunlit_court']);
+  expect(neighbourIds(DUNGEON, 'root_court')).toEqual(['face_gate', 'buttress_tree', 'sunlit_court', 'before_sanctuary']);
+  // Before the server has answered, the map is the unexplored temple.
+  expect(unexploredSites(DUNGEON)).toMatchObject({
+    face_gate: { state: 'current', cleared: false, reachable: false }, buttress_tree: { state: 'known' }, root_court: { state: 'known' },
+    sunlit_court: { state: 'hidden' }, library: { state: 'hidden' }, before_sanctuary: { state: 'hidden' }, sanctuary: { state: 'hidden' },
   });
 });
 
-test('the route crosses walls only through the east gate passages', () => {
-  const crossings = new Set();
-  for (let i = 1; i < DUNGEON.route.length; i++) {
-    const [x0, z0] = DUNGEON.route[i - 1];
-    const [x1, z1] = DUNGEON.route[i];
+test('every site stands on clear, level ground', () => {
+  expect(DUNGEON.sites.filter((site) => taProhmIsClear(...site.at)).length).toBeGreaterThan(3);
+  for (const site of DUNGEON.sites) {
+    const [x, z] = site.at;
+    // The level's own test (its planting rule) covers the ground inside the outer wall, and it keeps plants off the
+    // axis by calling the axis not clear. The start site is outside the wall and two sites are on the axis; the plan
+    // test covers them.
+    if (site.id !== DUNGEON.start && Math.abs(x) >= 2.5) expect(taProhmIsClear(x, z), site.name).toBe(true);
+    expect(blocked(x, z), site.name).toBeNull();
+    expect(taProhmHeightAt(x, z), site.name).toBe(0);
+  }
+});
+
+// Every point of a polyline, 0.2 m apart.
+function* along(points) {
+  for (let i = 1; i < points.length; i++) {
+    const [x0, z0] = points[i - 1];
+    const [x1, z1] = points[i];
     const steps = Math.ceil(Math.hypot(x1 - x0, z1 - z0) / 0.2);
-    for (let k = 0; k <= steps; k++) {
-      const [x, z] = [x0 + ((x1 - x0) * k) / steps, z0 + ((z1 - z0) * k) / steps];
-      expect(blocked(x, z), `route point [${x.toFixed(2)}, ${z.toFixed(2)}] is inside ${blocked(x, z)}`).toBeNull();
-      for (const [name, line] of [['outer', TA_PROHM.outer], ...TA_PROHM.rings.map((ring, index) => [`ring ${index}`, ring.hz])]) {
-        if (Math.abs(z - line) < 0.2 && Math.abs(x) < PASSAGE) crossings.add(name);
+    for (let k = 0; k <= steps; k++) yield [x0 + ((x1 - x0) * k) / steps, z0 + ((z1 - z0) * k) / steps];
+  }
+}
+
+test('every path, and the entrance, crosses walls only through the east gate passages', () => {
+  const index = (id) => DUNGEON.sites.findIndex((site) => site.id === id);
+  const crossed = {};
+  const lines = [['the entrance', [...DUNGEON.entrance, DUNGEON.sites[index(DUNGEON.start)].at]], ...DUNGEON.paths.map(({ between }) => [between.join(' to '), pathPoints(DUNGEON, index(between[0]), index(between[1]))])];
+  for (const [name, points] of lines) {
+    const crossings = new Set();
+    for (const [x, z] of along(points)) {
+      expect(blocked(x, z), `${name}: [${x.toFixed(2)}, ${z.toFixed(2)}] is inside ${blocked(x, z)}`).toBeNull();
+      for (const [line, at] of [['outer', TA_PROHM.outer], ...TA_PROHM.rings.map((ring, i) => [`ring ${i}`, ring.hz])]) {
+        if (Math.abs(z - at) < 0.2 && Math.abs(x) < PASSAGE) crossings.add(line);
       }
     }
+    crossed[name] = [...crossings].sort();
   }
-  // In through the gopura, the third enclosure's gate tree and the second enclosure's gate; the sanctuary's ring stays shut.
-  expect([...crossings].sort()).toEqual(['outer', 'ring 0', 'ring 1']);
+  expect(crossed).toEqual({
+    'the entrance': [],
+    'face_gate to buttress_tree': ['outer'], // in through the gopura
+    'face_gate to root_court': ['outer', 'ring 0'], // and the third enclosure's gate tree
+    'buttress_tree to root_court': ['ring 0'],
+    'root_court to sunlit_court': [],
+    'sunlit_court to library': [],
+    'root_court to before_sanctuary': ['ring 1'], // the second enclosure's gate
+    'sunlit_court to before_sanctuary': ['ring 1'],
+    'before_sanctuary to sanctuary': ['ring 2'], // the inner gate
+  });
 });
 
 test('the plan test itself refuses a wall, a pier and the sanctuary', () => {
@@ -73,4 +87,25 @@ test('the plan test itself refuses a wall, a pier and the sanctuary', () => {
   expect(blocked(5, 57)).toBe('the east gopura');
   expect(blocked(30, 56)).toBe('the outer wall');
   expect(blocked(0, 0)).not.toBeNull();
+  expect(blocked(-26, 22)).toBe('the library');
+});
+
+// Round 119: the world map.
+test('the world file: places joined by paths, one of them this dungeon, and a fog that shows the start and its neighbours', () => {
+  const ids = ATLAS_FILE.places.map((place) => place.id);
+  expect(new Set(ids).size).toBe(ids.length);
+  expect(ids).toContain(ATLAS_FILE.start);
+  for (const [a, b] of ATLAS_FILE.paths) { expect(ids).toContain(a); expect(ids).toContain(b); expect(a).not.toBe(b); }
+  for (const place of ATLAS_FILE.places) {
+    expect(place.map.x).toBeGreaterThan(0); expect(place.map.x).toBeLessThan(1);
+    expect(place.map.y).toBeGreaterThan(0); expect(place.map.y).toBeLessThan(1);
+    expect(place.description.trim().length).toBeGreaterThan(10);
+    // A place is open (it has a dungeon) or says why it is closed.
+    if (place.dungeon) expect(place.dungeon).toBe(DUNGEON.id); else expect(place.closed.length).toBeGreaterThan(5);
+  }
+  expect(ATLAS.places.map((place) => [place.id, place.state, place.dungeonId, Boolean(place.closed)])).toEqual([
+    ['ta_prohm', 'current', 'ta_prohm', false], ['angkor_wat', 'known', null, true], ['micromort_mountain', 'known', null, true],
+  ]);
+  expect(ATLAS.paths).toEqual([['ta_prohm', 'angkor_wat'], ['ta_prohm', 'micromort_mountain']]); // The Bone Dome is under the fog
+  expect(atlasView({ ...ATLAS_FILE, start: 'angkor_wat' }).places.map((place) => place.id)).toEqual(['ta_prohm', 'angkor_wat', 'the_bone_dome']);
 });

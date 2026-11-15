@@ -1,8 +1,9 @@
 // Round 115: the dungeon screen through its real components, in jsdom (no WebGL: the still backdrop stands in and
 // the camera arrives at once). The Spellbook and pronunciation checks below are the old single-encounter screen's.
+// Round 119: the dungeon is a map under a world map. The fake server keeps its run by the server's own rules.
 import React from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import DungeonScreen from '../DungeonScreen.jsx';
 import DialoguePanel from '../DialoguePanel.jsx';
@@ -10,6 +11,8 @@ import PronounceButton from '../PronounceButton.jsx';
 import Spellbook from '../Spellbook.jsx';
 import { createGameStore } from '../../stores/gameStore.js';
 import { DUNGEON } from '../../dungeon.js';
+import { ATLAS } from '../../atlas.js';
+import { createFakeRun } from '../../__tests__/fakeRun.js';
 
 const spanishLanguage = { code: 'es', name: 'Spanish', tag: 'es-ES' };
 const italianLanguage = { code: 'it', name: 'Italian', tag: 'it-IT' };
@@ -39,54 +42,69 @@ const response = (status, data) => ({ ok: status >= 200 && status < 300, status,
 
 
 const learnerId = '11111111-1111-4111-8111-111111111111';
-const SITE_IDS = DUNGEON.sites.map((site) => site.encounterId);
-const CAST = [
-  { name: 'Portia', objective: 'Greet Portia in Italian.', resolved: 'Portia sighs with relief, unlocks herself and lets you into the market.', briefing: ['Portia only lets in people who greet her properly.'] },
-  { name: 'Gerald', objective: 'Order a coffee using Italian.', resolved: null, briefing: null },
-  { name: 'Bambieshart', objective: 'Thank Bambieshart.', resolved: 'Bambieshart bows and steps aside.', briefing: null },
-];
+const CAST = {
+  face_gate: { name: 'Portia', objective: 'Greet Portia in Italian.', resolved: 'Portia sighs with relief, unlocks herself and lets you into the market.', briefing: ['Portia only lets in people who greet her properly.'] },
+  buttress_tree: { name: 'Mortimer', objective: 'Order some ham in Italian.', resolved: null, briefing: null },
+  root_court: { name: 'Gerald', objective: 'Order a coffee using Italian.', resolved: null, briefing: null },
+  sunlit_court: { name: 'Flick', objective: 'Ask Flick the time.', resolved: null, briefing: null },
+  library: { name: 'Marginalia', objective: 'Ask Marginalia for a book.', resolved: null, briefing: null },
+  before_sanctuary: { name: 'Bambieshart', objective: 'Thank Bambieshart.', resolved: 'Bambieshart bows and steps aside.', briefing: null },
+  sanctuary: { name: 'Errata', objective: 'Answer Errata.', resolved: 'Errata reads herself out of existence.', briefing: null },
+};
 const memoryStorage = () => { const values = new Map(); return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } }; };
 
-// The server in miniature, behind fetch: a run of three sites, one conversation at a time.
-function fakeServer({ cleared = 0, failFirstSend = false, failFirstStart = false } = {}) {
-  const server = { cleared, session: null, sessions: 0, sends: 0, starts: 0, reviews: 0, paths: [] };
-  const siteEncounter = (index, version, options = {}) => ({
-    ...encounter(version, options), id: `encounter-${server.sessions}`, encounterId: SITE_IDS[index], dungeonId: DUNGEON.id,
-    character: { id: CAST[index].name.toLowerCase(), name: CAST[index].name }, resolvedMessage: CAST[index].resolved, companionBriefing: CAST[index].briefing,
-    currentObjective: options.resolved ? null : { id: 'objective', prompt: CAST[index].objective },
-  });
-  const view = () => ({
-    dungeon: { id: DUNGEON.id, name: DUNGEON.name, level: DUNGEON.level, route: DUNGEON.route, sites: DUNGEON.sites.map((site, index) => ({ ...site, characterName: CAST[index].name })) },
-    progress: { run: 1, clearedEncounterIds: SITE_IDS.slice(0, server.cleared), nextSiteIndex: server.cleared < 3 ? server.cleared : null, nextEncounterId: SITE_IDS[server.cleared] ?? null, complete: server.cleared >= 3 },
+// The server in miniature, behind fetch: a run on the map (after `steps` visits of fakeRun's TOUR, or as `stored`),
+// one conversation at a time.
+function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart = false } = {}) {
+  const run = createFakeRun(stored).advance(steps);
+  const server = { run, session: null, sessions: 0, sends: 0, starts: 0, reviews: 0, paths: [], moves: [] };
+  const siteEncounter = (siteId, version, options = {}) => ({
+    ...encounter(version, options), id: `encounter-${server.sessions}`, encounterId: run.view().dungeon.sites.find((site) => site.id === siteId).encounterId, dungeonId: DUNGEON.id, siteId,
+    character: { id: CAST[siteId].name.toLowerCase(), name: CAST[siteId].name }, resolvedMessage: CAST[siteId].resolved, companionBriefing: CAST[siteId].briefing,
+    currentObjective: options.resolved ? null : { id: 'objective', prompt: CAST[siteId].objective },
   });
   const fetchMock = vi.fn(async (url, init = {}) => {
     const path = String(url);
     const body = init.body ? JSON.parse(init.body) : {};
     server.paths.push(path);
     if (path === '/api/learner') return response(201, { learnerId, recovered: false, language: italianLanguage });
-    if (path === '/api/dungeons/ta_prohm') return response(200, view());
-    if (path === '/api/dungeons/ta_prohm/reset') { server.cleared = 0; server.session = null; return response(200, view()); }
+    if (path === '/api/dungeons/ta_prohm/map') return response(200, run.view());
+    if (path === '/api/dungeons/ta_prohm/reset') { server.session = null; return response(200, run.reset()); }
+    if (path === '/api/dungeons/ta_prohm/move') {
+      server.moves.push(body);
+      // As the server: a conversation under way holds the player unless the move says `leave` (review 1, R1.6).
+      if (server.session && !server.session.resolved && body.siteId !== run.run.at && body.leave !== true) {
+        return response(409, { error: { code: 'CONVERSATION_UNDER_WAY', message: 'Finish your conversation first.' } });
+      }
+      try {
+        const from = run.run.at;
+        const moved = run.move(body.siteId);
+        if (body.siteId !== from) server.session = null;
+        return response(200, moved);
+      } catch (error) { return response(error.status, { error: { code: error.code, message: error.message } }); }
+    }
     if (path === '/api/encounter/start') {
       server.starts += 1;
       if (failFirstStart && server.starts === 1) return response(503, { error: { code: 'CLI_TIMEOUT', message: 'The selected CLI timed out. Your progress was not changed.', retryable: true } });
       expect(body.dungeonId).toBe('ta_prohm');
       server.sessions += 1;
-      server.session = { index: server.cleared, version: 1 };
-      return response(200, { encounter: siteEncounter(server.cleared, 1), spellbook: { ...spellbook, inEncounter: true } });
+      server.session = { siteId: run.run.at, version: 1, resolved: false };
+      return response(200, { encounter: siteEncounter(run.run.at, 1), spellbook: { ...spellbook, inEncounter: true } });
     }
     if (path === '/api/encounter/help') {
       const options = body.kind === 'word' ? { cafeMeaning: true } : { cafeMeaning: true, translated: true, exhausted: true };
       server.session.version = body.kind === 'word' ? 2 : 3;
-      return response(200, { reveal: { kind: body.kind }, charged: true, encounter: siteEncounter(server.session.index, server.session.version, options), spellbook });
+      return response(200, { reveal: { kind: body.kind }, charged: true, encounter: siteEncounter(server.session.siteId, server.session.version, options), spellbook });
     }
     if (path === '/api/encounter/dialogue') {
       server.sends += 1;
       if (failFirstSend && server.sends === 1) return response(503, { error: { message: 'Grading is temporarily unavailable; retry your answer.', retryable: true } });
-      const index = server.session.index;
-      server.cleared = index + 1;
+      const { siteId } = server.session;
+      server.session.resolved = true;
+      run.clear(siteId);
       return response(200, {
-        encounter: siteEncounter(index, 4, { resolved: true, allVisible: true }), spellbook,
-        assessment: { overallFeedback: `Your answer to ${CAST[index].name} passed.`, objectiveResults: [{ objectiveId: 'objective', passed: true, feedback: 'Well said.' }] },
+        encounter: siteEncounter(siteId, 4, { resolved: true, allVisible: true }), spellbook,
+        assessment: { overallFeedback: `Your answer to ${CAST[siteId].name} passed.`, objectiveResults: [{ objectiveId: 'objective', passed: true, feedback: 'Well said.' }] },
       });
     }
     if (path === '/api/spellbook') return response(200, spellbook);
@@ -109,14 +127,23 @@ function fakeServer({ cleared = 0, failFirstSend = false, failFirstStart = false
 }
 
 function renderScreen(options = {}) {
-  const store = createGameStore({ dungeon: DUNGEON, storage: memoryStorage(), ...options });
+  const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage(), ...options });
   render(<DungeonScreen useStore={store} />);
   return store;
 }
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
-test('a whole run on the screen: title, route, three conversations with a walk between them, victory, reviews, a new run', async () => {
+const siteRows = () => screen.getAllByRole('listitem').filter((item) => item.closest('.site-list')).map((item) => item.textContent);
+const ways = () => within(screen.getByRole('list', { name: 'Ways on' })).getAllByRole('button').map((button) => [button.textContent, button.disabled]);
+// Answers the conversation that is open and waits for the verdict.
+async function answer(user, name, text = 'Ecco.') {
+  await user.type(screen.getByLabelText('Your response'), text);
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  await screen.findByText(`Your answer to ${name} passed.`);
+}
+
+test('a whole run on the screen: title, world map, temple map, seven conversations by a walk the player picks, victory, reviews, a new run', async () => {
   const user = userEvent.setup();
   const server = fakeServer({ failFirstSend: true });
   renderScreen();
@@ -124,16 +151,28 @@ test('a whole run on the screen: title, route, three conversations with a walk b
   // Attract: the title and Enter. The level is a still backdrop here (no WebGL in jsdom).
   expect(screen.getByRole('heading', { name: 'ParaLLang' })).toBeTruthy();
   await screen.findByText(/answer in Italian/); // the language arrives with the learner
+  expect(screen.getByText(/^7 stand between you and the sanctuary/)).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Enter' }));
 
-  // Overview: the three sites in order, with the characters the server named.
+  // The world map: Ta Prohm is open, its neighbours are known and closed, The Bone Dome is under the fog.
+  expect(screen.getByRole('region', { name: 'The world map' })).toBeTruthy();
+  expect(screen.getByRole('img', { name: 'A map of 3 places' })).toBeTruthy();
+  expect(siteRows().map((row) => row.split(/(?<=[a-z])(?=[A-Z])/)[0])).toEqual(['Ta Prohm', 'Angkor Wat', 'Micromort Mountain']);
+  expect(screen.getByText('The causeway is under review. Nobody will say by whom.')).toBeTruthy();
+  expect(screen.getByText('0 of 7 cleared')).toBeTruthy();
+  expect(screen.queryByText(/Bone Dome/)).toBeNull();
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
+
+  // The temple map: the gate and the two sites a path leads to. The rest is under the fog.
   expect(screen.getByRole('heading', { name: 'Ta Prohm' })).toBeTruthy();
-  const sites = screen.getAllByRole('listitem').filter((item) => item.closest('.site-list'));
-  expect(sites.map((item) => item.textContent)).toEqual(['1The Face GatePortia', '2The Root CourtGerald', '3Before the SanctuaryBambieshart']);
-  expect(screen.getByLabelText('0 of 3 sites cleared')).toBeTruthy();
+  expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress Treeunexplored', '3The Root Courtunexplored']);
+  expect(screen.getByLabelText('0 of 7 sites cleared')).toBeTruthy();
+  expect(screen.queryByRole('button', { name: /^Walk/ })).toBeNull(); // Portia has not let the player pass
+  await user.click(screen.getByRole('button', { name: 'World map' }));
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
 
-  // Site 1: Portia's tutorial, with the companion's briefing.
+  // The Face Gate: Portia's tutorial, with the companion's briefing.
   await screen.findByText('Greet Portia in Italian.');
   expect(screen.getByLabelText('Conversation with Portia')).toBeTruthy();
   expect(screen.getByLabelText("Your companion's briefing").textContent).toContain('Portia only lets in people who greet her properly.');
@@ -163,27 +202,74 @@ test('a whole run on the screen: title, route, three conversations with a walk b
   await screen.findByText('Your answer to Portia passed.');
   expect(screen.getByText(/Portia sighs with relief/)).toBeTruthy();
   expect(screen.queryByLabelText('Your response')).toBeNull();
-  expect(screen.getByLabelText('1 of 3 sites cleared')).toBeTruthy();
+  expect(screen.getByLabelText('1 of 7 sites cleared')).toBeTruthy();
 
-  // The walk starts when the player says so.
-  await user.click(screen.getByRole('button', { name: 'Walk on to The Root Court' }));
+  // The ways on: the player picks. Both lead to places not yet seen.
+  await waitFor(() => expect(ways()).toEqual([['Walk to The Buttress Tree · unexplored', false], ['Walk to The Root Court · unexplored', false]]));
+  await user.click(screen.getByRole('button', { name: /Walk to The Root Court/ }));
   await screen.findByText('Order a coffee using Italian.');
   expect(screen.getByLabelText('Conversation with Gerald')).toBeTruthy();
   expect(screen.queryByLabelText("Your companion's briefing")).toBeNull();
-  await user.type(screen.getByLabelText('Your response'), 'Un caffè senza latte.');
-  await user.click(screen.getByRole('button', { name: 'Send' }));
-  await screen.findByText('Your answer to Gerald passed.');
+  expect(screen.queryByRole('list', { name: 'Ways on' })).toBeNull(); // no pick while the conversation is open
+  await answer(user, 'Gerald', 'Un caffè senza latte.');
   expect(screen.getByText('Gerald lets you pass.')).toBeTruthy(); // no authored message: a plain one
-  await user.click(screen.getByRole('button', { name: 'Walk on to Before the Sanctuary' }));
+  await waitFor(() => expect(ways().map(([text]) => text)).toEqual(['Walk to The Face Gate · cleared', 'Walk to The Buttress Tree · unexplored', 'Walk to The Sunlit Court · unexplored', 'Walk to Before the Sanctuary · unexplored']));
+
+  // Up to the map: more of the temple is out of the fog, and a walk can be picked there too.
+  await user.click(screen.getByRole('button', { name: 'Map' }));
+  expect(siteRows()).toEqual([
+    '1The Face GatePortia · clearedWalk here', '2The Buttress TreeunexploredWalk here', '3The Root CourtGerald · you are here · cleared',
+    '4The Sunlit CourtunexploredWalk here', '6Before the SanctuaryunexploredWalk here',
+  ]);
+  await user.click(screen.getByRole('button', { name: 'Walk to The Buttress Tree' }));
+  await screen.findByText('Order some ham in Italian.');
+
+  // Mortimer is too much for now: the player leaves, and his card says what that costs.
+  await user.click(screen.getByRole('button', { name: 'Leave' }));
+  const card = screen.getByRole('region', { name: 'The Buttress Tree' });
+  expect(within(card).getByText('Mortimer has not let you pass yet')).toBeTruthy();
+  expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Root Court · cleared', false]]); // the ways back are open
+  // He walks back to the gate: the move says it leaves the conversation (review 1, R1.6), and the server drops it.
+  await user.click(screen.getByRole('button', { name: /Walk to The Face Gate/ }));
+  expect(await screen.findByRole('button', { name: 'Talk to Portia again' })).toBeTruthy();
+  expect(server.moves.at(-1)).toEqual({ siteId: 'face_gate', leave: true });
+  await user.click(screen.getByRole('button', { name: /Walk to The Buttress Tree/ }));
+  await screen.findByText('Order some ham in Italian.');
+  expect(server.starts).toBe(4); // Mortimer starts again from his first line
+  await user.click(screen.getByRole('button', { name: 'Leave' }));
+  await user.click(screen.getByRole('button', { name: 'Back to the conversation' }));
+  expect(screen.getByLabelText('Conversation with Mortimer')).toBeTruthy();
+  expect(server.starts).toBe(4); // the same conversation, not a new one
+  await answer(user, 'Mortimer');
+
+  // Back through Gerald's court, which is cleared: its card, and Gerald will talk again.
+  await user.click(await screen.findByRole('button', { name: /Walk to The Root Court/ }));
+  expect(await screen.findByRole('button', { name: 'Talk to Gerald again' })).toBeTruthy();
+  expect(server.starts).toBe(4);
+  await user.click(screen.getByRole('button', { name: /Walk to The Sunlit Court/ }));
+  await screen.findByText('Ask Flick the time.');
+  await answer(user, 'Flick');
+  await user.click(await screen.findByRole('button', { name: /Walk to The Library/ }));
+  await screen.findByText('Ask Marginalia for a book.');
+  await answer(user, 'Marginalia');
+  await user.click(await screen.findByRole('button', { name: /Walk to The Sunlit Court/ }));
+  await user.click(await screen.findByRole('button', { name: /Walk to Before the Sanctuary/ }));
   await screen.findByText('Thank Bambieshart.');
-  await user.type(screen.getByLabelText('Your response'), 'Grazie!');
-  await user.click(screen.getByRole('button', { name: 'Send' }));
+  expect(screen.getByLabelText('5 of 7 sites cleared')).toBeTruthy();
+  await answer(user, 'Bambieshart', 'Grazie!');
   await screen.findByText(/Bambieshart bows/);
+
+  // The six are cleared: the Sanctuary's seal is off.
+  await user.click(await screen.findByRole('button', { name: /Walk to The Sanctuary/ }));
+  await screen.findByText('Answer Errata.');
+  await answer(user, 'Errata');
+  expect(screen.queryByRole('list', { name: 'Ways on' })).toBeNull();
   await user.click(screen.getByRole('button', { name: 'Leave the temple' }));
 
   // Victory, and the reviews that waited during the conversations.
   expect(await screen.findByRole('heading', { name: 'Dungeon cleared' })).toBeTruthy();
-  expect(screen.getByLabelText('3 of 3 sites cleared')).toBeTruthy();
+  expect(screen.getByLabelText('7 of 7 sites cleared')).toBeTruthy();
+  expect(screen.getByText(/^All 7 let you pass/)).toBeTruthy();
   await user.click(screen.getAllByRole('button', { name: /Spellbook/ })[0]);
   expect(await screen.findByRole('heading', { name: 'Spellbook' })).toBeTruthy();
   expect(screen.getByText('2 due for review')).toBeTruthy();
@@ -201,17 +287,58 @@ test('a whole run on the screen: title, route, three conversations with a walk b
   await user.click(screen.getByRole('button', { name: 'Back to the temple' }));
   expect(screen.queryByRole('heading', { name: 'Review feedback' })).toBeNull();
 
-  await user.click(screen.getByRole('button', { name: 'Play again' }));
-  expect(await screen.findByRole('button', { name: 'Start' })).toBeTruthy();
-  expect(screen.getByLabelText('0 of 3 sites cleared')).toBeTruthy();
+  // The finished run stays open (critique 1.3), and a new run starts from the world map with the fog back.
+  await user.click(screen.getByRole('button', { name: 'Stay in the temple' }));
+  expect(siteRows().length).toBe(7);
+  await user.click(screen.getByRole('button', { name: 'Go down to The Sanctuary' }));
+  await user.click(await screen.findByRole('button', { name: 'Talk to Errata again' }));
+  await screen.findByText('Answer Errata.');
+  expect(server.moves.filter((move) => move.leave !== undefined)).toEqual([{ siteId: 'face_gate', leave: true }]); // only the walk out of a conversation
 });
 
-test('a reload in the middle of a run opens the next site, and Start over begins its conversation again', async () => {
+test('Play again starts a new run from the world map, with the fog back', async () => {
   const user = userEvent.setup();
-  const server = fakeServer({ cleared: 1 });
+  const server = fakeServer({ steps: 8 });
+  renderScreen();
+  // A reload of a finished run opens the victory screen, with both ways out of it.
+  expect(await screen.findByRole('heading', { name: 'Dungeon cleared' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Stay in the temple' })).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Play again' }));
+  expect(await screen.findByRole('region', { name: 'The world map' })).toBeTruthy();
+  expect(server.run.run.run).toBe(2);
+  expect(screen.getByText('0 of 7 cleared')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
+  expect(siteRows().length).toBe(3);
+  expect(screen.getByRole('button', { name: 'Start' })).toBeTruthy();
+});
+
+test('a sealed or blocked way on says why, and a move the server refuses is shown', async () => {
+  const user = userEvent.setup();
+  // At Bambieshart's site with three sites cleared: the Sanctuary is in sight and sealed.
+  const server = fakeServer({ stored: { run: 1, at: 'before_sanctuary', cleared: ['face_gate', 'root_court'], visited: ['face_gate', 'root_court', 'before_sanctuary'] } });
+  renderScreen();
+  await screen.findByText('Thank Bambieshart.');
+  await user.click(screen.getByRole('button', { name: 'Leave' }));
+  expect(ways()).toEqual([['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · unexplored', true], ['Walk to The Sanctuary · unexplored', true]]);
+  const list = screen.getByRole('list', { name: 'Ways on' });
+  expect(within(list).getByText('Bambieshart has not let you pass')).toBeTruthy();
+  expect(within(list).getByText('sealed: 2 of 6 cleared')).toBeTruthy();
+  // The map names the seal too.
+  await user.click(screen.getByRole('button', { name: 'Map' }));
+  expect(siteRows()).toContain('7The Sanctuarysealed: 2 of 6 cleared');
+  // Another tab started a new run: the walk this tab offers is refused, said so, and the map is read again.
+  server.run.reset();
+  await user.click(screen.getByRole('button', { name: 'Walk to The Root Court' }));
+  expect((await screen.findByRole('alert')).textContent).toMatch(/Portia has not let you pass yet/);
+  await waitFor(() => expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress Treeunexplored', '3The Root Courtunexplored']));
+});
+
+test('a reload in the middle of a run opens the site the player stands at, and Start over begins its conversation again', async () => {
+  const user = userEvent.setup();
+  const server = fakeServer({ stored: { run: 1, at: 'root_court', cleared: ['face_gate'], visited: ['face_gate', 'root_court'] } });
   renderScreen();
   await screen.findByText('Order a coffee using Italian.');
-  expect(screen.getByLabelText('1 of 3 sites cleared')).toBeTruthy();
+  expect(screen.getByLabelText('1 of 7 sites cleared')).toBeTruthy();
   expect(screen.queryByRole('button', { name: 'Enter' })).toBeNull();
   await user.click(screen.getByRole('button', { name: 'Start over' }));
   await waitFor(() => expect(server.starts).toBe(2));
@@ -224,7 +351,7 @@ test('a reload in the middle of a run opens the next site, and Start over begins
 // Review 1 (R1.4): round 017's rule holds on the screen even when the store's snapshot says no conversation is open.
 test('the Spellbook hides meanings while a conversation is open, whatever its snapshot says', async () => {
   const user = userEvent.setup();
-  fakeServer({ cleared: 1 });
+  fakeServer({ stored: { run: 1, at: 'root_court', cleared: ['face_gate'], visited: ['face_gate', 'root_court'] } });
   const store = renderScreen();
   await screen.findByText('Order a coffee using Italian.');
   act(() => store.setState({ spellbook: { cards: [{ ...cards[0], due: false, nextReviewAt: '2999-01-01T00:00:00Z' }], dueCount: 0, inEncounter: false } }));
@@ -235,13 +362,16 @@ test('the Spellbook hides meanings while a conversation is open, whatever its sn
   expect(screen.queryByText('coffee')).toBeNull();
 });
 
-test('with no server the title and the route show, and Start explains and leads to the settings', async () => {
+test('with no server the title and the maps show, and Start explains and leads to the settings', async () => {
   const user = userEvent.setup();
   const fetchMock = vi.fn();
   vi.stubGlobal('fetch', fetchMock);
   renderScreen({ sameOrigin: false });
   await user.click(screen.getByRole('button', { name: 'Enter' }));
+  expect(screen.getAllByText('Angkor Wat').length).toBe(2); // on the map and in the list
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   expect(screen.getByText('The Face Gate')).toBeTruthy();
+  expect(siteRows().length).toBe(3); // the unexplored temple
   await user.click(screen.getByRole('button', { name: 'Start' }));
   expect((await screen.findByRole('alert')).textContent).toMatch(/No server is set/);
   expect(fetchMock).not.toHaveBeenCalled();
@@ -249,14 +379,16 @@ test('with no server the title and the route show, and Start explains and leads 
   expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
 });
 
-test('a site that fails to start says why and offers another try', async () => {
+test('a site that fails to start says why and offers another try and the map', async () => {
   const user = userEvent.setup();
   fakeServer({ failFirstStart: true });
   renderScreen();
   await screen.findByText(/answer in Italian/);
   await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
   expect((await screen.findByRole('alert')).textContent).toMatch(/CLI timed out/);
+  expect(screen.getByRole('button', { name: 'Map' })).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Try again' }));
   await screen.findByText('Greet Portia in Italian.');
 });

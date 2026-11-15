@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-15: round 119, the dungeon is a map under a world map
+
+The owner asked to bring the earlier gameplay (the world map, the party, leveling) into the dungeon, one round each.
+This is the first. Ta Prohm now holds all seven market encounters as sites joined by paths. The player picks where
+to walk on a top-down map with fog of war: a character lets them pass once answered, the way back is always open,
+and The Sanctuary (Errata) is sealed until the other six are cleared. A world map above it shows Ta Prohm open and
+Angkor Wat and Micromort Mountain closed. It was played through all seven sites in a headless browser with scripted
+replies, not against the live model and not on a phone. The owner was away and said to run on the most reasonable
+assumption, so Claude decided the design's open points and reports them. The party is round 120 and levels are
+round 121 ([findings](docs/rounds/119/findings.md), pictures in [`docs/rounds/119/shots/`](docs/rounds/119/shots/)).
+
 ## Addendum 2026-11-15: round 118, round 117's fix for the bottom strip was wrong; a reload from Settings
 
 Round 117's fix cut the bottom of the screen on the owner's iPhone, including the reply box, for 23 minutes on the
@@ -1068,6 +1079,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 119 | 11-15 | The map in the dungeon, in two layers: Ta Prohm as a free map of seven sites with fog, a seal and a pass rule; a world map of places above it; walks along any path with a turn on the spot (autonomous, the owner away) | [119](docs/rounds/119/architecture.md) | [findings](docs/rounds/119/findings.md) | `4713727` (pre-run record) to round 119 close, merged to `main` |
 | 118 | 11-15 | Round 117's strip fix cut the screen's bottom on the iPhone: a 100vh document with the panels kept out of the gap; the build and a reload in Settings | [118](docs/rounds/118/architecture.md) | [findings](docs/rounds/118/findings.md) | `ea04174` (pre-run record) to round 118 close; build `6076b49` |
 | 117 | 11-15 | The owner's first phone run: the installed page fills the screen on iOS, a slider for the text panels' opacity, a PS1 menu look | [117](docs/rounds/117/architecture.md) | [findings](docs/rounds/117/findings.md) | `bd91573` (pre-run record) to round 117 close; builds `7eeadfd`, `f728a16` |
 | 116 | 11-14 | The gameplay drives the camera inside an encounter (closed objectives, verdicts, the resolve); the dungeon deployed | [116](docs/rounds/116/architecture.md) | [findings](docs/rounds/116/findings.md) | `f299da0` (pre-run record) to round 116 close; merge `d01c8a0` |

@@ -1,0 +1,41 @@
+# Round 119: the world map, the layer above the dungeons. Bundled by the web client (client/src/atlas.js); the server
+# does not load it, because with one open place it has nothing to enforce.
+#
+# A place with `dungeon` is open: entering it opens that dungeon's map. A place without one is closed and shows its
+# `closed` line. Fog: `start` is where the player is, a place joined to it by a path is known, and every other place
+# is hidden. `map` is the place's position on the card, x from the left and y from the top, each from 0 to 1.
+#
+# Angkor Wat and The Bone Dome are the owner's (parallang_obsidian/LOCATIONS.md). Micromort Mountain is the owner's,
+# from round 113: Bambieshart's signpost points to it. The descriptions and the `closed` lines are authored in the
+# style guide's voice (content/narration/style_guide.yaml).
+start: ta_prohm
+places:
+  - id: ta_prohm
+    name: Ta Prohm
+    dungeon: ta_prohm
+    map: { x: 0.40, y: 0.64 }
+    description: >
+      A temple the jungle is halfway through eating. The Crumbling Market has moved in between the roots, because
+      rent is rent.
+  - id: angkor_wat
+    name: Angkor Wat
+    map: { x: 0.70, y: 0.40 }
+    description: >
+      Five towers and a moat, corrupted in ways the guidebook lists under "seasonal".
+    closed: "The causeway is under review. Nobody will say by whom."
+  - id: micromort_mountain
+    name: Micromort Mountain
+    map: { x: 0.18, y: 0.26 }
+    description: >
+      One chance in a million of death per step. The signpost says 14 km. That is a lot of steps.
+    closed: "You have been told to visit. You have not been told how."
+  - id: the_bone_dome
+    name: The Bone Dome
+    map: { x: 0.86, y: 0.14 }
+    description: >
+      A dome. Of bone. The name was not a metaphor.
+    closed: "No road leads here yet."
+paths:
+  - [ta_prohm, angkor_wat]
+  - [ta_prohm, micromort_mountain]
+  - [angkor_wat, the_bone_dome]

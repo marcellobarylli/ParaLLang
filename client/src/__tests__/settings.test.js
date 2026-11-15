@@ -52,8 +52,8 @@ test('requests go to the server URL and carry the token header; 401 and no answe
 
 test('the store explains a missing server without a request, and saved settings reconnect with the new URL and token', async () => {
   const storage = memoryStorage();
-  const dungeon = { id: 'ta_prohm', name: 'Ta Prohm', level: 'taprohm', sites: [{ encounterId: 'market_entrance_tutorial', name: 'The Face Gate', at: [3.5, 63], characterName: null }], route: [[0, 96], [3.5, 63]] };
-  const progress = { run: 1, clearedEncounterIds: [], nextSiteIndex: 0, nextEncounterId: 'market_entrance_tutorial', complete: false };
+  const dungeon = { id: 'ta_prohm', name: 'Ta Prohm', level: 'taprohm', start: 'face_gate', goal: 'face_gate', entrance: [[0, 96]], sites: [{ id: 'face_gate', encounterId: 'market_entrance_tutorial', name: 'The Face Gate', at: [3.5, 63], characterName: null }], paths: [] };
+  const progress = { run: 1, at: 'face_gate', complete: false, clearedSiteIds: [], visitedSiteIds: ['face_gate'], sites: { face_gate: { state: 'current', cleared: false, reachable: false } } };
   const fetchImpl = vi.fn(async (url) => (String(url).endsWith('/api/learner')
     ? ok({ learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: { code: 'it', name: 'Italian', tag: 'it-IT' } })
     : ok({ dungeon: { ...dungeon, sites: [{ ...dungeon.sites[0], characterName: 'Portia' }] }, progress })));
@@ -71,7 +71,7 @@ test('the store explains a missing server without a request, and saved settings 
   expect(store.getState().serverProblem).toBeNull();
   expect(store.getState().connection).toBe('ready');
   expect(store.getState().dungeon.sites[0].characterName).toBe('Portia');
-  expect(fetchImpl.mock.calls.map(([url]) => url)).toEqual(['https://parallang.example.com/api/learner', 'https://parallang.example.com/api/dungeons/ta_prohm']);
+  expect(fetchImpl.mock.calls.map(([url]) => url)).toEqual(['https://parallang.example.com/api/learner', 'https://parallang.example.com/api/dungeons/ta_prohm/map']);
   for (const [, init] of fetchImpl.mock.calls) expect(init.headers['X-ParaLLang-Token']).toBe('secret-token');
   expect(loadSettings(storage)).toEqual({ serverUrl: 'https://parallang.example.com', token: 'secret-token' });
 });

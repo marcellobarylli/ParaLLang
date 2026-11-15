@@ -1,13 +1,14 @@
 // Round 103: the web client (client/) played against today's server: its own store and API module, unmodified,
 // through an in-process server with a fixture provider. The fields its components read are asserted, so a server
 // rename shows up here. zustand (and the react it imports) resolve from the root node_modules.
-// Round 115: the web client plays the Ta Prohm dungeon, so this test plays the run's three sites to the victory
-// state, with the dungeon built from the content file as the client bundles it.
+// Round 115: the web client plays the Ta Prohm dungeon, with the dungeon built from the content file as the client
+// bundles it. Round 119: the dungeon is a map: this test walks a legal way through all seven sites to the victory
+// state, which also shows that every site of the real file can be reached.
 import { after, before, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadGameContent } from '../src/content-loader.js';
 import { PassingProvider, api, createRuntime, passingAnswers } from './helpers.js';
-import { createGameStore } from '../../client/src/stores/gameStore.js';
+import { createGameStore, siteStatesOf } from '../../client/src/stores/gameStore.js';
 import { toClientDungeon } from '../../client/src/dungeonModel.js';
 
 let runtime;
@@ -34,20 +35,36 @@ function memoryStorage() {
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } };
 }
 const has = (object, keys, where) => { for (const key of keys) assert.ok(Object.hasOwn(object ?? {}, key), `${where}.${key}`); };
-const SITES = ['market_entrance_tutorial', 'imp_coffee_greeting', 'high_gate_bambieshart'];
+const ENCOUNTER = { face_gate: 'market_entrance_tutorial', buttress_tree: 'butchers_stall_charcutier', root_court: 'imp_coffee_greeting', sunlit_court: 'cracked_fountain_letharger', library: 'old_bookshop_bookworm', before_sanctuary: 'high_gate_bambieshart', sanctuary: 'the_rift_errata' };
+const indexOf = (siteId) => dungeon.sites.findIndex((site) => site.id === siteId);
 
 function newStore(storage = memoryStorage()) {
   const store = createGameStore({ storage, dungeon });
   return { store, storage, s: () => store.getState() };
 }
 
-// From the title screen to the open dialogue of the run's next site.
-async function openNextSite(s) {
+// From the title screen (or the temple map) to the open dialogue of the site the player stands at.
+async function openSite(s) {
   if (s().phase === 'attract') s().enter();
+  if (s().phase === 'world') s().enterPlace('ta_prohm');
   if (s().phase === 'overview') await s().start();
   assert.equal(s().siteError, null);
   s().onCameraArrived();
   assert.equal(s().phase, 'encounter');
+}
+
+// A walk to a neighbouring site: to its open dialogue, or to its card when the site is cleared.
+async function walkTo(s, siteId, opens = 'encounter') {
+  const from = s().siteIndex;
+  await s().travel(siteId);
+  assert.equal(s().error, null);
+  assert.equal(s().phase, 'walk', `the walk to ${siteId} starts`);
+  assert.deepEqual([s().walkFrom, s().siteIndex], [from, indexOf(siteId)]);
+  assert.equal(s().progress.at, siteId);
+  assert.equal(s().siteError, null);
+  s().onCameraArrived();
+  assert.equal(s().phase, opens);
+  if (opens === 'encounter') assert.equal(s().encounter.encounterId, ENCOUNTER[siteId]);
 }
 
 async function answerSite(s) {
@@ -59,24 +76,30 @@ async function answerSite(s) {
   assert.equal(s().encounter.state, 'resolved');
 }
 
-test('the web client plays the dungeon: three sites, a help, the Spellbook, reviews, a new run and a reload', async () => {
+test('the web client plays the dungeon: seven sites by a walk over the map, a help, the Spellbook, reviews, a new run and a reload', async () => {
   const { storage, s } = newStore();
   await s().initialize();
   assert.equal(s().serverProblem, null);
   assert.equal(s().connection, 'ready');
   assert.equal(s().phase, 'attract');
   has(s().language, ['tag', 'name'], 'language');
-  has(s().progress, ['run', 'clearedEncounterIds', 'nextSiteIndex', 'nextEncounterId', 'complete'], 'progress');
-  assert.deepEqual(s().dungeon.sites.map((site) => [site.encounterId, site.characterName]), [[SITES[0], 'Portia'], [SITES[1], 'Gerald'], [SITES[2], 'Bambieshart']]);
-  // The bundled file and the server's copy agree on where the sites stand.
-  const served = (await api(runtime, '/api/dungeons/ta_prohm', { learnerId: s().learnerId })).data.dungeon;
-  assert.deepEqual(served.sites.map((site) => site.at), dungeon.sites.map((site) => site.at));
-  assert.deepEqual(served.route, dungeon.route);
+  has(s().progress, ['run', 'at', 'complete', 'clearedSiteIds', 'visitedSiteIds', 'sites'], 'progress');
+  for (const site of dungeon.sites) has(s().progress.sites[site.id], ['state', 'cleared', 'reachable'], `progress.sites.${site.id}`);
+  // The fog: the gate and the two sites a path leads to are named.
+  assert.deepEqual(s().dungeon.sites.map((site) => [site.id, site.characterName]), [
+    ['face_gate', 'Portia'], ['buttress_tree', 'Mortimer'], ['root_court', 'Gerald'], ['sunlit_court', null], ['library', null], ['before_sanctuary', null], ['sanctuary', null],
+  ]);
+  // The bundled file and the server's copy agree on where the sites stand and how the paths run.
+  const served = (await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId: s().learnerId })).data.dungeon;
+  assert.deepEqual(served.sites.map((site) => [site.id, site.encounterId, site.at]), dungeon.sites.map((site) => [site.id, site.encounterId, site.at]));
+  assert.deepEqual(served.paths, dungeon.paths.map(({ between, via }) => ({ between, via })));
+  assert.deepEqual([served.start, served.goal], [dungeon.start, dungeon.goal]);
 
-  await openNextSite(s);
+  await openSite(s);
   const encounter = s().encounter;
-  assert.equal(encounter.encounterId, SITES[0]);
+  assert.equal(encounter.encounterId, ENCOUNTER.face_gate);
   assert.equal(encounter.dungeonId, 'ta_prohm');
+  assert.equal(encounter.siteId, 'face_gate');
   assert.equal(encounter.state, 'ongoing');
   has(encounter, ['id', 'version', 'difficulty', 'hints', 'hints_available', 'transcript', 'currentObjective', 'character', 'resolvedMessage', 'companionBriefing', 'committedPlayerTurns'], 'encounter');
   assert.equal(encounter.character.name, 'Portia');
@@ -96,20 +119,32 @@ test('the web client plays the dungeon: three sites, a help, the Spellbook, revi
   assert.equal(s().reviewChallenge, null);
   assert.equal(s().spellbook.inEncounter, true);
 
+  // Before Portia is answered no walk is offered, and the server refuses one all the same.
+  assert.equal(siteStatesOf(s()).root_court.reachable, false);
+  const early = await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId: s().learnerId, method: 'POST', body: { siteId: 'root_court', leave: true } });
+  assert.equal(early.data.error.code, 'BLOCKED');
+
   await answerSite(s);
   has(s().assessment, ['overallFeedback', 'objectiveResults'], 'assessment');
   for (const result of s().assessment.objectiveResults) has(result, ['objectiveId', 'passed', 'feedback'], 'objectiveResult');
   assert.equal(typeof s().encounter.resolvedMessage, 'string');
   assert.ok(s().encounter.transcript.some((message) => message.role === 'player'));
-  assert.deepEqual(s().progress.clearedEncounterIds, [SITES[0]]);
+  assert.deepEqual(s().progress.clearedSiteIds, ['face_gate']);
+  assert.deepEqual(Object.entries(siteStatesOf(s())).filter(([, site]) => site.reachable).map(([id]) => id), ['buttress_tree', 'root_court']);
 
-  await s().walkOn();
-  assert.equal(s().phase, 'walk');
-  assert.deepEqual([s().walkFrom, s().siteIndex], [0, 1]);
-  await openNextSite(s);
-  assert.equal(s().encounter.encounterId, SITES[1]);
-  assert.equal(s().encounter.character.name, 'Gerald');
+  await walkTo(s, 'buttress_tree');
+  assert.equal(s().encounter.character.name, 'Mortimer');
   assert.equal(s().encounter.companionBriefing, null);
+  // The player leaves Mortimer for later: the way on is shut, the ways back are open.
+  s().leaveConversation();
+  assert.equal(s().phase, 'site');
+  assert.deepEqual(Object.entries(siteStatesOf(s())).filter(([, site]) => site.reachable).map(([id]) => id), ['face_gate']);
+  await s().talk();
+  assert.equal(s().phase, 'encounter');
+  await answerSite(s);
+
+  await walkTo(s, 'root_court');
+  assert.equal(s().encounter.character.name, 'Gerald');
   // A word help on Gerald's newest line: it costs a hint and brings the meaning.
   const line = s().encounter.transcript.findLast((message) => message.role !== 'player');
   assert.ok(line.dialogue.words.length > 0);
@@ -121,12 +156,27 @@ test('the web client plays the dungeon: three sites, a help, the Spellbook, revi
   const helped = s().encounter.transcript.find((message) => message.id === line.id).dialogue.words[0];
   has(helped, ['meaning', 'partOfSpeech'], 'helped word');
   await answerSite(s);
-  await s().walkOn();
-  await openNextSite(s);
-  assert.equal(s().encounter.encounterId, SITES[2]);
+
+  await walkTo(s, 'sunlit_court');
+  await answerSite(s);
+  await walkTo(s, 'library');
+  await answerSite(s);
+  await walkTo(s, 'sunlit_court', 'site'); // cleared: its card, and no conversation
+  assert.equal(s().encounter, null);
+  await walkTo(s, 'before_sanctuary');
+  // The Sanctuary is in sight and sealed until Bambieshart, the sixth, is answered.
+  has(siteStatesOf(s()).sanctuary.gate, ['sealed', 'required', 'completed'], 'gate');
+  assert.deepEqual(siteStatesOf(s()).sanctuary.gate, { sealed: true, required: 6, completed: 5 });
+  await answerSite(s);
+  assert.equal(siteStatesOf(s()).sanctuary.gate.sealed, false);
+  assert.equal(s().progress.complete, false);
+  await walkTo(s, 'sanctuary');
+  assert.equal(s().encounter.character.name, 'Errata');
   await answerSite(s);
   assert.equal(s().progress.complete, true);
-  await s().walkOn();
+  assert.deepEqual(s().progress.clearedSiteIds, dungeon.sites.map((site) => site.id));
+  assert.ok(s().dungeon.sites.every((site) => site.characterName), 'no fog is left');
+  s().leaveTemple();
   assert.equal(s().phase, 'victory');
 
   // The Spellbook and its reviews, now that no conversation is under way.
@@ -154,53 +204,70 @@ test('the web client plays the dungeon: three sites, a help, the Spellbook, revi
   has(s().reviewResult, ['canonicalAnswer'], 'reveal result');
   s().returnToDialogue();
 
-  // A reload of the page on a finished run: the stored learner is recovered, on the victory screen.
+  // A reload of the page on a finished run: the stored learner is recovered, on the victory screen, and may stay.
   const reloaded = newStore(storage);
   await reloaded.s().initialize();
   assert.equal(reloaded.s().learnerId, s().learnerId);
   assert.equal(reloaded.s().phase, 'victory');
+  reloaded.s().stay();
+  await reloaded.s().start();
+  reloaded.s().onCameraArrived();
+  assert.equal(reloaded.s().phase, 'site');
+  assert.equal(reloaded.s().siteIndex, indexOf('sanctuary'));
 
-  // A new run starts at the first site again, with a new conversation.
+  // A new run starts at the gate again, under the fog, with a new conversation.
   await s().playAgain();
   assert.equal(s().error, null);
-  assert.equal(s().phase, 'overview');
-  assert.deepEqual(s().progress.clearedEncounterIds, []);
+  assert.equal(s().phase, 'world');
+  assert.deepEqual(s().progress.clearedSiteIds, []);
   assert.equal(s().progress.run, 2);
-  await openNextSite(s);
-  assert.equal(s().encounter.encounterId, SITES[0]);
+  assert.equal(siteStatesOf(s()).library.state, 'hidden');
+  await openSite(s);
+  assert.equal(s().encounter.encounterId, ENCOUNTER.face_gate);
   assert.equal(s().encounter.committedPlayerTurns, 0);
   assert.notEqual(s().encounter.id, encounter.id);
 });
 
-test('a reload in the middle of a run resumes the conversation under way at the next site', async () => {
+test('a reload in the middle of a run resumes the conversation under way at the site the player stands at', async () => {
   const { storage, s } = newStore();
   await s().initialize();
-  await openNextSite(s);
+  await openSite(s);
   await answerSite(s);
-  await s().walkOn();
-  await openNextSite(s);
-  const [answer] = passingAnswers(runtime.content, SITES[1]);
+  await walkTo(s, 'root_court');
+  const [answer] = passingAnswers(runtime.content, ENCOUNTER.root_court);
   const conversation = s().encounter.id;
 
   const again = newStore(storage);
   await again.s().initialize();
   assert.equal(again.s().learnerId, s().learnerId);
   assert.equal(again.s().phase, 'approach');
-  assert.equal(again.s().siteIndex, 1);
+  assert.equal(again.s().siteIndex, indexOf('root_court'));
   assert.equal(again.s().encounter.id, conversation, 'resumed, not replaced');
   again.s().onCameraArrived();
   assert.equal(again.s().phase, 'encounter');
   await again.s().sendMessage(answer);
   assert.equal(again.s().error, null);
+
+  // A third tab leaves the conversation and walks back to the gate: the server drops the conversation at the court.
+  const third = newStore(storage);
+  await third.s().initialize();
+  third.s().onCameraArrived();
+  third.s().leaveConversation();
+  await third.s().travel('face_gate');
+  assert.equal(third.s().error, null);
+  assert.equal(third.s().phase, 'walk');
+  assert.equal(third.s().progress.at, 'face_gate');
+  const current = await api(runtime, '/api/encounter/current', { learnerId: s().learnerId });
+  assert.equal(current.data.encounter, null, 'the conversation at the court was left behind');
 });
 
 test('a market conversation under way is replaced by the dungeon, the web client\'s only screen', async () => {
   const { s } = newStore();
   await s().initialize();
-  const market = await api(runtime, '/api/encounter/start', { learnerId: s().learnerId, method: 'POST', body: { encounterId: SITES[0] } });
+  const market = await api(runtime, '/api/encounter/start', { learnerId: s().learnerId, method: 'POST', body: { encounterId: ENCOUNTER.face_gate } });
   assert.equal(market.status, 200);
   assert.equal(market.data.encounter.dungeonId, undefined);
-  await openNextSite(s);
+  await openSite(s);
   assert.equal(s().encounter.dungeonId, 'ta_prohm');
   assert.notEqual(s().encounter.id, market.data.encounter.id);
 });
@@ -208,7 +275,7 @@ test('a market conversation under way is replaced by the dungeon, the web client
 test('a send on a version another tab moved shows the stale message and keeps the answer', async () => {
   const { s } = newStore();
   await s().initialize();
-  await openNextSite(s);
+  await openSite(s);
   const { encounter, learnerId } = s();
   const npc = encounter.transcript.findLast((message) => message.role !== 'player');
   const moved = await api(runtime, '/api/encounter/help', {
@@ -223,7 +290,7 @@ test('a send on a version another tab moved shows the stale message and keeps th
   assert.equal(s().pendingInput, '¡Hola!');
 });
 
-test('without a token a protected server refuses the web client, which stays on the title and the route', async () => {
+test('without a token a protected server refuses the web client, which stays on the title and the maps', async () => {
   wrapper.token = false;
   try {
     const { s } = newStore();
@@ -232,6 +299,8 @@ test('without a token a protected server refuses the web client, which stays on 
     assert.equal(s().connection, 'offline');
     assert.equal(s().learnerId, null);
     s().enter();
+    assert.equal(s().phase, 'world');
+    s().enterPlace('ta_prohm');
     await s().start();
     assert.equal(s().phase, 'overview');
   } finally { wrapper.token = true; }
@@ -247,7 +316,7 @@ test('the web client sends the token from its settings', async () => {
     const { s } = newStore(storage);
     await s().initialize();
     assert.equal(s().serverProblem, null);
-    await openNextSite(s);
+    await openSite(s);
     assert.equal(s().encounter.state, 'ongoing');
     await s().saveSettings({ serverUrl: '', token: 'wrong-token' });
     assert.match(s().serverProblem, /refused the access token/);

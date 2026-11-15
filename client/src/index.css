@@ -27,6 +27,11 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .site-number { flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px; background: var(--gold); color: #17140a; font-weight: 700; font-size: .9rem; text-shadow: none; border: 2px solid; border-color: var(--gold-hi) var(--gold-lo) var(--gold-lo) var(--gold-hi); box-shadow: 0 0 0 1px #000; }
 .site-label .site-name { padding: .12rem .45rem; background: rgb(24 25 24 / .82); border: 1px solid #000; font-size: .8rem; text-shadow: 1px 1px 0 #000; }
 .site-label.cleared .site-number, .site-list .cleared .site-number { background: #5f7f5a; color: #e8f5e4; border-color: #a5c79f #2c4329 #2c4329 #a5c79f; }
+/* Round 119: the dungeon is a map. A label is a site's number; a site the player has only heard of is grey, and the
+   one they stand at is ringed. The fog's hidden sites have no label. */
+.site-label[hidden] { display: none; }
+.site-label.site-known .site-number, .site-list .site-known .site-number { background: #4b4d4a; color: var(--ink); border-color: var(--hi) var(--lo) var(--lo) var(--hi); }
+.site-label.site-current .site-number { box-shadow: 0 0 0 1px #000, 0 0 0 3px #fff, 0 0 0 4px #000; }
 
 .hud { position: absolute; top: 0; left: 0; right: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: max(.5rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right)) .5rem max(.75rem, env(safe-area-inset-left)); background: linear-gradient(rgb(12 13 12 / .85), rgb(12 13 12 / 0)); text-shadow: 1px 1px 0 #000; }
 .hud-title { display: flex; flex-direction: column; min-width: 0; }
@@ -59,6 +64,26 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .site-text { display: flex; flex-direction: column; min-width: 0; }
 .site-text small { color: var(--dim); }
 .site-done { margin-left: auto; color: #b5e7bb; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
+.walk-button { margin-left: auto; flex: none; }
+.overview-card .site-list, .place-list { max-height: 36vh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #8a8c86 transparent; }
+.site-card .sheet-header { padding: 0; border: 0; box-shadow: none; }
+.ways { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+.ways li { display: grid; gap: .15rem; }
+.ways button { width: 100%; text-align: left; }
+.ways small, .way-why { color: var(--dim); font-weight: 400; }
+.victory-banner .ways button { text-align: center; }
+.victory-banner .way-why { color: #a9d3ae; }
+.sheet-actions { margin-left: auto; display: flex; gap: .15rem; }
+.sheet-header .sheet-actions .text-button { margin-left: 0; }
+/* The world map: a sunken box with the places as squares, the paths dashed. */
+.world-map { display: block; width: 100%; height: auto; max-height: 26vh; background: var(--box); border: 2px solid; border-color: rgb(0 0 0 / .7) rgb(255 255 255 / .3) rgb(255 255 255 / .3) rgb(0 0 0 / .7); }
+.world-map line { stroke: #a9aba5; stroke-width: .5; stroke-dasharray: 1.6 1.2; }
+.world-place rect { fill: #4b4d4a; stroke: #000; stroke-width: .5; }
+.world-place.current rect { fill: var(--gold); }
+.world-place text { fill: var(--ink); font-size: 3.6px; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: .9px; text-shadow: none; }
+.world-place.closed text { fill: var(--dim); }
+.place-list .closed strong { color: var(--dim); }
+.closed-note { font-style: italic; }
 .problem { display: grid; gap: .5rem; border: 2px solid; border-color: #2a0d14 #a2485a #a2485a #2a0d14; background: #3a1620; padding: .7rem .8rem; color: #ffd6dc; }
 .caption { margin: 0 .75rem calc(max(1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); padding: .55rem .9rem; background: rgb(34 36 35 / .86); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); box-shadow: 0 0 0 1px #000; color: var(--ink); display: flex; align-items: center; gap: .75rem; }
 .caption-problem { color: #ffd6dc; border-color: #a2485a #2a0d14 #2a0d14 #a2485a; }
@@ -71,8 +96,11 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 
 @media (min-width: 1100px) {
   .card { border-bottom: 2px solid var(--lo); margin-bottom: 2rem; }
-  .phase-encounter .dock { left: auto; top: 0; width: var(--side-panel); }
-  .phase-encounter .hud { right: var(--side-panel); }
+  .phase-encounter .dock, .phase-overview .dock { left: auto; top: 0; width: var(--side-panel); }
+  .phase-encounter .hud, .phase-overview .hud { right: var(--side-panel); }
+  /* Round 119: the temple map's card is a side panel too, so the map has the screen's whole height. */
+  .phase-overview .card { margin-bottom: 0; align-content: start; border-width: 0 0 0 2px; padding-top: 1.5rem; }
+  .phase-overview .site-list { max-height: none; }
   .sheet { height: 100%; border-top: 0; border-left: 2px solid var(--hi); box-shadow: -1px 0 0 #000; }
 }
 

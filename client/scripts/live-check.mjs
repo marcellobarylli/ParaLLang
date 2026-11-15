@@ -1,7 +1,9 @@
 // Round 116: looks at the deployed web client. It loads the Pages site in headless Chromium, waits for the 3D level,
-// goes from the title to the route and presses Start. Without an access token the hosted server refuses, so the
-// run stops there: the check is that the level renders, the two far camera states work and the refusal is explained.
-// With PARALLANG_TOKEN set it starts the first conversation (one model call on the owner's subscription).
+// goes from the title over the world map to the temple map and presses Start (or "Go down to …" on a run under
+// way). Without an access token the hosted server refuses, so the run stops there: the check is that the level
+// renders, the two far camera states work and the refusal is explained. With PARALLANG_TOKEN set it starts the
+// conversation of the site the player stands at (one model call on the owner's subscription).
+// Round 119: the world map lies between the title and the temple map.
 //
 //   CHROME_PATH=/path/to/chrome PUPPETEER_CORE=/path/to/node_modules/puppeteer-core \
 //     node client/scripts/live-check.mjs [url] [outDir]
@@ -57,18 +59,23 @@ try {
     await page.screenshot({ path: join(OUT, `live-1-attract-${size.name}.jpg`), type: 'jpeg', quality: 72 });
     console.log(size.name, 'attract', JSON.stringify(await read()));
     if (!(await click('Enter'))) throw new Error('no Enter button');
+    await page.waitForFunction(() => window.__parallang.store.getState().phase === 'world', { timeout: 30000 });
+    await sleep(600);
+    await page.screenshot({ path: join(OUT, `live-2-world-${size.name}.jpg`), type: 'jpeg', quality: 72 });
+    console.log(size.name, 'world', JSON.stringify(await read()));
+    if (!(await click('Enter Ta Prohm'))) throw new Error('no way into Ta Prohm on the world map');
     await page.waitForFunction(() => window.__parallangLevel.director.mode === 'overview' && window.__parallangLevel.director.arrived, { timeout: 30000 });
     await sleep(2600);
-    await page.screenshot({ path: join(OUT, `live-2-overview-${size.name}.jpg`), type: 'jpeg', quality: 72 });
+    await page.screenshot({ path: join(OUT, `live-3-map-${size.name}.jpg`), type: 'jpeg', quality: 72 });
     console.log(size.name, 'overview', JSON.stringify(await read()));
-    if (!(await click('Start')) && !(await click('Continue'))) throw new Error('no Start button');
-    // Either the server refuses (no token) and the route card says why, or the first conversation opens.
-    await page.waitForFunction(() => { const s = window.__parallang.store.getState(); return !s.starting && (s.serverProblem || s.siteError || s.phase === 'encounter'); }, { timeout: 150000, polling: 250 });
+    if (!(await click('Start')) && !(await click('Go down to'))) throw new Error('no Start button');
+    // Either the server refuses (no token) and the map card says why, or the conversation of the site opens (or its card, on a cleared site).
+    await page.waitForFunction(() => { const s = window.__parallang.store.getState(); return !s.starting && (s.serverProblem || s.siteError || s.phase === 'encounter' || s.phase === 'site'); }, { timeout: 150000, polling: 250 });
     await sleep(2000);
-    await page.screenshot({ path: join(OUT, `live-3-start-${size.name}.jpg`), type: 'jpeg', quality: 72 });
+    await page.screenshot({ path: join(OUT, `live-4-start-${size.name}.jpg`), type: 'jpeg', quality: 72 });
     const end = await read();
     console.log(size.name, 'after Start', JSON.stringify(end));
-    const expected = TOKEN ? end.phase === 'encounter' : /access token/.test(end.serverProblem ?? '');
+    const expected = TOKEN ? ['encounter', 'site'].includes(end.phase) : /access token/.test(end.serverProblem ?? '');
     if (!expected) { failed = true; console.error(size.name, 'UNEXPECTED state after Start'); }
     // A refused token logs a 401 in the console; that is the expected refusal, not a page problem.
     for (const problem of problems) { failed = true; console.error(' ', problem); }
