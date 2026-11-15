@@ -282,3 +282,60 @@ round, and nothing runs on an iPhone. Mortimer, Flick, Marginalia and Errata hav
 The work is on the branch `round-119-map`. The round ends with a merge to `main`, which deploys the client to
 GitHub Pages and the server to Render (Q4). The Render deploy wipes every save on the free plan. The deploy is
 checked from the cluster as `docs/handoff.md` describes.
+
+## Amendment 2026-11-15: what the build settled (Claude, during the build)
+
+The owner was away (Q5). Each item is a detail inside the agreed design, or a correction the tests forced. They
+change the sentences of the Design named here.
+
+- **A walk starts with a turn on the spot.** The Design says a walk "starts with a blend from the pose the camera
+  holds to the start of the path". The existing blend swings the camera around the point it looks at. On a half
+  turn in a gate passage that carries it through the piers. A walk now goes in a straight line to the path's start
+  while its line of sight turns (`turnPoses`). A walk back along the path the camera came by starts where the
+  camera stands. A new director test walks all 60 combinations of arriving and leaving and fails if the camera is
+  ever inside the wall plan.
+- **A known neighbour is named.** The Design says "Walk to an unexplored place" for a site the player has not
+  visited. Two such neighbours would carry the same label, so the button reads "Walk to The Library · unexplored",
+  as the market's map names a known place.
+- **A sealed site is refused as `SEALED`** also when the character at the player's site has not let them pass. The
+  seal is the reason that lasts.
+- **A move is sent again with `leave`** when the server answers `CONVERSATION_UNDER_WAY`. After a reload at a
+  cleared site the server may hold a conversation the store never saw.
+- **A reload resumes only from the title.** The Design says a complete run opens the victory screen and a run with
+  progress the approach. That now holds while the title shows. A player who has gone on to a map before the server
+  answered is left there.
+- **No walk while a site start is with the server** (Talk on the site card), and the run is read again when the map
+  opens.
+- **From 1100 px the temple map's card is a side panel**, as the dialogue is, so the map has the screen's height.
+
+## Amendment 2026-11-15: fixes from Codex review 1 (Claude, after the build)
+
+A post-build review by Codex read the diff `365044e..5c60a49` and returned six findings; the raw text is in
+[`trail/review-1.md`](trail/review-1.md). All six were real and are fixed. The owner was away (Q5), so every
+disposition is Claude's. R1.3 and R1.4 name defects Claude had found and fixed while the review ran.
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Error, high | A page still running the build of rounds 115 to 118 reads the dungeon, meets the new shape and fails with "Cannot read properties of undefined". The owner's installed page keeps old builds (round 118) | + | Accept, with a narrower fix than a versioned contract: the map is read at `GET /api/dungeons/:id/map`, and the old path answers 426 `CLIENT_OUTDATED` with "This page is older than the server. Open Settings and tap "Reload the page".", which the old page shows on its route card | **Accepted** by Claude; the owner was away | `server/src/app.js`, `client/src/api/encounter.js`; `dungeon.test.js` |
+| R1.2 | Error, high | "Go down to The Root Court" from the map carried the camera through the third enclosure's gallery roof: the blend comes down on a slant | + | Accept: from the sky the camera crosses to the point above where it will stand while it is above everything, and comes down there (`dropPoses`). Used for every approach and for a walk picked on the map | **Accepted** by Claude; the owner was away | `director.js`; `director.test.js` (the way down, 46 descents at two screen shapes) |
+| R1.3 | Error, medium | A failed read of the run after the last answer left a resolved site blocking: the map showed nothing reachable | 0 | Accept: the run is read again when the map opens | **Accepted** by Claude; the owner was away | `gameStore.js` (`openMap`); `dungeon-flow.test.js` |
+| R1.4 | Error, medium | A start that names another site (another tab moved the player) left the map at the old site, so the way back was not offered | 0 | Accept: the run is read again when a start names another site | **Accepted** by Claude; the owner was away | `gameStore.js` (`loadSite`); `dungeon-flow.test.js` |
+| R1.5 | Error, medium | "Stay in the temple" stayed enabled while "Play again" was with the server, and a move made then could answer after the reset and put the old run back | 0 | Accept: Stay waits for the reset, and a move's reply from the run before a reset is dropped | **Accepted** by Claude; the owner was away | `gameStore.js` (`runEpoch`, `stay`), `DungeonScreen.jsx`; `dungeon-flow.test.js` |
+| R1.6 | Error, low | The screen test accepted a move without `leave`, and its fake server did not hold a player in a conversation | 0 | Accept: the fake server refuses such a move as the server does, and the test walks out of a conversation and asserts `leave: true` | **Accepted** by Claude; the owner was away | `dungeon-screen.test.jsx` |
+
+**Deferred:** none. Codex found no defect in the server's rules, the save migration, the session's site, clearing
+and reset, the client-only build and the Docker files (by inspection), or the 390 px layout.
+
+R1.1 changes the Design's Server section: the view is at `GET /api/dungeons/:id/map`. R1.2 changes the Camera
+section: an approach no longer blends to its site on a slant, so the first approach to The Face Gate is a descent
+over the avenue and no longer the crane shot of round 115.
+
+## Outcome (2026-11-15)
+
+Built as designed, with the two Amendments above. The web client's dungeon is a map of seven sites under a world
+map: the player picks where to walk, the fog lifts as paths lead on, a character lets the player pass once
+answered, and The Sanctuary opens when the six other sites are cleared. The map is read at
+`GET /api/dungeons/:id/map` and not at the path the Design names (review R1.1). Every suite passes (server 426,
+client 101, aesthetic 20, mobile 320), and the built client plays all seven sites in headless Chromium at 390×844
+and 1440×900 with a fixture provider. The claim boundary held: nobody played against the live model, and no phone
+was used. See [`findings.md`](findings.md) and [`shots/`](shots/).
