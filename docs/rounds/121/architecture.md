@@ -166,3 +166,37 @@ by play.
 
 The work is on the branch `round-121-levels`. The round ends with a merge to `main`, which deploys the client and
 the server (round 119, Q4). The Render deploy wipes every save on the free plan.
+
+## Amendment 2026-11-15: fixes from Codex review 1 (Claude, after the build)
+
+A post-build review by Codex read `git diff 29f7271..d95b03d -- client server content` and returned six findings;
+the raw text is in [`trail/review-1.md`](trail/review-1.md). All six were real and are fixed. The owner was away, so
+every disposition is Claude's. Each fix has a test that fails on the code as reviewed, except R1.4, which the
+playthrough checks.
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Error, high | The ratio bonus was applied in the shared session start, so the iPhone app's market conversations also grew harder with XP the app does not show | − | Accept, more narrowly than Codex's fix: the bonus applies to a dungeon site's conversation only. A party member's conversation has no dungeon mark and keeps the content's ratio | **Accepted** by Claude; the owner was away | `learning-service.js` (`openSession`); `progression.test.js` |
+| R1.2 | Error, high | A page of rounds 119 or 120 kept open across the deploy shows "sealed: 6 of 6 cleared" with no reason, and its cached map never opens the Sanctuary | + | Accept the error with another fix. Codex's keeps site-only seals for old pages for good. Instead the dungeon's routes ask for the client's contract (`client=121` on the map read, a move, a reset and a site start), and an older page is told to reload, the answer round 119 gave pages before it | **Accepted in part** by Claude; the owner was away | `server/src/errors.js`, `app.js`, `routes/encounter.js`, `client/src/api/encounter.js`; `dungeon.test.js` |
+| R1.3 | Error, medium | A review's reply that arrived after new settings had loaded another learner put the old learner's XP into the store, where the never-goes-down rule then kept it | 0 | Accept: a review's reply is dropped after new settings or another learner | **Accepted** by Claude; the owner was away | `gameStore.js` (`submitReview`, `revealReviewAnswer`); `dungeon-flow.test.js` |
+| R1.4 | Error, medium | Between 561 and about 700 px the level chip joined the one-row top bar and the title's text ran over it | 0 | Accept: the compact top bar holds up to 720 px, and the playthrough measures the title's text at 600, 720, 760 and 1024 px | **Accepted** by Claude; the owner was away | `index.css`; `dungeon-shots.mjs` |
+| R1.5 | Error, low | A save edited to hold 1e308 XP passed as an integer and sent `levelFor` into an endless loop, which would stop the server for every learner | 0 | Accept: only a safe integer is XP, and the level is solved in closed form | **Accepted** by Claude; the owner was away | `learning-storage.js`, `language-engine.js`; `progression.test.js` |
+| R1.6 | Error, low | The ratio test read the greeting's prompt and then only the shown difficulty, so a bonus missing from later prompts would pass | 0 | Accept: the test reads the prompt of a later turn, and of a turn in a conversation that crosses a level | **Accepted** by Claude; the owner was away | `progression.test.js` |
+
+**Deferred:** none. Codex found no defect in the XP commits, the receipts and replays, help reveals, the seal's
+message, the gates, moves and old saves, or the new client against round 120's server, and no state in which the
+player is sealed out of the Sanctuary with no way to earn the rest.
+
+R1.1 changes the Design's "Levels raise difficulty": the bonus is a dungeon site conversation's. R1.2 adds to the
+Design's Server part: the client contract.
+
+## Outcome (2026-11-15)
+
+Built as designed, with the Amendment above. The player earns XP for objectives, finished conversations and due
+reviews; the level is derived; The Library opens at level 3 and The Sanctuary at level 5 besides its six sites; a
+dungeon site's conversation gains 0.03 of target ratio per level above the first. Against the Design, the bonus is
+the dungeon sites' alone (review R1.1) and the dungeon's routes ask for the client's contract (review R1.2). Every
+suite passes (server 436, client 119, aesthetic 20, mobile 320), and the built client plays the seven sites, meets
+the level seal and passes it in headless Chromium at 390×844 and 1440×900 with a fixture provider. The claim
+boundary held: nothing was played against the live model, and no phone was used. See
+[`findings.md`](findings.md) and [`shots/`](shots/).
