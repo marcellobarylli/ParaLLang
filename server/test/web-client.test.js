@@ -290,6 +290,17 @@ test('the web client saves Gerald after his site, talks to him as a party member
   assert.equal(s().encounter.partyConversation, true);
   assert.equal(s().encounter.dungeonId, undefined);
   assert.equal(s().encounter.character.name, 'Gerald');
+  // Review 1 of round 120 (R1.5): a party conversation is a conversation. Meanings are withheld and reviews wait.
+  assert.equal(s().spellbook.inEncounter, true);
+  s().openSpellbook();
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  assert.equal(s().spellbook.inEncounter, true);
+  assert.ok(s().spellbook.cards.length > 0);
+  assert.ok(s().spellbook.cards.every((card) => !card.meanings), 'no meaning reaches the client during the conversation');
+  await s().startReview(null);
+  assert.match(s().error, /Reviews wait until the encounter is over/);
+  s().returnToDialogue();
+  s().clearError();
   // Left for now, it is resumed by the next Talk.
   const conversation = s().encounter.id;
   s().leaveParty();
@@ -302,6 +313,14 @@ test('the web client saves Gerald after his site, talks to him as a party member
   assert.deepEqual(s().progress.clearedSiteIds, ['face_gate', 'root_court'], 'a party conversation clears no site');
   s().leaveParty();
   assert.equal(s().phase, 'site');
+  // Once it is over the Spellbook opens up and a review starts.
+  s().openSpellbook();
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  assert.equal(s().spellbook.inEncounter, false);
+  await s().startReview(s().spellbook.cards[0].vocabularyId);
+  assert.equal(s().error, null);
+  assert.equal(s().view, 'review');
+  s().returnToDialogue();
 
   // A reload: the party comes back with the map, and the walk on is open as before.
   const reloaded = newStore(storage);

@@ -892,3 +892,74 @@ test('the newest read or write of the party wins: an older read undoes neither a
   await new Promise((resolve) => setTimeout(resolve, 0));
   expect(partyOf(s)).toEqual([['Gerald', 1, 'gerald_coffee_break']]);
 });
+
+// Review 1 of round 120 (Codex), findings R1.1 to R1.3.
+test('a Talk the player walks away from is no longer starting, and its late reply opens nothing (R1.1)', async () => {
+  const slow = deferred();
+  const { api, s } = makeStore();
+  await toGeraldWon(s);
+  await s().recruit('imp_coffee_greeting');
+  s().openMap();
+  await s().start();
+  s().onCameraArrived();
+  expect(s().phase).toBe('site');
+  const started = api.startEncounter.getMockImplementation();
+  api.startEncounter.mockImplementationOnce(async (...args) => { await slow.promise; return started(...args); });
+  s().openParty();
+  const talk = s().talkTo(s().party[0]);
+  expect(s()).toMatchObject({ partyStarting: 'gerald_coffee_break', encounterLoading: true });
+  s().returnToDialogue();
+  s().openMap(); // the player goes elsewhere while Gerald is getting ready
+  expect(s()).toMatchObject({ phase: 'overview', partyStarting: null, encounterLoading: false });
+  slow.resolve();
+  await talk;
+  expect(s()).toMatchObject({ phase: 'overview', partyStarting: null, encounter: null });
+  await s().talkTo(s().party[0]); // Talk works again (the server resumes the conversation it started)
+  expect(s().phase).toBe('party');
+});
+
+test('a recruit whose reply comes after a newer party read does not undo it: the party is read again (R1.2)', async () => {
+  const slow = deferred();
+  const { api, server, s } = makeStore();
+  await toGeraldWon(s);
+  await s().recruit('imp_coffee_greeting');
+  await s().travel('buttress_tree');
+  s().onCameraArrived();
+  await s().sendMessage('Un etto.');
+  // Mortimer is saved, and the reply is slow. It holds the party as it was when the server answered.
+  const recruit = api.recruit.getMockImplementation();
+  api.recruit.mockImplementationOnce(async (...args) => { const reply = await recruit(...args); await slow.promise; return reply; });
+  const saving = s().recruit('butchers_stall_charcutier');
+  await vi.waitFor(() => expect(server.party.party.length).toBe(2));
+  // Meanwhile Gerald's conversation is finished on the server and the Party panel reads the party.
+  server.party.finished('gerald_coffee_break');
+  s().openParty();
+  await vi.waitFor(() => expect(partyOf(s)).toEqual([['Gerald', 1, 'gerald_coffee_break'], ['Mortimer', 0, 'mortimer_tasting']]));
+  const reads = api.getParty.mock.calls.length;
+  slow.resolve();
+  await saving;
+  expect(partyOf(s)).toEqual([['Gerald', 1, 'gerald_coffee_break'], ['Mortimer', 0, 'mortimer_tasting']]);
+  expect(api.getParty.mock.calls.length).toBe(reads + 1); // the stale reply was not taken; the party was read again
+  expect(s().recruiting).toBe(false);
+});
+
+test('a greeting that arrives after the player opened the Spellbook leaves the Spellbook open (R1.3)', async () => {
+  const slow = deferred();
+  const { api, s } = makeStore();
+  await toGeraldWon(s);
+  await s().recruit('imp_coffee_greeting');
+  const started = api.startEncounter.getMockImplementation();
+  api.startEncounter.mockImplementationOnce(async (...args) => { await slow.promise; return started(...args); });
+  s().openParty();
+  const talk = s().talkTo(s().party[0]);
+  s().openSpellbook();
+  slow.resolve();
+  await talk;
+  expect(s()).toMatchObject({ phase: 'party', view: 'spellbook' });
+  s().returnToDialogue();
+  // And from the Party panel itself, the panel closes onto the conversation.
+  s().leaveParty();
+  s().openParty();
+  await s().talkTo(s().party[0]);
+  expect(s()).toMatchObject({ phase: 'party', view: 'dialogue' });
+});

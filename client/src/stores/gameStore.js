@@ -106,7 +106,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     // Every Spellbook from a reply goes through here (review 1, R1.4).
     const withSpellbook = (spellbook) => { spellbookVersion += 1; return spellbook; };
 
-    const quiet = { encounter: null, encounterLoading: false, siteError: null, assessment: null, closedObjectives: 0, view: 'dialogue', draft: '', pendingInput: null };
+    // Review 1 of round 120 (R1.1): a Talk the player walked away from is no longer starting.
+    const quiet = { encounter: null, encounterLoading: false, partyStarting: null, siteError: null, assessment: null, closedObjectives: 0, view: 'dialogue', draft: '', pendingInput: null };
     const showVictory = () => set({ ...quiet, phase: 'victory', cameraArrived: false });
 
     // The camera sets off to site `index` (from site `walkFrom`, or down from wherever it is). A site that is not
@@ -344,12 +345,17 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const { learnerId, recruiting } = get();
         if (!learnerId || recruiting || typeof encounterId !== 'string') return;
         const epoch = requestEpoch;
+        const sent = partyRequest;
         set({ recruiting: true, error: null });
         try {
           const result = await api.recruit(learnerId, encounterId);
           if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+          set({ recruiting: false });
+          // Review 1 of round 120 (R1.2): a read that started after this request was sent may be newer than its reply
+          // (a conversation finished meanwhile), so the party is read again instead of taking the reply.
+          if (sent !== partyRequest) { await refreshParty(learnerId); return; }
           partyRequest += 1; // a read sent before this reply shows the party without the new member
-          set({ party: result.party, recruiting: false });
+          set({ party: result.party });
         } catch (error) {
           if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, recruiting: false });
         }
@@ -378,9 +384,11 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         try {
           const result = await api.startEncounter(learnerId, { encounterId: member.conversationId });
           if (stale()) return;
+          // Review 1 of round 120 (R1.3): the Party panel closes; a Spellbook or a review opened meanwhile stays open.
+          const closing = get().view === 'party';
           set({
-            ...quiet, phase: 'party', partyReturn, partyStarting: null, encounter: result.encounter, spellbook: withSpellbook(result.spellbook),
-            reviewChallenge: null, reviewResult: null, error: null,
+            ...quiet, phase: 'party', partyReturn, encounter: result.encounter, spellbook: withSpellbook(result.spellbook), error: null,
+            ...(closing ? { reviewChallenge: null, reviewResult: null } : { view: get().view }),
           });
         } catch (error) {
           if (!stale()) set({ error: error.message, encounterLoading: false, partyStarting: null });
