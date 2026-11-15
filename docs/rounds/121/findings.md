@@ -50,6 +50,10 @@ provider: no model wrote a line.
   bar, the level seal and its wording, the level-up line, and that the top bar's title, level, pips and buttons do
   not overlap at 390, 600, 720, 760, 1024 and 1440 px. The pictures are in [`shots/`](shots/).
 
+- **Deploy.** `7b02e41` was pushed at 12:43:01 UTC. Both workflows passed (CI 43715255513, Pages 43715255688);
+  `version.json` reads `0.1.0+mwhttwfa`; Render's deployment of the same commit reports `success` and `/api/health`
+  answers 200. `client/scripts/live-check.mjs` (job 5463) loaded the live page at both sizes.
+
 ## Decision
 Levels are merged to `main` and deployed (round 119, Q4). The three integration rounds the owner asked for are
 done. Next are the characters at the sites (round 119, Q5).
