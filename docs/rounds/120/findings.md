@@ -52,6 +52,10 @@ provider: no model wrote a line.
   Gerald, reads the panel, talks to him where the camera stands, finishes the conversation, and checks the count
   and the top bar's layout. The pictures are in [`shots/`](shots/).
 
+- **Deploy.** `448ccad` was pushed at 11:47:44 UTC. Both workflows passed this time (CI 43710639704, Pages
+  43710639781); `version.json` reads `0.1.0+mwhruono`; Render's deployment of the same commit reports `success` and
+  `/api/health` answers 200. `client/scripts/live-check.mjs` (job 5456) loaded the live page at both sizes.
+
 ## Decision
 The party is merged to `main` and deployed (round 119, Q4). Round 121 is levels.
 
