@@ -19,7 +19,10 @@ function useInsets(hudRef, dockRef) {
   useLayoutEffect(() => {
     const measure = () => {
       const top = hudRef.current?.getBoundingClientRect?.().bottom ?? 0;
-      const next = dockInsets(dockRef.current?.getBoundingClientRect?.(), window.innerWidth, window.innerHeight, top);
+      // Round 117: the screen is the shell's rectangle. In the installed page on iOS the window reports less height.
+      const shell = dockRef.current?.closest?.('.app-shell')?.getBoundingClientRect?.();
+      const [width, height] = shell?.height > 0 ? [shell.width, shell.height] : [window.innerWidth, window.innerHeight];
+      const next = dockInsets(dockRef.current?.getBoundingClientRect?.(), width, height, top);
       setInsets((previous) => (sameInsets(previous, next) ? previous : next));
     };
     measure();

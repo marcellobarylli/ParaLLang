@@ -205,6 +205,25 @@ async function run(browser, runtime, size, log) {
   await clickButton(page, 'Enter');
   await waitArrived(page, 'overview');
   await shot('2-overview', { settle: 2600 }); // the site labels fade in after the camera settles
+  // Round 117: the installed page (display-mode: standalone) fills the window, and the dock sits on its bottom edge.
+  // Chrome 131 cannot emulate display-mode, so the built stylesheet's installed rule is applied without its condition.
+  if (size.name === 'phone') {
+    const layout = await page.evaluate(() => {
+      const media = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules]).find((rule) => rule instanceof CSSMediaRule && rule.conditionText.includes('display-mode: standalone'));
+      const style = document.createElement('style');
+      style.textContent = media ? [...media.cssRules].map((rule) => rule.cssText).join('\n') : '';
+      document.head.append(style);
+      const rect = (selector) => { const r = document.querySelector(selector)?.getBoundingClientRect(); return r ? { top: r.top, bottom: r.bottom, height: r.height } : null; };
+      const shell = getComputedStyle(document.querySelector('.app-shell'));
+      const result = { rule: style.textContent, bottom: shell.bottom, shell: rect('.app-shell'), dock: rect('.dock'), window: innerHeight };
+      style.remove();
+      return result;
+    });
+    console.log('installed layout', JSON.stringify(layout));
+    check(/\.app-shell/.test(layout.rule) && /height: 100vh/.test(layout.rule), `the built stylesheet has the installed rule (${layout.rule})`);
+    check(layout.shell && Math.abs(layout.shell.top) < 0.5 && Math.abs(layout.shell.height - layout.window) < 0.5, `installed: the shell fills the window (${JSON.stringify(layout.shell)} of ${layout.window})`);
+    check(layout.dock && Math.abs(layout.dock.bottom - layout.window) < 0.5, `installed: the dock sits on the bottom edge (${JSON.stringify(layout.dock)} of ${layout.window})`);
+  }
 
   await clickButton(page, 'Start');
   await waitFor(page, () => window.__parallangLevel.director.mode === 'approach');

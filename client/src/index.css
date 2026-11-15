@@ -117,3 +117,9 @@ input { font-size: 16px; min-height: 44px; }
 .settings-sheet .button-row { margin-top: .6rem; }
 @media (min-width: 621px) { .sheet-backdrop { align-items: center; } .settings-sheet { border-radius: 1rem; } }
 @media (prefers-reduced-motion: reduce) { .level-ready .level-canvas, .site-labels, .site-labels.shown { transition: none; } }
+
+/* Round 117: opened from the home screen, iOS keeps the layout area short by the status bar's inset, which left a
+   strip of the body under the dock. The viewport unit is the whole screen there. */
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  .app-shell, .sheet-backdrop { bottom: auto; height: 100vh; }
+}

@@ -68,3 +68,19 @@ test('everything the Dockerfile copies is in the Docker build context', () => {
   expect(ignored('client/src/App.jsx')).toBe(true);
   expect(ignored('server/node_modules/express/index.js')).toBe(true);
 });
+
+// Round 117: opened from the home screen on iOS, `position: fixed; inset: 0` ends above the screen's bottom edge.
+test('the installed page sizes the shell and the settings backdrop by the viewport unit', () => {
+  const css = readFileSync(resolve(CLIENT_DIR, 'src/index.css'), 'utf8');
+  const rule = css.match(/@media \(display-mode: standalone\)[^{]*\{\s*([^{]+)\{([^}]+)\}/);
+  expect(rule, 'a display-mode: standalone rule').not.toBeNull();
+  expect(rule[1]).toContain('.app-shell');
+  expect(rule[1]).toContain('.sheet-backdrop');
+  expect(rule[2]).toMatch(/bottom:\s*auto/);
+  expect(rule[2]).toMatch(/height:\s*100vh/);
+  // It must come after both base rules, whose `inset: 0` would otherwise put `bottom` back.
+  for (const base of ['.app-shell { position: fixed; inset: 0;', '.sheet-backdrop { position: fixed; inset: 0;']) {
+    expect(css.indexOf(base), base).toBeGreaterThan(-1);
+    expect(css.indexOf(rule[0])).toBeGreaterThan(css.indexOf(base));
+  }
+});
