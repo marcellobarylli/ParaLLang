@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
+import { loadDisplay, saveDisplay } from '../display.js';
 
 // Round 115: the web client plays a dungeon. Its flow:
 //
@@ -111,6 +112,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
 
     return {
       settings: loadSettings(storage),
+      display: loadDisplay(storage),
       settingsOpen: false,
       learnerId: null,
       language: null,
@@ -241,6 +243,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
 
       openSettings: () => set({ settingsOpen: true }),
       closeSettings: () => set({ settingsOpen: false }),
+      // Round 117: a display preference. It makes no request and leaves the run and the conversation alone.
+      setPanelOpacity: (value) => set({ display: saveDisplay({ ...get().display, panelOpacity: value }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       saveSettings: async (values) => {
         const settings = persistSettings(values, storage);

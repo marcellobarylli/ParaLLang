@@ -84,3 +84,17 @@ test('the installed page sizes the shell and the settings backdrop by the viewpo
     expect(css.indexOf(rule[0])).toBeGreaterThan(css.indexOf(base));
   }
 });
+
+// Round 117: the PS1 menu look. Hard corners everywhere; the panels take their opacity from the player's setting.
+test('the stylesheet has no rounded corner, and the panel background follows --panel-alpha', () => {
+  const css = readFileSync(resolve(CLIENT_DIR, 'src/index.css'), 'utf8');
+  const radii = [...css.matchAll(/border-radius:\s*([^;}]+)/g)].map((match) => match[1].trim());
+  expect(radii.filter((value) => value !== '0')).toEqual([]);
+  expect(css).toMatch(/--panel:[^;]*var\(--panel-alpha\)/);
+  for (const selector of ['.card {', '.sheet {', '.settings-sheet {']) {
+    const rule = css.slice(css.indexOf(selector), css.indexOf('}', css.indexOf(selector)));
+    expect(rule, selector).toMatch(/background: var\(--panel/);
+  }
+  expect(css).toMatch(/\.settings-open \.dock \{ visibility: hidden; \}/);
+  expect(css).not.toMatch(/#0d0d1a|#12111f|#19182a|#2a2940|#4a4863/i);
+});

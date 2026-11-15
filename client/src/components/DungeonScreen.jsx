@@ -171,7 +171,7 @@ export default function DungeonScreen({ useStore }) {
   const spellbook = conversing && !state.spellbook.inEncounter ? { ...state.spellbook, inEncounter: true } : state.spellbook;
 
   return (
-    <div className={`app-shell phase-${phase}`}>
+    <div className={`app-shell phase-${phase}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
       <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} cleared={cleared} insets={insets} onArrive={state.onCameraArrived}
         closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
 
@@ -186,7 +186,7 @@ export default function DungeonScreen({ useStore }) {
           <button type="button" className="secondary-button" onClick={state.openSpellbook}>
             Spellbook <span className="due-badge" aria-label={`${state.spellbook.dueCount} reviews due`}>{state.spellbook.dueCount}</span>
           </button>
-          <button type="button" className="secondary-button" onClick={state.openSettings} aria-label="Settings">⚙</button>
+          <button type="button" className="secondary-button" onClick={state.openSettings} aria-label="Settings">⚙︎</button>
         </nav>
       </header>
 
@@ -212,7 +212,7 @@ export default function DungeonScreen({ useStore }) {
         </div>
       )}
 
-      {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} />}
+      {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} />}
     </div>
   );
 }

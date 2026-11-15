@@ -286,6 +286,33 @@ test('replies that arrive after new settings are dropped', async () => {
   expect(JSON.parse(storage.values.get('parallang.settings'))).toEqual({ serverUrl: 'https://other.example.com', token: 'another-token' });
 });
 
+// Round 117: the opacity of the text panels is a display preference. Unlike new settings it must not reconnect.
+test('a new panel opacity is stored and leaves the conversation and the server alone', async () => {
+  const storage = memoryStorage({ 'parallang.display': '{"panelOpacity":0.4}' });
+  const { api, s } = makeStore({ storage });
+  expect(s().display).toEqual({ panelOpacity: 0.4 });
+  await s().initialize();
+  s().enter();
+  await s().start();
+  s().onCameraArrived();
+  s().setDraft('Buongiorno');
+  const before = s();
+  const mocks = Object.entries(api).filter(([, fn]) => fn?.mock);
+  const calls = Object.fromEntries(mocks.map(([name, fn]) => [name, fn.mock.calls.length]));
+  s().openSettings();
+  s().setPanelOpacity(0.23);
+  s().setPanelOpacity(2);
+  expect(s().display).toEqual({ panelOpacity: 1 });
+  s().setPanelOpacity(0.23);
+  expect(s().display).toEqual({ panelOpacity: 0.25 });
+  expect(JSON.parse(storage.values.get('parallang.display'))).toEqual({ panelOpacity: 0.25 });
+  expect(storage.values.has('parallang.settings')).toBe(false);
+  expect(s()).toMatchObject({ phase: 'encounter', settingsOpen: true, draft: 'Buongiorno', learnerId: before.learnerId, cameraArrived: true });
+  expect(s().encounter).toBe(before.encounter);
+  expect(mocks.length).toBeGreaterThan(5);
+  for (const [name, fn] of mocks) expect(fn.mock.calls.length, name).toBe(calls[name]);
+});
+
 test('opening the Spellbook shows the last snapshot and then the one the server holds', async () => {
   const { api, s } = makeStore();
   await s().initialize();

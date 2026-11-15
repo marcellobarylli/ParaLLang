@@ -60,3 +60,52 @@ is closed and opened again.
 - **Playthrough:** `client/scripts/dungeon-shots.mjs` gains a check at phone size with `display-mode: standalone`
   emulated: the shell's rectangle equals the window, and the dock's bottom edge is the window's bottom edge.
 - All suites and the build keep passing.
+
+## Amendment 2026-11-15: the browser check applies the installed rule directly (Claude, during the build)
+
+Chrome 131 does not emulate `display-mode`, through puppeteer or through the protocol. The playthrough reads the
+installed-mode rule from the built stylesheet, applies it without its condition, and measures the shell and the dock.
+
+## Amendment 2026-11-15: a slider for the panels' opacity, and a PS1 menu look (owner, during the round)
+
+The owner asked for both after the first fix was deployed ([`trail/interview.md`](trail/interview.md), Q1 and Q2):
+the 3D level is central, so the text panels should let it show through, set by a slider in Settings; and the panels
+should be grey with hard corners and fit a PS1 menu.
+
+### The opacity slider
+
+- **Setting:** `panelOpacity`, 0 to 1 in steps of 0.05, default 0.7. It is a display preference, stored under its own
+  key `parallang.display` (`client/src/display.js`). The server URL and the token stay under `parallang.settings`,
+  because saving those reconnects and a change of opacity must not.
+- **Store:** `display` and `setPanelOpacity(value)`, which clamps, applies and stores. It touches nothing else, so a
+  conversation in progress goes on.
+- **Screen:** the shell carries `--panel-alpha`. The dock's panels (title, route, dialogue sheet, victory) take their
+  background's alpha from it. The boxes inside a panel (objective, assessment, briefing) are a faint tint, so the
+  panel's opacity is what the slider says. The objective card stays sticky; it keeps at least 55% opacity so that
+  the text scrolling under it does not show through as text.
+- **Settings sheet:** a range input "Text panel opacity" with its percentage. It applies at once. While Settings is
+  open the dock is hidden and the sheet itself takes the panel's background over the undimmed level, so the sheet is
+  the preview. "Cancel" becomes "Close", since the slider has nothing to cancel.
+- The Spellbook and the review screen cover the level and stay opaque.
+
+### The PS1 menu look
+
+- **Grey:** the panels, boxes, buttons and inputs are neutral greys. The purple tints go. Gold stays for headings and
+  the main button; links are pale cyan.
+- **Hard corners:** no border radius anywhere, including the site numbers, the progress pips and the badge.
+- **Window frame:** each panel has a bevel (light top and left, dark bottom and right) inside a black outline, and a
+  banded vertical gradient. Boxes inside a panel are sunken (the bevel reversed).
+- **Dither:** a 2 px checkerboard at low contrast lies in the panel's background, as PS1 translucency was dithered.
+- **Type:** a system sans stack (Verdana first) in place of Georgia, with a hard one-pixel black shadow. Labels are
+  upper case.
+- **Buttons:** bevelled; a press reverses the bevel. The main button of a card carries a blinking cursor (still under
+  reduced motion).
+
+### Tests
+
+- `display.js`: default, clamp, bad stored values, storage failure.
+- Store: `setPanelOpacity` stores the value and makes no request; the conversation is unchanged.
+- Settings sheet and screen: the slider reports numbers; the shell carries the value; the dock is marked hidden
+  while Settings is open.
+- Playthrough: in a conversation at phone size, the slider is moved through the interface and the sheet's computed
+  background alpha follows; no element of the dock has a border radius. Pictures at two opacities.

@@ -238,6 +238,41 @@ async function run(browser, runtime, size, log) {
   await walk('Walk on to', '4-walk', EXTRA ? [0.3, 0.62, 0.86] : [0.3, 0.62]); // through the gopura, then the gate tree
   await arrivedAt(1);
   await shot('5-site-2', { settle: 1800 });
+  // Round 117: the opacity slider in Settings, moved through the interface in the middle of a conversation.
+  {
+    const before = await state(page);
+    const look = () => page.evaluate(() => {
+      const shell = document.querySelector('.app-shell');
+      const background = (selector) => { const element = document.querySelector(selector); return element ? getComputedStyle(element).backgroundImage : null; };
+      const rounded = [...shell.querySelectorAll('*')].filter((element) => getComputedStyle(element).borderTopLeftRadius !== '0px').map((element) => element.className || element.tagName);
+      return { alpha: shell.style.getPropertyValue('--panel-alpha'), dock: getComputedStyle(document.querySelector('.dock')).visibility, sheet: background('.sheet'), settings: background('.settings-sheet'), rounded: [...new Set(rounded)], stored: localStorage.getItem('parallang.display') };
+    });
+    const start = await look();
+    check(start.alpha === '0.7' && start.sheet?.includes('rgba(62, 64, 62, 0.7)'), `the panels start at 70% (${start.alpha}, ${start.sheet?.slice(0, 120)})`);
+    check(start.rounded.length === 0, `no rounded corner on the screen (${start.rounded.join(', ')})`);
+    await page.click('button[aria-label="Settings"]');
+    await page.waitForSelector('#settings-opacity');
+    await page.evaluate(() => {
+      const slider = document.querySelector('#settings-opacity');
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(slider, '30');
+      slider.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await sleep(200);
+    const open = await look();
+    check(open.alpha === '0.3' && open.settings?.includes('rgba(62, 64, 62, 0.3)'), `the settings sheet shows the new opacity at once (${open.alpha}, ${open.settings?.slice(0, 120)})`);
+    check(open.dock === 'hidden', `the dock is hidden behind the settings sheet (${open.dock})`);
+    check(open.rounded.length === 0, `no rounded corner in the settings (${open.rounded.join(', ')})`);
+    check(open.stored === '{"panelOpacity":0.3}', `the opacity is stored (${open.stored})`);
+    await shot('s-settings-30', { settle: 300 });
+    await clickButton(page, 'Close');
+    await sleep(200);
+    const closed = await look();
+    const after = await state(page);
+    check(closed.dock === 'visible' && closed.sheet?.includes('rgba(62, 64, 62, 0.3)'), `the dialogue sheet has the new opacity (${closed.dock}, ${closed.sheet?.slice(0, 120)})`);
+    check(after.phase === 'encounter' && after.sheet && after.encounter.id === before.encounter.id && after.encounter.version === before.encounter.version, `the conversation went on through the change (${after.phase}, ${after.encounter?.id} v${after.encounter?.version})`);
+    await shot('5-site-2-opacity-30', { settle: 300 });
+    await page.evaluate(() => window.__parallang.store.getState().setPanelOpacity(0.7));
+  }
   await answerSite();
   await walk('Walk on to', 'x-walk-to-site-3', EXTRA ? [0.6] : []);
   await arrivedAt(2);
