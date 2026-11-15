@@ -9,7 +9,8 @@ export function toClientDungeon(file) {
     start: file.start,
     goal: file.goal,
     entrance: file.entrance.map((point) => [...point]),
-    sites: file.sites.map((site) => Object.freeze({ id: site.id, encounterId: site.encounter, name: site.name, at: [...site.at], characterName: null })),
+    // Round 122: `figure` names the 3D figure of the site's character (null: the beacon).
+    sites: file.sites.map((site) => Object.freeze({ id: site.id, encounterId: site.encounter, name: site.name, at: [...site.at], characterName: null, figure: site.figure ?? null })),
     paths: file.paths.map(({ between, via = [] }) => Object.freeze({ between: [...between], via: via.map((point) => [...point]) })),
   });
 }

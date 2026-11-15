@@ -6,6 +6,9 @@
 # `requires` is sealed until every site it lists is cleared. `entrance` is the avenue, for the first approach to the
 # start site.
 #
+# Round 122: `figure` names the 3D figure of the site's character (aesthetic/src/scene/figures.js). A site without one
+# shows the old beacon.
+#
 # Round 121: a site with `requires_level` is also sealed until the player has that level. The Library opens at level 3
 # (140 XP: the sites on any way to it give that). The Sanctuary opens at level 5 (360 XP): the six sites before it
 # give 300, so it asks for one or two conversations more, or one and a few Spellbook reviews.
@@ -23,16 +26,17 @@ start: face_gate
 goal: sanctuary
 entrance: [[0, 96], [2.5, 70]]
 sites:
-  - { id: face_gate, encounter: market_entrance_tutorial, name: The Face Gate, at: [3.5, 63] }
-  - { id: buttress_tree, encounter: butchers_stall_charcutier, name: The Buttress Tree, at: [17, 42] }
-  - { id: root_court, encounter: imp_coffee_greeting, name: The Root Court, at: [6, 21.5] }
-  - { id: sunlit_court, encounter: cracked_fountain_letharger, name: The Sunlit Court, at: [-11, 23.5] }
-  - { id: library, encounter: old_bookshop_bookworm, name: The Library, at: [-26, 26], requires_level: 3 }
-  - { id: before_sanctuary, encounter: high_gate_bambieshart, name: Before the Sanctuary, at: [0.3, 11.2] }
+  - { id: face_gate, encounter: market_entrance_tutorial, name: The Face Gate, at: [3.5, 63], figure: archway }
+  - { id: buttress_tree, encounter: butchers_stall_charcutier, name: The Buttress Tree, at: [17, 42], figure: charcutier }
+  - { id: root_court, encounter: imp_coffee_greeting, name: The Root Court, at: [6, 21.5], figure: imp }
+  - { id: sunlit_court, encounter: cracked_fountain_letharger, name: The Sunlit Court, at: [-11, 23.5], figure: letharger }
+  - { id: library, encounter: old_bookshop_bookworm, name: The Library, at: [-26, 26], figure: bookworm, requires_level: 3 }
+  - { id: before_sanctuary, encounter: high_gate_bambieshart, name: Before the Sanctuary, at: [0.3, 11.2], figure: wanderer }
   - id: sanctuary
     encounter: the_rift_errata
     name: The Sanctuary
     at: [0.3, 5.4]
+    figure: erratum
     requires: [face_gate, buttress_tree, root_court, sunlit_court, library, before_sanctuary]
     requires_level: 5
 paths:

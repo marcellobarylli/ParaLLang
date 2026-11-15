@@ -5,6 +5,8 @@
 // and fails if they do not. Round 119: the dungeon is a map under a world map. The script walks all seven sites by
 // the ways on, the temple map and a site card, leaves a conversation and returns to it, and looks at the fog.
 // Round 120: it saves Gerald to the party after his site, opens the Party panel and talks to him.
+// Round 122: at each site it checks the character's figure: shown whole, turned to the camera, its face inside the
+// part of the screen the panels leave free, at the first hold and after the resolve; and the scene's triangles.
 // Round 121: it watches the experience grow, meets the Sanctuary's level seal with the six sites cleared at level 4,
 // talks to Gerald again to reach level 5, and enters.
 //
@@ -26,7 +28,7 @@ import { PassingProvider, createRuntime, passingAnswers } from '../../server/tes
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '121', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '122', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/'; // the page is served under a subpath, as on GitHub Pages
 const EXTRA = process.env.SHOTS_EXTRA === '1'; // also the in-between and debugging pictures
@@ -122,6 +124,22 @@ const state = (page) => page.evaluate(() => {
     phase: s.phase, siteIndex: s.siteIndex, siteId: s.dungeon.sites[s.siteIndex].id, connection: s.connection, isLoading: s.isLoading, error: s.error, siteError: s.siteError,
     at: s.progress?.at ?? null, cleared: s.progress?.clearedSiteIds ?? [], card: document.querySelector('.site-card')?.textContent ?? null,
     progression: s.progression, xpGained: s.xpGained, levelUp: s.levelUp, chip: document.querySelector('.level-chip')?.textContent ?? null,
+    // Round 122: the figure at the camera's site, and where its face falls on the screen and in the free part of it.
+    figure: level && (() => {
+      const figure = level.figures[s.siteIndex];
+      if (!figure) return null;
+      const pose = level.director.pose;
+      const toCamera = Math.atan2(pose.position[0] - figure.position[0], pose.position[2] - figure.position[2]);
+      let off = Math.abs(figure.facing - toCamera) % (2 * Math.PI);
+      if (off > Math.PI) off = 2 * Math.PI - off;
+      const ndc = level.camera.position.clone().set(figure.position[0], figure.position[1] + figure.focus, figure.position[2]).project(level.camera);
+      const face = [Math.round(((ndc.x + 1) / 2) * innerWidth), Math.round(((1 - ndc.y) / 2) * innerHeight)];
+      const hud = document.querySelector('.hud')?.getBoundingClientRect();
+      const dock = document.querySelector('.dock')?.getBoundingClientRect();
+      const side = dock && dock.height >= innerHeight * 0.9 && dock.width < innerWidth * 0.75; // a side panel
+      const free = { left: 0, top: Math.round(hud?.bottom ?? 0), right: Math.round(side ? dock.left : innerWidth), bottom: Math.round(dock && !side ? dock.top : innerHeight) };
+      return { name: figure.name, visible: figure.visible, scale: Math.round(figure.scale * 100) / 100, offDegrees: Math.round((off * 180) / Math.PI), face, free, inFree: ndc.z < 1 && face[0] >= free.left && face[0] <= free.right && face[1] >= free.top && face[1] <= free.bottom };
+    })(),
     labels: [...document.querySelectorAll('.site-label')].filter((label) => !label.hidden).map((label) => label.textContent), fog: level?.hiddenSites ?? null,
     encounter: s.encounter && { id: s.encounter.encounterId, state: s.encounter.state, version: s.encounter.version },
     closedObjectives: s.closedObjectives, beat: s.beat, sheet: Boolean(document.querySelector('.sheet')), caption: document.querySelector('.caption')?.textContent ?? null,
@@ -184,6 +202,13 @@ async function run(browser, runtime, size, log) {
     check(now.camera.toSite < (index === 0 ? 10.5 : 4.5), `${id}: the camera stands by the site (${now.camera.toSite} m)`);
     check(now.camera.targetToSite < 0.5, `${id}: the camera looks at the site (${now.camera.targetToSite} m off)`);
     if (sheet) check(now.closedObjectives === 0, `${id}: the conversation starts with nothing closed`);
+    // Round 122: the character stands there, whole, turned to the camera, its face in the free part of the screen.
+    // The view slides to the free part over about a second after the sheet opens, so the figure is read after that.
+    await sleep(1600);
+    const f = (await state(page)).figure;
+    check(f && f.visible && f.scale >= 0.99, `${id}: the figure is shown whole (${JSON.stringify(f)})`);
+    check(f && f.offDegrees <= 25, `${id}: the figure faces the camera (${f?.offDegrees} degrees off)`);
+    check(f && f.inFree, `${id}: the figure's face is inside the free part of the screen (${JSON.stringify(f?.face)} in ${JSON.stringify(f?.free)})`);
   };
   const answerSite = async () => {
     const start = await state(page);
@@ -206,6 +231,7 @@ async function run(browser, runtime, size, log) {
     check(end.camera.targetToSite < 0.5, `${id}: resolved, the camera keeps looking at the site (${end.camera.targetToSite} m off)`);
     check(end.camera.mode !== 'victory' && end.phase === 'encounter', `${id}: the walk waits for the player`);
     check(end.cleared.includes(id), `${id}: the site is cleared (${end.cleared})`);
+    check(end.figure && end.figure.visible && end.figure.scale >= 0.99 && end.figure.inFree, `${id}: resolved and stepped in, the figure is whole and its face is still in the free part of the screen (${JSON.stringify(end.figure)})`);
     // Round 121: ten for each objective and twenty-five for the resolve, and the top bar shows the level.
     const earned = 10 * passingAnswers(runtime.content, start.encounter.id).length + 25;
     check(end.progression.xp - start.progression.xp === earned && end.xpGained > 0, `${id}: the conversation earned ${earned} XP (${start.progression.xp} to ${end.progression.xp}, last +${end.xpGained})`);
@@ -252,6 +278,9 @@ async function run(browser, runtime, size, log) {
   await clickButton(page, 'Enter Ta Prohm');
   await waitArrived(page, 'overview');
   await shot('03-map-start', { settle: 2600 }); // the site labels fade in after the camera settles
+  // Round 122: the level, the dungeon's markers and the seven figures together stay inside the style's budget.
+  const triangles = await page.evaluate(() => ({ ...window.__parallangLevel.sceneTriangles, figures: window.__parallangLevel.figures.map((figure) => figure && [figure.name, figure.triangles]) }));
+  check(triangles.total <= 64000 && triangles.figures.every(Boolean) && new Set(triangles.figures.map(([name]) => name)).size === 7, `seven figures, and the scene within 64,000 triangles (${JSON.stringify(triangles)})`);
   await mapShows('a new run', [1, 2, 3], ['sunlit_court', 'library', 'before_sanctuary', 'sanctuary']);
   // Rounds 117 and 118: the installed page on iOS. Chrome cannot emulate display-mode and does not have the bug, so the
   // built stylesheet's installed rules are applied without their condition and a gap of 62 px is set by hand: the
