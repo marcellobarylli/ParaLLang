@@ -40,7 +40,7 @@ async function play(runtime, learnerId, encounter, answers) {
 }
 
 const start = (runtime, learnerId, body) => api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body });
-const view = (runtime, learnerId) => api(runtime, '/api/dungeons/ta_prohm', { learnerId });
+const view = (runtime, learnerId) => api(runtime, '/api/dungeons/ta_prohm/map', { learnerId });
 const move = (runtime, learnerId, body) => api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body });
 // Starts and resolves the encounter of the site the player stands at.
 async function clearHere(runtime, content, learnerId, siteId) {
@@ -248,12 +248,17 @@ test('a market conversation under way is not replaced, a market resolve clears n
   assert.equal(site.data.encounter.state, 'ongoing');
   assert.notEqual(site.data.encounter.id, market.id);
 
-  assert.equal((await api(runtime, '/api/dungeons/atlantis', { learnerId })).status, 404);
-  assert.equal((await api(runtime, '/api/dungeons/atlantis', { learnerId })).data.error.code, 'UNKNOWN_DUNGEON');
+  assert.equal((await api(runtime, '/api/dungeons/atlantis/map', { learnerId })).status, 404);
+  assert.equal((await api(runtime, '/api/dungeons/atlantis/map', { learnerId })).data.error.code, 'UNKNOWN_DUNGEON');
   assert.equal((await api(runtime, '/api/dungeons/atlantis/move', { learnerId, method: 'POST', body: { siteId: 'face_gate' } })).data.error.code, 'UNKNOWN_DUNGEON');
   assert.equal((await start(runtime, learnerId, { dungeonId: 'atlantis' })).data.error.code, 'UNKNOWN_DUNGEON');
   assert.equal((await view(runtime)).status, 400, 'a learner id is required');
-  assert.equal((await api(runtime, '/api/dungeons/ta_prohm', { learnerId, token: null })).status, 401, 'the token is required');
+  // Review 1 (R1.1): the path the client of rounds 115 to 118 read tells that page to reload, whatever the dungeon.
+  const outdated = await api(runtime, '/api/dungeons/ta_prohm', { learnerId });
+  assert.equal(outdated.status, 426);
+  assert.deepEqual([outdated.data.error.code, outdated.data.error.message], ['CLIENT_OUTDATED', 'This page is older than the server. Open Settings and tap "Reload the page".']);
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm', { learnerId, token: null })).status, 401, 'still behind the token');
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId, token: null })).status, 401, 'the token is required');
   assert.equal((await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId, method: 'POST', body: { siteId: 'face_gate' }, token: null })).status, 401);
 });
 

@@ -6,7 +6,7 @@
 import { describe, expect, test } from 'vitest';
 import { taProhmHeightAt } from '@parallang/aesthetic';
 import { DUNGEON } from '../../dungeon.js';
-import { DURATIONS, ENGAGE_MAX, EYE, STANDOFF, WALK_SPEED, arrivalPoints, blendPoses, createDirector, measurePath, pathPoints, turnPoses, walkFraction } from '../director.js';
+import { CLEAR, DURATIONS, ENGAGE_MAX, EYE, STANDOFF, WALK_SPEED, arrivalPoints, blendPoses, createDirector, dropPoses, measurePath, pathPoints, turnPoses, walkFraction } from '../director.js';
 import { blocked } from '../../__tests__/taProhmPlan.js';
 import { dockInsets, freeRect } from '../insets.js';
 
@@ -194,14 +194,64 @@ describe('the five states', () => {
     expect(d.arrival).toBeLessThan(DURATIONS.descend + (measurePath(pathPoints(DUNGEON, 2, 0)).total - STANDOFF) / WALK_SPEED + DURATIONS.ramp);
   });
 
-  test('a walk from the map comes down as a crane shot, in the approach\'s time', () => {
-    const d = director();
-    d.overview();
-    run(d, 4);
-    d.walk(0, 1);
-    expect(d.peek(DURATIONS.approach - 0.05).stage).toBe('transition');
-    expect(d.peek(DURATIONS.approach + 0.05).stage).toBe('travel');
-    expect(d.peek(DURATIONS.approach).position[1]).toBeCloseTo(EYE, 6);
+  // Review 1 of round 119 (R1.2): from the map or the orbit down to a site, the camera comes down only over the
+  // spot where it will stand. Below the height of the towers it is nowhere else, so it crosses no roof on the way.
+  test('the way down from the sky comes down over the place the camera will stand, for an approach and for a walk from the map', () => {
+    const TOWERS = 16;
+    const shapes = [{ aspect: 390 / (844 * 0.45), scale: 0.45 }, { aspect: 1000 / 844, scale: 844 / 900 }];
+    const descents = [];
+    for (let to = 0; to <= lastSite; to++) {
+      descents.push([`the map to ${DUNGEON.sites[to].id}`, (d) => d.overview(), (d) => d.approach(to)]);
+      descents.push([`the orbit to ${DUNGEON.sites[to].id}`, (d) => d.attract(), (d) => d.approach(to)]);
+    }
+    for (const [from, to] of [...PAIRS, ...PAIRS.map(([a, b]) => [b, a])]) descents.push([`the map to the walk ${DUNGEON.sites[from].id} to ${DUNGEON.sites[to].id}`, (d) => d.overview(), (d) => d.walk(from, to)]);
+    for (const shape of shapes) {
+      for (const [name, above, down] of descents) {
+        const d = director();
+        d.setView(shape);
+        above(d);
+        run(d, 12.3); // the far state has settled; the orbit is somewhere on its round
+        expect(d.pose.position[1], name).toBeGreaterThan(CLEAR);
+        down(d);
+        expect(d.peek(DURATIONS.approach - 0.05).stage, name).toBe('transition');
+        const landing = d.peek(DURATIONS.approach).position;
+        let low = 0;
+        run(d, DURATIONS.approach, (pose, previous) => {
+          if (d.stage !== 'transition') return; // the hold's drift is not the descent
+          expect(pose.position[1], name).toBeLessThanOrEqual(previous.position[1] + 1e-9); // it only comes down
+          expect(distance(pose.position, previous.position), name).toBeLessThan(15); // no jump: a phone's orbit stands far back, and from its far side the way down is 9 m a frame
+          expect(distance(pose.position, pose.target), name).toBeGreaterThan(1.5);
+          if (pose.position[1] >= TOWERS) return;
+          low += 1;
+          expect(Math.hypot(pose.position[0] - landing[0], pose.position[2] - landing[2]), `${name}: at ${pose.position[1].toFixed(1)} m`).toBeLessThan(0.5);
+        });
+        expect(low, name).toBeGreaterThan(5);
+        expect(d.arrived || d.stage === 'travel', name).toBe(true);
+      }
+    }
+  });
+
+  test('a camera that starts below the roofs goes up before it crosses, and both ways down end on their poses', () => {
+    const sky = { position: [-4, 120, 30], target: [-4, 0, 34] };
+    const court = { position: [6, 1.6, 25.5], target: [6, 1.35, 21.5] };
+    const gate = { position: [0.3, 1.6, 15.2], target: [0.3, 1.35, 11.2] };
+    for (const [a, b] of [[sky, court], [gate, court]]) {
+      expect(dropPoses(a, b, 0)).toEqual(a);
+      expect(dropPoses(a, b, 1)).toEqual(b);
+    }
+    // From the sky the crossing is over when the camera is down to CLEAR.
+    for (let u = 0; u <= 1; u += 0.01) {
+      const pose = dropPoses(sky, court, u);
+      if (pose.position[1] < CLEAR - 1e-6) expect(Math.hypot(pose.position[0] - 6, pose.position[2] - 25.5)).toBeLessThan(1e-6);
+    }
+    // From a gate passage (another tab moved the player): up where it stands, across at CLEAR, down where it will stand.
+    for (let u = 0; u <= 1; u += 0.01) {
+      const pose = dropPoses(gate, court, u);
+      const moved = Math.hypot(pose.position[0] - 0.3, pose.position[2] - 15.2);
+      const left = Math.hypot(pose.position[0] - 6, pose.position[2] - 25.5);
+      if (pose.position[1] < CLEAR - 1e-6) expect(Math.min(moved, left)).toBeLessThan(1e-6);
+    }
+    expect(dropPoses(gate, court, 0.45).position[1]).toBe(CLEAR);
   });
 
   test('an approach ends on the way in looking at the site: the start site from a few metres up, the others at eye height', () => {

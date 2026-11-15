@@ -47,6 +47,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
   let requestEpoch = 0; // a new learner or server: older replies are dropped
   let siteRequest = 0; // the newest site start wins
   let progressRequest = 0; // the newest read of the run wins, and a reset outdates every read before it
+  let runEpoch = 0; // a new run: a move's reply from the run before it is dropped (review 1 of round 119, R1.5)
   let spellbookVersion = 0; // counts the Spellbooks taken from replies, so a slower, older read is not applied over them
 
   return create((set, get) => {
@@ -118,8 +119,10 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const patch = { encounter: result.encounter, spellbook: withSpellbook(result.spellbook), encounterLoading: false, assessment: null, closedObjectives: 0, draft: '', pendingInput: null };
         const index = siteIndexOf(result.encounter.encounterId);
         // Another tab moved the player: the camera goes to the site the server started.
-        if (index >= 0 && index !== get().siteIndex) Object.assign(patch, { siteIndex: index, phase: 'approach', walkFrom: null, cameraArrived: false, arrival: 'encounter' });
+        const elsewhere = index >= 0 && index !== get().siteIndex;
+        if (elsewhere) Object.assign(patch, { siteIndex: index, phase: 'approach', walkFrom: null, cameraArrived: false, arrival: 'encounter' });
         set(patch);
+        if (elsewhere) refreshProgress(learnerId); // the map this store holds is the other tab's past
         // "Talk" on the site card: the camera is already there.
         if (get().phase === 'site' && index === get().siteIndex) set({ phase: 'encounter' });
         else maybeOpen();
@@ -238,11 +241,13 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const s = get();
         const open = s.phase === 'overview' || s.phase === 'site' || (s.phase === 'encounter' && s.encounter?.state === 'resolved') || (MOVING.has(s.phase) && Boolean(s.siteError));
         const target = indexOfSite(siteId);
-        if (!open || s.travelling || !s.learnerId || target < 0 || !siteStatesOf(s)[siteId]?.reachable) return;
+        // Not while a site start is with the server (Talk on the site card): its reply would find the player gone.
+        if (!open || s.travelling || s.encounterLoading || !s.learnerId || target < 0 || !siteStatesOf(s)[siteId]?.reachable) return;
         const learnerId = s.learnerId;
         const epoch = requestEpoch;
         const from = indexOfSite(s.progress.at);
-        const current = () => epoch === requestEpoch && get().learnerId === learnerId;
+        const run = runEpoch;
+        const current = () => epoch === requestEpoch && run === runEpoch && get().learnerId === learnerId;
         const move = (leave) => api.moveDungeon(learnerId, dungeon.id, { siteId, ...(leave ? { leave: true } : {}) });
         set({ travelling: true, error: null });
         siteRequest += 1; // a site start still in flight belongs to the place the player is leaving
@@ -265,7 +270,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           if (!current()) return;
           set({ error: error.message, travelling: false });
           await refreshProgress(learnerId);
-        } finally { if (current() && get().travelling) set({ travelling: false }); }
+        } finally { if (epoch === requestEpoch && get().learnerId === learnerId && get().travelling) set({ travelling: false }); }
       },
 
       // From a site (its card, a resolved conversation, a start that failed) up to the temple map.
@@ -274,6 +279,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         if (s.phase === 'site' || (s.phase === 'encounter' && s.encounter?.state === 'resolved') || (MOVING.has(s.phase) && Boolean(s.siteError))) {
           siteRequest += 1;
           set({ ...quiet, phase: 'overview', cameraArrived: false });
+          // The map is read again: the read after the last answer may have failed, and the map would show its past.
+          if (s.learnerId) refreshProgress(s.learnerId);
         }
       },
 
@@ -312,7 +319,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         if (s.phase === 'encounter' && s.encounter?.state === 'resolved' && s.dungeon.sites[s.siteIndex]?.id === s.dungeon.goal) showVictory();
       },
       // The victory screen's other way out: the finished run stays open (critique 1.3).
-      stay: () => { if (get().phase === 'victory') set({ phase: 'overview' }); },
+      stay: () => { if (get().phase === 'victory' && !get().isLoading) set({ phase: 'overview' }); }, // not while Play again is with the server
 
       playAgain: async () => {
         const { learnerId, isLoading } = get();
@@ -325,6 +332,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           if (!current()) return;
           siteRequest += 1;
           progressRequest += 1; // a read of the finished run still in flight must not undo the reset (R1.2)
+          runEpoch += 1; // nor a move made in it
           if (!usable(view)) throw new Error(OLD_SERVER);
           takeView(view);
           set({ ...quiet, phase: 'world', siteIndex: Math.max(0, indexOfSite(view.progress.at)), walkFrom: null, cameraArrived: false, isLoading: false });

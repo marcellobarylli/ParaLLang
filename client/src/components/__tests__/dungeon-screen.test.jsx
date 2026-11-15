@@ -68,10 +68,14 @@ function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart =
     const body = init.body ? JSON.parse(init.body) : {};
     server.paths.push(path);
     if (path === '/api/learner') return response(201, { learnerId, recovered: false, language: italianLanguage });
-    if (path === '/api/dungeons/ta_prohm') return response(200, run.view());
+    if (path === '/api/dungeons/ta_prohm/map') return response(200, run.view());
     if (path === '/api/dungeons/ta_prohm/reset') { server.session = null; return response(200, run.reset()); }
     if (path === '/api/dungeons/ta_prohm/move') {
       server.moves.push(body);
+      // As the server: a conversation under way holds the player unless the move says `leave` (review 1, R1.6).
+      if (server.session && !server.session.resolved && body.siteId !== run.run.at && body.leave !== true) {
+        return response(409, { error: { code: 'CONVERSATION_UNDER_WAY', message: 'Finish your conversation first.' } });
+      }
       try {
         const from = run.run.at;
         const moved = run.move(body.siteId);
@@ -84,7 +88,7 @@ function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart =
       if (failFirstStart && server.starts === 1) return response(503, { error: { code: 'CLI_TIMEOUT', message: 'The selected CLI timed out. Your progress was not changed.', retryable: true } });
       expect(body.dungeonId).toBe('ta_prohm');
       server.sessions += 1;
-      server.session = { siteId: run.run.at, version: 1 };
+      server.session = { siteId: run.run.at, version: 1, resolved: false };
       return response(200, { encounter: siteEncounter(run.run.at, 1), spellbook: { ...spellbook, inEncounter: true } });
     }
     if (path === '/api/encounter/help') {
@@ -96,6 +100,7 @@ function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart =
       server.sends += 1;
       if (failFirstSend && server.sends === 1) return response(503, { error: { message: 'Grading is temporarily unavailable; retry your answer.', retryable: true } });
       const { siteId } = server.session;
+      server.session.resolved = true;
       run.clear(siteId);
       return response(200, {
         encounter: siteEncounter(siteId, 4, { resolved: true, allVisible: true }), spellbook,
@@ -224,15 +229,23 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   const card = screen.getByRole('region', { name: 'The Buttress Tree' });
   expect(within(card).getByText('Mortimer has not let you pass yet')).toBeTruthy();
   expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Root Court · cleared', false]]); // the ways back are open
+  // He walks back to the gate: the move says it leaves the conversation (review 1, R1.6), and the server drops it.
+  await user.click(screen.getByRole('button', { name: /Walk to The Face Gate/ }));
+  expect(await screen.findByRole('button', { name: 'Talk to Portia again' })).toBeTruthy();
+  expect(server.moves.at(-1)).toEqual({ siteId: 'face_gate', leave: true });
+  await user.click(screen.getByRole('button', { name: /Walk to The Buttress Tree/ }));
+  await screen.findByText('Order some ham in Italian.');
+  expect(server.starts).toBe(4); // Mortimer starts again from his first line
+  await user.click(screen.getByRole('button', { name: 'Leave' }));
   await user.click(screen.getByRole('button', { name: 'Back to the conversation' }));
   expect(screen.getByLabelText('Conversation with Mortimer')).toBeTruthy();
-  expect(server.starts).toBe(3); // the same conversation, not a new one
+  expect(server.starts).toBe(4); // the same conversation, not a new one
   await answer(user, 'Mortimer');
 
   // Back through Gerald's court, which is cleared: its card, and Gerald will talk again.
   await user.click(await screen.findByRole('button', { name: /Walk to The Root Court/ }));
   expect(await screen.findByRole('button', { name: 'Talk to Gerald again' })).toBeTruthy();
-  expect(server.starts).toBe(3);
+  expect(server.starts).toBe(4);
   await user.click(screen.getByRole('button', { name: /Walk to The Sunlit Court/ }));
   await screen.findByText('Ask Flick the time.');
   await answer(user, 'Flick');
@@ -280,7 +293,7 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   await user.click(screen.getByRole('button', { name: 'Go down to The Sanctuary' }));
   await user.click(await screen.findByRole('button', { name: 'Talk to Errata again' }));
   await screen.findByText('Answer Errata.');
-  expect(server.moves.every((move) => move.leave === undefined || move.leave === true)).toBe(true);
+  expect(server.moves.filter((move) => move.leave !== undefined)).toEqual([{ siteId: 'face_gate', leave: true }]); // only the walk out of a conversation
 });
 
 test('Play again starts a new run from the world map, with the fog back', async () => {

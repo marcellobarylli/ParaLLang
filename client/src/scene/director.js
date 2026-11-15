@@ -4,7 +4,7 @@
 // Five states. Each starts from the pose the camera holds, so states join without a jump:
 //   attract  : a slow isometric orbit around the whole level
 //   overview : a bird's-eye view over the sites and their paths, east (the entrance) at the bottom of the screen
-//   approach : down to a site (the start site framed from a few metres up), then a slow drift
+//   approach : across to the point above a site and down to it (the start site framed from a few metres up), then a slow drift
 //   walk     : along a path at eye height above the ground to a neighbouring site, then the drift
 //   victory  : back out to the isometric orbit
 //
@@ -91,6 +91,33 @@ export function turnPoses(a, b, u) {
   const position = lerp3(a.position, b.position, u);
   const c = Math.cos(pitch);
   return { position, target: [position[0] + Math.sin(yaw) * c * distance, position[1] + Math.sin(pitch) * distance, position[2] + Math.cos(yaw) * c * distance] };
+}
+
+// Review 1 of round 119 (R1.2): the way down from the sky to a place on the ground. The camera crosses to the point
+// above where it will stand while it is still above everything (CLEAR), and comes down there. (blendPoses comes down
+// on a slant, which from the map to a court crosses a gallery roof on the way.) A camera that starts below CLEAR
+// goes up first, then across, then down. `u` is the fraction of the time, not eased.
+export const CLEAR = 36; // metres: above every roof and tower, and above the crowns of the giant trees
+const uneased = (v) => (v <= 0 ? 0 : v >= 1 ? 1 : v < 0.5 ? Math.cbrt(v / 4) : 1 - Math.cbrt(2 * (1 - v)) / 2); // easeInOut's inverse
+export function dropPoses(a, b, u) {
+  if (u <= 0) return clonePose(a);
+  if (u >= 1) return clonePose(b);
+  const [ay, by] = [a.position[1], b.position[1]];
+  let across;
+  let y;
+  if (ay > CLEAR && by < CLEAR) {
+    // One descent: the crossing is over by the time the camera is down to CLEAR.
+    y = lerp(ay, by, easeInOut(u));
+    across = easeInOut(Math.min(1, u / uneased((ay - CLEAR) / (ay - by))));
+  } else {
+    const top = Math.max(CLEAR, ay, by);
+    y = u < 0.25 ? lerp(ay, top, easeInOut(u / 0.25)) : u < 0.65 ? top : lerp(top, by, easeInOut((u - 0.65) / 0.35));
+    across = easeInOut(clamp((u - 0.25) / 0.4, 0, 1));
+  }
+  return {
+    position: [lerp(a.position[0], b.position[0], across), y, lerp(a.position[2], b.position[2], across)],
+    target: lerp3(a.target, b.target, easeInOut(u)),
+  };
 }
 
 // A slow sway that starts at zero, so a hold joins its transition without a jump.
@@ -240,13 +267,13 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
     const m = mode;
     if (m.name === 'walk') {
       const lead = m.lead;
-      if (t < lead) return { stage: 'transition', ...(m.far ? blendPoses : turnPoses)(m.from, pathPose(m.path, m.s0), easeInOut(t / lead)) };
+      if (t < lead) return { stage: 'transition', ...(m.far ? dropPoses(m.from, pathPose(m.path, m.s0), t / lead) : turnPoses(m.from, pathPose(m.path, m.s0), easeInOut(t / lead))) };
       const tt = t - lead;
       if (tt < m.travel) return { stage: 'travel', ...pathPose(m.path, lerp(m.s0, m.s1, walkFraction(tt, m.travel))) };
       return { stage: 'hold', ...shaped(withDrift(pathPose(m.path, m.s1), tt - m.travel), m.site) };
     }
     const hold = m.hold(t);
-    if (m.from && t < m.duration) return { stage: 'transition', ...blendPoses(m.from, hold, easeInOut(t / m.duration)) };
+    if (m.from && t < m.duration) return { stage: 'transition', ...(m.name === 'approach' ? dropPoses(m.from, hold, t / m.duration) : blendPoses(m.from, hold, easeInOut(t / m.duration))) };
     return { stage: 'hold', ...hold };
   }
 
@@ -286,8 +313,7 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
       if (!points) return api.approach(to);
       const path = measurePath(points);
       const s1 = standoff(path);
-      // Where the walk starts. From far off (the overview) the camera comes down to the path's start as a crane
-      // shot. From a hold at the site it goes there in a straight line and turns as it goes. When the path is the
+      // Where the walk starts. From far off (the overview) the camera comes down onto the path's start (dropPoses). From a hold at the site it goes there in a straight line and turns as it goes. When the path is the
       // way the camera came, it stands on it already and only turns.
       let [s0, lead, far] = [0, 0, false];
       if (pose) {

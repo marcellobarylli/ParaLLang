@@ -21,6 +21,9 @@ function requireToken(token) {
   };
 }
 
+// What a page from before round 119 is told when it reads the dungeon (it shows the message on its route card).
+export const OUTDATED_CLIENT = 'This page is older than the server. Open Settings and tap "Reload the page".';
+
 export function createApp({ service, logger = console, token = null }) {
   const app = express();
   app.use(cors());
@@ -55,10 +58,13 @@ export function createApp({ service, logger = console, token = null }) {
   });
 
   // Round 114: a dungeon with the learner's run, and a new run. Round 119: the dungeon is a map, and a move walks it.
-  app.get('/api/dungeons/:id', async (req, res, next) => {
+  // Review 1 of round 119 (R1.1): the map is read at /map. The path the client of rounds 115 to 118 reads answers
+  // with what to do, which that client shows on its route card: its page is older than this server.
+  app.get('/api/dungeons/:id/map', async (req, res, next) => {
     try { res.json(await service.getDungeon(req.get('X-Learner-Id'), req.params.id)); }
     catch (error) { next(error); }
   });
+  app.get('/api/dungeons/:id', (req, res, next) => next(new AppError(OUTDATED_CLIENT, { status: 426, code: 'CLIENT_OUTDATED' })));
   app.post('/api/dungeons/:id/reset', async (req, res, next) => {
     try { res.json(await service.resetDungeon(req.get('X-Learner-Id'), req.params.id)); }
     catch (error) { next(error); }

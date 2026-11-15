@@ -71,7 +71,7 @@ test('the store explains a missing server without a request, and saved settings 
   expect(store.getState().serverProblem).toBeNull();
   expect(store.getState().connection).toBe('ready');
   expect(store.getState().dungeon.sites[0].characterName).toBe('Portia');
-  expect(fetchImpl.mock.calls.map(([url]) => url)).toEqual(['https://parallang.example.com/api/learner', 'https://parallang.example.com/api/dungeons/ta_prohm']);
+  expect(fetchImpl.mock.calls.map(([url]) => url)).toEqual(['https://parallang.example.com/api/learner', 'https://parallang.example.com/api/dungeons/ta_prohm/map']);
   for (const [, init] of fetchImpl.mock.calls) expect(init.headers['X-ParaLLang-Token']).toBe('secret-token');
   expect(loadSettings(storage)).toEqual({ serverUrl: 'https://parallang.example.com', token: 'secret-token' });
 });

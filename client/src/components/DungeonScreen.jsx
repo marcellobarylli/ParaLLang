@@ -161,7 +161,7 @@ function WaysOn({ state, sites, site }) {
         const why = status.reachable ? null : status.gate?.sealed ? sealNote(status.gate) : !here?.cleared ? `${site.characterName ?? 'Someone'} has not let you pass` : null;
         return (
           <li key={way.id}>
-            <button type="button" className="secondary-button" onClick={() => state.travel(way.id)} disabled={!status.reachable || travelling}>
+            <button type="button" className="secondary-button" onClick={() => state.travel(way.id)} disabled={!status.reachable || travelling || state.encounterLoading}>
               Walk to {way.name}{status.state === 'known' && <small> · unexplored</small>}{status.cleared && <small> · cleared</small>}
             </button>
             {why && <small className="way-why">{why}</small>}
@@ -271,7 +271,7 @@ function VictoryCard({ state }) {
       <p>All {dungeon.sites.length} let you pass.{words > 0 && ` Your Spellbook holds ${words} ${words === 1 ? 'entry' : 'words and phrases'}.`}</p>
       <div className="button-row">
         <button type="button" className="primary-button big-button" onClick={state.playAgain} disabled={isLoading}>Play again</button>
-        <button type="button" className="secondary-button big-button" onClick={state.stay}>Stay in the temple</button>
+        <button type="button" className="secondary-button big-button" onClick={state.stay} disabled={isLoading}>Stay in the temple</button>
         <button type="button" className="secondary-button big-button" onClick={state.openSpellbook}>Spellbook</button>
       </div>
     </section>

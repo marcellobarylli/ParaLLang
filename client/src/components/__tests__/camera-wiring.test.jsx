@@ -52,7 +52,7 @@ function fakeServer() {
     const path = String(url);
     const body = init.body ? JSON.parse(init.body) : {};
     if (path === '/api/learner') return response({ learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: { code: 'it', name: 'Italian', tag: 'it-IT' } });
-    if (path === '/api/dungeons/ta_prohm') return response(run.view());
+    if (path === '/api/dungeons/ta_prohm/map') return response(run.view());
     if (path === '/api/dungeons/ta_prohm/move') { server.session = null; return response(run.move(body.siteId)); }
     if (path === '/api/encounter/start') {
       server.sessions += 1;

@@ -334,6 +334,70 @@ test('the map is reached from a site card and from a resolved conversation, not 
   expect(s().phase).toBe('encounter');
 });
 
+test('no walk while Talk is with the server, and the map is read again when it opens', async () => {
+  const pending = deferred();
+  const { api, s } = makeStore({ steps: 1 });
+  await s().initialize();
+  s().onCameraArrived();
+  expect(s().phase).toBe('site');
+  const started = api.startEncounter.getMockImplementation();
+  api.startEncounter.mockImplementationOnce(async (...args) => { await pending.promise; return started(...args); });
+  const talk = s().talk();
+  expect(s().encounterLoading).toBe(true);
+  await s().travel('root_court'); // the reply to Talk would find the player gone
+  expect(api.moveDungeon).not.toHaveBeenCalled();
+  pending.resolve();
+  await talk;
+  expect(s()).toMatchObject({ phase: 'encounter', encounterLoading: false });
+
+  // The read of the run after the last answer fails: the store still holds the map from before it.
+  api.getDungeon.mockImplementationOnce(async () => { throw new Error('The server did not answer.'); });
+  await s().sendMessage('Ciao!');
+  s().leaveConversation(); // resolved: there is nothing to leave
+  expect(s().phase).toBe('encounter');
+  const reads = api.getDungeon.mock.calls.length;
+  s().openMap();
+  expect(s().phase).toBe('overview');
+  await vi.waitFor(() => expect(api.getDungeon.mock.calls.length).toBe(reads + 1));
+});
+
+// Review 1 of round 119 (R1.5).
+test('a move whose reply comes after a new run has started is dropped, and Stay waits for Play again', async () => {
+  const late = deferred();
+  const slowReset = deferred();
+  const { api, server, s } = makeStore({ steps: TOUR.length });
+  await s().initialize();
+  expect(s().phase).toBe('victory');
+  const reset = api.resetDungeon.getMockImplementation();
+  api.resetDungeon.mockImplementationOnce(async (...args) => { await slowReset.promise; return reset(...args); });
+  const again = s().playAgain();
+  expect(s().isLoading).toBe(true);
+  s().stay(); // Play again is with the server
+  expect(s().phase).toBe('victory');
+  slowReset.resolve();
+  await again;
+  expect(s()).toMatchObject({ phase: 'world', progress: { run: 2 } });
+
+  // A second store plays the other half: a move made in run 1 that answers after the reset.
+  const other = makeStore({ steps: TOUR.length });
+  await other.s().initialize();
+  other.s().stay();
+  await other.s().start();
+  other.s().onCameraArrived();
+  const moved = other.api.moveDungeon.getMockImplementation();
+  other.api.moveDungeon.mockImplementationOnce(async (...args) => { const view = await moved(...args); await late.promise; return view; });
+  const walk = other.s().travel('before_sanctuary');
+  await vi.waitFor(() => expect(other.server.run.run.at).toBe('before_sanctuary'));
+  other.s().openMap();
+  other.store.setState({ phase: 'victory' }); // the reload's victory screen, where Play again lives
+  await other.s().playAgain();
+  expect(other.s()).toMatchObject({ phase: 'world', progress: { run: 2, at: 'face_gate' } });
+  late.resolve();
+  await walk;
+  expect(other.s()).toMatchObject({ phase: 'world', travelling: false, progress: { run: 2, at: 'face_gate' } });
+  expect(server.run.run.run).toBe(2);
+});
+
 test('a server from before the map is named, and Start tries again', async () => {
   const { api, s } = makeStore();
   const view = api.getDungeon.getMockImplementation();
@@ -395,8 +459,12 @@ test('the server decides the site: a player another tab moved is followed', asyn
   await s().start(); // this tab still believes the player is at the gate
   expect(s()).toMatchObject({ phase: 'approach', siteIndex: index('root_court'), cameraArrived: false, arrival: 'encounter' });
   expect(s().encounter.encounterId).toBe(encounterOf('root_court'));
+  // Review 1 of round 119 (R1.4): the map follows too, so the way back to the gate is offered after Leave.
+  await vi.waitFor(() => expect(s().progress.at).toBe('root_court'));
   s().onCameraArrived();
   expect(s().phase).toBe('encounter');
+  s().leaveConversation();
+  expect(siteStatesOf(s()).face_gate.reachable).toBe(true);
 });
 
 test('start over replaces the conversation of the site', async () => {

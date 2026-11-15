@@ -90,7 +90,7 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
     ['face_gate', 'Portia'], ['buttress_tree', 'Mortimer'], ['root_court', 'Gerald'], ['sunlit_court', null], ['library', null], ['before_sanctuary', null], ['sanctuary', null],
   ]);
   // The bundled file and the server's copy agree on where the sites stand and how the paths run.
-  const served = (await api(runtime, '/api/dungeons/ta_prohm', { learnerId: s().learnerId })).data.dungeon;
+  const served = (await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId: s().learnerId })).data.dungeon;
   assert.deepEqual(served.sites.map((site) => [site.id, site.encounterId, site.at]), dungeon.sites.map((site) => [site.id, site.encounterId, site.at]));
   assert.deepEqual(served.paths, dungeon.paths.map(({ between, via }) => ({ between, via })));
   assert.deepEqual([served.start, served.goal], [dungeon.start, dungeon.goal]);
