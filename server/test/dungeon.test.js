@@ -105,6 +105,8 @@ test('a new run: the view carries the map and the fog, a start is the gate\'s en
   // A hidden site keeps its place but not its character's name.
   assert.deepEqual(fresh.data.dungeon.sites.map((site) => [site.id, site.encounterId, site.characterName]), SITES.map(([id, encounter, name]) => [id, encounter, ['face_gate', 'buttress_tree', 'root_court'].includes(id) ? name : null]));
   assert.deepEqual(fresh.data.dungeon.sites[0].at, [3.5, 63]);
+  // Round 120: whether a site's character can be saved to the party, as far as the fog allows.
+  assert.deepEqual(fresh.data.dungeon.sites.map((site) => site.saveable), [false, true, true, null, null, null, null]);
   assert.deepEqual(fresh.data.dungeon.paths[0], { between: ['face_gate', 'buttress_tree'], via: [[0.3, 60.5], [0.3, 52], [0.3, 46]] });
   const { sites, ...progress } = fresh.data.progress;
   assert.deepEqual(progress, { run: 1, at: 'face_gate', complete: false, clearedSiteIds: [], visitedSiteIds: ['face_gate'] });
@@ -211,6 +213,42 @@ test('moves follow the pass rule, a conversation under way holds the player unle
   assert.equal((await start(runtime, learnerId, { dungeonId: 'ta_prohm' })).data.encounter.encounterId, 'the_rift_errata');
   const envelope = await runtime.storage.load(learnerId);
   assert.deepEqual([...envelope.world.completedEncounterIds].sort(), SITES.map(([, encounter]) => encounter).sort());
+});
+
+// Round 120: a party member's conversation is an ordinary one (no dungeonId): it starts where the player stands in the
+// dungeon, does not hold a move, and gives way to a site start only with `restart`.
+test('a party conversation in the dungeon: it starts at a site, a move is free, and a site start needs restart to replace it', async (t) => {
+  const { runtime, content, learnerId } = await dungeonRuntime(t);
+  await clearHere(runtime, content, learnerId, 'face_gate');
+  await move(runtime, learnerId, { siteId: 'root_court' });
+  await clearHere(runtime, content, learnerId, 'root_court');
+  const cleared = (await view(runtime, learnerId)).data;
+  assert.deepEqual(cleared.dungeon.sites.map((site) => site.saveable), [false, true, true, true, null, false, null]);
+  const joined = await api(runtime, '/api/party/recruit', { learnerId, method: 'POST', body: { encounterId: 'imp_coffee_greeting' } });
+  assert.equal(joined.data.joined, true);
+  const [gerald] = joined.data.party;
+  assert.equal(gerald.conversationId, 'gerald_coffee_break');
+
+  const talk = await start(runtime, learnerId, { encounterId: gerald.conversationId });
+  assert.equal(talk.status, 200);
+  assert.equal(talk.data.encounter.partyConversation, true);
+  assert.equal(talk.data.encounter.dungeonId, undefined);
+  // A walk is not held by it, with or without `leave`, and it stays under way.
+  const walked = await move(runtime, learnerId, { siteId: 'sunlit_court' });
+  assert.equal(walked.status, 200);
+  assert.equal((await api(runtime, '/api/encounter/current', { learnerId })).data.encounter.id, talk.data.encounter.id);
+  // Talk resumes it; the site's own start is refused until it is told to replace it.
+  assert.equal((await start(runtime, learnerId, { encounterId: gerald.conversationId })).data.encounter.id, talk.data.encounter.id);
+  assert.equal((await start(runtime, learnerId, { dungeonId: 'ta_prohm' })).data.error.code, 'CONVERSATION_UNDER_WAY');
+  const site = await start(runtime, learnerId, { dungeonId: 'ta_prohm', restart: true });
+  assert.equal(site.data.encounter.siteId, 'sunlit_court');
+  // A finished party conversation counts, and clears no site.
+  await move(runtime, learnerId, { siteId: 'root_court', leave: true });
+  const again = await start(runtime, learnerId, { encounterId: gerald.conversationId });
+  assert.notEqual(again.data.encounter.id, talk.data.encounter.id);
+  assert.equal((await play(runtime, learnerId, again.data.encounter, passingAnswers(content, gerald.conversationId))).state, 'resolved');
+  assert.equal((await api(runtime, '/api/party', { learnerId })).data.party[0].conversations, 1);
+  assert.deepEqual((await view(runtime, learnerId)).data.progress.clearedSiteIds, ['face_gate', 'root_court']);
 });
 
 test('a reset starts a new run at the gate: the fog is back, the conversation is dropped, and the market keeps its record', async (t) => {

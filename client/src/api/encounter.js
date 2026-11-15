@@ -48,6 +48,9 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     // Round 119: the map and the run on it. (The bare path is the one the client of rounds 115 to 118 read; the
     // server answers it with a note to reload.)
     getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/map`, { learnerId }),
+    // Round 120: the party, as the app has it (rounds 021 to 023).
+    getParty: (learnerId) => request('/api/party', { learnerId }),
+    recruit: (learnerId, encounterId) => request('/api/party/recruit', { learnerId, method: 'POST', body: { encounterId } }),
     // Round 119: a walk to a neighbouring site; `leave` drops the dungeon's conversation under way.
     moveDungeon: (learnerId, dungeonId, body) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/move`, { learnerId, method: 'POST', body }),
     resetDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/reset`, { learnerId, method: 'POST' }),

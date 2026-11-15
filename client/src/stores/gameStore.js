@@ -18,6 +18,10 @@ import { unexploredSites } from '../dungeonModel.js';
 // site's fog state and whether it can be walked to now. The encounter, help, Spellbook and review actions are the
 // old single-encounter client's (rounds 001-017).
 //
+// Round 120: the party. A saveable character whose site is cleared can be saved (recruit), and a member can be talked
+// to from anywhere outside a conversation (talkTo): the phase `party` is that conversation, and leaveParty returns
+// to where it was opened. An unfinished party conversation stays on the server until another conversation starts.
+//
 // This module imports no YAML and no three.js: server/test/web-client.test.js loads it in plain Node.
 const LEARNER_KEY = 'parallang.learnerId';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
@@ -32,11 +36,15 @@ function browserStorage() {
   try { return globalThis.localStorage; } catch { return null; }
 }
 
-// The server's sites carry each character's name (null while the fog hides the site); the bundled file does not.
+// The server's sites carry each character's name and whether the character can be saved to the party (both null
+// while the fog hides the site); the bundled file does not.
 function mergeDungeon(bundled, served) {
   if (!served) return bundled;
-  const names = new Map((served.sites ?? []).map((site) => [site.id, site.characterName ?? null]));
-  return { ...bundled, name: served.name ?? bundled.name, sites: bundled.sites.map((site) => ({ ...site, characterName: names.get(site.id) ?? site.characterName })) };
+  const byId = new Map((served.sites ?? []).map((site) => [site.id, site]));
+  return {
+    ...bundled, name: served.name ?? bundled.name,
+    sites: bundled.sites.map((site) => ({ ...site, characterName: byId.get(site.id)?.characterName ?? site.characterName, saveable: byId.get(site.id)?.saveable ?? site.saveable ?? null })),
+  };
 }
 
 // The server URL and access token come from the settings sheet (stored with the learner id). With no api given,
@@ -47,6 +55,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
   let requestEpoch = 0; // a new learner or server: older replies are dropped
   let siteRequest = 0; // the newest site start wins
   let progressRequest = 0; // the newest read of the run wins, and a reset outdates every read before it
+  let partyRequest = 0; // the newest read or write of the party wins (round 120, critique 1.6)
   let runEpoch = 0; // a new run: a move's reply from the run before it is dropped (review 1 of round 119, R1.5)
   let spellbookVersion = 0; // counts the Spellbooks taken from replies, so a slower, older read is not applied over them
 
@@ -80,6 +89,18 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         takeView(view);
         return view.progress;
       } catch { return null; }
+    };
+
+    // Round 120: the party is read beside the map, when its panel opens and after a member's conversation resolves.
+    // A reply that a newer read or a recruit has overtaken is dropped.
+    const refreshParty = async (learnerId) => {
+      const request = ++partyRequest;
+      const epoch = requestEpoch;
+      try {
+        const data = await api.getParty(learnerId);
+        if (request !== partyRequest || epoch !== requestEpoch || get().learnerId !== learnerId || !Array.isArray(data?.party)) return;
+        set({ party: data.party });
+      } catch { /* the party the store holds stays */ }
     };
 
     // Every Spellbook from a reply goes through here (review 1, R1.4).
@@ -145,6 +166,10 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       dungeon,
       atlas,
       progress: null,
+      party: [], // round 120: the server's list of members
+      partyReturn: null, // the phase a party conversation returns to
+      partyStarting: null, // the conversation Talk has asked the server for
+      recruiting: false,
       phase: 'attract',
       siteIndex: Math.max(0, dungeon.sites.findIndex((site) => site.id === dungeon.start)),
       walkFrom: null,
@@ -198,6 +223,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
             if (!usable(view)) throw new Error(OLD_SERVER);
             set({ learnerId: identity.learnerId, language: identity.language ?? null, connection: 'ready' });
             takeView(view);
+            if (api.getParty) refreshParty(identity.learnerId); // beside the map; the title does not wait for it
             // A reload resumes from the title. A player who has already gone on to the maps is left there.
             if (get().phase !== 'attract') return;
             const { progress } = view;
@@ -313,6 +339,81 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         await loadSite({ restart: true });
       },
 
+      // Round 120: a saveable character whose site is cleared joins the party. The reply holds the whole party.
+      recruit: async (encounterId) => {
+        const { learnerId, recruiting } = get();
+        if (!learnerId || recruiting || typeof encounterId !== 'string') return;
+        const epoch = requestEpoch;
+        set({ recruiting: true, error: null });
+        try {
+          const result = await api.recruit(learnerId, encounterId);
+          if (epoch !== requestEpoch || get().learnerId !== learnerId) return;
+          partyRequest += 1; // a read sent before this reply shows the party without the new member
+          set({ party: result.party, recruiting: false });
+        } catch (error) {
+          if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, recruiting: false });
+        }
+      },
+
+      openParty: () => {
+        set({ view: 'party', reviewChallenge: null, reviewResult: null, error: null });
+        const { learnerId } = get();
+        if (learnerId && api.getParty) refreshParty(learnerId);
+      },
+
+      // A conversation with a party member, from anywhere outside a conversation. The camera stays where it is.
+      talkTo: async (member) => {
+        const s = get();
+        const resolvedSite = s.phase === 'encounter' && s.encounter?.state === 'resolved';
+        const outside = ['attract', 'world', 'overview', 'site', 'victory'].includes(s.phase) || resolvedSite;
+        // Not while the store holds a site conversation under way (the player left it for the site's card).
+        if (!outside || !s.learnerId || !member?.conversationId || s.encounterLoading || s.travelling || s.encounter?.state === 'ongoing') return;
+        const learnerId = s.learnerId;
+        const atGoal = s.dungeon.sites[s.siteIndex]?.id === s.dungeon.goal;
+        const partyReturn = resolvedSite ? (atGoal ? 'victory' : 'site') : s.phase;
+        const request = ++siteRequest;
+        const epoch = requestEpoch;
+        const stale = () => request !== siteRequest || epoch !== requestEpoch || get().learnerId !== learnerId;
+        set({ encounterLoading: true, partyStarting: member.conversationId, error: null });
+        try {
+          const result = await api.startEncounter(learnerId, { encounterId: member.conversationId });
+          if (stale()) return;
+          set({
+            ...quiet, phase: 'party', partyReturn, partyStarting: null, encounter: result.encounter, spellbook: withSpellbook(result.spellbook),
+            reviewChallenge: null, reviewResult: null, error: null,
+          });
+        } catch (error) {
+          if (!stale()) set({ error: error.message, encounterLoading: false, partyStarting: null });
+        }
+      },
+
+      // The party conversation again from its first line.
+      restartParty: async () => {
+        const s = get();
+        if (s.phase !== 'party' || !s.encounter || s.encounterLoading || s.isLoading) return;
+        const learnerId = s.learnerId;
+        const request = ++siteRequest;
+        const epoch = requestEpoch;
+        set({ encounterLoading: true, error: null });
+        try {
+          const result = await api.startEncounter(learnerId, { encounterId: s.encounter.encounterId, restart: true });
+          if (request !== siteRequest || epoch !== requestEpoch) return;
+          set({ encounter: result.encounter, spellbook: withSpellbook(result.spellbook), encounterLoading: false, assessment: null, closedObjectives: 0, draft: '', pendingInput: null });
+        } catch (error) {
+          if (request === siteRequest && epoch === requestEpoch) set({ error: `The conversation could not start over: ${error.message}`, encounterLoading: false });
+        }
+      },
+
+      // Back to where the party conversation was opened. The store drops its copy; an unfinished one stays on the
+      // server until another conversation starts (critique 1.2).
+      leaveParty: () => {
+        const s = get();
+        if (s.phase !== 'party' || s.isLoading) return;
+        siteRequest += 1;
+        const back = s.partyReturn ?? 'overview';
+        set({ ...quiet, phase: back, partyReturn: null, ...(back === 'victory' ? { cameraArrived: false } : {}) });
+      },
+
       // After the goal's encounter resolves: out to the victory screen.
       leaveTemple: () => {
         const s = get();
@@ -350,10 +451,12 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         siteRequest += 1;
         progressRequest += 1;
         spellbookVersion += 1;
+        partyRequest += 1;
         initializationPromise = null;
         const phase = ['attract', 'world'].includes(get().phase) ? get().phase : 'overview';
         set({
           settings, settingsOpen: false, learnerId: null, language: null, progress: null, connection: 'idle', serverProblem: null, dungeon,
+          party: [], partyReturn: null, partyStarting: null, recruiting: false,
           phase, siteIndex: Math.max(0, dungeon.sites.findIndex((site) => site.id === dungeon.start)), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, encounter: null, encounterLoading: false, siteError: null, starting: false,
           spellbook: emptySpellbook, view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null, closedObjectives: 0, isLoading: false, error: null,
         });
@@ -379,7 +482,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
             encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: result.assessment, isLoading: false, pendingInput: null, draft: '',
             closedObjectives: get().closedObjectives + closed, beat: { id: (get().beat?.id ?? 0) + 1, kind },
           });
-          if (result.encounter.state === 'resolved') await refreshProgress(learnerId);
+          // A finished site conversation changes the map; a finished party conversation changes the party (critique 1.9).
+          if (result.encounter.state === 'resolved') await (result.encounter.partyConversation ? refreshParty(learnerId) : refreshProgress(learnerId));
         } catch (error) {
           if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
         }

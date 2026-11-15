@@ -8,7 +8,7 @@ import { expect, test, vi } from 'vitest';
 import { OLD_SERVER, createGameStore, siteStatesOf } from '../gameStore.js';
 import { DUNGEON } from '../../dungeon.js';
 import { ATLAS } from '../../atlas.js';
-import { NAMES, TOUR, apiError, createFakeRun } from '../../__tests__/fakeRun.js';
+import { NAMES, TOUR, apiError, createFakeParty, createFakeRun } from '../../__tests__/fakeRun.js';
 
 const identity = { learnerId: '11111111-1111-4111-8111-111111111111', recovered: true, language: { code: 'it', name: 'Italian', tag: 'it-IT' } };
 const spellbook = { cards: [], dueCount: 0, contentVersion: 'v1' };
@@ -24,7 +24,8 @@ function memoryStorage(entries = {}) {
 // or `stored` is the run as a save holds it.
 function fakeServer({ steps = 0, stored, ...overrides } = {}) {
   const run = createFakeRun(stored).advance(steps);
-  const server = { run, session: null, sessions: 0 };
+  const party = createFakeParty(run);
+  const server = { run, party, session: null, sessions: 0 };
   const encounter = () => ({ ...server.session });
   const api = {
     createLearner: vi.fn(async () => identity),
@@ -32,22 +33,39 @@ function fakeServer({ steps = 0, stored, ...overrides } = {}) {
     resetDungeon: vi.fn(async () => { server.session = null; return run.reset(); }),
     moveDungeon: vi.fn(async (_learnerId, _dungeonId, { siteId, leave = false }) => {
       const from = run.run.at;
-      if (server.session?.state === 'ongoing' && siteId !== from && !leave) throw apiError(`Finish your conversation with ${NAMES[from]} first.`, 'CONVERSATION_UNDER_WAY');
+      const own = server.session && !server.session.partyConversation;
+      if (own && server.session.state === 'ongoing' && siteId !== from && !leave) throw apiError(`Finish your conversation with ${NAMES[from]} first.`, 'CONVERSATION_UNDER_WAY');
       const view = run.move(siteId);
-      if (siteId !== from) server.session = null;
+      if (own && siteId !== from) server.session = null;
       return view;
     }),
-    startEncounter: vi.fn(async (_learnerId, { restart = false } = {}) => {
+    getParty: vi.fn(async () => ({ party: party.party })),
+    recruit: vi.fn(async (_learnerId, encounterId) => party.recruit(encounterId)),
+    startEncounter: vi.fn(async (_learnerId, { restart = false, encounterId, dungeonId } = {}) => {
+      // Round 120: a named start with no dungeon is a party member's conversation.
+      if (!dungeonId) {
+        const member = party.memberOf(encounterId);
+        if (!member) throw apiError('They are not in your party yet.', 'NOT_IN_PARTY');
+        const same = server.session?.encounterId === encounterId;
+        if (!restart && server.session?.state === 'ongoing' && !same) throw apiError(`Finish your conversation with ${server.session.character.name} first.`, 'CONVERSATION_UNDER_WAY');
+        if (restart || !same || server.session.state !== 'ongoing') {
+          server.sessions += 1;
+          server.session = { id: `enc-${server.sessions}`, encounterId, partyConversation: true, version: 1, state: 'ongoing', transcript: [], hints: { remaining: 2, limit: 2 }, character: { name: NAMES[member.siteId] } };
+        }
+        return { encounter: encounter(), spellbook };
+      }
+      if (!restart && server.session?.state === 'ongoing' && server.session.partyConversation) throw apiError(`Finish your conversation with ${server.session.character.name} first.`, 'CONVERSATION_UNDER_WAY');
       const site = run.site;
       if (restart || !server.session || server.session.siteId !== site.id || server.session.state !== 'ongoing') {
         server.sessions += 1;
-        server.session = { id: `enc-${server.sessions}`, encounterId: site.encounter, siteId: site.id, dungeonId: DUNGEON.id, version: 1, state: 'ongoing', transcript: [], hints: { remaining: 2, limit: 2 }, character: { name: NAMES[site.id] } };
+        server.session = { id: `enc-${server.sessions}`, encounterId: site.encounter, siteId: site.id, dungeonId: DUNGEON.id, version: 1, state: 'ongoing', transcript: [], hints: { remaining: 2, limit: 2 }, character: { name: NAMES[site.id], saveable: Boolean(run.view().dungeon.sites.find((entry) => entry.id === site.id).saveable) } };
       }
       return { encounter: encounter(), spellbook };
     }),
     sendDialogue: vi.fn(async (_learnerId, { message }) => {
       server.session = { ...server.session, version: server.session.version + 1, state: 'resolved', transcript: [{ id: 'p', role: 'player', text: message }] };
-      run.clear(server.session.siteId);
+      if (server.session.partyConversation) party.finished(server.session.encounterId);
+      else run.clear(server.session.siteId);
       return { encounter: encounter(), spellbook: { ...spellbook, dueCount: run.run.cleared.length }, assessment: { overallFeedback: 'Good', objectiveResults: [] } };
     }),
     revealHelp: vi.fn(), createReview: vi.fn(), submitReview: vi.fn(),
@@ -686,4 +704,191 @@ test('the store counts the objectives a conversation has closed and numbers each
   expect(s()).toMatchObject({ closedObjectives: 0, beat: { id: 4, kind: 'resolved' } });
   await s().travel('root_court');
   expect(s()).toMatchObject({ phase: 'walk', closedObjectives: 0 });
+});
+
+// Round 120: the party.
+const partyOf = (s) => s().party.map((member) => [member.name, member.conversations, member.conversationId]);
+// From the title to Gerald's court with Portia and Gerald answered: the resolved conversation of a saveable character.
+async function toGeraldWon(s) {
+  await toFirstSite(s);
+  await s().sendMessage('Ciao!');
+  await s().travel('root_court');
+  s().onCameraArrived();
+  await s().sendMessage('Un caffè.');
+  expect(s()).toMatchObject({ phase: 'encounter', encounter: { state: 'resolved', character: { saveable: true } } });
+}
+
+test('the party is read at startup, a recruit sets it from its reply, and the map names who can be saved', async () => {
+  const { api, s } = makeStore();
+  await s().initialize();
+  await vi.waitFor(() => expect(api.getParty).toHaveBeenCalledTimes(1));
+  expect(s().party).toEqual([]);
+  // The site merge keeps `saveable` beside the name, as far as the fog allows (critique 1.1).
+  expect(s().dungeon.sites.map((site) => site.saveable)).toEqual([false, true, true, null, null, null, null]);
+  await s().recruit('imp_coffee_greeting'); // not won yet
+  expect(s()).toMatchObject({ party: [], error: 'Gerald has not been won over yet. Finish the encounter first.', recruiting: false });
+
+  s().clearError();
+  s().enter();
+  s().enterPlace('ta_prohm');
+  await s().start();
+  s().onCameraArrived();
+  await s().sendMessage('Ciao!');
+  await s().travel('root_court');
+  s().onCameraArrived();
+  await s().sendMessage('Un caffè.');
+  const reads = api.getParty.mock.calls.length;
+  await s().recruit('imp_coffee_greeting');
+  expect(partyOf(s)).toEqual([['Gerald', 0, 'gerald_coffee_break']]);
+  expect(api.getParty.mock.calls.length).toBe(reads); // the reply holds the party: no read follows (critique 1.7)
+  await s().recruit('imp_coffee_greeting'); // again: nothing changes
+  expect(s().party.length).toBe(1);
+  await s().recruit('market_entrance_tutorial');
+  expect(s().error).toBe('Portia cannot join your party.');
+});
+
+test('a talk with a party member opens from each place outside a conversation and returns there; the camera phase is party', async () => {
+  const { api, server, s } = makeStore();
+  await toGeraldWon(s);
+  await s().recruit('imp_coffee_greeting');
+  const [gerald] = s().party;
+  const mapReads = api.getDungeon.mock.calls.length;
+
+  // From the resolved conversation at his site: it returns to the site's card.
+  await s().talkTo(gerald);
+  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { encounterId: 'gerald_coffee_break' });
+  expect(s()).toMatchObject({ phase: 'party', partyReturn: 'site', view: 'dialogue', encounterLoading: false, encounter: { partyConversation: true, state: 'ongoing' } });
+  // The site's actions are shut meanwhile.
+  await s().travel('face_gate');
+  s().openMap();
+  await s().talk();
+  s().leaveConversation();
+  expect(s().phase).toBe('party');
+  expect(api.moveDungeon).toHaveBeenCalledTimes(1);
+  await s().sendMessage('Con calma.');
+  expect(s().encounter.state).toBe('resolved');
+  // A finished party conversation reads the party, not the map (critique 1.9).
+  expect(partyOf(s)).toEqual([['Gerald', 1, 'gerald_coffee_break']]);
+  expect(api.getDungeon.mock.calls.length).toBe(mapReads);
+  s().leaveParty();
+  expect(s()).toMatchObject({ phase: 'site', partyReturn: null, encounter: null, siteIndex: index('root_court') });
+
+  // From the site card, the temple map, the world map and the title.
+  for (const [arrange, phase] of [[() => {}, 'site'], [() => s().openMap(), 'overview'], [() => s().toWorld(), 'world']]) {
+    arrange();
+    expect(s().phase).toBe(phase);
+    await s().talkTo(s().party[0]);
+    expect(s()).toMatchObject({ phase: 'party', partyReturn: phase });
+    s().leaveParty(); // unfinished: left for now
+    expect(s()).toMatchObject({ phase, encounter: null });
+  }
+  // Left for now, the conversation is resumed by the next Talk (the server still holds it).
+  const sessions = server.sessions;
+  await s().talkTo(s().party[0]);
+  expect(server.sessions).toBe(sessions);
+  await s().restartParty(); // Start over
+  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { encounterId: 'gerald_coffee_break', restart: true });
+  expect(server.sessions).toBe(sessions + 1);
+  expect(s()).toMatchObject({ phase: 'party', encounterLoading: false });
+  s().leaveParty();
+  expect(s().phase).toBe('world');
+});
+
+test('Talk is open on the title screen and on the victory screen, and from the resolved goal it returns to victory (critiques 1.4, 1.5)', async () => {
+  const { server, s } = makeStore({ steps: TOUR.length - 1 });
+  server.party.recruit('imp_coffee_greeting');
+  server.run.move('sanctuary');
+  await s().initialize();
+  await vi.waitFor(() => expect(s().party.length).toBe(1));
+  s().onCameraArrived();
+  await s().sendMessage('Ecco.'); // Errata is answered: the run is complete, and "Leave the temple" is on the sheet
+  expect(s()).toMatchObject({ phase: 'encounter', progress: { complete: true } });
+  await s().talkTo(s().party[0]);
+  expect(s()).toMatchObject({ phase: 'party', partyReturn: 'victory' });
+  s().leaveParty();
+  expect(s()).toMatchObject({ phase: 'victory', cameraArrived: false });
+  await s().talkTo(s().party[0]);
+  expect(s()).toMatchObject({ phase: 'party', partyReturn: 'victory' });
+  s().leaveParty();
+
+  // A new run, then a reload before it starts: the title screen, with the party.
+  const title = makeStore();
+  title.server.run.advance(3);
+  title.server.party.recruit('imp_coffee_greeting');
+  title.server.run.reset();
+  await title.s().initialize();
+  await vi.waitFor(() => expect(title.s().party.length).toBe(1));
+  expect(title.s().phase).toBe('attract');
+  await title.s().talkTo(title.s().party[0]);
+  expect(title.s()).toMatchObject({ phase: 'party', partyReturn: 'attract' });
+  title.s().leaveParty();
+  expect(title.s().phase).toBe('attract');
+});
+
+test('Talk waits for a site conversation the store holds, and shows the server\'s refusal for one it does not', async () => {
+  const { api, s } = makeStore();
+  await toGeraldWon(s);
+  await s().recruit('imp_coffee_greeting');
+  await s().travel('sunlit_court');
+  s().onCameraArrived();
+  expect(s()).toMatchObject({ phase: 'encounter', encounter: { state: 'ongoing' } });
+  const starts = api.startEncounter.mock.calls.length;
+  await s().talkTo(s().party[0]); // the conversation with Flick is open
+  s().leaveConversation();
+  await s().talkTo(s().party[0]); // and held on his site's card
+  expect(api.startEncounter.mock.calls.length).toBe(starts);
+  expect(s().phase).toBe('site');
+  // On the map the store has dropped its copy, but the server still holds Flick's conversation.
+  await s().travel('root_court');
+  s().onCameraArrived();
+  await s().travel('sunlit_court'); // back to Flick: his conversation starts again
+  s().onCameraArrived();
+  s().leaveConversation();
+  s().openMap();
+  expect(s()).toMatchObject({ phase: 'overview', encounter: null });
+  await s().talkTo(s().party[0]);
+  expect(s()).toMatchObject({ phase: 'overview', error: 'Finish your conversation with Flick first.', encounterLoading: false, partyStarting: null });
+});
+
+test('an unfinished party conversation gives way to the next site conversation (critique 1.2)', async () => {
+  const { api, server, s } = makeStore();
+  await toGeraldWon(s);
+  await s().recruit('imp_coffee_greeting');
+  await s().talkTo(s().party[0]);
+  s().leaveParty(); // left for now, on Gerald's card
+  expect(server.session).toMatchObject({ partyConversation: true, state: 'ongoing' });
+  await s().travel('sunlit_court'); // a walk is not held by it
+  expect(s()).toMatchObject({ phase: 'walk', siteError: null });
+  // Flick's start is refused once and sent again with restart (round 115, Decision 2): Gerald's talk is gone.
+  expect(api.startEncounter.mock.calls.slice(-2).map(([, options]) => options)).toEqual([{ dungeonId: 'ta_prohm', restart: false }, { dungeonId: 'ta_prohm', restart: true }]);
+  s().onCameraArrived();
+  expect(s()).toMatchObject({ phase: 'encounter', encounter: { encounterId: encounterOf('sunlit_court') } });
+});
+
+test('the newest read or write of the party wins: an older read undoes neither a recruit nor a finished conversation (critique 1.6)', async () => {
+  const lateOne = deferred();
+  const lateTwo = deferred();
+  const { api, s } = makeStore();
+  await toGeraldWon(s);
+  const read = api.getParty.getMockImplementation();
+  // A read from before the recruit, answered after it.
+  api.getParty.mockImplementationOnce(async () => { const before = await read(); await lateOne.promise; return before; });
+  s().openParty();
+  expect(s().view).toBe('party');
+  await s().recruit('imp_coffee_greeting');
+  lateOne.resolve();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(partyOf(s)).toEqual([['Gerald', 0, 'gerald_coffee_break']]);
+  s().returnToDialogue();
+
+  // A read from before a conversation finished, answered after the finish's own read.
+  api.getParty.mockImplementationOnce(async () => { const before = await read(); await lateTwo.promise; return before; });
+  s().openParty();
+  s().returnToDialogue();
+  await s().talkTo(s().party[0]);
+  await s().sendMessage('Con calma.');
+  expect(partyOf(s)).toEqual([['Gerald', 1, 'gerald_coffee_break']]);
+  lateTwo.resolve();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(partyOf(s)).toEqual([['Gerald', 1, 'gerald_coffee_break']]);
 });

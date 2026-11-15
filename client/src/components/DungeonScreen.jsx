@@ -5,6 +5,7 @@ import InputBar from './InputBar.jsx';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
+import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
 import { siteStatesOf } from '../stores/gameStore.js';
 import { neighbourIds } from '../dungeonModel.js';
@@ -14,6 +15,8 @@ import { neighbourIds } from '../dungeonModel.js';
 // (overview), a caption while the camera travels, the dialogue sheet (encounter), the site card (site) and the
 // victory card. The dock is a bottom sheet on a phone and, for the dialogue, a side panel from 1100 px. The camera
 // frames what the dock leaves free (useInsets).
+// Round 120: the party. A saveable character whose site is cleared can be saved, from the offer after the
+// conversation or from the site's card, and a member can be talked to from the Party panel.
 // Round 119: the dungeon is a map. The player picks where to walk: on the temple map, on the site card, or after a
 // conversation. The server says which sites are out of the fog and which can be walked to (progress.sites).
 const NO_INSETS = Object.freeze({ top: 0, right: 0, bottom: 0, left: 0 });
@@ -185,6 +188,9 @@ function SiteCard({ state, sites, site }) {
         <SiteNumber index={state.siteIndex} />
         <span className="site-text"><strong>{site.name}</strong><small>{name}{status.cleared ? ' · cleared' : ' has not let you pass yet'}</small></span>
       </header>
+      {status.cleared && site.saveable && (inParty(state.party, site.encounterId)
+        ? <p className="party-note" role="status">{name} is in your party.</p>
+        : <button type="button" className="secondary-button" onClick={() => state.recruit(site.encounterId)} disabled={state.recruiting}>Invite {name} to your party</button>)}
       <WaysOn state={state} sites={sites} site={site} />
       <div className="button-row">
         <button type="button" className={status.cleared ? 'secondary-button' : 'primary-button big-button'} onClick={state.talk} disabled={state.encounterLoading || state.travelling}>{talkLabel}</button>
@@ -211,12 +217,31 @@ function TravelCaption({ state, site }) {
   return <section className="caption" role="status">{text}</section>;
 }
 
-function EncounterSheet({ state, site, sites }) {
+// Round 120: after a saveable character lets the player pass, they may be saved to the party (the app's SAVE / LEAVE
+// card, round 021). Leave only closes the offer here: the invitation stays on the site's card.
+function PartyOffer({ state, encounter }) {
+  const [declined, setDeclined] = useState(false);
+  const name = encounter.character?.name ?? 'They';
+  if (inParty(state.party, encounter.encounterId)) return <p className="party-note" role="status">{name} is in your party.</p>;
+  if (declined) return null;
+  return (
+    <section className="party-offer" aria-label={`${name} could join your party`}>
+      <strong>{name} could join your party.</strong>
+      <div className="button-row">
+        <button type="button" className="primary-button" onClick={() => state.recruit(encounter.encounterId)} disabled={state.recruiting}>Save {name}</button>
+        <button type="button" className="secondary-button" onClick={() => setDeclined(true)} disabled={state.recruiting}>Leave</button>
+      </div>
+    </section>
+  );
+}
+
+// The dialogue sheet: a site's conversation, or (round 120, `party`) a conversation with a party member.
+function EncounterSheet({ state, site, sites, party = false }) {
   const { encounter, assessment, language, isLoading, encounterLoading } = state;
   const scrollRef = useRef(null);
   const resolved = encounter?.state === 'resolved';
-  const name = encounter?.character?.name ?? site?.characterName ?? 'them';
-  const atGoal = site?.id === state.dungeon.goal;
+  const name = encounter?.character?.name ?? (party ? null : site?.characterName) ?? 'them';
+  const atGoal = !party && site?.id === state.dungeon.goal;
   // The ways on wait for the server's word that the site is cleared (the run is read again after the last answer).
   const cleared = Boolean(sites[site?.id]?.cleared);
   // A conversation opens at its top (the objective, the briefing, the first line); each turn scrolls to its end.
@@ -226,14 +251,14 @@ function EncounterSheet({ state, site, sites }) {
     if (element) element.scrollTop = fresh ? 0 : element.scrollHeight;
   }, [encounter?.id, encounter?.transcript, assessment, isLoading, resolved, fresh]);
   return (
-    <section className="sheet" aria-label={site?.name ?? 'Conversation'}>
+    <section className="sheet" aria-label={party ? `${name}, your party` : site?.name ?? 'Conversation'}>
       <header className="sheet-header">
-        <SiteNumber index={state.siteIndex} />
-        <span className="site-text"><strong>{site?.name}</strong><small>{name}</small></span>
+        {!party && <SiteNumber index={state.siteIndex} />}
+        <span className="site-text"><strong>{party ? name : site?.name}</strong><small>{party ? 'your party' : name}</small></span>
         {!resolved && (
           <span className="sheet-actions">
-            <button type="button" className="text-button" onClick={state.restartSite} disabled={isLoading || encounterLoading}>Start over</button>
-            <button type="button" className="text-button" onClick={state.leaveConversation} disabled={isLoading || encounterLoading}>Leave</button>
+            <button type="button" className="text-button" onClick={party ? state.restartParty : state.restartSite} disabled={isLoading || encounterLoading}>Start over</button>
+            <button type="button" className="text-button" onClick={party ? state.leaveParty : state.leaveConversation} disabled={isLoading || encounterLoading}>{party ? 'Leave for now' : 'Leave'}</button>
           </span>
         )}
       </header>
@@ -245,9 +270,16 @@ function EncounterSheet({ state, site, sites }) {
             {assessment.objectiveResults.map((result) => <p key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</p>)}
           </section>
         )}
-        {resolved && (
+        {resolved && party && (
+          <section className="victory-banner" role="status">
+            <p>{encounter.resolvedMessage ?? `${name} has said what there was to say.`}</p>
+            <button type="button" className="primary-button big-button" onClick={state.leaveParty}>Back to the temple</button>
+          </section>
+        )}
+        {resolved && !party && (
           <section className="victory-banner" role="status">
             <p>{encounter.resolvedMessage ?? `${name} lets you pass.`}</p>
+            {encounter.character?.saveable && <PartyOffer key={encounter.id} state={state} encounter={encounter} />}
             {atGoal && <button type="button" className="primary-button big-button" onClick={state.leaveTemple}>Leave the temple</button>}
             {!atGoal && cleared && <WaysOn state={state} sites={sites} site={site} />}
             <button type="button" className="text-button" onClick={state.openMap} disabled={state.travelling}>Map</button>
@@ -289,8 +321,12 @@ export default function DungeonScreen({ useStore }) {
   const cleared = dungeon.sites.filter((entry) => sites[entry.id]?.cleared).map((entry) => entry.id);
   const site = dungeon.sites[siteIndex];
   const inEncounter = phase === 'encounter';
-  const atSite = !['attract', 'world', 'overview', 'victory'].includes(phase);
-  const returnLabel = inEncounter ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the temple';
+  const atSite = !['attract', 'world', 'overview', 'victory', 'party'].includes(phase);
+  const inParty_ = phase === 'party';
+  const returnLabel = inEncounter || inParty_ ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the temple';
+  // A site conversation under way that the store holds (the player left it for the site's card): Talk waits for it.
+  const held = !inParty_ && state.encounter?.state === 'ongoing' ? state.encounter : null;
+  const canTalk = ['attract', 'world', 'overview', 'site', 'victory'].includes(phase) || (inEncounter && state.encounter?.state === 'resolved');
   // Meanings stay hidden while a conversation is open or opening, whatever the snapshot says (round 017; review 1, R1.4).
   const conversing = state.encounter?.state === 'ongoing' || state.encounterLoading;
   const spellbook = conversing && !state.spellbook.inEncounter ? { ...state.spellbook, inEncounter: true } : state.spellbook;
@@ -308,6 +344,9 @@ export default function DungeonScreen({ useStore }) {
           ))}
         </ol>
         <nav aria-label="Menu">
+          <button type="button" className="secondary-button" onClick={state.openParty}>
+            Party <span className="due-badge" aria-label={`${state.party.length} in your party`}>{state.party.length}</span>
+          </button>
           <button type="button" className="secondary-button" onClick={state.openSpellbook}>
             Spellbook <span className="due-badge" aria-label={`${state.spellbook.dueCount} reviews due`}>{state.spellbook.dueCount}</span>
           </button>
@@ -324,11 +363,13 @@ export default function DungeonScreen({ useStore }) {
         {(phase === 'approach' || phase === 'walk') && <TravelCaption state={state} site={site} />}
         {inEncounter && <EncounterSheet state={state} site={site} sites={sites} />}
         {phase === 'site' && site && <SiteCard state={state} sites={sites} site={site} />}
+        {inParty_ && <EncounterSheet state={state} site={site} sites={sites} party />}
         {phase === 'victory' && <VictoryCard state={state} />}
       </div>
 
       {state.view !== 'dialogue' && (
         <div className="overlay">
+          {state.view === 'party' && <PartyPanel party={state.party} sites={dungeon.sites} held={held} starting={state.partyStarting} canTalk={canTalk} isLoading={state.isLoading || state.travelling} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
           {state.view === 'spellbook' && <Spellbook spellbook={spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
           {state.view === 'review' && <ReviewPanel
             key={state.reviewChallenge?.id ?? 'result'}

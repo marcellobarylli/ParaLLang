@@ -12,7 +12,7 @@ import Spellbook from '../Spellbook.jsx';
 import { createGameStore } from '../../stores/gameStore.js';
 import { DUNGEON } from '../../dungeon.js';
 import { ATLAS } from '../../atlas.js';
-import { createFakeRun } from '../../__tests__/fakeRun.js';
+import { createFakeParty, createFakeRun } from '../../__tests__/fakeRun.js';
 
 const spanishLanguage = { code: 'es', name: 'Spanish', tag: 'es-ES' };
 const italianLanguage = { code: 'it', name: 'Italian', tag: 'it-IT' };
@@ -57,11 +57,18 @@ const memoryStorage = () => { const values = new Map(); return { getItem: (key) 
 // one conversation at a time.
 function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart = false } = {}) {
   const run = createFakeRun(stored).advance(steps);
-  const server = { run, session: null, sessions: 0, sends: 0, starts: 0, reviews: 0, paths: [], moves: [] };
+  const party = createFakeParty(run);
+  const server = { run, party, session: null, sessions: 0, sends: 0, starts: 0, reviews: 0, paths: [], moves: [] };
   const siteEncounter = (siteId, version, options = {}) => ({
     ...encounter(version, options), id: `encounter-${server.sessions}`, encounterId: run.view().dungeon.sites.find((site) => site.id === siteId).encounterId, dungeonId: DUNGEON.id, siteId,
-    character: { id: CAST[siteId].name.toLowerCase(), name: CAST[siteId].name }, resolvedMessage: CAST[siteId].resolved, companionBriefing: CAST[siteId].briefing,
+    character: { id: CAST[siteId].name.toLowerCase(), name: CAST[siteId].name, saveable: ['buttress_tree', 'root_court', 'sunlit_court', 'library'].includes(siteId) }, resolvedMessage: CAST[siteId].resolved, companionBriefing: CAST[siteId].briefing,
     currentObjective: options.resolved ? null : { id: 'objective', prompt: CAST[siteId].objective },
+  });
+  // A party member's conversation: no site, no dungeon.
+  const talkEncounter = (session) => ({
+    ...encounter(session.resolved ? 4 : 1, { resolved: session.resolved, allVisible: session.resolved }), id: `encounter-${server.sessions}`, encounterId: session.talk, partyConversation: true,
+    character: { id: CAST[session.siteId].name.toLowerCase(), name: CAST[session.siteId].name, saveable: true }, resolvedMessage: null, companionBriefing: null,
+    currentObjective: session.resolved ? null : { id: 'objective', prompt: `Chat with ${CAST[session.siteId].name}.` },
   });
   const fetchMock = vi.fn(async (url, init = {}) => {
     const path = String(url);
@@ -73,20 +80,40 @@ function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart =
     if (path === '/api/dungeons/ta_prohm/move') {
       server.moves.push(body);
       // As the server: a conversation under way holds the player unless the move says `leave` (review 1, R1.6).
-      if (server.session && !server.session.resolved && body.siteId !== run.run.at && body.leave !== true) {
+      if (server.session && !server.session.talk && !server.session.resolved && body.siteId !== run.run.at && body.leave !== true) {
         return response(409, { error: { code: 'CONVERSATION_UNDER_WAY', message: 'Finish your conversation first.' } });
       }
       try {
         const from = run.run.at;
         const moved = run.move(body.siteId);
-        if (body.siteId !== from) server.session = null;
+        if (body.siteId !== from && !server.session?.talk) server.session = null;
         return response(200, moved);
       } catch (error) { return response(error.status, { error: { code: error.code, message: error.message } }); }
+    }
+    // Round 120: the party, and a member's conversation (a named start with no dungeon).
+    if (path === '/api/party') return response(200, { party: party.party });
+    if (path === '/api/party/recruit') {
+      try { return response(200, party.recruit(body.encounterId)); }
+      catch (error) { return response(error.status, { error: { code: error.code, message: error.message } }); }
+    }
+    if (path === '/api/encounter/start' && !body.dungeonId) {
+      const member = party.memberOf(body.encounterId);
+      if (!member) return response(409, { error: { code: 'NOT_IN_PARTY', message: 'They are not in your party yet.' } });
+      if (server.session && !server.session.resolved && server.session.talk !== body.encounterId && !body.restart) {
+        return response(409, { error: { code: 'CONVERSATION_UNDER_WAY', message: `Finish your conversation with ${CAST[server.session.siteId].name} first.` } });
+      }
+      if (!(server.session && !server.session.resolved && server.session.talk === body.encounterId && !body.restart)) {
+        server.sessions += 1;
+        server.talks = (server.talks ?? 0) + 1;
+        server.session = { siteId: member.siteId, version: 1, resolved: false, talk: body.encounterId };
+      }
+      return response(200, { encounter: talkEncounter(server.session), spellbook: { ...spellbook, inEncounter: true } });
     }
     if (path === '/api/encounter/start') {
       server.starts += 1;
       if (failFirstStart && server.starts === 1) return response(503, { error: { code: 'CLI_TIMEOUT', message: 'The selected CLI timed out. Your progress was not changed.', retryable: true } });
       expect(body.dungeonId).toBe('ta_prohm');
+      if (server.session?.talk && !server.session.resolved && !body.restart) return response(409, { error: { code: 'CONVERSATION_UNDER_WAY', message: 'Finish your conversation first.' } });
       server.sessions += 1;
       server.session = { siteId: run.run.at, version: 1, resolved: false };
       return response(200, { encounter: siteEncounter(run.run.at, 1), spellbook: { ...spellbook, inEncounter: true } });
@@ -101,6 +128,10 @@ function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart =
       if (failFirstSend && server.sends === 1) return response(503, { error: { message: 'Grading is temporarily unavailable; retry your answer.', retryable: true } });
       const { siteId } = server.session;
       server.session.resolved = true;
+      if (server.session.talk) {
+        party.finished(server.session.talk);
+        return response(200, { encounter: talkEncounter(server.session), spellbook, assessment: { overallFeedback: `${CAST[siteId].name} enjoyed that.`, objectiveResults: [] } });
+      }
       run.clear(siteId);
       return response(200, {
         encounter: siteEncounter(siteId, 4, { resolved: true, allVisible: true }), spellbook,
@@ -331,6 +362,84 @@ test('a sealed or blocked way on says why, and a move the server refuses is show
   await user.click(screen.getByRole('button', { name: 'Walk to The Root Court' }));
   expect((await screen.findByRole('alert')).textContent).toMatch(/Portia has not let you pass yet/);
   await waitFor(() => expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress Treeunexplored', '3The Root Courtunexplored']));
+});
+
+// Round 120: the party.
+test('the party on the screen: the offer after a saveable site, the panel, a talk with a member, and the invitation on a site card', async () => {
+  const user = userEvent.setup();
+  const server = fakeServer({ stored: { run: 1, at: 'root_court', cleared: ['face_gate'], visited: ['face_gate', 'root_court'] } });
+  renderScreen();
+  await screen.findByText('Order a coffee using Italian.');
+  expect(screen.getByLabelText('0 in your party')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  expect(screen.getByText('No one has joined you yet. Win someone over who is worth keeping.')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Back to Gerald' }));
+
+  // Gerald lets the player pass: he could join. Portia, who cannot be saved, got no such offer.
+  await answer(user, 'Gerald', 'Un caffè.');
+  const offer = await screen.findByRole('region', { name: 'Gerald could join your party' });
+  expect(within(offer).getByText('Gerald could join your party.')).toBeTruthy();
+  await user.click(within(offer).getByRole('button', { name: 'Save Gerald' }));
+  expect((await screen.findByText('Gerald is in your party.')).getAttribute('role')).toBe('status');
+  expect(screen.queryByRole('button', { name: 'Save Gerald' })).toBeNull();
+  expect(screen.getByLabelText('1 in your party')).toBeTruthy();
+
+  // The panel: where he was met is the temple's site, not the market's stall; no story is announced (critique 1.3).
+  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  const member = screen.getByRole('article', { name: 'Gerald, met at The Root Court' });
+  expect(within(member).getByText('Met at The Root Court · Conversations: 0')).toBeTruthy();
+  expect(within(member).queryByText(/story/i)).toBeNull();
+  expect(within(member).queryByText(/deeper conversation/)).toBeNull();
+  await user.click(within(member).getByRole('button', { name: 'Talk to Gerald' }));
+
+  // The talk: his name and "your party" in the header, no site number, no ways on.
+  const sheet = await screen.findByRole('region', { name: 'Gerald, your party' });
+  expect(within(sheet).getByText('your party')).toBeTruthy();
+  expect(within(sheet).getByText('Chat with Gerald.')).toBeTruthy();
+  expect(within(sheet).getByRole('button', { name: 'Leave for now' })).toBeTruthy();
+  expect(screen.queryByRole('list', { name: 'Ways on' })).toBeNull();
+  await user.type(screen.getByLabelText('Your response'), 'Con calma.');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  await screen.findByText('Gerald enjoyed that.');
+  expect(screen.getByText('Gerald has said what there was to say.')).toBeTruthy();
+  await user.click(within(sheet).getByRole('button', { name: 'Back to the temple' }));
+  // Back on his site's card: he is in the party, and the count went up.
+  const card = await screen.findByRole('region', { name: 'The Root Court' });
+  expect(within(card).getByText('Gerald is in your party.')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  expect(await screen.findByText('Met at The Root Court · Conversations: 1')).toBeTruthy();
+  expect(server.talks).toBe(1);
+  await user.click(screen.getByRole('button', { name: 'Back to the temple' }));
+
+  // Flick is answered and left unsaved: "Leave" closes the offer, and the invitation waits on his card.
+  await user.click(screen.getByRole('button', { name: /Walk to The Sunlit Court/ }));
+  await screen.findByText('Ask Flick the time.');
+  // While his conversation is open, Talk waits.
+  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  expect(screen.getByRole('button', { name: 'Talk to Gerald' }).disabled).toBe(true);
+  await user.click(screen.getByRole('button', { name: 'Back to Flick' }));
+  await answer(user, 'Flick');
+  await user.click(within(await screen.findByRole('region', { name: 'Flick could join your party' })).getByRole('button', { name: 'Leave' }));
+  expect(screen.queryByText('Flick could join your party.')).toBeNull();
+  expect(screen.getByRole('list', { name: 'Ways on' })).toBeTruthy();
+});
+
+test('after a reload a cleared site\'s card offers the invitation, and the deeper conversation is announced (critique 1.1)', async () => {
+  const user = userEvent.setup();
+  const server = fakeServer({ stored: { run: 1, at: 'sunlit_court', cleared: ['face_gate', 'root_court', 'sunlit_court'], visited: ['face_gate', 'root_court', 'sunlit_court'] } });
+  server.party.recruit('imp_coffee_greeting');
+  for (let i = 0; i < 3; i += 1) server.party.finished('gerald_coffee_break');
+  renderScreen();
+  const card = await screen.findByRole('region', { name: 'The Sunlit Court' });
+  expect(server.starts).toBe(0); // no conversation is loaded
+  await user.click(await within(card).findByRole('button', { name: 'Invite Flick to your party' }));
+  expect(await within(card).findByText('Flick is in your party.')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  expect(screen.getByLabelText('2 in your party')).toBeTruthy();
+  const gerald = screen.getByRole('article', { name: 'Gerald, met at The Root Court' });
+  expect(within(gerald).getByText('Gerald trusts you with a deeper conversation now.')).toBeTruthy();
+  expect(within(gerald).getByText('Met at The Root Court · Conversations: 3')).toBeTruthy();
+  expect(screen.getByRole('article', { name: 'Flick, met at The Sunlit Court' })).toBeTruthy();
 });
 
 test('a reload in the middle of a run opens the site the player stands at, and Start over begins its conversation again', async () => {
