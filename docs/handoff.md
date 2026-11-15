@@ -86,9 +86,18 @@ Round 115 built the dungeon crawl in the web client and round 116 tied the camer
 
 ### What nobody has checked
 
-- A run against the live model. The playthrough used a fixture provider.
-- A real phone: frame rate, the bottom sheet under the on-screen keyboard in iOS Safari, WebGL after the tab returns
-  from the background.
+- A whole run against the live model. The owner has played the first site on an iPhone (round 117); the
+  playthrough on the cluster uses a fixture provider.
+- From the cluster, anything on an iPhone. The owner reports by screenshot. Still unreported: frame rate, the
+  bottom sheet under the on-screen keyboard, WebGL after the page returns from the background, and whether round
+  117's fix removed the strip under the dock.
+
+### The page opened from the home screen (round 117)
+
+The owner plays the page from the iPhone's home screen. Two things follow. That page has its own storage, so a token
+entered in Safari is not there. And iOS keeps its layout area short by the status bar's inset, so the stylesheet
+sizes the shell with `100vh` under `display-mode: standalone`; Chrome on the cluster cannot emulate that mode. A
+push whose head commit says `[skip render]` deploys the client alone and leaves the server and its saves running.
 
 ### Working on the dungeon
 
@@ -97,6 +106,8 @@ Round 115 built the dungeon crawl in the web client and round 116 tied the camer
   the screen to them. `client/src/scene/levelView.js` is the
   three.js host. `client/src/stores/gameStore.js` is the flow. `content/world/dungeons/ta_prohm.yaml` holds the sites
   and the route.
+- `client/src/index.css` is the PS1 menu look (round 117): grey bevelled windows, no rounded corner (a test fails on
+  one), and the panels' opacity from `--panel-alpha`, which the Settings slider sets (`client/src/display.js`).
 - `client/src/__tests__/dungeon-file.test.js` checks the sites and the route against the level's wall plan, which
   it encodes by hand from `aesthetic/src/scene/taprohm.js`. Move a site or change the level, and that test says
   whether the camera would walk through stone.
@@ -110,8 +121,8 @@ Round 115 built the dungeon crawl in the web client and round 116 tied the camer
 
 ### Next
 
-- The owner's verdict after a run on the phone, and on two choices of the build: the walk starts on a button, and
-  only the first site is approached from above.
+- The owner's verdict on round 117 (the strip, the look, the opacity to make the default), and on two choices of the
+  build: the walk starts on a button, and only the first site is approached from above.
 - Start the next site's greeting when a site resolves, to hide the hosted server's 15 s start.
 - Encounter assets at the sites. Each site has a beacon (a crystal, a ring, a shaft of light) as a stand-in.
 - The dungeon in the iPhone app (`aesthetic/native/TempleView.js` is an untested start).

@@ -155,6 +155,8 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   the browser's `localStorage`; the token is sent as `X-ParaLLang-Token`. The Pages build takes its default server URL
   from the repository variable `VITE_API_BASE`. The token is never built in. A blank URL means the page's own `/api`,
   which is what `npm run dev:client` proxies (the proxy still adds `PARALLANG_TOKEN` itself).
+  The same sheet has a slider, "Text panel opacity", for how much of the 3D level shows through the text panels. It
+  applies at once and is stored under its own key (`parallang.display`), so it does not reconnect (round 117).
 - **Server image.** `Dockerfile` (Node 22, the server's production dependencies, `content/`, `prompts/` and Claude
   Code 2.1.325 at `CLAUDE_CLI_PATH=/usr/local/bin/claude`). `render.yaml` is the Render blueprint: one web service,
   health check `/api/health`. With `NODE_ENV=production` the server refuses to start unless `PARALLANG_TOKEN` is set

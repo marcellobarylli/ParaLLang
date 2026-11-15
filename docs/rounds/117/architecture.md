@@ -109,3 +109,11 @@ should be grey with hard corners and fit a PS1 menu.
   while Settings is open.
 - Playthrough: in a conversation at phone size, the slider is moved through the interface and the sheet's computed
   background alpha follows; no element of the dock has a border radius. Pictures at two opacities.
+
+## Outcome (2026-11-15)
+
+Built as designed, with the two Amendments, and deployed in two pushes (`7eeadfd`, `f728a16`), each with
+`[skip render]` so the server kept running. In the installed page the shell takes the viewport's height. Settings
+has a slider for the text panels' opacity, which applies at once and leaves a conversation alone. The interface is
+grey with bevelled, hard-cornered windows in a PS1 menu look. The claim boundary held: nothing was checked on an
+iPhone. See [`findings.md`](findings.md).
