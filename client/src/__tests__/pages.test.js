@@ -69,20 +69,33 @@ test('everything the Dockerfile copies is in the Docker build context', () => {
   expect(ignored('server/node_modules/express/index.js')).toBe(true);
 });
 
-// Round 117: opened from the home screen on iOS, `position: fixed; inset: 0` ends above the screen's bottom edge.
-test('the installed page sizes the shell and the settings backdrop by the viewport unit', () => {
+// Rounds 117 and 118: opened from the home screen on iOS, the layout area ends above the screen's bottom edge and a
+// fixed element is clipped to it. The document is made `100vh` high without a clip, and the panels pad by the gap.
+test('the installed page is a 100vh document that does not clip, and the panels keep out of the gap', () => {
   const css = readFileSync(resolve(CLIENT_DIR, 'src/index.css'), 'utf8');
-  const rule = css.match(/@media \(display-mode: standalone\)[^{]*\{\s*([^{]+)\{([^}]+)\}/);
-  expect(rule, 'a display-mode: standalone rule').not.toBeNull();
-  expect(rule[1]).toContain('.app-shell');
-  expect(rule[1]).toContain('.sheet-backdrop');
-  expect(rule[2]).toMatch(/bottom:\s*auto/);
-  expect(rule[2]).toMatch(/height:\s*100vh/);
-  // It must come after both base rules, whose `inset: 0` would otherwise put `bottom` back.
-  for (const base of ['.app-shell { position: fixed; inset: 0;', '.sheet-backdrop { position: fixed; inset: 0;']) {
-    expect(css.indexOf(base), base).toBeGreaterThan(-1);
-    expect(css.indexOf(rule[0])).toBeGreaterThan(css.indexOf(base));
+  const start = css.indexOf('@media (display-mode: standalone), (display-mode: fullscreen) {');
+  expect(start).toBeGreaterThan(-1);
+  const block = css.slice(start);
+  expect(block).toMatch(/html, body, #root \{ height: 100vh; overflow: visible; \}/);
+  expect(block).toMatch(/\.app-shell \{ position: absolute; inset: 0 0 auto 0; height: 100vh; \}/);
+  // Round 117's rule (a fixed shell of 100vh) cut the bottom of the screen on the phone.
+  expect(css).not.toMatch(/\.app-shell, \.sheet-backdrop \{ bottom: auto; height: 100vh; \}/);
+  expect(css).toMatch(/\.sheet-backdrop \{ position: absolute; inset: 0;/);
+  // The installed rules come last, after the base rules they override.
+  for (const base of ['.app-shell { position: fixed; inset: 0;', 'body { margin: 0;']) expect(start).toBeGreaterThan(css.indexOf(base));
+  for (const selector of ['.card {', '.caption {', '.sheet {', '.overlay {', '.settings-sheet {']) {
+    const rule = css.slice(css.indexOf(selector), css.indexOf('}', css.indexOf(selector)));
+    expect(rule, selector).toContain('var(--bottom-gap, 0px)');
   }
+});
+
+test('the build id is compiled into the page', async () => {
+  const config = await import('../../vite.config.js');
+  const resolved = config.default({ command: 'build', mode: 'production', isPreview: false });
+  expect(JSON.parse(resolved.define.__PARALLANG_BUILD__)).toBe(config.BUILD_ID);
+  const { BUILD_ID } = await import('../build.js');
+  // Vitest loaded the config on its own, a moment earlier; the built page is compared with version.json in the playthrough.
+  expect(BUILD_ID).toMatch(/^\d+\.\d+\.\d+\+[a-z0-9]+$/);
 });
 
 // Round 117: the PS1 menu look. Hard corners everywhere; the panels take their opacity from the player's setting.

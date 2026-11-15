@@ -38,6 +38,8 @@ export function yamlData() {
 export default defineConfig(({ command, mode, isPreview }) => ({
   base: './',
   plugins: [react(), yamlData(), versionFile()],
+  // Round 118: the page shows its build id in Settings (src/build.js).
+  define: { __PARALLANG_BUILD__: JSON.stringify(BUILD_ID) },
   // three.js and the level are one lazy chunk of about 700 kB (src/scene/levelView.js).
   build: { chunkSizeWarningLimit: 900 },
   test: {

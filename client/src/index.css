@@ -3,6 +3,7 @@
 :root { color-scheme: dark; font-family: Verdana, 'DejaVu Sans', Geneva, sans-serif; background: #0e0f0e; color: #ecece4; --ink: #ecece4; --dim: #a9aba5; --gold: #e4b847; --gold-hi: #f6dc8c; --gold-lo: #7d6216; --hi: #b9bbb4; --lo: #171817; --link: #9ad8e6; --side-panel: 440px; }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
+html { overscroll-behavior: none; }
 body { margin: 0; min-width: 320px; overflow: hidden; background: #0e0f0e; overscroll-behavior: none; }
 button, input { font: inherit; }
 button { cursor: pointer; }
@@ -42,7 +43,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .dock { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; display: flex; justify-content: center; pointer-events: none; font-size: .92rem; text-shadow: 1px 1px 0 #000; }
 .dock > * { pointer-events: auto; }
 .settings-open .dock { visibility: hidden; }
-.card { width: min(560px, 100%); background: var(--panel); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); border-bottom: 0; box-shadow: 0 0 0 1px #000; padding: 1rem 1.1rem max(1.1rem, env(safe-area-inset-bottom)); display: grid; gap: .6rem; }
+.card { width: min(560px, 100%); background: var(--panel); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); border-bottom: 0; box-shadow: 0 0 0 1px #000; padding: 1rem 1.1rem calc(max(1.1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); display: grid; gap: .6rem; }
 .card h1, .card h2, .card p { margin: 0; }
 .card h1 { color: var(--gold); letter-spacing: .14em; font-size: 1.8rem; text-shadow: 2px 2px 0 #000; }
 .card h2 { color: var(--gold); font-size: 1.25rem; letter-spacing: .06em; text-transform: uppercase; text-shadow: 2px 2px 0 #000; }
@@ -59,14 +60,14 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .site-text small { color: var(--dim); }
 .site-done { margin-left: auto; color: #b5e7bb; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
 .problem { display: grid; gap: .5rem; border: 2px solid; border-color: #2a0d14 #a2485a #a2485a #2a0d14; background: #3a1620; padding: .7rem .8rem; color: #ffd6dc; }
-.caption { margin: 0 .75rem max(1rem, env(safe-area-inset-bottom)); padding: .55rem .9rem; background: rgb(34 36 35 / .86); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); box-shadow: 0 0 0 1px #000; color: var(--ink); display: flex; align-items: center; gap: .75rem; }
+.caption { margin: 0 .75rem calc(max(1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); padding: .55rem .9rem; background: rgb(34 36 35 / .86); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); box-shadow: 0 0 0 1px #000; color: var(--ink); display: flex; align-items: center; gap: .75rem; }
 .caption-problem { color: #ffd6dc; border-color: #a2485a #2a0d14 #2a0d14 #a2485a; }
 
-.sheet { width: 100%; height: 62vh; height: 62dvh; display: flex; flex-direction: column; background: var(--panel); border-top: 2px solid var(--hi); box-shadow: 0 -1px 0 #000; }
+.sheet { width: 100%; height: calc(62vh + var(--bottom-gap, 0px)); height: calc(62dvh + var(--bottom-gap, 0px)); padding-bottom: var(--bottom-gap, 0px); display: flex; flex-direction: column; background: var(--panel); border-top: 2px solid var(--hi); box-shadow: 0 -1px 0 #000; }
 .sheet-header { flex: none; padding: .55rem 1rem; border-bottom: 2px solid rgb(0 0 0 / .55); box-shadow: 0 1px 0 rgb(255 255 255 / .14); }
 .sheet-header .text-button { margin-left: auto; }
 .sheet-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: .25rem 0 .5rem; scrollbar-width: thin; scrollbar-color: #8a8c86 transparent; }
-.overlay { position: absolute; inset: 0; z-index: 8; overflow-y: auto; overscroll-behavior: contain; background: rgb(22 23 22 / .96); padding-top: max(.5rem, env(safe-area-inset-top)); padding-bottom: env(safe-area-inset-bottom); font-size: .92rem; text-shadow: 1px 1px 0 #000; }
+.overlay { position: absolute; inset: 0; z-index: 8; overflow-y: auto; overscroll-behavior: contain; background: rgb(22 23 22 / .96); padding-top: max(.5rem, env(safe-area-inset-top)); padding-bottom: calc(env(safe-area-inset-bottom) + var(--bottom-gap, 0px)); font-size: .92rem; text-shadow: 1px 1px 0 #000; }
 
 @media (min-width: 1100px) {
   .card { border-bottom: 2px solid var(--lo); margin-bottom: 2rem; }
@@ -134,23 +135,28 @@ input::placeholder { color: #8a8c86; }
 input { font-size: 16px; min-height: 44px; }
 /* Round 117: the settings sheet takes the panel's background over the undimmed level (the dock is hidden meanwhile),
    so it shows what the opacity slider does while the slider moves. */
-.sheet-backdrop { position: fixed; inset: 0; z-index: 20; background: rgb(0 0 0 / .12); display: flex; align-items: flex-end; justify-content: center; }
-.settings-sheet { width: min(520px, 100%); display: grid; gap: .45rem; background: var(--panel, #262827); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); border-bottom: 0; box-shadow: 0 0 0 1px #000; padding: 1.1rem 1rem max(1.1rem, env(safe-area-inset-bottom)); font-size: .92rem; text-shadow: 1px 1px 0 #000; }
+.sheet-backdrop { position: absolute; inset: 0; z-index: 20; background: rgb(0 0 0 / .12); display: flex; align-items: flex-end; justify-content: center; }
+.settings-sheet { width: min(520px, 100%); display: grid; gap: .45rem; background: var(--panel, #262827); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); border-bottom: 0; box-shadow: 0 0 0 1px #000; padding: 1.1rem 1rem calc(max(1.1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); font-size: .92rem; text-shadow: 1px 1px 0 #000; }
 .settings-sheet h2 { margin: 0 0 .3rem; color: var(--gold); font-size: 1.25rem; letter-spacing: .06em; text-transform: uppercase; text-shadow: 2px 2px 0 #000; }
 .settings-sheet label { margin-top: .4rem; }
 .settings-sheet .button-row { margin-top: .6rem; }
 .setting-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
 .setting-row output { color: var(--gold); font-weight: 700; }
+.build-line { margin: .5rem 0 0; color: var(--dim); font-size: .7rem; line-height: 1.4; overflow-wrap: anywhere; }
+.build-line strong { color: var(--gold); }
 .settings-sheet input[type=range] { -webkit-appearance: none; appearance: none; flex: none; width: 100%; height: 44px; padding: 0; border: 0; background: transparent; }
 .settings-sheet input[type=range]::-webkit-slider-runnable-track { height: 12px; background: #151615; border: 2px solid; border-color: #060606 #7c7e78 #7c7e78 #060606; }
 .settings-sheet input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 30px; margin-top: -11px; background: var(--gold); border: 2px solid; border-color: var(--gold-hi) var(--gold-lo) var(--gold-lo) var(--gold-hi); border-radius: 0; box-shadow: 0 0 0 1px #000; }
 .settings-sheet input[type=range]::-moz-range-track { height: 8px; background: #151615; border: 2px solid; border-color: #060606 #7c7e78 #7c7e78 #060606; }
 .settings-sheet input[type=range]::-moz-range-thumb { width: 16px; height: 26px; background: var(--gold); border: 2px solid; border-color: var(--gold-hi) var(--gold-lo) var(--gold-lo) var(--gold-hi); border-radius: 0; }
-@media (min-width: 621px) { .sheet-backdrop { align-items: center; } .settings-sheet { border-bottom: 2px solid var(--lo); } }
+@media (min-width: 621px) { .sheet-backdrop { align-items: center; } .settings-sheet { border-bottom: 2px solid var(--lo); padding-bottom: 1.1rem; } }
 @media (prefers-reduced-motion: reduce) { .level-ready .level-canvas, .site-labels, .site-labels.shown { transition: none; } .big-button::before { animation: none !important; } }
 
-/* Round 117: opened from the home screen, iOS keeps the layout area short by the status bar's inset, which left a
-   strip of the body under the dock. The viewport unit is the whole screen there. */
+/* Rounds 117 and 118: opened from the home screen, iOS lays the page out in an area that is short of the screen by
+   the status bar's inset, and clips a fixed element to it. `100vh` is the whole screen there. So the document itself
+   is made that high and does not clip, the shell lies in it, and the panels keep their content out of the strip by
+   --bottom-gap (src/viewport.js). Where iOS will not paint the strip, nothing is cut. */
 @media (display-mode: standalone), (display-mode: fullscreen) {
-  .app-shell, .sheet-backdrop { bottom: auto; height: 100vh; }
+  html, body, #root { height: 100vh; overflow: visible; }
+  .app-shell { position: absolute; inset: 0 0 auto 0; height: 100vh; }
 }

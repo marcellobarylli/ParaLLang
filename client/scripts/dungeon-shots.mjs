@@ -205,25 +205,38 @@ async function run(browser, runtime, size, log) {
   await clickButton(page, 'Enter');
   await waitArrived(page, 'overview');
   await shot('2-overview', { settle: 2600 }); // the site labels fade in after the camera settles
-  // Round 117: the installed page (display-mode: standalone) fills the window, and the dock sits on its bottom edge.
-  // Chrome 131 cannot emulate display-mode, so the built stylesheet's installed rule is applied without its condition.
-  if (size.name === 'phone') {
-    const layout = await page.evaluate(() => {
+  // Rounds 117 and 118: the installed page on iOS. Chrome cannot emulate display-mode and does not have the bug, so the
+  // built stylesheet's installed rules are applied without their condition and a gap of 62 px is set by hand: the
+  // shell must reach the bottom of the window and every panel must keep its content 62 px above it.
+  const installed = async (label, selectors) => {
+    if (size.name !== 'phone') return;
+    const layout = await page.evaluate((contentSelectors) => {
       const media = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules]).find((rule) => rule instanceof CSSMediaRule && rule.conditionText.includes('display-mode: standalone'));
       const style = document.createElement('style');
       style.textContent = media ? [...media.cssRules].map((rule) => rule.cssText).join('\n') : '';
       document.head.append(style);
-      const rect = (selector) => { const r = document.querySelector(selector)?.getBoundingClientRect(); return r ? { top: r.top, bottom: r.bottom, height: r.height } : null; };
-      const shell = getComputedStyle(document.querySelector('.app-shell'));
-      const result = { rule: style.textContent, bottom: shell.bottom, shell: rect('.app-shell'), dock: rect('.dock'), window: innerHeight };
+      const root = document.documentElement;
+      const before = root.style.getPropertyValue('--bottom-gap');
+      const bottoms = () => Object.fromEntries(contentSelectors.map((selector) => [selector, Math.round(Math.max(...[...document.querySelectorAll(selector)].map((element) => element.getBoundingClientRect().bottom)))]));
+      const shellBottom = () => Math.round(document.querySelector('.app-shell').getBoundingClientRect().bottom);
+      const flat = { shell: shellBottom(), content: bottoms() };
+      root.style.setProperty('--bottom-gap', '62px');
+      const gapped = { shell: shellBottom(), content: bottoms(), position: getComputedStyle(document.querySelector('.app-shell')).position, clip: getComputedStyle(document.body).overflow };
+      root.style.setProperty('--bottom-gap', before);
       style.remove();
-      return result;
-    });
-    console.log('installed layout', JSON.stringify(layout));
-    check(/\.app-shell/.test(layout.rule) && /height: 100vh/.test(layout.rule), `the built stylesheet has the installed rule (${layout.rule})`);
-    check(layout.shell && Math.abs(layout.shell.top) < 0.5 && Math.abs(layout.shell.height - layout.window) < 0.5, `installed: the shell fills the window (${JSON.stringify(layout.shell)} of ${layout.window})`);
-    check(layout.dock && Math.abs(layout.dock.bottom - layout.window) < 0.5, `installed: the dock sits on the bottom edge (${JSON.stringify(layout.dock)} of ${layout.window})`);
-  }
+      return { rule: style.textContent, window: innerHeight, before, flat, gapped };
+    }, selectors);
+    console.log(`installed layout (${label})`, JSON.stringify(layout));
+    check(/html, body, #root \{ height: 100vh; overflow: visible; \}/.test(layout.rule) && /\.app-shell \{ position: absolute;/.test(layout.rule), `${label}: the built stylesheet has the installed rules (${layout.rule})`);
+    check(layout.before === '0px', `${label}: a browser tab has no gap (${layout.before})`);
+    check(layout.gapped.position === 'absolute' && layout.gapped.clip === 'visible', `${label}: installed, the shell lies in the document and the body does not clip (${layout.gapped.position}, ${layout.gapped.clip})`);
+    check(layout.flat.shell === layout.window && layout.gapped.shell === layout.window, `${label}: installed, the shell reaches the bottom of the window (${layout.flat.shell}, ${layout.gapped.shell} of ${layout.window})`);
+    for (const [selector, bottom] of Object.entries(layout.gapped.content)) {
+      check(bottom <= layout.window - 62, `${label}: with a gap of 62, ${selector} ends above it (${bottom} of ${layout.window})`);
+      check(layout.flat.content[selector] - bottom === 62, `${label}: the gap lifts ${selector} by 62 (${layout.flat.content[selector]} to ${bottom})`);
+    }
+  };
+  await installed('route', ['.card button', '.site-list']);
 
   await clickButton(page, 'Start');
   await waitFor(page, () => window.__parallangLevel.director.mode === 'approach');
@@ -240,6 +253,7 @@ async function run(browser, runtime, size, log) {
   await shot('5-site-2', { settle: 1800 });
   // Round 117: the opacity slider in Settings, moved through the interface in the middle of a conversation.
   {
+    await installed('conversation', ['.input-bar input', '.input-bar button', '.sheet-scroll']);
     const before = await state(page);
     const look = () => page.evaluate(() => {
       const shell = document.querySelector('.app-shell');
@@ -263,6 +277,9 @@ async function run(browser, runtime, size, log) {
     check(open.dock === 'hidden', `the dock is hidden behind the settings sheet (${open.dock})`);
     check(open.rounded.length === 0, `no rounded corner in the settings (${open.rounded.join(', ')})`);
     check(open.stored === '{"panelOpacity":0.3}', `the opacity is stored (${open.stored})`);
+    await installed('settings', ['.settings-sheet button', '.build-line']);
+    const build = await page.evaluate(async () => ({ line: document.querySelector('.build-line')?.textContent, site: (await (await fetch('./version.json')).json()).build }));
+    check(build.line?.includes(`Build ${build.site} · browser tab · window ${size.width}×${size.height}`), `Settings names the build of version.json and the window (${build.line} / ${build.site})`);
     await shot('s-settings-30', { settle: 300 });
     await clickButton(page, 'Close');
     await sleep(200);

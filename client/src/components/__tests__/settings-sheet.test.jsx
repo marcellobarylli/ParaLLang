@@ -1,7 +1,7 @@
 // Round 114: the settings sheet edits the server URL and access token; the gear button in the top bar opens it.
 import React from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SettingsSheet from '../SettingsSheet.jsx';
 import App from '../../App.jsx';
@@ -72,4 +72,27 @@ test('moving the slider on the dungeon screen sets the panels at once, hides the
   expect(shell.classList.contains('settings-open')).toBe(false);
   expect(shell.style.getPropertyValue('--panel-alpha')).toBe('0.3');
   localStorage.removeItem('parallang.display');
+});
+
+// Round 118: the build, the viewport's numbers and a reload from inside the page.
+test('the sheet names the build and the viewport, reloads on request, and announces a newer build', async () => {
+  const user = userEvent.setup();
+  const view = { installed: true, window: [393, 787], layoutHeight: 787, unitHeight: 852, screen: [393, 852], gap: 65 };
+  const site = { build: '0.1.0+old', latestBuild: vi.fn(async () => '0.1.0+new'), reload: vi.fn(), viewport: () => view };
+  render(<SettingsSheet settings={{ serverUrl: '', token: '' }} onSave={vi.fn()} onClose={vi.fn()} site={site} />);
+  expect(screen.getByText(/Build 0\.1\.0\+old · installed · window 393×787 · layout 787 · 100vh 852 · screen 393×852 · gap 65/)).toBeTruthy();
+  expect((await screen.findByRole('status')).textContent).toContain('A newer build is on the site (0.1.0+new).');
+  await user.click(screen.getByRole('button', { name: 'Reload the page' }));
+  expect(site.reload).toHaveBeenCalledOnce();
+});
+
+test('the same build on the site is not announced, and an unreadable one neither', async () => {
+  for (const latest of ['0.1.0+same', null]) {
+    const site = { build: '0.1.0+same', latestBuild: vi.fn(async () => latest), reload: vi.fn(), viewport: () => ({ installed: false, window: [1440, 900], layoutHeight: 900, unitHeight: 900, screen: [1440, 900], gap: 0 }) };
+    render(<SettingsSheet settings={{ serverUrl: '', token: '' }} onSave={vi.fn()} onClose={vi.fn()} site={site} />);
+    await act(async () => { await vi.waitFor(() => expect(site.latestBuild).toHaveBeenCalledOnce()); });
+    expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.getByText(/browser tab · window 1440×900/)).toBeTruthy();
+    cleanup();
+  }
 });
