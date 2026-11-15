@@ -315,7 +315,10 @@ test('a start that took a pending greeting whose call then timed out fails with 
   const learnerId = await atCart(runtime);
   await reply.arrived;
   const start = runtime.service.startEncounter(learnerId, { encounterId: 'imp_coffee_greeting' });
-  await wait(5);
+  // Round 122: until the start has taken the pending greeting (it reads the save first). A fixed 5 ms was not always
+  // enough: on a busy machine the greeting timed out before it was taken, and the start made a fresh call instead of
+  // failing. That was the failure GitHub's runners showed now and then (rounds 118 to 120).
+  await waitFor(() => runtime.service.greetings.size === 0);
   reply.open(new ProviderError('timeout', { provider: 'fixture' }));
   await assert.rejects(start, (error) => error.code === 'CLI_TIMEOUT');
   assert.equal(greetings(runtime).length, 0, 'no second greeting call');

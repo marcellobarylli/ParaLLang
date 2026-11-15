@@ -238,8 +238,28 @@ async function run(browser, runtime, size, log) {
     check(end.chip === `Lv ${end.progression.level}`, `${id}: the top bar shows the level (${end.chip}, level ${end.progression.level})`);
   };
   // A walk the player picks with the button `label`, to site `to`, which opens a conversation or the site's card.
-  const walk = async (label, to, { shots = [], name = null, opens = 'encounter' } = {}) => {
+  const walk = async (label, to, { shots = [], name = null, opens = 'encounter', through = null } = {}) => {
     const before = await state(page);
+    // Review 1 of round 122 (R1.3): a walk that leads through the place of the figure at the site it leaves. A watcher
+    // in the page reads that figure every frame: whole beyond 2.1 m, shrinking to 1.3 m, gone within.
+    if (through) await page.evaluate((index) => {
+      const level = window.__parallangLevel;
+      const seen = window.__figureWatch = { samples: 0, nearest: Infinity, wrong: [], gone: 0, shrunk: 0, done: false };
+      const tick = () => {
+        if (seen.done) return;
+        const figure = level.figures[index];
+        const pose = level.director.pose;
+        const away = Math.hypot(pose.position[0] - figure.position[0], pose.position[2] - figure.position[2]);
+        seen.samples += 1;
+        seen.nearest = Math.min(seen.nearest, away);
+        const shown = figure.visible ? figure.scale : 0;
+        if (away <= 1.25 && shown === 0) seen.gone += 1;
+        if (away > 1.4 && away < 2.0 && shown > 0.02 && shown < 0.98) seen.shrunk += 1;
+        if ((away >= 2.15 && shown < 0.99) || (away <= 1.25 && shown > 0)) seen.wrong.push([Math.round(away * 100) / 100, Math.round(shown * 100) / 100]);
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, names[through].index);
     await clickButton(page, label);
     await waitFor(page, (index) => window.__parallangLevel.director.mode === 'walk' && window.__parallangLevel.director.site === index, names[to].index);
     const { camera, sheet } = await state(page);
@@ -255,6 +275,11 @@ async function run(browser, runtime, size, log) {
       await shot(`${name}${shots.length > 1 ? `-${index + 1}` : ''}`, { settle: 0 });
     }
     await waitPhase(page, opens);
+    if (through) {
+      const seen = await page.evaluate(() => { const watch = window.__figureWatch; watch.done = true; return watch; });
+      check(seen.samples > 30 && seen.nearest < 0.6 && seen.gone > 0 && seen.shrunk > 0 && seen.wrong.length === 0,
+        `leaving ${through}, the camera walks through its figure's place, and the figure shrinks away and is gone there (${JSON.stringify({ ...seen, wrong: seen.wrong.slice(0, 5) })})`);
+    }
     await arrivedAt(to, { sheet: opens === 'encounter' });
   };
   // The temple map: the labels and the fog patches the view shows.
@@ -444,7 +469,7 @@ async function run(browser, runtime, size, log) {
 
   // Back through the Root Court, which is cleared: its card, and no conversation. Then on to the west.
   await walk('Walk to The Root Court', 'root_court', { opens: 'site' });
-  await walk('Walk to The Sunlit Court', 'sunlit_court');
+  await walk('Walk to The Sunlit Court', 'sunlit_court', { through: 'root_court' }); // the way west leads through Gerald's cart
   await shot('09-sunlit-court', { settle: 1800 });
   await answerSite();
   await walk('Walk to The Library', 'library');

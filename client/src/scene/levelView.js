@@ -228,7 +228,8 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       figure.hop = ease(figure.hop, 0, dt, 0.3);
       figure.group.scale.setScalar(figure.shown);
       figure.group.rotation.y = Math.atan2(pose.position[0] - figure.x, pose.position[2] - figure.z);
-      figure.group.position.y = figure.ground + FIGURE.bob * Math.sin(clock * 1.3 + index) + FIGURE.hop * Math.sin(Math.PI * figure.hop);
+      // Review 1 of round 122 (R1.1): with reduced motion a figure neither bobs nor hops.
+      figure.group.position.y = figure.ground + (reducedMotion ? 0 : FIGURE.bob * Math.sin(clock * 1.3 + index) + FIGURE.hop * Math.sin(Math.PI * figure.hop));
     });
     beacons.forEach((b, index) => {
       if (!b) return;
@@ -309,7 +310,7 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
         if (beatKind !== 'fail') {
           const b = beacons[director.site];
           if (b) b.flare = 1;
-          if (figures[director.site]) figures[director.site].hop = 1; // a pass: the character hops
+          if (figures[director.site] && !reducedMotion) figures[director.site].hop = 1; // a pass: the character hops
         }
       }
       talk.beatId = beatId;
@@ -327,11 +328,14 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     /** Round 122: each site's figure as the scene holds it, for the playthrough: null for a site with a beacon. */
     get figures() {
       return figures.map((figure, index) => figure && {
-        name: figure.name, site: dungeon.sites[index].id, visible: figure.group.visible, scale: figure.group.scale.x, facing: figure.group.rotation.y,
+        name: figure.name, site: dungeon.sites[index].id, visible: figure.group.visible, scale: figure.group.scale.x, facing: figure.group.rotation.y, lift: figure.group.position.y - figure.ground,
         position: [figure.x, figure.ground, figure.z], focus: figure.focus, height: figure.height, triangles: figure.triangles,
       });
     },
-    /** The triangles the level, the dungeon's markers and the figures hold together (the style's budget is for the scene). */
+    /**
+     * The triangles the level, the dungeon's markers and the figures hold together. The level's are counted as the
+     * package's own budget test counts them (`world.stats.triangles`: props and surface, without the sky's 712).
+     */
     get sceneTriangles() {
       const count = (object) => { let n = 0; object?.traverse((o) => { if (o.isMesh) n += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; }); return n; };
       return { level: world.stats.triangles, markers: count(markers), total: world.stats.triangles + count(markers) };
