@@ -53,6 +53,10 @@ provider.
   turned to the camera, and that its face is inside the free part of the screen at the first hold and after the
   resolve. The pictures are in [`shots/`](shots/); the gallery's are in [`shots/figures/`](shots/figures/).
 
+- **Deploy.** `893e646` was pushed at 13:25:57 UTC. Both workflows passed (CI 43718969574, Pages 43718969765);
+  `version.json` reads `0.1.0+mwhvd82e`; Render's deployment of the same commit reports `success` and `/api/health`
+  answers 200. `client/scripts/live-check.mjs` (job 5485) loaded the live page at both sizes with no page error.
+
 ## Decision
 The figures are merged to `main` and deployed. This was the last of the four pieces of work the owner asked for
 before leaving (the map, the party, levels, the characters).
