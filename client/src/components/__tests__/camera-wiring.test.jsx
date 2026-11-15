@@ -53,7 +53,7 @@ function fakeServer() {
     const path = String(url);
     const body = init.body ? JSON.parse(init.body) : {};
     if (path === '/api/learner') return response({ learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: { code: 'it', name: 'Italian', tag: 'it-IT' } });
-    if (path === '/api/dungeons/ta_prohm/map') return response(run.view());
+    if (path === '/api/dungeons/ta_prohm/map?client=121') return response(run.view());
     // Round 120: the party, and a member's conversation (one objective).
     if (path === '/api/party') return response({ party: party.party });
     if (path === '/api/party/recruit') return response(party.recruit(body.encounterId));

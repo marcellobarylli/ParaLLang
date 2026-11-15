@@ -2,6 +2,10 @@ import { TOKEN_HEADER, loadSettings } from './settings.js';
 
 // Round 114: requests go to the server URL from the settings (empty: this page's origin, as with the dev proxy) and
 // carry the access token, when one is set, as X-ParaLLang-Token.
+// Round 121: the contract of the dungeon's routes this client speaks (server/src/errors.js). A server that has moved
+// on tells an older page to reload.
+export const CLIENT_CONTRACT = 121;
+
 export function createLearningApi({ getSettings = () => loadSettings(), fetchImpl } = {}) {
   async function request(path, { learnerId, method = 'GET', body, signal } = {}) {
     const { serverUrl, token } = getSettings();
@@ -43,17 +47,17 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     // dungeonId the server starts the run's next site.
     startEncounter: (learnerId, options = {}) => {
       const { restart = false, dungeonId, encounterId } = typeof options === 'object' && options !== null ? options : { restart: options === true };
-      return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId } : {}), ...(encounterId ? { encounterId } : {}) } });
+      return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId, client: CLIENT_CONTRACT } : {}), ...(encounterId ? { encounterId } : {}) } });
     },
     // Round 119: the map and the run on it. (The bare path is the one the client of rounds 115 to 118 read; the
     // server answers it with a note to reload.)
-    getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/map`, { learnerId }),
+    getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/map?client=${CLIENT_CONTRACT}`, { learnerId }),
     // Round 120: the party, as the app has it (rounds 021 to 023).
     getParty: (learnerId) => request('/api/party', { learnerId }),
     recruit: (learnerId, encounterId) => request('/api/party/recruit', { learnerId, method: 'POST', body: { encounterId } }),
     // Round 119: a walk to a neighbouring site; `leave` drops the dungeon's conversation under way.
-    moveDungeon: (learnerId, dungeonId, body) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/move`, { learnerId, method: 'POST', body }),
-    resetDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/reset`, { learnerId, method: 'POST' }),
+    moveDungeon: (learnerId, dungeonId, body) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/move`, { learnerId, method: 'POST', body: { ...body, client: CLIENT_CONTRACT } }),
+    resetDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/reset`, { learnerId, method: 'POST', body: { client: CLIENT_CONTRACT } }),
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),
     revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),

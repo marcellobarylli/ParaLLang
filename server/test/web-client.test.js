@@ -90,7 +90,7 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
     ['face_gate', 'Portia'], ['buttress_tree', 'Mortimer'], ['root_court', 'Gerald'], ['sunlit_court', null], ['library', null], ['before_sanctuary', null], ['sanctuary', null],
   ]);
   // The bundled file and the server's copy agree on where the sites stand and how the paths run.
-  const served = (await api(runtime, '/api/dungeons/ta_prohm/map', { learnerId: s().learnerId })).data.dungeon;
+  const served = (await api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId: s().learnerId })).data.dungeon;
   assert.deepEqual(served.sites.map((site) => [site.id, site.encounterId, site.at]), dungeon.sites.map((site) => [site.id, site.encounterId, site.at]));
   assert.deepEqual(served.paths, dungeon.paths.map(({ between, via }) => ({ between, via })));
   assert.deepEqual([served.start, served.goal], [dungeon.start, dungeon.goal]);
@@ -121,7 +121,7 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
 
   // Before Portia is answered no walk is offered, and the server refuses one all the same.
   assert.equal(siteStatesOf(s()).root_court.reachable, false);
-  const early = await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId: s().learnerId, method: 'POST', body: { siteId: 'root_court', leave: true } });
+  const early = await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId: s().learnerId, method: 'POST', body: { siteId: 'root_court', leave: true, client: 121 } });
   assert.equal(early.data.error.code, 'BLOCKED');
 
   await answerSite(s);
@@ -164,12 +164,35 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
   await walkTo(s, 'sunlit_court', 'site'); // cleared: its card, and no conversation
   assert.equal(s().encounter, null);
   await walkTo(s, 'before_sanctuary');
-  // The Sanctuary is in sight and sealed until Bambieshart, the sixth, is answered.
-  has(siteStatesOf(s()).sanctuary.gate, ['sealed', 'required', 'completed'], 'gate');
-  assert.deepEqual(siteStatesOf(s()).sanctuary.gate, { sealed: true, required: 6, completed: 5 });
+  // The Sanctuary is in sight and sealed: Bambieshart, the sixth, is not answered, and it asks for level 5 (round 121).
+  const xpOf = (...sites) => sites.reduce((sum, siteId) => sum + 10 * runtime.content.encounters.get(ENCOUNTER[siteId]).encounter.objectives.length + 25, 0);
+  const five = xpOf('face_gate', 'buttress_tree', 'root_court', 'sunlit_court', 'library');
+  has(s().progression, ['xp', 'level', 'levelStartsAt', 'nextLevelAt'], 'progression');
+  assert.equal(s().progression.xp, five, 'ten for each objective and twenty-five for each resolve');
+  has(siteStatesOf(s()).sanctuary.gate, ['sealed', 'required', 'completed', 'level'], 'gate');
+  assert.deepEqual(siteStatesOf(s()).sanctuary.gate, { sealed: true, required: 6, completed: 5, level: { required: 5, current: s().progression.level } });
   await answerSite(s);
-  assert.equal(siteStatesOf(s()).sanctuary.gate.sealed, false);
   assert.equal(s().progress.complete, false);
+  // The six are answered. That is level 4: the level seal holds, and the walk is not offered.
+  const six = five + xpOf('before_sanctuary');
+  assert.deepEqual([s().progression.xp, s().progression.level], [six, 4]);
+  assert.equal(s().xpGained, 10 + 25, 'the last answer closed one objective and resolved');
+  assert.deepEqual(siteStatesOf(s()).sanctuary.gate, { sealed: true, required: 6, completed: 6, level: { required: 5, current: 4 } });
+  assert.equal(siteStatesOf(s()).sanctuary.reachable, false);
+  // Bambieshart again, from his card, until level 5. The answer that reaches it says so, and the map opens the seal.
+  while (s().progression.level < 5) {
+    s().openMap();
+    await s().start();
+    s().onCameraArrived();
+    assert.equal(s().phase, 'site');
+    await s().talk();
+    assert.equal(s().phase, 'encounter');
+    await answerSite(s);
+  }
+  assert.equal(s().levelUp, 5);
+  assert.equal(s().progression.xp, six + 2 * xpOf('before_sanctuary'));
+  assert.equal(siteStatesOf(s()).sanctuary.gate.sealed, false);
+  assert.equal(siteStatesOf(s()).sanctuary.reachable, true);
   await walkTo(s, 'sanctuary');
   assert.equal(s().encounter.character.name, 'Errata');
   await answerSite(s);
@@ -196,7 +219,8 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
   assert.equal(s().reviewChallenge.practice, !first.due);
   await s().submitReview('definitely wrong');
   assert.equal(s().error, null);
-  has(s().reviewResult, ['correct', 'feedback', 'canonicalAnswer', 'effectiveQuality', 'nextReviewAt'], 'review result');
+  has(s().reviewResult, ['correct', 'feedback', 'canonicalAnswer', 'effectiveQuality', 'nextReviewAt', 'xpGained', 'levelUp'], 'review result');
+  assert.equal(s().reviewResult.xpGained, 0, 'a wrong answer earns nothing');
   assert.equal(s().reviewResult.correct, false);
   await s().startReview(second.vocabularyId);
   await s().revealReviewAnswer();

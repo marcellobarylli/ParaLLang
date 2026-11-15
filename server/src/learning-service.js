@@ -3,7 +3,7 @@ import { gradingResponseSchema, encounterResponseSchema, locationAtmosphereSchem
 import { buildAtmosphereMessages, buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
 import {
   calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
-  foldEvidenceText, isDue, lacksTargetLanguage, masteryLabel, matchCanonicalVocabulary, scheduleReview,
+  foldEvidenceText, isDue, lacksTargetLanguage, levelFor, masteryLabel, matchCanonicalVocabulary, progressionView, ratioBonusFor, scheduleReview,
 } from './language-engine.js';
 import { foldWords } from './content-loader.js';
 import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
@@ -18,6 +18,8 @@ export const HELD_NOTE = 'A held objective was said correctly but does not count
 // Round 078: appended once, after the rejected reply, when a narration line had no target language (see narrate). It
 // asks for the turn's share and demands no English, since the share can reach 100% (critique 1.4).
 export const NARRATION_RETRY_MS = 20_000;
+// Round 121: what earns experience: an objective a turn closes, a conversation that resolves, a correct due review.
+export const XP = Object.freeze({ objective: 10, resolve: 25, review: 5 });
 const TIMED_OUT = Symbol('timed out');
 // Round 097 (critique 1.4): the correction's first word, which play-market uses to tell a retry from a first call.
 export const CORRECTION_PREFIX = 'CORRECTION:';
@@ -79,9 +81,11 @@ const lineKey = (line) => `${line.speaker}\u0000${line.native.normalize('NFC').t
 // Round 060 (critiques 1.2, 1.3): receipts store responses without the kept lines; a replay gets the current ones.
 // Round 082 Amendment 1 (review R1.2): the inscriptions too. Round 093 (critique 1.4): the whole Spellbook, which
 // grows with the cards; a replay carries the Spellbook as it is now.
+// Round 121 (critique 1.5): nor the progression, which a replay takes from the save as it is now; `xpGained`, what
+// that attempt earned, stays.
 function forReceipt(response) {
   if (!response || !('spellbook' in response)) return response;
-  const { spellbook, ...rest } = response;
+  const { spellbook, progression, ...rest } = response;
   return rest;
 }
 // Round 093 (critique Optional): only a receipt of the save's own, never an inherited property ("constructor").
@@ -182,13 +186,19 @@ export class LearningService {
   // Round 006: each session plays one encounter definition ({ encounter, character }) from the pack.
   definition(session) { return this.content.encounters.get(session?.definitionId ?? this.content.defaultEncounterId); }
 
-  ratioFor(turns, definition = this.definition(null)) {
+  // Round 121: `bonus` is the level's addition to the base ratio, taken when the conversation starts (a session's
+  // ratioBonus). The existing cap of 1 applies to the sum.
+  ratioFor(turns, definition = this.definition(null), bonus = 0) {
     return calculateTargetRatio(
-      definition.character.language_profile.base_target_ratio,
+      definition.character.language_profile.base_target_ratio + bonus,
       definition.encounter.escalation.target_ratio_increase_per_turn,
       turns,
     );
   }
+
+  // Round 121: the learner's experience and the level it makes.
+  progression(envelope) { return progressionView(envelope.progression?.xp ?? 0); }
+  level(envelope) { return levelFor(envelope.progression?.xp ?? 0); }
 
   // Round 045 (backlog G3): the objectives still open, in authored order. In order (the default), those from the index
   // on; unordered, every objective not yet passed. The current objective is the first open one.
@@ -622,7 +632,7 @@ export class LearningService {
       state: encounter.state,
       encounter_state: encounter.state === 'resolved' ? 'resolved' : 'ongoing',
       committedPlayerTurns: encounter.committedPlayerTurns,
-      difficulty: this.ratioFor(encounter.committedPlayerTurns, definition),
+      difficulty: this.ratioFor(encounter.committedPlayerTurns, definition, encounter.ratioBonus ?? 0),
       must_translate: encounter.state === 'ongoing' && Boolean(objective),
       hints_available: encounter.state === 'ongoing' && revealKeys.length < limit,
       // Round 112: `baseLimit` is the objective's own limit, so the app can say how many fewer the strain leaves.
@@ -714,7 +724,7 @@ export class LearningService {
   // its 3D view) but not its character's name, nor whether the character can be saved.
   dungeonView(envelope, dungeon) {
     const run = this.dungeonRun(envelope, dungeon);
-    const sites = siteStates(dungeon, run);
+    const sites = siteStates(dungeon, run, this.level(envelope)); // round 121: a site may ask for a level
     return {
       dungeon: {
         id: dungeon.id, name: dungeon.name, level: dungeon.level, start: dungeon.start, goal: dungeon.goal,
@@ -731,6 +741,7 @@ export class LearningService {
         paths: dungeon.paths.map(({ between, via }) => ({ between: [...between], via: via.map((point) => [...point]) })),
       },
       progress: { run: run.run, at: run.at, complete: isComplete(dungeon, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
+      progression: this.progression(envelope),
     };
   }
 
@@ -764,12 +775,19 @@ export class LearningService {
       const envelope = await this.loadEnvelope(learnerId);
       const run = this.dungeonRun(envelope, dungeon);
       const siteId = request?.siteId;
-      const problem = moveProblem(dungeon, run, siteId);
+      const level = this.level(envelope);
+      const problem = moveProblem(dungeon, run, siteId, level);
       if (problem === 'UNKNOWN_SITE') throw validationError('Unknown site.');
       const here = siteOf(dungeon, run.at);
       const target = siteOf(dungeon, siteId);
       if (problem === 'NOT_ADJACENT') throw conflictError(`You can't get to ${target.name} from ${here.name}.`, 'NOT_ADJACENT');
-      if (problem === 'SEALED') throw conflictError(sealedMessage(target.name, gateOfSite(target, run)), 'SEALED');
+      if (problem === 'SEALED') {
+        // Round 121: the message names what is missing: sites, the level, or both.
+        const gate = gateOfSite(target, run, level);
+        const sites = gate.completed < gate.required ? ` Finish the other encounters first (${gate.completed} of ${gate.required} done).` : '';
+        const levels = gate.level && gate.level.current < gate.level.required ? ` It opens at level ${gate.level.required} (you are level ${gate.level.current}).` : '';
+        throw conflictError(`${target.name} is sealed.${sites}${levels}`, 'SEALED');
+      }
       if (problem === 'BLOCKED') {
         throw conflictError(`${this.content.encounters.get(here.encounter).character.name} has not let you pass yet.`, 'BLOCKED');
       }
@@ -872,8 +890,11 @@ export class LearningService {
   async openSession(learnerId, envelope, definition, { locationId, dungeonId, siteId } = {}) {
     // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
     this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));
+    // Round 121: the level raises the target ratio of a dungeon site's conversation, from its first line to its last.
+    // Review R1.1: only there. The market's conversations (the iPhone app) and a party member's keep the content's.
+    const ratioBonus = dungeonId ? ratioBonusFor(this.level(envelope)) : 0;
     const generated = await this.prefetchedGreeting(learnerId, definition)
-      ?? await this.narrate(this.greetingMessages(definition, locationId), definition, this.ratioFor(0, definition));
+      ?? await this.narrate(this.greetingMessages(definition, locationId, ratioBonus), definition, this.ratioFor(0, definition, ratioBonus));
     const npcMessage = this.canonicalizeNarration(generated, definition);
     const stagedEnvelope = clone(envelope);
     this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
@@ -885,6 +906,7 @@ export class LearningService {
       committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
       ...(locationId ? { locationId } : {}),
       ...(dungeonId ? { dungeonId, siteId } : {}),
+      ...(ratioBonus ? { ratioBonus } : {}),
       // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
       ...(strainedBy.length ? { strained: true, strainedBy } : {}),
     };
@@ -895,7 +917,7 @@ export class LearningService {
 
   // Round 076 (critique 1.6): the greeting's prompt, the same for a start and a prefetch. It depends on content only,
   // which is loaded once for the service's lifetime, so a prefetched greeting is the one the start would ask for.
-  greetingMessages(definition, locationId) {
+  greetingMessages(definition, locationId, ratioBonus = 0) {
     return buildNarrationMessages({
       language: this.content.language,
       character: definition.character,
@@ -903,7 +925,7 @@ export class LearningService {
       locationName: this.sceneName({ definitionId: definition.encounter.id, locationId }),
       objectives: definition.encounter.objectives,
       vocabularyById: this.content.vocabularyById,
-      targetRatio: this.ratioFor(0, definition),
+      targetRatio: this.ratioFor(0, definition, ratioBonus),
       ambientEntries: definition.ambientEntries,
     });
   }
@@ -1043,7 +1065,7 @@ export class LearningService {
   // Round 082 Amendment 1: the inscriptions and the drill too. Round 093 (critique 1.4): receipts hold no Spellbook,
   // so a replay carries the whole Spellbook as it is now (also for older receipts that still hold one).
   replay(response, envelope) {
-    return { ...response, spellbook: this.spellbookSnapshot(envelope), replayed: true };
+    return { ...response, spellbook: this.spellbookSnapshot(envelope), ...('xpGained' in response ? { progression: this.progression(envelope) } : {}), replayed: true };
   }
 
   async revealEncounterHelp(learnerId, request) {
@@ -1209,10 +1231,10 @@ export class LearningService {
           vocabularyById: this.content.vocabularyById,
           conversationHistory: history,
           playerInput: message,
-          targetRatio: this.ratioFor(nextTurns, definition),
+          targetRatio: this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0),
           decision,
           ambientEntries: definition.ambientEntries,
-        }), definition, this.ratioFor(nextTurns, definition));
+        }), definition, this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0));
 
         const stagedEnvelope = clone(envelope);
         const stagedEncounter = clone(current);
@@ -1256,10 +1278,16 @@ export class LearningService {
           const by = new Set(stagedEncounter.strainedBy ?? []);
           for (const record of stagedEnvelope.annexes ?? []) if (record.strainSpentOn === null && by.has(record.id)) record.strainSpentOn = definition.encounter.id;
         }
+        // Round 121: experience for the objectives this turn closed and for a resolve, in the same save as the turn
+        // and its receipt, so a replayed attempt earns nothing again.
+        const xpGained = XP.objective * passedCount + (resolved ? XP.resolve : 0);
+        stagedEnvelope.progression = { xp: (stagedEnvelope.progression?.xp ?? 0) + xpGained };
         const response = {
           encounter: this.serializeEncounter(stagedEncounter),
           assessment: responseAssessment,
           spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
+          xpGained,
+          progression: this.progression(stagedEnvelope),
           replayed: false,
         };
         stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
@@ -1548,6 +1576,9 @@ export class LearningService {
       const scheduleChanged = isDue(stagedItem.schedule, this.clock()) && !challenge.practice;
       if (scheduleChanged) stagedItem.schedule = scheduleReview(stagedItem.schedule, result.quality, this.clock());
       stagedItem.evidence.push({ at: timestamp, kind: 'review', quality: result.quality, correct: result.correct, revealed: request.action === 'reveal', scheduleChanged });
+      // Round 121: a correct review of a due card earns experience (not practice, not a revealed answer).
+      const xpGained = result.correct && scheduleChanged ? XP.review : 0;
+      stagedEnvelope.progression = { xp: (stagedEnvelope.progression?.xp ?? 0) + xpGained };
       const response = {
         result: {
           correct: result.correct,
@@ -1560,6 +1591,8 @@ export class LearningService {
           scheduleChanged,
         },
         spellbook: this.spellbookSnapshot(stagedEnvelope),
+        xpGained,
+        progression: this.progression(stagedEnvelope),
         replayed: false,
       };
       stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {

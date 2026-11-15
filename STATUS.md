@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-15: round 121, levels in the dungeon
+
+The third of the owner's three integration rounds. The player earns experience in the dungeon: 10 XP for each
+objective, 25 for a finished conversation, 5 for a correct review of a due card. The top bar shows the level. The
+Library opens at level 3 and The Sanctuary at level 5 besides its six sites, which asks for one or two
+conversations more than the six. At each level the dungeon's characters speak a little more of the target language
+(3 points per level). The numbers are a first choice. It was played in a headless browser with scripted replies,
+not against the live model and not on a phone, so what the model writes at the higher ratio is not yet seen. The
+iPhone app's play is unchanged. A page older than this round is told to reload
+([findings](docs/rounds/121/findings.md), pictures in [`docs/rounds/121/shots/`](docs/rounds/121/shots/)).
+
 ## Addendum 2026-11-15: round 120, the party in the dungeon
 
 The second of the owner's three integration rounds. In the dungeon a character who can be saved (Gerald, Mortimer,
@@ -1088,6 +1099,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 121 | 11-15 | Levels in the dungeon: XP for objectives, resolves and due reviews; a derived level; level seals on the Library and the Sanctuary; more of the target language per level (autonomous, the owner away) | [121](docs/rounds/121/architecture.md) | [findings](docs/rounds/121/findings.md) | `29f7271` (pre-run record) to round 121 close, merged to `main` |
 | 120 | 11-15 | The party in the dungeon: the offer after a saveable site, the invitation on a site card, a Party panel, a conversation with a member from anywhere outside a conversation (autonomous, the owner away) | [120](docs/rounds/120/architecture.md) | [findings](docs/rounds/120/findings.md) | `b176f30` (pre-run record) to round 120 close, merged to `main` |
 | 119 | 11-15 | The map in the dungeon, in two layers: Ta Prohm as a free map of seven sites with fog, a seal and a pass rule; a world map of places above it; walks along any path with a turn on the spot (autonomous, the owner away) | [119](docs/rounds/119/architecture.md) | [findings](docs/rounds/119/findings.md) | `4713727` (pre-run record) to round 119 close, merged to `main` |
 | 118 | 11-15 | Round 117's strip fix cut the screen's bottom on the iPhone: a 100vh document with the panels kept out of the gap; the build and a reload in Settings | [118](docs/rounds/118/architecture.md) | [findings](docs/rounds/118/findings.md) | `ea04174` (pre-run record) to round 118 close; build `6076b49` |

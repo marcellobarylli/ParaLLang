@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { validationError } from '../errors.js';
+import { requireClient, validationError } from '../errors.js';
 
 function learnerId(req) {
   const value = req.get('X-Learner-Id');
@@ -12,7 +12,9 @@ export function createEncounterRouter(service) {
   router.post('/start', async (req, res, next) => {
     // Round 021: the app names the encounter at its location; without encounterId the default encounter starts.
     // Round 114: with dungeonId, the dungeon run's next site starts (see LearningService.startEncounter).
+    // Round 121 (review R1.2): a dungeon start names the client's contract; the app's starts have no dungeon.
     try {
+      if (req.body?.dungeonId != null) requireClient(req.body.client);
       res.json(await service.startEncounter(learnerId(req), {
         restart: req.body?.restart === true, encounterId: req.body?.encounterId ?? null, dungeonId: req.body?.dungeonId ?? null,
       }));

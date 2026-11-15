@@ -22,8 +22,8 @@ function memoryStorage(entries = {}) {
 
 // A server in miniature: a run on the map, one conversation at a time. `steps` visits of TOUR are already played,
 // or `stored` is the run as a save holds it.
-function fakeServer({ steps = 0, stored, ...overrides } = {}) {
-  const run = createFakeRun(stored).advance(steps);
+function fakeServer({ steps = 0, stored, xp, ...overrides } = {}) {
+  const run = createFakeRun(stored, xp === undefined ? {} : { xp }).advance(steps);
   const party = createFakeParty(run);
   const server = { run, party, session: null, sessions: 0 };
   const encounter = () => ({ ...server.session });
@@ -66,9 +66,15 @@ function fakeServer({ steps = 0, stored, ...overrides } = {}) {
       server.session = { ...server.session, version: server.session.version + 1, state: 'resolved', transcript: [{ id: 'p', role: 'player', text: message }] };
       if (server.session.partyConversation) party.finished(server.session.encounterId);
       else run.clear(server.session.siteId);
-      return { encounter: encounter(), spellbook: { ...spellbook, dueCount: run.run.cleared.length }, assessment: { overallFeedback: 'Good', objectiveResults: [] } };
+      // Round 121: one objective and the resolve.
+      return { encounter: encounter(), spellbook: { ...spellbook, dueCount: run.run.cleared.length }, assessment: { overallFeedback: 'Good', objectiveResults: [] }, xpGained: 35, progression: run.earn(35) };
     }),
-    revealHelp: vi.fn(), createReview: vi.fn(), submitReview: vi.fn(),
+    revealHelp: vi.fn(),
+    createReview: vi.fn(async () => ({ challenge: { id: 'challenge-1', vocabularyId: 'ciao', target: 'ciao', practice: false }, spellbook })),
+    submitReview: vi.fn(async (_learnerId, { action }) => {
+      const xpGained = action === 'answer' ? 5 : 0;
+      return { result: { correct: action === 'answer', feedback: 'Correct.', canonicalAnswer: 'hello', effectiveQuality: 5, nextReviewAt: '2026-01-16T12:00:00Z' }, spellbook, xpGained, progression: run.earn(xpGained) };
+    }),
     getSpellbook: vi.fn(async () => ({ ...spellbook, dueCount: 7 })),
     ...overrides,
   };
@@ -962,4 +968,112 @@ test('a greeting that arrives after the player opened the Spellbook leaves the S
   s().openParty();
   await s().talkTo(s().party[0]);
   expect(s()).toMatchObject({ phase: 'party', view: 'dialogue' });
+});
+
+// Round 121: experience and levels.
+test('the level comes with the map, an answer says what it earned, and the answer that reaches a level says so', async () => {
+  const { s } = makeStore({ xp: 20 });
+  expect(s().progression).toBeNull();
+  await s().initialize();
+  expect(s().progression).toEqual({ xp: 20, level: 1, levelStartsAt: 0, nextLevelAt: 60 });
+  s().enter();
+  s().enterPlace('ta_prohm');
+  await s().start();
+  s().onCameraArrived();
+  expect(s()).toMatchObject({ xpGained: 0, levelUp: null });
+  await s().sendMessage('Ciao!'); // 35 XP: 55, still level 1
+  expect(s()).toMatchObject({ xpGained: 35, levelUp: null, progression: { xp: 55, level: 1 } });
+  await s().travel('root_court');
+  expect(s()).toMatchObject({ xpGained: 0, levelUp: null }); // the line belongs to the answer, not to the next site
+  s().onCameraArrived();
+  await s().sendMessage('Un caffè.'); // 90: level 2
+  expect(s()).toMatchObject({ xpGained: 35, levelUp: 2, progression: { xp: 90, level: 2, levelStartsAt: 60, nextLevelAt: 140 } });
+});
+
+test('a level seal: the Sanctuary stays shut at level 4, and a party talk or a review that reaches level 5 reads the map again (critique 1.1)', async () => {
+  // The six sites are cleared and Gerald is in the party; the player stands before the Sanctuary at level 4.
+  const { api, server, s } = makeStore({ steps: TOUR.length - 1, xp: 320 });
+  server.party.recruit('imp_coffee_greeting');
+  await s().initialize();
+  await vi.waitFor(() => expect(s().party.length).toBe(1));
+  s().onCameraArrived();
+  expect(s()).toMatchObject({ phase: 'site', progression: { level: 4 } });
+  expect(siteStatesOf(s()).sanctuary).toMatchObject({ reachable: false, gate: { sealed: true, required: 6, completed: 6, level: { required: 5, current: 4 } } });
+  await s().travel('sanctuary');
+  expect(api.moveDungeon).not.toHaveBeenCalled();
+
+  // A talk with Gerald: 35 XP makes 355, not yet. No level, no read of the map.
+  const reads = api.getDungeon.mock.calls.length;
+  await s().talkTo(s().party[0]);
+  await s().sendMessage('Con calma.');
+  expect(s()).toMatchObject({ levelUp: null, progression: { xp: 355, level: 4 } });
+  expect(api.getDungeon.mock.calls.length).toBe(reads);
+  s().leaveParty();
+  // A due review, answered: 5 XP makes 360, level 5. The map is read again and the seal is open.
+  await s().startReview('ciao');
+  await s().submitReview('hello');
+  expect(s().reviewResult).toMatchObject({ correct: true, xpGained: 5, levelUp: 5 });
+  await vi.waitFor(() => expect(siteStatesOf(s()).sanctuary).toMatchObject({ reachable: true, gate: { sealed: false, level: { required: 5, current: 5 } } }));
+  expect(api.getDungeon.mock.calls.length).toBe(reads + 1);
+  s().returnToDialogue();
+  await s().travel('sanctuary');
+  expect(s()).toMatchObject({ phase: 'walk', siteIndex: index('sanctuary') });
+
+  // The same by a party talk alone.
+  const other = makeStore({ steps: TOUR.length - 1, xp: 330 });
+  other.server.party.recruit('imp_coffee_greeting');
+  await other.s().initialize();
+  await vi.waitFor(() => expect(other.s().party.length).toBe(1));
+  other.s().onCameraArrived();
+  await other.s().talkTo(other.s().party[0]);
+  await other.s().sendMessage('Con calma.');
+  expect(other.s()).toMatchObject({ levelUp: 5, progression: { xp: 365 } });
+  await vi.waitFor(() => expect(siteStatesOf(other.s()).sanctuary.reachable).toBe(true));
+});
+
+test('experience in the store never goes down: an older map reply does not put older XP back; a revealed review earns nothing', async () => {
+  const { api, s } = makeStore({ xp: 20 });
+  await toFirstSite(s);
+  // A view of the map from before the answer (20 XP) is what the read after the answer gets back.
+  const stale = await api.getDungeon.getMockImplementation()();
+  api.getDungeon.mockImplementationOnce(async () => stale);
+  await s().sendMessage('Ciao!'); // earns 35
+  expect(stale.progression.xp).toBe(20);
+  expect(s().progression).toMatchObject({ xp: 55, level: 1 });
+  await s().startReview('ciao');
+  await s().revealReviewAnswer();
+  expect(s().reviewResult).toMatchObject({ xpGained: 0, levelUp: null });
+  expect(s().progression.xp).toBe(55);
+});
+
+test('a server that sends no experience (an older one) leaves the level out', async () => {
+  const { api, s } = makeStore();
+  const view = api.getDungeon.getMockImplementation();
+  api.getDungeon.mockImplementation(async () => { const { progression, ...rest } = await view(); return rest; });
+  const send = api.sendDialogue.getMockImplementation();
+  api.sendDialogue.mockImplementation(async (...args) => { const { progression, xpGained, ...rest } = await send(...args); return rest; });
+  await toFirstSite(s);
+  expect(s().progression).toBeNull();
+  await s().sendMessage('Ciao!');
+  expect(s()).toMatchObject({ progression: null, xpGained: 0, levelUp: null, encounter: { state: 'resolved' } });
+});
+
+// Review 1 of round 121 (Codex), R1.3.
+test('a review answered after new settings loaded another learner does not bring its experience along', async () => {
+  const slow = deferred();
+  const { api, server, s } = makeStore({ xp: 355, steps: 1 });
+  await s().initialize();
+  s().onCameraArrived();
+  await s().startReview('ciao');
+  const review = api.submitReview.getMockImplementation();
+  api.submitReview.mockImplementationOnce(async (...args) => { const reply = await review(...args); await slow.promise; return reply; });
+  const answered = s().submitReview('hello'); // 360 XP on the old server, level 5
+  await vi.waitFor(() => expect(server.run.xp).toBe(360));
+  server.run.xp = 0; // the server the new settings point at knows a learner with nothing
+  await s().saveSettings({ serverUrl: 'https://other.example.com', token: 'another-token' });
+  expect(s().progression).toMatchObject({ xp: 0, level: 1 });
+  slow.resolve();
+  await answered;
+  expect(s().progression).toMatchObject({ xp: 0, level: 1 });
+  expect(s()).toMatchObject({ reviewResult: null, isLoading: false });
 });

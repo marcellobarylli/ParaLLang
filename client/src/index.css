@@ -89,14 +89,23 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .party-offer .button-row { justify-content: center; }
 .party-note { color: #b5e7bb; }
 .party-member .primary-button { margin-top: .4rem; }
+/* Round 121: the level in the top bar, and the line that says what an answer earned. */
+.level-chip { display: flex; align-items: center; gap: .35rem; flex: none; margin-left: .5rem; color: var(--gold); font-weight: 700; font-size: .78rem; letter-spacing: .04em; text-shadow: 1px 1px 0 #000; white-space: nowrap; }
+.xp-bar { display: block; width: 46px; height: 7px; background: rgb(12 13 12 / .7); border: 1px solid #000; box-shadow: 0 0 0 1px rgb(255 255 255 / .25); }
+.xp-bar i { display: block; height: 100%; background: var(--gold); }
+.phase-attract .level-chip { visibility: hidden; }
+.xp-line { color: var(--gold); font-weight: 700; letter-spacing: .04em; }
 /* The top bar holds three buttons on a phone. The pips go under the title, the dungeon's name gives way to them, and
-   the buttons give up some padding. */
-@media (max-width: 560px) {
-  .hud { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "title nav" "pips nav"; column-gap: .4rem; row-gap: .25rem; align-items: center; }
-  .hud-title { grid-area: title; align-self: end; }
+   the buttons give up some padding. Up to 720 px (review R1.4 of round 121): with the level chip the one-row bar
+   needs more than that. */
+@media (max-width: 720px) {
+  .hud { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "title nav" "level nav" "pips nav"; column-gap: .4rem; row-gap: .2rem; align-items: center; }
+  .level-chip { grid-area: level; margin: 0; font-size: .72rem; }
+  .xp-bar { width: 40px; height: 6px; }
+  .hud-title { grid-area: title; }
   .hud-title strong { font-size: .9rem; letter-spacing: .06em; white-space: nowrap; }
   .hud-title span { display: none; }
-  .pips { grid-area: pips; align-self: start; margin: 0; gap: .25rem; }
+  .pips { grid-area: pips; margin: 0; gap: .25rem; }
   .pips li { width: 9px; height: 9px; }
   .hud nav { grid-area: nav; gap: .3rem; }
   .hud nav .secondary-button { padding: .5rem .45rem; font-size: .82rem; }

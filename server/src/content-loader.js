@@ -203,6 +203,7 @@ const dungeonSchema = z.object({
   sites: z.array(z.object({
     id: locationIdSchema, encounter: z.string().min(1), name: z.string().min(1), at: pointSchema,
     requires: z.array(locationIdSchema).min(1).optional(),
+    requires_level: z.number().int().min(2).optional(), // round 121: the level that opens the site
   }).strict()).min(1),
   paths: z.array(z.object({ between: z.tuple([locationIdSchema, locationIdSchema]), via: z.array(pointSchema).default([]) }).strict()),
 }).strict();
