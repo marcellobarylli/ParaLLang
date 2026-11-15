@@ -54,6 +54,18 @@ against an in-process server whose provider is a fixture: no model wrote a line.
   and a site card, leaves a conversation and returns to it, checks the seal with five of six cleared, and checks
   the map's labels and fog at four moments. The pictures are in [`shots/`](shots/).
 
+- **Deploy.** `113f661` was pushed at 10:55:16 UTC. Pages run
+  [43706390704](https://github.com/marcellobarylli/ParaLLang/actions/runs/43706390704) succeeded at 10:56:43, and
+  `version.json` reads `0.1.0+mwhpyza1`. Render's deployment of the same commit reports `success`, and `/api/health`
+  answers 200. `client/scripts/live-check.mjs` (job 5447) loaded the live page at both sizes: the title, the world
+  map, the temple map with its three unfogged sites, and the expected refusal without a token. The server's new
+  routes cannot be told apart from the cluster without the token: every path answers 401.
+- **CI failed once on `113f661`.** Run
+  [43706390799](https://github.com/marcellobarylli/ParaLLang/actions/runs/43706390799) failed in `npm test` after
+  18 s. The deploy workflow ran `npm test` on the same commit and passed. The log needs a GitHub login. The server
+  and client suites then passed five times in a row on the cluster under Node 22.23.5 with `CI=true` on two cores
+  (job 5446). The cause is not known; round 118 saw the same pattern once.
+
 ## Decision
 The map is merged to `main` and deployed (Q4). Rounds 120 (the party) and 121 (levels) attach to it: the party
 offer to a cleared site, the level gates to the seal and to the closed places.
