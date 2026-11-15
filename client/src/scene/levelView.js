@@ -1,12 +1,14 @@
 // Round 115: the three.js host of the dungeon screen. It owns the renderer, the level from @parallang/aesthetic, the
-// PS1 pipeline, the route ribbon and the site beacons, and it moves the camera as the director says. Everything
+// PS1 pipeline, the path ribbons and the site beacons, and it moves the camera as the director says. Everything
 // that needs WebGL is here, and this module is loaded lazily (it is three.js and the level, about 700 kB).
+// Round 119: the dungeon is a map. One ribbon per path, shown from above when both its sites are out of the fog, and
+// a dark patch over each hidden site.
 import {
-  AdditiveBlending, BufferGeometry, CylinderGeometry, DoubleSide, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial,
+  AdditiveBlending, BufferGeometry, CircleGeometry, CylinderGeometry, DoubleSide, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial,
   OctahedronGeometry, PerspectiveCamera, RingGeometry, Vector3, WebGLRenderer,
 } from 'three';
 import { PRESETS, TA_PROHM, createPS1Pipeline, createWorld, taProhmHeightAt } from '@parallang/aesthetic';
-import { createDirector } from './director.js';
+import { createDirector, pathPoints } from './director.js';
 import { freeRect } from './insets.js';
 
 const FOV = 60;
@@ -17,6 +19,8 @@ const LEVELS = {
 };
 const GOLD = [1, 0.8, 0.36]; // written as is: the PS1 materials and the post pass do no colour conversion
 const RIBBON = { width: 1.5, lift: 0.4 };
+// The fog over a hidden site, seen from above: three stacked discs, so the patch is darkest in the middle.
+const FOG_PATCH = { radii: [7, 9.5, 12], height: 16, opacity: 0.42 };
 const ease = (current, target, dt, tau) => current + (target - current) * (1 - Math.exp(-dt / tau));
 const basic = (rgb, options = {}) => {
   const material = new MeshBasicMaterial({ transparent: true, depthWrite: false, fog: false, side: DoubleSide, ...options });
@@ -24,7 +28,7 @@ const basic = (rgb, options = {}) => {
   return material;
 };
 
-// A flat ribbon along the route: one quad per segment, each run on by half the width so the corners close.
+// A flat ribbon along a path: one quad per segment, each run on by half the width so the corners close.
 function ribbonGeometry(route, heightAt) {
   const positions = [];
   const half = RIBBON.width / 2;
@@ -42,6 +46,22 @@ function ribbonGeometry(route, heightAt) {
   const geometry = new BufferGeometry();
   geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
   return geometry;
+}
+
+// The fog patch over a hidden site.
+function fogPatch([x, z], heightAt) {
+  const group = new Group();
+  const materials = FOG_PATCH.radii.map(() => basic([0.02, 0.03, 0.03], { depthTest: false, opacity: 0 }));
+  FOG_PATCH.radii.forEach((radius, i) => {
+    const disc = new Mesh(new CircleGeometry(radius, 20), materials[i]);
+    disc.rotation.x = -Math.PI / 2;
+    disc.position.set(x, heightAt(x, z) + FOG_PATCH.height + i * 0.05, z);
+    disc.renderOrder = 15;
+    disc.frustumCulled = false;
+    group.add(disc);
+  });
+  group.visible = false;
+  return { group, materials, opacity: 0 };
 }
 
 // A site's beacon, standing in for the encounter's character until there are assets: a turning crystal, a ring on
@@ -91,16 +111,24 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
   director.attract();
   const fog = { near: PRESETS[world.preset].fogNear, far: PRESETS[world.preset].fogFar };
 
-  const ribbon = new Mesh(ribbonGeometry(dungeon.route, level.heightAt), basic(GOLD, { depthTest: false, opacity: 0 }));
-  ribbon.renderOrder = 20;
-  ribbon.frustumCulled = false;
-  ribbon.visible = false;
+  const indexOf = (siteId) => dungeon.sites.findIndex((site) => site.id === siteId);
+  const ribbons = dungeon.paths.map(({ between }) => {
+    const ends = between.map(indexOf);
+    const mesh = new Mesh(ribbonGeometry(pathPoints(dungeon, ends[0], ends[1]), level.heightAt), basic(GOLD, { depthTest: false, opacity: 0 }));
+    mesh.renderOrder = 20;
+    mesh.frustumCulled = false;
+    mesh.visible = false;
+    return { mesh, between, opacity: 0 };
+  });
   const beacons = dungeon.sites.map((site) => beacon(site.at, level.heightAt));
+  const patches = dungeon.sites.map((site) => fogPatch(site.at, level.heightAt));
   const markers = new Group();
   markers.name = 'dungeon-markers';
-  markers.add(ribbon, ...beacons.map((b) => b.group));
+  markers.add(...patches.map((patch) => patch.group), ...ribbons.map((ribbon) => ribbon.mesh), ...beacons.map((b) => b.group));
   for (const b of beacons) for (const child of b.group.children) child.renderOrder = 10;
   world.scene.add(markers);
+  // Which sites the fog hides, by id (setProgress). Before the first report nothing is hidden.
+  let hidden = new Set();
   const siteAnchors = dungeon.sites.map((site) => new Vector3(site.at[0], level.heightAt(site.at[0], site.at[1]) + 1.2, site.at[1]));
 
   const size = { width: 1, height: 1 };
@@ -110,7 +138,6 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
   let labels = [];
   let phaseKey = 'attract:0:null'; // the director starts in the attract orbit
   let notified = true;
-  let ribbonOpacity = 0;
   let clock = 0;
   let raf = 0;
   let last = null;
@@ -163,9 +190,18 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     world.uniforms.uJitter.value = distance > 60 ? 0 : 1;
 
     const mode = director.mode;
-    ribbonOpacity = ease(ribbonOpacity, mode === 'overview' ? 0.9 : 0, dt, 0.4);
-    ribbon.material.opacity = ribbonOpacity;
-    ribbon.visible = ribbonOpacity > 0.02;
+    for (const ribbon of ribbons) {
+      const shown = mode === 'overview' && !ribbon.between.some((id) => hidden.has(id));
+      ribbon.opacity = ease(ribbon.opacity, shown ? 0.9 : 0, dt, 0.4);
+      ribbon.mesh.material.opacity = ribbon.opacity;
+      ribbon.mesh.visible = ribbon.opacity > 0.02;
+    }
+    patches.forEach((patch, index) => {
+      const shown = mode === 'overview' && hidden.has(dungeon.sites[index].id);
+      patch.opacity = ease(patch.opacity, shown ? 1 : 0, dt, 0.5);
+      patch.group.visible = patch.opacity > 0.02;
+      for (const material of patch.materials) material.opacity = patch.opacity * FOG_PATCH.opacity;
+    });
     beacons.forEach((b, index) => {
       const on = (mode === 'approach' || mode === 'walk') && director.site === index;
       b.opacity = ease(b.opacity, on ? 1 : 0, dt, 0.5);
@@ -215,12 +251,14 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     setPhase({ phase, siteIndex = 0, walkFrom = null }) {
       const key = `${phase}:${siteIndex}:${walkFrom}`;
       const atSite = (director.mode === 'approach' || director.mode === 'walk') && director.site === siteIndex;
-      if (key === phaseKey || (phase === 'encounter' && atSite)) { phaseKey = key; return; }
+      // A conversation and the site card (round 119) keep the hold the camera arrived at.
+      if (key === phaseKey || ((phase === 'encounter' || phase === 'site') && atSite)) { phaseKey = key; return; }
       phaseKey = key;
-      if (phase === 'attract') director.attract();
+      // Round 119: the world map lies over the same orbit as the title.
+      if (phase === 'attract' || phase === 'world') { if (director.mode !== 'attract') director.attract(); }
       else if (phase === 'overview') director.overview();
       else if (phase === 'victory') director.victory();
-      else if (phase === 'walk' && walkFrom !== null && walkFrom < siteIndex) director.walk(walkFrom, siteIndex);
+      else if (phase === 'walk' && walkFrom !== null && walkFrom !== siteIndex) director.walk(walkFrom, siteIndex);
       else director.approach(siteIndex);
       if (reducedMotion) director.skip();
       notified = false;
@@ -228,13 +266,12 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     },
     /**
      * Round 116: the conversation at the site the camera holds at. `closed` objectives step the camera in, a new
-     * `beatId` is a verdict of `beatKind` ('pass', 'fail' or 'resolved'), and `resolved` releases the beacon and
-     * turns the camera to the way on.
+     * `beatId` is a verdict of `beatKind` ('pass', 'fail' or 'resolved'), and `resolved` releases the beacon. The
+     * camera keeps looking at the site (round 119).
      */
     setEncounter({ closed = 0, resolved = false, beatId = null, beatKind = null } = {}) {
       if (director.mode !== 'approach' && director.mode !== 'walk') return;
       director.engage(resolved ? 1 : Math.min(0.7, closed * 0.35));
-      director.onward(resolved);
       talk.resolved = resolved;
       if (beatId !== null && beatId !== talk.beatId) {
         if (!reducedMotion) director.beat(beatKind);
@@ -249,6 +286,9 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       insetsSet = true;
     },
     setLabels(elements) { labels = elements ?? []; },
+    /** Round 119: the fog. `sites` is the run's `progress.sites`: a site whose state is 'hidden' gets a patch and loses its ribbons. */
+    setProgress(sites) { hidden = new Set(Object.entries(sites ?? {}).filter(([, site]) => site.state === 'hidden').map(([id]) => id)); },
+    get hiddenSites() { return [...hidden]; },
     resize,
     /** One frame of `dt` seconds, outside the animation loop (screenshots). */
     step,

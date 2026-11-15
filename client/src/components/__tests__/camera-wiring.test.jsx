@@ -1,6 +1,7 @@
 // Round 116: the gameplay and the camera, wired through the real screen and store with the three.js host replaced
 // by a recorder. The screen must send the level view each phase with its site, open the dialogue only when the
 // camera reports its arrival, and pass every verdict and the resolve on to it.
+// Round 119: the dungeon is a map. The view also gets the fog, a walk in either direction, and the site card's phase.
 import React from 'react';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
@@ -8,6 +9,8 @@ import userEvent from '@testing-library/user-event';
 import DungeonScreen from '../DungeonScreen.jsx';
 import { createGameStore } from '../../stores/gameStore.js';
 import { DUNGEON } from '../../dungeon.js';
+import { ATLAS } from '../../atlas.js';
+import { NAMES, createFakeRun } from '../../__tests__/fakeRun.js';
 
 const level = vi.hoisted(() => ({ views: [] }));
 vi.mock('../../scene/levelView.js', () => ({
@@ -16,7 +19,7 @@ vi.mock('../../scene/levelView.js', () => ({
       canvas, options, calls: [], disposed: false,
       setPhase: (value) => view.calls.push(['phase', value]),
       setEncounter: (value) => view.calls.push(['encounter', value]),
-      setInsets: () => {}, setLabels: (labels) => { view.labels = labels; },
+      setInsets: () => {}, setLabels: (labels) => { view.labels = labels; }, setProgress: (sites) => { view.fog = sites; },
       dispose: () => { view.disposed = true; },
     };
     level.views.push(view);
@@ -24,44 +27,43 @@ vi.mock('../../scene/levelView.js', () => ({
   },
 }));
 
-const SITE_IDS = DUNGEON.sites.map((site) => site.encounterId);
-const NAMES = ['Portia', 'Gerald', 'Bambieshart'];
 const response = (data) => ({ ok: true, status: 200, json: async () => data });
 const memoryStorage = () => { const values = new Map(); return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } }; };
+const index = (siteId) => DUNGEON.sites.findIndex((site) => site.id === siteId);
+const encounterOf = (siteId) => DUNGEON.sites[index(siteId)].encounterId;
 
 // Each site has two objectives: a first answer closes one (or none, if it says "wrong"), a second resolves the site.
 function fakeServer() {
-  const server = { cleared: 0, session: null, sessions: 0 };
-  const view = () => ({
-    dungeon: { id: DUNGEON.id, name: DUNGEON.name, level: DUNGEON.level, route: DUNGEON.route, sites: DUNGEON.sites.map((site, index) => ({ ...site, characterName: NAMES[index] })) },
-    progress: { run: 1, clearedEncounterIds: SITE_IDS.slice(0, server.cleared), nextSiteIndex: server.cleared < 3 ? server.cleared : null, nextEncounterId: SITE_IDS[server.cleared] ?? null, complete: server.cleared >= 3 },
-  });
+  const run = createFakeRun();
+  const server = { run, session: null, sessions: 0 };
   const encounter = () => {
-    const { index, version, closed } = server.session;
+    const { siteId, version, closed } = server.session;
     const resolved = closed >= 2;
+    const name = NAMES[siteId];
     return {
-      id: `encounter-${server.sessions}`, encounterId: SITE_IDS[index], dungeonId: DUNGEON.id, version, state: resolved ? 'resolved' : 'ongoing',
+      id: `encounter-${server.sessions}`, encounterId: encounterOf(siteId), dungeonId: DUNGEON.id, siteId, version, state: resolved ? 'resolved' : 'ongoing',
       committedPlayerTurns: version - 1, difficulty: 0.25, hints_available: true, hints: { used: 0, remaining: 2, limit: 2 },
-      character: { name: NAMES[index] }, resolvedMessage: `${NAMES[index]} steps aside.`, companionBriefing: null,
-      currentObjective: resolved ? null : { id: `objective-${closed}`, prompt: `Objective ${closed + 1} for ${NAMES[index]}.` },
-      transcript: [{ id: 'npc-1', role: 'npc', narrative: 'A pause.', protected: !resolved, dialogue: { speaker: NAMES[index], native: 'Allora?', words: [], ...(resolved ? { translation: 'Well?' } : {}) } }],
+      character: { name }, resolvedMessage: `${name} steps aside.`, companionBriefing: null,
+      currentObjective: resolved ? null : { id: `objective-${closed}`, prompt: `Objective ${closed + 1} for ${name}.` },
+      transcript: [{ id: 'npc-1', role: 'npc', narrative: 'A pause.', protected: !resolved, dialogue: { speaker: name, native: 'Allora?', words: [], ...(resolved ? { translation: 'Well?' } : {}) } }],
     };
   };
   vi.stubGlobal('fetch', vi.fn(async (url, init = {}) => {
     const path = String(url);
     const body = init.body ? JSON.parse(init.body) : {};
     if (path === '/api/learner') return response({ learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: { code: 'it', name: 'Italian', tag: 'it-IT' } });
-    if (path === '/api/dungeons/ta_prohm') return response(view());
+    if (path === '/api/dungeons/ta_prohm') return response(run.view());
+    if (path === '/api/dungeons/ta_prohm/move') { server.session = null; return response(run.move(body.siteId)); }
     if (path === '/api/encounter/start') {
       server.sessions += 1;
-      server.session = { index: server.cleared, version: 1, closed: 0 };
+      server.session = { siteId: run.run.at, version: 1, closed: 0 };
       return response({ encounter: encounter(), spellbook: { cards: [], dueCount: 0, inEncounter: true } });
     }
     if (path === '/api/encounter/dialogue') {
       const passed = !body.message.includes('wrong');
       server.session.version += 1;
       if (passed) server.session.closed += 1;
-      if (server.session.closed >= 2) server.cleared = server.session.index + 1;
+      if (server.session.closed >= 2) run.clear(server.session.siteId);
       return response({ encounter: encounter(), spellbook: { cards: [], dueCount: 0 }, assessment: { overallFeedback: passed ? 'Yes.' : 'Not yet.', objectiveResults: [{ objectiveId: 'objective', passed, feedback: passed ? 'Closed.' : 'Try again.' }] } });
     }
     throw new Error(`Unexpected fetch ${path}`);
@@ -78,10 +80,10 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); delete
 const phases = (view) => view.calls.filter(([kind]) => kind === 'phase').map(([, value]) => `${value.phase}:${value.siteIndex}:${value.walkFrom}`);
 const lastEncounter = (view) => view.calls.findLast(([kind]) => kind === 'encounter')?.[1];
 
-test('the screen drives the camera through a whole run, and the camera gates the dialogue', async () => {
+test('the screen drives the camera over the map, and the camera gates the dialogue', async () => {
   const user = userEvent.setup();
   fakeServer();
-  const store = createGameStore({ dungeon: DUNGEON, storage: memoryStorage() });
+  const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage() });
   render(<DungeonScreen useStore={store} />);
   await waitFor(() => expect(level.views.length).toBe(1));
   const view = level.views[0];
@@ -90,12 +92,18 @@ test('the screen drives the camera through a whole run, and the camera gates the
     await user.type(screen.getByLabelText('Your response'), text);
     await user.click(screen.getByRole('button', { name: 'Send' }));
   };
+  const shown = () => view.labels.filter((label) => label && !label.hidden).map((label) => label.textContent);
   expect(view.options.dungeon.id).toBe('ta_prohm');
   await waitFor(() => expect(phases(view)).toEqual(['attract:0:null']));
-  await waitFor(() => expect(view.labels.filter(Boolean).length).toBe(3)); // the site labels the view places
+  // A label per site for the view to place; the fog hides all but the gate's and the two a path leads to.
+  await waitFor(() => expect(view.labels.filter(Boolean).length).toBe(7));
+  expect(shown()).toEqual(['1The Face Gate', '2', '3']);
 
   await screen.findByText(/answer in Italian/);
+  expect(view.fog).toMatchObject({ face_gate: { state: 'current' }, root_court: { state: 'known' }, library: { state: 'hidden' } });
   await user.click(screen.getByRole('button', { name: 'Enter' }));
+  expect(phases(view).at(-1)).toBe('world:0:null');
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   expect(phases(view).at(-1)).toBe('overview:0:null');
   arrive('overview'); // an arrival outside a move opens nothing
   expect(screen.queryByLabelText('Your response')).toBeNull();
@@ -103,7 +111,7 @@ test('the screen drives the camera through a whole run, and the camera gates the
   await user.click(screen.getByRole('button', { name: 'Start' }));
   await waitFor(() => expect(phases(view).at(-1)).toBe('approach:0:null'));
   // The encounter has loaded, but the camera is still coming down: a caption, no dialogue.
-  await waitFor(() => expect(store.getState().encounter?.encounterId).toBe(SITE_IDS[0]));
+  await waitFor(() => expect(store.getState().encounter?.encounterId).toBe(encounterOf('face_gate')));
   expect(screen.getByRole('status').textContent).toBe('Approaching The Face Gate…');
   expect(screen.queryByLabelText('Your response')).toBeNull();
   expect(lastEncounter(view)).toBeUndefined();
@@ -121,30 +129,37 @@ test('the screen drives the camera through a whole run, and the camera gates the
   await waitFor(() => expect(lastEncounter(view)).toEqual({ closed: 2, resolved: true, beatId: 3, beatKind: 'resolved' }));
   expect(phases(view).at(-1)).toBe('encounter:0:null'); // the walk waits for the player
 
-  // The walk: the camera sets off, the dialogue closes, and it opens again only on arrival.
-  await user.click(screen.getByRole('button', { name: 'Walk on to The Root Court' }));
-  await waitFor(() => expect(phases(view).at(-1)).toBe('walk:1:0'));
-  await waitFor(() => expect(store.getState().encounter?.encounterId).toBe(SITE_IDS[1]));
+  // The walk the player picks: the camera sets off, the dialogue closes, and it opens again only on arrival.
+  await user.click(await screen.findByRole('button', { name: /Walk to The Root Court/ }));
+  await waitFor(() => expect(phases(view).at(-1)).toBe('walk:2:0'));
+  await waitFor(() => expect(store.getState().encounter?.encounterId).toBe(encounterOf('root_court')));
   expect(screen.getByRole('status').textContent).toBe('Walking to The Root Court…');
   expect(screen.queryByLabelText('Your response')).toBeNull();
+  // The fog has moved with the player: the court's neighbours are known now.
+  expect(view.fog).toMatchObject({ root_court: { state: 'current' }, sunlit_court: { state: 'known' }, before_sanctuary: { state: 'known' }, library: { state: 'hidden' } });
   arrive('walk');
   expect(await screen.findByLabelText('Conversation with Gerald')).toBeTruthy();
   expect(lastEncounter(view)).toEqual({ closed: 0, resolved: false, beatId: 3, beatKind: 'resolved' }); // a new site starts unshaped; the old verdict is not replayed
   await answer('Un caffè.');
   await answer('Senza latte.');
   await waitFor(() => expect(lastEncounter(view)).toMatchObject({ closed: 2, resolved: true, beatId: 5 }));
-  await user.click(screen.getByRole('button', { name: 'Walk on to Before the Sanctuary' }));
-  await waitFor(() => expect(phases(view).at(-1)).toBe('walk:2:1'));
+
+  // Up to the map and back down a path the other way, to a cleared site: its card, and no conversation.
+  await user.click(screen.getByRole('button', { name: 'Map' }));
+  expect(phases(view).at(-1)).toBe('overview:2:0');
+  expect(shown()).toEqual(['1', '2', '3The Root Court', '4', '6']);
+  await user.click(screen.getByRole('button', { name: 'Walk to The Face Gate' }));
+  await waitFor(() => expect(phases(view).at(-1)).toBe('walk:0:2'));
+  expect(screen.getByRole('status').textContent).toBe('Walking to The Face Gate…');
+  const conversations = view.calls.filter(([kind]) => kind === 'encounter').length;
   arrive('walk');
-  await screen.findByLabelText('Conversation with Bambieshart');
-  await answer('Grazie.');
-  await answer('La montagna?');
-  await user.click(await screen.findByRole('button', { name: 'Leave the temple' }));
-  expect(await screen.findByRole('heading', { name: 'Dungeon cleared' })).toBeTruthy();
+  expect(await screen.findByRole('button', { name: 'Talk to Portia again' })).toBeTruthy();
+  expect(phases(view).at(-1)).toBe('site:0:2');
+  expect(view.calls.filter(([kind]) => kind === 'encounter').length).toBe(conversations); // the card does not shape the camera
 
   expect(phases(view)).toEqual([
-    'attract:0:null', 'overview:0:null', 'approach:0:null', 'encounter:0:null',
-    'walk:1:0', 'encounter:1:0', 'walk:2:1', 'encounter:2:1', 'victory:2:1',
+    'attract:0:null', 'world:0:null', 'overview:0:null', 'approach:0:null', 'encounter:0:null',
+    'walk:2:0', 'encounter:2:0', 'overview:2:0', 'walk:0:2', 'site:0:2',
   ]);
   expect(view.disposed).toBe(false);
   cleanup();
@@ -160,12 +175,13 @@ test('the camera arriving before the encounter has loaded waits for it', async (
     if (String(url) === '/api/encounter/start') await new Promise((resolve) => { release = resolve; });
     return real(url, init);
   }));
-  const store = createGameStore({ dungeon: DUNGEON, storage: memoryStorage() });
+  const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage() });
   render(<DungeonScreen useStore={store} />);
   await waitFor(() => expect(level.views.length).toBe(1));
   const view = level.views[0];
   await screen.findByText(/answer in Italian/);
   await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
   await waitFor(() => expect(phases(view).at(-1)).toBe('approach:0:null'));
   act(() => view.options.onArrive('approach'));

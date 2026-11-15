@@ -46,6 +46,8 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
       return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId } : {}), ...(encounterId ? { encounterId } : {}) } });
     },
     getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}`, { learnerId }),
+    // Round 119: a walk to a neighbouring site; `leave` drops the dungeon's conversation under way.
+    moveDungeon: (learnerId, dungeonId, body) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/move`, { learnerId, method: 'POST', body }),
     resetDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/reset`, { learnerId, method: 'POST' }),
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),

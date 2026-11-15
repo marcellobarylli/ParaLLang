@@ -73,6 +73,9 @@ async function fixtureContent(t, extra = async () => {}) {
   await writeYaml(join(dir, 'languages/es/vocabulary/fixture_meat.yaml'), vocabulary);
   await writeYaml(join(dir, 'languages/es/encounters/fixture_butcher.yaml'), encounter);
   await editYaml(join(dir, 'world/locations/butchers_stall.yaml'), (location) => { location.encounter = 'fixture_butcher'; });
+  // Round 119: the dungeon names the encounters this fixture replaces or removes (the butcher's, the Rift's). These
+  // tests are the market's, so the fixture has no dungeon.
+  await rm(join(dir, 'world/dungeons'), { recursive: true });
   // Round 014: the Rift's gate names the replaced encounter. Round 015: the Rift boss reviews the removed meats, so
   // the fixture pack leaves it out.
   await rm(join(dir, 'languages/es/encounters/the_rift_errata.yaml'));

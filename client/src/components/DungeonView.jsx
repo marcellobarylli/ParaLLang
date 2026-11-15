@@ -3,11 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 // Round 115: the level behind the dungeon screen. The three.js host (src/scene/levelView.js) loads as its own chunk
 // after the first paint. Without WebGL (an old browser, the jsdom tests) a still backdrop stands in, and the camera
 // "arrives" at once, so the game stays playable.
+// Round 119: the labels are the numbers of the sites out of the fog; the current site also shows its name.
 const MOVING = new Set(['approach', 'walk']);
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
-export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, cleared = [], insets, onArrive, closed = 0, resolved = false, beat = null }) {
+export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites = {}, insets, onArrive, closed = 0, resolved = false, beat = null }) {
   const canvasRef = useRef(null);
   const viewRef = useRef(null);
   const labelRefs = useRef([]);
@@ -48,6 +49,8 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, clear
   }, [status, phase, siteIndex, closed, resolved, beat]);
 
   useEffect(() => { if (status === 'ready' && insets) viewRef.current?.setInsets(insets); }, [status, insets]);
+  // Round 119: the fog. A hidden site has a dark patch over it, no ribbon and no label.
+  useEffect(() => { if (status === 'ready') viewRef.current?.setProgress(sites); }, [status, sites]);
 
   return (
     <div className={`level level-${status}`} aria-hidden="true">
@@ -55,12 +58,15 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, clear
       {status === 'unavailable' && <div className="level-backdrop" />}
       {status === 'ready' && (
         <div className={`site-labels${phase === 'overview' ? ' shown' : ''}`}>
-          {dungeon.sites.map((site, index) => (
-            <div className={`site-label${cleared.includes(site.encounterId) ? ' cleared' : ''}`} key={site.encounterId} ref={(element) => { labelRefs.current[index] = element; }}>
-              <span className="site-number">{index + 1}</span>
-              <span className="site-name">{site.name}</span>
-            </div>
-          ))}
+          {dungeon.sites.map((site, index) => {
+            const state = sites[site.id]?.state ?? 'hidden';
+            return (
+              <div className={`site-label site-${state}${sites[site.id]?.cleared ? ' cleared' : ''}`} key={site.id} hidden={state === 'hidden'} ref={(element) => { labelRefs.current[index] = element; }}>
+                <span className="site-number">{index + 1}</span>
+                {state === 'current' && <span className="site-name">{site.name}</span>}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

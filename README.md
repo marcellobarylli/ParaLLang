@@ -114,19 +114,43 @@ Two optional switches spend extra LLM calls and are off by default. Set them in 
 ## The web client: the Ta Prohm dungeon
 
 Since round 115 the web client (`client/`) is one screen, a dungeon crawl through the Ta Prohm level of
-[`aesthetic/`](aesthetic/README.md). Three encounters are played in order: Portia's tutorial at The Face Gate,
-Gerald's coffee order in The Root Court, and Bambieshart Before the Sanctuary. The camera moves through five states:
-a slow orbit of the whole level (the title), a bird's-eye view with the route and the numbered sites, an approach
-down to site 1, a walk at eye height along the route to each next site, and a pull back out to the orbit when the
-last site is cleared. The dialogue is a bottom sheet on a phone and a side panel from 1100 px. A reload resumes the
-run at its next site. Inside a conversation the camera follows the answers (round 116): each objective the player
-closes steps it in towards the site, a verdict is a brief push or pull, and a resolved site turns it to the way on,
-from where "Walk on" starts the walk.
+[`aesthetic/`](aesthetic/README.md). Since round 119 the dungeon is a map under a world map.
 
-- **Content.** `content/world/dungeons/ta_prohm.yaml` holds the sites and the route in Ta Prohm world units. The
-  client bundles it at build time, so the title and the route show before the server answers. The server serves the
-  run's progress (`GET /api/dungeons/:id`), starts the run's next site (`POST /api/encounter/start` with `dungeonId`)
-  and starts a new run (`POST /api/dungeons/:id/reset`).
+- **The world map** shows the places the fog allows: Ta Prohm, which is open, and its two neighbours, Angkor Wat and
+  Micromort Mountain, which are closed. The Bone Dome is hidden.
+- **The temple map** is the top-down view of Ta Prohm. Seven sites hold the Crumbling Market's seven encounters:
+
+  | Site | Character | Where |
+  |---|---|---|
+  | The Face Gate | Portia (the tutorial) | Outside the wall, the start |
+  | The Buttress Tree | Mortimer | The outer court |
+  | The Root Court | Gerald | The third enclosure's court |
+  | The Sunlit Court | Flick | The third enclosure's court |
+  | The Library | Marginalia | The third enclosure's court |
+  | Before the Sanctuary | Bambieshart | The second enclosure's court |
+  | The Sanctuary | Errata | The first enclosure, the goal |
+
+  Eight paths join them. A site the player has not reached is under the fog until a path leads to it from a visited
+  site.
+- **Moving.** The player picks where to walk: on the temple map, on a site's card, or from the ways on after a
+  conversation. A character lets the player pass once answered, and the way back to a visited site is always open.
+  The Sanctuary is sealed until the six other sites are cleared. Clearing it completes the run. A complete run
+  stays open ("Stay in the temple"), and "Play again" starts a new one from the world map.
+- **The camera** moves through five states: a slow orbit of the whole level (the title and the world map), a
+  bird's-eye view of the map with its numbered sites, an approach down to the site the player stands at, a walk at
+  eye height along a path to a neighbouring site, and a pull back out to the orbit when the Sanctuary is cleared.
+  Inside a conversation the camera follows the answers (round 116): each objective the player closes steps it in
+  towards the site, and a verdict is a brief push or pull.
+- The dialogue is a bottom sheet on a phone and a side panel from 1100 px. A reload resumes at the site the player
+  stands at.
+
+- **Content.** `content/world/dungeons/ta_prohm.yaml` holds the sites, the paths, the start, the goal and the seal in
+  Ta Prohm world units. `content/world/atlas.yaml` holds the world map's places. The client bundles both at build
+  time, so the title and the maps show before the server answers. The server keeps the run
+  (`server/src/dungeon.js` holds the rules): `GET /api/dungeons/:id` returns the map with each site's fog state and
+  whether it can be walked to now, `POST /api/dungeons/:id/move` walks to a neighbouring site,
+  `POST /api/encounter/start` with `dungeonId` starts the encounter of the site the player stands at, and
+  `POST /api/dungeons/:id/reset` starts a new run.
 - **Code.** `client/src/scene/director.js` is the camera director (pure, no three.js). `client/src/scene/levelView.js`
   is the three.js host and loads as its own chunk. `client/src/stores/gameStore.js` holds the flow, and
   `client/src/components/DungeonScreen.jsx` the screen. Without WebGL a still backdrop stands in and the game stays
@@ -135,11 +159,14 @@ from where "Walk on" starts the walk.
   listens on a port: on a shared machine run it inside a job, never on a login node.
 - **Check it.** `npm test` covers the director, the dungeon file against the level's plan, the store, the screen
   (jsdom), the wiring between the screen and the camera (`camera-wiring.test.jsx`, the three.js host mocked) and the
-  client's store against the real server. `client/scripts/dungeon-shots.mjs` plays the built client
-  through all three sites in headless Chromium against an in-process server with a fixture provider and writes a
-  screenshot of each camera state at a phone and a desktop size. It fails if the gameplay and the camera come apart
-  (a dialogue open while the camera travels, no step in after a closed objective, no turn at a resolve). It needs `puppeteer-core` and a Chrome (see the
-  script's header); round 115's pictures are in [`docs/rounds/115/shots/`](docs/rounds/115/shots/).
+  client's store against the real server. The director's tests walk every path in both directions, from every way
+  the camera can have come, and fail if the camera is ever inside a wall of the level's plan.
+  `client/scripts/dungeon-shots.mjs` plays the built client through all seven sites in headless Chromium against an
+  in-process server with a fixture provider and writes a screenshot of each camera state at a phone and a desktop
+  size. It fails if the gameplay and the camera come apart (a dialogue open while the camera travels, no step in
+  after a closed objective) or if the map's labels and fog are not what the run should show. It needs
+  `puppeteer-core` and a Chrome (see the script's header); round 119's pictures are in
+  [`docs/rounds/119/shots/`](docs/rounds/119/shots/).
 
 ## Web client on GitHub Pages, server on Render
 
