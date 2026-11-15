@@ -155,6 +155,12 @@ Since round 115 the web client (`client/`) is one screen, a dungeon crawl throug
   reviews. Each level above the first also adds 0.03 to the target-language ratio of a site's conversation, taken
   when the conversation starts. The market's conversations in the iPhone app and a party member's keep the
   content's ratio. A new run keeps the level.
+- **The characters** (round 122). Each site shows its character as a figure built in code in the level's PS1 look,
+  after the character's sheet: Portia a stone archway with eyes on her lintel and glowing threads, Gerald an imp on
+  his coffee cart, Mortimer in a striped apron with a ham for a hat, Flick a gnome on the rim of a cracked basin
+  with sparks, Marginalia a spectacled worm on a heap of books, Bambieshart a stooped wanderer in a banded coat,
+  Errata a misaligned figure with a bright seam and drifting letters. A figure turns to the camera, hops when an
+  objective is passed, and shrinks away when the camera walks through its place.
 - The dialogue is a bottom sheet on a phone and a side panel from 1100 px. A reload resumes at the site the player
   stands at.
 
@@ -170,6 +176,9 @@ Since round 115 the web client (`client/`) is one screen, a dungeon crawl throug
   that names an older one, or none, is told to reload. The party is the server's of rounds 021 to 047 (`GET /api/party`,
   `POST /api/party/recruit`, a party conversation by `encounterId`); the map names which sites' characters can be
   saved (`saveable`).
+- **Figures.** `aesthetic/src/scene/figures.js` builds them (at most 160 triangles each, one mesh in the `plain`
+  material); a site names its figure in the dungeon file (`figure: imp`). `client/scripts/figure-shots.mjs` renders
+  each one at its site with no server.
 - **Code.** `client/src/scene/director.js` is the camera director (pure, no three.js). `client/src/scene/levelView.js`
   is the three.js host and loads as its own chunk. `client/src/stores/gameStore.js` holds the flow, and
   `client/src/components/DungeonScreen.jsx` the screen. Without WebGL a still backdrop stands in and the game stays

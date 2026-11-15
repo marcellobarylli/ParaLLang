@@ -9,6 +9,7 @@ export { createTempleWorld, createMaterials, createWorldKit, assembleWorld } fro
 export { createTaProhmWorld, TA_PROHM, TA_PROHM_TOUR, taProhmHeightAt, isClear as taProhmIsClear } from './scene/taprohm.js';
 export { createWorld, WORLDS } from './worlds.js';
 export { MeshBuilder } from './scene/geometry.js';
+export { FIGURES, createFigure } from './scene/figures.js';
 export { createCameraRig, TOUR } from './camera.js';
 export { PRESETS } from './scene/presets.js';
 export { LAYOUT } from './scene/layout.js';

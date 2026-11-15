@@ -61,6 +61,7 @@ test('the Ta Prohm dungeon loads in both packs: seven location encounters on the
     assert.deepEqual(dungeon.sites.map((site) => [site.id, site.encounter]), SITES.map(([id, encounter]) => [id, encounter]));
     for (const site of dungeon.sites) assert.equal(encounters.get(site.encounter).encounter.party_of, undefined);
     assert.equal(dungeon.paths.length, 8);
+    assert.deepEqual(dungeon.sites.map((site) => site.figure), ['archway', 'charcutier', 'imp', 'letharger', 'bookworm', 'wanderer', 'erratum']); // round 122
     assert.ok(Object.isFrozen(dungeon.paths[0].via[0]));
     assert.ok(Object.isFrozen(dungeon.entrance));
   }
@@ -81,6 +82,7 @@ test('the loader refuses a bad site, level, start, goal, seal or path, and a sit
     ['path from a site to itself', (d) => { d.paths[0].between = ['face_gate', 'face_gate']; }, /a path between face_gate and face_gate/],
     ['the same path twice', (d) => { d.paths[1].between = ['buttress_tree', 'face_gate']; }, /paths contains duplicate IDs: buttress_tree and face_gate/],
     ['the old route', (d) => { d.route = [[0, 96], [3.5, 63]]; }, /route/],
+    ['a figure that is not a lower-case word', (d) => { d.sites[0].figure = 'Arch Way'; }, /figure/], // round 122
   ];
   for (const [name, change, error] of cases) {
     const dir = await makeTempDir('parallang-dungeon-');

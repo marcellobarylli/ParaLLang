@@ -1,0 +1,4254 @@
+[
+ {
+  "shot": "01-attract-phone.jpg",
+  "phase": "attract",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "progression": {
+   "xp": 0,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    41,
+    450
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 641
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "site": null,
+   "arrival": 0,
+   "position": [
+    127.61,
+    128.23,
+    128.39
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 140.28,
+   "targetToSite": 57.11
+  }
+ },
+ {
+  "shot": "02-world-phone.jpg",
+  "phase": "world",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "progression": {
+   "xp": 0,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    94,
+    246
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 253
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "site": null,
+   "arrival": 0,
+   "position": [
+    203.06,
+    192.66,
+    179.45
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 231.05,
+   "targetToSite": 57.11
+  }
+ },
+ {
+  "shot": "03-map-start-phone.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "progression": {
+   "xp": 0,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    247,
+    506
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 580
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    116.83,
+    43.66
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 20.93,
+   "targetToSite": 29.89
+  }
+ },
+ {
+  "shot": "04-face-gate-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "progression": {
+   "xp": 0,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    183,
+    161
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "site": 0,
+   "arrival": 3.6,
+   "position": [
+    2.59,
+    4.49,
+    72.59
+   ],
+   "target": [
+    3.65,
+    1.39,
+    63.08
+   ],
+   "toSite": 9.64,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "04-resolved-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    200,
+    146
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "resolved",
+   "version": 4
+  },
+  "closedObjectives": 3,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "site": 0,
+   "arrival": 3.6,
+   "position": [
+    2.53,
+    3.35,
+    69.29
+   ],
+   "target": [
+    3.45,
+    1.39,
+    63.05
+   ],
+   "toSite": 6.36,
+   "targetToSite": 0.08
+  }
+ },
+ {
+  "shot": "05-walk-1-phone.jpg",
+  "phase": "walk",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    317,
+    384
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 788
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": "Walking to The Root Court…",
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "site": 2,
+   "arrival": 19.418146268968776,
+   "position": [
+    0.3,
+    1.6,
+    55.74
+   ],
+   "target": [
+    0.3,
+    1.35,
+    51.74
+   ],
+   "toSite": 34.71,
+   "targetToSite": 30.77
+  }
+ },
+ {
+  "shot": "05-walk-2-phone.jpg",
+  "phase": "walk",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    451,
+    388
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 788
+   },
+   "inFree": false
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": "Walking to The Root Court…",
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "site": 2,
+   "arrival": 19.418146268968776,
+   "position": [
+    0.3,
+    1.6,
+    37.77
+   ],
+   "target": [
+    0.3,
+    1.35,
+    33.77
+   ],
+   "toSite": 17.24,
+   "targetToSite": 13.53
+  }
+ },
+ {
+  "shot": "06-root-court-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    167,
+    185
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.418146268968776,
+   "position": [
+    5.82,
+    1.69,
+    25.65
+   ],
+   "target": [
+    6.15,
+    1.39,
+    21.58
+   ],
+   "toSite": 4.15,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "s-settings-30-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    164,
+    186
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.418146268968776,
+   "position": [
+    5.85,
+    1.7,
+    25.68
+   ],
+   "target": [
+    6.17,
+    1.4,
+    21.6
+   ],
+   "toSite": 4.18,
+   "targetToSite": 0.2
+  }
+ },
+ {
+  "shot": "s-root-court-opacity-30-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    163,
+    187
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.418146268968776,
+   "position": [
+    5.85,
+    1.71,
+    25.71
+   ],
+   "target": [
+    6.18,
+    1.4,
+    21.61
+   ],
+   "toSite": 4.21,
+   "targetToSite": 0.21
+  }
+ },
+ {
+  "shot": "06-party-offer-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 100,
+   "level": 2,
+   "levelStartsAt": 60,
+   "nextLevelAt": 140
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 2",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    189,
+    185
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.418146268968776,
+   "position": [
+    5.59,
+    1.55,
+    24.27
+   ],
+   "target": [
+    6.01,
+    1.4,
+    21.58
+   ],
+   "toSite": 2.8,
+   "targetToSite": 0.08
+  }
+ },
+ {
+  "shot": "06-party-panel-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 100,
+   "level": 2,
+   "levelStartsAt": 60,
+   "nextLevelAt": 140
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 2",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    198,
+    184
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.418146268968776,
+   "position": [
+    5.55,
+    1.54,
+    24.26
+   ],
+   "target": [
+    5.98,
+    1.39,
+    21.57
+   ],
+   "toSite": 2.79,
+   "targetToSite": 0.07
+  }
+ },
+ {
+  "shot": "06-party-talk-phone.jpg",
+  "phase": "party",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 100,
+   "level": 2,
+   "levelStartsAt": 60,
+   "nextLevelAt": 140
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 2",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    213,
+    182
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "gerald_coffee_break",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.418146268968776,
+   "position": [
+    5.49,
+    1.52,
+    24.23
+   ],
+   "target": [
+    5.93,
+    1.39,
+    21.54
+   ],
+   "toSite": 2.78,
+   "targetToSite": 0.09
+  }
+ },
+ {
+  "shot": "07-map-middle-phone.jpg",
+  "phase": "overview",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 145,
+   "level": 3,
+   "levelStartsAt": 140,
+   "nextLevelAt": 240
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 3",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    240,
+    176
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 400
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 7,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    168.57,
+    47.85
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 28.36,
+   "targetToSite": 16.48
+  }
+ },
+ {
+  "shot": "08-buttress-tree-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 1,
+  "siteId": "buttress_tree",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "buttress_tree",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 145,
+   "level": 3,
+   "levelStartsAt": 140,
+   "nextLevelAt": 240
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 3",
+  "figure": {
+   "name": "charcutier",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    185,
+    188
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2The Buttress Tree",
+   "3",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "butchers_stall_charcutier",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 7,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 1,
+   "arrival": 17.46553228181976,
+   "position": [
+    13.43,
+    1.69,
+    41.24
+   ],
+   "target": [
+    17.15,
+    1.39,
+    42.08
+   ],
+   "toSite": 3.65,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "08-site-card-phone.jpg",
+  "phase": "site",
+  "siteIndex": 1,
+  "siteId": "buttress_tree",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "buttress_tree",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": "2The Buttress TreeMortimer has not let you pass yetWalk to The Face Gate · clearedWalk to The Root Court · clearedBack to the conversationMap",
+  "progression": {
+   "xp": 145,
+   "level": 3,
+   "levelStartsAt": 140,
+   "nextLevelAt": 240
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 3",
+  "figure": {
+   "name": "charcutier",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    180,
+    340
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 617
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2The Buttress Tree",
+   "3",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "butchers_stall_charcutier",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 7,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 1,
+   "arrival": 17.46553228181976,
+   "position": [
+    13.44,
+    1.72,
+    41.33
+   ],
+   "target": [
+    17.18,
+    1.4,
+    42.11
+   ],
+   "toSite": 3.62,
+   "targetToSite": 0.21
+  }
+ },
+ {
+  "shot": "09-sunlit-court-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 3,
+  "siteId": "sunlit_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sunlit_court",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 190,
+   "level": 3,
+   "levelStartsAt": 140,
+   "nextLevelAt": 240
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 3",
+  "figure": {
+   "name": "letharger",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    211,
+    210
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4The Sunlit Court",
+   "5",
+   "6"
+  ],
+  "fog": [
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "cracked_fountain_letharger",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 9,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 3,
+   "arrival": 7.689720004430736,
+   "position": [
+    -6.7,
+    1.69,
+    23.32
+   ],
+   "target": [
+    -10.85,
+    1.39,
+    23.58
+   ],
+   "toSite": 4.31,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "10-library-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 4,
+  "siteId": "library",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "library",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 255,
+   "level": 4,
+   "levelStartsAt": 240,
+   "nextLevelAt": 360
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 4",
+  "figure": {
+   "name": "bookworm",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    213,
+    191
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5The Library",
+   "6"
+  ],
+  "fog": [
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "old_bookshop_bookworm",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 13,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 4,
+   "arrival": 7.002466544909124,
+   "position": [
+    -21.74,
+    1.69,
+    25.52
+   ],
+   "target": [
+    -25.85,
+    1.39,
+    26.08
+   ],
+   "toSite": 4.29,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "11-before-sanctuary-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 300,
+   "level": 4,
+   "levelStartsAt": 240,
+   "nextLevelAt": 360
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 4",
+  "figure": {
+   "name": "wanderer",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    169,
+    181
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 15,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.62,
+    1.69,
+    15.38
+   ],
+   "target": [
+    0.45,
+    1.39,
+    11.28
+   ],
+   "toSite": 4.19,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "11-level-seal-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 345,
+   "level": 4,
+   "levelStartsAt": 240,
+   "nextLevelAt": 360
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 4",
+  "figure": {
+   "name": "wanderer",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    175,
+    181
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 17,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.3,
+    1.57,
+    14
+   ],
+   "target": [
+    0.37,
+    1.41,
+    11.3
+   ],
+   "toSite": 2.8,
+   "targetToSite": 0.13
+  }
+ },
+ {
+  "shot": "11-level-up-phone.jpg",
+  "phase": "party",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 390,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 35,
+  "levelUp": 5,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "wanderer",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    190,
+    180
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "gerald_coffee_break",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 19,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.22,
+    1.55,
+    13.98
+   ],
+   "target": [
+    0.31,
+    1.4,
+    11.28
+   ],
+   "toSite": 2.79,
+   "targetToSite": 0.08
+  }
+ },
+ {
+  "shot": "11-seal-open-phone.jpg",
+  "phase": "site",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": "6Before the SanctuaryBambieshart · clearedWalk to The Root Court · clearedWalk to The Sunlit Court · clearedWalk to The Sanctuary · unexploredTalk to Bambieshart againMap",
+  "progression": {
+   "xp": 390,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "wanderer",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    201,
+    289
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 566
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 19,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.17,
+    1.54,
+    13.97
+   ],
+   "target": [
+    0.27,
+    1.39,
+    11.27
+   ],
+   "toSite": 2.77,
+   "targetToSite": 0.07
+  }
+ },
+ {
+  "shot": "12-sanctuary-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 390,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "erratum",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    169,
+    176
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "the_rift_errata",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 19,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 6,
+   "arrival": 3.642857142857143,
+   "position": [
+    0.62,
+    1.69,
+    9.58
+   ],
+   "target": [
+    0.45,
+    1.39,
+    5.48
+   ],
+   "toSite": 4.19,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "12-resolved-phone.jpg",
+  "phase": "encounter",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 445,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "erratum",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    209,
+    169
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 321
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "the_rift_errata",
+   "state": "resolved",
+   "version": 4
+  },
+  "closedObjectives": 3,
+  "beat": {
+   "id": 22,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 6,
+   "arrival": 3.642857142857143,
+   "position": [
+    0.13,
+    1.53,
+    8.16
+   ],
+   "target": [
+    0.24,
+    1.39,
+    5.45
+   ],
+   "toSite": 2.77,
+   "targetToSite": 0.08
+  }
+ },
+ {
+  "shot": "13-victory-phone.jpg",
+  "phase": "victory",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 445,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "erratum",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    197,
+    331
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 598
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 22,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "victory",
+   "stage": "hold",
+   "site": null,
+   "arrival": 3.6,
+   "position": [
+    51.92,
+    128.23,
+    175.02
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 177.3,
+   "targetToSite": 0.67
+  }
+ },
+ {
+  "shot": "14-map-complete-phone.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 445,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    225,
+    314
+   ],
+   "free": {
+    "left": 0,
+    "top": 62,
+    "right": 390,
+    "bottom": 351
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    197.24,
+    50.17
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 15.12,
+   "targetToSite": 29.89
+  }
+ },
+ {
+  "shot": "01-attract-desktop.jpg",
+  "phase": "attract",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "progression": {
+   "xp": 0,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    471,
+    520
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1440,
+    "bottom": 663
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "site": null,
+   "arrival": 0,
+   "position": [
+    90.96,
+    92.15,
+    93.6
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 92.66,
+   "targetToSite": 57.11
+  }
+ },
+ {
+  "shot": "02-world-desktop.jpg",
+  "phase": "world",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "progression": {
+   "xp": 0,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    610,
+    262
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1440,
+    "bottom": 298
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "attract",
+   "stage": "hold",
+   "site": null,
+   "arrival": 0,
+   "position": [
+    196.3,
+    187.81,
+    176.9
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 223.93,
+   "targetToSite": 57.11
+  }
+ },
+ {
+  "shot": "03-map-start-desktop.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "progression": {
+   "xp": 0,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    591,
+    806
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    72.15,
+    40.04
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 24.31,
+   "targetToSite": 29.89
+  }
+ },
+ {
+  "shot": "04-face-gate-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [],
+  "card": null,
+  "progression": {
+   "xp": 0,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    487,
+    448
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "site": 0,
+   "arrival": 3.6,
+   "position": [
+    2.59,
+    4.49,
+    72.6
+   ],
+   "target": [
+    3.65,
+    1.39,
+    63.09
+   ],
+   "toSite": 9.64,
+   "targetToSite": 0.18
+  }
+ },
+ {
+  "shot": "04-resolved-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "face_gate",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    506,
+    431
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1The Face Gate",
+   "2",
+   "3"
+  ],
+  "fog": [
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "market_entrance_tutorial",
+   "state": "resolved",
+   "version": 4
+  },
+  "closedObjectives": 3,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "approach",
+   "stage": "hold",
+   "site": 0,
+   "arrival": 3.6,
+   "position": [
+    2.53,
+    3.35,
+    69.29
+   ],
+   "target": [
+    3.44,
+    1.39,
+    63.05
+   ],
+   "toSite": 6.36,
+   "targetToSite": 0.08
+  }
+ },
+ {
+  "shot": "05-walk-1-desktop.jpg",
+  "phase": "walk",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    850,
+    408
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1440,
+    "bottom": 844
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": "Walking to The Root Court…",
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "site": 2,
+   "arrival": 19.417846377816357,
+   "position": [
+    0.3,
+    1.6,
+    55.65
+   ],
+   "target": [
+    0.3,
+    1.35,
+    51.65
+   ],
+   "toSite": 34.62,
+   "targetToSite": 30.68
+  }
+ },
+ {
+  "shot": "05-walk-2-desktop.jpg",
+  "phase": "walk",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    1000,
+    412
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1440,
+    "bottom": 844
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": "Walking to The Root Court…",
+  "camera": {
+   "mode": "walk",
+   "stage": "travel",
+   "site": 2,
+   "arrival": 19.417846377816357,
+   "position": [
+    0.3,
+    1.6,
+    37.4
+   ],
+   "target": [
+    0.3,
+    1.35,
+    33.4
+   ],
+   "toSite": 16.89,
+   "targetToSite": 13.19
+  }
+ },
+ {
+  "shot": "06-root-court-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    470,
+    473
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.417846377816357,
+   "position": [
+    5.82,
+    1.69,
+    25.65
+   ],
+   "target": [
+    6.15,
+    1.39,
+    21.58
+   ],
+   "toSite": 4.15,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "s-settings-30-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    467,
+    474
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.417846377816357,
+   "position": [
+    5.85,
+    1.7,
+    25.68
+   ],
+   "target": [
+    6.17,
+    1.4,
+    21.6
+   ],
+   "toSite": 4.18,
+   "targetToSite": 0.2
+  }
+ },
+ {
+  "shot": "s-root-court-opacity-30-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 55,
+   "level": 1,
+   "levelStartsAt": 0,
+   "nextLevelAt": 60
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 1",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    466,
+    475
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 3,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.417846377816357,
+   "position": [
+    5.85,
+    1.71,
+    25.7
+   ],
+   "target": [
+    6.18,
+    1.4,
+    21.61
+   ],
+   "toSite": 4.21,
+   "targetToSite": 0.21
+  }
+ },
+ {
+  "shot": "06-party-offer-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 100,
+   "level": 2,
+   "levelStartsAt": 60,
+   "nextLevelAt": 140
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 2",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    492,
+    473
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.417846377816357,
+   "position": [
+    5.6,
+    1.55,
+    24.27
+   ],
+   "target": [
+    6.02,
+    1.4,
+    21.58
+   ],
+   "toSite": 2.8,
+   "targetToSite": 0.09
+  }
+ },
+ {
+  "shot": "06-party-panel-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 100,
+   "level": 2,
+   "levelStartsAt": 60,
+   "nextLevelAt": 140
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 2",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    501,
+    472
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "imp_coffee_greeting",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.417846377816357,
+   "position": [
+    5.55,
+    1.54,
+    24.26
+   ],
+   "target": [
+    5.98,
+    1.4,
+    21.57
+   ],
+   "toSite": 2.79,
+   "targetToSite": 0.07
+  }
+ },
+ {
+  "shot": "06-party-talk-desktop.jpg",
+  "phase": "party",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 100,
+   "level": 2,
+   "levelStartsAt": 60,
+   "nextLevelAt": 140
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 2",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    519,
+    470
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "gerald_coffee_break",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 5,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 2,
+   "arrival": 19.417846377816357,
+   "position": [
+    5.49,
+    1.52,
+    24.23
+   ],
+   "target": [
+    5.92,
+    1.39,
+    21.54
+   ],
+   "toSite": 2.78,
+   "targetToSite": 0.09
+  }
+ },
+ {
+  "shot": "07-map-middle-desktop.jpg",
+  "phase": "overview",
+  "siteIndex": 2,
+  "siteId": "root_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "root_court",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 145,
+   "level": 3,
+   "levelStartsAt": 140,
+   "nextLevelAt": 240
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 3",
+  "figure": {
+   "name": "imp",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    614,
+    342
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3The Root Court",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 7,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    72.15,
+    40.04
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 21.31,
+   "targetToSite": 16.48
+  }
+ },
+ {
+  "shot": "08-buttress-tree-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 1,
+  "siteId": "buttress_tree",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "buttress_tree",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 145,
+   "level": 3,
+   "levelStartsAt": 140,
+   "nextLevelAt": 240
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 3",
+  "figure": {
+   "name": "charcutier",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    490,
+    476
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2The Buttress Tree",
+   "3",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "butchers_stall_charcutier",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 7,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 1,
+   "arrival": 17.46553228181976,
+   "position": [
+    13.43,
+    1.69,
+    41.24
+   ],
+   "target": [
+    17.15,
+    1.39,
+    42.08
+   ],
+   "toSite": 3.65,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "08-site-card-desktop.jpg",
+  "phase": "site",
+  "siteIndex": 1,
+  "siteId": "buttress_tree",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "buttress_tree",
+  "cleared": [
+   "face_gate",
+   "root_court"
+  ],
+  "card": "2The Buttress TreeMortimer has not let you pass yetWalk to The Face Gate · clearedWalk to The Root Court · clearedBack to the conversationMap",
+  "progression": {
+   "xp": 145,
+   "level": 3,
+   "levelStartsAt": 140,
+   "nextLevelAt": 240
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 3",
+  "figure": {
+   "name": "charcutier",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    704,
+    350
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1440,
+    "bottom": 639
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2The Buttress Tree",
+   "3",
+   "4",
+   "6"
+  ],
+  "fog": [
+   "library",
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "butchers_stall_charcutier",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 7,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 1,
+   "arrival": 17.46553228181976,
+   "position": [
+    13.44,
+    1.72,
+    41.33
+   ],
+   "target": [
+    17.18,
+    1.4,
+    42.11
+   ],
+   "toSite": 3.62,
+   "targetToSite": 0.21
+  }
+ },
+ {
+  "shot": "09-sunlit-court-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 3,
+  "siteId": "sunlit_court",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sunlit_court",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 190,
+   "level": 3,
+   "levelStartsAt": 140,
+   "nextLevelAt": 240
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 3",
+  "figure": {
+   "name": "letharger",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    517,
+    499
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4The Sunlit Court",
+   "5",
+   "6"
+  ],
+  "fog": [
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "cracked_fountain_letharger",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 9,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 3,
+   "arrival": 7.689720004430736,
+   "position": [
+    -6.7,
+    1.69,
+    23.32
+   ],
+   "target": [
+    -10.85,
+    1.39,
+    23.58
+   ],
+   "toSite": 4.31,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "10-library-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 4,
+  "siteId": "library",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "library",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 255,
+   "level": 4,
+   "levelStartsAt": 240,
+   "nextLevelAt": 360
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 4",
+  "figure": {
+   "name": "bookworm",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    519,
+    480
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5The Library",
+   "6"
+  ],
+  "fog": [
+   "sanctuary"
+  ],
+  "encounter": {
+   "id": "old_bookshop_bookworm",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 13,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 4,
+   "arrival": 7.002466544909124,
+   "position": [
+    -21.73,
+    1.69,
+    25.52
+   ],
+   "target": [
+    -25.85,
+    1.39,
+    26.08
+   ],
+   "toSite": 4.29,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "11-before-sanctuary-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 300,
+   "level": 4,
+   "levelStartsAt": 240,
+   "nextLevelAt": 360
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 4",
+  "figure": {
+   "name": "wanderer",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    472,
+    469
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 15,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.62,
+    1.69,
+    15.38
+   ],
+   "target": [
+    0.45,
+    1.39,
+    11.28
+   ],
+   "toSite": 4.19,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "11-level-seal-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 345,
+   "level": 4,
+   "levelStartsAt": 240,
+   "nextLevelAt": 360
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 4",
+  "figure": {
+   "name": "wanderer",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    479,
+    469
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "high_gate_bambieshart",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 17,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.3,
+    1.57,
+    14
+   ],
+   "target": [
+    0.37,
+    1.41,
+    11.3
+   ],
+   "toSite": 2.8,
+   "targetToSite": 0.12
+  }
+ },
+ {
+  "shot": "11-level-up-desktop.jpg",
+  "phase": "party",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 390,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 35,
+  "levelUp": 5,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "wanderer",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    496,
+    467
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "gerald_coffee_break",
+   "state": "resolved",
+   "version": 3
+  },
+  "closedObjectives": 2,
+  "beat": {
+   "id": 19,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.21,
+    1.55,
+    13.98
+   ],
+   "target": [
+    0.31,
+    1.4,
+    11.28
+   ],
+   "toSite": 2.78,
+   "targetToSite": 0.08
+  }
+ },
+ {
+  "shot": "11-seal-open-desktop.jpg",
+  "phase": "site",
+  "siteIndex": 5,
+  "siteId": "before_sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "before_sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": "6Before the SanctuaryBambieshart · clearedWalk to The Root Court · clearedWalk to The Sunlit Court · clearedWalk to The Sanctuary · unexploredTalk to Bambieshart againMap",
+  "progression": {
+   "xp": 390,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "wanderer",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    703,
+    327
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1440,
+    "bottom": 588
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6Before the Sanctuary",
+   "7"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 19,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 5,
+   "arrival": 9.149317622777737,
+   "position": [
+    0.16,
+    1.54,
+    13.97
+   ],
+   "target": [
+    0.27,
+    1.39,
+    11.27
+   ],
+   "toSite": 2.77,
+   "targetToSite": 0.07
+  }
+ },
+ {
+  "shot": "12-sanctuary-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 390,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "erratum",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    472,
+    464
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "the_rift_errata",
+   "state": "ongoing",
+   "version": 1
+  },
+  "closedObjectives": 0,
+  "beat": {
+   "id": 19,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 6,
+   "arrival": 3.642857142857143,
+   "position": [
+    0.62,
+    1.69,
+    9.58
+   ],
+   "target": [
+    0.45,
+    1.39,
+    5.48
+   ],
+   "toSite": 4.19,
+   "targetToSite": 0.17
+  }
+ },
+ {
+  "shot": "12-resolved-desktop.jpg",
+  "phase": "encounter",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 445,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 35,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "erratum",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    515,
+    457
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": {
+   "id": "the_rift_errata",
+   "state": "resolved",
+   "version": 4
+  },
+  "closedObjectives": 3,
+  "beat": {
+   "id": 22,
+   "kind": "resolved"
+  },
+  "sheet": true,
+  "caption": null,
+  "camera": {
+   "mode": "walk",
+   "stage": "hold",
+   "site": 6,
+   "arrival": 3.642857142857143,
+   "position": [
+    0.13,
+    1.53,
+    8.16
+   ],
+   "target": [
+    0.25,
+    1.39,
+    5.45
+   ],
+   "toSite": 2.77,
+   "targetToSite": 0.08
+  }
+ },
+ {
+  "shot": "13-victory-desktop.jpg",
+  "phase": "victory",
+  "siteIndex": 6,
+  "siteId": "sanctuary",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 445,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "erratum",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    722,
+    379
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1440,
+    "bottom": 696
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": {
+   "id": 22,
+   "kind": "resolved"
+  },
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "victory",
+   "stage": "hold",
+   "site": null,
+   "arrival": 3.6,
+   "position": [
+    35.09,
+    88.18,
+    121.5
+   ],
+   "target": [
+    0,
+    2,
+    6
+   ],
+   "toSite": 121.2,
+   "targetToSite": 0.67
+  }
+ },
+ {
+  "shot": "14-map-complete-desktop.jpg",
+  "phase": "overview",
+  "siteIndex": 0,
+  "siteId": "face_gate",
+  "connection": "ready",
+  "isLoading": false,
+  "error": null,
+  "siteError": null,
+  "at": "sanctuary",
+  "cleared": [
+   "face_gate",
+   "buttress_tree",
+   "root_court",
+   "sunlit_court",
+   "library",
+   "before_sanctuary",
+   "sanctuary"
+  ],
+  "card": null,
+  "progression": {
+   "xp": 445,
+   "level": 5,
+   "levelStartsAt": 360,
+   "nextLevelAt": 500
+  },
+  "xpGained": 0,
+  "levelUp": null,
+  "chip": "Lv 5",
+  "figure": {
+   "name": "archway",
+   "visible": true,
+   "scale": 1,
+   "offDegrees": 0,
+   "face": [
+    591,
+    806
+   ],
+   "free": {
+    "left": 0,
+    "top": 60,
+    "right": 1000,
+    "bottom": 900
+   },
+   "inFree": true
+  },
+  "labels": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7The Sanctuary"
+  ],
+  "fog": [],
+  "encounter": null,
+  "closedObjectives": 0,
+  "beat": null,
+  "sheet": false,
+  "caption": null,
+  "camera": {
+   "mode": "overview",
+   "stage": "hold",
+   "site": null,
+   "arrival": 2.6,
+   "position": [
+    -4.5,
+    72.15,
+    40.04
+   ],
+   "target": [
+    -4.5,
+    0,
+    34.2
+   ],
+   "toSite": 24.31,
+   "targetToSite": 29.89
+  }
+ }
+]

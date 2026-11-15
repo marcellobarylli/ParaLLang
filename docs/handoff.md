@@ -75,7 +75,12 @@ Round 115 built the dungeon crawl in the web client and round 116 tied the camer
 
 ### Checking a deploy from the cluster
 
-- Actions runs: the public API, as above.
+- Actions runs: the public API, as above. A failed run's log needs a GitHub login. In rounds 118 to 120 one of the
+  two workflows failed now and then in `npm test`; round 122 found a race in `server/test/greeting-prefetch.test.js`
+  that fails on a busy machine and fixed it. If a workflow fails again, [`rounds/120/trail/ci-annotations.patch`](rounds/120/trail/ci-annotations.patch)
+  (not applied: the owner did not ask for a workflow change) makes both workflows name the failing tests in the
+  run's annotations, which the public API serves. A failed Pages workflow leaves the old client live beside the new
+  server; a push with `[skip render]` runs it again.
 - Render's build: Render records each deploy as a GitHub deployment named "main - parallang".
   `curl -s https://api.github.com/repos/marcellobarylli/ParaLLang/deployments?per_page=4` lists them, and
   `.../deployments/<id>/statuses` gives `in_progress`, then `success` or `failure`. This is the only view of a Render
@@ -175,6 +180,26 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
 - The numbers (the awards, the curve, levels 3 and 5, 0.03) are a first choice, not tuned by play. What the live
   model does with a higher ratio has not been measured.
 
+### The characters' figures (round 122)
+
+([122 architecture](rounds/122/architecture.md), [122 findings](rounds/122/findings.md), pictures in
+[`rounds/122/shots/`](rounds/122/shots/).)
+
+- `aesthetic/src/scene/figures.js` builds the seven figures from boxes, cones and cylinders with vertex colours,
+  one mesh each in the `plain` PS1 material. `FIGURES` holds each one's scale, the height of its face (`focus`) and
+  how far it floats. `aesthetic/test/figures.test.js` holds the limits: 160 triangles, 2.2 m, 0.9 m from the axis, a
+  face between 1.2 and 1.5 m (Portia's higher: the start site's camera stands back).
+- **The triangle budget is nearly spent.** The level has 62,408 of the style's 64,000; the figures 986, the path
+  ribbons and fog patches about 300. The playthrough fails above 64,000.
+- **Why the faces are low.** On a phone the top bar and the conversation sheet leave a strip that shows from about
+  0.9 to 1.8 m at a site once the camera has stepped in. The camera looks 1.35 m above the site
+  (`TARGET_LIFT` in `director.js`).
+- **Why a figure shrinks away.** A walk from a site starts at the site's point, so the camera walks through the
+  place of the figure on some ways on (`FIGURE.near`, `FIGURE.far` in `levelView.js`). A camera that walks round
+  the figure would be the better answer; the gate passages are 2.2 m wide.
+- **To look at a figure:** `client/scripts/figure-shots.mjs` in a Slurm job (it needs the built client, no server).
+- A site without `figure` in the dungeon file still shows the old beacon.
+
 ### Working on the dungeon
 
 - `client/src/scene/director.js` is the camera (pure, tested in Node). Its `engage` and `beat` are how a
@@ -199,8 +224,9 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
 
 ### Next
 
-- Next: real characters at the sites in place of the beacons (the owner's request in round 119). The world map's
-  closed places get a level when they get a dungeon (round 121 left them without one).
+- The world map's closed places get a level when they get a dungeon (round 121 left them without one).
+- Figures that are modelled and move (round 122's are built from primitives and only turn, bob and hop), and a
+  camera that walks round a figure in place of the figure shrinking away.
 - The owner's phone run of the map (round 119's open items), the screenshot of Settings in the installed page
   (round 118), and the verdict on round 117 (the look, the opacity to make the default).
 - A site's greeting is requested when the walk to it is picked. On a short walk the hosted server's 15 s start still

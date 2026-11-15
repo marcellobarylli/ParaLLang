@@ -3,7 +3,7 @@
 // on clear ground, and nothing crosses a gallery or the outer wall except through an east gate passage.
 // Round 119: the dungeon is a map: every path is checked, and the world file with its fog.
 import { expect, test } from 'vitest';
-import { TA_PROHM, WORLDS, taProhmHeightAt, taProhmIsClear } from '@parallang/aesthetic';
+import { FIGURES, TA_PROHM, WORLDS, createFigure, createWorldKit, taProhmHeightAt, taProhmIsClear } from '@parallang/aesthetic';
 import { DUNGEON } from '../dungeon.js';
 import { ATLAS, ATLAS_FILE } from '../atlas.js';
 import { atlasView, neighbourIds, unexploredSites } from '../dungeonModel.js';
@@ -17,7 +17,7 @@ test('the bundled dungeon is the content file in the client shape, on a level ae
     ['face_gate', 'market_entrance_tutorial'], ['buttress_tree', 'butchers_stall_charcutier'], ['root_court', 'imp_coffee_greeting'],
     ['sunlit_court', 'cracked_fountain_letharger'], ['library', 'old_bookshop_bookworm'], ['before_sanctuary', 'high_gate_bambieshart'], ['sanctuary', 'the_rift_errata'],
   ]);
-  for (const site of DUNGEON.sites) expect(site).toMatchObject({ name: expect.any(String), at: [expect.any(Number), expect.any(Number)], characterName: null });
+  for (const site of DUNGEON.sites) expect(site).toMatchObject({ name: expect.any(String), at: [expect.any(Number), expect.any(Number)], characterName: null, figure: expect.any(String) });
   expect([DUNGEON.start, DUNGEON.goal]).toEqual(['face_gate', 'sanctuary']);
   expect(DUNGEON.paths.length).toBe(8);
   expect(Object.isFrozen(DUNGEON)).toBe(true);
@@ -88,6 +88,28 @@ test('the plan test itself refuses a wall, a pier and the sanctuary', () => {
   expect(blocked(30, 56)).toBe('the outer wall');
   expect(blocked(0, 0)).not.toBeNull();
   expect(blocked(-26, 22)).toBe('the library');
+});
+
+// Round 122: the characters' figures.
+test('every site names its character\'s figure, and the figure has room at its site', () => {
+  expect(DUNGEON.sites.map((site) => [site.id, site.figure])).toEqual([
+    ['face_gate', 'archway'], ['buttress_tree', 'charcutier'], ['root_court', 'imp'], ['sunlit_court', 'letharger'],
+    ['library', 'bookworm'], ['before_sanctuary', 'wanderer'], ['sanctuary', 'erratum'],
+  ]);
+  for (const site of DUNGEON.sites) expect(Object.hasOwn(FIGURES, site.figure), site.figure).toBe(true);
+  expect(new Set(DUNGEON.sites.map((site) => site.figure)).size).toBe(DUNGEON.sites.length);
+  // The figure's footprint (the farthest any of it is from its axis), whichever way it is turned, is clear of walls.
+  const { materials } = createWorldKit(7);
+  for (const site of DUNGEON.sites) {
+    const { radius } = createFigure(site.figure, materials, { seed: 7 });
+    expect(radius, site.figure).toBeLessThanOrEqual(0.9);
+    for (let step = 0; step < 36; step += 1) {
+      const angle = (step / 36) * 2 * Math.PI;
+      const [x, z] = [site.at[0] + radius * Math.cos(angle), site.at[1] + radius * Math.sin(angle)];
+      // The stone itself, with 5 cm to spare: a figure needs no walker's shoulder room.
+      expect(blocked(x, z, 0.05), `${site.figure} at ${site.name}: [${x.toFixed(2)}, ${z.toFixed(2)}] is inside ${blocked(x, z, 0.05)}`).toBeNull();
+    }
+  }
 });
 
 // Round 119: the world map.

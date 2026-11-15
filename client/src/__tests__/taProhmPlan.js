@@ -4,10 +4,11 @@ import { TA_PROHM } from '@parallang/aesthetic';
 
 const G = TA_PROHM.gallery;
 export const PASSAGE = 1.1; // half the width of a gate passage: the piers stand from 1.1 to 3.2 either side of the axis
-const SHOULDER = 0.35; // room a walker needs either side
+const WALKER = 0.35; // room a walker needs either side
 
-// Where a walker's centre may not be, from the level's plan.
-export function blocked(x, z) {
+// Where a walker's centre may not be, from the level's plan. With `SHOULDER` 0 it is the stone itself: where no part
+// of a figure may be (round 122).
+export function blocked(x, z, SHOULDER = WALKER) {
   const [ax, az] = [Math.abs(x), Math.abs(z)];
   const inPassage = ax < PASSAGE - SHOULDER && z > 0;
   for (const ring of TA_PROHM.rings) {

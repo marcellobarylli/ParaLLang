@@ -3,11 +3,14 @@
 // that needs WebGL is here, and this module is loaded lazily (it is three.js and the level, about 700 kB).
 // Round 119: the dungeon is a map. One ribbon per path, shown from above when both its sites are out of the fog, and
 // a dark patch over each hidden site.
+// Round 122: a site that names a figure shows its character (aesthetic's figures.js) in place of the beacon. The
+// figure faces the camera, bobs, hops when an objective is passed, and shrinks away as the camera steps through the
+// place where it stands.
 import {
   AdditiveBlending, BufferGeometry, CircleGeometry, CylinderGeometry, DoubleSide, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial,
   OctahedronGeometry, PerspectiveCamera, RingGeometry, Vector3, WebGLRenderer,
 } from 'three';
-import { PRESETS, TA_PROHM, createPS1Pipeline, createWorld, taProhmHeightAt } from '@parallang/aesthetic';
+import { PRESETS, TA_PROHM, createFigure, createPS1Pipeline, createWorld, taProhmHeightAt } from '@parallang/aesthetic';
 import { createDirector, pathPoints } from './director.js';
 import { freeRect } from './insets.js';
 
@@ -20,7 +23,10 @@ const LEVELS = {
 const GOLD = [1, 0.8, 0.36]; // written as is: the PS1 materials and the post pass do no colour conversion
 const RIBBON = { width: 1.5, lift: 0.4 };
 // The fog over a hidden site, seen from above: three stacked discs, so the patch is darkest in the middle.
-const FOG_PATCH = { radii: [7, 9.5, 12], height: 16, opacity: 0.42 };
+const FOG_PATCH = { radii: [7, 9.5, 12], height: 16, opacity: 0.42, segments: 12 }; // 12 segments: the scene's triangle budget (round 122)
+// A figure is whole from FIGURE.far metres and gone at FIGURE.near: the camera's way on from some sites leads through
+// the place where the character stands. The nearest the camera comes in a conversation is about 2.4 m.
+const FIGURE = { near: 1.3, far: 2.1, bob: 0.02, hop: 0.14 };
 const ease = (current, target, dt, tau) => current + (target - current) * (1 - Math.exp(-dt / tau));
 const basic = (rgb, options = {}) => {
   const material = new MeshBasicMaterial({ transparent: true, depthWrite: false, fog: false, side: DoubleSide, ...options });
@@ -53,7 +59,7 @@ function fogPatch([x, z], heightAt) {
   const group = new Group();
   const materials = FOG_PATCH.radii.map(() => basic([0.02, 0.03, 0.03], { depthTest: false, opacity: 0 }));
   FOG_PATCH.radii.forEach((radius, i) => {
-    const disc = new Mesh(new CircleGeometry(radius, 20), materials[i]);
+    const disc = new Mesh(new CircleGeometry(radius, FOG_PATCH.segments), materials[i]);
     disc.rotation.x = -Math.PI / 2;
     disc.position.set(x, heightAt(x, z) + FOG_PATCH.height + i * 0.05, z);
     disc.renderOrder = 15;
@@ -120,12 +126,21 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     mesh.visible = false;
     return { mesh, between, opacity: 0 };
   });
-  const beacons = dungeon.sites.map((site) => beacon(site.at, level.heightAt));
+  // Round 122: a site's character, where the site names a figure the package knows; else the beacon.
+  const figures = dungeon.sites.map((site) => {
+    const figure = site.figure ? createFigure(site.figure, world.materials, { seed: 7 }) : null;
+    if (!figure) return null;
+    const [x, z] = site.at;
+    figure.group.position.set(x, level.heightAt(x, z), z);
+    figure.group.visible = false;
+    return { ...figure, x, z, ground: level.heightAt(x, z), hop: 0, shown: 0 };
+  });
+  const beacons = dungeon.sites.map((site, index) => (figures[index] ? null : beacon(site.at, level.heightAt)));
   const patches = dungeon.sites.map((site) => fogPatch(site.at, level.heightAt));
   const markers = new Group();
   markers.name = 'dungeon-markers';
-  markers.add(...patches.map((patch) => patch.group), ...ribbons.map((ribbon) => ribbon.mesh), ...beacons.map((b) => b.group));
-  for (const b of beacons) for (const child of b.group.children) child.renderOrder = 10;
+  markers.add(...patches.map((patch) => patch.group), ...ribbons.map((ribbon) => ribbon.mesh), ...beacons.filter(Boolean).map((b) => b.group), ...figures.filter(Boolean).map((figure) => figure.group));
+  for (const b of beacons.filter(Boolean)) for (const child of b.group.children) child.renderOrder = 10;
   world.scene.add(markers);
   // Which sites the fog hides, by id (setProgress). Before the first report nothing is hidden.
   let hidden = new Set();
@@ -202,7 +217,22 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       patch.group.visible = patch.opacity > 0.02;
       for (const material of patch.materials) material.opacity = patch.opacity * FOG_PATCH.opacity;
     });
+    // Round 122: each figure out of the fog stands at its site, turned to the camera.
+    figures.forEach((figure, index) => {
+      if (!figure) return;
+      const away = Math.hypot(pose.position[0] - figure.x, pose.position[2] - figure.z);
+      const whole = Math.min(1, Math.max(0, (away - FIGURE.near) / (FIGURE.far - FIGURE.near)));
+      figure.shown = hidden.has(dungeon.sites[index].id) ? 0 : whole * whole * (3 - 2 * whole);
+      figure.group.visible = figure.shown > 0.02;
+      if (!figure.group.visible) return;
+      figure.hop = ease(figure.hop, 0, dt, 0.3);
+      figure.group.scale.setScalar(figure.shown);
+      figure.group.rotation.y = Math.atan2(pose.position[0] - figure.x, pose.position[2] - figure.z);
+      // Review 1 of round 122 (R1.1): with reduced motion a figure neither bobs nor hops.
+      figure.group.position.y = figure.ground + (reducedMotion ? 0 : FIGURE.bob * Math.sin(clock * 1.3 + index) + FIGURE.hop * Math.sin(Math.PI * figure.hop));
+    });
     beacons.forEach((b, index) => {
+      if (!b) return;
       const on = (mode === 'approach' || mode === 'walk') && director.site === index;
       b.opacity = ease(b.opacity, on ? 1 : 0, dt, 0.5);
       b.group.visible = b.opacity > 0.02;
@@ -277,7 +307,11 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       talk.resolved = resolved;
       if (beatId !== null && beatId !== talk.beatId) {
         if (!reducedMotion) director.beat(beatKind);
-        if (beatKind !== 'fail') { const b = beacons[director.site]; if (b) b.flare = 1; }
+        if (beatKind !== 'fail') {
+          const b = beacons[director.site];
+          if (b) b.flare = 1;
+          if (figures[director.site] && !reducedMotion) figures[director.site].hop = 1; // a pass: the character hops
+        }
       }
       talk.beatId = beatId;
     },
@@ -291,6 +325,21 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     /** Round 119: the fog. `sites` is the run's `progress.sites`: a site whose state is 'hidden' gets a patch and loses its ribbons. */
     setProgress(sites) { hidden = new Set(Object.entries(sites ?? {}).filter(([, site]) => site.state === 'hidden').map(([id]) => id)); },
     get hiddenSites() { return [...hidden]; },
+    /** Round 122: each site's figure as the scene holds it, for the playthrough: null for a site with a beacon. */
+    get figures() {
+      return figures.map((figure, index) => figure && {
+        name: figure.name, site: dungeon.sites[index].id, visible: figure.group.visible, scale: figure.group.scale.x, facing: figure.group.rotation.y, lift: figure.group.position.y - figure.ground,
+        position: [figure.x, figure.ground, figure.z], focus: figure.focus, height: figure.height, triangles: figure.triangles,
+      });
+    },
+    /**
+     * The triangles the level, the dungeon's markers and the figures hold together. The level's are counted as the
+     * package's own budget test counts them (`world.stats.triangles`: props and surface, without the sky's 712).
+     */
+    get sceneTriangles() {
+      const count = (object) => { let n = 0; object?.traverse((o) => { if (o.isMesh) n += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; }); return n; };
+      return { level: world.stats.triangles, markers: count(markers), total: world.stats.triangles + count(markers) };
+    },
     resize,
     /** One frame of `dt` seconds, outside the animation loop (screenshots). */
     step,
