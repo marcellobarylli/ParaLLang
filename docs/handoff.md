@@ -148,6 +148,26 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
 - The client's tests have a fake party (`createFakeParty` in `client/src/__tests__/fakeRun.js`). It is a
   re-statement of the server's party rules, unlike the fake run, which uses the server's own.
 
+### Levels in the dungeon (round 121)
+
+([121 architecture](rounds/121/architecture.md), [121 findings](rounds/121/findings.md).)
+
+- **XP is awarded inside the commits that exist** (`submitDialogue`, `submitReview` in
+  `server/src/learning-service.js`, the sizes in `XP`), so a replayed attempt earns nothing again. The save holds
+  `progression: { xp }`; the level is derived (`levelFor`, `progressionView` in `server/src/language-engine.js`).
+  A receipt holds `xpGained` and not `progression`.
+- **A level seal** is `requires_level` on a site of `content/world/dungeons/ta_prohm.yaml` (The Library 3, The
+  Sanctuary 5). `gateFor`, `moveProblem` and `siteStates` in `server/src/dungeon.js` take the level. In a complete
+  run no gate is sealed.
+- **The ratio bonus** (`ratioBonusFor`, 0.03 per level above the first) is taken when a conversation starts and
+  kept in the session (`ratioBonus`). The pinned prompt fixtures are at level 1, where nothing changes.
+- **The client** keeps `progression` highest-wins (`takeProgression` in `gameStore.js`), and a reply that raises
+  the level reads the map again, because the client walks by its cached map.
+- The client's fake run (`client/src/__tests__/fakeRun.js`) starts at 5000 XP, above every site's level, so tests
+  that are not about levels walk freely. A test about levels passes `xp`.
+- The numbers (the awards, the curve, levels 3 and 5, 0.03) are a first choice, not tuned by play. What the live
+  model does with a higher ratio has not been measured.
+
 ### Working on the dungeon
 
 - `client/src/scene/director.js` is the camera (pure, tested in Node). Its `engage` and `beat` are how a
@@ -172,10 +192,8 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
 
 ### Next
 
-- Round 121: levels and XP (the owner's choice: levels unlock places and raise difficulty). The seal on The
-  Sanctuary and the closed places of `content/world/atlas.yaml` are where a level gate attaches. The world map has
-  no server state yet.
-- After that: real characters at the sites in place of the beacons (the owner's request in round 119).
+- Next: real characters at the sites in place of the beacons (the owner's request in round 119). The world map's
+  closed places get a level when they get a dungeon (round 121 left them without one).
 - The owner's phone run of the map (round 119's open items), the screenshot of Settings in the installed page
   (round 118), and the verdict on round 117 (the look, the opacity to make the default).
 - A site's greeting is requested when the walk to it is picked. On a short walk the hosted server's 15 s start still

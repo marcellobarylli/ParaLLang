@@ -15,6 +15,8 @@ import { neighbourIds } from '../dungeonModel.js';
 // (overview), a caption while the camera travels, the dialogue sheet (encounter), the site card (site) and the
 // victory card. The dock is a bottom sheet on a phone and, for the dialogue, a side panel from 1100 px. The camera
 // frames what the dock leaves free (useInsets).
+// Round 121: levels. The top bar shows the level and the way to the next; a turn that earned experience says so;
+// a site sealed by a level says which.
 // Round 120: the party. A saveable character whose site is cleared can be saved, from the offer after the
 // conversation or from the site's card, and a member can be talked to from the Party panel.
 // Round 119: the dungeon is a map. The player picks where to walk: on the temple map, on the site card, or after a
@@ -99,7 +101,26 @@ function WorldCard({ state, cleared }) {
   );
 }
 
-const sealNote = (gate) => `sealed: ${gate.completed} of ${gate.required} cleared`;
+// What a seal still asks for: sites to clear, a level (round 121), or both.
+export function sealNote(gate) {
+  const parts = [];
+  if (gate.completed < gate.required) parts.push(`sealed: ${gate.completed} of ${gate.required} cleared`);
+  if (gate.level && gate.level.current < gate.level.required) parts.push(`opens at level ${gate.level.required} (you are level ${gate.level.current})`);
+  return parts.join(' · ') || 'sealed';
+}
+
+// Round 121: the level and the experience towards the next one.
+function LevelChip({ progression }) {
+  if (!progression) return null;
+  const { xp, level, levelStartsAt, nextLevelAt } = progression;
+  const share = Math.max(0, Math.min(1, (xp - levelStartsAt) / Math.max(1, nextLevelAt - levelStartsAt)));
+  return (
+    <div className="level-chip" role="img" aria-label={`Level ${level}: ${xp} XP, level ${level + 1} at ${nextLevelAt}`}>
+      <span>Lv {level}</span>
+      <span className="xp-bar"><i style={{ width: `${Math.round(share * 100)}%` }} /></span>
+    </div>
+  );
+}
 
 // What a site's row says of its state.
 function siteNote(site, status) {
@@ -268,6 +289,7 @@ function EncounterSheet({ state, site, sites, party = false }) {
           <section className="assessment-banner" aria-live="polite">
             <strong>Assessment</strong><p>{assessment.overallFeedback}</p>
             {assessment.objectiveResults.map((result) => <p key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</p>)}
+            {state.xpGained > 0 && <p className="xp-line">+{state.xpGained} XP{state.levelUp ? ` · Level ${state.levelUp}` : ''}</p>}
           </section>
         )}
         {resolved && party && (
@@ -338,6 +360,7 @@ export default function DungeonScreen({ useStore }) {
 
       <header className="hud" ref={hudRef}>
         <div className="hud-title"><strong>ParaLLang</strong><span>{dungeon.name}</span></div>
+        <LevelChip progression={state.progression} />
         <ol className="pips" aria-label={`${cleared.length} of ${dungeon.sites.length} sites cleared`}>
           {dungeon.sites.map((entry, index) => (
             <li key={entry.id} className={cleared.includes(entry.id) ? 'done' : (atSite && index === siteIndex ? 'current' : undefined)} />

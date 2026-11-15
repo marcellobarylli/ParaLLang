@@ -22,6 +22,10 @@ import { unexploredSites } from '../dungeonModel.js';
 // to from anywhere outside a conversation (talkTo): the phase `party` is that conversation, and leaveParty returns
 // to where it was opened. An unfinished party conversation stays on the server until another conversation starts.
 //
+// Round 121: experience and levels. `progression` ({ xp, level, levelStartsAt, nextLevelAt }) comes with the map and
+// with each dialogue and review reply; XP in the store never goes down for one learner. A reply that raises the
+// level reads the map again, because a level seal may have opened.
+//
 // This module imports no YAML and no three.js: server/test/web-client.test.js loads it in plain Node.
 const LEARNER_KEY = 'parallang.learnerId';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
@@ -77,7 +81,26 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
 
     // A server from before round 119 answers without the player's position.
     const usable = (view) => typeof view?.progress?.at === 'string' && Boolean(view.progress.sites);
-    const takeView = (view) => set({ progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon) });
+    // Round 121 (critique 1.1): the newest experience is the highest, so an older reply cannot put older XP back.
+    // Returns the new level when this reply raised it, null otherwise.
+    const takeProgression = (incoming) => {
+      if (!incoming || !Number.isInteger(incoming.xp) || !Number.isInteger(incoming.level)) return null;
+      const current = get().progression;
+      if (current && incoming.xp < current.xp) return null;
+      set({ progression: incoming });
+      return current && incoming.level > current.level ? incoming.level : null;
+    };
+    const takeView = (view) => { set({ progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon) }); takeProgression(view.progression); };
+
+    // A review's reply: its result with what it earned (round 121), and the map again if it raised the level.
+    const tookReview = (result, learnerId) => {
+      const levelUp = takeProgression(result.progression);
+      set({
+        reviewResult: { ...result.result, xpGained: Number.isInteger(result.xpGained) ? result.xpGained : 0, levelUp },
+        spellbook: withSpellbook(result.spellbook), reviewChallenge: null, isLoading: false,
+      });
+      if (levelUp) refreshProgress(learnerId);
+    };
 
     // Review 1 (R1.2): a read that a reset, new settings or a newer read has overtaken is dropped.
     const refreshProgress = async (learnerId) => {
@@ -107,7 +130,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     const withSpellbook = (spellbook) => { spellbookVersion += 1; return spellbook; };
 
     // Review 1 of round 120 (R1.1): a Talk the player walked away from is no longer starting.
-    const quiet = { encounter: null, encounterLoading: false, partyStarting: null, siteError: null, assessment: null, closedObjectives: 0, view: 'dialogue', draft: '', pendingInput: null };
+    const quiet = { encounter: null, encounterLoading: false, partyStarting: null, siteError: null, assessment: null, xpGained: 0, levelUp: null, closedObjectives: 0, view: 'dialogue', draft: '', pendingInput: null };
     const showVictory = () => set({ ...quiet, phase: 'victory', cameraArrived: false });
 
     // The camera sets off to site `index` (from site `walkFrom`, or down from wherever it is). A site that is not
@@ -167,6 +190,9 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       dungeon,
       atlas,
       progress: null,
+      progression: null, // round 121: { xp, level, levelStartsAt, nextLevelAt }, or null with a server that sends none
+      xpGained: 0, // what the last answer earned
+      levelUp: null, // the level the last answer or review reached, if it raised it
       party: [], // round 120: the server's list of members
       partyReturn: null, // the phase a party conversation returns to
       partyStarting: null, // the conversation Talk has asked the server for
@@ -465,6 +491,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({
           settings, settingsOpen: false, learnerId: null, language: null, progress: null, connection: 'idle', serverProblem: null, dungeon,
           party: [], partyReturn: null, partyStarting: null, recruiting: false,
+          progression: null, xpGained: 0, levelUp: null,
           phase, siteIndex: Math.max(0, dungeon.sites.findIndex((site) => site.id === dungeon.start)), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, encounter: null, encounterLoading: false, siteError: null, starting: false,
           spellbook: emptySpellbook, view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null, closedObjectives: 0, isLoading: false, error: null,
         });
@@ -486,12 +513,18 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           // A held pass (said too early in an ordered encounter) closes nothing (round 051).
           const closed = (result.assessment?.objectiveResults ?? []).filter((entry) => entry.passed && !entry.held).length;
           const kind = result.encounter.state === 'resolved' ? 'resolved' : closed > 0 ? 'pass' : 'fail';
+          const levelUp = takeProgression(result.progression);
           set({
             encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: result.assessment, isLoading: false, pendingInput: null, draft: '',
             closedObjectives: get().closedObjectives + closed, beat: { id: (get().beat?.id ?? 0) + 1, kind },
+            xpGained: Number.isInteger(result.xpGained) ? result.xpGained : 0, levelUp,
           });
           // A finished site conversation changes the map; a finished party conversation changes the party (critique 1.9).
-          if (result.encounter.state === 'resolved') await (result.encounter.partyConversation ? refreshParty(learnerId) : refreshProgress(learnerId));
+          const resolved = result.encounter.state === 'resolved';
+          const readsMap = resolved && !result.encounter.partyConversation;
+          // Round 121 (critique 1.1): a new level may open a seal, so the map is read again whatever earned it.
+          if (levelUp && !readsMap) refreshProgress(learnerId);
+          if (resolved) await (result.encounter.partyConversation ? refreshParty(learnerId) : refreshProgress(learnerId));
         } catch (error) {
           if (epoch === requestEpoch && get().learnerId === learnerId) set({ error: error.message, isLoading: false, pendingInput: text, draft: text });
         }
@@ -540,7 +573,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({ isLoading: true, error: null });
         try {
           const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'answer', answer: String(answer).trim() });
-          set({ reviewResult: result.result, spellbook: withSpellbook(result.spellbook), reviewChallenge: null, isLoading: false });
+          tookReview(result, learnerId);
         } catch (error) { set({ error: error.message, isLoading: false }); }
       },
 
@@ -550,7 +583,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({ isLoading: true, error: null });
         try {
           const result = await api.submitReview(learnerId, { challengeId: reviewChallenge.id, attemptId: attemptId(), action: 'reveal', answer: '' });
-          set({ reviewResult: result.result, spellbook: withSpellbook(result.spellbook), reviewChallenge: null, isLoading: false });
+          tookReview(result, learnerId);
         } catch (error) { set({ error: error.message, isLoading: false }); }
       },
     };

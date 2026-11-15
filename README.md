@@ -147,6 +147,13 @@ Since round 115 the web client (`client/`) is one screen, a dungeon crawl throug
   starts a conversation with him wherever the player is, outside a conversation. The camera stays where it is.
   After three finished conversations a member offers a deeper one. A party conversation left unfinished is kept
   until another conversation starts.
+- **Levels** (round 121). The player earns experience: 10 XP for each objective a turn closes, 25 for a conversation
+  that resolves (a site's or a party member's) and 5 for a correct review of a due Spellbook card. Level L starts at
+  `10 × (L − 1) × (L + 4)` XP (0, 60, 140, 240, 360, 500, …). The top bar shows the level and the way to the next.
+  A level opens sealed sites: The Library opens at level 3 and The Sanctuary at level 5, besides its six sites. The
+  six sites give 300 XP (level 4), so the Sanctuary asks for one or two conversations more, or one and a few
+  reviews. Each level above the first also adds 0.03 to a conversation's target-language ratio, taken when the
+  conversation starts. A new run keeps the level.
 - The dialogue is a bottom sheet on a phone and a side panel from 1100 px. A reload resumes at the site the player
   stands at.
 
@@ -156,7 +163,9 @@ Since round 115 the web client (`client/`) is one screen, a dungeon crawl throug
   (`server/src/dungeon.js` holds the rules): `GET /api/dungeons/:id` returns the map with each site's fog state and
   whether it can be walked to now, `POST /api/dungeons/:id/move` walks to a neighbouring site,
   `POST /api/encounter/start` with `dungeonId` starts the encounter of the site the player stands at, and
-  `POST /api/dungeons/:id/reset` starts a new run. The party is the server's of rounds 021 to 047 (`GET /api/party`,
+  `POST /api/dungeons/:id/reset` starts a new run. The map and the dialogue and review replies carry
+  `progression` (`{ xp, level, levelStartsAt, nextLevelAt }`); the save holds the XP and the level is derived
+  (`server/src/language-engine.js`). The party is the server's of rounds 021 to 047 (`GET /api/party`,
   `POST /api/party/recruit`, a party conversation by `encounterId`); the map names which sites' characters can be
   saved (`saveable`).
 - **Code.** `client/src/scene/director.js` is the camera director (pure, no three.js). `client/src/scene/levelView.js`

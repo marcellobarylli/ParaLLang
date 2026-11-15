@@ -55,8 +55,8 @@ const memoryStorage = () => { const values = new Map(); return { getItem: (key) 
 
 // The server in miniature, behind fetch: a run on the map (after `steps` visits of fakeRun's TOUR, or as `stored`),
 // one conversation at a time.
-function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart = false } = {}) {
-  const run = createFakeRun(stored).advance(steps);
+function fakeServer({ steps = 0, stored, xp, failFirstSend = false, failFirstStart = false } = {}) {
+  const run = createFakeRun(stored, xp === undefined ? {} : { xp }).advance(steps);
   const party = createFakeParty(run);
   const server = { run, party, session: null, sessions: 0, sends: 0, starts: 0, reviews: 0, paths: [], moves: [] };
   const siteEncounter = (siteId, version, options = {}) => ({
@@ -130,12 +130,13 @@ function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart =
       server.session.resolved = true;
       if (server.session.talk) {
         party.finished(server.session.talk);
-        return response(200, { encounter: talkEncounter(server.session), spellbook, assessment: { overallFeedback: `${CAST[siteId].name} enjoyed that.`, objectiveResults: [] } });
+        return response(200, { encounter: talkEncounter(server.session), spellbook, assessment: { overallFeedback: `${CAST[siteId].name} enjoyed that.`, objectiveResults: [] }, xpGained: 45, progression: run.earn(45) });
       }
       run.clear(siteId);
       return response(200, {
         encounter: siteEncounter(siteId, 4, { resolved: true, allVisible: true }), spellbook,
         assessment: { overallFeedback: `Your answer to ${CAST[siteId].name} passed.`, objectiveResults: [{ objectiveId: 'objective', passed: true, feedback: 'Well said.' }] },
+        xpGained: 35, progression: run.earn(35), // round 121: one objective and the resolve
       });
     }
     if (path === '/api/spellbook') return response(200, spellbook);
@@ -149,6 +150,7 @@ function fakeServer({ steps = 0, stored, failFirstSend = false, failFirstStart =
       return response(200, {
         result: { correct: !revealed, feedback: revealed ? 'Answer revealed; this recall attempt was recorded as quality 0.' : 'Correct.', effectiveQuality: revealed ? 0 : 5, canonicalAnswer: revealed ? 'without milk' : 'coffee', nextReviewAt: '2026-01-16T12:00:00Z', scheduleChanged: true },
         spellbook: { ...spellbook, dueCount: revealed ? 0 : 1 },
+        xpGained: revealed ? 0 : 5, progression: run.earn(revealed ? 0 : 5),
       });
     }
     throw new Error(`Unexpected fetch ${path}`);
@@ -353,7 +355,7 @@ test('a sealed or blocked way on says why, and a move the server refuses is show
   expect(ways()).toEqual([['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · unexplored', true], ['Walk to The Sanctuary · unexplored', true]]);
   const list = screen.getByRole('list', { name: 'Ways on' });
   expect(within(list).getByText('Bambieshart has not let you pass')).toBeTruthy();
-  expect(within(list).getByText('sealed: 2 of 6 cleared')).toBeTruthy();
+  expect(within(list).getByText('sealed: 2 of 6 cleared')).toBeTruthy(); // the fake's level is above every site's
   // The map names the seal too.
   await user.click(screen.getByRole('button', { name: 'Map' }));
   expect(siteRows()).toContain('7The Sanctuarysealed: 2 of 6 cleared');
@@ -362,6 +364,71 @@ test('a sealed or blocked way on says why, and a move the server refuses is show
   await user.click(screen.getByRole('button', { name: 'Walk to The Root Court' }));
   expect((await screen.findByRole('alert')).textContent).toMatch(/Portia has not let you pass yet/);
   await waitFor(() => expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress Treeunexplored', '3The Root Courtunexplored']));
+});
+
+// Round 121: levels.
+test('levels on the screen: the level in the top bar, what an answer earned, a level reached, and a seal that asks for a level', async () => {
+  const user = userEvent.setup();
+  // Five sites cleared, 320 XP (level 4): at Bambieshart's site, with the Sanctuary in sight.
+  const server = fakeServer({ xp: 320, stored: { run: 1, at: 'before_sanctuary', cleared: ['face_gate', 'buttress_tree', 'root_court', 'sunlit_court', 'library'], visited: ['face_gate', 'buttress_tree', 'root_court', 'sunlit_court', 'library', 'before_sanctuary'] } });
+  renderScreen();
+  await screen.findByText('Thank Bambieshart.');
+  expect(screen.getByRole('img', { name: 'Level 4: 320 XP, level 5 at 360' })).toBeTruthy();
+  expect(screen.getByText('Lv 4')).toBeTruthy();
+  await answer(user, 'Bambieshart', 'Grazie!');
+  // 35 XP: 355, still level 4. The six are cleared, and the seal now asks only for the level.
+  expect(screen.getByText('+35 XP')).toBeTruthy();
+  expect(screen.getByRole('img', { name: 'Level 4: 355 XP, level 5 at 360' })).toBeTruthy();
+  await waitFor(() => expect(ways()).toEqual([['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · cleared', false], ['Walk to The Sanctuary · unexplored', true]]));
+  expect(within(screen.getByRole('list', { name: 'Ways on' })).getByText('opens at level 5 (you are level 4)')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Map' }));
+  expect(siteRows()).toContain('7The Sanctuaryopens at level 5 (you are level 4)');
+
+  // A due review answered: 5 XP, level 5. The review says so, and the map opens the Sanctuary.
+  await user.click(screen.getByRole('button', { name: /Spellbook/ }));
+  await user.click((await screen.findAllByRole('button', { name: 'Review' }))[0]);
+  await user.type(await screen.findByLabelText('English meaning'), 'coffee');
+  await user.click(screen.getByRole('button', { name: 'Check answer' }));
+  expect(await screen.findByText('+5 XP · Level 5')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Back to the temple' }));
+  expect(screen.getByText('Lv 5')).toBeTruthy();
+  await waitFor(() => expect(siteRows()).toContain('7The SanctuaryunexploredWalk here'));
+  expect(server.run.level).toBe(5);
+});
+
+test('an answer that reaches a level says so, and a server without experience shows no level', async () => {
+  const user = userEvent.setup();
+  fakeServer({ xp: 30 });
+  renderScreen();
+  await screen.findByText(/answer in Italian/);
+  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  expect(screen.getByText('Lv 1')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
+  await user.click(screen.getByRole('button', { name: 'Start' }));
+  await screen.findByText('Greet Portia in Italian.');
+  await answer(user, 'Portia', 'Ciao!');
+  expect(screen.getByText('+35 XP · Level 2')).toBeTruthy();
+  expect(screen.getByRole('img', { name: 'Level 2: 65 XP, level 3 at 140' })).toBeTruthy();
+  cleanup();
+
+  // An older server: the map and the replies carry no experience.
+  fakeServer();
+  const real = globalThis.fetch;
+  vi.stubGlobal('fetch', vi.fn(async (url, init) => {
+    const reply = await real(url, init);
+    const data = await reply.json();
+    const { progression, xpGained, ...rest } = data;
+    return { ...reply, json: async () => rest };
+  }));
+  renderScreen();
+  await screen.findByText(/answer in Italian/);
+  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  expect(screen.queryByText(/^Lv /)).toBeNull();
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
+  await user.click(screen.getByRole('button', { name: 'Start' }));
+  await screen.findByText('Greet Portia in Italian.');
+  await answer(user, 'Portia', 'Ciao!');
+  expect(screen.queryByText(/XP/)).toBeNull();
 });
 
 // Round 120: the party.

@@ -2,6 +2,7 @@
 // module) over the real dungeon file, so a fake server in a test cannot drift from what the server does.
 import file from '../../../content/world/dungeons/ta_prohm.yaml';
 import { cleared, freshRun, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from '../../../server/src/dungeon.js';
+import { levelFor, progressionView } from '../../../server/src/language-engine.js';
 
 export const DUNGEON_FILE = file;
 export const NAMES = { face_gate: 'Portia', buttress_tree: 'Mortimer', root_court: 'Gerald', sunlit_court: 'Flick', library: 'Marginalia', before_sanctuary: 'Bambieshart', sanctuary: 'Errata' };
@@ -22,15 +23,24 @@ const MARKET = { buttress_tree: "The Butcher's Stall", root_court: 'The Coffee C
 
 export const apiError = (message, code, details, status = 409) => Object.assign(new Error(message), { code, details, status });
 
-export function createFakeRun(stored) {
+// Round 121: the fake has experience, and its level opens the level seals as the server's does. It starts with 5000 XP
+// (level 21, above every site's level, with 460 XP to the next) so that a test which is not about levels walks freely
+// and meets no level-up; a test about them sets `xp`. `earn` adds experience, as a turn or a review does on the server.
+export function createFakeRun(stored, { xp: startXp = 5000 } = {}) {
   let run = readRun(file, stored);
+  let xp = startXp;
   const fake = {
     get run() { return run; },
+    get xp() { return xp; },
+    set xp(value) { xp = value; },
+    get level() { return levelFor(xp); },
+    get progression() { return progressionView(xp); },
+    earn(amount) { xp += amount; return progressionView(xp); },
     get site() { return siteOf(file, run.at); },
     get complete() { return isComplete(file, run); },
     // GET /api/dungeons/:id
     view() {
-      const sites = siteStates(file, run);
+      const sites = siteStates(file, run, levelFor(xp));
       return {
         dungeon: {
           id: file.id, name: file.name, level: file.level, start: file.start, goal: file.goal,
@@ -38,13 +48,15 @@ export function createFakeRun(stored) {
           paths: file.paths.map(({ between, via = [] }) => ({ between: [...between], via: via.map((point) => [...point]) })),
         },
         progress: { run: run.run, at: run.at, complete: isComplete(file, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
+        progression: progressionView(xp),
       };
     },
     // POST /api/dungeons/:id/move: the new view, or the server's refusal thrown as the client's API module throws it.
     move(siteId) {
-      const problem = moveProblem(file, run, siteId);
+      const problem = moveProblem(file, run, siteId, levelFor(xp));
       if (problem === 'UNKNOWN_SITE') throw apiError('Unknown site.', 'VALIDATION_ERROR', undefined, 400);
       if (problem === 'BLOCKED') throw apiError(`${NAMES[run.at]} has not let you pass yet.`, 'BLOCKED');
+      if (problem === 'SEALED' && siteOf(file, siteId).requires_level > levelFor(xp)) throw apiError(`${siteOf(file, siteId).name} is sealed. It opens at level ${siteOf(file, siteId).requires_level} (you are level ${levelFor(xp)}).`, 'SEALED');
       if (problem) throw apiError(`You can't get there (${problem}).`, problem);
       run = moved(file, run, siteId);
       return fake.view();

@@ -20,6 +20,7 @@ export function createLearnerEnvelope(learnerId) {
     world: emptyWorldProgress(),
     party: [],
     dungeons: {}, // round 114
+    progression: { xp: 0 }, // round 121
   };
 }
 
@@ -176,6 +177,9 @@ function validateEnvelope(value, learnerId) {
     throw retryableError('The learner save contains invalid dungeon progress. The original file was preserved.', 'SAVE_UNREADABLE');
   }
   for (const [id, run] of Object.entries(value.dungeons)) if (!validDungeonRun(run)) delete value.dungeons[id];
+  // Round 121: experience. A save without it, or with anything but a whole number of XP, has none.
+  if (!Number.isInteger(value.progression?.xp) || value.progression.xp < 0) value.progression = { xp: 0 };
+  else value.progression = { xp: value.progression.xp };
   if (value.annexes !== undefined) {
     if (!Array.isArray(value.annexes)) throw retryableError('The learner save contains invalid annex records. The original file was preserved.', 'SAVE_UNREADABLE');
     value.annexes = value.annexes.filter(validAnnexRecord).filter((record, index, all) => all.findIndex((other) => other.id === record.id) === index).slice(0, ANNEX_LIMIT);

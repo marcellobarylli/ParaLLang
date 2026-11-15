@@ -123,6 +123,23 @@ export function calculateTargetRatio(base, increment, committedPlayerTurns) {
   return Math.min(1, base + increment * committedPlayerTurns);
 }
 
+// Round 121: experience and levels. The level is derived from the XP, never stored: level L starts at
+// 10 × (L − 1) × (L + 4) XP, so levels 1 to 6 start at 0, 60, 140, 240, 360 and 500.
+export const levelStartsAt = (level) => 10 * (level - 1) * (level + 4);
+export function levelFor(xp) {
+  let level = 1;
+  while (levelStartsAt(level + 1) <= xp) level += 1;
+  return level;
+}
+export function progressionView(xp) {
+  const level = levelFor(xp);
+  return { xp, level, levelStartsAt: levelStartsAt(level), nextLevelAt: levelStartsAt(level + 1) };
+}
+// Each level above the first adds this much to a conversation's base target ratio (the owner: a replay at a higher
+// level is harder). Rounded to a hundredth, so a session and its prompt carry 0.06, not 0.06000000000000001.
+export const RATIO_PER_LEVEL = 0.03;
+export const ratioBonusFor = (level) => Math.round(RATIO_PER_LEVEL * (Math.max(1, level) - 1) * 100) / 100;
+
 export function initialSchedule(now) {
   const timestamp = new Date(now).toISOString();
   return { ease: 2.5, repetitions: 0, intervalDays: 0, dueAt: timestamp, lastReviewedAt: null, lastQuality: null };

@@ -5,7 +5,8 @@
 // cleared and visited, each in the file's site order.
 //
 //   fog      a site is `current` (at), `visited`, `known` (joined by a path to a visited site) or `hidden`
-//   seal     a site with `requires` is sealed until every site it lists is cleared
+//   seal     a site with `requires` is sealed until every site it lists is cleared, and one with `requires_level`
+//            (round 121) until the player has that level
 //   pass     a move from `at` to a site is allowed when a path joins them, the site is not sealed, and either `at` is
 //            cleared or the site is visited: a character lets the player pass once answered, and the way back is open
 //   complete the run is complete when `goal` is cleared; a complete run is open everywhere
@@ -35,23 +36,29 @@ export function readRun(dungeon, stored) {
 
 export const isComplete = (dungeon, run) => run.cleared.includes(dungeon.goal);
 
-// A sealed site's gate: how many of the sites it requires are cleared. Null for an open site.
-export function gateFor(site, run) {
+// A sealed site's gate: how many of the sites it requires are cleared and, for a site that asks for a level (round
+// 121), that level and the player's. Sealed until both are met. Null for a site that asks for neither.
+export function gateFor(site, run, level = 1) {
   const required = site.requires ?? [];
-  if (!required.length) return null;
+  const needs = site.requires_level ?? null;
+  if (!required.length && needs === null) return null;
   const completed = required.filter((id) => run.cleared.includes(id)).length;
-  return { sealed: completed < required.length, required: required.length, completed };
+  return {
+    sealed: completed < required.length || (needs !== null && level < needs),
+    required: required.length, completed,
+    ...(needs !== null ? { level: { required: needs, current: level } } : {}),
+  };
 }
 
 // Why a move to `siteId` is refused now: 'UNKNOWN_SITE', 'NOT_ADJACENT', 'SEALED' or 'BLOCKED'. Null when it is allowed
-// (a move to `at` is allowed and changes nothing).
-export function moveProblem(dungeon, run, siteId) {
+// (a move to `at` is allowed and changes nothing). `level` is the player's (round 121).
+export function moveProblem(dungeon, run, siteId, level = 1) {
   const site = typeof siteId === 'string' ? siteOf(dungeon, siteId) : null;
   if (!site) return 'UNKNOWN_SITE';
   if (siteId === run.at) return null;
   if (!neighboursOf(dungeon, run.at).includes(siteId)) return 'NOT_ADJACENT';
   if (isComplete(dungeon, run)) return null;
-  if (gateFor(site, run)?.sealed) return 'SEALED';
+  if (gateFor(site, run, level)?.sealed) return 'SEALED';
   if (!run.cleared.includes(run.at) && !run.visited.includes(siteId)) return 'BLOCKED';
   return null;
 }
@@ -72,18 +79,20 @@ export function cleared(dungeon, run, siteId) {
   return { ...run, cleared: ids.filter((id) => done.has(id)), visited: ids.filter((id) => visited.has(id)) };
 }
 
-// What the map shows of each site, by id.
-export function siteStates(dungeon, run) {
+// What the map shows of each site, by id. In a complete run no gate is sealed, as no move is refused for one
+// (round 121, critique 1.2).
+export function siteStates(dungeon, run, level = 1) {
   const visited = new Set(run.visited);
   const known = new Set(run.visited.flatMap((id) => neighboursOf(dungeon, id)));
+  const complete = isComplete(dungeon, run);
   return Object.fromEntries(dungeon.sites.map((site) => {
     const state = site.id === run.at ? 'current' : visited.has(site.id) ? 'visited' : known.has(site.id) ? 'known' : 'hidden';
-    const gate = gateFor(site, run);
+    const gate = gateFor(site, run, level);
     return [site.id, {
       state,
       cleared: run.cleared.includes(site.id),
-      reachable: site.id !== run.at && moveProblem(dungeon, run, site.id) === null,
-      ...(gate ? { gate } : {}),
+      reachable: site.id !== run.at && moveProblem(dungeon, run, site.id, level) === null,
+      ...(gate ? { gate: complete ? { ...gate, sealed: false } : gate } : {}),
     }];
   }));
 }

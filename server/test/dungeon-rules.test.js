@@ -1,18 +1,20 @@
 // Round 119: the dungeon map's rules (server/src/dungeon.js) over the real Ta Prohm file: fog, seals, the pass rule,
 // clearing, completion, a new run, and a save from before the map. Pure: no server and no port.
+// Round 121: a site may ask for a level. HIGH is a level above every site's, for the tests that are not about levels.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadGameContent } from '../src/content-loader.js';
 import { cleared, freshRun, gateFor, isComplete, moveProblem, moved, neighboursOf, readRun, siteOf, siteStates } from '../src/dungeon.js';
 
 const dungeon = loadGameContent({ language: 'it' }).dungeons.get('ta_prohm');
-const states = (run) => Object.fromEntries(Object.entries(siteStates(dungeon, run)).map(([id, site]) => [id, site.state]));
-const reachable = (run) => Object.entries(siteStates(dungeon, run)).filter(([, site]) => site.reachable).map(([id]) => id);
+const HIGH = 9;
+const states = (run) => Object.fromEntries(Object.entries(siteStates(dungeon, run, HIGH)).map(([id, site]) => [id, site.state]));
+const reachable = (run, level = HIGH) => Object.entries(siteStates(dungeon, run, level)).filter(([, site]) => site.reachable).map(([id]) => id);
 // Walks and clears in order, asserting each move is allowed.
-function play(run, ids) {
+function play(run, ids, level = HIGH) {
   let current = run;
   for (const id of ids) {
-    assert.equal(moveProblem(dungeon, current, id), null, `move to ${id}`);
+    assert.equal(moveProblem(dungeon, current, id, level), null, `move to ${id}`);
     current = cleared(dungeon, moved(dungeon, current, id), id);
   }
   return current;
@@ -25,6 +27,7 @@ test('the map: seven sites, eight paths, a start outside the wall and a sealed g
   assert.deepEqual(neighboursOf(dungeon, 'root_court').sort(), ['before_sanctuary', 'buttress_tree', 'face_gate', 'sunlit_court']);
   assert.deepEqual(neighboursOf(dungeon, 'library'), ['sunlit_court']);
   assert.deepEqual(siteOf(dungeon, 'sanctuary').requires, ['face_gate', 'buttress_tree', 'root_court', 'sunlit_court', 'library', 'before_sanctuary']);
+  assert.deepEqual(dungeon.sites.filter((site) => site.requires_level).map((site) => [site.id, site.requires_level]), [['library', 3], ['sanctuary', 5]]);
   assert.equal(siteOf(dungeon, 'nowhere'), null);
 });
 
@@ -68,17 +71,17 @@ test('the pass rule: a character lets the player pass once answered, and the way
 
 test('the seal: the sanctuary opens when the six other sites are cleared, and clearing it completes the run', () => {
   const five = play(freshRun(dungeon), ['face_gate', 'root_court', 'before_sanctuary']);
-  assert.deepEqual(gateFor(siteOf(dungeon, 'sanctuary'), five), { sealed: true, required: 6, completed: 3 });
-  assert.equal(gateFor(siteOf(dungeon, 'library'), five), null);
+  assert.deepEqual(gateFor(siteOf(dungeon, 'sanctuary'), five, HIGH), { sealed: true, required: 6, completed: 3, level: { required: 5, current: HIGH } });
+  assert.equal(gateFor(siteOf(dungeon, 'root_court'), five, HIGH), null);
   assert.equal(five.at, 'before_sanctuary');
-  assert.equal(moveProblem(dungeon, five, 'sanctuary'), 'SEALED');
-  assert.equal(siteStates(dungeon, five).sanctuary.state, 'known');
-  assert.deepEqual(siteStates(dungeon, five).sanctuary.gate, { sealed: true, required: 6, completed: 3 });
+  assert.equal(moveProblem(dungeon, five, 'sanctuary', HIGH), 'SEALED');
+  assert.equal(siteStates(dungeon, five, HIGH).sanctuary.state, 'known');
+  assert.deepEqual(siteStates(dungeon, five, HIGH).sanctuary.gate, { sealed: true, required: 6, completed: 3, level: { required: 5, current: HIGH } });
 
   const six = play(five, ['root_court', 'buttress_tree', 'root_court', 'sunlit_court', 'library', 'sunlit_court', 'before_sanctuary']);
   assert.equal(six.cleared.length, 6);
   assert.equal(isComplete(dungeon, six), false);
-  assert.equal(moveProblem(dungeon, six, 'sanctuary'), null);
+  assert.equal(moveProblem(dungeon, six, 'sanctuary', HIGH), null);
   const done = play(six, ['sanctuary']);
   assert.equal(isComplete(dungeon, done), true);
   assert.deepEqual(done.cleared, dungeon.sites.map((site) => site.id), 'in the file\'s site order');
@@ -86,6 +89,41 @@ test('the seal: the sanctuary opens when the six other sites are cleared, and cl
   // Clearing a cleared site again changes nothing, and an unknown site is ignored.
   assert.equal(cleared(dungeon, done, 'root_court'), done);
   assert.equal(cleared(dungeon, done, 'nowhere'), done);
+});
+
+// Round 121: levels open places.
+test('a level seal: the Library opens at level 3 and the Sanctuary at level 5, whatever else is met', () => {
+  const atCourt = play(freshRun(dungeon), ['face_gate', 'root_court', 'sunlit_court']);
+  assert.deepEqual(gateFor(siteOf(dungeon, 'library'), atCourt, 2), { sealed: true, required: 0, completed: 0, level: { required: 3, current: 2 } });
+  assert.equal(moveProblem(dungeon, atCourt, 'library', 2), 'SEALED');
+  assert.deepEqual(reachable(atCourt, 2).sort(), ['before_sanctuary', 'root_court']);
+  assert.equal(gateFor(siteOf(dungeon, 'library'), atCourt, 3).sealed, false);
+  assert.equal(moveProblem(dungeon, atCourt, 'library', 3), null);
+  assert.equal(moveProblem(dungeon, atCourt, 'library'), 'SEALED', 'with no level given the player is level 1');
+  // The seal is named before the character in the way: at an uncleared Sunlit Court the Library is SEALED at level 2.
+  const before = moved(dungeon, play(freshRun(dungeon), ['face_gate', 'root_court']), 'sunlit_court');
+  assert.equal(moveProblem(dungeon, before, 'library', 2), 'SEALED');
+  assert.equal(moveProblem(dungeon, before, 'library', 3), 'BLOCKED');
+
+  // The Sanctuary: the six sites and level 5.
+  const six = play(freshRun(dungeon), ['face_gate', 'buttress_tree', 'root_court', 'sunlit_court', 'library', 'sunlit_court', 'before_sanctuary']);
+  assert.deepEqual(gateFor(siteOf(dungeon, 'sanctuary'), six, 4), { sealed: true, required: 6, completed: 6, level: { required: 5, current: 4 } });
+  assert.equal(moveProblem(dungeon, six, 'sanctuary', 4), 'SEALED');
+  assert.equal(siteStates(dungeon, six, 4).sanctuary.reachable, false);
+  assert.deepEqual(gateFor(siteOf(dungeon, 'sanctuary'), six, 5), { sealed: false, required: 6, completed: 6, level: { required: 5, current: 5 } });
+  assert.equal(moveProblem(dungeon, six, 'sanctuary', 5), null);
+  assert.equal(siteStates(dungeon, six, 5).sanctuary.reachable, true);
+});
+
+test('in a complete run no gate is sealed, on the map as for moves, also at level 1 (critique 1.2)', () => {
+  // A finished run from before levels existed: every site cleared, no XP.
+  const done = readRun(dungeon, { run: 1, at: 'sanctuary', cleared: dungeon.sites.map((site) => site.id), visited: dungeon.sites.map((site) => site.id) });
+  const map = siteStates(dungeon, done, 1);
+  assert.deepEqual(map.sanctuary.gate, { sealed: false, required: 6, completed: 6, level: { required: 5, current: 1 } });
+  assert.deepEqual(map.library.gate, { sealed: false, required: 0, completed: 0, level: { required: 3, current: 1 } });
+  assert.equal(map.before_sanctuary.reachable, true);
+  assert.equal(moveProblem(dungeon, moved(dungeon, done, 'before_sanctuary'), 'sanctuary', 1), null);
+  assert.equal(moveProblem(dungeon, readRun(dungeon, { ...done, at: 'sunlit_court' }), 'library', 1), null);
 });
 
 test('a complete run is open everywhere a path leads', () => {

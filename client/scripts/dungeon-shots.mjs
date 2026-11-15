@@ -5,6 +5,8 @@
 // and fails if they do not. Round 119: the dungeon is a map under a world map. The script walks all seven sites by
 // the ways on, the temple map and a site card, leaves a conversation and returns to it, and looks at the fog.
 // Round 120: it saves Gerald to the party after his site, opens the Party panel and talks to him.
+// Round 121: it watches the experience grow, meets the Sanctuary's level seal with the six sites cleared at level 4,
+// talks to Gerald again to reach level 5, and enters.
 //
 //   npm run build -w client
 //   CHROME_PATH=/path/to/chrome PUPPETEER_CORE=/path/to/node_modules/puppeteer-core node client/scripts/dungeon-shots.mjs [outDir]
@@ -24,7 +26,7 @@ import { PassingProvider, createRuntime, passingAnswers } from '../../server/tes
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '120', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '121', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/'; // the page is served under a subpath, as on GitHub Pages
 const EXTRA = process.env.SHOTS_EXTRA === '1'; // also the in-between and debugging pictures
@@ -119,6 +121,7 @@ const state = (page) => page.evaluate(() => {
   return {
     phase: s.phase, siteIndex: s.siteIndex, siteId: s.dungeon.sites[s.siteIndex].id, connection: s.connection, isLoading: s.isLoading, error: s.error, siteError: s.siteError,
     at: s.progress?.at ?? null, cleared: s.progress?.clearedSiteIds ?? [], card: document.querySelector('.site-card')?.textContent ?? null,
+    progression: s.progression, xpGained: s.xpGained, levelUp: s.levelUp, chip: document.querySelector('.level-chip')?.textContent ?? null,
     labels: [...document.querySelectorAll('.site-label')].filter((label) => !label.hidden).map((label) => label.textContent), fog: level?.hiddenSites ?? null,
     encounter: s.encounter && { id: s.encounter.encounterId, state: s.encounter.state, version: s.encounter.version },
     closedObjectives: s.closedObjectives, beat: s.beat, sheet: Boolean(document.querySelector('.sheet')), caption: document.querySelector('.caption')?.textContent ?? null,
@@ -203,6 +206,10 @@ async function run(browser, runtime, size, log) {
     check(end.camera.targetToSite < 0.5, `${id}: resolved, the camera keeps looking at the site (${end.camera.targetToSite} m off)`);
     check(end.camera.mode !== 'victory' && end.phase === 'encounter', `${id}: the walk waits for the player`);
     check(end.cleared.includes(id), `${id}: the site is cleared (${end.cleared})`);
+    // Round 121: ten for each objective and twenty-five for the resolve, and the top bar shows the level.
+    const earned = 10 * passingAnswers(runtime.content, start.encounter.id).length + 25;
+    check(end.progression.xp - start.progression.xp === earned && end.xpGained > 0, `${id}: the conversation earned ${earned} XP (${start.progression.xp} to ${end.progression.xp}, last +${end.xpGained})`);
+    check(end.chip === `Lv ${end.progression.level}`, `${id}: the top bar shows the level (${end.chip}, level ${end.progression.level})`);
   };
   // A walk the player picks with the button `label`, to site `to`, which opens a conversation or the site's card.
   const walk = async (label, to, { shots = [], name = null, opens = 'encounter' } = {}) => {
@@ -363,11 +370,12 @@ async function run(browser, runtime, size, log) {
     await arrivedAt('root_court', { sheet: false });
     const hud = await page.evaluate(() => {
       const box = (selector) => { const r = document.querySelector(selector).getBoundingClientRect(); return { left: Math.round(r.left), right: Math.round(r.right), top: Math.round(r.top), bottom: Math.round(r.bottom) }; };
-      return { title: box('.hud-title strong'), pips: box('.pips'), nav: box('.hud nav'), width: innerWidth, titleScroll: document.querySelector('.hud-title strong').scrollWidth - document.querySelector('.hud-title strong').clientWidth };
+      return { title: box('.hud-title strong'), level: box('.level-chip'), pips: box('.pips'), nav: box('.hud nav'), width: innerWidth };
     });
     const apart = (a, b) => a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top;
-    check(hud.nav.right <= hud.width && apart(hud.title, hud.pips) && apart(hud.title, hud.nav) && apart(hud.pips, hud.nav) && hud.title.left >= 0 && hud.pips.left >= 0,
-      `the top bar holds the title, the pips and three buttons without overlap (${JSON.stringify(hud)})`);
+    const parts = ['title', 'level', 'pips', 'nav'];
+    check(hud.nav.right <= hud.width && parts.every((a, i) => hud[a].left >= 0 && parts.slice(i + 1).every((b) => apart(hud[a], hud[b]))),
+      `the top bar holds the title, the level, the pips and three buttons without overlap (${JSON.stringify(hud)})`);
   }
 
   // Up to the map: the court's neighbours are out of the fog. A walk is picked there, to Mortimer in the outer court.
@@ -404,7 +412,32 @@ async function run(browser, runtime, size, log) {
   const sealed = await page.evaluate(() => window.__parallang.store.getState().progress.sites.sanctuary);
   check(sealed.gate.sealed && sealed.gate.completed === 5 && !sealed.reachable, `the Sanctuary is sealed with five of six cleared (${JSON.stringify(sealed)})`);
   await answerSite();
-  await shot('11-resolved', { settle: 600 }); // the seal is off: the way to the Sanctuary is offered
+  // Round 121: the six are cleared, which is level 4. The Sanctuary asks for level 5, and the way on says so.
+  {
+    await waitFor(page, () => window.__parallang.store.getState().progress.sites.sanctuary.gate.completed === 6);
+    const now = await page.evaluate(() => { const s = window.__parallang.store.getState(); return { gate: s.progress.sites.sanctuary, progression: s.progression, why: document.querySelector('.ways .way-why')?.textContent ?? null }; });
+    check(now.progression.level === 4 && now.gate.gate.sealed && !now.gate.reachable && now.why === 'opens at level 5 (you are level 4)', `the Sanctuary is sealed by its level (${JSON.stringify(now)})`);
+    await shot('11-level-seal', { settle: 600 });
+    // A talk with Gerald, who is in the party, earns the rest.
+    await clickButton(page, 'Party');
+    await page.waitForSelector('.party-panel');
+    await clickButton(page, 'Talk to Gerald');
+    await waitPhase(page, 'party');
+    for (const answer of passingAnswers(runtime.content, 'gerald_coffee_break')) {
+      const version = await page.evaluate(() => window.__parallang.store.getState().encounter.version);
+      await page.type('#player-response', answer);
+      await clickButton(page, 'Send');
+      await waitFor(page, (was) => { const s = window.__parallang.store.getState(); return !s.isLoading && (s.encounter?.version !== was || s.error); }, version);
+    }
+    const up = await state(page);
+    const line = await page.evaluate(() => document.querySelector('.xp-line')?.textContent ?? null);
+    check(up.progression.level === 5 && up.levelUp === 5 && /Level 5/.test(line ?? ''), `the talk reaches level 5 and says so (${JSON.stringify(up.progression)}, ${line})`);
+    await shot('11-level-up', { settle: 600 });
+    await clickButton(page, 'Back to the temple');
+    await waitPhase(page, 'site');
+    await waitFor(page, () => window.__parallang.store.getState().progress.sites.sanctuary.reachable === true);
+  }
+  await shot('11-seal-open', { settle: 600 }); // the seal is off: the way to the Sanctuary is offered
   await walk('Walk to The Sanctuary', 'sanctuary');
   await shot('12-sanctuary', { settle: 1800 });
   await answerSite();

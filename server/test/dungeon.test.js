@@ -110,9 +110,11 @@ test('a new run: the view carries the map and the fog, a start is the gate\'s en
   assert.deepEqual(fresh.data.dungeon.paths[0], { between: ['face_gate', 'buttress_tree'], via: [[0.3, 60.5], [0.3, 52], [0.3, 46]] });
   const { sites, ...progress } = fresh.data.progress;
   assert.deepEqual(progress, { run: 1, at: 'face_gate', complete: false, clearedSiteIds: [], visitedSiteIds: ['face_gate'] });
+  // Round 121: the learner's experience comes with the map.
+  assert.deepEqual(fresh.data.progression, { xp: 0, level: 1, levelStartsAt: 0, nextLevelAt: 60 });
   assert.deepEqual(sites.face_gate, { state: 'current', cleared: false, reachable: false });
   assert.deepEqual(sites.root_court, { state: 'known', cleared: false, reachable: false });
-  assert.deepEqual(sites.sanctuary, { state: 'hidden', cleared: false, reachable: false, gate: { sealed: true, required: 6, completed: 0 } });
+  assert.deepEqual(sites.sanctuary, { state: 'hidden', cleared: false, reachable: false, gate: { sealed: true, required: 6, completed: 0, level: { required: 5, current: 1 } } });
 
   // The player stands at the Market Entrance; Gerald's cart is elsewhere.
   const named = await start(runtime, learnerId, { encounterId: 'imp_coffee_greeting' });
@@ -198,13 +200,27 @@ test('moves follow the pass rule, a conversation under way holds the player unle
   await clearHere(runtime, content, learnerId, 'before_sanctuary');
   const stillShut = await move(runtime, learnerId, { siteId: 'sanctuary' });
   assert.equal(stillShut.data.error.code, 'SEALED');
-  assert.match(stillShut.data.error.message, /The Sanctuary is sealed.*3 of 6 done/);
+  assert.equal(stillShut.data.error.message, 'The Sanctuary is sealed. Finish the other encounters first (3 of 6 done). It opens at level 5 (you are level 3).');
 
-  for (const [to, clear] of [['root_court', false], ['buttress_tree', true], ['root_court', false], ['sunlit_court', true], ['library', true], ['sunlit_court', false], ['before_sanctuary', false], ['sanctuary', true]]) {
+  for (const [to, clear] of [['root_court', false], ['buttress_tree', true], ['root_court', false], ['sunlit_court', true], ['library', true], ['sunlit_court', false], ['before_sanctuary', false]]) {
     const walked = await move(runtime, learnerId, { siteId: to });
     assert.equal(walked.status, 200, `${to}: ${JSON.stringify(walked.data.error)}`);
     if (clear) await clearHere(runtime, content, learnerId, to);
   }
+  // Round 121: the six sites are cleared, which is 300 XP and level 4. The Sanctuary asks for level 5.
+  const six = (await view(runtime, learnerId)).data;
+  assert.deepEqual(six.progression, { xp: 300, level: 4, levelStartsAt: 240, nextLevelAt: 360 });
+  assert.deepEqual(six.progress.sites.sanctuary.gate, { sealed: true, required: 6, completed: 6, level: { required: 5, current: 4 } });
+  const short = await move(runtime, learnerId, { siteId: 'sanctuary' });
+  assert.equal(short.data.error.code, 'SEALED');
+  assert.equal(short.data.error.message, 'The Sanctuary is sealed. It opens at level 5 (you are level 4).');
+  // Two more conversations with Bambieshart (45 XP each) make level 5.
+  await clearHere(runtime, content, learnerId, 'before_sanctuary');
+  await clearHere(runtime, content, learnerId, 'before_sanctuary');
+  assert.deepEqual((await view(runtime, learnerId)).data.progression, { xp: 390, level: 5, levelStartsAt: 360, nextLevelAt: 500 });
+  const opened = await move(runtime, learnerId, { siteId: 'sanctuary' });
+  assert.equal(opened.status, 200, JSON.stringify(opened.data.error));
+  await clearHere(runtime, content, learnerId, 'sanctuary');
   const done = (await view(runtime, learnerId)).data;
   assert.equal(done.progress.complete, true);
   assert.deepEqual(done.progress.clearedSiteIds, SITES.map(([id]) => id));
@@ -262,6 +278,7 @@ test('a reset starts a new run at the gate: the fog is back, the conversation is
   assert.equal(reset.status, 200);
   const { sites, ...progress } = reset.data.progress;
   assert.deepEqual(progress, { run: 2, at: 'face_gate', complete: false, clearedSiteIds: [], visitedSiteIds: ['face_gate'] });
+  assert.equal(reset.data.progression.xp, 55, 'a new run keeps the experience: Portia\'s three objectives and her resolve');
   assert.equal(sites.sunlit_court.state, 'hidden');
   // The reset dropped Gerald's conversation, so the tutorial starts without CONVERSATION_UNDER_WAY, as a new session.
   const replay = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
