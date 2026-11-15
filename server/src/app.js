@@ -54,13 +54,18 @@ export function createApp({ service, logger = console, token = null }) {
     catch (error) { next(error); }
   });
 
-  // Round 114: a dungeon (its sites and route) with the learner's run, and a new run.
+  // Round 114: a dungeon with the learner's run, and a new run. Round 119: the dungeon is a map, and a move walks it.
   app.get('/api/dungeons/:id', async (req, res, next) => {
     try { res.json(await service.getDungeon(req.get('X-Learner-Id'), req.params.id)); }
     catch (error) { next(error); }
   });
   app.post('/api/dungeons/:id/reset', async (req, res, next) => {
     try { res.json(await service.resetDungeon(req.get('X-Learner-Id'), req.params.id)); }
+    catch (error) { next(error); }
+  });
+
+  app.post('/api/dungeons/:id/move', async (req, res, next) => {
+    try { res.json(await service.moveInDungeon(req.get('X-Learner-Id'), req.params.id, req.body ?? {})); }
     catch (error) { next(error); }
   });
 

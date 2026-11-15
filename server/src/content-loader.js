@@ -187,16 +187,24 @@ const locationSchema = z.object({
   requires_completed: z.array(z.string().min(1)).default([]),
   map: z.object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) }).strict(),
 }).strict();
-// Round 114: a dungeon, a fixed run of location encounters on one of the 3D levels in aesthetic/ (content/world/dungeons/).
+// Round 114: a dungeon, location encounters on one of the 3D levels in aesthetic/ (content/world/dungeons/).
 // The level ids are aesthetic's WORLDS, listed here so the server need not import three.js.
+// Round 119: a dungeon is a map: sites joined by paths (walked in either direction along [a.at, ...via, b.at]), a
+// start, a goal, and seals (`requires`). server/src/dungeon.js holds its rules.
 export const DUNGEON_LEVELS = Object.freeze(['angkor', 'taprohm']);
 const pointSchema = z.tuple([z.number().finite(), z.number().finite()]);
 const dungeonSchema = z.object({
   id: locationIdSchema,
   name: z.string().min(1),
   level: z.string().min(1),
-  sites: z.array(z.object({ encounter: z.string().min(1), name: z.string().min(1), at: pointSchema }).strict()).min(1),
-  route: z.array(pointSchema).min(2),
+  start: locationIdSchema,
+  goal: locationIdSchema,
+  entrance: z.array(pointSchema).min(1),
+  sites: z.array(z.object({
+    id: locationIdSchema, encounter: z.string().min(1), name: z.string().min(1), at: pointSchema,
+    requires: z.array(locationIdSchema).min(1).optional(),
+  }).strict()).min(1),
+  paths: z.array(z.object({ between: z.tuple([locationIdSchema, locationIdSchema]), via: z.array(pointSchema).default([]) }).strict()),
 }).strict();
 const connectionsSchema = z.object({
   start: locationIdSchema,
@@ -310,8 +318,9 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
 }
 
 // Round 114: the dungeons, shared by every pack. Each site's encounter must be a location encounter in every pack (a
-// dungeon file is shared, so a site missing from one pack would break that language's run), and each site's `at` must be
-// a point of the route, in site order (the camera walks the route between sites).
+// dungeon file is shared, so a site missing from one pack would break that language's run). Round 119: the map's
+// references must hold (start, goal, paths and seals name sites). That every site can be reached is shown by a walk
+// through the real file in server/test/web-client.test.js.
 function packEncounterKinds(contentDir, code) {
   const kinds = new Map();
   for (const file of yamlFiles(contentDir, `languages/${code}/encounters`)) {
@@ -332,7 +341,9 @@ function loadDungeons(contentDir, encounters, code) {
     if (`${relativeDir}/${dungeon.id}.yaml` !== file) throw new Error(`content/${file} must declare id ${file.slice(relativeDir.length + 1, -5)}`);
     if (!DUNGEON_LEVELS.includes(dungeon.level)) throw new Error(`Dungeon ${dungeon.id} names unknown level ${dungeon.level}. Known: ${DUNGEON_LEVELS.join(', ')}`);
     unique(dungeon.sites.map((site) => site.encounter), `Dungeon ${dungeon.id} sites`);
-    let previous = -1;
+    unique(dungeon.sites.map((site) => site.id), `Dungeon ${dungeon.id} site ids`);
+    const ids = new Set(dungeon.sites.map((site) => site.id));
+    for (const key of ['start', 'goal']) if (!ids.has(dungeon[key])) throw new Error(`Dungeon ${dungeon.id} names unknown ${key} site ${dungeon[key]}`);
     for (const site of dungeon.sites) {
       const definition = encounters.get(site.encounter);
       if (!definition) throw new Error(`Dungeon ${dungeon.id} names unknown encounter ${site.encounter}`);
@@ -341,10 +352,14 @@ function loadDungeons(contentDir, encounters, code) {
         if (!kinds.has(site.encounter)) throw new Error(`Dungeon ${dungeon.id} site ${site.encounter} is missing from the ${other} pack`);
         if (kinds.get(site.encounter) !== 'location') throw new Error(`Dungeon ${dungeon.id} site ${site.encounter} is a party conversation in the ${other} pack`);
       }
-      const index = dungeon.route.findIndex(([x, z], i) => i > previous && x === site.at[0] && z === site.at[1]);
-      if (index < 0) throw new Error(`Dungeon ${dungeon.id} site ${site.encounter} at [${site.at}] is not a later point of the route`);
-      previous = index;
+      for (const required of site.requires ?? []) {
+        if (!ids.has(required) || required === site.id) throw new Error(`Dungeon ${dungeon.id} site ${site.id} requires ${required}, which is not another site`);
+      }
     }
+    for (const { between: [a, b] } of dungeon.paths) {
+      if (!ids.has(a) || !ids.has(b) || a === b) throw new Error(`Dungeon ${dungeon.id} has a path between ${a} and ${b}, which are not two sites`);
+    }
+    unique(dungeon.paths.map(({ between }) => [...between].sort().join(' and ')), `Dungeon ${dungeon.id} paths`);
     dungeons.set(dungeon.id, deepFreeze(dungeon));
   }
   return dungeons;

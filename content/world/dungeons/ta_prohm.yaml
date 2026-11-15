@@ -1,32 +1,41 @@
-# Round 114: the first dungeon, a crawl through Ta Prohm (the 3D level in aesthetic/src/scene/taprohm.js).
-# Shared by every language pack. Coordinates are Ta Prohm world units: x across, z along the east-west axis
-# (+z is east, where the visitor comes in). Sites are played in this order, and each site's `at` is also a
-# point of `route`, so the camera's walk from one site to the next follows the route between them.
+# The first dungeon: Ta Prohm (the 3D level in aesthetic/src/scene/taprohm.js). Shared by every language pack.
+# Coordinates are Ta Prohm world units: x across, z along the east-west axis (+z is east, where the visitor comes in).
 #
-# Site 1 stands before the east face-tower gopura, outside the outer wall. Site 2 is in the third enclosure's
-# court, in front of the thitpok astride the second gallery. Site 3 is in the second enclosure's court, facing
-# the central sanctuary through the inner gate. The route enters each enclosure through its east gate passage
-# (|x| < 1.1) and never crosses a wall.
+# Round 119: the dungeon is a map. Seven sites, joined by paths the player walks in either direction. A path is the
+# polyline [a.at, ...via, b.at]. `start` is where a run begins and `goal` is the site that completes it. A site with
+# `requires` is sealed until every site it lists is cleared. `entrance` is the avenue, for the first approach to the
+# start site.
 #
-# Round 115: site 3 stands on the axis, 1.4 m before the inner gate's door. The camera stops 4 m short of a site, so
-# it looks at site 3 from inside the second enclosure's gate passage, with the inner gate and the sanctuary tower
-# behind. (At [2.6, 11] the site stood against the pavilion wall and the camera faced blank stone from 2.4 m.)
+# The temple's plan gives the order: outside the wall (The Face Gate, before the east face-tower gopura), the outer
+# court (The Buttress Tree, by a free-standing thitpok), the third enclosure's court (The Root Court in front of the
+# thitpok astride the second gallery, The Sunlit Court under a shaft of light, The Library), the second enclosure's
+# court (Before the Sanctuary, facing the inner gate) and the first enclosure (The Sanctuary, 1.7 m before the
+# sanctuary's east wall). Every path crosses an enclosure through its east gate passage (|x| < 1.1) and never crosses
+# a wall: client/src/__tests__/dungeon-file.test.js checks each one against the level's plan.
 id: ta_prohm
 name: Ta Prohm
 level: taprohm
+start: face_gate
+goal: sanctuary
+entrance: [[0, 96], [2.5, 70]]
 sites:
-  - { encounter: market_entrance_tutorial, name: The Face Gate, at: [3.5, 63] }
-  - { encounter: imp_coffee_greeting, name: The Root Court, at: [6, 21.5] }
-  - { encounter: high_gate_bambieshart, name: Before the Sanctuary, at: [0.3, 11.2] }
-route:
-  - [0, 96]       # the avenue, the entrance
-  - [2.5, 70]
-  - [3.5, 63]     # site 1
-  - [0.3, 60.5]
-  - [0.3, 52]     # through the gopura's passage
-  - [0.3, 33]
-  - [0.3, 25.5]   # through the gate tree's door
-  - [5.5, 25.5]
-  - [6, 21.5]     # site 2
-  - [0.3, 20.8]
-  - [0.3, 11.2]   # through the second enclosure's gate; site 3
+  - { id: face_gate, encounter: market_entrance_tutorial, name: The Face Gate, at: [3.5, 63] }
+  - { id: buttress_tree, encounter: butchers_stall_charcutier, name: The Buttress Tree, at: [17, 42] }
+  - { id: root_court, encounter: imp_coffee_greeting, name: The Root Court, at: [6, 21.5] }
+  - { id: sunlit_court, encounter: cracked_fountain_letharger, name: The Sunlit Court, at: [-11, 23.5] }
+  - { id: library, encounter: old_bookshop_bookworm, name: The Library, at: [-26, 26] }
+  - { id: before_sanctuary, encounter: high_gate_bambieshart, name: Before the Sanctuary, at: [0.3, 11.2] }
+  - id: sanctuary
+    encounter: the_rift_errata
+    name: The Sanctuary
+    at: [0.3, 5.4]
+    requires: [face_gate, buttress_tree, root_court, sunlit_court, library, before_sanctuary]
+paths:
+  - { between: [face_gate, buttress_tree], via: [[0.3, 60.5], [0.3, 52], [0.3, 46]] }      # through the gopura's passage
+  - { between: [face_gate, root_court], via: [[0.3, 60.5], [0.3, 52], [0.3, 33], [0.3, 25.5], [5.5, 25.5]] }  # and the gate tree's door
+  - { between: [buttress_tree, root_court], via: [[0.3, 38], [0.3, 25.5], [5.5, 25.5]] }
+  - { between: [root_court, sunlit_court], via: [[0.3, 22.5]] }
+  - { between: [sunlit_court, library], via: [[-20, 25]] }
+  - { between: [root_court, before_sanctuary], via: [[0.3, 20.8]] }                        # through the second enclosure's gate
+  - { between: [sunlit_court, before_sanctuary], via: [[0.3, 20.8]] }
+  - { between: [before_sanctuary, sanctuary], via: [] }                                    # through the inner gate

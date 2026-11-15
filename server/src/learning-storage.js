@@ -43,10 +43,13 @@ function migrate(value) {
 // Round 114: per dungeon id, the current run: its number (from 1) and the encounter ids of the sites cleared in it, in
 // play order. As for lines, only the container is strict: an invalid entry is dropped and the save kept.
 function validDungeonRun(run) {
+  const ids = (list) => Array.isArray(list) && list.every((id) => typeof id === 'string' && id.length > 0) && new Set(list).size === list.length;
+  // Round 119: `visited` and `at` joined the run. A run from rounds 114 to 118 has neither.
   return Boolean(run) && typeof run === 'object' && !Array.isArray(run)
     && Number.isInteger(run.run) && run.run >= 1
-    && Array.isArray(run.cleared) && run.cleared.every((id) => typeof id === 'string' && id.length > 0)
-    && new Set(run.cleared).size === run.cleared.length;
+    && ids(run.cleared)
+    && (run.visited === undefined || ids(run.visited))
+    && (run.at === undefined || (typeof run.at === 'string' && run.at.length > 0));
 }
 
 // Round 021: party members are defeated, saveable characters, one entry per character, in join order.
