@@ -56,7 +56,8 @@ test('the store explains a missing server without a request, and saved settings 
   const progress = { run: 1, at: 'face_gate', complete: false, clearedSiteIds: [], visitedSiteIds: ['face_gate'], sites: { face_gate: { state: 'current', cleared: false, reachable: false } } };
   const fetchImpl = vi.fn(async (url) => (String(url).endsWith('/api/learner')
     ? ok({ learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: { code: 'it', name: 'Italian', tag: 'it-IT' } })
-    : ok({ dungeon: { ...dungeon, sites: [{ ...dungeon.sites[0], characterName: 'Portia' }] }, progress })));
+    : String(url).endsWith('/api/party') ? ok({ party: [] }) // round 120: the party is read beside the map
+      : ok({ dungeon: { ...dungeon, sites: [{ ...dungeon.sites[0], characterName: 'Portia' }] }, progress })));
   vi.stubGlobal('fetch', fetchImpl);
   const store = createGameStore({ storage, dungeon, sameOrigin: false });
   await store.getState().initialize();
@@ -71,7 +72,7 @@ test('the store explains a missing server without a request, and saved settings 
   expect(store.getState().serverProblem).toBeNull();
   expect(store.getState().connection).toBe('ready');
   expect(store.getState().dungeon.sites[0].characterName).toBe('Portia');
-  expect(fetchImpl.mock.calls.map(([url]) => url)).toEqual(['https://parallang.example.com/api/learner', 'https://parallang.example.com/api/dungeons/ta_prohm/map']);
+  expect(fetchImpl.mock.calls.map(([url]) => url)).toEqual(['https://parallang.example.com/api/learner', 'https://parallang.example.com/api/dungeons/ta_prohm/map', 'https://parallang.example.com/api/party']);
   for (const [, init] of fetchImpl.mock.calls) expect(init.headers['X-ParaLLang-Token']).toBe('secret-token');
   expect(loadSettings(storage)).toEqual({ serverUrl: 'https://parallang.example.com', token: 'secret-token' });
 });

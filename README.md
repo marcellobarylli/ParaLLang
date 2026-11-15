@@ -141,6 +141,12 @@ Since round 115 the web client (`client/`) is one screen, a dungeon crawl throug
   eye height along a path to a neighbouring site, and a pull back out to the orbit when the Sanctuary is cleared.
   Inside a conversation the camera follows the answers (round 116): each objective the player closes steps it in
   towards the site, and a verdict is a brief push or pull.
+- **The party** (round 120, as the iPhone app has it). After a saveable character lets the player pass (Gerald,
+  Mortimer, Flick, Marginalia), the player may save them: "Save Gerald" after the conversation, or "Invite Gerald to
+  your party" on the cleared site's card. The Party panel in the top bar lists the members, and "Talk to Gerald"
+  starts a conversation with him wherever the player is, outside a conversation. The camera stays where it is.
+  After three finished conversations a member offers a deeper one. A party conversation left unfinished is kept
+  until another conversation starts.
 - The dialogue is a bottom sheet on a phone and a side panel from 1100 px. A reload resumes at the site the player
   stands at.
 
@@ -150,7 +156,9 @@ Since round 115 the web client (`client/`) is one screen, a dungeon crawl throug
   (`server/src/dungeon.js` holds the rules): `GET /api/dungeons/:id` returns the map with each site's fog state and
   whether it can be walked to now, `POST /api/dungeons/:id/move` walks to a neighbouring site,
   `POST /api/encounter/start` with `dungeonId` starts the encounter of the site the player stands at, and
-  `POST /api/dungeons/:id/reset` starts a new run.
+  `POST /api/dungeons/:id/reset` starts a new run. The party is the server's of rounds 021 to 047 (`GET /api/party`,
+  `POST /api/party/recruit`, a party conversation by `encounterId`); the map names which sites' characters can be
+  saved (`saveable`).
 - **Code.** `client/src/scene/director.js` is the camera director (pure, no three.js). `client/src/scene/levelView.js`
   is the three.js host and loads as its own chunk. `client/src/stores/gameStore.js` holds the flow, and
   `client/src/components/DungeonScreen.jsx` the screen. Without WebGL a still backdrop stands in and the game stays

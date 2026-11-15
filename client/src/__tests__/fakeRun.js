@@ -11,6 +11,15 @@ export const TOUR = [
   ['sunlit_court', false], ['before_sanctuary', true], ['sanctuary', true],
 ];
 
+// Round 120: who can be saved to the party (as content/characters says), and the conversations Talk starts: the first,
+// and the deeper one after three finished conversations (round 047).
+export const SAVEABLE = { buttress_tree: true, root_court: true, sunlit_court: true, library: true };
+export const TALKS = {
+  buttress_tree: ['mortimer_tasting', 'mortimer_oath'], root_court: ['gerald_coffee_break', 'gerald_confidence'],
+  sunlit_court: ['flick_slow_walk', 'flick_lotus'], library: ['marginalia_fragment', 'marginalia_folded_page'],
+};
+const MARKET = { buttress_tree: "The Butcher's Stall", root_court: 'The Coffee Cart', sunlit_court: 'The Cracked Fountain', library: 'The Old Bookshop' };
+
 export const apiError = (message, code, details, status = 409) => Object.assign(new Error(message), { code, details, status });
 
 export function createFakeRun(stored) {
@@ -25,7 +34,7 @@ export function createFakeRun(stored) {
       return {
         dungeon: {
           id: file.id, name: file.name, level: file.level, start: file.start, goal: file.goal,
-          sites: file.sites.map((site) => ({ id: site.id, encounterId: site.encounter, name: site.name, at: [...site.at], characterName: sites[site.id].state === 'hidden' ? null : NAMES[site.id] })),
+          sites: file.sites.map((site) => ({ id: site.id, encounterId: site.encounter, name: site.name, at: [...site.at], characterName: sites[site.id].state === 'hidden' ? null : NAMES[site.id], saveable: sites[site.id].state === 'hidden' ? null : Boolean(SAVEABLE[site.id]) })),
           paths: file.paths.map(({ between, via = [] }) => ({ between: [...between], via: via.map((point) => [...point]) })),
         },
         progress: { run: run.run, at: run.at, complete: isComplete(file, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
@@ -52,4 +61,37 @@ export function createFakeRun(stored) {
     },
   };
   return fake;
+}
+
+// Round 120: the party as the server keeps it (rounds 021, 022, 047), for a fake server: recruit after the site's
+// encounter is won, a conversation count per member, and the conversation Talk starts.
+export function createFakeParty(run) {
+  const members = [];
+  const won = new Set(); // encounters ever won: the server's world.completedEncounterIds outlives a new run
+  const siteOfEncounter = (encounterId) => file.sites.find((site) => site.encounter === encounterId);
+  const snapshot = () => members.map((member) => {
+    const deeper = member.conversations >= 3;
+    return {
+      characterId: `${NAMES[member.siteId].toLowerCase()}_001`, name: NAMES[member.siteId], encounterId: siteOf(file, member.siteId).encounter,
+      locationId: member.siteId, locationName: MARKET[member.siteId], joinedAt: '2026-11-15T10:00:00.000Z', conversations: member.conversations,
+      conversationId: TALKS[member.siteId][deeper ? 1 : 0], conversationTier: deeper ? 3 : 0, nextStoryAt: deeper ? null : 3, storiesTold: deeper ? 1 : 0,
+    };
+  });
+  return {
+    get party() { return snapshot(); },
+    // POST /api/party/recruit
+    recruit(encounterId) {
+      for (const id of run.run.cleared) won.add(siteOf(file, id).encounter);
+      const site = siteOfEncounter(encounterId);
+      if (!site) throw apiError('Unknown encounter.', 'VALIDATION_ERROR', undefined, 400);
+      if (!SAVEABLE[site.id]) throw apiError(`${NAMES[site.id]} cannot join your party.`, 'NOT_SAVEABLE');
+      if (!won.has(encounterId)) throw apiError(`${NAMES[site.id]} has not been won over yet. Finish the encounter first.`, 'NOT_DEFEATED');
+      if (members.some((member) => member.siteId === site.id)) return { party: snapshot(), joined: false };
+      members.push({ siteId: site.id, conversations: 0 });
+      return { party: snapshot(), joined: true };
+    },
+    // The member a party conversation belongs to, or null (not a party conversation, or its member has not joined).
+    memberOf(conversationId) { return members.find((member) => TALKS[member.siteId].includes(conversationId)) ?? null; },
+    finished(conversationId) { const member = this.memberOf(conversationId); if (member) member.conversations += 1; },
+  };
 }

@@ -10,7 +10,7 @@ import DungeonScreen from '../DungeonScreen.jsx';
 import { createGameStore } from '../../stores/gameStore.js';
 import { DUNGEON } from '../../dungeon.js';
 import { ATLAS } from '../../atlas.js';
-import { NAMES, createFakeRun } from '../../__tests__/fakeRun.js';
+import { NAMES, createFakeParty, createFakeRun } from '../../__tests__/fakeRun.js';
 
 const level = vi.hoisted(() => ({ views: [] }));
 vi.mock('../../scene/levelView.js', () => ({
@@ -35,7 +35,8 @@ const encounterOf = (siteId) => DUNGEON.sites[index(siteId)].encounterId;
 // Each site has two objectives: a first answer closes one (or none, if it says "wrong"), a second resolves the site.
 function fakeServer() {
   const run = createFakeRun();
-  const server = { run, session: null, sessions: 0 };
+  const party = createFakeParty(run);
+  const server = { run, party, session: null, sessions: 0 };
   const encounter = () => {
     const { siteId, version, closed } = server.session;
     const resolved = closed >= 2;
@@ -53,6 +54,14 @@ function fakeServer() {
     const body = init.body ? JSON.parse(init.body) : {};
     if (path === '/api/learner') return response({ learnerId: '11111111-1111-4111-8111-111111111111', recovered: false, language: { code: 'it', name: 'Italian', tag: 'it-IT' } });
     if (path === '/api/dungeons/ta_prohm/map') return response(run.view());
+    // Round 120: the party, and a member's conversation (one objective).
+    if (path === '/api/party') return response({ party: party.party });
+    if (path === '/api/party/recruit') return response(party.recruit(body.encounterId));
+    if (path === '/api/encounter/start' && !body.dungeonId) {
+      server.sessions += 1;
+      server.session = { siteId: party.memberOf(body.encounterId).siteId, version: 1, closed: 1, talk: body.encounterId };
+      return response({ encounter: { ...encounter(), encounterId: body.encounterId, partyConversation: true, dungeonId: undefined, siteId: undefined }, spellbook: { cards: [], dueCount: 0, inEncounter: true } });
+    }
     if (path === '/api/dungeons/ta_prohm/move') { server.session = null; return response(run.move(body.siteId)); }
     if (path === '/api/encounter/start') {
       server.sessions += 1;
@@ -161,6 +170,18 @@ test('the screen drives the camera over the map, and the camera gates the dialog
     'attract:0:null', 'world:0:null', 'overview:0:null', 'approach:0:null', 'encounter:0:null',
     'walk:2:0', 'encounter:2:0', 'overview:2:0', 'walk:0:2', 'site:0:2',
   ]);
+
+  // Round 120: a talk with a party member happens where the player stands. The view hears the phase and nothing of
+  // the conversation: the real view leaves the camera alone in `party` (levelView.setPhase).
+  await act(async () => { await store.getState().recruit(encounterOf('root_court')); });
+  const before = view.calls.length;
+  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  await user.click(await screen.findByRole('button', { name: 'Talk to Gerald' }));
+  expect(await screen.findByRole('region', { name: 'Gerald, your party' })).toBeTruthy();
+  await answer('Con calma.');
+  await user.click(await screen.findByRole('button', { name: 'Back to the temple' }));
+  expect(await screen.findByRole('button', { name: 'Talk to Portia again' })).toBeTruthy();
+  expect(view.calls.slice(before).map(([kind, value]) => (kind === 'phase' ? `${value.phase}:${value.siteIndex}` : kind))).toEqual(['party:0', 'site:0']);
   expect(view.disposed).toBe(false);
   cleanup();
   expect(view.disposed).toBe(true);

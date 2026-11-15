@@ -1,0 +1,48 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 6187914..1846a1a 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -19,5 +19,17 @@ jobs:
+             mobile/package-lock.json
+       - run: npm ci
+       - run: npm ci --prefix mobile
+-      - run: npm test
++      # The log of a failed run needs a GitHub login. The step after this one puts the failing tests into the run's
++      # annotations, which the public API serves (docs/handoff.md, "Checking a deploy from the cluster").
++      - run: |
++          set -o pipefail
++          npm test 2>&1 | tee "$RUNNER_TEMP/npm-test.log"
++      - name: Name the failing tests
++        if: failure()
++        run: |
++          log="$RUNNER_TEMP/npm-test.log"
++          [ -f "$log" ] || exit 0
++          found=$(grep -E -A30 '^\s*not ok |^ FAIL |^\s+× |^\s+● ' "$log" | head -90 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
++          [ -n "$found" ] || found=$(tail -40 "$log" | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
++          echo "::error title=npm test failed::${found}"
+       - run: npm run build -w client
+diff --git a/.github/workflows/deploy.yml b/.github/workflows/deploy.yml
+index 3b5336e..588e55c 100644
+--- a/.github/workflows/deploy.yml
++++ b/.github/workflows/deploy.yml
+@@ -35,7 +35,19 @@ jobs:
+             mobile/package-lock.json
+       - run: npm ci
+       - run: npm ci --prefix mobile
+-      - run: npm test
++      # The log of a failed run needs a GitHub login. The step after this one puts the failing tests into the run's
++      # annotations, which the public API serves (docs/handoff.md, "Checking a deploy from the cluster").
++      - run: |
++          set -o pipefail
++          npm test 2>&1 | tee "$RUNNER_TEMP/npm-test.log"
++      - name: Name the failing tests
++        if: failure()
++        run: |
++          log="$RUNNER_TEMP/npm-test.log"
++          [ -f "$log" ] || exit 0
++          found=$(grep -E -A30 '^\s*not ok |^ FAIL |^\s+× |^\s+● ' "$log" | head -90 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
++          [ -n "$found" ] || found=$(tail -40 "$log" | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
++          echo "::error title=npm test failed::${found}"
+       - run: npm run build -w client
+         env:
+           VITE_API_BASE: ${{ vars.VITE_API_BASE }}

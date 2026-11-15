@@ -133,6 +133,21 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
 - **Two deploys, one push.** For some minutes after a push the new client may talk to the old server, or the
   reverse. The client names an old server ("The server is being updated") and retries on Start.
 
+### The party in the dungeon (round 120)
+
+([120 architecture](rounds/120/architecture.md), [120 findings](rounds/120/findings.md).)
+
+- The server's party is unchanged. The client added `party`, `recruit`, `talkTo`, `leaveParty` and the phase `party`
+  (`client/src/stores/gameStore.js`), `PartyPanel.jsx`, and the offer and the invitation in `DungeonScreen.jsx`.
+- **A party conversation has no `dungeonId`.** The server does not hold a move for it, and a site start replaces it
+  (the client sends the start again with `restart`, round 115's Decision 2). So an unfinished one lasts until the
+  next site conversation. The app keeps it until the player finishes or leaves it.
+- **The newest read or write of the party wins** (`partyRequest`), as for the run (`progressRequest`).
+- **The stories a member tells** (the Journey's fragments after three conversations) are on the server and in the
+  app. This client's Spellbook shows no fragments, so its Party panel announces none.
+- The client's tests have a fake party (`createFakeParty` in `client/src/__tests__/fakeRun.js`). It is a
+  re-statement of the server's party rules, unlike the fake run, which uses the server's own.
+
 ### Working on the dungeon
 
 - `client/src/scene/director.js` is the camera (pure, tested in Node). Its `engage` and `beat` are how a
@@ -157,10 +172,6 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
 
 ### Next
 
-- Round 120: the party in the dungeon, as the app has it (the owner's choice in round 119). SAVE or LEAVE after a
-  saveable character's site, a Party panel, Talk outside a conversation. The server already has the party
-  (`GET /api/party`, `POST /api/party/recruit`, party conversations by `encounterId`); a dungeon resolve already
-  writes `world.completedEncounterIds`, which `recruit` checks.
 - Round 121: levels and XP (the owner's choice: levels unlock places and raise difficulty). The seal on The
   Sanctuary and the closed places of `content/world/atlas.yaml` are where a level gate attaches. The world map has
   no server state yet.

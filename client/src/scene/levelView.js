@@ -249,6 +249,8 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     world,
     get size() { return { ...size }; },
     setPhase({ phase, siteIndex = 0, walkFrom = null }) {
+      // Round 120: a conversation with a party member leaves the camera where it is.
+      if (phase === 'party') return;
       const key = `${phase}:${siteIndex}:${walkFrom}`;
       const atSite = (director.mode === 'approach' || director.mode === 'walk') && director.site === siteIndex;
       // A conversation and the site card (round 119) keep the hold the camera arrived at.

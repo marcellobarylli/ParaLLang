@@ -261,6 +261,77 @@ test('a reload in the middle of a run resumes the conversation under way at the 
   assert.equal(current.data.encounter, null, 'the conversation at the court was left behind');
 });
 
+// Round 120: the party from the dungeon, against the real server.
+test('the web client saves Gerald after his site, talks to him as a party member and finishes the conversation', async () => {
+  const { storage, s } = newStore();
+  await s().initialize();
+  await openSite(s);
+  await answerSite(s);
+  // Nobody is in the party, and the map says who could be: Mortimer and Gerald, not Portia.
+  assert.deepEqual(s().party, []);
+  assert.deepEqual(s().dungeon.sites.slice(0, 3).map((site) => site.saveable), [false, true, true]);
+  await s().recruit(ENCOUNTER.root_court);
+  assert.match(s().error, /Gerald has not been won over yet/);
+  await walkTo(s, 'root_court');
+  assert.equal(s().encounter.character.saveable, true);
+  await answerSite(s);
+
+  await s().recruit(ENCOUNTER.root_court);
+  assert.equal(s().error, null);
+  assert.equal(s().party.length, 1);
+  const [gerald] = s().party;
+  has(gerald, ['characterId', 'name', 'encounterId', 'locationName', 'conversations', 'conversationId', 'conversationTier'], 'party member');
+  assert.deepEqual([gerald.name, gerald.encounterId, gerald.conversations, gerald.conversationId], ['Gerald', ENCOUNTER.root_court, 0, 'gerald_coffee_break']);
+
+  await s().talkTo(gerald);
+  assert.equal(s().error, null);
+  assert.equal(s().phase, 'party');
+  assert.equal(s().partyReturn, 'site');
+  assert.equal(s().encounter.partyConversation, true);
+  assert.equal(s().encounter.dungeonId, undefined);
+  assert.equal(s().encounter.character.name, 'Gerald');
+  // Review 1 of round 120 (R1.5): a party conversation is a conversation. Meanings are withheld and reviews wait.
+  assert.equal(s().spellbook.inEncounter, true);
+  s().openSpellbook();
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  assert.equal(s().spellbook.inEncounter, true);
+  assert.ok(s().spellbook.cards.length > 0);
+  assert.ok(s().spellbook.cards.every((card) => !card.meanings), 'no meaning reaches the client during the conversation');
+  await s().startReview(null);
+  assert.match(s().error, /Reviews wait until the encounter is over/);
+  s().returnToDialogue();
+  s().clearError();
+  // Left for now, it is resumed by the next Talk.
+  const conversation = s().encounter.id;
+  s().leaveParty();
+  assert.equal(s().phase, 'site');
+  await s().talkTo(gerald);
+  assert.equal(s().encounter.id, conversation);
+  await answerSite(s);
+  assert.equal(s().encounter.state, 'resolved');
+  assert.deepEqual(s().party.map((member) => [member.name, member.conversations]), [['Gerald', 1]]);
+  assert.deepEqual(s().progress.clearedSiteIds, ['face_gate', 'root_court'], 'a party conversation clears no site');
+  s().leaveParty();
+  assert.equal(s().phase, 'site');
+  // Once it is over the Spellbook opens up and a review starts.
+  s().openSpellbook();
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  assert.equal(s().spellbook.inEncounter, false);
+  await s().startReview(s().spellbook.cards[0].vocabularyId);
+  assert.equal(s().error, null);
+  assert.equal(s().view, 'review');
+  s().returnToDialogue();
+
+  // A reload: the party comes back with the map, and the walk on is open as before.
+  const reloaded = newStore(storage);
+  await reloaded.s().initialize();
+  reloaded.s().onCameraArrived();
+  assert.equal(reloaded.s().phase, 'site');
+  for (let i = 0; i < 50 && reloaded.s().party.length === 0; i += 1) await new Promise((resolve) => setTimeout(resolve, 10));
+  assert.deepEqual(reloaded.s().party.map((member) => [member.name, member.conversations]), [['Gerald', 1]]);
+  await walkTo(reloaded.s, 'sunlit_court');
+});
+
 test('a market conversation under way is replaced by the dungeon, the web client\'s only screen', async () => {
   const { s } = newStore();
   await s().initialize();

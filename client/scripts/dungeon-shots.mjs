@@ -4,6 +4,7 @@
 // gameplay and the camera move together (no dialogue while the camera travels, a step in for each closed objective),
 // and fails if they do not. Round 119: the dungeon is a map under a world map. The script walks all seven sites by
 // the ways on, the temple map and a site card, leaves a conversation and returns to it, and looks at the fog.
+// Round 120: it saves Gerald to the party after his site, opens the Party panel and talks to him.
 //
 //   npm run build -w client
 //   CHROME_PATH=/path/to/chrome PUPPETEER_CORE=/path/to/node_modules/puppeteer-core node client/scripts/dungeon-shots.mjs [outDir]
@@ -23,7 +24,7 @@ import { PassingProvider, createRuntime, passingAnswers } from '../../server/tes
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '119', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '120', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/'; // the page is served under a subpath, as on GitHub Pages
 const EXTRA = process.env.SHOTS_EXTRA === '1'; // also the in-between and debugging pictures
@@ -330,6 +331,44 @@ async function run(browser, runtime, size, log) {
     await page.evaluate(() => window.__parallang.store.getState().setPanelOpacity(0.7));
   }
   await answerSite();
+
+  // Round 120: Gerald could join the party. He is saved, the Party panel names him, and he talks where the player stands.
+  {
+    const offered = await page.evaluate(() => document.querySelector('.party-offer')?.textContent ?? null);
+    check(offered?.includes('Gerald could join your party.'), `the offer shows after Gerald's site (${offered})`);
+    await shot('06-party-offer', { settle: 300 });
+    await clickButton(page, 'Save Gerald');
+    await waitFor(page, () => window.__parallang.store.getState().party.length === 1);
+    await clickButton(page, 'Party');
+    await page.waitForSelector('.party-panel');
+    const panel = await page.evaluate(() => document.querySelector('.party-member')?.textContent ?? null);
+    check(panel?.includes('Met at The Root Court · Conversations: 0'), `the panel names Gerald and his site (${panel})`);
+    await shot('06-party-panel', { settle: 300 });
+    const before = await state(page);
+    await clickButton(page, 'Talk to Gerald');
+    await waitPhase(page, 'party');
+    const talking = await state(page);
+    check(talking.sheet && Math.hypot(...talking.camera.position.map((v, i) => v - before.camera.position[i])) < 0.8, `the talk opens where the camera stands (${before.camera.position} to ${talking.camera.position})`);
+    await shot('06-party-talk', { settle: 900 });
+    for (const answer of passingAnswers(runtime.content, 'gerald_coffee_break')) {
+      const version = await page.evaluate(() => window.__parallang.store.getState().encounter.version);
+      await page.type('#player-response', answer);
+      await clickButton(page, 'Send');
+      await waitFor(page, (was) => { const s = window.__parallang.store.getState(); return !s.isLoading && (s.encounter?.version !== was || s.error); }, version);
+    }
+    const done = await page.evaluate(() => { const s = window.__parallang.store.getState(); return { state: s.encounter?.state, error: s.error, conversations: s.party[0]?.conversations }; });
+    check(done.state === 'resolved' && done.conversations === 1, `the talk resolves and counts (${JSON.stringify(done)})`);
+    await clickButton(page, 'Back to the temple');
+    await waitPhase(page, 'site');
+    await arrivedAt('root_court', { sheet: false });
+    const hud = await page.evaluate(() => {
+      const box = (selector) => { const r = document.querySelector(selector).getBoundingClientRect(); return { left: Math.round(r.left), right: Math.round(r.right), top: Math.round(r.top), bottom: Math.round(r.bottom) }; };
+      return { title: box('.hud-title strong'), pips: box('.pips'), nav: box('.hud nav'), width: innerWidth, titleScroll: document.querySelector('.hud-title strong').scrollWidth - document.querySelector('.hud-title strong').clientWidth };
+    });
+    const apart = (a, b) => a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top;
+    check(hud.nav.right <= hud.width && apart(hud.title, hud.pips) && apart(hud.title, hud.nav) && apart(hud.pips, hud.nav) && hud.title.left >= 0 && hud.pips.left >= 0,
+      `the top bar holds the title, the pips and three buttons without overlap (${JSON.stringify(hud)})`);
+  }
 
   // Up to the map: the court's neighbours are out of the fog. A walk is picked there, to Mortimer in the outer court.
   await clickButton(page, 'Map');

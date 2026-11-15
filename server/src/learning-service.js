@@ -711,17 +711,23 @@ export class LearningService {
   }
 
   // The dungeon's map and what the run shows of it. A hidden site keeps its place (the client bundles the file for
-  // its 3D view) but not its character's name.
+  // its 3D view) but not its character's name, nor whether the character can be saved.
   dungeonView(envelope, dungeon) {
     const run = this.dungeonRun(envelope, dungeon);
     const sites = siteStates(dungeon, run);
     return {
       dungeon: {
         id: dungeon.id, name: dungeon.name, level: dungeon.level, start: dungeon.start, goal: dungeon.goal,
-        sites: dungeon.sites.map((site) => ({
-          id: site.id, encounterId: site.encounter, name: site.name, at: [...site.at],
-          characterName: sites[site.id].state === 'hidden' ? null : this.content.encounters.get(site.encounter).character.name,
-        })),
+        // Round 120: `saveable` lets a cleared site's card offer the party invitation with no conversation loaded.
+        sites: dungeon.sites.map((site) => {
+          const { character } = this.content.encounters.get(site.encounter);
+          const hidden = sites[site.id].state === 'hidden';
+          return {
+            id: site.id, encounterId: site.encounter, name: site.name, at: [...site.at],
+            characterName: hidden ? null : character.name,
+            saveable: hidden ? null : character.saveable === true,
+          };
+        }),
         paths: dungeon.paths.map(({ between, via }) => ({ between: [...between], via: via.map((point) => [...point]) })),
       },
       progress: { run: run.run, at: run.at, complete: isComplete(dungeon, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
