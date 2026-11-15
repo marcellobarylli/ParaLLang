@@ -13,3 +13,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 7 | 08:30:47 | 08:31:44 | run | Claude (claude-fable-5-2) | Slurm job 5413 (CPU, dada): root `npm test` under Node 22.23.5 with `CI=true` passes, so the CI failure is not reproduced | — |
 | 8 | 08:31:44 | 08:31:44 | outcome | Claude (claude-fable-5-2) | findings.md and Outcome written | `../findings.md` |
 | 9 | 08:31:44 | 08:31:44 | closed | Claude (claude-fable-5-2) | Status addendum and index row; handoff corrected for the installed page. Pushed with CI on, as a second run | `../architecture.md` |
+| 10 | 08:33:47 | 08:33:55 | result | Claude (claude-fable-5-2) | The closing commit 2bfb960 holds the same code: CI run 43694928143 and Pages run 43694928153 succeeded, so the failure of run 43694594256 did not repeat. The live build is now 0.1.0+mwhkukpz; Render still at d01c8a0 | — |
