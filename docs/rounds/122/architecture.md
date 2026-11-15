@@ -154,3 +154,52 @@ animated characters.
 
 The work is on the branch `round-122-figures`. The round ends with a merge to `main`, which deploys the client and
 the server. The server changes by one optional content field.
+
+## Amendment 2026-11-15: what the build settled (Claude, during the build)
+
+The owner was away. The first two items change sentences of the Design; the pictures and the tests forced them.
+
+- **A figure shrinks away when the camera comes within 2.1 m, and is gone at 1.3 m.** The Design says a figure never
+  leaves its place, and that holds. But the camera's way on from a site starts at the site's point (round 119): from
+  The Root Court to The Sunlit Court, from The Buttress Tree back to The Root Court and from Before the Sanctuary to
+  The Sanctuary it walks through the place where the character stands. The gate passages are 2.2 m wide, so the
+  camera cannot go round. The nearest the camera comes in a conversation is about 2.4 m, where the figure is whole.
+- **The tall figures are smaller than the Design says, so that their faces stay on a phone's screen.** With the top
+  bar and the conversation sheet, a phone shows from about 0.9 to 1.8 m at a site once the camera has stepped in.
+  Mortimer is 1.79 m (the Design: 1.9), Bambieshart 1.70 m (2.0), Errata 1.62 m floating 0.21 m (1.9 and 0.25).
+  Every face is between 1.2 and 1.5 m, except Portia's at 1.8 m: at the start site the camera stands 9.5 m back.
+  The imp is 0.6 m tall with his horns, on a cart 1.02 m high (the Design: 0.35 m and 1.05 m).
+- **The footprint is checked against the stone itself**, with 5 cm to spare, and not with the 0.35 m a walker needs
+  (`blocked(x, z, 0.05)` in `client/src/__tests__/taProhmPlan.js`). Errata's letters come within 0.2 m of the inner
+  gate's pier.
+- **`client/scripts/figure-shots.mjs`** is new: it renders each figure at its site at the first hold and at the
+  resolved one, with no server, for looking at them while they are built.
+
+## Amendment 2026-11-15: fixes from Codex review 1 (Claude, after the build)
+
+A post-build review by Codex read `git diff 98bb0e4..1b174ef -- aesthetic client server content` and returned three
+findings; the raw text is in [`trail/review-1.md`](trail/review-1.md). The owner was away, so every disposition is
+Claude's.
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Error, medium | With the system's reduced-motion setting on, the camera's beat is skipped but the figure still hopped and bobbed | 0 | Accept: with reduced motion a figure neither bobs nor hops | **Accepted** by Claude; the owner was away | `levelView.js` |
+| R1.2 | Error, low | The triangle count leaves out the sky (712). Counting every mesh of the scene gives 64,404, above the style's 64,000 | 0 | Reject the count, accept a clearer statement: the package's own budget test counts props and surface without the sky (`world.stats.triangles`), and the playthrough adds the markers and figures to that same number, 63,692. The accessor's comment now says so | **Rejected in part** by Claude; the owner was away | `levelView.js` (comment); Claim boundary of the findings |
+| R1.3 | Error, low | Nothing checked that a figure shrinks away when the camera walks through its place: the checks read figures only at a hold | + | Accept: on the walk from The Root Court to The Sunlit Court the playthrough reads Gerald's figure every frame: whole beyond 2.1 m, shrinking, gone within 1.3 m, and the camera does pass within 0.6 m of his place | **Accepted** by Claude; the owner was away | `client/scripts/dungeon-shots.mjs` |
+
+**Deferred:** none. Codex found no defect in the figures' geometry, transforms, bounds, colours and determinism; in
+the framing of a conversation, the site card, a reload, neighbouring figures, the fog, the facing, the beacon that
+remains and the dispose path; or in the package's exports, the client's imports, both language packs' loaders, the
+Docker files and an old page with the new server or the reverse.
+
+R1.1 has no automated test: the playthrough does not run with reduced motion, and the view needs WebGL.
+
+## Outcome (2026-11-15)
+
+Built as designed, with the three Amendments above. Seven figures stand at the seven sites in place of the beacons,
+each one mesh of at most 156 triangles in the `plain` PS1 material, turned to the camera. Against the Design, the
+tall figures are smaller, so that their faces stay on a phone's screen, and a figure shrinks away when the camera
+walks through its place. Every suite passes (server 436, client 120, aesthetic 43, mobile 320), and the built client
+plays the seven sites with the figure checks in headless Chromium at 390×844 and 1440×900. The claim boundary held:
+the figures were judged from screenshots by Claude, and no phone was used. See [`findings.md`](findings.md) and
+[`shots/`](shots/).

@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-15: round 122, the characters stand at the sites
+
+The owner asked for real characters in place of the placeholder beacons. Each of the seven sites now shows its
+character as a 3D figure in the level's PS1 look, built in code after the character's sheet: Portia an archway with
+eyes, Gerald an imp on his coffee cart, Mortimer in a striped apron with a ham for a hat, Flick a gnome on a
+cracked basin, Marginalia a spectacled worm on a heap of books, Bambieshart a stooped wanderer, Errata a misaligned
+figure with a bright seam. A figure turns to the player and hops when an objective is passed. They are simple
+(about 140 triangles each) and were judged from screenshots by Claude, not by the owner and not on a phone. The
+round also found and fixed the server test that failed now and then on GitHub
+([findings](docs/rounds/122/findings.md), pictures in [`docs/rounds/122/shots/`](docs/rounds/122/shots/)).
+
 ## Addendum 2026-11-15: round 121, levels in the dungeon
 
 The third of the owner's three integration rounds. The player earns experience in the dungeon: 10 XP for each
@@ -1099,7 +1110,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
-| 122 | 11-15 | Characters at the sites: seven figures built in code in the PS1 look, one per character, in place of the beacons (autonomous, the owner away) | [122](docs/rounds/122/architecture.md) | to be written | pre-run record |
+| 122 | 11-15 | Characters at the sites: seven figures built in code in the PS1 look, one per character, in place of the beacons (autonomous, the owner away) | [122](docs/rounds/122/architecture.md) | [findings](docs/rounds/122/findings.md) | `98bb0e4` (pre-run record) to round 122 close, merged to `main` |
 | 121 | 11-15 | Levels in the dungeon: XP for objectives, resolves and due reviews; a derived level; level seals on the Library and the Sanctuary; more of the target language per level (autonomous, the owner away) | [121](docs/rounds/121/architecture.md) | [findings](docs/rounds/121/findings.md) | `29f7271` (pre-run record) to round 121 close, merged to `main` |
 | 120 | 11-15 | The party in the dungeon: the offer after a saveable site, the invitation on a site card, a Party panel, a conversation with a member from anywhere outside a conversation (autonomous, the owner away) | [120](docs/rounds/120/architecture.md) | [findings](docs/rounds/120/findings.md) | `b176f30` (pre-run record) to round 120 close, merged to `main` |
 | 119 | 11-15 | The map in the dungeon, in two layers: Ta Prohm as a free map of seven sites with fog, a seal and a pass rule; a world map of places above it; walks along any path with a turn on the spot (autonomous, the owner away) | [119](docs/rounds/119/architecture.md) | [findings](docs/rounds/119/findings.md) | `4713727` (pre-run record) to round 119 close, merged to `main` |

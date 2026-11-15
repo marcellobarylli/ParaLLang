@@ -75,7 +75,12 @@ Round 115 built the dungeon crawl in the web client and round 116 tied the camer
 
 ### Checking a deploy from the cluster
 
-- Actions runs: the public API, as above.
+- Actions runs: the public API, as above. A failed run's log needs a GitHub login. In rounds 118 to 120 one of the
+  two workflows failed now and then in `npm test`; round 122 found a race in `server/test/greeting-prefetch.test.js`
+  that fails on a busy machine and fixed it. If a workflow fails again, [`rounds/120/trail/ci-annotations.patch`](rounds/120/trail/ci-annotations.patch)
+  (not applied: the owner did not ask for a workflow change) makes both workflows name the failing tests in the
+  run's annotations, which the public API serves. A failed Pages workflow leaves the old client live beside the new
+  server; a push with `[skip render]` runs it again.
 - Render's build: Render records each deploy as a GitHub deployment named "main - parallang".
   `curl -s https://api.github.com/repos/marcellobarylli/ParaLLang/deployments?per_page=4` lists them, and
   `.../deployments/<id>/statuses` gives `in_progress`, then `success` or `failure`. This is the only view of a Render
