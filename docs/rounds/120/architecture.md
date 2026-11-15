@@ -155,3 +155,41 @@ keeps it until the player finishes or leaves it.
 
 The work is on the branch `round-120-party`. The round ends with a merge to `main`, which deploys the client and
 the server (round 119, Q4). The Render deploy wipes every save on the free plan.
+
+## Amendment 2026-11-15: what the build settled (Claude, during the build)
+
+The owner was away. These are details inside the agreed design.
+
+- **The phone's top bar.** Three buttons (Party, Spellbook, the gear) leave no room for the pips beside the title at
+  390 px. Under 560 px the pips go under the title and the dungeon's name is not shown. The first build drew the
+  pips over the title; the pictures showed it, and the playthrough now fails on any overlap in the top bar.
+- **The Party panel** says how many members there are under its heading, and "{name} is getting ready to talk…"
+  while Talk waits for the server (the app's line).
+- **A resolved party conversation** with no authored closing line says "{name} has said what there was to say."
+
+## Amendment 2026-11-15: fixes from Codex review 1 (Claude, after the build)
+
+A post-build review by Codex read `git diff 605a00e..fb700bc -- client server` and returned five findings; the raw
+text is in [`trail/review-1.md`](trail/review-1.md). The owner was away, so every disposition is Claude's. Each fix
+has a test that fails on the code as reviewed.
+
+| # | Type | Finding | +/−/0 | My recommendation | Owner disposition | Where it landed |
+|---|---|---|---|---|---|---|
+| R1.1 | Error, medium | A Talk the player walked away from (to the map, or by Play again) left `partyStarting` set, and the panel then disabled every Talk button for good | 0 | Accept: every navigation that drops a conversation also clears it | **Accepted** by Claude; the owner was away | `gameStore.js` (`quiet`); `dungeon-flow.test.js` |
+| R1.2 | Error, medium | A recruit's reply that arrives after a newer read of the party put the older party back (a finished conversation's count and tier) | 0 | Accept: a recruit overtaken by another read or write does not take its reply; the party is read again | **Accepted** by Claude; the owner was away | `gameStore.js` (`recruit`); `dungeon-flow.test.js` |
+| R1.3 | Error, medium | A greeting that arrived after the player had opened the Spellbook closed it | 0 | Accept: the Party panel closes onto the conversation; another overlay opened meanwhile stays | **Accepted** by Claude; the owner was away | `gameStore.js` (`talkTo`); `dungeon-flow.test.js` |
+| R1.4 | Error, medium | In the minutes after a push, the new client with round 119's server gets no `saveable`, so a cleared site's card shows no invitation | + | Reject: the state lasts until Render has deployed, and that deploy wipes every save on the free plan, so no cleared site outlives it. Codex's fix adds an "updating" state for one field | **Rejected** by Claude; the owner was away | Claim boundary of the findings |
+| R1.5 | Error, low | The contract test did not check that a party conversation hides meanings and holds reviews | 0 | Accept | **Accepted** by Claude; the owner was away | `server/test/web-client.test.js` |
+
+**Deferred:** none. Codex found no defect in the server's part (the `saveable` field, party sessions, moves, site
+starts, hidden meanings, review refusal), in the offer and the invitation on matching builds, in the top bar at
+390 px and from 1100 px, or in round 119's client against the new server.
+
+## Outcome (2026-11-15)
+
+Built as designed, with the two Amendments above. In the web client's dungeon a saveable character whose site is
+cleared can be saved to the party, from the offer after the conversation or from the site's card, and talked to
+from a Party panel wherever the player is outside a conversation. The server gained one field. Every suite passes
+(server 428, client 112, aesthetic 20, mobile 320), and the built client plays the seven sites with Gerald saved and
+talked to in headless Chromium at 390×844 and 1440×900 with a fixture provider. The claim boundary held: nothing was
+played against the live model, and no phone was used. See [`findings.md`](findings.md) and [`shots/`](shots/).
