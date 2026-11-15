@@ -89,15 +89,26 @@ Round 115 built the dungeon crawl in the web client and round 116 tied the camer
 - A whole run against the live model. The owner has played the first site on an iPhone (round 117); the
   playthrough on the cluster uses a fixture provider.
 - From the cluster, anything on an iPhone. The owner reports by screenshot. Still unreported: frame rate, the
-  bottom sheet under the on-screen keyboard, WebGL after the page returns from the background, and whether round
-  117's fix removed the strip under the dock.
+  bottom sheet under the on-screen keyboard, WebGL after the page returns from the background, and whether the strip
+  under the dock is gone (round 118).
 
-### The page opened from the home screen (round 117)
+### The page opened from the home screen (rounds 117 and 118)
 
-The owner plays the page from the iPhone's home screen. Two things follow. That page has its own storage, so a token
-entered in Safari is not there. And iOS keeps its layout area short by the status bar's inset, so the stylesheet
-sizes the shell with `100vh` under `display-mode: standalone`; Chrome on the cluster cannot emulate that mode. A
-push whose head commit says `[skip render]` deploys the client alone and leaves the server and its saves running.
+The owner plays the page from the iPhone's home screen. Three things follow.
+
+- That page has its own storage, so a token entered in Safari is not there.
+- iOS lays it out in an area short of the screen by the status bar's inset (about 65 pt), and clips a fixed element
+  to that area, while `100vh` is the whole screen. Round 117 made the fixed shell `100vh` high and cut the bottom of
+  the screen. Since round 118 the document is `100vh` high, and the panels keep their content out of the measured
+  gap (`client/src/viewport.js`, `--bottom-gap`). Whether iOS paints the strip is not yet known. Chrome on the
+  cluster has neither the mode nor the bug: a layout change for the installed page cannot be tested here, so it must
+  never be able to cut content.
+- Settings shows the build and the viewport's numbers and has "Reload the page". Ask the owner for a screenshot of
+  Settings before reasoning about the phone.
+
+A push whose head commit says `[skip render]` deploys the client alone and leaves the server and its saves running.
+CI's logs need a GitHub login, which the cluster lacks; `~/workspace/r115-jobs/node22/` holds Node 22, the version
+CI uses, to rerun the suites under it.
 
 ### Working on the dungeon
 
@@ -121,7 +132,8 @@ push whose head commit says `[skip render]` deploys the client alone and leaves 
 
 ### Next
 
-- The owner's verdict on round 117 (the strip, the look, the opacity to make the default), and on two choices of the
+- The owner's screenshot of Settings in the installed page (round 118), and the verdict on round 117 (the look, the
+  opacity to make the default), and on two choices of the
   build: the walk starts on a button, and only the first site is approached from above.
 - Start the next site's greeting when a site resolves, to hide the hosted server's 15 s start.
 - Encounter assets at the sites. Each site has a beacon (a crystal, a ring, a shaft of light) as a stand-in.

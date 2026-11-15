@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-15: round 118, round 117's fix for the bottom strip was wrong; a reload from Settings
+
+Round 117's fix cut the bottom of the screen on the owner's iPhone, including the reply box, for 23 minutes on the
+live site. The layout now keeps all content inside the area the phone is known to show, so nothing can be cut;
+whether the empty strip is gone is still for the owner to see. Settings shows the running build and has a "Reload
+the page" button ([findings](docs/rounds/118/findings.md)).
+
 ## Addendum 2026-11-15: round 117, the owner's first phone run: the bottom strip, an opacity slider, a PS1 menu look
 
 The owner played the dungeon on an iPhone against the live server and asked for three changes, all deployed. The
@@ -1061,6 +1068,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 118 | 11-15 | Round 117's strip fix cut the screen's bottom on the iPhone: a 100vh document with the panels kept out of the gap; the build and a reload in Settings | [118](docs/rounds/118/architecture.md) | [findings](docs/rounds/118/findings.md) | `ea04174` (pre-run record) to round 118 close; build `6076b49` |
 | 117 | 11-15 | The owner's first phone run: the installed page fills the screen on iOS, a slider for the text panels' opacity, a PS1 menu look | [117](docs/rounds/117/architecture.md) | [findings](docs/rounds/117/findings.md) | `bd91573` (pre-run record) to round 117 close; builds `7eeadfd`, `f728a16` |
 | 116 | 11-14 | The gameplay drives the camera inside an encounter (closed objectives, verdicts, the resolve); the dungeon deployed | [116](docs/rounds/116/architecture.md) | [findings](docs/rounds/116/findings.md) | `f299da0` (pre-run record) to round 116 close; merge `d01c8a0` |
 | 115 | 11-14 | The Ta Prohm dungeon crawl in the web client: three sites, five camera transitions, the dialogue as a bottom sheet, a victory screen (merged to `main` in round 116) | [115](docs/rounds/115/architecture.md) | [findings](docs/rounds/115/findings.md) | `76a59f7` (pre-run record) to round 115 close |

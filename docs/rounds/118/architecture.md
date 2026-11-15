@@ -82,3 +82,11 @@ is the owner's observation; the layout numbers in Settings are there for the cas
 - Playthrough (real browser): with the installed rules applied and a gap of 62 px set, the dock's content ends at or
   above the layout area's bottom edge and the shell reaches 62 px below it; with a gap of 0 the layout is unchanged.
 - All suites and the build keep passing.
+
+## Outcome (2026-11-15)
+
+Built as designed and deployed as `6076b49` with `[skip render]`. In the installed page the document is `100vh` high
+and the panels keep their content out of the measured gap, so nothing can be cut. Settings names the build and the
+viewport's numbers and reloads the page past the cache. The claim boundary held: whether the strip is gone on the
+iPhone is not known. CI failed once on the build commit and could not be read from the cluster; the suites pass
+there under both Node versions. See [`findings.md`](findings.md).
