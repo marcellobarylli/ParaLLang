@@ -23,7 +23,8 @@ const LEVELS = {
 const GOLD = [1, 0.8, 0.36]; // written as is: the PS1 materials and the post pass do no colour conversion
 const RIBBON = { width: 1.5, lift: 0.4 };
 // The fog over a hidden site, seen from above: three stacked discs, so the patch is darkest in the middle.
-const FOG_PATCH = { radii: [7, 9.5, 12], height: 16, opacity: 0.42, segments: 12 }; // 12 segments: the scene's triangle budget (round 122)
+// Round 124: each disc at 0.3 (0.42 before), so the rim covers 30 % of the ground, the middle 51 % and the centre 66 %.
+const FOG_PATCH = { radii: [7, 9.5, 12], height: 16, opacity: 0.3, segments: 12 }; // 12 segments: the scene's triangle budget (round 122)
 // A figure is whole from FIGURE.far metres and gone at FIGURE.near: the camera's way on from some sites leads through
 // the place where the character stands. The nearest the camera comes in a conversation is about 2.4 m.
 const FIGURE = { near: 1.3, far: 2.1, bob: 0.02, hop: 0.14 };

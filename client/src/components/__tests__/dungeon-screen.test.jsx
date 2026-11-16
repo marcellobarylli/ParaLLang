@@ -5,7 +5,7 @@ import React from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import DungeonScreen from '../DungeonScreen.jsx';
+import DungeonScreen, { FOG_LEGEND } from '../DungeonScreen.jsx';
 import DialoguePanel from '../DialoguePanel.jsx';
 import PronounceButton from '../PronounceButton.jsx';
 import Spellbook from '../Spellbook.jsx';
@@ -204,6 +204,7 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress Treeunexplored', '3The Root Courtunexplored']);
   expect(screen.getByLabelText('0 of 7 sites cleared')).toBeTruthy();
   expect(screen.queryByRole('button', { name: /^Walk/ })).toBeNull(); // Portia has not let the player pass
+  expect(screen.getByText(FOG_LEGEND)).toBeTruthy(); // round 124: the map says what its dark patches are
   await user.click(screen.getByRole('button', { name: 'World map' }));
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
@@ -326,6 +327,7 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   // The finished run stays open (critique 1.3), and a new run starts from the world map with the fog back.
   await user.click(screen.getByRole('button', { name: 'Stay in the temple' }));
   expect(siteRows().length).toBe(7);
+  expect(screen.queryByText(FOG_LEGEND)).toBeNull(); // no site is hidden, so there is no patch to explain
   await user.click(screen.getByRole('button', { name: 'Go down to The Sanctuary' }));
   await user.click(await screen.findByRole('button', { name: 'Talk to Errata again' }));
   await screen.findByText('Answer Errata.');

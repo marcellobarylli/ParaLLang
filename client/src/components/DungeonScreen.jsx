@@ -130,6 +130,8 @@ function siteNote(site, status) {
   return status.state === 'known' ? 'unexplored' : 'not cleared';
 }
 
+export const FOG_LEGEND = 'Dark patches cover places you have not found. One lifts when you reach a site next to it.';
+
 // Round 119: the temple map's card. The sites out of the fog, each with its state, and a walk to each one the
 // server calls reachable. The main button goes down to the site the player stands at.
 function OverviewCard({ state, sites }) {
@@ -157,6 +159,10 @@ function OverviewCard({ state, sites }) {
           );
         })}
       </ol>
+      {/* Round 124: what the dark patches on the map are, while there is one. */}
+      {dungeon.sites.some((site) => sites[site.id]?.state === 'hidden') && (
+        <p className="fog-legend"><span className="fog-swatch" aria-hidden="true" /><small>{FOG_LEGEND}</small></p>
+      )}
       {serverProblem && (
         <div className="problem" role="alert">
           <p>{serverProblem}</p>

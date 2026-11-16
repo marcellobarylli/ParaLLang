@@ -66,6 +66,9 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .site-done { margin-left: auto; color: #b5e7bb; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
 .walk-button { margin-left: auto; flex: none; }
 .overview-card .site-list, .place-list { max-height: 36vh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #8a8c86 transparent; }
+.fog-legend { display: flex; align-items: center; gap: .65rem; }
+.fog-legend small { color: var(--dim); line-height: 1.35; }
+.fog-swatch { flex: none; width: 28px; height: 28px; background: radial-gradient(circle, #050808 0 36%, #1b211f 36% 62%, #353c39 62% 100%); clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
 .site-card .sheet-header { padding: 0; border: 0; box-shadow: none; }
 .ways { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
 .ways li { display: grid; gap: .15rem; }

@@ -307,6 +307,16 @@ async function run(browser, runtime, size, log) {
   const triangles = await page.evaluate(() => ({ ...window.__parallangLevel.sceneTriangles, figures: window.__parallangLevel.figures.map((figure) => figure && [figure.name, figure.triangles]) }));
   check(triangles.total <= 64000 && triangles.figures.every(Boolean) && new Set(triangles.figures.map(([name]) => name)).size === 7, `seven figures, and the scene within 64,000 triangles (${JSON.stringify(triangles)})`);
   await mapShows('a new run', [1, 2, 3], ['sunlit_court', 'library', 'before_sanctuary', 'sanctuary']);
+  // Round 124: the card says what the dark patches are, inside the card and the window.
+  const legend = await page.evaluate(() => {
+    const line = document.querySelector('.overview-card .fog-legend');
+    if (!line) return null;
+    const box = line.getBoundingClientRect();
+    const card = line.closest('.card').getBoundingClientRect();
+    const swatch = line.querySelector('.fog-swatch').getBoundingClientRect();
+    return { text: line.textContent, inside: box.top >= card.top && box.bottom <= card.bottom && box.left >= card.left && box.right <= card.right && box.bottom <= window.innerHeight, swatch: [Math.round(swatch.width), Math.round(swatch.height)] };
+  });
+  check(legend && /Dark patches cover places you have not found/.test(legend.text) && legend.inside && legend.swatch[0] === 28 && legend.swatch[1] === 28, `the map's card explains the dark patches (${JSON.stringify(legend)})`);
   // Rounds 117 and 118: the installed page on iOS. Chrome cannot emulate display-mode and does not have the bug, so the
   // built stylesheet's installed rules are applied without their condition and a gap of 62 px is set by hand: the
   // shell must reach the bottom of the window and every panel must keep its content 62 px above it.
@@ -524,6 +534,7 @@ async function run(browser, runtime, size, log) {
   await waitArrived(page, 'overview');
   await shot('14-map-complete', { settle: 2600 });
   await mapShows('a finished run', [1, 2, 3, 4, 5, 6, 7], []);
+  check(await page.evaluate(() => !document.querySelector('.fog-legend')), 'a finished run: no patch, so no legend');
   // A new run returns to the world map, with the fog back.
   await page.reload({ waitUntil: 'load' });
   await waitFor(page, () => Boolean(window.__parallangLevel) && window.__parallang.store.getState().phase === 'victory');
