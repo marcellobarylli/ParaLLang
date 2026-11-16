@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-15: round 123 is opened and only logged, New Game Plus on reused assets
+
+The owner locked the next round's subject and asked for it to be logged only. The game should work with limited
+resources as PS1 games did: reuse the assets it has and avoid building new places. So New Game Plus becomes a
+feature. The player goes through the world map's places more than once, meets target-language content above their
+level on each pass, and comes back to it when they understand more. Nothing is designed or built. The owner's words
+and the open questions are in [`docs/rounds/123/trail/interview.md`](docs/rounds/123/trail/interview.md); the round
+has no `architecture.md` yet.
+
 ## Addendum 2026-11-15: round 122, the characters stand at the sites
 
 The owner asked for real characters in place of the placeholder beacons. Each of the seven sites now shows its
