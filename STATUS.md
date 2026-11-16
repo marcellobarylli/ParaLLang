@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-16: round 124, a legend for the map's dark patches, and the patches less dark
+
+The owner asked what the black shadows on the temple map are. They are the fog over the sites not yet found. The
+map's card now says so in one line while a site is hidden, and the patches are lighter (each of a patch's three
+discs at 0.3, 0.42 before). Live as build `0.1.0+mwj51535`; checked in a headless browser, not on a phone
+([findings](docs/rounds/124/findings.md), picture: [`03-map-start-phone.jpg`](docs/rounds/124/shots/03-map-start-phone.jpg)).
+
 ## Addendum 2026-11-15: round 123 is opened and only logged, New Game Plus on reused assets
 
 The owner locked the next round's subject and asked for it to be logged only. The game should work with limited
@@ -1119,6 +1126,8 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 124 | 11-16 | A legend line for the temple map's fog patches; the patches less dark (0.42 to 0.3 per disc) | [124](docs/rounds/124/architecture.md) | [findings](docs/rounds/124/findings.md) | `17282b3` (pre-run record) to round 124 close; build `77cdf04` |
+| 123 | 11-15 | Opened and only logged: New Game Plus on reused assets (no design yet) | [interview](docs/rounds/123/trail/interview.md) | — | `17282b3` |
 | 122 | 11-15 | Characters at the sites: seven figures built in code in the PS1 look, one per character, in place of the beacons (autonomous, the owner away) | [122](docs/rounds/122/architecture.md) | [findings](docs/rounds/122/findings.md) | `98bb0e4` (pre-run record) to round 122 close, merged to `main` |
 | 121 | 11-15 | Levels in the dungeon: XP for objectives, resolves and due reviews; a derived level; level seals on the Library and the Sanctuary; more of the target language per level (autonomous, the owner away) | [121](docs/rounds/121/architecture.md) | [findings](docs/rounds/121/findings.md) | `29f7271` (pre-run record) to round 121 close, merged to `main` |
 | 120 | 11-15 | The party in the dungeon: the offer after a saveable site, the invitation on a site card, a Party panel, a conversation with a member from anywhere outside a conversation (autonomous, the owner away) | [120](docs/rounds/120/architecture.md) | [findings](docs/rounds/120/findings.md) | `b176f30` (pre-run record) to round 120 close, merged to `main` |

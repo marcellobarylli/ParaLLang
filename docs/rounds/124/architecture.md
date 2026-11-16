@@ -56,3 +56,10 @@ iPhone's screen is the owner's observation. The value is one number in `client/s
 - Playthrough (real browser, 390×844 and 1440×900): the legend is visible on the first temple map and lies inside
   the card; the existing overlap checks keep passing; a screenshot of the map for the record.
 - All suites and the build keep passing.
+
+## Outcome (2026-11-16)
+
+Built as designed and deployed as `77cdf04` with `[skip render]`; the live build is `0.1.0+mwj51535`. The temple
+map's card explains the dark patches while a site is hidden, and each disc of a patch is drawn at 0.3. All suites
+and the playthrough pass. The claim boundary held: the darkness on the iPhone's screen is not known. See
+[`findings.md`](findings.md); the owner's words are in [`trail/interview.md`](trail/interview.md).
