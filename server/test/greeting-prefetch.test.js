@@ -55,8 +55,14 @@ async function waitFor(condition, ms = 1000) {
   }
 }
 // A fresh learner moved at once to the coffee cart (the entrance's own arrival is replaced before its dwell).
+// Round 126: the entrance's dwell is made too long to end while the learner is created. With the tests' 25 ms it
+// could end before the move on a busy machine: the entrance's greeting (Portia's) then took the held call, and the
+// start at the cart made its own. That failed the Pages deploy of rounds 125 and 126 once ("used" 0, not 1).
 async function atCart(runtime) {
-  const { learnerId } = await runtime.service.createOrRecoverLearner();
+  const dwell = runtime.service.prefetchDwellMs;
+  runtime.service.prefetchDwellMs = 60_000;
+  let learnerId;
+  try { ({ learnerId } = await runtime.service.createOrRecoverLearner()); } finally { runtime.service.prefetchDwellMs = dwell; }
   await runtime.service.moveTo(learnerId, { locationId: 'coffee_cart' });
   return learnerId;
 }
