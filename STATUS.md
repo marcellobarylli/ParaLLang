@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 131's server half is deployed
+
+The owner said to deploy the server. The push that carries this note has no `[skip render]`, so Render builds the
+server with the conversational prompts, the graders' paragraph line and the list of open objectives. The free plan's
+saves are wiped by it once more; the web client now recovers from that by itself.
+
 ## Addendum 2026-11-19: round 131, a turn asks for a paragraph (the server half not deployed yet)
 
 The owner finds each turn slow and asked that each ask for more: an answer of about a paragraph, with conversational
