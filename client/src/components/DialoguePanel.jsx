@@ -1,4 +1,5 @@
 import BilingualText from './BilingualText.jsx';
+import NarrativeText from './NarrativeText.jsx';
 
 // Round 115: the conversation of the dungeon's current site. The character's name comes from the encounter (the
 // old screen named Gerald), and the tutorial's companion briefing is shown above the first line. The sheet around
@@ -28,7 +29,7 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
       )}
       {encounter.transcript.map((message) => message.role === 'npc' ? (
         <article className="npc-message" key={message.id}>
-          <p className="narrative">{message.narrative}</p>
+          <NarrativeText narrative={message.narrative} words={message.narrativeWords} language={language} />
           <div className="speaker-row">
             <strong className="speaker">{message.dialogue.speaker}</strong>
             {onSpeak && <button type="button" className="icon-button speak-button" onClick={() => onSpeak(message)} aria-label={`Hear ${message.dialogue.speaker} say this line`} title="Hear this line">🔊</button>}

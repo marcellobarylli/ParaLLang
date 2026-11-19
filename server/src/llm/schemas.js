@@ -8,7 +8,9 @@ export const generatedWordSchema = z.object({
 }).strict();
 
 export const encounterResponseSchema = z.object({
-  narrative: z.string().min(1).describe('Atmospheric scene narration, always in English'),
+  narrative: z.string().min(1).describe('Atmospheric scene narration: English prose with a few target-language words dropped in'),
+  // Round 130: the target-language words of the narrative with their meanings. The server keeps or drops each (keptNarrativeWords).
+  narrative_words: z.array(z.object({ word: z.string(), meaning: z.string() }).strict()).optional().describe('Every target-language word or phrase used in the narrative, exactly as written there, with its English meaning'),
   dialogue: z.object({
     speaker: z.string().min(1),
     native: z.string().min(1),

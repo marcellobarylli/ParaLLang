@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 130, Italian words in the narration, tapped for their meaning
+
+The owner liked the narration and asked whether it follows the share of Italian words. It did not; the prompt kept
+it English. It is now asked to be English prose with a few target-language words dropped in, at half the share of
+the character's line. The model lists the words with meanings; the server keeps those that are in the text and are
+not an answer; in the web dungeon each is a word to tap, which shows its meaning for free. Proven with scripted
+replies; the model has not been run with the new prompt ([findings](docs/rounds/130/findings.md), picture:
+[`02-tapped.jpg`](docs/rounds/130/shots/02-tapped.jpg)).
+
 ## Addendum 2026-11-19: beginner mode takes English too
 
 The owner played round 129's build: Italian with mistakes is corrected as designed, but English was not accepted.
@@ -1211,6 +1220,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 130 | 11-19 | Target-language words in the narration, each tapped for its meaning (half the line's share; listed by the model, filtered by the server) | [130](docs/rounds/130/architecture.md) | [findings](docs/rounds/130/findings.md) | `2ca2b2b` (pre-run record) to round 130 close; build `d5ece33` |
 | 129 | 11-19 | Beginner mode: a mistake is understood, corrected for one heart and the player moves on; three hearts a conversation; a practice box checked in the app | [129](docs/rounds/129/architecture.md) | [findings](docs/rounds/129/findings.md) | `8502225` (pre-run record) to round 129 close; build `2363b42` |
 | 128 | 11-19 | No internet slang; the humour in Pratchett's manner (style guide, four character quirks, a tone test); a second prefetch test race fixed | [128](docs/rounds/128/architecture.md) | [findings](docs/rounds/128/findings.md) | `9cb64ee` (pre-run record) to round 128 close; build `83534c8` |
 | 127 | 11-19 | Quiet ambient music made in the browser: generated chords, ducked under speech, a Settings switch | [127](docs/rounds/127/architecture.md) | [findings](docs/rounds/127/findings.md) | `9c52599` (pre-run record) to round 127 close; build `8a974a6` |

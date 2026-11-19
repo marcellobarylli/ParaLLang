@@ -65,6 +65,9 @@ export function buildNarrationMessages({
       targetRatio: Math.round(targetRatio * 100),
       // Round 026 (backlog E1): a worked example beside the percentage, from the same ratio, so the two agree.
       wordsPer20: Math.round(targetRatio * 20),
+      // Round 130: the narration's own share of target-language words, half the line's and at most 30%.
+      narrativeRatio: Math.round(narrativeRatio(targetRatio) * 100),
+      narrativePer40: Math.max(1, Math.round(narrativeRatio(targetRatio) * 40)),
       learningData: JSON.stringify(targetData(objectives, vocabularyById)),
       ambientVocabulary: ambientLine(language, ambientEntries),
     },
@@ -94,6 +97,12 @@ function orderLine(language, objectives, ordered) {
 function beginnerOrderLine(objectives, ordered) {
   if (!ordered || objectives.length < 2) return '';
   return '\n- ORDER: these objectives are met in the order given. Mark each on its own. An objective after one that is neither passed nor attempted will be asked for again later: say so kindly in its feedback.';
+}
+
+// Round 130: the share of target-language words in the narration, from the share of the character's line.
+export const NARRATIVE_SHARE = Object.freeze({ ofLine: 0.5, max: 0.3 });
+export function narrativeRatio(targetRatio) {
+  return Math.min(NARRATIVE_SHARE.max, Math.max(0, Number(targetRatio) || 0) * NARRATIVE_SHARE.ofLine);
 }
 
 export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput, ordered = false, beginner = false }) {
