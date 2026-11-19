@@ -625,7 +625,10 @@ export class LearningService {
       location: this.sceneLocationId(encounter),
       partyConversation: Boolean(definition.encounter.party_of),
       ...(encounter.dungeonId ? { dungeonId: encounter.dungeonId, siteId: encounter.siteId } : {}), // rounds 114, 119
-      character: { id: definition.character.id, name: definition.character.name, saveable: definition.character.saveable === true },
+      character: {
+        id: definition.character.id, name: definition.character.name, saveable: definition.character.saveable === true,
+        ...(definition.character.voice ? { voice: { ...definition.character.voice } } : {}), // round 126
+      },
       resolvedMessage: definition.encounter.resolved_message ?? null,
       companionBriefing: definition.encounter.companion_briefing ?? null,
       version: encounter.version,

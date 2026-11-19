@@ -4,6 +4,7 @@ import { afterEach, expect, test, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SettingsSheet from '../SettingsSheet.jsx';
+import { measureViewport } from '../../viewport.js';
 import App from '../../App.jsx';
 import { useGameStore } from '../../stores/useGameStore.js';
 
@@ -64,8 +65,8 @@ test('moving the slider on the dungeon screen sets the panels at once, hides the
   const requests = fetchMock.mock.calls.length;
   fireEvent.change(screen.getByLabelText('Text panel opacity'), { target: { value: '30' } });
   expect(shell.style.getPropertyValue('--panel-alpha')).toBe('0.3');
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3 });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3 });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true });
   expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
   expect(fetchMock.mock.calls.length).toBe(requests);
   await user.click(screen.getByRole('button', { name: 'Close' }));
@@ -95,4 +96,88 @@ test('the same build on the site is not announced, and an unreadable one neither
     expect(screen.getByText(/browser tab · window 1440×900/)).toBeTruthy();
     cleanup();
   }
+});
+
+// Round 125: tilt to look. Ticking the box is the tap from which the page asks for the phone's orientation.
+test('ticking "Tilt to look" asks the browser and reports the choice; unticking does not ask', async () => {
+  const user = userEvent.setup();
+  const onTiltLook = vi.fn();
+  const site = { build: 'b', latestBuild: async () => 'b', reload: vi.fn(), viewport: measureViewport, requestTilt: vi.fn(async () => 'granted') };
+  const props = { settings: { serverUrl: '', token: '' }, onSave: vi.fn(), onClose: vi.fn(), onTiltLook, site };
+  const view = render(<SettingsSheet {...props} tiltLook={false} />);
+  const box = screen.getByLabelText('Tilt to look');
+  expect(box.type).toBe('checkbox');
+  expect(box.checked).toBe(false);
+  await user.click(box);
+  expect(site.requestTilt).toHaveBeenCalledOnce();
+  expect(onTiltLook).toHaveBeenLastCalledWith(true);
+  view.rerender(<SettingsSheet {...props} tiltLook />);
+  expect(screen.getByLabelText('Tilt to look').checked).toBe(true);
+  expect(screen.queryByText(/refused|no motion sensor/)).toBeNull();
+  await user.click(screen.getByLabelText('Tilt to look'));
+  expect(onTiltLook).toHaveBeenLastCalledWith(false);
+  expect(site.requestTilt).toHaveBeenCalledOnce();
+});
+
+test('a refusal, or a device with no sensor to ask, is said under the box', async () => {
+  const user = userEvent.setup();
+  for (const [answer, text] of [['denied', /refused access/], ['unsupported', /no motion sensor/]]) {
+    const site = { build: 'b', latestBuild: async () => 'b', reload: vi.fn(), viewport: measureViewport, requestTilt: vi.fn(async () => answer) };
+    const props = { settings: { serverUrl: '', token: '' }, onSave: vi.fn(), onClose: vi.fn(), onTiltLook: vi.fn(), site };
+    const view = render(<SettingsSheet {...props} tiltLook={false} />);
+    await user.click(screen.getByLabelText('Tilt to look'));
+    view.rerender(<SettingsSheet {...props} tiltLook />);
+    expect(await screen.findByText(text)).toBeTruthy();
+    view.unmount();
+  }
+});
+
+test('the box on the dungeon screen switches the preference and stores it', async () => {
+  const user = userEvent.setup();
+  vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
+  useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false } });
+  render(<App />);
+  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await user.click(screen.getByLabelText('Tilt to look'));
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true });
+  expect(screen.getByLabelText('Tilt to look').checked).toBe(true);
+  await user.click(screen.getByLabelText('Tilt to look'));
+  expect(useGameStore.getState().display.tiltLook).toBe(false);
+});
+
+// Round 126: character voices, and what this browser can do.
+test('"Character voices" reports each switch, and the sheet says when the browser cannot speak or listen', async () => {
+  const user = userEvent.setup();
+  const onVoices = vi.fn();
+  const props = { settings: { serverUrl: '', token: '' }, onSave: vi.fn(), onClose: vi.fn(), onVoices };
+  const view = render(<SettingsSheet {...props} voices />);
+  const box = screen.getByLabelText('Character voices');
+  expect(box.checked).toBe(true);
+  expect(screen.getByText(/reads its lines aloud/)).toBeTruthy();
+  expect(screen.getByText(/writes what you say\. You send it/)).toBeTruthy();
+  await user.click(box);
+  expect(onVoices).toHaveBeenLastCalledWith(false);
+  view.rerender(<SettingsSheet {...props} voices={false} speechSupport={{ speak: false, listen: false }} />);
+  expect(screen.getByLabelText('Character voices').disabled).toBe(true);
+  expect(screen.getByText('This browser cannot read aloud.')).toBeTruthy();
+  expect(screen.getByText(/cannot listen\. The keyboard's own microphone key/)).toBeTruthy();
+});
+
+test('the voices box on the dungeon screen switches the preference and stores it', async () => {
+  const user = userEvent.setup();
+  vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
+  vi.stubGlobal('speechSynthesis', { getVoices: () => [], speak: vi.fn(), cancel: vi.fn() });
+  vi.stubGlobal('SpeechSynthesisUtterance', function Utterance(text) { this.text = text; });
+  useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true } });
+  const speech = { speaker: { supported: true, speak: vi.fn(), stop: vi.fn(), prime: vi.fn(), available: () => true }, listener: { supported: false, start: vi.fn(), stop: vi.fn() } };
+  const { default: DungeonScreen } = await import('../DungeonScreen.jsx');
+  render(<DungeonScreen useStore={useGameStore} speech={speech} />);
+  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  expect(speech.speaker.prime).toHaveBeenCalledOnce(); // the first tap on the page
+  await user.click(screen.getByLabelText('Character voices'));
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false });
+  expect(JSON.parse(localStorage.getItem('parallang.display')).voices).toBe(false);
+  await user.click(screen.getByLabelText('Character voices'));
+  expect(useGameStore.getState().display.voices).toBe(true);
 });

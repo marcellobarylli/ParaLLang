@@ -19,6 +19,7 @@ vi.mock('../../scene/levelView.js', () => ({
       canvas, options, calls: [], disposed: false,
       setPhase: (value) => view.calls.push(['phase', value]),
       setEncounter: (value) => view.calls.push(['encounter', value]),
+      setLook: (source) => view.calls.push(['look', source]),
       setInsets: () => {}, setLabels: (labels) => { view.labels = labels; }, setProgress: (sites) => { view.fog = sites; },
       dispose: () => { view.disposed = true; },
     };
@@ -210,4 +211,166 @@ test('the camera arriving before the encounter has loaded waits for it', async (
   expect(screen.queryByLabelText('Your response')).toBeNull();
   await act(async () => release());
   expect(await screen.findByLabelText('Conversation with Portia')).toBeTruthy();
+});
+
+// Round 125: tilt to look. With the setting on the view gets a look source fed by the phone's orientation events;
+// with it off it gets none, and switching it off takes the source away.
+test('tilt to look hands the level view a source that the phone\'s orientation moves', async () => {
+  fakeServer();
+  const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage() });
+  render(<DungeonScreen useStore={store} />);
+  await waitFor(() => expect(level.views.length).toBe(1));
+  const view = level.views[0];
+  const looks = () => view.calls.filter(([kind]) => kind === 'look').map(([, source]) => source);
+  await waitFor(() => expect(phases(view)).toEqual(['attract:0:null']));
+  expect(looks()).toEqual([]); // off by default
+  const orient = (angles, timeStamp) => { const event = new Event('deviceorientation'); Object.assign(event, angles); Object.defineProperty(event, 'timeStamp', { value: timeStamp }); window.dispatchEvent(event); };
+
+  act(() => store.getState().setTiltLook(true));
+  await waitFor(() => expect(looks().length).toBe(1));
+  const source = looks()[0];
+  expect(source.look).toEqual({ yaw: 0, pitch: 0 });
+  orient({ alpha: 0, beta: 50, gamma: 0 }, 1000);
+  orient({ alpha: 0, beta: 40, gamma: 10 }, 1016);
+  expect(source.look.yaw).toBeGreaterThan(0.08); // right edge down: to the left
+  expect(source.look.pitch).toBeGreaterThan(0.08); // top away: up
+
+  act(() => store.getState().setTiltLook(false));
+  await waitFor(() => expect(looks()).toEqual([source, null]));
+  const before = source.look;
+  orient({ alpha: 0, beta: 50, gamma: -10 }, 1032);
+  expect(source.look).toEqual(before); // no longer listening
+});
+
+test('where the browser wants to be asked, a visit with the setting on asks at the first click, once', async () => {
+  fakeServer();
+  const requestPermission = vi.fn(async () => 'granted');
+  vi.stubGlobal('DeviceOrientationEvent', { requestPermission });
+  const storage = memoryStorage();
+  storage.setItem('parallang.display', '{"tiltLook":true}');
+  const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage });
+  render(<DungeonScreen useStore={store} />);
+  await waitFor(() => expect(level.views.length).toBe(1));
+  await waitFor(() => expect(level.views[0].calls.some(([kind]) => kind === 'look')).toBe(true));
+  expect(requestPermission).not.toHaveBeenCalled(); // a page may not ask on its own
+  await act(async () => { document.body.click(); });
+  expect(requestPermission).toHaveBeenCalledOnce();
+  await act(async () => { document.body.click(); });
+  expect(requestPermission).toHaveBeenCalledOnce();
+});
+
+// Round 126: the characters are voiced and the player may speak. The speaker and the listener are fakes of
+// speech.js's; the conversation is the fake server's, with later lines put into the store.
+function fakeSpeech() {
+  const speech = {
+    spoken: [], stops: 0, heard: null,
+    speaker: { supported: true, available: () => true, prime: () => {}, speak: (line) => { speech.spoken.push(line); }, stop: () => { speech.stops += 1; } },
+    listener: { supported: true, start: (options) => { speech.heard = options; return true; }, stop: () => { speech.heard?.onEnd(null); } },
+  };
+  return speech;
+}
+async function openConversation(speech, storage = memoryStorage()) {
+  const user = userEvent.setup();
+  fakeServer();
+  const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage });
+  render(<DungeonScreen useStore={store} speech={speech} />);
+  await waitFor(() => expect(level.views.length).toBe(1));
+  await screen.findByText(/answer in Italian/);
+  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
+  await user.click(screen.getByRole('button', { name: 'Start' }));
+  await waitFor(() => expect(store.getState().encounter?.encounterId).toBe(encounterOf('face_gate')));
+  // The server's encounter names the character's voice, and the pack its language.
+  act(() => store.setState({ language: { code: 'it', name: 'Italian', tag: 'it-IT' }, encounter: { ...store.getState().encounter, character: { name: 'Portia', voice: { kind: 'female', pitch: 1, rate: 0.9 } } } }));
+  expect(speech.spoken).toEqual([]); // the camera is still on its way: no sheet, no voice
+  act(() => level.views[0].options.onArrive('approach'));
+  await screen.findByLabelText('Conversation with Portia');
+  return { user, store };
+}
+const PORTIA = { kind: 'female', pitch: 1, rate: 0.9 };
+
+test('a character\'s line is read aloud once in its sheet\'s voice, a new line too, and the 🔊 repeats it', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  expect(speech.spoken).toEqual([{ text: 'Allora?', tag: 'it-IT', voice: PORTIA }]);
+  // A translation revealed on the same line is not a new line.
+  act(() => store.setState({ encounter: { ...store.getState().encounter, version: 2 } }));
+  expect(speech.spoken).toHaveLength(1);
+  // The player's turn and the character's reply.
+  const before = store.getState().encounter;
+  act(() => store.setState({ encounter: { ...before, transcript: [...before.transcript, { id: 'player-1', role: 'player', text: 'Ciao!' }, { id: 'npc-2', role: 'npc', narrative: 'A stamp falls.', protected: true, dialogue: { speaker: 'Portia', native: 'Bene. *Piacere!*', words: [] } }] } }));
+  expect(speech.spoken).toHaveLength(2);
+  expect(speech.spoken[1]).toEqual({ text: 'Bene. *Piacere!*', tag: 'it-IT', voice: PORTIA });
+  // Each line has its own button.
+  const buttons = screen.getAllByRole('button', { name: 'Hear Portia say this line' });
+  expect(buttons).toHaveLength(2);
+  await user.click(buttons[0]);
+  expect(speech.spoken[2]).toEqual({ text: 'Allora?', tag: 'it-IT', voice: PORTIA });
+});
+
+test('sending stops the voice, and so does leaving the conversation', async () => {
+  const speech = fakeSpeech();
+  const { user } = await openConversation(speech);
+  const stops = speech.stops;
+  await user.type(screen.getByLabelText('Your response'), 'Ciao!');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  expect(speech.stops).toBeGreaterThan(stops);
+  await waitFor(() => expect(screen.getByLabelText('Your response').value).toBe(''));
+  const sent = speech.stops;
+  await waitFor(() => expect(screen.getByRole('button', { name: 'Leave' }).disabled).toBe(false));
+  await user.click(screen.getByRole('button', { name: 'Leave' }));
+  await waitFor(() => expect(screen.queryByLabelText('Your response')).toBeNull());
+  expect(speech.stops).toBeGreaterThan(sent);
+});
+
+test('with voices off nothing is read on its own, the 🔊 still reads, and switching off stops the voice', async () => {
+  const speech = fakeSpeech();
+  const storage = memoryStorage();
+  storage.setItem('parallang.display', '{"voices":false}');
+  const { user, store } = await openConversation(speech, storage);
+  expect(speech.spoken).toEqual([]);
+  await user.click(screen.getByRole('button', { name: 'Hear Portia say this line' }));
+  expect(speech.spoken).toHaveLength(1);
+  act(() => store.getState().setVoices(true));
+  expect(speech.spoken).toHaveLength(2); // switched on in a conversation: the line is read
+  const stops = speech.stops;
+  act(() => store.getState().setVoices(false));
+  expect(speech.stops).toBe(stops + 1);
+});
+
+test('the microphone writes what it hears into the reply box after what was there, stops the voice, and does not send', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  const box = screen.getByLabelText('Your response');
+  await user.type(box, 'Buongiorno.');
+  const stops = speech.stops;
+  await user.click(screen.getByRole('button', { name: 'Speak your response in Italian' }));
+  expect(speech.stops).toBe(stops + 1); // the character does not talk into the microphone
+  expect(speech.heard.tag).toBe('it-IT');
+  expect(box.placeholder).toBe('Listening for Italian…');
+  act(() => speech.heard.onText('sono', false));
+  expect(box.value).toBe('Buongiorno. sono');
+  act(() => speech.heard.onText('sono Sam', true));
+  expect(box.value).toBe('Buongiorno. sono Sam');
+  // A second tap ends it; the text stays and nothing was sent.
+  await user.click(screen.getByRole('button', { name: 'Stop listening' }));
+  expect(screen.getByRole('button', { name: 'Speak your response in Italian' })).toBeTruthy();
+  expect(box.value).toBe('Buongiorno. sono Sam');
+  expect(store.getState().encounter.transcript).toHaveLength(1);
+  expect(fetch.mock.calls.some(([url]) => String(url).includes('/api/encounter/dialogue'))).toBe(false);
+});
+
+test('a refusal to listen is said under the box with the way round it; without recognition there is no microphone', async () => {
+  const speech = fakeSpeech();
+  const { user } = await openConversation(speech);
+  await user.click(screen.getByRole('button', { name: 'Speak your response in Italian' }));
+  act(() => speech.heard.onEnd('service-not-allowed'));
+  expect(screen.getByRole('button', { name: 'Speak your response in Italian' })).toBeTruthy();
+  expect(screen.getByText(/will not listen here.*keyboard's microphone key/)).toBeTruthy();
+  cleanup();
+  level.views.length = 0;
+  const deaf = fakeSpeech();
+  deaf.listener.supported = false;
+  await openConversation(deaf);
+  expect(screen.queryByRole('button', { name: /Speak your response/ })).toBeNull();
 });

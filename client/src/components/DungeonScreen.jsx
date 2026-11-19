@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import DungeonView from './DungeonView.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
+import { browserSpeech } from '../speech.js';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
@@ -263,9 +264,22 @@ function PartyOffer({ state, encounter }) {
 }
 
 // The dialogue sheet: a site's conversation, or (round 120, `party`) a conversation with a party member.
-function EncounterSheet({ state, site, sites, party = false }) {
+// Round 126: the character's lines are read aloud in the voice of its sheet (`speech.speaker`): each new line when
+// it arrives, unless voices are off in Settings, and any line again from its 🔊. The voice stops when the player
+// sends, starts the microphone or leaves.
+function EncounterSheet({ state, site, sites, party = false, speech }) {
   const { encounter, assessment, language, isLoading, encounterLoading } = state;
   const scrollRef = useRef(null);
+  const { speaker, listener } = speech;
+  const voicesOn = state.display?.voices !== false;
+  const lastLine = encounter?.transcript?.findLast((message) => message.role === 'npc') ?? null;
+  const lineKey = lastLine ? `${encounter.id}:${encounter.transcript.length}:${lastLine.id}` : null; // a new line, not a revealed translation
+  const speakLine = (message) => speaker.speak({ text: message.dialogue.native, tag: language?.tag, voice: encounter?.character?.voice });
+  useEffect(() => {
+    if (voicesOn && lastLine && speaker.supported) speakLine(lastLine);
+    else if (!voicesOn) speaker.stop();
+  }, [voicesOn, lineKey, language?.tag]);
+  useEffect(() => () => speaker.stop(), [speaker]);
   const resolved = encounter?.state === 'resolved';
   const name = encounter?.character?.name ?? (party ? null : site?.characterName) ?? 'them';
   const atGoal = !party && site?.id === state.dungeon.goal;
@@ -290,7 +304,7 @@ function EncounterSheet({ state, site, sites, party = false }) {
         )}
       </header>
       <div className="sheet-scroll" ref={scrollRef}>
-        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} />
+        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} />
         {assessment && (
           <section className="assessment-banner" aria-live="polite">
             <strong>Assessment</strong><p>{assessment.overallFeedback}</p>
@@ -315,7 +329,8 @@ function EncounterSheet({ state, site, sites, party = false }) {
         )}
       </div>
       {!resolved && (
-        <InputBar value={state.draft} onChange={state.setDraft} onSend={state.sendMessage} name={name} loading={isLoading} disabled={isLoading || encounterLoading || !encounter} />
+        <InputBar value={state.draft} onChange={state.setDraft} onSend={(text) => { speaker.stop(); state.sendMessage(text); }} name={name} loading={isLoading} disabled={isLoading || encounterLoading || !encounter}
+          listener={listener} language={language} onListen={() => speaker.stop()} />
       )}
     </section>
   );
@@ -338,8 +353,16 @@ function VictoryCard({ state }) {
   );
 }
 
-export default function DungeonScreen({ useStore }) {
+export default function DungeonScreen({ useStore, speech = browserSpeech() }) {
   const state = useStore();
+  // Round 126: iOS Safari lets a page speak on its own only after it has spoken from inside a tap. The first tap does.
+  const voicesWanted = state.display?.voices !== false;
+  useEffect(() => {
+    if (!voicesWanted || !speech.speaker.supported || typeof window === 'undefined') return undefined;
+    const prime = () => speech.speaker.prime();
+    window.addEventListener('click', prime, { once: true, capture: true });
+    return () => window.removeEventListener('click', prime, { capture: true });
+  }, [voicesWanted, speech]);
   const { initialize, dungeon, phase, siteIndex, progress } = state;
   useEffect(() => { initialize(); }, [initialize]);
   const hudRef = useRef(null);
@@ -362,7 +385,7 @@ export default function DungeonScreen({ useStore }) {
   return (
     <div className={`app-shell phase-${phase}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
       <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
-        closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
+        closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
 
       <header className="hud" ref={hudRef}>
         <div className="hud-title"><strong>ParaLLang</strong><span>{dungeon.name}</span></div>
@@ -390,9 +413,9 @@ export default function DungeonScreen({ useStore }) {
         {phase === 'world' && <WorldCard state={state} cleared={cleared} />}
         {phase === 'overview' && <OverviewCard state={state} sites={sites} />}
         {(phase === 'approach' || phase === 'walk') && <TravelCaption state={state} site={site} />}
-        {inEncounter && <EncounterSheet state={state} site={site} sites={sites} />}
+        {inEncounter && <EncounterSheet state={state} site={site} sites={sites} speech={speech} />}
         {phase === 'site' && site && <SiteCard state={state} sites={sites} site={site} />}
-        {inParty_ && <EncounterSheet state={state} site={site} sites={sites} party />}
+        {inParty_ && <EncounterSheet state={state} site={site} sites={sites} party speech={speech} />}
         {phase === 'victory' && <VictoryCard state={state} />}
       </div>
 
@@ -409,7 +432,8 @@ export default function DungeonScreen({ useStore }) {
         </div>
       )}
 
-      {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} />}
+      {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
+        voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }} />}
     </div>
   );
 }

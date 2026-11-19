@@ -34,7 +34,7 @@ Choose one narration/grading provider in the root `.env`:
 - `LLM_PROVIDER=claude-cli`: install the official Claude Code CLI, run `claude auth login`, and use native `claude.ai` subscription authentication. API keys and third-party providers do not satisfy this mode. A subscription OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) is also accepted and passed to the Claude CLI only; `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL` and the Bedrock/Vertex switches are refused either way.
 - `LLM_PROVIDER=openai`: set `OPENAI_API_KEY`; the default model is `gpt-4o-mini`.
 - `LLM_PROVIDER=ollama`: ensure the configured `OLLAMA_BASE_URL` is already reachable; the default model is `llama3.1`.
-- `LLM_MODEL` optionally selects a model for any provider. When it is blank for a CLI provider, ParaLLang delegates to that CLI's default; it never supplies the OpenAI API default to a CLI.
+- `LLM_MODEL` optionally selects a model for any provider. When it is blank, `claude-cli` gets `sonnet` (round 126; `LLM_MODEL=default` gives the account's own default model, `haiku` is the fastest) and `codex-cli` uses its own default; ParaLLang never supplies the OpenAI API default to a CLI.
 
 Optional CLI settings are `CODEX_CLI_PATH`, `CLAUDE_CLI_PATH`, and `LLM_CLI_TIMEOUT_MS`. Executable settings are paths, not shell commands. The timeout defaults to 120000 ms and accepts integers from 1000 through 300000. Existing `.env` values are preserved when the root file is loaded.
 
@@ -58,7 +58,7 @@ The integration was developed against capability surfaces observed in Codex CLI 
 - `CLI_MISSING`: install the official CLI or set its executable path, then restart the server.
 - `CLI_AUTH_REQUIRED`: sign in through `codex login` or `claude auth login`; do not set an API key as a substitute.
 - `CLI_UNSUPPORTED`: remove conflicting provider configuration or use an installed version whose help exposes the reported isolation controls.
-- `CLI_MODEL_UNAVAILABLE`: remove `LLM_MODEL` to use the CLI default, or select a model available to that subscription.
+- `CLI_MODEL_UNAVAILABLE`: select a model available to that subscription with `LLM_MODEL`; `LLM_MODEL=default` (claude-cli) or a blank `LLM_MODEL` (codex-cli) uses the account's own default.
 - `CLI_QUOTA_EXHAUSTED`, `CLI_BUSY`, or `CLI_TIMEOUT`: keep the retained response in the browser and retry later. Increase `LLM_CLI_TIMEOUT_MS` only when a normal request genuinely needs longer.
 - `CLI_INVALID_RESPONSE` or `CLI_PROCESS_FAILURE`: run `npm run check:provider`, restart the backend after configuration changes, and retry. Raw CLI stderr, prompts, account details, and credentials are intentionally omitted from browser errors and ordinary logs.
 
@@ -212,6 +212,15 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   which is what `npm run dev:client` proxies (the proxy still adds `PARALLANG_TOKEN` itself).
   The same sheet has a slider, "Text panel opacity", for how much of the 3D level shows through the text panels. It
   applies at once and is stored under its own key (`parallang.display`), so it does not reconnect (round 117).
+  A checkbox, "Tilt to look", lets the phone's orientation turn the camera's look at a site by up to 12° sideways and
+  8° up or down (round 125). It is off by default; ticking it is the tap from which iOS Safari is asked for access to
+  motion. `node client/scripts/tilt-check.mjs` checks it in headless Chromium with synthetic orientation events.
+  "Character voices" (round 126, on by default) has each character read its new lines aloud with the browser's speech
+  synthesis, in the voice its sheet names (`voice: { kind, pitch, rate }` in `content/characters/enemies/`, kinds
+  `female`, `male`, `creature`, `funny`); a line's 🔊 repeats it. Where the browser has speech recognition, a 🎤 beside
+  the reply box writes what the player says, in the target language, and the player sends it. Both run in the
+  browser: no key, no cost and no extra call to the model. `node client/scripts/voice-check.mjs` checks the wiring in
+  headless Chromium with recorders in place of the browser's speech.
 - **Server image.** `Dockerfile` (Node 22, the server's production dependencies, `content/`, `prompts/` and Claude
   Code 2.1.325 at `CLAUDE_CLI_PATH=/usr/local/bin/claude`). `render.yaml` is the Render blueprint: one web service,
   health check `/api/health`. With `NODE_ENV=production` the server refuses to start unless `PARALLANG_TOKEN` is set

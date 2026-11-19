@@ -51,6 +51,12 @@ test('registry keeps API defaults and gives CLI providers no API model default u
   assert.equal(resolveLLMConfig({}, { LLM_PROVIDER: 'ollama' }).model, 'llama3.1');
   assert.equal(resolveLLMConfig({}, { LLM_PROVIDER: 'codex-cli', OPENAI_MODEL: 'must-not-cross' }).model, undefined);
   assert.equal(resolveLLMConfig({}, { LLM_PROVIDER: 'claude-cli', LLM_MODEL: 'sonnet' }).model, 'sonnet');
+  // Round 126: the Claude CLI gets Sonnet when no model is named; a named model and the account's default still pass.
+  assert.equal(resolveLLMConfig({}, { LLM_PROVIDER: 'claude-cli' }).model, 'sonnet');
+  assert.equal(resolveLLMConfig({}, { LLM_PROVIDER: 'claude-cli', LLM_MODEL: '  ' }).model, 'sonnet');
+  assert.equal(resolveLLMConfig({}, { LLM_PROVIDER: 'claude-cli', LLM_MODEL: 'haiku' }).model, 'haiku');
+  assert.equal(resolveLLMConfig({}, { LLM_PROVIDER: 'claude-cli', LLM_MODEL: 'default' }).model, 'default');
+  assert.equal(resolveLLMConfig({}, { LLM_PROVIDER: 'claude-cli', OPENAI_MODEL: 'must-not-cross' }).model, 'sonnet');
   assert.equal(createLLMAdapter({ provider: 'codex-cli', executable: paths['codex-cli'], childEnv: process.env }).provider.constructor.name, 'CodexCLIAdapter');
   assert.equal(createLLMAdapter({ provider: 'claude-cli', executable: paths['claude-cli'], childEnv: process.env }).provider.constructor.name, 'ClaudeCLIAdapter');
 });
@@ -61,7 +67,7 @@ test('both CLI adapters preflight native auth and extract schema-valid native st
       const runtime = await fixtureAdapter(t, provider);
       const preflight = await runtime.adapter.preflight();
       assert.match(preflight.authentication, /subscription/);
-      assert.equal(preflight.requestedModel, 'CLI default');
+      assert.equal(preflight.requestedModel, provider === 'claude-cli' ? 'sonnet' : 'CLI default'); // round 126
       const result = await runtime.adapter.structuredChat([
         { role: 'system', content: 'Narrate.' },
         { role: 'user', content: 'TURN DATA: {"task":"greeting"}' },

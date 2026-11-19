@@ -15,7 +15,7 @@ const definitions = {
   },
   'model-unavailable': {
     code: 'CLI_MODEL_UNAVAILABLE', status: 503, retryable: false,
-    message: 'The requested model is unavailable for this CLI subscription. Remove LLM_MODEL or choose a model available to the signed-in account.',
+    message: 'The requested model is unavailable for this CLI subscription. Set LLM_MODEL to a model available to the signed-in account (LLM_MODEL=default uses the account\'s own default with claude-cli).',
   },
   quota: {
     code: 'CLI_QUOTA_EXHAUSTED', status: 429, retryable: true,

@@ -44,7 +44,9 @@ export function resolveLLMConfig(overrides = {}, env = process.env) {
   if (provider === 'claude-cli') {
     return {
       provider,
-      model: sharedModel,
+      // Round 126: Sonnet unless LLM_MODEL says otherwise. Before, a blank LLM_MODEL left the choice to the account's
+      // default, which may be a slower model. LLM_MODEL=default gives that back.
+      model: sharedModel ?? 'sonnet',
       executable: nonBlank(overrides.executable) ?? nonBlank(env.CLAUDE_CLI_PATH) ?? 'claude',
       timeoutMs: parseCliTimeout(overrides.timeoutMs ?? env.LLM_CLI_TIMEOUT_MS),
       runner: overrides.runner,

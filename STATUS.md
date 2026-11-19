@@ -33,6 +33,28 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 126, the characters speak and the player may (on a branch, not deployed)
+
+The owner asked for voiced characters by type, the player's voice recognised as text, the cheapest and easiest way,
+and Sonnet as the default model. In the web dungeon each character now reads its lines aloud with the browser's own
+speech, in the voice its sheet names (female, male, creature or funny, with a pitch and a rate), and a 🎤 beside the
+reply box writes what the player says; the player sends it. Both cost nothing and add no call to the model. The
+Claude CLI provider asks for Sonnet unless `LLM_MODEL` is set; before, it used the account's default. It was checked
+by tests and in a headless browser with recorders, not heard and not on a phone. Reports say the iPhone does not
+listen in a page opened from the home screen; the owner has to try. The findings also list what a turn spends its
+time on: two model calls in a row ([findings](docs/rounds/126/findings.md), pictures in
+[`docs/rounds/126/shots/`](docs/rounds/126/shots/)).
+
+## Addendum 2026-11-19: round 125, tilt to look (on a branch, not deployed)
+
+The owner asked for a gyro feature: the encounter camera should respond to the phone's orientation. Settings in the
+web dungeon now has a "Tilt to look" checkbox, off by default. With it on, tilting the phone at a site turns the
+camera's look by up to 12° sideways and 8° up or down; the camera stays where it stands. Ticking the box is the tap
+from which iOS is asked for access to motion. It was checked by tests and in a headless browser with synthetic
+orientation events, not on a phone. The work is on the branch `claude/inspiring-hypatia-xoybb3`; merging it to
+`main` deploys it, which is the owner's call ([findings](docs/rounds/125/findings.md), pictures in
+[`docs/rounds/125/shots/`](docs/rounds/125/shots/)).
+
 ## Addendum 2026-11-16: round 124, a legend for the map's dark patches, and the patches less dark
 
 The owner asked what the black shadows on the temple map are. They are the fog over the sites not yet found. The
@@ -1126,6 +1148,8 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 126 | 11-19 | Character voices by type and a spoken answer in the web dungeon (the browser's speech); the Claude CLI defaults to Sonnet; what a turn does (on a branch) | [126](docs/rounds/126/architecture.md) | [findings](docs/rounds/126/findings.md) | `5055562` (pre-run record) to round 126 close; build `c9a2ce7` |
+| 125 | 11-19 | Tilt to look: the phone's orientation turns the encounter camera's look at a site (a Settings checkbox, off by default; on a branch) | [125](docs/rounds/125/architecture.md) | [findings](docs/rounds/125/findings.md) | `25d1d0f` (pre-run record) to round 125 close; build `747dbda` |
 | 124 | 11-16 | A legend line for the temple map's fog patches; the patches less dark (0.42 to 0.3 per disc) | [124](docs/rounds/124/architecture.md) | [findings](docs/rounds/124/findings.md) | `17282b3` (pre-run record) to round 124 close; build `77cdf04` |
 | 123 | 11-15 | Opened and only logged: New Game Plus on reused assets (no design yet) | [interview](docs/rounds/123/trail/interview.md) | — | `17282b3` |
 | 122 | 11-15 | Characters at the sites: seven figures built in code in the PS1 look, one per character, in place of the beacons (autonomous, the owner away) | [122](docs/rounds/122/architecture.md) | [findings](docs/rounds/122/findings.md) | `98bb0e4` (pre-run record) to round 122 close, merged to `main` |

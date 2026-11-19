@@ -567,7 +567,7 @@ test('replies that arrive after new settings are dropped', async () => {
 test('a new panel opacity is stored and leaves the conversation and the server alone', async () => {
   const storage = memoryStorage({ 'parallang.display': '{"panelOpacity":0.4}' });
   const { api, s } = makeStore({ storage });
-  expect(s().display).toEqual({ panelOpacity: 0.4 });
+  expect(s().display).toEqual({ panelOpacity: 0.4, tiltLook: false, voices: true });
   await toFirstSite(s);
   s().setDraft('Buongiorno');
   const before = s();
@@ -576,10 +576,10 @@ test('a new panel opacity is stored and leaves the conversation and the server a
   s().openSettings();
   s().setPanelOpacity(0.23);
   s().setPanelOpacity(2);
-  expect(s().display).toEqual({ panelOpacity: 1 });
+  expect(s().display).toEqual({ panelOpacity: 1, tiltLook: false, voices: true });
   s().setPanelOpacity(0.23);
-  expect(s().display).toEqual({ panelOpacity: 0.25 });
-  expect(JSON.parse(storage.values.get('parallang.display'))).toEqual({ panelOpacity: 0.25 });
+  expect(s().display).toEqual({ panelOpacity: 0.25, tiltLook: false, voices: true });
+  expect(JSON.parse(storage.values.get('parallang.display'))).toEqual({ panelOpacity: 0.25, tiltLook: false, voices: true });
   expect(storage.values.has('parallang.settings')).toBe(false);
   expect(s()).toMatchObject({ phase: 'encounter', settingsOpen: true, draft: 'Buongiorno', learnerId: before.learnerId, cameraArrived: true });
   expect(s().encounter).toBe(before.encounter);
