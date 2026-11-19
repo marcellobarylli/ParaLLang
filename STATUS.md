@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: rounds 125 and 126 are deployed; a creation myth in the owner's notes
+
+The owner said to deploy. `main` holds both rounds as `63a3436`. The first Pages deploy failed on a race in an old
+server test (`greeting-prefetch.test.js`: on a busy runner the entrance's 25 ms dwell ended before the test's move);
+the test is fixed, and CI run 44559507379 and Pages run 44559506971 succeeded for `d3913c7`. Render deploys the
+server from `63a3436` on its own; the cloud session could reach neither the live page nor the server, so neither was
+looked at. The owner also asked for a creation myth for "language is the fabric of reality", in Pratchett's manner,
+with stories within stories: it is [`parallang_obsidian/Creation Myth.md`](parallang_obsidian/Creation%20Myth.md),
+linked from the lore notes. It is a draft in the repository's copy of the vault, not in the owner's own vault, and
+nothing of it is in the game yet.
+
 ## Addendum 2026-11-19: round 126, the characters speak and the player may (on a branch, not deployed)
 
 The owner asked for voiced characters by type, the player's voice recognised as text, the cheapest and easiest way,

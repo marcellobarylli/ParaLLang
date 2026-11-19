@@ -89,6 +89,9 @@ Founding father / mother myth (eg Lee Kuan Yew)
 
 A portal opens and the Companion enters the world of the player. This is where the events of the Story begin. 
 
+### Creation Myth
+The full text and its design notes are in [[Creation Myth]] (added 2026-11-19). In short: in the beginning was the Word, "Once" or "Well?" depending on the school, and it could not be left alone, so it kept talking and things came to be as they were mentioned. A branch is a retelling in which one word came out differently. The first stitch is the first translation. Whoever told the Word is in a bigger story: it is stories all the way up, and all the way down, since every book written in the world is a small world. The Telling ends with a correction, headed *Errata*.
+
 ---
 
 # Anulus Mirabilis
@@ -275,6 +278,7 @@ Advanced:
 - Majora's Mask (Moon and World state mechanics)
 
 ### Myths
+- Creation by speech, the models for our [[Creation Myth]]: Gospel of John 1:1 and Genesis 1; Tolkien's Ainulindalë
 - Prometheus / Sisyphus
 - Homer, The Odyssey (the model for [[#Journathan|Journathan]] and The Journey)
 

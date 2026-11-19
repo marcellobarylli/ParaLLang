@@ -19,6 +19,7 @@ Tags:
 - Majora's Mask (Moon and World state mechanics)
 
 ### myths
+- Creation by speech, the models for our [[Creation Myth]]: Gospel of John 1:1 ("In the beginning was the Word") and Genesis 1; Tolkien's Ainulindalë (the world sung, then made real by one word, "Eä")
 - Prometheus / Sisyphus
 - Homer, The Odyssey (the model for [[CHARACTERS#Journathan|Journathan]] and The Journey)
 
