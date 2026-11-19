@@ -38,6 +38,7 @@ const FAR = 25; // a walk that starts further than this from its path (from the 
 const ON_PATH = 1.5; // a camera this near to the path it is about to walk (the way it came) starts from where it stands
 const LEAD_SPEED = 3; // metres per second, the camera's pace to the start of a path
 const OVERVIEW_MARGIN = 8; // metres around the sites and paths in the overview
+const OVERVIEW_MIN = 28; // the overview frames at least this much on each side of its middle (a dungeon of one site, round 133)
 const BEAT = Object.freeze({ pass: 0.045, resolved: 0.045, fail: -0.05, peak: 0.25 }); // a verdict's push or pull, and when it peaks
 // Ta Prohm's outer enclosure (aesthetic's TA_PROHM.outer), the default level extent.
 export const TA_PROHM_BOX = Object.freeze({ minX: -56, maxX: 56, minZ: -56, maxZ: 56 });
@@ -221,12 +222,14 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
   const mapPoints = [...dungeon.sites.map((site) => site.at), ...dungeon.paths.flatMap(({ via }) => via)];
   const mapXs = mapPoints.map((p) => p[0]);
   const mapZs = mapPoints.map((p) => p[1]);
-  const orbitCentre = [(levelBox.minX + levelBox.maxX) / 2, 2, (levelBox.minZ + levelBox.maxZ) / 2 + 6];
+  const orbitCentre = [(levelBox.minX + levelBox.maxX) / 2, levelBox.centreY ?? 2, (levelBox.minZ + levelBox.maxZ) / 2 + 6];
   const orbitRadius = Math.max(levelBox.maxX - levelBox.minX, levelBox.maxZ - levelBox.minZ) / 2;
   // The overview frames the map: one fixed box around every site and path (round 119, critique 1.5).
+  const spread = (values) => Math.max((Math.max(...values) - Math.min(...values)) / 2 + OVERVIEW_MARGIN, OVERVIEW_MIN);
+  const mid = (values) => (Math.max(...values) + Math.min(...values)) / 2;
   const overviewBox = {
-    minX: Math.min(...mapXs) - OVERVIEW_MARGIN, maxX: Math.max(...mapXs) + OVERVIEW_MARGIN,
-    minZ: Math.min(...mapZs) - OVERVIEW_MARGIN, maxZ: Math.max(...mapZs) + OVERVIEW_MARGIN,
+    minX: mid(mapXs) - spread(mapXs), maxX: mid(mapXs) + spread(mapXs),
+    minZ: mid(mapZs) - spread(mapZs), maxZ: mid(mapZs) + spread(mapZs),
   };
 
   const ground = ([x, z], lift) => [x, heightAt(x, z) + lift, z];
@@ -242,7 +245,7 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
     const w = (overviewBox.maxX - overviewBox.minX) / 2;
     const h = (overviewBox.maxZ - overviewBox.minZ) / 2;
     return fromSpherical({
-      target: [(overviewBox.minX + overviewBox.maxX) / 2, 0, (overviewBox.minZ + overviewBox.maxZ) / 2],
+      target: [(overviewBox.minX + overviewBox.maxX) / 2, heightAt((overviewBox.minX + overviewBox.maxX) / 2, (overviewBox.minZ + overviewBox.maxZ) / 2), (overviewBox.minZ + overviewBox.maxZ) / 2],
       yaw: 0, pitch: OVERVIEW_PITCH, distance: 1.06 * fitBox(w, h),
     });
   };

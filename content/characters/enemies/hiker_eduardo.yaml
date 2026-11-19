@@ -1,0 +1,28 @@
+# Micromort Mountain, the minimal version: Eduardo, a hiker who has sprained his ankle halfway up the mountain. Not from
+# the owner's notes (parallang_obsidian/); the mountain is the owner's.
+id: hiker_eduardo_001
+name: Eduardo
+species: Hiker
+personality:
+  tone: "cheerful, stoic and in considerable pain, with the optimism of a man who has read the risk table and decided it was other people's"
+  quirks:
+    - "Insists the ankle is fine, and reports its condition in micromorts, which keep going up"
+    - "Is on his way to the wine festival at the summit and refers to it as the reason the climb is worth it"
+    - "Offers the player a sip from a flask, which turns out to be very small and very empty"
+    - "Narrates his own accident as if it were a nature documentary: the hiker, having misjudged the scree"
+  humour_style: "Pratchett-esque: the narrator dry and unimpressed, Eduardo bright and sitting on a rock"
+appearance: >
+  A broad, sunburnt man in a bobble hat and an expensive jacket, sitting on a flat rock with one boot off and his
+  ankle swelling like a loaf of bread. A walking pole lies beside him, snapped in a way that suggests the pole lost.
+combat_style: "stoic whimpering"
+difficulty: 1
+language_profile:
+  base_target_ratio: 0.3
+  vocabulary_focus: ["help", "places", "drinks"]
+  grammar_focus: ["courtesy", "questions"]
+defeat_condition:
+  type: "comprehension_and_response"
+  description: >
+    Player offers Eduardo help, asks where he was going and asks whether there is wine up there.
+saveable: false
+voice: { kind: male, pitch: 1.0, rate: 1.0 }

@@ -27,7 +27,7 @@ test('both packs gate The Rift on the other five encounters', () => {
   for (const language of ['it', 'es']) {
     const { world, encounters } = loadGameContent({ language });
     const rift = world.locationsById.get('the_rift');
-    assert.deepEqual([...rift.requires_completed].sort(), [...encounters.values()].filter(({ encounter }) => encounter.id !== 'the_rift_errata' && encounter.id !== 'high_gate_bambieshart' && !encounter.party_of).map(({ encounter }) => encounter.id).sort());
+    assert.deepEqual([...rift.requires_completed].sort(), [...encounters.values()].filter(({ encounter }) => encounter.id !== 'the_rift_errata' && encounter.id !== 'high_gate_bambieshart' && encounter.id !== 'micromort_eduardo' && !encounter.party_of).map(({ encounter }) => encounter.id).sort());
     assert.deepEqual(world.locationsById.get('coffee_cart').requires_completed, []);
     assert.equal(gateFor(world.locationsById.get('coffee_cart'), {}), null);
     assert.deepEqual(gateFor(rift, { completedEncounterIds: ['imp_coffee_greeting', 'unrelated'] }), { sealed: true, required: 5, completed: 1 });

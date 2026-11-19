@@ -55,8 +55,11 @@ function mergeDungeon(bundled, served) {
 
 // The server URL and access token come from the settings sheet (stored with the learner id). With no api given,
 // requests read them from this store, so a saved change applies to the next request (round 114).
-export function createGameStore({ api: givenApi, storage = browserStorage(), dungeon, atlas = null, sameOrigin = SAME_ORIGIN_API } = {}) {
+// Round 133: `dungeons` is every dungeon the world map can open, by id (Micromort Mountain beside Ta Prohm). The one in
+// play is `dungeon`, which entering another place on the world map replaces.
+export function createGameStore({ api: givenApi, storage = browserStorage(), dungeon, dungeons = null, atlas = null, sameOrigin = SAME_ORIGIN_API } = {}) {
   if (!dungeon) throw new Error('createGameStore needs the dungeon (src/dungeon.js)');
+  const known = dungeons ?? { [dungeon.id]: dungeon };
   let initializationPromise = null;
   let requestEpoch = 0; // a new learner or server: older replies are dropped
   let siteRequest = 0; // the newest site start wins
@@ -289,9 +292,24 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
 
       enter: () => { if (get().phase === 'attract') set({ phase: 'world' }); },
       // The world map: only a place whose dungeon this client holds can be entered.
+      // Round 133: a place whose dungeon the client holds is entered; if it is not the one in play, the store takes it
+      // over (the run, the conversation and the camera's site start again) and reads that dungeon's run.
       enterPlace: (placeId) => {
-        const place = get().atlas?.places.find((candidate) => candidate.id === placeId);
-        if (get().phase === 'world' && (!get().atlas || place?.dungeonId === dungeon.id)) set({ phase: 'overview' });
+        const s = get();
+        if (s.phase !== 'world') return;
+        const place = s.atlas?.places.find((candidate) => candidate.id === placeId);
+        const target = s.atlas ? (place?.dungeonId ? known[place.dungeonId] : null) : dungeon;
+        if (!target) return;
+        if (target.id === dungeon.id) { set({ phase: 'overview' }); return; }
+        dungeon = target;
+        siteRequest += 1;
+        progressRequest += 1; // a read of the other dungeon's run still in flight must not land on this one
+        runEpoch += 1;
+        set({
+          ...quiet, dungeon: target, progress: null, phase: 'overview', siteIndex: Math.max(0, target.sites.findIndex((site) => site.id === target.start)),
+          walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, starting: false, error: null,
+        });
+        if (s.learnerId) refreshProgress(s.learnerId);
       },
       toWorld: () => { if (get().phase === 'overview') set({ phase: 'world' }); },
 

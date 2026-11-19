@@ -72,7 +72,7 @@ function WorldCard({ state, cleared }) {
   const { atlas, dungeon } = state;
   const places = atlas?.places ?? [{ id: dungeon.id, name: dungeon.name, state: 'current', map: { x: 0.5, y: 0.5 }, description: '', dungeonId: dungeon.id, closed: null }];
   const byId = new Map(places.map((place) => [place.id, place]));
-  const open = places.find((place) => place.dungeonId === dungeon.id);
+  const open = places.filter((place) => place.dungeonId);
   return (
     <section className="card world-card" aria-label="The world map">
       <p className="eyebrow">The world</p>
@@ -96,11 +96,13 @@ function WorldCard({ state, cleared }) {
               <small>{place.description}</small>
               {place.closed && <small className="closed-note">{place.closed}</small>}
             </span>
-            {!place.closed && <span className="site-done">{cleared.length} of {dungeon.sites.length} cleared</span>}
+            {place.dungeonId === dungeon.id && <span className="site-done">{cleared.length} of {dungeon.sites.length} cleared</span>}
           </li>
         ))}
       </ul>
-      {open && <button type="button" className="primary-button big-button" onClick={() => state.enterPlace(open.id)}>Enter {open.name}</button>}
+      {open.map((place) => (
+        <button key={place.id} type="button" className="primary-button big-button" onClick={() => state.enterPlace(place.id)}>Enter {place.name}</button>
+      ))}
     </section>
   );
 }
@@ -349,10 +351,10 @@ function VictoryCard({ state }) {
     <section className="card victory-card" role="status">
       <p className="eyebrow">{dungeon.name}</p>
       <h2>Dungeon cleared</h2>
-      <p>All {dungeon.sites.length} let you pass.{words > 0 && ` Your Spellbook holds ${words} ${words === 1 ? 'entry' : 'words and phrases'}.`}</p>
+      <p>{dungeon.sites.length === 1 ? `${dungeon.sites[0].characterName ?? 'The character'} lets you pass.` : `All ${dungeon.sites.length} let you pass.`}{words > 0 && ` Your Spellbook holds ${words} ${words === 1 ? 'entry' : 'words and phrases'}.`}</p>
       <div className="button-row">
         <button type="button" className="primary-button big-button" onClick={state.playAgain} disabled={isLoading}>Play again</button>
-        <button type="button" className="secondary-button big-button" onClick={state.stay} disabled={isLoading}>Stay in the temple</button>
+        <button type="button" className="secondary-button big-button" onClick={state.stay} disabled={isLoading}>{dungeon.id === 'micromort_mountain' ? 'Stay on the mountain' : 'Stay in the temple'}</button>
         <button type="button" className="secondary-button big-button" onClick={state.openSpellbook}>Spellbook</button>
       </div>
     </section>

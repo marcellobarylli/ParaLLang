@@ -4,4 +4,8 @@
 import taProhm from '../../content/world/dungeons/ta_prohm.yaml';
 import { toClientDungeon } from './dungeonModel.js';
 
+import micromortMountain from '../../content/world/dungeons/micromort_mountain.yaml';
+
 export const DUNGEON = toClientDungeon(taProhm);
+// Round 133: the world map's open places, by dungeon id. Ta Prohm is the one a run starts in.
+export const DUNGEONS = Object.freeze({ [DUNGEON.id]: DUNGEON, ...Object.fromEntries([micromortMountain].map((file) => [file.id, toClientDungeon(file)])) });

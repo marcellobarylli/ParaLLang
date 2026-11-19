@@ -26,6 +26,7 @@ const C = Object.freeze({
   basin: [0.62, 0.64, 0.6], water: [0.16, 0.26, 0.3], gnome: [0.3, 0.55, 0.3], cap: [0.8, 0.2, 0.16], spark: [2.4, 1.9, 0.7],
   worm: [0.86, 0.8, 0.62], wormDark: [0.7, 0.62, 0.46], bookA: [0.5, 0.16, 0.14], bookB: [0.16, 0.3, 0.42], bookC: [0.5, 0.42, 0.2], pencil: [1.1, 0.85, 0.2], lens: [0.7, 0.86, 0.95],
   coat: [0.36, 0.5, 0.5], band: [0.78, 0.62, 0.3], candle: [0.95, 0.92, 0.8], staff: [0.4, 0.3, 0.2],
+  jacket: [0.88, 0.42, 0.14], boot: [0.3, 0.2, 0.14], sock: [0.8, 0.18, 0.16], swollen: [1.5, 0.55, 0.5], hat: [0.2, 0.36, 0.7], bobble: [0.95, 0.94, 0.9], rockSeat: [0.5, 0.5, 0.52], beard: [0.42, 0.3, 0.2],
   rift: [0.1, 0.07, 0.16], riftEdge: [0.24, 0.14, 0.36], seam: [2.6, 2.2, 3], tile: [1.5, 1.45, 1.3],
 });
 
@@ -130,6 +131,25 @@ function wanderer(b) {
   box(C.staff, 0.05, 1.98, 0.05, 0.46, 0, 0.24);
 }
 
+// Eduardo (round 133): a broad hiker in an expensive orange jacket and a bobble hat, sitting on a flat rock halfway up
+// Micromort Mountain, one boot off and the ankle swelling like a loaf of bread, holding it with the air of a man who
+// has decided it is fine.
+function hiker(b) {
+  const { box, gem } = tools(b);
+  box(C.rockSeat, 0.95, 0.42, 0.78, 0, 0, -0.18, { ry: 0.1 });
+  box(C.trousers, 0.3, 0.2, 0.62, -0.2, 0.42, 0.12); // the good leg, bent
+  box(C.trousers, 0.28, 0.16, 0.72, 0.22, 0.42, 0.22, { ry: -0.1 }); // the other, stretched out
+  box(C.sock, 0.2, 0.14, 0.3, 0.26, 0.4, 0.62, { ry: -0.1 }); // the sock, where the boot was
+  box(C.swollen, 0.2, 0.17, 0.2, 0.25, 0.46, 0.5, { ry: -0.1 }); // the ankle
+  box(C.boot, 0.2, 0.24, 0.34, 0.6, 0, 0.3, { ry: 0.5 }); // the boot, set aside
+  box(C.jacket, 0.62, 0.62, 0.44, 0, 0.62, -0.14, { rx: 0.2 }); // the torso, leaning in
+  box(C.jacket, 0.14, 0.14, 0.5, 0.24, 0.7, 0.2, { rx: 0.15 }); // an arm, down to the ankle
+  box(C.skin, 0.28, 0.28, 0.26, 0, 1.28, 0);
+  box(C.beard, 0.24, 0.12, 0.1, 0, 1.2, 0.14);
+  box(C.hat, 0.32, 0.16, 0.3, 0, 1.54, -0.01);
+  gem(C.bobble, 0.1, 0, 1.7, -0.01);
+}
+
 // Errata: a tear in the air shaped roughly like a person described by two witnesses who disagree, with letters
 // drifting off it. It floats.
 function erratum(b) {
@@ -157,6 +177,7 @@ export const FIGURES = Object.freeze({
   letharger: Object.freeze({ build: letharger, scale: 1, focus: 1.27, clearance: 0 }),
   bookworm: Object.freeze({ build: bookworm, scale: 1, focus: 1.38, clearance: 0 }),
   wanderer: Object.freeze({ build: wanderer, scale: 0.86, focus: 1.44, clearance: 0 }),
+  hiker: Object.freeze({ build: hiker, scale: 1, focus: 1.34, clearance: 0 }), // round 133: Eduardo, seated, with his hat at 1.7 m
   erratum: Object.freeze({ build: erratum, scale: 0.84, focus: 1.47, clearance: 0.21 }),
 });
 

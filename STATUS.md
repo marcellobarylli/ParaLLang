@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 133, a minimal Micromort Mountain
+
+The owner asked for a minimal Micromort Mountain: one encounter with Eduardo, a hiker who sprained his ankle, the
+level starting halfway up the mountain and a snowy summit with a wine festival. The world map now opens the
+mountain beside Ta Prohm. Its level is a ridge trail up to a snowfield; Eduardo sits on a ledge halfway up, and
+the festival (bonfire, marquees, tables, bunting, a crowd) stands on the summit as scenery. Eduardo's encounter has
+three objectives (help, the top, a festival) in Italian and Spanish; resolving him completes the run. His location,
+The Micromort Trail, joins the market's world beside The High Gate. Checked with scripted replies and in headless
+Chromium, not against the live model and not on a phone; the Italian and Spanish text awaits the owner's review
+([findings](docs/rounds/133/findings.md), pictures in [`docs/rounds/133/shots/`](docs/rounds/133/shots/)).
+
 ## Addendum 2026-11-19: round 132, the conversation panel's layout
 
 The owner reported from the iPhone that Settings did not scroll and that the pinned objective box (a list since
@@ -1255,6 +1266,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 133 | 11-19 | A minimal Micromort Mountain: Eduardo on a ledge halfway up, a snowy summit with a wine festival | [133](docs/rounds/133/architecture.md) | [findings](docs/rounds/133/findings.md) | round 133 build |
 | 132 | 11-19 | Settings scrolls; the objective box follows the opening line and folds into a bar; the conversation panel drags from the top bar down to its grip | [132](docs/rounds/132/architecture.md) | [findings](docs/rounds/132/findings.md) | `74f16da` (pre-run record) to round 132 close; build `16ec3f9` |
 | 131 | 11-19 | A turn asks for a paragraph: the character asks for everything open and a question of its own; the card lists the open objectives; a reply box of several lines (server half waits for a deploy) | [131](docs/rounds/131/architecture.md) | [findings](docs/rounds/131/findings.md) | `15bb752` (pre-run record) to round 131 close; build `5af7179` |
 | 130 | 11-19 | Target-language words in the narration, each tapped for its meaning (half the line's share; listed by the model, filtered by the server) | [130](docs/rounds/130/architecture.md) | [findings](docs/rounds/130/findings.md) | `2ca2b2b` (pre-run record) to round 130 close; build `d5ece33` |

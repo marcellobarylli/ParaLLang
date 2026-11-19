@@ -75,6 +75,26 @@ export const PRESETS = {
     water: [0.8, 0.95, 0.85],
     corruption: 0,
   },
+  // Round 133: Micromort Mountain. A clear, cold morning above the cloud line; the fog is far, because the summit has to
+  // show from halfway up.
+  alpine: {
+    label: 'Alpine morning',
+    zenith: '#3d73bd',
+    mid: '#9fc2e6',
+    horizon: '#e2edf6',
+    fog: '#d3e1ee',
+    sun: '#fffbe6',
+    sunDir: [-0.38, 0.6, 0.7],
+    sunColor: [0.82, 0.78, 0.68],
+    ambientSky: [0.55, 0.6, 0.72],
+    ambientGround: [0.44, 0.44, 0.5],
+    fogNear: 90,
+    fogFar: 520,
+    cloud: '#ffffff',
+    hills: '#8ea3bd',
+    water: [0.8, 0.95, 1.0],
+    corruption: 0,
+  },
   corrupted: {
     label: 'The dead branch',
     zenith: '#120a22',

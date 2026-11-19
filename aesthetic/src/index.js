@@ -7,6 +7,7 @@ export { createPS1Pipeline, internalResolution } from './ps1/pipeline.js';
 export { createTextures } from './ps1/textures.js';
 export { createTempleWorld, createMaterials, createWorldKit, assembleWorld } from './scene/world.js';
 export { createTaProhmWorld, TA_PROHM, TA_PROHM_TOUR, taProhmHeightAt, isClear as taProhmIsClear } from './scene/taprohm.js';
+export { createMicromortWorld, MICROMORT, MICROMORT_TOUR, micromortHeightAt } from './scene/micromort.js';
 export { createWorld, WORLDS } from './worlds.js';
 export { MeshBuilder } from './scene/geometry.js';
 export { FIGURES, createFigure } from './scene/figures.js';

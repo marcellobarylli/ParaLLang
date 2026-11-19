@@ -74,7 +74,7 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
 
   return (
     <div className={`level level-${status}`} aria-hidden="true">
-      <canvas ref={canvasRef} className="level-canvas" />
+      <canvas key={dungeon.id} ref={canvasRef} className="level-canvas" />
       {status === 'unavailable' && <div className="level-backdrop" />}
       {status === 'ready' && (
         <div className={`site-labels${phase === 'overview' ? ' shown' : ''}`}>

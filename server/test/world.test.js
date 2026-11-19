@@ -35,12 +35,12 @@ async function serviceRuntime(t, { saveDir } = {}) {
   return { service, storage, content, saveDir: dir };
 }
 
-test('the Crumbling Market loads seven connected locations with Gerald at The Coffee Cart', () => {
+test('the Crumbling Market loads eight connected locations with Gerald at The Coffee Cart', () => {
   for (const language of ['it', 'es']) {
     const { world, encounter } = loadGameContent({ language });
     assert.equal(world.start, 'market_entrance');
     assert.deepEqual(world.locations.map((location) => location.id).sort(), [
-      'butchers_stall', 'coffee_cart', 'cracked_fountain', 'market_entrance', 'old_bookshop', 'the_high_gate', 'the_rift',
+      'butchers_stall', 'coffee_cart', 'cracked_fountain', 'market_entrance', 'micromort_trail', 'old_bookshop', 'the_high_gate', 'the_rift',
     ]);
     assert.equal(world.locationsById.get('coffee_cart').encounter, encounter.id);
     assert.equal(encounter.location, 'coffee_cart');

@@ -4,7 +4,7 @@
 // Round 119: the dungeon is a map: every path is checked, and the world file with its fog.
 import { expect, test } from 'vitest';
 import { FIGURES, TA_PROHM, WORLDS, createFigure, createWorldKit, taProhmHeightAt, taProhmIsClear } from '@parallang/aesthetic';
-import { DUNGEON } from '../dungeon.js';
+import { DUNGEON, DUNGEONS } from '../dungeon.js';
 import { ATLAS, ATLAS_FILE } from '../atlas.js';
 import { atlasView, neighbourIds, unexploredSites } from '../dungeonModel.js';
 import { pathPoints } from '../scene/director.js';
@@ -123,10 +123,10 @@ test('the world file: places joined by paths, one of them this dungeon, and a fo
     expect(place.map.y).toBeGreaterThan(0); expect(place.map.y).toBeLessThan(1);
     expect(place.description.trim().length).toBeGreaterThan(10);
     // A place is open (it has a dungeon) or says why it is closed.
-    if (place.dungeon) expect(place.dungeon).toBe(DUNGEON.id); else expect(place.closed.length).toBeGreaterThan(5);
+    if (place.dungeon) expect(DUNGEONS[place.dungeon]).toBeTruthy(); else expect(place.closed.length).toBeGreaterThan(5);
   }
   expect(ATLAS.places.map((place) => [place.id, place.state, place.dungeonId, Boolean(place.closed)])).toEqual([
-    ['ta_prohm', 'current', 'ta_prohm', false], ['angkor_wat', 'known', null, true], ['micromort_mountain', 'known', null, true],
+    ['ta_prohm', 'current', 'ta_prohm', false], ['angkor_wat', 'known', null, true], ['micromort_mountain', 'known', 'micromort_mountain', false],
   ]);
   expect(ATLAS.paths).toEqual([['ta_prohm', 'angkor_wat'], ['ta_prohm', 'micromort_mountain']]); // The Bone Dome is under the fog
   expect(atlasView({ ...ATLAS_FILE, start: 'angkor_wat' }).places.map((place) => place.id)).toEqual(['ta_prohm', 'angkor_wat', 'the_bone_dome']);

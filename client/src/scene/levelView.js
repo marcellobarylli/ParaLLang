@@ -11,7 +11,7 @@ import {
   AdditiveBlending, BufferGeometry, CircleGeometry, CylinderGeometry, DoubleSide, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial,
   OctahedronGeometry, PerspectiveCamera, RingGeometry, Vector3, WebGLRenderer,
 } from 'three';
-import { PRESETS, TA_PROHM, createFigure, createPS1Pipeline, createWorld, taProhmHeightAt } from '@parallang/aesthetic';
+import { PRESETS, TA_PROHM, createFigure, createPS1Pipeline, createWorld, micromortHeightAt, taProhmHeightAt } from '@parallang/aesthetic';
 import { createDirector, pathPoints } from './director.js';
 import { freeRect } from './insets.js';
 
@@ -20,6 +20,8 @@ const FOV = 60;
 const LEVELS = {
   taprohm: { heightAt: taProhmHeightAt, box: { minX: -TA_PROHM.outer, maxX: TA_PROHM.outer, minZ: -TA_PROHM.outer, maxZ: TA_PROHM.outer } },
   angkor: { heightAt: () => 0, box: { minX: -70, maxX: 70, minZ: -70, maxZ: 70 } },
+  // Round 133: the mountain climbs from the valley at +z to the summit plateau at -z; the orbit looks at its middle.
+  micromort: { heightAt: micromortHeightAt, box: { minX: -100, maxX: 100, minZ: -200, maxZ: 100, centreY: 50 } },
 };
 const GOLD = [1, 0.8, 0.36]; // written as is: the PS1 materials and the post pass do no colour conversion
 const RIBBON = { width: 1.5, lift: 0.4 };

@@ -198,7 +198,7 @@ const locationSchema = z.object({
 // The level ids are aesthetic's WORLDS, listed here so the server need not import three.js.
 // Round 119: a dungeon is a map: sites joined by paths (walked in either direction along [a.at, ...via, b.at]), a
 // start, a goal, and seals (`requires`). server/src/dungeon.js holds its rules.
-export const DUNGEON_LEVELS = Object.freeze(['angkor', 'taprohm']);
+export const DUNGEON_LEVELS = Object.freeze(['angkor', 'taprohm', 'micromort']);
 const pointSchema = z.tuple([z.number().finite(), z.number().finite()]);
 const dungeonSchema = z.object({
   id: locationIdSchema,
