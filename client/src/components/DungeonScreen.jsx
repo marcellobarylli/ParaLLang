@@ -301,18 +301,16 @@ function EncounterSheet({ state, site, sites, party = false, speech, height = nu
   const atGoal = !party && site?.id === state.dungeon.goal;
   // The ways on wait for the server's word that the site is cleared (the run is read again after the last answer).
   const cleared = Boolean(sites[site?.id]?.cleared);
-  // A conversation opens at its top (the objective, the briefing, the first line); each turn scrolls to its end.
+  // A conversation opens at its top (the objective, the briefing, the first line), or at its end when it is resumed
+  // part-way. After that the text is the player's own to scroll (round 138): an answer, a verdict or a reply coming
+  // in never moves it, wherever it is.
   const fresh = encounter?.committedPlayerTurns === 0 && !assessment && !isLoading;
+  const freshRef = useRef(fresh);
+  freshRef.current = fresh;
   useEffect(() => {
     const element = scrollRef.current;
-    if (!element) return;
-    // Round 136: when the character has just replied, the text stands at the start of that reply, not at the end of
-    // everything below it (the correction, the assessment). While the player's answer is out, the end.
-    const last = encounter?.transcript?.at(-1);
-    const reply = last?.role === 'npc' && !fresh && !isLoading ? [...element.querySelectorAll('.npc-message')].at(-1) : null;
-    if (reply) element.scrollTop = Math.max(0, reply.getBoundingClientRect().top - element.getBoundingClientRect().top + element.scrollTop - 8);
-    else element.scrollTop = fresh ? 0 : element.scrollHeight;
-  }, [encounter?.id, encounter?.transcript, assessment, isLoading, resolved, fresh]);
+    if (element) element.scrollTop = freshRef.current ? 0 : element.scrollHeight;
+  }, [encounter?.id]);
   return (
     <section className="sheet" aria-label={party ? `${name}, your party` : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
       {/* Round 132: the panel drags from the top bar's edge down to this strip alone. */}
