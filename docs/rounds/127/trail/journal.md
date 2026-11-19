@@ -11,3 +11,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 16:51:00 | 16:51:00 | built | Claude | `round 127: quiet ambient music made in the browser (generated chords, ducked under speech, a Settings switch)` committed as `8a974a6` | `../../../../client/src/ambience.js`, `../../../../client/src/components/DungeonScreen.jsx` |
 | 6 | 16:51:00 | 16:51:00 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 7 | 16:51:00 | 16:51:00 | closed | Claude | Status addendum and index row; merged to `main` with `[skip render]` | `../architecture.md` |
+| 8 | 16:57:07 | 16:57:07 | amended | Claude | Correction to the time of row 1 and of Q0 in `interview.md`, written without reading the clock. From git: the pre-run record was committed at 16:46:56, so the round opened at about 16:45 | — |
