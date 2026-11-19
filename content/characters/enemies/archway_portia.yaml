@@ -25,3 +25,5 @@ defeat_condition:
   description: >
     Player must greet Portia in the target language, say who they are, and ask her who she is in return.
 saveable: false
+# Round 126: how the web client reads the lines aloud (kind: female, male, creature or funny; pitch 0 to 2; rate 0.5 to 2).
+voice: { kind: female, pitch: 1.0, rate: 0.9 }  # fussy and formal, in no hurry

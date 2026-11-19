@@ -14,8 +14,9 @@ const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s moti
 // localStorage; the token is sent as X-ParaLLang-Token. A blank URL means this page's own /api (the dev proxy).
 // Round 117: the opacity of the text panels over the level. The slider applies at once and needs no save; the sheet
 // takes the same background, so it shows the result while the slider moves.
+// Round 126: "Character voices" switches the reading aloud of new lines, and the sheet says what this browser can do.
 // Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, site = SITE }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE }) {
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
   const submit = (event) => {
@@ -47,6 +48,16 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             <input id="settings-opacity" type="range" min={PANEL_OPACITY.min * 100} max={PANEL_OPACITY.max * 100} step={PANEL_OPACITY.step * 100}
               value={percent} aria-valuetext={`${percent}%`} onChange={(event) => onPanelOpacity(Number(event.target.value) / 100)} />
             <small>Lower it to see more of the temple behind the text. It applies at once.</small>
+          </>
+        )}
+        {onVoices && (
+          <>
+            <label className="setting-check" htmlFor="settings-voices">
+              <input id="settings-voices" type="checkbox" checked={voices} onChange={(event) => onVoices(event.target.checked)} disabled={!speechSupport.speak} />
+              <span>Character voices</span>
+            </label>
+            <small>{speechSupport.speak ? 'Each character reads its lines aloud in its own voice. A line\'s 🔊 repeats it.' : 'This browser cannot read aloud.'}</small>
+            <small>{speechSupport.listen ? 'The 🎤 beside the reply box writes what you say. You send it.' : 'This browser cannot listen. The keyboard\'s own microphone key still writes what you say.'}</small>
           </>
         )}
         {onTiltLook && (

@@ -31,3 +31,5 @@ defeat_condition:
     Player must tell Flick to stop, tell it which way to go, tell it the time (round 050), and insist on doing it
     now rather than later.
 saveable: true
+# Round 126: how the web client reads the lines aloud (kind: female, male, creature or funny; pitch 0 to 2; rate 0.5 to 2).
+voice: { kind: funny, pitch: 0.6, rate: 0.6 }  # lethargic: very slow

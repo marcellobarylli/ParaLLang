@@ -30,3 +30,5 @@ defeat_condition:
   description: >
     Player thanks Bambieshart for the Brocade and asks him about Micromort Mountain.
 saveable: false
+# Round 126: how the web client reads the lines aloud (kind: female, male, creature or funny; pitch 0 to 2; rate 0.5 to 2).
+voice: { kind: male, pitch: 0.9, rate: 0.9 }

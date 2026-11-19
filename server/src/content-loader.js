@@ -136,6 +136,13 @@ const characterSchema = z.object({
   }).strict(),
   defeat_condition: z.object({ type: z.string().min(1), description: z.string().min(1) }).strict(),
   saveable: z.boolean(),
+  // Round 126: how the character sounds when the web client reads its lines aloud. `kind` picks a system voice;
+  // `pitch` (0 to 2) and `rate` (0.5 to 2) are the browser's speech synthesis scales and override the kind's own.
+  voice: z.object({
+    kind: z.enum(['female', 'male', 'creature', 'funny']),
+    pitch: z.number().min(0).max(2).optional(),
+    rate: z.number().min(0.5).max(2).optional(),
+  }).strict().optional(),
 }).strict();
 
 const styleGuideSchema = z.object({

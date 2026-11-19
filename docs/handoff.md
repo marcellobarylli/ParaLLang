@@ -53,7 +53,9 @@ the owner for the token; it is not in the repo.
 - The free plan sleeps after about 15 idle minutes. The first request then waits about a minute.
 - Saves live in `/data/saves` inside the container and are lost on every redeploy, which means every push to `main`.
   A paid plan with the commented `disk` block in `render.yaml` keeps them.
-- With the `claude-cli` provider, an encounter start takes about 15 s and a turn about 25 s.
+- With the `claude-cli` provider, an encounter start takes about 15 s and a turn about 25 s. That was measured on the
+  account's default model. From round 126 the provider asks for Sonnet unless `LLM_MODEL` is set; the new times are
+  not measured.
 - Anyone with the token spends the owner's subscription. To rotate it, change `PARALLANG_TOKEN` in Render (the
   service restarts) and re-enter it in each browser's gear sheet.
 - The Claude CLI in the image is pinned to 2.1.325 in the `Dockerfile`.

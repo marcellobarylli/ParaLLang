@@ -66,7 +66,7 @@ test('the coffee break starts anywhere once Gerald has joined, is set where the 
   let encounter = started.data.encounter;
   assert.equal(encounter.location, 'market_entrance');
   assert.equal(encounter.partyConversation, true);
-  assert.deepEqual(encounter.character, { id: 'imp_coffee_001', name: 'Gerald', saveable: true });
+  assert.deepEqual(encounter.character, { id: 'imp_coffee_001', name: 'Gerald', saveable: true, voice: { kind: 'creature', pitch: 1.7, rate: 1.15 } });
   const greeting = narrationPrompts(runtime)[calls];
   assert.match(greeting.at(-1).content, /introduce Gerald at Market Entrance/);
   assert.match(greeting.at(-1).content, /The player approaches Gerald at Market Entrance in The Crumbling Market/);

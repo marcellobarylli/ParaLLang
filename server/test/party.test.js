@@ -45,7 +45,7 @@ test('the start route passes encounterId: the named encounter at its place, NOT_
   const portia = await start({ encounterId: 'market_entrance_tutorial' });
   assert.equal(portia.status, 200);
   assert.equal(portia.data.encounter.encounterId, 'market_entrance_tutorial');
-  assert.deepEqual(portia.data.encounter.character, { id: 'archway_portia_001', name: 'Portia', saveable: false });
+  assert.deepEqual(portia.data.encounter.character, { id: 'archway_portia_001', name: 'Portia', saveable: false, voice: { kind: 'female', pitch: 1, rate: 0.9 } });
 
   const fallback = await start({});
   assert.equal(fallback.status, 200);
@@ -69,7 +69,7 @@ test('a defeated Gerald can be saved to the party once; Portia cannot; nobody jo
   }
 
   const resolved = await defeatGerald(runtime, learnerId);
-  assert.deepEqual(resolved.character, { id: 'imp_coffee_001', name: 'Gerald', saveable: true });
+  assert.deepEqual(resolved.character, { id: 'imp_coffee_001', name: 'Gerald', saveable: true, voice: { kind: 'creature', pitch: 1.7, rate: 1.15 } });
   const world = await api(runtime, '/api/world', { learnerId });
   assert.deepEqual(world.data.world.locations.find((l) => l.id === 'coffee_cart').encounter,
     { id: 'imp_coffee_greeting', completed: true, characterName: 'Gerald', characterId: 'imp_coffee_001', saveable: true });
