@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 139, the walk at its original speed
+
+The owner asked for the camera's walk back at its original speed (2.8 m/s): the conversation already starts while the
+camera walks, so round 135's doubling was not needed ([findings](docs/rounds/139/findings.md)). Travel between visited
+sites stays. Client only; merged with `[skip render]`.
+
 ## Addendum 2026-11-19: round 138, the text stays where the player scrolled it
 
 The owner asked that the conversation text never move by itself when an answer, a verdict or a reply comes in. Round
@@ -1304,6 +1310,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 139 | 11-19 | The walk back at its original speed | [139](docs/rounds/139/architecture.md) | [findings](docs/rounds/139/findings.md) | round 139 build |
 | 138 | 11-19 | The conversation text stays where the player scrolled it | [138](docs/rounds/138/architecture.md) | [findings](docs/rounds/138/findings.md) | round 138 build |
 | 137 | 11-19 | The correction card's practice box grows and wraps, Check below | [137](docs/rounds/137/architecture.md) | [findings](docs/rounds/137/findings.md) | round 137 build |
 | 136 | 11-19 | Courier New everywhere; the text stands at the character's reply | [136](docs/rounds/136/architecture.md) | [findings](docs/rounds/136/findings.md) | round 136 build |

@@ -15,7 +15,7 @@
 // a resolve the camera keeps looking at the site: the player picks the way on (round 116's turn to it is gone).
 
 export const EYE = 1.6; // eye height above the ground, metres
-export const WALK_SPEED = 5.6; // metres per second along a path, between the ramps
+export const WALK_SPEED = 2.8; // metres per second along a path, between the ramps
 export const STANDOFF = 4; // a walk stops this far before its site, along the path, and looks at it
 export const LOOK_AHEAD = 4; // while walking the camera looks this far ahead on the path, never past the site
 export const DURATIONS = Object.freeze({ overview: 2.6, approach: 3.6, descend: 1.6, orbit: 3.6, ramp: 1.4 });

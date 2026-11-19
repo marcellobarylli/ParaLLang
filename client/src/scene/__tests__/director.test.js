@@ -592,7 +592,7 @@ describe('the look follows the phone', () => {
     both(plain, d, d.arrival + 3, (a, b) => {
       expect(distance(b.position, a.position)).toBeLessThan(1e-9);
       const now = sight(b);
-      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.12); // the walk is twice as fast (round 134)
+      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.12); // looser since round 135 (the walk was briefly twice as fast)
       expect(Math.abs(now.pitch - previous.pitch)).toBeLessThan(0.12);
       previous = now;
     });
