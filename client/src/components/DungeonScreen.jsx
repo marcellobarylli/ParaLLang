@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import DungeonView from './DungeonView.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
+import CorrectionCard from './CorrectionCard.jsx';
 import { browserSpeech } from '../speech.js';
 import { browserAmbience } from '../ambience.js';
 import Spellbook from './Spellbook.jsx';
@@ -305,11 +306,12 @@ function EncounterSheet({ state, site, sites, party = false, speech }) {
         )}
       </header>
       <div className="sheet-scroll" ref={scrollRef}>
-        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} />
+        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} beginner={state.display?.beginner !== false} />
         {assessment && (
           <section className="assessment-banner" aria-live="polite">
             <strong>Assessment</strong><p>{assessment.overallFeedback}</p>
-            {assessment.objectiveResults.map((result) => <p key={result.objectiveId}>{result.passed ? '✓' : '→'} {result.feedback}</p>)}
+            {assessment.correction && <CorrectionCard key={encounter?.version} correction={assessment.correction} language={language} speaker={speaker} listener={listener} onUse={resolved ? null : state.setDraft} />}
+            {assessment.objectiveResults.map((result) => <p key={result.objectiveId}>{result.corrected ? '✎' : result.passed ? '✓' : '→'} {result.feedback}</p>)}
             {state.xpGained > 0 && <p className="xp-line">+{state.xpGained} XP{state.levelUp ? ` · Level ${state.levelUp}` : ''}</p>}
           </section>
         )}
@@ -448,6 +450,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       )}
 
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
+        beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
         voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }} />}
     </div>

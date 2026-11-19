@@ -89,9 +89,18 @@ function orderLine(language, objectives, ordered) {
   return `\n- ORDER: these objectives count only in the order given. An objective after one that does not pass stays open whatever its verdict: its feedback must not call it a success or say it will count later; say in English that the player must say it again once the earlier objective is met. Treat it as not passed for every rule above, in \`feedback\` and \`overall_feedback\`: never write an expression in ${language.name} that would satisfy it.`;
 }
 
-export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput, ordered = false }) {
+// Round 129: in beginner mode an objective the learner tried also counts, so only one neither passed nor tried holds
+// the later ones back.
+function beginnerOrderLine(objectives, ordered) {
+  if (!ordered || objectives.length < 2) return '';
+  return '\n- ORDER: these objectives are met in the order given. Mark each on its own. An objective after one that is neither passed nor attempted will be asked for again later: say so kindly in its feedback.';
+}
+
+export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput, ordered = false, beginner = false }) {
   const rubric = targetData(objectives, vocabularyById, { forms: true });
-  const system = fillTemplate(loadTemplate('language/grading.txt'), { language, rubric: JSON.stringify(rubric), order: orderLine(language, objectives, ordered) });
+  const system = beginner
+    ? fillTemplate(loadTemplate('language/grading_beginner.txt'), { language, rubric: JSON.stringify(rubric), order: beginnerOrderLine(objectives, ordered) })
+    : fillTemplate(loadTemplate('language/grading.txt'), { language, rubric: JSON.stringify(rubric), order: orderLine(language, objectives, ordered) });
   return [
     { role: 'system', content: system },
     { role: 'user', content: JSON.stringify({ conversation_context: conversationContext, player_answer: playerInput }) },

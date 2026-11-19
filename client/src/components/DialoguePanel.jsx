@@ -4,7 +4,8 @@ import BilingualText from './BilingualText.jsx';
 // old screen named Gerald), and the tutorial's companion briefing is shown above the first line. The sheet around
 // it scrolls; the objective stays at the top of the sheet (index.css).
 // Round 126: with `onSpeak`, each of the character's lines has a 🔊 that reads it aloud in the character's voice.
-export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null }) {
+// Round 129: in beginner mode the objective card shows the conversation's hearts.
+export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null, beginner = false }) {
   if (!encounter) return <main className="dialogue-panel"><p>Preparing the conversation…</p></main>;
   const name = encounter.character?.name ?? 'them';
   const briefing = encounter.companionBriefing ?? [];
@@ -13,6 +14,11 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
       <section className="objective-card" aria-live="polite">
         {encounter.currentObjective ? <><strong>Current objective</strong><p>{encounter.currentObjective.prompt}</p></> : <strong>Conversation complete</strong>}
         <small>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</small>
+        {beginner && encounter.hearts && (
+          <small className="hearts" aria-label={`${encounter.hearts.limit - encounter.hearts.used} of ${encounter.hearts.limit} hearts left`}>
+            {'♥'.repeat(Math.max(0, encounter.hearts.limit - encounter.hearts.used))}{'♡'.repeat(Math.min(encounter.hearts.limit, encounter.hearts.used))}
+          </small>
+        )}
       </section>
       {briefing.length > 0 && encounter.committedPlayerTurns === 0 && (
         <aside className="briefing-card" aria-label="Your companion's briefing">

@@ -110,7 +110,16 @@ export class FixtureProvider {
     this.calls.push({ messages, options });
     // Round 053 (critique 1.8): the map's atmosphere line has its own branch.
     if (options.schemaName === 'location_atmosphere') return { atmosphere: 'Dust settles on the stalls like it has opinions.' };
-    return options.schemaName === 'dialogue_assessment' ? this.grade(messages) : this.narrate(messages);
+    if (options.schemaName !== 'dialogue_assessment') return this.narrate(messages);
+    // Round 129: asked as the beginner's teacher, a fixture verdict without the beginner fields gets them: an
+    // objective is tried when it passed, and nothing is corrected. A grader that scripts them keeps its own.
+    const verdict = this.grade(messages);
+    if (!/complete beginner/.test(messages[0].content) || !verdict || 'correction' in verdict) return verdict;
+    return {
+      ...verdict,
+      objective_results: verdict.objective_results.map((result) => ({ attempted: result.passed, ...result })),
+      correction: null, correction_translation: null,
+    };
   }
 }
 

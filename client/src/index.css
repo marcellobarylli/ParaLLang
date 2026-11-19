@@ -205,6 +205,17 @@ input { font-size: 16px; min-height: 44px; }
 .speaker-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
 .speak-button { flex: none; padding: .1rem .5rem; }
 .mic-button.listening { background: var(--gold); color: #000; }
+.hearts { display: block; margin-top: .2rem; color: #e0584f; font-size: 1.05rem; letter-spacing: .15em; }
+.correction-card { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; max-width: 100%; box-sizing: border-box; gap: .35rem; margin: .5rem 0; padding: .6rem .7rem; background: rgb(0 0 0 / .32); border: 2px solid; border-color: var(--lo) var(--hi) var(--hi) var(--lo); }
+.correction-text { margin: 0; font-size: 1.1rem; color: var(--gold); }
+.correction-note { margin: 0; font-size: .85rem; }
+.heart-lost { color: #e0584f; font-weight: 700; }
+.practice-row { display: flex; gap: .4rem; align-items: center; min-width: 0; }
+.practice-row input { flex: 1 1 0; min-width: 0; width: 0; }
+.practice-row button { flex: none; }
+.correction-card .speaker-row > p { min-width: 0; overflow-wrap: anywhere; }
+.practice-verdict { margin: 0; font-size: .9rem; }
+.practice-verdict.right { color: #8fd18a; }
 .listen-note { flex: none; margin: 0; padding: .4rem .75rem; font-size: .85rem; color: var(--gold); }
 .build-line { margin: .5rem 0 0; color: var(--dim); font-size: .7rem; line-height: 1.4; overflow-wrap: anywhere; }
 .build-line strong { color: var(--gold); }
