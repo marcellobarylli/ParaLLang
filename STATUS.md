@@ -37,7 +37,7 @@ The entry point for agents: the current state, how the project is logged, and th
 
 The owner's first answer at Mortimer's site came back "Unknown learner ID. Create a learner identity first.", with
 the conversation left dead on the screen. Cause: the hosted server had restarted for a deploy, and on the free Render
-plan a restart wipes the saves; the page still held the old learner's id. Seven server deploys went out on this day.
+plan a restart wipes the saves; the page still held the old learner's id. Five server deploys went out on this day (rounds 125 and 126 together, 128, 129, its Amendment, 130).
 The web client now recognises that answer on any request, says "The server was restarted and lost your run with it.
 A new run has started.", drops the dead conversation and starts a new run at the temple map. The run itself is still
 lost: keeping saves across restarts needs the paid plan's disk (`render.yaml`) or fewer server deploys. Client only,
