@@ -33,7 +33,7 @@ tower; gallery walls carry devatas in niches.
 
 ### The Kiln
 
-Ta Prohm's plan again, burnt (round 132). It is built by the same builder with the same random sequence, so every
+Ta Prohm's plan again, burnt (round 133). It is built by the same builder with the same random sequence, so every
 wall, collapsed bay and root stands where it does in Ta Prohm, and it uses the same sixteen textures: no new texture
 and no new model. The theme changes the rest: soot where the moss was, three bare branches where each canopy blob
 was, low flames for grass tufts, columns of lit smoke for light shafts, a floor of dark rock with hot patches, a

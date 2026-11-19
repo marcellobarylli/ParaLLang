@@ -30,7 +30,7 @@ test('the bundled dungeon is the content file in the client shape, on a level ae
   });
 });
 
-// Round 132: The Kiln is the second dungeon, on Ta Prohm's plan under the ember theme.
+// Round 133: The Kiln is the second dungeon, on Ta Prohm's plan under the ember theme.
 test('The Kiln is bundled too: Ta Prohm\'s sites, encounters, figures, paths and seals on the level `kiln`, under its own names', () => {
   expect(DUNGEONS).toEqual([DUNGEON, KILN]);
   expect(KILN).toMatchObject({ id: 'the_kiln', name: 'The Kiln', level: 'kiln', start: DUNGEON.start, goal: DUNGEON.goal, entrance: DUNGEON.entrance, paths: DUNGEON.paths });
@@ -138,7 +138,7 @@ test('the world file: places joined by paths, one of them this dungeon, and a fo
     expect(place.map.y).toBeGreaterThan(0); expect(place.map.y).toBeLessThan(1);
     expect(place.description.trim().length).toBeGreaterThan(10);
     // A place is open (it has a dungeon) or says why it is closed.
-    // (Round 132: a bundled dungeon, and no dungeon is opened by two places.)
+    // (Round 133: a bundled dungeon, and no dungeon is opened by two places.)
     if (place.dungeon) expect(DUNGEONS.map((dungeon) => dungeon.id)).toContain(place.dungeon); else expect(place.closed.length).toBeGreaterThan(5);
   }
   const opened = ATLAS_FILE.places.filter((place) => place.dungeon).map((place) => place.dungeon);

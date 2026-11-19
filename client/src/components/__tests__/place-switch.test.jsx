@@ -1,4 +1,4 @@
-// Round 132: a second open place on the world map. The store holds every bundled dungeon and plays one at a time:
+// Round 133: a second open place on the world map. The store holds every bundled dungeon and plays one at a time:
 // entering another place switches the dungeon, reads its run and remembers the place. The fake server keeps one run
 // per dungeon by the server's own rules (server/src/dungeon.js) over the real files.
 import { afterEach, expect, test, vi } from 'vitest';

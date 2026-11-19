@@ -1,4 +1,4 @@
-# Round 132: The Kiln, the second dungeon. It is Ta Prohm's plan on the burnt level (`kiln` in
+# Round 133: The Kiln, the second dungeon. It is Ta Prohm's plan on the burnt level (`kiln` in
 # aesthetic/src/scene/taprohm.js: the same walls, heights and clear ground under an ember theme), so the sites, the
 # paths, the seals and the entrance are those of ta_prohm.yaml, and client/src/__tests__/dungeon-file.test.js checks
 # both files against the same wall plan. The encounters and figures are Ta Prohm's too: the round added a place, not

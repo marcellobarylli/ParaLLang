@@ -106,7 +106,7 @@ test('Ta Prohm has its face tower, thitpok trees and light shafts', () => {
   assert.equal(world.preset, 'jungle');
 });
 
-// Round 132: The Kiln is Ta Prohm's plan under another theme.
+// Round 133: The Kiln is Ta Prohm's plan under another theme.
 test('The Kiln is Ta Prohm burnt: the same stone in the same place, no leaves, bare branches, lava and embers', () => {
   const temple = createWorld('taprohm');
   const kiln = createWorld('kiln');

@@ -5,7 +5,7 @@ import { createKilnWorld, createTaProhmWorld } from './scene/taprohm.js';
 export const WORLDS = {
   angkor: { label: 'Angkor Wat', create: createTempleWorld, defaultPreset: 'golden' },
   taprohm: { label: 'Ta Prohm', create: createTaProhmWorld, defaultPreset: 'jungle' },
-  // Round 132: Ta Prohm's plan, burnt. The same layout, heights and clear ground as `taprohm`.
+  // Round 133: Ta Prohm's plan, burnt. The same layout, heights and clear ground as `taprohm`.
   kiln: { label: 'The Kiln', create: createKilnWorld, defaultPreset: 'ember' },
 };
 

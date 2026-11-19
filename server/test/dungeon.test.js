@@ -372,7 +372,7 @@ test('production refuses to start without a usable token, and only then may a CL
   assert.equal(listenHostForProvider('claude-cli', { NODE_ENV: 'production', PARALLANG_TOKEN: 'a-long-enough-token-1234', HOST: '192.0.2.1' }), '192.0.2.1');
 });
 
-// Round 132: The Kiln, a second dungeon on Ta Prohm's plan with Ta Prohm's encounters.
+// Round 133: The Kiln, a second dungeon on Ta Prohm's plan with Ta Prohm's encounters.
 test('The Kiln loads in both packs as Ta Prohm\'s plan on the kiln level, and its run is kept apart from Ta Prohm\'s', async (t) => {
   for (const language of ['it', 'es']) {
     const { dungeons } = loadGameContent({ language });

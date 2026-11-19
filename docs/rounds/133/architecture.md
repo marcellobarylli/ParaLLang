@@ -1,4 +1,4 @@
-# Round 132 architecture
+# Round 133 architecture
 
 **Conversational round, recorded before the build.** Opened on 2026-11-19 by the owner's instruction in a Claude
 Code cloud session, not through the round pipeline. Sections marked *pre-run* must not be edited after the commit
@@ -11,7 +11,7 @@ record (the owner's words, timeline) is in `trail/`; it is not needed to impleme
 - **Findings:** [`findings.md`](findings.md).
 - **Artifact:** `aesthetic/src/` (the level and the shader), `content/world/dungeons/the_kiln.yaml`,
   `content/world/atlas.yaml`, `server/src/content-loader.js`, `client/src/` (store, level view, world card), the
-  tests and `docs/rounds/132/shots/`.
+  tests and `docs/rounds/133/shots/`.
 
 ## Goal (pre-run)
 

@@ -19,7 +19,7 @@ const FOV = 60;
 // What the host needs to know about each aesthetic level a dungeon may name.
 const LEVELS = {
   taprohm: { heightAt: taProhmHeightAt, box: { minX: -TA_PROHM.outer, maxX: TA_PROHM.outer, minZ: -TA_PROHM.outer, maxZ: TA_PROHM.outer } },
-  // Round 132: The Kiln is Ta Prohm's plan under another theme: the same heights and the same box.
+  // Round 133: The Kiln is Ta Prohm's plan under another theme: the same heights and the same box.
   kiln: { heightAt: taProhmHeightAt, box: { minX: -TA_PROHM.outer, maxX: TA_PROHM.outer, minZ: -TA_PROHM.outer, maxZ: TA_PROHM.outer } },
   angkor: { heightAt: () => 0, box: { minX: -70, maxX: 70, minZ: -70, maxZ: 70 } },
 };

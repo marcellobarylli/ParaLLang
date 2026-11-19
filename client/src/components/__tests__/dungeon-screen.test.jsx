@@ -190,7 +190,7 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   expect(screen.getByText(/^7 stand between you and the sanctuary/)).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Enter' }));
 
-  // The world map: Ta Prohm is open, its neighbours are known, The Bone Dome is under the fog. (Round 132: The Kiln
+  // The world map: Ta Prohm is open, its neighbours are known, The Bone Dome is under the fog. (Round 133: The Kiln
   // is a neighbour. This store holds Ta Prohm alone, so The Kiln has no count and no button here; place-switch.test.jsx
   // plays both.)
   expect(screen.getByRole('region', { name: 'The world map' })).toBeTruthy();

@@ -67,7 +67,7 @@ function TitleCard({ state }) {
 
 // Round 119: the world map. Places and the paths between them, as far as the fog allows; an open place can be
 // entered, the others say why not.
-// Round 132: more than one place may be open. The marker is on the place the player is in, each open place shows its
+// Round 133: more than one place may be open. The marker is on the place the player is in, each open place shows its
 // own count of cleared sites once its run is read, and each has its own Enter button.
 function WorldCard({ state, cleared }) {
   const { atlas, dungeon, runs = {} } = state;

@@ -6,7 +6,7 @@ import { unexploredSites } from '../dungeonModel.js';
 
 // Round 115: the web client plays a dungeon. Round 119: the dungeon is a map under a world map. The flow:
 //
-//   attract --enter--> world --enterPlace--> overview (the temple map; round 132: of the place entered)
+//   attract --enter--> world --enterPlace--> overview (the temple map; round 133: of the place entered)
 //   overview --start--> approach (to the site the player stands at) --> encounter (site not cleared) | site (cleared)
 //   overview | site | encounter (resolved) --travel(siteId)--> walk --> encounter | site
 //   encounter (ongoing) --leaveConversation--> site          site --talk--> encounter
@@ -28,7 +28,7 @@ import { unexploredSites } from '../dungeonModel.js';
 //
 // This module imports no YAML and no three.js: server/test/web-client.test.js loads it in plain Node.
 const LEARNER_KEY = 'parallang.learnerId';
-// Round 132: the place on the world map the player last entered. The server keeps a run per dungeon; which place
+// Round 133: the place on the world map the player last entered. The server keeps a run per dungeon; which place
 // the player is in is the browser's to remember.
 export const PLACE_KEY = 'parallang.placeId';
 // Shown when the server no longer knows the learner (its saves were wiped by a restart).
@@ -58,7 +58,7 @@ function mergeDungeon(bundled, served) {
 
 // The server URL and access token come from the settings sheet (stored with the learner id). With no api given,
 // requests read them from this store, so a saved change applies to the next request (round 114).
-// Round 132: `dungeons` is every dungeon a place on the world map may open (`dungeon`, the first one, is always among
+// Round 133: `dungeons` is every dungeon a place on the world map may open (`dungeon`, the first one, is always among
 // them). The store plays one at a time: `enterPlace` switches, and a reload opens the place last entered.
 export function createGameStore({ api: givenApi, storage = browserStorage(), dungeon: firstDungeon, dungeons = null, atlas = null, sameOrigin = SAME_ORIGIN_API } = {}) {
   if (!firstDungeon) throw new Error('createGameStore needs the dungeon (src/dungeon.js)');
@@ -123,7 +123,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       set({ progression: incoming });
       return current && incoming.level > current.level ? incoming.level : null;
     };
-    // Round 132: what the world map shows of a dungeon's run.
+    // Round 133: what the world map shows of a dungeon's run.
     const runOf = (of, progress) => ({ cleared: of.sites.filter((site) => progress.sites[site.id]?.cleared).length, total: of.sites.length, complete: Boolean(progress.complete) });
     const takeView = (view) => {
       set({ progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon), runs: { ...get().runs, [dungeon.id]: runOf(dungeon, view.progress) } });
@@ -241,8 +241,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       language: null,
       dungeon,
       atlas,
-      enterable: [...bundled.keys()], // round 132: the dungeons this client holds; a place opens only one of these
-      runs: {}, // round 132: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
+      enterable: [...bundled.keys()], // round 133: the dungeons this client holds; a place opens only one of these
+      runs: {}, // round 133: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
       progress: null,
       progression: null, // round 121: { xp, level, levelStartsAt, nextLevelAt }, or null with a server that sends none
       xpGained: 0, // what the last answer earned
@@ -305,7 +305,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
             if (!usable(view)) throw new Error(OLD_SERVER);
             set({ learnerId: identity.learnerId, language: identity.language ?? null, connection: 'ready' });
             if (bundled.size > 1) readOtherRuns(identity.learnerId);
-            // Round 132: the player entered another place while the server was answering. Its run is read instead.
+            // Round 133: the player entered another place while the server was answering. Its run is read instead.
             if (asked !== dungeon) {
               if (api.getParty) refreshParty(identity.learnerId);
               await refreshProgress(identity.learnerId);
@@ -329,7 +329,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       },
 
       enter: () => { if (get().phase === 'attract') set({ phase: 'world' }); },
-      // The world map: only a place whose dungeon this client holds can be entered. Round 132: entering another
+      // The world map: only a place whose dungeon this client holds can be entered. Round 133: entering another
       // place than the one the player is in switches the dungeon. Replies still on their way belong to the place
       // left and are dropped, the new place's run is read, and the place is remembered for the next visit.
       enterPlace: (placeId) => {
@@ -360,7 +360,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         try {
           if (get().connection !== 'ready') await get().initialize();
           if (get().connection !== 'ready' || get().phase !== 'overview') return;
-          // Round 132: just after a change of place the run may not be read yet.
+          // Round 133: just after a change of place the run may not be read yet.
           if (!get().progress) await refreshProgress(get().learnerId);
           if (get().phase !== 'overview') return;
           const { progress } = get();

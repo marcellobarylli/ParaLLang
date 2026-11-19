@@ -1,6 +1,6 @@
-// Round 132: opens the built web client in headless Chromium, goes from the title to the world map, into The Kiln,
+// Round 133: opens the built web client in headless Chromium, goes from the title to the world map, into The Kiln,
 // down to its first site and on to the second, then back out and into Ta Prohm, and takes the round's pictures
-// (docs/rounds/132/shots/). It fails if The Kiln does not open its own level, or if the level does not change back.
+// (docs/rounds/133/shots/). It fails if The Kiln does not open its own level, or if the level does not change back.
 //
 //   npm run build -w client
 //   node client/scripts/kiln-shots.mjs [outDir]
@@ -18,7 +18,7 @@ import { PassingProvider, createRuntime, passingAnswers } from '../../server/tes
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '132', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '133', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/';
 const SIZES = [

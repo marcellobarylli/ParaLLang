@@ -473,7 +473,7 @@ function buildPlanting(b, surface, rng) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// The Kiln (round 132): Ta Prohm's plan again, burnt. The same builders, the same textures and the
+// The Kiln (round 133): Ta Prohm's plan again, burnt. The same builders, the same textures and the
 // same random sequence, so every wall, collapsed bay and root stands where it does in Ta Prohm.
 // What differs is the theme: soot for moss, bare branches for leaves, flames for grass, smoke for
 // light shafts, a floor of glowing rock, a moat of lava, and materials that glow in their dark parts.
