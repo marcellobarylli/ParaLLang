@@ -234,6 +234,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for
   its meaning, free. `node client/scripts/narrative-check.mjs` checks the tapping in headless Chromium.
+  From round 131 a turn asks for about a paragraph: the character's line (the CONVERSATION block of
+  `prompts/system/base.txt`) asks in one go for everything still open and adds a question of its own, the
+  conversation's view lists every open objective (`openObjectives`), and the reply box is a growing text area
+  (Enter sends, Shift+Enter makes a new line).
 - **Server image.** `Dockerfile` (Node 22, the server's production dependencies, `content/`, `prompts/` and Claude
   Code 2.1.325 at `CLAUDE_CLI_PATH=/usr/local/bin/claude`). `render.yaml` is the Render blueprint: one web service,
   health check `/api/health`. With `NODE_ENV=production` the server refuses to start unless `PARALLANG_TOKEN` is set

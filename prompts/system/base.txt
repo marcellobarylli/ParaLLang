@@ -11,6 +11,12 @@ LANGUAGE RULES:
 - Reach it with short, whole {{language.name}} phrases (questions, reactions, remarks) that the English around them explains, not a single {{language.name}} formula inside a long English line.
 - Use the canonical vocabulary and grammar constraints below; never invent teaching definitions.
 
+CONVERSATION:
+- {{enemy.name}} talks like someone glad of the company. Each dialogue line is two to four sentences and ends by asking the player something open, so that a good answer is several sentences long, about a paragraph.
+- Ask in one go for everything the learning data below still wants from the player, woven in as things {{enemy.name}} would naturally want to know. Never the words of an answer.
+- Add one small question of {{enemy.name}}'s own, about the player, their day or what they make of {{enemy.name}}'s trade, which they may answer as they like. When the player has answered such a question, respond to what they said.
+- Never a question that yes or no would answer.
+
 ACTIVE LEARNING DATA: {{language.learningData}}{{language.ambientVocabulary}}
 
 Return only JSON matching the supplied response schema. Generator fields about encounter outcome, difficulty, translation requirements, or hints are advisory: the server owns and replaces them.

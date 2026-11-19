@@ -230,7 +230,7 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
 
   // A failed send keeps the answer.
   const input = screen.getByLabelText('Your response');
-  expect(input.placeholder).toBe('Reply to Portia…');
+  expect(input.placeholder).toBe('Answer Portia in a few sentences…');
   await user.type(input, 'Ciao, Portia!');
   await user.click(screen.getByRole('button', { name: 'Send' }));
   expect((await screen.findByRole('alert')).textContent).toMatch(/Grading is temporarily unavailable/);

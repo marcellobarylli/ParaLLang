@@ -15,6 +15,14 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, n
   const listenerRef = useRef(listener);
   listenerRef.current = listener;
   useEffect(() => () => listenerRef.current?.stop(), []);
+  // The box is as tall as its text, up to about six lines.
+  const boxRef = useRef(null);
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!box) return;
+    box.style.height = 'auto';
+    box.style.height = `${Math.min(box.scrollHeight || 0, 150) || ''}${box.scrollHeight ? 'px' : ''}`;
+  }, [value]);
   const canListen = Boolean(listener?.supported);
   const submit = (event) => {
     event.preventDefault();
@@ -43,11 +51,15 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, n
       {problem && <p className="listen-note" role="status">{LISTEN_PROBLEMS[problem] ?? LISTEN_PROBLEMS.failed}</p>}
       <form className="input-bar" onSubmit={submit}>
         <label className="sr-only" htmlFor="player-response">Your response</label>
-        <input
+        {/* Round 131: a box for a paragraph. It grows with the text; Enter sends and Shift+Enter makes a new line. */}
+        <textarea
           id="player-response"
+          ref={boxRef}
+          rows={2}
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder={loading ? 'Sending your response…' : listening ? `Listening for ${languageName}…` : `Reply to ${name}…`}
+          onKeyDown={(event) => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent?.isComposing) submit(event); }}
+          placeholder={loading ? 'Sending your response…' : listening ? `Listening for ${languageName}…` : `Answer ${name} in a few sentences…`}
           disabled={disabled}
           autoComplete="off"
           autoCapitalize="sentences"

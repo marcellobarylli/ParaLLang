@@ -13,7 +13,16 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
   return (
     <main className="dialogue-panel" aria-label={`Conversation with ${name}`}>
       <section className="objective-card" aria-live="polite">
-        {encounter.currentObjective ? <><strong>Current objective</strong><p>{encounter.currentObjective.prompt}</p></> : <strong>Conversation complete</strong>}
+        {/* Round 131: every objective still open, since one answer of a paragraph may meet several. */}
+        {!encounter.currentObjective && <strong>Conversation complete</strong>}
+        {encounter.currentObjective && !(encounter.openObjectives?.length > 1) && <><strong>Current objective</strong><p>{encounter.currentObjective.prompt}</p></>}
+        {encounter.currentObjective && encounter.openObjectives?.length > 1 && (
+          <>
+            <strong>In your answer</strong>
+            <ol className="objective-list">{encounter.openObjectives.map((objective) => <li key={objective.id}>{objective.prompt}</li>)}</ol>
+            <small className="objective-advice">Answer in a few sentences, and do as many of these as you can in one go.</small>
+          </>
+        )}
         <small>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</small>
         {beginner && encounter.hearts && (
           <small className="hearts" aria-label={`${encounter.hearts.limit - encounter.hearts.used} of ${encounter.hearts.limit} hearts left`}>

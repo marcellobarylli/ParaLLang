@@ -35,7 +35,7 @@ export const FOOTNOTE_MAX_LENGTH = 200; // round 081
 // in the narration; at most this many.
 export const NARRATIVE_WORDS = Object.freeze({ max: 12, word: 40, meaning: 80 });
 export const BEGINNER_HEARTS = 3;
-export const CORRECTION_MAX_LENGTH = 300;
+export const CORRECTION_MAX_LENGTH = 600; // round 131: an answer may be a paragraph (300 before)
 const CORRECTED_NOTE = 'An objective marked corrected was said with slips, or in English; the player was understood and has been shown the correct form. Treat it as met. Answer what the player meant. Do not mock the slips, do not remark on which language the player used, and do not repeat the correction.';
 
 // Round 086: does the text hold an inflection of a single-word form (4+ letters) of the objectives' targets?
@@ -676,6 +676,8 @@ export class LearningService {
       // Round 112: `baseLimit` is the objective's own limit, so the app can say how many fewer the strain leaves.
       hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit, baseLimit: this.baseHintLimit(objective), strained: Boolean(encounter.strained) },
       currentObjective: objective ? { id: objective.id, prompt: objective.prompt } : null,
+      // Round 131: every objective still open, in order: one answer of a paragraph may meet several.
+      openObjectives: encounter.state === 'ongoing' ? this.activeObjectives(encounter).map(({ id, prompt }) => ({ id, prompt })) : [],
       // Round 129: the hearts of beginner mode. A new conversation (and Start over) has them all.
       hearts: { used: encounter.heartsUsed ?? 0, limit: BEGINNER_HEARTS },
       transcript,

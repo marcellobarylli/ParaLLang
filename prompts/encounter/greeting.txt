@@ -1,3 +1,3 @@
-Use this turn data to introduce {{enemy.name}} at {{location.name}}. Keep the greeting concise, in character, and beginner-friendly. Do not decide the encounter outcome.
+Use this turn data to introduce {{enemy.name}} at {{location.name}}. Keep the greeting in character and beginner-friendly, and end it with the open questions the conversation rules ask for. Do not decide the encounter outcome.
 
 TURN DATA: {{turnData}}

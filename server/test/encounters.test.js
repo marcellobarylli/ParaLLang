@@ -12,7 +12,7 @@ import { buildNarrationMessages } from '../src/llm/prompt-builder.js';
 import { FixtureProvider, fixedNow } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r130.json'), 'utf8'));
+const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r131.json'), 'utf8'));
 
 const character = {
   id: 'charcutier_fixture', name: 'Bernard', species: 'Charcutier',
@@ -119,8 +119,8 @@ async function runtime(t, contentDir) {
 // Regenerated in round 007, when the style guide entered the prompt on purpose (round 006 pinned the round 005 text),
 // in round 012 for the no-menu rule, in round 026 for the concrete language-mix rule, in round 081 for footnotes, and
 // in round 128, when the owner dropped the meme-culture texture: the humour is in Pratchett's manner, with no slang.
-// Round 130: regenerated again, for the target-language words in the narration.
-test("Gerald's narration prompts match the round 130 fixture and carry the style guide", () => {
+// Round 130: regenerated again, for the target-language words in the narration. Round 131: for the conversation rules.
+test("Gerald's narration prompts match the round 131 fixture and carry the style guide", () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
     const base = { language: c.language, character: c.character, styleGuide: c.styleGuide, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };
@@ -136,6 +136,12 @@ test("Gerald's narration prompts match the round 130 fixture and carry the style
     assert.doesNotMatch(greeting[0].content, /word-level breakdowns/);
     assert.match(greeting[0].content, /about 13% of its words \(in a 40-word narrative, about 5\)/);
     assert.doesNotMatch(greeting[0].content, /Narrative text is always/);
+    assert.match(greeting[0].content, /CONVERSATION:\n- Gerald talks like someone glad of the company\. Each dialogue line is two to four sentences and ends by asking the player something open, so that a good answer is several sentences long, about a paragraph\./);
+    assert.match(greeting[0].content, /Ask in one go for everything the learning data below still wants from the player/);
+    assert.match(greeting[0].content, /Add one small question of Gerald's own/);
+    assert.match(greeting[0].content, /Never a question that yes or no would answer\./);
+    assert.match(greeting.at(-1).content, /end it with the open questions the conversation rules ask for/);
+    assert.doesNotMatch(greeting.at(-1).content, /concise/);
     assert.deepEqual(buildNarrationMessages({
       ...base, objectives: c.encounter.objectives.slice(1), targetRatio: 0.3,
       conversationHistory: [{ role: 'assistant', content: 'Ciao.' }], playerInput: 'Un caffè.',

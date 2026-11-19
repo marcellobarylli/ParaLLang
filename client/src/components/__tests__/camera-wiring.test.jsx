@@ -463,7 +463,7 @@ test('the answer is sent as a beginner\'s while the mode is on, and plainly when
 test('the microphone listens in Italian or in English by a switch, and adds each stretch to the reply box', async () => {
   const speech = fakeSpeech();
   const { user } = await openConversation(speech);
-  const box = screen.getByLabelText('Your response', { selector: 'input' });
+  const box = screen.getByLabelText('Your response', { selector: 'textarea' });
   const toggle = screen.getByRole('button', { name: 'Listening in Italian. Switch to English' });
   expect(toggle.textContent).toBe('IT');
   await user.click(screen.getByRole('button', { name: 'Speak your response in Italian' }));
@@ -495,12 +495,12 @@ test('a server that has forgotten the learner: the page says so, drops the dead 
     if (String(url).endsWith('/api/learner')) learners += 1;
     return served(url, init);
   });
-  await user.type(screen.getByLabelText('Your response', { selector: 'input' }), 'Io quiero un vegetable');
+  await user.type(screen.getByLabelText('Your response', { selector: 'textarea' }), 'Io quiero un vegetable');
   await user.click(screen.getByRole('button', { name: 'Send' }));
   // The reason, in the banner; no conversation; the temple map of a new run.
   expect(await screen.findByText('The server was restarted and lost your run with it. A new run has started.')).toBeTruthy();
   expect(screen.queryByText(/Unknown learner ID/)).toBeNull();
-  await waitFor(() => expect(screen.queryByLabelText('Your response', { selector: 'input' })).toBeNull());
+  await waitFor(() => expect(screen.queryByLabelText('Your response', { selector: 'textarea' })).toBeNull());
   await waitFor(() => expect(store.getState().connection).toBe('ready'));
   const state = store.getState();
   expect(learners).toBe(1); // the learner was created again
@@ -512,4 +512,35 @@ test('a server that has forgotten the learner: the page says so, drops the dead 
   await user.click(screen.getByRole('button', { name: 'Start' }));
   await waitFor(() => expect(store.getState().encounter?.encounterId).toBe(encounterOf('face_gate')));
   expect(store.getState().error).toBeNull();
+});
+
+// Round 131: a turn asks for a paragraph. The card lists every open objective, and the reply box takes several lines.
+test('the objective card lists every open objective with its advice; one alone reads as before', async () => {
+  const speech = fakeSpeech();
+  const { store } = await openConversation(speech);
+  expect(screen.getByText('Current objective')).toBeTruthy(); // a server that sends no list
+  const open = [{ id: 'greet', prompt: 'Greet Portia in Italian.' }, { id: 'introduce', prompt: 'Tell Portia who you are, in Italian.' }, { id: 'ask_back', prompt: 'Ask Portia who she is in return, in Italian.' }];
+  act(() => store.setState({ encounter: { ...store.getState().encounter, currentObjective: open[0], openObjectives: open } }));
+  expect(screen.getByText('In your answer')).toBeTruthy();
+  expect([...document.querySelectorAll('.objective-list li')].map((item) => item.textContent)).toEqual(open.map((objective) => objective.prompt));
+  expect(screen.getByText('Answer in a few sentences, and do as many of these as you can in one go.')).toBeTruthy();
+  expect(screen.queryByText('Current objective')).toBeNull();
+  act(() => store.setState({ encounter: { ...store.getState().encounter, currentObjective: open[2], openObjectives: [open[2]] } }));
+  expect(screen.getByText('Current objective')).toBeTruthy();
+  expect(screen.getByText(open[2].prompt)).toBeTruthy();
+  expect(screen.queryByText('In your answer')).toBeNull();
+});
+
+test('the reply box takes a paragraph: several lines, Shift+Enter for a new line, Enter to send', async () => {
+  const speech = fakeSpeech();
+  const { user } = await openConversation(speech);
+  const box = screen.getByLabelText('Your response', { selector: 'textarea' });
+  expect(box.tagName).toBe('TEXTAREA');
+  expect(box.placeholder).toBe('Answer Portia in a few sentences…');
+  await user.type(box, 'Buongiorno, Portia!{Shift>}{Enter}{/Shift}Io sono Sam.');
+  expect(box.value).toBe('Buongiorno, Portia!\nIo sono Sam.');
+  expect(dialogueCalls()).toHaveLength(0);
+  await user.type(box, '{Enter}');
+  await waitFor(() => expect(dialogueCalls()).toHaveLength(1));
+  expect(JSON.parse(dialogueCalls()[0][1].body).message).toBe('Buongiorno, Portia!\nIo sono Sam.');
 });
