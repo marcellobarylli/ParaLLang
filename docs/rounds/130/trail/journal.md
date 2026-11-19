@@ -11,3 +11,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 17:25:33 | 17:25:33 | built | Claude | `round 130: target-language words in the narration, each tapped for its meaning` committed as `d5ece33` | `../../../../prompts/system/base.txt`, `../../../../server/src/learning-service.js`, `../../../../client/src/components/NarrativeText.jsx` |
 | 6 | 17:25:33 | 17:25:33 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 7 | 17:25:33 | 17:25:33 | closed | Claude | Status addendum and index row; merged to `main`, server included | `../architecture.md` |
+| 8 | 17:25:46 | 17:25:46 | amended | Claude | Correction to row 4's time, whose start ("17:28") was written without reading the clock and lies after its end. From git: the pre-run record was committed at 17:22:07 and the build at 17:25:33, so the run was between those | — |
