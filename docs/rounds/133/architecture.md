@@ -146,3 +146,10 @@ of its own. Ta Prohm builds exactly as before. Suites: aesthetic 55, server 464,
 client was played into The Kiln and back in headless Chromium at 390×844 and 1440×900. The claim boundary held: the
 look was judged from screenshots by Claude, no model was called, and nothing is deployed. See
 [`findings.md`](findings.md) and [`shots/`](shots/).
+
+## Amendment 2026-11-19: renumbered and deployed (Claude, after the build)
+
+Another session merged its own round 132 (the conversation panel's layout) to `main` while this round was on its
+branch, so this round is 133; its earlier commits say 132. The owner said "Amazing let's deploy": the merge to
+`main` deploys the client to GitHub Pages and the server to Render. The Render restart wipes the saves on the free
+plan.
