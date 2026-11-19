@@ -76,3 +76,14 @@ is the phone's rule, not checked here.
 - **Real browser:** the built page starts an audio context at the first tap, the context runs, and oscillators
   sound at the table's frequencies.
 - All client suites and the build keep passing.
+
+## Outcome (2026-11-19)
+
+Built as designed, as `8a974a6`, and deployed to the client alone. The web dungeon plays quiet generated chords from
+the first tap: eight voicings in D flat major, a new one every 14 s chosen from the last one's neighbours, through a
+low-pass filter and a reverberation. The music drops while a line is read aloud and is silent while the microphone
+listens, and "Ambient music" in Settings switches it. One addition: the audio context's `resume`, `suspend` and
+`close` may answer with a rejected promise, which is now ignored. The client's 185 tests pass, and in a real browser
+the page starts the music at the first tap and a 52 s render peaks at 0.094 of full scale. The claim boundary held:
+nobody has heard it but through the rendered sample, which Claude cannot hear either. See
+[`findings.md`](findings.md); the owner's words are in [`trail/interview.md`](trail/interview.md).

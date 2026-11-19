@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 127, ambient music
+
+The owner asked for non-intrusive ambient music, in the manner of a slow ambient track he named. The web dungeon now
+plays quiet generated chords from the first tap, made in the browser with no audio file: eight voicings of our own, a
+new one every 14 s, never the same order twice. The music drops while a character speaks and stops while the
+microphone listens; Settings has an "Ambient music" switch. Measured, not heard: a rendered sample is in the round's
+folder for the owner to listen to ([findings](docs/rounds/127/findings.md),
+[sample](docs/rounds/127/ambience-sample.m4a)).
+
 ## Addendum 2026-11-19: the lore as one book
 
 The owner asked for the whole lore and story of the notes and the world as a linear book, kept outside the vault,
@@ -1173,6 +1182,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 127 | 11-19 | Quiet ambient music made in the browser: generated chords, ducked under speech, a Settings switch | [127](docs/rounds/127/architecture.md) | [findings](docs/rounds/127/findings.md) | `9c52599` (pre-run record) to round 127 close; build `8a974a6` |
 | 126 | 11-19 | Character voices by type and a spoken answer in the web dungeon (the browser's speech); the Claude CLI defaults to Sonnet; what a turn does (on a branch) | [126](docs/rounds/126/architecture.md) | [findings](docs/rounds/126/findings.md) | `5055562` (pre-run record) to round 126 close; build `c9a2ce7` |
 | 125 | 11-19 | Tilt to look: the phone's orientation turns the encounter camera's look at a site (a Settings checkbox, off by default; on a branch) | [125](docs/rounds/125/architecture.md) | [findings](docs/rounds/125/findings.md) | `25d1d0f` (pre-run record) to round 125 close; build `747dbda` |
 | 124 | 11-16 | A legend line for the temple map's fog patches; the patches less dark (0.42 to 0.3 per disc) | [124](docs/rounds/124/architecture.md) | [findings](docs/rounds/124/findings.md) | `17282b3` (pre-run record) to round 124 close; build `77cdf04` |
