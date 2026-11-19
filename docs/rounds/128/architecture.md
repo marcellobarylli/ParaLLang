@@ -73,3 +73,14 @@ the deploy. The server deploy this needs wipes the saves on the free Render plan
 - The prompt built for Gerald carries the new tone and none of the old wording, and matches the new fixture.
 - No style-guide line and no character sheet holds internet slang (a word list in the test).
 - All server suites keep passing; the client is unchanged.
+
+## Outcome (2026-11-19)
+
+Built as designed, as `83534c8`, and deployed with the server. The style guide asks for Terry Pratchett's manner and
+bans internet slang, meme formats and references to the present day; the footnote rule describes a dry aside. Four
+character quirks and one authored line are rewritten in kind. A new test reads the style guide, every character
+sheet and the encounters' English for internet slang. The owner's note carries the dated decision, and the lore book
+lost its three slang lines. The server's 442 tests pass. Also fixed: a second test with the prefetch race of round
+126 (`target-language-guard.test.js`), which failed CI once on the round 127 merge. The claim boundary held: no line
+from the live model was seen. See [`findings.md`](findings.md); the owner's words are in
+[`trail/interview.md`](trail/interview.md).
