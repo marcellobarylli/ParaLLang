@@ -1,6 +1,6 @@
 /* Round 117: a PS1 menu look. Neutral greys, hard corners, bevelled window frames (light top and left, dark bottom
    and right), a banded gradient with a dither in the panels, a sans face with a hard one-pixel shadow. */
-:root { color-scheme: dark; font-family: Verdana, 'DejaVu Sans', Geneva, sans-serif; background: #0e0f0e; color: #ecece4; --ink: #ecece4; --dim: #a9aba5; --gold: #e4b847; --gold-hi: #f6dc8c; --gold-lo: #7d6216; --hi: #b9bbb4; --lo: #171817; --link: #9ad8e6; --side-panel: 440px; }
+:root { color-scheme: dark; font-family: 'Courier New', Courier, monospace; background: #0e0f0e; color: #ecece4; --ink: #ecece4; --dim: #a9aba5; --gold: #e4b847; --gold-hi: #f6dc8c; --gold-lo: #7d6216; --hi: #b9bbb4; --lo: #171817; --link: #9ad8e6; --side-panel: 440px; }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
 html { overscroll-behavior: none; }

@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 136, Courier New and the text at the reply
+
+The owner asked for every font to be Courier New and for the conversation text to stand at the character's reply
+when it arrives, not scrolled to the end below it. Both are in the web client ([findings](docs/rounds/136/findings.md)).
+Client only; merged with `[skip render]`.
+
 ## Addendum 2026-11-19: round 135, a faster walk and travel between discovered places
 
 The owner asked for the camera's walk to be twice as fast and for a move between any two discovered places, not
@@ -1286,6 +1292,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 136 | 11-19 | Courier New everywhere; the text stands at the character's reply | [136](docs/rounds/136/architecture.md) | [findings](docs/rounds/136/findings.md) | round 136 build |
 | 135 | 11-19 | A faster walk; a move between any two discovered places | [135](docs/rounds/135/architecture.md) | [findings](docs/rounds/135/findings.md) | round 135 build |
 | 134 | 11-19 | A minimal Micromort Mountain: Eduardo on a ledge halfway up, a snowy summit with a wine festival | [133](docs/rounds/134/architecture.md) | [findings](docs/rounds/134/findings.md) | round 133 build |
 | 133 | 11-19 | The Kiln: a third level built from Ta Prohm's plan and textures under an ember theme (lava floor and moat, glowing stone, charred bare trees), a second dungeon on it and a second open place on the world map (deployed) | [133](docs/rounds/133/architecture.md) | [findings](docs/rounds/133/findings.md) | `98c1fc4` (pre-run record) to round 133 close; build `b0c2b08` |

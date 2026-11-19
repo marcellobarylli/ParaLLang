@@ -305,7 +305,13 @@ function EncounterSheet({ state, site, sites, party = false, speech, height = nu
   const fresh = encounter?.committedPlayerTurns === 0 && !assessment && !isLoading;
   useEffect(() => {
     const element = scrollRef.current;
-    if (element) element.scrollTop = fresh ? 0 : element.scrollHeight;
+    if (!element) return;
+    // Round 136: when the character has just replied, the text stands at the start of that reply, not at the end of
+    // everything below it (the correction, the assessment). While the player's answer is out, the end.
+    const last = encounter?.transcript?.at(-1);
+    const reply = last?.role === 'npc' && !fresh && !isLoading ? [...element.querySelectorAll('.npc-message')].at(-1) : null;
+    if (reply) element.scrollTop = Math.max(0, reply.getBoundingClientRect().top - element.getBoundingClientRect().top + element.scrollTop - 8);
+    else element.scrollTop = fresh ? 0 : element.scrollHeight;
   }, [encounter?.id, encounter?.transcript, assessment, isLoading, resolved, fresh]);
   return (
     <section className="sheet" aria-label={party ? `${name}, your party` : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
