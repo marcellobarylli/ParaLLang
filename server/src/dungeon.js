@@ -7,8 +7,8 @@
 //   fog      a site is `current` (at), `visited`, `known` (joined by a path to a visited site) or `hidden`
 //   seal     a site with `requires` is sealed until every site it lists is cleared, and one with `requires_level`
 //            (round 121) until the player has that level
-//   pass     a move from `at` to a site is allowed when a path joins them or the site is visited (round 134), the site is not sealed, and either `at` is
-//            cleared or the site is visited: a character lets the player pass once answered, and the way back is open
+//   pass     a move from `at` to a site is allowed from anywhere (round 143) when the site is out of the fog (visited
+//            or `known`) and not sealed. Only a `hidden` site needs a visit to a site next to it first
 //   complete the run is complete when `goal` is cleared; a complete run is open everywhere
 
 const siteIds = (dungeon) => dungeon.sites.map((site) => site.id);
@@ -50,17 +50,18 @@ export function gateFor(site, run, level = 1) {
   };
 }
 
-// Why a move to `siteId` is refused now: 'UNKNOWN_SITE', 'NOT_ADJACENT', 'SEALED' or 'BLOCKED'. Null when it is allowed
+// Why a move to `siteId` is refused now: 'UNKNOWN_SITE', 'NOT_ADJACENT' (hidden in the fog) or 'SEALED'. Null when it is allowed
 // (a move to `at` is allowed and changes nothing). `level` is the player's (round 121).
 export function moveProblem(dungeon, run, siteId, level = 1) {
   const site = typeof siteId === 'string' ? siteOf(dungeon, siteId) : null;
   if (!site) return 'UNKNOWN_SITE';
   if (siteId === run.at) return null;
-  // Round 134: any two discovered (visited) sites are joined, as well as neighbours: the player walks the way between.
-  if (!neighboursOf(dungeon, run.at).includes(siteId) && !run.visited.includes(siteId)) return 'NOT_ADJACENT';
+  // Round 143: every site out of the fog is joined to every other: the player walks the way between. A hidden site is
+  // not (it lifts from the fog when a site next to it is visited).
+  const found = run.visited.includes(siteId) || run.visited.some((id) => neighboursOf(dungeon, id).includes(siteId));
+  if (!found) return 'NOT_ADJACENT';
   if (isComplete(dungeon, run)) return null;
   if (gateFor(site, run, level)?.sealed) return 'SEALED';
-  if (!run.cleared.includes(run.at) && !run.visited.includes(siteId)) return 'BLOCKED';
   return null;
 }
 

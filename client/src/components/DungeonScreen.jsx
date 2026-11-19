@@ -12,7 +12,6 @@ import SettingsSheet from './SettingsSheet.jsx';
 import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
 import { siteStatesOf } from '../stores/gameStore.js';
-import { neighbourIds } from '../dungeonModel.js';
 
 // Round 115: the web client's one screen, the dungeon. The level fills the screen; over it lie the top bar and the
 // dock, which holds the panel of the current phase: the title (attract), the world map (world), the temple map
@@ -197,15 +196,14 @@ function OverviewCard({ state, sites }) {
 function WaysOn({ state, sites, site }) {
   const { dungeon, travelling } = state;
   const here = sites[site.id];
-  // Round 135: the neighbours, and every other site the player has been to.
-  const near = new Set(neighbourIds(dungeon, site.id));
-  const ways = dungeon.sites.filter((way) => way.id !== site.id && sites[way.id] && sites[way.id].state !== 'hidden' && (near.has(way.id) || sites[way.id].state === 'visited'));
+  // Round 143: every site out of the fog, from anywhere.
+  const ways = dungeon.sites.filter((way) => way.id !== site.id && sites[way.id] && sites[way.id].state !== 'hidden');
   if (!ways.length) return null;
   return (
     <ul className="ways" aria-label="Ways on">
       {ways.map((way) => {
         const status = sites[way.id];
-        const why = status.reachable ? null : status.gate?.sealed ? sealNote(status.gate) : !here?.cleared ? `${site.characterName ?? 'Someone'} has not let you pass` : null;
+        const why = status.reachable ? null : status.gate?.sealed ? sealNote(status.gate) : null;
         return (
           <li key={way.id}>
             <button type="button" className="secondary-button" onClick={() => state.travel(way.id)} disabled={!status.reachable || travelling || state.encounterLoading}>

@@ -267,11 +267,8 @@ test('a retreat: the player leaves a conversation they cannot finish, walks back
   s().leaveConversation();
   expect(s()).toMatchObject({ phase: 'site', siteIndex: index('buttress_tree') });
   expect(s().encounter.id).toBe(mortimer); // kept for "Back to the conversation"
-  // Mortimer has not let the player pass: Gerald's court is not reachable, the gate is.
-  expect(siteStatesOf(s()).root_court.reachable).toBe(false);
-  await s().travel('root_court');
-  expect(s().phase).toBe('site');
-  expect(api.moveDungeon).toHaveBeenCalledTimes(1);
+  // Round 143: Mortimer has not been answered, but Gerald's court is out of the fog, so it is reachable.
+  expect(siteStatesOf(s()).root_court.reachable).toBe(true);
 
   await s().talk(); // back in, with no new start
   expect(s()).toMatchObject({ phase: 'encounter' });

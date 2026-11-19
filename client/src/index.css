@@ -257,3 +257,12 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
   html, body, #root { height: 100vh; overflow: visible; }
   .app-shell { position: absolute; inset: 0 0 auto 0; height: 100vh; }
 }
+
+/* Round 142: matched sentences of a line and its translation share a colour (Okabe-Ito, lightened for the dark panels). */
+.sentence[data-sentence="0"] { color: #56b4e9; }
+.sentence[data-sentence="1"] { color: #e69f00; }
+.sentence[data-sentence="2"] { color: #e69ac4; }
+.sentence[data-sentence="3"] { color: #f0e442; }
+.sentence[data-sentence="4"] { color: #2fcb9c; }
+.sentence[data-sentence="5"] { color: #7f9cff; }
+.sentence[data-sentence="6"] { color: #ff8a50; }

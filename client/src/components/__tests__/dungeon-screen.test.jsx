@@ -204,9 +204,9 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
 
   // The temple map: the gate and the two sites a path leads to. The rest is under the fog.
   expect(screen.getByRole('heading', { name: 'Ta Prohm' })).toBeTruthy();
-  expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress Treeunexplored', '3The Root Courtunexplored']);
+  expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress TreeunexploredWalk here', '3The Root CourtunexploredWalk here']);
   expect(screen.getByLabelText('0 of 7 sites cleared')).toBeTruthy();
-  expect(screen.queryByRole('button', { name: /^Walk/ })).toBeNull(); // Portia has not let the player pass
+  expect(screen.getAllByRole('button', { name: /^Walk/ })).toHaveLength(2); // round 143: out of the fog, so open before Portia is answered
   expect(screen.getByText(FOG_LEGEND)).toBeTruthy(); // round 124: the map says what its dark patches are
   await user.click(screen.getByRole('button', { name: 'World map' }));
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
@@ -227,7 +227,8 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   await user.click(screen.getByRole('button', { name: 'Translate word: café' }));
   await screen.findByText(/Hints: 1\/2/);
   await user.click(screen.getByRole('button', { name: 'Translate sentence' }));
-  await screen.findByText('Do you want a coffee? Without milk is civilized.');
+  // Matched sentences are split into coloured spans (round 142), so the line is read as one paragraph.
+  await waitFor(() => expect(document.querySelector('p.translation')?.textContent).toBe('Do you want a coffee? Without milk is civilized.'));
   expect(screen.getByText(/Hints: 0\/2/)).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Translate word: sin leche' }).disabled).toBe(true);
 
@@ -268,7 +269,7 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   await user.click(screen.getByRole('button', { name: 'Leave' }));
   const card = screen.getByRole('region', { name: 'The Buttress Tree' });
   expect(within(card).getByText('Mortimer has not let you pass yet')).toBeTruthy();
-  expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Root Court · cleared', false]]); // the ways back are open
+  expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · unexplored', false], ['Walk to Before the Sanctuary · unexplored', false]]); // every site out of the fog is open (round 143)
   // He walks back to the gate: the move says it leaves the conversation (review 1, R1.6), and the server drops it.
   await user.click(screen.getByRole('button', { name: /Walk to The Face Gate/ }));
   expect(await screen.findByRole('button', { name: 'Talk to Portia again' })).toBeTruthy();
@@ -353,25 +354,24 @@ test('Play again starts a new run from the world map, with the fog back', async 
   expect(screen.getByRole('button', { name: 'Start' })).toBeTruthy();
 });
 
-test('a sealed or blocked way on says why, and a move the server refuses is shown', async () => {
+test('a sealed or hidden way on says why, and a move the server refuses is shown', async () => {
   const user = userEvent.setup();
   // At Bambieshart's site with three sites cleared: the Sanctuary is in sight and sealed.
   const server = fakeServer({ stored: { run: 1, at: 'before_sanctuary', cleared: ['face_gate', 'root_court'], visited: ['face_gate', 'root_court', 'before_sanctuary'] } });
   renderScreen();
   await screen.findByText('Thank Bambieshart.');
   await user.click(screen.getByRole('button', { name: 'Leave' }));
-  expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · unexplored', true], ['Walk to The Sanctuary · unexplored', true]]);
+  expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Buttress Tree · unexplored', false], ['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · unexplored', false], ['Walk to The Sanctuary · unexplored', true]]);
   const list = screen.getByRole('list', { name: 'Ways on' });
-  expect(within(list).getByText('Bambieshart has not let you pass')).toBeTruthy();
   expect(within(list).getByText('sealed: 2 of 6 cleared')).toBeTruthy(); // the fake's level is above every site's
   // The map names the seal too.
   await user.click(screen.getByRole('button', { name: 'Map' }));
   expect(siteRows()).toContain('7The Sanctuarysealed: 2 of 6 cleared');
   // Another tab started a new run: the walk this tab offers is refused, said so, and the map is read again.
   server.run.reset();
-  await user.click(screen.getByRole('button', { name: 'Walk to The Root Court' }));
-  expect((await screen.findByRole('alert')).textContent).toMatch(/Portia has not let you pass yet/);
-  await waitFor(() => expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress Treeunexplored', '3The Root Courtunexplored']));
+  await user.click(screen.getByRole('button', { name: 'Walk to The Sunlit Court' }));
+  expect((await screen.findByRole('alert')).textContent).toMatch(/You can't get there/);
+  await waitFor(() => expect(siteRows()).toEqual(['1The Face GatePortia · you are here', '2The Buttress TreeunexploredWalk here', '3The Root CourtunexploredWalk here']));
 });
 
 // Round 121: levels.

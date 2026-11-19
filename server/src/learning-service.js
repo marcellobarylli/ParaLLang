@@ -830,9 +830,6 @@ export class LearningService {
         const levels = gate.level && gate.level.current < gate.level.required ? ` It opens at level ${gate.level.required} (you are level ${gate.level.current}).` : '';
         throw conflictError(`${target.name} is sealed.${sites}${levels}`, 'SEALED');
       }
-      if (problem === 'BLOCKED') {
-        throw conflictError(`${this.content.encounters.get(here.encounter).character.name} has not let you pass yet.`, 'BLOCKED');
-      }
       const active = this.encounters.get(learnerId);
       const own = active?.dungeonId === dungeon.id;
       if (siteId !== run.at && own && active.state === 'ongoing' && request?.leave !== true) {
