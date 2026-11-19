@@ -225,6 +225,11 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   (`client/src/ambience.js`): no audio file, never the same twice, lowered while a line is read aloud and silent
   while the microphone listens. It starts at the first tap. `node client/scripts/music-check.mjs` checks it in
   headless Chromium and renders a sample to listen to.
+  "Beginner mode" (round 129, on by default) sends `beginner: true` with each answer. The server then grades with
+  `prompts/language/grading_beginner.txt`: the grader says which objectives the player tried and returns their
+  answer in correct target language. A corrected answer costs one of three hearts a conversation and closes the
+  objectives it tried; with no heart left it is corrected and must be said right. The player may say or type the
+  correction again; the app checks that itself. `node client/scripts/beginner-check.mjs` plays it in headless Chromium.
 - **Server image.** `Dockerfile` (Node 22, the server's production dependencies, `content/`, `prompts/` and Claude
   Code 2.1.325 at `CLAUDE_CLI_PATH=/usr/local/bin/claude`). `render.yaml` is the Render blueprint: one web service,
   health check `/api/health`. With `NODE_ENV=production` the server refuses to start unless `PARALLANG_TOKEN` is set

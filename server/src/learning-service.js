@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { gradingResponseSchema, encounterResponseSchema, locationAtmosphereSchema } from './llm/schemas.js';
+import { beginnerGradingResponseSchema, gradingResponseSchema, encounterResponseSchema, locationAtmosphereSchema } from './llm/schemas.js';
 import { buildAtmosphereMessages, buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
 import {
   calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
@@ -29,6 +29,11 @@ export function correctionNote(language, ratio) {
 
 export const ATMOSPHERE_MAX_LENGTH = 300;
 export const FOOTNOTE_MAX_LENGTH = 200; // round 081
+// Round 129: beginner mode. A conversation's hearts, each of which pays for one corrected answer, and the longest
+// correction kept. CORRECTED_NOTE is told to the narrator when a correction closed an objective.
+export const BEGINNER_HEARTS = 3;
+export const CORRECTION_MAX_LENGTH = 300;
+const CORRECTED_NOTE = 'An objective marked corrected was said with slips; the player was understood and has been shown the correct form. Treat it as met. Answer what the player meant. Do not mock the slips and do not repeat the correction.';
 
 // Round 086: does the text hold an inflection of a single-word form (4+ letters) of the objectives' targets?
 // Round 088: split so kept lines can test one entry's forms (`inflectsForms` takes the surface forms as written).
@@ -641,6 +646,8 @@ export class LearningService {
       // Round 112: `baseLimit` is the objective's own limit, so the app can say how many fewer the strain leaves.
       hints: { used: revealKeys.length, remaining: Math.max(0, limit - revealKeys.length), limit, baseLimit: this.baseHintLimit(objective), strained: Boolean(encounter.strained) },
       currentObjective: objective ? { id: objective.id, prompt: objective.prompt } : null,
+      // Round 129: the hearts of beginner mode. A new conversation (and Start over) has them all.
+      hearts: { used: encounter.heartsUsed ?? 0, limit: BEGINNER_HEARTS },
       transcript,
     };
   }
@@ -1109,9 +1116,9 @@ export class LearningService {
     });
   }
 
-  validateAssessment(raw, objectives, playerInput) {
+  validateAssessment(raw, objectives, playerInput, schema = gradingResponseSchema) {
     let assessment;
-    try { assessment = gradingResponseSchema.parse(raw); }
+    try { assessment = schema.parse(raw); }
     catch { throw retryableError('The grading response was invalid. Your answer can be retried unchanged.', 'INVALID_GRADING'); }
     const allowed = new Map(objectives.map((objective) => [objective.id, objective]));
     const seen = new Set();
@@ -1161,22 +1168,37 @@ export class LearningService {
       if (current.state !== 'ongoing') throw validationError('This encounter is already complete. Restart to play again.');
       const definition = this.definition(current);
       const objectives = this.activeObjectives(current);
+      // Round 129: beginner mode, asked for by the client with each answer. The grader also says what the player
+      // tried and gives their answer in correct target language; a heart pays for a corrected answer.
+      const beginner = request.beginner === true;
+      const gradingSchema = beginner ? beginnerGradingResponseSchema : gradingResponseSchema;
       const gradingRaw = await this.callProvider(buildGradingMessages({
         language: this.content.language, objectives, vocabularyById: this.content.vocabularyById,
         conversationContext: current.transcript.map((item) => item.role === 'player' ? item.text : item.dialogue.native),
         playerInput: message,
         ordered: definition.encounter.objectives_unordered !== true,
-      }), gradingResponseSchema, 'dialogue_assessment', 'The language assessor');
-      const assessment = this.validateAssessment(gradingRaw, objectives, message);
+        ...(beginner ? { beginner } : {}),
+      }), gradingSchema, 'dialogue_assessment', 'The language assessor');
+      const assessment = this.validateAssessment(gradingRaw, objectives, message, gradingSchema);
 
       // In order: the leading run of passes closes. Unordered (round 045): every passed open objective closes.
-      const passedOf = (objective) => assessment.objective_results.find((item) => item.objective_id === objective.id)?.passed === true;
+      const resultOf = (objective) => assessment.objective_results.find((item) => item.objective_id === objective.id);
+      const passedOf = (objective) => resultOf(objective)?.passed === true;
+      // Round 129: the correction, when the grader gave one and the player tried at least one objective. With a heart
+      // left it costs that heart and closes the objectives it covers (those tried and not passed); with none it is
+      // only shown. One heart for an answer, however many slips.
+      const heartsUsed = current.heartsUsed ?? 0;
+      const correctionText = beginner && typeof assessment.correction === 'string' ? assessment.correction.trim().replace(/\s+/g, ' ').slice(0, CORRECTION_MAX_LENGTH) : '';
+      const corrected = beginner && correctionText !== '' && assessment.objective_results.some((result) => result.attempted || result.passed);
+      const heartLost = corrected && heartsUsed < BEGINNER_HEARTS;
+      const forgivenOf = (objective) => heartLost && !passedOf(objective) && resultOf(objective)?.attempted === true;
       const unordered = definition.encounter.objectives_unordered === true;
       const closing = [];
       for (const objective of objectives) {
-        if (passedOf(objective)) closing.push(objective);
+        if (passedOf(objective) || forgivenOf(objective)) closing.push(objective);
         else if (!unordered) break;
       }
+      const forgivenIds = new Set(closing.filter((objective) => !passedOf(objective)).map((objective) => objective.id));
       const passedCount = closing.length;
       const nextObjectiveIndex = current.objectiveIndex + passedCount;
       const nextPassedIds = [...(current.passedObjectiveIds ?? []), ...closing.map((objective) => objective.id)];
@@ -1191,11 +1213,14 @@ export class LearningService {
       const heldIds = new Set(unordered ? [] : assessment.objective_results
         .filter((result) => result.passed && !closingIds.has(result.objective_id)).map((result) => result.objective_id));
       const heldMark = (id) => (heldIds.has(id) ? { held: true } : {});
+      // Round 129: an objective closed by a correction is passed for the narrator and the client, and marked.
+      const correctedMark = (id) => (forgivenIds.has(id) ? { corrected: true } : {});
       const decision = {
-        objectiveResults: assessment.objective_results.map(({ objective_id, passed }) => ({ objectiveId: objective_id, passed, ...heldMark(objective_id) })),
+        objectiveResults: assessment.objective_results.map(({ objective_id, passed }) => ({ objectiveId: objective_id, passed: passed || forgivenIds.has(objective_id), ...heldMark(objective_id), ...correctedMark(objective_id) })),
         encounterState: resolved ? 'resolved' : 'ongoing',
         nextObjectiveId: remaining[0]?.id ?? null,
         ...(heldIds.size ? { held_note: HELD_NOTE } : {}),
+        ...(forgivenIds.size ? { corrected_note: CORRECTED_NOTE } : {}),
       };
       // Round 045 (critique 1.5): in an unordered encounter, help taken on the current objective may serve any open
       // objective, so a reveal caps the quality of every objective graded this turn (round 092: ordered ones too). Round 070 (critique 1.8): the
@@ -1210,12 +1235,14 @@ export class LearningService {
       const responseAssessment = {
         overallFeedback: assessment.overall_feedback,
         objectiveResults: assessment.objective_results.map((result) => ({
-          objectiveId: result.objective_id, passed: result.passed, ...heldMark(result.objective_id), feedback: result.feedback,
+          objectiveId: result.objective_id, passed: result.passed || forgivenIds.has(result.objective_id), ...heldMark(result.objective_id), ...correctedMark(result.objective_id), feedback: result.feedback,
           vocabularyEvidence: result.vocabulary_evidence.map((evidence) => ({
             vocabularyId: evidence.vocabulary_id, evidence: evidence.evidence,
             quality: evidence.quality, effectiveQuality: evidence.effective_quality,
           })),
         })),
+        // Round 129: what the player meant, in correct target language, and whether it cost a heart.
+        ...(corrected ? { correction: { text: correctionText, translation: typeof assessment.correction_translation === 'string' ? assessment.correction_translation.trim() : null, heartLost } } : {}),
       };
       // Round 070: the verdict is readable through progress() while the reply is written; this run removes only its
       // own entry, inside the lock (critique 1.4).
@@ -1263,6 +1290,7 @@ export class LearningService {
         stagedEncounter.committedPlayerTurns = nextTurns;
         stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
         stagedEncounter.version += 1;
+        if (heartLost) stagedEncounter.heartsUsed = heartsUsed + 1; // round 129
         // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
         // holds the encounter's containment file.
         if (resolved && definition.encounter.party_of) {

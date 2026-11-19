@@ -374,3 +374,86 @@ test('a refusal to listen is said under the box with the way round it; without r
   await openConversation(deaf);
   expect(screen.queryByRole('button', { name: /Speak your response/ })).toBeNull();
 });
+
+// Round 129: beginner mode on the screen. The server's verdict is put into the store as the server sends it.
+const CORRECTION = { text: 'Buongiorno! Mi chiamo Luigione. Come ti chiami?', translation: 'Good morning! My name is Luigione. What is your name?', heartLost: true };
+const corrected = (store, { correction = CORRECTION, used = 1 } = {}) => act(() => store.setState({
+  encounter: { ...store.getState().encounter, version: store.getState().encounter.version + 1, hearts: { used, limit: 3 } },
+  assessment: { overallFeedback: 'You got your meaning across.', correction, objectiveResults: [{ objectiveId: 'objective-0', passed: true, corrected: true, feedback: 'Nearly: the greeting is spelled buongiorno.' }] },
+}));
+const dialogueCalls = () => fetch.mock.calls.filter(([url]) => String(url).includes('/api/encounter/dialogue'));
+
+test('beginner mode: the hearts, the corrected sentence with its heart, and a practice box that sends nothing', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  act(() => store.setState({ encounter: { ...store.getState().encounter, hearts: { used: 0, limit: 3 } } }));
+  expect(screen.getByLabelText('3 of 3 hearts left').textContent).toBe('♥♥♥');
+  corrected(store);
+  expect(screen.getByLabelText('2 of 3 hearts left').textContent).toBe('♥♥♡');
+  const card = screen.getByRole('region', { name: 'What you meant' });
+  expect(card.textContent).toContain(CORRECTION.text);
+  expect(card.textContent).toContain(CORRECTION.translation);
+  expect(screen.getByLabelText('One heart used').textContent).toBe('−1 ♥');
+  expect(screen.getByText(/✎ Nearly: the greeting is spelled buongiorno\./)).toBeTruthy();
+  expect(screen.queryByText(/No hearts left/)).toBeNull();
+  // Hear it.
+  await user.click(screen.getByRole('button', { name: 'Hear the corrected sentence' }));
+  expect(speech.spoken.at(-1)).toEqual({ text: CORRECTION.text, tag: 'it-IT' });
+  // Type it wrongly, then rightly: the app answers, the server hears nothing.
+  const box = screen.getByLabelText('Say it yourself');
+  expect(screen.getByRole('button', { name: 'Check' }).disabled).toBe(true);
+  await user.type(box, 'Buongiorno! Me chiamo Luigione. Come ti chiami?');
+  await user.click(screen.getByRole('button', { name: 'Check' }));
+  expect(screen.getByText(/Not quite\. Look again at:/).textContent).toContain('Mi');
+  expect(screen.getByText(/you have moved on either way/)).toBeTruthy();
+  await user.clear(box);
+  await user.type(box, 'buongiorno mi chiamo luigione come ti chiami');
+  await user.click(screen.getByRole('button', { name: 'Check' }));
+  expect(screen.getByText("✓ That's it.")).toBeTruthy();
+  expect(dialogueCalls()).toHaveLength(0);
+  expect(store.getState().encounter.hearts.used).toBe(1);
+  // The reply box for the next answer is still there.
+  expect(screen.getByLabelText('Your response')).toBeTruthy();
+});
+
+test('beginner mode: the correction can be spoken, and is checked when the listening ends', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  corrected(store);
+  await user.click(screen.getByRole('button', { name: 'Say the corrected sentence in Italian' }));
+  expect(speech.heard.tag).toBe('it-IT');
+  act(() => speech.heard.onText('buongiorno mi chiamo Luigione come ti chiami', true));
+  expect(screen.getByLabelText('Say it yourself').value).toBe('buongiorno mi chiamo Luigione come ti chiami');
+  act(() => speech.heard.onEnd(null));
+  expect(screen.getByText("✓ That's it.")).toBeTruthy();
+  expect(dialogueCalls()).toHaveLength(0);
+});
+
+test('beginner mode: with no heart left the correction says so and can be put in the reply box', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  corrected(store, { correction: { ...CORRECTION, text: 'Buongiorno!', translation: 'Good morning!', heartLost: false }, used: 3 });
+  expect(screen.getByLabelText('0 of 3 hearts left').textContent).toBe('♡♡♡');
+  expect(screen.queryByLabelText('One heart used')).toBeNull();
+  expect(screen.getByText(/No hearts left, so this one has to be said right to move on\./)).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Put it in the reply box' }));
+  expect(screen.getByLabelText('Your response').value).toBe('Buongiorno!');
+});
+
+test('the answer is sent as a beginner\'s while the mode is on, and plainly when it is off; off shows no hearts', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  const body = () => JSON.parse(dialogueCalls().at(-1)[1].body);
+  await user.type(screen.getByLabelText('Your response'), 'wrong');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  await waitFor(() => expect(dialogueCalls()).toHaveLength(1));
+  expect(body().beginner).toBe(true);
+  await waitFor(() => expect(screen.getByLabelText('Your response').value).toBe(''));
+  act(() => store.getState().setBeginner(false));
+  act(() => store.setState({ encounter: { ...store.getState().encounter, hearts: { used: 0, limit: 3 } } }));
+  expect(screen.queryByLabelText(/hearts left/)).toBeNull();
+  await user.type(screen.getByLabelText('Your response'), 'wrong');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  await waitFor(() => expect(dialogueCalls()).toHaveLength(2));
+  expect('beginner' in body()).toBe(false);
+});

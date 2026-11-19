@@ -483,6 +483,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       setVoices: (on) => set({ display: saveDisplay({ ...get().display, voices: on !== false }, storage) }),
       // Round 127: whether the ambient music plays.
       setMusic: (on) => set({ display: saveDisplay({ ...get().display, music: on !== false }, storage) }),
+      // Round 129: beginner mode, sent with each answer.
+      setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       saveSettings: async (values) => {
@@ -514,7 +516,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const epoch = requestEpoch;
         set({ isLoading: true, error: null, pendingInput: text, draft: text });
         try {
-          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text });
+          // Round 129: beginner mode travels with the answer (the server grades strictly without it).
+          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(state.display?.beginner !== false ? { beginner: true } : {}) });
           if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
           // A held pass (said too early in an ordered encounter) closes nothing (round 051).
           const closed = (result.assessment?.objectiveResults ?? []).filter((entry) => entry.passed && !entry.held).length;
