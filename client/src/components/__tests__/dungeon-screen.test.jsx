@@ -357,7 +357,7 @@ test('a sealed or blocked way on says why, and a move the server refuses is show
   renderScreen();
   await screen.findByText('Thank Bambieshart.');
   await user.click(screen.getByRole('button', { name: 'Leave' }));
-  expect(ways()).toEqual([['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · unexplored', true], ['Walk to The Sanctuary · unexplored', true]]);
+  expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · unexplored', true], ['Walk to The Sanctuary · unexplored', true]]);
   const list = screen.getByRole('list', { name: 'Ways on' });
   expect(within(list).getByText('Bambieshart has not let you pass')).toBeTruthy();
   expect(within(list).getByText('sealed: 2 of 6 cleared')).toBeTruthy(); // the fake's level is above every site's
@@ -384,7 +384,7 @@ test('levels on the screen: the level in the top bar, what an answer earned, a l
   // 35 XP: 355, still level 4. The six are cleared, and the seal now asks only for the level.
   expect(screen.getByText('+35 XP')).toBeTruthy();
   expect(screen.getByRole('img', { name: 'Level 4: 355 XP, level 5 at 360' })).toBeTruthy();
-  await waitFor(() => expect(ways()).toEqual([['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · cleared', false], ['Walk to The Sanctuary · unexplored', true]]));
+  await waitFor(() => expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Buttress Tree · cleared', false], ['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · cleared', false], ['Walk to The Library · cleared', false], ['Walk to The Sanctuary · unexplored', true]]));
   expect(within(screen.getByRole('list', { name: 'Ways on' })).getByText('opens at level 5 (you are level 4)')).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Map' }));
   expect(siteRows()).toContain('7The Sanctuaryopens at level 5 (you are level 4)');

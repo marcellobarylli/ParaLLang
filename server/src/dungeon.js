@@ -7,7 +7,7 @@
 //   fog      a site is `current` (at), `visited`, `known` (joined by a path to a visited site) or `hidden`
 //   seal     a site with `requires` is sealed until every site it lists is cleared, and one with `requires_level`
 //            (round 121) until the player has that level
-//   pass     a move from `at` to a site is allowed when a path joins them, the site is not sealed, and either `at` is
+//   pass     a move from `at` to a site is allowed when a path joins them or the site is visited (round 134), the site is not sealed, and either `at` is
 //            cleared or the site is visited: a character lets the player pass once answered, and the way back is open
 //   complete the run is complete when `goal` is cleared; a complete run is open everywhere
 
@@ -56,7 +56,8 @@ export function moveProblem(dungeon, run, siteId, level = 1) {
   const site = typeof siteId === 'string' ? siteOf(dungeon, siteId) : null;
   if (!site) return 'UNKNOWN_SITE';
   if (siteId === run.at) return null;
-  if (!neighboursOf(dungeon, run.at).includes(siteId)) return 'NOT_ADJACENT';
+  // Round 134: any two discovered (visited) sites are joined, as well as neighbours: the player walks the way between.
+  if (!neighboursOf(dungeon, run.at).includes(siteId) && !run.visited.includes(siteId)) return 'NOT_ADJACENT';
   if (isComplete(dungeon, run)) return null;
   if (gateFor(site, run, level)?.sealed) return 'SEALED';
   if (!run.cleared.includes(run.at) && !run.visited.includes(siteId)) return 'BLOCKED';

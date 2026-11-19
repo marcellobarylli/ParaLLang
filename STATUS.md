@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 134, a faster walk and travel between discovered places
+
+The owner asked for the camera's walk to be twice as fast and for a move between any two discovered places, not
+only neighbours. The walk is 5.6 m/s. A move to any visited site is allowed (the server's pass rule), and the camera
+walks the paths between ([findings](docs/rounds/134/findings.md)). Deployed with rounds 133 and 134 by a merge to
+`main`; the Render deploy wipes the saves on the free plan.
+
 ## Addendum 2026-11-19: round 133, a minimal Micromort Mountain
 
 The owner asked for a minimal Micromort Mountain: one encounter with Eduardo, a hiker who sprained his ankle, the
@@ -1266,6 +1273,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 134 | 11-19 | A faster walk; a move between any two discovered places | [134](docs/rounds/134/architecture.md) | [findings](docs/rounds/134/findings.md) | round 134 build |
 | 133 | 11-19 | A minimal Micromort Mountain: Eduardo on a ledge halfway up, a snowy summit with a wine festival | [133](docs/rounds/133/architecture.md) | [findings](docs/rounds/133/findings.md) | round 133 build |
 | 132 | 11-19 | Settings scrolls; the objective box follows the opening line and folds into a bar; the conversation panel drags from the top bar down to its grip | [132](docs/rounds/132/architecture.md) | [findings](docs/rounds/132/findings.md) | `74f16da` (pre-run record) to round 132 close; build `16ec3f9` |
 | 131 | 11-19 | A turn asks for a paragraph: the character asks for everything open and a question of its own; the card lists the open objectives; a reply box of several lines (server half waits for a deploy) | [131](docs/rounds/131/architecture.md) | [findings](docs/rounds/131/findings.md) | `15bb752` (pre-run record) to round 131 close; build `5af7179` |

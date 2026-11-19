@@ -15,7 +15,7 @@
 // a resolve the camera keeps looking at the site: the player picks the way on (round 116's turn to it is gone).
 
 export const EYE = 1.6; // eye height above the ground, metres
-export const WALK_SPEED = 2.8; // metres per second along a path, between the ramps
+export const WALK_SPEED = 5.6; // metres per second along a path, between the ramps
 export const STANDOFF = 4; // a walk stops this far before its site, along the path, and looks at it
 export const LOOK_AHEAD = 4; // while walking the camera looks this far ahead on the path, never past the site
 export const DURATIONS = Object.freeze({ overview: 2.6, approach: 3.6, descend: 1.6, orbit: 3.6, ramp: 1.4 });
@@ -201,6 +201,22 @@ export function pathPoints(dungeon, from, to) {
   return null;
 }
 
+/** Round 134: the polyline between any two sites: the direct path, else the fewest paths joined end to end. Null when none joins them. */
+export function routePoints(dungeon, from, to) {
+  const direct = pathPoints(dungeon, from, to);
+  if (direct || from === to) return direct;
+  const previous = new Map([[from, null]]);
+  const queue = [from];
+  while (queue.length && !previous.has(to)) {
+    const here = queue.shift();
+    dungeon.sites.forEach((_, next) => { if (!previous.has(next) && pathPoints(dungeon, here, next)) { previous.set(next, here); queue.push(next); } });
+  }
+  if (!previous.has(to)) return null;
+  const hops = [];
+  for (let at = to; previous.get(at) !== null && previous.get(at) !== undefined; at = previous.get(at)) hops.unshift([previous.get(at), at]);
+  return hops.flatMap(([x, y], i) => pathPoints(dungeon, x, y).slice(i === 0 ? 0 : 1));
+}
+
 /** The polyline an approach to site `index` comes in on: the entrance for the start site, else the first path listed for it. */
 export function arrivalPoints(dungeon, index) {
   const site = dungeon.sites[index];
@@ -331,7 +347,7 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
     },
     /** Walks from site `from` to its neighbour `to` along their path, ending STANDOFF before `to`. With no path it is an approach. */
     walk(from, to) {
-      const points = pathPoints(dungeon, from, to);
+      const points = routePoints(dungeon, from, to);
       if (!points) return api.approach(to);
       const path = measurePath(points);
       const s1 = standoff(path);
