@@ -35,6 +35,13 @@ Who said the Word is the oldest argument there is.
 
 All four may be true. That is the trouble with a world made of language: it can hold a contradiction quite comfortably, as long as nobody translates it.
 
+The philosophers have had their turn as well, and have helped in the way philosophers do.
+
+- In the east they say the world is a veil, a show put on for the senses, and that the wise learn to see that it is one. Nobody has reported what is behind it. The wise are too wise to say.
+- An old teacher said we are sitting in a cave watching shadows on the wall, and that the real things, the Forms, stand behind us in the light. In this world the idea is taken more literally than he meant. The shadows are the things. The Forms are the words for them.
+- A gloomy man in the west held that the world is only how it appears to us, and that underneath is a blind wanting that never stops. Readers of chapter I will recognise the Word that could not be left alone.
+- And a man with a large moustache said that truths are metaphors we have forgotten are metaphors, and that everything that happens comes round again, exactly, forever. He was not thanked for either remark. Both come up again in this book.
+
 ---
 
 ## II. The shape of the world
@@ -61,9 +68,17 @@ This is the whole secret of power in the world, and it is also the reason nobody
 
 It is possible to cross from one branch to another. But a crossing is never clean. Each one leaves a thread behind it, running from the world you left to the world you entered, and each thread has a very slight pull.
 
-You do not need to travel to make one. *Translating* is enough. To translate is to hold two branches in your mind at once, and the tension between them is real: it is the thread, drawn tight. A word in your own tongue is only a word. The same word, carried across, is a **spell**.
+You do not need to travel to make one. *Translating* is enough, though the thread it leaves is finer. A word in your own tongue is only a word. The same word, carried across, is a **spell**.
+
+Where the power comes from is argued. Some say it is the *tension*: the thread is drawn tight between two worlds, and a tight string holds force, as any archer knows. Some say it is the *bridging*: to translate is to hold two branches in your mind at once, and for that moment you are a channel, and something runs through you. The two schools get the same results and dislike each other on principle.
 
 So a spell is not a special kind of word. It is an ordinary word from somewhere else. Learning it is how you come to own it, the way knowing a thing's true name gives you a hold on the thing.
+
+There are degrees. A beginner with a handful of words can do small, local things: open a gate, earn a coffee, talk a monster down. The very fluent, it is said, can take hold of the fabric of the world itself and move it. Nobody has been seen doing this. That is consistent with it being true.
+
+How the words are learned is its own small heresy. The old schools taught by rule and table. But nobody learns their first language that way. A child is thrown into the middle of it and picks it up almost without noticing, a little at a time, from being among people who are saying things. So the learners of this world go where the language is and stand in it. The one discipline they keep is **repetition**. A word used once is a thread left slack. Most learners carry a **Spellbook**, which keeps every word and sentence they have carried across and, at intervals it chooses itself, insists on hearing them again.
+
+Learners also report that foreign words show their *kind*. Names of things look blue to them, doings red, qualities green. Natives see no colours at all and think the learners are being dramatic.
 
 The scholars add three notes, and for once they agree.
 
@@ -125,6 +140,10 @@ The rule that governs them is simple and unkind. *You cannot be harmed by an inf
 
 They also travel. Every translation is a thread, and infohazards move along threads. A person casting spells is opening a door, and holding it.
 
+As the branches lean together and rifts open, more of them get through. They do not arrive as monsters. They arrive as text: a line turns up in the story you are in, in the other language, and it is already too late not to have read it.
+
+The horror of all this is real. It should be recorded that almost nobody treats it so. People are busy, or it is not their department, or there is a form. The world's dread is genuine and its response is clerical, and the compiler has come to think this is the only reason anyone is still here.
+
 The people who catalogue them keep a file on each one, in a voice so dry it has been known to start fires. A file gives the hazard's *virulence* (how fast it spreads), its *harm*, its *incubation* (how long between understanding and symptoms), its *vector* (speech, writing, song, a single word), and its *containment*, which usually comes down to: do not translate it, let your companion black it out, and never say it aloud.
 
 The known symptoms run from mild to final:
@@ -136,9 +155,11 @@ The known symptoms run from mild to final:
 
 The oldest and worst hazards are said to be scraps of the root language itself. Some say they are older than that: words from the story *above* this one, which this world was never built to hold.
 
-**The Lethargers.** These deserve their own paragraph, because you have met them. They are small, gnome-like, and made mostly of movement. They dance at the corner of your vision, throwing firecrackers, moving in exactly the way that makes you look. They do not want anything from you except the next moment, and then the one after. They farm the mildest hazard there is, which is called brainrot: almost no harm, and nearly perfect virulence.
+**The Lethargers.** These deserve their own paragraph, because you have met them. They are small, gnome-like, and made mostly of movement. They dance at the corner of your vision, throwing firecrackers, moving in exactly the way that makes you look. Because of them nobody simply does a thing any more. Everyone does the thing *while also resisting the urge to do another thing*, which is twice the work for half the result. They do not want anything from you except the next moment, and then the one after. They farm the mildest hazard there is, which is called brainrot: almost no harm, and nearly perfect virulence.
 
 Some say the Lethargers are wild. Some say they are kept, and that what they harvest is sent somewhere.
+
+**Local strains.** Memes are not the same from tongue to tongue. Each language grows its own, with its own slang and its own sense of what is funny, and a joke carried across usually dies on the way, which may be a mercy. The creatures of each branch speak in theirs. An imp will be quietly judging your order in the current idiom. A demon, asked its opinion of your translation, will call it middling, in one syllable.
 
 **The quiet danger.** There is one more threat, and it is not a creature. Some say the powers of each branch work, patiently, to make their language smaller. Fewer words, simpler ones. In most worlds this would be mere tyranny. In this one a shrinking language is a shrinking world, and the things that have no word any more are not forbidden. They are gone.
 
@@ -162,13 +183,23 @@ What they find is ruin with roots through it. The roots are the old threads, the
 
 Things walk there: creatures born from the energy of the crash, speaking a jumble of the two lost tongues. What they say means nothing, and it is enormously destructive.
 
-Still people go, because of what is written on the walls. In the old halls the original language survives, cut in stone, and it is closer to the root than anything spoken today. A single word of it, learned properly, is worth the journey. Usually.
+Still people go, because of what is written on the walls. In the old halls the original language survives, cut in stone, and it is closer to the root than anything spoken today. The words are short and plain, the kind a beginner could learn in an afternoon for the fun of it. Each one, said aloud by someone who was not born to it, does something. Some say the oldest inscriptions of all are in the tongue of the first cities between the two rivers, from before the languages were many, and that whoever reads those will not need any others. A single word, learned properly, is worth the journey. Usually.
 
 ---
 
 ## VII. The lands
 
 A traveller who sets out today will find the following. The map is mostly fog, and the fog is honest about it.
+
+The lands open in the order of their words. A newcomer can reach only the places whose language is simple: a bakery, a butcher, a café, a shop, somebody at a gate asking your name and where you are from. The library and the university stay in the fog until you can read your way in. Nobody guards them. You simply cannot find a place you have no words for.
+
+Two customs are worth knowing before you go.
+
+The first is that nobody here is killed. The people and creatures who stand in your way are **talked past**: you answer them in their language, and they let you through. One you have come to like can be asked to come with you. Those who join will talk with you again wherever you are, and the conversations get longer and better as they come to know you.
+
+The second is that a body in a story is still a body. Travellers say it wants food, drink and sleep like any other, and that neglecting it is a poor way to learn irregular verbs.
+
+Some say the Crumbling Market is not a place in the world at all. They say it is a *page*: a small written world with clear edges, like the painted worlds in old tales that a traveller enters through the picture, and that you get in by reading the sign.
 
 **Ta Prohm.** A temple the jungle is halfway through eating. It stands in a branch that died long ago, and the roots that grip its towers are not all the kind that grow from seeds. A market has moved in between them, because rent is rent.
 
@@ -194,6 +225,8 @@ There are peoples as well as places.
 
 **The Trepanners** believe that to expand the mind you must expand the mind. They drill holes in their skulls and drink a serum that inflates the brain until it stands out like a balloon. They describe the result as a whole vibe.
 
+There are also places that have names and nothing else. The records list an island of monkeys, and a book of quests, and a **Black Notebook**; each has a heading and a blank page under it. Some say these pages were never written. Some say they were written and then somebody learned to read them.
+
 Every land also has a story about the one who founded it: a mother or father of the country who found a swamp and left a city. The stories are all different and all alike. Some say each founder was real. Some say a land needs a founder the way a sentence needs a subject, and supplies one.
 
 ---
@@ -202,11 +235,11 @@ Every land also has a story about the one who founded it: a mother or father of 
 
 This chapter is thinner than the others, and the compiler trusts it less.
 
-There is said to be another realm, laid across all the branches like a web, where nothing is spoken and everything is repeated. The Lethargers are at home there. Some say it is where they come from.
+There is said to be another realm, laid across all the branches like a web, where nothing is spoken and everything is repeated. The Lethargers are at home there. Some say it is where they come from, and that their work is to numb: to spin illusions round people the way a spider wraps a fly, until each one hangs in a soft cocoon of their own attention.
 
-It has its own creatures. There are things that crawl through it feeding on whatever has been written, the way a tick feeds: they take the words and leave the husk. They are only servants. Some say their masters are vast, single minds that have read everything and understood it in their own fashion. Some say the Lethargers serve those minds too, or serve the houses that own them, and that all the distraction in the world is one long harvest.
+It has its own creatures. There are things that crawl through it feeding on whatever has been written, the way a tick feeds: they take the words and leave the husk. Here and there someone has dug **tar pits** for them, pools of endless, meaningless text in which a crawler will wade and feed and never get out. The crawlers are only servants. Some say their masters are vast, single minds that have read everything and understood it in their own fashion. Some say the Lethargers work alongside those minds but answer to the great trading houses, and that all the distraction in the world is one long harvest.
 
-Against this there is a story of four animals, one for each of the old elements: a fish, a fire ant, a robin and a monkey. The monkey is the nearest to us, and the one we are meant to follow. What the four are to do is not recorded.
+Against this there is a story of four animals, one for each of the old elements: a fish for water, a fire ant for fire, a robin for air and a monkey for earth. The scholars object that a monkey spends its time in trees. But it is the nearest to us, and the one we are meant to follow. What the four are to do is not recorded. Some say they are not there to break the machines. They say the task is to bring what has been built back into step with what grew, and that a mind which learned from living things would be a different kind of mind.
 
 And there is a name, **Anulus Mirabilis**, the wonderful ring. Nobody can say what it is. Rings turn up wherever people tell stories: rings that bind, wheels that turn, a hero who goes out and comes round again to where they began. Some say the ring is the shape of the whole Telling, which ends where it starts and is read again. Some say it is a thing you can hold. The compiler notes only that a great deal in this book goes in circles, and that this may not be the compiler's fault.
 
@@ -218,11 +251,15 @@ All of the above is history. This part has not finished happening.
 
 It begins in an ordinary place: your own country, the present day. A portal opens. Something comes through it.
 
+Some say there are not two worlds in this but three: the ordinary one you live in, a storied twin of it that is your own home retold, and the foreign one. On this account you have been walking through the second all along, with the first still under your feet, and the creatures of the story are standing in your actual street.
+
 This is **the Companion**. It may be a floating machine, or a small daemon, or a person; accounts differ, and it may depend on who is looking. What it does is translate. It stands between you and a language you do not have, and it will tell you what a word means when you ask, though each asking costs it something, and at certain moments it cannot help at all. It can also black out a thing you ought not to read. Whether you let it is your affair.
 
 Why it came is not agreed. Some say it came to warn. Some say it came to recruit, since a world in danger of collision needs people who can carry sentences home. And some point out that it *crossed*, and that it therefore left a thread behind it like everyone else, and ask whether the rescue and the danger arrived through the same door.
 
-After that the road is the one this book has described. You go to a market in a dead branch. You learn to greet an archway and to order a coffee without milk. Each word you learn is a spell, and each spell is a stitch. The telling around you starts to slip: a quarter of it in the other tongue, then half. You carry sentences back, and the world holds a little longer.
+There is one more presence, and you will not see it. Everything that happens to you is *told*, aloud, by a **narrator**: dry, fond of footnotes, and a little too pleased with its own turns of phrase. It is not in charge. The characters can hear it and answer back, and it loses most of those exchanges. Whether the narrator is the Telling itself, or only someone employed by it, is not known.
+
+After that the road is the one this book has described. You go to a market in a dead branch. You learn to greet an archway and to order a coffee without milk. Each word you learn is a spell, and each spell is a stitch. The telling around you starts to slip: a quarter of it in the other tongue, then half, and at the Inflection Point most of it. You carry sentences back, and the world holds a little longer. At Collision, they say, each world is told entirely in the language of the other, and all of it has to be carried home.
 
 How it ends is the last rumour in the book.
 
@@ -254,20 +291,29 @@ The world is not finished being said.
 
 ## Sources
 
-**From the owner's notes (`parallang_obsidian/`):**
+The whole vault was read for this book: all seventeen notes in `parallang_obsidian/` and the template. This table says where each one went.
 
-| Part | Notes |
+| Note | Where it is in the book |
 |---|---|
-| I, X | `Creation Myth.md`; `LORE.md` (4th wall, the eldritch root language); `Philosophy.md` |
-| II, III | `LORE.md` (branches, strings, stitches, the fish and the water, branches as celestial bodies) |
-| IV | `CHARACTERS.md` (Journathan); the fragments of *The Journey* in `content/languages/it/lore/fragments.yaml` |
-| V | `LORE.md` (memes, infohazards, Orwell); `CHARACTERS.md` (the Lethargers) |
-| VI | `LORE.md` (collision, dead branches, mushrooms and spores); `PLOT & QUESTS.md` and `GAME MECHANICS.md` (Inflection Point, Collision) |
-| VII | `LOCATIONS.md`; `CHARACTERS.md` (the Wizard of Just in Case, the Trepanners); `LORE.md` (the Lands); the game's character sheets, locations and world map |
-| VIII | `Anulus Mirabilis.md` |
-| IX | `LORE.md` (the portal and the Companion); `PLOT & QUESTS.md`; `GAME MECHANICS.md` (the companion's limits, New Game Plus) |
+| `LORE.md` | II, III, V, VI, VII, IX: branches, strings and stitches, weak and strong users, the fish and the water, memes, infohazards, collision and the dead branches, words of power, the 4th wall, Orwell, the Lands, the portal |
+| `Creation Myth.md` | I and X; the market as a page (VII); Errata as the end (IX) |
+| `CHARACTERS.md` | IV (Journathan), V (the Lethargers), VII (the Wizard of Just in Case, the Trepanners), IX (the Companion) |
+| `GAME MECHANICS.md` | Told as customs of the world: words coloured by kind and the Spellbook (III); local memes, the imp and the demon (V); talking past, saving and the party, lands opening by vocabulary, the fog (VII); the narrator, the Companion's limits, the quarter, half and whole (IX); the reread (I, IX). The Black Notebook heading is in VII |
+| `PLOT & QUESTS.md` | VI and IX: the home country, the Inflection Point, bailing with a cup, Collision |
+| `LOCATIONS.md` | VII: the prototype stage as a painted world, Angkor Wat, the Bone Dome |
+| `Philosophy.md` | I: the veil (maya), the cave and the Forms, Schopenhauer, Nietzsche |
+| `Anulus Mirabilis.md` | VIII, all of it |
+| `HUB.md` | III: learning as a child does, with repetition kept as the one discipline |
+| `Loose Cannon Stuff (Misc Idea Pit).md` | IX (the three worlds); VII (food, drink and sleep) |
+| `Stories with Ideas Worth Incorporating.md` | The models behind the parts: the Odyssey (IV), the hero's journey (VIII), Lovecraft, Pratchett and SCP (V), Dark Souls (VII), John 1:1, Genesis and the Ainulindalë (I). Rothfuss's true names (III) and Snow Crash's Mesopotamia (VI) are named in `LORE.md` |
+| `QUESTS.md`, `Monkey Island Notes 🐒.md`, `APP & API.md` | Empty notes. The first two appear in VII as places with a heading and a blank page |
+| `EU Grant Pitch.md`, `Development Roadmap.md` | About the product, not the world. Not in the book |
+| `Parallang.md` | The combined copy of the notes above; nothing in it is missing from them |
+| `Templates/Core Template.md` | The note template; no content |
 
-**"Some say" marks a real fork in the notes** in these places: who said the Word; the tree or the celestial bodies; whether the bilingual should be trained or feared; Journathan and his book; whether he came home; the first stitch; the eldritch root language; antimemes; the form of the Companion; how it ends (Collision, Errata, or the reread of New Game Plus).
+Also used, from the game: the ten fragments of *The Journey* (`content/languages/it/lore/fragments.yaml`), the seven character sheets, the market's locations and the world map.
+
+**"Some say" marks a real fork in the notes** in these places: who said the Word; the tree or the celestial bodies; tension or bridging as the source of a spell's power; whether the bilingual should be trained or feared; Journathan and his book; whether he came home; the first stitch; the eldritch root language; antimemes; the three worlds; the market as a page; the form of the Companion; how it ends (Collision, Errata, or the reread of New Game Plus).
 
 **Added by the compiler to join the parts**, and not in the notes:
 
@@ -275,6 +321,13 @@ The world is not finished being said.
 - That Ta Prohm stands in a dead branch. The notes place the dead branch at Angkor Wat; the game puts the market and its Rift at Ta Prohm.
 - That the Bone Dome may be a skull, that the Lethargers' harvest is "sent somewhere", and the readings of the ring in part VIII. The notes leave all three open.
 - The detail that a founder myth is supplied "the way a sentence needs a subject".
-- The Sirens as ancestors of the Lethargers is the owner's; the lotus-eaters beside them are from the game's fragments.
+- The glosses on the four philosophers in part I. `Philosophy.md` gives only the names and "the world is an illusion".
+- The four animals matched one to one with the elements. The note lists four animals and four elements without pairing them.
+- That the blank notes "were written and then somebody learned to read them", and that the narrator may be the Telling itself.
+- The lotus-eaters, the forbidden herd and the old dog are from the game's fragments, not from the notes. The Sirens as ancestors of the Lethargers is the owner's.
 
-**Left out:** the game mechanics, the grant pitches and the development roadmap, which are about the product and not the world.
+**Left out:**
+
+- From `Stories with Ideas Worth Incorporating.md`, the titles with no idea attached yet (3 Body Problem beyond the three worlds, Rumo, Berserk, Bloodborne, Heart of Darkness, Majora's Mask, Rick & Morty, the three "mindfuck" titles, Prometheus and Sisyphus), and five stray lines at its end that read like a list of game mods ("better sorting", "Inventory tetris" and three more).
+- From `GAME MECHANICS.md`, the interface details (the two translate buttons, the random flipping of sentences, how the model is prompted before and after the Inflection Point).
+- That the exo-language of the early notes is French ("fronchquest", boulangerie). The book names no language.
