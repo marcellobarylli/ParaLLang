@@ -93,4 +93,26 @@ export const PRESETS = {
     water: [0.85, 0.7, 1.0],
     corruption: 1,
   },
+  // The Kiln: the light comes from the floor. More ambient from the ground than from the sky, so
+  // undersides are lit orange; `glow` and `glowHot` replace the strings' violet.
+  ember: {
+    label: 'Ember',
+    zenith: '#0c0405',
+    mid: '#34100a',
+    horizon: '#a23c14',
+    fog: '#6a2410',
+    sun: '#ff7a2c',
+    sunDir: [-0.35, 0.2, -0.9],
+    sunColor: [0.5, 0.24, 0.12],
+    ambientSky: [0.3, 0.17, 0.14],
+    ambientGround: [0.95, 0.42, 0.16],
+    fogNear: 14,
+    fogFar: 130,
+    cloud: '#2a0e0a',
+    hills: '#1c0906',
+    water: [1.0, 0.5, 0.3],
+    corruption: 1,
+    glow: '#ff5210',
+    glowHot: '#ffc84a',
+  },
 };

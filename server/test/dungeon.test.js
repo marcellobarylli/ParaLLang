@@ -371,3 +371,48 @@ test('production refuses to start without a usable token, and only then may a CL
   assert.equal(listenHostForProvider('claude-cli', { NODE_ENV: 'production', PARALLANG_TOKEN: 'a-long-enough-token-1234' }), '0.0.0.0');
   assert.equal(listenHostForProvider('claude-cli', { NODE_ENV: 'production', PARALLANG_TOKEN: 'a-long-enough-token-1234', HOST: '192.0.2.1' }), '192.0.2.1');
 });
+
+// Round 132: The Kiln, a second dungeon on Ta Prohm's plan with Ta Prohm's encounters.
+test('The Kiln loads in both packs as Ta Prohm\'s plan on the kiln level, and its run is kept apart from Ta Prohm\'s', async (t) => {
+  for (const language of ['it', 'es']) {
+    const { dungeons } = loadGameContent({ language });
+    assert.deepEqual([...dungeons.keys()].sort(), ['ta_prohm', 'the_kiln']);
+    const [temple, kiln] = [dungeons.get('ta_prohm'), dungeons.get('the_kiln')];
+    assert.equal(kiln.level, 'kiln');
+    const plan = (dungeon) => ({ start: dungeon.start, goal: dungeon.goal, entrance: dungeon.entrance, paths: dungeon.paths, sites: dungeon.sites.map(({ name: _name, ...site }) => site) });
+    assert.deepEqual(plan(kiln), plan(temple));
+    assert.deepEqual(kiln.sites.map((site) => site.name).filter((name) => temple.sites.some((site) => site.name === name)), []);
+  }
+
+  const { runtime, content, learnerId } = await dungeonRuntime(t);
+  const kilnView = () => api(runtime, '/api/dungeons/the_kiln/map?client=121', { learnerId });
+  const first = await kilnView();
+  assert.equal(first.status, 200);
+  assert.deepEqual([first.data.dungeon.name, first.data.dungeon.level, first.data.dungeon.sites[0].name, first.data.dungeon.sites[0].characterName], ['The Kiln', 'kiln', 'The Ash Gate', 'Portia']);
+  assert.deepEqual([first.data.progress.at, first.data.progress.clearedSiteIds], ['face_gate', []]);
+
+  // Portia answered in The Kiln clears The Kiln's gate and not Ta Prohm's.
+  const started = await start(runtime, learnerId, { dungeonId: 'the_kiln' });
+  assert.equal(started.status, 200, JSON.stringify(started.data.error));
+  assert.deepEqual([started.data.encounter.encounterId, started.data.encounter.siteId], ['market_entrance_tutorial', 'face_gate']);
+  const resolved = await play(runtime, learnerId, started.data.encounter, passingAnswers(content, 'market_entrance_tutorial'));
+  assert.equal(resolved.state, 'resolved');
+  assert.deepEqual((await kilnView()).data.progress.clearedSiteIds, ['face_gate']);
+  assert.deepEqual((await view(runtime, learnerId)).data.progress.clearedSiteIds, []);
+
+  // A walk in The Kiln moves The Kiln's player; Ta Prohm's still stands at its gate, where Portia has not been answered.
+  const walked = await api(runtime, '/api/dungeons/the_kiln/move', { learnerId, method: 'POST', body: { client: 121, siteId: 'buttress_tree' } });
+  assert.equal(walked.status, 200, JSON.stringify(walked.data.error));
+  assert.equal(walked.data.progress.at, 'buttress_tree');
+  assert.equal((await view(runtime, learnerId)).data.progress.at, 'face_gate');
+  assert.equal((await move(runtime, learnerId, { siteId: 'buttress_tree' })).data.error.code, 'BLOCKED');
+
+  // Ta Prohm's gate starts its own conversation with Portia, and clearing it leaves The Kiln's run as it was.
+  await clearHere(runtime, content, learnerId, 'face_gate');
+  assert.deepEqual((await view(runtime, learnerId)).data.progress.clearedSiteIds, ['face_gate']);
+  assert.deepEqual([(await kilnView()).data.progress.at, (await kilnView()).data.progress.clearedSiteIds], ['buttress_tree', ['face_gate']]);
+
+  // A reset of one leaves the other.
+  assert.equal((await api(runtime, '/api/dungeons/the_kiln/reset', { learnerId, method: 'POST', body: { client: 121 } })).data.progress.run, 2);
+  assert.deepEqual((await view(runtime, learnerId)).data.progress, { ...(await view(runtime, learnerId)).data.progress, run: 1, clearedSiteIds: ['face_gate'] });
+});

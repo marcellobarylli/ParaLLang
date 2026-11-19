@@ -1,7 +1,7 @@
 import { Scene } from 'three';
 import { createPS1Material, createPS1Uniforms } from '../ps1/material.js';
 import { createTextures } from '../ps1/textures.js';
-import { hexToRgb } from '../palette.js';
+import { PALETTE, hexToRgb } from '../palette.js';
 import { createRandom } from '../util/random.js';
 import { MeshBuilder } from './geometry.js';
 import { LAYOUT } from './layout.js';
@@ -84,6 +84,7 @@ export function assembleWorld(kit, { name, props, surface, preset, reflections, 
   for (const group of [surfaceGroup, propsGroup]) {
     for (const mesh of group.children) {
       if (mesh.material === materials.water) mesh.renderOrder = 5;
+      if (mesh.material === materials.ember) mesh.renderOrder = 7;
       if (mesh.material === materials.shaft) mesh.renderOrder = 6;
     }
   }
@@ -114,6 +115,9 @@ export function assembleWorld(kit, { name, props, surface, preset, reflections, 
     uniforms.uFogNear.value = p.fogNear;
     uniforms.uFogFar.value = p.fogFar;
     materials.shaft.uniforms.uTint.value.set(...hexToRgb(p.sun));
+    // The glow is the strings' violet unless the preset names its own (ember).
+    uniforms.uGlowColor.value.set(...hexToRgb(p.glow ?? PALETTE.stringGlow));
+    uniforms.uGlowHot.value.set(...hexToRgb(p.glowHot ?? p.glow ?? PALETTE.stringGlow));
     sky.applyPreset(p);
     setCorruption(p.corruption);
   }

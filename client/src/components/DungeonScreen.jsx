@@ -65,13 +65,22 @@ function TitleCard({ state }) {
   );
 }
 
-// Round 119: the world map. Places and the paths between them, as far as the fog allows; the place the player is at
-// can be entered, the others say why not.
+// Round 119: the world map. Places and the paths between them, as far as the fog allows; an open place can be
+// entered, the others say why not.
+// Round 132: more than one place may be open. The marker is on the place the player is in, each open place shows its
+// own count of cleared sites once its run is read, and each has its own Enter button.
 function WorldCard({ state, cleared }) {
-  const { atlas, dungeon } = state;
+  const { atlas, dungeon, runs = {} } = state;
   const places = atlas?.places ?? [{ id: dungeon.id, name: dungeon.name, state: 'current', map: { x: 0.5, y: 0.5 }, description: '', dungeonId: dungeon.id, closed: null }];
   const byId = new Map(places.map((place) => [place.id, place]));
-  const open = places.find((place) => place.dungeonId === dungeon.id);
+  const here = (place) => place.dungeonId === dungeon.id;
+  const holds = new Set(state.enterable ?? [dungeon.id]);
+  const open = places.filter((place) => place.dungeonId && holds.has(place.dungeonId));
+  const count = (place) => {
+    if (here(place)) return `${cleared.length} of ${dungeon.sites.length} cleared`;
+    const run = runs[place.dungeonId];
+    return run ? `${run.cleared} of ${run.total} cleared` : null;
+  };
   return (
     <section className="card world-card" aria-label="The world map">
       <p className="eyebrow">The world</p>
@@ -81,7 +90,7 @@ function WorldCard({ state, cleared }) {
           <line key={`${a}-${b}`} x1={byId.get(a).map.x * 100} y1={byId.get(a).map.y * 60} x2={byId.get(b).map.x * 100} y2={byId.get(b).map.y * 60} />
         ))}
         {places.map((place) => (
-          <g key={place.id} className={`world-place ${place.state}${place.closed ? ' closed' : ''}`} transform={`translate(${place.map.x * 100} ${place.map.y * 60})`}>
+          <g key={place.id} className={`world-place ${here(place) ? 'current' : 'known'}${place.closed ? ' closed' : ''}`} transform={`translate(${place.map.x * 100} ${place.map.y * 60})`}>
             <rect x="-2.2" y="-2.2" width="4.4" height="4.4" />
             <text y="-4">{place.name}</text>
           </g>
@@ -95,11 +104,13 @@ function WorldCard({ state, cleared }) {
               <small>{place.description}</small>
               {place.closed && <small className="closed-note">{place.closed}</small>}
             </span>
-            {!place.closed && <span className="site-done">{cleared.length} of {dungeon.sites.length} cleared</span>}
+            {!place.closed && count(place) && <span className="site-done">{count(place)}</span>}
           </li>
         ))}
       </ul>
-      {open && <button type="button" className="primary-button big-button" onClick={() => state.enterPlace(open.id)}>Enter {open.name}</button>}
+      {open.map((place) => (
+        <button type="button" key={place.id} className={`${here(place) ? 'primary-button' : 'secondary-button'} big-button`} onClick={() => state.enterPlace(place.id)}>Enter {place.name}</button>
+      ))}
     </section>
   );
 }

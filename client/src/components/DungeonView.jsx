@@ -22,6 +22,9 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
     if (!hasWebGL()) return undefined;
     let cancelled = false;
     let view = null;
+    // Round 132: another place is another level. The effects below wait for the new view, and the canvas is a new
+    // element (its key), because the view that is disposed gives up the old one's WebGL context.
+    setStatus('loading');
     import('../scene/levelView.js').then(({ createLevelView }) => {
       if (cancelled) return;
       view = createLevelView(canvasRef.current, { dungeon, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode) });
@@ -74,7 +77,7 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
 
   return (
     <div className={`level level-${status}`} aria-hidden="true">
-      <canvas ref={canvasRef} className="level-canvas" />
+      <canvas key={dungeon.id} ref={canvasRef} className="level-canvas" />
       {status === 'unavailable' && <div className="level-backdrop" />}
       {status === 'ready' && (
         <div className={`site-labels${phase === 'overview' ? ' shown' : ''}`}>

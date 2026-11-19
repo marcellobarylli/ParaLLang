@@ -116,8 +116,13 @@ Two optional switches spend extra LLM calls and are off by default. Set them in 
 Since round 115 the web client (`client/`) is one screen, a dungeon crawl through the Ta Prohm level of
 [`aesthetic/`](aesthetic/README.md). Since round 119 the dungeon is a map under a world map.
 
-- **The world map** shows the places the fog allows: Ta Prohm, which is open, and its two neighbours, Angkor Wat and
-  Micromort Mountain, which are closed. The Bone Dome is hidden.
+- **The world map** shows the places the fog allows: Ta Prohm, which is open, and its neighbours: The Kiln, which
+  is open too (round 132), and Angkor Wat and Micromort Mountain, which are closed. The Bone Dome is hidden.
+- **The Kiln** is Ta Prohm's plan burnt: the level `kiln` of `aesthetic/` (lava-rock floor, glowing ruins, charred
+  bare trees) with the same seven sites and characters under its own site names
+  (`content/world/dungeons/the_kiln.yaml`). Its run is kept apart from Ta Prohm's; experience, the Spellbook and
+  the party are shared. The browser remembers the place last entered. `node client/scripts/kiln-shots.mjs` plays
+  into it in headless Chromium (needs Playwright).
 - **The temple map** is the top-down view of Ta Prohm. Seven sites hold the Crumbling Market's seven encounters:
 
   | Site | Character | Where |

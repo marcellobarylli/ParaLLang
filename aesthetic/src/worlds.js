@@ -1,10 +1,12 @@
 import { createTempleWorld } from './scene/world.js';
-import { createTaProhmWorld } from './scene/taprohm.js';
+import { createKilnWorld, createTaProhmWorld } from './scene/taprohm.js';
 
 /** The levels, by id. Each factory returns the same world interface. */
 export const WORLDS = {
   angkor: { label: 'Angkor Wat', create: createTempleWorld, defaultPreset: 'golden' },
   taprohm: { label: 'Ta Prohm', create: createTaProhmWorld, defaultPreset: 'jungle' },
+  // Round 132: Ta Prohm's plan, burnt. The same layout, heights and clear ground as `taprohm`.
+  kiln: { label: 'The Kiln', create: createKilnWorld, defaultPreset: 'ember' },
 };
 
 export function createWorld(id = 'angkor', options = {}) {

@@ -22,6 +22,10 @@ const SHOTS = {
   'taprohm-gate-tree': 'scene=taprohm&cam=-3,2.2,41,0,5,28.7',
   'taprohm-wall-tree-corrupted': 'scene=taprohm&cam=-24,2.6,14,-33,4.5,6&preset=corrupted',
   'taprohm-fig-tower-golden': 'scene=taprohm&cam=27,3,27,18.7,5,16.7&preset=golden',
+  'kiln-face-gopura': 'scene=kiln&cam=0,2.6,74,0,6.5,57',
+  'kiln-gate-tree': 'scene=kiln&cam=-3,2.2,41,0,5,28.7',
+  'kiln-wall-tree': 'scene=kiln&cam=-24,2.6,14,-33,4.5,6',
+  'kiln-moat': 'scene=kiln&cam=24,5,76,40,0,58',
 };
 
 (async () => {

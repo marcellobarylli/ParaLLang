@@ -121,6 +121,7 @@ Display-space sRGB; the pipeline does no linear conversion and no tone mapping (
 | `day` | High | `#c5d6d4`, 55–250 | 0 | Hazy midday |
 | `jungle` | High from the east, through the canopy | `#a3ad8a`, 20–175 | 0 | Ta Prohm's default: humid, green |
 | `corrupted` | Pale violet | `#58446a`, 22–165 | 1 | The dead branch at full corruption |
+| `ember` | Dim, low, behind the temple; most ambient light comes from the ground | `#6a2410`, 14–130 | 1 | The Kiln's default (round 132): the glow is orange (`#ff5210`, hot parts `#ffc84a`) instead of the strings' violet |
 
 ## 7. Porting checklist
 

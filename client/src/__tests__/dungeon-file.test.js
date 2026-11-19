@@ -2,9 +2,9 @@
 // Round 115: the dungeon file against the level it is played on (aesthetic/src/scene/taprohm.js). Every site stands
 // on clear ground, and nothing crosses a gallery or the outer wall except through an east gate passage.
 // Round 119: the dungeon is a map: every path is checked, and the world file with its fog.
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { FIGURES, TA_PROHM, WORLDS, createFigure, createWorldKit, taProhmHeightAt, taProhmIsClear } from '@parallang/aesthetic';
-import { DUNGEON } from '../dungeon.js';
+import { DUNGEON, DUNGEONS, KILN } from '../dungeon.js';
 import { ATLAS, ATLAS_FILE } from '../atlas.js';
 import { atlasView, neighbourIds, unexploredSites } from '../dungeonModel.js';
 import { pathPoints } from '../scene/director.js';
@@ -30,6 +30,19 @@ test('the bundled dungeon is the content file in the client shape, on a level ae
   });
 });
 
+// Round 132: The Kiln is the second dungeon, on Ta Prohm's plan under the ember theme.
+test('The Kiln is bundled too: Ta Prohm\'s sites, encounters, figures, paths and seals on the level `kiln`, under its own names', () => {
+  expect(DUNGEONS).toEqual([DUNGEON, KILN]);
+  expect(KILN).toMatchObject({ id: 'the_kiln', name: 'The Kiln', level: 'kiln', start: DUNGEON.start, goal: DUNGEON.goal, entrance: DUNGEON.entrance, paths: DUNGEON.paths });
+  expect(WORLDS[KILN.level]).toBeTruthy();
+  const plan = (dungeon) => dungeon.sites.map(({ id, encounterId, at, figure }) => ({ id, encounterId, at, figure }));
+  expect(plan(KILN)).toEqual(plan(DUNGEON));
+  const names = KILN.sites.map((site) => site.name);
+  expect(new Set(names).size).toBe(names.length);
+  for (const name of names) expect(DUNGEON.sites.map((site) => site.name)).not.toContain(name);
+});
+
+describe.each(DUNGEONS.map((dungeon) => [dungeon.name, dungeon]))('%s against the wall plan', (_name, DUNGEON) => {
 test('every site stands on clear, level ground', () => {
   expect(DUNGEON.sites.filter((site) => taProhmIsClear(...site.at)).length).toBeGreaterThan(3);
   for (const site of DUNGEON.sites) {
@@ -80,6 +93,8 @@ test('every path, and the entrance, crosses walls only through the east gate pas
   });
 });
 
+});
+
 test('the plan test itself refuses a wall, a pier and the sanctuary', () => {
   expect(blocked(12, 29)).toBe('a gallery');
   expect(blocked(2, 29)).not.toBeNull();
@@ -123,11 +138,14 @@ test('the world file: places joined by paths, one of them this dungeon, and a fo
     expect(place.map.y).toBeGreaterThan(0); expect(place.map.y).toBeLessThan(1);
     expect(place.description.trim().length).toBeGreaterThan(10);
     // A place is open (it has a dungeon) or says why it is closed.
-    if (place.dungeon) expect(place.dungeon).toBe(DUNGEON.id); else expect(place.closed.length).toBeGreaterThan(5);
+    // (Round 132: a bundled dungeon, and no dungeon is opened by two places.)
+    if (place.dungeon) expect(DUNGEONS.map((dungeon) => dungeon.id)).toContain(place.dungeon); else expect(place.closed.length).toBeGreaterThan(5);
   }
+  const opened = ATLAS_FILE.places.filter((place) => place.dungeon).map((place) => place.dungeon);
+  expect(opened.sort()).toEqual(DUNGEONS.map((dungeon) => dungeon.id).sort());
   expect(ATLAS.places.map((place) => [place.id, place.state, place.dungeonId, Boolean(place.closed)])).toEqual([
-    ['ta_prohm', 'current', 'ta_prohm', false], ['angkor_wat', 'known', null, true], ['micromort_mountain', 'known', null, true],
+    ['ta_prohm', 'current', 'ta_prohm', false], ['the_kiln', 'known', 'the_kiln', false], ['angkor_wat', 'known', null, true], ['micromort_mountain', 'known', null, true],
   ]);
-  expect(ATLAS.paths).toEqual([['ta_prohm', 'angkor_wat'], ['ta_prohm', 'micromort_mountain']]); // The Bone Dome is under the fog
+  expect(ATLAS.paths).toEqual([['ta_prohm', 'the_kiln'], ['ta_prohm', 'angkor_wat'], ['ta_prohm', 'micromort_mountain']]); // The Bone Dome is under the fog
   expect(atlasView({ ...ATLAS_FILE, start: 'angkor_wat' }).places.map((place) => place.id)).toEqual(['ta_prohm', 'angkor_wat', 'the_bone_dome']);
 });

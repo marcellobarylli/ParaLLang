@@ -106,6 +106,63 @@ test('Ta Prohm has its face tower, thitpok trees and light shafts', () => {
   assert.equal(world.preset, 'jungle');
 });
 
+// Round 132: The Kiln is Ta Prohm's plan under another theme.
+test('The Kiln is Ta Prohm burnt: the same stone in the same place, no leaves, bare branches, lava and embers', () => {
+  const temple = createWorld('taprohm');
+  const kiln = createWorld('kiln');
+  assert.equal(kiln.preset, 'ember');
+  assert.equal(kiln.layout, temple.layout);
+  for (const name of ['props:stone', 'props:devata', 'props:thitpok', 'props:rootGlow']) {
+    const a = temple.scene.getObjectByName(name).geometry.attributes.position.array;
+    const b = kiln.scene.getObjectByName(name).geometry.attributes.position.array;
+    assert.equal(b.length, a.length, `${name}: the two levels differ in size`);
+    for (let i = 0; i < a.length; i += 97) assert.equal(b[i], a[i], `${name}: vertex data differs at ${i}`);
+  }
+  assert.equal(kiln.scene.getObjectByName('props:leaves'), undefined);
+  assert.ok(kiln.scene.getObjectByName('props:root').geometry.attributes.position.count > temple.scene.getObjectByName('props:root').geometry.attributes.position.count);
+  for (const name of ['surface:lava', 'props:ember', 'props:shaft', 'surface:tuft']) assert.ok(kiln.scene.getObjectByName(name), `missing ${name}`);
+  assert.equal(temple.scene.getObjectByName('surface:lava'), undefined);
+});
+
+test('The Kiln adds no texture: every map on its materials is one of the shared set', () => {
+  const kiln = createWorld('kiln');
+  const temple = createWorld('taprohm');
+  assert.deepEqual(Object.keys(kiln.textures), Object.keys(temple.textures));
+  const shared = new Set(Object.values(kiln.textures));
+  kiln.scene.traverse((o) => {
+    const map = o.isMesh ? o.material.uniforms.uMap.value : null;
+    if (map) assert.ok(shared.has(map), `${o.name} uses a texture outside the shared set`);
+  });
+});
+
+test('The Kiln glows red: the ember preset sets the glow colours, lights from the ground and glows in the stone', () => {
+  const kiln = createWorld('kiln');
+  const p = PRESETS.ember;
+  assert.deepEqual(kiln.uniforms.uGlowColor.value.toArray(), hexToRgb(p.glow));
+  assert.deepEqual(kiln.uniforms.uGlowHot.value.toArray(), hexToRgb(p.glowHot));
+  assert.ok(p.ambientGround[0] > p.ambientSky[0], 'the light should come from the floor');
+  assert.equal(kiln.uniforms.uCorruption.value, 1);
+  for (const name of ['props:stone', 'props:devata', 'props:laterite', 'surface:litter']) {
+    const u = kiln.scene.getObjectByName(name).material.uniforms;
+    assert.ok(u.uGlow.value > 0 && u.uGlowDark.value.y > 0, `${name} does not glow`);
+  }
+  // The other presets keep the strings' violet, in both glow colours.
+  kiln.setPreset('corrupted');
+  assert.deepEqual(kiln.uniforms.uGlowColor.value.toArray(), hexToRgb(PS1_STYLE.palette.stringGlow));
+  assert.deepEqual(kiln.uniforms.uGlowHot.value.toArray(), hexToRgb(PS1_STYLE.palette.stringGlow));
+});
+
+test('the heat options are off unless a material asks for them', () => {
+  const temple = createWorld('taprohm');
+  temple.scene.traverse((o) => {
+    if (!o.isMesh) return;
+    const u = o.material.uniforms;
+    assert.equal(u.uGlowDark.value.y, 0, o.name);
+    assert.equal(u.uGlowFade.value.x, 0, o.name);
+    assert.equal(u.uRise.value.x, 0, o.name);
+  });
+});
+
 test('internal resolution keeps 240 lines on the short side', () => {
   assert.deepEqual(internalResolution(640, 480), { width: 320, height: 240 });
   assert.deepEqual(internalResolution(1920, 1080), { width: 427, height: 240 });

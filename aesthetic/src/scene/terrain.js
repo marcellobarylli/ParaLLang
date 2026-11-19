@@ -36,14 +36,14 @@ function geometryFrom(positions) {
 }
 
 /**
- * Ground, water and banks for any level. cfg: { grid, heightAt, isWater, color, key, waterY }.
+ * Ground, water and banks for any level. cfg: { grid, heightAt, isWater, color, key, waterY, waterKey, bank }.
  * grid: { fine, fineHalf, fineFront, avenueHalf, coarse, coarseHalf }. Fine cells cover the
  * square of fineHalf plus an avenue of avenueHalf out to fineFront along +z. Heights must be
  * zero on the fine region's edge so the coarse cells meet it without cracks.
  */
 export function buildGround(surface, props, cfg) {
   const { fine, fineHalf, fineFront, avenueHalf, coarse, coarseHalf } = cfg.grid;
-  const { heightAt: h, isWater: wet = () => false, color, key = 'ground', waterY: W = 0 } = cfg;
+  const { heightAt: h, isWater: wet = () => false, color, key = 'ground', waterY: W = 0, waterKey = 'water', bank = { moss: 0.6, color: [0.9, 0.85, 0.8] } } = cfg;
   const ground = [];
   const water = [];
   const banks = [];
@@ -82,8 +82,8 @@ export function buildGround(surface, props, cfg) {
   }
 
   surface.add(key, geometryFrom(ground), { uvScale: 1 / 8, jitter: 0.03, color });
-  if (water.length) surface.add('water', geometryFrom(water), { uvScale: 1 / 8, jitter: 0, unshaded: true });
-  if (banks.length) props.add('laterite', geometryFrom(banks), { uvScale: 0.25, jitter: 0.05, moss: 0.6, color: [0.9, 0.85, 0.8] });
+  if (water.length) surface.add(waterKey, geometryFrom(water), { uvScale: 1 / 8, jitter: 0, unshaded: true });
+  if (banks.length) props.add('laterite', geometryFrom(banks), { uvScale: 0.25, jitter: 0.05, ...bank });
 }
 
 /** The Angkor Wat site: moat, pools and the avenue. */

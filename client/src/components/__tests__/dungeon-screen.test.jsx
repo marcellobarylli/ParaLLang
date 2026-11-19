@@ -190,10 +190,13 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   expect(screen.getByText(/^7 stand between you and the sanctuary/)).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Enter' }));
 
-  // The world map: Ta Prohm is open, its neighbours are known and closed, The Bone Dome is under the fog.
+  // The world map: Ta Prohm is open, its neighbours are known, The Bone Dome is under the fog. (Round 132: The Kiln
+  // is a neighbour. This store holds Ta Prohm alone, so The Kiln has no count and no button here; place-switch.test.jsx
+  // plays both.)
   expect(screen.getByRole('region', { name: 'The world map' })).toBeTruthy();
-  expect(screen.getByRole('img', { name: 'A map of 3 places' })).toBeTruthy();
-  expect(siteRows().map((row) => row.split(/(?<=[a-z])(?=[A-Z])/)[0])).toEqual(['Ta Prohm', 'Angkor Wat', 'Micromort Mountain']);
+  expect(screen.getByRole('img', { name: 'A map of 4 places' })).toBeTruthy();
+  expect(siteRows().map((row) => row.split(/(?<=[a-z])(?=[A-Z])/)[0])).toEqual(['Ta Prohm', 'The Kiln', 'Angkor Wat', 'Micromort Mountain']);
+  expect(screen.queryByRole('button', { name: 'Enter The Kiln' })).toBeNull();
   expect(screen.getByText('The causeway is under review. Nobody will say by whom.')).toBeTruthy();
   expect(screen.getByText('0 of 7 cleared')).toBeTruthy();
   expect(screen.queryByText(/Bone Dome/)).toBeNull();

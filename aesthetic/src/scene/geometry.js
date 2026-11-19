@@ -96,10 +96,15 @@ export function faceUp(geometry) {
  * scene costs one draw call per material.
  */
 export class MeshBuilder {
-  /** `shade(x, y, z)` -> brightness multiplier applied to every vertex (canopy shade). */
-  constructor(rng, { shade = null } = {}) {
+  /**
+   * `shade(x, y, z)` -> brightness multiplier applied to every vertex (canopy shade).
+   * `moss` is the colour that creeps over stone where a piece asks for moss: green by default,
+   * soot in a burnt level.
+   */
+  constructor(rng, { shade = null, moss = MOSS } = {}) {
     this.rng = rng;
     this.shade = shade;
+    this.moss = moss;
     this.buckets = new Map();
   }
 
@@ -124,7 +129,7 @@ export class MeshBuilder {
     if (flat || !g.attributes.normal) g.computeVertexNormals();
     if (uv === 'box') boxUV(g, uvScale);
     else if (!g.attributes.uv) g.setAttribute('uv', new Float32BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
-    paint(g, options, this.rng, options.unshaded ? null : this.shade);
+    paint(g, options, this.rng, options.unshaded ? null : this.shade, this.moss);
     if (!this.buckets.has(key)) this.buckets.set(key, []);
     this.buckets.get(key).push(g);
     return g;
@@ -153,7 +158,7 @@ export class MeshBuilder {
   }
 }
 
-function paint(g, options, rng, shade) {
+function paint(g, options, rng, shade, MOSS) {
   const { color = [1, 1, 1], jitter = 0.05, grime = 0, grimeHeight = 3, moss = 0 } = options;
   const pos = g.attributes.position;
   const nrm = g.attributes.normal;

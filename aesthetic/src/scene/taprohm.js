@@ -1,4 +1,4 @@
-import { BoxGeometry, CatmullRomCurve3, CylinderGeometry, ExtrudeGeometry, Matrix4, Quaternion, Shape, Vector3 } from 'three';
+import { BoxGeometry, CatmullRomCurve3, CylinderGeometry, ExtrudeGeometry, Matrix4, PlaneGeometry, Quaternion, Shape, Vector3 } from 'three';
 import { M, MeshBuilder, chain, taperedTube } from './geometry.js';
 import { STONE, box, prang } from './temple.js';
 import { mushrooms, root } from './ruins.js';
@@ -6,7 +6,8 @@ import { bush, canopy, jungleTree, tuft } from './vegetation.js';
 import { buildGround } from './terrain.js';
 import { assembleWorld, createWorldKit } from './world.js';
 import { PRESETS } from './presets.js';
-import { smoothstep, valueNoise2 } from '../util/random.js';
+import { createRandom, smoothstep, valueNoise2 } from '../util/random.js';
+import { createPS1Material } from '../ps1/material.js';
 
 // Ta Prohm, the second level: a flat monastery temple, facing east (+z here, as at Angkor Wat
 // the visitor approaches from +z), with galleried enclosures around a central sanctuary and
@@ -35,7 +36,9 @@ const UP = new Vector3(0, 1, 0);
 const DOOR = [0.14, 0.13, 0.11];
 
 // Ta Prohm's sandstone reads greyer and greener than Angkor Wat's.
-const TP = { ...STONE, color: [0.84, 0.91, 0.84], moss: 0.55, grime: 0.6 };
+const JUNGLE_STONE = { ...STONE, color: [0.84, 0.91, 0.84], moss: 0.55, grime: 0.6 };
+// The stone of the theme being built (buildLevel sets it; the builders below are synchronous).
+let TP = JUNGLE_STONE;
 const tbox = (b, key, F, x, y0, z, w, h, d, opts = {}, ry = 0) => box(b, key, F, x, y0, z, w, h, d, { ...TP, ...opts }, ry);
 
 /** The giant trees, placed first so the canopy shade and the collapse logic know about them. */
@@ -380,8 +383,11 @@ function buildGiants(b, rng) {
   canopy(b, rng, figTop.x, figTop.y + 1.2, figTop.z, 5, 3);
 }
 
-/** Translucent light shafts through gaps in the canopy, as PS1 games did them. */
-function buildShafts(b) {
+/**
+ * Translucent light shafts through gaps in the canopy, as PS1 games did them. With `smoke` they
+ * are columns of lit smoke instead: upright, widening as they rise, brightest at the ground.
+ */
+function buildShafts(b, { smoke = false } = {}) {
   const sun = new Vector3(...PRESETS.jungle.sunDir).normalize();
   const q = new Quaternion().setFromUnitVectors(UP, sun);
   const spots = [
@@ -393,12 +399,13 @@ function buildShafts(b) {
     [-6, 50],
     [38, 34],
   ];
+  const shade = smoke ? (y) => 1 - 0.75 * Math.min(1, y / 26) : (y) => 0.5 + 0.5 * Math.min(1, y / 30);
   for (const [x, z] of spots) {
-    const g = new CylinderGeometry(1.4, 2.8, 36, 4, 1, true);
+    const g = smoke ? new CylinderGeometry(3.4, 0.9, 36, 4, 1, true) : new CylinderGeometry(1.4, 2.8, 36, 4, 1, true);
     g.translate(0, 18, 0);
-    g.applyQuaternion(q);
+    if (!smoke) g.applyQuaternion(q);
     g.translate(x, 0, z);
-    b.add('shaft', g, { uv: 'keep', jitter: 0, unshaded: true, color: (_x, y) => [0.5 + 0.5 * Math.min(1, y / 30), 0.5 + 0.5 * Math.min(1, y / 30), 0.5 + 0.5 * Math.min(1, y / 30)] });
+    b.add('shaft', g, { uv: 'keep', jitter: 0, unshaded: true, color: (_x, y) => [shade(y), shade(y), shade(y)] });
   }
 }
 
@@ -465,25 +472,167 @@ function buildPlanting(b, surface, rng) {
   for (const [x, z] of scatter(9, ring(12, 50), (x, z) => isClear(x, z) && Math.abs(x) > 5)) rubblePile(b, rng, x, z, rng.range(1.5, 3), rng.int(5, 10));
 }
 
-/** Builds the Ta Prohm level. Same interface as createTempleWorld. */
-export function createTaProhmWorld(options = {}) {
-  const { seed = 7, preset = 'jungle' } = options;
-  const kit = createWorldKit(seed);
-  const { rng } = kit;
-  const props = new MeshBuilder(rng, { shade: canopyShade });
-  const surface = new MeshBuilder(rng, { shade: canopyShade });
+// ---------------------------------------------------------------------------------------------
+// The Kiln (round 132): Ta Prohm's plan again, burnt. The same builders, the same textures and the
+// same random sequence, so every wall, collapsed bay and root stands where it does in Ta Prohm.
+// What differs is the theme: soot for moss, bare branches for leaves, flames for grass, smoke for
+// light shafts, a floor of glowing rock, a moat of lava, and materials that glow in their dark parts.
 
-  TA_PROHM.rings.forEach((ring, i) => buildRing(props, rng, ring, i));
-  buildSanctuary(props);
-  buildLibrary(props);
-  buildOuterEnclosure(props, rng);
-  buildGiants(props, rng);
-  buildShafts(props);
-  buildPlanting(props, surface, rng);
-  buildGround(surface, props, { grid: TA_PROHM.grid, heightAt: taProhmHeightAt, color: groundColor, key: 'litter' });
+const SOOT = [0.06, 0.05, 0.05];
+const KILN_STONE = { ...STONE, color: [0.56, 0.47, 0.43], moss: 0.55, grime: 0 };
+const KILN = { lavaY: -0.4, moat: [57, 64], causewayHalf: 14 };
+
+/** The lava moat: between the outer wall and the edge of the fine ground, open at the avenue. */
+function isLava(x, z) {
+  const d = Math.max(Math.abs(x), Math.abs(z));
+  return d > KILN.moat[0] && d < KILN.moat[1] && !(z > 0 && Math.abs(x) < KILN.causewayHalf);
+}
+
+/** The Kiln's floor: dark rock with hot patches, hotter beyond the moat, ash on the axis path. */
+function kilnGroundColor(x, _y, z) {
+  const ax = Math.abs(x);
+  const d = Math.max(ax, Math.abs(z));
+  let path = ax < 3.5 && z > -12 ? 1 - smoothstep(1.5, 3.5, ax) : 0;
+  path *= 1 - smoothstep(110, 128, z);
+  const n = valueNoise2(x * 0.11, z * 0.11, 0, 41);
+  const wide = valueNoise2(x * 0.03, z * 0.03, 0, 43);
+  // Hot where the noise crosses its middle: veins and pools between cooler plates.
+  let hot = (1 - smoothstep(0.02, 0.13, Math.abs(n - 0.5))) * (0.35 + 0.65 * wide);
+  hot = Math.max(hot, smoothstep(64, 120, d) * smoothstep(0.35, 0.7, wide) * 0.9);
+  hot *= 1 - path;
+  const rock = 0.3 + 0.16 * valueNoise2(x * 0.2, z * 0.2, 0, 44) + 0.14 * path;
+  const cold = [rock * 1.08, rock * 0.86, rock * 0.8];
+  const lava = [1.9, 0.62, 0.14];
+  return [cold[0] + (lava[0] - cold[0]) * hot, cold[1] + (lava[1] - cold[1]) * hot, cold[2] + (lava[2] - cold[2]) * hot];
+}
+
+/** Brighter towards the floor: the stone's base stands in the heat. */
+const heatShade = (_x, y) => 1 + 0.5 * (1 - smoothstep(0, 3.5, y));
+
+/**
+ * The Kiln's builder: what the jungle level adds as leaves, this adds as bare branches. The
+ * leaves' share of the random sequence is still consumed, and the branches draw from a sequence of
+ * their own, so the rest of the level is built exactly as Ta Prohm is.
+ */
+class CharBuilder extends MeshBuilder {
+  constructor(rng, options, seed) {
+    super(rng, options);
+    this.twigs = createRandom(seed + 500);
+  }
+
+  add(key, source, options = {}) {
+    if (key !== 'leaves') return super.add(key, source, options);
+    const triangles = (source.index ? source.index.count : source.attributes.position.count) / 3;
+    for (let i = 0; i < triangles; i++) this.rng.next();
+    source.computeBoundingSphere();
+    const radius = source.boundingSphere.radius;
+    const e = options.matrix.elements;
+    const centre = new Vector3(e[12], e[13], e[14]);
+    const main = this.rng;
+    const r = this.twigs;
+    this.rng = r;
+    // Straight spikes of six triangles each: the level stays inside the triangle budget.
+    const count = 3;
+    const base = centre.clone().add(new Vector3(0, -radius * 0.35, 0));
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2 + r.range(-0.5, 0.5);
+      const dir = new Vector3(Math.cos(a), r.range(0.25, 1.1), Math.sin(a)).normalize();
+      const end = base.clone().addScaledVector(dir, radius * r.range(0.75, 1.3));
+      const thick = Math.min(0.32, Math.max(0.05, radius * 0.055));
+      super.add('root', taperedTube(new CatmullRomCurve3([base, end]), 1, 3, thick, 0.02, 2), { uv: 'keep', jitter: 0.08 });
+    }
+    this.rng = main;
+    return source;
+  }
+}
+
+/** The Kiln's materials: Ta Prohm's textures, tinted to char and glowing in their dark parts. */
+function kilnMaterials(uniforms, textures) {
+  const m = (options) => createPS1Material(uniforms, options);
+  const heat = (name, map, glowDark, extra = {}) => m({ name, map, glow: 0.66, glowDark, glowFade: [6, 0.3], ...extra });
+  return {
+    stone: heat('stone', textures.sandstone, [0.3, 0.47]),
+    devata: heat('devata', textures.devata, [0.27, 0.4]),
+    laterite: heat('laterite', textures.laterite, [0.26, 0.35]),
+    // The face tower stands high: its glow does not fade, so the carved eyes and mouths burn.
+    face: m({ name: 'face', map: textures.face, glow: 0.8, glowDark: [0.34, 0.43] }),
+    litter: m({ name: 'kiln-floor', map: textures.laterite, lit: false, glow: 0.78, glowDark: [0.27, 0.36] }),
+    lava: m({ name: 'lava', map: textures.water, lit: false, tint: [4.4, 1.3, 0.3], scroll: [0.006, 0.011], ripple: 0.05, glow: 0.3, fog: 0.5 }),
+    thitpok: m({ name: 'thitpok', map: textures.thitpok, tint: [0.2, 0.17, 0.16], glow: 0.7, glowDark: [0.57, 0.615], glowFade: [10, 0.12] }),
+    root: m({ name: 'root', map: textures.root, tint: [0.34, 0.28, 0.26], glow: 0.8, glowDark: [0.2, 0.25], glowFade: [8, 0.15] }),
+    tuft: m({ name: 'flame', map: textures.tuft, alphaTest: 0.5, doubleSided: true, sway: 0.3, lit: false, tint: [2.3, 0.85, 0.2], fog: 0.5 }),
+    // The characters' figures (and the mushrooms) are built in `plain`. The light here is orange, so green and blue
+    // are lifted: a figure keeps some of its own colours and reads against the dark stone.
+    plain: m({ name: 'plain', tint: [1.1, 1.5, 2] }),
+    ember: m({ name: 'ember', lit: false, fog: 0.3, doubleSided: true, tint: [1, 0.55, 0.16], rise: [1.1, 16] }),
+  };
+}
+
+/** Embers over the courts and the avenue: small quads that the vertex shader lifts and drifts. */
+function buildEmbers(b, seed) {
+  const r = createRandom(seed + 900);
+  for (let i = 0; i < 240; i++) {
+    const avenue = i % 5 === 0;
+    const x = avenue ? r.range(-14, 14) : r.range(-58, 58);
+    const z = avenue ? r.range(58, 120) : r.range(-58, 58);
+    const size = r.range(0.07, 0.16);
+    const g = new PlaneGeometry(size, size);
+    g.rotateY(r.range(0, Math.PI));
+    g.translate(x, 0.2, z);
+    // The quad's phase, carried in the direction of its normal (see the vertex shader).
+    const phase = r.range(-Math.PI, Math.PI);
+    const normal = g.attributes.normal;
+    for (let k = 0; k < normal.count; k++) normal.setXYZ(k, Math.cos(phase), 0, Math.sin(phase));
+    const c = r.range(0.7, 1.6);
+    b.add('ember', g, { uv: 'keep', jitter: 0, unshaded: true, color: [c, c, c] });
+  }
+}
+
+const THEMES = {
+  jungle: {
+    name: 'ta-prohm',
+    preset: 'jungle',
+    stone: JUNGLE_STONE,
+    builder: (rng) => new MeshBuilder(rng, { shade: canopyShade }),
+    ground: { color: groundColor, key: 'litter' },
+  },
+  ember: {
+    name: 'the-kiln',
+    preset: 'ember',
+    stone: KILN_STONE,
+    builder: (rng, seed) => new CharBuilder(rng, { shade: heatShade, moss: SOOT }, seed),
+    materials: kilnMaterials,
+    smoke: true,
+    ground: { color: kilnGroundColor, key: 'litter', isWater: isLava, waterY: KILN.lavaY, waterKey: 'lava', bank: { color: [0.5, 0.36, 0.3] } },
+    embers: true,
+  },
+};
+
+function buildLevel(options, theme) {
+  const { seed = 7, preset = theme.preset } = options;
+  const kit = createWorldKit(seed);
+  if (theme.materials) Object.assign(kit.materials, theme.materials(kit.uniforms, kit.textures));
+  const { rng } = kit;
+  const props = theme.builder(rng, seed);
+  const surface = theme.builder(rng, seed);
+
+  TP = theme.stone;
+  try {
+    TA_PROHM.rings.forEach((ring, i) => buildRing(props, rng, ring, i));
+    buildSanctuary(props);
+    buildLibrary(props);
+    buildOuterEnclosure(props, rng);
+    buildGiants(props, rng);
+    buildShafts(props, { smoke: theme.smoke });
+    buildPlanting(props, surface, rng);
+    buildGround(surface, props, { grid: TA_PROHM.grid, heightAt: taProhmHeightAt, ...theme.ground });
+    if (theme.embers) buildEmbers(props, seed);
+  } finally {
+    TP = JUNGLE_STONE;
+  }
 
   return assembleWorld(kit, {
-    name: 'ta-prohm',
+    name: theme.name,
     props,
     surface,
     preset,
@@ -493,6 +642,16 @@ export function createTaProhmWorld(options = {}) {
     tour: TA_PROHM_TOUR,
     orbitTarget: [0, 6, 0],
   });
+}
+
+/** Builds the Ta Prohm level. Same interface as createTempleWorld. */
+export function createTaProhmWorld(options = {}) {
+  return buildLevel(options, THEMES.jungle);
+}
+
+/** Builds The Kiln: Ta Prohm's plan under the ember theme. Same interface, same layout, same heights. */
+export function createKilnWorld(options = {}) {
+  return buildLevel(options, THEMES.ember);
 }
 
 export const TA_PROHM_TOUR = [

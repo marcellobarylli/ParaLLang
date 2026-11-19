@@ -23,15 +23,27 @@ uniform vec2 uScroll;
 uniform float uLit;
 uniform float uSway;
 uniform float uRipple;
+uniform vec2 uRise;
 
 varying vec3 vColor;
 varying vec3 vUvAffine;
 varying vec2 vUvPerspective;
 varying float vFog;
 varying float vPulse;
+varying float vHeight;
 
 void main() {
   vec4 world = modelMatrix * vec4(position, 1.0);
+
+  // Embers: each quad carries its own phase in the direction of its normal (unlit, so the normal is
+  // free), rises through uRise.y metres at uRise.x metres a second and starts again at the ground.
+  if (uRise.x > 0.0) {
+    float phase = atan(normal.z, normal.x) * 0.15915494 + 0.5;
+    float t = fract(phase + uTime * uRise.x / uRise.y);
+    world.y += t * uRise.y;
+    world.x += 0.6 * sin(uTime * 0.9 + phase * 40.0 + t * 5.0);
+    world.z += 0.6 * cos(uTime * 0.7 + phase * 23.0 + t * 4.0);
+  }
 
   // Foliage sway, weighted towards the tip (uv.y runs base 0 -> tip 1 on fronds and tufts).
   float tip = uv.y * uv.y;
@@ -70,6 +82,7 @@ void main() {
   float dist = length(viewPos.xyz);
   vFog = clamp((dist - uFogNear) / max(uFogFar - uFogNear, 0.001), 0.0, 1.0);
   vPulse = world.x * 0.15 + world.z * 0.15 + world.y * 0.3;
+  vHeight = world.y;
 }
 `;
 
@@ -86,6 +99,9 @@ uniform float uCorruption;
 uniform vec3 uGlowColor;
 uniform float uGlow;
 uniform float uGlowMask;
+uniform vec3 uGlowHot;
+uniform vec2 uGlowDark;
+uniform vec2 uGlowFade;
 uniform float uTime;
 
 varying vec3 vColor;
@@ -93,6 +109,7 @@ varying vec3 vUvAffine;
 varying vec2 vUvPerspective;
 varying float vFog;
 varying float vPulse;
+varying float vHeight;
 
 void main() {
   // Interpolating (uv * w) and w perspective-correctly, then dividing, gives screen-linear UVs.
@@ -105,9 +122,17 @@ void main() {
 
   // The strings between the worlds glow as corruption rises. With uGlowMask the texture's
   // alpha marks where (carved grooves of inscriptions are alpha 0).
-  float glow = clamp(uGlow * uCorruption * mix(1.0, 1.0 - tex.a, uGlowMask), 0.0, 1.0);
+  float mask = mix(1.0, 1.0 - tex.a, uGlowMask);
+  // Heat (the ember levels): the dark parts of the texture glow (joints, grooves, cracks), below
+  // luminance uGlowDark.x fully and not at all above uGlowDark.y; and the glow fades with height,
+  // down to the share uGlowFade.y at uGlowFade.x metres. Both are off at zero.
+  // Far off, the fog takes the fine glow, so a minified texture does not sparkle.
+  if (uGlowDark.y > 0.0) mask *= (1.0 - smoothstep(uGlowDark.x, uGlowDark.y, dot(tex.rgb, vec3(0.299, 0.587, 0.114)))) * (1.0 - 0.8 * vFog);
+  if (uGlowFade.x > 0.0) mask *= mix(1.0, uGlowFade.y, smoothstep(0.0, uGlowFade.x, vHeight));
+  float glow = clamp(uGlow * uCorruption * mask, 0.0, 1.0);
   float pulse = 0.72 + 0.28 * sin(uTime * 2.4 + vPulse);
-  col = mix(col, uGlowColor * pulse * 1.25, glow);
+  // The brightest parts go to the hot colour (the same as the glow colour unless a preset names one).
+  col = mix(col, mix(uGlowColor, uGlowHot, glow * glow) * pulse * 1.25, glow);
 
   float fog = vFog * uFogAmount * (1.0 - 0.7 * glow);
   col = mix(col, uFogColor, fog);

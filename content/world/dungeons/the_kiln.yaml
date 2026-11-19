@@ -1,0 +1,34 @@
+# Round 132: The Kiln, the second dungeon. It is Ta Prohm's plan on the burnt level (`kiln` in
+# aesthetic/src/scene/taprohm.js: the same walls, heights and clear ground under an ember theme), so the sites, the
+# paths, the seals and the entrance are those of ta_prohm.yaml, and client/src/__tests__/dungeon-file.test.js checks
+# both files against the same wall plan. The encounters and figures are Ta Prohm's too: the round added a place, not
+# characters. The site names are its own. Its run is kept apart from Ta Prohm's (the save holds a run per dungeon).
+id: the_kiln
+name: The Kiln
+level: kiln
+start: face_gate
+goal: sanctuary
+entrance: [[0, 96], [2.5, 70]]
+sites:
+  - { id: face_gate, encounter: market_entrance_tutorial, name: The Ash Gate, at: [3.5, 63], figure: archway }
+  - { id: buttress_tree, encounter: butchers_stall_charcutier, name: The Charred Buttress, at: [17, 42], figure: charcutier }
+  - { id: root_court, encounter: imp_coffee_greeting, name: The Ember Court, at: [6, 21.5], figure: imp }
+  - { id: sunlit_court, encounter: cracked_fountain_letharger, name: The Cinder Court, at: [-11, 23.5], figure: letharger }
+  - { id: library, encounter: old_bookshop_bookworm, name: The Burnt Library, at: [-26, 26], figure: bookworm, requires_level: 3 }
+  - { id: before_sanctuary, encounter: high_gate_bambieshart, name: Before the Furnace, at: [0.3, 11.2], figure: wanderer }
+  - id: sanctuary
+    encounter: the_rift_errata
+    name: The Furnace
+    at: [0.3, 5.4]
+    figure: erratum
+    requires: [face_gate, buttress_tree, root_court, sunlit_court, library, before_sanctuary]
+    requires_level: 5
+paths:
+  - { between: [face_gate, buttress_tree], via: [[0.3, 60.5], [0.3, 52], [0.3, 46]] }
+  - { between: [face_gate, root_court], via: [[0.3, 60.5], [0.3, 52], [0.3, 33], [0.3, 25.5], [5.5, 25.5]] }
+  - { between: [buttress_tree, root_court], via: [[0.3, 38], [0.3, 25.5], [5.5, 25.5]] }
+  - { between: [root_court, sunlit_court], via: [[0.3, 22.5]] }
+  - { between: [sunlit_court, library], via: [[-20, 25]] }
+  - { between: [root_court, before_sanctuary], via: [[0.3, 20.8]] }
+  - { between: [sunlit_court, before_sanctuary], via: [[0.3, 20.8]] }
+  - { between: [before_sanctuary, sanctuary], via: [] }

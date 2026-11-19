@@ -20,6 +20,7 @@ export function createPS1Uniforms() {
     uTime: { value: 0 },
     uCorruption: { value: 0 },
     uGlowColor: { value: new Vector3(...hexToRgb('#c08cff')) },
+    uGlowHot: { value: new Vector3(...hexToRgb('#c08cff')) },
   };
 }
 
@@ -36,6 +37,9 @@ export function createPS1Uniforms() {
  *  ripple      vertical vertex wave amplitude (water)
  *  glow        0..1, how strongly the surface glows with corruption
  *  glowMask    true: the texture alpha marks the glowing parts (0 = glows)
+ *  glowDark    [lo, hi]: the dark parts of the texture glow, fully below luminance lo, not above hi
+ *  glowFade    [height, share]: the glow fades with height, down to `share` of itself at `height`
+ *  rise        [speed, height]: ember quads rise `height` metres at `speed` and start again
  *  doubleSided
  */
 export function createPS1Material(shared, options = {}) {
@@ -53,6 +57,9 @@ export function createPS1Material(shared, options = {}) {
     ripple = 0,
     glow = 0,
     glowMask = false,
+    glowDark = [0, 0],
+    glowFade = [0, 0],
+    rise = [0, 0],
     doubleSided = false,
     depthWrite,
   } = options;
@@ -71,6 +78,9 @@ export function createPS1Material(shared, options = {}) {
     uRipple: { value: ripple },
     uGlow: { value: glow },
     uGlowMask: { value: glowMask ? 1 : 0 },
+    uGlowDark: { value: new Vector2(...glowDark) },
+    uGlowFade: { value: new Vector2(...glowFade) },
+    uRise: { value: new Vector2(...rise) },
   };
 
   const material = new ShaderMaterial({

@@ -1,7 +1,7 @@
 # Round 119: the world map, the layer above the dungeons. Bundled by the web client (client/src/atlas.js); the server
 # does not load it, because with one open place it has nothing to enforce.
 #
-# A place with `dungeon` is open: entering it opens that dungeon's map. A place without one is closed and shows its
+# A place with `dungeon` is open: entering it opens that dungeon's map (round 132: more than one place may be open). A place without one is closed and shows its
 # `closed` line. Fog: `start` is where the player is, a place joined to it by a path is known, and every other place
 # is hidden. `map` is the place's position on the card, x from the left and y from the top, each from 0 to 1.
 #
@@ -17,6 +17,14 @@ places:
     description: >
       A temple the jungle is halfway through eating. The Crumbling Market has moved in between the roots, because
       rent is rent.
+  # Round 132: Ta Prohm's plan again, burnt (content/world/dungeons/the_kiln.yaml). The name and the lines are ours.
+  - id: the_kiln
+    name: The Kiln
+    dungeon: the_kiln
+    map: { x: 0.24, y: 0.84 }
+    description: >
+      Ta Prohm again, on a branch that caught fire and never got round to going out. The trees have given up their
+      leaves. The floor has given up nothing.
   - id: angkor_wat
     name: Angkor Wat
     map: { x: 0.70, y: 0.40 }
@@ -36,6 +44,7 @@ places:
       A dome. Of bone. The name was not a metaphor.
     closed: "No road leads here yet."
 paths:
+  - [ta_prohm, the_kiln]
   - [ta_prohm, angkor_wat]
   - [ta_prohm, micromort_mountain]
   - [angkor_wat, the_bone_dome]
