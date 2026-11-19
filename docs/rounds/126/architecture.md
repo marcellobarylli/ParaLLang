@@ -107,3 +107,13 @@ Sonnet against the account's default is not measured: the session has no subscri
 - **Server:** a sheet's voice is validated and comes with the encounter; all seven sheets carry one; `claude-cli`
   without `LLM_MODEL` resolves to `sonnet`, with it to its value, and the other providers are as before.
 - All server and client suites and the build keep passing.
+
+## Outcome (2026-11-19)
+
+Built as designed on the branch `claude/inspiring-hypatia-xoybb3` as `c9a2ce7`. It is not merged to `main`, so it
+is not deployed. In the web dungeon each character reads its new lines aloud in the voice its sheet names, each line
+has a 🔊, and a 🎤 beside the reply box writes what the player says where the browser can listen. All seven sheets
+carry a voice. The Claude CLI provider asks for Sonnet unless `LLM_MODEL` is set. Server 438 and client 172 tests
+pass, and a real-browser run of the first conversation passes with recorders in place of the browser's speech. The
+claim boundary held: nothing was heard, no phone was used, and Sonnet's speed is not measured. What a turn spends
+its time on is in [`findings.md`](findings.md); the owner's words are in [`trail/interview.md`](trail/interview.md).
