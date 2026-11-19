@@ -65,8 +65,8 @@ test('moving the slider on the dungeon screen sets the panels at once, hides the
   const requests = fetchMock.mock.calls.length;
   fireEvent.change(screen.getByLabelText('Text panel opacity'), { target: { value: '30' } });
   expect(shell.style.getPropertyValue('--panel-alpha')).toBe('0.3');
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true });
   expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
   expect(fetchMock.mock.calls.length).toBe(requests);
   await user.click(screen.getByRole('button', { name: 'Close' }));
@@ -139,8 +139,8 @@ test('the box on the dungeon screen switches the preference and stores it', asyn
   render(<App />);
   await user.click(screen.getByRole('button', { name: 'Settings' }));
   await user.click(screen.getByLabelText('Tilt to look'));
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true });
   expect(screen.getByLabelText('Tilt to look').checked).toBe(true);
   await user.click(screen.getByLabelText('Tilt to look'));
   expect(useGameStore.getState().display.tiltLook).toBe(false);
@@ -176,8 +176,53 @@ test('the voices box on the dungeon screen switches the preference and stores it
   await user.click(screen.getByRole('button', { name: 'Settings' }));
   expect(speech.speaker.prime).toHaveBeenCalledOnce(); // the first tap on the page
   await user.click(screen.getByLabelText('Character voices'));
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false, music: true });
   expect(JSON.parse(localStorage.getItem('parallang.display')).voices).toBe(false);
   await user.click(screen.getByLabelText('Character voices'));
   expect(useGameStore.getState().display.voices).toBe(true);
+});
+
+// Round 127: the ambient music. It starts at the first tap, gives way to speech, and has a switch in Settings.
+test('the music starts at the first tap and not before, follows speech, and the Settings box stops and starts it', async () => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
+  useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: true } });
+  const speech = { speaker: { supported: true, speaking: false, speak: vi.fn(), stop: vi.fn(), prime: vi.fn(), available: () => true }, listener: { supported: true, listening: false, start: vi.fn(), stop: vi.fn() } };
+  const ambience = { supported: true, start: vi.fn(), stop: vi.fn(), setLevel: vi.fn() };
+  const { default: DungeonScreen } = await import('../DungeonScreen.jsx');
+  try {
+    render(<DungeonScreen useStore={useGameStore} speech={speech} ambience={ambience} />);
+    expect(ambience.start).not.toHaveBeenCalled(); // a page may not make sound on its own
+    await user.click(screen.getByRole('button', { name: 'Settings' }));
+    expect(ambience.start).toHaveBeenCalledOnce();
+    // Every 400 ms the music is told whether the browser is speaking or listening.
+    act(() => { vi.advanceTimersByTime(450); });
+    expect(ambience.setLevel).toHaveBeenLastCalledWith('full');
+    speech.speaker.speaking = true;
+    act(() => { vi.advanceTimersByTime(400); });
+    expect(ambience.setLevel).toHaveBeenLastCalledWith('duck');
+    speech.listener.listening = true;
+    act(() => { vi.advanceTimersByTime(400); });
+    expect(ambience.setLevel).toHaveBeenLastCalledWith('mute');
+    // The box.
+    const box = screen.getByLabelText('Ambient music');
+    expect(box.checked).toBe(true);
+    await user.click(box);
+    expect(ambience.stop).toHaveBeenCalledOnce();
+    expect(useGameStore.getState().display.music).toBe(false);
+    expect(JSON.parse(localStorage.getItem('parallang.display')).music).toBe(false);
+    const calls = ambience.setLevel.mock.calls.length;
+    act(() => { vi.advanceTimersByTime(1000); });
+    expect(ambience.setLevel.mock.calls.length).toBe(calls); // off: nobody is watching
+    await user.click(screen.getByLabelText('Ambient music'));
+    expect(ambience.start).toHaveBeenCalledTimes(2); // the tick is the tap
+    expect(useGameStore.getState().display.music).toBe(true);
+  } finally { vi.useRealTimers(); }
+});
+
+test('Settings says when the browser cannot play the music', () => {
+  render(<SettingsSheet settings={{ serverUrl: '', token: '' }} onSave={vi.fn()} onClose={vi.fn()} music onMusic={vi.fn()} musicSupported={false} />);
+  expect(screen.getByLabelText('Ambient music').disabled).toBe(true);
+  expect(screen.getByText('This browser cannot play it.')).toBeTruthy();
 });

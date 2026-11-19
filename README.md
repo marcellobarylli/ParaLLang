@@ -221,6 +221,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   the reply box writes what the player says, in the target language, and the player sends it. Both run in the
   browser: no key, no cost and no extra call to the model. `node client/scripts/voice-check.mjs` checks the wiring in
   headless Chromium with recorders in place of the browser's speech.
+  "Ambient music" (round 127, on by default) plays quiet generated chords with the Web Audio API
+  (`client/src/ambience.js`): no audio file, never the same twice, lowered while a line is read aloud and silent
+  while the microphone listens. It starts at the first tap. `node client/scripts/music-check.mjs` checks it in
+  headless Chromium and renders a sample to listen to.
 - **Server image.** `Dockerfile` (Node 22, the server's production dependencies, `content/`, `prompts/` and Claude
   Code 2.1.325 at `CLAUDE_CLI_PATH=/usr/local/bin/claude`). `render.yaml` is the Render blueprint: one web service,
   health check `/api/health`. With `NODE_ENV=production` the server refuses to start unless `PARALLANG_TOKEN` is set
