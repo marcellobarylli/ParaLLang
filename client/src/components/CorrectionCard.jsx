@@ -8,9 +8,20 @@ export default function CorrectionCard({ correction, language, speaker = null, l
   const [attempt, setAttempt] = useState('');
   const [verdict, setVerdict] = useState(null); // null, 'right', or the words to look at
   const [listening, setListening] = useState(false);
+  const boxRef = useRef(null);
+  const verdictRef = useRef(null);
   const listenerRef = useRef(listener);
   listenerRef.current = listener;
   useEffect(() => () => { if (listenerRef.current?.listening) listenerRef.current.stop(); }, []);
+  // Round 137: the box grows with its text (it wraps), and the sheet keeps the box and the verdict in view.
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!box) return;
+    box.style.height = 'auto';
+    box.style.height = box.scrollHeight ? `${box.scrollHeight}px` : '';
+    box.scrollIntoView?.({ block: 'nearest' });
+  }, [attempt]);
+  useEffect(() => { if (verdict) verdictRef.current?.scrollIntoView?.({ block: 'nearest' }); }, [verdict]);
   const languageName = language?.name ?? 'the target language';
   const check = (text = attempt) => {
     if (!text.trim()) return;
@@ -47,16 +58,19 @@ export default function CorrectionCard({ correction, language, speaker = null, l
       )}
       <form className="practice-row" onSubmit={(event) => { event.preventDefault(); check(); }}>
         <label className="sr-only" htmlFor="practice-box">Say it yourself</label>
-        <input id="practice-box" value={attempt} onChange={(event) => { setAttempt(event.target.value); setVerdict(null); }} lang={language?.tag}
+        <textarea id="practice-box" ref={boxRef} rows={1} value={attempt} onChange={(event) => { setAttempt(event.target.value); setVerdict(null); }} lang={language?.tag}
+          onKeyDown={(event) => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent?.isComposing) { event.preventDefault(); check(); } }}
           placeholder={listening ? `Listening for ${languageName}…` : 'Say it yourself (optional)'} autoComplete="off" autoCapitalize="sentences" />
+        <div className="practice-buttons">
         {listener?.supported && (
           <button type="button" className={`icon-button mic-button${listening ? ' listening' : ''}`} onClick={listen} aria-pressed={listening}
             aria-label={listening ? 'Stop listening' : `Say the corrected sentence in ${languageName}`}>{listening ? '■' : '🎤'}</button>
         )}
         <button type="submit" className="secondary-button" disabled={!attempt.trim()}>Check</button>
+        </div>
       </form>
-      {verdict === 'right' && <p className="practice-verdict right" role="status">✓ That's it.</p>}
-      {Array.isArray(verdict) && <p className="practice-verdict" role="status">Not quite. Look again at: <span lang={language?.tag}>{verdict.join(' ') || correction.text}</span>. It costs nothing, and you have moved on either way.</p>}
+      {verdict === 'right' && <p ref={verdictRef} className="practice-verdict right" role="status">✓ That's it.</p>}
+      {Array.isArray(verdict) && <p ref={verdictRef} className="practice-verdict" role="status">Not quite. Look again at: <span lang={language?.tag}>{verdict.join(' ') || correction.text}</span>. It costs nothing, and you have moved on either way.</p>}
     </section>
   );
 }

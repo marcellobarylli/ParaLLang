@@ -231,9 +231,10 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .correction-text { margin: 0; font-size: 1.1rem; color: var(--gold); }
 .correction-note { margin: 0; font-size: .85rem; }
 .heart-lost { color: #e0584f; font-weight: 700; }
-.practice-row { display: flex; gap: .4rem; align-items: center; min-width: 0; }
-.practice-row input { flex: 1 1 0; min-width: 0; width: 0; }
-.practice-row button { flex: none; }
+.practice-row { display: flex; flex-direction: column; gap: .4rem; min-width: 0; }
+.practice-row textarea { display: block; width: 100%; box-sizing: border-box; min-width: 0; overflow-wrap: anywhere; }
+.practice-buttons { display: flex; gap: .4rem; align-items: center; justify-content: flex-end; }
+.practice-buttons button { flex: none; }
 .correction-card .speaker-row > p { min-width: 0; overflow-wrap: anywhere; }
 .practice-verdict { margin: 0; font-size: .9rem; }
 .practice-verdict.right { color: #8fd18a; }

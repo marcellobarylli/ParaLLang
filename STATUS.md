@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 137, the correction card's practice box grows
+
+The owner's screenshot showed the correction card's practice box as one line with the verdict cut off below it. The box
+now wraps and grows, Check and the microphone sit below it, and the verdict is scrolled into view
+([findings](docs/rounds/137/findings.md)). Client only; merged with `[skip render]`.
+
 ## Addendum 2026-11-19: round 136, Courier New and the text at the reply
 
 The owner asked for every font to be Courier New and for the conversation text to stand at the character's reply
@@ -1292,6 +1298,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 137 | 11-19 | The correction card's practice box grows and wraps, Check below | [137](docs/rounds/137/architecture.md) | [findings](docs/rounds/137/findings.md) | round 137 build |
 | 136 | 11-19 | Courier New everywhere; the text stands at the character's reply | [136](docs/rounds/136/architecture.md) | [findings](docs/rounds/136/findings.md) | round 136 build |
 | 135 | 11-19 | A faster walk; a move between any two discovered places | [135](docs/rounds/135/architecture.md) | [findings](docs/rounds/135/findings.md) | round 135 build |
 | 134 | 11-19 | A minimal Micromort Mountain: Eduardo on a ledge halfway up, a snowy summit with a wine festival | [133](docs/rounds/134/architecture.md) | [findings](docs/rounds/134/findings.md) | round 133 build |
