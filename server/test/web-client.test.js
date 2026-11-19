@@ -119,10 +119,10 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
   assert.equal(s().reviewChallenge, null);
   assert.equal(s().spellbook.inEncounter, true);
 
-  // Before Portia is answered no walk is offered, and the server refuses one all the same.
-  assert.equal(siteStatesOf(s()).root_court.reachable, false);
-  const early = await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId: s().learnerId, method: 'POST', body: { siteId: 'root_court', leave: true, client: 121 } });
-  assert.equal(early.data.error.code, 'BLOCKED');
+  // Round 143: a site out of the fog is open before Portia is answered, a hidden one is refused.
+  assert.equal(siteStatesOf(s()).root_court.reachable, true);
+  const early = await api(runtime, '/api/dungeons/ta_prohm/move', { learnerId: s().learnerId, method: 'POST', body: { siteId: 'library', leave: true, client: 121 } });
+  assert.equal(early.data.error.code, 'NOT_ADJACENT');
 
   await answerSite(s);
   has(s().assessment, ['overallFeedback', 'objectiveResults'], 'assessment');
@@ -135,10 +135,10 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
   await walkTo(s, 'buttress_tree');
   assert.equal(s().encounter.character.name, 'Mortimer');
   assert.equal(s().encounter.companionBriefing, null);
-  // The player leaves Mortimer for later: the way on is shut, the ways back are open.
+  // The player leaves Mortimer for later: every site out of the fog is open (round 143).
   s().leaveConversation();
   assert.equal(s().phase, 'site');
-  assert.deepEqual(Object.entries(siteStatesOf(s())).filter(([, site]) => site.reachable).map(([id]) => id), ['face_gate']);
+  assert.deepEqual(Object.entries(siteStatesOf(s())).filter(([, site]) => site.reachable).map(([id]) => id), ['face_gate', 'root_court']);
   await s().talk();
   assert.equal(s().phase, 'encounter');
   await answerSite(s);

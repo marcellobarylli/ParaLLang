@@ -43,30 +43,27 @@ test('fog: a new run shows the start and the sites a path leads to; the rest are
   });
 });
 
-test('the pass rule: a character lets the player pass once answered, and the way back stays open', () => {
+test('the pass rule: any site out of the fog is reachable from anywhere, a hidden one is not', () => {
   const run = freshRun(dungeon);
-  // Portia has not been answered: no site is reachable, and the refusal is BLOCKED for a neighbour.
-  assert.deepEqual(reachable(run), []);
-  assert.equal(moveProblem(dungeon, run, 'root_court'), 'BLOCKED');
-  assert.equal(moveProblem(dungeon, run, 'library'), 'NOT_ADJACENT');
+  // Round 143: no character has to let the player pass; the neighbours of the gate are out of the fog and open.
+  assert.deepEqual(reachable(run).sort(), ['buttress_tree', 'root_court']);
+  assert.equal(moveProblem(dungeon, run, 'root_court'), null);
+  assert.equal(moveProblem(dungeon, run, 'library'), 'NOT_ADJACENT', 'hidden in the fog');
   assert.equal(moveProblem(dungeon, run, 'nowhere'), 'UNKNOWN_SITE');
   assert.equal(moveProblem(dungeon, run, undefined), 'UNKNOWN_SITE');
   assert.equal(moveProblem(dungeon, run, 'face_gate'), null, 'a move to the site the player stands at is allowed');
   assert.equal(moved(dungeon, run, 'face_gate'), run, 'and changes nothing');
 
-  const past = cleared(dungeon, run, 'face_gate');
-  assert.deepEqual(reachable(past).sort(), ['buttress_tree', 'root_court']);
-  // At Mortimer's site, not yet answered: the way on to Gerald is blocked, the way back to Portia is open.
-  const atTree = moved(dungeon, past, 'buttress_tree');
-  assert.equal(moveProblem(dungeon, atTree, 'root_court'), 'BLOCKED');
-  assert.deepEqual(reachable(atTree), ['face_gate']);
-  // Back at the gate, Gerald's court is reachable: it is the gate's character who lets the player pass.
-  const back = moved(dungeon, atTree, 'face_gate');
-  assert.deepEqual(reachable(back).sort(), ['buttress_tree', 'root_court']);
-  // A visited, uncleared site can be walked to from an uncleared one.
-  const atCourt = moved(dungeon, back, 'root_court');
+  // At Mortimer's site, not yet answered, Gerald's court (known, not a neighbour of this site's) is still open.
+  const atTree = moved(dungeon, run, 'buttress_tree');
+  assert.equal(moveProblem(dungeon, atTree, 'root_court'), null);
+  assert.equal(moveProblem(dungeon, atTree, 'face_gate'), null);
+  // Visiting a site lifts the fog on the sites next to it: Gerald's court's neighbour opens from anywhere.
+  const atCourt = moved(dungeon, atTree, 'root_court');
+  assert.equal(moveProblem(dungeon, atCourt, 'sunlit_court'), null);
   assert.equal(moveProblem(dungeon, atCourt, 'buttress_tree'), null);
-  assert.equal(moveProblem(dungeon, atCourt, 'sunlit_court'), 'BLOCKED');
+  assert.equal(moveProblem(dungeon, atTree, 'sunlit_court'), 'NOT_ADJACENT', 'still hidden before the court is visited');
+  assert.equal(moveProblem(dungeon, moved(dungeon, atCourt, 'face_gate'), 'sunlit_court'), null, 'and open from any point after');
 });
 
 test('the seal: the sanctuary opens when the six other sites are cleared, and clearing it completes the run', () => {
@@ -96,14 +93,14 @@ test('a level seal: the Library opens at level 3 and the Sanctuary at level 5, w
   const atCourt = play(freshRun(dungeon), ['face_gate', 'root_court', 'sunlit_court']);
   assert.deepEqual(gateFor(siteOf(dungeon, 'library'), atCourt, 2), { sealed: true, required: 0, completed: 0, level: { required: 3, current: 2 } });
   assert.equal(moveProblem(dungeon, atCourt, 'library', 2), 'SEALED');
-  assert.deepEqual(reachable(atCourt, 2).sort(), ['before_sanctuary', 'face_gate', 'root_court']); // and the gate, visited (round 134)
+  assert.deepEqual(reachable(atCourt, 2).sort(), ['before_sanctuary', 'buttress_tree', 'face_gate', 'root_court']); // every site out of the fog but the sealed one (round 143)
   assert.equal(gateFor(siteOf(dungeon, 'library'), atCourt, 3).sealed, false);
   assert.equal(moveProblem(dungeon, atCourt, 'library', 3), null);
   assert.equal(moveProblem(dungeon, atCourt, 'library'), 'SEALED', 'with no level given the player is level 1');
-  // The seal is named before the character in the way: at an uncleared Sunlit Court the Library is SEALED at level 2.
+  // At level 2 the Library is SEALED, at level 3 it is open.
   const before = moved(dungeon, play(freshRun(dungeon), ['face_gate', 'root_court']), 'sunlit_court');
   assert.equal(moveProblem(dungeon, before, 'library', 2), 'SEALED');
-  assert.equal(moveProblem(dungeon, before, 'library', 3), 'BLOCKED');
+  assert.equal(moveProblem(dungeon, before, 'library', 3), null);
 
   // The Sanctuary: the six sites and level 5.
   const six = play(freshRun(dungeon), ['face_gate', 'buttress_tree', 'root_court', 'sunlit_court', 'library', 'sunlit_court', 'before_sanctuary']);
@@ -126,12 +123,12 @@ test('in a complete run no gate is sealed, on the map as for moves, also at leve
   assert.equal(moveProblem(dungeon, readRun(dungeon, { ...done, at: 'sunlit_court' }), 'library', 1), null);
 });
 
-// Round 134: any two discovered places are joined, not only neighbours.
-test('a visited site can be reached from anywhere, an unvisited one only from a neighbour', () => {
+// Round 143: any two places out of the fog are joined, visited or not.
+test('a site out of the fog can be reached from anywhere, a hidden one cannot', () => {
   const run = readRun(dungeon, { run: 1, at: 'library', cleared: ['face_gate', 'root_court', 'sunlit_court'], visited: ['face_gate', 'root_court', 'sunlit_court', 'library'] });
   assert.equal(moveProblem(dungeon, run, 'face_gate'), null, 'the gate is not next to the library, but the player has been there');
   assert.equal(moveProblem(dungeon, run, 'root_court'), null);
-  assert.equal(moveProblem(dungeon, run, 'buttress_tree'), 'NOT_ADJACENT', 'never visited');
+  assert.equal(moveProblem(dungeon, run, 'buttress_tree'), null, 'never visited, but next to the gate: out of the fog');
   assert.equal(moveProblem(dungeon, readRun(dungeon, { run: 1, at: 'library', cleared: [], visited: ['face_gate', 'library'] }), 'sanctuary'), 'NOT_ADJACENT');
 });
 

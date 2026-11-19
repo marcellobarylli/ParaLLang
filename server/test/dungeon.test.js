@@ -116,7 +116,7 @@ test('a new run: the view carries the map and the fog, a start is the gate\'s en
   // Round 121: the learner's experience comes with the map.
   assert.deepEqual(fresh.data.progression, { xp: 0, level: 1, levelStartsAt: 0, nextLevelAt: 60 });
   assert.deepEqual(sites.face_gate, { state: 'current', cleared: false, reachable: false });
-  assert.deepEqual(sites.root_court, { state: 'known', cleared: false, reachable: false });
+  assert.deepEqual(sites.root_court, { state: 'known', cleared: false, reachable: true }); // round 143: out of the fog, so open
   assert.deepEqual(sites.sanctuary, { state: 'hidden', cleared: false, reachable: false, gate: { sealed: true, required: 6, completed: 0, level: { required: 5, current: 1 } } });
 
   // The player stands at the Market Entrance; Gerald's cart is elsewhere.
@@ -154,11 +154,7 @@ test('a new run: the view carries the map and the fog, a start is the gate\'s en
 
 test('moves follow the pass rule, a conversation under way holds the player unless they leave, and the goal completes the run', async (t) => {
   const { runtime, content, learnerId } = await dungeonRuntime(t);
-  // Before Portia is answered nothing lies open.
-  const blocked = await move(runtime, learnerId, { siteId: 'root_court' });
-  assert.equal(blocked.status, 409);
-  assert.equal(blocked.data.error.code, 'BLOCKED');
-  assert.equal(blocked.data.error.message, 'Portia has not let you pass yet.');
+  // Round 143: a hidden site is refused, whoever has been answered.
   assert.equal((await move(runtime, learnerId, { siteId: 'library' })).data.error.code, 'NOT_ADJACENT');
   assert.equal((await move(runtime, learnerId, { siteId: 'the_moon' })).status, 400);
   assert.equal((await move(runtime, learnerId, {})).status, 400);
@@ -172,10 +168,9 @@ test('moves follow the pass rule, a conversation under way holds the player unle
   assert.equal(toTree.status, 200);
   assert.deepEqual([toTree.data.progress.at, toTree.data.progress.visitedSiteIds], ['buttress_tree', ['face_gate', 'buttress_tree']]);
   assert.equal(toTree.data.dungeon.sites[1].characterName, 'Mortimer');
-  // Mortimer has not been answered: the message names him, not Portia (critique 1.2).
-  const past = await move(runtime, learnerId, { siteId: 'root_court' });
-  assert.equal(past.data.error.code, 'BLOCKED');
-  assert.equal(past.data.error.message, 'Mortimer has not let you pass yet.');
+  // Mortimer has not been answered; Gerald's court is out of the fog, so the walk is allowed all the same (round 143).
+  assert.equal((await move(runtime, learnerId, { siteId: 'root_court' })).status, 200);
+  assert.equal((await move(runtime, learnerId, { siteId: 'buttress_tree' })).status, 200);
 
   // A conversation under way holds the player; `leave` drops it and walks.
   const talking = await start(runtime, learnerId, { dungeonId: 'ta_prohm' });
@@ -405,7 +400,7 @@ test('The Kiln loads in both packs as Ta Prohm\'s plan on the kiln level, and it
   assert.equal(walked.status, 200, JSON.stringify(walked.data.error));
   assert.equal(walked.data.progress.at, 'buttress_tree');
   assert.equal((await view(runtime, learnerId)).data.progress.at, 'face_gate');
-  assert.equal((await move(runtime, learnerId, { siteId: 'buttress_tree' })).data.error.code, 'BLOCKED');
+  assert.equal((await move(runtime, learnerId, { siteId: 'library' })).data.error.code, 'NOT_ADJACENT'); // hidden in Ta Prohm's own fog
 
   // Ta Prohm's gate starts its own conversation with Portia, and clearing it leaves The Kiln's run as it was.
   await clearHere(runtime, content, learnerId, 'face_gate');

@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-20: round 143, every site out of the fog is reachable from anywhere
+
+The owner clarified round 135's travel: any place that can be reached, unexplored ones too, is directly reachable from
+any point; only sites still hidden in the fog need a neighbour visited first. The server's move rule now says so and
+the "a character lets you pass" gate is gone ([findings](docs/rounds/143/findings.md)). Seals still hold. Tested, not
+watched; the owner should confirm the skipped gate is meant.
+
 ## Addendum 2026-11-20: round 142, matching sentences share a colour
 
 A character's line and its translation (also the correction card) are matched sentence by sentence, and each pair is
