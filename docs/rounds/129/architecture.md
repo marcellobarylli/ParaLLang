@@ -121,3 +121,23 @@ its English and a 🔊, and a box to say or type it again, checked in the app. T
 scripted grader, resolves the tutorial for one heart. Server 452 and client 193 tests pass, and the flow passes in a
 real browser. The claim boundary held: the new grading prompt has not been run against the model. See
 [`findings.md`](findings.md); the owner's words are in [`trail/interview.md`](trail/interview.md).
+
+## Amendment 2026-11-19: English is an attempt (owner, after playing)
+
+The owner played the deployed build: mistakes in Italian are corrected as designed. But an English answer was not
+accepted, and the owner decided: "I should be able to use english and / or italian. It will correct my english as
+it would a mistake in italian and give me the correction" ([`trail/interview.md`](trail/interview.md), Q1). This
+reverses Decision 4 for English.
+
+- **The grader.** An answer in English, or in a mixture, that says what an objective asks for is `attempted`. The
+  `correction` is then the whole answer in correct target language: the slips mended and the English translated. It
+  costs a heart like any other correction. An answer on another subject, a quotation or another person's words is
+  still not an attempt.
+- **The character.** In the owner's screenshot Portia remarked that the answer "was English". The note the narrator
+  gets for a corrected objective now also says not to remark on which language the player used.
+- **The microphone.** The browser's recogniser listens in one language at a time
+  ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition/lang): `lang` is one language tag). A
+  small button beside the 🎤 switches it between the target language and English. Each stretch of speech is added to
+  the reply box, so "one sentence in this, one in that" works by switching between them. A single English word
+  inside an Italian sentence does not: the recogniser writes it as the nearest Italian. Typing, or a transcription
+  service that takes mixed speech, are the ways round it; the second is not built.

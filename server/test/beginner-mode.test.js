@@ -56,7 +56,7 @@ test("the owner's answer to Portia: understood, corrected, one heart, and the co
   const told = JSON.parse(narrationCalls(runtime).at(-1).messages.at(-1).content.split('TURN DATA: ').at(-1)).authoritative_decision;
   assert.equal(told.encounterState, 'resolved');
   assert.deepEqual(told.objectiveResults, [{ objectiveId: 'greet', passed: true, corrected: true }, { objectiveId: 'introduce', passed: true, corrected: true }, { objectiveId: 'ask_back', passed: true, corrected: true }]);
-  assert.match(told.corrected_note, /Answer what the player meant\. Do not mock the slips/);
+  assert.match(told.corrected_note, /Answer what the player meant\. Do not mock the slips, do not remark on which language the player used/);
   // Experience for three objectives and the resolve; no review schedule moved on words written wrongly.
   assert.equal(turn.xpGained, 3 * 10 + 25);
   assert.ok(turn.spellbook.cards.every((card) => card.repetitions === 0));
@@ -71,13 +71,36 @@ test('a correct answer costs no heart and brings no correction', async (t) => {
   assert.equal(turn.encounter.currentObjective.id, 'introduce');
 });
 
+// The owner, after playing: "I should be able to use english and / or italian. It will correct my english as it would a
+// mistake in italian and give me the correction."
+test('an answer in English that says what is asked is an attempt: put into Italian for a heart, and the player moves on', async (t) => {
+  const english = graded([result('greet', { attempted: true }), result('introduce', { attempted: true }), result('ask_back')], 'Buongiorno! Mi chiamo Luigione.', 'Good morning! My name is Luigione.');
+  const mixed = graded([result('ask_back', { attempted: true })], 'Come ti chiami?', 'What is your name?');
+  const { runtime, encounter, say } = await open(t, [english, mixed]);
+  const first = await say('Good morning! My name is Luigione.', encounter);
+  assert.deepEqual(first.assessment.correction, { text: 'Buongiorno! Mi chiamo Luigione.', translation: 'Good morning! My name is Luigione.', heartLost: true });
+  assert.equal(first.encounter.currentObjective.id, 'ask_back');
+  assert.equal(first.encounter.hearts.used, 1);
+  // A sentence that is half one and half the other.
+  const second = await say('What is your nome?', first.encounter);
+  assert.equal(second.encounter.state, 'resolved');
+  assert.equal(second.assessment.correction.text, 'Come ti chiami?');
+  assert.equal(second.encounter.hearts.used, 2);
+  // The grader is told English is welcome and how to treat it.
+  const asked = gradingCalls(runtime)[0].messages[0].content;
+  assert.match(asked, /English is welcome here: it is treated like any other slip and corrected/);
+  assert.match(asked, /An English sentence that says what the objective asks for is an attempt/);
+  assert.match(asked, /the slips mended and the English put into Italian/);
+  assert.doesNotMatch(asked, /False for an English-only answer/);
+});
+
 test('an answer that tries nothing closes nothing and costs nothing, even if the grader writes a correction', async (t) => {
   const { encounter, say } = await open(t, [NOTHING, graded(NOTHING.objective_results, 'Ciao!', 'Hello!')]);
-  const first = await say('Hello there, I am Sam.', encounter);
+  const first = await say('Lovely weather for an archway.', encounter);
   assert.equal(first.assessment.correction, undefined);
   assert.deepEqual(first.encounter.hearts, { used: 0, limit: BEGINNER_HEARTS });
   assert.equal(first.encounter.currentObjective.id, 'greet');
-  const second = await say('Good day to you.', first.encounter);
+  const second = await say('Is the market far?', first.encounter);
   assert.equal(second.assessment.correction, undefined); // nothing was attempted: there is nothing of the player's to correct
   assert.equal(second.encounter.hearts.used, 0);
   assert.equal(second.encounter.currentObjective.id, 'greet');
@@ -169,7 +192,7 @@ test('without the flag the strict grader is asked exactly as before, and its ver
   assert.match(strict[0].content, /never write a Italian expression that would satisfy it/);
   const kind = buildGradingMessages({ ...base, beginner: true });
   assert.match(kind[0].content, /kind and exact Italian teacher/);
-  assert.match(kind[0].content, /`correction`: when at least one objective is attempted/);
+  assert.match(kind[0].content, /`correction`: when at least one objective is attempted and anything in the answer is wrong or in English/);
   assert.match(kind[0].content, /Never scold/);
   assert.match(kind[0].content, /ORDER: these objectives are met in the order given/);
   assert.deepEqual(kind[1], strict[1]);
