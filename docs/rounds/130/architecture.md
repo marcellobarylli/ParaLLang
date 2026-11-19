@@ -71,3 +71,13 @@ takes the model a little longer to write.
 - **Client:** the listed words are buttons inside the narration; a tap shows the meaning and a second hides it; a
   narration without the list is plain text; a word listed twice in the text is a button each time.
 - All server and client suites and the build keep passing.
+
+## Outcome (2026-11-19)
+
+Built as designed, as `d5ece33`, and deployed with the server. The narration prompt asks for English prose with a few
+target-language words dropped in, at half the share of the character's line and at most 30%, never a word an open
+objective asks for, and for the list of those words with meanings. The server keeps a listed word that stands in the
+narration, is short, has a meaning and is not a form of any objective's target. The web client draws each kept word
+as a button in the text; a tap shows its meaning, free. Server 459 and client 197 tests pass, and the tapping passes
+in a real browser. The claim boundary held: the model has not been run with the new prompt. See
+[`findings.md`](findings.md); the owner's words are in [`trail/interview.md`](trail/interview.md).
