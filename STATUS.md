@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: beginner mode takes English too
+
+The owner played round 129's build: Italian with mistakes is corrected as designed, but English was not accepted.
+His decision: English and Italian may be used alone or mixed, and English is corrected like a mistake. The beginner
+grader now counts an English answer that says what is asked as an attempt and gives it in Italian in the correction,
+for a heart; the character is told not to remark on the language. The browser listens in one language at a time, so
+the microphone got a switch between Italian and English ([round 129's Amendment](docs/rounds/129/architecture.md)).
+
 ## Addendum 2026-11-19: round 129, beginner mode
 
 The owner answered Portia with "Bungiorno! Me chiamo Luigione. Come te chiame?" and got three refusals and no

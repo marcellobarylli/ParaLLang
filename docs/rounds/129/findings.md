@@ -30,7 +30,8 @@ headless Chromium.
   | Tried, with a slip, a heart left | Corrected, one heart, its objectives close |
   | Several slips in one answer | One heart |
   | Tried, with a slip, no heart left | Corrected, nothing closes; "Put it in the reply box" offers the sentence |
-  | Does not try (English only, off the subject) | Nothing closes, no heart, told in English what is wanted |
+  | In English, or mixed, saying what is asked (Amendment, after the owner played) | Put into Italian in the correction, one heart, its objectives close |
+  | Does not try (another subject, a quotation) | Nothing closes, no heart, told in English what is wanted |
   | Resent after a lost reply | The same response again, no second heart |
 
 - **Hearts.** Three a conversation, shown on the objective card ([picture](shots/01-hearts.jpg)); a new
@@ -60,6 +61,9 @@ long. None of this is seen until the owner plays. The iPhone app (`mobile/`) doe
 unchanged. The mobile suite and the full playthrough were not run. No Codex critique was made.
 
 ## Open items
+- **After the owner played (Amendment):** English now counts as an attempt and is corrected for a heart. The
+  microphone listens in one language at a time and has a switch between Italian and English; one English word
+  inside an Italian sentence is not heard correctly by the browser's recogniser.
 - **Owner:** send the same answer to Portia on the deployed build and say what comes back.
 - **Owner:** three hearts, and what zero hearts does, are first choices (`BEGINNER_HEARTS` in
   `server/src/learning-service.js`).

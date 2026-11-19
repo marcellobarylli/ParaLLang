@@ -457,3 +457,26 @@ test('the answer is sent as a beginner\'s while the mode is on, and plainly when
   await waitFor(() => expect(dialogueCalls()).toHaveLength(2));
   expect('beginner' in body()).toBe(false);
 });
+
+// Round 129 (amendment): the browser listens in one language at a time, so the microphone can be switched between
+// the target language and English; each stretch of speech is added to the box.
+test('the microphone listens in Italian or in English by a switch, and adds each stretch to the reply box', async () => {
+  const speech = fakeSpeech();
+  const { user } = await openConversation(speech);
+  const box = screen.getByLabelText('Your response', { selector: 'input' });
+  const toggle = screen.getByRole('button', { name: 'Listening in Italian. Switch to English' });
+  expect(toggle.textContent).toBe('IT');
+  await user.click(screen.getByRole('button', { name: 'Speak your response in Italian' }));
+  expect(speech.heard.tag).toBe('it-IT');
+  expect(toggle.disabled).toBe(true); // not while it listens
+  act(() => speech.heard.onText('Buongiorno', true));
+  act(() => speech.heard.onEnd(null));
+  await user.click(toggle);
+  expect(screen.getByRole('button', { name: 'Listening in English. Switch to Italian' }).textContent).toBe('EN');
+  await user.click(screen.getByRole('button', { name: 'Speak your response in English' }));
+  expect(speech.heard.tag).toBe('en-US');
+  expect(box.placeholder).toBe('Listening for English…');
+  act(() => speech.heard.onText('my name is Luigione', true));
+  act(() => speech.heard.onEnd(null));
+  expect(box.value).toBe('Buongiorno my name is Luigione');
+});

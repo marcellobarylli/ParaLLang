@@ -58,7 +58,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
               <input id="settings-beginner" type="checkbox" checked={beginner} onChange={(event) => onBeginner(event.target.checked)} />
               <span>Beginner mode</span>
             </label>
-            <small>A mistake in your answer is corrected for you and costs one heart; you move on. Off: an answer must be right to count, and nothing is corrected.</small>
+            <small>Answer in the language you are learning, in English or in a mixture. A mistake, or English, is corrected for you and costs one heart; you move on. Off: an answer must be right to count, and nothing is corrected.</small>
           </>
         )}
         {onMusic && (

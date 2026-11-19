@@ -33,7 +33,7 @@ export const FOOTNOTE_MAX_LENGTH = 200; // round 081
 // correction kept. CORRECTED_NOTE is told to the narrator when a correction closed an objective.
 export const BEGINNER_HEARTS = 3;
 export const CORRECTION_MAX_LENGTH = 300;
-const CORRECTED_NOTE = 'An objective marked corrected was said with slips; the player was understood and has been shown the correct form. Treat it as met. Answer what the player meant. Do not mock the slips and do not repeat the correction.';
+const CORRECTED_NOTE = 'An objective marked corrected was said with slips, or in English; the player was understood and has been shown the correct form. Treat it as met. Answer what the player meant. Do not mock the slips, do not remark on which language the player used, and do not repeat the correction.';
 
 // Round 086: does the text hold an inflection of a single-word form (4+ letters) of the objectives' targets?
 // Round 088: split so kept lines can test one entry's forms (`inflectsForms` takes the surface forms as written).
