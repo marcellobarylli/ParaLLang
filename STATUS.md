@@ -33,6 +33,16 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 131, a turn asks for a paragraph (the server half not deployed yet)
+
+The owner finds each turn slow and asked that each ask for more: an answer of about a paragraph, with conversational
+characters from the first line. The character's line is now asked to be two to four sentences that request
+everything still open at once and add a question of its own; the objective card lists every open objective; the
+reply box takes several lines. No content was added, so a conversation can finish in one or two answers. **The
+client is deployed. The server half (the prompts and the list of open objectives) is on `main` and not deployed**: a
+server deploy wipes the owner's run on the free plan, so it waits for the owner's word; the next push to `main`
+without `[skip render]` deploys it ([findings](docs/rounds/131/findings.md)).
+
 ## Addendum 2026-11-19: a server that forgot the learner no longer strands the player
 
 The owner's first answer at Mortimer's site came back "Unknown learner ID. Create a learner identity first.", with
@@ -1230,6 +1240,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 131 | 11-19 | A turn asks for a paragraph: the character asks for everything open and a question of its own; the card lists the open objectives; a reply box of several lines (server half waits for a deploy) | [131](docs/rounds/131/architecture.md) | [findings](docs/rounds/131/findings.md) | `15bb752` (pre-run record) to round 131 close; build `5af7179` |
 | 130 | 11-19 | Target-language words in the narration, each tapped for its meaning (half the line's share; listed by the model, filtered by the server) | [130](docs/rounds/130/architecture.md) | [findings](docs/rounds/130/findings.md) | `2ca2b2b` (pre-run record) to round 130 close; build `d5ece33` |
 | 129 | 11-19 | Beginner mode: a mistake is understood, corrected for one heart and the player moves on; three hearts a conversation; a practice box checked in the app | [129](docs/rounds/129/architecture.md) | [findings](docs/rounds/129/findings.md) | `8502225` (pre-run record) to round 129 close; build `2363b42` |
 | 128 | 11-19 | No internet slang; the humour in Pratchett's manner (style guide, four character quirks, a tone test); a second prefetch test race fixed | [128](docs/rounds/128/architecture.md) | [findings](docs/rounds/128/findings.md) | `9cb64ee` (pre-run record) to round 128 close; build `83534c8` |

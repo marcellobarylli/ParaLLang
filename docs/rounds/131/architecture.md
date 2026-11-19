@@ -76,3 +76,13 @@ conversation finished in one answer may feel short: that is Decision 5's cost.
 - **Client:** the card lists every open objective with its line of advice, and one objective alone reads as
   before; the reply box takes several lines, Enter sends, Shift+Enter does not.
 - All server and client suites and the build keep passing.
+
+## Outcome (2026-11-19)
+
+Built as designed, as `5af7179`. The client half is deployed; the server half is on `main` and waits for the owner's
+word, because a server deploy on the free plan wipes the run the owner is playing. The narration prompt has a
+CONVERSATION block: lines of two to four sentences that ask in one go for everything still open and add a question
+of the character's own. Both graders are told an answer may be a paragraph over several objectives. The view lists
+every open objective; the card shows the list with a line of advice; the reply box is a growing text area. Server
+463 and client 200 tests pass. The claim boundary held: the model has not been run with the new prompts. See
+[`findings.md`](findings.md); the owner's words are in [`trail/interview.md`](trail/interview.md).
