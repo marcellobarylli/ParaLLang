@@ -37,7 +37,7 @@ The entry point for agents: the current state, how the project is logged, and th
 
 The owner asked for the whole lore and story of the notes and the world as a linear book, kept outside the vault,
 with "some say…" wherever the notes hold more than one version. It is [`docs/lore-book.md`](docs/lore-book.md),
-"Some Say": ten parts from the Telling to the story so far. Its last section lists the note behind each part, the
+"Some Say": ten parts from the Telling to the story so far, from a reading of every note in the vault. Its last section lists the note behind each part, the
 forks that "some say" marks, and the few joins the compiler added that are not in the notes. It is a draft for the
 owner to edit; nothing in the game reads it.
 
