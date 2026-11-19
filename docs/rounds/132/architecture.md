@@ -79,3 +79,21 @@ finger, and whether Settings scrolls there, is the owner's observation.
   narration and the line before the box; after an answer the box is above and the bar shows; the panel drags to
   the top bar and down to the handle, and the reply box is reachable again after dragging back.
 - All client suites and the build keep passing.
+
+## Amendment 2026-11-19: the box is measured, not observed (Claude, during the build)
+
+The Design used an `IntersectionObserver` to tell when the box had left the top of the text. In the real browser
+the bar never came. An observer reports crossings, and the jump to the end of the text that follows every turn
+takes the box from below the view to above it without its ever being in view. The box's place is now measured on
+every scroll and after every change of the conversation. A box with no more than 44 px still showing (the bar's own
+room) counts as past.
+
+## Outcome (2026-11-19)
+
+Built as designed, with the Amendment above, as `16ec3f9`, and deployed to the client alone. Settings has a maximum
+height and scrolls inside. The objective box stands after the character's opening line, unpinned; scrolled past, a
+one-line bar ("Objective", how many to do) is pinned at the top of the text, and a tap unfolds the objectives over
+the text. A grip at the top of the panel drags it up to the top bar's edge and down to the grip alone; a tap on the
+grip of a panel that is down brings it back. The client's 209 tests pass and 23 checks pass in headless Chromium at
+393×852 with touch. The claim boundary held: not tried on the iPhone. See [`findings.md`](findings.md); the
+owner's words are in [`trail/interview.md`](trail/interview.md).
