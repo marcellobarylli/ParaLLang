@@ -243,6 +243,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   `prompts/system/base.txt`) asks in one go for everything still open and adds a question of its own, the
   conversation's view lists every open objective (`openObjectives`), and the reply box is a growing text area
   (Enter sends, Shift+Enter makes a new line).
+  From round 132 the objective box stands in the conversation after the character's opening line; scrolled past, it
+  folds into a one-line bar at the top of the text that a tap unfolds. The conversation panel has a grip: it drags
+  up to the top bar and down to the grip alone. Settings scrolls inside the screen.
+  `node client/scripts/layout-check.mjs` checks all three in headless Chromium with touch input.
 - **Server image.** `Dockerfile` (Node 22, the server's production dependencies, `content/`, `prompts/` and Claude
   Code 2.1.325 at `CLAUDE_CLI_PATH=/usr/local/bin/claude`). `render.yaml` is the Render blueprint: one web service,
   health check `/api/health`. With `NODE_ENV=production` the server refuses to start unless `PARALLANG_TOKEN` is set

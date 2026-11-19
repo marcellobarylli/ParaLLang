@@ -117,7 +117,11 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .caption { margin: 0 .75rem calc(max(1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); padding: .55rem .9rem; background: rgb(34 36 35 / .86); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); box-shadow: 0 0 0 1px #000; color: var(--ink); display: flex; align-items: center; gap: .75rem; }
 .caption-problem { color: #ffd6dc; border-color: #a2485a #2a0d14 #2a0d14 #a2485a; }
 
-.sheet { width: 100%; height: calc(62vh + var(--bottom-gap, 0px)); height: calc(62dvh + var(--bottom-gap, 0px)); padding-bottom: var(--bottom-gap, 0px); display: flex; flex-direction: column; background: var(--panel); border-top: 2px solid var(--hi); box-shadow: 0 -1px 0 #000; }
+.sheet { width: 100%; height: var(--sheet-h, calc(62vh + var(--bottom-gap, 0px))); height: var(--sheet-h, calc(62dvh + var(--bottom-gap, 0px))); overflow: hidden; padding-bottom: var(--bottom-gap, 0px); display: flex; flex-direction: column; background: var(--panel); border-top: 2px solid var(--hi); box-shadow: 0 -1px 0 #000; }
+/* Round 132: the grip the panel is dragged by. Only this strip refuses the browser's own touch gestures. */
+.sheet-handle { flex: none; display: flex; align-items: center; justify-content: center; width: 100%; height: 30px; min-height: 30px; padding: 0; margin: 0; border: 0; border-bottom: 1px solid rgb(0 0 0 / .45); background: rgb(0 0 0 / .18); cursor: ns-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
+.sheet-grip { display: block; width: 54px; height: 6px; background: var(--hi); box-shadow: 0 0 0 1px #000; }
+.sheet-handle:focus-visible .sheet-grip { background: var(--gold); }
 .sheet-header { flex: none; padding: .55rem 1rem; border-bottom: 2px solid rgb(0 0 0 / .55); box-shadow: 0 1px 0 rgb(255 255 255 / .14); }
 .sheet-header .text-button { margin-left: auto; }
 .sheet-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: .25rem 0 .5rem; scrollbar-width: thin; scrollbar-color: #8a8c86 transparent; }
@@ -131,6 +135,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .phase-overview .card { margin-bottom: 0; align-content: start; border-width: 0 0 0 2px; padding-top: 1.5rem; }
   .phase-overview .site-list { max-height: none; }
   .sheet { height: 100%; border-top: 0; border-left: 2px solid var(--hi); box-shadow: -1px 0 0 #000; }
+  .sheet-handle { display: none; }
 }
 
 .button-row { display: flex; gap: .65rem; align-items: center; flex-wrap: wrap; }
@@ -151,10 +156,17 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .objective-card p, .assessment-banner p, .briefing-card p { margin: .35rem 0; line-height: 1.45; }
 .objective-card strong, .objective-card small { display: block; }
 .objective-card strong, .assessment-banner strong { color: var(--gold); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
-/* The objective stays at the top of the conversation. Text scrolls under it, so it keeps some body of its own. */
-.sheet .objective-card { position: sticky; top: 0; z-index: 1; padding: .55rem .9rem; background: rgb(36 38 37 / max(var(--panel-alpha), .9)); }
+/* Round 132: the objective box stands in the conversation after the opening line. Once it is scrolled out of the top,
+   a one-line bar is pinned there; unfolded, it shows the same box over the text. */
+.sheet .objective-card { padding: .55rem .9rem; background: rgb(36 38 37 / max(var(--panel-alpha), .9)); }
+.objective-pin { position: sticky; top: 0; height: 0; z-index: 3; }
+.objective-bar { position: absolute; top: -.3rem; left: 0; right: 0; }
+.objective-toggle { display: flex; align-items: center; gap: .6rem; width: 100%; min-height: 40px; padding: .3rem .9rem; margin: 0; font: inherit; color: var(--ink); text-align: left; background: #242625; border: 2px solid; border-color: rgb(0 0 0 / .7) rgb(255 255 255 / .3) rgb(255 255 255 / .3) rgb(0 0 0 / .7); cursor: pointer; text-shadow: inherit; }
+.objective-toggle > span:first-child { color: var(--gold); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.objective-toggle > small { flex: 1; }
+.dock .sheet .objective-card.objective-unfolded { margin: 0; border-top: 0; background: #242625; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: 0 6px 10px rgb(0 0 0 / .5); }
 @supports ((backdrop-filter: blur(6px)) or (-webkit-backdrop-filter: blur(6px))) {
-  .sheet .objective-card { background: rgb(36 38 37 / max(var(--panel-alpha), .55)); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .sheet .objective-card:not(.objective-unfolded) { background: rgb(36 38 37 / max(var(--panel-alpha), .55)); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 }
 .sheet .objective-card p { margin: .15rem 0; }
 .briefing-card { background: #2b2714; border-color: rgb(0 0 0 / .7) #8f7a2e #8f7a2e rgb(0 0 0 / .7); }
@@ -198,7 +210,7 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 /* Round 117: the settings sheet takes the panel's background over the undimmed level (the dock is hidden meanwhile),
    so it shows what the opacity slider does while the slider moves. */
 .sheet-backdrop { position: absolute; inset: 0; z-index: 20; background: rgb(0 0 0 / .12); display: flex; align-items: flex-end; justify-content: center; }
-.settings-sheet { width: min(520px, 100%); display: grid; gap: .45rem; background: var(--panel, #262827); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); border-bottom: 0; box-shadow: 0 0 0 1px #000; padding: 1.1rem 1rem calc(max(1.1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); font-size: .92rem; text-shadow: 1px 1px 0 #000; }
+.settings-sheet { width: min(520px, 100%); max-height: calc(100% - env(safe-area-inset-top, 0px)); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; align-content: start; display: grid; gap: .45rem; background: var(--panel, #262827); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); border-bottom: 0; box-shadow: 0 0 0 1px #000; padding: 1.1rem 1rem calc(max(1.1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); font-size: .92rem; text-shadow: 1px 1px 0 #000; }
 .settings-sheet h2 { margin: 0 0 .3rem; color: var(--gold); font-size: 1.25rem; letter-spacing: .06em; text-transform: uppercase; text-shadow: 2px 2px 0 #000; }
 .settings-sheet label { margin-top: .4rem; }
 .settings-sheet .button-row { margin-top: .6rem; }
