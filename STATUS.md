@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 129, beginner mode
+
+The owner answered Portia with "Bungiorno! Me chiamo Luigione. Come te chiame?" and got three refusals and no
+correction: "very harsh for someone who has never spoken Italian". The web dungeon now has a beginner mode, on by
+default. The grader works out what the player tried to say and returns it in correct Italian. A mistake costs one
+heart for the whole answer, the correction is shown, and the conversation moves on. There are three hearts a
+conversation; with none left a mistake is still corrected but must be said right. Under the correction the player
+may say or type it again, which the app checks itself and which costs nothing. Proven with a scripted grader; the
+new grading prompt has not been run against the model ([findings](docs/rounds/129/findings.md), pictures in
+[`docs/rounds/129/shots/`](docs/rounds/129/shots/)).
+
 ## Addendum 2026-11-19: round 128, no internet slang; the humour in Pratchett's manner
 
 The owner asked to get rid of the gen-Z speak ("mid" and the like) and to make the humour Pratchett style. This
@@ -1192,6 +1203,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 129 | 11-19 | Beginner mode: a mistake is understood, corrected for one heart and the player moves on; three hearts a conversation; a practice box checked in the app | [129](docs/rounds/129/architecture.md) | [findings](docs/rounds/129/findings.md) | `8502225` (pre-run record) to round 129 close; build `2363b42` |
 | 128 | 11-19 | No internet slang; the humour in Pratchett's manner (style guide, four character quirks, a tone test); a second prefetch test race fixed | [128](docs/rounds/128/architecture.md) | [findings](docs/rounds/128/findings.md) | `9cb64ee` (pre-run record) to round 128 close; build `83534c8` |
 | 127 | 11-19 | Quiet ambient music made in the browser: generated chords, ducked under speech, a Settings switch | [127](docs/rounds/127/architecture.md) | [findings](docs/rounds/127/findings.md) | `9c52599` (pre-run record) to round 127 close; build `8a974a6` |
 | 126 | 11-19 | Character voices by type and a spoken answer in the web dungeon (the browser's speech); the Claude CLI defaults to Sonnet; what a turn does (on a branch) | [126](docs/rounds/126/architecture.md) | [findings](docs/rounds/126/findings.md) | `5055562` (pre-run record) to round 126 close; build `c9a2ce7` |

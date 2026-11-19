@@ -110,3 +110,14 @@ correction and stays kind is seen only after the deploy, in the owner's play. A 
   correction with other case, accents and punctuation, refuses another sentence, and sends nothing; the Settings
   box; the flag is sent only while the mode is on.
 - All server and client suites and the build keep passing.
+
+## Outcome (2026-11-19)
+
+Built as designed, as `2363b42`, and deployed with the server. With "Beginner mode" on (the default), the grader is
+asked as a teacher of beginners: it says which objectives the player tried and returns their answer in correct
+target language. A corrected answer costs one of three hearts and closes the objectives it tried; with no heart left
+it is corrected and has to be said right. The screen shows the hearts, "What you meant" with the corrected sentence,
+its English and a 🔊, and a box to say or type it again, checked in the app. The owner's own answer to Portia, with a
+scripted grader, resolves the tutorial for one heart. Server 452 and client 193 tests pass, and the flow passes in a
+real browser. The claim boundary held: the new grading prompt has not been run against the model. See
+[`findings.md`](findings.md); the owner's words are in [`trail/interview.md`](trail/interview.md).
