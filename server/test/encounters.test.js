@@ -12,7 +12,7 @@ import { buildNarrationMessages } from '../src/llm/prompt-builder.js';
 import { FixtureProvider, fixedNow } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r128.json'), 'utf8'));
+const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r130.json'), 'utf8'));
 
 const character = {
   id: 'charcutier_fixture', name: 'Bernard', species: 'Charcutier',
@@ -119,7 +119,8 @@ async function runtime(t, contentDir) {
 // Regenerated in round 007, when the style guide entered the prompt on purpose (round 006 pinned the round 005 text),
 // in round 012 for the no-menu rule, in round 026 for the concrete language-mix rule, in round 081 for footnotes, and
 // in round 128, when the owner dropped the meme-culture texture: the humour is in Pratchett's manner, with no slang.
-test("Gerald's narration prompts match the round 128 fixture and carry the style guide", () => {
+// Round 130: regenerated again, for the target-language words in the narration.
+test("Gerald's narration prompts match the round 130 fixture and carry the style guide", () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
     const base = { language: c.language, character: c.character, styleGuide: c.styleGuide, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };
@@ -133,6 +134,8 @@ test("Gerald's narration prompts match the round 128 fixture and carry the style
     assert.match(greeting[0].content, /- The narrator may add a footnote \(the footnote field\)/);
     assert.match(greeting[0].content, /Delivers a verdict on every translation like a wine taster addressing a court/);
     assert.doesNotMatch(greeting[0].content, /word-level breakdowns/);
+    assert.match(greeting[0].content, /about 13% of its words \(in a 40-word narrative, about 5\)/);
+    assert.doesNotMatch(greeting[0].content, /Narrative text is always/);
     assert.deepEqual(buildNarrationMessages({
       ...base, objectives: c.encounter.objectives.slice(1), targetRatio: 0.3,
       conversationHistory: [{ role: 'assistant', content: 'Ciao.' }], playerInput: 'Un caffè.',

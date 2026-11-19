@@ -31,6 +31,9 @@ export const ATMOSPHERE_MAX_LENGTH = 300;
 export const FOOTNOTE_MAX_LENGTH = 200; // round 081
 // Round 129: beginner mode. A conversation's hearts, each of which pays for one corrected answer, and the longest
 // correction kept. CORRECTED_NOTE is told to the narrator when a correction closed an objective.
+// Round 130: the narration's tappable words. A listed word is kept when it is short, has a short meaning and stands
+// in the narration; at most this many.
+export const NARRATIVE_WORDS = Object.freeze({ max: 12, word: 40, meaning: 80 });
 export const BEGINNER_HEARTS = 3;
 export const CORRECTION_MAX_LENGTH = 300;
 const CORRECTED_NOTE = 'An objective marked corrected was said with slips, or in English; the player was understood and has been shown the correct form. Treat it as met. Answer what the player meant. Do not mock the slips, do not remark on which language the player used, and do not repeat the correction.';
@@ -563,6 +566,30 @@ export class LearningService {
     return inflectsAnswer(text, open, this.content.vocabularyById) ? undefined : text;
   }
 
+  // Round 130: the target-language words of a narration, as the model listed them, that the player may tap for a
+  // meaning. Kept: short, with a meaning, standing in the narration as written at word boundaries, once each. Not
+  // kept: a form of a target of any of the conversation's objectives, so a tap never gives an answer's meaning away
+  // (round 017's rule for the Spellbook); the word stays in the text.
+  keptNarrativeWords(generated, definition) {
+    if (!Array.isArray(generated.narrative_words)) return [];
+    const targetIds = new Set(definition.encounter.objectives.flatMap((objective) => objective.target_vocabulary_ids));
+    const narrative = foldEvidenceText(generated.narrative);
+    const kept = [];
+    const seen = new Set();
+    for (const entry of generated.narrative_words) {
+      const word = String(entry?.word ?? '').trim().replace(/\s+/g, ' ');
+      const meaning = String(entry?.meaning ?? '').trim().replace(/\s+/g, ' ');
+      const folded = foldEvidenceText(word);
+      if (!word || !meaning || word.length > NARRATIVE_WORDS.word || meaning.length > NARRATIVE_WORDS.meaning) continue;
+      if (!folded || seen.has(folded) || !atWordBoundaries(narrative, folded)) continue;
+      if (matchCanonicalVocabulary(word, this.content.vocabulary.entries).some((match) => targetIds.has(match.id))) continue;
+      seen.add(folded);
+      kept.push({ word, meaning });
+      if (kept.length === NARRATIVE_WORDS.max) break;
+    }
+    return kept;
+  }
+
   canonicalizeNarration(generated, definition, previousNpc, open = definition.encounter.objectives) {
     const matches = matchCanonicalVocabulary(generated.dialogue.native, definition.narrationEntries);
     // Round 057 (backlog C7): every span the matcher gave an id, so the app can mark the word in the line where the
@@ -581,8 +608,10 @@ export class LearningService {
       spans: wordSpans,
     }));
     const footnote = this.keptFootnote(generated, previousNpc, open);
+    const narrativeWords = this.keptNarrativeWords(generated, definition);
     return {
       id: randomUUID(), role: 'npc', narrative: generated.narrative,
+      ...(narrativeWords.length ? { narrativeWords } : {}),
       ...(footnote ? { footnote } : {}),
       dialogue: { speaker: definition.character.name, native: generated.dialogue.native, translation: generated.dialogue.translation, words },
     };
@@ -604,6 +633,7 @@ export class LearningService {
       const sentenceRevealed = !protectedMessage || revealKeys.includes(`sentence:${message.id}`);
       return {
         id: message.id, role: message.role, narrative: message.narrative,
+        ...(message.narrativeWords?.length ? { narrativeWords: message.narrativeWords.map((entry) => ({ ...entry })) } : {}), // round 130
         ...(message.footnote ? { footnote: message.footnote } : {}),
         dialogue: {
           speaker: message.dialogue.speaker,

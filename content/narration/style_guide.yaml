@@ -5,7 +5,8 @@ tone: "in the manner of Terry Pratchett: dry wit and understatement, satire of t
 narrator_voice: "omniscient, slightly exasperated, fond of everyone it describes, and inclined to explain a thing by making it worse"
 rules:
   - "Never break character for the NPC"
-  - "Narrative text is always in English"
+  # Round 130: the narration carries a few target-language words (the share is in the language rules).
+  - "Narrative text is English prose; the few target-language words in it are the ones the language rules ask for"
   - "Target-language dialogue must be grammatically correct and stay beginner-level; the wit is in the character's English"
   - "A character is funny because of who they are: their trade, their certainties and what they are wrong about. They speak plainly and in their own way (pedantic, pompous, weary, literal-minded, cheerfully mistaken). No internet slang, meme formats or references to the present day, from the characters or the narrator"
   # Round 081 (backlog B5): the narrator's footnotes. Round 128: a dry aside only, no meme formats.

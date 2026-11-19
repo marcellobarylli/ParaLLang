@@ -230,6 +230,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   answer in correct target language. A corrected answer costs one of three hearts a conversation and closes the
   objectives it tried; with no heart left it is corrected and must be said right. The player may say or type the
   correction again; the app checks that itself. `node client/scripts/beginner-check.mjs` plays it in headless Chromium.
+  From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
+  character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
+  that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for
+  its meaning, free. `node client/scripts/narrative-check.mjs` checks the tapping in headless Chromium.
 - **Server image.** `Dockerfile` (Node 22, the server's production dependencies, `content/`, `prompts/` and Claude
   Code 2.1.325 at `CLAUDE_CLI_PATH=/usr/local/bin/claude`). `render.yaml` is the Render blueprint: one web service,
   health check `/api/health`. With `NODE_ENV=production` the server refuses to start unless `PARALLANG_TOKEN` is set
