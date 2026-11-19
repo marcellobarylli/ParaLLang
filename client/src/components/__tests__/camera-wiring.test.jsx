@@ -480,3 +480,36 @@ test('the microphone listens in Italian or in English by a switch, and adds each
   act(() => speech.heard.onEnd(null));
   expect(box.value).toBe('Buongiorno my name is Luigione');
 });
+
+// The owner's screenshot of 2026-11-19: the hosted server had restarted (a deploy; the free plan wipes its saves) and
+// the first answer at Mortimer's site came back "Unknown learner ID. Create a learner identity first.", with the
+// dead conversation left on the screen. The page now says what happened and starts a new run.
+test('a server that has forgotten the learner: the page says so, drops the dead conversation and starts a new run', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  const before = store.getState().learnerId;
+  const served = fetch.getMockImplementation();
+  let learners = 0;
+  fetch.mockImplementation(async (url, init) => {
+    if (String(url).includes('/api/encounter/dialogue')) return { ok: false, status: 400, json: async () => ({ error: { code: 'VALIDATION_ERROR', message: 'Unknown learner ID. Create a learner identity first.' } }) };
+    if (String(url).endsWith('/api/learner')) learners += 1;
+    return served(url, init);
+  });
+  await user.type(screen.getByLabelText('Your response', { selector: 'input' }), 'Io quiero un vegetable');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  // The reason, in the banner; no conversation; the temple map of a new run.
+  expect(await screen.findByText('The server was restarted and lost your run with it. A new run has started.')).toBeTruthy();
+  expect(screen.queryByText(/Unknown learner ID/)).toBeNull();
+  await waitFor(() => expect(screen.queryByLabelText('Your response', { selector: 'input' })).toBeNull());
+  await waitFor(() => expect(store.getState().connection).toBe('ready'));
+  const state = store.getState();
+  expect(learners).toBe(1); // the learner was created again
+  expect(state.learnerId).toBeTruthy();
+  expect(before).toBeTruthy();
+  expect([state.phase, state.encounter, state.assessment, state.isLoading, state.draft]).toEqual(['overview', null, null, false, '']);
+  expect(screen.getByRole('button', { name: 'Start' })).toBeTruthy();
+  // The banner can be closed, and the new run plays.
+  await user.click(screen.getByRole('button', { name: 'Start' }));
+  await waitFor(() => expect(store.getState().encounter?.encounterId).toBe(encounterOf('face_gate')));
+  expect(store.getState().error).toBeNull();
+});

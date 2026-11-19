@@ -28,6 +28,8 @@ import { unexploredSites } from '../dungeonModel.js';
 //
 // This module imports no YAML and no three.js: server/test/web-client.test.js loads it in plain Node.
 const LEARNER_KEY = 'parallang.learnerId';
+// Shown when the server no longer knows the learner (its saves were wiped by a restart).
+export const RUN_LOST = 'The server was restarted and lost your run with it. A new run has started.';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
 const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now()}-${Math.random()}`;
 const MOVING = new Set(['approach', 'walk']);
@@ -64,7 +66,26 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
   let spellbookVersion = 0; // counts the Spellbooks taken from replies, so a slower, older read is not applied over them
 
   return create((set, get) => {
-    const api = givenApi ?? createLearningApi({ getSettings: () => get().settings });
+    // The server lost this learner: on the free hosting plan every restart of the server (each deploy) wipes its
+    // saves, and the page still holds the old learner's id. Any request then fails with "Unknown learner ID". The run
+    // cannot be had back, so the page says what happened and starts a new one, instead of leaving a dead conversation
+    // on the screen. (The code is for a server that sends one; today's sends only the message.)
+    const isLostLearner = (error) => error?.code === 'UNKNOWN_LEARNER' || /unknown learner id/i.test(error?.message ?? '');
+    const rawApi = givenApi ?? createLearningApi({ getSettings: () => get().settings });
+    const api = new Proxy(rawApi, {
+      get(target, key) {
+        const call = target[key];
+        if (typeof call !== 'function' || key === 'createLearner') return call;
+        return async (...args) => {
+          try { return await call.apply(target, args); }
+          catch (error) {
+            if (!isLostLearner(error)) throw error;
+            get().recoverLostRun();
+            throw Object.assign(new Error(RUN_LOST), { code: 'RUN_LOST' });
+          }
+        };
+      },
+    });
     const siteIndexOf = (encounterId) => get().dungeon.sites.findIndex((site) => site.encounterId === encounterId);
     const indexOfSite = (siteId) => get().dungeon.sites.findIndex((site) => site.id === siteId);
     const clearedAt = (index, progress = get().progress) => Boolean(progress?.sites?.[get().dungeon.sites[index]?.id]?.cleared);
@@ -487,7 +508,13 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
-      saveSettings: async (values) => {
+      // The server no longer knows this learner (see `api` above): everything of the old run is dropped, the learner
+      // is created again and the player stands at a new run's start, with a line saying why.
+      recoverLostRun: () => {
+        if (get().error === RUN_LOST && !get().learnerId) return; // already recovering
+        get().saveSettings(get().settings, { notice: RUN_LOST });
+      },
+      saveSettings: async (values, { notice = null } = {}) => {
         const settings = persistSettings(values, storage);
         requestEpoch += 1;
         siteRequest += 1;
@@ -497,11 +524,12 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         initializationPromise = null;
         const phase = ['attract', 'world'].includes(get().phase) ? get().phase : 'overview';
         set({
-          settings, settingsOpen: false, learnerId: null, language: null, progress: null, connection: 'idle', serverProblem: null, dungeon,
+          settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, connection: 'idle', serverProblem: null, dungeon,
           party: [], partyReturn: null, partyStarting: null, recruiting: false,
           progression: null, xpGained: 0, levelUp: null,
           phase, siteIndex: Math.max(0, dungeon.sites.findIndex((site) => site.id === dungeon.start)), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, encounter: null, encounterLoading: false, siteError: null, starting: false,
-          spellbook: emptySpellbook, view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null, closedObjectives: 0, isLoading: false, error: null,
+          spellbook: emptySpellbook, view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null, closedObjectives: 0, isLoading: false, error: notice,
+          ...(notice ? { draft: '', pendingInput: null } : {}),
         });
         await get().initialize();
       },
