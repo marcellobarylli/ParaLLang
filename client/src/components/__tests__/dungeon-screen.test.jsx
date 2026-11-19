@@ -227,7 +227,8 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   await user.click(screen.getByRole('button', { name: 'Translate word: café' }));
   await screen.findByText(/Hints: 1\/2/);
   await user.click(screen.getByRole('button', { name: 'Translate sentence' }));
-  await screen.findByText('Do you want a coffee? Without milk is civilized.');
+  // Matched sentences are split into coloured spans (round 142), so the line is read as one paragraph.
+  await waitFor(() => expect(document.querySelector('p.translation')?.textContent).toBe('Do you want a coffee? Without milk is civilized.'));
   expect(screen.getByText(/Hints: 0\/2/)).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Translate word: sin leche' }).disabled).toBe(true);
 

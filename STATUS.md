@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-20: round 142, matching sentences share a colour
+
+A character's line and its translation (also the correction card) are matched sentence by sentence, and each pair is
+coloured alike from a colourblind-safe palette (Okabe-Ito, seven colours, cycling). A line whose two sides differ in
+sentence count stays plain. Client only; tested in jsdom, not seen on a phone ([findings](docs/rounds/142/findings.md)).
+
 ## Addendum 2026-11-20: round 141, the answer boxes grow with their text
 
 The practice box of the correction card showed two lines of a longer text. Both it and the reply box now show all their

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { differingWords, sameSentence } from '../practice.js';
+import { pairSentences } from '../sentences.js';
+import SentenceText from './SentenceText.jsx';
 
 // Round 129: beginner mode. What the player meant, in correct target language, after an answer with a slip in it,
 // and a box to say or type it once more. The conversation has already moved on (or, with no heart left, waits for
@@ -24,6 +26,7 @@ export default function CorrectionCard({ correction, language, speaker = null, l
     box.scrollIntoView?.({ block: 'nearest' });
   }, [attempt]);
   useEffect(() => { if (verdict) verdictRef.current?.scrollIntoView?.({ block: 'nearest' }); }, [verdict]);
+  const pairs = pairSentences(correction.text, correction.translation);
   const languageName = language?.name ?? 'the target language';
   const check = (text = attempt) => {
     if (!text.trim()) return;
@@ -48,10 +51,10 @@ export default function CorrectionCard({ correction, language, speaker = null, l
         {correction.heartLost && <span className="heart-lost" aria-label="One heart used">−1 ♥</span>}
       </div>
       <div className="speaker-row">
-        <p className="correction-text" lang={language?.tag}>{correction.text}</p>
+        <SentenceText className="correction-text" lang={language?.tag} text={correction.text} sentences={pairs?.native} />
         {speaker?.supported && <button type="button" className="icon-button speak-button" onClick={() => speaker.speak({ text: correction.text, tag: language?.tag })} aria-label="Hear the corrected sentence" title="Hear it">🔊</button>}
       </div>
-      {correction.translation && <p className="translation">{correction.translation}</p>}
+      {correction.translation && <SentenceText className="translation" text={correction.translation} sentences={pairs?.translation} />}
       {!correction.heartLost && (
         <p className="correction-note">
           No hearts left, so this one has to be said right to move on.

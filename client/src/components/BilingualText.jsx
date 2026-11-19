@@ -1,8 +1,12 @@
+import { pairSentences } from '../sentences.js';
+import SentenceText from './SentenceText.jsx';
+
 export default function BilingualText({ message, language, onHelp, disabled = false }) {
   const { dialogue, protected: isProtected } = message;
+  const pairs = pairSentences(dialogue.native, dialogue.translation); // round 142: matched sentences share a colour
   return (
     <div className="bilingual-text">
-      <p className="native-line" lang={language?.tag}>{dialogue.native}</p>
+      <SentenceText className="native-line" lang={language?.tag} text={dialogue.native} sentences={pairs?.native} />
       <div className="word-actions" aria-label="Word translations">
         {dialogue.words.map((word) => (
           <div className="word-help" key={word.vocabularyId}>
@@ -20,7 +24,7 @@ export default function BilingualText({ message, language, onHelp, disabled = fa
         ))}
       </div>
       {dialogue.translation ? (
-        <p className="translation" role="status">{dialogue.translation}</p>
+        <SentenceText className="translation" role="status" text={dialogue.translation} sentences={pairs?.translation} />
       ) : (
         <button
           type="button"
