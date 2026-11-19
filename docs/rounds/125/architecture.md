@@ -95,3 +95,20 @@ handled in the mathematics and not checked on a device.
 - **Real browser:** at a site, synthetic orientation events turn the rendered camera within the range, and the
   camera's position does not move with them.
 - All client suites and the build keep passing.
+
+## Amendment 2026-11-19: two corrections during the build (Claude)
+
+- **The recentre is 30 s, not 12 s.** In the browser check a look held at its range had crept back by a tenth after
+  a second (7.1° of 8° after 1.5 s). At 30 s it is 7.6°.
+- **A fourth answer, `unknown`.** Headless Chromium has `DeviceOrientationEvent.requestPermission()` and answers
+  "prompt", which is neither yes nor no. The Design mapped every answer but "granted" to a refusal, so Settings showed
+  the refusal line in a browser that refused nothing. Such an answer is now `unknown` and shows no line.
+
+## Outcome (2026-11-19)
+
+Built as designed, with the Amendment above, on the branch `claude/inspiring-hypatia-xoybb3` as `747dbda`. It is not
+merged to `main`, so it is not deployed. Settings has a "Tilt to look" checkbox, off by default. With it on, the
+phone's orientation turns the camera's look at a site by up to 12° sideways and 8° up or down, and the camera's
+position stays the director's. The client's 149 tests and the real-browser check with synthetic orientation events
+pass. The claim boundary held: no phone was used. See [`findings.md`](findings.md); the owner's words are in
+[`trail/interview.md`](trail/interview.md).
