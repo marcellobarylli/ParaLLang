@@ -129,7 +129,11 @@ test('a turn reply with no target language is written again; the grading call is
 
 test('a prefetched greeting goes through the same guard', async (t) => {
   const runtime = await setup(t, [ENGLISH, MIXED], { prefetch: true, prefetchDwellMs: 20 });
+  // Round 128: the entrance's dwell cannot end while the learner is created (as in greeting-prefetch.test.js, round
+  // 126). On a busy runner it did, the entrance's greeting took the queued replies, and the start made a third call.
+  runtime.service.prefetchDwellMs = 60_000;
   const { learnerId } = await runtime.service.createOrRecoverLearner();
+  runtime.service.prefetchDwellMs = 20;
   await runtime.service.moveTo(learnerId, { locationId: 'coffee_cart' });
   const end = Date.now() + 2000;
   while (runtime.service.narrationStats.retryPassed < 1) {

@@ -24,7 +24,7 @@ The entry point for agents: the current state, how the project is logged, and th
   Letharger at The Cracked Fountain ([round 011](docs/rounds/011/architecture.md)) and Marginalia the Bookworm, who
   reads from *The Journey*, at The Old Bookshop ([round 013](docs/rounds/013/architecture.md)). The Rift is sealed until those five are complete ([round 014](docs/rounds/014/architecture.md)) and holds the boss, Errata, an infohazard in glitched mixed language who reviews every earlier vocabulary file ([round 015](docs/rounds/015/architecture.md)). New encounters are content only ([round 006](docs/rounds/006/architecture.md)). Defeated saveable NPCs can be saved to the player's party ([round 021](docs/rounds/021/architecture.md)) and talked to again anywhere ([round 022](docs/rounds/022/architecture.md)). The autonomous run's backlog
   is in [`docs/autonomy/STATE.md`](docs/autonomy/STATE.md).
-- **Tone.** The narration prompt carries the style guide (Pratchett × meme culture) and neither NPCs nor the
+- **Tone.** The narration prompt carries the style guide (Pratchett's manner, no internet slang since [round 128](docs/rounds/128/architecture.md)) and neither NPCs nor the
   grader's feedback give the answer away ([round 007](docs/rounds/007/architecture.md),
   [round 008](docs/rounds/008/architecture.md)), nor offer the answers as a menu to pick from
   ([round 012](docs/rounds/012/architecture.md)). The Spellbook hides meanings during encounters and on due cards
@@ -32,6 +32,16 @@ The entry point for agents: the current state, how the project is logged, and th
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-19: round 128, no internet slang; the humour in Pratchett's manner
+
+The owner asked to get rid of the gen-Z speak ("mid" and the like) and to make the humour Pratchett style. This
+reverses the meme half of round 007's "Pratchett × meme culture". The style guide now asks for Pratchett's manner
+and bans internet slang, meme formats and present-day references; Gerald, Mortimer, Flick and Marginalia each lost a
+slang quirk and gained one in kind (Gerald now delivers verdicts like a wine taster addressing a court). Footnotes
+and the meme lore stay. A test scans the style guide, the character sheets and the encounters' English. Deployed
+with the server; no line from the live model has been seen. A second flaky prefetch test, which failed CI on the
+round 127 merge, is fixed ([findings](docs/rounds/128/findings.md)).
 
 ## Addendum 2026-11-19: round 127, ambient music
 
@@ -1182,6 +1192,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 128 | 11-19 | No internet slang; the humour in Pratchett's manner (style guide, four character quirks, a tone test); a second prefetch test race fixed | [128](docs/rounds/128/architecture.md) | [findings](docs/rounds/128/findings.md) | `9cb64ee` (pre-run record) to round 128 close; build `83534c8` |
 | 127 | 11-19 | Quiet ambient music made in the browser: generated chords, ducked under speech, a Settings switch | [127](docs/rounds/127/architecture.md) | [findings](docs/rounds/127/findings.md) | `9c52599` (pre-run record) to round 127 close; build `8a974a6` |
 | 126 | 11-19 | Character voices by type and a spoken answer in the web dungeon (the browser's speech); the Claude CLI defaults to Sonnet; what a turn does (on a branch) | [126](docs/rounds/126/architecture.md) | [findings](docs/rounds/126/findings.md) | `5055562` (pre-run record) to round 126 close; build `c9a2ce7` |
 | 125 | 11-19 | Tilt to look: the phone's orientation turns the encounter camera's look at a site (a Settings checkbox, off by default; on a branch) | [125](docs/rounds/125/architecture.md) | [findings](docs/rounds/125/findings.md) | `25d1d0f` (pre-run record) to round 125 close; build `747dbda` |
