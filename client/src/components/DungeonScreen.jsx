@@ -3,6 +3,7 @@ import DungeonView from './DungeonView.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
+import SheetHandle from './SheetHandle.jsx';
 import { browserSpeech } from '../speech.js';
 import { browserAmbience } from '../ambience.js';
 import Spellbook from './Spellbook.jsx';
@@ -269,7 +270,7 @@ function PartyOffer({ state, encounter }) {
 // Round 126: the character's lines are read aloud in the voice of its sheet (`speech.speaker`): each new line when
 // it arrives, unless voices are off in Settings, and any line again from its 🔊. The voice stops when the player
 // sends, starts the microphone or leaves.
-function EncounterSheet({ state, site, sites, party = false, speech }) {
+function EncounterSheet({ state, site, sites, party = false, speech, height = null, onHeight = () => {} }) {
   const { encounter, assessment, language, isLoading, encounterLoading } = state;
   const scrollRef = useRef(null);
   const { speaker, listener } = speech;
@@ -294,7 +295,9 @@ function EncounterSheet({ state, site, sites, party = false, speech }) {
     if (element) element.scrollTop = fresh ? 0 : element.scrollHeight;
   }, [encounter?.id, encounter?.transcript, assessment, isLoading, resolved, fresh]);
   return (
-    <section className="sheet" aria-label={party ? `${name}, your party` : site?.name ?? 'Conversation'}>
+    <section className="sheet" aria-label={party ? `${name}, your party` : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
+      {/* Round 132: the panel drags from the top bar's edge down to this strip alone. */}
+      <SheetHandle height={height} onHeight={onHeight} />
       <header className="sheet-header">
         {!party && <SiteNumber index={state.siteIndex} />}
         <span className="site-text"><strong>{party ? name : site?.name}</strong><small>{party ? 'your party' : name}</small></span>
@@ -360,6 +363,8 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const state = useStore();
   // Round 127: ambient music. Browsers let a page make sound only after a tap, so it starts at the first one. It
   // drops while a line is read aloud and is silent while the microphone listens.
+  // Round 132: the conversation panel's height as the player dragged it, kept from one conversation to the next.
+  const [sheetHeight, setSheetHeight] = useState(null);
   const musicWanted = state.display?.music !== false;
   useEffect(() => {
     if (!musicWanted || !ambience.supported || typeof window === 'undefined') return undefined;
@@ -430,9 +435,9 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         {phase === 'world' && <WorldCard state={state} cleared={cleared} />}
         {phase === 'overview' && <OverviewCard state={state} sites={sites} />}
         {(phase === 'approach' || phase === 'walk') && <TravelCaption state={state} site={site} />}
-        {inEncounter && <EncounterSheet state={state} site={site} sites={sites} speech={speech} />}
+        {inEncounter && <EncounterSheet state={state} site={site} sites={sites} speech={speech} height={sheetHeight} onHeight={setSheetHeight} />}
         {phase === 'site' && site && <SiteCard state={state} sites={sites} site={site} />}
-        {inParty_ && <EncounterSheet state={state} site={site} sites={sites} party speech={speech} />}
+        {inParty_ && <EncounterSheet state={state} site={site} sites={sites} party speech={speech} height={sheetHeight} onHeight={setSheetHeight} />}
         {phase === 'victory' && <VictoryCard state={state} />}
       </div>
 
