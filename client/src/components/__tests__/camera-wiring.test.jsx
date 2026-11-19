@@ -19,6 +19,7 @@ vi.mock('../../scene/levelView.js', () => ({
       canvas, options, calls: [], disposed: false,
       setPhase: (value) => view.calls.push(['phase', value]),
       setEncounter: (value) => view.calls.push(['encounter', value]),
+      setLook: (source) => view.calls.push(['look', source]),
       setInsets: () => {}, setLabels: (labels) => { view.labels = labels; }, setProgress: (sites) => { view.fog = sites; },
       dispose: () => { view.disposed = true; },
     };
@@ -210,4 +211,50 @@ test('the camera arriving before the encounter has loaded waits for it', async (
   expect(screen.queryByLabelText('Your response')).toBeNull();
   await act(async () => release());
   expect(await screen.findByLabelText('Conversation with Portia')).toBeTruthy();
+});
+
+// Round 125: tilt to look. With the setting on the view gets a look source fed by the phone's orientation events;
+// with it off it gets none, and switching it off takes the source away.
+test('tilt to look hands the level view a source that the phone\'s orientation moves', async () => {
+  fakeServer();
+  const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage() });
+  render(<DungeonScreen useStore={store} />);
+  await waitFor(() => expect(level.views.length).toBe(1));
+  const view = level.views[0];
+  const looks = () => view.calls.filter(([kind]) => kind === 'look').map(([, source]) => source);
+  await waitFor(() => expect(phases(view)).toEqual(['attract:0:null']));
+  expect(looks()).toEqual([]); // off by default
+  const orient = (angles, timeStamp) => { const event = new Event('deviceorientation'); Object.assign(event, angles); Object.defineProperty(event, 'timeStamp', { value: timeStamp }); window.dispatchEvent(event); };
+
+  act(() => store.getState().setTiltLook(true));
+  await waitFor(() => expect(looks().length).toBe(1));
+  const source = looks()[0];
+  expect(source.look).toEqual({ yaw: 0, pitch: 0 });
+  orient({ alpha: 0, beta: 50, gamma: 0 }, 1000);
+  orient({ alpha: 0, beta: 40, gamma: 10 }, 1016);
+  expect(source.look.yaw).toBeGreaterThan(0.08); // right edge down: to the left
+  expect(source.look.pitch).toBeGreaterThan(0.08); // top away: up
+
+  act(() => store.getState().setTiltLook(false));
+  await waitFor(() => expect(looks()).toEqual([source, null]));
+  const before = source.look;
+  orient({ alpha: 0, beta: 50, gamma: -10 }, 1032);
+  expect(source.look).toEqual(before); // no longer listening
+});
+
+test('where the browser wants to be asked, a visit with the setting on asks at the first click, once', async () => {
+  fakeServer();
+  const requestPermission = vi.fn(async () => 'granted');
+  vi.stubGlobal('DeviceOrientationEvent', { requestPermission });
+  const storage = memoryStorage();
+  storage.setItem('parallang.display', '{"tiltLook":true}');
+  const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage });
+  render(<DungeonScreen useStore={store} />);
+  await waitFor(() => expect(level.views.length).toBe(1));
+  await waitFor(() => expect(level.views[0].calls.some(([kind]) => kind === 'look')).toBe(true));
+  expect(requestPermission).not.toHaveBeenCalled(); // a page may not ask on its own
+  await act(async () => { document.body.click(); });
+  expect(requestPermission).toHaveBeenCalledOnce();
+  await act(async () => { document.body.click(); });
+  expect(requestPermission).toHaveBeenCalledOnce();
 });

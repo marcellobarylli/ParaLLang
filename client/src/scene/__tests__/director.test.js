@@ -6,7 +6,7 @@
 import { describe, expect, test } from 'vitest';
 import { taProhmHeightAt } from '@parallang/aesthetic';
 import { DUNGEON } from '../../dungeon.js';
-import { CLEAR, DURATIONS, ENGAGE_MAX, EYE, STANDOFF, WALK_SPEED, arrivalPoints, blendPoses, createDirector, dropPoses, measurePath, pathPoints, turnPoses, walkFraction } from '../director.js';
+import { CLEAR, DURATIONS, ENGAGE_MAX, EYE, LOOK_MAX, STANDOFF, WALK_SPEED, arrivalPoints, blendPoses, createDirector, dropPoses, measurePath, pathPoints, turnPoses, walkFraction } from '../director.js';
 import { blocked } from '../../__tests__/taProhmPlan.js';
 import { dockInsets, freeRect } from '../insets.js';
 
@@ -463,6 +463,138 @@ describe('the camera follows the conversation', () => {
     run(d, 3);
     expect(distance(d.pose.position, before.position)).toBeLessThan(1e-9);
     expect(distance(d.pose.target, before.target)).toBeLessThan(1e-9);
+  });
+});
+
+// Round 125: tilt to look. The phone's tilt turns the line of sight at a hold at a site and nothing else.
+describe('the look follows the phone', () => {
+  const sight = ({ position, target }) => {
+    const d = [target[0] - position[0], target[1] - position[1], target[2] - position[2]];
+    return { yaw: Math.atan2(d[0], d[2]), pitch: Math.asin(d[1] / Math.hypot(...d)), distance: Math.hypot(...d) };
+  };
+  const wrap = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
+  // Two directors on the same clock, one with a look: at a hold at `index`, arrived by an approach.
+  function pair(index, look) {
+    const [plain, tilted] = [director(), director()];
+    for (const d of [plain, tilted]) d.approach(index);
+    tilted.look(look);
+    return [plain, tilted];
+  }
+  const both = (plain, tilted, seconds, check = () => {}) => { for (let t = 0; t < seconds; t += FRAME) check(plain.update(FRAME), tilted.update(FRAME)); };
+
+  test('with no look every pose is what it was', () => {
+    const [plain, zero] = pair(2, { yaw: 0, pitch: 0 });
+    both(plain, zero, DURATIONS.approach + 4, (a, b) => expect(b).toEqual(a));
+    const never = director();
+    never.approach(2);
+    expect(never.looked).toEqual({ yaw: 0, pitch: 0 });
+  });
+
+  test('a look turns the sight to the left and up by its angles, and leaves the camera where it is', () => {
+    for (let index = 0; index <= lastSite; index++) {
+      const [plain, tilted] = pair(index, { yaw: 0.2, pitch: 0.1 });
+      both(plain, tilted, DURATIONS.approach + 5, (a, b) => expect(b.position).toEqual(a.position));
+      const [a, b] = [sight(plain.pose), sight(tilted.pose)];
+      expect(wrap(b.yaw - a.yaw)).toBeCloseTo(0.2, 3);
+      expect(b.pitch - a.pitch).toBeCloseTo(0.1, 3);
+      expect(b.distance).toBeCloseTo(a.distance, 6);
+    }
+  });
+
+  test('to the left is the left of the screen', () => {
+    const [plain, tilted] = pair(2, { yaw: 0.2, pitch: 0 });
+    both(plain, tilted, DURATIONS.approach + 5);
+    const [a, b] = [plain.pose, tilted.pose];
+    const forward = [a.target[0] - a.position[0], a.target[2] - a.position[2]];
+    const right = [-forward[1], forward[0]]; // forward × up, on the ground plan
+    const moved = [b.target[0] - a.target[0], b.target[2] - a.target[2]];
+    expect(moved[0] * right[0] + moved[1] * right[1]).toBeLessThan(0);
+  });
+
+  test('the look is nothing on the way to a site and at the start of the hold, then fades in without a jump', () => {
+    const [plain, tilted] = pair(3, { yaw: LOOK_MAX.yaw, pitch: -LOOK_MAX.pitch });
+    both(plain, tilted, DURATIONS.approach - FRAME, (a, b) => expect(b).toEqual(a));
+    let previous = sight(tilted.pose);
+    both(plain, tilted, 4, (a, b) => {
+      const now = sight(b);
+      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.03); // under a degree a second per degree of range
+      expect(Math.abs(now.pitch - previous.pitch)).toBeLessThan(0.03);
+      previous = now;
+    });
+    expect(wrap(sight(tilted.pose).yaw - sight(plain.pose).yaw)).toBeCloseTo(LOOK_MAX.yaw, 2);
+  });
+
+  test('the orbits, the map and a walk ignore the look', () => {
+    for (const state of ['attract', 'overview', 'victory']) {
+      const [plain, tilted] = [director(), director()];
+      plain.approach(0); tilted.approach(0);
+      plain.skip(); tilted.skip();
+      tilted.look({ yaw: 0.2, pitch: 0.1 });
+      plain[state](); tilted[state]();
+      plain.skip(); tilted.skip();
+      both(plain, tilted, 3, (a, b) => expect(b).toEqual(a));
+    }
+    const [plain, tilted] = [director(), director()];
+    for (const d of [plain, tilted]) { d.approach(0); d.skip(); d.walk(0, 2); }
+    tilted.look({ yaw: 0.2, pitch: 0.1 });
+    both(plain, tilted, plain.arrival - FRAME, (a, b) => expect(b).toEqual(a));
+  });
+
+  test('a look is bounded, and junk is no look', () => {
+    const d = director();
+    d.approach(1);
+    d.skip();
+    d.look({ yaw: 9, pitch: -9 });
+    run(d, 5);
+    expect(d.looked.yaw).toBeCloseTo(LOOK_MAX.yaw, 4);
+    expect(d.looked.pitch).toBeCloseTo(-LOOK_MAX.pitch, 4);
+    for (const junk of [undefined, null, {}, { yaw: NaN, pitch: 'up' }]) {
+      d.look(junk ?? undefined);
+      run(d, 3);
+      expect(d.looked.yaw).toBeCloseTo(0, 6);
+      expect(d.looked.pitch).toBeCloseTo(0, 6);
+    }
+  });
+
+  test('a new look is eased to, and taking the look away eases back', () => {
+    const d = director();
+    d.approach(2);
+    d.skip();
+    run(d, 3);
+    let previous = sight(d.pose);
+    const smooth = (pose) => {
+      const now = sight(pose);
+      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.07);
+      previous = now;
+    };
+    d.look({ yaw: LOOK_MAX.yaw });
+    run(d, 1, smooth);
+    expect(d.looked.yaw).toBeCloseTo(LOOK_MAX.yaw, 3);
+    d.look();
+    run(d, 1, smooth);
+    expect(d.looked.yaw).toBeCloseTo(0, 3);
+  });
+
+  test('a new state keeps the look, and a walk that starts from a turned camera has no jump', () => {
+    const [plain, d] = [director(), director()];
+    for (const each of [plain, d]) { each.approach(0); each.skip(); }
+    d.look({ yaw: 0.2, pitch: 0.1 });
+    both(plain, d, 4);
+    const before = d.pose;
+    plain.walk(0, 2);
+    d.walk(0, 2);
+    expect(d.looked.yaw).toBeCloseTo(0.2, 4);
+    expect(d.pose.position).toEqual(before.position);
+    expect(distance(d.pose.target, before.target)).toBeLessThan(1e-9);
+    // The walk goes where it goes without a look, and the sight never snaps.
+    let previous = sight(d.pose);
+    both(plain, d, d.arrival + 3, (a, b) => {
+      expect(distance(b.position, a.position)).toBeLessThan(1e-9);
+      const now = sight(b);
+      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.08);
+      expect(Math.abs(now.pitch - previous.pitch)).toBeLessThan(0.08);
+      previous = now;
+    });
   });
 });
 

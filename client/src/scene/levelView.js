@@ -6,6 +6,7 @@
 // Round 122: a site that names a figure shows its character (aesthetic's figures.js) in place of the beacon. The
 // figure faces the camera, bobs, hops when an objective is passed, and shrinks away as the camera steps through the
 // place where it stands.
+// Round 125: tilt to look. A look source (tilt.js) turns the camera's line of sight at a site.
 import {
   AdditiveBlending, BufferGeometry, CircleGeometry, CylinderGeometry, DoubleSide, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial,
   OctahedronGeometry, PerspectiveCamera, RingGeometry, Vector3, WebGLRenderer,
@@ -161,6 +162,8 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
   const projected = new Vector3();
   // Round 116: the conversation at the site the camera holds at.
   const talk = { resolved: false, beatId: null };
+  // Round 125: where the phone's tilt comes from (setLook), or null.
+  let lookSource = null;
 
   function resize() {
     const width = Math.max(1, canvas.clientWidth || canvas.width || 1);
@@ -194,6 +197,7 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     clock += dt;
     resize();
     applyView(dt);
+    director.look(lookSource?.look);
     const pose = director.update(dt);
     camera.position.set(...pose.position);
     camera.lookAt(...pose.target);
@@ -296,6 +300,7 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       if (reducedMotion) director.skip();
       notified = false;
       Object.assign(talk, { resolved: false });
+      lookSource?.recentre?.(); // the way the phone is held on arriving is "straight ahead"
     },
     /**
      * Round 116: the conversation at the site the camera holds at. `closed` objectives step the camera in, a new
@@ -316,6 +321,8 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       }
       talk.beatId = beatId;
     },
+    /** Round 125: `source.look` is { yaw, pitch } in radians, read every frame; null turns the look back to the site. */
+    setLook(source) { lookSource = source ?? null; },
     setInsets(next) {
       for (const side of Object.keys(insetTarget)) insetTarget[side] = Math.max(0, Number(next?.[side]) || 0);
       // The first measurement applies at once: the level must not slide into place when the page opens.

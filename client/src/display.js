@@ -2,6 +2,7 @@
 // (api/settings.js), because saving those reconnects and a change here must not.
 //
 // panelOpacity: how opaque the text panels over the 3D level are, 0 (only the text) to 1 (the level hidden).
+// tiltLook (round 125): whether the phone's orientation turns the camera's look at a site. Off unless switched on.
 import { browserStorage } from './api/settings.js';
 
 export const DISPLAY_KEY = 'parallang.display';
@@ -18,11 +19,11 @@ export function clampPanelOpacity(value) {
 export function loadDisplay(storage = browserStorage()) {
   let stored = null;
   try { stored = JSON.parse(storage?.getItem?.(DISPLAY_KEY) ?? 'null'); } catch { stored = null; }
-  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity) };
+  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true };
 }
 
 export function saveDisplay(display, storage = browserStorage()) {
-  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity) };
+  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true };
   try { storage?.setItem?.(DISPLAY_KEY, JSON.stringify(value)); } catch { /* private mode: kept for this page only */ }
   return value;
 }

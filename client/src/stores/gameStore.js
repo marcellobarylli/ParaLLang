@@ -478,6 +478,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       closeSettings: () => set({ settingsOpen: false }),
       // Round 117: a display preference. It makes no request and leaves the run and the conversation alone.
       setPanelOpacity: (value) => set({ display: saveDisplay({ ...get().display, panelOpacity: value }, storage) }),
+      // Round 125: tilt to look, another display preference.
+      setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       saveSettings: async (values) => {
         const settings = persistSettings(values, storage);

@@ -20,17 +20,27 @@ test('the opacity is clamped to the slider and rounded to its step', () => {
 
 test('the preference loads with a default, saves under its own key, and survives a broken stored value', () => {
   const storage = memoryStorage();
-  expect(loadDisplay(storage)).toEqual({ panelOpacity: PANEL_OPACITY.default });
-  expect(saveDisplay({ panelOpacity: 0.32 }, storage)).toEqual({ panelOpacity: 0.3 });
-  expect(JSON.parse(storage.values.get(DISPLAY_KEY))).toEqual({ panelOpacity: 0.3 });
-  expect(loadDisplay(storage)).toEqual({ panelOpacity: 0.3 });
+  expect(loadDisplay(storage)).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false });
+  expect(saveDisplay({ panelOpacity: 0.32 }, storage)).toEqual({ panelOpacity: 0.3, tiltLook: false });
+  expect(JSON.parse(storage.values.get(DISPLAY_KEY))).toEqual({ panelOpacity: 0.3, tiltLook: false });
+  expect(loadDisplay(storage)).toEqual({ panelOpacity: 0.3, tiltLook: false });
   expect(storage.values.has('parallang.settings')).toBe(false);
-  expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: '{broken' }))).toEqual({ panelOpacity: PANEL_OPACITY.default });
-  expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: '{"panelOpacity":"dark"}' }))).toEqual({ panelOpacity: PANEL_OPACITY.default });
-  expect(loadDisplay(null)).toEqual({ panelOpacity: PANEL_OPACITY.default });
+  expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: '{broken' }))).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false });
+  expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: '{"panelOpacity":"dark"}' }))).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false });
+  expect(loadDisplay(null)).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false });
 });
 
 test('a storage that refuses the write keeps the value for this page', () => {
   const storage = { getItem: () => null, setItem: () => { throw new Error('QuotaExceededError'); } };
-  expect(saveDisplay({ panelOpacity: 0.5 }, storage)).toEqual({ panelOpacity: 0.5 });
+  expect(saveDisplay({ panelOpacity: 0.5 }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false });
+});
+
+// Round 125: tilt to look is off unless it was switched on, and is stored beside the opacity.
+test('tilt to look loads off, saves as a boolean, and anything but true is off', () => {
+  const storage = memoryStorage();
+  expect(loadDisplay(storage).tiltLook).toBe(false);
+  expect(saveDisplay({ panelOpacity: 0.5, tiltLook: true }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: true });
+  expect(loadDisplay(storage)).toEqual({ panelOpacity: 0.5, tiltLook: true });
+  for (const junk of ['true', 1, 'yes', null, {}]) expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: JSON.stringify({ tiltLook: junk }) })).tiltLook, String(junk)).toBe(false);
+  expect(saveDisplay({ tiltLook: 'on' }, storage).tiltLook).toBe(false);
 });

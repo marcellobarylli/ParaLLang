@@ -362,7 +362,7 @@ export default function DungeonScreen({ useStore }) {
   return (
     <div className={`app-shell phase-${phase}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
       <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
-        closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
+        closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
 
       <header className="hud" ref={hudRef}>
         <div className="hud-title"><strong>ParaLLang</strong><span>{dungeon.name}</span></div>
@@ -409,7 +409,7 @@ export default function DungeonScreen({ useStore }) {
         </div>
       )}
 
-      {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} />}
+      {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook} />}
     </div>
   );
 }

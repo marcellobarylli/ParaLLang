@@ -1,22 +1,33 @@
 import { useEffect, useState } from 'react';
 import { PANEL_OPACITY, clampPanelOpacity } from '../display.js';
 import { BUILD_ID } from '../build.js';
+import { requestTiltPermission } from '../scene/tilt.js';
 import { describeViewport, latestBuild, measureViewport, reloadPage } from '../viewport.js';
 
 // Round 118: which build runs, what the browser reports about its viewport (so a screenshot of Settings carries
 // both), whether the site holds a newer build, and a reload that goes past the browser's cache.
-const SITE = { build: BUILD_ID, latestBuild, reload: reloadPage, viewport: measureViewport };
+const SITE = { build: BUILD_ID, latestBuild, reload: reloadPage, viewport: measureViewport, requestTilt: () => requestTiltPermission() };
+// Round 125: what the browser answered when the box was ticked, if it was not a yes.
+const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s motion sensor, so the view will not move.', unsupported: 'This device reports no motion sensor.' };
 
 // Round 114: the server URL and the access token (PARALLANG_TOKEN on the server). Both stay in this browser's
 // localStorage; the token is sent as X-ParaLLang-Token. A blank URL means this page's own /api (the dev proxy).
 // Round 117: the opacity of the text panels over the level. The slider applies at once and needs no save; the sheet
 // takes the same background, so it shows the result while the slider moves.
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, site = SITE }) {
+// Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, site = SITE }) {
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
   const submit = (event) => {
     event.preventDefault();
     onSave({ serverUrl, token });
+  };
+  const [tiltAnswer, setTiltAnswer] = useState(null);
+  const changeTilt = (event) => {
+    const on = event.target.checked;
+    setTiltAnswer(null);
+    if (on) Promise.resolve(site.requestTilt?.() ?? 'granted').then(setTiltAnswer, () => setTiltAnswer('denied'));
+    onTiltLook(on);
   };
   const percent = Math.round(clampPanelOpacity(panelOpacity) * 100);
   const [newest, setNewest] = useState(null);
@@ -36,6 +47,16 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             <input id="settings-opacity" type="range" min={PANEL_OPACITY.min * 100} max={PANEL_OPACITY.max * 100} step={PANEL_OPACITY.step * 100}
               value={percent} aria-valuetext={`${percent}%`} onChange={(event) => onPanelOpacity(Number(event.target.value) / 100)} />
             <small>Lower it to see more of the temple behind the text. It applies at once.</small>
+          </>
+        )}
+        {onTiltLook && (
+          <>
+            <label className="setting-check" htmlFor="settings-tilt">
+              <input id="settings-tilt" type="checkbox" checked={tiltLook} onChange={changeTilt} />
+              <span>Tilt to look</span>
+            </label>
+            <small>In a conversation, tilting the phone turns the view a little. The phone may ask for access to motion.</small>
+            {tiltLook && TILT_ANSWERS[tiltAnswer] && <small role="status" className="setting-warning">{TILT_ANSWERS[tiltAnswer]}</small>}
           </>
         )}
         <label htmlFor="settings-server">Server URL</label>

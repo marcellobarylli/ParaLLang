@@ -10,6 +10,7 @@
 //
 // Round 116: at a site the conversation shapes the hold. Each closed objective steps the camera in, and a verdict is
 // a brief push or pull.
+// Round 125: tilt to look. At a hold at a site the phone's tilt turns the line of sight; the position is the director's.
 // Round 119: the dungeon is a map. A walk follows the path between two neighbouring sites in either direction. After
 // a resolve the camera keeps looking at the site: the player picks the way on (round 116's turn to it is gone).
 
@@ -29,6 +30,10 @@ const TARGET_LIFT = EYE - 0.25; // where on a site (and on the path ahead) the c
 // Round 116: how the conversation shapes a hold at a site.
 export const ENGAGE_MAX = 0.35; // at a resolved site the camera stands this fraction of the way in to it
 const ENGAGE_TAU = 0.7; // seconds, the ease of a step in
+// Round 125: the look a tilt may ask for (the host's tilt.js keeps inside it), and how it is applied.
+export const LOOK_MAX = Object.freeze({ yaw: 0.25, pitch: 0.18 }); // radians
+const LOOK_TAU = 0.12; // seconds, the ease to a new look
+const LOOK_IN = 0.5; // seconds, the look fades in over the start of a hold
 const FAR = 25; // a walk that starts further than this from its path (from the overview) comes down as an approach does
 const ON_PATH = 1.5; // a camera this near to the path it is about to walk (the way it came) starts from where it stands
 const LEAD_SPEED = 3; // metres per second, the camera's pace to the start of a path
@@ -118,6 +123,16 @@ export function dropPoses(a, b, u) {
     position: [lerp(a.position[0], b.position[0], across), y, lerp(a.position[2], b.position[2], across)],
     target: lerp3(a.target, b.target, easeInOut(u)),
   };
+}
+
+// Round 125: the pose with its line of sight turned by `yaw` (to the left) and `pitch` (up); the position stays.
+function turned({ position, target }, yaw, pitch) {
+  if (!yaw && !pitch) return { position, target };
+  const d = [target[0] - position[0], target[1] - position[1], target[2] - position[2]];
+  const distance = Math.hypot(...d) || 1e-6;
+  const [y, p] = [Math.atan2(d[0], d[2]) + yaw, clamp(Math.asin(clamp(d[1] / distance, -1, 1)) + pitch, -1.4, 1.4)];
+  const c = Math.cos(p);
+  return { position, target: [position[0] + Math.sin(y) * c * distance, position[1] + Math.sin(p) * distance, position[2] + Math.cos(y) * c * distance] };
 }
 
 // A slow sway that starts at zero, so a hold joins its transition without a jump.
@@ -239,9 +254,13 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
   // and dies away.
   const react = { level: 0, engaged: 0, beat: 0, beatAge: Infinity };
   const beatNow = () => { const x = react.beatAge / BEAT.peak; return Number.isFinite(x) ? react.beat * x * Math.exp(1 - x) : 0; };
-  const shaped = (hold, index) => {
+  // Round 125: the phone's tilt. `looked` eases to `look`. It is the player's hand, not the conversation's, so a new
+  // state keeps it; it shapes a hold from zero, `held` seconds in, so a hold still joins its transition.
+  const tilt = { look: { yaw: 0, pitch: 0 }, looked: { yaw: 0, pitch: 0 } };
+  const shaped = (hold, index, held) => {
     const along = clamp(ENGAGE_MAX * react.engaged + beatNow(), -0.08, ENGAGE_MAX + 0.06);
-    return { position: lerp3(hold.position, sitePoint(index), along), target: hold.target };
+    const weight = held > 0 ? 1 - Math.exp(-held / LOOK_IN) : 0;
+    return turned({ position: lerp3(hold.position, sitePoint(index), along), target: hold.target }, tilt.looked.yaw * weight, tilt.looked.pitch * weight);
   };
   const standoff = (path) => Math.max(0, path.total - STANDOFF);
   const approachPose = (index) => {
@@ -270,7 +289,7 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
       if (t < lead) return { stage: 'transition', ...(m.far ? dropPoses(m.from, pathPose(m.path, m.s0), t / lead) : turnPoses(m.from, pathPose(m.path, m.s0), easeInOut(t / lead))) };
       const tt = t - lead;
       if (tt < m.travel) return { stage: 'travel', ...pathPose(m.path, lerp(m.s0, m.s1, walkFraction(tt, m.travel))) };
-      return { stage: 'hold', ...shaped(withDrift(pathPose(m.path, m.s1), tt - m.travel), m.site) };
+      return { stage: 'hold', ...shaped(withDrift(pathPose(m.path, m.s1), tt - m.travel), m.site, tt - m.travel) };
     }
     const hold = m.hold(t);
     if (m.from && t < m.duration) return { stage: 'transition', ...(m.name === 'approach' ? dropPoses(m.from, hold, t / m.duration) : blendPoses(m.from, hold, easeInOut(t / m.duration))) };
@@ -305,7 +324,7 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
     overview() { return begin('overview', { duration: DURATIONS.overview, hold: () => overviewPose() }); },
     approach(index) {
       const target = approachPose(index);
-      return begin('approach', { site: index, duration: DURATIONS.approach, hold: (t) => shaped(withDrift(target, t - DURATIONS.approach), index) });
+      return begin('approach', { site: index, duration: DURATIONS.approach, hold: (t) => shaped(withDrift(target, t - DURATIONS.approach), index, t - DURATIONS.approach) });
     },
     /** Walks from site `from` to its neighbour `to` along their path, ending STANDOFF before `to`. With no path it is an approach. */
     walk(from, to) {
@@ -333,6 +352,9 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
       const step = Math.max(0, dt);
       react.engaged += (react.level - react.engaged) * (1 - Math.exp(-step / ENGAGE_TAU));
       react.beatAge += step;
+      const ease = 1 - Math.exp(-step / LOOK_TAU);
+      tilt.looked.yaw += (tilt.look.yaw - tilt.looked.yaw) * ease;
+      tilt.looked.pitch += (tilt.look.pitch - tilt.looked.pitch) * ease;
       time += Math.max(0, dt);
       if (mode) pose = evaluate(time - mode.start);
       return api.pose;
@@ -343,6 +365,12 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
     /** A verdict: 'pass' and 'resolved' push in briefly, 'fail' pulls back. */
     beat(kind) { if (BEAT[kind]) Object.assign(react, { beat: BEAT[kind], beatAge: 0 }); return api; },
     get reaction() { return { level: react.level, engaged: react.engaged }; },
+    /** Round 125: the turn of the line of sight a tilt asks for, in radians: `yaw` to the left, `pitch` up. It shapes a hold at a site. */
+    look({ yaw = 0, pitch = 0 } = {}) {
+      tilt.look = { yaw: clamp(Number(yaw) || 0, -LOOK_MAX.yaw, LOOK_MAX.yaw), pitch: clamp(Number(pitch) || 0, -LOOK_MAX.pitch, LOOK_MAX.pitch) };
+      return api;
+    },
+    get looked() { return { ...tilt.looked }; },
     /** Jumps to the state's hold (reduced motion). */
     skip() {
       if (!mode) return api;
