@@ -8,7 +8,7 @@ defeat_condition:
   type: comprehension_and_response
   description: Player says they like Mortimer's slice and asks for more, in Italian
 max_turns: 20
-resolved_message: Mortimer weighs your appetite and declares it certified ham-tier.
+resolved_message: Mortimer weighs your appetite and declares it Certified Ham, First Class.
 escalation:
   target_ratio_increase_per_turn: 0.05
 # Round 045 (backlog G3): saying you like it and asking for more may come in either order.

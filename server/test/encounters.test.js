@@ -12,7 +12,7 @@ import { buildNarrationMessages } from '../src/llm/prompt-builder.js';
 import { FixtureProvider, fixedNow } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r081.json'), 'utf8'));
+const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r128.json'), 'utf8'));
 
 const character = {
   id: 'charcutier_fixture', name: 'Bernard', species: 'Charcutier',
@@ -117,8 +117,9 @@ async function runtime(t, contentDir) {
 }
 
 // Regenerated in round 007, when the style guide entered the prompt on purpose (round 006 pinned the round 005 text),
-// in round 012 for the no-menu rule, in round 026 for the concrete language-mix rule, and in round 081 for footnotes.
-test("Gerald's narration prompts match the round 081 fixture and carry the style guide", () => {
+// in round 012 for the no-menu rule, in round 026 for the concrete language-mix rule, in round 081 for footnotes, and
+// in round 128, when the owner dropped the meme-culture texture: the humour is in Pratchett's manner, with no slang.
+test("Gerald's narration prompts match the round 128 fixture and carry the style guide", () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
     const base = { language: c.language, character: c.character, styleGuide: c.styleGuide, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };
@@ -126,10 +127,11 @@ test("Gerald's narration prompts match the round 081 fixture and carry the style
     assert.deepEqual(greeting, golden[code].greeting);
     assert.match(greeting[0].content, /- Never tell the player what to say or how to phrase it/);
     assert.match(greeting[0].content, /- Never offer an open objective's target words as options to choose from/);
-    assert.match(greeting[0].content, /meme-culture texture/);
+    assert.match(greeting[0].content, /in the manner of Terry Pratchett: dry wit and understatement/);
+    assert.match(greeting[0].content, /No internet slang, meme formats or references to the present day/);
+    assert.doesNotMatch(greeting[0].content, /meme-culture|internet register|\bmid\b|lowkey|vibe|POV:|Nobody:|ratioed/i);
     assert.match(greeting[0].content, /- The narrator may add a footnote \(the footnote field\)/);
-    assert.match(greeting[0].content, /the narrator does not, except in a footnote/);
-    assert.match(greeting[0].content, /Rates translations like a food critic/);
+    assert.match(greeting[0].content, /Delivers a verdict on every translation like a wine taster addressing a court/);
     assert.doesNotMatch(greeting[0].content, /word-level breakdowns/);
     assert.deepEqual(buildNarrationMessages({
       ...base, objectives: c.encounter.objectives.slice(1), targetRatio: 0.3,

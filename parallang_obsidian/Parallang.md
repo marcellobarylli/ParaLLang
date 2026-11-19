@@ -170,6 +170,7 @@ Anulus Mirabilis itself not sure about yet. Ring motifs are universal in mytholo
 - Translating phrases back / forwards would be done via voice recognition. Forwards is best because it forces sentence generation. The app *Superfluent* has some good inspiration for conversational AI learning - how to make it conversational within an interactive story?
 
 ### Terry Pratchett × Meme Culture, Absurd Humour
+- **Decision, 2026-11-19 (owner):** "we have to get rid of the gen z speak "mid" etc. instead, please make the humour pratchett style". The meme-culture texture below is dropped from how the characters and the narrator talk: the humour is Pratchett's manner throughout (dry wit, understatement, footnotes, trades and paperwork taken more seriously than magic, characters funny because of who they are). Memes as *lore* (life forms in a language, infohazards) stay. The bullets below are kept as the earlier idea (round 128)
 - Superfluent's basic gameplay units are short conversations about grabbing a coffee, movies etc
 - We have dungeon encounters with monsters
 - Our basic encounter is having a chat with eg an Imp about grabbing a coffee, movies etc

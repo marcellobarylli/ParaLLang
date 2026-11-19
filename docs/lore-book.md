@@ -159,7 +159,7 @@ The oldest and worst hazards are said to be scraps of the root language itself. 
 
 Some say the Lethargers are wild. Some say they are kept, and that what they harvest is sent somewhere.
 
-**Local strains.** Memes are not the same from tongue to tongue. Each language grows its own, with its own slang and its own sense of what is funny, and a joke carried across usually dies on the way, which may be a mercy. The creatures of each branch speak in theirs. An imp will be quietly judging your order in the current idiom. A demon, asked its opinion of your translation, will call it middling, in one syllable.
+**Local strains.** Memes are not the same from tongue to tongue. Each language grows its own, with its own turns of phrase and its own sense of what is funny, and a joke carried across usually dies on the way, which may be a mercy. The creatures of each branch speak in theirs. An imp will deliver a verdict on your order as a wine taster might address a court. A demon, asked its opinion of your translation, will say that it has heard worse, though not recently.
 
 **The quiet danger.** There is one more threat, and it is not a creature. Some say the powers of each branch work, patiently, to make their language smaller. Fewer words, simpler ones. In most worlds this would be mere tyranny. In this one a shrinking language is a shrinking world, and the things that have no word any more are not forbidden. They are gone.
 
@@ -223,7 +223,7 @@ There are peoples as well as places.
 
 **The Wizard of Just in Case** has altered his body many times so that it cannot be killed. He can, for instance, come apart into thousands of very small wizards, who cooperate well enough to pass for one of normal size. His will writes itself, and is revised according to the colour of his mood ring.
 
-**The Trepanners** believe that to expand the mind you must expand the mind. They drill holes in their skulls and drink a serum that inflates the brain until it stands out like a balloon. They describe the result as a whole vibe.
+**The Trepanners** believe that to expand the mind you must expand the mind. They drill holes in their skulls and drink a serum that inflates the brain until it stands out like a balloon. They describe the result as roomy.
 
 There are also places that have names and nothing else. The records list an island of monkeys, and a book of quests, and a **Black Notebook**; each has a heading and a blank page under it. Some say these pages were never written. Some say they were written and then somebody learned to read them.
 
