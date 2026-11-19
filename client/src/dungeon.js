@@ -7,6 +7,9 @@ import taProhm from '../../content/world/dungeons/ta_prohm.yaml';
 import theKiln from '../../content/world/dungeons/the_kiln.yaml';
 import { toClientDungeon } from './dungeonModel.js';
 
+import micromortMountain from '../../content/world/dungeons/micromort_mountain.yaml';
+
 export const DUNGEON = toClientDungeon(taProhm);
 export const KILN = toClientDungeon(theKiln);
-export const DUNGEONS = Object.freeze([DUNGEON, KILN]);
+export const MICROMORT_MOUNTAIN = toClientDungeon(micromortMountain);
+export const DUNGEONS = Object.freeze([DUNGEON, KILN, MICROMORT_MOUNTAIN]);

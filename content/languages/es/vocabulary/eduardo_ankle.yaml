@@ -1,0 +1,44 @@
+# Micromort Mountain, Eduardo's ankle. Reference URLs follow the existing patterns and were not opened from the build
+# container; listed for the owner's content review.
+version: eduardo-ankle-es-v1
+references:
+  - id: rae-ayuda
+    title: "Real Academia Española, Diccionario de la lengua española: ayuda"
+    url: "https://dle.rae.es/ayuda"
+  - id: rae-cima
+    title: "Real Academia Española, Diccionario de la lengua española: cima"
+    url: "https://dle.rae.es/cima"
+  - id: rae-fiesta
+    title: "Real Academia Española, Diccionario de la lengua española: fiesta"
+    url: "https://dle.rae.es/fiesta"
+entries:
+  - id: ayuda
+    kind: word
+    target: "ayuda"
+    part_of_speech: noun
+    accepted_translations: ["help", "aid"]
+    surface_variants: ["ayuda", "ayudo", "ayudar", "ayudarte", "ayudarle", "ayudas"]
+    accent_insensitive: false
+    example: { target: "Te ayudo.", english: "I'll help you." }
+    note: "'Ayuda' is the noun (help); 'ayudo' is the first person of 'ayudar' (to help): 'Te ayudo' is 'I help you'."
+    reference_ids: [rae-ayuda]
+  - id: cima
+    kind: word
+    target: "cima"
+    part_of_speech: noun
+    accepted_translations: ["summit", "peak"]
+    surface_variants: ["cima", "cimas"]
+    accent_insensitive: false
+    example: { target: "La cima está cubierta de nieve.", english: "The summit is covered in snow." }
+    note: "'Cima' is feminine: la cima, plural las cimas."
+    reference_ids: [rae-cima]
+  - id: fiesta
+    kind: word
+    target: "fiesta"
+    part_of_speech: noun
+    accepted_translations: ["party", "festival"]
+    surface_variants: ["fiesta", "fiestas"]
+    accent_insensitive: false
+    example: { target: "¡Qué buena fiesta!", english: "What a great party!" }
+    note: "'Fiesta' is feminine: la fiesta, plural las fiestas. It means a party or a festival."
+    reference_ids: [rae-fiesta]

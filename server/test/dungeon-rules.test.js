@@ -96,7 +96,7 @@ test('a level seal: the Library opens at level 3 and the Sanctuary at level 5, w
   const atCourt = play(freshRun(dungeon), ['face_gate', 'root_court', 'sunlit_court']);
   assert.deepEqual(gateFor(siteOf(dungeon, 'library'), atCourt, 2), { sealed: true, required: 0, completed: 0, level: { required: 3, current: 2 } });
   assert.equal(moveProblem(dungeon, atCourt, 'library', 2), 'SEALED');
-  assert.deepEqual(reachable(atCourt, 2).sort(), ['before_sanctuary', 'root_court']);
+  assert.deepEqual(reachable(atCourt, 2).sort(), ['before_sanctuary', 'face_gate', 'root_court']); // and the gate, visited (round 134)
   assert.equal(gateFor(siteOf(dungeon, 'library'), atCourt, 3).sealed, false);
   assert.equal(moveProblem(dungeon, atCourt, 'library', 3), null);
   assert.equal(moveProblem(dungeon, atCourt, 'library'), 'SEALED', 'with no level given the player is level 1');
@@ -124,6 +124,15 @@ test('in a complete run no gate is sealed, on the map as for moves, also at leve
   assert.equal(map.before_sanctuary.reachable, true);
   assert.equal(moveProblem(dungeon, moved(dungeon, done, 'before_sanctuary'), 'sanctuary', 1), null);
   assert.equal(moveProblem(dungeon, readRun(dungeon, { ...done, at: 'sunlit_court' }), 'library', 1), null);
+});
+
+// Round 134: any two discovered places are joined, not only neighbours.
+test('a visited site can be reached from anywhere, an unvisited one only from a neighbour', () => {
+  const run = readRun(dungeon, { run: 1, at: 'library', cleared: ['face_gate', 'root_court', 'sunlit_court'], visited: ['face_gate', 'root_court', 'sunlit_court', 'library'] });
+  assert.equal(moveProblem(dungeon, run, 'face_gate'), null, 'the gate is not next to the library, but the player has been there');
+  assert.equal(moveProblem(dungeon, run, 'root_court'), null);
+  assert.equal(moveProblem(dungeon, run, 'buttress_tree'), 'NOT_ADJACENT', 'never visited');
+  assert.equal(moveProblem(dungeon, readRun(dungeon, { run: 1, at: 'library', cleared: [], visited: ['face_gate', 'library'] }), 'sanctuary'), 'NOT_ADJACENT');
 });
 
 test('a complete run is open everywhere a path leads', () => {

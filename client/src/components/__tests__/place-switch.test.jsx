@@ -66,7 +66,7 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 test('entering The Kiln switches the dungeon, reads its run, remembers the place, and leaves Ta Prohm\'s run alone', async () => {
   const server = fakeServer({ ta_prohm: clearedRun(taProhmFile, ['face_gate']) });
   const { s, storage } = makeStore(server);
-  expect(s()).toMatchObject({ dungeon: { id: 'ta_prohm' }, enterable: ['ta_prohm', 'the_kiln'] });
+  expect(s()).toMatchObject({ dungeon: { id: 'ta_prohm' }, enterable: ['ta_prohm', 'the_kiln', 'micromort_mountain'] });
   await s().initialize();
   await settle();
   // The world map's counts: Ta Prohm from its own read, The Kiln from the read beside it.

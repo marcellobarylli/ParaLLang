@@ -199,7 +199,7 @@ const locationSchema = z.object({
 // Round 119: a dungeon is a map: sites joined by paths (walked in either direction along [a.at, ...via, b.at]), a
 // start, a goal, and seals (`requires`). server/src/dungeon.js holds its rules.
 // Round 133: `kiln` is Ta Prohm's plan under the ember theme.
-export const DUNGEON_LEVELS = Object.freeze(['angkor', 'taprohm', 'kiln']);
+export const DUNGEON_LEVELS = Object.freeze(['angkor', 'taprohm', 'kiln', 'micromort']);
 const pointSchema = z.tuple([z.number().finite(), z.number().finite()]);
 const dungeonSchema = z.object({
   id: locationIdSchema,

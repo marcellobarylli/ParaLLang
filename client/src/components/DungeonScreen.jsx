@@ -197,7 +197,9 @@ function OverviewCard({ state, sites }) {
 function WaysOn({ state, sites, site }) {
   const { dungeon, travelling } = state;
   const here = sites[site.id];
-  const ways = neighbourIds(dungeon, site.id).map((id) => dungeon.sites.find((candidate) => candidate.id === id)).filter((way) => way && sites[way.id] && sites[way.id].state !== 'hidden');
+  // Round 135: the neighbours, and every other site the player has been to.
+  const near = new Set(neighbourIds(dungeon, site.id));
+  const ways = dungeon.sites.filter((way) => way.id !== site.id && sites[way.id] && sites[way.id].state !== 'hidden' && (near.has(way.id) || sites[way.id].state === 'visited'));
   if (!ways.length) return null;
   return (
     <ul className="ways" aria-label="Ways on">
@@ -360,10 +362,10 @@ function VictoryCard({ state }) {
     <section className="card victory-card" role="status">
       <p className="eyebrow">{dungeon.name}</p>
       <h2>Dungeon cleared</h2>
-      <p>All {dungeon.sites.length} let you pass.{words > 0 && ` Your Spellbook holds ${words} ${words === 1 ? 'entry' : 'words and phrases'}.`}</p>
+      <p>{dungeon.sites.length === 1 ? `${dungeon.sites[0].characterName ?? 'The character'} lets you pass.` : `All ${dungeon.sites.length} let you pass.`}{words > 0 && ` Your Spellbook holds ${words} ${words === 1 ? 'entry' : 'words and phrases'}.`}</p>
       <div className="button-row">
         <button type="button" className="primary-button big-button" onClick={state.playAgain} disabled={isLoading}>Play again</button>
-        <button type="button" className="secondary-button big-button" onClick={state.stay} disabled={isLoading}>Stay in the temple</button>
+        <button type="button" className="secondary-button big-button" onClick={state.stay} disabled={isLoading}>{dungeon.id === 'micromort_mountain' ? 'Stay on the mountain' : 'Stay in the temple'}</button>
         <button type="button" className="secondary-button big-button" onClick={state.openSpellbook}>Spellbook</button>
       </div>
     </section>

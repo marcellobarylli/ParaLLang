@@ -34,6 +34,8 @@ export function createMaterials(uniforms, textures) {
     devata: m({ name: 'devata', map: textures.devata }),
     face: m({ name: 'face', map: textures.face }),
     litter: m({ name: 'litter', map: textures.litter }),
+    snow: m({ name: 'snow', map: textures.snow }),
+    rock: m({ name: 'rock', map: textures.rock }),
     shaft: m({ name: 'light-shaft', lit: false, fog: 0.4, transparent: true, opacity: 0.16, doubleSided: true }),
   };
 }

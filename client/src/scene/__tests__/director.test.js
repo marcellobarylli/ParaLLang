@@ -6,6 +6,7 @@
 import { describe, expect, test } from 'vitest';
 import { taProhmHeightAt } from '@parallang/aesthetic';
 import { DUNGEON } from '../../dungeon.js';
+import { routePoints } from '../director.js';
 import { CLEAR, DURATIONS, ENGAGE_MAX, EYE, LOOK_MAX, STANDOFF, WALK_SPEED, arrivalPoints, blendPoses, createDirector, dropPoses, measurePath, pathPoints, turnPoses, walkFraction } from '../director.js';
 import { blocked } from '../../__tests__/taProhmPlan.js';
 import { dockInsets, freeRect } from '../insets.js';
@@ -591,8 +592,8 @@ describe('the look follows the phone', () => {
     both(plain, d, d.arrival + 3, (a, b) => {
       expect(distance(b.position, a.position)).toBeLessThan(1e-9);
       const now = sight(b);
-      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.08);
-      expect(Math.abs(now.pitch - previous.pitch)).toBeLessThan(0.08);
+      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.12); // the walk is twice as fast (round 134)
+      expect(Math.abs(now.pitch - previous.pitch)).toBeLessThan(0.12);
       previous = now;
     });
   });
@@ -614,4 +615,22 @@ describe('the free area', () => {
     expect(squeezed.height).toBeCloseTo(844 * 0.3, 6);
     expect(squeezed.centreY).toBeLessThan(844 / 2);
   });
+});
+
+// Round 134: a walk between two sites that no single path joins follows the paths between, end to end.
+test('a route joins non-neighbouring sites along their paths, and the camera walks it', () => {
+  const index = (id) => DUNGEON.sites.findIndex((site) => site.id === id);
+  const [library, face] = [index('library'), index('face_gate')];
+  expect(pathPoints(DUNGEON, library, face)).toBeNull();
+  const route = routePoints(DUNGEON, library, face);
+  expect(route[0]).toEqual(DUNGEON.sites[library].at);
+  expect(route.at(-1)).toEqual(DUNGEON.sites[face].at);
+  expect(route.length).toBeGreaterThan(pathPoints(DUNGEON, index('library'), index('sunlit_court')).length);
+  expect(routePoints(DUNGEON, face, face)).toBeNull();
+  const d = createDirector({ dungeon: DUNGEON, heightAt: () => 0 });
+  d.approach(library);
+  d.update(DURATIONS.approach + 1);
+  d.walk(library, face);
+  expect(d.mode).toBe('walk');
+  expect(d.arrival).toBeGreaterThan(5);
 });

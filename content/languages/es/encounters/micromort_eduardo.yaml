@@ -1,0 +1,81 @@
+# Micromort Mountain, the minimal version: Eduardo has sprained his ankle halfway up. The player offers help, asks how far
+# it is to the top and asks whether there is a festival up there.
+id: micromort_eduardo
+character: characters/enemies/hiker_eduardo.yaml
+location: micromort_trail
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player offers Eduardo help, asks how far it is to the top and asks whether there is a festival up there, in Spanish"
+max_turns: 20
+resolved_message: "Eduardo drapes an arm over your shoulder, announces that the ankle is practically a decoration, and the two of you begin the climb. Above you, faintly, someone is already singing."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: offer_help
+    prompt: "Eduardo is sitting on a rock holding his ankle, insisting that it is fine. Offer to help him, using Spanish."
+    intent: "Eduardo greets the player cheerfully from his rock, insists that the sprained ankle is perfectly fine and reports the risk of the mountain in micromorts, and plainly could use a hand, while never asking for one. He never says \"ayuda\" (in dialogue or narration) before the player has, and he does not tell the player what to say."
+    target_vocabulary_ids: [ayuda]
+    required_target_groups:
+      - [ayuda]
+    grammar_constraints:
+      - "The player offers Eduardo help, in their own words, with the Spanish word for help (ayuda)."
+      - "Reject English-only offers, quotations, definitions of the word, and lines that report someone else's offer."
+    accepted_examples:
+      - "Te ayudo, Eduardo."
+      - "¿Puedo ayudarte?"
+    negative_examples:
+      - text: "Can I help you, Eduardo?"
+        reason: "English-only; it does not use the Spanish word."
+      - text: "Ayuda means help."
+        reason: "It discusses the word rather than offering help."
+      - text: "Eduardo says ayuda."
+        reason: "It reports someone else's words."
+    reference_meaning: "The player offers Eduardo help."
+    hint_limit: 2
+    next_objective: ask_top
+    assessment_reference_ids: [rae-ayuda]
+  - id: ask_top
+    prompt: "Eduardo keeps glancing up at the very top of the mountain, where the festival is. Ask him how far it is to the top, using Spanish."
+    intent: "Grateful, Eduardo explains that he is on his way to a festival at the top of the mountain, past the snow, and keeps glancing upward, estimating the distance in micromorts. He never says the Spanish word for the top or summit (\"cima\"), in dialogue or narration, before the player has. He does not tell the player what to say."
+    target_vocabulary_ids: [cima]
+    required_target_groups:
+      - [cima]
+    grammar_constraints:
+      - "The player asks Eduardo how far it is to the top of the mountain, in their own words, with the Spanish word for the top (cima)."
+      - "Reject English-only questions, quotations, and talk about the word."
+    accepted_examples:
+      - "¿Cuánto falta para la cima, Eduardo?"
+      - "¿Cómo es la cima?"
+    negative_examples:
+      - text: "How far is the top, Eduardo?"
+        reason: "English-only; it does not use the Spanish word."
+      - text: "La cima es blanca."
+        reason: "It states a fact instead of asking Eduardo how far the top is."
+    reference_meaning: "The player asks Eduardo how far it is to the top."
+    hint_limit: 2
+    next_objective: ask_party
+    assessment_reference_ids: [rae-cima]
+  - id: ask_party
+    prompt: "Eduardo says the wine festival at the top is the whole reason for the climb. Ask him whether there is a festival up there, using Spanish."
+    intent: "Eduardo lights up and describes what waits at the summit: long tables in the snow, wine, music, and a great many people who have also ignored the risk table. He never says the Spanish word for a festival or party (\"fiesta\"), in dialogue or narration, before the player has. He does not tell the player what to say."
+    target_vocabulary_ids: [fiesta]
+    required_target_groups:
+      - [fiesta]
+    grammar_constraints:
+      - "The player asks Eduardo whether there is a festival at the top, in their own words, with the Spanish word for festival or party (fiesta)."
+      - "Reject English-only questions, quotations, and talk about the word."
+    accepted_examples:
+      - "¿Hay una fiesta allá arriba?"
+      - "¿Qué fiesta es?"
+    negative_examples:
+      - text: "Is there a festival up there?"
+        reason: "English-only; it does not use the Spanish word."
+      - text: "La fiesta es bonita."
+        reason: "It states a fact about the festival instead of asking Eduardo."
+    reference_meaning: "The player asks Eduardo whether there is a festival at the top."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [rae-fiesta]

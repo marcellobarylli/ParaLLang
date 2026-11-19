@@ -1,0 +1,9 @@
+id: micromort_trail
+name: The Micromort Trail
+description: >
+  Halfway up Micromort Mountain, where the path stops pretending to be gentle. A wooden sign counts the micromorts
+  per step in a tidy hand. Below you, the valley; above you, a long climb of switchbacks, scree and one very
+  optimistic goat. Beyond the last bend, if the rumours are true, there is snow, and in the snow, wine.
+vocabulary_focus: [help, places, drinks]
+encounter: micromort_eduardo
+map: { x: 0.94, y: 0.12 }

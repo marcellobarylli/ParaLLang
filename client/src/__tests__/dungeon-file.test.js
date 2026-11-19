@@ -32,7 +32,7 @@ test('the bundled dungeon is the content file in the client shape, on a level ae
 
 // Round 133: The Kiln is the second dungeon, on Ta Prohm's plan under the ember theme.
 test('The Kiln is bundled too: Ta Prohm\'s sites, encounters, figures, paths and seals on the level `kiln`, under its own names', () => {
-  expect(DUNGEONS).toEqual([DUNGEON, KILN]);
+  expect(DUNGEONS.filter((entry) => entry.id !== 'micromort_mountain')).toEqual([DUNGEON, KILN]);
   expect(KILN).toMatchObject({ id: 'the_kiln', name: 'The Kiln', level: 'kiln', start: DUNGEON.start, goal: DUNGEON.goal, entrance: DUNGEON.entrance, paths: DUNGEON.paths });
   expect(WORLDS[KILN.level]).toBeTruthy();
   const plan = (dungeon) => dungeon.sites.map(({ id, encounterId, at, figure }) => ({ id, encounterId, at, figure }));
@@ -42,7 +42,7 @@ test('The Kiln is bundled too: Ta Prohm\'s sites, encounters, figures, paths and
   for (const name of names) expect(DUNGEON.sites.map((site) => site.name)).not.toContain(name);
 });
 
-describe.each(DUNGEONS.map((dungeon) => [dungeon.name, dungeon]))('%s against the wall plan', (_name, DUNGEON) => {
+describe.each(DUNGEONS.filter((dungeon) => dungeon.id !== 'micromort_mountain').map((dungeon) => [dungeon.name, dungeon]))('%s against the wall plan', (_name, DUNGEON) => {
 test('every site stands on clear, level ground', () => {
   expect(DUNGEON.sites.filter((site) => taProhmIsClear(...site.at)).length).toBeGreaterThan(3);
   for (const site of DUNGEON.sites) {
@@ -144,7 +144,7 @@ test('the world file: places joined by paths, one of them this dungeon, and a fo
   const opened = ATLAS_FILE.places.filter((place) => place.dungeon).map((place) => place.dungeon);
   expect(opened.sort()).toEqual(DUNGEONS.map((dungeon) => dungeon.id).sort());
   expect(ATLAS.places.map((place) => [place.id, place.state, place.dungeonId, Boolean(place.closed)])).toEqual([
-    ['ta_prohm', 'current', 'ta_prohm', false], ['the_kiln', 'known', 'the_kiln', false], ['angkor_wat', 'known', null, true], ['micromort_mountain', 'known', null, true],
+    ['ta_prohm', 'current', 'ta_prohm', false], ['the_kiln', 'known', 'the_kiln', false], ['angkor_wat', 'known', null, true], ['micromort_mountain', 'known', 'micromort_mountain', false],
   ]);
   expect(ATLAS.paths).toEqual([['ta_prohm', 'the_kiln'], ['ta_prohm', 'angkor_wat'], ['ta_prohm', 'micromort_mountain']]); // The Bone Dome is under the fog
   expect(atlasView({ ...ATLAS_FILE, start: 'angkor_wat' }).places.map((place) => place.id)).toEqual(['ta_prohm', 'angkor_wat', 'the_bone_dome']);

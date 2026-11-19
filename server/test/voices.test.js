@@ -9,7 +9,7 @@ for (const language of ['it', 'es']) {
   test(`${language}: every character has a voice of a known kind, with a pitch and a rate on the browser's scales`, () => {
     const content = loadGameContent({ language });
     const characters = new Map([...content.encounters.values()].map(({ character }) => [character.id, character]));
-    assert.equal(characters.size, 7);
+    assert.equal(characters.size, 8);
     for (const character of characters.values()) {
       assert.ok(character.voice, `${character.name} has a voice`);
       assert.ok(KINDS.has(character.voice.kind), `${character.name}: ${character.voice.kind}`);

@@ -119,6 +119,18 @@ const RECIPES = {
       },
     };
   },
+  micromort_trail(n) {
+    // Round 133: thin wind high on a mountain, with a crow's call now and then and snow ticking on the rocks.
+    const wind = normal(lowpass(lowpass(noise(81, n), 600), 900));
+    return {
+      bed: wind.map((v, i) => 0.45 * v * (0.5 + 0.5 * swell(1, i / RATE, 0.35))),
+      events: (out) => {
+        event(out, 1.2, 0.5, (t, p) => Math.sin(Math.PI * p) * Math.sin(TAU * (520 - 140 * p) * t) * 0.18);
+        const ticks = noise(82, RATE);
+        for (const at of [3.1, 3.35, 4.4, 5.2]) event(out, at, 0.03, (t) => Math.exp(-200 * t) * ticks[Math.round(t * RATE)] * 0.3);
+      },
+    };
+  },
   the_rift(n) {
     return {
       bed: Float64Array.from({ length: n }, (_, i) => {

@@ -1,0 +1,14 @@
+# Micromort Mountain, the minimal version (the 3D level in aesthetic/src/scene/micromort.js): one encounter, with
+# Eduardo, who has sprained his ankle halfway up. The run begins there. The summit, a snowfield with a wine festival,
+# is scenery: it is what the camera looks up at, and what the victory view stays on. The camera comes to the ledge
+# from the west, along the shelf, so that the valley falls away behind Eduardo and the summit stands to the left.
+# Coordinates are Micromort world units: x across, z along the mountain; the summit lies at -z, the valley at +z.
+id: micromort_mountain
+name: Micromort Mountain
+level: micromort
+start: ankle_ledge
+goal: ankle_ledge
+entrance: [[-34, 22], [-14, 22]]
+sites:
+  - { id: ankle_ledge, encounter: micromort_eduardo, name: The Ankle Ledge, at: [3, 22], figure: hiker }
+paths: []

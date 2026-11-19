@@ -462,6 +462,50 @@ function litter(seed) {
   return c;
 }
 
+// Round 133 (Micromort Mountain): wind-packed snow, white with a blue shadow in the pits and a few glints.
+function snow(seed) {
+  const W = 32;
+  const c = canvas(W, W);
+  const r = createRandom(seed);
+  for (let y = 0; y < W; y++) {
+    for (let x = 0; x < W; x++) {
+      const n = valueNoise2(x / 6, y / 6, 6, seed);
+      const m = valueNoise2(x / 2, y / 2, 16, seed + 1);
+      c.set(x, y, mix([226, 234, 246], [246, 249, 252], n * 0.6 + m * 0.4));
+    }
+  }
+  for (let i = 0; i < 36; i++) c.set(r.int(0, W - 1), r.int(0, W - 1), [150, 172, 205]); // blue pits
+  for (let i = 0; i < 20; i++) c.set(r.int(0, W - 1), r.int(0, W - 1), [255, 255, 255]); // glints
+  return c;
+}
+
+// Grey mountain rock in leaning strata, with cracks and a little lichen.
+function rock(seed) {
+  const W = 64;
+  const c = canvas(W, W);
+  const r = createRandom(seed);
+  for (let y = 0; y < W; y++) {
+    for (let x = 0; x < W; x++) {
+      const band = valueNoise2(x / 24, (y + x * 0.35) / 3, 0, seed);
+      const n = valueNoise2(x / 4, y / 4, 16, seed + 1);
+      let col = mix([96, 92, 90], [150, 144, 138], band * 0.7 + n * 0.3);
+      col = add(col, (valueNoise2(x, y, 64, seed + 2) - 0.5) * 22);
+      c.set(x, y, col);
+    }
+  }
+  for (let i = 0; i < 10; i++) {
+    let x = r.int(0, W - 1);
+    let y = r.int(0, W - 1);
+    for (let k = 0; k < r.int(6, 16); k++) {
+      c.set(x, y, [58, 56, 56]);
+      x += r.int(-1, 1);
+      y += r.int(0, 1);
+    }
+  }
+  for (let i = 0; i < 40; i++) c.set(r.int(0, W - 1), r.int(0, W - 1), [128, 138, 96]); // lichen
+  return c;
+}
+
 const smoothstepT = (a, b, x) => {
   const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
   return t * t * (3 - 2 * t);
@@ -485,5 +529,7 @@ export function createTextures(seed = 7) {
     devata: toTexture(devata(seed + 14), 'devata'),
     face: toTexture(face(seed + 15), 'face'),
     litter: toTexture(litter(seed + 16), 'litter'),
+    snow: toTexture(snow(seed + 17), 'snow'),
+    rock: toTexture(rock(seed + 18), 'rock'),
   };
 }

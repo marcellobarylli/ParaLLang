@@ -1,0 +1,44 @@
+# Micromort Mountain, Eduardo's ankle. Reference URLs follow the existing patterns and were not opened from the build
+# container; listed for the owner's content review.
+version: eduardo-ankle-it-v1
+references:
+  - id: treccani-aiuto
+    title: "Treccani, Vocabolario: aiuto"
+    url: "https://www.treccani.it/vocabolario/aiuto/"
+  - id: treccani-cima
+    title: "Treccani, Vocabolario: cima"
+    url: "https://www.treccani.it/vocabolario/cima/"
+  - id: treccani-festa
+    title: "Treccani, Vocabolario: festa"
+    url: "https://www.treccani.it/vocabolario/festa/"
+entries:
+  - id: aiuto
+    kind: word
+    target: "aiuto"
+    part_of_speech: noun
+    accepted_translations: ["help", "I help", "aid"]
+    surface_variants: ["aiuto", "aiutare", "aiutarti", "aiuti", "aiutarla", "aiutarlo"]
+    accent_insensitive: false
+    example: { target: "Ti aiuto io.", english: "I'll help you." }
+    note: "'Aiuto' is both the noun (help) and the first person of 'aiutare' (to help): 'Ti aiuto' is 'I help you'."
+    reference_ids: [treccani-aiuto]
+  - id: cima
+    kind: word
+    target: "cima"
+    part_of_speech: noun
+    accepted_translations: ["summit", "peak"]
+    surface_variants: ["cima", "cime"]
+    accent_insensitive: false
+    example: { target: "La cima è coperta di neve.", english: "The summit is covered in snow." }
+    note: "'Cima' is feminine: la cima, plural le cime."
+    reference_ids: [treccani-cima]
+  - id: festa
+    kind: word
+    target: "festa"
+    part_of_speech: noun
+    accepted_translations: ["party", "festival"]
+    surface_variants: ["festa", "feste"]
+    accent_insensitive: false
+    example: { target: "Che bella festa!", english: "What a lovely party!" }
+    note: "'Festa' is feminine: la festa, plural le feste. It means a party or a festival."
+    reference_ids: [treccani-festa]
