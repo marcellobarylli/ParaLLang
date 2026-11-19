@@ -35,15 +35,15 @@ describe('the tilt', () => {
     expect(right.orient({ ...HELD, gamma: -10 }, 0, 1 / 60).yaw / DEG).toBeCloseTo(-TILT.gain * 10, 1);
   });
 
-  test('tilting the top of the phone away looks up, towards the player looks down', () => {
+  test('tilting the top of the phone towards the player looks up, away looks down (the owner\'s phone, 2026-11-19)', () => {
     const up = createTilt();
     up.orient(HELD, 0, 0);
     const look = up.orient({ ...HELD, beta: HELD.beta - 10 }, 0, 1 / 60);
-    expect(look.pitch / DEG).toBeCloseTo(TILT.gain * 10, 1);
+    expect(look.pitch / DEG).toBeCloseTo(-TILT.gain * 10, 1);
     expect(look.yaw).toBeCloseTo(0, 6);
     const down = createTilt();
     down.orient(HELD, 0, 0);
-    expect(down.orient({ ...HELD, beta: HELD.beta + 10 }, 0, 1 / 60).pitch / DEG).toBeCloseTo(-TILT.gain * 10, 1);
+    expect(down.orient({ ...HELD, beta: HELD.beta + 10 }, 0, 1 / 60).pitch / DEG).toBeCloseTo(TILT.gain * 10, 1);
   });
 
   test('the look stays in its range however far the phone tilts', () => {
@@ -109,7 +109,7 @@ describe('the tilt', () => {
     const b = same.orient({ alpha: 180, beta: 88, gamma: 180 }, 0, 1 / 60); // the same orientation, written the other way
     expect(b.pitch).toBeCloseTo(a.pitch, 6);
     expect(b.yaw).toBeCloseTo(a.yaw, 6);
-    expect(a.pitch / DEG).toBeCloseTo(-TILT.gain * 4, 1);
+    expect(a.pitch / DEG).toBeCloseTo(TILT.gain * 4, 1);
   });
 
   test('a sweep of the phone moves the look smoothly', () => {
@@ -144,7 +144,7 @@ describe('the tilt', () => {
     const pitch = createTilt();
     pitch.orient(flat, 90, 0);
     const b = pitch.orient({ ...flat, gamma: 10 }, 90, 1 / 60);
-    expect(b.pitch / DEG).toBeCloseTo(TILT.gain * 10, 1);
+    expect(b.pitch / DEG).toBeCloseTo(-TILT.gain * 10, 1);
     expect(b.yaw).toBeCloseTo(0, 6);
   });
 

@@ -8,8 +8,9 @@
 // the phone is upright).
 //
 // Signs: a positive yaw turns the look to the left (the director's sight yaw grows to the left), a positive pitch
-// turns it up. Turning the phone to the left looks left; tilting its top away looks up. For the opposite, flip
-// TILT.yawSign or TILT.pitchSign.
+// turns it up. Turning the phone to the left looks left; tilting its top towards the player looks up. (The vertical
+// was a window's at first, top away looks up; the owner found it inverted on the iPhone, 2026-11-19.) For the
+// opposite, flip TILT.yawSign or TILT.pitchSign.
 
 const RAD = Math.PI / 180;
 export const TILT = Object.freeze({
@@ -18,7 +19,7 @@ export const TILT = Object.freeze({
   maxPitch: 8 * RAD, // and up or down
   recentre: 30, // seconds: the baseline follows the phone this slowly (12 at first: a held look crept back by a tenth a second)
   yawSign: 1,
-  pitchSign: 1,
+  pitchSign: -1,
 });
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));

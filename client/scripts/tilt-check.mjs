@@ -82,8 +82,8 @@ check(Math.abs(turnedLeft - leftWanted) < 2.5, `the rendered camera has turned a
 check(Math.abs(wrap(angles(left.direction).yaw - angles(left.sight).yaw)) < 1e-3, 'the camera looks where the director says');
 await shot('02-left');
 
-const up = await hold({ ...HELD, beta: 30 }, 1500);
-check(up.looked.pitch / DEG <= 8 && up.looked.pitch / DEG > 8 * faded(1500) - 0.5, `top away 20 degrees for 1.5 s: the look is up, within the range of 8 degrees (${(up.looked.pitch / DEG).toFixed(2)})`);
+const up = await hold({ ...HELD, beta: 70 }, 1500);
+check(up.looked.pitch / DEG <= 8 && up.looked.pitch / DEG > 8 * faded(1500) - 0.5, `top towards the player 20 degrees for 1.5 s: the look is up, within the range of 8 degrees (${(up.looked.pitch / DEG).toFixed(2)})`);
 check(Math.abs(up.looked.yaw / DEG) < 1, `and no longer sideways (${(up.looked.yaw / DEG).toFixed(2)})`);
 await shot('03-up');
 
