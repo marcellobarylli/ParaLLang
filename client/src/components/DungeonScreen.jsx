@@ -307,9 +307,36 @@ function EncounterSheet({ state, site, sites, party = false, speech, height = nu
   const fresh = encounter?.committedPlayerTurns === 0 && !assessment && !isLoading;
   const freshRef = useRef(fresh);
   freshRef.current = fresh;
+  // Round 140: the text's position is the player's alone. It is remembered while the player scrolls (a touch, the wheel,
+  // a key, the scrollbar, and the momentum after a flick); a scroll at any other time (a reply arriving, the browser
+  // keeping a focused box in view, a change of height) is put back to it.
+  const pin = useRef({ top: 0, until: 0 });
   useEffect(() => {
     const element = scrollRef.current;
-    if (element) element.scrollTop = freshRef.current ? 0 : element.scrollHeight;
+    if (!element) return undefined;
+    const user = (extra = 1500) => () => { pin.current.until = Date.now() + extra; };
+    const events = [['touchstart', user(60000)], ['touchmove', user(60000)], ['touchend', user(1800)], ['wheel', user()], ['keydown', user()], ['pointerdown', user(60000)], ['pointerup', user(1800)]];
+    for (const [name, handler] of events) element.addEventListener(name, handler, { passive: true });
+    const onScroll = () => {
+      if (Date.now() < pin.current.until) pin.current.top = element.scrollTop;
+      else if (element.scrollTop !== pin.current.top) element.scrollTop = pin.current.top;
+    };
+    element.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      for (const [name, handler] of events) element.removeEventListener(name, handler);
+      element.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+  useLayoutEffect(() => {
+    const element = scrollRef.current;
+    if (element && element.scrollTop !== pin.current.top && Date.now() >= pin.current.until) element.scrollTop = pin.current.top;
+  }); // after every render: whatever the change did to the position, the player's stands
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+    pin.current.top = freshRef.current ? 0 : element.scrollHeight;
+    element.scrollTop = pin.current.top;
+    pin.current.top = element.scrollTop; // as far as the text allows
   }, [encounter?.id]);
   return (
     <section className="sheet" aria-label={party ? `${name}, your party` : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
