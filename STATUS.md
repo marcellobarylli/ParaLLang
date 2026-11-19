@@ -33,6 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: round 132, The Kiln, a burnt Ta Prohm on the world map (on a branch, not deployed)
+
+The owner asked for a new zone on the world map that reuses Ta Prohm's assets and textures: lava-rock floor, glowing
+and smouldering ruins, charred trees without foliage, red glow everywhere. It is The Kiln (the name is Claude's): a
+third level in `aesthetic/`, built by Ta Prohm's builder under an ember theme with no new texture or model, and a
+second open place on the web client's world map. It is playable with Ta Prohm's seven sites and characters under
+its own site names, and keeps a run of its own; the browser remembers the place last entered. Judged from
+screenshots by Claude, not by the owner and not on a phone. The work is on the branch `claude/loving-pascal-i1jq5j`.
+Merging it to `main` deploys it, and the server deploy it needs wipes the saves on the free plan: the owner's call
+([findings](docs/rounds/132/findings.md), pictures: [`03-ash-gate-desktop.jpg`](docs/rounds/132/shots/03-ash-gate-desktop.jpg),
+[`kiln-face-gopura.png`](aesthetic/docs/shots/kiln-face-gopura.png)).
+
 ## Addendum 2026-11-19: round 131's server half is deployed
 
 The owner said to deploy the server. The push that carries this note has no `[skip render]`, so Render builds the
@@ -1246,6 +1258,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 132 | 11-19 | The Kiln: a third level built from Ta Prohm's plan and textures under an ember theme (lava floor and moat, glowing stone, charred bare trees), a second dungeon on it and a second open place on the world map (on a branch, not deployed) | [132](docs/rounds/132/architecture.md) | [findings](docs/rounds/132/findings.md) | `ccf6a0d` (pre-run record) to round 132 close; build `5404420` |
 | 131 | 11-19 | A turn asks for a paragraph: the character asks for everything open and a question of its own; the card lists the open objectives; a reply box of several lines (server half waits for a deploy) | [131](docs/rounds/131/architecture.md) | [findings](docs/rounds/131/findings.md) | `15bb752` (pre-run record) to round 131 close; build `5af7179` |
 | 130 | 11-19 | Target-language words in the narration, each tapped for its meaning (half the line's share; listed by the model, filtered by the server) | [130](docs/rounds/130/architecture.md) | [findings](docs/rounds/130/findings.md) | `2ca2b2b` (pre-run record) to round 130 close; build `d5ece33` |
 | 129 | 11-19 | Beginner mode: a mistake is understood, corrected for one heart and the player moves on; three hearts a conversation; a practice box checked in the app | [129](docs/rounds/129/architecture.md) | [findings](docs/rounds/129/findings.md) | `8502225` (pre-run record) to round 129 close; build `2363b42` |

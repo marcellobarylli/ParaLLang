@@ -8,7 +8,7 @@ record (the owner's words, timeline) is in `trail/`; it is not needed to impleme
 - **Design source:** the owner's instruction ([`trail/interview.md`](trail/interview.md)); round 119's
   [architecture](../119/architecture.md) (the world map and the dungeon map); `aesthetic/STYLE.md` (the PS1 rules);
   round 123's logged constraint (reuse the assets, avoid building new places).
-- **Findings:** to be written after the build (`findings.md`).
+- **Findings:** [`findings.md`](findings.md).
 - **Artifact:** `aesthetic/src/` (the level and the shader), `content/world/dungeons/the_kiln.yaml`,
   `content/world/atlas.yaml`, `server/src/content-loader.js`, `client/src/` (store, level view, world card), the
   tests and `docs/rounds/132/shots/`.
@@ -116,3 +116,33 @@ and on the free plan it wipes the saves; that is the owner's call.
 - **Screen** (`client`): the world card shows two open places, each with its count and button.
 - **Pictures:** the level in the package's demo and the place in the built client, in headless Chromium.
 - Every existing suite passes: server, client, aesthetic; `npm run build -w client`.
+
+## Amendment 2026-11-19: what the build settled (Claude, during the build)
+
+Each item is a detail inside the design above, or a limit the build met.
+
+- **Bare branches are straight and three to a canopy blob.** Curved branches, five to a blob, put the level at
+  75,828 triangles. Three straight spikes of six triangles each give 62,654, which leaves room for the game's
+  markers and figures under the 64,000 limit (63,938 in the game).
+- **The fine glow dims with the fog.** From the air the glowing cracks of a minified texture sparkled. The
+  dark-part glow is multiplied by 1 − 0.8 × the vertex's fog.
+- **The floor is unlit and uses the laterite texture.** Its colour comes from the vertex colours alone, so the hot
+  patches do not depend on the sun.
+- **The characters' material is tinted** (`plain`, ×1.1, 1.5, 2.0). Under the orange light a figure was a dark
+  shape; with green and blue lifted it keeps some of its own colours.
+- **Embers are in.** The vertex shader lifts each quad through 16 m and starts it again; the quad's phase is carried
+  in the direction of its normal, which an unlit material does not otherwise use.
+- **The store's state gained `enterable` and `runs`.** The world card shows an Enter button only for a place whose
+  dungeon the store holds, and each open place's count once its run has been read.
+- **The level view gets a new canvas per dungeon.** A disposed view gives up its WebGL context, so the canvas
+  element is keyed by the dungeon.
+- **The server change is one line** (the known levels), as planned, plus a test.
+
+## Outcome (2026-11-19)
+
+Built as designed, with the Amendment above. The world map has a second open place, The Kiln: Ta Prohm's plan under
+an ember theme, with no new texture and no new model, playable with Ta Prohm's seven sites and characters and a run
+of its own. Ta Prohm builds exactly as before. Suites: aesthetic 55, server 464, client 209, all passing; the built
+client was played into The Kiln and back in headless Chromium at 390×844 and 1440×900. The claim boundary held: the
+look was judged from screenshots by Claude, no model was called, and nothing is deployed. See
+[`findings.md`](findings.md) and [`shots/`](shots/).
