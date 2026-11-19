@@ -112,3 +112,10 @@ phone's orientation turns the camera's look at a site by up to 12° sideways and
 position stays the director's. The client's 149 tests and the real-browser check with synthetic orientation events
 pass. The claim boundary held: no phone was used. See [`findings.md`](findings.md); the owner's words are in
 [`trail/interview.md`](trail/interview.md).
+
+## Amendment 2026-11-19: the vertical tilt is turned round (owner, on the iPhone)
+
+The owner played the deployed build and reported: "The vertical tilt is inverted". Decision 4's window direction
+(top away looks up) felt wrong in the hand. `TILT.pitchSign` is now -1: tilting the phone's top towards the player
+looks up, away looks down. The sideways direction is unchanged; the owner did not object to it. The tests and the
+browser check carry the new direction. The owner's words are in [`trail/interview.md`](trail/interview.md) (Q1).

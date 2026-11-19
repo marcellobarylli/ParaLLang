@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-19: the vertical tilt turned round
+
+The owner tried "Tilt to look" on the iPhone and found the vertical direction inverted. Tilting the phone's top
+towards the player now looks up (`TILT.pitchSign` in `client/src/scene/tilt.js`); sideways is unchanged. Deployed
+to the client alone ([round 125's Amendment](docs/rounds/125/architecture.md)).
+
 ## Addendum 2026-11-19: rounds 125 and 126 are deployed; a creation myth in the owner's notes
 
 The owner said to deploy. `main` holds both rounds as `63a3436`. The first Pages deploy failed on a race in an old

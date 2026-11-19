@@ -213,7 +213,7 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   The same sheet has a slider, "Text panel opacity", for how much of the 3D level shows through the text panels. It
   applies at once and is stored under its own key (`parallang.display`), so it does not reconnect (round 117).
   A checkbox, "Tilt to look", lets the phone's orientation turn the camera's look at a site by up to 12° sideways and
-  8° up or down (round 125). It is off by default; ticking it is the tap from which iOS Safari is asked for access to
+  8° up or down (round 125; tilting the phone's top towards the player looks up). It is off by default; ticking it is the tap from which iOS Safari is asked for access to
   motion. `node client/scripts/tilt-check.mjs` checks it in headless Chromium with synthetic orientation events.
   "Character voices" (round 126, on by default) has each character read its new lines aloud with the browser's speech
   synthesis, in the voice its sheet names (`voice: { kind, pitch, rate }` in `content/characters/enemies/`, kinds

@@ -233,7 +233,7 @@ test('tilt to look hands the level view a source that the phone\'s orientation m
   orient({ alpha: 0, beta: 50, gamma: 0 }, 1000);
   orient({ alpha: 0, beta: 40, gamma: 10 }, 1016);
   expect(source.look.yaw).toBeGreaterThan(0.08); // right edge down: to the left
-  expect(source.look.pitch).toBeGreaterThan(0.08); // top away: up
+  expect(source.look.pitch).toBeLessThan(-0.08); // top away: down
 
   act(() => store.getState().setTiltLook(false));
   await waitFor(() => expect(looks()).toEqual([source, null]));
