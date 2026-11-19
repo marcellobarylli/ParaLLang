@@ -15,13 +15,15 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, n
   const listenerRef = useRef(listener);
   listenerRef.current = listener;
   useEffect(() => () => listenerRef.current?.stop(), []);
-  // The box is as tall as its text, up to about six lines.
+  // The box is as tall as its text, up to twelve lines.
   const boxRef = useRef(null);
   useEffect(() => {
     const box = boxRef.current;
     if (!box) return;
     box.style.height = 'auto';
-    box.style.height = `${Math.min(box.scrollHeight || 0, 150) || ''}${box.scrollHeight ? 'px' : ''}`;
+    // Round 141: the whole text shows, up to twelve lines, then it scrolls inside. scrollHeight leaves out the border.
+    const edge = box.offsetHeight - box.clientHeight;
+    box.style.height = box.scrollHeight ? `${Math.min(box.scrollHeight + edge, 12 * 22 + edge)}px` : '';
   }, [value]);
   const canListen = Boolean(listener?.supported);
   const submit = (event) => {

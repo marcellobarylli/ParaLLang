@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-20: round 141, the answer boxes grow with their text
+
+The practice box of the correction card showed two lines of a longer text. Both it and the reply box now show all their
+text (the border was missing from the height), up to twelve lines, then scroll inside
+([findings](docs/rounds/141/findings.md)). Client only; merged with `[skip render]`.
+
 ## Addendum 2026-11-20: round 140, the text's position is pinned to the player's scrolling
 
 The owner still saw the text jump down when a reply arrived. The sheet now remembers the position while the player
@@ -1317,6 +1323,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |
 | 140 | 11-20 | The text's position is pinned to the player's scrolling | [140](docs/rounds/140/architecture.md) | [findings](docs/rounds/140/findings.md) | round 140 build |
 | 139 | 11-19 | The walk back at its original speed | [139](docs/rounds/139/architecture.md) | [findings](docs/rounds/139/findings.md) | round 139 build |
 | 138 | 11-19 | The conversation text stays where the player scrolled it | [138](docs/rounds/138/architecture.md) | [findings](docs/rounds/138/findings.md) | round 138 build |

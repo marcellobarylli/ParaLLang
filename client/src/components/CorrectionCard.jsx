@@ -18,7 +18,9 @@ export default function CorrectionCard({ correction, language, speaker = null, l
     const box = boxRef.current;
     if (!box) return;
     box.style.height = 'auto';
-    box.style.height = box.scrollHeight ? `${box.scrollHeight}px` : '';
+    // The whole text shows (up to twelve lines, then it scrolls inside): scrollHeight leaves out the border.
+    const edge = box.offsetHeight - box.clientHeight;
+    box.style.height = box.scrollHeight ? `${Math.min(box.scrollHeight + edge, 12 * 22 + edge)}px` : '';
     box.scrollIntoView?.({ block: 'nearest' });
   }, [attempt]);
   useEffect(() => { if (verdict) verdictRef.current?.scrollIntoView?.({ block: 'nearest' }); }, [verdict]);
