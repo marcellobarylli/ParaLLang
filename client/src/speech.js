@@ -75,6 +75,8 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
   const voices = () => (supported ? synthesis.getVoices?.() ?? [] : []);
   return {
     supported,
+    /** True while the browser is reading a line aloud (round 127: the music drops under it). */
+    get speaking() { return supported && synthesis.speaking === true; },
     available: (tag) => ofLanguage(voices(), tag).length > 0,
     speak({ text, tag, voice } = {}) {
       const line = spokenText(text);

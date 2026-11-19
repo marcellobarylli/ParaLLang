@@ -14,9 +14,10 @@ const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s moti
 // localStorage; the token is sent as X-ParaLLang-Token. A blank URL means this page's own /api (the dev proxy).
 // Round 117: the opacity of the text panels over the level. The slider applies at once and needs no save; the sheet
 // takes the same background, so it shows the result while the slider moves.
+// Round 127: "Ambient music" switches the generated background music (ambience.js).
 // Round 126: "Character voices" switches the reading aloud of new lines, and the sheet says what this browser can do.
 // Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE }) {
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
   const submit = (event) => {
@@ -48,6 +49,15 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             <input id="settings-opacity" type="range" min={PANEL_OPACITY.min * 100} max={PANEL_OPACITY.max * 100} step={PANEL_OPACITY.step * 100}
               value={percent} aria-valuetext={`${percent}%`} onChange={(event) => onPanelOpacity(Number(event.target.value) / 100)} />
             <small>Lower it to see more of the temple behind the text. It applies at once.</small>
+          </>
+        )}
+        {onMusic && (
+          <>
+            <label className="setting-check" htmlFor="settings-music">
+              <input id="settings-music" type="checkbox" checked={music} onChange={(event) => onMusic(event.target.checked)} disabled={!musicSupported} />
+              <span>Ambient music</span>
+            </label>
+            <small>{musicSupported ? 'Quiet chords in the background. They drop while a character speaks and stop while you speak.' : 'This browser cannot play it.'}</small>
           </>
         )}
         {onVoices && (

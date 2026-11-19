@@ -481,6 +481,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       // Round 125: tilt to look, another display preference.
       // Round 126: whether the characters read their lines aloud.
       setVoices: (on) => set({ display: saveDisplay({ ...get().display, voices: on !== false }, storage) }),
+      // Round 127: whether the ambient music plays.
+      setMusic: (on) => set({ display: saveDisplay({ ...get().display, music: on !== false }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       saveSettings: async (values) => {

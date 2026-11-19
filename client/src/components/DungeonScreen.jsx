@@ -3,6 +3,7 @@ import DungeonView from './DungeonView.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import { browserSpeech } from '../speech.js';
+import { browserAmbience } from '../ambience.js';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
@@ -353,8 +354,22 @@ function VictoryCard({ state }) {
   );
 }
 
-export default function DungeonScreen({ useStore, speech = browserSpeech() }) {
+export default function DungeonScreen({ useStore, speech = browserSpeech(), ambience = browserAmbience() }) {
   const state = useStore();
+  // Round 127: ambient music. Browsers let a page make sound only after a tap, so it starts at the first one. It
+  // drops while a line is read aloud and is silent while the microphone listens.
+  const musicWanted = state.display?.music !== false;
+  useEffect(() => {
+    if (!musicWanted || !ambience.supported || typeof window === 'undefined') return undefined;
+    const begin = () => ambience.start();
+    window.addEventListener('click', begin, { once: true, capture: true });
+    const watch = window.setInterval(() => ambience.setLevel(speech.listener.listening ? 'mute' : speech.speaker.speaking ? 'duck' : 'full'), 400);
+    return () => {
+      window.removeEventListener('click', begin, { capture: true });
+      window.clearInterval(watch);
+      ambience.stop();
+    };
+  }, [musicWanted, ambience, speech]);
   // Round 126: iOS Safari lets a page speak on its own only after it has spoken from inside a tap. The first tap does.
   const voicesWanted = state.display?.voices !== false;
   useEffect(() => {
@@ -433,6 +448,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech() }) {
       )}
 
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
+        music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
         voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }} />}
     </div>
   );
