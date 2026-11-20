@@ -1,0 +1,10 @@
+id: gobkit-minions
+name: Gobkit Free Minions
+source_url: https://gobkit.com/freebies
+licence_claimed: CC0 1.0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 8 rigged enemies
+formats: glb
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

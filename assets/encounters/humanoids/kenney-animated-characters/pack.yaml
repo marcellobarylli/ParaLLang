@@ -1,0 +1,10 @@
+id: kenney-animated-characters
+name: Kenney Animated Characters 1 and 3
+source_url: https://kenney.nl/assets/animated-characters-1
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: Idle, jump, run clips only
+formats: fbx, glb (check)
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

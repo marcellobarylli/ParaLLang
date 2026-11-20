@@ -1,0 +1,10 @@
+id: barnabe-wild-low-poly-rigged
+name: Low-poly rigged character (Barnabe Wild)
+source_url: https://barnabe-wild.itch.io/low-poly-rigged-character
+licence_claimed: CC0 v1.0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 1 character
+formats: check
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

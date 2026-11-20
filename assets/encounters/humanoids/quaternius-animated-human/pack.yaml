@@ -1,0 +1,10 @@
+id: quaternius-animated-human
+name: Quaternius Animated Human Low Poly
+source_url: https://opengameart.org/content/animated-human-low-poly
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 1 human; idle, walk, run, jump, punch, death
+formats: fbx, gltf (check)
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

@@ -1,0 +1,10 @@
+id: quaternius-universal-base-characters
+name: Quaternius Universal Base Characters
+source_url: https://quaternius.com/packs/universalbasecharacters.html
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 6 characters on the universal humanoid rig; no clips of their own (pair with Universal Animation Library)
+formats: gltf, fbx, obj
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

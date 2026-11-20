@@ -1,0 +1,10 @@
+id: quaternius-animated-animals
+name: Quaternius Animated Animal Pack
+source_url: https://poly.pizza/bundle/Animated-Animal-Pack-ILAPXeUYiS
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 12 animals, a dozen+ clips each
+formats: gltf, fbx, obj, blend
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

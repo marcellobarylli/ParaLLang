@@ -1,0 +1,10 @@
+id: gobkit-animal-pack-vol-5
+name: Gobkit Free Animal Pack Vol.5
+source_url: https://gobkit.itch.io/gobkit-free-animal-pack-vol-5
+licence_claimed: CC0 1.0 (licence page per listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 10 creatures: Narwhal, Koala, Tasmanian Devil, Dingo, Sea Otter, Mole, Seagull, Quail, Scorpion, Chick; idle, attack, dead, walk
+formats: glb
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

@@ -1,0 +1,10 @@
+id: blocky-characters-8
+name: 8 Free Blocky Characters
+source_url: https://itch.io/game-assets/free/tag-cc0/tag-characters
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 8 blocky characters, 6 clips each; low priority
+formats: glb, fbx
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

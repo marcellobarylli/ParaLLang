@@ -1,0 +1,10 @@
+id: quaternius-ultimate-monsters
+name: Quaternius Ultimate Monsters Pack
+source_url: https://sketchfab.com/3d-models/ultimate-monsters-pack-fd72e114d119488da71fe3a16f216c4f
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 50 monsters; walk, run, attack, death and more
+formats: blend, fbx, obj, gltf
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

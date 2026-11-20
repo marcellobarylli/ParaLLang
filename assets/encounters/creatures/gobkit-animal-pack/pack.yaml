@@ -1,0 +1,10 @@
+id: gobkit-animal-pack
+name: Gobkit Free Animal Pack
+source_url: https://gobkit.itch.io/gobkit-free-animal-pack
+licence_claimed: CC0 1.0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 10 creatures: Anglerfish, Bat, Corgi, Duck, Hippo, Jellyfish, Platypus, Red, Rhino, Shark
+formats: glb
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

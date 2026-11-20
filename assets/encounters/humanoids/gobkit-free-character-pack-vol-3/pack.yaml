@@ -1,0 +1,10 @@
+id: gobkit-free-character-pack-vol-3
+name: Gobkit Free Character Pack Vol.3
+source_url: https://gobkit.itch.io/gobkit-free-character-pack-vol-3
+licence_claimed: CC0 1.0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 8 characters: Peasant Militia, Archer, Footman, Scout, Priestess, Heavy Warrior, Knight Captain, King; shared skeleton, named clips
+formats: glb
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

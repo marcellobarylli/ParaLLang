@@ -214,12 +214,15 @@ sources:
     kinds: [humanoids]
     notes: Idle, walk, run, jump, punch, death clips.
   - id: polygonal-mind-100-avatars
-    name: Polygonal Mind 100 Avatars (rounds 1 and 2)
+    name: Polygonal Mind 100 Avatars (madjin/100avatars on GitHub)
     url: https://github.com/madjin/100avatars
-    licence: CC0 (per a 2026 guide)
-    verified: search-only
+    licence: CC-BY 4.0 (CCLicense.md in the repo, read 2026-11-20)
+    verified: primary
+    excluded: attribution required, so not CC0. A 2026 guide's CC0 claim is wrong for this repo.
     kinds: [humanoids]
-    notes: 73 + 94 rigged low-poly humanoids; FBX, glTF; on Sketchfab and Poly Pizza. VRM variants in the madjin repo.
+    notes: >
+      About 2.4 GB, 46k files; 500 VRM files (1.5 GB), 201 top-level FBX (60 MB). README asks not to sell them
+      unmodified. Animation folders (Dance, Swim, Crawl, Idle...) look Mixamo-derived, which has Adobe terms.
   - id: blocky-characters-8
     name: 8 Free Blocky Characters
     url: https://itch.io/game-assets/free/tag-cc0/tag-characters

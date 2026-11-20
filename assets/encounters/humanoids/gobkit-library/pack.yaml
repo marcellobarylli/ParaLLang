@@ -1,0 +1,10 @@
+id: gobkit-library
+name: Gobkit free library (other character packs)
+source_url: https://gobkit.com/freebies
+licence_claimed: CC0 1.0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 364 rigged characters in total across packs, incl. Orc Bruiser, Human Knight; pick fantasy ones
+formats: glb
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

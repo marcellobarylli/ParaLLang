@@ -1,0 +1,10 @@
+id: quaternius-lowpoly-rpg-characters
+name: Quaternius LowPoly RPG Characters
+source_url: https://opengameart.org/content/lowpoly-rpg-characters
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 6 characters: wizard, warrior, rogue, monk, ranger
+formats: fbx, obj, blend
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

@@ -1,0 +1,10 @@
+id: kaykit-character-animations
+name: KayKit Character Animations
+source_url: https://kaylousberg.itch.io/kaykit-character-animations
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 133 humanoid clips incl. Idle, Walk; Rig_Medium and Rig_Large; for KayKit characters
+formats: gltf, fbx
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

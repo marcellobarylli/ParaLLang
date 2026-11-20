@@ -1,0 +1,10 @@
+id: quaternius-universal-animation-library
+name: Quaternius Universal Animation Library
+source_url: https://quaternius.com/packs/universalanimationlibrary.html
+licence_claimed: CC0 (listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 120+ clips on the universal humanoid rig; idle not confirmed
+formats: gltf, fbx, obj
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

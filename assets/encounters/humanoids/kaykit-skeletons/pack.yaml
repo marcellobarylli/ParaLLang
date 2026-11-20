@@ -1,0 +1,10 @@
+id: kaykit-skeletons
+name: KayKit Character Pack: Skeletons
+source_url: https://kaylousberg.itch.io/kaykit-skeletons
+licence_claimed: CC0 (Godot listing)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: Skeleton characters; basic movement; use the current, not Legacy, version
+formats: gltf, fbx
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded

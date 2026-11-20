@@ -1,0 +1,10 @@
+id: kaykit-adventurers
+name: KayKit Character Pack: Adventurers
+source_url: https://kaylousberg.itch.io/kaykit-adventurers
+licence_claimed: CC0 (creator page via search)
+licence_checked: false      # set true after reading the licence page and the zip's license file
+contents: 5 free characters (Extra tier is separate); rigged; idle among 75 clips
+formats: gltf, fbx
+rigged: true
+status: pending             # pending -> downloaded -> converted
+files: []                   # relative paths of adopted model files once downloaded
