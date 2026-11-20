@@ -87,3 +87,52 @@ sources:
     verified: unverified
     kinds: [characters, props]
     notes: From memory; not confirmed this session.
+
+  # PS1-style fantasy leads (search results only; read each licence page before use)
+  - id: psx-characters-sampler
+    name: CSAF PSX Characters Sampler
+    url: https://csaf.itch.io/psx-characters-sampler
+    licence: unconfirmed
+    verified: unverified
+    kinds: [characters]
+    notes: 19 free PS1-style low-poly characters, rigged, 45 clips each (per devlog v1.11). Licence not seen; may not be CC0.
+  - id: oga-retro-medieval-kit
+    name: Retro Medieval Kit (Kenney, OpenGameArt)
+    url: https://opengameart.org/content/retro-medieval-kit
+    licence: CC0
+    verified: search-only
+    kinds: [environment, props]
+    notes: Tagged PS1/PSX in search results.
+  - id: oga-ps1-medieval-weapons
+    name: PS1 Medieval Weapons (sword, spear, shield, mace)
+    url: https://opengameart.org/node/123291
+    licence: CC0
+    verified: search-only
+    kinds: [props]
+  - id: kaykit-dungeon-remastered
+    name: KayKit Dungeon Remastered
+    url: https://kaylousberg.itch.io/kaykit-dungeon-remastered
+    licence: CC0
+    verified: search-only
+    kinds: [environment, props]
+    notes: 200+ stylised dungeon assets. Low-poly but not PS1-textured.
+  - id: miziziziz-ps1-list
+    name: Miziziziz PS1 asset list (GitHub)
+    url: https://github.com/Miziziziz
+    licence: index only
+    verified: unverified
+    kinds: [index]
+    notes: Mentioned in an OpenGameArt thread as a collection of CC0 PS1-style assets. Exact repo not located.
+  # NOT CC0, excluded unless attribution is accepted:
+  - id: crimsongcat-ps1-dungeon
+    name: PS1 PSX Dungeon Modular Pack (crimsongcat)
+    url: https://crimsongcat.itch.io/ps1-dungeon-pack
+    licence: CC-BY 4.0
+    verified: search-only
+    excluded: attribution required
+  - id: goblinatron-psx-dungeon
+    name: PSX Dungeon (Goblinatron)
+    url: https://goblinatron.itch.io/psx-dungeon
+    licence: CC-BY 4.0
+    verified: search-only
+    excluded: attribution required
