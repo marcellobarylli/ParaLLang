@@ -183,3 +183,68 @@ sources:
     verified: unverified
     kinds: [characters]
     notes: 332 rigged low-poly characters incl. orc, goblin, elf, knight. Licence not seen.
+
+  # Fresh character search 2026-11-20 (humanoids and creatures; search results only)
+  - id: gobkit-animals
+    name: Gobkit Animal Packs (original, Vol.5)
+    url: https://gobkit.itch.io/gobkit-free-animal-pack-vol-5
+    licence: CC0 1.0 (licence page per listing)
+    verified: search-only
+    kinds: [creatures]
+    notes: 10 rigged GLB animals per pack, shared skeleton, idle/attack/dead/walk clips. Also Gobkit Free Minions (8 enemies).
+  - id: quaternius-animated-animals
+    name: Quaternius Animated Animal Pack
+    url: https://poly.pizza/bundle/Animated-Animal-Pack-ILAPXeUYiS
+    licence: CC0
+    verified: search-only
+    kinds: [creatures]
+    notes: 12 animals, a dozen+ clips each; glTF, FBX, OBJ, Blend.
+  - id: quaternius-cute-monsters
+    name: Quaternius Cute Animated Monsters
+    url: https://opengameart.org/content/textured-cute-monster-pack
+    licence: CC0
+    verified: search-only
+    kinds: [creatures]
+    notes: 21 textured animated monsters; FBX, OBJ, Blend (2020).
+  - id: quaternius-animated-human
+    name: Quaternius Animated Human Low Poly
+    url: https://opengameart.org/content/animated-human-low-poly
+    licence: CC0
+    verified: search-only
+    kinds: [humanoids]
+    notes: Idle, walk, run, jump, punch, death clips.
+  - id: polygonal-mind-100-avatars
+    name: Polygonal Mind 100 Avatars (rounds 1 and 2)
+    url: https://github.com/madjin/100avatars
+    licence: CC0 (per a 2026 guide)
+    verified: search-only
+    kinds: [humanoids]
+    notes: 73 + 94 rigged low-poly humanoids; FBX, glTF; on Sketchfab and Poly Pizza. VRM variants in the madjin repo.
+  - id: blocky-characters-8
+    name: 8 Free Blocky Characters
+    url: https://itch.io/game-assets/free/tag-cc0/tag-characters
+    licence: CC0
+    verified: search-only
+    kinds: [humanoids]
+    notes: GLB + FBX, 6 animations each. Blocky, so likely not an upgrade on current figures.
+  - id: clint-bellanger-low-poly-human
+    name: Very Low Poly Human (Clint Bellanger)
+    url: https://opengameart.org/content/very-low-poly-human
+    licence: public domain dedication
+    verified: search-only
+    kinds: [humanoids]
+    notes: 246 triangles, rigged. Too crude to be a main source.
+  - id: poly-pizza-bundles
+    name: Poly Pizza character bundles (mastjie, Quaternius)
+    url: https://poly.pizza/bundle/Low-Poly-Characters-Bundle-SUwNzGJ2qb
+    licence: per model, CC0 or CC-BY
+    verified: search-only
+    kinds: [humanoids, creatures]
+    notes: Site has a CC0 filter and 10,600+ models (per a guide). Confirm each model.
+  - id: grab3d-rigged
+    name: Grab3D free rigged models
+    url: https://grab3d.com/free-rigged-3d-models/
+    licence: CC0 (stated in listing)
+    verified: unverified
+    kinds: [humanoids]
+    notes: FBX, GLB, Blend; humanoid skeleton with walk and run clips. Unknown provenance.
