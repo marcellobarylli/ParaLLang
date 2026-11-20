@@ -1,0 +1,79 @@
+# Catalogue of CC0 sources. verified: search-only = taken from web-search summaries, licence page not yet read.
+sources:
+  - id: quaternius
+    name: Quaternius
+    url: https://quaternius.com/
+    licence: CC0
+    verified: search-only
+    kinds: [characters, environment, props]
+    formats: [glTF, FBX, OBJ]
+    notes: >
+      Roughly 80 themed packs, 1,100+ models. Universal Base Characters pack (glTF) is the lead candidate.
+      Download via Google Drive or a Patreon bundle. Many packs are rigged and animated.
+    entry_points:
+      - https://quaternius.com/packs/universalbasecharacters.html
+      - https://opengameart.org/content/all-cc0-uploader-quaternius
+  - id: kaykit
+    name: KayKit (Kay Lousberg)
+    url: https://kaylousberg.itch.io/kaykit-adventurers
+    licence: CC0
+    verified: search-only
+    kinds: [characters, dungeon, props]
+    formats: [glTF, FBX]
+    notes: Adventurers (rigged, animated), Skeletons, Dungeon kit. Check each pack page; some KayKit packs have paid extras.
+  - id: kenney
+    name: Kenney
+    url: https://kenney.nl/assets
+    licence: CC0
+    verified: search-only
+    kinds: [characters, environment, props, ui]
+    formats: [glTF, FBX, OBJ]
+    notes: >
+      40k+ assets in one shared low-poly style. Some character bundles are paid; the free sample is 1 model with
+      4 skins. Use free packs only.
+    entry_points: [https://kenney.itch.io/kenney-character-assets]
+  - id: polyhaven
+    name: Poly Haven
+    url: https://polyhaven.com/models
+    licence: CC0
+    verified: search-only
+    kinds: [environment, props]
+    formats: [glTF, Blender, FBX]
+    notes: Photoreal scale, so heavy. Needs strong decimation; better for textures and HDRIs than for PS1 geometry.
+  - id: awesome-cc0
+    name: awesome-cc0 (aggregator)
+    url: https://github.com/madjin/awesome-cc0
+    licence: CC0 (the list itself; per-asset licences vary by site)
+    verified: primary-list-only
+    kinds: [index]
+    notes: >
+      Read this session. Links: The Base Mesh (900+ CC0 models), Base Meshes as glTF, 300 CC0 Avatars
+      (github.com/madjin/100avatars, VRM + FBX), Smithsonian Open Access, Retro3D assets, Blend Swap,
+      Game Assets Garden, Polygonal Mind. Licences of the linked items were not checked.
+  - id: opengameart
+    name: OpenGameArt CC0 filter
+    url: https://opengameart.org/content/lowpoly-rpg-characters
+    licence: mixed, filter to CC0 per item
+    verified: search-only
+    kinds: [characters, environment, props]
+    notes: Hosts many Quaternius and Kenney mirrors. Record the licence shown on every item.
+  - id: itch-cc0
+    name: itch.io CC0 game assets
+    url: https://itch.io/game-assets/assets-cc0/tag-models
+    licence: CC0 filter, confirm per item
+    verified: search-only
+    kinds: [characters, environment, props]
+  - id: sketchfab-cc0
+    name: Sketchfab (CC0 filter)
+    url: https://sketchfab.com/search?features=downloadable&licenses=7c23a1ba438d4306920229c12afcb5f9&type=models
+    licence: mixed, CC0 only per item
+    verified: unverified
+    kinds: [characters, environment, props]
+    notes: URL filter is from memory, not checked. Requires login to download.
+  - id: poly-pizza
+    name: Poly Pizza
+    url: https://poly.pizza
+    licence: mixed (CC0 and CC-BY), CC0 only
+    verified: unverified
+    kinds: [characters, props]
+    notes: From memory; not confirmed this session.
