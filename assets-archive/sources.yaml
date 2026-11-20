@@ -17,10 +17,20 @@ sources:
     name: KayKit (Kay Lousberg)
     url: https://kaylousberg.itch.io/kaykit-adventurers
     licence: CC0
-    verified: search-only
     kinds: [characters, dungeon, props]
     formats: [glTF, FBX]
-    notes: Adventurers (rigged, animated), Skeletons, Dungeon kit. Check each pack page; some KayKit packs have paid extras.
+    verified: search-snippet-of-primary-page
+    notes: >
+      Search results quoting the creator's itch.io page: licence Creative Commons Zero v1.0, free for personal and
+      commercial use, no attribution; creator asks not to resell unmodified copies. Free tier of Adventurers is five
+      characters (glTF + FBX); an Extra tier adds three characters and 25+ accessories (paid or support tier, check).
+      Character Animations (133 clips incl. Idle, Walk) is a separate CC0 pack. Mystery Monthly series 5 and 6 are CC0.
+      Some pages are marked (Legacy): download the current version. Still to do: read the live page and the zip's
+      license file, and save a dated copy under items/.
+    entry_points:
+      - https://kaylousberg.com/game-assets/characters-adventurers
+      - https://kaylousberg.itch.io/kaykit-character-animations
+      - https://kaylousberg.itch.io/kaykit-skeletons
   - id: kenney
     name: Kenney
     url: https://kenney.nl/assets
