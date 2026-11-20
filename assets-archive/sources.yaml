@@ -136,3 +136,50 @@ sources:
     licence: CC-BY 4.0
     verified: search-only
     excluded: attribution required
+
+  # Fantasy character leads (search results only)
+  - id: gobkit
+    name: Gobkit free library
+    url: https://gobkit.com/freebies
+    licence: CC0 1.0 (stated in listings)
+    verified: search-only
+    kinds: [characters, props]
+    notes: >
+      405 free models, 364 rigged and animated low-poly characters, no account. Includes Orc Bruiser and Human Knight.
+      Vol.3 has 8 characters (Peasant Militia, Archer, Footman, Scout, Priestess, Heavy Warrior, Knight Captain, King)
+      on a shared skeleton with named clips. Check which files are free and whether paid tiers exist.
+    entry_points: [https://gobkit.itch.io/gobkit-free-character-pack-vol-3]
+  - id: quaternius-lowpoly-rpg-characters
+    name: Quaternius LowPoly RPG Characters
+    url: https://opengameart.org/content/lowpoly-rpg-characters
+    licence: CC0
+    verified: search-only
+    kinds: [characters]
+    notes: 6 rigged, animated, textured characters (wizard, warrior, rogue, monk, ranger). FBX, OBJ, Blend. From 2020.
+  - id: quaternius-ultimate-monsters
+    name: Quaternius Ultimate Monsters Pack
+    url: https://sketchfab.com/3d-models/ultimate-monsters-pack-fd72e114d119488da71fe3a16f216c4f
+    licence: CC0
+    verified: search-only
+    kinds: [characters, monsters]
+    notes: 50 monsters with walk, run, attack, death clips. Blend, FBX, OBJ, glTF.
+  - id: quaternius-lowpoly-animated-monsters
+    name: Quaternius LowPoly Animated Monsters
+    url: https://quaternius.itch.io/lowpoly-animated-monsters
+    licence: CC0
+    verified: search-only
+    kinds: [monsters]
+  - id: kenney-mini-characters
+    name: Kenney Mini Characters
+    url: https://kenney.nl/assets/mini-characters
+    licence: CC0
+    verified: search-only
+    kinds: [characters]
+    notes: Not fantasy-themed (mixed modern people). Kenney Character Assets (4 models, 75 skins, 17 clips) is closer; full bundle was unavailable.
+  - id: polyfork
+    name: Polyfork free characters
+    url: https://polyfork.dev/characters
+    licence: unconfirmed
+    verified: unverified
+    kinds: [characters]
+    notes: 332 rigged low-poly characters incl. orc, goblin, elf, knight. Licence not seen.
