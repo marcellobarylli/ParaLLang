@@ -19,7 +19,7 @@ import { RoadProvider } from '../../server/test/road-helpers.js';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '144', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '146', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/';
 const SEED = Number(process.env.ROAD_SEED ?? 4242);
@@ -106,7 +106,7 @@ async function until(page, test, what, timeout = 40_000) {
 }
 
 async function run(browser, size, content) {
-  let runtime = await createRuntime({ language: 'it', content, provider: new ShotsProvider(content), serviceOptions: { seedSource: () => SEED } });
+  let runtime = await createRuntime({ language: 'it', content, provider: new ShotsProvider(content), serviceOptions: { seedSource: () => SEED }, saves: () => ({ kind: 'disk' }) });
   const context = await browser.newContext({ viewport: size.viewport, deviceScaleFactor: size.deviceScaleFactor, isMobile: size.isMobile ?? false, hasTouch: size.hasTouch ?? false });
   const page = await context.newPage();
   page.on('pageerror', (error) => console.error(`[${size.name}] page error:`, error.message));
@@ -131,7 +131,35 @@ async function run(browser, size, content) {
     await until(page, (v) => v.arrived, 'the camera at the first site');
     report.push(`start ${s.at}, ${s.frontier.length} sites ahead, ${s.scene.chunks} chunks, ${s.scene.triangles} triangles`);
     if (s.scene.triangles > 64_000) fail(`${s.scene.triangles} triangles`);
+    // Round 146: the weather follows the clock. The pictures hold it still: a clear late morning, unless they are
+    // of the weather itself.
+    const pin = async (values) => { await page.evaluate((v) => window.__parallangRoad.pinWeather(v), values); await sleep(700); };
+    const sky = () => page.evaluate(() => ({ label: window.__parallangRoad.weather.label, ...window.__parallangRoad.effects }));
+    await pin({ phase: 0.2 });
     await shot('02-hub');
+    if (!/Morning · clear/.test(await page.locator('.weather-line').textContent())) fail('the hub does not show the weather of the level');
+    for (const [name, values, check] of [
+      ['11-dusk', { phase: 0.54 }, (w) => w.label.startsWith('Dusk')],
+      ['12-night', { phase: 0.78 }, (w) => w.stars > 0.5 && w.fireflies > 0.5],
+      ['13-rain', { phase: 0.3, rain: 0.6 }, (w) => w.rain > 0.5 && w.stars === 0],
+      ['14-storm-at-night', { phase: 0.8, rain: 0.95 }, (w) => w.rain > 0.9],
+    ]) {
+      await pin(values);
+      const now = await sky();
+      if (!check(now)) fail(`${name}: ${JSON.stringify(now)}`);
+      await shot(name);
+    }
+    report.push('weather: dusk, a starry night with fireflies, rain and a storm at night shown');
+    await pin({ phase: 0.2 });
+    // The guide to the GitHub save, in Settings beside "Your save".
+    await page.getByRole('button', { name: 'Settings' }).click();
+    await page.getByRole('button', { name: 'Guide: keep the saves on GitHub' }).click();
+    await page.getByRole('region', { name: 'How to keep the saves on GitHub' }).scrollIntoViewIfNeeded();
+    const store = await page.locator('.store-line').textContent();
+    if (!/disk only/.test(store)) fail(`the guide does not say where the saves are: ${store}`);
+    await shot('15-save-guide');
+    await page.getByRole('button', { name: 'Close', exact: true }).click();
+    report.push('the save guide opens in Settings and reads the server\'s save store');
 
     // A conversation, answered with each objective's first example, as the scripted grader passes them.
     const converse = async (label) => {
@@ -185,7 +213,7 @@ async function run(browser, size, content) {
     // The server loses everything (a redeploy on the free plan). The page puts the save back from its copy.
     const lost = s;
     const old = runtime;
-    runtime = await createRuntime({ language: 'it', content, provider: new ShotsProvider(content), serviceOptions: { seedSource: () => 999 } });
+    runtime = await createRuntime({ language: 'it', content, provider: new ShotsProvider(content), serviceOptions: { seedSource: () => 999 }, saves: () => ({ kind: 'disk' }) });
     await old.close();
     await page.addInitScript(([key, token]) => { localStorage.setItem(key, JSON.stringify({ serverUrl: 'https://parallang.test', token })); }, ['parallang.settings', runtime.token]);
     await page.reload();
@@ -197,6 +225,7 @@ async function run(browser, size, content) {
     s = await until(page, (v) => v.mode === 'road' && v.at && !v.loading, 'the road again');
     if (s.step !== lost.step || s.at !== lost.at || JSON.stringify(s.totals) !== JSON.stringify(lost.totals)) fail(`the restored road differs: ${JSON.stringify([s, lost])}`);
     await until(page, (v) => v.arrived && v.scene?.chunks >= 81, 'the ground again');
+    await page.evaluate(() => window.__parallangRoad.pinWeather({ phase: 0.2 }));
     await shot('10-restored');
     report.push(`save put back after a server restart: step ${s.step}, ${JSON.stringify(s.totals)}`);
   } finally {

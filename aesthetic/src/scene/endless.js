@@ -1,4 +1,4 @@
-import { BufferGeometry, Float32BufferAttribute, Group, Mesh } from 'three';
+import { AdditiveBlending, BufferGeometry, Float32BufferAttribute, Group, LineBasicMaterial, LineSegments, Mesh, Points, PointsMaterial } from 'three';
 import { MeshBuilder } from './geometry.js';
 import { assembleWorld, createWorldKit } from './world.js';
 
@@ -279,4 +279,166 @@ export function createTrack(materials, points, heightAt, { width = 1.6, lift = 0
   const mesh = new Mesh(geometryFrom(data), materials.plain);
   mesh.name = 'track';
   return mesh;
+}
+
+// Round 146: what the weather adds to the endless level beside its light (atmosphere.js): rain as short lines
+// falling round the camera, snow in its place on high ground, stars on a clear night, fireflies over the meadows
+// after dark, lightning in a storm, and the trees' crowns moving in the wind.
+export const EFFECTS = Object.freeze({
+  rain: Object.freeze({ drops: 900, box: 34, height: 22, speed: 27, length: 0.9 }),
+  snow: Object.freeze({ above: 52, speed: 2.4, flakes: 500 }),
+  stars: Object.freeze({ count: 260, radius: 380 }),
+  fireflies: Object.freeze({ count: 40, box: 26 }),
+  lightning: Object.freeze({ everySeconds: 9, lasts: 0.22, boost: 1.9 }), // one flash at a time, never a flicker
+});
+
+// A fixed stream of numbers in [0, 1): the effects need no seed of their own.
+function sequence(start) {
+  let a = start >>> 0;
+  return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+/**
+ * The weather's effects in `world` (an endless world).
+ *
+ *   update(weather, dt, camera)  once a frame; returns { flash } (true in the frame a lightning flash begins)
+ *   state                        what is showing now, for tests and the playthrough
+ *
+ * `reducedMotion` leaves the lightning out. The flash is slow and single on purpose: no strobing.
+ */
+export function createWeatherEffects(world, { terrain = world.terrain, reducedMotion = false } = {}) {
+  const next = sequence(146);
+  const group = new Group();
+  group.name = 'weather';
+  world.scene.add(group);
+  const plain = (material) => Object.assign(material, { fog: false, depthWrite: false, transparent: true });
+
+  // Rain and snow share their drops: a column of points round the camera, falling and coming round again.
+  const { drops, box, height: tall } = EFFECTS.rain;
+  const seeds = Array.from({ length: drops }, () => [next() * box - box / 2, next() * tall, next() * box - box / 2]);
+  const rainGeometry = new BufferGeometry();
+  rainGeometry.setAttribute('position', new Float32BufferAttribute(new Float32Array(drops * 6), 3));
+  const rain = new LineSegments(rainGeometry, plain(new LineBasicMaterial({ color: 0xb9c6d8, opacity: 0 })));
+  const snowGeometry = new BufferGeometry();
+  snowGeometry.setAttribute('position', new Float32BufferAttribute(new Float32Array(EFFECTS.snow.flakes * 3), 3));
+  const snow = new Points(snowGeometry, plain(new PointsMaterial({ color: 0xffffff, size: 2, sizeAttenuation: false, opacity: 0 })));
+  for (const object of [rain, snow]) { object.frustumCulled = false; object.renderOrder = 30; object.visible = false; }
+
+  // Stars on the upper half of a sphere, more of them low down, where the sky is wide.
+  const starPositions = [];
+  for (let n = 0; n < EFFECTS.stars.count; n += 1) {
+    const [a, y] = [next() * Math.PI * 2, 0.06 + 0.94 * next() ** 1.4];
+    const r = Math.sqrt(1 - y * y) * EFFECTS.stars.radius;
+    starPositions.push(Math.cos(a) * r, y * EFFECTS.stars.radius, Math.sin(a) * r);
+  }
+  const starGeometry = new BufferGeometry();
+  starGeometry.setAttribute('position', new Float32BufferAttribute(starPositions, 3));
+  const stars = new Points(starGeometry, plain(new PointsMaterial({ color: 0xe8ecff, size: 1.5, sizeAttenuation: false, opacity: 0 })));
+  stars.frustumCulled = false;
+  stars.renderOrder = -9.5; // over the sky's dome, under its clouds
+  stars.visible = false;
+
+  const flies = Array.from({ length: EFFECTS.fireflies.count }, () => ({ x: next() * EFFECTS.fireflies.box - EFFECTS.fireflies.box / 2, z: next() * EFFECTS.fireflies.box - EFFECTS.fireflies.box / 2, y: 0.5 + next() * 1.8, phase: next() * 6.28, rate: 0.4 + next() * 0.7 }));
+  const flyGeometry = new BufferGeometry();
+  flyGeometry.setAttribute('position', new Float32BufferAttribute(new Float32Array(flies.length * 3), 3));
+  const fireflies = new Points(flyGeometry, plain(new PointsMaterial({ color: 0xd8ff7a, size: 2.5, sizeAttenuation: false, opacity: 0, blending: AdditiveBlending })));
+  fireflies.frustumCulled = false;
+  fireflies.renderOrder = 29;
+  fireflies.visible = false;
+  group.add(stars, rain, snow, fireflies);
+
+  const state = { rain: 0, snow: 0, stars: 0, fireflies: 0, flash: 0, sway: 0, flashes: 0 };
+  let clock = 0;
+  let sinceFlash = EFFECTS.lightning.everySeconds;
+  const wrap = (value, size) => ((value % size) + size) % size;
+
+  function update(weather, dt, camera) {
+    clock += dt;
+    const [cx, cy, cz] = [camera.position.x, camera.position.y, camera.position.z];
+    const ground = terrain.heightAt(cx, cz);
+    const snowing = ground > EFFECTS.snow.above;
+    state.rain = snowing ? 0 : weather.rain;
+    state.snow = snowing ? weather.rain : 0;
+
+    rain.visible = state.rain > 0.01;
+    if (rain.visible) {
+      const count = Math.max(1, Math.round(drops * (0.25 + 0.75 * state.rain)));
+      const positions = rainGeometry.attributes.position.array;
+      const slant = EFFECTS.rain.length * (0.15 + 0.5 * weather.wind);
+      for (let n = 0; n < count; n += 1) {
+        const [sx, sy, sz] = seeds[n];
+        // The drops keep their places in the world as the camera moves: each is wrapped into the box round it.
+        const x = cx + wrap(sx - cx, box) - box / 2;
+        const z = cz + wrap(sz - cz, box) - box / 2;
+        const y = cy - tall * 0.35 + wrap(sy - clock * EFFECTS.rain.speed, tall);
+        positions.set([x, y, z, x - slant, y + EFFECTS.rain.length, z], n * 6);
+      }
+      rainGeometry.attributes.position.needsUpdate = true;
+      rainGeometry.setDrawRange(0, count * 2);
+      rain.material.opacity = 0.22 + 0.4 * state.rain;
+      rain.material.color.setScalar(0.35 + 0.5 * weather.daylight);
+    }
+    snow.visible = state.snow > 0.01;
+    if (snow.visible) {
+      const count = Math.max(1, Math.round(EFFECTS.snow.flakes * (0.3 + 0.7 * state.snow)));
+      const positions = snowGeometry.attributes.position.array;
+      for (let n = 0; n < count; n += 1) {
+        const [sx, sy, sz] = seeds[n];
+        const drift = Math.sin(clock * 0.7 + n) * 0.8;
+        positions.set([cx + wrap(sx + drift - cx, box) - box / 2, cy - tall * 0.35 + wrap(sy - clock * EFFECTS.snow.speed, tall), cz + wrap(sz - cz, box) - box / 2], n * 3);
+      }
+      snowGeometry.attributes.position.needsUpdate = true;
+      snowGeometry.setDrawRange(0, count);
+      snow.material.opacity = 0.5 + 0.4 * state.snow;
+    }
+
+    // Stars: out when the daylight is gone and the cloud is thin. They turn slowly, as the night does.
+    state.stars = Math.max(0, 1 - weather.daylight * 3) * Math.max(0, 1 - weather.cloud * 1.5);
+    stars.visible = state.stars > 0.02;
+    if (stars.visible) {
+      stars.position.set(cx, world.terrain.waterY, cz);
+      stars.rotation.y = weather.phase * Math.PI * 2;
+      stars.material.opacity = 0.9 * state.stars;
+    }
+
+    // Fireflies: after dark, when it is dry, below the tree line.
+    state.fireflies = Math.max(0, 1 - weather.daylight * 2.5) * (weather.rain > 0.02 ? 0 : 1) * (ground > 1 && ground < 34 ? 1 : 0);
+    fireflies.visible = state.fireflies > 0.02;
+    if (fireflies.visible) {
+      const positions = flyGeometry.attributes.position.array;
+      const size = EFFECTS.fireflies.box;
+      flies.forEach((fly, n) => {
+        const x = cx + wrap(fly.x + Math.sin(clock * fly.rate + fly.phase) * 1.4 - cx, size) - size / 2;
+        const z = cz + wrap(fly.z + Math.cos(clock * fly.rate * 0.8 + fly.phase) * 1.4 - cz, size) - size / 2;
+        positions.set([x, Math.max(terrain.heightAt(x, z), world.terrain.waterY) + fly.y + 0.3 * Math.sin(clock * 1.3 + fly.phase), z], n * 3);
+      });
+      flyGeometry.attributes.position.needsUpdate = true;
+      fireflies.material.opacity = state.fireflies * (0.55 + 0.35 * Math.sin(clock * 2.1));
+    }
+
+    // Lightning: in a storm, one slow flash now and then. Never with reduced motion.
+    sinceFlash += dt;
+    let flash = false;
+    if (weather.storm && !reducedMotion && sinceFlash > EFFECTS.lightning.everySeconds * (0.6 + next())) {
+      sinceFlash = 0;
+      state.flash = 1;
+      state.flashes += 1;
+      flash = true;
+    }
+    state.flash = Math.max(0, state.flash - dt / EFFECTS.lightning.lasts);
+    world.uniforms.uLightBoost.value = 1 + (EFFECTS.lightning.boost - 1) * state.flash * state.flash;
+
+    // The wind in the trees: the crowns' tips move (the leaves' material sways by height).
+    state.sway = 0.03 + 0.3 * weather.wind;
+    world.materials.leaves.uniforms.uSway.value = state.sway;
+    return { flash };
+  }
+
+  return {
+    group, update, state,
+    dispose() {
+      world.scene.remove(group);
+      for (const object of [rain, snow, stars, fireflies]) { object.geometry.dispose(); object.material.dispose(); }
+    },
+  };
 }

@@ -12,6 +12,7 @@ import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
 import { roadMethods } from './road/service.js';
+import { weatherAt } from './road/weather.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
 export const HELD_NOTE = 'A held objective was said correctly but does not count: an earlier objective comes first. Do not celebrate it or treat it as done, and do not give its answer; the player must say it again after the earlier objective.';
@@ -1012,6 +1013,8 @@ export class LearningService {
   sceneExtras(definition) {
     return {
       ...(definition.scene?.place ? { placeName: definition.scene.place } : {}),
+      // Round 146: the time of day and the weather on the road, as the player sees them (the same clock and seed).
+      ...(definition.scene?.seed !== undefined ? { weather: weatherAt(new Date(this.clock()).getTime(), definition.scene.seed).sentence } : {}),
       ...(definition.teachingNote ? { teachingNote: definition.teachingNote } : {}),
     };
   }

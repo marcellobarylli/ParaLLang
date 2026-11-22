@@ -99,7 +99,7 @@ export function buildRoadDefinition({ curriculum, language, seed, node, step, ac
     ambientEntries: Object.freeze([]),
     // What sets a road conversation apart from an authored one (learning-service.js reads these).
     scope: curriculum.vocabulary.entries,
-    scene: Object.freeze({ name: place, place: ROAD_PLACE.name }),
+    scene: Object.freeze({ name: place, place: ROAD_PLACE.name, seed }), // the seed gives the scene its weather (round 146)
     teachingNote: teaches
       ? `This is a first lesson. The player has never seen the ${language.name} words the learning data asks for. Model each of them naturally in ${first}'s own lines before expecting it back; for this conversation that replaces the rule against using the words of an answer. Never tell the player what to say.`
       : null,

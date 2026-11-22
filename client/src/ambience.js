@@ -40,6 +40,10 @@ export const AMBIENCE = Object.freeze({
   fadeIn: 4, // the start
   fadeOut: 1.5, // the stop
   levels: Object.freeze({ full: 0.14, duck: 0.045, mute: 0 }),
+  // Round 146: the weather of The Long Way Home. Rain is filtered noise under the chords, as loud as it is heavy;
+  // thunder is a low rumble that swells and dies away.
+  rain: Object.freeze({ gain: 1.4, low: 700, high: 5200, ease: 1.5 }),
+  thunder: Object.freeze({ gain: 2.2, cutoff: 140, swell: 0.35, lasts: 3.2 }),
 });
 
 /**
@@ -50,6 +54,8 @@ export const AMBIENCE = Object.freeze({
  *   start()              call inside a tap (browsers let a page make sound only after one)
  *   stop()
  *   setLevel(name)       'full', 'duck' (a line is spoken) or 'mute' (the microphone listens)
+ *   setRain(amount)      0 (dry) to 1 (a downpour): the sound of rain under the music (round 146)
+ *   thunder()            one rumble
  */
 export function createAmbience({ scope = typeof window !== 'undefined' ? window : {}, random = Math.random } = {}) {
   const Context = scope.AudioContext ?? scope.webkitAudioContext;
@@ -60,6 +66,39 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
   const quietly = (context, method) => { try { Promise.resolve(context[method]?.()).catch(() => {}); } catch { /* the same */ } };
   let live = null; // { context, master, input, timer, chord }
   let level = 'full';
+  let rain = 0;
+
+  // Two seconds of noise, played round and round: the rain's and the thunder's raw material.
+  function noise(context) {
+    const length = Math.floor(context.sampleRate * 2);
+    const buffer = context.createBuffer(1, length, context.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < length; i++) data[i] = random() * 2 - 1;
+    return buffer;
+  }
+  // The rain's chain, from a looping noise source to the master gain. Null where the browser lacks a part of it.
+  function rainChain(context, master) {
+    if (!context.createBufferSource || !context.createBiquadFilter) return null;
+    try {
+      const source = context.createBufferSource();
+      source.buffer = noise(context);
+      source.loop = true;
+      const high = context.createBiquadFilter();
+      high.type = 'highpass';
+      high.frequency.value = AMBIENCE.rain.low;
+      const low = context.createBiquadFilter();
+      low.type = 'lowpass';
+      low.frequency.value = AMBIENCE.rain.high;
+      const gain = context.createGain();
+      gain.gain.value = 0;
+      source.connect(high);
+      high.connect(low);
+      low.connect(gain);
+      gain.connect(master);
+      source.start?.();
+      return { gain, buffer: source.buffer };
+    } catch { return null; }
+  }
 
   function impulse(context) {
     const length = Math.floor(context.sampleRate * AMBIENCE.reverb);
@@ -144,7 +183,8 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       reverb.connect(wet);
       dry.connect(master);
       wet.connect(master);
-      live = { context, master, input: filter, timer: null, chord: null };
+      live = { context, master, input: filter, timer: null, chord: null, rain: rainChain(context, master) };
+      live.rain?.gain.gain.setTargetAtTime?.(rain * AMBIENCE.rain.gain, context.currentTime, AMBIENCE.rain.ease);
       scope.document?.addEventListener?.('visibilitychange', onVisibility);
       tick(live);
       return true;
@@ -159,6 +199,35 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       master.gain.cancelScheduledValues?.(context.currentTime);
       master.gain.setTargetAtTime(0, context.currentTime, AMBIENCE.fadeOut / 4);
       later(() => quietly(context, 'close'), AMBIENCE.fadeOut * 1000 + 100);
+    },
+    get rain() { return rain; },
+    setRain(amount) {
+      const next = Math.min(1, Math.max(0, Number(amount) || 0));
+      if (Math.abs(next - rain) < 0.01) return;
+      rain = next;
+      live?.rain?.gain.gain.setTargetAtTime?.(rain * AMBIENCE.rain.gain, live.context.currentTime, AMBIENCE.rain.ease);
+    },
+    thunder() {
+      if (!live?.rain) return false;
+      const { context, master } = live;
+      try {
+        const source = context.createBufferSource();
+        source.buffer = live.rain.buffer;
+        const filter = context.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = AMBIENCE.thunder.cutoff;
+        const gain = context.createGain();
+        const at = context.currentTime;
+        gain.gain.setValueAtTime(0, at);
+        gain.gain.linearRampToValueAtTime(AMBIENCE.thunder.gain, at + AMBIENCE.thunder.swell);
+        gain.gain.linearRampToValueAtTime(0, at + AMBIENCE.thunder.lasts);
+        source.connect(filter);
+        filter.connect(gain);
+        gain.connect(master);
+        source.start(at);
+        source.stop(at + AMBIENCE.thunder.lasts + 0.1);
+        return true;
+      } catch { return false; }
     },
     setLevel(name) {
       if (!Object.hasOwn(AMBIENCE.levels, name) || name === level) return;

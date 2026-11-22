@@ -48,6 +48,11 @@ test('the hub names the place, describes who waits in words, and says where the 
   expect(screen.getByText('The Long Way Home')).toBeTruthy(); // the top bar
   expect(screen.queryByRole('button', { name: /^Party/ })).toBe(null);
   expect(screen.getByRole('checkbox', { name: /On rails/ }).checked).toBe(true);
+  // Round 146: the time of day and the weather of this road, as its seed and the clock give them.
+  const { weatherAt } = await import('../../../../server/src/road/weather.js');
+  const line = card.querySelector('.weather-line');
+  const labels = [weatherAt(Date.now() - 5000, s().road.seed).label, weatherAt(Date.now(), s().road.seed).label];
+  expect(labels).toContain(line.textContent.replace(/^\S+ /, ''));
 });
 
 test('a conversation on the road, then Continue takes the rails to the next one', async () => {

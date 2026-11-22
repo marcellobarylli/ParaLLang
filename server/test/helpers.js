@@ -153,14 +153,14 @@ export function passingAnswers(content, encounterId) {
   return content.encounters.get(encounterId).encounter.objectives.map((objective) => objective.accepted_examples[0]);
 }
 
-export async function createRuntime({ provider = new FixtureProvider(), clock = () => fixedNow, storage, language = 'es', saveDir: baseSaveDir, content: givenContent, serviceOptions = {} } = {}) {
+export async function createRuntime({ provider = new FixtureProvider(), clock = () => fixedNow, storage, language = 'es', saveDir: baseSaveDir, content: givenContent, serviceOptions = {}, saves = null } = {}) {
   const saveDir = baseSaveDir ?? await makeTempDir('parallang-test-');
   const actualStorage = storage ?? new JsonLearningStorage({ saveDir });
   const content = givenContent ?? loadGameContent({ language }); // round 045: a test may pass edited content
   const service = new LearningService({ provider, storage: actualStorage, content, clock, ...serviceOptions }); // round 076: options
   // Test servers bind 127.0.0.1 and are protected by a random PARALLANG_TOKEN-style secret.
   const token = randomUUID();
-  const app = createApp({ service, logger: { error() {} }, token });
+  const app = createApp({ service, logger: { error() {} }, token, ...(saves ? { saves } : {}) }); // round 146: a test may say where its saves are kept
   const server = app.listen(0, '127.0.0.1');
   await new Promise((resolve) => server.once('listening', resolve));
   const baseUrl = `http://127.0.0.1:${server.address().port}`;

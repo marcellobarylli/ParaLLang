@@ -10,7 +10,9 @@ export { createTaProhmWorld, createKilnWorld, TA_PROHM, TA_PROHM_TOUR, taProhmHe
 export { createMicromortWorld, MICROMORT, MICROMORT_TOUR, micromortHeightAt } from './scene/micromort.js';
 export { createWorld, WORLDS } from './worlds.js';
 // Round 144: the endless level is not one of WORLDS: it has no fixed size and takes its landscape from the host.
-export { ENDLESS, buildChunk, createCairn, createEndlessWorld, createStandIn, createTrack } from './scene/endless.js';
+export { EFFECTS, ENDLESS, buildChunk, createCairn, createEndlessWorld, createStandIn, createTrack, createWeatherEffects } from './scene/endless.js';
+// Round 146: the endless level's sky and light at any time of day and in any weather.
+export { ATMOSPHERE, atmosphereFor } from './scene/atmosphere.js';
 export { MeshBuilder } from './scene/geometry.js';
 export { FIGURES, createFigure } from './scene/figures.js';
 export { createCameraRig, TOUR } from './camera.js';

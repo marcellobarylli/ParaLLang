@@ -267,6 +267,23 @@ pictures in [`rounds/144/shots/`](rounds/144/shots/).)
 - The browser's copy (round 144) stays as a second line: it is used only when the server answers that it did not
   know the learner.
 
+### The weather and the save guide (round 146)
+
+([146 architecture](rounds/146/architecture.md), [146 findings](rounds/146/findings.md), pictures in
+[`rounds/146/shots/`](rounds/146/shots/).)
+
+- `server/src/road/weather.js` is the model (`WEATHER` holds the 45 minutes, the 30 % and the rest). It is bundled
+  by the client like `terrain.js`. The server uses it only for the narrator's sentence (`sceneExtras`).
+- `aesthetic/src/scene/atmosphere.js` turns a weather into a preset's values; `createWeatherEffects` in
+  `endless.js` is the rain, snow, stars, fireflies, lightning and sway. `client/src/scene/roadView.js` sets the
+  light four times a second and the effects every frame.
+- **To look at a weather:** `window.__parallangRoad.pinWeather({ phase, rain })` (phase 0 is sunrise, 0.28 noon,
+  0.56 sunset, 0.78 midnight). `client/scripts/road-shots.mjs` does this for its pictures and writes to round 146's
+  folder by default.
+- The rain's sound is in `client/src/ambience.js` (`setRain`, `thunder`), under the music's master gain.
+- `client/src/components/SaveGuide.jsx` is the guide in Settings; its line comes from `GET /api/health`
+  (`readSaveStore` in the store). Change the guide when the settings of `server/src/github-saves.js` change.
+
 ### Next
 
 - The world map's closed places get a level when they get a dungeon (round 121 left them without one).

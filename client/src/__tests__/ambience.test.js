@@ -209,3 +209,67 @@ describe('the ambience', () => {
     expect(broken.running).toBe(false);
   });
 });
+
+// Round 146: the rain of The Long Way Home under the music, and thunder.
+describe('rain and thunder', () => {
+  function withNoise() {
+    const scope = fakeAudio();
+    const Base = scope.AudioContext;
+    scope.AudioContext = function AudioContext() {
+      Base.call(this);
+      this.createBufferSource = () => { const n = { kind: 'source', to: [], buffer: null, loop: false, started: null, stopped: null, connect(target) { this.to.push(target); }, start(t = 0) { this.started = t; }, stop(t) { this.stopped = t; } }; this.made.push(n); return n; };
+    };
+    return scope;
+  }
+  const rainGain = (context) => { const source = context.made.find((n) => n.kind === 'source' && n.loop); return source.to[0].to[0].to[0]; };
+
+  test('rain is looping noise through two filters into the master, silent until it rains, as loud as it is heavy', () => {
+    const scope = withNoise();
+    const ambience = createAmbience({ scope, random: () => 0.5 });
+    ambience.setRain(0.4); // before the start: remembered
+    ambience.start();
+    const context = scope.contexts[0];
+    const source = context.made.find((n) => n.kind === 'source');
+    expect([source.loop, source.started]).toEqual([true, 0]);
+    expect(source.to[0].type).toBe('highpass');
+    expect(source.to[0].to[0].type).toBe('lowpass');
+    const gain = rainGain(context);
+    expect(gain.to).toEqual([master(context)]); // under the master: it ducks and mutes with the music
+    expect(gain.gain.value).toBe(0);
+    expect(gain.gain.events.at(-1)).toEqual(['target', 0.4 * AMBIENCE.rain.gain, 0, AMBIENCE.rain.ease]);
+    ambience.setRain(1);
+    expect(gain.gain.events.at(-1)).toEqual(['target', AMBIENCE.rain.gain, 0, AMBIENCE.rain.ease]);
+    const events = gain.gain.events.length;
+    ambience.setRain(1.004); // no change worth a ramp
+    expect(gain.gain.events).toHaveLength(events);
+    ambience.setRain(0);
+    expect(gain.gain.events.at(-1)[1]).toBe(0);
+    ambience.setRain('nonsense');
+    expect(ambience.rain).toBe(0);
+  });
+
+  test('thunder is one low rumble that swells and dies away; without the music there is none', () => {
+    const scope = withNoise();
+    const ambience = createAmbience({ scope, random: () => 0.5 });
+    expect(ambience.thunder()).toBe(false);
+    ambience.start();
+    const context = scope.contexts[0];
+    context.currentTime = 12;
+    expect(ambience.thunder()).toBe(true);
+    const rumble = context.made.filter((n) => n.kind === 'source').at(-1);
+    expect([rumble.loop, rumble.started]).toEqual([false, 12]);
+    expect(rumble.stopped).toBeCloseTo(12 + AMBIENCE.thunder.lasts + 0.1);
+    const [filter] = rumble.to;
+    expect([filter.type, filter.frequency.value]).toEqual(['lowpass', AMBIENCE.thunder.cutoff]);
+    expect(filter.to[0].gain.events).toEqual([['set', 0, 12], ['ramp', AMBIENCE.thunder.gain, 12 + AMBIENCE.thunder.swell], ['ramp', 0, 12 + AMBIENCE.thunder.lasts]]);
+  });
+
+  test('a browser without a noise source plays the music and no rain', () => {
+    const scope = fakeAudio();
+    const ambience = createAmbience({ scope, random: () => 0 });
+    expect(ambience.start()).toBe(true);
+    ambience.setRain(1);
+    expect(ambience.thunder()).toBe(false);
+    expect(ambience.rain).toBe(1);
+  });
+});

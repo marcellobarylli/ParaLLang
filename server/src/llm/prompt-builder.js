@@ -60,6 +60,8 @@ export function buildNarrationMessages({
   // words are new. An authored encounter passes neither, and its prompts are unchanged.
   placeName = 'The Crumbling Market',
   teachingNote = null,
+  // Round 146: on the road, the time of day and the weather ("It is dusk and a light rain is falling.").
+  weather = null,
 }) {
   const system = fillTemplate(loadTemplate('system/base.txt'), {
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
@@ -77,8 +79,8 @@ export function buildNarrationMessages({
     },
   });
   const turnData = playerInput === null
-    ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in ${placeName}.`, ...(teachingNote ? { teaching_note: teachingNote } : {}) }
-    : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision, ...(teachingNote ? { teaching_note: teachingNote } : {}) };
+    ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in ${placeName}.${weather ? ` ${weather}` : ''}`, ...(teachingNote ? { teaching_note: teachingNote } : {}) }
+    : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision, ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) };
 
   return [
     { role: 'system', content: system },
