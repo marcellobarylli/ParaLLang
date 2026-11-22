@@ -10,3 +10,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 21:56 approx. | 21:56:46 | run | Claude | Cloud session container. Server 505 tests, web client 258 and the aesthetic package pass; the client builds; `client/scripts/road-shots.mjs` passes at 390×844 and 1440×900 | `../shots/` |
 | 5 | 21:56:46 | 21:56:46 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 6 | 21:56:46 | 21:56:46 | closed | Claude | Status addendum and index row; committed and pushed on the session branch. Not on `main`; issue #10 open | `../architecture.md` |
+| 7 | 21:58:50 | 21:58:50 | decision | Owner | "Yes to both": read as merge to `main` and deploy the page and the server both (no `[skip render]`); close issue #10 | `interview.md` |

@@ -38,6 +38,10 @@ for the owner to overrule:
 - Comments in the code use the short form "The Journey 2".
 - The earlier rounds' records keep the old name.
 
+The owner answered "Yes to both" (2026-11-22) to a message that listed the first two of these as choices to
+overrule and asked whether the merge should also restart the server. Claude read it as: merge, and deploy the page
+and the server both. The round was merged to `main` without `[skip render]` and issue #10 closed.
+
 ## Evidence
 
 `content/world/atlas.yaml`, `server/src/road/encounters.js`, `client/src/atlas.js`, the tests named in the
