@@ -458,6 +458,40 @@ test('the answer is sent as a beginner\'s while the mode is on, and plainly when
   expect('beginner' in body()).toBe(false);
 });
 
+// Round 153 (issue #1): light mode. Nothing is marked: the answer goes out as `light`, and what comes back is shown as
+// what was understood, with the sentence in the language under it.
+test('light mode: the answer is sent as light and not as a beginner\'s; the reply shows what was understood, without hearts', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  act(() => store.getState().setLight(true));
+  act(() => store.setState({ encounter: { ...store.getState().encounter, hearts: { used: 0, limit: 3 } } }));
+  expect(screen.queryByLabelText(/hearts left/)).toBeNull();
+  expect(screen.getByText(/Light mode: nothing is marked\./)).toBeTruthy();
+  await user.type(screen.getByLabelText('Your response'), 'good morning');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  await waitFor(() => expect(dialogueCalls()).toHaveLength(1));
+  const body = JSON.parse(dialogueCalls()[0][1].body);
+  expect(body.light).toBe(true);
+  expect('beginner' in body).toBe(false);
+  await waitFor(() => expect(screen.getByLabelText('Your response').value).toBe(''));
+  act(() => store.setState({
+    encounter: { ...store.getState().encounter, version: store.getState().encounter.version + 1 },
+    assessment: { light: true, overallFeedback: 'Good morning!', correction: { text: 'Buongiorno!', translation: 'Good morning!', heartLost: false, light: true },
+      objectiveResults: [{ objectiveId: 'objective-0', passed: true, feedback: 'Greet Portia.' }, { objectiveId: 'objective-1', passed: false, feedback: 'Say your name.' }] },
+  }));
+  expect(screen.getByText('Understood')).toBeTruthy();
+  expect(screen.queryByText('Assessment')).toBeNull();
+  const card = screen.getByRole('region', { name: 'What you meant' });
+  expect(card.textContent).toContain('In Italian');
+  expect(card.textContent).toContain('Buongiorno!');
+  expect(screen.queryByText(/No hearts left/)).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Put it in the reply box' })).toBeNull();
+  // Only what the answer covered is listed: nothing is marked as missing.
+  expect(screen.getByText(/✓ Greet Portia\./)).toBeTruthy();
+  expect(screen.queryByText(/Say your name\./)).toBeNull();
+  expect(store.getState().display.light).toBe(true);
+});
+
 // Round 129 (amendment): the browser listens in one language at a time, so the microphone can be switched between
 // the target language and English; each stretch of speech is added to the box.
 test('the microphone listens in Italian or in English by a switch, and adds each stretch to the reply box', async () => {

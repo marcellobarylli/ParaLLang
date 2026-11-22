@@ -287,6 +287,11 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   answer in correct target language. A corrected answer costs one of three hearts a conversation and closes the
   objectives it tried; with no heart left it is corrected and must be said right. The player may say or type the
   correction again; the app checks that itself. `node client/scripts/beginner-check.mjs` plays it in headless Chromium.
+  "How answers are checked" (round 153, Strict unless changed) has a second choice, Light, which sends `light: true`
+  with each answer in place of `beginner`. The server then checks nothing: one call to the model
+  (`prompts/encounter/light_turn.txt`, schema `lightTurnSchema`) returns what the player meant, the same in correct
+  target language, which open objectives that meaning fulfils, and the character's reply. An objective closes on the
+  model's word, in any order; there are no hearts, no grader and no evidence rules.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

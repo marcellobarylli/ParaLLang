@@ -220,6 +220,12 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .setting-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
 .setting-row output { color: var(--gold); font-weight: 700; }
 .setting-check { display: flex; align-items: center; gap: .7rem; min-height: 44px; }
+/* Round 153: strict or light checking, a pair of radio buttons in one row. */
+.setting-choice { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1.2rem; border: 0; padding: 0; margin: 0; min-height: 44px; }
+.setting-choice legend { padding: 0; margin-bottom: .2rem; }
+.setting-choice label { display: flex; align-items: center; gap: .5rem; min-height: 44px; }
+.settings-sheet .setting-choice input { flex: none; width: 24px; height: 24px; min-height: 0; padding: 0; margin: 0; accent-color: var(--gold); }
+.light-note { display: block; }
 .settings-sheet .setting-check input { flex: none; width: 26px; height: 26px; min-height: 0; padding: 0; margin: 0; accent-color: var(--gold); border-radius: 0; }
 .setting-warning { color: var(--gold); }
 .speaker-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }

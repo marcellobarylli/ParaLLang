@@ -25,6 +25,17 @@ export const encounterResponseSchema = z.object({
   footnote: z.string().nullable().optional().describe('An optional English narrator footnote, one dry aside; null on most replies'),
 }).strict();
 
+// Round 153: light mode. One reply holds what the player meant and the character's answer to it: `player` beside the
+// narration's own fields. Nothing in it is checked against the answer; the server keeps only the ids it knows.
+export const lightTurnSchema = encounterResponseSchema.extend({
+  player: z.object({
+    meant: z.string().min(1).describe('What the player meant, in plain English'),
+    target: z.string().min(1).describe('The same in correct, simple target language'),
+    clean: z.boolean().describe('True only when the player\'s own answer was already correct target language throughout'),
+    objectives_met: z.array(z.string()).describe('The ids of the open objectives that the player\'s meaning fulfils'),
+  }).strict(),
+}).strict();
+
 export const gradingResponseSchema = z.object({
   objective_results: z.array(z.object({
     objective_id: z.string().min(1),

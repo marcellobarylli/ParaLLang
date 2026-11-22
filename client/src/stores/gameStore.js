@@ -621,6 +621,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value) }, storage) }),
       // Round 129: beginner mode, sent with each answer.
       setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
+      // Round 153: strict or light checking of answers, sent with each answer.
+      setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       // The server no longer knows this learner (see `api` above): everything of the old run is dropped, the learner
@@ -687,7 +689,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({ isLoading: true, error: null, pendingInput: text, draft: text });
         try {
           // Round 129: beginner mode travels with the answer (the server grades strictly without it).
-          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(state.display?.beginner !== false ? { beginner: true } : {}), immersion: immersionOf(state) });
+          // Round 153: so does light mode, in which the server checks nothing; it takes the place of beginner mode.
+          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(state.display?.light === true ? { light: true } : state.display?.beginner !== false ? { beginner: true } : {}), immersion: immersionOf(state) });
           if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
           // A held pass (said too early in an ordered encounter) closes nothing (round 051).
           const closed = (result.assessment?.objectiveResults ?? []).filter((entry) => entry.passed && !entry.held).length;

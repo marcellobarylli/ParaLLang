@@ -47,7 +47,7 @@ export default function CorrectionCard({ correction, language, speaker = null, l
   return (
     <section className="correction-card" aria-label="What you meant">
       <div className="speaker-row">
-        <strong>What you meant</strong>
+        <strong>{correction.light ? `In ${languageName}` : 'What you meant'}</strong>
         {correction.heartLost && <span className="heart-lost" aria-label="One heart used">−1 ♥</span>}
       </div>
       <div className="speaker-row">
@@ -55,7 +55,7 @@ export default function CorrectionCard({ correction, language, speaker = null, l
         {speaker?.supported && <button type="button" className="icon-button speak-button" onClick={() => speaker.speak({ text: correction.text, tag: language?.tag })} aria-label="Hear the corrected sentence" title="Hear it">🔊</button>}
       </div>
       {correction.translation && <SentenceText className="translation" text={correction.translation} sentences={pairs?.translation} />}
-      {!correction.heartLost && (
+      {!correction.heartLost && !correction.light && (
         <p className="correction-note">
           No hearts left, so this one has to be said right to move on.
           {onUse && <> <button type="button" className="text-button" onClick={() => onUse(correction.text)}>Put it in the reply box</button></>}
@@ -75,7 +75,7 @@ export default function CorrectionCard({ correction, language, speaker = null, l
         </div>
       </form>
       {verdict === 'right' && <p ref={verdictRef} className="practice-verdict right" role="status">✓ That's it.</p>}
-      {Array.isArray(verdict) && <p ref={verdictRef} className="practice-verdict" role="status">Not quite. Look again at: <span lang={language?.tag}>{verdict.join(' ') || correction.text}</span>. It costs nothing, and you have moved on either way.</p>}
+      {Array.isArray(verdict) && <p ref={verdictRef} className="practice-verdict" role="status">Not quite. Look again at: <span lang={language?.tag}>{verdict.join(' ') || correction.text}</span>. It costs nothing{correction.light ? '' : ', and you have moved on either way'}.</p>}
     </section>
   );
 }

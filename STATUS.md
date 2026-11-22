@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 153, light mode beside strict mode (on the session branch, not deployed)
+
+The owner asked for every open issue, one after the other, and went to sleep; this is the first, #1 (step 3 of the
+build order). Settings in the web client has "How answers are checked": **Strict** (as before, the default) or
+**Light**. In light mode nothing is marked: one call to the model returns what the player meant, the same in the
+target language, which open objectives it covers, and the character's reply, so a turn is one call instead of two.
+An objective closes on the model's word, in any order; there are no hearts. The Spellbook still records the target
+words the player wrote, and the road's score still tells a clean answer from a mended one. Strict mode's prompts and
+tests are unchanged. **No model was called** (the tests script it), and it is on the branch
+`claude/modest-einstein-obt6yy`, not on `main` ([findings](docs/rounds/153/findings.md)).
+
 ## Addendum 2026-11-22: round 152, the road is The Journey 2: Journathan Returns (again) (deployed)
 
 The owner asked for the next GitHub issue: #10, step 2 of the build order. The endless road, The Long Way Home until
@@ -1503,6 +1514,7 @@ Newest first.
 | 150 | 11-22 | The icons of the web app and the iPhone app are a snapshot of the road's isometric map with a walk on it (issue #22); deployed | [150](docs/rounds/150/architecture.md) | [findings](docs/rounds/150/findings.md) | round 150 build, merged to `main` |
 | 151 | 11-22 | The lore book says what the roads are: the graph is a web of threads stitched to other worlds, and no character knows (issue #12); a text only; on `main` | [151](docs/rounds/151/architecture.md) | [findings](docs/rounds/151/findings.md) | round 151 build, merged to `main` |
 | 152 | 11-22 | The road's name is The Journey 2: Journathan Returns (again) (issue #10): the world map, the top bar, the narrator's scene, the documents; ids and saves unchanged; deployed | [152](docs/rounds/152/architecture.md) | [findings](docs/rounds/152/findings.md) | round 152 build, merged to `main` |
+| 153 | 11-22 | Light mode beside strict mode (issue #1): one call that reads the answer and replies, nothing checked; a Strict / Light choice in Settings; strict mode unchanged | [153](docs/rounds/153/architecture.md) | [findings](docs/rounds/153/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

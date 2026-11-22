@@ -371,12 +371,13 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
         )}
       </header>
       <div className="sheet-scroll" ref={scrollRef}>
-        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} beginner={state.display?.beginner !== false} />
+        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} beginner={state.display?.beginner !== false} light={state.display?.light === true} />
         {assessment && (
           <section className="assessment-banner" aria-live="polite">
-            <strong>Assessment</strong><p>{assessment.overallFeedback}</p>
-            {assessment.correction && <CorrectionCard key={encounter?.version} correction={assessment.correction} language={language} speaker={speaker} listener={listener} onUse={resolved ? null : state.setDraft} />}
-            {assessment.objectiveResults.map((result) => <p key={result.objectiveId}>{result.corrected ? '✎' : result.passed ? '✓' : '→'} {result.feedback}</p>)}
+            {/* Round 153: a light turn is not an assessment: what was understood, and what of the objectives it covered. */}
+            <strong>{assessment.light ? 'Understood' : 'Assessment'}</strong><p>{assessment.overallFeedback}</p>
+            {assessment.correction && <CorrectionCard key={encounter?.version} correction={assessment.correction} language={language} speaker={speaker} listener={listener} onUse={resolved || assessment.light ? null : state.setDraft} />}
+            {assessment.objectiveResults.filter((result) => !assessment.light || result.passed).map((result) => <p key={result.objectiveId}>{result.corrected ? '✎' : result.passed ? '✓' : '→'} {result.feedback}</p>)}
             {state.xpGained > 0 && <p className="xp-line">+{state.xpGained} XP{state.levelUp ? ` · Level ${state.levelUp}` : ''}</p>}
           </section>
         )}
@@ -546,6 +547,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
 
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
+        light={state.display?.light === true} onLight={state.setLight}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
         voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }}
