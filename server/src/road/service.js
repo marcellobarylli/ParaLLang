@@ -57,14 +57,19 @@ export function frontierOf(graph, road) {
   const onTrail = new Set(road.trail);
   const seen = new Set();
   const out = [];
-  const recent = [road.at, ...road.trail.slice(-ROAD.frontierFrom).reverse().filter((id) => id !== road.at)];
-  for (const from of recent) {
-    for (const id of graph.neighbours(from)) {
-      if (onTrail.has(id) || seen.has(id)) continue;
-      seen.add(id);
-      out.push({ id, from });
+  const collect = (sites) => {
+    for (const from of sites) {
+      for (const id of graph.neighbours(from)) {
+        if (onTrail.has(id) || seen.has(id)) continue;
+        seen.add(id);
+        out.push({ id, from });
+      }
     }
-  }
+  };
+  collect([road.at, ...road.trail.slice(-ROAD.frontierFrom).reverse().filter((id) => id !== road.at)]);
+  // A walk can box itself in: every site near the learner already visited. Then the whole trail is searched. It
+  // always has a site ahead: the trail's site furthest north-east keeps a forced way further north or east.
+  if (!out.length) collect([...road.trail].reverse());
   return out;
 }
 
@@ -234,7 +239,8 @@ export const roadMethods = {
     const session = this.roadSession(road, curriculum);
     const definition = this.roadDefinition(session);
     const active = this.encounters.get(learnerId);
-    const ownSession = Boolean(active?.road) && this.definition(active) === definition;
+    // The same conversation by what it is made from (a definition may have been built again meanwhile).
+    const ownSession = Boolean(active?.road) && JSON.stringify(active.road) === JSON.stringify(session);
     if (!restart && ownSession && active.state === 'ongoing') {
       return { encounter: this.serializeEncounter(active), spellbook: this.spellbookSnapshot(envelope) };
     }

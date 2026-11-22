@@ -224,6 +224,33 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
   `src/__tests__/proxy.test.js`, which binds one: name the folders. `~/workspace/r119-jobs/run.sh` and `shots.sh`
   are round 119's job scripts.
 
+### The Long Way Home (round 144)
+
+([144 architecture](rounds/144/architecture.md), [144 findings](rounds/144/findings.md), [the curriculum](curriculum.md),
+pictures in [`rounds/144/shots/`](rounds/144/shots/).)
+
+- **Everything pure is in `server/src/road/`** and the client bundles `terrain.js` and `graph.js` from there
+  (`client/src/scene/roadView.js`, `client/src/components/Road.jsx`), so both stand on the same ground from the seed
+  alone. A change to either changes every learner's landscape: the sites of a save are ids of cells, and a site that
+  no longer exists sends the learner back to the start (`roadOf` in `service.js`).
+- **The road's methods are on `LearningService`** (`Object.assign` at the end of `learning-service.js`). A road
+  conversation is an ordinary session with `road: { seed, node, step, activity, unitId }`; its definition is built
+  from that by `encounters.js` and cached. `definition.scope` (the curriculum's vocabulary) is what makes the service
+  read evidence against the curriculum and not the pack.
+- **The curriculum's vocabulary is not in `content.vocabulary`.** Ids start with `c_`; `service.lookup` and
+  `service.entryVersion` find both kinds. `content.curriculum` is read on first use (about a second: one pattern per
+  form), and `server.js` reads it at start.
+- **A new lesson, unit or stage is content.** `node server/scripts/check-curriculum.js` after every edit. A unit's
+  `roles` are who the player meets there. The pacing's numbers are `PACING` in `pacing.js`, with their sources in
+  `docs/curriculum.md`.
+- **The client's tests run the real server logic** in process (`client/src/__tests__/roadServer.js`), with the
+  scripted grader of `server/test/road-helpers.js`. Nothing of the road is mocked.
+- **The save's copy** is the store's `backup` (`gameStore.js`), read and written past the proxy that handles a lost
+  learner. `initialize` puts it back when the server answers `recovered: false` for an id the browser already had.
+- **`client/scripts/road-shots.mjs`** needs Playwright and a Chromium (the cloud session's container has both; the
+  cluster's scripts use `puppeteer-core`). It serves `client/dist` by request interception and starts its own server.
+- **Not built:** the road in the iPhone app; figures that are more than a cloak; a stage exam; sound for the glide.
+
 ### Next
 
 - The world map's closed places get a level when they get a dungeon (round 121 left them without one).

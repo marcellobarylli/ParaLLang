@@ -20,7 +20,7 @@ The core mechanic: enemy NPCs speak increasingly more of the target language as 
 
 ## Planned Stack
 
-- **Frontend:** iPhone-first. An Expo / React Native app in `mobile/` (Zustand for state), run in the iOS Simulator through Expo Go; development is app-first from round 004. The React/Vite web client in `client/` plays the Ta Prohm dungeon crawl on the three.js level in `aesthetic/` (round 115; round 133 added a second place, The Kiln, on the same plan) and is deployed to GitHub Pages
+- **Frontend:** iPhone-first. An Expo / React Native app in `mobile/` (Zustand for state), run in the iOS Simulator through Expo Go; development is app-first from round 004. The React/Vite web client in `client/` plays the Ta Prohm dungeon crawl on the three.js level in `aesthetic/` (round 115; round 133 added a second place, The Kiln, on the same plan) and is deployed to GitHub Pages. Round 144 added The Long Way Home to it: an endless generated landscape with a curriculum (A1 to B1) walked along a graph of sites, in `server/src/road/` and `content/curriculum/` (see `docs/curriculum.md`)
 - **Backend:** Node.js with Express (or Fastify)
 - **LLM:** Provider-agnostic adapter (OpenAI GPT-4o-mini recommended, Anthropic and Ollama also supported)
 - **Content:** YAML files for world/characters/encounters/vocabulary

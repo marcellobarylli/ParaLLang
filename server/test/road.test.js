@@ -300,6 +300,24 @@ test('a move obeys the frontier, the map offers a choice of kinds, and a convers
   assert.equal((await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { road: true } })).status, 200);
 });
 
+test('a walk that boxes itself in still has a site ahead', () => {
+  const { curriculum } = loadGameContent({ language: 'it' });
+  for (const seed of [7, 42, 4242]) {
+    const graph = createGraph(createTerrain(seed));
+    // A trail that fills a whole block of cells around its end: every site next to the learner is visited.
+    const block = [];
+    for (let i = -6; i <= 6; i += 1) for (let j = -6; j <= 6; j += 1) if (graph.nodeAt(i, j)) block.push(graph.nodeAt(i, j).id);
+    const at = graph.node('0,0') ? '0,0' : graph.start;
+    const trail = [...block.filter((id) => id !== at), at];
+    const stored = { ...freshRoad(seed, curriculum), at, trail };
+    assert.ok(graph.neighbours(at).every((id) => trail.includes(id)), 'boxed in');
+    const frontier = frontierOf(graph, stored);
+    assert.ok(frontier.length >= 1, `seed ${seed}: a site ahead`);
+    assert.ok(frontier.every((entry) => !trail.includes(entry.id) && trail.includes(entry.from)));
+    assert.ok(offersFor(graph, stored, curriculum).rails, 'and the rails have somewhere to go');
+  }
+});
+
 test('a corrected answer scores half, a failed gate keeps the unit, and a resent answer is recorded once', async (t) => {
   const { runtime, provider, learnerId } = await roadRuntime(t);
   await road(runtime, learnerId);
@@ -320,6 +338,39 @@ test('a corrected answer scores half, a failed gate keeps the unit, and a resent
   assert.equal(view.road.step, 1, 'a replay is not a second conversation');
   assert.equal(view.curriculum.stages[0].units[0].lessons[0].done, 1);
   assert.equal((await startHere(runtime, learnerId)).data.error.code, 'NOTHING_HERE');
+});
+
+test('a word of the curriculum is a Spellbook card: hidden while it is due, reviewed by its meaning, and scheduled', async (t) => {
+  let now = new Date('2026-01-15T12:00:00.000Z');
+  const content = loadGameContent({ language: 'it' });
+  const runtime = await createRuntime({ language: 'it', content, provider: new RoadProvider(content), clock: () => now, serviceOptions: { seedSource: () => 4242 } });
+  t.after(runtime.close);
+  const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
+  await road(runtime, learnerId);
+  await talkHere(runtime, learnerId);
+  now = new Date('2026-01-18T12:00:00.000Z');
+  const book = await runtime.service.getSpellbook(learnerId);
+  const due = book.cards.filter((card) => card.due);
+  assert.ok(due.length >= 1, 'a card of the lesson falls due');
+  assert.equal(due[0].meanings, null, 'a due card keeps its meaning back');
+  const { challenge } = await runtime.service.createReviewChallenge(learnerId, due[0].vocabularyId);
+  const entry = content.curriculum.vocabulary.byId.get(challenge.vocabularyId);
+  assert.equal(challenge.target, entry.target);
+  const reviewed = await runtime.service.submitReview(learnerId, { challengeId: challenge.id, attemptId: randomUUID(), action: 'answer', answer: entry.accepted_translations[0] });
+  assert.equal(reviewed.result.correct, true);
+  assert.equal(reviewed.result.scheduleChanged, true);
+  assert.ok(reviewed.xpGained > 0);
+  assert.ok(Date.parse(reviewed.result.nextReviewAt) > now.getTime());
+  // The cards a card's own form or example holds are found among the curriculum's entries, as among the pack's.
+  // (Each entry is read alone, the pack's and the curriculum's: "ciao" is a card of both.) The quick way of finding
+  // them gives what reading every entry precisely gives.
+  const { inflectsForms } = await import('../src/learning-service.js');
+  for (const text of ['Ciao, come stai? Mi chiamo Sam.', 'Vorrei due caffè e una pizza, per favore.', 'Ieri ho mangiato i panini buonissimi.', 'The player approaches.']) {
+    const precise = runtime.service.allEntries().filter((entry) => matchCanonicalVocabulary(text, [entry]).length || inflectsForms(text, entry.surface_variants)).map((entry) => entry.id);
+    assert.deepEqual([...runtime.service.entryIdsIn(text)].sort(), precise.sort(), text);
+  }
+  const found = runtime.service.entryIdsIn('Ciao, come stai? Mi chiamo Sam.');
+  for (const id of ['c_ciao', 'c_come_stai', 'c_mi_chiamo', 'ciao']) assert.ok(found.has(id), id);
 });
 
 test('the whole save can be copied out and put back on a server that lost it', async (t) => {

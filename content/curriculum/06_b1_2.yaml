@@ -1,0 +1,185 @@
+# Round 144: the curriculum's skeleton, stage B1.2. Language-neutral: what the learner can do, the lessons and what
+# each asks of the player. The words are in content/languages/<code>/curriculum/06_b1_2.yaml. The functions are the
+# second half of the CEFR B1 descriptors: hopes and wishes (a first subjunctive), conditions, passing on what was
+# said, customs compared, persuading, and the story of your life so far. For the owner's review.
+id: b1_2
+cefr: B1
+name: Whatever comes up
+ratio: 0.64
+can_do: >
+  Say what you hope for and what you would do if things were different, pass on what others have said, compare
+  customs, argue for a plan and settle on a compromise, and tell the story of your life so far.
+units:
+  - id: hopes
+    title: Hopes and wishes
+    can_do: "Say what you hope will happen, wish someone well, and say what you want to happen."
+    grammar: "The present subjunctive after 'I hope that' and 'I want ... to'; set phrases for good wishes."
+    roles:
+      - "Wishing-Well Attendant: sorts the coins from the wishes each evening and forwards the wishes to the proper department"
+      - "Clerk of Fond Hopes: registers them at the counter and warns that processing times vary"
+      - "Toastmaster Without a Feast: has the good wishes ready and is only waiting for an occasion"
+      - "Optimist, Under Review: has been hopeful for so long that the guild has sent someone round to check"
+    lessons:
+      - id: hopes_hope
+        title: Hoping
+        objectives:
+          - { id: hope_that, ask: "Tell {name} what you hope will happen tomorrow", cue: "{name} is taking down hopes in a ledger and has reached the column for tomorrow." }
+          - { id: hope_to, ask: "Tell {name} something you hope to do yourself: come back, see them again" }
+          - { id: hope_so, ask: "Tell {name} that you hope so, or that you hope not" }
+      - id: hopes_wish
+        title: Wishing someone well
+        objectives:
+          - { id: good_luck, ask: "Wish {name} good luck" }
+          - { id: good_journey, ask: "Wish {name} a good journey, a good day or a good holiday" }
+          - { id: get_well, ask: "Tell {name} to get well soon", cue: "{name} has a cold of the kind that is heard before it is seen." }
+      - id: hopes_want
+        title: What you want to happen
+        objectives:
+          - { id: hope_you_like, ask: "Tell {name} that you hope they like it", cue: "{name} is holding something you have just handed over and has not yet decided on an expression." }
+          - { id: want_you_to, ask: "Tell {name} that you want them to come, or do not want them to leave" }
+          - { id: important_that, ask: "Tell {name} that it is important, or necessary, that something happens" }
+
+  - id: hypotheses
+    title: If
+    can_do: "Say what you do if something happens, and what you would do if you could, had the time or won a fortune."
+    grammar: "Real conditions with 'if' and the present; unreal conditions as fixed chunks ('if I could, I would')."
+    roles:
+      - "Underwriter of Unlikely Events: insures people against things that will not happen and has never paid out, which proves the point"
+      - "Lottery Clerk of the Empty Drum: sells tickets for a draw with no prize, and the queue is orderly"
+      - "Planner of Contingencies: has a written procedure for every eventuality except the ones that occur"
+      - "Assessor of Daydreams: values castles in the air for tax purposes and finds most of them over-declared"
+    lessons:
+      - id: hypotheses_real
+        title: If it happens
+        objectives:
+          - { id: if_weather, ask: "Tell {name} what you do if it rains, or if the weather is fine", cue: "{name} is drawing up a plan for every kind of weather and has reached the wet ones." }
+          - { id: if_time, ask: "Tell {name} what you will do if you have time, or if you can" }
+          - { id: if_you_want, ask: "Offer {name} something: if you want, if you like" }
+      - id: hypotheses_unreal
+        title: If I could
+        objectives:
+          - { id: if_could, ask: "Tell {name} what you would do if you could, or if you had more time" }
+          - { id: if_won, ask: "Tell {name} what you would do if you won the lottery, or were rich", cue: "{name} sells the tickets and likes to hear what the winnings are for before anybody has them." }
+          - { id: would_do, ask: "Tell {name} what you would buy, where you would go or what you would do" }
+      - id: hypotheses_then
+        title: What then
+        objectives:
+          - { id: what_if, ask: "Ask {name} what happens if something goes wrong" }
+          - { id: in_that_case, ask: "Tell {name} what you will do in that case", cue: "{name} has a procedure for everything and is checking whether you have one for anything." }
+          - { id: otherwise, ask: "Tell {name} what happens otherwise" }
+
+  - id: retelling
+    title: Passing things on
+    can_do: "Tell someone what another person said or asked, say that you have heard something, and say whether you believe it."
+    grammar: "Reported speech with 'said that' and 'asked whether'; 'I heard that'; believing and doubting."
+    roles:
+      - "Gossip, Bonded and Insured: passes things on under licence and is liable for any embellishment"
+      - "Messenger of the Third Hand: delivers only what somebody told somebody who told somebody, and guarantees nothing"
+      - "Rumour Miller: grinds what is heard into what is said, and keeps the stones well dressed"
+      - "Verifier of Hearsay: stamps each rumour TRUE, FALSE or INTERESTING, and uses the third stamp most"
+    lessons:
+      - id: retelling_said
+        title: What they said
+        objectives:
+          - { id: said_that, ask: "Tell {name} what somebody said to you", cue: "{name} was not there, regrets it, and would like the whole conversation." }
+          - { id: asked, ask: "Tell {name} what that person asked you" }
+          - { id: answered, ask: "Tell {name} what you answered" }
+      - id: retelling_heard
+        title: I heard that
+        objectives:
+          - { id: heard, ask: "Tell {name} something that you have heard or read", cue: "{name} deals in second-hand news and wants to know what you have brought." }
+          - { id: is_it_true, ask: "Ask {name} whether something is really true" }
+          - { id: who_told, ask: "Ask {name} who told them" }
+      - id: retelling_believe
+        title: Believing it
+        objectives:
+          - { id: believe, ask: "Tell {name} that you believe it, or that it is possible" }
+          - { id: doubt, ask: "Tell {name} that you doubt it" }
+          - { id: who_knows, ask: "Say that nobody knows, and that we shall see", cue: "{name} has stamped the rumour twice already and is reaching for a third stamp." }
+
+  - id: customs
+    title: Customs here and there
+    can_do: "Describe a custom or a festival at home, compare it with one here, and say what surprised you."
+    grammar: "Impersonal 'one does'; contrast with 'whereas' and 'instead'; 'what surprised me'; 'used to' as an adjective."
+    roles:
+      - "Master of the Revels, Provincial: runs the only festival in the district and is unsure what it is in honour of"
+      - "Collector of Foreign Habits: pins them to a board like butterflies and labels each with its country of origin"
+      - "Keeper of the Old Ways: stores them in a shed and brings one out each spring to see whether it still works"
+      - "Surveyor of Etiquette: maps where one bows, where one shakes hands, and the disputed strip between"
+    lessons:
+      - id: customs_home
+        title: At home
+        objectives:
+          - { id: in_my_country, ask: "Tell {name} about something that is done in your country", cue: "{name} has a board of other people's habits and a pin ready." }
+          - { id: festival, ask: "Tell {name} about a festival or a holiday at home" }
+          - { id: one_does, ask: "Tell {name} what people eat, drink or do on that day" }
+      - id: customs_compare
+        title: Here and there
+        objectives:
+          - { id: whereas, ask: "Compare for {name}: here one thing is done, whereas at home another", cue: "{name} cannot see why anybody would do it any other way than the way it is done here." }
+          - { id: similar, ask: "Tell {name} about something that is similar, or the same, at home" }
+          - { id: prefer, ask: "Tell {name} which way you prefer, and why" }
+      - id: customs_surprise
+        title: What surprised you
+        objectives:
+          - { id: struck_me, ask: "Tell {name} what struck or surprised you here" }
+          - { id: not_used, ask: "Tell {name} that you are not used to it, or are getting used to it", cue: "{name} has watched you do something the local way, slightly wrong." }
+          - { id: find_it, ask: "Tell {name} how the custom seems to you" }
+
+  - id: persuading
+    title: Persuading
+    can_do: "Propose a plan and argue for it, concede a point, and reach a compromise."
+    grammar: "Connectors of argument: 'on the one hand', 'however', 'anyway'; urging ('come on'); conceding ('you are right about that')."
+    roles:
+      - "Advocate for Lost Causes: takes only cases that cannot be won and has, to general embarrassment, won two"
+      - "Broker of Compromises: splits every difference down the middle, including some that nobody had"
+      - "Hawker of Excellent Schemes: has a plan for your afternoon and will not be leaving without it"
+      - "Devil's Advocate, Unpaid: argues the other side on principle and would like it known that the client has never settled the bill"
+    lessons:
+      - id: persuading_propose
+        title: Proposing
+        objectives:
+          - { id: propose, ask: "Propose a plan to {name}" }
+          - { id: advantage, ask: "Give {name} an advantage of your plan: it is cheaper, quicker, easier" }
+          - { id: come_on, ask: "Urge {name} on: come on, trust me, you will see", cue: "{name} is perfectly comfortable where they are and can see no reason to be anywhere else." }
+      - id: persuading_argue
+        title: Arguing
+        objectives:
+          - { id: two_sides, ask: "Weigh it up for {name}: on the one hand, on the other" }
+          - { id: however, ask: "Raise an objection to what {name} says: however, and yet", cue: "{name} has a plan of their own and has just finished praising it." }
+          - { id: anyway, ask: "Insist: anyway, in any case, it is worth it" }
+      - id: persuading_settle
+        title: Reaching a compromise
+        objectives:
+          - { id: concede, ask: "Concede a point to {name}: on that they are right" }
+          - { id: compromise, ask: "Propose a compromise to {name}" }
+          - { id: settled, ask: "Close the matter: tell {name} that it suits you, or that it is a deal", cue: "{name} has stopped arguing and started doing sums, which is usually a good sign." }
+
+  - id: life_story
+    title: Your story so far
+    can_do: "Say where you were born and grew up, how long you have been doing something, and what you have never done and still want to do."
+    grammar: "'I was born', 'I grew up'; duration up to now ('for', 'since') with the present; 'never' and 'not yet' with the perfect."
+    roles:
+      - "Biographer of the Living: writes people's lives while they are still using them and asks to be kept informed"
+      - "Registrar of Births, Retrospective: is catching up on entries that were missed and has got as far as you"
+      - "Keeper of Unfinished Business: holds everything people meant to do, on shelves, alphabetically by excuse"
+      - "Obituarist in Advance: likes to have the piece ready early and needs only a few details and, in due course, a date"
+    lessons:
+      - id: life_story_born
+        title: Where you began
+        objectives:
+          - { id: born, ask: "Tell {name} where or when you were born", cue: "{name} has opened a large book at the first page of you." }
+          - { id: grew_up, ask: "Tell {name} where you grew up" }
+          - { id: moved, ask: "Tell {name} when you moved somewhere else" }
+      - id: life_story_since
+        title: How long
+        objectives:
+          - { id: how_long, ask: "Tell {name} how long you have lived where you live now: for so many years or months" }
+          - { id: learning, ask: "Tell {name} how long you have been learning their language", cue: "{name} has been listening to your accent and trying to put a date on it." }
+          - { id: ask_how_long, ask: "Ask {name} how long they have been doing this" }
+      - id: life_story_never
+        title: Never, and not yet
+        objectives:
+          - { id: never, ask: "Tell {name} something that you have never done" }
+          - { id: not_yet, ask: "Tell {name} something that you have not done yet" }
+          - { id: one_day, ask: "Tell {name} what you still want to do one day", cue: "{name} keeps a shelf for things people meant to do, and there is a space on it with your name." }

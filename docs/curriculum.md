@@ -31,8 +31,16 @@ the source by its number in that reference list. Where the research found nothin
 Six stages from CEFR A1 to B1, six units a stage, three lessons a unit, three objectives a lesson. A stage also sets
 how much of the target language a character speaks in its first line (it rises by 5 points a turn).
 
-<!-- stages:start -->
-<!-- stages:end -->
+| Stage | CEFR | Share of target language | Units |
+|---|---|---|---|
+| First words (`a1_1`) | A1 | 20 % | Hello and goodbye; Where you are from; Please, thank you, sorry; Numbers and age; Ordering; Likes and dislikes |
+| Getting around (`a1_2`) | A1 | 28 % | Family and people; Where things are; Finding the way; Time and days; Daily routine; Shopping |
+| What happened (`a2_1`) | A2 | 36 % | What you did; Where you went; Weather and seasons; At the restaurant; Feeling ill; Plans and musts |
+| Making arrangements (`a2_2`) | A2 | 44 % | Invitations; Comparing; Travel and lodging; How things used to be; The future; Work and study |
+| Having opinions (`b1_1`) | B1 | 54 % | Opinions; Advice; Telling a story; Problems while travelling; Feelings; Polite requests |
+| Whatever comes up (`b1_2`) | B1 | 64 % | Hopes and wishes; If; Passing things on; Customs here and there; Persuading; Your story so far |
+
+36 units, 108 lessons and 324 objectives in each language; 493 vocabulary entries in Italian and 487 in Spanish.
 
 The order of functions follows the CEFR levels' descriptors and the A1 to B1 syllabi found [1, 2, 3 to 10]: at A1
 greeting and introducing, personal data, getting by when one has not understood, numbers, ordering, likes, then

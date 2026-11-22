@@ -413,10 +413,20 @@ export class LearningService {
     return found;
   }
 
+  // Round 144: with the curriculum's vocabulary this runs over many more entries, so each entry is first tried
+  // cheaply: only one whose form (or, for an inflection, whose stem) stands somewhere in the text is read precisely.
+  // The result is the same as reading every entry precisely.
   entryIdsIn(text) {
-    return new Set(this.allEntries()
-      .filter((entry) => matchCanonicalVocabulary(text, [entry]).length || inflectsForms(text, entry.surface_variants))
-      .map((entry) => entry.id));
+    this.entryForms ??= this.allEntries().map((entry) => {
+      const forms = entry.surface_variants.map((form) => foldWords(form).trim()).filter(Boolean);
+      return { entry, forms, stems: forms.filter((form) => form.length >= 4 && !form.includes(' ')).map((form) => form.slice(0, -1)) };
+    });
+    const folded = foldWords(text);
+    const words = folded.trim().split(' ');
+    return new Set(this.entryForms
+      .filter(({ entry, forms, stems }) => (forms.some((form) => folded.includes(form.split(' ')[0])) && matchCanonicalVocabulary(text, [entry]).length)
+        || (stems.some((stem) => words.some((word) => word.startsWith(stem))) && inflectsForms(text, entry.surface_variants)))
+      .map(({ entry }) => entry.id));
   }
 
   // Round 090 (review R1.2 of rounds 029–039): the pack entries in an entry's own target and in its example, without

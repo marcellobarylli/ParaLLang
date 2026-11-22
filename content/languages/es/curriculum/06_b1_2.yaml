@@ -1,0 +1,154 @@
+# Round 144: the Spanish words of curriculum stage B1.2 (the skeleton is content/curriculum/06_b1_2.yaml). Authored by
+# Claude from the functions of the B1 syllabi read for the round; no source page was opened for a single entry. For
+# the owner's review. The vocabulary shares one namespace with the earlier stages: an id defined in an earlier file is
+# reused here, never redefined, and no new entry repeats an earlier entry's form.
+stage: b1_2
+version: curriculum-b1-2-es-v1
+grammar:
+  hopes: "Presente de subjuntivo after espero que, ojalá, quiero que, es importante que (haga, llueva, vengas, estén, vayas); espero + infinitive when the subject is the same; wishes with que (que te vaya bien)."
+  hypotheses: "si + present for real conditions (si llueve, me quedo en casa); si + imperfecto de subjuntivo + condicional as fixed chunks (si pudiera, si tuviera, si ganara ... compraría, iría, haría)."
+  retelling: "dijo que, me preguntó si; he oído que, dicen que; me lo creo, no me lo creo, lo dudo."
+  customs: "The impersonal se (se come, se celebra); en cambio and mientras que for contrast; me llamó la atención; estar acostumbrado a."
+  persuading: "propongo + infinitive; por un lado ... por otro; pero, sin embargo, de todas formas; venga, anímate; en eso tienes razón."
+  life_story: "nací, crecí, me mudé; the present with desde hace, and llevar + gerundio, for what still goes on (llevo seis meses viviendo aquí); nunca he, todavía no he with the perfecto."
+lessons:
+  hopes_hope:
+    hope_that: { say: [espero_que, ojala], examples: ["Espero que mañana haga buen tiempo.", "Ojalá no llueva."] }
+    hope_to: { say: [espero], examples: ["Espero volver pronto.", "Espero verte otra vez."] }
+    hope_so: { say: [espero_que_si], examples: ["Espero que sí.", "¡Espero que no!"] }
+  hopes_wish:
+    good_luck: { say: [buena_suerte], examples: ["¡Buena suerte!", "¡Mucha suerte!"] }
+    good_journey: { say: [buen_viaje], examples: ["¡Buen viaje!", "¡Que tengas un buen día!", "¡Felices vacaciones!"] }
+    get_well: { say: [que_te_mejores], examples: ["¡Que te mejores!", "Espero que se mejore pronto."] }
+  hopes_want:
+    hope_you_like: { say: [te_guste], examples: ["Espero que te guste.", "Espero que le guste el regalo."] }
+    want_you_to: { say: [quiero_que], examples: ["Quiero que vengas con nosotros.", "No quiero que te vayas."] }
+    important_that: { say: [es_importante_que], examples: ["Es importante que todos estén de acuerdo.", "Es necesario que vayas ahora."] }
+  hypotheses_real:
+    if_weather: { say: [si_llueve], examples: ["Si llueve, me quedo en casa.", "Si hace buen tiempo, voy a la playa."] }
+    if_time: { say: [si_tengo_tiempo], examples: ["Si tengo tiempo, te llamo.", "Si puedo, voy mañana."] }
+    if_you_want: { say: [si_quieres], examples: ["Si quieres, vamos juntos.", "Si quiere, le ayudo."] }
+  hypotheses_unreal:
+    if_could: { say: [si_pudiera, si_tuviera], examples: ["Si pudiera, me quedaría aquí.", "Si tuviera más tiempo, viajaría más."] }
+    if_won: { say: [si_ganara], examples: ["Si ganara la lotería, compraría una casa.", "Si fuera rica, no trabajaría."] }
+    would_do: { say: [compraria, iria, haria], examples: ["Compraría una casa en la playa.", "Iría a Japón.", "Haría un viaje por todo el mundo."] }
+  hypotheses_then:
+    what_if: { say: [que_pasa_si], examples: ["¿Qué pasa si pierdo el tren?", "¿Y si no hay sitio?"] }
+    in_that_case: { say: [en_ese_caso], examples: ["En ese caso tomo un taxi.", "En ese caso me quedo aquí."] }
+    otherwise: { say: [si_no], examples: ["Si no, vuelvo mañana.", "Tengo que salir ahora; si no, pierdo el tren."] }
+  retelling_said:
+    said_that: { say: [dijo_que], examples: ["Mi hermana dijo que llega mañana.", "Me dijo que el museo está cerrado."] }
+    asked: { say: [me_pregunto], examples: ["Me preguntó si hablo español.", "Me preguntó dónde vivo."] }
+    answered: { say: [conteste], examples: ["Contesté que sí.", "Le dije que no lo sé."] }
+  retelling_heard:
+    heard: { say: [he_oido_que], examples: ["He oído que mañana hay huelga.", "Dicen que el tren no sale."] }
+    is_it_true: { say: [es_verdad_que], examples: ["¿Es verdad que el museo está cerrado?", "¿En serio?"] }
+    who_told: { say: [quien_te_lo_dijo], examples: ["¿Quién te lo dijo?", "¿Quién lo dice?"] }
+  retelling_believe:
+    believe: { say: [me_lo_creo], examples: ["Me lo creo.", "Es posible."] }
+    doubt: { say: [no_me_lo_creo], examples: ["No me lo creo.", "Lo dudo."] }
+    who_knows: { say: [quien_sabe], examples: ["¡Quién sabe!", "Ya veremos."] }
+  customs_home:
+    in_my_country: { say: [en_mi_pais], examples: ["En mi país se cena temprano.", "En mi tierra se bebe mucho té."] }
+    festival: { say: [fiesta, navidad], examples: ["La fiesta más importante es Navidad.", "Hay una fiesta en mayo."] }
+    one_does: { say: [se_come], examples: ["En Navidad se come pavo.", "Se celebra en familia."] }
+  customs_compare:
+    whereas: { say: [en_cambio], examples: ["Aquí se cena tarde; en cambio, en mi país se cena temprano.", "En mi país se bebe té, mientras que aquí se bebe café."] }
+    similar: { say: [parecido], examples: ["También en mi país es así.", "Es muy parecido."] }
+    prefer: { say: [[prefiero], [porque]], examples: ["Prefiero cenar temprano, porque luego duermo mejor.", "Prefiero el café de aquí porque es más fuerte."] }
+  customs_surprise:
+    struck_me: { say: [me_llamo_la_atencion, estoy_sorprendido], examples: ["Me llamó la atención el silencio.", "Lo que más me sorprendió fue el horario de las tiendas."] }
+    not_used: { say: [no_estoy_acostumbrado], examples: ["No estoy acostumbrado a cenar tan tarde.", "Me estoy acostumbrando."] }
+    find_it: { say: [me_parece], examples: ["Me parece una costumbre bonita.", "Me parece un poco extraña."] }
+  persuading_propose:
+    propose: { say: [propongo, que_te_parece], examples: ["Propongo salir temprano.", "¿Por qué no vamos a pie?"] }
+    advantage: { say: [la_ventaja, es_mas_rapido], examples: ["La ventaja es que cuesta menos.", "Es más rápido ir en tren."] }
+    come_on: { say: [venga, vamos], examples: ["¡Venga, anímate!", "Confía en mí, ya verás."] }
+  persuading_argue:
+    two_sides: { say: [por_un_lado], examples: ["Por un lado es caro, por otro es cómodo.", "Por una parte tienes razón."] }
+    however: { say: [sin_embargo], examples: ["Sí, pero está lejos.", "Es bonito; sin embargo, cuesta demasiado."] }
+    anyway: { say: [de_todas_formas, merece_la_pena], examples: ["De todas formas, yo voy.", "Merece la pena probar."] }
+  persuading_settle:
+    concede: { say: [en_eso_tienes_razon], examples: ["En eso tienes razón, pero es tarde.", "Lo reconozco, es un poco caro."] }
+    compromise: { say: [hagamos_una_cosa], examples: ["Hagamos una cosa: hoy el museo y mañana la playa.", "Lleguemos a un acuerdo."] }
+    settled: { say: [me_parece_bien], examples: ["Me parece bien.", "¡Trato hecho!"] }
+  life_story_born:
+    born: { say: [naci], examples: ["Nací en Londres.", "Nací en 1990."] }
+    grew_up: { say: [creci], examples: ["Crecí en el campo.", "Me crié en Manchester."] }
+    moved: { say: [me_mude], examples: ["Me mudé a Londres hace diez años.", "A los veinte años me fui a vivir a París."] }
+  life_story_since:
+    how_long: { say: [[desde_hace, llevo], [anos, meses]], examples: ["Vivo en Londres desde hace diez años.", "Llevo seis meses viviendo aquí."] }
+    learning: { say: [desde_hace, llevo], examples: ["Estudio español desde hace un año.", "Llevo tres meses aprendiendo español."] }
+    ask_how_long: { say: [cuanto_tiempo_llevas], examples: ["¿Cuánto tiempo llevas aquí?", "¿Desde cuándo hace este trabajo?"] }
+  life_story_never:
+    never: { say: [nunca_he_estado, nunca], examples: ["Nunca he visto el mar.", "Nunca he estado en Japón."] }
+    not_yet: { say: [todavia_no], examples: ["Todavía no he visitado Madrid.", "Aún no."] }
+    one_day: { say: [algun_dia], examples: ["Algún día quiero ver Japón.", "Mi sueño es escribir un libro."] }
+vocabulary:
+  # hopes
+  espero_que: { t: "espero que", pos: phrase, en: ["I hope that"], forms: ["espero que", "esperamos que"], ex: ["Espero que estés bien.", "I hope that you are well."], n: "The verb after it is in the subjuntivo: espero que sea, que venga, que haga." }
+  ojala: { t: "ojalá", pos: interjection, en: ["I hope", "if only", "let's hope"], forms: ["ojalá", "ojalá que"], ex: ["Ojalá haga sol mañana.", "I hope it is sunny tomorrow."], n: "Always with the subjuntivo: ojalá llueva, ojalá vengas." }
+  espero: { t: "espero", pos: verb, en: ["I hope", "I hope to"], forms: ["espero", "esperamos"], ex: ["Espero llegar a tiempo.", "I hope to arrive in time."], n: "With an infinitive, when you hope something for yourself." }
+  espero_que_si: { t: "espero que sí", pos: phrase, en: ["I hope so"], forms: ["espero que sí", "espero que no", "eso espero"], ex: ["¿Viene Marta también? Espero que sí.", "Is Marta coming too? I hope so."], n: "'Espero que no' is 'I hope not'." }
+  buena_suerte: { t: "buena suerte", pos: phrase, en: ["good luck"], forms: ["buena suerte", "mucha suerte", "suerte", "que tengas suerte", "que tenga suerte"], ex: ["¡Buena suerte para mañana!", "Good luck for tomorrow!"] }
+  buen_viaje: { t: "buen viaje", pos: phrase, en: ["have a good journey", "have a good trip"], forms: ["buen viaje", "que tengas buen viaje", "que tenga buen viaje", "que tengas un buen día", "que tenga un buen día", "que te vaya bien", "que le vaya bien", "que descanses", "que descanse", "que aproveche", "buen provecho", "felices vacaciones"], ex: ["¡Buen viaje y hasta pronto!", "Have a good journey, and see you soon!"], n: "Most wishes are que + subjuntivo: que te vaya bien, que descanses." }
+  que_te_mejores: { t: "que te mejores", pos: phrase, en: ["get well soon"], forms: ["que te mejores", "que se mejore", "que te recuperes pronto", "que se recupere pronto", "espero que te mejores", "espero que se mejore"], ex: ["Que te mejores pronto.", "Get well soon."] }
+  te_guste: { t: "te guste", pos: phrase, en: ["you like it", "that you like it"], forms: ["te guste", "le guste", "os guste", "te gusten", "le gusten"], ex: ["Espero que te guste la ciudad.", "I hope that you like the town."], n: "The subjuntivo of te gusta, after espero que." }
+  quiero_que: { t: "quiero que", pos: phrase, en: ["I want ... to", "I want that"], forms: ["quiero que", "no quiero que", "deseo que"], ex: ["Quiero que seas feliz.", "I want you to be happy."], n: "Spanish says 'I want that you come': quiero que vengas." }
+  es_importante_que: { t: "es importante que", pos: phrase, en: ["it is important that"], forms: ["es importante que", "es necesario que", "hace falta que"], ex: ["Es importante que descanses.", "It is important that you rest."], n: "'Es necesario que' is 'it is necessary that'." }
+  # hypotheses
+  si_llueve: { t: "si llueve", pos: phrase, en: ["if it rains"], forms: ["si llueve", "si hace buen tiempo", "si hace sol", "si hace frío", "si hace calor", "si nieva"], ex: ["Si llueve, tomo el autobús.", "If it rains, I take the bus."], n: "A real condition takes the plain present after si." }
+  si_tengo_tiempo: { t: "si tengo tiempo", pos: phrase, en: ["if I have time"], forms: ["si tengo tiempo", "si puedo", "si me da tiempo"], ex: ["Si tengo tiempo, paso por tu casa.", "If I have time, I'll drop by."], n: "'Si puedo' is 'if I can'." }
+  si_quieres: { t: "si quieres", pos: phrase, en: ["if you want", "if you like"], forms: ["si quieres", "si quiere", "si queréis", "si te apetece", "si le apetece"], ex: ["Si quieres, te acompaño.", "If you like, I'll come with you."] }
+  si_pudiera: { t: "si pudiera", pos: phrase, en: ["if I could"], forms: ["si pudiera", "si pudiese"], ex: ["Si pudiera, saldría mañana.", "If I could, I would leave tomorrow."], n: "A fixed chunk, followed by the condicional." }
+  si_tuviera: { t: "si tuviera", pos: phrase, en: ["if I had"], forms: ["si tuviera", "si tuviese", "si tuviera tiempo", "si tuviera más tiempo", "si tuviera dinero"], ex: ["Si tuviera tiempo, leería más.", "If I had time, I would read more."] }
+  si_ganara: { t: "si ganara", pos: phrase, en: ["if I won"], forms: ["si ganara", "si ganase", "si ganara la lotería", "si me tocara la lotería", "si fuera rico", "si fuera rica"], ex: ["Si ganara, haría una fiesta.", "If I won, I would throw a party."], n: "'Si fuera rico' is 'if I were rich'." }
+  compraria: { t: "compraría", pos: verb, en: ["I would buy"], forms: ["compraría", "compraríamos"], ex: ["Compraría un barco.", "I would buy a boat."] }
+  iria: { t: "iría", pos: verb, en: ["I would go"], forms: ["iría", "iríamos"], ex: ["Iría a vivir junto al mar.", "I would go and live by the sea."] }
+  haria: { t: "haría", pos: verb, en: ["I would do", "I would make"], forms: ["haría", "haríamos"], ex: ["Haría un viaje largo.", "I would take a long trip."] }
+  que_pasa_si: { t: "qué pasa si", pos: phrase, en: ["what happens if"], forms: ["qué pasa si", "qué hago si", "y si"], ex: ["¿Qué pasa si llego tarde?", "What happens if I arrive late?"], n: "'¿Y si ...?' is 'what if ...?'." }
+  en_ese_caso: { t: "en ese caso", pos: phrase, en: ["in that case"], forms: ["en ese caso", "en este caso", "en tal caso"], ex: ["En ese caso te llamo.", "In that case I'll call you."] }
+  si_no: { t: "si no", pos: phrase, en: ["otherwise", "or else", "if not"], forms: ["si no", "de lo contrario", "si no es así"], ex: ["Corre; si no, pierdes el tren.", "Run, otherwise you'll miss the train."], n: "Two words; 'sino' in one word means 'but rather'." }
+  # retelling
+  dijo_que: { t: "dijo que", pos: phrase, en: ["he said that", "she said that"], forms: ["dijo que", "me dijo que", "me dijo", "ha dicho que", "me ha dicho que", "dijeron que", "me dijeron que", "dice que"], ex: ["Pablo dijo que viene.", "Pablo said that he is coming."] }
+  me_pregunto: { t: "me preguntó", pos: phrase, en: ["he asked me", "she asked me"], forms: ["me preguntó", "me preguntó si", "me ha preguntado", "me ha preguntado si", "me preguntaron", "me pidió"], ex: ["Me preguntó si tengo hermanos.", "She asked me whether I have brothers."], n: "'Preguntar' is to ask a question; 'pedir' is to ask for something." }
+  conteste: { t: "contesté", pos: verb, en: ["I answered", "I replied"], forms: ["contesté", "contesté que", "le contesté", "respondí", "respondí que", "le respondí", "dije que", "le dije que", "le dije que sí", "le dije que no"], ex: ["Contesté que no podía.", "I answered that I couldn't."] }
+  he_oido_que: { t: "he oído que", pos: phrase, en: ["I heard that", "I have heard that"], forms: ["he oído que", "oí que", "he oído decir que", "me he enterado de que", "he leído que", "dicen que", "se dice que"], ex: ["He oído que el bar cierra.", "I heard that the bar is closing."], n: "'Dicen que' is 'they say that'." }
+  es_verdad_que: { t: "es verdad que", pos: phrase, en: ["is it true that"], forms: ["es verdad que", "es cierto que", "de verdad", "en serio"], ex: ["¿Es verdad que te vas mañana?", "Is it true that you are leaving tomorrow?"], n: "'¿En serio?' on its own is 'really?'." }
+  quien_te_lo_dijo: { t: "quién te lo dijo", pos: phrase, en: ["who told you"], forms: ["quién te lo dijo", "quién se lo dijo", "quién lo dijo", "quién te lo ha dicho", "quién lo dice"], ex: ["¿Y quién te lo dijo?", "And who told you?"] }
+  me_lo_creo: { t: "me lo creo", pos: phrase, en: ["I believe it"], forms: ["me lo creo", "lo creo", "creo que sí", "pienso que sí", "es posible"], ex: ["Sí, me lo creo.", "Yes, I believe it."], n: "'Creo que sí' is 'I think so'." }
+  no_me_lo_creo: { t: "no me lo creo", pos: phrase, en: ["I don't believe it"], forms: ["no me lo creo", "lo dudo", "tengo mis dudas", "me parece raro", "no puede ser"], ex: ["Lo siento, no me lo creo.", "I'm sorry, I don't believe it."], n: "'Lo dudo' is 'I doubt it'." }
+  quien_sabe: { t: "quién sabe", pos: phrase, en: ["who knows"], forms: ["quién sabe", "ya veremos", "a saber", "vete a saber"], ex: ["Quién sabe si es verdad.", "Who knows whether it is true."], n: "'Ya veremos' is 'we shall see'." }
+  # customs
+  en_mi_pais: { t: "en mi país", pos: phrase, en: ["in my country"], forms: ["en mi país", "en mi tierra", "en mi casa"], ex: ["En mi país llueve a menudo.", "In my country it rains often."] }
+  fiesta: { t: "fiesta", pos: noun, en: ["festival", "holiday", "party"], forms: ["fiesta", "la fiesta", "una fiesta", "fiestas", "fiesta nacional"], ex: ["Mañana es fiesta.", "Tomorrow is a holiday."] }
+  navidad: { t: "Navidad", pos: noun, en: ["Christmas"], forms: ["Navidad", "en Navidad", "Navidades", "Nochevieja", "Año Nuevo", "Semana Santa"], ex: ["En Navidad vuelvo a casa.", "At Christmas I go home."], n: "'Nochevieja' is New Year's Eve, 'Semana Santa' is Easter week." }
+  se_come: { t: "se come", pos: phrase, en: ["people eat", "one eats"], forms: ["se come", "se comen", "se bebe", "se cena", "se celebra", "se hace una fiesta", "se hacen regalos", "se suele"], ex: ["Aquí se come bien.", "People eat well here."], n: "Se with the verb says what people in general do." }
+  en_cambio: { t: "en cambio", pos: phrase, en: ["whereas", "on the other hand", "instead"], forms: ["en cambio", "mientras que", "al contrario"], ex: ["Yo tomo té; él, en cambio, café.", "I have tea, whereas he has coffee."] }
+  parecido: { t: "parecido", pos: adjective, en: ["similar", "alike"], forms: ["parecido", "parecida", "parecidos", "parecidas", "similar", "similares", "también en mi país", "como en mi país"], ex: ["Las dos fiestas son parecidas.", "The two festivals are similar."] }
+  me_llamo_la_atencion: { t: "me llamó la atención", pos: phrase, en: ["it struck me", "it caught my attention"], forms: ["me llamó la atención", "me ha llamado la atención", "lo que más me sorprendió", "lo que me sorprendió"], ex: ["Me llamó la atención la amabilidad de la gente.", "The kindness of the people struck me."] }
+  no_estoy_acostumbrado: { t: "no estoy acostumbrado", pos: phrase, en: ["I am not used to it", "I am not used to"], forms: ["no estoy acostumbrado", "no estoy acostumbrada", "me estoy acostumbrando", "me he acostumbrado", "ya me he acostumbrado"], ex: ["No estoy acostumbrada al calor.", "I am not used to the heat."], n: "'Me estoy acostumbrando' is 'I am getting used to it'." }
+  me_parece: { t: "me parece", pos: phrase, en: ["it seems to me", "I find it"], forms: ["me parece", "me parecen", "lo encuentro", "la encuentro"], ex: ["Me parece una buena costumbre.", "It seems a good custom to me."] }
+  # persuading
+  propongo: { t: "propongo", pos: verb, en: ["I suggest", "I propose"], forms: ["propongo", "te propongo", "le propongo", "propongo que"], ex: ["Propongo ir a pie.", "I suggest going on foot."] }
+  la_ventaja: { t: "la ventaja", pos: noun, en: ["the advantage"], forms: ["la ventaja", "una ventaja", "la ventaja es que"], ex: ["La ventaja es que está cerca.", "The advantage is that it is near."] }
+  es_mas_rapido: { t: "es más rápido", pos: phrase, en: ["it is quicker"], forms: ["es más rápido", "es más cómodo", "es más fácil", "conviene", "nos conviene"], ex: ["En tren es más rápido.", "By train it is quicker."], n: "'Conviene salir pronto' is 'it is best to leave early'." }
+  venga: { t: "venga", pos: interjection, en: ["come on"], forms: ["venga", "anda", "anímate", "confía en mí", "ya verás"], ex: ["¡Venga, vamos!", "Come on, let's go!"], n: "'Confía en mí' is 'trust me'; 'ya verás' is 'you'll see'." }
+  por_un_lado: { t: "por un lado", pos: phrase, en: ["on the one hand"], forms: ["por un lado", "por una parte", "por otro lado", "por otra parte", "por otro"], ex: ["Por un lado me gusta, por otro cuesta demasiado.", "On the one hand I like it, on the other it costs too much."], n: "'Por otro lado' is 'on the other hand'." }
+  sin_embargo: { t: "sin embargo", pos: phrase, en: ["however", "but"], forms: ["sin embargo", "pero", "no obstante", "aun así"], ex: ["Es bonito; sin embargo, es caro.", "It is nice; however, it is expensive."] }
+  de_todas_formas: { t: "de todas formas", pos: phrase, en: ["in any case", "anyway"], forms: ["de todas formas", "de todos modos", "de todas maneras", "en cualquier caso"], ex: ["De todas formas, nos vemos mañana.", "In any case, see you tomorrow."] }
+  merece_la_pena: { t: "merece la pena", pos: phrase, en: ["it is worth it", "it is worth"], forms: ["merece la pena", "vale la pena"], ex: ["Está lejos, pero merece la pena.", "It is far, but it is worth it."] }
+  en_eso_tienes_razon: { t: "en eso tienes razón", pos: phrase, en: ["you are right about that"], forms: ["en eso tienes razón", "en eso tiene razón", "lo admito", "lo reconozco", "tengo que admitir", "tengo que reconocer"], ex: ["En eso tienes razón, lo admito.", "You are right about that, I admit it."] }
+  hagamos_una_cosa: { t: "hagamos una cosa", pos: phrase, en: ["let's do this", "let's do one thing"], forms: ["hagamos una cosa", "hacemos una cosa", "lleguemos a un acuerdo", "un acuerdo", "un término medio", "mitad y mitad"], ex: ["Hagamos una cosa: hoy pago yo y mañana tú.", "Let's do this: I pay today and you pay tomorrow."], n: "'Lleguemos a un acuerdo' is 'let's come to an agreement'." }
+  me_parece_bien: { t: "me parece bien", pos: phrase, en: ["that suits me", "that is fine by me"], forms: ["me parece bien", "por mí vale", "por mí bien", "estamos de acuerdo", "entonces de acuerdo", "trato hecho"], ex: ["A las ocho me parece bien.", "Eight o'clock suits me."], n: "'Trato hecho' is 'it's a deal'." }
+  # life_story
+  naci: { t: "nací", pos: verb, en: ["I was born"], ex: ["Nací en Bristol.", "I was born in Bristol."] }
+  creci: { t: "crecí", pos: verb, en: ["I grew up"], forms: ["crecí", "me crié"], ex: ["Crecí en una ciudad pequeña.", "I grew up in a small town."] }
+  me_mude: { t: "me mudé", pos: phrase, en: ["I moved"], forms: ["me mudé", "nos mudamos", "me fui a vivir", "me trasladé"], ex: ["Me mudé a Madrid en 2015.", "I moved to Madrid in 2015."] }
+  desde_hace: { t: "desde hace", pos: phrase, en: ["for", "since"], forms: ["desde hace", "desde"], ex: ["Trabajo aquí desde hace dos años.", "I have worked here for two years."], n: "For what still goes on, Spanish uses the present: vivo aquí desde hace un año." }
+  llevo: { t: "llevo", pos: verb, en: ["I have been", "I have spent"], forms: ["llevo", "llevamos"], ex: ["Llevo dos años trabajando aquí.", "I have been working here for two years."], n: "Llevar + a length of time + a gerund: llevo un año estudiando." }
+  meses: { t: "meses", pos: noun, en: ["months"], forms: ["meses", "mes"], ex: ["Estoy aquí desde hace tres meses.", "I have been here for three months."] }
+  cuanto_tiempo_llevas: { t: "cuánto tiempo llevas", pos: phrase, en: ["how long have you been"], forms: ["cuánto tiempo llevas", "cuánto tiempo lleva", "cuánto llevas", "cuánto lleva", "desde cuándo", "desde hace cuánto"], ex: ["¿Cuánto tiempo llevas estudiando español?", "How long have you been studying Spanish?"] }
+  nunca_he_estado: { t: "nunca he estado", pos: phrase, en: ["I have never been"], forms: ["nunca he estado", "no he estado nunca", "jamás he estado"], ex: ["Nunca he estado en Italia.", "I have never been to Italy."], n: "Nunca goes before the verb alone, or after it with no: no he estado nunca." }
+  todavia_no: { t: "todavía no", pos: phrase, en: ["not yet"], forms: ["todavía no", "aún no", "todavía no he", "aún no he"], ex: ["Todavía no he terminado.", "I have not finished yet."] }
+  algun_dia: { t: "algún día", pos: phrase, en: ["one day", "some day"], forms: ["algún día", "tarde o temprano", "mi sueño es", "sueño con"], ex: ["Algún día aprenderé a nadar.", "One day I will learn to swim."], n: "'Mi sueño es' is 'my dream is'." }

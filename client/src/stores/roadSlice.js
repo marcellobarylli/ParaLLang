@@ -74,7 +74,9 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
         takeRoad(view);
         set({ roadLoading: false });
       } catch (error) {
-        if (get().mode === 'road') set({ roadLoading: false, roadError: error.code === 'RUN_LOST' ? null : error.message });
+        // A server from before the road has no such route.
+        const message = error.status === 404 ? 'This server does not know the road yet. It is being updated: try again in a few minutes.' : error.message;
+        if (get().mode === 'road') set({ roadLoading: false, roadError: error.code === 'RUN_LOST' ? null : message });
       }
     },
 

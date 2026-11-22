@@ -28,8 +28,10 @@ async function mount() {
   const useStore = createGameStore({ api: server.api, storage: memoryStorage(), dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
-  await user.click(await screen.findByRole('button', { name: 'Enter' }));
+  await user.click(await screen.findByRole('button', { name: 'Enter' }, { timeout: 20_000 }));
   await user.click(screen.getByRole('button', { name: 'Set out on The Long Way Home' }));
+  // The first road of a process loads the curriculum (about a second, more on a busy machine).
+  await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 });
   return { server, user, s: () => useStore.getState() };
 }
 
