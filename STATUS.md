@@ -41,8 +41,13 @@ JSON file per learner (a summary of the level and of the place in the curriculum
 back when its disk has lost it (`server/src/github-saves.js`). The file's name is a hash and the learner's id is not
 in it, because the repository is public. **It is off until the owner enters `PARALLANG_GITHUB_TOKEN` and
 `PARALLANG_GITHUB_REPO` in Render** (the README says how); `GET /api/health` says which store is in use. Tested
-against a GitHub written in the tests, not against GitHub. Rounds 144 and 145 were merged to `main`, which deploys the
-client and the server ([findings](docs/rounds/145/findings.md)).
+against a GitHub written in the tests, not against GitHub. Rounds 144 and 145 were merged to `main` as `4772475`,
+which deploys the client and the server ([findings](docs/rounds/145/findings.md)).
+
+**The deploy (2026-11-22, 16:51 to 16:54 UTC).** CI run 45046139766 and Pages run 45046139840 succeeded for
+`4772475`, and Render's deployment "main - parallang" for the same commit reports success. The cloud session could
+reach neither the live page nor the hosted server (its network does not allow those hosts), so neither was looked
+at: the health check's `saves` field has not been read.
 
 ## Addendum 2026-11-22: round 144, The Long Way Home: an endless road, a curriculum, and a save that survives the server (deployed with round 145)
 
