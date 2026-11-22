@@ -14,6 +14,7 @@ import SettingsSheet from './SettingsSheet.jsx';
 import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
 import { ROAD_NAME } from '../atlas.js';
+import Narration from './Narration.jsx';
 import { siteStatesOf } from '../stores/gameStore.js';
 
 // Round 115: the web client's one screen, the dungeon. The level fills the screen; over it lie the top bar and the
@@ -248,6 +249,8 @@ function SiteCard({ state, sites, site }) {
         <SiteNumber index={state.siteIndex} />
         <span className="site-text"><strong>{site.name}</strong><small>{name}{status.cleared ? ' · cleared' : ' has not let you pass yet'}</small></span>
       </header>
+      {/* Round 156: what the narrator says of this site. */}
+      <Narration narration={state.narration} />
       {status.cleared && site.saveable && (inParty(state.party, site.encounterId)
         ? <p className="party-note" role="status">{name} is in your party.</p>
         : <button type="button" className="secondary-button" onClick={() => state.recruit(site.encounterId)} disabled={state.recruiting}>Invite {name} to your party</button>)}
@@ -274,7 +277,8 @@ function TravelCaption({ state, site }) {
   const text = cameraArrived && arrival !== 'site'
     ? `${site?.characterName ?? 'Someone'} is getting ready to talk…`
     : `${phase === 'walk' ? 'Walking to' : 'Approaching'} ${site?.name ?? 'the next site'}…`;
-  return <section className="caption" role="status">{text}</section>;
+  // Round 156: on the way to a site, the narrator tells what is there.
+  return <section className="caption" role="status">{!cameraArrived && <Narration narration={state.narration} />}<span>{text}</span></section>;
 }
 
 // Round 120: after a saveable character lets the player pass, they may be saved to the party (the app's SAVE / LEAVE
@@ -383,14 +387,14 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
         )}
         {resolved && party && (
           <section className="victory-banner" role="status">
-            <p>{encounter.resolvedMessage ?? `${name} has said what there was to say.`}</p>
+            <p className="narrative">{encounter.resolvedMessage ?? `${name} has said what there was to say.`}</p>
             <button type="button" className="primary-button big-button" onClick={state.leaveParty}>Back to the temple</button>
           </section>
         )}
         {resolved && road && <section className="victory-banner road-banner"><RoadResolved state={state} encounter={encounter} /></section>}
         {resolved && !party && !road && (
           <section className="victory-banner" role="status">
-            <p>{encounter.resolvedMessage ?? `${name} lets you pass.`}</p>
+            <p className="narrative">{encounter.resolvedMessage ?? `${name} lets you pass.`}</p>
             {encounter.character?.saveable && <PartyOffer key={encounter.id} state={state} encounter={encounter} />}
             {atGoal && <button type="button" className="primary-button big-button" onClick={state.leaveTemple}>Leave the temple</button>}
             {!atGoal && cleared && <WaysOn state={state} sites={sites} site={site} />}

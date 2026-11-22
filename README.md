@@ -298,6 +298,12 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   what everybody knows and each region's lore from `content/world/knowledge.yaml`, and one thing the character has
   noticed (`world.noticed` on an authored character's sheet; a draw from the region's pools for a character of the
   road, ordinary at the A levels and more knowing from B1 on).
+  From round 156 the italic text is a narrator: `narrator` in `content/narration/style_guide.yaml` holds the rules of
+  the `narrative` field (a storybook told to "you", in the present tense, that does not finish the thought) and what
+  the narrator knows and never says, and `content/narration/passages.yaml` holds the narrator's written passages,
+  told when the player sets out on the road, arrives at a site or stands at a site of a dungeon
+  (`server/src/narration.js`; a save keeps what was told under `told`). `node client/scripts/narrator-check.mjs`
+  plays them in headless Chromium.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

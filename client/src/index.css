@@ -175,6 +175,10 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .objective-card small, .protected-note, small { color: var(--dim); }
 .npc-message { margin: 1rem 0 1.5rem; }
 .narrative { color: #b9bbb4; font-style: italic; line-height: 1.55; }
+/* Round 156: the narrator's written passages, on a card or in the travel caption. */
+.narration { margin: .2rem 0 .6rem; }
+.caption .narration { display: block; margin: 0; }
+.caption:has(.narration) { flex-direction: column; align-items: flex-start; gap: .35rem; }
 .speaker { color: var(--gold); display: block; margin-bottom: .3rem; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
 .native-line { line-height: 1.7; font-size: 1.02rem; }
 .translation { color: #c6c8c1; border-left: 2px solid #8a8c86; padding-left: .75rem; }

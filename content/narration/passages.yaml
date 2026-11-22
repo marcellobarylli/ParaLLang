@@ -1,0 +1,150 @@
+# Round 156 (issue #6): the narrator's own passages: narration that is written down, not generated. The voice is the
+# one content/narration/style_guide.yaml asks of the generated narration: a storybook told to "you", in the present
+# tense, that describes a thing and does not finish the thought. It never explains the world. Where a passage hints,
+# it puts a word for sewing where a word for a road is expected (docs/lore-book.md, "What the book does not say").
+#
+#   id     a name, unique
+#   when   the event and the facts it must have. Events and their facts:
+#            road_enter                                the first step on The Journey 2
+#            road_arrive   way: path|ford|pass|ferry   an arrival at a site of the road, by that kind of way,
+#                          biome: shore|meadow|forest|highland|snow     in that kind of country
+#            site_arrive   dungeon, site               standing at a site of a dungeon
+#   once   true: told once to a learner, and before any other passage that fits
+#   text   the passage, in English
+#
+# Among the passages that fit an event, those that ask for the most facts win, and the place picks among them.
+passages:
+  - id: road_first_step
+    when: { event: road_enter }
+    once: true
+    text: >-
+      You step onto the road. It was built long ago, people will tell you, and it has the patience of a thing that
+      already knows where you are going. Behind you the way you came closes over like water.
+
+  # Arrivals by an ordinary path, whatever the country.
+  - id: path_bends
+    when: { event: road_arrive, way: path }
+    text: >-
+      You follow the path between the hills. It bends where you would have bent, a moment before you do.
+  - id: path_unmended
+    when: { event: road_arrive, way: path }
+    text: >-
+      The path runs on, neither mended nor worn. Whoever laid it does not seem to have expected to come back and
+      check.
+  - id: path_host
+    when: { event: road_arrive, way: path }
+    text: >-
+      You walk. The road keeps a hand on your shoulder, lightly, the way a good host steers a guest towards the
+      door.
+  - id: path_milestone
+    when: { event: road_arrive, way: path }
+    text: >-
+      A milestone stands at the verge with nothing cut in it. It has the air of a thing still waiting to be told
+      the distance.
+
+  # Arrivals by a path, by the country.
+  - id: path_shore
+    when: { event: road_arrive, way: path, biome: shore }
+    text: >-
+      You come down to the shore. The tide has left a line of weed along the sand, as straight as a hem.
+  - id: path_forest
+    when: { event: road_arrive, way: path, biome: forest }
+    text: >-
+      You walk in under the trees. Their roots cross the path here and there, and only, it turns out, where
+      another path does.
+  - id: path_meadow
+    when: { event: road_arrive, way: path, biome: meadow }
+    text: >-
+      The meadow opens around you. From the rise you can see three roads meeting at the place ahead. Roads here
+      are never seen to meet anywhere that is not a place.
+  - id: path_highland
+    when: { event: road_arrive, way: path, biome: highland }
+    text: >-
+      The ground climbs. Stone shows through the turf like an elbow through a sleeve.
+  - id: path_snow
+    when: { event: road_arrive, way: path, biome: snow }
+    text: >-
+      Snow lies on everything but the road. The road is clear, though nobody clears it.
+
+  # The other ways.
+  - id: ford_thread
+    when: { event: road_arrive, way: ford }
+    text: >-
+      You wade the ford. The water is cold to the knee, and the road goes on beneath it unbothered, as a thread
+      goes on through cloth.
+  - id: ford_footprints
+    when: { event: road_arrive, way: ford }
+    text: >-
+      The river has been asked to make room and has made it, grudgingly. On the far bank your wet footprints are
+      the only proof that you crossed.
+  - id: pass_folds
+    when: { event: road_arrive, way: pass }
+    text: >-
+      You climb to the pass. From up here the land shows its folds, and for a moment the roads below look less
+      like roads than like something pulled tight.
+  - id: pass_cairn
+    when: { event: road_arrive, way: pass }
+    text: >-
+      The pass is narrow and old. Somebody has left a cairn. Somebody else has left a complaint under its top
+      stone.
+  - id: ferry_rope
+    when: { event: road_arrive, way: ferry }
+    text: >-
+      The ferry takes you over. The ferryman does not ask where you are going, and has never been told who he
+      works for. The rope hums a little as it runs, like a plucked string.
+  - id: ferry_sky
+    when: { event: road_arrive, way: ferry }
+    text: >-
+      You cross by ferry. Halfway over, the water is the colour of the sky, and it is briefly unclear which of the
+      two is holding the boat up.
+
+  # Sites of the dead branch (Ta Prohm; The Kiln is the same temple, burnt, and has its own).
+  - id: ta_prohm_face_gate
+    when: { event: site_arrive, dungeon: ta_prohm, site: face_gate }
+    text: >-
+      You stand before the gate. A stone face looks down from the tower with the expression of someone who has
+      watched a great many people be surprised.
+  - id: ta_prohm_buttress_tree
+    when: { event: site_arrive, dungeon: ta_prohm, site: buttress_tree }
+    text: >-
+      A tree has sat down on the gallery and the gallery has let it. Between the buttresses someone has hung
+      hams, with the confidence of a tenant.
+  - id: ta_prohm_root_court
+    when: { event: site_arrive, dungeon: ta_prohm, site: root_court }
+    text: >-
+      Roots as thick as your body grip the walls of the court. Not all of them, you see, come up out of the
+      ground.
+  - id: ta_prohm_sunlit_court
+    when: { event: site_arrive, dungeon: ta_prohm, site: sunlit_court }
+    text: >-
+      The court is open to the sky. A basin stands dry in the middle of it, and something is humming, which the
+      basin would like you to know is not the basin.
+  - id: ta_prohm_library
+    when: { event: site_arrive, dungeon: ta_prohm, site: library }
+    text: >-
+      The library has lost its roof and kept its silence. On one lintel a line of script runs on past the edge of
+      the stone, as though the wall had once been longer.
+  - id: ta_prohm_before_sanctuary
+    when: { event: site_arrive, dungeon: ta_prohm, site: before_sanctuary }
+    text: >-
+      The last gate before the sanctuary has never, by all accounts, been open. A signpost beside it has one arm,
+      and points with great conviction.
+  - id: ta_prohm_sanctuary
+    when: { event: site_arrive, dungeon: ta_prohm, site: sanctuary }
+    text: >-
+      The sanctuary is very still. Light comes in through a seam that the masons did not leave.
+  - id: the_kiln_face_gate
+    when: { event: site_arrive, dungeon: the_kiln, site: face_gate }
+    text: >-
+      You stand before the gate. The stone face on the tower is black with soot and still warm, and its
+      expression has not changed, which is somehow worse.
+  - id: the_kiln_sanctuary
+    when: { event: site_arrive, dungeon: the_kiln, site: sanctuary }
+    text: >-
+      The furnace glows without burning anything. The seam in its wall is the same seam; only the light through
+      it is a different age.
+  - id: micromort_ankle_ledge
+    when: { event: site_arrive, dungeon: micromort_mountain, site: ankle_ledge }
+    text: >-
+      You come out onto a ledge halfway up the mountain. Far above, the summit is strung with lights. The trail
+      between is one line, drawn without lifting the pen.

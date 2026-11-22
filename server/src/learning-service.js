@@ -12,6 +12,7 @@ import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
 import { roadMethods } from './road/service.js';
+import { passageView, selectPassage } from './narration.js';
 import { weatherAt } from './road/weather.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
@@ -247,6 +248,17 @@ export class LearningService {
     const immersion = session?.immersion ?? null;
     return { targetRatio: this.ratioFor(turns, definition, session?.ratioBonus ?? 0, immersion), ...(immersion !== null && immersion >= IMMERSION.full ? { full: true } : {}) };
   }
+
+  // Round 156 (issue #6): the narrator's written passage for something that happened (narration.js), or null. It is
+  // marked as told in the envelope given, which the caller saves (or does not: a passage of a view that writes
+  // nothing is chosen again the same way). `pick` chooses among passages that fit equally.
+  tell(envelope, event, pick = 0) {
+    const passage = selectPassage(this.content.passages ?? [], event, { told: envelope.told ?? {}, pick });
+    if (passage && !Object.hasOwn(envelope.told ?? {}, passage.id)) envelope.told = { ...(envelope.told ?? {}), [passage.id]: nowIso(this.clock) };
+    return passage;
+  }
+  // A passage by its id, as the client is sent it; null for none or one the content no longer has.
+  toldView(passageId) { return passageView(this.content.passagesById?.get(passageId) ?? null); }
 
   progression(envelope) { return progressionView(envelope.progression?.xp ?? 0); }
   level(envelope) { return levelFor(envelope.progression?.xp ?? 0); }
@@ -857,6 +869,8 @@ export class LearningService {
         paths: dungeon.paths.map(({ between, via }) => ({ between: [...between], via: via.map((point) => [...point]) })),
       },
       progress: { run: run.run, at: run.at, complete: isComplete(dungeon, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
+      // Round 156: the narrator's passage for the site the player stands at (the same one every time; nothing is saved).
+      narration: passageView(selectPassage(this.content.passages ?? [], { event: 'site_arrive', dungeon: dungeon.id, site: run.at })),
       progression: this.progression(envelope),
     };
   }

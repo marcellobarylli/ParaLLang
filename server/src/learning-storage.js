@@ -69,6 +69,7 @@ function validParty(party) {
 // companion's strain is pending, then the encounter whose finished conversation spent it. As for lines, only the
 // container is strict: an invalid or repeated entry is dropped and the save kept.
 export const ANNEX_LIMIT = 20;
+export const TOLD_LIMIT = 1000; // round 156
 function validAnnexRecord(record) {
   return Boolean(record) && typeof record === 'object' && !Array.isArray(record)
     && typeof record.id === 'string' && record.id.length > 0 && record.id.length <= 100
@@ -198,6 +199,11 @@ function validateEnvelope(value, learnerId) {
   // Review R1.5: a safe integer, so an edited save with 1e308 XP is not taken for a number of XP.
   if (!Number.isSafeInteger(value.progression?.xp) || value.progression.xp < 0) value.progression = { xp: 0 };
   else value.progression = { xp: value.progression.xp };
+  // Round 156: the narrator's passages told to this learner ({ id: when }). Anything else is dropped and the save kept.
+  if (value.told !== undefined) {
+    const entries = value.told && typeof value.told === 'object' && !Array.isArray(value.told) ? Object.entries(value.told) : [];
+    value.told = Object.fromEntries(entries.filter(([id, at]) => id.length <= 100 && typeof at === 'string' && Number.isFinite(Date.parse(at))).slice(0, TOLD_LIMIT));
+  }
   if (value.annexes !== undefined) {
     if (!Array.isArray(value.annexes)) throw retryableError('The learner save contains invalid annex records. The original file was preserved.', 'SAVE_UNREADABLE');
     value.annexes = value.annexes.filter(validAnnexRecord).filter((record, index, all) => all.findIndex((other) => other.id === record.id) === index).slice(0, ANNEX_LIMIT);

@@ -80,7 +80,13 @@ export function buildNarrationMessages({
   const system = fillTemplate(loadTemplate('system/base.txt'), {
     worldBlock,
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
-    style: { tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n') },
+    style: {
+      tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n'),
+      // Round 156 (issue #6): the narrator's own rules and what it knows and never says; nothing for a style guide without them.
+      narrator: styleGuide.narrator
+        ? `\n\nTHE NARRATOR (the \`narrative\` field):\n${styleGuide.narrator.rules.map((rule) => `- ${rule}`).join('\n')}\nWHAT THE NARRATOR KNOWS AND NEVER SAYS: ${styleGuide.narrator.knows}.`
+        : '',
+    },
     language: {
       name: language.name,
       targetRatio: Math.round(targetRatio * 100),

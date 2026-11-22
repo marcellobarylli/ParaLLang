@@ -176,7 +176,19 @@ export function worldFor(knowledge, languageCode, regionId, noticed) {
 const styleGuideSchema = z.object({
   tone: z.string().min(1),
   narrator_voice: z.string().min(1),
+  // Round 156 (issue #6): the rules of the narrative field and what the narrator knows and never says.
+  narrator: z.object({ rules: z.array(z.string().min(1)).min(1), knows: z.string().min(1) }).strict().optional(),
   rules: z.array(z.string().min(1)).min(1),
+}).strict();
+
+// Round 156 (issue #6): the narrator's written passages (content/narration/passages.yaml, optional; narration.js).
+const passagesSchema = z.object({
+  passages: z.array(z.object({
+    id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+    when: z.object({ event: z.string().min(1) }).catchall(z.union([z.string(), z.number(), z.boolean()])),
+    once: z.boolean().optional(),
+    text: z.string().min(1),
+  }).strict()),
 }).strict();
 
 // Round 027: the philosophy statement shown once before the map (content/narration/onboarding.yaml).
@@ -280,6 +292,9 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const { default_encounter: defaultEncounterId, ...language } = languageSchema.parse(parseYaml(contentDir, `${pack}/language.yaml`));
   if (language.code !== code) throw new Error(`content/${pack}/language.yaml must declare code ${code}`);
   const styleGuide = styleGuideSchema.parse(parseYaml(contentDir, 'narration/style_guide.yaml'));
+  const passages = Object.freeze(existsSync(resolve(contentDir, 'narration/passages.yaml'))
+    ? passagesSchema.parse(parseYaml(contentDir, 'narration/passages.yaml')).passages.map((passage) => Object.freeze(passage)) : []);
+  unique(passages.map((passage) => passage.id), 'Narration passages');
   const knowledge = existsSync(resolve(contentDir, 'world/knowledge.yaml')) ? Object.freeze(knowledgeSchema.parse(parseYaml(contentDir, 'world/knowledge.yaml'))) : null;
   const { begin_label: beginLabel, ...onboardingText } = onboardingSchema.parse(parseYaml(contentDir, 'narration/onboarding.yaml'));
   const onboarding = Object.freeze({ ...onboardingText, notes: Object.freeze(onboardingText.notes), beginLabel });
@@ -349,7 +364,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const fragments = loadFragments(contentDir, pack, encounters);
   const inscriptions = loadInscriptions(contentDir, pack, world);
   return Object.freeze({
-    language, styleGuide, knowledge, onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
+    language, styleGuide, knowledge, passages, passagesById: new Map(passages.map((passage) => [passage.id, passage])), onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
     inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
     // Round 144: the curriculum of The Journey 2 (content/curriculum/ and the pack's curriculum/), with its own
     // vocabulary, kept apart from the pack's above. Null in a pack that has none. Read on first use: its vocabulary

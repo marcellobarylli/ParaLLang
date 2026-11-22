@@ -14,6 +14,7 @@
 //   current   the conversation waiting at `at`: { node, step, activity }, or null once it is finished
 //   progress  the curriculum's marks (pacing.js)
 //   log       the last ROAD.log conversations, newest first, for the journal
+//   narration the id of the narrator's passage for the last arrival (round 156), or null
 //
 // Rules: the learner may walk to any site next to a site of the recent trail that is not itself on the trail (the
 // frontier; round 143's rule that everything out of the fog is reachable from anywhere). The pacing's recommended
@@ -199,6 +200,7 @@ export const roadMethods = {
         id: ROAD.id, name: ROAD.name, seed: road.seed, step: road.step, at: road.at, here: site(road.at),
         current: road.current ? offer(graph.node(road.current.node), road.current.step, road.current.activity) : null,
         trail: road.trail.slice(-ROAD.shownTrail), cleared: road.cleared.slice(-ROAD.shownTrail),
+        narration: this.toldView(road.narration ?? null), // round 156: what the narrator said of the last arrival
         frontier: frontier.map(({ id, from }) => ({
           ...site(id), from, way: graph.edge(from, id).kind, recommended: id === rails,
           offer: offer(graph.node(id), road.step, offers.get(id)),
@@ -219,10 +221,15 @@ export const roadMethods = {
       const latest = await this.loadEnvelope(learnerId);
       if (latest.road) return this.roadView(latest);
       const staged = clone(latest);
-      staged.road = freshRoad(this.roadSeed(), this.curriculum());
+      staged.road = this.setOut(staged, freshRoad(this.roadSeed(), this.curriculum()));
       await this.storage.save(staged);
       return this.roadView(staged);
     });
+  },
+
+  // Round 156: the narrator's passage for the first step on a new road (told once to a learner; null after that).
+  setOut(envelope, road) {
+    return { ...road, narration: this.tell(envelope, { event: 'road_enter' })?.id ?? null };
   },
 
   // A walk to a site of the frontier. The conversation the pacing put there is fixed on arrival. While the road's own
@@ -248,10 +255,14 @@ export const roadMethods = {
       }
       const staged = clone(envelope);
       const activity = commit(curriculum, road.progress, road.step, offers.get(nodeId), this.isDueObjective(envelope));
+      // Round 156: the narrator's passage for the arrival: by the kind of way taken and the country arrived in.
+      const [ni, nj] = parseNodeId(nodeId);
+      const arrival = { event: 'road_arrive', way: graph.edge(frontier.find((entry) => entry.id === nodeId).from, nodeId).kind, biome: graph.node(nodeId).biome };
       staged.road = {
         ...road, at: nodeId,
         trail: [...road.trail.filter((id) => id !== nodeId), nodeId].slice(-ROAD.trail),
         current: { node: nodeId, step: road.step, activity },
+        narration: this.tell(staged, arrival, hash(ni * 13 + road.step, nj * 17 - road.step, road.seed + 1212))?.id ?? null,
       };
       await this.storage.save(staged);
       if (own) this.encounters.delete(learnerId);
@@ -267,7 +278,7 @@ export const roadMethods = {
     const road = this.roadOf(envelope);
     if (!envelope.road) {
       envelope = clone(envelope);
-      envelope.road = road;
+      envelope.road = this.setOut(envelope, road);
       await this.storage.save(envelope);
     }
     if (!road.current) throw conflictError('Nobody is waiting here any more. Walk on.', 'NOTHING_HERE');
@@ -336,7 +347,7 @@ export const roadMethods = {
         const [first] = plan(curriculum, fresh.progress, fresh.step);
         fresh.current = first ? { node: fresh.at, step: fresh.step, activity: commit(curriculum, fresh.progress, fresh.step, first, this.isDueObjective(envelope)) } : null;
       }
-      staged.road = fresh;
+      staged.road = this.setOut(staged, fresh);
       await this.storage.save(staged);
       if (this.encounters.get(learnerId)?.road) this.encounters.delete(learnerId);
       return this.roadView(staged);

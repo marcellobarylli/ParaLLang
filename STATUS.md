@@ -33,6 +33,19 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 156, the italic text is a narrator (on the session branch, not deployed)
+
+Issue #6, the fourth of the eleven. The narration a model writes for each line is now asked for as a storybook told
+to "you" in the present tense, which describes a thing as an old inventory does, leaves the thought unfinished and
+never explains the world; the model is given the truth of the lore book's last part and told never to state it, with
+at most one hint a conversation (a word for sewing where a word for a road is expected). The narrator also has 26
+**written passages** ([`content/narration/passages.yaml`](content/narration/passages.yaml)), told on the first step
+of the road, on each arrival (by the way taken and the country) and at a dungeon's sites; a conversation's last line
+is set as narration too. A passage is sent as segments, where issue #4's untranslatable spans will go, and the save
+keeps what was told, which issue #5's guidebook will hang on. Gerald's pinned prompts were regenerated. **No model
+was called**; seen in headless Chromium, not on a phone ([findings](docs/rounds/156/findings.md), picture:
+[`03-on-the-way.jpg`](docs/rounds/156/shots/03-on-the-way.jpg)).
+
 ## Addendum 2026-11-22: round 155, the characters belong to the world (on the session branch, not deployed)
 
 Issue #3, the third of the eleven. The narrator's prompt now carries what a character knows of the world it was born
@@ -1539,6 +1552,7 @@ Newest first.
 | 153 | 11-22 | Light mode beside strict mode (issue #1): one call that reads the answer and replies, nothing checked; a Strict / Light choice in Settings; strict mode unchanged | [153](docs/rounds/153/architecture.md) | [findings](docs/rounds/153/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 154 | 11-22 | A light conversation is an exchange of three to five turns (issue #2): a floor of three, a ceiling of five, the objectives decide between; follow-ups and questions back asked of the model and nudged on the screen | [154](docs/rounds/154/architecture.md) | [findings](docs/rounds/154/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 155 | 11-22 | The characters belong to the world (issue #3): what everybody knows, a region's lore and one thing noticed, as one block of the narrator's prompt; the road acts as Tuscany; A levels ordinary, B levels more knowing | [155](docs/rounds/155/architecture.md) | [findings](docs/rounds/155/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 156 | 11-22 | The italic text is a narrator (issue #6): a storybook told to "you" that knows more than it says, as rules in the style guide; 26 written passages for the road and the dungeons' sites; segments and the save's `told` as hooks for issues #4 and #5; Gerald's pinned prompts regenerated | [156](docs/rounds/156/architecture.md) | [findings](docs/rounds/156/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

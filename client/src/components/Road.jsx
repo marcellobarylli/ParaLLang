@@ -4,6 +4,7 @@ import { createGraph } from '../../../server/src/road/graph.js';
 import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 import { ROAD_NAME } from '../atlas.js';
+import Narration from './Narration.jsx';
 
 // Round 144: what the dock and the overlays show on The Journey 2. The server's view of the road (`state.road`)
 // says where the player is, who waits there and what each site ahead offers; the curriculum with the player's marks
@@ -128,6 +129,8 @@ export function HubCard({ state }) {
       <p className="eyebrow">{positionLine(curriculum)}</p>
       <h2>{road.here.name}</h2>
       <WeatherLine seed={road.seed} />
+      {/* Round 156: what the narrator said of the arrival here. */}
+      <Narration narration={road.narration} />
       {waiting ? (
         <>
           <p className="who"><strong>{waiting.character.name}</strong>, {waiting.character.role}</p>
@@ -137,7 +140,7 @@ export function HubCard({ state }) {
         </>
       ) : (
         <>
-          <p>Nobody is waiting here now. A cairn marks the spot.</p>
+          <p className="narrative">Nobody waits here now. Somebody has left a cairn, the way people do when they expect not to be believed.</p>
           <WayOn state={state} />
         </>
       )}
@@ -157,7 +160,8 @@ export function RoadCaption({ state }) {
   const waiting = road?.current;
   if (roadError) return <section className="caption caption-problem" role="alert"><span>{roadError}</span></section>;
   const text = roadArrived && encounterLoading ? `${firstName(waiting?.character)} is getting ready to talk…` : `On the way to ${road?.here?.name ?? 'the next site'}…`;
-  return <section className="caption" role="status">{text}</section>;
+  // Round 156: while the camera walks, the narrator tells the way taken.
+  return <section className="caption" role="status">{!roadArrived && <Narration narration={road?.narration} />}<span>{text}</span></section>;
 }
 
 /** Under a finished conversation: what it did to the curriculum, and the way on. */
@@ -166,7 +170,7 @@ export function RoadResolved({ state, encounter }) {
   const recorded = road && road.current === null; // the road has been read again after the last answer
   return (
     <>
-      <p>{encounter.resolvedMessage ?? `${encounter.character?.name ?? 'They'} lets you pass.`}</p>
+      <p className="narrative">{encounter.resolvedMessage ?? `${encounter.character?.name ?? 'They'} lets you pass.`}</p>
       {result && (
         <p className="road-result" role="status">
           {result.kind === 'checkpoint'

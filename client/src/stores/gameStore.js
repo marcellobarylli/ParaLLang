@@ -151,7 +151,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     // Round 133: what the world map shows of a dungeon's run.
     const runOf = (of, progress) => ({ cleared: of.sites.filter((site) => progress.sites[site.id]?.cleared).length, total: of.sites.length, complete: Boolean(progress.complete) });
     const takeView = (view) => {
-      set({ progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon), runs: { ...get().runs, [dungeon.id]: runOf(dungeon, view.progress) } });
+      // Round 156: with the narrator's passage for the site the player stands at (null from a server before it).
+      set({ progress: view.progress, narration: view.narration ?? null, dungeon: mergeDungeon(dungeon, view.dungeon), runs: { ...get().runs, [dungeon.id]: runOf(dungeon, view.progress) } });
       takeProgression(view.progression);
     };
     // The runs of the dungeons the player is not in, for the world map's counts. Nothing waits for them.
@@ -277,6 +278,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       enterable: [...bundled.keys()], // round 133: the dungeons this client holds; a place opens only one of these
       runs: {}, // round 133: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
       progress: null,
+      narration: null, // round 156: the narrator's passage for the dungeon site the player stands at
       progression: null, // round 121: { xp, level, levelStartsAt, nextLevelAt }, or null with a server that sends none
       xpGained: 0, // what the last answer earned
       levelUp: null, // the level the last answer or review reached, if it raised it
@@ -386,7 +388,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           siteRequest += 1;
           progressRequest += 1;
           runEpoch += 1;
-          set({ ...quiet, dungeon, progress: null, siteIndex: startIndex(dungeon), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, starting: false, partyReturn: null, error: null });
+          set({ ...quiet, dungeon, progress: null, narration: null, siteIndex: startIndex(dungeon), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, starting: false, partyReturn: null, error: null });
           if (s.learnerId) refreshProgress(s.learnerId);
         }
         try { storage?.setItem?.(PLACE_KEY, place.id); } catch { /* private mode: the first dungeon next time */ }
@@ -642,7 +644,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         initializationPromise = null;
         const phase = ['attract', 'world'].includes(get().phase) ? get().phase : 'overview';
         set({
-          settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
+          settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, narration: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
           mode: 'dungeon', road: null, curriculum: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false,
           party: [], partyReturn: null, partyStarting: null, recruiting: false,
           progression: null, xpGained: 0, levelUp: null,

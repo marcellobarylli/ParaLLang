@@ -12,7 +12,7 @@ import { buildNarrationMessages } from '../src/llm/prompt-builder.js';
 import { FixtureProvider, fixedNow } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r131.json'), 'utf8'));
+const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r156.json'), 'utf8'));
 
 const character = {
   id: 'charcutier_fixture', name: 'Bernard', species: 'Charcutier',
@@ -120,7 +120,8 @@ async function runtime(t, contentDir) {
 // in round 012 for the no-menu rule, in round 026 for the concrete language-mix rule, in round 081 for footnotes, and
 // in round 128, when the owner dropped the meme-culture texture: the humour is in Pratchett's manner, with no slang.
 // Round 130: regenerated again, for the target-language words in the narration. Round 131: for the conversation rules.
-test("Gerald's narration prompts match the round 131 fixture and carry the style guide", () => {
+// Round 156 (issue #6): for the narrator: a storybook told to "you" that knows more than it says.
+test("Gerald's narration prompts match the round 156 fixture and carry the style guide", () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
     const base = { language: c.language, character: c.character, styleGuide: c.styleGuide, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };
@@ -135,6 +136,13 @@ test("Gerald's narration prompts match the round 131 fixture and carry the style
     assert.match(greeting[0].content, /Delivers a verdict on every translation like a wine taster addressing a court/);
     assert.doesNotMatch(greeting[0].content, /word-level breakdowns/);
     assert.match(greeting[0].content, /about 13% of its words \(in a 40-word narrative, about 5\)/);
+    // Round 156: the narrator's voice, its rules, and what it knows and never says, between the style and the language rules.
+    assert.match(greeting[0].content, /Narrator: a storybook narrator telling the player their own story, in the second person and the present tense/);
+    assert.doesNotMatch(greeting[0].content, /inclined to explain a thing by making it worse/);
+    assert.match(greeting[0].content, /\n\nTHE NARRATOR \(the `narrative` field\):\n- The narrative is told to the player as a story is told to its reader: "you" are the player, and the tense is the present\./);
+    assert.match(greeting[0].content, /- It never explains how the world works, never states what is under KNOWS below, and never answers a question the scene raises\./);
+    assert.match(greeting[0].content, /a word for sewing where a word for a road is expected \(a stitch, a thread, a seam, a knot, a hem\)/);
+    assert.match(greeting[0].content, /WHAT THE NARRATOR KNOWS AND NEVER SAYS: The world is a web\. Its roads are threads[^\n]+\.\n\nLANGUAGE RULES:/);
     assert.doesNotMatch(greeting[0].content, /Narrative text is always/);
     assert.match(greeting[0].content, /CONVERSATION:\n- Gerald talks like someone glad of the company\. Each dialogue line is two to four sentences and ends by asking the player something open, so that a good answer is several sentences long, about a paragraph\./);
     assert.match(greeting[0].content, /Ask in one go for everything the learning data below still wants from the player/);
