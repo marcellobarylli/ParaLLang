@@ -293,8 +293,11 @@ export const roadMethods = {
     const definition = this.roadDefinition(session.road);
     const total = definition.encounter.objectives.length;
     const corrected = new Set(session.correctedObjectiveIds ?? []);
-    const hinted = definition.encounter.objectives.filter((objective) => !corrected.has(objective.id) && (session.reveals?.[objective.id] ?? []).length > 0).length;
-    const score = scoreOf({ total, corrected: corrected.size, hinted });
+    // Round 154: a light exchange may end with an objective never met; it is neither corrected nor hinted, it is missed.
+    const passed = new Set(session.passedObjectiveIds ?? []);
+    const missed = definition.encounter.objectives.filter((objective) => !passed.has(objective.id)).length;
+    const hinted = definition.encounter.objectives.filter((objective) => passed.has(objective.id) && !corrected.has(objective.id) && (session.reveals?.[objective.id] ?? []).length > 0).length;
+    const score = scoreOf({ total, corrected: corrected.size, hinted, missed });
     const { activity } = stored.current;
     const before = position(curriculum, stored.progress);
     const step = stored.step + 1;

@@ -467,6 +467,15 @@ test('light mode: the answer is sent as light and not as a beginner\'s; the repl
   act(() => store.setState({ encounter: { ...store.getState().encounter, hearts: { used: 0, limit: 3 } } }));
   expect(screen.queryByLabelText(/hearts left/)).toBeNull();
   expect(screen.getByText(/Light mode: nothing is marked\./)).toBeTruthy();
+  // Round 154 (issue #2): the exchange of turns, and the nudge to ask something back.
+  act(() => store.setState({ encounter: { ...store.getState().encounter, exchange: { turn: 1, min: 3, max: 5 } } }));
+  expect(screen.getByText(/Turn 2 of 3 to 5\. You can ask \w+ questions back\./)).toBeTruthy();
+  const open = store.getState().encounter;
+  act(() => store.setState({ encounter: { ...open, currentObjective: null, openObjectives: [] } }));
+  expect(screen.getByText('Keep talking')).toBeTruthy();
+  expect(screen.queryByText('Conversation complete')).toBeNull();
+  expect(screen.getByLabelText('Your response')).toBeTruthy();
+  act(() => store.setState({ encounter: open }));
   await user.type(screen.getByLabelText('Your response'), 'good morning');
   await user.click(screen.getByRole('button', { name: 'Send' }));
   await waitFor(() => expect(dialogueCalls()).toHaveLength(1));

@@ -39,6 +39,14 @@ export const NARRATIVE_WORDS = Object.freeze({ max: 12, word: 40, meaning: 80 })
 export const BEGINNER_HEARTS = 3;
 // Round 153: the quality recorded for a target the player wrote in a light turn: said, with nobody having checked how well.
 export const LIGHT_QUALITY = 4;
+// Round 154: a light conversation is an exchange of this many of the player's turns. Before `min` it goes on even
+// when every objective is met; from `min` it ends once none is open; at `max` it ends whatever is open.
+export const LIGHT_EXCHANGE = Object.freeze({ min: 3, max: 5 });
+const LIGHT_ENDING = Object.freeze({
+  go_on: 'Not yet: the conversation goes on after this reply, whatever has been met. Do not say goodbye.',
+  if_done: 'If no objective is left open after this answer, this reply is the last of the conversation: wind it up warmly, as the character would, and ask nothing more. Otherwise the conversation goes on.',
+  now: 'Now: this reply is the last of the conversation, whatever is still open. Wind it up warmly, as the character would, and ask nothing more.',
+});
 export const CORRECTION_MAX_LENGTH = 600; // round 131: an answer may be a paragraph (300 before)
 const CORRECTED_NOTE = 'An objective marked corrected was said with slips, or in English; the player was understood and has been shown the correct form. Treat it as met. Answer what the player meant. Do not mock the slips, do not remark on which language the player used, and do not repeat the correction.';
 
@@ -733,6 +741,8 @@ export class LearningService {
       openObjectives: encounter.state === 'ongoing' ? this.activeObjectives(encounter).map(({ id, prompt }) => ({ id, prompt })) : [],
       // Round 129: the hearts of beginner mode. A new conversation (and Start over) has them all.
       hearts: { used: encounter.heartsUsed ?? 0, limit: BEGINNER_HEARTS },
+      // Round 154: where a light conversation stands in its exchange of turns (the player's turns so far).
+      exchange: { turn: encounter.committedPlayerTurns, min: LIGHT_EXCHANGE.min, max: LIGHT_EXCHANGE.max },
       transcript,
     };
   }
@@ -1195,6 +1205,8 @@ export class LearningService {
       this.validateVersion(current, request.encounterId, request.version);
       if (current.state !== 'ongoing') throw validationError('This encounter no longer has an active learning objective.');
       const objective = this.currentObjective(current);
+      // Round 154: a light exchange may go on with every objective met; then there is nothing left to hint at.
+      if (!objective) throw conflictError('No translation hints remain for this objective.', 'HINTS_EXHAUSTED');
       const activeMessage = [...current.transcript].reverse().find((message) => message.role === 'npc');
       if (!activeMessage || request.messageId !== activeMessage.id) throw conflictError(`Help is only available for the current ${this.definition(current).character.name} message.`, 'STALE_MESSAGE');
       let key;
@@ -1284,7 +1296,8 @@ export class LearningService {
       const objectives = this.activeObjectives(current);
       // Round 153: light mode, asked for by the client with each answer: nothing is checked, and one call reads the
       // answer and replies to it.
-      if (request.light === true) return this.lightTurn({ learnerId, request, fingerprint, envelope, current, definition, objectives, message });
+      // Round 154: nor is there anything to mark once every objective is met and the exchange is still going.
+      if (request.light === true || objectives.length === 0) return this.lightTurn({ learnerId, request, fingerprint, envelope, current, definition, objectives, message });
       // Round 129: beginner mode, asked for by the client with each answer. The grader also says what the player
       // tried and gives their answer in correct target language; a heart pays for a corrected answer.
       const beginner = request.beginner === true;
@@ -1470,7 +1483,8 @@ export class LearningService {
   // Round 153: light mode's turn. One call to the model returns what the player meant, the same in correct target
   // language, which open objectives that meaning fulfils, and the character's reply. Nothing is checked against the
   // answer: no grader, no evidence rules, no hearts, no retry of the line. An objective closes on the model's word, in
-  // any order. The Spellbook still learns from the turn: a target of a closed objective that stands in the player's
+  // any order. Round 154: the conversation is an exchange of LIGHT_EXCHANGE turns, and the model is told where in it
+  // this turn stands. The Spellbook still learns from the turn: a target of a closed objective that stands in the player's
   // own text (found by the vocabulary matcher, not by a judge) is recorded as said.
   async lightTurn({ learnerId, request, fingerprint, envelope, current, definition, objectives, message }) {
     const nextTurns = current.committedPlayerTurns + 1;
@@ -1489,14 +1503,15 @@ export class LearningService {
       ...this.shareOf(nextTurns, definition, current),
       ambientEntries: definition.ambientEntries,
       ...this.sceneExtras(definition),
-      light: true,
+      light: { turn: nextTurns, min: LIGHT_EXCHANGE.min, max: LIGHT_EXCHANGE.max, ending: LIGHT_ENDING[nextTurns >= LIGHT_EXCHANGE.max ? 'now' : nextTurns >= LIGHT_EXCHANGE.min ? 'if_done' : 'go_on'] },
     }), lightTurnSchema, 'light_turn', definition.character.name);
     const { player } = generated;
     const met = new Set(player.objectives_met);
     const closing = objectives.filter((objective) => met.has(objective.id));
     const closingIds = new Set(closing.map((objective) => objective.id));
     const remaining = objectives.filter((objective) => !closingIds.has(objective.id));
-    const resolved = remaining.length === 0;
+    // Round 154: the exchange's end: nothing open from the third turn on, or the fifth turn whatever is open.
+    const resolved = nextTurns >= LIGHT_EXCHANGE.max || (remaining.length === 0 && nextTurns >= LIGHT_EXCHANGE.min);
     const tidy = (text) => String(text).trim().replace(/\s+/g, ' ').slice(0, CORRECTION_MAX_LENGTH);
     const said = new Set(matchCanonicalVocabulary(message, definition.scope ?? this.content.vocabulary.entries).map((match) => match.id));
     const anyReveal = objectives.some((objective) => (current.reveals[objective.id] ?? []).length > 0);

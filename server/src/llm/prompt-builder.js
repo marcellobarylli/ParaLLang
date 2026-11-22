@@ -67,7 +67,8 @@ export function buildNarrationMessages({
   full = false,
   // Round 153: light mode's turn. The one reply reads the player's answer and answers it (encounter/light_turn.txt);
   // there is no decision to express. `objectives` are the ones still open before the answer.
-  light = false,
+  // Round 154: `light` is { turn, min, max, ending }: where this turn stands in the exchange and whether it may end.
+  light = null,
 }) {
   const dialogueRules = fillTemplate(loadTemplate(full ? 'system/dialogue_full.txt' : 'system/dialogue_mixed.txt'), {
     language: { name: language.name, targetRatio: Math.round(targetRatio * 100), wordsPer20: Math.round(targetRatio * 20) },
@@ -91,7 +92,7 @@ export function buildNarrationMessages({
   const turnData = playerInput === null
     ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in ${placeName}.${weather ? ` ${weather}` : ''}`, ...(teachingNote ? { teaching_note: teachingNote } : {}) }
     : light
-      ? { task: 'light_turn', player_answer: playerInput, open_objectives: objectives.map(({ id, intent, reference_meaning }) => ({ id, intent, reference_meaning })), ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) }
+      ? { task: 'light_turn', exchange: light, player_answer: playerInput, open_objectives: objectives.map(({ id, intent, reference_meaning }) => ({ id, intent, reference_meaning })), ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) }
       : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision, ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) };
   const turnTemplate = playerInput === null ? 'encounter/greeting.txt' : light ? 'encounter/light_turn.txt' : 'encounter/dialogue_turn.txt';
 

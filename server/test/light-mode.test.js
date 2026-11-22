@@ -3,24 +3,13 @@
 // character's reply. The model here is scripted: it returns what light_turn.txt asks a model for.
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { FixtureProvider, createRuntime } from './helpers.js';
+import { LightProvider, createRuntime } from './helpers.js';
 import { answer, moveTo, road, roadRuntime, startHere } from './road-helpers.js';
 import { lightTurnSchema } from '../src/llm/schemas.js';
 import { LIGHT_QUALITY } from '../src/learning-service.js';
 
 const TUTORIAL = 'market_entrance_tutorial';
 
-// Light replies from a queue: each entry is the `player` block; the narration around it is the fixture's.
-export class LightProvider extends FixtureProvider {
-  constructor(queue = []) { super(); this.queue = [...queue]; }
-  narrate(messages) {
-    const reply = super.narrate(messages);
-    const turn = JSON.parse(messages.at(-1).content.split('TURN DATA: ').at(-1).trim());
-    if (turn.task !== 'light_turn') return reply;
-    const next = this.queue.shift();
-    return { ...reply, player: typeof next === 'function' ? next(turn) : next };
-  }
-}
 const calls = (runtime, name) => runtime.provider.calls.filter((call) => call.options.schemaName === name);
 const turnData = (call) => JSON.parse(call.messages.at(-1).content.split('TURN DATA: ').at(-1).trim());
 
@@ -65,7 +54,7 @@ test('a light answer is one call to the model: no grader, and the reply holds wh
   assert.equal(turn.encounter.transcript.at(-2).text, 'Good morning! Me chiamo Luigione.');
 });
 
-test('objectives close in any order, an unknown id is ignored, and the conversation resolves when none is left', async (t) => {
+test('objectives close in any order, and an unknown id is ignored', async (t) => {
   const { encounter, say } = await open(t, [
     { meant: 'What is your name?', target: 'Come ti chiami?', clean: true, objectives_met: ['ask_back', 'no_such_objective'] },
     { meant: 'Hello, I am Ada.', target: 'Ciao, mi chiamo Ada.', clean: true, objectives_met: ['greet', 'introduce'] },
@@ -74,8 +63,8 @@ test('objectives close in any order, an unknown id is ignored, and the conversat
   assert.deepEqual(first.encounter.openObjectives.map((objective) => objective.id), ['greet', 'introduce']);
   assert.equal(first.assessment.correction, undefined); // a clean answer brings no corrected sentence
   const second = await say('Ciao, mi chiamo Ada.', first.encounter);
-  assert.equal(second.encounter.state, 'resolved');
-  assert.equal(second.xpGained, 2 * 10 + 25);
+  assert.deepEqual(second.encounter.openObjectives, []);
+  assert.equal(second.xpGained, 2 * 10);
 });
 
 test('an answer that fulfils nothing closes nothing and still gets a reply', async (t) => {
@@ -150,15 +139,16 @@ test('on the road a light conversation counts for the curriculum: clean objectiv
     return turn.task === 'light_turn' ? { ...reply, player: queue.shift()(turn) } : reply;
   };
   const started = await startHere(runtime, learnerId);
-  const ids = started.data.encounter.openObjectives.map((objective) => objective.id);
-  queue.push((turn) => ({ meant: 'Everything at once.', target: 'Tutto insieme.', clean: false, objectives_met: turn.open_objectives.map((objective) => objective.id) }));
-  const turn = await answer(runtime, learnerId, started.data.encounter, 'everything at once', { light: true });
+  const all = (turn) => ({ meant: 'Everything at once.', target: 'Tutto insieme.', clean: false, objectives_met: turn.open_objectives.map((objective) => objective.id) });
+  queue.push(all, all, all);
+  let turn = await answer(runtime, learnerId, started.data.encounter, 'everything at once', { light: true });
+  turn = await answer(runtime, learnerId, turn.encounter, 'and some talk', { light: true });
+  turn = await answer(runtime, learnerId, turn.encounter, 'and a goodbye', { light: true });
   assert.equal(turn.encounter.state, 'resolved');
   assert.equal(turn.roadResult.kind, 'lesson');
-  assert.ok(turn.roadResult.score < 1, 'a mended answer is not a clean one');
+  assert.equal(turn.roadResult.score, 0.5); // every objective met, none cleanly
   const view = await road(runtime, learnerId);
   assert.equal(view.data.road.step, 1);
-  assert.equal(ids.length > 0, true);
   // The way on is open as after a strict conversation.
   const next = view.data.road.frontier[0];
   assert.equal((await moveTo(runtime, learnerId, next.id)).status, 200);
