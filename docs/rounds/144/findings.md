@@ -29,7 +29,7 @@ map through the curriculum: all 108 lessons and 36 gates of each language, and t
 
 | What | Result |
 |---|---|
-| Tests | server 484 of 484 in the last whole run, and the road's own files again after a later fix (14 and 2 passing); aesthetic 73; iPhone app 320 (untouched); web client 240 of 241 in the last whole run, the one failure a wait of one second for the road's first render on a busy machine, since given more time. A last whole run was under way when this was written: see the Outcome below |
+| Tests | server 485 of 485 (469 before the round); web client 241 of 241 (228 before); aesthetic 73 of 73 (66 before); iPhone app 320 of 320 (untouched) |
 | Client build | passes; the road's host is a lazy chunk of 14 kB beside the shared three.js chunk |
 | Landscape | pure in the seed; dry at the start for every seed tried; about a quarter of the ground under water; heights from about −20 to 115 m; 0.7 to 1.3 µs a height |
 | Graph | over three seeds and 441 cells each: every site on dry ground in its cell, every way two-way, every site with a way on north or east, mean degree about 3 |
@@ -48,7 +48,8 @@ Pictures (each at a phone and a desktop size) in [`shots/`](shots/):
 
 ## Outcome
 
-Built and played as described under Results. The final whole run's numbers are added below when it ends.
+Built and played as described under Results. The last whole run, after the last change: every suite above passing,
+the client built, and `road-shots.mjs` through at both sizes with 20 pictures and no failure (2026-11-22).
 
 ## Decision
 
