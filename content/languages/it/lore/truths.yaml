@@ -1,0 +1,42 @@
+# Round 158 (issue #4): the untranslatable texts of the Italian pack. Deep truths about the world exist only in the
+# language being learned: these sentences are set into the narrator's written passages (content/narration/
+# passages.yaml, as {truth:<id>}) in a colour of their own, and nothing in the game translates them. There is no
+# English here on purpose: the server cannot send what it does not hold. What each one says, for the owner, is in
+# parallang_obsidian/Understood Later.md.
+#
+#   id      the name a passage uses
+#   level   how hard the language is (the stage of the curriculum at which a learner can read it)
+#   text    the sentence, in Italian only
+#
+# The texts follow docs/lore-book.md, "What the book does not say". The deeper the truth, the harder the language.
+truths:
+  - id: wake_of_a_stitch
+    level: A2
+    text: "Torna indietro! Oltre giace la scia di un punto."
+  - id: not_a_road
+    level: A1
+    text: "La strada non è una strada."
+  - id: a_thread_passes
+    level: A1
+    text: "Qui passa un filo."
+  - id: every_place_a_knot
+    level: A1
+    text: "Ogni luogo è un nodo."
+  - id: walked_on_a_web
+    level: A2
+    text: "Non hai camminato su una strada. Hai camminato su una tela."
+  - id: a_word_a_stitch
+    level: A2
+    text: "Chi impara una parola dà un punto."
+  - id: sewn_not_built
+    level: B1
+    text: "Le strade non furono costruite: furono cucite."
+  - id: sewn_to_another
+    level: B1
+    text: "La tela non finisce dove finisce il mondo: è cucita a un'altra."
+  - id: roots_and_roads
+    level: B1
+    text: "Dove vedi una radice, un tempo c'era una strada; dove vedi una strada, un giorno ci sarà una radice."
+  - id: all_the_threads
+    level: B1
+    text: "Se tutti i fili si tendessero insieme, i due mondi si toccherebbero, e nessuna parola avrebbe più senso."

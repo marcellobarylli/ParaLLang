@@ -10,7 +10,11 @@
 #                          biome: shore|meadow|forest|highland|snow     in that kind of country
 #            site_arrive   dungeon, site               standing at a site of a dungeon
 #   once   true: told once to a learner, and before any other passage that fits
-#   text   the passage, in English
+#   min_step   (round 158) the fewest conversations finished on the road before the passage can be told
+#   text   the passage, in English. Round 158 (issue #4): `{truth:<id>}` sets one of the pack's untranslatable
+#          texts into it (content/languages/<code>/lore/truths.yaml): a sentence in the language being learned,
+#          shown in a colour of its own, which nothing in the game translates. The passage leads up to it and says
+#          nothing of what it means
 #
 # Among the passages that fit an event, those that ask for the most facts win, and the place picks among them.
 passages:
@@ -20,6 +24,75 @@ passages:
     text: >-
       You step onto the road. It was built long ago, people will tell you, and it has the patience of a thing that
       already knows where you are going. Behind you the way you came closes over like water.
+
+  # Round 158 (issue #4): passages that hold an untranslatable text. Each is told once, at the first arrival that
+  # fits after `min_step` conversations, so they are spread along the walk; the harder ones wait for the stage
+  # (`cefr`: the stage of the curriculum the learner is in) whose language they are written in.
+  - id: truth_forest_edge
+    when: { event: road_arrive, biome: forest }
+    once: true
+    min_step: 2
+    text: >-
+      You walk to the edge of the forest, peering into the darkness between the trees. Etched into the wood you
+      see a crude message: {truth:wake_of_a_stitch}
+  - id: truth_milestone
+    when: { event: road_arrive, way: path, biome: meadow }
+    once: true
+    min_step: 5
+    text: >-
+      A milestone leans in the grass. The distance has been scraped off it, carefully, and something shorter cut
+      in its place: {truth:not_a_road}
+  - id: truth_ford
+    when: { event: road_arrive, way: ford }
+    once: true
+    min_step: 3
+    text: >-
+      You wade the ford. On a flat stone in the middle of the stream, where only someone crossing would see it,
+      three words are scratched: {truth:a_thread_passes}
+  - id: truth_pass
+    when: { event: road_arrive, way: pass }
+    once: true
+    min_step: 4
+    text: >-
+      You come to the top of the pass. There is a cairn, and on its top stone a line in charcoal that the rain has
+      not managed to move: {truth:every_place_a_knot}
+  - id: truth_shore
+    when: { event: road_arrive, biome: shore, cefr: A2 }
+    once: true
+    text: >-
+      The tide is out. Below the weed line somebody has written in the wet sand with a stick, in a neat hand, and
+      the sea has left it alone: {truth:a_word_a_stitch}
+  - id: truth_path_a2
+    when: { event: road_arrive, way: path, cefr: A2 }
+    once: true
+    min_step: 20
+    text: >-
+      A fingerpost stands where the path forks. One arm names the place ahead. The other has been painted over
+      and written on again, small, as if for one reader: {truth:walked_on_a_web}
+  - id: truth_path_b1
+    when: { event: road_arrive, way: path, cefr: B1 }
+    once: true
+    text: >-
+      The guild has put up a notice about the upkeep of this stretch. Underneath it, in older paint, the wall says
+      something the notice was hung to cover and does not quite cover: {truth:sewn_not_built}
+  - id: truth_ferry_b1
+    when: { event: road_arrive, way: ferry, cefr: B1 }
+    once: true
+    text: >-
+      The ferry's rail is carved along its whole length, the letters worn almost flat by a great many hands. The
+      ferryman has never read it. He says it came with the boat: {truth:sewn_to_another}
+  - id: truth_highland_b1
+    when: { event: road_arrive, biome: highland, cefr: B1 }
+    once: true
+    text: >-
+      You climb. High on the hill a slab of rock stands clear of the turf. Whoever cut the words in it cut them deep, and
+      meant them to last longer than the hill: {truth:roots_and_roads}
+  - id: truth_snow_b1
+    when: { event: road_arrive, biome: snow, cefr: B1 }
+    once: true
+    text: >-
+      You find a hut at the snow line with nobody in it. On the inside of the door, where the last person out
+      would have stood to write, a long sentence runs from the latch to the floor: {truth:all_the_threads}
 
   # Arrivals by an ordinary path, whatever the country.
   - id: path_bends
@@ -123,7 +196,7 @@ passages:
     when: { event: site_arrive, dungeon: ta_prohm, site: library }
     text: >-
       The library has lost its roof and kept its silence. On one lintel a line of script runs on past the edge of
-      the stone, as though the wall had once been longer.
+      the stone, as though the wall had once been longer. What is left of it reads: {truth:roots_and_roads}
   - id: ta_prohm_before_sanctuary
     when: { event: site_arrive, dungeon: ta_prohm, site: before_sanctuary }
     text: >-

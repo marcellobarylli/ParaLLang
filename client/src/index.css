@@ -49,6 +49,9 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .dock > * { pointer-events: auto; }
 .settings-open .dock { visibility: hidden; }
 .card { width: min(560px, 100%); background: var(--panel); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); border-bottom: 0; box-shadow: 0 0 0 1px #000; padding: 1rem 1.1rem calc(max(1.1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); display: grid; gap: .6rem; }
+/* Round 158: a card is never taller than the screen under the top bar; a long one scrolls inside. (A card with the
+   narrator's passage, a guidebook entry and a long description of a character was taller than a phone.) */
+.card { max-height: calc(100vh - 4.4rem); max-height: calc(100dvh - 4.4rem); overflow-y: auto; overscroll-behavior: contain; }
 .card h1, .card h2, .card p { margin: 0; }
 .card h1 { color: var(--gold); letter-spacing: .14em; font-size: 1.8rem; text-shadow: 2px 2px 0 #000; }
 .card h2 { color: var(--gold); font-size: 1.25rem; letter-spacing: .06em; text-transform: uppercase; text-shadow: 2px 2px 0 #000; }
@@ -189,6 +192,12 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .guide-note small { color: #b9bbb4; }
 .hud nav .guide-button { position: relative; min-width: 2rem; padding-left: .35rem; padding-right: .35rem; }
 .guide-badge { position: absolute; top: -.35rem; right: -.35rem; margin: 0; min-width: 1.1rem; height: 1.1rem; font-size: .7rem; }
+/* Round 158 (issue #4): untranslatable text. Turmeric, upright in the italic narration, and not selectable into a
+   translator by a slip of the thumb. */
+.narration-truth { color: #e8a317; font-style: normal; font-weight: 600; letter-spacing: .01em; text-shadow: 1px 1px 0 #000, 0 0 6px rgb(232 163 23 / .25); }
+.guide-fragments { margin-top: 1.4rem; }
+.guide-fragments > h3 { margin: 0; color: #e8a317; font-size: 1rem; letter-spacing: .05em; text-transform: uppercase; }
+.guide-fragments > p { margin: .2rem 0 0; color: #b9bbb4; }
 /* Round 156: the narrator's written passages, on a card or in the travel caption. */
 .narration { margin: .2rem 0 .6rem; }
 .caption .narration { display: block; margin: 0; }

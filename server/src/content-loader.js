@@ -4,6 +4,7 @@ import yaml from 'js-yaml';
 import { z } from 'zod';
 import { normalizeAnswer } from './language-engine.js';
 import { loadCurriculum } from './road/curriculum.js';
+import { truthIds } from './narration.js';
 
 const defaultContentDir = resolve(import.meta.dirname, '..', '..', 'content');
 export const DEFAULT_LANGUAGE = 'it';
@@ -197,6 +198,17 @@ const passagesSchema = z.object({
     id: z.string().regex(/^[a-z][a-z0-9_]*$/),
     when: z.object({ event: z.string().min(1) }).catchall(z.union([z.string(), z.number(), z.boolean()])),
     once: z.boolean().optional(),
+    min_step: z.number().int().min(0).optional(), // round 158
+    text: z.string().min(1),
+  }).strict()),
+}).strict();
+
+// Round 158 (issue #4): the pack's untranslatable texts (content/languages/<code>/lore/truths.yaml, optional). In the
+// language being learned only: there is no field for a translation.
+const truthsSchema = z.object({
+  truths: z.array(z.object({
+    id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+    level: z.enum(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']),
     text: z.string().min(1),
   }).strict()),
 }).strict();
@@ -302,12 +314,24 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const { default_encounter: defaultEncounterId, ...language } = languageSchema.parse(parseYaml(contentDir, `${pack}/language.yaml`));
   if (language.code !== code) throw new Error(`content/${pack}/language.yaml must declare code ${code}`);
   const styleGuide = styleGuideSchema.parse(parseYaml(contentDir, 'narration/style_guide.yaml'));
-  const passages = Object.freeze(existsSync(resolve(contentDir, 'narration/passages.yaml'))
-    ? passagesSchema.parse(parseYaml(contentDir, 'narration/passages.yaml')).passages.map((passage) => Object.freeze(passage)) : []);
-  unique(passages.map((passage) => passage.id), 'Narration passages');
+  const allPassages = existsSync(resolve(contentDir, 'narration/passages.yaml'))
+    ? passagesSchema.parse(parseYaml(contentDir, 'narration/passages.yaml')).passages.map((passage) => Object.freeze(passage)) : [];
+  unique(allPassages.map((passage) => passage.id), 'Narration passages');
   const guide = Object.freeze(existsSync(resolve(contentDir, 'narration/guidebook.yaml'))
     ? guidebookSchema.parse(parseYaml(contentDir, 'narration/guidebook.yaml')).entries.map((entry) => Object.freeze(entry)) : []);
   unique(guide.map((entry) => entry.id), 'Guidebook entries');
+  // A pack with untranslatable texts must have every one a passage names. A pack with none at all (no file) plays
+  // without the passages that hold one.
+  const hasTruths = existsSync(resolve(contentDir, `${pack}/lore/truths.yaml`));
+  const truthList = hasTruths ? truthsSchema.parse(parseYaml(contentDir, `${pack}/lore/truths.yaml`)).truths : [];
+  unique(truthList.map((truth) => truth.id), 'Untranslatable texts');
+  const truths = new Map(truthList.map((truth) => [truth.id, Object.freeze(truth)]));
+  if (hasTruths) {
+    for (const { id, text } of allPassages) {
+      for (const truthId of truthIds(text)) if (!truths.has(truthId)) throw new Error(`Narration ${id} names the untranslatable text ${truthId}, which the ${language.name} pack does not have`);
+    }
+  }
+  const passages = Object.freeze(hasTruths ? allPassages : allPassages.filter((passage) => truthIds(passage.text).length === 0));
   const knowledge = existsSync(resolve(contentDir, 'world/knowledge.yaml')) ? Object.freeze(knowledgeSchema.parse(parseYaml(contentDir, 'world/knowledge.yaml'))) : null;
   const { begin_label: beginLabel, ...onboardingText } = onboardingSchema.parse(parseYaml(contentDir, 'narration/onboarding.yaml'));
   const onboarding = Object.freeze({ ...onboardingText, notes: Object.freeze(onboardingText.notes), beginLabel });
@@ -377,7 +401,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const fragments = loadFragments(contentDir, pack, encounters);
   const inscriptions = loadInscriptions(contentDir, pack, world);
   return Object.freeze({
-    language, styleGuide, knowledge, guide, passages, passagesById: new Map(passages.map((passage) => [passage.id, passage])), onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
+    language, styleGuide, knowledge, guide, truths, passages, passagesById: new Map(passages.map((passage) => [passage.id, passage])), onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
     inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
     // Round 144: the curriculum of The Journey 2 (content/curriculum/ and the pack's curriculum/), with its own
     // vocabulary, kept apart from the pack's above. Null in a pack that has none. Read on first use: its vocabulary

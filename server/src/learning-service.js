@@ -12,7 +12,7 @@ import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
 import { roadMethods } from './road/service.js';
-import { entriesFor, passageView, selectPassage, toSegments } from './narration.js';
+import { entriesFor, passageView, selectPassage, toSegments, truthIds } from './narration.js';
 import { weatherAt } from './road/weather.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
@@ -256,8 +256,12 @@ export class LearningService {
     this.enterGuide(envelope, event);
     const passage = selectPassage(this.content.passages ?? [], event, { told: envelope.told ?? {}, pick });
     if (passage && !Object.hasOwn(envelope.told ?? {}, passage.id)) envelope.told = { ...(envelope.told ?? {}), [passage.id]: nowIso(this.clock) };
+    // Round 158 (issue #4): a passage with an untranslatable text in it; the guidebook has an entry for the first.
+    if (passage && truthIds(passage.text).length) this.enterGuide(envelope, { event: 'truth_shown' });
     return passage;
   }
+  // Round 158: what turns a written text into segments: the pack's untranslatable texts and the language's tag.
+  get narrationPack() { return { truths: this.content.truths ?? new Map(), lang: this.content.language.tag }; }
   // Round 157 (issue #5): the guidebook. What happened may enter entries (content/narration/guidebook.yaml): each is
   // entered once, unread, in the envelope given, which the caller saves. Returns whether any was entered.
   enterGuide(envelope, event) {
@@ -267,7 +271,19 @@ export class LearningService {
     envelope.guidebook = { ...(envelope.guidebook ?? {}), ...Object.fromEntries(entering.map((entry) => [entry.id, { at, read: false }])) };
     return true;
   }
-  guideEntry(entry, record) { return { id: entry.id, title: entry.title, segments: toSegments(entry.text), at: record.at, unread: !record.read }; }
+  guideEntry(entry, record) { return { id: entry.id, title: entry.title, segments: toSegments(entry.text, this.narrationPack), at: record.at, unread: !record.read }; }
+  // Round 158 (issue #4): the passages told to this learner that hold an untranslatable text, oldest first, so that
+  // a text met early can be read again when more of the language is known.
+  guideFragments(envelope) {
+    return Object.entries(envelope.told ?? {})
+      .map(([id, at]) => ({ passage: this.content.passagesById?.get(id), at }))
+      .filter(({ passage }) => passage && truthIds(passage.text).length)
+      .sort((a, b) => a.at.localeCompare(b.at) || a.passage.id.localeCompare(b.passage.id))
+      .map(({ passage, at }) => ({ ...passageView(passage, this.narrationPack), at }));
+  }
+  guidebookView(envelope) {
+    return { guidebook: { entries: this.guideEntries(envelope), total: (this.content.guide ?? []).length, fragments: this.guideFragments(envelope) } };
+  }
   // The learner's entries, in the order they were entered (the file's order within one moment).
   guideEntries(envelope) {
     const have = envelope.guidebook ?? {};
@@ -281,8 +297,7 @@ export class LearningService {
     return { count: entries.length, unread: entries.filter((entry) => entry.unread) };
   }
   async getGuidebook(learnerId) {
-    const envelope = await this.loadEnvelope(learnerId);
-    return { guidebook: { entries: this.guideEntries(envelope), total: (this.content.guide ?? []).length } };
+    return this.guidebookView(await this.loadEnvelope(learnerId));
   }
   // The guidebook was opened: every entry is read.
   async readGuidebook(learnerId) {
@@ -293,12 +308,12 @@ export class LearningService {
       const staged = clone(envelope);
       for (const entry of Object.values(staged.guidebook)) entry.read = true;
       await this.storage.save(staged);
-      return { guidebook: { entries: this.guideEntries(staged), total: (this.content.guide ?? []).length } };
+      return this.guidebookView(staged);
     });
   }
 
   // A passage by its id, as the client is sent it; null for none or one the content no longer has.
-  toldView(passageId) { return passageView(this.content.passagesById?.get(passageId) ?? null); }
+  toldView(passageId) { return passageView(this.content.passagesById?.get(passageId) ?? null, this.narrationPack); }
 
   progression(envelope) { return progressionView(envelope.progression?.xp ?? 0); }
   level(envelope) { return levelFor(envelope.progression?.xp ?? 0); }
@@ -910,7 +925,7 @@ export class LearningService {
       },
       progress: { run: run.run, at: run.at, complete: isComplete(dungeon, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
       // Round 156: the narrator's passage for the site the player stands at (the same one every time; nothing is saved).
-      narration: passageView(selectPassage(this.content.passages ?? [], { event: 'site_arrive', dungeon: dungeon.id, site: run.at })),
+      narration: passageView(selectPassage(this.content.passages ?? [], { event: 'site_arrive', dungeon: dungeon.id, site: run.at }), this.narrationPack),
       guidebook: this.guidebookNote(envelope), // round 157
       progression: this.progression(envelope),
     };
@@ -967,7 +982,7 @@ export class LearningService {
       if (siteId === run.at) return this.dungeonView(envelope, dungeon);
       const staged = clone(envelope);
       this.saveRun(staged, dungeon, moved(dungeon, run, siteId));
-      this.enterGuide(staged, { event: 'site_arrive', dungeon: dungeon.id, site: siteId }); // round 157
+      this.tell(staged, { event: 'site_arrive', dungeon: dungeon.id, site: siteId }); // rounds 157 and 158: the guidebook's entries, and the site's passage as told
       await this.storage.save(staged);
       // The conversation belongs to the site the player has left (a resolved one is over; an ongoing one was left).
       if (own) this.encounters.delete(learnerId);
@@ -1071,7 +1086,8 @@ export class LearningService {
     const stagedEnvelope = clone(envelope);
     this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
     // Round 157: the first conversation at a dungeon's site may enter a guidebook entry (a map only read enters none).
-    if (dungeonId) this.enterGuide(stagedEnvelope, { event: 'site_arrive', dungeon: dungeonId, site: siteId });
+    // Round 158: and the site's passage counts as told (one with an untranslatable text is kept for the guidebook).
+    if (dungeonId) this.tell(stagedEnvelope, { event: 'site_arrive', dungeon: dungeonId, site: siteId });
     // Round 111 (review R1.12): computed once. Round 112 (critique 1.5): only the oldest pending read strains a
     // session, so with two reads pending each costs its own finished conversation (no stacking, none free).
     const strainedBy = this.pendingStrainIds(envelope).slice(0, 1);

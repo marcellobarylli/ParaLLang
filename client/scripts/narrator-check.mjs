@@ -10,7 +10,7 @@ const game = await openGame({ out: process.argv[2] ?? 'docs/rounds/156/shots', p
 
 await game.run(async ({ page, check, shot, tap, say, runtime, content }) => {
   await game.toRoad();
-  const first = page.locator('.road-card .narration');
+  const first = page.locator('.road-card > .narration');
   check((await first.textContent()).startsWith('You step onto the road.'), 'the road\'s card tells the first step');
   check(await first.evaluate((element) => getComputedStyle(element).fontStyle) === 'italic', 'in the narrator\'s italic');
   await shot('01-first-step');
@@ -41,7 +41,7 @@ await game.run(async ({ page, check, shot, tap, say, runtime, content }) => {
   await tap(page.getByRole('button', { name: 'Start', exact: true }));
   await page.getByLabel('Conversation with Portia').waitFor({ timeout: 60000 });
   await tap(page.getByRole('button', { name: 'Leave', exact: true }));
-  const site = page.locator('.site-card .narration');
+  const site = page.locator('.site-card > .narration');
   await site.waitFor({ timeout: 20000 });
   check((await site.textContent()).startsWith('You stand before the gate.'), 'the site card of the Face Gate tells its passage');
   await shot('04-face-gate');

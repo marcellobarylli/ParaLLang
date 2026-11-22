@@ -20,11 +20,13 @@ const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
 export const PHONE = { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
 export const DESKTOP = { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 };
 
-export async function openGame({ provider, out, language = 'it', display = {}, device = PHONE, serviceOptions = {} }) {
+export async function openGame({ provider, out, language = 'it', display = {}, device = PHONE, serviceOptions = {}, before = null }) {
   const problems = [];
   const check = (ok, text) => { console.log(`${ok ? 'ok  ' : 'FAIL'} ${text}`); if (!ok) problems.push(text); };
   const content = loadGameContent({ language });
   const runtime = await createRuntime({ language, content, provider: provider(content), serviceOptions });
+  // `before(runtime, content)` may play on the server first; a learner id it returns is the browser's learner.
+  const learnerId = before ? await before(runtime, content) : null;
   const outDir = resolve(ROOT, out);
   await mkdir(outDir, { recursive: true });
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
@@ -45,10 +47,11 @@ export async function openGame({ provider, out, language = 'it', display = {}, d
     try { return route.fulfill({ status: 200, contentType: TYPES[extname(file)] ?? 'application/octet-stream', body: await readFile(join(DIST, file)) }); } catch { return route.fulfill({ status: 404, body: '' }); }
   });
   // The server's address and token; no music and no voices unless the check asks for them.
-  await page.addInitScript(([settings, shown]) => {
+  await page.addInitScript(([settings, shown, learner]) => {
     localStorage.setItem('parallang.settings', settings);
     if (!localStorage.getItem('parallang.display')) localStorage.setItem('parallang.display', shown);
-  }, [JSON.stringify({ serverUrl: ORIGIN, token: runtime.token }), JSON.stringify({ music: false, voices: false, ...display })]);
+    if (learner && !localStorage.getItem('parallang.learnerId')) localStorage.setItem('parallang.learnerId', learner);
+  }, [JSON.stringify({ serverUrl: ORIGIN, token: runtime.token }), JSON.stringify({ music: false, voices: false, ...display }), learnerId]);
   const tap = (locator, options) => (device.hasTouch ? locator.tap(options) : locator.click(options));
   const game = {
     page, runtime, content, sent, check, problems, tap,

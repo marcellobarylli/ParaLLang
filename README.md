@@ -308,6 +308,12 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   the event that enters each), a save keeps the entries a learner has under `guidebook`, `GET /api/guidebook` lists
   them and `POST /api/guidebook/read` marks them read. A new entry is told on the card of the place where it was
   entered, and the top bar's "?" opens the guidebook. `node client/scripts/guidebook-check.mjs` plays it.
+  From round 158 deep truths about the world exist only in the language being learned:
+  `content/languages/<code>/lore/truths.yaml` holds the pack's untranslatable texts (no field for a translation),
+  a passage sets one with `{truth:<id>}`, and the server sends it as a segment of the kind `truth`, which the client
+  shows in turmeric with nothing to tap. The guidebook explains the colour once ("Turmeric text") and keeps the
+  passages found. What each text says is in `parallang_obsidian/Understood Later.md`, which the game does not read.
+  `node client/scripts/turmeric-check.mjs` plays it.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

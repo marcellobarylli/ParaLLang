@@ -8,6 +8,7 @@
 #             road_enter                                       the first step on The Journey 2
 #             road_arrive  way, biome, kind: lesson|review|repair|checkpoint   an arrival at a site of the road
 #             site_arrive  dungeon, site                       standing at a site of a dungeon
+#             truth_shown                                      (round 158) a passage with an untranslatable text was told
 #   text    the entry, in English, in the narrator's voice. It may say how things are done here; like every other
 #           narration it does not say why the world is so.
 entries:
@@ -18,6 +19,13 @@ entries:
       No road ends. Where water is in the way the road goes through it as a ford; where a mountain is in the way,
       over it as a pass; and where there is no land at all there is a ferry. A traveller who stops choosing is
       carried along all the same, and arrives.
+  # Round 158 (issue #4): the entry issue #5 gave as its example, entered with the first turmeric text.
+  - id: turmeric_text
+    title: Turmeric text
+    when: { event: truth_shown }
+    text: >-
+      Turmeric coloured text cannot be translated. It holds fragments of the truth of the world; to understand you
+      must become a proficient speaker.
   - id: talked_past
     title: Being let past
     when: { event: site_arrive }

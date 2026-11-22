@@ -258,7 +258,10 @@ export const roadMethods = {
       const activity = commit(curriculum, road.progress, road.step, offers.get(nodeId), this.isDueObjective(envelope));
       // Round 156: the narrator's passage for the arrival: by the kind of way taken and the country arrived in.
       const [ni, nj] = parseNodeId(nodeId);
-      const arrival = { event: 'road_arrive', way: graph.edge(frontier.find((entry) => entry.id === nodeId).from, nodeId).kind, biome: graph.node(nodeId).biome, kind: activity.kind }; // `kind`: round 157
+      const arrival = { event: 'road_arrive', way: graph.edge(frontier.find((entry) => entry.id === nodeId).from, nodeId).kind, biome: graph.node(nodeId).biome, kind: activity.kind, // `kind`: round 157
+        // Round 158: the stage of the curriculum the learner is in, and the conversations finished: a passage with a
+        // harder untranslatable text waits for its stage, and one may wait for a number of conversations.
+        cefr: curriculum.stages.find((stage) => stage.id === position(curriculum, road.progress).unit?.stageId)?.cefr ?? curriculum.stages.at(-1).cefr, step: road.step };
       staged.road = {
         ...road, at: nodeId,
         trail: [...road.trail.filter((id) => id !== nodeId), nodeId].slice(-ROAD.trail),
