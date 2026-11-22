@@ -178,7 +178,10 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .speaker { color: var(--gold); display: block; margin-bottom: .3rem; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
 .native-line { line-height: 1.7; font-size: 1.02rem; }
 .translation { color: #c6c8c1; border-left: 2px solid #8a8c86; padding-left: .75rem; }
-.word-actions { display: flex; flex-wrap: wrap; gap: .35rem .8rem; margin: .3rem 0 .65rem; }
+.word-actions { display: flex; flex-wrap: wrap; gap: .35rem .8rem; margin: .65rem 0 .3rem; }
+/* Round 149: the line and its translation stand together; the words come after. */
+.bilingual-text .native-line { margin-bottom: .45rem; }
+.bilingual-text .native-line + .translation { margin-top: 0; }
 .word-help { font-size: .85rem; }
 .protected-note { display: block; margin-top: .55rem; }
 .player-message { margin: 1rem 0 1rem auto; max-width: 78%; width: fit-content; padding: .6rem .85rem; background: rgb(255 255 255 / .13); border: 2px solid; border-color: rgb(255 255 255 / .45) rgb(0 0 0 / .65) rgb(0 0 0 / .65) rgb(255 255 255 / .45); }

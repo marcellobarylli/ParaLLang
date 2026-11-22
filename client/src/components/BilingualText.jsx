@@ -7,6 +7,19 @@ export default function BilingualText({ message, language, onHelp, disabled = fa
   return (
     <div className="bilingual-text">
       <SentenceText className="native-line" lang={language?.tag} text={dialogue.native} sentences={pairs?.native} />
+      {/* Round 149: the translation stands directly under the line, with nothing between them; the words come after. */}
+      {dialogue.translation ? (
+        <SentenceText className="translation" role="status" text={dialogue.translation} sentences={pairs?.translation} />
+      ) : (
+        <button
+          type="button"
+          className="secondary-button"
+          disabled={disabled}
+          onClick={() => onHelp({ kind: 'sentence', messageId: message.id })}
+        >
+          Translate sentence
+        </button>
+      )}
       <div className="word-actions" aria-label="Word translations">
         {dialogue.words.map((word) => (
           <div className="word-help" key={word.vocabularyId}>
@@ -23,19 +36,7 @@ export default function BilingualText({ message, language, onHelp, disabled = fa
           </div>
         ))}
       </div>
-      {dialogue.translation ? (
-        <SentenceText className="translation" role="status" text={dialogue.translation} sentences={pairs?.translation} />
-      ) : (
-        <button
-          type="button"
-          className="secondary-button"
-          disabled={disabled}
-          onClick={() => onHelp({ kind: 'sentence', messageId: message.id })}
-        >
-          Translate sentence
-        </button>
-      )}
-      {isProtected && <small className="protected-note">Active-message translations use your companion hint allowance.</small>}
+      {isProtected && <small className="protected-note">{dialogue.translation ? 'Word translations use your companion hint allowance.' : 'Active-message translations use your companion hint allowance.'}</small>}
     </div>
   );
 }

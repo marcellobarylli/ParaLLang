@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 149, the translation directly under the line (not deployed)
+
+From the live game on a phone the owner asked for nothing between the Italian line and its English: the word
+buttons stood between the two. The translation is now directly under the line and the word buttons come after it
+([findings](docs/rounds/149/findings.md)). The web client only; a deploy needs no restart of the server.
+
 ## Addendum 2026-11-22: round 148, a slider for how much of the language the characters speak, at 100 % by default (deployed)
 
 The owner asked for "full italian for the npcs" as a slider that goes up to 100 % and starts there, with the
@@ -1451,6 +1457,7 @@ Newest first.
 | 146 | 11-22 | A guide to the GitHub save in Settings, with where the server keeps its saves now; on The Long Way Home a day of 45 minutes, rain 30 % of the time, a blended sky, rain, snow, stars, fireflies, lightning, wind and the sound of rain; the narrator told the weather; deployed | [146](docs/rounds/146/architecture.md) | [findings](docs/rounds/146/findings.md) | round 146 build, merged to `main` |
 | 147 | 11-22 | Sunsets in orange, red and purple and sunrises in gold and pink on The Long Way Home, the sun's disc down to the horizon; a layer of drifting clouds lit by the sky; the road's map as an isometric picture of the landscape with relief; deployed with round 148 | [147](docs/rounds/147/architecture.md) | [findings](docs/rounds/147/findings.md) | round 147 build, merged to `main` |
 | 148 | 11-22 | A slider in Settings for how much of the language the characters speak, 100 % by default: the narrator is told to speak the language only, and at 100 % the line's translation shows with it, free; the server's default and the iPhone app unchanged; no model called; deployed | [148](docs/rounds/148/architecture.md) | [findings](docs/rounds/148/findings.md) | round 148 build, merged to `main` |
+| 149 | 11-22 | The translation directly under a character's line, the word buttons after it; the web client only | [149](docs/rounds/149/architecture.md) | [findings](docs/rounds/149/findings.md) | round 149 build |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |
