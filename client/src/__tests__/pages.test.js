@@ -28,7 +28,7 @@ test('the manifest installs to the home screen with icons that exist', () => {
   expect(manifest.icons.some((icon) => icon.sizes === '512x512' && icon.purpose === 'maskable')).toBe(true);
   for (const icon of manifest.icons) expect(existsSync(resolve(CLIENT_DIR, 'public', icon.src)), icon.src).toBe(true);
   const html = readFileSync(resolve(CLIENT_DIR, 'index.html'), 'utf8');
-  for (const href of ['./manifest.webmanifest', './parallang-icon.svg', './parallang-icon-apple-touch.png']) expect(html).toContain(`href="${href}"`);
+  for (const href of ['./manifest.webmanifest', './parallang-icon-64.png', './parallang-icon-apple-touch.png']) expect(html).toContain(`href="${href}"`);
   expect(existsSync(resolve(CLIENT_DIR, 'public/parallang-icon-apple-touch.png'))).toBe(true);
   expect(html).toContain('viewport-fit=cover');
 });
@@ -110,4 +110,25 @@ test('the stylesheet has no rounded corner, and the panel background follows --p
   }
   expect(css).toMatch(/\.settings-open \.dock \{ visibility: hidden; \}/);
   expect(css).not.toMatch(/#0d0d1a|#12111f|#19182a|#2a2940|#4a4863/i);
+});
+
+// Round 150: the icons are a snapshot of the road's map with a walk on it, written by scripts/make-icons.mjs.
+test('the icon is the map with a walk that a round mask does not cut, and every file has its size', async () => {
+  const { ICON, ICON_FILES, iconScene, iconPixels, png } = await import('../../scripts/make-icons.mjs');
+  const scene = iconScene();
+  expect(scene.walk).toHaveLength(ICON.hops + 1);
+  expect(new Set(scene.walk).size).toBe(scene.walk.length);
+  // A maskable icon is safe inside a circle of 80 % of its side; the flag stands 11.4 units over the last site.
+  const [last] = scene.sites.slice(-1);
+  for (const [x, y] of [...scene.line, ...scene.sites, [last[0], last[1] - 11.4]]) expect(Math.hypot(x - ICON.frame / 2, y - ICON.frame / 2)).toBeLessThan(ICON.frame * 0.4);
+  // The walked line is on the picture: some of its pixels have the line's own colour, nothing mixed in.
+  const pixels = iconPixels(scene, 64);
+  let way = 0;
+  for (let n = 0; n < pixels.length; n += 3) if (pixels[n] === 255 && pixels[n + 1] === 243 && pixels[n + 2] === 207) way += 1;
+  expect(way).toBeGreaterThan(20);
+  expect(png(64, pixels).readUInt32BE(16)).toBe(64);
+  for (const [folder, name, size] of ICON_FILES) {
+    const file = readFileSync(new URL(name, folder));
+    expect([name, file.readUInt32BE(16), file.readUInt32BE(20), file[25]]).toEqual([name, size, size, 2]);
+  }
 });
