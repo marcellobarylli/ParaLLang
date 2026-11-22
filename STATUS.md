@@ -33,6 +33,20 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 152, the road is The Journey 2: Journathan Returns (again) (deployed)
+
+The owner asked for the next GitHub issue: #10, step 2 of the build order. The endless road, The Long Way Home until
+now, is called **The Journey 2: Journathan Returns (again)** on the world map, its button, the top bar, in what the
+narrator is told of the scene, and in the README, `CLAUDE.md`, `docs/curriculum.md` and `docs/handoff.md`. The
+place's id (`the_long_way`) and the saves are unchanged; the earlier rounds' records keep the old name. The world
+map's label is set as two lines, since one ran off the map on a phone. Checked by tests and in headless Chromium at a
+phone and a desktop size; not on a phone, and no model was told the new name. Asked
+whether the merge should also restart the server, the owner answered "Yes to both": it is merged to `main` without
+`[skip render]`, so the page and the server are both deployed, and issue #10 is closed. The server's restart loses
+the saves on its disk unless the GitHub save is on; a browser's copy puts its save back
+([findings](docs/rounds/152/findings.md), picture:
+[`01-world-map-phone.jpg`](docs/rounds/152/shots/01-world-map-phone.jpg)).
+
 ## Addendum 2026-11-22: round 151, the lore book says what the roads are (on `main`)
 
 The owner asked for the next GitHub issue that needs nothing first: #12, step 1 of the issues' build order. The
@@ -1484,6 +1498,7 @@ Newest first.
 | 149 | 11-22 | The translation directly under a character's line, the word buttons after it; the web client only; deployed | [149](docs/rounds/149/architecture.md) | [findings](docs/rounds/149/findings.md) | round 149 build, merged to `main` |
 | 150 | 11-22 | The icons of the web app and the iPhone app are a snapshot of the road's isometric map with a walk on it (issue #22); deployed | [150](docs/rounds/150/architecture.md) | [findings](docs/rounds/150/findings.md) | round 150 build, merged to `main` |
 | 151 | 11-22 | The lore book says what the roads are: the graph is a web of threads stitched to other worlds, and no character knows (issue #12); a text only; on `main` | [151](docs/rounds/151/architecture.md) | [findings](docs/rounds/151/findings.md) | round 151 build, merged to `main` |
+| 152 | 11-22 | The road's name is The Journey 2: Journathan Returns (again) (issue #10): the world map, the top bar, the narrator's scene, the documents; ids and saves unchanged; deployed | [152](docs/rounds/152/architecture.md) | [findings](docs/rounds/152/findings.md) | round 152 build, merged to `main` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

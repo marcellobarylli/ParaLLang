@@ -201,9 +201,9 @@ Since round 115 the web client (`client/`) is one screen, a dungeon crawl throug
   `puppeteer-core` and a Chrome (see the script's header); round 119's pictures are in
   [`docs/rounds/119/shots/`](docs/rounds/119/shots/).
 
-## The Long Way Home: an endless road and a curriculum
+## The Journey 2: Journathan Returns (again): an endless road and a curriculum
 
-Since round 144 the world map has one more place, **The Long Way Home**: an endless landscape with a curriculum
+Since round 144 the world map has one more place, **The Journey 2: Journathan Returns (again)** (called The Long Way Home until round 152): an endless landscape with a curriculum
 walked along it. It is in the web client only.
 
 - **The landscape** is generated from a seed by fractal noise (`server/src/road/terrain.js`), and only the ground

@@ -123,7 +123,7 @@ export function trimEvidence(spellbook, limit = EVIDENCE_LIMIT) {
   return spellbook;
 }
 
-// Round 144: The Long Way Home (road/service.js). Only the container is checked: a road this server cannot read is
+// Round 144: The Journey 2 (road/service.js). Only the container is checked: a road this server cannot read is
 // dropped and the save kept, and the learner starts a new road.
 const SITE_ID = /^-?\d{1,7},-?\d{1,7}$/;
 function validRoad(road) {

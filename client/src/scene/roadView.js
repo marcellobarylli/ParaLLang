@@ -1,4 +1,4 @@
-// Round 144: the three.js host of The Long Way Home. It owns the renderer, the endless level from
+// Round 144: the three.js host of The Journey 2. It owns the renderer, the endless level from
 // @parallang/aesthetic and the PS1 pipeline, keeps the ground around the camera built (and nothing else), shows who
 // stands at the sites near the player as plain stand-ins, lays a track along the ways, and moves the camera as the
 // road's director says. Loaded lazily, as the dungeon's host is.

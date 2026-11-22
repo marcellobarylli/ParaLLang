@@ -224,7 +224,7 @@ Ta Prohm holds seven sites joined by eight paths, under a world map of places
   `src/__tests__/proxy.test.js`, which binds one: name the folders. `~/workspace/r119-jobs/run.sh` and `shots.sh`
   are round 119's job scripts.
 
-### The Long Way Home (round 144)
+### The Journey 2: Journathan Returns (again) (round 144; called The Long Way Home until round 152)
 
 ([144 architecture](rounds/144/architecture.md), [144 findings](rounds/144/findings.md), [the curriculum](curriculum.md),
 pictures in [`rounds/144/shots/`](rounds/144/shots/).)

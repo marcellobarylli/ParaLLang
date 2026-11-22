@@ -322,7 +322,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   return Object.freeze({
     language, styleGuide, onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
     inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
-    // Round 144: the curriculum of The Long Way Home (content/curriculum/ and the pack's curriculum/), with its own
+    // Round 144: the curriculum of The Journey 2 (content/curriculum/ and the pack's curriculum/), with its own
     // vocabulary, kept apart from the pack's above. Null in a pack that has none. Read on first use: its vocabulary
     // is some hundreds of entries whose patterns take about a second to make, which a process that never sets foot
     // on the road (most of the tests) need not spend. server.js reads it at start, so a content error stops the

@@ -6,7 +6,7 @@
 // music (round 127): whether the ambient music plays. On unless switched off.
 // voices (round 126): whether the characters read their new lines aloud. On unless switched off.
 // tiltLook (round 125): whether the phone's orientation turns the camera's look at a site. Off unless switched on.
-// rails (round 144): on The Long Way Home, whether the way on is chosen for the player. On unless switched off.
+// rails (round 144): on The Journey 2, whether the way on is chosen for the player. On unless switched off.
 // immersion (round 148): the share of a character's lines in the language being learned, 0.1 to 1. 1 unless moved.
 import { browserStorage } from './api/settings.js';
 

@@ -1,4 +1,4 @@
-// Round 144: The Long Way Home on the server: the learner's place on the endless graph, what each site ahead offers,
+// Round 144: The Journey 2 on the server: the learner's place on the endless graph, what each site ahead offers,
 // the conversation at the site they stand at, and what a finished conversation does to the curriculum. These are
 // methods of LearningService (learning-service.js assigns them to its prototype); they live here so that the road
 // can be read in one place.

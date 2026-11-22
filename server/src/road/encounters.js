@@ -1,4 +1,4 @@
-// Round 144: a conversation of The Long Way Home as the encounter engine plays it. An activity of the pacing
+// Round 144: a conversation of The Journey 2 as the encounter engine plays it. An activity of the pacing
 // (pacing.js: a lesson, a review, a repair or a checkpoint) and the character of the site (characters.js) are made
 // into a definition of the same shape as an authored encounter's ({ encounter, character, narrationEntries,
 // ambientEntries }), so starting, grading, hints, hearts, the Spellbook and spaced review all work unchanged.
@@ -7,7 +7,7 @@
 import { CHECKPOINT_ROLES, REVIEW_ROLES, characterFor, placeName, roleFor } from './characters.js';
 import { PACING } from './pacing.js';
 
-export const ROAD_PLACE = Object.freeze({ id: 'the_long_way', name: 'The Long Way Home' });
+export const ROAD_PLACE = Object.freeze({ id: 'the_long_way', name: 'The Journey 2: Journathan Returns (again)' });
 
 const fill = (text, name) => String(text).replaceAll('{name}', name);
 

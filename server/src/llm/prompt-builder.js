@@ -56,7 +56,7 @@ export function buildNarrationMessages({
   targetRatio,
   decision = null,
   ambientEntries = [],
-  // Round 144: a conversation of The Long Way Home names its own place and, for a lesson, carries a note that its
+  // Round 144: a conversation of The Journey 2 names its own place and, for a lesson, carries a note that its
   // words are new. An authored encounter passes neither, and its prompts are unchanged.
   placeName = 'The Crumbling Market',
   teachingNote = null,

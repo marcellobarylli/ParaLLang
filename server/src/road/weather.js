@@ -1,4 +1,4 @@
-// Round 146: the time of day and the weather of The Long Way Home. Pure: a function of the clock and the road's
+// Round 146: the time of day and the weather of The Journey 2. Pure: a function of the clock and the road's
 // seed, with no state, so the server (which tells the narrator what the sky is doing) and the web client (which
 // shows it) agree without talking to each other, and the weather goes on while nobody is looking.
 //

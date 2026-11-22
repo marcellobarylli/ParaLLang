@@ -1,4 +1,4 @@
-// Round 144: the endless landscape of The Long Way Home. Pure and deterministic: no three.js, no DOM, no state. The
+// Round 144: the endless landscape of The Journey 2. Pure and deterministic: no three.js, no DOM, no state. The
 // server computes the graph of sites from it (graph.js) and the web client builds its meshes from the same functions
 // (client/src/scene/roadView.js imports this file), so both always agree on where the ground is.
 //

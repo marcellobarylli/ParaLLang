@@ -17,7 +17,7 @@ export function createEncounterRouter(service) {
       if (req.body?.dungeonId != null) requireClient(req.body.client);
       res.json(await service.startEncounter(learnerId(req), {
         restart: req.body?.restart === true, encounterId: req.body?.encounterId ?? null, dungeonId: req.body?.dungeonId ?? null,
-        road: req.body?.road === true, // round 144: the conversation waiting on The Long Way Home
+        road: req.body?.road === true, // round 144: the conversation waiting on The Journey 2
         immersion: req.body?.immersion ?? null, // round 148: the share of target language the player chose
       }));
     }

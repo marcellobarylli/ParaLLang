@@ -40,7 +40,7 @@ export const AMBIENCE = Object.freeze({
   fadeIn: 4, // the start
   fadeOut: 1.5, // the stop
   levels: Object.freeze({ full: 0.14, duck: 0.045, mute: 0 }),
-  // Round 146: the weather of The Long Way Home. Rain is filtered noise under the chords, as loud as it is heavy;
+  // Round 146: the weather of The Journey 2. Rain is filtered noise under the chords, as loud as it is heavy;
   // thunder is a low rumble that swells and dies away.
   rain: Object.freeze({ gain: 1.4, low: 700, high: 5200, ease: 1.5 }),
   thunder: Object.freeze({ gain: 2.2, cutoff: 140, swell: 0.35, lasts: 3.2 }),

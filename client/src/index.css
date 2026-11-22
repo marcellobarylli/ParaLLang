@@ -270,7 +270,7 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .sentence[data-sentence="5"] { color: #7f9cff; }
 .sentence[data-sentence="6"] { color: #ff8a50; }
 
-/* Round 144: The Long Way Home. The hub card, the kind tags, the map and the curriculum panel, in the same PS1 menu
+/* Round 144: The Journey 2. The hub card, the kind tags, the map and the curriculum panel, in the same PS1 menu
    look: hard corners, bevels, no rounding. */
 .road-backdrop { background: linear-gradient(180deg, #7fa5c8 0, #c5d6d4 46%, #62803a 46%, #3f5a2a 100%); }
 .road-card .who { color: var(--gold-hi); }

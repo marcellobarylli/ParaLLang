@@ -1,4 +1,4 @@
-// Round 144: The Long Way Home in the web client's store (gameStore.js spreads this slice into its state). The
+// Round 144: The Journey 2 in the web client's store (gameStore.js spreads this slice into its state). The
 // road is a mode beside the dungeon: `mode` is 'dungeon' or 'road', and in road mode `roadPhase` says what the dock
 // shows:
 //

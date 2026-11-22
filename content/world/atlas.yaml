@@ -44,10 +44,10 @@ places:
       A dome. Of bone. The name was not a metaphor.
     closed: "No road leads here yet."
   # Round 144: the endless road. It has no dungeon file: its landscape, its sites and its characters are generated
-  # (server/src/road/), and the curriculum is walked along it. The name and the lines are ours; Journathan, "still
+  # (server/src/road/), and the curriculum is walked along it. The lines are ours; the name is the owner's (issue #10; it was The Long Way Home until round 152); Journathan, "still
   # technically on his way home", is the owner's (parallang_obsidian/).
   - id: the_long_way
-    name: The Long Way Home
+    name: "The Journey 2: Journathan Returns (again)"
     road: true
     map: { x: 0.62, y: 0.86 }
     description: >

@@ -210,7 +210,7 @@ describe('the ambience', () => {
   });
 });
 
-// Round 146: the rain of The Long Way Home under the music, and thunder.
+// Round 146: the rain of The Journey 2 under the music, and thunder.
 describe('rain and thunder', () => {
   function withNoise() {
     const scope = fakeAudio();

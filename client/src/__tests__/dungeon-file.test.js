@@ -5,7 +5,8 @@
 import { describe, expect, test } from 'vitest';
 import { FIGURES, TA_PROHM, WORLDS, createFigure, createWorldKit, taProhmHeightAt, taProhmIsClear } from '@parallang/aesthetic';
 import { DUNGEON, DUNGEONS, KILN } from '../dungeon.js';
-import { ATLAS, ATLAS_FILE } from '../atlas.js';
+import { ATLAS, ATLAS_FILE, ROAD_NAME } from '../atlas.js';
+import { ROAD_PLACE } from '../../../server/src/road/encounters.js';
 import { atlasView, neighbourIds, unexploredSites } from '../dungeonModel.js';
 import { pathPoints } from '../scene/director.js';
 import { PASSAGE, blocked } from './taProhmPlan.js';
@@ -145,6 +146,9 @@ test('the world file: places joined by paths, one of them this dungeon, and a fo
     else expect(place.closed.length).toBeGreaterThan(5);
   }
   expect(ATLAS_FILE.places.filter((place) => place.road).map((place) => place.id)).toEqual(['the_long_way']);
+  // Round 152: the road's name is the atlas's, and the server's copy (what the narrator is told) is the same.
+  expect(ROAD_NAME).toBe('The Journey 2: Journathan Returns (again)');
+  expect({ id: ROAD_PLACE.id, name: ROAD_PLACE.name }).toEqual({ id: 'the_long_way', name: ROAD_NAME });
   const opened = ATLAS_FILE.places.filter((place) => place.dungeon).map((place) => place.dungeon);
   expect(opened.sort()).toEqual(DUNGEONS.map((dungeon) => dungeon.id).sort());
   expect(ATLAS.places.map((place) => [place.id, place.state, place.dungeonId, Boolean(place.closed)])).toEqual([

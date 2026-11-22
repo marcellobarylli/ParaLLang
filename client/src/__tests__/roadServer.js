@@ -1,4 +1,4 @@
-// Round 144: the server of The Long Way Home for the client's tests: the real LearningService, in this process,
+// Round 144: the server of The Journey 2 for the client's tests: the real LearningService, in this process,
 // with a scripted grader and a save directory of its own. The store's API is a thin adapter over the service's
 // methods, so the client is tested against the server's own rules (as fakeRun.js does for the dungeon's map).
 // A module, not a test file.

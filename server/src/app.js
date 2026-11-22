@@ -81,7 +81,7 @@ export function createApp({ service, logger = console, token = null, saves = nul
     catch (error) { next(error); }
   });
 
-  // Round 144: The Long Way Home: the learner's place on the endless graph with what each site ahead offers and the
+  // Round 144: The Journey 2: the learner's place on the endless graph with what each site ahead offers and the
   // curriculum's marks; a walk to a site; a new road. And the whole save, for a copy the player keeps.
   app.get('/api/road', async (req, res, next) => {
     try { res.json(await service.getRoad(req.get('X-Learner-Id'))); }

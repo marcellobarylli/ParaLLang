@@ -13,6 +13,7 @@ import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
 import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
+import { ROAD_NAME } from '../atlas.js';
 import { siteStatesOf } from '../stores/gameStore.js';
 
 // Round 115: the web client's one screen, the dungeon. The level fills the screen; over it lie the top bar and the
@@ -26,7 +27,7 @@ import { siteStatesOf } from '../stores/gameStore.js';
 // conversation or from the site's card, and a member can be talked to from the Party panel.
 // Round 119: the dungeon is a map. The player picks where to walk: on the temple map, on the site card, or after a
 // conversation. The server says which sites are out of the fog and which can be walked to (progress.sites).
-// Round 144: The Long Way Home is a mode of this same screen (`state.mode === 'road'`): the endless level in place of
+// Round 144: The Journey 2 is a mode of this same screen (`state.mode === 'road'`): the endless level in place of
 // the dungeon's, its own top bar chip and dock (Road.jsx), and the same dialogue sheet, Spellbook, reviews and Settings.
 const NO_INSETS = Object.freeze({ top: 0, right: 0, bottom: 0, left: 0 });
 const sameInsets = (a, b) => ['top', 'right', 'bottom', 'left'].every((side) => Math.abs(a[side] - b[side]) < 1);
@@ -69,6 +70,14 @@ function TitleCard({ state }) {
   );
 }
 
+// Round 152: a name with a colon in it is too long for one line of the world map, so it is set as two lines, the
+// second where the one line would be.
+function mapLabel(name) {
+  const at = name.indexOf(': ');
+  if (at < 0) return name;
+  return [name.slice(0, at + 1), name.slice(at + 2)].map((line, index) => <tspan key={line} x="0" dy={index ? 3.9 : -3.9}>{line}</tspan>);
+}
+
 // Round 119: the world map. Places and the paths between them, as far as the fog allows; an open place can be
 // entered, the others say why not.
 // Round 133: more than one place may be open. The marker is on the place the player is in, each open place shows its
@@ -98,7 +107,7 @@ function WorldCard({ state, cleared }) {
         {places.map((place) => (
           <g key={place.id} className={`world-place ${here(place) ? 'current' : 'known'}${place.closed ? ' closed' : ''}${place.road ? ' road' : ''}`} transform={`translate(${place.map.x * 100} ${place.map.y * 60})`}>
             <rect x="-2.2" y="-2.2" width="4.4" height="4.4" />
-            <text y="-4">{place.name}</text>
+            <text y="-4">{mapLabel(place.name)}</text>
           </g>
         ))}
       </svg>
@@ -290,7 +299,7 @@ function PartyOffer({ state, encounter }) {
 // Round 126: the character's lines are read aloud in the voice of its sheet (`speech.speaker`): each new line when
 // it arrives, unless voices are off in Settings, and any line again from its 🔊. The voice stops when the player
 // sends, starts the microphone or leaves.
-// Round 144: with `road` ({ title, subtitle }) it is a conversation of The Long Way Home: the same sheet, with the
+// Round 144: with `road` ({ title, subtitle }) it is a conversation of The Journey 2: the same sheet, with the
 // road's way on under a finished conversation (RoadResolved).
 function EncounterSheet({ state, site, sites, party = false, road = null, speech, height = null, onHeight = () => {} }) {
   const { encounter, assessment, language, isLoading, encounterLoading } = state;
@@ -477,7 +486,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
 
       <header className="hud" ref={hudRef}>
-        <div className="hud-title"><strong>ParaLLang</strong><span>{onRoad ? 'The Long Way Home' : dungeon.name}</span></div>
+        <div className="hud-title"><strong>ParaLLang</strong><span>{onRoad ? ROAD_NAME : dungeon.name}</span></div>
         <LevelChip progression={state.progression} />
         {!onRoad && (
           <ol className="pips" aria-label={`${cleared.length} of ${dungeon.sites.length} sites cleared`}>

@@ -1,4 +1,4 @@
-// Round 144: the camera of The Long Way Home. Pure: no DOM and no three.js, so it is tested in Node. A pose is
+// Round 144: the camera of The Journey 2. Pure: no DOM and no three.js, so it is tested in Node. A pose is
 // { position: [x, y, z], target: [x, y, z] }, as the dungeon's director gives (director.js); the host copies it to
 // its camera.
 //

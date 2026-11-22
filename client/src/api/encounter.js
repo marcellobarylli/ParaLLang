@@ -50,7 +50,7 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
       const { restart = false, dungeonId, encounterId, road = false, immersion } = typeof options === 'object' && options !== null ? options : { restart: options === true };
       return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId, client: CLIENT_CONTRACT } : {}), ...(encounterId ? { encounterId } : {}), ...(road ? { road: true } : {}), ...(typeof immersion === 'number' ? { immersion } : {}) } });
     },
-    // Round 144: The Long Way Home: the learner's place on the endless graph with what waits ahead and the
+    // Round 144: The Journey 2: the learner's place on the endless graph with what waits ahead and the
     // curriculum's marks; a walk to a site (`leave` drops the road's conversation under way); a new road.
     getRoad: (learnerId) => request('/api/road', { learnerId }),
     moveRoad: (learnerId, body) => request('/api/road/move', { learnerId, method: 'POST', body }),
