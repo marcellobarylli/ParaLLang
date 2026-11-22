@@ -19,7 +19,7 @@ import { RoadProvider } from '../../server/test/road-helpers.js';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '148', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '149', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/';
 const SEED = Number(process.env.ROAD_SEED ?? 4242);
@@ -197,6 +197,10 @@ async function run(browser, size, content) {
         if (!(await page.locator('.bilingual-text .translation').last().isVisible())) fail('the translation does not show with the line');
         if (await page.getByRole('button', { name: 'Translate sentence' }).count()) fail('the translation is still behind a hint');
         await shot('03-conversation');
+        // Round 149: nothing stands between the line and its translation.
+        const order = await page.locator('.bilingual-text').last().evaluate((node) => [...node.children].map((child) => child.className));
+        if (order[0] !== 'native-line' || order[1] !== 'translation') fail(`between the line and its translation: ${order.join(', ')}`);
+        if (size.name === 'desktop') await shot('22-line-and-translation'); // the phone's sheet shows the line only
       }
       await page.getByRole('textbox').first().fill(answer);
       if (label === 'first') await shot('04-answer');

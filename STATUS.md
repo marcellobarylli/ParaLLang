@@ -33,7 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-22: round 148, a slider for how much of the language the characters speak, at 100 % by default (not deployed)
+## Addendum 2026-11-22: round 149, the translation directly under the line (deployed)
+
+From the live game on a phone the owner asked for nothing between the Italian line and its English: the word
+buttons stood between the two. The translation is now directly under the line and the word buttons come after it
+([findings](docs/rounds/149/findings.md)). The web client only.
+
+Asked whether to deploy, the owner chose "Deploy, and keep deploying": this round is merged to `main` with
+`[skip render]` (the page alone; the server is not restarted), and later changes asked for in the same chat are
+deployed once tested, without a question first.
+
+## Addendum 2026-11-22: round 148, a slider for how much of the language the characters speak, at 100 % by default (deployed)
 
 The owner asked for "full italian for the npcs" as a slider that goes up to 100 % and starts there, with the
 coloured translation carrying the learning and the voices kept.
@@ -48,10 +58,18 @@ coloured translation carrying the learning and the voices kept.
   a gate.
 
 **No model was called**: the tests check what the narrator is told, not what a model then writes
-([findings](docs/rounds/148/findings.md)). It is on the session branch with round 147. A deploy of this round
-restarts the server.
+([findings](docs/rounds/148/findings.md)).
 
-## Addendum 2026-11-22: round 147, sunsets and sunrises, clouds, and the road's map as an isometric picture (not deployed)
+**The deploy of rounds 147 and 148 (2026-11-22, 19:05 to 19:14 UTC).** The owner chose "Deploy both now" when
+asked. Both rounds were merged to `main` as `f6acc02`. CI run 45058747456 succeeded and Render's deployment "main -
+parallang" for the commit reports success. The Pages run for the push (45058747466) built and uploaded the page but
+failed at its last step twice: first GitHub's API did not yet list the artifact just uploaded, and the re-run of
+the job then found two artifacts of the same name in the one run. A fresh run started by hand on `main`
+(45059330498, no change to the code) succeeded. The cloud session cannot reach the hosted server or the live page
+itself; this is read from GitHub's API. The server restarted, so saves on its disk were lost unless the GitHub save
+is on; a browser's copy puts its save back.
+
+## Addendum 2026-11-22: round 147, sunsets and sunrises, clouds, and the road's map as an isometric picture (deployed)
 
 The owner asked for "nice sunsets with beautiful orange, purple, red and beautiful sunrises", clouds, and the world
 map "not top down but isometric zoomed out", to show off the fractal landscape.
@@ -67,9 +85,8 @@ map "not top down but isometric zoomed out", to show off the fractal landscape.
   signs standing on it.
 
 Checked by tests and in headless Chromium at a phone and a desktop size, at one site; not on a phone
-([findings](docs/rounds/147/findings.md), pictures in [`docs/rounds/147/shots/`](docs/rounds/147/shots/)). **It is
-on the session branch only.** Every change is in the web client, so a deploy needs no restart of the server (a merge
-to `main` with `[skip render]`); it waits for the owner's word.
+([findings](docs/rounds/147/findings.md), pictures in [`docs/rounds/147/shots/`](docs/rounds/147/shots/)). It was
+deployed with round 148 (see that addendum).
 
 ## Addendum 2026-11-22: round 146, a guide to the GitHub save in Settings; day, night and weather on the road (deployed)
 
@@ -1442,8 +1459,9 @@ Newest first.
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
 | 146 | 11-22 | A guide to the GitHub save in Settings, with where the server keeps its saves now; on The Long Way Home a day of 45 minutes, rain 30 % of the time, a blended sky, rain, snow, stars, fireflies, lightning, wind and the sound of rain; the narrator told the weather; deployed | [146](docs/rounds/146/architecture.md) | [findings](docs/rounds/146/findings.md) | round 146 build, merged to `main` |
-| 147 | 11-22 | Sunsets in orange, red and purple and sunrises in gold and pink on The Long Way Home, the sun's disc down to the horizon; a layer of drifting clouds lit by the sky; the road's map as an isometric picture of the landscape with relief; on the session branch, not deployed | [147](docs/rounds/147/architecture.md) | [findings](docs/rounds/147/findings.md) | round 147 build |
-| 148 | 11-22 | A slider in Settings for how much of the language the characters speak, 100 % by default: the narrator is told to speak the language only, and at 100 % the line's translation shows with it, free; the server's default and the iPhone app unchanged; no model called; on the session branch, not deployed | [148](docs/rounds/148/architecture.md) | [findings](docs/rounds/148/findings.md) | round 148 build |
+| 147 | 11-22 | Sunsets in orange, red and purple and sunrises in gold and pink on The Long Way Home, the sun's disc down to the horizon; a layer of drifting clouds lit by the sky; the road's map as an isometric picture of the landscape with relief; deployed with round 148 | [147](docs/rounds/147/architecture.md) | [findings](docs/rounds/147/findings.md) | round 147 build, merged to `main` |
+| 148 | 11-22 | A slider in Settings for how much of the language the characters speak, 100 % by default: the narrator is told to speak the language only, and at 100 % the line's translation shows with it, free; the server's default and the iPhone app unchanged; no model called; deployed | [148](docs/rounds/148/architecture.md) | [findings](docs/rounds/148/findings.md) | round 148 build, merged to `main` |
+| 149 | 11-22 | The translation directly under a character's line, the word buttons after it; the web client only; deployed | [149](docs/rounds/149/architecture.md) | [findings](docs/rounds/149/findings.md) | round 149 build, merged to `main` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |
