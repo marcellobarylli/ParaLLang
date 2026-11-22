@@ -52,5 +52,6 @@ Listed in the book under "Not settled", for the owner:
 - Whether it is the same web as the realm of the Ring (part IX).
 - Where on the map the stitches to other worlds are (issue #8's dungeons beside the road may be them).
 
-Also open: the vault's `LORE.md` does not have the fact; it is in the owner's own vault to add. Issue #12 stays open
-until the round is on `main`.
+Also open: the vault's `LORE.md` does not have the fact; it is in the owner's own vault to add.
+
+Issue #12 was closed when the round was merged to `main` (the owner's "Go!", 2026-11-22).

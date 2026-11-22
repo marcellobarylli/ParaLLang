@@ -10,3 +10,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 21:35:40 | 21:35:40 | run | Claude | Cloud session container. The round-log check passes. No test run: no code, prompt or content changed | `../findings.md` |
 | 5 | 21:35:40 | 21:35:40 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 6 | 21:35:40 | 21:35:40 | closed | Claude | Status addendum and index row; committed and pushed on the session branch. Not on `main`; issue #12 open | `../architecture.md` |
+| 7 | 21:39:57 | 21:39:57 | decision | Owner | "Go!": merge to `main` with `[skip ci] [skip render]` and close issue #12 | `interview.md` |

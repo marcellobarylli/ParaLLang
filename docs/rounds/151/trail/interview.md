@@ -17,3 +17,9 @@ threads stitched to other worlds", marked "Needs first: nothing, independent. Ca
 Claude's reading, which the owner has not confirmed: "next" is the lowest step of the build order among the issues
 that need nothing first, so #12. The others that need nothing first are #10 (step 2), #1 (step 3) and #8 (step 10).
 "The lore book" is `docs/lore-book.md`.
+
+### Q1 (2026-11-22): asked after the round was pushed on the session branch
+- **Question:** "Say the word and I'll merge to `main` and close #12. The commit carries `[skip ci] [skip render]`,
+  so the server will not restart."
+- **Options offered:** none.
+- **Answer:** "Go!"
