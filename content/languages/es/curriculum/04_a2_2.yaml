@@ -1,0 +1,170 @@
+# Round 144: the Spanish words of curriculum stage A2.2 (the skeleton is content/curriculum/04_a2_2.yaml). Authored by
+# Claude from the functions of the A2 syllabi read for the round; no source page was opened for a single entry. For
+# the owner's review. The vocabulary shares one namespace with the earlier stages: an id defined in an earlier file is
+# reused here, never redefined, and no new entry repeats an earlier entry's form.
+stage: a2_2
+version: curriculum-a2-2-es-v1
+grammar:
+  invitations: "¿quieres + infinitive?, ¿te apetece + infinitive?; ¿vamos a ...?, ¿qué te parece ...?; claro, qué pena, no puedo."
+  comparisons: "más ... que and menos ... que; mejor and peor; el mejor, la mejor; tan ... como."
+  travel: "quisiera with a noun (una habitación doble); no funciona, no hay; questions with a qué hora and está incluido."
+  used_to: "Pretérito imperfecto: era, tenía, vivía, iba, jugaba; había; de pequeño; ahora, ya no."
+  future: "Futuro simple: iré, haré, será, volveré; el año que viene; a lo mejor, probablemente; te prometo que."
+  work: "soy + a job with no article, trabajo de; empiezo a, termino; me gustaría ser."
+lessons:
+  invitations_invite:
+    invite: { say: [quieres_venir, te_apetece], examples: ["¿Quieres venir a cenar a mi casa?", "¿Te apetece ir al cine?", "¿Le apetece tomar un café?"] }
+    suggest: { say: [que_te_parece, vamos, voy_a], examples: ["¿Vamos al cine el sábado?", "¿Qué te parece una pizza?"] }
+    where_meet: { say: [donde_quedamos], examples: ["¿Dónde quedamos?", "¿A qué hora quedamos?"] }
+  invitations_accept:
+    accept: { say: [claro, me_encantaria], examples: ["¡Claro que sí!", "Me encantaría.", "Con mucho gusto."] }
+    good_idea: { say: [buena_idea], examples: ["¡Buena idea!", "Es muy buena idea."] }
+    bring: { say: [llevo_algo], examples: ["¿Llevo algo?", "¿Tengo que llevar algo?"] }
+  invitations_decline:
+    decline: { say: [que_pena, no_puedo], examples: ["Qué pena, no puedo.", "Lo siento, el sábado no puedo."] }
+    excuse: { say: [estoy_ocupado], examples: ["Estoy ocupado.", "Ya tengo planes."] }
+    another_time: { say: [otro_dia], examples: ["¿Quedamos otro día?", "Mejor otro día."] }
+  comparisons_more:
+    ask_which: { say: [cual], examples: ["¿Cuál es más grande?", "¿Cuál cuesta más?"] }
+    bigger_than: { say: [mas_grande_que, mas_pequeno_que], examples: ["Madrid es más grande que Sevilla.", "Mi casa es más pequeña que la tuya."] }
+    cheaper: { say: [mas_barato, mas_caro], examples: ["El tren es más barato que el avión.", "Este cuesta menos.", "El pescado es más caro que la carne."] }
+  comparisons_better:
+    better: { say: [mejor], examples: ["Este es mejor.", "El vino tinto es mejor que el blanco."] }
+    worse: { say: [peor], examples: ["Este es peor.", "Hoy el tiempo es peor que ayer."] }
+    the_best: { say: [el_mejor], examples: ["Esta pizza es la mejor.", "Es el mejor de todos."] }
+  comparisons_same:
+    as_as: { say: [tan], examples: ["Mi hermano es tan alto como yo.", "Esta habitación es tan grande como la otra."] }
+    same: { say: [igual], examples: ["Son iguales.", "Es lo mismo."] }
+    different: { say: [diferente], examples: ["Son diferentes.", "No, esta es distinta."] }
+  travel_room:
+    room: { say: [habitacion], examples: ["Quisiera una habitación doble.", "¿Tienen una habitación individual?"] }
+    nights: { say: [noche], examples: ["Para dos noches.", "Me quedo tres noches."] }
+    booking: { say: [a_nombre_de, reservar], examples: ["Tengo una reserva a nombre de Sam.", "He reservado una habitación a nombre de Sam García."] }
+  travel_problem:
+    not_working: { say: [no_funciona], examples: ["La ducha no funciona.", "La calefacción está rota."] }
+    no_water: { say: [agua_caliente, mucho_ruido], examples: ["No hay agua caliente.", "Hay mucho ruido."] }
+    change_room: { say: [cambiar_de_habitacion], examples: ["¿Puedo cambiar de habitación?", "Quisiera otra habitación."] }
+  travel_ask:
+    breakfast: { say: [desayuno], examples: ["¿El desayuno está incluido?", "¿A qué hora es el desayuno?"] }
+    checkout: { say: [dejar_la_habitacion], examples: ["¿A qué hora tengo que dejar la habitación?", "¿Cuál es la hora de salida?"] }
+    delayed: { say: [con_retraso], examples: ["¿El tren viene con retraso?", "¿Cuántos minutos de retraso tiene?"] }
+  used_to_child:
+    was_like: { say: [[de_pequeno], [era]], examples: ["De pequeño era tímido.", "De niña era muy alta."] }
+    lived: { say: [vivia], examples: ["Vivía en un pueblo pequeño.", "Vivíamos en Londres."] }
+    had: { say: [tenia], examples: ["Tenía un perro.", "Tenía una bicicleta roja."] }
+  used_to_habits:
+    used_to: { say: [jugaba, iba], examples: ["Jugaba al fútbol con mi hermano.", "Iba a la playa con mis abuelos."] }
+    how_often: { say: [cada_verano], examples: ["Cada verano iba a la playa.", "Todos los domingos comíamos con mis abuelos."] }
+    liked: { say: [me_gustaba], examples: ["Me gustaba leer.", "No me gustaba el colegio."] }
+  used_to_place:
+    there_was: { say: [habia], examples: ["Aquí había un cine.", "Había muchas tiendas."] }
+    it_was: { say: [era], examples: ["Era más pequeña.", "La ciudad era tranquila."] }
+    now: { say: [ahora, ya_no], examples: ["Ahora hay un supermercado.", "El cine ya no está."] }
+  future_next_year:
+    will_go: { say: [ire], examples: ["El año que viene iré a España.", "Iré a Madrid."] }
+    will_do: { say: [[el_ano_que_viene], [estudiare, trabajare, viajare, hare]], examples: ["El año que viene estudiaré español.", "El próximo año viajaré mucho."] }
+    ask_will: { say: [que_haras], examples: ["¿Qué harás el año que viene?", "¿Qué hará?"] }
+  future_predict:
+    weather: { say: [llovera], examples: ["Mañana lloverá.", "Mañana hará frío."] }
+    will_be: { say: [sera], examples: ["Será difícil.", "Será un buen día."] }
+    perhaps: { say: [quizas], examples: ["A lo mejor llueve mañana.", "Probablemente llegaré tarde."] }
+  future_promise:
+    promise: { say: [te_prometo], examples: ["Te prometo que volveré.", "¡Lo prometo!"] }
+    will_return: { say: [volvere, escribire, llamare], examples: ["Volveré pronto.", "Te escribiré.", "Le llamaré mañana."] }
+    not_forget: { say: [no_olvidare], examples: ["No lo olvidaré.", "No lo olvidaré nunca."] }
+  work_job:
+    ask_job: { say: [a_que_te_dedicas], examples: ["¿A qué te dedicas?", "¿En qué trabaja?"] }
+    my_job: { say: [trabajo_de, soy_estudiante, profesor, administrativo, cocinero, enfermero, medico], examples: ["Soy cocinero.", "Trabajo de profesora.", "Soy estudiante."] }
+    where_work: { say: [en_una_oficina, en_un_colegio, en_una_tienda, desde_casa], examples: ["Trabajo en una oficina.", "Trabajo desde casa."] }
+  work_day:
+    start: { say: [empiezo], examples: ["Empiezo a las nueve.", "Empiezo a trabajar a las ocho."] }
+    finish: { say: [termino], examples: ["Termino a las cinco.", "Salgo del trabajo a las seis."] }
+    like_job: { say: [mi_trabajo], examples: ["Me gusta mi trabajo.", "Mi trabajo es interesante."] }
+  work_become:
+    become: { say: [me_gustaria_ser], examples: ["Me gustaría ser médico.", "Quiero ser profesora."] }
+    why: { say: [[porque], [interesante, util, bien_pagado]], examples: ["Porque es un trabajo interesante.", "Porque es útil.", "Porque está bien pagado."] }
+    ask_dream: { say: [que_querias_ser], examples: ["¿Qué querías ser de mayor?", "¿Qué quería ser de pequeño?"] }
+vocabulary:
+  # invitations
+  quieres_venir: { t: "quieres venir", pos: phrase, en: ["do you want to come"], forms: ["quieres venir", "quiere venir", "queréis venir"], ex: ["¿Quieres venir a la playa con nosotros?", "Do you want to come to the beach with us?"] }
+  te_apetece: { t: "te apetece", pos: phrase, en: ["do you fancy", "do you feel like"], forms: ["te apetece", "le apetece", "os apetece", "te gustaría", "le gustaría", "tienes ganas de"], ex: ["¿Te apetece salir esta noche?", "Do you fancy going out tonight?"], n: "Everyday in Spain; in Latin America, ¿tienes ganas de ...? or ¿te gustaría ...?" }
+  que_te_parece: { t: "qué te parece", pos: phrase, en: ["what do you think", "what about"], forms: ["qué te parece", "qué le parece", "qué os parece", "qué tal si", "por qué no"], ex: ["¿Qué te parece el sábado?", "What about Saturday?"] }
+  vamos: { t: "vamos", pos: verb, en: ["let's go", "shall we go", "we go"], ex: ["¿Vamos al cine?", "Shall we go to the cinema?"] }
+  donde_quedamos: { t: "dónde quedamos", pos: phrase, en: ["where shall we meet"], forms: ["dónde quedamos", "a qué hora quedamos", "cuándo quedamos", "dónde nos vemos", "a qué hora nos vemos"], ex: ["¿Dónde quedamos mañana?", "Where shall we meet tomorrow?"], n: "'Quedar' is to arrange to meet." }
+  claro: { t: "claro", pos: adverb, en: ["of course", "sure"], forms: ["claro", "claro que sí", "por supuesto", "desde luego"], ex: ["Claro, voy.", "Of course, I'm coming."] }
+  me_encantaria: { t: "me encantaría", pos: phrase, en: ["I would love to"], forms: ["me encantaría", "con mucho gusto", "con gusto"], ex: ["Me encantaría ir.", "I would love to go."] }
+  buena_idea: { t: "buena idea", pos: phrase, en: ["good idea"], forms: ["buena idea", "muy buena idea", "qué buena idea", "gran idea"], ex: ["Es una buena idea.", "It is a good idea."] }
+  llevo_algo: { t: "llevo algo", pos: phrase, en: ["shall I bring something"], forms: ["llevo algo", "tengo que llevar algo", "puedo llevar algo", "qué llevo", "traigo algo"], ex: ["¿Llevo algo de beber?", "Shall I bring something to drink?"] }
+  que_pena: { t: "qué pena", pos: phrase, en: ["what a pity", "unfortunately"], forms: ["qué pena", "qué lástima", "por desgracia", "desgraciadamente", "lamentablemente"], ex: ["Qué pena, trabajo.", "What a pity, I am working."] }
+  estoy_ocupado: { t: "estoy ocupado", pos: phrase, en: ["I am busy"], forms: ["estoy ocupado", "estoy ocupada", "tengo un compromiso", "tengo planes", "ya tengo planes", "tengo mucho que hacer"], ex: ["El sábado estoy ocupada.", "On Saturday I am busy."], n: "'Ya tengo planes' is 'I already have plans'." }
+  otro_dia: { t: "otro día", pos: phrase, en: ["another day", "another time"], forms: ["otro día", "mejor otro día", "la próxima vez", "en otro momento"], ex: ["Lo dejamos para otro día.", "Let's leave it for another day."] }
+  # comparisons
+  cual: { t: "cuál", pos: pronoun, en: ["which", "which one"], forms: ["cuál", "cuáles"], ex: ["¿Cuál prefieres?", "Which one do you prefer?"] }
+  mas_grande_que: { t: "más grande que", pos: phrase, en: ["bigger than"], forms: ["más grande que", "más grandes que"], ex: ["Barcelona es más grande que Bilbao.", "Barcelona is bigger than Bilbao."], n: "'Than' is que: más alto que yo." }
+  mas_pequeno_que: { t: "más pequeño que", pos: phrase, en: ["smaller than"], forms: ["más pequeño que", "más pequeña que", "más pequeños que", "más pequeñas que"], ex: ["La habitación es más pequeña que la cocina.", "The bedroom is smaller than the kitchen."] }
+  mas_barato: { t: "más barato", pos: phrase, en: ["cheaper"], forms: ["más barato", "más barata", "más baratos", "más baratas", "menos caro", "menos cara", "cuesta menos"], ex: ["El autobús es más barato que el tren.", "The bus is cheaper than the train."] }
+  mas_caro: { t: "más caro", pos: phrase, en: ["more expensive", "dearer"], forms: ["más caro", "más cara", "cuesta más"], ex: ["El vino es más caro que la cerveza.", "Wine is more expensive than beer."] }
+  mejor: { t: "mejor", pos: adjective, en: ["better"], forms: ["mejor", "mejores", "mejor que"], ex: ["Hoy estoy mejor.", "I feel better today."] }
+  peor: { t: "peor", pos: adjective, en: ["worse"], forms: ["peor", "peores", "peor que"], ex: ["Hoy estoy peor.", "I feel worse today."] }
+  el_mejor: { t: "el mejor", pos: phrase, en: ["the best"], forms: ["el mejor", "la mejor", "los mejores", "las mejores", "lo mejor"], ex: ["Este helado es el mejor.", "This ice cream is the best."] }
+  tan: { t: "tan", pos: adverb, en: ["as", "so"], forms: ["tan", "tanto como"], ex: ["Soy tan alta como mi madre.", "I am as tall as my mother."], n: "'As ... as' is tan ... como." }
+  igual: { t: "igual", pos: adjective, en: ["the same", "equal"], forms: ["igual", "iguales", "igual que", "lo mismo", "el mismo", "la misma"], ex: ["El precio es igual.", "The price is the same."] }
+  diferente: { t: "diferente", pos: adjective, en: ["different"], forms: ["diferente", "diferentes", "distinto", "distinta", "distintos", "distintas"], ex: ["El color es diferente.", "The colour is different."] }
+  # travel
+  habitacion: { t: "habitación", pos: noun, en: ["room", "bedroom"], forms: ["habitación", "una habitación", "habitación individual", "habitación doble", "una habitación individual", "una habitación doble", "habitación sencilla"], ex: ["La habitación está en el primer piso.", "The room is on the first floor."], n: "'Individual' for one person, 'doble' for two." }
+  noche: { t: "noche", pos: noun, en: ["night"], forms: ["noche", "noches"], ex: ["Una habitación para una noche.", "A room for one night."] }
+  a_nombre_de: { t: "a nombre de", pos: phrase, en: ["in the name of", "under the name"], forms: ["a nombre de", "a mi nombre"], ex: ["La habitación está a nombre de García.", "The room is in the name of García."] }
+  no_funciona: { t: "no funciona", pos: phrase, en: ["it doesn't work", "it is not working"], forms: ["no funciona", "no funcionan", "está roto", "está rota", "está estropeado", "está estropeada"], ex: ["La luz no funciona.", "The light doesn't work."], n: "'Está roto' is 'it is broken'." }
+  agua_caliente: { t: "agua caliente", pos: phrase, en: ["hot water"], ex: ["No hay agua caliente en el baño.", "There is no hot water in the bathroom."] }
+  mucho_ruido: { t: "mucho ruido", pos: phrase, en: ["a lot of noise", "too much noise"], forms: ["mucho ruido", "demasiado ruido", "ruido"], ex: ["Por la noche hay mucho ruido.", "At night there is a lot of noise."] }
+  cambiar_de_habitacion: { t: "cambiar de habitación", pos: phrase, en: ["to change rooms"], forms: ["cambiar de habitación", "cambiar la habitación", "otra habitación"], ex: ["Quisiera cambiar de habitación.", "I would like to change rooms."] }
+  desayuno: { t: "desayuno", pos: noun, en: ["breakfast"], forms: ["desayuno", "el desayuno"], ex: ["El desayuno es a las ocho.", "Breakfast is at eight."] }
+  dejar_la_habitacion: { t: "dejar la habitación", pos: phrase, en: ["to leave the room", "to check out"], forms: ["dejar la habitación", "dejar libre la habitación", "hora de salida", "la hora de salida", "el check-out", "check-out"], ex: ["Tengo que dejar la habitación a las diez.", "I have to leave the room at ten."] }
+  con_retraso: { t: "con retraso", pos: phrase, en: ["late", "delayed"], forms: ["con retraso", "retraso", "minutos de retraso", "llega tarde"], ex: ["El autobús llega con retraso.", "The bus is running late."] }
+  # used_to
+  de_pequeno: { t: "de pequeño", pos: phrase, en: ["as a child", "when I was little"], forms: ["de pequeño", "de pequeña", "de niño", "de niña", "cuando era pequeño", "cuando era pequeña", "cuando era niño", "cuando era niña"], ex: ["De pequeña vivía en Cádiz.", "As a child I lived in Cádiz."] }
+  era: { t: "era", pos: verb, en: ["I was", "it was", "he was", "she was"], forms: ["era", "éramos", "eran"], ex: ["La casa era pequeña.", "The house was small."], n: "The imperfecto describes how things were. 'I was' and 'it was' are the same word." }
+  vivia: { t: "vivía", pos: verb, en: ["I lived", "I used to live"], forms: ["vivía", "vivíamos"], ex: ["Vivía cerca del mar.", "I used to live near the sea."] }
+  tenia: { t: "tenía", pos: verb, en: ["I had", "I used to have"], forms: ["tenía", "teníamos"], ex: ["Tenía un gato negro.", "I had a black cat."] }
+  jugaba: { t: "jugaba", pos: verb, en: ["I played", "I used to play"], forms: ["jugaba", "jugábamos"], ex: ["Jugaba en la plaza.", "I used to play in the square."] }
+  iba: { t: "iba", pos: verb, en: ["I went", "I used to go"], forms: ["iba", "íbamos"], ex: ["Iba al colegio a pie.", "I used to walk to school."] }
+  cada_verano: { t: "cada verano", pos: phrase, en: ["every summer"], forms: ["cada verano", "todos los veranos", "cada domingo", "todos los domingos", "cada sábado", "cada año", "todos los años"], ex: ["Cada verano íbamos a la montaña.", "Every summer we went to the mountains."], n: "Cada never changes: cada domingo, cada año." }
+  me_gustaba: { t: "me gustaba", pos: phrase, en: ["I liked", "I used to like"], forms: ["me gustaba", "me gustaban", "no me gustaba", "no me gustaban"], ex: ["Me gustaba jugar al fútbol.", "I liked playing football."] }
+  habia: { t: "había", pos: verb, en: ["there was", "there were", "there used to be"], ex: ["En la plaza había un bar.", "There was a bar in the square."], n: "One form for one thing or for several." }
+  ahora: { t: "ahora", pos: adverb, en: ["now"], forms: ["ahora", "hoy en día", "actualmente"], ex: ["Ahora vivo en Madrid.", "Now I live in Madrid."] }
+  ya_no: { t: "ya no", pos: phrase, en: ["no longer", "not any more"], forms: ["ya no", "ya no hay", "ya no está", "ya no existe"], ex: ["El bar ya no está.", "The bar is no longer there."] }
+  # future
+  ire: { t: "iré", pos: verb, en: ["I will go"], forms: ["iré", "iremos"], ex: ["Mañana iré al médico.", "Tomorrow I will go to the doctor."] }
+  el_ano_que_viene: { t: "el año que viene", pos: phrase, en: ["next year"], forms: ["el año que viene", "el próximo año", "el año próximo"], ex: ["El año que viene cambio de trabajo.", "Next year I am changing jobs."] }
+  estudiare: { t: "estudiaré", pos: verb, en: ["I will study"], forms: ["estudiaré", "aprenderé"], ex: ["Estudiaré toda la tarde.", "I will study all afternoon."], n: "'Aprenderé' is 'I will learn'." }
+  trabajare: { t: "trabajaré", pos: verb, en: ["I will work"], ex: ["Trabajaré en un colegio.", "I will work in a school."] }
+  viajare: { t: "viajaré", pos: verb, en: ["I will travel"], forms: ["viajaré", "viajaremos"], ex: ["Viajaré en tren.", "I will travel by train."] }
+  hare: { t: "haré", pos: verb, en: ["I will do", "I will make"], forms: ["haré", "haremos"], ex: ["Haré un viaje a Galicia.", "I will take a trip to Galicia."] }
+  que_haras: { t: "qué harás", pos: phrase, en: ["what will you do"], forms: ["qué harás", "qué hará", "qué haréis", "qué vas a hacer", "qué va a hacer"], ex: ["¿Qué harás mañana?", "What will you do tomorrow?"] }
+  llovera: { t: "lloverá", pos: verb, en: ["it will rain"], forms: ["lloverá", "nevará", "hará frío", "hará calor", "hará sol", "hará buen tiempo"], ex: ["Esta noche lloverá.", "It will rain tonight."], n: "'Hará calor' is 'it will be hot'." }
+  sera: { t: "será", pos: verb, en: ["it will be", "he will be", "she will be"], forms: ["será", "serán"], ex: ["Será una noche bonita.", "It will be a lovely evening."] }
+  quizas: { t: "quizás", pos: adverb, en: ["perhaps", "maybe"], forms: ["quizás", "quizá", "tal vez", "a lo mejor", "probablemente"], ex: ["A lo mejor voy yo también.", "Perhaps I will come too."], n: "'A lo mejor' takes the ordinary present or future; 'probablemente' is 'probably'." }
+  te_prometo: { t: "te prometo", pos: phrase, en: ["I promise you", "I promise"], forms: ["te prometo", "le prometo", "os prometo", "te lo prometo", "lo prometo", "prometo"], ex: ["Te prometo que iré.", "I promise you that I will go."] }
+  volvere: { t: "volveré", pos: verb, en: ["I will come back", "I will return"], forms: ["volveré", "volveremos", "regresaré"], ex: ["Volveré el año que viene.", "I will come back next year."] }
+  escribire: { t: "escribiré", pos: verb, en: ["I will write"], forms: ["escribiré", "te escribiré", "le escribiré"], ex: ["Te escribiré desde Madrid.", "I will write to you from Madrid."] }
+  llamare: { t: "llamaré", pos: verb, en: ["I will call"], forms: ["llamaré", "te llamaré", "le llamaré", "lo llamaré", "la llamaré"], ex: ["Te llamaré esta noche.", "I will call you tonight."] }
+  no_olvidare: { t: "no olvidaré", pos: phrase, en: ["I will not forget"], forms: ["no olvidaré", "no lo olvidaré", "no te olvidaré", "no me olvidaré"], ex: ["No olvidaré este viaje.", "I will not forget this trip."] }
+  # work
+  a_que_te_dedicas: { t: "a qué te dedicas", pos: phrase, en: ["what do you do for a living", "what is your job"], forms: ["a qué te dedicas", "a qué se dedica", "en qué trabajas", "en qué trabaja", "cuál es tu trabajo"], ex: ["Y tú, ¿a qué te dedicas?", "And you, what do you do for a living?"] }
+  trabajo_de: { t: "trabajo de", pos: phrase, en: ["I work as"], forms: ["trabajo de", "trabajo como"], ex: ["Trabajo de enfermera.", "I work as a nurse."] }
+  soy_estudiante: { t: "soy estudiante", pos: phrase, en: ["I am a student"], ex: ["Soy estudiante en Salamanca.", "I am a student in Salamanca."] }
+  profesor: { t: "profesor", pos: noun, en: ["teacher"], forms: ["profesor", "profesora", "maestro", "maestra"], ex: ["Mi madre es profesora.", "My mother is a teacher."], n: "No article after ser: soy profesor." }
+  administrativo: { t: "administrativo", pos: noun, en: ["office worker", "clerk"], forms: ["administrativo", "administrativa", "oficinista", "empleado", "empleada"], ex: ["Soy administrativa en un banco.", "I am a clerk in a bank."] }
+  cocinero: { t: "cocinero", pos: noun, en: ["cook", "chef"], forms: ["cocinero", "cocinera"], ex: ["Mi hermano es cocinero.", "My brother is a cook."] }
+  enfermero: { t: "enfermero", pos: noun, en: ["nurse"], forms: ["enfermero", "enfermera"], ex: ["Soy enfermero desde hace diez años.", "I have been a nurse for ten years."] }
+  en_una_oficina: { t: "en una oficina", pos: phrase, en: ["in an office"], forms: ["en una oficina", "en la oficina", "oficina"], ex: ["Hoy estoy en la oficina.", "Today I am at the office."] }
+  en_un_colegio: { t: "en un colegio", pos: phrase, en: ["in a school"], forms: ["en un colegio", "en una escuela", "en un instituto", "colegio", "escuela"], ex: ["Trabajo en un colegio.", "I work in a school."] }
+  en_una_tienda: { t: "en una tienda", pos: phrase, en: ["in a shop"], forms: ["en una tienda", "tienda"], ex: ["Trabajo en una tienda de zapatos.", "I work in a shoe shop."] }
+  desde_casa: { t: "desde casa", pos: phrase, en: ["from home", "at home"], forms: ["desde casa", "en casa"], ex: ["Los viernes trabajo desde casa.", "On Fridays I work from home."] }
+  empiezo: { t: "empiezo", pos: verb, en: ["I start", "I begin"], forms: ["empiezo", "comienzo", "empiezo a trabajar"], ex: ["Empiezo a las ocho y media.", "I start at half past eight."] }
+  termino: { t: "termino", pos: verb, en: ["I finish"], forms: ["termino", "acabo", "salgo del trabajo"], ex: ["Termino a las seis.", "I finish at six."] }
+  mi_trabajo: { t: "mi trabajo", pos: phrase, en: ["my job", "my work"], ex: ["Mi trabajo me gusta mucho.", "I like my job very much."] }
+  me_gustaria_ser: { t: "me gustaría ser", pos: phrase, en: ["I would like to be", "I would like to become"], forms: ["me gustaría ser", "quiero ser", "quisiera ser", "me gustaría trabajar de", "me gustaría trabajar como"], ex: ["Me gustaría ser cocinero.", "I would like to be a cook."] }
+  util: { t: "útil", pos: adjective, en: ["useful"], forms: ["útil", "útiles"], ex: ["Es un trabajo útil.", "It is a useful job."] }
+  bien_pagado: { t: "bien pagado", pos: phrase, en: ["well paid"], forms: ["bien pagado", "bien pagada", "pagado bien", "se gana bien"], ex: ["No es un trabajo bien pagado.", "It is not a well-paid job."] }
+  que_querias_ser: { t: "qué querías ser", pos: phrase, en: ["what did you want to be"], forms: ["qué querías ser", "qué quería ser", "qué querías ser de mayor"], ex: ["¿Qué querías ser de mayor?", "What did you want to be when you grew up?"] }

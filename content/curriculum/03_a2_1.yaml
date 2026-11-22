@@ -1,0 +1,185 @@
+# Round 144: the curriculum's skeleton, stage A2.1. Language-neutral: what the learner can do, the lessons and what
+# each asks of the player. The words are in content/languages/<code>/curriculum/03_a2_1.yaml. The functions are the
+# first half of the CEFR A2 descriptors: saying what happened (a first past tense), the weather, a meal out, feeling
+# ill, and plans with 'want', 'must' and 'can'. For the owner's review.
+id: a2_1
+cefr: A2
+name: What happened
+ratio: 0.36
+can_do: >
+  Say what you did and where you went, talk about the weather, get through a meal in a restaurant, explain what is
+  wrong when you are ill, and say what you want to, have to and are going to do.
+units:
+  - id: past_did
+    title: What you did
+    can_do: "Say what you did yesterday or last week: what you ate, bought, saw and did."
+    grammar: "A first past tense for finished actions; 'yesterday' and 'last week'."
+    roles:
+      - "Clerk of Yesterdays: files each day once it is over and will not accept one without a statement of what was done in it"
+      - "Alibi Notary: certifies what people were doing at the time, in triplicate, for a modest fee"
+      - "Diarist for Hire: keeps other people's diaries for them and is running a week behind on yours"
+      - "Dealer in Used Days: buys them second-hand, provided the previous owner can say what they were used for"
+    lessons:
+      - id: past_did_yesterday
+        title: Yesterday
+        objectives:
+          - { id: ate, ask: "Tell {name} what you ate or drank yesterday", cue: "{name} is entering yesterday in a ledger and has got as far as lunch." }
+          - { id: worked, ask: "Tell {name} whether you worked or studied" }
+          - { id: ask_did, ask: "Ask {name} what they did yesterday" }
+      - id: past_did_bought
+        title: Buying and seeing
+        objectives:
+          - { id: bought, ask: "Tell {name} something that you bought", cue: "{name} has noticed that you are carrying more than you set out with." }
+          - { id: paid, ask: "Tell {name} how much you paid for it" }
+          - { id: saw, ask: "Tell {name} something or someone that you saw" }
+      - id: past_did_week
+        title: Last week
+        objectives:
+          - { id: last_week, ask: "Tell {name} one thing that happened last week", cue: "{name} is a week behind and is relying on you for the whole of it." }
+          - { id: made, ask: "Tell {name} one thing that you did or made" }
+          - { id: met, ask: "Tell {name} who you met or spoke to" }
+
+  - id: past_went
+    title: Where you went
+    can_do: "Say where you went, when you left, arrived and came back, and who you went with."
+    grammar: "The past of verbs of movement ('I went', 'I arrived', 'I left'); 'with'."
+    roles:
+      - "Collector of Other People's Journeys: has never been anywhere, has a full album, and needs the particulars of yours"
+      - "Customs Officer for Souvenirs: must be told where you went before deciding what is owed on what you brought back"
+      - "Returned Explorer: went somewhere once, came back, and has measured everyone else's trips against it ever since"
+      - "Keeper of the Arrivals Book: writes down everyone who arrives and is troubled by those who did so without leaving anywhere first"
+    lessons:
+      - id: past_went_where
+        title: Where you went
+        objectives:
+          - { id: went, ask: "Tell {name} where you went yesterday or last week", cue: "{name} has a map with pins in it and is holding one more pin." }
+          - { id: stayed, ask: "Tell {name} where you have been, or that you stayed at home" }
+          - { id: ask_where, ask: "Ask {name} where they went" }
+      - id: past_went_when
+        title: Leaving and arriving
+        objectives:
+          - { id: left, ask: "Tell {name} when you left", cue: "{name} keeps a book of departures, and you are not in it." }
+          - { id: arrived, ask: "Tell {name} when you arrived" }
+          - { id: came_back, ask: "Tell {name} when you came back" }
+      - id: past_went_with
+        title: Who with
+        objectives:
+          - { id: with_whom, ask: "Tell {name} who you went with, or that you went alone" }
+          - { id: ask_with, ask: "Ask {name} who they went with" }
+          - { id: how_was, ask: "Tell {name} how it was: that it was lovely, or that you enjoyed yourself", cue: "{name} has heard where and when and is now waiting, pen raised, for the verdict." }
+
+  - id: weather
+    title: Weather and seasons
+    can_do: "Say what the weather is like and what it was like, name the seasons, and say what you do when it rains."
+    grammar: "Impersonal weather expressions ('it is hot', 'it is raining'); the seasons; 'when'."
+    roles:
+      - "Weather Clerk: issues the day's weather on a form and accepts complaints only in writing"
+      - "Umbrella Lender: lends umbrellas against a deposit and has views on people who bring them back dry"
+      - "Rainmaker, Semi-Retired: still does the odd shower for old customers and blames the rest on younger rainmakers"
+      - "Curator of Seasons: keeps the three that are not in use, folded, and is particular about the order they go back in"
+    lessons:
+      - id: weather_today
+        title: What it is like
+        objectives:
+          - { id: ask_weather, ask: "Ask {name} what the weather is like" }
+          - { id: hot_cold, ask: "Tell {name} that it is hot, or cold, today", cue: "{name} has been indoors with the paperwork all day and takes the weather on report." }
+          - { id: sun_rain, ask: "Tell {name} whether it is sunny, raining, windy or snowing" }
+      - id: weather_seasons
+        title: The seasons
+        objectives:
+          - { id: ask_season, ask: "Ask {name} which season they like best" }
+          - { id: favourite, ask: "Tell {name} which season you prefer", cue: "{name} has four of them to choose from and has never been able to settle on one." }
+          - { id: in_season, ask: "Say what the weather is like in that season where you live" }
+      - id: weather_rain
+        title: When it rains
+        objectives:
+          - { id: was, ask: "Tell {name} what the weather was like yesterday", cue: "{name} missed yesterday entirely and is piecing it together from witnesses." }
+          - { id: when_rains, ask: "Tell {name} what you do when it rains" }
+          - { id: fine_weather, ask: "Say what you do when the weather is fine" }
+
+  - id: restaurant
+    title: At the restaurant
+    can_do: "Book a table, order a meal course by course, say that something is wrong and ask for something else."
+    grammar: "Polite requests with 'I would like'; 'as a starter', 'as a main course'; 'another'."
+    roles:
+      - "Head Waiter of the Full House: every table has been booked since the place opened, by people who have never come"
+      - "Chef of the Old Recipe: follows it to the letter, although several of the letters have worn away"
+      - "Sommelier of Complaints: pairs each complaint with a suitable apology and is proud of the cellar"
+      - "Table Broker: deals in reservations and can get you the window at eight, provided you do not ask how"
+    lessons:
+      - id: restaurant_book
+        title: Booking a table
+        objectives:
+          - { id: book, ask: "Tell {name} that you would like to book a table", cue: "{name} is guarding a large book in which, it appears, tables are kept." }
+          - { id: how_many, ask: "Tell {name} how many people it is for" }
+          - { id: for_when, ask: "Say that it is for this evening, or for tomorrow" }
+      - id: restaurant_order
+        title: Ordering
+        objectives:
+          - { id: starter, ask: "Tell {name} what you will have to start with" }
+          - { id: main, ask: "Tell {name} what you will have as a main course: meat, fish or chicken", cue: "{name} has written down the first half of your order and is waiting for the second." }
+          - { id: dessert, ask: "Order a dessert" }
+      - id: restaurant_wrong
+        title: Something is wrong
+        objectives:
+          - { id: cold, ask: "Tell {name} that the food is cold, or too salty", cue: "{name} asks whether everything is all right, in the voice of someone who expects it to be." }
+          - { id: missing, ask: "Tell {name} that something is missing: a fork, a knife, a glass, the bread" }
+          - { id: another, ask: "Ask {name} for another one" }
+
+  - id: health
+    title: Feeling ill
+    can_do: "Say that you feel ill and what hurts, say that you have a cold or a fever, and ask for a doctor or for something to take."
+    grammar: "'It hurts' with a part of the body; 'to have' with ailments; 'must'."
+    roles:
+      - "Apothecary of Second Opinions: never gives the first, on principle, and charges half for the third"
+      - "Barber-Surgeon, Mostly Barber: will look at anything that hurts, but does tend to finish with a trim"
+      - "Leech Wrangler: speaks highly of the leeches, which are trained, and likes to hear the symptoms first"
+      - "Inspector of Sneezes: licenses them for the district and can tell a real cold from an attempt to get out of something"
+    lessons:
+      - id: health_hurts
+        title: What hurts
+        objectives:
+          - { id: not_well, ask: "Tell {name} that you do not feel well", cue: "{name} has looked you up and down and reached for a notebook." }
+          - { id: hurts, ask: "Tell {name} what hurts: your head, your stomach, your throat, a tooth or your back" }
+          - { id: since, ask: "Say since when: since yesterday, or for a few days" }
+      - id: health_cold
+        title: A cold, a fever
+        objectives:
+          - { id: cold_fever, ask: "Tell {name} that you have a cold, a fever or a cough", cue: "{name} is standing well back and would like to know what exactly you have brought in." }
+          - { id: tired, ask: "Tell {name} that you are very tired" }
+          - { id: must_rest, ask: "Say that you must rest" }
+      - id: health_help
+        title: Getting help
+        objectives:
+          - { id: need, ask: "Tell {name} that you need a doctor or a pharmacy" }
+          - { id: something_for, ask: "Ask {name} for something for a headache, a cough or a sore throat", cue: "{name} has a shelf of small bottles and is waiting to learn which one you deserve." }
+          - { id: how_often, ask: "Ask {name} how many times a day you must take it" }
+
+  - id: plans
+    title: Plans and musts
+    can_do: "Say what you want to do, have to do and can do this weekend, and say what you are going to do."
+    grammar: "'Want', 'must' and 'can' with an infinitive; ways of talking about the near future."
+    roles:
+      - "Keeper of Good Intentions: stores them over the winter, labelled, and notes that very few are ever collected"
+      - "Appointments Broker: buys and sells free afternoons and can do nothing for you before Thursday"
+      - "Fortune Teller, Strictly Short Range: sees as far as the weekend, in detail, and declines to speculate beyond it"
+      - "Clerk of Obligations: keeps the list of what everybody has to do and adds to it when people look idle"
+    lessons:
+      - id: plans_want
+        title: What you want to do
+        objectives:
+          - { id: want, ask: "Tell {name} what you want to do this weekend", cue: "{name} has your weekend open on the desk and it is, so far, blank." }
+          - { id: ask_want, ask: "Ask {name} what they want to do" }
+          - { id: can, ask: "Tell {name} which day you can, or cannot, come" }
+      - id: plans_must
+        title: What you have to do
+        objectives:
+          - { id: must, ask: "Tell {name} something that you have to do this week" }
+          - { id: cannot_because, ask: "Tell {name} that you cannot come, because you have to do something else", cue: "{name} has invited you to something that will take all day and possibly some of the next." }
+          - { id: ask_must, ask: "Ask {name} whether they have to work tomorrow" }
+      - id: plans_going
+        title: What you are going to do
+        objectives:
+          - { id: going_to, ask: "Tell {name} what you are going to do tomorrow", cue: "{name} deals in the near future and would like yours in advance." }
+          - { id: next_week, ask: "Tell {name} something that you are doing next week" }
+          - { id: about_to, ask: "Tell {name} that you are just about to leave" }

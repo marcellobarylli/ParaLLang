@@ -78,15 +78,18 @@ export const CHECKPOINT_ROLES = [
   { title: 'Warden of the Milestone', premise: 'will not let the milestone be passed by anyone who cannot explain how they got this far' },
 ];
 
-const PLACE_ADJECTIVES = ['Patient', 'Second', 'Reluctant', 'Windy', 'Lower', 'Upper', 'Crooked', 'Sensible', 'Lesser', 'Greater', 'Mislaid', 'Honest', 'Borrowed', 'Nearly', 'Quiet', 'Further', 'Hither', 'Leftover', 'Unlikely', 'Punctual'];
+const PLACE_ADJECTIVES = ['Patient', 'Second', 'Reluctant', 'Windy', 'Lower', 'Upper', 'Crooked', 'Sensible', 'Lesser', 'Greater', 'Mislaid', 'Honest', 'Borrowed', 'Nearly', 'Quiet', 'Further', 'Hither', 'Leftover', 'Unlikely', 'Punctual',
+  'Modest', 'Thoughtful', 'Sideways', 'Provisional', 'Tidy', 'Stubborn', 'Polite', 'Overdue', 'Middling', 'Dependable', 'Absent', 'Earnest', 'Third', 'Outer', 'Hopeful', 'Damp', 'Respectable', 'Forgotten', 'Occasional', 'Considerable'];
 const PLACE_NOUNS = {
-  shore: ['Landing', 'Strand', 'Jetty', 'Shallows', 'Reedbed', 'Ford'],
-  meadow: ['Meadow', 'Crossroads', 'Common', 'Stile', 'Pasture', 'Milestone', 'Green'],
-  forest: ['Clearing', 'Copse', 'Hollow', 'Glade', 'Thicket', 'Stump'],
-  highland: ['Ridge', 'Shoulder', 'Cairn', 'Saddle', 'Outcrop', 'Ledge'],
-  snow: ['Pass', 'Drift', 'Summit Hut', 'Col', 'Snowfield', 'Cornice'],
+  shore: ['Landing', 'Strand', 'Jetty', 'Shallows', 'Reedbed', 'Ford', 'Mudflat', 'Slipway', 'Sandbar', 'Cove'],
+  meadow: ['Meadow', 'Crossroads', 'Common', 'Stile', 'Pasture', 'Milestone', 'Green', 'Paddock', 'Hayfield', 'Signpost'],
+  forest: ['Clearing', 'Copse', 'Hollow', 'Glade', 'Thicket', 'Stump', 'Spinney', 'Dell', 'Coppice', 'Windfall'],
+  highland: ['Ridge', 'Shoulder', 'Cairn', 'Saddle', 'Outcrop', 'Ledge', 'Scree', 'Bluff', 'Tor', 'Knoll'],
+  snow: ['Pass', 'Drift', 'Summit Hut', 'Col', 'Snowfield', 'Cornice', 'Shelter', 'Icefall'],
   water: ['Landing'],
 };
+// About two sites in five carry a qualifier, so that two sites near each other seldom share a name.
+const PLACE_QUALIFIERS = ['by the Old Stone', 'under the Hill', 'of the Two Opinions', 'beyond the Hedge', 'on the Wrong Side', 'of the Last Inspection', 'past the Bend', 'by Appointment', 'of No Fixed Purpose', 'before the Rain', 'at the Usual Place', 'of the Seventh Draft', 'near Enough', 'behind the Times', 'of the Short Straw'];
 
 // A stream of hashed numbers for one subject: draw(k) is in [0, 1) and differs for every k.
 function drawer(seed, a, b) { return (k) => hash(a * 131 + k * 17, b * 137 - k * 29, seed + 500 + k); }
@@ -95,7 +98,8 @@ const pickFrom = (list, value) => list[Math.min(list.length - 1, Math.floor(valu
 /** The name of a site: "The Patient Meadow". Fixed by the seed and the site. */
 export function placeName(seed, node) {
   const draw = drawer(seed, node.i, node.j);
-  return `The ${pickFrom(PLACE_ADJECTIVES, draw(1))} ${pickFrom(PLACE_NOUNS[node.biome] ?? PLACE_NOUNS.meadow, draw(2))}`;
+  const qualifier = draw(3) < 0.4 ? ` ${pickFrom(PLACE_QUALIFIERS, draw(4))}` : '';
+  return `The ${pickFrom(PLACE_ADJECTIVES, draw(1))} ${pickFrom(PLACE_NOUNS[node.biome] ?? PLACE_NOUNS.meadow, draw(2))}${qualifier}`;
 }
 
 /**

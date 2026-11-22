@@ -1,0 +1,185 @@
+# Round 144: the curriculum's skeleton, stage A2.2. Language-neutral: what the learner can do, the lessons and what
+# each asks of the player. The words are in content/languages/<code>/curriculum/04_a2_2.yaml. The functions are the
+# second half of the CEFR A2 descriptors: invitations, comparisons, travel and lodging, how things used to be (the
+# imperfect), the future tense, and work and study. For the owner's review.
+id: a2_2
+cefr: A2
+name: Making arrangements
+ratio: 0.44
+can_do: >
+  Invite people and answer invitations, compare things, book a room and deal with what is wrong with it, describe
+  how things used to be, say what you will do, and talk about your work or your studies.
+units:
+  - id: invitations
+    title: Invitations
+    can_do: "Invite someone, accept gladly, and decline politely with an excuse and another suggestion."
+    grammar: "'Do you want to', 'shall we', 'what about'; formulas for accepting and declining."
+    roles:
+      - "Master of Small Ceremonies: arranges gatherings of up to four people and regards five as a riot"
+      - "Bearer of Invitations: delivers them by hand and waits on the doorstep for the answer, however long it takes"
+      - "Hermit, Sociable: withdrew from the world years ago and has been inviting it round ever since"
+      - "Keeper of the Guest List: holds the list for an event nobody has announced and would like to know whether you are coming"
+    lessons:
+      - id: invitations_invite
+        title: Inviting
+        objectives:
+          - { id: invite, ask: "Invite {name} to do something with you: dinner, the cinema, a coffee", cue: "{name} appears to have nothing on this evening and to be faintly aware of it." }
+          - { id: suggest, ask: "Suggest a plan to {name}: shall we go, what about" }
+          - { id: where_meet, ask: "Ask {name} where or at what time the two of you will meet" }
+      - id: invitations_accept
+        title: Accepting
+        objectives:
+          - { id: accept, ask: "Accept {name}'s invitation gladly", cue: "{name} has just invited you to something and is studying your face for the answer." }
+          - { id: good_idea, ask: "Tell {name} that it is a good idea" }
+          - { id: bring, ask: "Ask {name} whether you should bring something" }
+      - id: invitations_decline
+        title: Declining
+        objectives:
+          - { id: decline, ask: "Tell {name} politely that, unfortunately, you cannot come" }
+          - { id: excuse, ask: "Give {name} a reason: you are busy, you already have plans", cue: "{name} has taken the refusal well and is now waiting, quite pleasantly, for the reason." }
+          - { id: another_time, ask: "Propose another time to {name}" }
+
+  - id: comparisons
+    title: Comparing
+    can_do: "Say that one thing is bigger, better, worse or cheaper than another, name the best, and say that two things are alike."
+    grammar: "Comparatives ('more ... than'); irregular 'better' and 'worse'; the superlative; 'as ... as'."
+    roles:
+      - "Judge of Vegetable Shows: has ranked marrows for forty years and can no longer look at two of anything without choosing"
+      - "Assayer of Sizes: tests whether the bigger thing is in fact bigger, and issues a certificate either way"
+      - "Runner-Up, Professional: comes second in competitions for a living, so that the winner has somebody to beat"
+      - "Dealer in Second-Best: stocks only the next best thing and will explain at length what it is next to"
+    lessons:
+      - id: comparisons_more
+        title: More and less
+        objectives:
+          - { id: ask_which, ask: "Ask {name} which of two things is bigger, or costs more" }
+          - { id: bigger_than, ask: "Tell {name} that one thing is bigger, or smaller, than another", cue: "{name} has put two things side by side and wants the difference stated for the record." }
+          - { id: cheaper, ask: "Tell {name} that one thing is cheaper, or dearer, than another" }
+      - id: comparisons_better
+        title: Better and worse
+        objectives:
+          - { id: better, ask: "Tell {name} that one thing is better than another" }
+          - { id: worse, ask: "Tell {name} that something else is worse" }
+          - { id: the_best, ask: "Tell {name} which one is the best of all", cue: "{name} has judged everything in sight and wants a second signature on the result." }
+      - id: comparisons_same
+        title: As good as
+        objectives:
+          - { id: as_as, ask: "Tell {name} that one person or thing is as tall, big or good as another" }
+          - { id: same, ask: "Tell {name} that two things are the same", cue: "{name} is holding up two things and insisting that there is a difference." }
+          - { id: different, ask: "Tell {name} that they are different" }
+
+  - id: travel
+    title: Travel and lodging
+    can_do: "Book a room, say what is wrong with it, ask about breakfast and leaving, and cope with a late train."
+    grammar: "'I have a booking'; 'it does not work', 'there is no'; questions about times and what is included."
+    roles:
+      - "Innkeeper of the Extra Room: has one more room than the building has space for and does not ask where it goes"
+      - "Night Porter by Daylight: was put on the wrong shift years ago and is too polite to mention it"
+      - "Stationmaster of the Late Train: has been expecting the same train for some time and keeps its tea warm"
+      - "Inspector of Pillows: grades them by rank and will not issue a second one without the proper form"
+    lessons:
+      - id: travel_room
+        title: A room
+        objectives:
+          - { id: room, ask: "Tell {name} that you would like a room, single or double", cue: "{name} stands behind a desk with a great many keys and no visible guests." }
+          - { id: nights, ask: "Tell {name} how many nights it is for" }
+          - { id: booking, ask: "Tell {name} that you have a booking, and in what name" }
+      - id: travel_problem
+        title: A problem with the room
+        objectives:
+          - { id: not_working, ask: "Tell {name} that something in the room does not work", cue: "{name} asks whether the room is to your liking, and has not been in it lately." }
+          - { id: no_water, ask: "Tell {name} that there is no hot water, or that there is too much noise" }
+          - { id: change_room, ask: "Ask {name} whether you can change rooms" }
+      - id: travel_ask
+        title: Breakfast, leaving, delays
+        objectives:
+          - { id: breakfast, ask: "Ask {name} about breakfast: whether it is included, or at what time it is" }
+          - { id: checkout, ask: "Ask {name} by what time you must leave the room" }
+          - { id: delayed, ask: "Ask {name} whether the train is late", cue: "{name} is looking down the line with the calm of long practice." }
+
+  - id: used_to
+    title: How things used to be
+    can_do: "Say what you were like as a child, what you used to do, and what a place used to be like."
+    grammar: "The imperfect tense for descriptions and habits in the past; 'when I was little'; 'now', 'no longer'."
+    roles:
+      - "Curator of the Way Things Were: keeps a small museum of how it used to be and will not hear a word against it"
+      - "Oldest Inhabitant, Acting: is standing in until the real one gets back and has learned the reminiscences by heart"
+      - "Restorer of Childhoods: touches up faded ones for a fee and needs to know what colour everything was"
+      - "Ghost of the Former Tenant: is not haunting anybody, exactly, but does keep mentioning where the furniture used to be"
+    lessons:
+      - id: used_to_child
+        title: As a child
+        objectives:
+          - { id: was_like, ask: "Tell {name} what you were like when you were little", cue: "{name} is trying to picture you a good deal smaller and needs help." }
+          - { id: lived, ask: "Tell {name} where you lived as a child" }
+          - { id: had, ask: "Tell {name} something you had then: a dog, a bicycle" }
+      - id: used_to_habits
+        title: What you used to do
+        objectives:
+          - { id: used_to, ask: "Tell {name} what you used to do as a child: where you went, what you played", cue: "{name} collects other people's childhoods and has a gap where yours should go." }
+          - { id: how_often, ask: "Say how often: every summer, every Sunday, every year" }
+          - { id: liked, ask: "Tell {name} something you liked, or did not like, in those days" }
+      - id: used_to_place
+        title: How a place was
+        objectives:
+          - { id: there_was, ask: "Tell {name} something that there used to be in your town" }
+          - { id: it_was, ask: "Tell {name} what the place was like then", cue: "{name} remembers the place differently and is prepared to be told so." }
+          - { id: now, ask: "Say what is different now: what there is today, or what is no longer there" }
+
+  - id: future
+    title: The future
+    can_do: "Say what you will do next year, make a prediction, and promise something."
+    grammar: "The simple future tense; 'next year'; 'perhaps', 'probably'; 'I promise'."
+    roles:
+      - "Prophet on Probation: made one prediction that came true and has been asked by the guild to explain how"
+      - "Seller of Next Year's Calendars: has them in stock already and hints that some of the months are better than others"
+      - "Notary of Promises: writes them down, stamps them, and reads them back to people at awkward moments"
+      - "Weathercock, Ambitious: is tired of saying where the wind is and would like to move on to where it will be"
+    lessons:
+      - id: future_next_year
+        title: Next year
+        objectives:
+          - { id: will_go, ask: "Tell {name} where you will go next year", cue: "{name} is filling in next year in advance and has left a line for you." }
+          - { id: will_do, ask: "Tell {name} one more thing you will do next year: study, work, travel" }
+          - { id: ask_will, ask: "Ask {name} what they will do" }
+      - id: future_predict
+        title: Predictions
+        objectives:
+          - { id: weather, ask: "Predict tomorrow's weather for {name}", cue: "{name} has a great deal riding on tomorrow and would like a second opinion on it." }
+          - { id: will_be, ask: "Tell {name} how something will be: easy, difficult, a fine day" }
+          - { id: perhaps, ask: "Make a prediction that you are less sure of: perhaps, probably" }
+      - id: future_promise
+        title: Promises
+        objectives:
+          - { id: promise, ask: "Promise {name} something" }
+          - { id: will_return, ask: "Tell {name} that you will come back, write or call" }
+          - { id: not_forget, ask: "Tell {name} that you will not forget", cue: "{name} has done you a small favour and is the kind who keeps accounts." }
+
+  - id: work
+    title: Work and study
+    can_do: "Say what you do for a living or what you study, describe your working day, and say what you would like to become."
+    grammar: "'I am a ...' and 'I work as'; start and finish; 'I would like to become'."
+    roles:
+      - "Careers Officer for Unlikely Trades: has placed three dragon dentists and one lighthouse keeper inland, and is always looking"
+      - "Guild Registrar: must enter every traveller under a trade and has no column for none"
+      - "Apprentice of Long Standing: has been learning the trade for thirty years and expects to be let near the tools any day now"
+      - "Inspector of Job Titles: checks that people are what they say they are and has doubts about most of them"
+    lessons:
+      - id: work_job
+        title: What you do
+        objectives:
+          - { id: ask_job, ask: "Ask {name} what they do for a living" }
+          - { id: my_job, ask: "Tell {name} what your job is, or that you are a student", cue: "{name} has a register open at the column headed TRADE." }
+          - { id: where_work, ask: "Tell {name} where you work: in an office, a school, a shop, or at home" }
+      - id: work_day
+        title: Your working day
+        objectives:
+          - { id: start, ask: "Tell {name} at what time you start work" }
+          - { id: finish, ask: "Tell {name} at what time you finish" }
+          - { id: like_job, ask: "Tell {name} whether you like your work", cue: "{name} has heard the hours and is now waiting for the complaint that usually follows." }
+      - id: work_become
+        title: What you would like to be
+        objectives:
+          - { id: become, ask: "Tell {name} what you would like to become", cue: "{name} has reached the part of the form headed AMBITIONS and has left plenty of room." }
+          - { id: why, ask: "Give {name} a reason: because it is interesting, useful or well paid" }
+          - { id: ask_dream, ask: "Ask {name} what they wanted to be when they were little" }

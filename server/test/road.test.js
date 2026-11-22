@@ -207,6 +207,9 @@ test('a character is drawn from what the conversation is about, and is the same 
   assert.equal(review.encounter.objectives[0].hint_limit, PACING.hints.review);
   assert.equal(placeName(4242, node), placeName(4242, node));
   assert.match(placeName(4242, node), /^The \w+ [\w ]+$/);
+  // Names seldom repeat among neighbours: of the sites of a ten-by-ten patch, nearly all have a name of their own.
+  const names = graph.nodesNear(node.x, node.z, 5).map((site) => placeName(4242, site));
+  assert.ok(new Set(names).size >= names.length * 0.9, `${new Set(names).size} names for ${names.length} sites`);
   assert.ok(characterFor({ seed: 1, node, step: 0, role: unit.roles[0], ratio: 0.2, focus: { vocabulary: 'x', grammar: 'y' } }).voice.pitch <= 2);
 });
 

@@ -139,13 +139,19 @@ test('the world file: places joined by paths, one of them this dungeon, and a fo
     expect(place.description.trim().length).toBeGreaterThan(10);
     // A place is open (it has a dungeon) or says why it is closed.
     // (Round 133: a bundled dungeon, and no dungeon is opened by two places.)
-    if (place.dungeon) expect(DUNGEONS.map((dungeon) => dungeon.id)).toContain(place.dungeon); else expect(place.closed.length).toBeGreaterThan(5);
+    // Round 144: or it is the endless road, which has no dungeon file.
+    if (place.dungeon) expect(DUNGEONS.map((dungeon) => dungeon.id)).toContain(place.dungeon);
+    else if (place.road) expect(place.closed).toBeUndefined();
+    else expect(place.closed.length).toBeGreaterThan(5);
   }
+  expect(ATLAS_FILE.places.filter((place) => place.road).map((place) => place.id)).toEqual(['the_long_way']);
   const opened = ATLAS_FILE.places.filter((place) => place.dungeon).map((place) => place.dungeon);
   expect(opened.sort()).toEqual(DUNGEONS.map((dungeon) => dungeon.id).sort());
   expect(ATLAS.places.map((place) => [place.id, place.state, place.dungeonId, Boolean(place.closed)])).toEqual([
     ['ta_prohm', 'current', 'ta_prohm', false], ['the_kiln', 'known', 'the_kiln', false], ['angkor_wat', 'known', null, true], ['micromort_mountain', 'known', 'micromort_mountain', false],
+    ['the_long_way', 'known', null, false], // round 144: open, with no dungeon
   ]);
-  expect(ATLAS.paths).toEqual([['ta_prohm', 'the_kiln'], ['ta_prohm', 'angkor_wat'], ['ta_prohm', 'micromort_mountain']]); // The Bone Dome is under the fog
+  expect(ATLAS.places.find((place) => place.id === 'the_long_way').road).toBe(true);
+  expect(ATLAS.paths).toEqual([['ta_prohm', 'the_long_way'], ['ta_prohm', 'the_kiln'], ['ta_prohm', 'angkor_wat'], ['ta_prohm', 'micromort_mountain']]); // The Bone Dome is under the fog
   expect(atlasView({ ...ATLAS_FILE, start: 'angkor_wat' }).places.map((place) => place.id)).toEqual(['ta_prohm', 'angkor_wat', 'the_bone_dome']);
 });

@@ -19,6 +19,10 @@ const port = Number(process.env.PORT || 3001);
 const selectedProvider = process.env.LLM_PROVIDER || 'openai';
 const host = listenHostForProvider(selectedProvider);
 const content = loadGameContent({ language: resolveTargetLanguage() });
+// Round 144: the curriculum is read now (the loader reads it on first use), so its content errors stop the start.
+const curriculumLine = content.curriculum
+  ? `Curriculum: ${content.curriculum.stages.length} stages, ${content.curriculum.units.length} units, ${content.curriculum.lessonsById.size} lessons`
+  : 'Curriculum: none in this language pack';
 const provider = createLLMAdapter();
 const storage = new JsonLearningStorage({
   saveDir: saveDirForLanguage(process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'), content.language.code),
@@ -37,6 +41,7 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`LLM provider: ${selectedProvider}`);
     console.log(`Target language: ${content.language.name} (${content.language.code})`);
     console.log(`Spellbook saves: ${storage.saveDir}`);
+    console.log(curriculumLine);
   });
   let stopping = false;
   const stop = async () => {

@@ -1,0 +1,185 @@
+# Round 144: the curriculum's skeleton, stage B1.1. Language-neutral: what the learner can do, the lessons and what
+# each asks of the player. The words are in content/languages/<code>/curriculum/05_b1_1.yaml. The functions are the
+# first half of the CEFR B1 descriptors: opinions with reasons, advice, telling a story, sorting out problems while
+# travelling, feelings, and polite requests in the conditional. For the owner's review.
+id: b1_1
+cefr: B1
+name: Having opinions
+ratio: 0.54
+can_do: >
+  Give and defend an opinion, ask for and give advice, tell a short story, sort out a problem on a journey, talk
+  about feelings, and ask for things politely.
+units:
+  - id: opinions
+    title: Opinions
+    can_do: "Give an opinion, agree and disagree politely, and back it up with a reason and an example."
+    grammar: "'I think that', 'in my view'; agreeing and disagreeing; 'so', 'for example'."
+    roles:
+      - "Pamphleteer of Moderate Views: publishes strongly worded leaflets in favour of seeing both sides"
+      - "Umpire of Arguments: awards points in other people's disagreements and has never yet declared a winner"
+      - "Keeper of the Public Opinion: looks after it on behalf of the public, who have not asked for it back"
+      - "Contrarian by Appointment: is retained by the town to disagree with whatever was said last, for balance"
+    lessons:
+      - id: opinions_give
+        title: Giving an opinion
+        objectives:
+          - { id: i_think, ask: "Tell {name} what you think of the town, the food or the weather", cue: "{name} is collecting views on the district and has a column ruled for yours." }
+          - { id: ask_opinion, ask: "Ask {name} what they think" }
+          - { id: not_sure, ask: "Tell {name} that you are not sure, or that it depends" }
+      - id: opinions_agree
+        title: Agreeing and disagreeing
+        objectives:
+          - { id: agree, ask: "Tell {name} that you agree, or that they are right" }
+          - { id: disagree, ask: "Tell {name} politely that you do not agree", cue: "{name} has just said, with great confidence, something that cannot possibly be right." }
+          - { id: partly, ask: "Tell {name} that they are right in part, or that it may be so" }
+      - id: opinions_reason
+        title: Reasons and examples
+        objectives:
+          - { id: reason, ask: "Give {name} a reason for your opinion: because, or so" }
+          - { id: example, ask: "Give {name} an example" }
+          - { id: important, ask: "Tell {name} what, in your view, is the important thing", cue: "{name} has had the opinion and the example and would now like the moral." }
+
+  - id: advice
+    title: Advice
+    can_do: "Ask for advice, give it, and say what you think of the advice you get."
+    grammar: "The conditional of 'must' and 'can' ('you should', 'you could'); 'if I were you'; 'I advise you to'."
+    roles:
+      - "Agony Uncle to the Livestock: answers letters on behalf of worried sheep and has seen it all"
+      - "Consulting Busybody: gives advice by the quarter-hour and refunds nothing if it is taken"
+      - "Sage, Newly Qualified: passed the examination last week and is anxious to try it out on somebody"
+      - "Dispenser of Second Thoughts: sells them to people who have already decided, at a small premium for lateness"
+    lessons:
+      - id: advice_ask
+        title: Asking for advice
+        objectives:
+          - { id: problem, ask: "Tell {name} that you have a problem and do not know what to do", cue: "{name} has a sign up offering advice and, so far today, no takers." }
+          - { id: ask_advice, ask: "Ask {name} what you should do" }
+          - { id: in_my_place, ask: "Ask {name} what they would do in your place" }
+      - id: advice_give
+        title: Giving advice
+        objectives:
+          - { id: should, ask: "Tell {name} what they should do", cue: "{name} has explained a difficulty at some length and has now stopped, expectantly." }
+          - { id: could, ask: "Suggest to {name} something else they could do" }
+          - { id: if_i_were_you, ask: "Tell {name} what you would do in their place, or what you advise" }
+      - id: advice_react
+        title: Reacting to advice
+        objectives:
+          - { id: good_advice, ask: "Tell {name} that it is good advice" }
+          - { id: will_try, ask: "Tell {name} that you will try" }
+          - { id: not_easy, ask: "Tell {name} that it is not so easy, or that you have already tried", cue: "{name} has given advice that would be excellent for somebody else entirely." }
+
+  - id: stories
+    title: Telling a story
+    can_do: "Tell a short story: set the scene, say what happened, and say how it ended."
+    grammar: "The imperfect for the scene against the perfect for the events; 'while', 'suddenly', 'then', 'in the end'."
+    roles:
+      - "Collector of Anecdotes: pays by the yard and deducts for any story heard before"
+      - "Chronicler of Minor Incidents: is writing the complete history of things that nearly happened"
+      - "Witness, Professional: was present at most events of note and at several that have not occurred yet"
+      - "Storyteller Without an Ending: has forty beginnings in stock and hopes to borrow the rest"
+    lessons:
+      - id: stories_scene
+        title: Setting the scene
+        objectives:
+          - { id: once, ask: "Begin a story for {name}: one day, once, last year", cue: "{name} has put down everything else and folded both hands, which is how these things start." }
+          - { id: where_i_was, ask: "Set the scene: tell {name} where you were or what you were doing" }
+          - { id: while, ask: "Say what was going on while you did that" }
+      - id: stories_events
+        title: What happened
+        objectives:
+          - { id: suddenly, ask: "Tell {name} what suddenly happened", cue: "{name} is leaning forward, having rightly sensed that something is about to happen." }
+          - { id: lost_found, ask: "Tell {name} what you lost, found or forgot at that point" }
+          - { id: then, ask: "Tell {name} what happened next" }
+      - id: stories_end
+        title: How it ended
+        objectives:
+          - { id: in_the_end, ask: "Tell {name} how it ended", cue: "{name} has followed every word and will not be fobbed off without an ending." }
+          - { id: luckily, ask: "Say whether that was lucky or unlucky" }
+          - { id: what_kind, ask: "Tell {name} what kind of day it was: strange, funny, terrible" }
+
+  - id: problems
+    title: Problems while travelling
+    can_do: "Report a lost bag, a missed train or a wrong bill, explain what happened, and ask what can be done."
+    grammar: "The perfect for what has gone wrong ('I have lost', 'I missed'); 'there is a mistake'; 'what can I do'."
+    roles:
+      - "Keeper of Lost Property: has everything that was ever mislaid on this road, filed under the wrong letter"
+      - "Clerk of Missed Connections: issues certificates of lateness and is sorry, in a general way, for your loss"
+      - "Auditor of Bills: finds one error in every bill presented and, where there is none, supplies it"
+      - "Complaints Officer, Second Window: deals only with complaints about the first window, of which there are many"
+    lessons:
+      - id: problems_lost
+        title: A lost bag
+        objectives:
+          - { id: lost_bag, ask: "Tell {name} that you have lost your suitcase, your bag, your wallet or your passport", cue: "{name} presides over shelves of other people's belongings, none of them yours so far." }
+          - { id: inside, ask: "Tell {name} what was inside it" }
+          - { id: where_left, ask: "Tell {name} where you left it" }
+      - id: problems_missed
+        title: A missed train
+        objectives:
+          - { id: missed, ask: "Tell {name} that you have missed your train or your bus", cue: "{name} is watching the back of a departing train with professional sympathy." }
+          - { id: why, ask: "Explain to {name} what happened: something, or somebody, arrived late" }
+          - { id: next_one, ask: "Ask {name} when the next one leaves" }
+      - id: problems_bill
+        title: A wrong bill
+        objectives:
+          - { id: mistake, ask: "Tell {name} that there is a mistake in the bill", cue: "{name} presents the bill with the air of someone who has added it up twice and got two answers." }
+          - { id: not_ordered, ask: "Explain to {name} that you did not order something that is on it" }
+          - { id: what_can, ask: "Ask {name} what can be done, or whether they can help you" }
+
+  - id: feelings
+    title: Feelings
+    can_do: "Say how you feel and why, ask someone what is wrong, and comfort them."
+    grammar: "'To be' and 'to feel' with adjectives of feeling; reassuring imperatives ('don't worry')."
+    roles:
+      - "Barometer of Moods: reads the feelings of a room to the nearest sigh and posts the forecast by the door"
+      - "Professional Mourner, Between Engagements: is keeping in practice and will be sad about anything, on request"
+      - "Licensed Worrier: worries on behalf of clients who lack the time, and sends a weekly statement"
+      - "Keeper of the Cheerful Disposition: has charge of the only one in town and lends it out on market days"
+    lessons:
+      - id: feelings_how
+        title: How you feel
+        objectives:
+          - { id: happy, ask: "Tell {name} that you are happy today" }
+          - { id: low, ask: "Tell {name} that you are worried, sad, tired or bored", cue: "{name} has asked how you are and seems prepared, this once, for a long answer." }
+          - { id: surprised, ask: "Tell {name} that something has surprised you" }
+      - id: feelings_ask
+        title: What is wrong
+        objectives:
+          - { id: whats_wrong, ask: "Ask {name} what is wrong", cue: "{name} is staring into a cup of something that went cold a good while ago." }
+          - { id: why_sad, ask: "Ask {name} why they are sad or worried" }
+          - { id: can_i_help, ask: "Ask {name} whether you can help" }
+      - id: feelings_comfort
+        title: Comforting
+        objectives:
+          - { id: understand, ask: "Tell {name} that you understand, or that you are very sorry" }
+          - { id: dont_worry, ask: "Tell {name} not to worry", cue: "{name} has finished explaining and looks no better for it." }
+          - { id: all_right, ask: "Tell {name} that everything will be all right" }
+
+  - id: polite_requests
+    title: Polite requests
+    can_do: "Ask a favour politely, say what you would like, and turn a request down gently."
+    grammar: "The present conditional ('could you', 'would you mind', 'I would prefer', 'it would be')."
+    roles:
+      - "Favour Broker: arranges small favours between strangers and keeps a ledger of who owes whom a cup of sugar"
+      - "Chamberlain of the Front Step: decides who may ask what of the household, and in what tone"
+      - "Petitions Clerk: accepts requests only in the conditional and returns the rest unopened"
+      - "Borrower by Profession: has borrowed something from everyone on the road and is, in principle, about to return it"
+    lessons:
+      - id: polite_requests_favour
+        title: Asking a favour
+        objectives:
+          - { id: could_you, ask: "Ask {name} politely whether they could help you, or do you a favour" }
+          - { id: would_you_mind, ask: "Ask {name} whether they would mind opening the window, or waiting a moment" }
+          - { id: lend, ask: "Ask {name} whether they would lend you something", cue: "{name} owns exactly the thing you need, and knows it." }
+      - id: polite_requests_wish
+        title: What you would like
+        objectives:
+          - { id: would_like, ask: "Tell {name} something that you would like to do" }
+          - { id: would_prefer, ask: "Tell {name} what you would prefer", cue: "{name} has offered you the choice of two things, neither of which you wanted." }
+          - { id: would_be, ask: "Tell {name} that something would be nice or better, or ask whether it would be possible" }
+      - id: polite_requests_refuse
+        title: Turning a request down
+        objectives:
+          - { id: afraid_not, ask: "Tell {name} gently that you are afraid you cannot", cue: "{name} has asked a favour that would take the rest of the afternoon and some of the evening." }
+          - { id: no_time, ask: "Give {name} a short reason: you have no time, you are in a hurry" }
+          - { id: later, ask: "Offer to do it later" }

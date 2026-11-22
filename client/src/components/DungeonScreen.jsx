@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import DungeonView from './DungeonView.jsx';
+import RoadView from './RoadView.jsx';
+import { CurriculumChip, CurriculumPanel, HubCard, RoadCaption, RoadMap, RoadResolved } from './Road.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
@@ -24,6 +26,8 @@ import { siteStatesOf } from '../stores/gameStore.js';
 // conversation or from the site's card, and a member can be talked to from the Party panel.
 // Round 119: the dungeon is a map. The player picks where to walk: on the temple map, on the site card, or after a
 // conversation. The server says which sites are out of the fog and which can be walked to (progress.sites).
+// Round 144: The Long Way Home is a mode of this same screen (`state.mode === 'road'`): the endless level in place of
+// the dungeon's, its own top bar chip and dock (Road.jsx), and the same dialogue sheet, Spellbook, reviews and Settings.
 const NO_INSETS = Object.freeze({ top: 0, right: 0, bottom: 0, left: 0 });
 const sameInsets = (a, b) => ['top', 'right', 'bottom', 'left'].every((side) => Math.abs(a[side] - b[side]) < 1);
 
@@ -76,6 +80,8 @@ function WorldCard({ state, cleared }) {
   const here = (place) => place.dungeonId === dungeon.id;
   const holds = new Set(state.enterable ?? [dungeon.id]);
   const open = places.filter((place) => place.dungeonId && holds.has(place.dungeonId));
+  // Round 144: the endless road has no dungeon: it is entered by its own button.
+  const roads = state.enterRoad ? places.filter((place) => place.road) : [];
   const count = (place) => {
     if (here(place)) return `${cleared.length} of ${dungeon.sites.length} cleared`;
     const run = runs[place.dungeonId];
@@ -90,7 +96,7 @@ function WorldCard({ state, cleared }) {
           <line key={`${a}-${b}`} x1={byId.get(a).map.x * 100} y1={byId.get(a).map.y * 60} x2={byId.get(b).map.x * 100} y2={byId.get(b).map.y * 60} />
         ))}
         {places.map((place) => (
-          <g key={place.id} className={`world-place ${here(place) ? 'current' : 'known'}${place.closed ? ' closed' : ''}`} transform={`translate(${place.map.x * 100} ${place.map.y * 60})`}>
+          <g key={place.id} className={`world-place ${here(place) ? 'current' : 'known'}${place.closed ? ' closed' : ''}${place.road ? ' road' : ''}`} transform={`translate(${place.map.x * 100} ${place.map.y * 60})`}>
             <rect x="-2.2" y="-2.2" width="4.4" height="4.4" />
             <text y="-4">{place.name}</text>
           </g>
@@ -110,6 +116,9 @@ function WorldCard({ state, cleared }) {
       </ul>
       {open.map((place) => (
         <button type="button" key={place.id} className={`${here(place) ? 'primary-button' : 'secondary-button'} big-button`} onClick={() => state.enterPlace(place.id)}>Enter {place.name}</button>
+      ))}
+      {roads.map((place) => (
+        <button type="button" key={place.id} className="secondary-button big-button" onClick={state.enterRoad} disabled={state.roadLoading}>Set out on {place.name}</button>
       ))}
     </section>
   );
@@ -281,7 +290,9 @@ function PartyOffer({ state, encounter }) {
 // Round 126: the character's lines are read aloud in the voice of its sheet (`speech.speaker`): each new line when
 // it arrives, unless voices are off in Settings, and any line again from its 🔊. The voice stops when the player
 // sends, starts the microphone or leaves.
-function EncounterSheet({ state, site, sites, party = false, speech, height = null, onHeight = () => {} }) {
+// Round 144: with `road` ({ title, subtitle }) it is a conversation of The Long Way Home: the same sheet, with the
+// road's way on under a finished conversation (RoadResolved).
+function EncounterSheet({ state, site, sites, party = false, road = null, speech, height = null, onHeight = () => {} }) {
   const { encounter, assessment, language, isLoading, encounterLoading } = state;
   const scrollRef = useRef(null);
   const { speaker, listener } = speech;
@@ -295,8 +306,8 @@ function EncounterSheet({ state, site, sites, party = false, speech, height = nu
   }, [voicesOn, lineKey, language?.tag]);
   useEffect(() => () => speaker.stop(), [speaker]);
   const resolved = encounter?.state === 'resolved';
-  const name = encounter?.character?.name ?? (party ? null : site?.characterName) ?? 'them';
-  const atGoal = !party && site?.id === state.dungeon.goal;
+  const name = encounter?.character?.name ?? (party || road ? null : site?.characterName) ?? 'them';
+  const atGoal = !party && !road && site?.id === state.dungeon.goal;
   // The ways on wait for the server's word that the site is cleared (the run is read again after the last answer).
   const cleared = Boolean(sites[site?.id]?.cleared);
   // A conversation opens at its top (the objective, the briefing, the first line), or at its end when it is resumed
@@ -337,16 +348,16 @@ function EncounterSheet({ state, site, sites, party = false, speech, height = nu
     pin.current.top = element.scrollTop; // as far as the text allows
   }, [encounter?.id]);
   return (
-    <section className="sheet" aria-label={party ? `${name}, your party` : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
+    <section className="sheet" aria-label={party ? `${name}, your party` : road ? road.title : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
       {/* Round 132: the panel drags from the top bar's edge down to this strip alone. */}
       <SheetHandle height={height} onHeight={onHeight} />
       <header className="sheet-header">
-        {!party && <SiteNumber index={state.siteIndex} />}
-        <span className="site-text"><strong>{party ? name : site?.name}</strong><small>{party ? 'your party' : name}</small></span>
+        {!party && !road && <SiteNumber index={state.siteIndex} />}
+        <span className="site-text"><strong>{party ? name : road ? road.title : site?.name}</strong><small>{party ? 'your party' : road ? road.subtitle : name}</small></span>
         {!resolved && (
           <span className="sheet-actions">
-            <button type="button" className="text-button" onClick={party ? state.restartParty : state.restartSite} disabled={isLoading || encounterLoading}>Start over</button>
-            <button type="button" className="text-button" onClick={party ? state.leaveParty : state.leaveConversation} disabled={isLoading || encounterLoading}>{party ? 'Leave for now' : 'Leave'}</button>
+            <button type="button" className="text-button" onClick={party ? state.restartParty : road ? state.restartRoadConversation : state.restartSite} disabled={isLoading || encounterLoading}>Start over</button>
+            <button type="button" className="text-button" onClick={party ? state.leaveParty : road ? state.leaveRoadConversation : state.leaveConversation} disabled={isLoading || encounterLoading}>{party ? 'Leave for now' : 'Leave'}</button>
           </span>
         )}
       </header>
@@ -366,7 +377,8 @@ function EncounterSheet({ state, site, sites, party = false, speech, height = nu
             <button type="button" className="primary-button big-button" onClick={state.leaveParty}>Back to the temple</button>
           </section>
         )}
-        {resolved && !party && (
+        {resolved && road && <section className="victory-banner road-banner"><RoadResolved state={state} encounter={encounter} /></section>}
+        {resolved && !party && !road && (
           <section className="victory-banner" role="status">
             <p>{encounter.resolvedMessage ?? `${name} lets you pass.`}</p>
             {encounter.character?.saveable && <PartyOffer key={encounter.id} state={state} encounter={encounter} />}
@@ -438,7 +450,13 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const inEncounter = phase === 'encounter';
   const atSite = !['attract', 'world', 'overview', 'victory', 'party'].includes(phase);
   const inParty_ = phase === 'party';
-  const returnLabel = inEncounter || inParty_ ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the temple';
+  // Round 144: on the road the phases are the road's own.
+  const onRoad = state.mode === 'road';
+  const roadTalking = onRoad && state.roadPhase === 'encounter';
+  const roadEncounter = roadTalking && state.encounter?.road ? state.encounter : null;
+  const shellPhase = onRoad ? ({ hub: 'site', travel: 'walk', encounter: 'encounter' }[state.roadPhase] ?? 'site') : phase;
+  const returnLabel = onRoad ? (roadTalking ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the road')
+    : inEncounter || inParty_ ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the temple';
   // A site conversation under way that the store holds (the player left it for the site's card): Talk waits for it.
   const held = !inParty_ && state.encounter?.state === 'ongoing' ? state.encounter : null;
   const canTalk = ['attract', 'world', 'overview', 'site', 'victory'].includes(phase) || (inEncounter && state.encounter?.state === 'resolved');
@@ -447,22 +465,28 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const spellbook = conversing && !state.spellbook.inEncounter ? { ...state.spellbook, inEncounter: true } : state.spellbook;
 
   return (
-    <div className={`app-shell phase-${phase}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
-      <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
-        closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
+    <div className={`app-shell phase-${shellPhase}${onRoad ? ' on-road' : ''}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
+      {onRoad
+        ? <RoadView road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived}
+          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
+        : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
+          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
 
       <header className="hud" ref={hudRef}>
-        <div className="hud-title"><strong>ParaLLang</strong><span>{dungeon.name}</span></div>
+        <div className="hud-title"><strong>ParaLLang</strong><span>{onRoad ? 'The Long Way Home' : dungeon.name}</span></div>
         <LevelChip progression={state.progression} />
-        <ol className="pips" aria-label={`${cleared.length} of ${dungeon.sites.length} sites cleared`}>
-          {dungeon.sites.map((entry, index) => (
-            <li key={entry.id} className={cleared.includes(entry.id) ? 'done' : (atSite && index === siteIndex ? 'current' : undefined)} />
-          ))}
-        </ol>
+        {!onRoad && (
+          <ol className="pips" aria-label={`${cleared.length} of ${dungeon.sites.length} sites cleared`}>
+            {dungeon.sites.map((entry, index) => (
+              <li key={entry.id} className={cleared.includes(entry.id) ? 'done' : (atSite && index === siteIndex ? 'current' : undefined)} />
+            ))}
+          </ol>
+        )}
         <nav aria-label="Menu">
-          <button type="button" className="secondary-button" onClick={state.openParty}>
+          {onRoad && <CurriculumChip state={state} />}
+          {!onRoad && <button type="button" className="secondary-button" onClick={state.openParty}>
             Party <span className="due-badge" aria-label={`${state.party.length} in your party`}>{state.party.length}</span>
-          </button>
+          </button>}
           <button type="button" className="secondary-button" onClick={state.openSpellbook}>
             Spellbook <span className="due-badge" aria-label={`${state.spellbook.dueCount} reviews due`}>{state.spellbook.dueCount}</span>
           </button>
@@ -473,15 +497,26 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.error && <div className="error-banner" role="alert"><span>{state.error}</span><button type="button" onClick={state.clearError} aria-label="Dismiss error">×</button></div>}
 
       <div className="dock" ref={dockRef}>
-        {phase === 'attract' && <TitleCard state={state} />}
-        {phase === 'world' && <WorldCard state={state} cleared={cleared} />}
-        {phase === 'overview' && <OverviewCard state={state} sites={sites} />}
-        {(phase === 'approach' || phase === 'walk') && <TravelCaption state={state} site={site} />}
-        {inEncounter && <EncounterSheet state={state} site={site} sites={sites} speech={speech} height={sheetHeight} onHeight={setSheetHeight} />}
-        {phase === 'site' && site && <SiteCard state={state} sites={sites} site={site} />}
-        {inParty_ && <EncounterSheet state={state} site={site} sites={sites} party speech={speech} height={sheetHeight} onHeight={setSheetHeight} />}
-        {phase === 'victory' && <VictoryCard state={state} />}
+        {onRoad && state.roadPhase === 'hub' && <HubCard state={state} />}
+        {onRoad && state.roadPhase === 'travel' && <RoadCaption state={state} />}
+        {roadTalking && <EncounterSheet state={state} site={null} sites={{}} speech={speech} height={sheetHeight} onHeight={setSheetHeight}
+          road={{ title: roadEncounter?.road.title ?? 'A conversation', subtitle: roadEncounter ? `${roadEncounter.character.name}, ${roadEncounter.character.role} · ${roadEncounter.road.place}` : '' }} />}
+        {!onRoad && phase === 'attract' && <TitleCard state={state} />}
+        {!onRoad && phase === 'world' && <WorldCard state={state} cleared={cleared} />}
+        {!onRoad && phase === 'overview' && <OverviewCard state={state} sites={sites} />}
+        {!onRoad && (phase === 'approach' || phase === 'walk') && <TravelCaption state={state} site={site} />}
+        {!onRoad && inEncounter && <EncounterSheet state={state} site={site} sites={sites} speech={speech} height={sheetHeight} onHeight={setSheetHeight} />}
+        {!onRoad && phase === 'site' && site && <SiteCard state={state} sites={sites} site={site} />}
+        {!onRoad && inParty_ && <EncounterSheet state={state} site={site} sites={sites} party speech={speech} height={sheetHeight} onHeight={setSheetHeight} />}
+        {!onRoad && phase === 'victory' && <VictoryCard state={state} />}
       </div>
+
+      {onRoad && state.roadPanel && state.road && state.view === 'dialogue' && (
+        <div className="overlay road-overlay">
+          {state.roadPanel === 'map' && <RoadMap state={state} onClose={state.closeRoadPanel} />}
+          {state.roadPanel === 'curriculum' && <CurriculumPanel state={state} onClose={state.closeRoadPanel} />}
+        </div>
+      )}
 
       {state.view !== 'dialogue' && (
         <div className="overlay">
@@ -499,7 +534,8 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
-        voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }} />}
+        voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }}
+        savedAt={state.savedAt} onExportCopy={state.exportCopy} onImportCopy={state.importCopy} />}
     </div>
   );
 }

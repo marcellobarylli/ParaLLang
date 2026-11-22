@@ -15,7 +15,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import yaml from 'js-yaml';
 import { z } from 'zod';
-import { matchCanonicalVocabulary, vocabularyFormConflicts } from '../language-engine.js';
+import { matchCanonicalVocabulary } from '../language-engine.js';
 
 export const CURRICULUM_PREFIX = 'c_';
 const idSchema = z.string().regex(/^[a-z][a-z0-9_]*$/);
@@ -68,6 +68,8 @@ const packStageSchema = z.object({
   vocabulary: z.record(idSchema, packEntrySchema),
 }).strict();
 
+// A form as the matcher compares it: without accents, in lower case, apostrophes alike, white space as one space.
+const foldForm = (form) => String(form).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[\u2019\u2018\u02BC\u0060\u00B4\u2032]/gu, "'").replace(/\s+/gu, ' ').trim();
 const yamlFiles = (dir) => (existsSync(dir) ? readdirSync(dir).filter((name) => name.endsWith('.yaml')).sort() : []);
 function parse(path) {
   try { return yaml.load(readFileSync(path, 'utf8')); }
@@ -117,12 +119,23 @@ export function loadCurriculum({ contentDir, language }) {
       });
     }
   }
-  const conflicts = vocabularyFormConflicts(entries);
-  if (conflicts.length) {
-    const [{ id, variant, got }] = conflicts;
-    throw new Error(`Curriculum (${language.code}): the form "${variant}" of ${id} is read as ${got.join(', ') || 'nothing'}; two entries may not share a form`);
+  // No two entries may share a form, and each form must be read as its own entry (the matcher's rule for the market's
+  // vocabulary, language-engine.js's vocabularyFormConflicts). With some hundreds of entries the shared forms are
+  // found by folding each form once; each form is then read against its own entry alone.
+  const owner = new Map();
+  for (const entry of entries) {
+    for (const variant of entry.surface_variants) {
+      const folded = foldForm(variant);
+      const other = owner.get(folded);
+      if (other && other !== entry.id) throw new Error(`Curriculum (${language.code}): the form "${variant}" belongs to both ${other} and ${entry.id}; two entries may not share a form`);
+      owner.set(folded, entry.id);
+      // Read alone, a form is matched whole unless it is padded or holds a run of spaces (the matcher's patterns
+      // start and end at the form's own first and last character).
+      if (!folded || variant !== variant.trim() || /\s{2,}/u.test(variant)) throw new Error(`Curriculum (${language.code}): the form "${variant}" of ${entry.id} is empty, padded or holds a run of spaces`);
+    }
   }
   const byId = new Map(entries.map((entry) => [entry.id, deepFreeze(entry)]));
+  const allEntries = Object.freeze([...byId.values()]); // one list for every match, so its patterns are made once
 
   const stages = [];
   const units = [];
@@ -152,7 +165,7 @@ export function loadCurriculum({ contentDir, language }) {
         for (const objective of lesson.objectives) {
           const data = words[objective.id];
           if (!data) throw new Error(`Curriculum (${language.code}): objective ${lesson.id}.${objective.id} has no words`);
-          lessonOut.objectives.push(compileObjective({ language, lesson, objective, data, byId }));
+          lessonOut.objectives.push(compileObjective({ language, lesson, objective, data, byId, entries: allEntries }));
         }
         unitOut.lessons.push(lessonOut);
         lessonsById.set(lesson.id, { lesson: lessonOut, unit: unitOut, stage: stageOut });
@@ -167,13 +180,13 @@ export function loadCurriculum({ contentDir, language }) {
   if (!stages.length) return null;
   return deepFreeze({
     stages, units, lessonsById,
-    vocabulary: { entries: [...byId.values()], byId, versionOf: (id) => versionById.get(id) },
+    vocabulary: { entries: allEntries, byId, versionOf: (id) => versionById.get(id) },
     reference: { id: `curriculum-${language.code}`, title: `ParaLLang curriculum, ${language.name} (authored; awaits the owner's review)`, url: 'https://github.com/marcellobarylli/ParaLLang/blob/main/docs/curriculum.md' },
   });
 }
 
 // One skeleton objective with a pack's words, in the engine's shape. `{name}` is left in the texts.
-function compileObjective({ language, lesson, objective, data, byId }) {
+function compileObjective({ language, lesson, objective, data, byId, entries }) {
   const where = `${lesson.id}.${objective.id}`;
   const groups = (Array.isArray(data.say[0]) ? data.say : [data.say]).map((group) => group.map((bare) => {
     const id = `${CURRICULUM_PREFIX}${bare}`;
@@ -181,7 +194,6 @@ function compileObjective({ language, lesson, objective, data, byId }) {
     return id;
   }));
   const targetIds = [...new Set(groups.flat())];
-  const entries = [...byId.values()];
   // The engine passes an objective only on evidence it can find in the answer. Every authored example must hold a
   // form from each group, read by the same matcher (so a longer phrase of another entry cannot hide it).
   for (const example of data.examples) {

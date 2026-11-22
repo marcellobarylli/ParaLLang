@@ -73,7 +73,7 @@ function trunk(out, x, y, z, radius, height, sides, color) {
 // A faceted ball: two pyramids base to base (an octahedron stretched to taste).
 function ball(out, x, y, z, radius, height, color, turn = 0) {
   const ring = [0, 1, 2, 3].map((k) => { const a = turn + (k / 4) * Math.PI * 2; return [x + Math.cos(a) * radius, y, z + Math.sin(a) * radius]; });
-  const [top, bottom] = [[x, y + height * 0.6, z], [x, y - height * 0.4, z]];
+  const [top, bottom] = [[x, y + height * 0.72, z], [x, y - height * 0.28, z]];
   for (let k = 0; k < 4; k += 1) {
     const [a, b] = [ring[k], ring[(k + 1) % 4]];
     tri(out, b, a, top, color.map((v) => v * (0.9 + 0.1 * k)));

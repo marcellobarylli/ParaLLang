@@ -46,9 +46,17 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     // Round 115: `options` is { restart, dungeonId, encounterId }; a bare boolean is the old `restart` flag. With a
     // dungeonId the server starts the run's next site.
     startEncounter: (learnerId, options = {}) => {
-      const { restart = false, dungeonId, encounterId } = typeof options === 'object' && options !== null ? options : { restart: options === true };
-      return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId, client: CLIENT_CONTRACT } : {}), ...(encounterId ? { encounterId } : {}) } });
+      const { restart = false, dungeonId, encounterId, road = false } = typeof options === 'object' && options !== null ? options : { restart: options === true };
+      return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId, client: CLIENT_CONTRACT } : {}), ...(encounterId ? { encounterId } : {}), ...(road ? { road: true } : {}) } });
     },
+    // Round 144: The Long Way Home: the learner's place on the endless graph with what waits ahead and the
+    // curriculum's marks; a walk to a site (`leave` drops the road's conversation under way); a new road.
+    getRoad: (learnerId) => request('/api/road', { learnerId }),
+    moveRoad: (learnerId, body) => request('/api/road/move', { learnerId, method: 'POST', body }),
+    resetRoad: (learnerId, body = {}) => request('/api/road/reset', { learnerId, method: 'POST', body }),
+    // Round 144: the whole save, for the copy this browser keeps, and the copy put back on a server that lost it.
+    exportSave: (learnerId) => request('/api/save', { learnerId }),
+    restoreSave: (copy) => request('/api/save/restore', { method: 'POST', body: copy }),
     // Round 119: the map and the run on it. (The bare path is the one the client of rounds 115 to 118 read; the
     // server answers it with a note to reload.)
     getDungeon: (learnerId, dungeonId) => request(`/api/dungeons/${encodeURIComponent(dungeonId)}/map?client=${CLIENT_CONTRACT}`, { learnerId }),

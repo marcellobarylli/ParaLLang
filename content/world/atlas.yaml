@@ -43,7 +43,18 @@ places:
     description: >
       A dome. Of bone. The name was not a metaphor.
     closed: "No road leads here yet."
+  # Round 144: the endless road. It has no dungeon file: its landscape, its sites and its characters are generated
+  # (server/src/road/), and the curriculum is walked along it. The name and the lines are ours; Journathan, "still
+  # technically on his way home", is the owner's (parallang_obsidian/).
+  - id: the_long_way
+    name: The Long Way Home
+    road: true
+    map: { x: 0.62, y: 0.86 }
+    description: >
+      A road with no far end. It is said that Journathan is still on it somewhere, technically on his way home. Whoever
+      you meet along it has something to teach you and is under the impression that it is the other way round.
 paths:
+  - [ta_prohm, the_long_way]
   - [ta_prohm, the_kiln]
   - [ta_prohm, angkor_wat]
   - [ta_prohm, micromort_mountain]

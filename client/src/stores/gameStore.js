@@ -3,6 +3,7 @@ import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
 import { loadDisplay, saveDisplay } from '../display.js';
 import { unexploredSites } from '../dungeonModel.js';
+import { createRoadSlice } from './roadSlice.js';
 
 // Round 115: the web client plays a dungeon. Round 119: the dungeon is a map under a world map. The flow:
 //
@@ -33,6 +34,11 @@ const LEARNER_KEY = 'parallang.learnerId';
 export const PLACE_KEY = 'parallang.placeId';
 // Shown when the server no longer knows the learner (its saves were wiped by a restart).
 export const RUN_LOST = 'The server was restarted and lost your run with it. A new run has started.';
+// Round 144: the whole save is copied to this browser after each finished conversation, review and walk on the road,
+// and put back when the server has lost it (the free hosting plan wipes its files on every restart).
+export const BACKUP_KEY = 'parallang.save';
+export const RUN_RESTORED = 'The server had lost your run. It was put back from the copy this browser keeps.';
+export const COPY_LOADED = 'The saved run was loaded.';
 const emptySpellbook = { cards: [], dueCount: 0, contentVersion: null };
 const attemptId = () => globalThis.crypto?.randomUUID?.() ?? `attempt-${Date.now()}-${Math.random()}`;
 const MOVING = new Set(['approach', 'walk']);
@@ -98,6 +104,22 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         };
       },
     });
+    // Round 144: this browser's copy of the save. Read and written past the proxy above: a lost learner is what the
+    // copy is for, not a reason to start again.
+    const readBackup = () => {
+      try { const copy = JSON.parse(storage?.getItem?.(BACKUP_KEY) ?? 'null'); return typeof copy?.save?.learnerId === 'string' ? copy : null; }
+      catch { return null; }
+    };
+    const backup = async (learnerId) => {
+      if (!rawApi.exportSave || !learnerId) return;
+      const epoch = requestEpoch;
+      try {
+        const copy = await rawApi.exportSave(learnerId);
+        if (epoch !== requestEpoch || get().learnerId !== learnerId || copy?.save?.learnerId !== learnerId) return;
+        try { storage?.setItem?.(BACKUP_KEY, JSON.stringify(copy)); } catch { return; } // no room, or private mode
+        set({ savedAt: copy.exportedAt ?? null });
+      } catch { /* the next one will do */ }
+    };
     const siteIndexOf = (encounterId) => get().dungeon.sites.findIndex((site) => site.encounterId === encounterId);
     const indexOfSite = (siteId) => get().dungeon.sites.findIndex((site) => site.id === siteId);
     const clearedAt = (index, progress = get().progress) => Boolean(progress?.sites?.[get().dungeon.sites[index]?.id]?.cleared);
@@ -151,6 +173,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         spellbook: withSpellbook(result.spellbook), reviewChallenge: null, isLoading: false,
       });
       if (levelUp) refreshProgress(learnerId);
+      backup(learnerId); // round 144
     };
 
     // Review 1 (R1.2): a read that a reset, new settings or a newer read has overtaken is dropped.
@@ -234,6 +257,12 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     };
 
     return {
+      // Round 144: The Long Way Home (roadSlice.js).
+      ...createRoadSlice({
+        set, get, api, quiet, withSpellbook, takeProgression, backup,
+        guard: { epoch: () => requestEpoch, site: () => siteRequest, bumpSite: () => { siteRequest += 1; return siteRequest; } },
+      }),
+      savedAt: null, // when this browser's copy of the save was last written (the server's clock)
       settings: loadSettings(storage),
       display: loadDisplay(storage),
       settingsOpen: false,
@@ -299,6 +328,15 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
             const identity = await api.createLearner(storedId);
             if (epoch !== requestEpoch) return;
             try { storage?.setItem?.(LEARNER_KEY, identity.learnerId); } catch { /* private mode: a new learner next time */ }
+            // Round 144: the server did not know this learner and has made an empty save for the id. If this browser
+            // keeps a copy of that learner's save, it goes back in its place.
+            const copy = readBackup();
+            let restored = false;
+            if (identity.recovered === false && storedId && copy?.save.learnerId === identity.learnerId && rawApi.restoreSave) {
+              try { await rawApi.restoreSave({ ...copy, replace: true }); restored = true; } catch { /* the new, empty run stays */ }
+              if (epoch !== requestEpoch) return;
+            }
+            set({ savedAt: copy?.save.learnerId === identity.learnerId ? (copy.exportedAt ?? null) : null, ...(restored ? { error: RUN_RESTORED } : {}) });
             const asked = dungeon;
             const view = await api.getDungeon(identity.learnerId, asked.id);
             if (epoch !== requestEpoch) return;
@@ -576,6 +614,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       },
       saveSettings: async (values, { notice = null } = {}) => {
         const settings = persistSettings(values, storage);
+        const wasRoad = get().mode === 'road';
         requestEpoch += 1;
         siteRequest += 1;
         progressRequest += 1;
@@ -585,6 +624,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const phase = ['attract', 'world'].includes(get().phase) ? get().phase : 'overview';
         set({
           settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
+          mode: 'dungeon', road: null, curriculum: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false,
           party: [], partyReturn: null, partyStarting: null, recruiting: false,
           progression: null, xpGained: 0, levelUp: null,
           phase, siteIndex: startIndex(dungeon), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, encounter: null, encounterLoading: false, siteError: null, starting: false,
@@ -592,6 +632,30 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           ...(notice ? { draft: '', pendingInput: null } : {}),
         });
         await get().initialize();
+        // Round 144: a player who was on the road is put back on it.
+        if (wasRoad && get().connection === 'ready') { set({ phase: 'world' }); await get().enterRoad(); }
+      },
+
+      // Round 144: on The Long Way Home, whether the way on is chosen for the player.
+      setRails: (on) => set({ display: saveDisplay({ ...get().display, rails: on !== false }, storage) }),
+      // Round 144: this browser's copy of the save as a file's text (a fresh copy when the server answers), and a
+      // copy from a file put on the server in place of whatever it holds for that learner.
+      exportCopy: async () => {
+        const { learnerId } = get();
+        if (learnerId) await backup(learnerId);
+        try { return storage?.getItem?.(BACKUP_KEY) ?? null; } catch { return null; }
+      },
+      importCopy: async (text) => {
+        let copy;
+        try { copy = JSON.parse(text); } catch { copy = null; }
+        if (typeof copy?.save?.learnerId !== 'string') { set({ error: 'That file is not a ParaLLang save.' }); return false; }
+        if (!rawApi.restoreSave) return false;
+        try {
+          await rawApi.restoreSave({ ...copy, replace: true });
+          try { storage?.setItem?.(LEARNER_KEY, copy.save.learnerId); storage?.setItem?.(BACKUP_KEY, JSON.stringify(copy)); } catch { /* private mode */ }
+          await get().saveSettings(get().settings, { notice: COPY_LOADED });
+          return true;
+        } catch (error) { set({ error: `The save could not be loaded: ${error.message}` }); return false; }
       },
 
       sendMessage: async (providedText) => {
@@ -618,6 +682,12 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           });
           // A finished site conversation changes the map; a finished party conversation changes the party (critique 1.9).
           const resolved = result.encounter.state === 'resolved';
+          // Round 144: a conversation of the road changes the road and the curriculum instead.
+          if (result.encounter.road) {
+            if (resolved) await get().roadFinished(result, learnerId);
+            return;
+          }
+          if (resolved) backup(learnerId);
           const readsMap = resolved && !result.encounter.partyConversation;
           // Round 121 (critique 1.1): a new level may open a seal, so the map is read again whatever earned it.
           if (levelUp && !readsMap) refreshProgress(learnerId);

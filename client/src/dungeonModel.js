@@ -35,7 +35,9 @@ export function atlasView(file) {
   const joined = new Set(file.paths.flatMap(([a, b]) => (a === file.start ? [b] : b === file.start ? [a] : [])));
   const places = file.places.filter((place) => place.id === file.start || joined.has(place.id)).map((place) => Object.freeze({
     id: place.id, name: place.name, state: place.id === file.start ? 'current' : 'known', map: { ...place.map },
-    description: String(place.description ?? '').trim(), dungeonId: place.dungeon ?? null, closed: place.dungeon ? null : (place.closed ?? 'Closed.'),
+    description: String(place.description ?? '').trim(), dungeonId: place.dungeon ?? null,
+    // Round 144: a place with `road` is The Long Way Home: open, with no dungeon (the landscape is generated).
+    road: place.road === true, closed: place.dungeon || place.road ? null : (place.closed ?? 'Closed.'),
   }));
   const shown = new Set(places.map((place) => place.id));
   return Object.freeze({ start: file.start, places, paths: file.paths.filter(([a, b]) => shown.has(a) && shown.has(b)).map(([a, b]) => [a, b]) });

@@ -180,7 +180,7 @@ test('the world card: two open places, each with its count and its button; The K
   render(<DungeonScreen useStore={store} />);
   await screen.findByText(/answer in Italian/);
   await user.click(screen.getByRole('button', { name: 'Enter' }));
-  expect(screen.getByRole('img', { name: 'A map of 4 places' })).toBeTruthy();
+  expect(screen.getByRole('img', { name: 'A map of 5 places' })).toBeTruthy();
   const rows = () => screen.getAllByRole('listitem').filter((item) => item.closest('.place-list')).map((item) => item.textContent);
   expect(rows()[0]).toMatch(/^Ta Prohm.*0 of 7 cleared$/);
   expect(await screen.findByText('1 of 7 cleared')).toBeTruthy();
