@@ -204,6 +204,13 @@ function validateEnvelope(value, learnerId) {
     const entries = value.told && typeof value.told === 'object' && !Array.isArray(value.told) ? Object.entries(value.told) : [];
     value.told = Object.fromEntries(entries.filter(([id, at]) => id.length <= 100 && typeof at === 'string' && Number.isFinite(Date.parse(at))).slice(0, TOLD_LIMIT));
   }
+  // Round 157: the guidebook: the entries this learner has ({ id: { at, read } }). Anything else is dropped.
+  if (value.guidebook !== undefined) {
+    const entries = value.guidebook && typeof value.guidebook === 'object' && !Array.isArray(value.guidebook) ? Object.entries(value.guidebook) : [];
+    value.guidebook = Object.fromEntries(entries
+      .filter(([id, entry]) => id.length <= 100 && entry && typeof entry === 'object' && typeof entry.at === 'string' && Number.isFinite(Date.parse(entry.at)))
+      .slice(0, TOLD_LIMIT).map(([id, entry]) => [id, { at: entry.at, read: entry.read === true }]));
+  }
   if (value.annexes !== undefined) {
     if (!Array.isArray(value.annexes)) throw retryableError('The learner save contains invalid annex records. The original file was preserved.', 'SAVE_UNREADABLE');
     value.annexes = value.annexes.filter(validAnnexRecord).filter((record, index, all) => all.findIndex((other) => other.id === record.id) === index).slice(0, ANNEX_LIMIT);

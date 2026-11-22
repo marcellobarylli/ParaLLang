@@ -72,6 +72,9 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),
     revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),
+    // Round 157: the guidebook's entries, and their being read when it is opened.
+    getGuidebook: (learnerId) => request('/api/guidebook', { learnerId }),
+    readGuidebook: (learnerId) => request('/api/guidebook/read', { learnerId, method: 'POST', body: {} }),
     getSpellbook: (learnerId) => request('/api/spellbook', { learnerId }),
     createReview: (learnerId, vocabularyId) => request('/api/spellbook/review', { learnerId, method: 'POST', body: vocabularyId ? { vocabularyId } : {} }),
     submitReview: (learnerId, payload) => request('/api/spellbook/review/submit', { learnerId, method: 'POST', body: payload }),

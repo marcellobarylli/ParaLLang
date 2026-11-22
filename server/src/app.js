@@ -122,6 +122,16 @@ export function createApp({ service, logger = console, token = null, saves = nul
     catch (error) { next(error); }
   });
 
+  // Round 157 (issue #5): the guidebook: the entries the learner has, and their being read when it is opened.
+  app.get('/api/guidebook', async (req, res, next) => {
+    try { res.json(await service.getGuidebook(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
+  app.post('/api/guidebook/read', async (req, res, next) => {
+    try { res.json(await service.readGuidebook(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
+
   // Round 111 (backlog B8): read a redacted annex anyway.
   app.post('/api/spellbook/annex/read', async (req, res, next) => {
     try { res.json(await service.readAnnex(req.get('X-Learner-Id'), req.body ?? {})); }

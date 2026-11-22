@@ -12,7 +12,7 @@ import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
 import { roadMethods } from './road/service.js';
-import { passageView, selectPassage } from './narration.js';
+import { entriesFor, passageView, selectPassage, toSegments } from './narration.js';
 import { weatherAt } from './road/weather.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
@@ -253,10 +253,50 @@ export class LearningService {
   // marked as told in the envelope given, which the caller saves (or does not: a passage of a view that writes
   // nothing is chosen again the same way). `pick` chooses among passages that fit equally.
   tell(envelope, event, pick = 0) {
+    this.enterGuide(envelope, event);
     const passage = selectPassage(this.content.passages ?? [], event, { told: envelope.told ?? {}, pick });
     if (passage && !Object.hasOwn(envelope.told ?? {}, passage.id)) envelope.told = { ...(envelope.told ?? {}), [passage.id]: nowIso(this.clock) };
     return passage;
   }
+  // Round 157 (issue #5): the guidebook. What happened may enter entries (content/narration/guidebook.yaml): each is
+  // entered once, unread, in the envelope given, which the caller saves. Returns whether any was entered.
+  enterGuide(envelope, event) {
+    const entering = entriesFor(this.content.guide ?? [], event, envelope.guidebook ?? {});
+    if (!entering.length) return false;
+    const at = nowIso(this.clock);
+    envelope.guidebook = { ...(envelope.guidebook ?? {}), ...Object.fromEntries(entering.map((entry) => [entry.id, { at, read: false }])) };
+    return true;
+  }
+  guideEntry(entry, record) { return { id: entry.id, title: entry.title, segments: toSegments(entry.text), at: record.at, unread: !record.read }; }
+  // The learner's entries, in the order they were entered (the file's order within one moment).
+  guideEntries(envelope) {
+    const have = envelope.guidebook ?? {};
+    return (this.content.guide ?? []).filter((entry) => Object.hasOwn(have, entry.id))
+      .map((entry, index) => ({ entry: this.guideEntry(entry, have[entry.id]), index }))
+      .sort((a, b) => a.entry.at.localeCompare(b.entry.at) || a.index - b.index).map(({ entry }) => entry);
+  }
+  // What every view of a place carries: how many entries the learner has, and those not yet read, to be told there.
+  guidebookNote(envelope) {
+    const entries = this.guideEntries(envelope);
+    return { count: entries.length, unread: entries.filter((entry) => entry.unread) };
+  }
+  async getGuidebook(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    return { guidebook: { entries: this.guideEntries(envelope), total: (this.content.guide ?? []).length } };
+  }
+  // The guidebook was opened: every entry is read.
+  async readGuidebook(learnerId) {
+    assertLearnerId(learnerId);
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      if (!Object.values(envelope.guidebook ?? {}).some((entry) => !entry.read)) return this.getGuidebook(learnerId);
+      const staged = clone(envelope);
+      for (const entry of Object.values(staged.guidebook)) entry.read = true;
+      await this.storage.save(staged);
+      return { guidebook: { entries: this.guideEntries(staged), total: (this.content.guide ?? []).length } };
+    });
+  }
+
   // A passage by its id, as the client is sent it; null for none or one the content no longer has.
   toldView(passageId) { return passageView(this.content.passagesById?.get(passageId) ?? null); }
 
@@ -871,6 +911,7 @@ export class LearningService {
       progress: { run: run.run, at: run.at, complete: isComplete(dungeon, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
       // Round 156: the narrator's passage for the site the player stands at (the same one every time; nothing is saved).
       narration: passageView(selectPassage(this.content.passages ?? [], { event: 'site_arrive', dungeon: dungeon.id, site: run.at })),
+      guidebook: this.guidebookNote(envelope), // round 157
       progression: this.progression(envelope),
     };
   }
@@ -926,6 +967,7 @@ export class LearningService {
       if (siteId === run.at) return this.dungeonView(envelope, dungeon);
       const staged = clone(envelope);
       this.saveRun(staged, dungeon, moved(dungeon, run, siteId));
+      this.enterGuide(staged, { event: 'site_arrive', dungeon: dungeon.id, site: siteId }); // round 157
       await this.storage.save(staged);
       // The conversation belongs to the site the player has left (a resolved one is over; an ongoing one was left).
       if (own) this.encounters.delete(learnerId);
@@ -1028,6 +1070,8 @@ export class LearningService {
     const npcMessage = this.canonicalizeNarration(generated, definition);
     const stagedEnvelope = clone(envelope);
     this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
+    // Round 157: the first conversation at a dungeon's site may enter a guidebook entry (a map only read enters none).
+    if (dungeonId) this.enterGuide(stagedEnvelope, { event: 'site_arrive', dungeon: dungeonId, site: siteId });
     // Round 111 (review R1.12): computed once. Round 112 (critique 1.5): only the oldest pending read strains a
     // session, so with two reads pending each costs its own finished conversation (no stacking, none free).
     const strainedBy = this.pendingStrainIds(envelope).slice(0, 1);
@@ -1044,7 +1088,7 @@ export class LearningService {
     };
     await this.storage.save(stagedEnvelope);
     this.encounters.set(learnerId, encounter);
-    return { encounter: this.serializeEncounter(encounter), spellbook: this.spellbookSnapshot(stagedEnvelope) };
+    return { encounter: this.serializeEncounter(encounter), spellbook: this.spellbookSnapshot(stagedEnvelope), guidebook: this.guidebookNote(stagedEnvelope) };
   }
 
   // Round 076 (critique 1.6): the greeting's prompt, the same for a start and a prefetch. It depends on content only,

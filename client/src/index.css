@@ -110,8 +110,11 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .hud-title span { display: none; }
   .pips { grid-area: pips; margin: 0; gap: .25rem; }
   .pips li { width: 9px; height: 9px; }
-  .hud nav { grid-area: nav; gap: .3rem; }
-  .hud nav .secondary-button { padding: .5rem .45rem; font-size: .82rem; }
+  /* Round 157: a fourth button (the guidebook) shares the row, so each gives up a little. */
+  .hud nav { grid-area: nav; gap: .2rem; }
+  .hud nav .secondary-button { padding: .5rem .32rem; font-size: .8rem; }
+  .hud nav .due-badge { margin-left: .2rem; min-width: 1.15rem; }
+  .hud-title strong { letter-spacing: .03em; }
 }
 .problem { display: grid; gap: .5rem; border: 2px solid; border-color: #2a0d14 #a2485a #a2485a #2a0d14; background: #3a1620; padding: .7rem .8rem; color: #ffd6dc; }
 .caption { margin: 0 .75rem calc(max(1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); padding: .55rem .9rem; background: rgb(34 36 35 / .86); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); box-shadow: 0 0 0 1px #000; color: var(--ink); display: flex; align-items: center; gap: .75rem; }
@@ -175,6 +178,17 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .objective-card small, .protected-note, small { color: var(--dim); }
 .npc-message { margin: 1rem 0 1.5rem; }
 .narrative { color: #b9bbb4; font-style: italic; line-height: 1.55; }
+/* Round 157: the guidebook: its panel, the note of a new entry on a card, and its button's mark. */
+.guidebook { max-width: 46rem; margin: 0 auto; padding: 1rem; }
+.guide-list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .8rem; }
+.guide-entry { padding: .7rem .9rem; background: rgb(34 36 35 / .8); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); }
+.guide-entry h3 { margin: 0 0 .3rem; color: var(--gold); font-size: 1rem; letter-spacing: .05em; text-transform: uppercase; display: flex; align-items: center; gap: .6rem; }
+.guide-entry .narration, .guide-note .narration { margin: 0; }
+.guide-note { margin: .2rem 0 .7rem; padding: .55rem .7rem; border-left: 3px solid var(--gold); background: rgb(0 0 0 / .28); display: grid; gap: .35rem; }
+.guide-note strong { color: var(--gold); letter-spacing: .05em; text-transform: uppercase; font-size: .85rem; }
+.guide-note small { color: #b9bbb4; }
+.hud nav .guide-button { position: relative; min-width: 2rem; padding-left: .35rem; padding-right: .35rem; }
+.guide-badge { position: absolute; top: -.35rem; right: -.35rem; margin: 0; min-width: 1.1rem; height: 1.1rem; font-size: .7rem; }
 /* Round 156: the narrator's written passages, on a card or in the travel caption. */
 .narration { margin: .2rem 0 .6rem; }
 .caption .narration { display: block; margin: 0; }

@@ -33,6 +33,14 @@ export function selectPassage(passages, event, { told = {}, pick = 0 } = {}) {
   return best[Math.min(best.length - 1, Math.floor(Math.max(0, pick) * best.length))];
 }
 
+/**
+ * Round 157 (issue #5): the guidebook entries an event enters: those that fit it and that the learner does not have
+ * yet (`have` is the save's { id: … }), in the file's order.
+ */
+export function entriesFor(entries, event, have = {}) {
+  return entries.filter((entry) => matches(entry, event) && !Object.hasOwn(have, entry.id));
+}
+
 /** A passage's text as segments. Round 156: one plain segment. */
 export function toSegments(text) {
   return [{ text: String(text).trim().replace(/\s+/g, ' ') }];

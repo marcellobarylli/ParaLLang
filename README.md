@@ -304,6 +304,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   told when the player sets out on the road, arrives at a site or stands at a site of a dungeon
   (`server/src/narration.js`; a save keeps what was told under `told`). `node client/scripts/narrator-check.mjs`
   plays them in headless Chromium.
+  From round 157 there is a guidebook: `content/narration/guidebook.yaml` holds its entries (a title, a text and
+  the event that enters each), a save keeps the entries a learner has under `guidebook`, `GET /api/guidebook` lists
+  them and `POST /api/guidebook/read` marks them read. A new entry is told on the card of the place where it was
+  entered, and the top bar's "?" opens the guidebook. `node client/scripts/guidebook-check.mjs` plays it.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

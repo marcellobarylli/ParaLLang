@@ -181,6 +181,16 @@ const styleGuideSchema = z.object({
   rules: z.array(z.string().min(1)).min(1),
 }).strict();
 
+// Round 157 (issue #5): the guidebook's entries (content/narration/guidebook.yaml, optional; narration.js).
+const guidebookSchema = z.object({
+  entries: z.array(z.object({
+    id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+    title: z.string().min(1),
+    when: z.object({ event: z.string().min(1) }).catchall(z.union([z.string(), z.number(), z.boolean()])),
+    text: z.string().min(1),
+  }).strict()),
+}).strict();
+
 // Round 156 (issue #6): the narrator's written passages (content/narration/passages.yaml, optional; narration.js).
 const passagesSchema = z.object({
   passages: z.array(z.object({
@@ -295,6 +305,9 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const passages = Object.freeze(existsSync(resolve(contentDir, 'narration/passages.yaml'))
     ? passagesSchema.parse(parseYaml(contentDir, 'narration/passages.yaml')).passages.map((passage) => Object.freeze(passage)) : []);
   unique(passages.map((passage) => passage.id), 'Narration passages');
+  const guide = Object.freeze(existsSync(resolve(contentDir, 'narration/guidebook.yaml'))
+    ? guidebookSchema.parse(parseYaml(contentDir, 'narration/guidebook.yaml')).entries.map((entry) => Object.freeze(entry)) : []);
+  unique(guide.map((entry) => entry.id), 'Guidebook entries');
   const knowledge = existsSync(resolve(contentDir, 'world/knowledge.yaml')) ? Object.freeze(knowledgeSchema.parse(parseYaml(contentDir, 'world/knowledge.yaml'))) : null;
   const { begin_label: beginLabel, ...onboardingText } = onboardingSchema.parse(parseYaml(contentDir, 'narration/onboarding.yaml'));
   const onboarding = Object.freeze({ ...onboardingText, notes: Object.freeze(onboardingText.notes), beginLabel });
@@ -364,7 +377,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const fragments = loadFragments(contentDir, pack, encounters);
   const inscriptions = loadInscriptions(contentDir, pack, world);
   return Object.freeze({
-    language, styleGuide, knowledge, passages, passagesById: new Map(passages.map((passage) => [passage.id, passage])), onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
+    language, styleGuide, knowledge, guide, passages, passagesById: new Map(passages.map((passage) => [passage.id, passage])), onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
     inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
     // Round 144: the curriculum of The Journey 2 (content/curriculum/ and the pack's curriculum/), with its own
     // vocabulary, kept apart from the pack's above. Null in a pack that has none. Read on first use: its vocabulary

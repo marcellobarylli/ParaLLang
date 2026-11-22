@@ -148,10 +148,13 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       set({ progression: incoming });
       return current && incoming.level > current.level ? incoming.level : null;
     };
+    // Round 157: what a view says of the guidebook ({ count, unread }); a server before it says nothing.
+    const takeGuide = (note) => { if (note && Array.isArray(note.unread)) set({ guideNote: note }); };
     // Round 133: what the world map shows of a dungeon's run.
     const runOf = (of, progress) => ({ cleared: of.sites.filter((site) => progress.sites[site.id]?.cleared).length, total: of.sites.length, complete: Boolean(progress.complete) });
     const takeView = (view) => {
       // Round 156: with the narrator's passage for the site the player stands at (null from a server before it).
+      takeGuide(view.guidebook);
       set({ progress: view.progress, narration: view.narration ?? null, dungeon: mergeDungeon(dungeon, view.dungeon), runs: { ...get().runs, [dungeon.id]: runOf(dungeon, view.progress) } });
       takeProgression(view.progression);
     };
@@ -240,6 +243,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           result = await startSite(true);
         }
         if (stale()) return;
+        takeGuide(result.guidebook); // round 157: the first conversation in a dungeon may have entered an entry
         const patch = { encounter: result.encounter, spellbook: withSpellbook(result.spellbook), encounterLoading: false, assessment: null, closedObjectives: 0, draft: '', pendingInput: null };
         const index = siteIndexOf(result.encounter.encounterId);
         // Another tab moved the player: the camera goes to the site the server started.
@@ -263,7 +267,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     return {
       // Round 144: The Journey 2 (roadSlice.js).
       ...createRoadSlice({
-        set, get, api, quiet, withSpellbook, takeProgression, backup,
+        set, get, api, quiet, withSpellbook, takeProgression, backup, takeGuide,
         guard: { epoch: () => requestEpoch, site: () => siteRequest, bumpSite: () => { siteRequest += 1; return siteRequest; } },
       }),
       savedAt: null, // when this browser's copy of the save was last written (the server's clock)
@@ -278,6 +282,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       enterable: [...bundled.keys()], // round 133: the dungeons this client holds; a place opens only one of these
       runs: {}, // round 133: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
       progress: null,
+      guideNote: null, // round 157: { count, unread }: the guidebook's size and the entries not yet read
+      guidebook: null, // the guidebook as last read ({ entries, total }), while its panel is open
       narration: null, // round 156: the narrator's passage for the dungeon site the player stands at
       progression: null, // round 121: { xp, level, levelStartsAt, nextLevelAt }, or null with a server that sends none
       xpGained: 0, // what the last answer earned
@@ -644,7 +650,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         initializationPromise = null;
         const phase = ['attract', 'world'].includes(get().phase) ? get().phase : 'overview';
         set({
-          settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, narration: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
+          settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, narration: null, guideNote: null, guidebook: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
           mode: 'dungeon', road: null, curriculum: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false,
           party: [], partyReturn: null, partyStarting: null, recruiting: false,
           progression: null, xpGained: 0, levelUp: null,
@@ -743,6 +749,22 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           // Not over a newer Spellbook: a read sent before a conversation opened would show its meanings (R1.4).
           const fresh = epoch === requestEpoch && version === spellbookVersion && get().learnerId === learnerId && get().view === 'spellbook';
           if (fresh && spellbook?.cards) set({ spellbook: withSpellbook(spellbook) });
+        }).catch(() => {});
+      },
+      // Round 157: the guidebook. It shows what the store last read at once, then the server's, and opening it reads
+      // every entry (the notes on the cards go).
+      openGuidebook: () => {
+        set({ view: 'guidebook', reviewChallenge: null, reviewResult: null, error: null });
+        const { learnerId } = get();
+        if (!learnerId || !api.getGuidebook) return;
+        const epoch = requestEpoch;
+        const current = () => epoch === requestEpoch && get().learnerId === learnerId;
+        api.getGuidebook(learnerId).then((data) => {
+          if (!current() || !data?.guidebook) return;
+          set({ guidebook: data.guidebook });
+          if (!data.guidebook.entries.some((entry) => entry.unread)) return;
+          // The panel keeps its "New" marks for this visit; the notes elsewhere are done with.
+          return api.readGuidebook(learnerId).then(() => { if (current()) set({ guideNote: { count: data.guidebook.entries.length, unread: [] } }); });
         }).catch(() => {});
       },
       returnToDialogue: () => set({ view: 'dialogue', reviewChallenge: null, reviewResult: null, error: null }),

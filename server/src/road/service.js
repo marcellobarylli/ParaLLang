@@ -210,6 +210,7 @@ export const roadMethods = {
       },
       curriculum: overview(curriculum, road.progress),
       progression: this.progression(envelope),
+      guidebook: this.guidebookNote(envelope), // round 157
     };
   },
 
@@ -257,7 +258,7 @@ export const roadMethods = {
       const activity = commit(curriculum, road.progress, road.step, offers.get(nodeId), this.isDueObjective(envelope));
       // Round 156: the narrator's passage for the arrival: by the kind of way taken and the country arrived in.
       const [ni, nj] = parseNodeId(nodeId);
-      const arrival = { event: 'road_arrive', way: graph.edge(frontier.find((entry) => entry.id === nodeId).from, nodeId).kind, biome: graph.node(nodeId).biome };
+      const arrival = { event: 'road_arrive', way: graph.edge(frontier.find((entry) => entry.id === nodeId).from, nodeId).kind, biome: graph.node(nodeId).biome, kind: activity.kind }; // `kind`: round 157
       staged.road = {
         ...road, at: nodeId,
         trail: [...road.trail.filter((id) => id !== nodeId), nodeId].slice(-ROAD.trail),

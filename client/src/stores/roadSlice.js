@@ -15,11 +15,12 @@
 
 import { clampImmersion } from '../display.js';
 
-export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgression, guard, backup }) {
+export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgression, guard, backup, takeGuide = () => {} }) {
   const usable = (view) => typeof view?.road?.at === 'string' && Array.isArray(view.road.frontier) && Boolean(view.curriculum);
   const takeRoad = (view) => {
     set({ road: view.road, curriculum: view.curriculum });
     takeProgression(view.progression);
+    takeGuide(view.guidebook); // round 157
   };
 
   // The newest read of the road wins, and one from before a move or another learner is dropped.

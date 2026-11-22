@@ -15,6 +15,7 @@ import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
 import { ROAD_NAME } from '../atlas.js';
 import Narration from './Narration.jsx';
+import Guidebook, { GuideNote } from './Guidebook.jsx';
 import { siteStatesOf } from '../stores/gameStore.js';
 
 // Round 115: the web client's one screen, the dungeon. The level fills the screen; over it lie the top bar and the
@@ -251,6 +252,7 @@ function SiteCard({ state, sites, site }) {
       </header>
       {/* Round 156: what the narrator says of this site. */}
       <Narration narration={state.narration} />
+      <GuideNote note={state.guideNote} onOpen={state.openGuidebook} />
       {status.cleared && site.saveable && (inParty(state.party, site.encounterId)
         ? <p className="party-note" role="status">{name} is in your party.</p>
         : <button type="button" className="secondary-button" onClick={() => state.recruit(site.encounterId)} disabled={state.recruiting}>Invite {name} to your party</button>)}
@@ -508,6 +510,10 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
           <button type="button" className="secondary-button" onClick={state.openSpellbook}>
             Spellbook <span className="due-badge" aria-label={`${state.spellbook.dueCount} reviews due`}>{state.spellbook.dueCount}</span>
           </button>
+          {/* Round 157: the guidebook, with a mark while an entry is unread. */}
+          <button type="button" className="secondary-button guide-button" onClick={state.openGuidebook} aria-label={`Guidebook${state.guideNote?.unread?.length ? `, ${state.guideNote.unread.length} new` : ''}`}>
+            ?{state.guideNote?.unread?.length > 0 && <span className="due-badge guide-badge" aria-hidden="true">{state.guideNote.unread.length}</span>}
+          </button>
           <button type="button" className="secondary-button" onClick={state.openSettings} aria-label="Settings">⚙︎</button>
         </nav>
       </header>
@@ -539,6 +545,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.view !== 'dialogue' && (
         <div className="overlay">
           {state.view === 'party' && <PartyPanel party={state.party} sites={dungeon.sites} held={held} starting={state.partyStarting} canTalk={canTalk} isLoading={state.isLoading || state.travelling} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
+          {state.view === 'guidebook' && <Guidebook guidebook={state.guidebook} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
           {state.view === 'spellbook' && <Spellbook spellbook={spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
           {state.view === 'review' && <ReviewPanel
             key={state.reviewChallenge?.id ?? 'result'}

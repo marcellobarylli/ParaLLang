@@ -5,6 +5,7 @@ import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 import { ROAD_NAME } from '../atlas.js';
 import Narration from './Narration.jsx';
+import { GuideNote } from './Guidebook.jsx';
 
 // Round 144: what the dock and the overlays show on The Journey 2. The server's view of the road (`state.road`)
 // says where the player is, who waits there and what each site ahead offers; the curriculum with the player's marks
@@ -131,6 +132,7 @@ export function HubCard({ state }) {
       <WeatherLine seed={road.seed} />
       {/* Round 156: what the narrator said of the arrival here. */}
       <Narration narration={road.narration} />
+      <GuideNote note={state.guideNote} onOpen={state.openGuidebook} />
       {waiting ? (
         <>
           <p className="who"><strong>{waiting.character.name}</strong>, {waiting.character.role}</p>
