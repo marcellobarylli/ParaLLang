@@ -10,3 +10,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 19:29:00 | 19:30:15 | run | Claude | Cloud session container. Web client 257 tests pass; the client builds; `client/scripts/road-shots.mjs` passes at 390×844 and 1440×900, 43 pictures | `../shots/` |
 | 5 | 19:30:15 | 19:30:15 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 6 | 19:30:15 | 19:30:15 | closed | Claude | Status addendum and index row; committed and pushed on the session branch | `../architecture.md` |
+| 7 | 19:31:31 | 19:31:31 | decision | Owner | Deploy this round, and deploy each later change asked for in this chat once it is tested, without asking again | `interview.md` |
