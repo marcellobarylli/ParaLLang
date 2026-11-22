@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { beginnerGradingResponseSchema, gradingResponseSchema, encounterResponseSchema, locationAtmosphereSchema } from './llm/schemas.js';
 import { buildAtmosphereMessages, buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
 import {
-  calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, initialSchedule,
+  IMMERSION, calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, immersionFrom, initialSchedule,
   foldEvidenceText, isDue, lacksTargetLanguage, levelFor, masteryLabel, matchCanonicalVocabulary, progressionView, ratioBonusFor, scheduleReview,
 } from './language-engine.js';
 import { foldWords } from './content-loader.js';
@@ -215,7 +215,9 @@ export class LearningService {
 
   // Round 121: `bonus` is the level's addition to the base ratio, taken when the conversation starts (a session's
   // ratioBonus). The existing cap of 1 applies to the sum.
-  ratioFor(turns, definition = this.definition(null), bonus = 0) {
+  // Round 148: `immersion` is the share the player chose (a session's `immersion`); it replaces the content's.
+  ratioFor(turns, definition = this.definition(null), bonus = 0, immersion = null) {
+    if (immersion !== null) return immersion;
     return calculateTargetRatio(
       definition.character.language_profile.base_target_ratio + bonus,
       definition.encounter.escalation.target_ratio_increase_per_turn,
@@ -224,6 +226,18 @@ export class LearningService {
   }
 
   // Round 121: the learner's experience and the level it makes.
+  // Round 148: the share a request asks for, or null. A share that is not one is refused.
+  immersionOf(value) {
+    const immersion = immersionFrom(value);
+    if (immersion === undefined) throw validationError(`immersion must be a number from ${IMMERSION.min} to ${IMMERSION.max}.`);
+    return immersion;
+  }
+  // What the narrator's prompt takes from a session's share: the ratio, and whether the lines are wholly target language.
+  shareOf(turns, definition, session) {
+    const immersion = session?.immersion ?? null;
+    return { targetRatio: this.ratioFor(turns, definition, session?.ratioBonus ?? 0, immersion), ...(immersion !== null && immersion >= IMMERSION.full ? { full: true } : {}) };
+  }
+
   progression(envelope) { return progressionView(envelope.progression?.xp ?? 0); }
   level(envelope) { return levelFor(envelope.progression?.xp ?? 0); }
 
@@ -661,7 +675,8 @@ export class LearningService {
     const transcript = encounter.transcript.map((message) => {
       if (message.role === 'player') return clone(message);
       const protectedMessage = encounter.state === 'ongoing' && message.id === currentNpc?.id;
-      const sentenceRevealed = !protectedMessage || revealKeys.includes(`sentence:${message.id}`);
+      // Round 148: at full immersion the translation comes with the line, free: it is how the line is read.
+      const sentenceRevealed = !protectedMessage || (encounter.immersion ?? 0) >= IMMERSION.full || revealKeys.includes(`sentence:${message.id}`);
       return {
         id: message.id, role: message.role, narrative: message.narrative,
         ...(message.narrativeWords?.length ? { narrativeWords: message.narrativeWords.map((entry) => ({ ...entry })) } : {}), // round 130
@@ -772,15 +787,24 @@ export class LearningService {
   // must be at that encounter's location. Round 114: with a dungeonId, a site of that dungeon starts, wherever the player
   // stands on the market map. Round 119: it is the site the player stands at in the dungeon (encounterId, if given, must be its encounter).
   // Round 144: with `road`, the conversation waiting at the learner's site of The Long Way Home starts.
-  async startEncounter(learnerId, { restart = false, encounterId = null, dungeonId = null, road = false } = {}) {
+  // Round 148: with `immersion` (the web client's slider) the characters' lines have that share of target language.
+  async startEncounter(learnerId, { restart = false, encounterId = null, dungeonId = null, road = false, immersion: asked = null } = {}) {
     assertLearnerId(learnerId);
+    const immersion = this.immersionOf(asked);
     return this.serialized(learnerId, async () => {
       // Round 076 (critique 1.2): no prefetch starts while a start runs, saving included.
       this.starting.add(learnerId);
       try {
-        if (road) return await this._startRoad(learnerId, restart);
-        if (dungeonId !== null) return await this._startDungeonSite(learnerId, restart, encounterId, dungeonId);
-        return await this._startEncounter(learnerId, restart, encounterId);
+        const started = road ? await this._startRoad(learnerId, restart, immersion)
+          : dungeonId !== null ? await this._startDungeonSite(learnerId, restart, encounterId, dungeonId, immersion)
+            : await this._startEncounter(learnerId, restart, encounterId, immersion);
+        // A conversation taken up again takes the share asked for now: its next line follows it.
+        const session = this.encounters.get(learnerId);
+        if (immersion !== null && session && session.immersion !== immersion) {
+          session.immersion = immersion;
+          return { ...started, encounter: this.serializeEncounter(session) };
+        }
+        return started;
       } finally { this.starting.delete(learnerId); }
     });
   }
@@ -886,7 +910,7 @@ export class LearningService {
   // one at the site the player stands at. The run's own conversation at this site resumes (a reload); any other start
   // of it is a new conversation, also when the site is cleared. Another conversation under way is never replaced
   // without restart.
-  async _startDungeonSite(learnerId, restart, encounterId, dungeonId) {
+  async _startDungeonSite(learnerId, restart, encounterId, dungeonId, immersion = null) {
     const dungeon = this.dungeon(dungeonId);
     const envelope = await this.loadEnvelope(learnerId);
     const site = siteOf(dungeon, this.dungeonRun(envelope, dungeon).at);
@@ -903,10 +927,10 @@ export class LearningService {
     if (!restart && !ownSession && active?.state === 'ongoing') {
       throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
     }
-    return this.openSession(learnerId, envelope, definition, { dungeonId: dungeon.id, siteId: site.id });
+    return this.openSession(learnerId, envelope, definition, { dungeonId: dungeon.id, siteId: site.id, immersion });
   }
 
-  async _startEncounter(learnerId, restart, encounterId) {
+  async _startEncounter(learnerId, restart, encounterId, immersion = null) {
     {
       const envelope = await this.loadEnvelope(learnerId);
       const definitionId = encounterId ?? this.content.defaultEncounterId;
@@ -957,20 +981,23 @@ export class LearningService {
       if (encounterId !== null && !restart && active?.state === 'ongoing' && this.definition(active) !== definition) {
         throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
       }
-      return this.openSession(learnerId, envelope, definition, { locationId });
+      return this.openSession(learnerId, envelope, definition, { locationId, immersion });
     }
   }
 
   // A new conversation: its greeting, the words it exposes, and the session held in memory. Round 114: split out of
   // _startEncounter for the dungeon start; a dungeon's session carries its dungeonId.
-  async openSession(learnerId, envelope, definition, { locationId, dungeonId, siteId, road } = {}) {
+  async openSession(learnerId, envelope, definition, { locationId, dungeonId, siteId, road, immersion = null } = {}) {
     // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
     this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));
     // Round 121: the level raises the target ratio of a dungeon site's conversation, from its first line to its last.
     // Review R1.1: only there. The market's conversations (the iPhone app) and a party member's keep the content's.
     const ratioBonus = dungeonId ? ratioBonusFor(this.level(envelope)) : 0;
-    const generated = await this.prefetchedGreeting(learnerId, definition)
-      ?? await this.narrate(this.greetingMessages(definition, locationId, ratioBonus), definition, this.ratioFor(0, definition, ratioBonus));
+    // Round 148: a greeting written ahead was written at the content's share; with a share of the player's own it is
+    // dropped and the greeting is written now.
+    if (immersion !== null && !definition.encounter.party_of) this.dropGreeting(greetingKey(learnerId, definition.encounter.id));
+    const generated = (immersion === null ? await this.prefetchedGreeting(learnerId, definition) : null)
+      ?? await this.narrate(this.greetingMessages(definition, locationId, ratioBonus, immersion), definition, this.ratioFor(0, definition, ratioBonus, immersion));
     const npcMessage = this.canonicalizeNarration(generated, definition);
     const stagedEnvelope = clone(envelope);
     this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
@@ -984,6 +1011,7 @@ export class LearningService {
       ...(dungeonId ? { dungeonId, siteId } : {}),
       ...(road ? { road } : {}), // round 144: the stage sets a road conversation's ratio, so it takes no level bonus
       ...(ratioBonus ? { ratioBonus } : {}),
+      ...(immersion !== null ? { immersion } : {}), // round 148
       // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
       ...(strainedBy.length ? { strained: true, strainedBy } : {}),
     };
@@ -994,7 +1022,7 @@ export class LearningService {
 
   // Round 076 (critique 1.6): the greeting's prompt, the same for a start and a prefetch. It depends on content only,
   // which is loaded once for the service's lifetime, so a prefetched greeting is the one the start would ask for.
-  greetingMessages(definition, locationId, ratioBonus = 0) {
+  greetingMessages(definition, locationId, ratioBonus = 0, immersion = null) {
     return buildNarrationMessages({
       language: this.content.language,
       character: definition.character,
@@ -1002,7 +1030,7 @@ export class LearningService {
       locationName: definition.scene?.name ?? this.sceneName({ definitionId: definition.encounter.id, locationId }),
       objectives: definition.encounter.objectives,
       vocabularyById: this.lookup,
-      targetRatio: this.ratioFor(0, definition, ratioBonus),
+      ...this.shareOf(0, definition, { ratioBonus, immersion }),
       ambientEntries: definition.ambientEntries,
       ...this.sceneExtras(definition),
     });
@@ -1236,6 +1264,7 @@ export class LearningService {
     const message = String(request.message ?? '').trim();
     if (!message) throw validationError('Enter a response before sending.');
     if (!request.attemptId) throw validationError('A stable attempt ID is required.');
+    const immersion = this.immersionOf(request.immersion); // round 148: the slider travels with each answer
     return this.serialized(learnerId, async () => {
       const envelope = await this.loadEnvelope(learnerId);
       const fingerprint = payloadHash({ kind: 'dialogue', encounterId: request.encounterId, version: request.version, message });
@@ -1247,6 +1276,7 @@ export class LearningService {
       const current = this.encounters.get(learnerId);
       this.validateVersion(current, request.encounterId, request.version);
       if (current.state !== 'ongoing') throw validationError('This encounter is already complete. Restart to play again.');
+      if (immersion !== null) current.immersion = immersion; // the reply to this answer follows the slider as it stands
       const definition = this.definition(current);
       const objectives = this.activeObjectives(current);
       // Round 129: beginner mode, asked for by the client with each answer. The grader also says what the player
@@ -1342,11 +1372,11 @@ export class LearningService {
           vocabularyById: this.lookup,
           conversationHistory: history,
           playerInput: message,
-          targetRatio: this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0),
+          ...this.shareOf(nextTurns, definition, current),
           decision,
           ambientEntries: definition.ambientEntries,
           ...this.sceneExtras(definition),
-        }), definition, this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0));
+        }), definition, this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0, current.immersion ?? null));
 
         const stagedEnvelope = clone(envelope);
         const stagedEncounter = clone(current);

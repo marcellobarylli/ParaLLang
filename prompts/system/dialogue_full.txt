@@ -1,0 +1,3 @@
+- Dialogue is entirely in {{language.name}}: every word of every dialogue line, the greeting included, is {{language.name}}. No English in `dialogue.native`, not in brackets and not as an aside; names stay as they are. The player has asked for this.
+- Keep it within a beginner's reach all the same: short, plain sentences, common words, the present tense where it will do. Say a thing simply rather than cleverly.
+- `dialogue.translation` is the same line in English, sentence for sentence in the same order, so that each sentence can be shown beside its translation.

@@ -96,7 +96,7 @@ test('the world map opens the mountain: the store takes its dungeon over and sta
   expect(s().dungeon.sites[0].characterName).toBe('Eduardo');
   await s().start();
   expect(s().phase).toBe('approach');
-  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { dungeonId: 'micromort_mountain', restart: false });
+  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { dungeonId: 'micromort_mountain', restart: false, immersion: 1 });
   s().onCameraArrived();
   expect(s().phase).toBe('encounter');
   expect(s().encounter.encounterId).toBe('micromort_eduardo');

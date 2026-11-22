@@ -89,7 +89,7 @@ test('entering The Kiln switches the dungeon, reads its run, remembers the place
   await s().start();
   s().onCameraArrived();
   expect(s().phase).toBe('encounter');
-  expect(server.api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { dungeonId: 'the_kiln', restart: false });
+  expect(server.api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { dungeonId: 'the_kiln', restart: false, immersion: 1 });
   expect(server.runs.ta_prohm.cleared).toEqual(['face_gate']);
 
   // Back in Ta Prohm, its run is as it was left.

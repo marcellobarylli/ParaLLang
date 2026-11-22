@@ -30,15 +30,19 @@ before(async () => {
 });
 after(async () => { globalThis.fetch = realFetch; await runtime.close(); });
 
-function memoryStorage() {
-  const values = new Map();
+function memoryStorage(entries = {}) {
+  const values = new Map(Object.entries(entries));
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } };
 }
 const has = (object, keys, where) => { for (const key of keys) assert.ok(Object.hasOwn(object ?? {}, key), `${where}.${key}`); };
 const ENCOUNTER = { face_gate: 'market_entrance_tutorial', buttress_tree: 'butchers_stall_charcutier', root_court: 'imp_coffee_greeting', sunlit_court: 'cracked_fountain_letharger', library: 'old_bookshop_bookworm', before_sanctuary: 'high_gate_bambieshart', sanctuary: 'the_rift_errata' };
 const indexOf = (siteId) => dungeon.sites.findIndex((site) => site.id === siteId);
 
-function newStore(storage = memoryStorage()) {
+// Round 148: the web client asks for the language only unless its slider is moved, and the line then comes with its
+// translation. This file is about the helps (a protected line's translation and meanings cost a hint), which hold
+// below that, so its stores have the slider at one half. `fullStore` is the page as it is first opened.
+const HALF = { 'parallang.display': JSON.stringify({ immersion: 0.5 }) };
+function newStore(storage = memoryStorage(HALF)) {
   const store = createGameStore({ storage, dungeon });
   return { store, storage, s: () => store.getState() };
 }
@@ -417,4 +421,19 @@ test('the web client sends the token from its settings', async () => {
     assert.match(s().serverProblem, /refused the access token/);
     assert.equal(s().encounter, null);
   } finally { wrapper.token = true; }
+});
+
+// Round 148: the page as it is first opened asks for the language only, and the line being answered comes with its
+// translation without a hint spent.
+test('the web client as first opened: the line comes with its translation, and no hint is used for it', async () => {
+  const { s } = newStore(memoryStorage());
+  await s().initialize();
+  assert.equal(s().display.immersion, 1);
+  await openSite(s);
+  const line = s().encounter.transcript.findLast((message) => message.role !== 'player');
+  assert.equal(line.protected, true);
+  assert.equal(typeof line.dialogue.translation, 'string');
+  assert.equal(s().encounter.hints.used, 0);
+  const system = runtime.provider.calls.filter((call) => call.options.schemaName === 'encounter_narration').at(-1).messages[0].content;
+  assert.match(system, /Dialogue is entirely in Spanish/);
 });

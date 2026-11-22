@@ -92,22 +92,30 @@ export function createSky(uniforms, seed = 7) {
     const mid = hexToRgb(p.mid);
     const horizon = hexToRgb(p.horizon);
     const fog = hexToRgb(p.fog);
+    // How high each colour reaches, as a share of the way up: the fog's, the horizon's, and where the zenith's
+    // begins to be the whole sky. Round 147: a preset may bring them down (`skyBands`), as a sunset does.
+    const [low, band, high] = p.skyBands ?? [0.04, 0.25, 0.75];
     paint(dome, (_x, y) => {
       const t = Math.abs(y) / RADIUS;
-      if (t < 0.04) return mixRgb(fog, horizon, t / 0.04);
-      if (t < 0.25) return mixRgb(horizon, mid, (t - 0.04) / 0.21);
-      return mixRgb(mid, zenith, Math.min(1, (t - 0.25) / 0.5));
+      if (t < low) return mixRgb(fog, horizon, t / low);
+      if (t < band) return mixRgb(horizon, mid, (t - low) / (band - low));
+      return mixRgb(mid, zenith, Math.min(1, (t - band) / (high - band)));
     });
     const cloud = hexToRgb(p.cloud);
-    paint(cloudGeo, (_x, y) => mixRgb(mixRgb(cloud, fog, 0.45), cloud, Math.min(1, Math.max(0, (y - 55) / 55))));
+    const under = p.cloudUnder ? mixRgb(hexToRgb(p.cloudUnder), fog, 0.25) : mixRgb(cloud, fog, 0.45);
+    paint(cloudGeo, (_x, y) => mixRgb(under, cloud, Math.min(1, Math.max(0, (y - 55) / 55))));
     const hill = hexToRgb(p.hills);
     paint(hillGeo, (_x, y) => mixRgb(hill, fog, Math.max(0, (y + 4) / 30) * 0.5));
     const sunCol = hexToRgb(p.sun);
     paint(sun.geometry, () => sunCol);
     paint(halo.geometry, () => mixRgb(sunCol, horizon, 0.3));
-    const dir = new Vector3(...p.sunDir).normalize();
+    // Round 147: a preset may draw the sun's disc elsewhere than its light comes from (`sunDisc`: at sunset the disc
+    // sinks to the horizon while the light stays a little above it), and larger or smaller (`sunScale`).
+    const dir = new Vector3(...(p.sunDisc ?? p.sunDir)).normalize();
     sun.position.copy(dir).multiplyScalar(360);
     halo.position.copy(dir).multiplyScalar(365);
+    sun.scale.setScalar(p.sunScale ?? 1);
+    halo.scale.setScalar((p.sunScale ?? 1) * (p.haloScale ?? 1));
   }
 
   return {

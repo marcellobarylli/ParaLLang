@@ -28,7 +28,7 @@ export function createRoadServer({ seed = 4242 } = {}) {
     resetDungeon: (learnerId, dungeonId) => service.resetDungeon(learnerId, dungeonId),
     getParty: (learnerId) => service.getParty(learnerId),
     recruit: (learnerId, encounterId) => service.recruit(learnerId, { encounterId }),
-    startEncounter: (learnerId, { restart = false, encounterId = null, dungeonId = null, road = false } = {}) => service.startEncounter(learnerId, { restart, encounterId, dungeonId, road }),
+    startEncounter: (learnerId, { restart = false, encounterId = null, dungeonId = null, road = false, immersion = null } = {}) => service.startEncounter(learnerId, { restart, encounterId, dungeonId, road, immersion }),
     currentEncounter: (learnerId) => service.currentEncounter(learnerId),
     sendDialogue: (learnerId, payload) => service.submitDialogue(learnerId, payload),
     revealHelp: (learnerId, payload) => service.revealEncounterHelp(learnerId, payload),

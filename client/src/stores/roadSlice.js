@@ -13,6 +13,8 @@
 // and what a finished conversation does to the curriculum. `road` and `curriculum` are its view, as sent. On rails
 // (a display preference, on by default) the way on is the server's `road.rails`: the pacing's own choice.
 
+import { clampImmersion } from '../display.js';
+
 export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgression, guard, backup }) {
   const usable = (view) => typeof view?.road?.at === 'string' && Array.isArray(view.road.frontier) && Boolean(view.curriculum);
   const takeRoad = (view) => {
@@ -100,7 +102,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       const epoch = guard.epoch();
       const stale = () => request !== guard.site() || epoch !== guard.epoch() || get().mode !== 'road';
       set({ encounterLoading: true, roadError: null, error: null });
-      const start = (again) => api.startEncounter(learnerId, { road: true, restart: again });
+      const start = (again) => api.startEncounter(learnerId, { road: true, restart: again, immersion: clampImmersion(get().display?.immersion) });
       try {
         let result;
         try { result = await start(restart); }

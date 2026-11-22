@@ -19,7 +19,7 @@ import { RoadProvider } from '../../server/test/road-helpers.js';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '146', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '148', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/';
 const SEED = Number(process.env.ROAD_SEED ?? 4242);
@@ -41,12 +41,17 @@ class ShotsProvider extends RoadProvider {
     const words = data.flatMap((objective) => objective.targets.slice(0, 1)).slice(0, 3);
     const greeting = messages.at(-1).content.includes('"task":"greeting"');
     const first = name.split(' ')[0];
+    // Round 148: asked for the language only (the slider at 100 %, the page's default), the scripted character
+    // speaks Italian only. These lines are the script's own, written for the pictures: no model wrote them.
+    const full = /Dialogue is entirely in /.test(system);
+    this.fullLines = (this.fullLines ?? 0) + (full ? 1 : 0);
+    const said = words.map((word) => `${word.target.charAt(0).toUpperCase()}${word.target.slice(1)}!`).join(' ');
     const native = greeting
-      ? `${words.map((word) => `${word.target.charAt(0).toUpperCase()}${word.target.slice(1)}!`).join(' ')} That is how it is done here, and I would not say so if the guild had not checked. And you, traveller, what do you say?`
-      : `Bene, bene. ${first} has written that down. The road goes on, and so, I am told, must you.`;
+      ? `${said} ${full ? 'Così si fa qui, e non lo direi se la gilda non avesse controllato. E tu, viaggiatore, che cosa dici?' : 'That is how it is done here, and I would not say so if the guild had not checked. And you, traveller, what do you say?'}`
+      : full ? `Bene, bene. ${first} l'ha scritto nel registro. La strada continua, e anche tu, mi dicono.` : `Bene, bene. ${first} has written that down. The road goes on, and so, I am told, must you.`;
     const translation = greeting
       ? `${words.map((word) => `${word.meanings[0].charAt(0).toUpperCase()}${word.meanings[0].slice(1)}!`).join(' ')} That is how it is done here, and I would not say so if the guild had not checked. And you, traveller, what do you say?`
-      : `Good, good. ${first} has written that down. The road goes on, and so, I am told, must you.`;
+      : full ? `Good, good. ${first} has written it in the ledger. The road goes on, and so must you, I am told.` : `Good, good. ${first} has written that down. The road goes on, and so, I am told, must you.`;
     return {
       narrative: greeting ? `${first} looks up from a ledger that has clearly been waiting for you, and clears a throat with some ceremony.` : `${first} makes a mark in the ledger, blows on the ink and looks very nearly pleased.`,
       dialogue: { speaker: name, native, translation, words: [] },
@@ -138,26 +143,47 @@ async function run(browser, size, content) {
     await pin({ phase: 0.2 });
     await shot('02-hub');
     if (!/Morning · clear/.test(await page.locator('.weather-line').textContent())) fail('the hub does not show the weather of the level');
-    for (const [name, values, check] of [
-      ['11-dusk', { phase: 0.54 }, (w) => w.label.startsWith('Dusk')],
-      ['12-night', { phase: 0.78 }, (w) => w.stars > 0.5 && w.fireflies > 0.5],
-      ['13-rain', { phase: 0.3, rain: 0.6 }, (w) => w.rain > 0.5 && w.stars === 0],
-      ['14-storm-at-night', { phase: 0.8, rain: 0.95 }, (w) => w.rain > 0.9],
+    // Round 147: sunrise and sunset are looked at: the camera is put with its back to the site's far side, so the
+    // sun stands behind whoever waits there.
+    const faceSun = () => page.evaluate(() => {
+      const road = window.__parallangRoad;
+      const site = road.graph.node(window.__parallang.store.getState().road.at);
+      // A little to one side, so the sun stands beside the figure and not behind it.
+      const [x, z] = [Math.cos(road.weather.azimuth + 0.3), -Math.sin(road.weather.azimuth + 0.3) * 0.8 + 0.25];
+      road.director.stand(site, [site.x - x * 10, site.z - z * 10]);
+    });
+    for (const [name, values, check, toSun] of [
+      ['11-golden-hour', { phase: 0.52 }, (w) => w.clouds > 5, true],
+      ['12-sunset', { phase: 0.555 }, (w) => w.label.startsWith('Dusk') && w.clouds > 5, true],
+      ['13-afterglow', { phase: 0.575 }, (w) => w.clouds > 5, true],
+      ['14-night', { phase: 0.78 }, (w) => w.stars > 0.5 && w.fireflies > 0.5],
+      ['15-before-dawn', { phase: 0.985 }, (w) => w.label.startsWith('Dawn'), true],
+      ['16-sunrise', { phase: 0.005 }, (w) => w.label.startsWith('Dawn') && w.clouds > 5, true],
+      ['17-cloudy-noon', { phase: 0.28, cloud: 0.6 }, (w) => w.clouds > 25],
+      ['18-rain', { phase: 0.3, rain: 0.6 }, (w) => w.rain > 0.5 && w.stars === 0],
+      ['19-storm-at-night', { phase: 0.8, rain: 0.95 }, (w) => w.rain > 0.9],
     ]) {
       await pin(values);
+      if (toSun) { await faceSun(); await sleep(500); }
       const now = await sky();
       if (!check(now)) fail(`${name}: ${JSON.stringify(now)}`);
       await shot(name);
     }
-    report.push('weather: dusk, a starry night with fireflies, rain and a storm at night shown');
+    report.push('weather: golden hour, sunset, afterglow, night, before dawn, sunrise, a cloudy noon, rain and a storm at night shown');
     await pin({ phase: 0.2 });
-    // The guide to the GitHub save, in Settings beside "Your save".
+    // Round 148: the slider for how much Italian the characters speak, at 100 % unless moved.
     await page.getByRole('button', { name: 'Settings' }).click();
+    const slider = page.getByLabel('How much Italian the characters speak');
+    if (await slider.inputValue() !== '100') fail(`the language slider starts at ${await slider.inputValue()}`);
+    await slider.scrollIntoViewIfNeeded();
+    await shot('21-language-slider');
+    report.push('the language slider is in Settings, at 100 %');
+    // The guide to the GitHub save, in Settings beside "Your save".
     await page.getByRole('button', { name: 'Guide: keep the saves on GitHub' }).click();
     await page.getByRole('region', { name: 'How to keep the saves on GitHub' }).scrollIntoViewIfNeeded();
     const store = await page.locator('.store-line').textContent();
     if (!/disk only/.test(store)) fail(`the guide does not say where the saves are: ${store}`);
-    await shot('15-save-guide');
+    await shot('20-save-guide');
     await page.getByRole('button', { name: 'Close', exact: true }).click();
     report.push('the save guide opens in Settings and reads the server\'s save store');
 
@@ -165,7 +191,13 @@ async function run(browser, size, content) {
     const converse = async (label) => {
       await until(page, (v) => v.roadPhase === 'encounter' && v.encounter === 'ongoing' && !v.loading, `the conversation (${label})`);
       const answer = runtime.service.definition(runtime.service.encounters.get(await page.evaluate(() => window.__parallang.store.getState().learnerId))).encounter.objectives.map((objective) => objective.accepted_examples[0]).join(' ');
-      if (label === 'first') await shot('03-conversation');
+      if (label === 'first') {
+        // Round 148: the line is in Italian only and its translation is under it without a hint asked for.
+        if (!runtime.provider.fullLines) fail('the narrator was not asked for Italian only');
+        if (!(await page.locator('.bilingual-text .translation').last().isVisible())) fail('the translation does not show with the line');
+        if (await page.getByRole('button', { name: 'Translate sentence' }).count()) fail('the translation is still behind a hint');
+        await shot('03-conversation');
+      }
       await page.getByRole('textbox').first().fill(answer);
       if (label === 'first') await shot('04-answer');
       await page.getByRole('button', { name: /^Send/ }).first().click();

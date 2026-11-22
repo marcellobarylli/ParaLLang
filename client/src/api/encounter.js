@@ -46,8 +46,9 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     // Round 115: `options` is { restart, dungeonId, encounterId }; a bare boolean is the old `restart` flag. With a
     // dungeonId the server starts the run's next site.
     startEncounter: (learnerId, options = {}) => {
-      const { restart = false, dungeonId, encounterId, road = false } = typeof options === 'object' && options !== null ? options : { restart: options === true };
-      return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId, client: CLIENT_CONTRACT } : {}), ...(encounterId ? { encounterId } : {}), ...(road ? { road: true } : {}) } });
+      // Round 148: `immersion` is the share of target language the player chose for the characters' lines.
+      const { restart = false, dungeonId, encounterId, road = false, immersion } = typeof options === 'object' && options !== null ? options : { restart: options === true };
+      return request('/api/encounter/start', { learnerId, method: 'POST', body: { restart, ...(dungeonId ? { dungeonId, client: CLIENT_CONTRACT } : {}), ...(encounterId ? { encounterId } : {}), ...(road ? { road: true } : {}), ...(typeof immersion === 'number' ? { immersion } : {}) } });
     },
     // Round 144: The Long Way Home: the learner's place on the endless graph with what waits ahead and the
     // curriculum's marks; a walk to a site (`leave` drops the road's conversation under way); a new road.

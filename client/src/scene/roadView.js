@@ -154,7 +154,9 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     if (sinceLight > 0.25) {
       sinceLight = 0;
       weather = currentWeather(seed, now());
-      world.setAtmosphere(atmosphereFor(weather));
+      const light = atmosphereFor(weather);
+      world.setAtmosphere(light);
+      effects.setAtmosphere(light); // the clouds take their colours from the same sky
     }
     if (effects.update(weather, dt, camera).flash) onThunder();
     for (const [id, figure] of figures) {
