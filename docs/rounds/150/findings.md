@@ -36,8 +36,9 @@ and a PNG in place of the SVG favicon.
 
 ## Claim boundary
 
-Not seen on a phone or in the Simulator. Not deployed: the work is on the session branch.
+Not seen on a phone or in the Simulator. A phone that has the page on its home screen keeps the old icon until the
+page is added again.
 
 ## Open items
 
-- Issues #22 and #14 stay open until the owner has seen it; #19 (the saved journey) is not built.
+- Issue #19 (the saved journey) is not built; the icon's walk is the map's trail as it is drawn today.

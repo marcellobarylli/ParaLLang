@@ -18,3 +18,10 @@ which is not built. The map already draws the walked trail, so the icon is drawn
 The picture is a crop of one of the tries Claude drew before choosing: the landscape of seed 3 (a lake, its shore, a
 wood, a mountain's foot at the right) with the walk along the shore and the flag at the upper left, in the first
 try's frame and line width. The icons are now that picture.
+
+### Q2 (2026-11-22): asked after the owner's pick was built
+- **Question:** "Say the word and I'll merge to `main` with `[skip render]` (the page deploys, the server does not
+  restart) and close #22 and its duplicate #14."
+- **Options offered:** none.
+- **Answer:** "Go". The session's permission check then refused the push to `main`; told so, the owner answered
+  "What lmao, usually you deploy it for".

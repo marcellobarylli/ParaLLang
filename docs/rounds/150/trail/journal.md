@@ -12,3 +12,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 6 | 21:13:31 | 21:13:31 | closed | Claude | Status addendum and index row; committed and pushed on the session branch. Not deployed | `../architecture.md` |
 | 7 | 21:20 approx. | 21:15:05 | decision | Owner | "Not that one mate. This one is cool", with a crop of the seed 3 try: that picture is the icon | `interview.md` |
 | 8 | 21:15:05 | 21:15:05 | built | Claude | "round 150: the owner's pick of the icon's landscape" on the session branch; web client 258 tests pass | `client/scripts/make-icons.mjs` |
+| 9 | 21:18:49 | 21:18:49 | decision | Owner | "Go": merge to `main` with `[skip render]` and close issues #22 and #14 | `interview.md` |

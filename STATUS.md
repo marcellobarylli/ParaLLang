@@ -33,13 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-22: round 150, the icons are the road's map with a walk on it (on a branch, not deployed)
+## Addendum 2026-11-22: round 150, the icons are the road's map with a walk on it (deployed)
 
 The owner asked for the top GitHub issue, #22: the app's and the web's icon as a snapshot of the isometric map with
 the graph walk on it. `client/scripts/make-icons.mjs` now draws the icons from the game's own landscape, graph and
 map (seed 3, the owner's pick of the tries; a walk of nine ways) and writes the web app's five and the iPhone app's `mobile/assets/icon.png`. The
-gold archway and the SVG favicon are gone. Seen in headless Chromium, not on a phone; the work is on
-`claude/zen-cray-56stot` and a merge to `main` is the owner's call ([findings](docs/rounds/150/findings.md),
+gold archway and the SVG favicon are gone. Seen in headless Chromium, not on a phone. The owner said "Go": it is merged to
+`main` with `[skip render]` (the page alone; the server is not restarted) ([findings](docs/rounds/150/findings.md),
 picture: [`01-icon-sizes.png`](docs/rounds/150/shots/01-icon-sizes.png)).
 
 ## Addendum 2026-11-22: round 149, the translation directly under the line (deployed)
@@ -1471,7 +1471,7 @@ Newest first.
 | 147 | 11-22 | Sunsets in orange, red and purple and sunrises in gold and pink on The Long Way Home, the sun's disc down to the horizon; a layer of drifting clouds lit by the sky; the road's map as an isometric picture of the landscape with relief; deployed with round 148 | [147](docs/rounds/147/architecture.md) | [findings](docs/rounds/147/findings.md) | round 147 build, merged to `main` |
 | 148 | 11-22 | A slider in Settings for how much of the language the characters speak, 100 % by default: the narrator is told to speak the language only, and at 100 % the line's translation shows with it, free; the server's default and the iPhone app unchanged; no model called; deployed | [148](docs/rounds/148/architecture.md) | [findings](docs/rounds/148/findings.md) | round 148 build, merged to `main` |
 | 149 | 11-22 | The translation directly under a character's line, the word buttons after it; the web client only; deployed | [149](docs/rounds/149/architecture.md) | [findings](docs/rounds/149/findings.md) | round 149 build, merged to `main` |
-| 150 | 11-22 | The icons of the web app and the iPhone app are a snapshot of the road's isometric map with a walk on it (issue #22); not deployed | [150](docs/rounds/150/architecture.md) | [findings](docs/rounds/150/findings.md) | round 150 build, on the session branch |
+| 150 | 11-22 | The icons of the web app and the iPhone app are a snapshot of the road's isometric map with a walk on it (issue #22); deployed | [150](docs/rounds/150/architecture.md) | [findings](docs/rounds/150/findings.md) | round 150 build, merged to `main` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |
