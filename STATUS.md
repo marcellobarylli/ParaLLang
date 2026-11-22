@@ -47,6 +47,10 @@ the saves on its disk unless the GitHub save is on; a browser's copy puts its sa
 ([findings](docs/rounds/152/findings.md), picture:
 [`01-world-map-phone.jpg`](docs/rounds/152/shots/01-world-map-phone.jpg)).
 
+**The deploy (2026-11-22, 21:58 to 22:01 UTC).** Round 152 was merged to `main` as `ffd4b51`. CI run 45075078399
+and Pages run 45075078391 succeeded for it, and Render's deployment "main - parallang" for the same commit reports
+success (read from GitHub's API; the cloud session cannot reach the hosted server or the live page itself).
+
 ## Addendum 2026-11-22: round 151, the lore book says what the roads are (on `main`)
 
 The owner asked for the next GitHub issue that needs nothing first: #12, step 1 of the issues' build order. The

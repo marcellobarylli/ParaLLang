@@ -11,3 +11,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 21:56:46 | 21:56:46 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 6 | 21:56:46 | 21:56:46 | closed | Claude | Status addendum and index row; committed and pushed on the session branch. Not on `main`; issue #10 open | `../architecture.md` |
 | 7 | 21:58:50 | 21:58:50 | decision | Owner | "Yes to both": read as merge to `main` and deploy the page and the server both (no `[skip render]`); close issue #10 | `interview.md` |
+| 8 | 22:01 approx. | 22:01:58 | run | Claude | The deploy of `ffd4b51`: CI run 45075078399 and Pages run 45075078391 succeeded; Render's deployment "main - parallang" reports success. Read from GitHub's API, the live page and server not looked at | `../findings.md` |
