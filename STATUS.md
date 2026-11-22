@@ -43,6 +43,9 @@ Asked whether to deploy, the owner chose "Deploy, and keep deploying": this roun
 `[skip render]` (the page alone; the server is not restarted), and later changes asked for in the same chat are
 deployed once tested, without a question first.
 
+**The deploy (2026-11-22, 19:30 to 19:34 UTC).** Merged to `main` as `556a815`. CI and the Pages run 45061241451
+succeeded; GitHub lists no Render deployment for the commit, as `[skip render]` asks.
+
 ## Addendum 2026-11-22: round 148, a slider for how much of the language the characters speak, at 100 % by default (deployed)
 
 The owner asked for "full italian for the npcs" as a slider that goes up to 100 % and starts there, with the
