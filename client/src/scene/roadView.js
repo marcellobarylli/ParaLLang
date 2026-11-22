@@ -6,9 +6,10 @@
 // The landscape and its graph are the server's own functions (server/src/road/terrain.js and graph.js), bundled
 // here: the seed the server sends is all the client needs to stand on the same ground.
 import { Group, PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
-import { ENDLESS, createCairn, createEndlessWorld, createPS1Pipeline, createStandIn, createTrack } from '@parallang/aesthetic';
+import { ENDLESS, atmosphereFor, createCairn, createEndlessWorld, createPS1Pipeline, createStandIn, createTrack, createWeatherEffects } from '@parallang/aesthetic';
 import { createTerrain } from '../../../server/src/road/terrain.js';
 import { createGraph } from '../../../server/src/road/graph.js';
+import { currentWeather, onWeatherPin, pinWeather } from './weatherClock.js';
 import { createRoadDirector } from './roadDirector.js';
 import { freeRect } from './insets.js';
 
@@ -25,7 +26,7 @@ const easeTo = (current, target, dt, tau) => current + (target - current) * (1 -
  *   setTalking(on)       whether somebody is being talked to at the site (else the camera wanders round it)
  *   setEncounter(...)    the conversation's progress, as the dungeon's host takes it
  */
-export function createRoadView(canvas, { seed, onArrive = () => {}, reducedMotion = false } = {}) {
+export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, now = () => Date.now() } = {}) {
   const terrain = createTerrain(seed);
   const graph = createGraph(terrain);
   const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
@@ -37,6 +38,12 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, reducedMotio
   const markers = new Group();
   markers.name = 'road-markers';
   world.scene.add(markers);
+  // Round 146: the time of day and the weather (server/src/road/weather.js: the same clock and seed give the server
+  // the same sky). The light is set a few times a second; the rain, the stars and the rest every frame.
+  const effects = createWeatherEffects(world, { terrain, reducedMotion });
+  let weather = currentWeather(seed, now());
+  let sinceLight = Infinity;
+  const unpin = onWeatherPin(() => { sinceLight = Infinity; }); // a weather held still (weatherClock.js) shows at once
 
   const size = { width: 1, height: 1 };
   const insets = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -143,6 +150,13 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, reducedMotio
     camera.lookAt(...pose.target);
     // Only the ground around the camera exists. A few chunks a frame keep a glide ahead of the fog.
     world.streamTo(pose.position[0], pose.position[2], world.chunkCount < 9 ? 6 : 2);
+    sinceLight += dt;
+    if (sinceLight > 0.25) {
+      sinceLight = 0;
+      weather = currentWeather(seed, now());
+      world.setAtmosphere(atmosphereFor(weather));
+    }
+    if (effects.update(weather, dt, camera).flash) onThunder();
     for (const [id, figure] of figures) {
       const away = Math.hypot(pose.position[0] - figure.x, pose.position[2] - figure.z);
       figure.group.visible = away < ENDLESS.fog.far + 20;
@@ -203,6 +217,10 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, reducedMotio
       anchor.set(node.x, node.y + 2.4, node.z).project(camera);
       return anchor.z > -1 && anchor.z < 1 ? [((anchor.x + 1) / 2) * size.width, ((1 - anchor.y) / 2) * size.height] : null;
     },
+    /** Round 146: the weather showing now, and a way to hold one still ({ phase, rain, cloud, wind }, or null for the clock's). */
+    get weather() { return weather; },
+    pinWeather,
+    get effects() { return { ...effects.state }; },
     /** What the scene holds now, for the playthrough script. */
     get stats() { return { chunks: world.chunkCount, triangles: world.triangleCount, figures: figures.size, tracks: tracks.length, mode: director.mode }; },
     resize,
@@ -210,6 +228,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, reducedMotio
     dispose() {
       disposed = true;
       cancelAnimationFrame(raf);
+      unpin();
       canvas.removeEventListener('webglcontextlost', onContextLost);
       world.scene.traverse((object) => {
         object.geometry?.dispose?.();

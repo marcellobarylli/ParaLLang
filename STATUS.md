@@ -33,6 +33,25 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 146, a guide to the GitHub save in Settings; day, night and weather on the road (deployed)
+
+The owner asked for the steps of the GitHub save in the app ("I might lose this chat"), a day and night of 45
+minutes, rain 30 % of the time and "other cool stuff", and a re-deploy.
+
+- **The guide** is in Settings under "Your save": a line that says where the server keeps its saves now (read from
+  its health check: its disk only, or GitHub) and "Guide: keep the saves on GitHub", which opens the four steps in
+  place (a token, two variables on Render, the check, the first commit).
+- **The weather** of The Long Way Home is a pure function of the clock and the road's seed
+  (`server/src/road/weather.js`): a day of 45 minutes with about 25 of daylight, rain 30 % of the time in spells of
+  three minutes, clouds before and after, storms. The level blends its sky and light for every moment and has rain,
+  snow on high ground, stars and a moon, fireflies, lightning with thunder (none with reduced motion), wind in the
+  trees and the sound of rain under the music. The hub's card shows the weather and the narrator is told it. The
+  other places keep their light.
+
+Checked by tests and in headless Chromium at a phone and a desktop size with the weather held still; not on a phone,
+the sound not heard, no live model told the weather ([findings](docs/rounds/146/findings.md), pictures in
+[`docs/rounds/146/shots/`](docs/rounds/146/shots/)).
+
 ## Addendum 2026-11-22: round 145, saves written to GitHub; rounds 144 and 145 deployed
 
 The owner asked for a save safer than the browser's copy, as JSON written to GitHub that says where the learner is in
@@ -41,8 +60,13 @@ JSON file per learner (a summary of the level and of the place in the curriculum
 back when its disk has lost it (`server/src/github-saves.js`). The file's name is a hash and the learner's id is not
 in it, because the repository is public. **It is off until the owner enters `PARALLANG_GITHUB_TOKEN` and
 `PARALLANG_GITHUB_REPO` in Render** (the README says how); `GET /api/health` says which store is in use. Tested
-against a GitHub written in the tests, not against GitHub. Rounds 144 and 145 were merged to `main`, which deploys the
-client and the server ([findings](docs/rounds/145/findings.md)).
+against a GitHub written in the tests, not against GitHub. Rounds 144 and 145 were merged to `main` as `4772475`,
+which deploys the client and the server ([findings](docs/rounds/145/findings.md)).
+
+**The deploy (2026-11-22, 16:51 to 16:54 UTC).** CI run 45046139766 and Pages run 45046139840 succeeded for
+`4772475`, and Render's deployment "main - parallang" for the same commit reports success. The cloud session could
+reach neither the live page nor the hosted server (its network does not allow those hosts), so neither was looked
+at: the health check's `saves` field has not been read.
 
 ## Addendum 2026-11-22: round 144, The Long Way Home: an endless road, a curriculum, and a save that survives the server (deployed with round 145)
 
@@ -1375,6 +1399,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 146 | 11-22 | A guide to the GitHub save in Settings, with where the server keeps its saves now; on The Long Way Home a day of 45 minutes, rain 30 % of the time, a blended sky, rain, snow, stars, fireflies, lightning, wind and the sound of rain; the narrator told the weather; deployed | [146](docs/rounds/146/architecture.md) | [findings](docs/rounds/146/findings.md) | round 146 build, merged to `main` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

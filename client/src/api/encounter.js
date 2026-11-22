@@ -56,6 +56,8 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     resetRoad: (learnerId, body = {}) => request('/api/road/reset', { learnerId, method: 'POST', body }),
     // Round 144: the whole save, for the copy this browser keeps, and the copy put back on a server that lost it.
     exportSave: (learnerId) => request('/api/save', { learnerId }),
+    // Round 146: the server's health check, which says where it keeps its saves (round 145). No token is needed.
+    getHealth: () => request('/api/health'),
     restoreSave: (copy) => request('/api/save/restore', { method: 'POST', body: copy }),
     // Round 119: the map and the run on it. (The bare path is the one the client of rounds 115 to 118 read; the
     // server answers it with a note to reload.)

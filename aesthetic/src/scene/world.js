@@ -109,6 +109,12 @@ export function assembleWorld(kit, { name, props, surface, preset, reflections, 
     const p = PRESETS[presetName];
     if (!p) throw new Error(`Unknown preset "${presetName}"`);
     state.preset = presetName;
+    applyPreset(p);
+  }
+
+  // Round 146: the light and the sky from a preset's values, named or made up (the endless level blends its own as
+  // the day turns: atmosphere.js).
+  function applyPreset(p) {
     uniforms.uSunDir.value.set(...p.sunDir).normalize();
     uniforms.uSunColor.value.set(...p.sunColor);
     uniforms.uAmbientSky.value.set(...p.ambientSky);
@@ -142,6 +148,8 @@ export function assembleWorld(kit, { name, props, surface, preset, reflections, 
       return state.corruption;
     },
     setPreset,
+    /** Round 146: applies a preset given as values (see presets.js for the keys), without naming it. */
+    setAtmosphere: applyPreset,
     setCorruption,
     setEffects({ jitter, affine } = {}) {
       if (jitter !== undefined) uniforms.uJitter.value = jitter ? 1 : 0;

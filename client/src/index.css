@@ -333,3 +333,14 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .file-button { display: inline-flex; align-items: center; cursor: pointer; }
 .world-place.road rect { fill: #9ad8e6; }
 .road-overlay { background: #161716; }
+.weather-line { margin: 0; color: var(--link); font-size: .82rem; letter-spacing: .04em; }
+/* Round 146: the guide to the GitHub save, beside "Your save" in Settings. */
+.save-guide { display: grid; gap: .5rem; }
+.store-line { color: #ffd6a0; line-height: 1.4; }
+.store-line.store-safe { color: #b9dcb3; }
+.guide-steps { display: grid; gap: .6rem; padding: .7rem .8rem; background: rgb(0 0 0 / .3); border: 2px solid; border-color: rgb(0 0 0 / .7) rgb(255 255 255 / .3) rgb(255 255 255 / .3) rgb(0 0 0 / .7); font-size: .84rem; line-height: 1.45; }
+.guide-steps p, .guide-steps ol, .guide-steps ul { margin: 0; }
+.guide-steps ol { padding-left: 1.3rem; display: grid; gap: .55rem; }
+.guide-steps ul { padding-left: 1.1rem; margin-top: .25rem; display: grid; gap: .2rem; color: #d9dbd3; }
+.guide-steps code { background: #151615; padding: 0 .25em; border: 1px solid #000; overflow-wrap: anywhere; }
+.guide-steps a { color: var(--link); }

@@ -263,6 +263,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         guard: { epoch: () => requestEpoch, site: () => siteRequest, bumpSite: () => { siteRequest += 1; return siteRequest; } },
       }),
       savedAt: null, // when this browser's copy of the save was last written (the server's clock)
+      saveStore: null, // round 146: where the server keeps its saves (its health check's `saves`), read when Settings opens
       settings: loadSettings(storage),
       display: loadDisplay(storage),
       settingsOpen: false,
@@ -593,7 +594,18 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         } catch (error) { if (current()) set({ error: error.message, isLoading: false }); }
       },
 
-      openSettings: () => set({ settingsOpen: true }),
+      openSettings: () => {
+        set({ settingsOpen: true });
+        get().readSaveStore();
+      },
+      // Round 146: where the server keeps its saves (its health check, which needs no token), for the guide beside
+      // "Your save". A server that does not answer, or one from before round 145, leaves it unknown. Read when Settings
+      // opens and again when new settings are saved; never without a server to ask.
+      readSaveStore: () => {
+        if (!rawApi.getHealth || settingsProblem(get().settings, { sameOrigin })) { set({ saveStore: null }); return; }
+        const epoch = requestEpoch;
+        rawApi.getHealth().then((health) => { if (epoch === requestEpoch) set({ saveStore: health?.saves ?? null }); }, () => { if (epoch === requestEpoch) set({ saveStore: null }); });
+      },
       closeSettings: () => set({ settingsOpen: false }),
       // Round 117: a display preference. It makes no request and leaves the run and the conversation alone.
       setPanelOpacity: (value) => set({ display: saveDisplay({ ...get().display, panelOpacity: value }, storage) }),
@@ -631,6 +643,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           spellbook: emptySpellbook, view: 'dialogue', reviewChallenge: null, reviewResult: null, assessment: null, closedObjectives: 0, isLoading: false, error: notice,
           ...(notice ? { draft: '', pendingInput: null } : {}),
         });
+        if (get().settingsOpen) get().readSaveStore();
         await get().initialize();
         // Round 144: a player who was on the road is put back on it.
         if (wasRoad && get().connection === 'ready') { set({ phase: 'world' }); await get().enterRoad(); }

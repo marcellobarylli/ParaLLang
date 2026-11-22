@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createTerrain } from '../../../server/src/road/terrain.js';
 import { GRAPH, createGraph } from '../../../server/src/road/graph.js';
+import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 
 // Round 144: what the dock and the overlays show on The Long Way Home. The server's view of the road (`state.road`)
 // says where the player is, who waits there and what each site ahead offers; the curriculum with the player's marks
@@ -25,6 +26,28 @@ export function positionLine(curriculum) {
   const units = curriculum.stages.flatMap((stage) => stage.units);
   const index = units.findIndex((unit) => unit.id === curriculum.position.unitId);
   return `${curriculum.position.cefr} · unit ${index + 1} of ${units.length} · ${curriculum.position.unitTitle}`;
+}
+
+// Round 146: the time of day and the weather of the road of `seed`, as the level shows them (the same clock and seed).
+// Looked at again every few seconds.
+export function useWeather(seed, now = () => Date.now()) {
+  const [weather, setWeather] = useState(() => (seed === null || seed === undefined ? null : currentWeather(seed, now())));
+  useEffect(() => {
+    if (seed === null || seed === undefined) { setWeather(null); return undefined; }
+    const look = () => setWeather(currentWeather(seed, now()));
+    look();
+    const timer = setInterval(look, 4000);
+    const stop = onWeatherPin(look);
+    return () => { clearInterval(timer); stop(); };
+  }, [seed]);
+  return weather;
+}
+const SKY_MARK = { clear: '☀', 'grey skies': '☁', 'light rain': '☂', 'heavy rain': '☂', 'a storm': '⚡' };
+function WeatherLine({ seed }) {
+  const weather = useWeather(seed);
+  if (!weather) return null;
+  const mark = weather.part === 'night' && weather.sky === 'clear' ? '☾' : SKY_MARK[weather.sky];
+  return <p className="weather-line" aria-label={`The weather: ${weather.label}`}><span aria-hidden="true">{mark}</span> {weather.label}</p>;
 }
 
 function OfferLine({ offer }) {
@@ -102,6 +125,7 @@ export function HubCard({ state }) {
     <section className="card road-card" aria-label={road.here.name}>
       <p className="eyebrow">{positionLine(curriculum)}</p>
       <h2>{road.here.name}</h2>
+      <WeatherLine seed={road.seed} />
       {waiting ? (
         <>
           <p className="who"><strong>{waiting.character.name}</strong>, {waiting.character.role}</p>

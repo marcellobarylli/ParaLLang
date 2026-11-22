@@ -226,7 +226,16 @@ walked along it. It is in the web client only.
 - **The curriculum panel** (the chip in the top bar) shows every stage, unit and lesson with its marks, the unit the
   player is in, the recent success rate and the journal.
 
-Pictures are in [`docs/rounds/144/shots/`](docs/rounds/144/shots/). To take them again, and to play the road from
+- **Day, night and weather** (round 146). A day turns in 45 minutes of real time and it rains 30 % of the time, by a
+  pure function of the clock and the road's seed (`server/src/road/weather.js`), so the server and the page agree
+  without asking. The sky and the light are blended for every moment (`aesthetic/src/scene/atmosphere.js`); there
+  is rain, snow above the snow line, stars and a moon, fireflies after dark, lightning and thunder in a storm (no
+  flash with reduced motion), wind in the trees, and the sound of rain under the music. The hub's card shows the
+  weather and the narrator is told it. To hold one still in the browser's console:
+  `window.__parallangRoad.pinWeather({ phase: 0.78, rain: 0.9 })` (a storm at night), `pinWeather(null)` to let go.
+
+Pictures are in [`docs/rounds/146/shots/`](docs/rounds/146/shots/) (round 144's are in
+[`docs/rounds/144/shots/`](docs/rounds/144/shots/)). To take them again, and to play the road from
 the world map to a restored save in headless Chromium against a scripted server:
 
 ```bash
@@ -320,7 +329,9 @@ and does not depend on any browser:
 | `PARALLANG_GITHUB_BRANCH` | Optional; the branch the files go to. Default `saves`. Never `main` |
 | `PARALLANG_GITHUB_DIR` | Optional; the folder on that branch. Default `saves` |
 
-On Render: the service → Environment → add the two, save; the service restarts. `GET /api/health` then answers
+On Render: the service → Environment → "Add Environment Variable" for each, then "Save and deploy". The same steps
+are in the app: Settings → "Guide: keep the saves on GitHub" (round 146), with a line that says where the server
+keeps its saves now. `GET /api/health` then answers
 `"saves": { "kind": "github", ... }` with whether the last write went through; without the settings it says
 `"kind": "disk"`, with a `problem` when the settings are there but wrong (one without the other, a repository that
 is not `owner/name`, the branch `main`): the server then runs on its disk alone.

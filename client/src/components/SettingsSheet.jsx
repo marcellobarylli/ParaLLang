@@ -3,6 +3,7 @@ import { PANEL_OPACITY, clampPanelOpacity } from '../display.js';
 import { BUILD_ID } from '../build.js';
 import { requestTiltPermission } from '../scene/tilt.js';
 import { describeViewport, latestBuild, measureViewport, reloadPage } from '../viewport.js';
+import SaveGuide from './SaveGuide.jsx';
 
 // Round 118: which build runs, what the browser reports about its viewport (so a screenshot of Settings carries
 // both), whether the site holds a newer build, and a reload that goes past the browser's cache.
@@ -19,7 +20,7 @@ const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s moti
 // Round 126: "Character voices" switches the reading aloud of new lines, and the sheet says what this browser can do.
 // Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
 // Round 144: "Your save": when this browser last copied the save, a download of the copy as a file, and a file put back.
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
   const submit = (event) => {
@@ -118,6 +119,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
               <label className="secondary-button file-button">Load from a file<input type="file" accept="application/json,.json" onChange={upload} className="sr-only" /></label>
             </div>
             {copyNote && <small role="status">{copyNote}</small>}
+            <SaveGuide store={saveStore} serverUrl={settings.serverUrl} />
           </>
         )}
         <label htmlFor="settings-server">Server URL</label>

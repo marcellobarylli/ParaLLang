@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import DungeonView from './DungeonView.jsx';
 import RoadView from './RoadView.jsx';
-import { CurriculumChip, CurriculumPanel, HubCard, RoadCaption, RoadMap, RoadResolved } from './Road.jsx';
+import { CurriculumChip, CurriculumPanel, HubCard, RoadCaption, RoadMap, RoadResolved, useWeather } from './Road.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
@@ -439,6 +439,10 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
     window.addEventListener('click', prime, { once: true, capture: true });
     return () => window.removeEventListener('click', prime, { capture: true });
   }, [voicesWanted, speech]);
+  // Round 146: on the road the rain is heard under the music, as heavy as it falls; elsewhere it is dry.
+  const roadWeather = useWeather(state.mode === 'road' ? state.road?.seed ?? null : null);
+  const rainNow = roadWeather?.rain ?? 0;
+  useEffect(() => { ambience.setRain?.(musicWanted ? rainNow : 0); }, [ambience, musicWanted, rainNow]);
   const { initialize, dungeon, phase, siteIndex, progress } = state;
   useEffect(() => { initialize(); }, [initialize]);
   const hudRef = useRef(null);
@@ -467,7 +471,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   return (
     <div className={`app-shell phase-${shellPhase}${onRoad ? ' on-road' : ''}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
       {onRoad
-        ? <RoadView road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived}
+        ? <RoadView road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (musicWanted) ambience.thunder?.(); }}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
@@ -535,7 +539,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
         voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }}
-        savedAt={state.savedAt} onExportCopy={state.exportCopy} onImportCopy={state.importCopy} />}
+        savedAt={state.savedAt} onExportCopy={state.exportCopy} onImportCopy={state.importCopy} saveStore={state.saveStore} />}
     </div>
   );
 }
