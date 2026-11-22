@@ -19,7 +19,7 @@ import { RoadProvider } from '../../server/test/road-helpers.js';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '147', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '148', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/';
 const SEED = Number(process.env.ROAD_SEED ?? 4242);
@@ -41,12 +41,17 @@ class ShotsProvider extends RoadProvider {
     const words = data.flatMap((objective) => objective.targets.slice(0, 1)).slice(0, 3);
     const greeting = messages.at(-1).content.includes('"task":"greeting"');
     const first = name.split(' ')[0];
+    // Round 148: asked for the language only (the slider at 100 %, the page's default), the scripted character
+    // speaks Italian only. These lines are the script's own, written for the pictures: no model wrote them.
+    const full = /Dialogue is entirely in /.test(system);
+    this.fullLines = (this.fullLines ?? 0) + (full ? 1 : 0);
+    const said = words.map((word) => `${word.target.charAt(0).toUpperCase()}${word.target.slice(1)}!`).join(' ');
     const native = greeting
-      ? `${words.map((word) => `${word.target.charAt(0).toUpperCase()}${word.target.slice(1)}!`).join(' ')} That is how it is done here, and I would not say so if the guild had not checked. And you, traveller, what do you say?`
-      : `Bene, bene. ${first} has written that down. The road goes on, and so, I am told, must you.`;
+      ? `${said} ${full ? 'Così si fa qui, e non lo direi se la gilda non avesse controllato. E tu, viaggiatore, che cosa dici?' : 'That is how it is done here, and I would not say so if the guild had not checked. And you, traveller, what do you say?'}`
+      : full ? `Bene, bene. ${first} l'ha scritto nel registro. La strada continua, e anche tu, mi dicono.` : `Bene, bene. ${first} has written that down. The road goes on, and so, I am told, must you.`;
     const translation = greeting
       ? `${words.map((word) => `${word.meanings[0].charAt(0).toUpperCase()}${word.meanings[0].slice(1)}!`).join(' ')} That is how it is done here, and I would not say so if the guild had not checked. And you, traveller, what do you say?`
-      : `Good, good. ${first} has written that down. The road goes on, and so, I am told, must you.`;
+      : full ? `Good, good. ${first} has written it in the ledger. The road goes on, and so must you, I am told.` : `Good, good. ${first} has written that down. The road goes on, and so, I am told, must you.`;
     return {
       narrative: greeting ? `${first} looks up from a ledger that has clearly been waiting for you, and clears a throat with some ceremony.` : `${first} makes a mark in the ledger, blows on the ink and looks very nearly pleased.`,
       dialogue: { speaker: name, native, translation, words: [] },
@@ -166,8 +171,14 @@ async function run(browser, size, content) {
     }
     report.push('weather: golden hour, sunset, afterglow, night, before dawn, sunrise, a cloudy noon, rain and a storm at night shown');
     await pin({ phase: 0.2 });
-    // The guide to the GitHub save, in Settings beside "Your save".
+    // Round 148: the slider for how much Italian the characters speak, at 100 % unless moved.
     await page.getByRole('button', { name: 'Settings' }).click();
+    const slider = page.getByLabel('How much Italian the characters speak');
+    if (await slider.inputValue() !== '100') fail(`the language slider starts at ${await slider.inputValue()}`);
+    await slider.scrollIntoViewIfNeeded();
+    await shot('21-language-slider');
+    report.push('the language slider is in Settings, at 100 %');
+    // The guide to the GitHub save, in Settings beside "Your save".
     await page.getByRole('button', { name: 'Guide: keep the saves on GitHub' }).click();
     await page.getByRole('region', { name: 'How to keep the saves on GitHub' }).scrollIntoViewIfNeeded();
     const store = await page.locator('.store-line').textContent();
@@ -180,7 +191,13 @@ async function run(browser, size, content) {
     const converse = async (label) => {
       await until(page, (v) => v.roadPhase === 'encounter' && v.encounter === 'ongoing' && !v.loading, `the conversation (${label})`);
       const answer = runtime.service.definition(runtime.service.encounters.get(await page.evaluate(() => window.__parallang.store.getState().learnerId))).encounter.objectives.map((objective) => objective.accepted_examples[0]).join(' ');
-      if (label === 'first') await shot('03-conversation');
+      if (label === 'first') {
+        // Round 148: the line is in Italian only and its translation is under it without a hint asked for.
+        if (!runtime.provider.fullLines) fail('the narrator was not asked for Italian only');
+        if (!(await page.locator('.bilingual-text .translation').last().isVisible())) fail('the translation does not show with the line');
+        if (await page.getByRole('button', { name: 'Translate sentence' }).count()) fail('the translation is still behind a hint');
+        await shot('03-conversation');
+      }
       await page.getByRole('textbox').first().fill(answer);
       if (label === 'first') await shot('04-answer');
       await page.getByRole('button', { name: /^Send/ }).first().click();

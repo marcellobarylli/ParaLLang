@@ -260,7 +260,7 @@ export const roadMethods = {
 
   // The conversation waiting at the site the learner stands at. The road's own conversation resumes (a reload);
   // another conversation under way is never replaced without `restart`.
-  async _startRoad(learnerId, restart) {
+  async _startRoad(learnerId, restart, immersion = null) {
     let envelope = await this.loadEnvelope(learnerId);
     const curriculum = this.curriculum();
     const road = this.roadOf(envelope);
@@ -281,7 +281,7 @@ export const roadMethods = {
     if (!restart && !ownSession && active?.state === 'ongoing') {
       throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
     }
-    return this.openSession(learnerId, envelope, definition, { road: session });
+    return this.openSession(learnerId, envelope, definition, { road: session, immersion });
   },
 
   // A road conversation resolved: its score goes to the curriculum's marks, the step counts up, the site is cleared

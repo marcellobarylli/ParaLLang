@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PANEL_OPACITY, clampPanelOpacity } from '../display.js';
+import { IMMERSION, PANEL_OPACITY, clampImmersion, clampPanelOpacity } from '../display.js';
 import { BUILD_ID } from '../build.js';
 import { requestTiltPermission } from '../scene/tilt.js';
 import { describeViewport, latestBuild, measureViewport, reloadPage } from '../viewport.js';
@@ -20,7 +20,8 @@ const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s moti
 // Round 126: "Character voices" switches the reading aloud of new lines, and the sheet says what this browser can do.
 // Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
 // Round 144: "Your save": when this browser last copied the save, a download of the copy as a file, and a file put back.
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, immersion = IMMERSION.default, onImmersion, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+  const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
   const submit = (event) => {
@@ -70,6 +71,16 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             <input id="settings-opacity" type="range" min={PANEL_OPACITY.min * 100} max={PANEL_OPACITY.max * 100} step={PANEL_OPACITY.step * 100}
               value={percent} aria-valuetext={`${percent}%`} onChange={(event) => onPanelOpacity(Number(event.target.value) / 100)} />
             <small>Lower it to see more of the temple behind the text. It applies at once.</small>
+          </>
+        )}
+        {onImmersion && (
+          <>
+            <div className="setting-row"><label htmlFor="settings-immersion">{`How much ${languageName ?? 'of the language'} the characters speak`}</label><output htmlFor="settings-immersion">{immersionPercent}%</output></div>
+            <input id="settings-immersion" type="range" min={IMMERSION.min * 100} max={IMMERSION.max * 100} step={IMMERSION.step * 100}
+              value={immersionPercent} aria-valuetext={`${immersionPercent}%`} onChange={(event) => onImmersion(Number(event.target.value) / 100)} />
+            <small>{immersionPercent >= 100
+              ? `Every line a character speaks is in ${languageName ?? 'the language you are learning'}. Its translation shows under it, sentence by sentence in matching colours, and costs nothing.`
+              : `About ${immersionPercent}% of each line is in ${languageName ?? 'the language you are learning'} and the rest in English. The translation of the line you are answering is a hint. At 100% it is free.`} It applies from the character's next line.</small>
           </>
         )}
         {onBeginner && (

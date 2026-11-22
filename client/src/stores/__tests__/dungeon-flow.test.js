@@ -144,7 +144,7 @@ test('a whole run: the world map, the temple map, seven sites by a walk of the p
   s().enterPlace('ta_prohm');
   await s().start();
   expect(s()).toMatchObject({ phase: 'approach', siteIndex: 0, walkFrom: null, cameraArrived: false, arrival: 'encounter' });
-  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { dungeonId: 'ta_prohm', restart: false });
+  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { dungeonId: 'ta_prohm', restart: false, immersion: 1 });
   expect(s().encounter.encounterId).toBe(encounterOf('face_gate')); // loaded, but the camera is still on its way
   s().onCameraArrived();
   expect(s().phase).toBe('encounter');
@@ -493,7 +493,7 @@ test('start over replaces the conversation of the site', async () => {
   await toFirstSite(s);
   const first = s().encounter.id;
   await s().restartSite();
-  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { dungeonId: 'ta_prohm', restart: true });
+  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { dungeonId: 'ta_prohm', restart: true, immersion: 1 });
   expect(s().encounter.id).not.toBe(first);
   expect(s().phase).toBe('encounter');
 });
@@ -564,7 +564,7 @@ test('replies that arrive after new settings are dropped', async () => {
 test('a new panel opacity is stored and leaves the conversation and the server alone', async () => {
   const storage = memoryStorage({ 'parallang.display': '{"panelOpacity":0.4}' });
   const { api, s } = makeStore({ storage });
-  expect(s().display).toEqual({ panelOpacity: 0.4, tiltLook: false, voices: true, music: true, beginner: true, rails: true });
+  expect(s().display).toEqual({ panelOpacity: 0.4, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1 });
   await toFirstSite(s);
   s().setDraft('Buongiorno');
   const before = s();
@@ -573,10 +573,10 @@ test('a new panel opacity is stored and leaves the conversation and the server a
   s().openSettings();
   s().setPanelOpacity(0.23);
   s().setPanelOpacity(2);
-  expect(s().display).toEqual({ panelOpacity: 1, tiltLook: false, voices: true, music: true, beginner: true, rails: true });
+  expect(s().display).toEqual({ panelOpacity: 1, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1 });
   s().setPanelOpacity(0.23);
-  expect(s().display).toEqual({ panelOpacity: 0.25, tiltLook: false, voices: true, music: true, beginner: true, rails: true });
-  expect(JSON.parse(storage.values.get('parallang.display'))).toEqual({ panelOpacity: 0.25, tiltLook: false, voices: true, music: true, beginner: true, rails: true });
+  expect(s().display).toEqual({ panelOpacity: 0.25, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1 });
+  expect(JSON.parse(storage.values.get('parallang.display'))).toEqual({ panelOpacity: 0.25, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1 });
   expect(storage.values.has('parallang.settings')).toBe(false);
   expect(s()).toMatchObject({ phase: 'encounter', settingsOpen: true, draft: 'Buongiorno', learnerId: before.learnerId, cameraArrived: true });
   expect(s().encounter).toBe(before.encounter);
@@ -759,7 +759,7 @@ test('a talk with a party member opens from each place outside a conversation an
 
   // From the resolved conversation at his site: it returns to the site's card.
   await s().talkTo(gerald);
-  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { encounterId: 'gerald_coffee_break' });
+  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { encounterId: 'gerald_coffee_break', immersion: 1 });
   expect(s()).toMatchObject({ phase: 'party', partyReturn: 'site', view: 'dialogue', encounterLoading: false, encounter: { partyConversation: true, state: 'ongoing' } });
   // The site's actions are shut meanwhile.
   await s().travel('face_gate');
@@ -790,7 +790,7 @@ test('a talk with a party member opens from each place outside a conversation an
   await s().talkTo(s().party[0]);
   expect(server.sessions).toBe(sessions);
   await s().restartParty(); // Start over
-  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { encounterId: 'gerald_coffee_break', restart: true });
+  expect(api.startEncounter).toHaveBeenLastCalledWith(identity.learnerId, { encounterId: 'gerald_coffee_break', restart: true, immersion: 1 });
   expect(server.sessions).toBe(sessions + 1);
   expect(s()).toMatchObject({ phase: 'party', encounterLoading: false });
   s().leaveParty();
@@ -863,7 +863,7 @@ test('an unfinished party conversation gives way to the next site conversation (
   await s().travel('sunlit_court'); // a walk is not held by it
   expect(s()).toMatchObject({ phase: 'walk', siteError: null });
   // Flick's start is refused once and sent again with restart (round 115, Decision 2): Gerald's talk is gone.
-  expect(api.startEncounter.mock.calls.slice(-2).map(([, options]) => options)).toEqual([{ dungeonId: 'ta_prohm', restart: false }, { dungeonId: 'ta_prohm', restart: true }]);
+  expect(api.startEncounter.mock.calls.slice(-2).map(([, options]) => options)).toEqual([{ dungeonId: 'ta_prohm', restart: false, immersion: 1 }, { dungeonId: 'ta_prohm', restart: true, immersion: 1 }]);
   s().onCameraArrived();
   expect(s()).toMatchObject({ phase: 'encounter', encounter: { encounterId: encounterOf('sunlit_court') } });
 });

@@ -169,3 +169,31 @@ test('a copy can be taken as a file and loaded on another device', async () => {
   await vi.waitFor(() => expect(other.s().road?.step).toBe(1));
   expect(other.s().learnerId).toBe(s().learnerId);
 });
+
+// Round 148: the slider in Settings. By default a character speaks the language only and the line being answered
+// comes with its translation; lower, the lines are mixed and the translation is a hint again.
+test('by default the lines are in full Italian with their translation; the slider changes the next line', async () => {
+  const world = await onTheRoad();
+  const { s, server } = world;
+  const narrations = () => server.provider.calls.filter((call) => call.options.schemaName === 'encounter_narration');
+  const line = () => s().encounter.transcript.filter((message) => message.role === 'npc').at(-1);
+  expect(s().display.immersion).toBe(1);
+  await s().roadTalk();
+  expect(narrations().at(-1).messages[0].content).toMatch(/Dialogue is entirely in Italian/);
+  expect(typeof line().dialogue.translation).toBe('string');
+  expect(server.service.encounters.get(s().learnerId).immersion).toBe(1);
+
+  // Down to 40 %: stored at once, and the answer carries it, so the reply is mixed and its translation is a hint.
+  s().setImmersion(0.4);
+  expect(JSON.parse(world.storage.values.get('parallang.display')).immersion).toBe(0.4);
+  await s().sendMessage('Boh.');
+  expect(s().encounter.state).toBe('ongoing');
+  expect(narrations().at(-1).messages[0].content).toMatch(/about 40% of the words in each dialogue line are Italian/);
+  expect(line().dialogue.translation).toBeUndefined();
+
+  // Back to all of it, and Start over: the new greeting is in Italian only.
+  s().setImmersion(1);
+  await s().restartRoadConversation();
+  expect(narrations().at(-1).messages[0].content).toMatch(/Dialogue is entirely in Italian/);
+  expect(typeof line().dialogue.translation).toBe('string');
+});

@@ -133,6 +133,16 @@ export function vocabularyFormConflicts(entries) {
   }));
 }
 
+// Round 148: the share of the target language in a character's lines when the player chooses it (the web client's
+// slider). From `full` up the lines are wholly in the target language and their translation is shown with them.
+export const IMMERSION = Object.freeze({ min: 0.1, max: 1, full: 0.95 });
+/** The share a request asks for: null when it asks for none, a number of hundredths, or undefined when it is not one. */
+export function immersionFrom(value) {
+  if (value === undefined || value === null) return null;
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < IMMERSION.min || value > IMMERSION.max) return undefined;
+  return Math.round(value * 100) / 100;
+}
+
 export function calculateTargetRatio(base, increment, committedPlayerTurns) {
   return Math.min(1, base + increment * committedPlayerTurns);
 }

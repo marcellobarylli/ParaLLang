@@ -33,6 +33,24 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 148, a slider for how much of the language the characters speak, at 100 % by default (not deployed)
+
+The owner asked for "full italian for the npcs" as a slider that goes up to 100 % and starts there, with the
+coloured translation carrying the learning and the voices kept.
+
+- **Settings has "How much Italian the characters speak"**, 10 % to 100 %, 100 % unless moved. The web client sends
+  it with every start and every answer; it replaces the content's share (a character's own, its rise by the turn, the
+  stage's on the road). The server's default is unchanged, so the iPhone app plays as before.
+- **At 100 % the narrator is told to write every line in the language only**
+  (`prompts/system/dialogue_full.txt`), simply, with a translation that follows it sentence for sentence. The
+  narration around the line stays English with a few words of the language.
+- **At 100 % the line's translation shows with it, free.** As a hint it would be spent on every line and refused at
+  a gate.
+
+**No model was called**: the tests check what the narrator is told, not what a model then writes
+([findings](docs/rounds/148/findings.md)). It is on the session branch with round 147. A deploy of this round
+restarts the server.
+
 ## Addendum 2026-11-22: round 147, sunsets and sunrises, clouds, and the road's map as an isometric picture (not deployed)
 
 The owner asked for "nice sunsets with beautiful orange, purple, red and beautiful sunrises", clouds, and the world
@@ -1425,6 +1443,7 @@ Newest first.
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
 | 146 | 11-22 | A guide to the GitHub save in Settings, with where the server keeps its saves now; on The Long Way Home a day of 45 minutes, rain 30 % of the time, a blended sky, rain, snow, stars, fireflies, lightning, wind and the sound of rain; the narrator told the weather; deployed | [146](docs/rounds/146/architecture.md) | [findings](docs/rounds/146/findings.md) | round 146 build, merged to `main` |
 | 147 | 11-22 | Sunsets in orange, red and purple and sunrises in gold and pink on The Long Way Home, the sun's disc down to the horizon; a layer of drifting clouds lit by the sky; the road's map as an isometric picture of the landscape with relief; on the session branch, not deployed | [147](docs/rounds/147/architecture.md) | [findings](docs/rounds/147/findings.md) | round 147 build |
+| 148 | 11-22 | A slider in Settings for how much of the language the characters speak, 100 % by default: the narrator is told to speak the language only, and at 100 % the line's translation shows with it, free; the server's default and the iPhone app unchanged; no model called; on the session branch, not deployed | [148](docs/rounds/148/architecture.md) | [findings](docs/rounds/148/findings.md) | round 148 build |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

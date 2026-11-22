@@ -1,9 +1,12 @@
 import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
-import { loadDisplay, saveDisplay } from '../display.js';
+import { clampImmersion, loadDisplay, saveDisplay } from '../display.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
+
+// Round 148: the share of target language the player chose (Settings), as the server takes it.
+export const immersionOf = (state) => clampImmersion(state?.display?.immersion);
 
 // Round 115: the web client plays a dungeon. Round 119: the dungeon is a map under a world map. The flow:
 //
@@ -225,7 +228,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       const epoch = requestEpoch;
       const stale = () => request !== siteRequest || epoch !== requestEpoch;
       set({ encounterLoading: true, siteError: null, error: null });
-      const startSite = (again) => api.startEncounter(learnerId, { dungeonId: dungeon.id, restart: again });
+      const startSite = (again) => api.startEncounter(learnerId, { dungeonId: dungeon.id, restart: again, immersion: immersionOf(get()) });
       try {
         let result;
         try { result = await startSite(restart); }
@@ -528,7 +531,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const stale = () => request !== siteRequest || epoch !== requestEpoch || get().learnerId !== learnerId;
         set({ encounterLoading: true, partyStarting: member.conversationId, error: null });
         try {
-          const result = await api.startEncounter(learnerId, { encounterId: member.conversationId });
+          const result = await api.startEncounter(learnerId, { encounterId: member.conversationId, immersion: immersionOf(get()) });
           if (stale()) return;
           // Review 1 of round 120 (R1.3): the Party panel closes; a Spellbook or a review opened meanwhile stays open.
           const closing = get().view === 'party';
@@ -550,7 +553,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         const epoch = requestEpoch;
         set({ encounterLoading: true, error: null });
         try {
-          const result = await api.startEncounter(learnerId, { encounterId: s.encounter.encounterId, restart: true });
+          const result = await api.startEncounter(learnerId, { encounterId: s.encounter.encounterId, restart: true, immersion: immersionOf(get()) });
           if (request !== siteRequest || epoch !== requestEpoch) return;
           set({ encounter: result.encounter, spellbook: withSpellbook(result.spellbook), encounterLoading: false, assessment: null, closedObjectives: 0, draft: '', pendingInput: null });
         } catch (error) {
@@ -614,6 +617,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       setVoices: (on) => set({ display: saveDisplay({ ...get().display, voices: on !== false }, storage) }),
       // Round 127: whether the ambient music plays.
       setMusic: (on) => set({ display: saveDisplay({ ...get().display, music: on !== false }, storage) }),
+      // Round 148: how much of a character's lines is in the language being learned; sent with each start and answer.
+      setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value) }, storage) }),
       // Round 129: beginner mode, sent with each answer.
       setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
@@ -682,7 +687,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({ isLoading: true, error: null, pendingInput: text, draft: text });
         try {
           // Round 129: beginner mode travels with the answer (the server grades strictly without it).
-          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(state.display?.beginner !== false ? { beginner: true } : {}) });
+          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(state.display?.beginner !== false ? { beginner: true } : {}), immersion: immersionOf(state) });
           if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
           // A held pass (said too early in an ordered encounter) closes nothing (round 051).
           const closed = (result.assessment?.objectiveResults ?? []).filter((entry) => entry.passed && !entry.held).length;

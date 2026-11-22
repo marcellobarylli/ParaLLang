@@ -62,7 +62,13 @@ export function buildNarrationMessages({
   teachingNote = null,
   // Round 146: on the road, the time of day and the weather ("It is dusk and a light rain is falling.").
   weather = null,
+  // Round 148: true when the player chose a share that makes the lines wholly target language. The dialogue's rules
+  // are then the full ones; otherwise they are the mixed ones, byte for byte as before.
+  full = false,
 }) {
+  const dialogueRules = fillTemplate(loadTemplate(full ? 'system/dialogue_full.txt' : 'system/dialogue_mixed.txt'), {
+    language: { name: language.name, targetRatio: Math.round(targetRatio * 100), wordsPer20: Math.round(targetRatio * 20) },
+  }).trimEnd();
   const system = fillTemplate(loadTemplate('system/base.txt'), {
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
     style: { tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n') },
@@ -74,6 +80,7 @@ export function buildNarrationMessages({
       // Round 130: the narration's own share of target-language words, half the line's and at most 30%.
       narrativeRatio: Math.round(narrativeRatio(targetRatio) * 100),
       narrativePer40: Math.max(1, Math.round(narrativeRatio(targetRatio) * 40)),
+      dialogueRules,
       learningData: JSON.stringify(targetData(objectives, vocabularyById)),
       ambientVocabulary: ambientLine(language, ambientEntries),
     },
