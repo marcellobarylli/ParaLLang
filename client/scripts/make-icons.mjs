@@ -1,41 +1,104 @@
-// Round 114: writes the web app's icons into client/public/ (an archway, gold on night blue): the SVG favicon and the
-// PNGs the manifest and iOS ask for. Pure Node (zlib), no image library. Run: node client/scripts/make-icons.mjs
+// Round 150: writes the icons of the web app (client/public/) and of the iPhone app (mobile/assets/icon.png). The
+// icon is a snapshot of the road's map (src/roadMap.js: the landscape seen from above at an angle) with a walk
+// along the graph of sites drawn on it, as the map draws the trail. The landscape, the graph and the walk are pure
+// functions of SEED, so a run writes the same files every time. Pure Node (zlib), no image library.
+// Run: node client/scripts/make-icons.mjs
 import { writeFileSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
+import { createGraph } from '../../server/src/road/graph.js';
+import { createTerrain, hash } from '../../server/src/road/terrain.js';
+import { createMapView, renderMap } from '../src/roadMap.js';
 
-const OUT = new URL('../public/', import.meta.url);
-const BG = [13, 13, 26];
-const GOLD = [228, 184, 71];
-const GLOW = [192, 140, 255];
+const PUBLIC = new URL('../public/', import.meta.url);
+const MOBILE = new URL('../../mobile/assets/', import.meta.url);
 
-// Shapes in unit coordinates (y down), scaled about the centre by `scale` (the maskable icon keeps a safe margin).
-function colourAt(x0, y0, scale) {
-  const x = 0.5 + (x0 - 0.5) / scale;
-  const y = 0.5 + (y0 - 0.5) / scale;
-  const inArch = (left, right, cy, r, bottom) => x >= left && x <= right && y <= bottom && (y >= cy || Math.hypot(x - 0.5, y - cy) <= r);
-  if (Math.hypot(x - 0.5, y - 0.13) <= 0.04) return GLOW;
-  if (y >= 0.84 && y <= 0.89 && x >= 0.16 && x <= 0.84) return GOLD;
-  if (inArch(0.22, 0.78, 0.5, 0.28, 0.84) && !inArch(0.34, 0.66, 0.54, 0.16, 0.85)) return GOLD;
-  return BG;
+export const ICON = Object.freeze({
+  seed: 3, // the landscape of the picture: a lake, its shore, a wood and a mountain's foot (the owner's pick)
+  hops: 9, // the ways walked
+  frame: 62, // the picture's side in the map's units: the smaller, the closer (the map shows 1 m as 0.095 at most)
+  columns: 88, // the landscape's pixels across; drawn small and shown large, as the map is
+  // A maskable icon may be cut to a circle of 80 % of the side: it shows more land around the same walk, so that
+  // the walk keeps inside the circle.
+  maskable: 78,
+  margin: Object.freeze({ side: 13, top: 15, bottom: 12 }), // room around the walk
+  way: 1.15, // half the width of the walked line, in the map's units
+  edge: 0.55, // the dark line around every mark
+});
+
+const COLOURS = { way: [255, 243, 207], edge: [16, 18, 16], site: [169, 211, 155], here: [255, 255, 255] };
+
+/** A walk of `hops` ways from the graph's start: a hashed pick among the sites next door, new ones first. */
+export function iconWalk(graph, hops = ICON.hops) {
+  const walk = [graph.start];
+  for (let step = 0; step < hops; step += 1) {
+    const at = walk[walk.length - 1];
+    const next = graph.neighbours(at);
+    const fresh = next.filter((id) => !walk.includes(id));
+    const order = (id) => { const [i, j] = id.split(',').map(Number); return hash(i * 7 + step, j * 11 - step, graph.seed + 777); };
+    const pick = (fresh.length ? fresh : next).sort((a, b) => order(a) - order(b))[0];
+    if (!pick) break;
+    walk.push(pick);
+  }
+  return walk;
 }
 
-function png(size, scale) {
-  const samples = 4;
-  const rows = [];
-  for (let py = 0; py < size; py++) {
-    const row = Buffer.alloc(1 + size * 3);
-    for (let px = 0; px < size; px++) {
-      const sum = [0, 0, 0];
-      for (let sy = 0; sy < samples; sy++) {
-        for (let sx = 0; sx < samples; sx++) {
-          const c = colourAt((px + (sx + 0.5) / samples) / size, (py + (sy + 0.5) / samples) / size, scale);
-          for (let k = 0; k < 3; k++) sum[k] += c[k];
-        }
-      }
-      for (let k = 0; k < 3; k++) row[1 + px * 3 + k] = Math.round(sum[k] / samples ** 2);
+/** The icon's scene: the landscape's pixels and the marks of the walk, in the map's units. */
+export function iconScene({ seed = ICON.seed, hops = ICON.hops, frame = ICON.frame } = {}) {
+  const terrain = createTerrain(seed);
+  const graph = createGraph(terrain);
+  const walk = iconWalk(graph, hops);
+  const nodes = walk.map((id) => graph.node(id));
+  const view = createMapView(nodes, { width: frame, height: frame, margin: ICON.margin });
+  const place = (x, z) => view.project(x, z, terrain.heightAt(x, z));
+  // A way lies on the ground: every point of it is drawn at its own height.
+  const line = walk.slice(1).flatMap((id, index) => graph.pathPoints(walk[index], id).map(([x, z]) => place(x, z)));
+  return { walk, view, frame, picture: renderMap(terrain, view, { columns: Math.round((ICON.columns * frame) / ICON.frame) }), line, sites: nodes.map((node) => place(node.x, node.z)) };
+}
+
+// Distances in the map's units; below zero is inside.
+const toSegment = (x, y, [ax, ay], [bx, by]) => {
+  const [dx, dy] = [bx - ax, by - ay];
+  const t = Math.min(1, Math.max(0, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy || 1)));
+  return Math.hypot(x - ax - t * dx, y - ay - t * dy);
+};
+// A square lying on the ground as the map shows it: twice as wide as it is deep.
+const toTile = (x, y, [cx, cy], half) => ((Math.abs(x - cx) / half + Math.abs(y - cy) / (half * 0.58)) - 1) * half * 0.5;
+const toBox = (x, y, left, top, right, bottom) => Math.max(left - x, x - right, top - y, y - bottom);
+
+/** The icon as the RGB bytes of `size` × `size` pixels. */
+export function iconPixels(scene, size) {
+  const { picture, line, sites, frame } = scene;
+  const unit = frame / size; // the map's units per pixel
+  const here = sites[sites.length - 1];
+  const before = sites.slice(0, -1);
+  const out = Buffer.alloc(size * size * 3);
+  for (let py = 0; py < size; py += 1) {
+    for (let px = 0; px < size; px += 1) {
+      const [x, y] = [(px + 0.5) * unit, (py + 0.5) * unit];
+      const from = (Math.min(picture.height - 1, Math.floor((y / frame) * picture.height)) * picture.width + Math.floor((x / frame) * picture.width)) * 4;
+      const colour = [picture.data[from], picture.data[from + 1], picture.data[from + 2]];
+      // Each mark is painted over what is there by how much of the pixel it covers.
+      const paint = (distance, rgb) => {
+        const cover = Math.min(1, Math.max(0, 0.5 - distance / unit));
+        if (cover > 0) for (let k = 0; k < 3; k += 1) colour[k] += (rgb[k] - colour[k]) * cover;
+      };
+      const mark = (distance, rgb) => { paint(distance - ICON.edge, COLOURS.edge); paint(distance, rgb); };
+      let way = Infinity;
+      for (let n = 1; n < line.length; n += 1) way = Math.min(way, toSegment(x, y, line[n - 1], line[n]));
+      mark(way - ICON.way, COLOURS.way);
+      mark(Math.min(...before.map((site) => toTile(x, y, site, 2.6))), COLOURS.site);
+      // Where the walker stands: a white tile with a post and a flag, as on the map.
+      mark(toTile(x, y, here, 3.8), COLOURS.here);
+      mark(Math.min(toBox(x, y, here[0] - 0.45, here[1] - 8, here[0] + 0.45, here[1]), toBox(x, y, here[0] - 1.9, here[1] - 11.4, here[0] + 1.9, here[1] - 7.6)), COLOURS.here);
+      out.set(colour.map(Math.round), (py * size + px) * 3);
     }
-    rows.push(row);
   }
+  return out;
+}
+
+export function png(size, rgb) {
+  const rows = Buffer.alloc(size * (1 + size * 3));
+  for (let y = 0; y < size; y += 1) rgb.copy(rows, y * (1 + size * 3) + 1, y * size * 3, (y + 1) * size * 3);
   const chunk = (type, data) => {
     const body = Buffer.concat([Buffer.from(type, 'ascii'), data]);
     const length = Buffer.alloc(4);
@@ -48,11 +111,11 @@ function png(size, scale) {
   header.writeUInt32BE(size, 0);
   header.writeUInt32BE(size, 4);
   header[8] = 8; // bit depth
-  header[9] = 2; // RGB
+  header[9] = 2; // RGB, no transparency: iOS refuses an app icon that has any
   return Buffer.concat([
     Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
     chunk('IHDR', header),
-    chunk('IDAT', deflateSync(Buffer.concat(rows), { level: 9 })),
+    chunk('IDAT', deflateSync(rows, { level: 9 })),
     chunk('IEND', Buffer.alloc(0)),
   ]);
 }
@@ -68,18 +131,19 @@ function crc32(buffer) {
   return (c ^ 0xffffffff) >>> 0;
 }
 
-const hex = (c) => `#${c.map((v) => v.toString(16).padStart(2, '0')).join('')}`;
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" fill="${hex(BG)}"/>
-  <path fill="${hex(GOLD)}" fill-rule="evenodd" d="M22 84V50A28 28 0 0 1 78 50V84ZM34 85V54A16 16 0 0 1 66 54V85Z"/>
-  <rect x="16" y="84" width="68" height="5" fill="${hex(GOLD)}"/>
-  <circle cx="50" cy="13" r="4" fill="${hex(GLOW)}"/>
-</svg>
-`;
+// The files: the browser tab's icon, the manifest's three, the iPhone home screen's, and the Expo app's.
+export const ICON_FILES = Object.freeze([
+  [PUBLIC, 'parallang-icon-64.png', 64],
+  [PUBLIC, 'parallang-icon-192.png', 192],
+  [PUBLIC, 'parallang-icon-512.png', 512],
+  [PUBLIC, 'parallang-icon-maskable-512.png', 512, ICON.maskable],
+  [PUBLIC, 'parallang-icon-apple-touch.png', 180],
+  [MOBILE, 'icon.png', 1024],
+]);
 
-writeFileSync(new URL('parallang-icon.svg', OUT), svg);
-writeFileSync(new URL('parallang-icon-192.png', OUT), png(192, 1));
-writeFileSync(new URL('parallang-icon-512.png', OUT), png(512, 1));
-writeFileSync(new URL('parallang-icon-maskable-512.png', OUT), png(512, 0.72));
-writeFileSync(new URL('parallang-icon-apple-touch.png', OUT), png(180, 0.86));
-console.log('wrote client/public/parallang-icon*.{svg,png}');
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const scenes = new Map();
+  const sceneOf = (frame) => scenes.get(frame) ?? scenes.set(frame, iconScene({ frame })).get(frame);
+  for (const [folder, name, size, frame = ICON.frame] of ICON_FILES) writeFileSync(new URL(name, folder), png(size, iconPixels(sceneOf(frame), size)));
+  console.log(`wrote ${ICON_FILES.length} icons: a walk of ${ICON.hops} ways on the landscape of seed ${ICON.seed}`);
+}
