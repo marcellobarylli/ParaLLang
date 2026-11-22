@@ -33,7 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-22: round 144, The Long Way Home: an endless road, a curriculum, and a save that survives the server (on a branch, not deployed)
+## Addendum 2026-11-22: round 145, saves written to GitHub; rounds 144 and 145 deployed
+
+The owner asked for a save safer than the browser's copy, as JSON written to GitHub that says where the learner is in
+the curriculum, and said to deploy. The server can now write every save to a `saves` branch of a repository as one
+JSON file per learner (a summary of the level and of the place in the curriculum, then the whole save) and read it
+back when its disk has lost it (`server/src/github-saves.js`). The file's name is a hash and the learner's id is not
+in it, because the repository is public. **It is off until the owner enters `PARALLANG_GITHUB_TOKEN` and
+`PARALLANG_GITHUB_REPO` in Render** (the README says how); `GET /api/health` says which store is in use. Tested
+against a GitHub written in the tests, not against GitHub. Rounds 144 and 145 were merged to `main`, which deploys the
+client and the server ([findings](docs/rounds/145/findings.md)).
+
+## Addendum 2026-11-22: round 144, The Long Way Home: an endless road, a curriculum, and a save that survives the server (deployed with round 145)
 
 The owner asked for a backbone: an endless fractal landscape of which only the part around the player exists, a
 graph of points computed from it as the world map, a researched curriculum walked along it with random characters
@@ -1364,6 +1375,7 @@ Newest first.
 | 091 | 11-06 | Fixes from a review of rounds 017–028: a conversation under way is not replaced by the map's Talk; a way back and a way out (autonomous) | [091](docs/rounds/091/architecture.md) | [findings](docs/rounds/091/findings.md) | pre-run record to round 091 close |
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
+| 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |
 | 140 | 11-20 | The text's position is pinned to the player's scrolling | [140](docs/rounds/140/architecture.md) | [findings](docs/rounds/140/findings.md) | round 140 build |

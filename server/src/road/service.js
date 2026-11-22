@@ -22,7 +22,7 @@
 
 import { randomInt } from 'node:crypto';
 import { AppError, conflictError, validationError } from '../errors.js';
-import { isDue } from '../language-engine.js';
+import { isDue, levelFor } from '../language-engine.js';
 import { assertLearnerId } from '../learning-storage.js';
 import { hash, createTerrain } from './terrain.js';
 import { graphFor, parseNodeId } from './graph.js';
@@ -95,6 +95,40 @@ export function offersFor(graph, road, curriculum) {
     offers.set(id, options[turn % options.length]);
   }
   return { frontier, rails, offers };
+}
+
+/**
+ * Round 145: what a save says of its learner in a few lines, for the top of the file written to GitHub
+ * (github-saves.js): the level, the Spellbook's size, the dungeons' runs and, above all, where the learner is in the
+ * curriculum. `line` is the one-line form (it is the commit's message).
+ */
+export function saveSummary(content, envelope) {
+  const xp = envelope.progression?.xp ?? 0;
+  const cards = Object.keys(envelope.spellbook?.words ?? {}).length + Object.keys(envelope.spellbook?.phrases ?? {}).length;
+  const base = {
+    level: levelFor(xp), xp, spellbookCards: cards,
+    dungeons: Object.fromEntries(Object.entries(envelope.dungeons ?? {}).map(([id, run]) => [id, { run: run.run, cleared: run.cleared.length }])),
+  };
+  const road = envelope.road;
+  const curriculum = road ? content.curriculum : null;
+  if (!curriculum) return { line: `level ${base.level}, ${cards} Spellbook cards`, ...base, curriculum: null };
+  const view = overview(curriculum, road.progress);
+  const units = view.stages.flatMap((stage) => stage.units.map((unit) => ({
+    id: unit.id, title: unit.title, cefr: stage.cefr, state: unit.state,
+    lessonsDone: unit.lessons.filter((lesson) => lesson.done > 0).length, lessons: unit.lessons.length, gate: unit.checkpoint.passed,
+  })));
+  const number = view.position ? units.findIndex((unit) => unit.id === view.position.unitId) + 1 : null;
+  const line = view.complete
+    ? `curriculum finished (${units.length} units), ${road.step} conversations`
+    : `${view.position.cefr}, unit ${number} of ${units.length} (${view.position.unitTitle}), ${view.totals.lessonsDone} of ${view.totals.lessonsTotal} lessons, ${road.step} conversations`;
+  return {
+    line, ...base,
+    curriculum: {
+      complete: view.complete, conversations: road.step,
+      position: view.position ? { ...view.position, unitNumber: number, unitsTotal: units.length } : null,
+      totals: view.totals, successRate: view.successRate, units,
+    },
+  };
 }
 
 export const roadMethods = {

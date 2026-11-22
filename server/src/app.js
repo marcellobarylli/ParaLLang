@@ -21,7 +21,7 @@ function requireToken(token) {
   };
 }
 
-export function createApp({ service, logger = console, token = null }) {
+export function createApp({ service, logger = console, token = null, saves = null }) {
   const app = express();
   app.use(cors());
   if (token) app.use(requireToken(token));
@@ -32,7 +32,9 @@ export function createApp({ service, logger = console, token = null }) {
     catch (error) { next(error); }
   });
   app.use(express.json({ limit: '32kb' }));
-  app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+  // Round 145: with `saves` (where the saves are kept, and whether the last copy to GitHub went through) the health
+  // check says so, so the owner can see from outside that the store is the one they set up.
+  app.get('/api/health', (req, res) => res.json({ status: 'ok', ...(saves ? { saves: saves() } : {}) }));
 
   app.post('/api/learner', async (req, res, next) => {
     try { res.status(req.body?.learnerId ? 200 : 201).json(await service.createOrRecoverLearner(req.body?.learnerId)); }
