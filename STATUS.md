@@ -37,7 +37,7 @@ The entry point for agents: the current state, how the project is logged, and th
 
 The owner asked for the top GitHub issue, #22: the app's and the web's icon as a snapshot of the isometric map with
 the graph walk on it. `client/scripts/make-icons.mjs` now draws the icons from the game's own landscape, graph and
-map (seed 42, a walk of nine ways) and writes the web app's five and the iPhone app's `mobile/assets/icon.png`. The
+map (seed 3, the owner's pick of the tries; a walk of nine ways) and writes the web app's five and the iPhone app's `mobile/assets/icon.png`. The
 gold archway and the SVG favicon are gone. Seen in headless Chromium, not on a phone; the work is on
 `claude/zen-cray-56stot` and a merge to `main` is the owner's call ([findings](docs/rounds/150/findings.md),
 picture: [`01-icon-sizes.png`](docs/rounds/150/shots/01-icon-sizes.png)).

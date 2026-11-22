@@ -13,14 +13,16 @@ const PUBLIC = new URL('../public/', import.meta.url);
 const MOBILE = new URL('../../mobile/assets/', import.meta.url);
 
 export const ICON = Object.freeze({
-  seed: 42, // the landscape of the picture: a lake's shore, a meadow and a wood
+  seed: 3, // the landscape of the picture: a lake, its shore, a wood and a mountain's foot (the owner's pick)
   hops: 9, // the ways walked
-  frame: 42, // the picture's side in the map's units: the smaller, the closer (the map shows 1 m as 0.095 at most)
-  columns: 72, // the landscape's pixels across; drawn small and shown large, as the map is
-  // Room around the walk. A maskable icon may be cut to a circle of 80 % of the side, so the walk keeps inside it.
-  margin: Object.freeze({ side: 8, top: 12, bottom: 7 }),
-  way: 0.8, // half the width of the walked line, in the map's units
-  edge: 0.45, // the dark line around every mark
+  frame: 62, // the picture's side in the map's units: the smaller, the closer (the map shows 1 m as 0.095 at most)
+  columns: 88, // the landscape's pixels across; drawn small and shown large, as the map is
+  // A maskable icon may be cut to a circle of 80 % of the side: it shows more land around the same walk, so that
+  // the walk keeps inside the circle.
+  maskable: 78,
+  margin: Object.freeze({ side: 13, top: 15, bottom: 12 }), // room around the walk
+  way: 1.15, // half the width of the walked line, in the map's units
+  edge: 0.55, // the dark line around every mark
 });
 
 const COLOURS = { way: [255, 243, 207], edge: [16, 18, 16], site: [169, 211, 155], here: [255, 255, 255] };
@@ -41,16 +43,16 @@ export function iconWalk(graph, hops = ICON.hops) {
 }
 
 /** The icon's scene: the landscape's pixels and the marks of the walk, in the map's units. */
-export function iconScene({ seed = ICON.seed, hops = ICON.hops } = {}) {
+export function iconScene({ seed = ICON.seed, hops = ICON.hops, frame = ICON.frame } = {}) {
   const terrain = createTerrain(seed);
   const graph = createGraph(terrain);
   const walk = iconWalk(graph, hops);
   const nodes = walk.map((id) => graph.node(id));
-  const view = createMapView(nodes, { width: ICON.frame, height: ICON.frame, margin: ICON.margin });
+  const view = createMapView(nodes, { width: frame, height: frame, margin: ICON.margin });
   const place = (x, z) => view.project(x, z, terrain.heightAt(x, z));
   // A way lies on the ground: every point of it is drawn at its own height.
   const line = walk.slice(1).flatMap((id, index) => graph.pathPoints(walk[index], id).map(([x, z]) => place(x, z)));
-  return { walk, view, picture: renderMap(terrain, view, { columns: ICON.columns }), line, sites: nodes.map((node) => place(node.x, node.z)) };
+  return { walk, view, frame, picture: renderMap(terrain, view, { columns: Math.round((ICON.columns * frame) / ICON.frame) }), line, sites: nodes.map((node) => place(node.x, node.z)) };
 }
 
 // Distances in the map's units; below zero is inside.
@@ -65,15 +67,15 @@ const toBox = (x, y, left, top, right, bottom) => Math.max(left - x, x - right, 
 
 /** The icon as the RGB bytes of `size` × `size` pixels. */
 export function iconPixels(scene, size) {
-  const { picture, line, sites } = scene;
-  const unit = ICON.frame / size; // the map's units per pixel
+  const { picture, line, sites, frame } = scene;
+  const unit = frame / size; // the map's units per pixel
   const here = sites[sites.length - 1];
   const before = sites.slice(0, -1);
   const out = Buffer.alloc(size * size * 3);
   for (let py = 0; py < size; py += 1) {
     for (let px = 0; px < size; px += 1) {
       const [x, y] = [(px + 0.5) * unit, (py + 0.5) * unit];
-      const from = (Math.min(picture.height - 1, Math.floor((y / ICON.frame) * picture.height)) * picture.width + Math.floor((x / ICON.frame) * picture.width)) * 4;
+      const from = (Math.min(picture.height - 1, Math.floor((y / frame) * picture.height)) * picture.width + Math.floor((x / frame) * picture.width)) * 4;
       const colour = [picture.data[from], picture.data[from + 1], picture.data[from + 2]];
       // Each mark is painted over what is there by how much of the pixel it covers.
       const paint = (distance, rgb) => {
@@ -84,9 +86,9 @@ export function iconPixels(scene, size) {
       let way = Infinity;
       for (let n = 1; n < line.length; n += 1) way = Math.min(way, toSegment(x, y, line[n - 1], line[n]));
       mark(way - ICON.way, COLOURS.way);
-      mark(Math.min(...before.map((site) => toTile(x, y, site, 2.2))), COLOURS.site);
+      mark(Math.min(...before.map((site) => toTile(x, y, site, 2.6))), COLOURS.site);
       // Where the walker stands: a white tile with a post and a flag, as on the map.
-      mark(toTile(x, y, here, 3.2), COLOURS.here);
+      mark(toTile(x, y, here, 3.8), COLOURS.here);
       mark(Math.min(toBox(x, y, here[0] - 0.45, here[1] - 8, here[0] + 0.45, here[1]), toBox(x, y, here[0] - 1.9, here[1] - 11.4, here[0] + 1.9, here[1] - 7.6)), COLOURS.here);
       out.set(colour.map(Math.round), (py * size + px) * 3);
     }
@@ -134,14 +136,14 @@ export const ICON_FILES = Object.freeze([
   [PUBLIC, 'parallang-icon-64.png', 64],
   [PUBLIC, 'parallang-icon-192.png', 192],
   [PUBLIC, 'parallang-icon-512.png', 512],
-  [PUBLIC, 'parallang-icon-maskable-512.png', 512],
+  [PUBLIC, 'parallang-icon-maskable-512.png', 512, ICON.maskable],
   [PUBLIC, 'parallang-icon-apple-touch.png', 180],
   [MOBILE, 'icon.png', 1024],
 ]);
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const scene = iconScene({ seed: Number(process.env.ICON_SEED ?? ICON.seed) });
-  const out = process.env.ICON_OUT ? new URL(`file://${process.env.ICON_OUT.replace(/\/?$/, '/')}`) : null;
-  for (const [folder, name, size] of ICON_FILES) writeFileSync(new URL(name, out ?? folder), png(size, iconPixels(scene, size)));
-  console.log(`wrote ${ICON_FILES.length} icons: a walk of ${scene.walk.length - 1} ways on the landscape of seed ${process.env.ICON_SEED ?? ICON.seed}`);
+  const scenes = new Map();
+  const sceneOf = (frame) => scenes.get(frame) ?? scenes.set(frame, iconScene({ frame })).get(frame);
+  for (const [folder, name, size, frame = ICON.frame] of ICON_FILES) writeFileSync(new URL(name, folder), png(size, iconPixels(sceneOf(frame), size)));
+  console.log(`wrote ${ICON_FILES.length} icons: a walk of ${ICON.hops} ways on the landscape of seed ${ICON.seed}`);
 }

@@ -22,17 +22,18 @@ on it, in place of the gold archway.
 `client/scripts/make-icons.mjs` draws the icon from the game's own code, so it is a picture of the game and not a
 drawing of one:
 
-1. The landscape of seed 42 (a lake's shore, a meadow and a wood) and its graph of sites.
+1. The landscape of seed 3 (a lake, its shore, a wood and a mountain's foot) and its graph of sites. The owner
+   picked it from the pictures of the first try (see the Amendment).
 2. A walk of nine ways from the graph's start: a hashed pick among the sites next door, new ones first. This is the
    rule of the rails in small.
-3. The picture is `renderMap` of `client/src/roadMap.js` in a square frame of 42 map units (about 440 m across,
-   closer than the map in the game, whose marks would be too small on an icon), 72 pixels across and shown large.
+3. The picture is `renderMap` of `client/src/roadMap.js` in a square frame of 62 map units (about 650 m across,
+   closer than the map in the game, whose marks would be too small on an icon), 88 pixels across and shown large.
 4. The marks are the map's own: the walked ways in cream along the ground, a green tile at each site, a white tile
    with a post and a flag where the walker stands, each with a dark edge. They are drawn at each icon's own size, so
    they stay sharp.
 
-One picture serves every size. The walk and the flag lie inside a circle of 80 % of the side, so a round mask (the
-maskable icon) cuts landscape only.
+One picture serves every size but the maskable icon, which may be cut to a circle of 80 % of its side. That one
+shows more land around the same walk (a frame of 78 units), so the walk and the flag lie inside the circle.
 
 **Files.** 64 pixels for the browser tab (new; the SVG favicon is removed, since the picture is pixels), 192 and 512
 and the maskable 512 for the manifest, 180 for the iPhone's home screen, 1024 for the Expo app
@@ -44,14 +45,21 @@ the map changes there, the script's marks should follow. The Expo app's splash p
 
 ## Tests
 
-`client/src/__tests__/pages.test.js`: the walk has nine ways and no site twice; every mark lies inside the maskable
-icon's safe circle; the walked line's colour is in the 64-pixel picture; every file has its size and is RGB; the page
+`client/src/__tests__/pages.test.js`: the walk has nine ways and no site twice; every mark of the maskable icon lies inside
+its safe circle; the walked line's colour is in the 64-pixel picture; every file has its size and is RGB; the page
 links the 64-pixel icon.
 
 ## Claim boundary
 
 Seen in headless Chromium, not on a phone's home screen and not in the Simulator. The iPhone app's tests were not
 run (the change there is one picture).
+
+## Amendment 2026-11-22: the owner's pick
+
+The first build used seed 42 in a closer frame (42 units). The owner answered with a crop of another picture from
+the tries, "Not that one mate. This one is cool": seed 3 with the first try's frame and marks (a frame of 62 units,
+a wider walked line). The icons are now that picture. Its flag stands near the left edge, outside a round mask's
+safe circle, so the maskable icon got its wider frame.
 
 ## Outcome
 

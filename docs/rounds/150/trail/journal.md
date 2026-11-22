@@ -10,3 +10,5 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 21:13 approx. | 21:13:31 | run | Claude | Cloud session container. Web client 258 tests pass; the client builds; the icons looked at in headless Chromium at 16 to 360 pixels | `../shots/` |
 | 5 | 21:13:31 | 21:13:31 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 6 | 21:13:31 | 21:13:31 | closed | Claude | Status addendum and index row; committed and pushed on the session branch. Not deployed | `../architecture.md` |
+| 7 | 21:20 approx. | 21:15:05 | decision | Owner | "Not that one mate. This one is cool", with a crop of the seed 3 try: that picture is the icon | `interview.md` |
+| 8 | 21:15:05 | 21:15:05 | built | Claude | "round 150: the owner's pick of the icon's landscape" on the session branch; web client 258 tests pass | `client/scripts/make-icons.mjs` |

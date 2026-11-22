@@ -118,9 +118,10 @@ test('the icon is the map with a walk that a round mask does not cut, and every 
   const scene = iconScene();
   expect(scene.walk).toHaveLength(ICON.hops + 1);
   expect(new Set(scene.walk).size).toBe(scene.walk.length);
-  // A maskable icon is safe inside a circle of 80 % of its side; the flag stands 11.4 units over the last site.
-  const [last] = scene.sites.slice(-1);
-  for (const [x, y] of [...scene.line, ...scene.sites, [last[0], last[1] - 11.4]]) expect(Math.hypot(x - ICON.frame / 2, y - ICON.frame / 2)).toBeLessThan(ICON.frame * 0.4);
+  // A maskable icon is safe inside a circle of 80 % of its side; the flag's corners stand 11.4 units over the last site.
+  const masked = iconScene({ frame: ICON.maskable });
+  const [last] = masked.sites.slice(-1);
+  for (const [x, y] of [...masked.line, ...masked.sites, [last[0] - 1.9, last[1] - 11.4], [last[0] + 1.9, last[1] - 11.4]]) expect(Math.hypot(x - ICON.maskable / 2, y - ICON.maskable / 2)).toBeLessThan(ICON.maskable * 0.4);
   // The walked line is on the picture: some of its pixels have the line's own colour, nothing mixed in.
   const pixels = iconPixels(scene, 64);
   let way = 0;
