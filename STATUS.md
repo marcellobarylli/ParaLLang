@@ -33,6 +33,26 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 147, sunsets and sunrises, clouds, and the road's map as an isometric picture (not deployed)
+
+The owner asked for "nice sunsets with beautiful orange, purple, red and beautiful sunrises", clouds, and the world
+map "not top down but isometric zoomed out", to show off the fractal landscape.
+
+- **The sky** of The Long Way Home passes through a row of palettes as the sun goes down: the day, a golden hour, a
+  sunset (an orange horizon under red and purple), an afterglow, the night; the morning has its own (violet before
+  dawn, a pink and gold sunrise, a pale gold morning). The sun's disc goes down to the horizon and grows as it does.
+  Scattered cloud no longer greys the sky.
+- **Clouds**: a layer of up to 80 low-poly clouds that drifts with the wind, thickens with the weather and takes its
+  colours from the sky, so a low sun lights it from below.
+- **The road's map** is an isometric picture of at least a kilometre of the landscape (`client/src/roadMap.js`):
+  relief drawn three times taller than true, lit from the left, with height lines, trees and water, and the sites as
+  signs standing on it.
+
+Checked by tests and in headless Chromium at a phone and a desktop size, at one site; not on a phone
+([findings](docs/rounds/147/findings.md), pictures in [`docs/rounds/147/shots/`](docs/rounds/147/shots/)). **It is
+on the session branch only.** Every change is in the web client, so a deploy needs no restart of the server (a merge
+to `main` with `[skip render]`); it waits for the owner's word.
+
 ## Addendum 2026-11-22: round 146, a guide to the GitHub save in Settings; day, night and weather on the road (deployed)
 
 The owner asked for the steps of the GitHub save in the app ("I might lose this chat"), a day and night of 45
@@ -51,6 +71,10 @@ minutes, rain 30 % of the time and "other cool stuff", and a re-deploy.
 Checked by tests and in headless Chromium at a phone and a desktop size with the weather held still; not on a phone,
 the sound not heard, no live model told the weather ([findings](docs/rounds/146/findings.md), pictures in
 [`docs/rounds/146/shots/`](docs/rounds/146/shots/)).
+
+**The deploy (2026-11-22).** Round 146 was merged to `main` as `3cb31fe`. The CI run and the Pages run for that
+commit succeeded, and Render's deployment "main - parallang" for it reports success (read through GitHub's public
+API from the cloud session, which cannot reach the hosted server or the live page itself).
 
 ## Addendum 2026-11-22: round 145, saves written to GitHub; rounds 144 and 145 deployed
 
@@ -1400,6 +1424,7 @@ Newest first.
 | 108 | 11-06 | Fixes from a second review of rounds 105–107: no token proxy in `vite preview`, the client declares `dotenv`, withholding tests for every Spellbook route (autonomous) | [108](docs/rounds/108/architecture.md) | [findings](docs/rounds/108/findings.md) | pre-run record to round 108 close |
 | 109 | 11-06 | Owner-notes audit; two fragments of The Journey, the archway's telling and Journathan still on his way (autonomous) | [109](docs/rounds/109/architecture.md) | [findings](docs/rounds/109/findings.md) | pre-run record to round 109 close |
 | 146 | 11-22 | A guide to the GitHub save in Settings, with where the server keeps its saves now; on The Long Way Home a day of 45 minutes, rain 30 % of the time, a blended sky, rain, snow, stars, fireflies, lightning, wind and the sound of rain; the narrator told the weather; deployed | [146](docs/rounds/146/architecture.md) | [findings](docs/rounds/146/findings.md) | round 146 build, merged to `main` |
+| 147 | 11-22 | Sunsets in orange, red and purple and sunrises in gold and pink on The Long Way Home, the sun's disc down to the horizon; a layer of drifting clouds lit by the sky; the road's map as an isometric picture of the landscape with relief; on the session branch, not deployed | [147](docs/rounds/147/architecture.md) | [findings](docs/rounds/147/findings.md) | round 147 build |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

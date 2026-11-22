@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createTerrain } from '../../../server/src/road/terrain.js';
-import { GRAPH, createGraph } from '../../../server/src/road/graph.js';
+import { createGraph } from '../../../server/src/road/graph.js';
 import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
+import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 
 // Round 144: what the dock and the overlays show on The Long Way Home. The server's view of the road (`state.road`)
 // says where the player is, who waits there and what each site ahead offers; the curriculum with the player's marks
@@ -184,19 +185,13 @@ export function RoadResolved({ state, encounter }) {
   );
 }
 
-// The colour of a point of the landscape on the map, by what grows there and how high it is.
-const MAP_COLOURS = { water: [47, 85, 82], shore: [186, 168, 120], meadow: [118, 142, 74], forest: [62, 98, 52], highland: [140, 136, 122], snow: [226, 230, 232] };
-function shade(terrain, x, z) {
-  const h = terrain.heightAt(x, z);
-  const base = MAP_COLOURS[terrain.biomeAt(x, z, h)];
-  // A hillshade from the slope towards the north-west, so ridges and valleys read.
-  const light = Math.max(0.72, Math.min(1.22, 1 + (terrain.heightAt(x - 12, z - 12) - h) * -0.02));
-  return base.map((value) => Math.max(0, Math.min(255, value * light)));
-}
+// A square lying on the ground as the map shows it: twice as wide as it is deep.
+const MAP_TILE = (half) => `${-half},0 0,${-half * 0.58} ${half},0 0,${half * 0.58}`;
 
 /**
- * The map: the landscape around the walk from above, the sites visited and the ways between them, and each site
- * ahead with what waits there. A tap picks a site; "Walk here" goes.
+ * The map: the landscape around the walk seen from far off and above at an angle (roadMap.js), so its hills and
+ * lakes show, with the sites visited, the ways between them and each site ahead with what waits there. A tap picks
+ * a site; "Walk here" goes.
  */
 export function RoadMap({ state, onClose }) {
   const { road } = state;
@@ -205,34 +200,26 @@ export function RoadMap({ state, onClose }) {
   const [picked, setPicked] = useState(road.rails ?? road.frontier[0]?.id ?? null);
   useEffect(() => { if (!road.frontier.some((site) => site.id === picked)) setPicked(road.rails ?? road.frontier[0]?.id ?? null); }, [road.frontier, road.rails, picked]);
   const sites = useMemo(() => {
-    const point = (id) => { const node = graph.node(id); return node ? { id, x: node.x, z: node.z } : null; };
-    return { trail: road.trail.map(point).filter(Boolean), here: point(road.at) };
-  }, [graph, road.trail, road.at]);
-  // The frame: every site of the trail shown and of the frontier, with a margin, square, at least five cells wide.
-  const frame = useMemo(() => {
-    const all = [...sites.trail.slice(-24), ...road.frontier.map((site) => ({ x: site.at[0], z: site.at[1] })), sites.here].filter(Boolean);
-    const [minX, maxX] = [Math.min(...all.map((p) => p.x)), Math.max(...all.map((p) => p.x))];
-    const [minZ, maxZ] = [Math.min(...all.map((p) => p.z)), Math.max(...all.map((p) => p.z))];
-    const span = Math.max(GRAPH.cell * 5, maxX - minX + GRAPH.cell * 1.6, maxZ - minZ + GRAPH.cell * 1.6);
-    return { x: (minX + maxX) / 2 - span / 2, z: (minZ + maxZ) / 2 - span / 2, span };
-  }, [sites, road.frontier]);
+    const point = (id) => graph.node(id);
+    return { trail: road.trail.map(point).filter(Boolean), here: point(road.at), ahead: road.frontier.map((site) => point(site.id)) };
+  }, [graph, road.trail, road.at, road.frontier]);
+  // The frame holds the last sites of the trail and every site ahead; the rest of the trail shows where it falls.
+  const view = useMemo(() => createMapView([...sites.trail.slice(-ROAD_MAP.recent), ...sites.ahead, sites.here].filter(Boolean)), [sites]);
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext?.('2d');
     if (!context) return;
-    const n = canvas.width;
-    const image = context.createImageData(n, n);
-    for (let j = 0; j < n; j += 1) {
-      for (let i = 0; i < n; i += 1) {
-        const [r, g, b] = shade(terrain, frame.x + ((i + 0.5) / n) * frame.span, frame.z + ((j + 0.5) / n) * frame.span);
-        image.data.set([r, g, b, 255], (j * n + i) * 4);
-      }
-    }
+    const picture = renderMap(terrain, view);
+    Object.assign(canvas, { width: picture.width, height: picture.height });
+    const image = context.createImageData(picture.width, picture.height);
+    image.data.set(picture.data);
     context.putImageData(image, 0, 0);
-  }, [terrain, frame]);
-  const u = (x) => ((x - frame.x) / frame.span) * 100;
-  const v = (z) => ((z - frame.z) / frame.span) * 100;
-  const line = (a, b) => (graph.pathPoints(a, b) ?? [[graph.node(a).x, graph.node(a).z], [graph.node(b).x, graph.node(b).z]]).map(([x, z]) => `${u(x).toFixed(2)},${v(z).toFixed(2)}`).join(' ');
+  }, [terrain, view]);
+  const place = (node) => view.project(node.x, node.z, node.y);
+  const at = (node) => { const [x, y] = place(node); return `translate(${x.toFixed(2)} ${y.toFixed(2)})`; };
+  // A way lies on the ground: every point of it is drawn at its own height.
+  const line = (a, b) => (graph.pathPoints(a, b) ?? [[graph.node(a).x, graph.node(a).z], [graph.node(b).x, graph.node(b).z]])
+    .map(([x, z]) => view.project(x, z, terrain.heightAt(x, z)).map((value) => value.toFixed(2)).join(',')).join(' ');
   const cleared = new Set(road.cleared);
   const chosen = road.frontier.find((site) => site.id === picked) ?? null;
   const busy = state.roadTravelling || state.encounterLoading || state.isLoading;
@@ -242,25 +229,28 @@ export function RoadMap({ state, onClose }) {
         <div><h2>The map</h2><p>{road.here.name} · {road.step} {road.step === 1 ? 'conversation' : 'conversations'} so far</p></div>
         <button type="button" className="secondary-button" onClick={onClose}>Back to the road</button>
       </div>
-      <div className="road-map">
-        <canvas ref={canvasRef} width="112" height="112" aria-hidden="true" />
-        <svg viewBox="0 0 100 100" role="img" aria-label={`A map with ${road.frontier.length} ${road.frontier.length === 1 ? 'site' : 'sites'} ahead`}>
-          {sites.trail.slice(1).map((site, index) => <polyline key={`t${site.id}`} className="map-way walked" points={line(sites.trail[index].id, site.id)} />)}
+      <div className="road-map" style={{ aspectRatio: `${view.width} / ${view.height}` }}>
+        <canvas ref={canvasRef} width={ROAD_MAP.columns} height={Math.round((ROAD_MAP.columns * view.height) / view.width)} aria-hidden="true" />
+        <svg viewBox={`0 0 ${view.width} ${view.height}`} role="img" aria-label={`A map with ${road.frontier.length} ${road.frontier.length === 1 ? 'site' : 'sites'} ahead`}>
+          {sites.trail.slice(1).map((site, index) => <polyline key={`t${index}${site.id}`} className="map-way walked" points={line(sites.trail[index].id, site.id)} />)}
           {road.frontier.map((site) => <polyline key={`f${site.id}`} className={`map-way ahead way-${site.way}`} points={line(site.from, site.id)} />)}
-          {sites.trail.filter((site) => site.id !== road.at).map((site) => <rect key={site.id} className={`map-site ${cleared.has(site.id) ? 'cleared' : 'visited'}`} x={u(site.x) - 1.1} y={v(site.z) - 1.1} width="2.2" height="2.2" />)}
-          {sites.here && <g className="map-here" transform={`translate(${u(sites.here.x)} ${v(sites.here.z)})`}><rect x="-2" y="-2" width="4" height="4" /><rect className="ring" x="-3.4" y="-3.4" width="6.8" height="6.8" /></g>}
-          {road.frontier.map((site) => (
-            <g key={site.id} className={`map-ahead kind-${site.offer.kind}${site.id === picked ? ' picked' : ''}${site.recommended ? ' rails' : ''}`} transform={`translate(${u(site.at[0])} ${v(site.at[1])})`}
+          {sites.trail.filter((site) => site.id !== road.at).map((site, index) => <polygon key={`s${index}${site.id}`} className={`map-site ${cleared.has(site.id) ? 'cleared' : 'visited'}`} points={MAP_TILE(1.5)} transform={at(site)} />)}
+          {sites.here && <g className="map-here" transform={at(sites.here)}><polygon className="ring" points={MAP_TILE(4.2)} /><polygon points={MAP_TILE(2.3)} /><line y2="-5" /><rect x="-1.1" y="-7.2" width="2.2" height="2.2" /></g>}
+          {road.frontier.map((site, index) => sites.ahead[index] && (
+            <g key={site.id} className={`map-ahead kind-${site.offer.kind}${site.id === picked ? ' picked' : ''}${site.recommended ? ' rails' : ''}`} transform={at(sites.ahead[index])}
               role="button" tabIndex="0" aria-label={`${site.name}: ${KIND[site.offer.kind].label}, ${site.offer.title}`} aria-pressed={site.id === picked}
               onClick={() => setPicked(site.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setPicked(site.id); } }}>
-              <rect x="-3.2" y="-3.2" width="6.4" height="6.4" />
-              <text y="1.5">{KIND[site.offer.kind].mark}</text>
+              <rect className="hit" x="-4.4" y="-10.4" width="8.8" height="12" />
+              <ellipse className="foot" rx="2" ry="1.1" />
+              <line className="stem" y2="-3.2" />
+              <rect className="sign" x="-2.9" y="-9" width="5.8" height="5.8" />
+              <text y="-4.7">{KIND[site.offer.kind].mark}</text>
             </g>
           ))}
         </svg>
       </div>
       <p className="map-legend"><small>
-        <span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate. The ringed site is the pacing's choice; small squares are where you have been.
+        <span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate. The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
       </small></p>
       {chosen && (
         <section className="map-choice" aria-live="polite">

@@ -1,4 +1,7 @@
-import { AdditiveBlending, BufferGeometry, Float32BufferAttribute, Group, LineBasicMaterial, LineSegments, Mesh, Points, PointsMaterial } from 'three';
+import { AdditiveBlending, BufferGeometry, DodecahedronGeometry, Float32BufferAttribute, Group, LineBasicMaterial, LineSegments, Mesh, Points, PointsMaterial } from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { createPS1Material } from '../ps1/material.js';
+import { hexToRgb } from '../palette.js';
 import { MeshBuilder } from './geometry.js';
 import { assembleWorld, createWorldKit } from './world.js';
 
@@ -290,6 +293,10 @@ export const EFFECTS = Object.freeze({
   stars: Object.freeze({ count: 260, radius: 380 }),
   fireflies: Object.freeze({ count: 40, box: 26 }),
   lightning: Object.freeze({ everySeconds: 9, lasts: 0.22, boost: 1.9 }), // one flash at a time, never a flicker
+  // Round 147: the cloud layer. `reach` is how far from the camera a cloud is kept (it comes round again on the
+  // other side); the layer is `top` metres over the camera overhead and `drop` metres lower at its rim, so far
+  // clouds stand low over the horizon, where a low sun lights them. `least` is the share there on a clear day.
+  clouds: Object.freeze({ count: 80, shapes: 6, reach: 640, top: 108, drop: 72, speed: Object.freeze([2.5, 16]), least: 0.4, glow: 0.4 }),
 });
 
 // A fixed stream of numbers in [0, 1): the effects need no seed of their own.
@@ -347,8 +354,72 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
   fireflies.visible = false;
   group.add(stars, rain, snow, fireflies);
 
-  const state = { rain: 0, snow: 0, stars: 0, fireflies: 0, flash: 0, sway: 0, flashes: 0 };
+  // Round 147: clouds. A few shapes, each some faceted balls with a flat base, shared by all the clouds; every
+  // cloud is one mesh that drifts with the wind and comes round again. Their faces are coloured when the light is
+  // set (`setAtmosphere`): tops in the sky's cloud colour, undersides in its `cloudUnder`, and the faces turned to
+  // a low sun warmed by it, which is what makes a sunset.
+  const CLOUDS = EFFECTS.clouds;
+  const cloudMaterial = createPS1Material(world.uniforms, { name: 'cloud-layer', lit: false, fog: 0.22 });
+  const shapes = Array.from({ length: CLOUDS.shapes }, () => {
+    const balls = [];
+    const count = 3 + Math.floor(next() * 3);
+    let x = 0;
+    for (let n = 0; n < count; n += 1) {
+      const [rx, ry, rz] = [22 + next() * 26, 7 + next() * 8, 15 + next() * 16];
+      const ball = new DodecahedronGeometry(1, 0); // twelve flat faces: a cloud of few triangles, as the trees are
+      ball.rotateY(next() * Math.PI);
+      ball.scale(rx, ry, rz);
+      const at = ball.attributes.position;
+      for (let v = 0; v < at.count; v += 1) at.setY(v, Math.max(at.getY(v), -ry * 0.3) + ry * 0.3); // a flat base
+      ball.translate(x, (next() - 0.3) * 3, (next() - 0.5) * 16);
+      ball.deleteAttribute('uv');
+      ball.deleteAttribute('normal');
+      balls.push(ball);
+      x += rx * (0.9 + next() * 0.5);
+    }
+    const shape = mergeGeometries(balls);
+    shape.translate(-x / 2, 0, 0);
+    shape.computeVertexNormals(); // not indexed: every face has its own normal
+    shape.setAttribute('uv', new Float32BufferAttribute(new Float32Array(shape.attributes.position.count * 2), 2));
+    shape.setAttribute('color', new Float32BufferAttribute(new Float32Array(shape.attributes.position.count * 3).fill(1), 3));
+    shape.computeBoundingSphere();
+    for (const ball of balls) ball.dispose();
+    return shape;
+  });
+  const clouds = new Group();
+  clouds.name = 'clouds';
+  const cloudList = Array.from({ length: CLOUDS.count }, (_, n) => {
+    const mesh = new Mesh(shapes[n % shapes.length], cloudMaterial);
+    mesh.frustumCulled = false;
+    mesh.visible = false;
+    clouds.add(mesh);
+    return { mesh, x: (next() - 0.5) * CLOUDS.reach * 2, z: (next() - 0.5) * CLOUDS.reach * 2, size: 0.75 + next() * 0.8, lift: next() * 26 };
+  });
+  group.add(clouds);
+  let painted = '';
+  function setAtmosphere(p) {
+    const sun = p.sunDisc ?? p.sunDir;
+    const key = [p.cloud, p.cloudUnder, p.sun, ...sun.map((value) => value.toFixed(2))].join();
+    if (key === painted) return;
+    painted = key;
+    const [top, under, lit] = [hexToRgb(p.cloud), hexToRgb(p.cloudUnder ?? p.cloud), hexToRgb(p.sun)];
+    const length = Math.hypot(...sun) || 1;
+    const strength = CLOUDS.glow * Math.min(1, p.sunColor?.[0] ?? 1); // the moon lights a cloud's edge only faintly
+    for (const shape of shapes) {
+      const [normal, color] = [shape.attributes.normal, shape.attributes.color];
+      for (let v = 0; v < normal.count; v += 1) {
+        const up = Math.min(1, Math.max(0, (normal.getY(v) + 0.3) / 0.9));
+        const facing = Math.max(0, (normal.getX(v) * sun[0] + normal.getY(v) * sun[1] + normal.getZ(v) * sun[2]) / length);
+        const glow = strength * facing * facing;
+        color.setXYZ(v, ...top.map((value, i) => { const base = under[i] + (value - under[i]) * up * up * (3 - 2 * up); return base + (lit[i] - base) * glow; }));
+      }
+      color.needsUpdate = true;
+    }
+  }
+
+  const state = { rain: 0, snow: 0, stars: 0, fireflies: 0, flash: 0, sway: 0, flashes: 0, clouds: 0 };
   let clock = 0;
+  let drift = 0;
   let sinceFlash = EFFECTS.lightning.everySeconds;
   const wrap = (value, size) => ((value % size) + size) % size;
 
@@ -391,6 +462,27 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
       snowGeometry.setDrawRange(0, count);
       snow.material.opacity = 0.5 + 0.4 * state.snow;
     }
+
+    // Clouds: as many as the cover asks for, blown along by the wind (they stand still with reduced motion). Each
+    // keeps its place in the world and is wrapped into the circle round the camera, where it grows from nothing at
+    // the rim: a cloud never appears at once, at the rim or when the cover changes.
+    if (!reducedMotion) drift += dt * (CLOUDS.speed[0] + (CLOUDS.speed[1] - CLOUDS.speed[0]) * weather.wind);
+    const wanted = CLOUDS.count * (CLOUDS.least + (1 - CLOUDS.least) * weather.cloud);
+    const ceiling = cy + CLOUDS.top; // over the camera wherever it is: a peak may stand up into the clouds
+    state.clouds = 0;
+    cloudList.forEach((cloud, n) => {
+      const there = Math.min(1, Math.max(0, wanted - n));
+      const dx = wrap(cloud.x + drift - cx + CLOUDS.reach, CLOUDS.reach * 2) - CLOUDS.reach;
+      const dz = wrap(cloud.z - cz + CLOUDS.reach, CLOUDS.reach * 2) - CLOUDS.reach;
+      const away = Math.hypot(dx, dz) / CLOUDS.reach;
+      const rim = Math.min(1, Math.max(0, (1 - away) / 0.22));
+      const scale = cloud.size * there * there * (3 - 2 * there) * rim * rim * (3 - 2 * rim);
+      cloud.mesh.visible = scale > 0.02;
+      if (!cloud.mesh.visible) return;
+      state.clouds += 1;
+      cloud.mesh.position.set(cx + dx, ceiling + cloud.lift - CLOUDS.drop * away * away, cz + dz);
+      cloud.mesh.scale.setScalar(scale);
+    });
 
     // Stars: out when the daylight is gone and the cloud is thin. They turn slowly, as the night does.
     state.stars = Math.max(0, 1 - weather.daylight * 3) * Math.max(0, 1 - weather.cloud * 1.5);
@@ -435,10 +527,12 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
   }
 
   return {
-    group, update, state,
+    group, update, state, setAtmosphere,
     dispose() {
       world.scene.remove(group);
       for (const object of [rain, snow, stars, fireflies]) { object.geometry.dispose(); object.material.dispose(); }
+      for (const shape of shapes) shape.dispose();
+      cloudMaterial.dispose();
     },
   };
 }

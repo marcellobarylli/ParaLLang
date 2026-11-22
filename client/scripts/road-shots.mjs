@@ -19,7 +19,7 @@ import { RoadProvider } from '../../server/test/road-helpers.js';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const DIST = join(ROOT, 'client', 'dist');
-const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '146', 'shots'));
+const OUT = resolve(process.argv[2] ?? join(ROOT, 'docs', 'rounds', '147', 'shots'));
 const ORIGIN = 'https://parallang.test';
 const BASE_PATH = '/ParaLLang/';
 const SEED = Number(process.env.ROAD_SEED ?? 4242);
@@ -138,18 +138,33 @@ async function run(browser, size, content) {
     await pin({ phase: 0.2 });
     await shot('02-hub');
     if (!/Morning · clear/.test(await page.locator('.weather-line').textContent())) fail('the hub does not show the weather of the level');
-    for (const [name, values, check] of [
-      ['11-dusk', { phase: 0.54 }, (w) => w.label.startsWith('Dusk')],
-      ['12-night', { phase: 0.78 }, (w) => w.stars > 0.5 && w.fireflies > 0.5],
-      ['13-rain', { phase: 0.3, rain: 0.6 }, (w) => w.rain > 0.5 && w.stars === 0],
-      ['14-storm-at-night', { phase: 0.8, rain: 0.95 }, (w) => w.rain > 0.9],
+    // Round 147: sunrise and sunset are looked at: the camera is put with its back to the site's far side, so the
+    // sun stands behind whoever waits there.
+    const faceSun = () => page.evaluate(() => {
+      const road = window.__parallangRoad;
+      const site = road.graph.node(window.__parallang.store.getState().road.at);
+      // A little to one side, so the sun stands beside the figure and not behind it.
+      const [x, z] = [Math.cos(road.weather.azimuth + 0.3), -Math.sin(road.weather.azimuth + 0.3) * 0.8 + 0.25];
+      road.director.stand(site, [site.x - x * 10, site.z - z * 10]);
+    });
+    for (const [name, values, check, toSun] of [
+      ['11-golden-hour', { phase: 0.52 }, (w) => w.clouds > 5, true],
+      ['12-sunset', { phase: 0.555 }, (w) => w.label.startsWith('Dusk') && w.clouds > 5, true],
+      ['13-afterglow', { phase: 0.575 }, (w) => w.clouds > 5, true],
+      ['14-night', { phase: 0.78 }, (w) => w.stars > 0.5 && w.fireflies > 0.5],
+      ['15-before-dawn', { phase: 0.985 }, (w) => w.label.startsWith('Dawn'), true],
+      ['16-sunrise', { phase: 0.005 }, (w) => w.label.startsWith('Dawn') && w.clouds > 5, true],
+      ['17-cloudy-noon', { phase: 0.28, cloud: 0.6 }, (w) => w.clouds > 25],
+      ['18-rain', { phase: 0.3, rain: 0.6 }, (w) => w.rain > 0.5 && w.stars === 0],
+      ['19-storm-at-night', { phase: 0.8, rain: 0.95 }, (w) => w.rain > 0.9],
     ]) {
       await pin(values);
+      if (toSun) { await faceSun(); await sleep(500); }
       const now = await sky();
       if (!check(now)) fail(`${name}: ${JSON.stringify(now)}`);
       await shot(name);
     }
-    report.push('weather: dusk, a starry night with fireflies, rain and a storm at night shown');
+    report.push('weather: golden hour, sunset, afterglow, night, before dawn, sunrise, a cloudy noon, rain and a storm at night shown');
     await pin({ phase: 0.2 });
     // The guide to the GitHub save, in Settings beside "Your save".
     await page.getByRole('button', { name: 'Settings' }).click();
@@ -157,7 +172,7 @@ async function run(browser, size, content) {
     await page.getByRole('region', { name: 'How to keep the saves on GitHub' }).scrollIntoViewIfNeeded();
     const store = await page.locator('.store-line').textContent();
     if (!/disk only/.test(store)) fail(`the guide does not say where the saves are: ${store}`);
-    await shot('15-save-guide');
+    await shot('20-save-guide');
     await page.getByRole('button', { name: 'Close', exact: true }).click();
     report.push('the save guide opens in Settings and reads the server\'s save store');
 

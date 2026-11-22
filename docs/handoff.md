@@ -284,6 +284,20 @@ pictures in [`rounds/144/shots/`](rounds/144/shots/).)
 - `client/src/components/SaveGuide.jsx` is the guide in Settings; its line comes from `GET /api/health`
   (`readSaveStore` in the store). Change the guide when the settings of `server/src/github-saves.js` change.
 
+
+### Sunsets, clouds and the road's map (round 147)
+
+- **The sky's colours** are the palettes at the top of `aesthetic/src/scene/atmosphere.js` (`SUNSET`, `SUNRISE`,
+  `GOLDEN_HOUR`, `AFTERGLOW`, `BEFORE_DAWN`, `GOLDEN_MORNING`) and `STOPS`, the sun's height at which each is the
+  whole sky. To change a sunset, change `SUNSET`; the tests hold it to orange, red and purple.
+- **The clouds** are in `createWeatherEffects` (`aesthetic/src/scene/endless.js`), with their numbers in
+  `EFFECTS.clouds`. They are coloured by `effects.setAtmosphere(preset)`, which `client/src/scene/roadView.js` calls
+  with the same values it gives the world.
+- **The map** is `client/src/roadMap.js`: `createMapView` (where a point of the world is in the picture) and
+  `renderMap` (the picture's pixels). `ROAD_MAP` holds the relief (3), how close the view may come, and the picture's
+  size. `RoadMap` in `client/src/components/Road.jsx` lays the sites over it with the same view.
+- Not deployed when written: it is on the session branch.
+
 ### Next
 
 - The world map's closed places get a level when they get a dungeon (round 121 left them without one).

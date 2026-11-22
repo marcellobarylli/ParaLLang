@@ -233,6 +233,11 @@ walked along it. It is in the web client only.
   flash with reduced motion), wind in the trees, and the sound of rain under the music. The hub's card shows the
   weather and the narrator is told it. To hold one still in the browser's console:
   `window.__parallangRoad.pinWeather({ phase: 0.78, rain: 0.9 })` (a storm at night), `pinWeather(null)` to let go.
+- **Sunsets, clouds and the map** (round 147). The sky has its own palettes for sunset (orange, red, purple) and
+  sunrise (gold, pink), blended by the sun's height in `aesthetic/src/scene/atmosphere.js`; a layer of clouds drifts
+  over the level and is lit by the sky. The road's map is an isometric picture of the landscape drawn by
+  `client/src/roadMap.js`. To look at a sunset: `window.__parallangRoad.pinWeather({ phase: 0.555 })`; a sunrise is
+  `phase: 0.005`.
 
 Pictures are in [`docs/rounds/146/shots/`](docs/rounds/146/shots/) (round 144's are in
 [`docs/rounds/144/shots/`](docs/rounds/144/shots/)). To take them again, and to play the road from
