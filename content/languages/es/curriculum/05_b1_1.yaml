@@ -1,0 +1,157 @@
+# Round 144: the Spanish words of curriculum stage B1.1 (the skeleton is content/curriculum/05_b1_1.yaml). Authored by
+# Claude from the functions of the B1 syllabi read for the round; no source page was opened for a single entry. For
+# the owner's review. The vocabulary shares one namespace with the earlier stages: an id defined in an earlier file is
+# reused here, never redefined, and no new entry repeats an earlier entry's form.
+stage: b1_1
+version: curriculum-b1-1-es-v1
+grammar:
+  opinions: "creo que and pienso que + indicative (no creo que takes the subjunctive, so the plain no lo creo is used here); en mi opinión; estoy de acuerdo; porque, por eso, por ejemplo."
+  advice: "Condicional of deber and poder: deberías, debería, podrías, podría; yo que tú + condicional; te aconsejo + infinitive."
+  stories: "Imperfecto for the scene (estaba, llovía, caminaba) against indefinido for the events (vi, llegó, volví); mientras, de repente, luego, al final."
+  problems: "Indefinido or perfecto for what went wrong (perdí, he perdido, olvidé); lo dejé and la dejé; hay un error; ¿qué puedo hacer?"
+  feelings: "estar with adjectives of feeling that agree (estoy contento, estoy preocupada); the negative imperative (no te preocupes, no se preocupe)."
+  polite_requests: "Condicional simple: podría, le importaría, me prestarías, me gustaría, preferiría, sería."
+lessons:
+  opinions_give:
+    i_think: { say: [creo_que, en_mi_opinion], examples: ["Creo que la ciudad es muy bonita.", "En mi opinión, la comida es buenísima."] }
+    ask_opinion: { say: [que_opinas, que_te_parece], examples: ["¿Qué opinas?", "¿Y a usted qué le parece?"] }
+    not_sure: { say: [depende], examples: ["Depende.", "No estoy seguro."] }
+  opinions_agree:
+    agree: { say: [estoy_de_acuerdo], examples: ["Estoy de acuerdo.", "Tienes razón."] }
+    disagree: { say: [no_estoy_de_acuerdo], examples: ["No estoy de acuerdo.", "Lo siento, pero no lo creo."] }
+    partly: { say: [en_parte], examples: ["En parte tienes razón.", "Puede ser."] }
+  opinions_reason:
+    reason: { say: [porque, por_eso], examples: ["Me gusta porque es tranquila.", "Es cara, por eso no voy."] }
+    example: { say: [por_ejemplo], examples: ["Por ejemplo, los trenes siempre llegan tarde.", "Por ejemplo, el pan está buenísimo."] }
+    important: { say: [lo_mas_importante], examples: ["Lo más importante es la gente.", "Lo importante es estar bien."] }
+  advice_ask:
+    problem: { say: [no_se_que_hacer], examples: ["Tengo un problema y no sé qué hacer.", "No sé qué hacer."] }
+    ask_advice: { say: [que_deberia_hacer], examples: ["¿Qué debería hacer?", "¿Qué me aconseja?"] }
+    in_my_place: { say: [en_mi_lugar], examples: ["¿Qué harías en mi lugar?", "¿Usted qué haría?"] }
+  advice_give:
+    should: { say: [deberias], examples: ["Deberías descansar.", "Debería hablar con un médico."] }
+    could: { say: [podrias], examples: ["Podrías ir en tren.", "Podría preguntar en la estación."] }
+    if_i_were_you: { say: [yo_que_tu, te_aconsejo], examples: ["Yo que tú, hablaría con él.", "Le aconsejo esperar."] }
+  advice_react:
+    good_advice: { say: [buen_consejo], examples: ["Es un buen consejo, gracias.", "¡Muy buen consejo!"] }
+    will_try: { say: [lo_intentare], examples: ["Lo intentaré.", "Vale, voy a intentarlo."] }
+    not_easy: { say: [no_es_facil], examples: ["No es tan fácil.", "Ya lo he intentado."] }
+  stories_scene:
+    once: { say: [un_dia], examples: ["Un día estaba en Madrid.", "Una vez perdí las llaves.", "El año pasado fui a Galicia."] }
+    where_i_was: { say: [estaba], examples: ["Estaba en el tren, leyendo.", "Estaba volviendo a casa."] }
+    while: { say: [mientras], examples: ["Mientras caminaba, llovía.", "Mientras esperaba el tren, leía."] }
+  stories_events:
+    suddenly: { say: [de_repente], examples: ["De repente vi un perro.", "De pronto llegó un hombre."] }
+    lost_found: { say: [perdi, encontre, olvide], examples: ["Perdí las llaves.", "Encontré una cartera.", "Olvidé el bolso en el tren."] }
+    then: { say: [luego], examples: ["Luego volví a casa.", "Después llamé a mi hermana."] }
+  stories_end:
+    in_the_end: { say: [al_final], examples: ["Al final encontré el camino.", "Al final todo salió bien."] }
+    luckily: { say: [por_suerte, que_pena], examples: ["Por suerte no estaba lejos.", "Por desgracia era demasiado tarde."] }
+    what_kind: { say: [raro, terrible, divertido], examples: ["Fue un día muy raro.", "Fue terrible.", "Fue muy divertido."] }
+  problems_lost:
+    lost_bag: { say: [[perdi], [maleta, bolso, cartera, pasaporte]], examples: ["He perdido la maleta.", "Perdí la cartera."] }
+    inside: { say: [dentro_habia], examples: ["Dentro estaban mis documentos.", "Dentro había un pasaporte y dinero."] }
+    where_left: { say: [lo_deje], examples: ["La dejé en el tren.", "Me lo dejé en el bar."] }
+  problems_missed:
+    missed: { say: [perdi_el_tren], examples: ["He perdido el tren.", "Perdí el autobús de las nueve."] }
+    why: { say: [llegue_tarde], examples: ["El primer tren llegó con retraso.", "Llegué tarde a la estación."] }
+    next_one: { say: [el_proximo_tren], examples: ["¿Cuándo sale el próximo tren?", "¿A qué hora sale el siguiente?"] }
+  problems_bill:
+    mistake: { say: [hay_un_error], examples: ["Perdone, hay un error en la cuenta.", "La cuenta está mal."] }
+    not_ordered: { say: [no_he_pedido], examples: ["No he pedido vino.", "No pedimos postre."] }
+    what_can: { say: [que_puedo_hacer], examples: ["¿Qué puedo hacer?", "¿Me puede ayudar?"] }
+  feelings_how:
+    happy: { say: [estoy_contento], examples: ["Hoy estoy contento.", "Estoy muy contenta."] }
+    low: { say: [estoy_preocupado, estoy_triste, estoy_aburrido, estoy_cansado], examples: ["Estoy un poco preocupado.", "Estoy triste.", "Me aburro."] }
+    surprised: { say: [estoy_sorprendido], examples: ["¡Qué sorpresa!", "No me lo esperaba."] }
+  feelings_ask:
+    whats_wrong: { say: [que_te_pasa], examples: ["¿Qué te pasa?", "¿Qué ha pasado?"] }
+    why_sad: { say: [estas_triste], examples: ["¿Por qué estás triste?", "¿Por qué está preocupada?"] }
+    can_i_help: { say: [puedo_ayudarte], examples: ["¿Puedo ayudarte?", "¿Puedo hacer algo?"] }
+  feelings_comfort:
+    understand: { say: [te_entiendo], examples: ["Te entiendo.", "Cuánto lo siento."] }
+    dont_worry: { say: [no_te_preocupes], examples: ["No te preocupes.", "Tranquila, no se preocupe."] }
+    all_right: { say: [todo_ira_bien], examples: ["Todo irá bien.", "Ya verás, todo va a salir bien."] }
+  polite_requests_favour:
+    could_you: { say: [podria_ayudarme, me_haces_un_favor], examples: ["¿Podría ayudarme, por favor?", "¿Me harías un favor?"] }
+    would_you_mind: { say: [le_importaria], examples: ["¿Le importaría abrir la ventana?", "¿Te importa esperar un momento?"] }
+    lend: { say: [me_prestarias], examples: ["¿Me prestarías un bolígrafo?", "¿Me podría prestar un paraguas?"] }
+  polite_requests_wish:
+    would_like: { say: [quisiera, me_encantaria], examples: ["Me gustaría ver el mar.", "Me encantaría quedarme un día más."] }
+    would_prefer: { say: [preferiria], examples: ["Preferiría una mesa cerca de la ventana.", "Preferiría salir mañana."] }
+    would_be: { say: [seria], examples: ["Sería genial quedarnos aquí.", "¿Sería posible cambiar de habitación?"] }
+  polite_requests_refuse:
+    afraid_not: { say: [me_temo_que_no, no_puedo], examples: ["Me temo que no, lo siento.", "Me gustaría, pero no puedo."] }
+    no_time: { say: [no_tengo_tiempo], examples: ["Hoy no tengo tiempo.", "Tengo mucha prisa."] }
+    later: { say: [mas_tarde], examples: ["Quizás más tarde.", "Puedo hacerlo más tarde."] }
+vocabulary:
+  # opinions
+  creo_que: { t: "creo que", pos: phrase, en: ["I think that", "I believe that"], forms: ["creo que", "pienso que", "me parece que", "opino que"], ex: ["Creo que es verdad.", "I think that it is true."], n: "Takes the ordinary indicative: creo que es caro." }
+  en_mi_opinion: { t: "en mi opinión", pos: phrase, en: ["in my opinion", "in my view"], forms: ["en mi opinión", "desde mi punto de vista", "a mi parecer", "a mi juicio"], ex: ["En mi opinión, es demasiado caro.", "In my opinion, it is too expensive."] }
+  que_opinas: { t: "qué opinas", pos: phrase, en: ["what do you think"], forms: ["qué opinas", "qué opina", "qué piensas", "qué piensa", "qué crees", "qué cree"], ex: ["Y tú, ¿qué opinas?", "And you, what do you think?"] }
+  depende: { t: "depende", pos: verb, en: ["it depends"], forms: ["depende", "no estoy seguro", "no estoy segura", "no sé", "no lo sé"], ex: ["Depende del tiempo.", "It depends on the weather."], n: "'No estoy seguro' is 'I am not sure'." }
+  estoy_de_acuerdo: { t: "estoy de acuerdo", pos: phrase, en: ["I agree"], forms: ["estoy de acuerdo", "tienes razón", "tiene razón", "es verdad", "es cierto"], ex: ["Estoy de acuerdo contigo.", "I agree with you."], n: "'Tienes razón' is 'you are right'." }
+  no_estoy_de_acuerdo: { t: "no estoy de acuerdo", pos: phrase, en: ["I don't agree", "I disagree"], forms: ["no estoy de acuerdo", "no estoy muy de acuerdo", "no creo", "no lo creo", "no es verdad", "no es cierto"], ex: ["Lo siento, no estoy de acuerdo.", "I'm sorry, I don't agree."] }
+  en_parte: { t: "en parte", pos: phrase, en: ["partly", "in part"], forms: ["en parte", "hasta cierto punto", "puede ser", "puede que sí"], ex: ["Es verdad solo en parte.", "It is only partly true."], n: "'Puede ser' is 'it may be so'." }
+  por_eso: { t: "por eso", pos: phrase, en: ["that is why", "so", "therefore"], forms: ["por eso", "así que", "por lo tanto"], ex: ["Llueve, por eso me quedo en casa.", "It is raining, that is why I am staying at home."] }
+  por_ejemplo: { t: "por ejemplo", pos: phrase, en: ["for example"], ex: ["Por ejemplo, los domingos todo está cerrado.", "For example, on Sundays everything is closed."] }
+  lo_mas_importante: { t: "lo más importante", pos: phrase, en: ["the most important thing"], forms: ["lo más importante", "lo importante", "es importante", "importante"], ex: ["Lo más importante es la salud.", "The most important thing is health."] }
+  # advice
+  no_se_que_hacer: { t: "no sé qué hacer", pos: phrase, en: ["I don't know what to do"], forms: ["no sé qué hacer", "tengo un problema"], ex: ["He perdido las llaves y no sé qué hacer.", "I have lost my keys and I don't know what to do."] }
+  que_deberia_hacer: { t: "qué debería hacer", pos: phrase, en: ["what should I do"], forms: ["qué debería hacer", "qué debo hacer", "qué hago", "qué me aconsejas", "qué me aconseja", "qué me recomiendas", "qué me recomienda"], ex: ["En tu opinión, ¿qué debería hacer?", "In your opinion, what should I do?"] }
+  en_mi_lugar: { t: "en mi lugar", pos: phrase, en: ["in my place", "if you were me"], forms: ["en mi lugar", "qué harías", "qué haría", "tú qué harías"], ex: ["¿Tú qué harías en mi lugar?", "What would you do in my place?"] }
+  deberias: { t: "deberías", pos: verb, en: ["you should", "you ought to"], forms: ["deberías", "debería", "deberíais", "tendrías que", "tendría que"], ex: ["Deberías dormir más.", "You should sleep more."], n: "The condicional of deber; 'debería' is the formal form." }
+  podrias: { t: "podrías", pos: verb, en: ["you could"], forms: ["podrías", "podría", "podríais"], ex: ["Podrías tomar el autobús.", "You could take the bus."], n: "The condicional of poder; 'podría' is the formal form." }
+  yo_que_tu: { t: "yo que tú", pos: phrase, en: ["if I were you"], forms: ["yo que tú", "yo que usted", "yo en tu lugar", "en tu lugar", "en su lugar"], ex: ["Yo que tú, me quedaría en casa.", "If I were you, I would stay at home."], n: "A fixed phrase, followed by the condicional." }
+  te_aconsejo: { t: "te aconsejo", pos: phrase, en: ["I advise you"], forms: ["te aconsejo", "le aconsejo", "os aconsejo", "te recomiendo", "le recomiendo"], ex: ["Te aconsejo salir temprano.", "I advise you to leave early."] }
+  buen_consejo: { t: "buen consejo", pos: phrase, en: ["good advice"], forms: ["buen consejo", "muy buen consejo", "gran consejo"], ex: ["Gracias, es un buen consejo.", "Thank you, that is good advice."] }
+  lo_intentare: { t: "lo intentaré", pos: phrase, en: ["I will try"], forms: ["lo intentaré", "voy a intentarlo", "lo voy a intentar", "lo probaré"], ex: ["No es fácil, pero lo intentaré.", "It is not easy, but I will try."] }
+  no_es_facil: { t: "no es fácil", pos: phrase, en: ["it is not easy"], forms: ["no es fácil", "no es tan fácil", "no es sencillo", "ya lo he intentado", "ya lo intenté"], ex: ["Para mí no es fácil.", "For me it is not easy."], n: "'Ya lo he intentado' is 'I have already tried'." }
+  # stories
+  un_dia: { t: "un día", pos: phrase, en: ["one day"], forms: ["un día", "una vez", "una mañana", "hace unos años", "hace muchos años", "el año pasado"], ex: ["Un día vi a un viejo amigo.", "One day I saw an old friend."], n: "'Una vez' is 'once'; 'el año pasado' is 'last year'." }
+  estaba: { t: "estaba", pos: verb, en: ["I was", "it was"], forms: ["estaba", "estábamos"], ex: ["Estaba esperando el autobús.", "I was waiting for the bus."], n: "With a gerund, for what was going on: estaba leyendo." }
+  mientras: { t: "mientras", pos: conjunction, en: ["while"], ex: ["Mientras comía, llegó Pablo.", "While I was eating, Pablo arrived."], n: "The background after mientras is in the imperfecto." }
+  de_repente: { t: "de repente", pos: phrase, en: ["suddenly", "all of a sudden"], forms: ["de repente", "de pronto", "de golpe"], ex: ["De repente empezó a llover.", "Suddenly it began to rain."] }
+  perdi: { t: "perdí", pos: verb, en: ["I lost"], forms: ["perdí", "perdimos", "he perdido"], ex: ["Perdí el billete.", "I lost my ticket."] }
+  encontre: { t: "encontré", pos: verb, en: ["I found"], forms: ["encontré", "he encontrado"], ex: ["Encontré un sombrero en la plaza.", "I found a hat in the square."] }
+  olvide: { t: "olvidé", pos: verb, en: ["I forgot"], forms: ["olvidé", "he olvidado", "me olvidé", "se me olvidó"], ex: ["Olvidé el billete en casa.", "I forgot my ticket at home."] }
+  luego: { t: "luego", pos: adverb, en: ["then", "afterwards"], forms: ["luego", "después", "entonces"], ex: ["Luego fuimos a cenar.", "Then we went to dinner."] }
+  al_final: { t: "al final", pos: phrase, en: ["in the end", "finally"], forms: ["al final", "por fin", "finalmente"], ex: ["Al final llegamos.", "In the end we arrived."] }
+  por_suerte: { t: "por suerte", pos: phrase, en: ["luckily", "fortunately"], forms: ["por suerte", "menos mal", "afortunadamente"], ex: ["Por suerte tenía un paraguas.", "Luckily I had an umbrella."] }
+  raro: { t: "raro", pos: adjective, en: ["strange", "odd"], forms: ["raro", "rara", "rarísimo", "extraño", "extraña"], ex: ["Es una historia rara.", "It is a strange story."] }
+  terrible: { t: "terrible", pos: adjective, en: ["terrible", "awful"], forms: ["terrible", "horrible"], ex: ["El viaje fue terrible.", "The journey was terrible."] }
+  # problems
+  maleta: { t: "maleta", pos: noun, en: ["suitcase"], forms: ["maleta", "la maleta", "maletas", "equipaje", "el equipaje"], ex: ["Mi maleta es roja.", "My suitcase is red."], n: "'El equipaje' is luggage in general." }
+  bolso: { t: "bolso", pos: noun, en: ["bag"], forms: ["bolso", "el bolso", "mochila", "la mochila"], ex: ["¿Dónde está mi bolso?", "Where is my bag?"], n: "A 'mochila' is a rucksack." }
+  cartera: { t: "cartera", pos: noun, en: ["wallet"], forms: ["cartera", "la cartera", "billetera", "monedero"], ex: ["La cartera estaba en el bolso.", "The wallet was in the bag."] }
+  pasaporte: { t: "pasaporte", pos: noun, en: ["passport"], forms: ["pasaporte", "el pasaporte", "documentos", "mis documentos"], ex: ["No encuentro el pasaporte.", "I can't find my passport."], n: "'Los documentos' are your papers." }
+  dentro_habia: { t: "dentro había", pos: phrase, en: ["inside there was", "inside it there was"], forms: ["dentro había", "dentro hay", "dentro estaba", "dentro estaban", "dentro tenía", "dentro"], ex: ["Dentro había dinero y un libro.", "Inside there was money and a book."] }
+  lo_deje: { t: "lo dejé", pos: phrase, en: ["I left it"], forms: ["lo dejé", "la dejé", "me lo dejé", "me la dejé", "lo he dejado", "la he dejado", "lo olvidé", "la olvidé", "lo perdí", "la perdí"], ex: ["Lo dejé en la habitación.", "I left it in the room."], n: "'Lo' for a masculine thing, 'la' for a feminine one: la maleta, la dejé." }
+  perdi_el_tren: { t: "perdí el tren", pos: phrase, en: ["I missed the train"], forms: ["perdí el tren", "he perdido el tren", "perdimos el tren", "perdí el autobús", "he perdido el autobús", "perdí el avión", "he perdido el avión"], ex: ["Perdí el tren de las ocho.", "I missed the eight o'clock train."], n: "Perder is both to lose a thing and to miss a train." }
+  llegue_tarde: { t: "llegué tarde", pos: phrase, en: ["I arrived late", "it arrived late"], forms: ["llegué tarde", "he llegado tarde", "llegó tarde", "llegó con retraso", "venía con retraso", "salió con retraso"], ex: ["Llegué tarde por el autobús.", "I arrived late because of the bus."] }
+  el_proximo_tren: { t: "el próximo tren", pos: phrase, en: ["the next train"], forms: ["el próximo tren", "el próximo autobús", "el próximo", "el siguiente tren", "el siguiente"], ex: ["El próximo tren sale a las diez.", "The next train leaves at ten."] }
+  hay_un_error: { t: "hay un error", pos: phrase, en: ["there is a mistake"], forms: ["hay un error", "hay una equivocación", "un error", "la cuenta está mal", "está mal"], ex: ["Creo que hay un error aquí.", "I think there is a mistake here."] }
+  no_he_pedido: { t: "no he pedido", pos: phrase, en: ["I didn't order", "I haven't ordered"], forms: ["no he pedido", "no hemos pedido", "no pedí", "no pedimos"], ex: ["No he pedido pescado.", "I didn't order fish."] }
+  que_puedo_hacer: { t: "qué puedo hacer", pos: phrase, en: ["what can I do"], forms: ["qué puedo hacer", "qué se puede hacer", "puede ayudarme", "me puede ayudar", "puedes ayudarme", "me puedes ayudar"], ex: ["Y ahora, ¿qué puedo hacer?", "And now what can I do?"], n: "'¿Me puede ayudar?' is 'can you help me?'." }
+  # feelings
+  estoy_contento: { t: "estoy contento", pos: phrase, en: ["I am happy", "I am glad"], forms: ["estoy contento", "estoy contenta", "estoy muy contento", "estoy muy contenta", "estoy feliz", "soy feliz"], ex: ["Estoy contento de verte.", "I am happy to see you."] }
+  estoy_preocupado: { t: "estoy preocupado", pos: phrase, en: ["I am worried"], forms: ["estoy preocupado", "estoy preocupada", "estoy un poco preocupado", "estoy un poco preocupada"], ex: ["Estoy preocupada por mi hermano.", "I am worried about my brother."] }
+  estoy_triste: { t: "estoy triste", pos: phrase, en: ["I am sad"], forms: ["estoy triste", "me siento triste"], ex: ["Hoy estoy triste.", "I am sad today."] }
+  estoy_aburrido: { t: "estoy aburrido", pos: phrase, en: ["I am bored"], forms: ["estoy aburrido", "estoy aburrida", "me aburro"], ex: ["Cuando llueve me aburro.", "When it rains I am bored."] }
+  estoy_sorprendido: { t: "estoy sorprendido", pos: phrase, en: ["I am surprised"], forms: ["estoy sorprendido", "estoy sorprendida", "me sorprendió", "me ha sorprendido", "qué sorpresa", "no me lo esperaba"], ex: ["Estoy sorprendido de verte aquí.", "I am surprised to see you here."], n: "'No me lo esperaba' is 'I didn't expect it'." }
+  que_te_pasa: { t: "qué te pasa", pos: phrase, en: ["what is wrong", "what is the matter"], forms: ["qué te pasa", "qué le pasa", "qué pasa", "qué ha pasado", "qué pasó", "te pasa algo"], ex: ["¿Qué te pasa? ¿Estás bien?", "What is wrong? Are you all right?"] }
+  estas_triste: { t: "estás triste", pos: phrase, en: ["you are sad", "are you sad"], forms: ["estás triste", "está triste", "estás preocupado", "estás preocupada", "está preocupado", "está preocupada", "estás enfadado", "estás enfadada"], ex: ["¿Por qué estás triste hoy?", "Why are you sad today?"] }
+  puedo_ayudarte: { t: "puedo ayudarte", pos: phrase, en: ["can I help you"], forms: ["puedo ayudarte", "puedo ayudarle", "puedo ayudar", "te puedo ayudar", "le puedo ayudar", "puedo hacer algo"], ex: ["¿Puedo ayudarte con la maleta?", "Can I help you with the suitcase?"] }
+  te_entiendo: { t: "te entiendo", pos: phrase, en: ["I understand you", "I understand"], forms: ["te entiendo", "le entiendo", "lo entiendo", "entiendo", "te comprendo", "cuánto lo siento"], ex: ["Te entiendo, es difícil.", "I understand, it is hard."] }
+  no_te_preocupes: { t: "no te preocupes", pos: phrase, en: ["don't worry"], forms: ["no te preocupes", "no se preocupe", "tranquilo", "tranquila"], ex: ["No te preocupes, yo me ocupo.", "Don't worry, I'll see to it."], n: "To a stranger: no se preocupe." }
+  todo_ira_bien: { t: "todo irá bien", pos: phrase, en: ["everything will be all right"], forms: ["todo irá bien", "todo va a salir bien", "todo saldrá bien", "ya pasará"], ex: ["Ya verás que todo irá bien.", "You'll see, everything will be all right."] }
+  # polite_requests
+  podria_ayudarme: { t: "podría ayudarme", pos: phrase, en: ["could you help me"], forms: ["podría ayudarme", "podrías ayudarme", "me podría ayudar", "me podrías ayudar"], ex: ["Perdone, ¿podría ayudarme?", "Excuse me, could you help me?"] }
+  me_haces_un_favor: { t: "me haces un favor", pos: phrase, en: ["will you do me a favour"], forms: ["me haces un favor", "me hace un favor", "me harías un favor", "me haría un favor", "un favor"], ex: ["¿Me haces un favor? Cierra la puerta.", "Will you do me a favour? Shut the door."] }
+  le_importaria: { t: "le importaría", pos: phrase, en: ["would you mind"], forms: ["le importaría", "te importaría", "le importa", "te importa", "os importa"], ex: ["¿Le importaría hablar más despacio?", "Would you mind speaking more slowly?"], n: "Followed by an infinitive." }
+  me_prestarias: { t: "me prestarías", pos: phrase, en: ["would you lend me"], forms: ["me prestarías", "me prestaría", "me prestas", "me presta", "me puedes prestar", "me puede prestar", "me podrías prestar", "me podría prestar", "podrías prestarme", "podría prestarme", "me dejas"], ex: ["¿Me prestarías diez euros?", "Would you lend me ten euros?"] }
+  preferiria: { t: "preferiría", pos: verb, en: ["I would prefer", "I would rather"], forms: ["preferiría", "preferiríamos"], ex: ["Preferiría quedarme en casa.", "I would rather stay at home."] }
+  seria: { t: "sería", pos: verb, en: ["it would be"], forms: ["sería", "sería genial", "sería mejor", "sería posible"], ex: ["Sería mejor salir temprano.", "It would be better to leave early."] }
+  me_temo_que_no: { t: "me temo que no", pos: phrase, en: ["I am afraid not"], forms: ["me temo que no", "no va a ser posible", "no es posible"], ex: ["¿Mañana? Me temo que no.", "Tomorrow? I am afraid not."] }
+  no_tengo_tiempo: { t: "no tengo tiempo", pos: phrase, en: ["I have no time", "I don't have time"], forms: ["no tengo tiempo", "no tengo mucho tiempo", "tengo prisa", "tengo mucha prisa", "voy con prisa"], ex: ["Lo siento, no tengo tiempo.", "I'm sorry, I have no time."], n: "'Tengo prisa' is 'I am in a hurry'." }
+  mas_tarde: { t: "más tarde", pos: phrase, en: ["later"], forms: ["más tarde", "dentro de un rato", "en un rato"], ex: ["Te llamo más tarde.", "I'll call you later."] }

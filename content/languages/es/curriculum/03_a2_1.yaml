@@ -1,0 +1,177 @@
+# Round 144: the Spanish words of curriculum stage A2.1 (the skeleton is content/curriculum/03_a2_1.yaml). Authored by
+# Claude from the functions of the A2 syllabi read for the round; no source page was opened for a single entry. For
+# the owner's review. The vocabulary shares one namespace with the earlier stages: an id defined in an earlier file is
+# reused here, never redefined, and no new entry repeats an earlier entry's form.
+stage: a2_1
+version: curriculum-a2-1-es-v1
+grammar:
+  past_did: "Pretérito indefinido of regular verbs: -é (compré, trabajé) and -í (comí, bebí); also hice and vi. The pretérito perfecto (he comido) is accepted. ayer, la semana pasada."
+  past_went: "Irregular indefinidos: fui (ir), estuve (estar); and salí, llegué, volví; con."
+  weather: "hace calor, hace frío, hace sol; llueve, nieva; en verano, en invierno; cuando."
+  restaurant: "quisiera with an infinitive (quisiera reservar); de primero, de segundo, de postre; otro, otra."
+  health: "me duele and me duelen; tener with ailments (tengo fiebre) and estar (estoy resfriado); tengo que with an infinitive."
+  plans: "querer, tener que and poder with an infinitive (quiero, tengo que, puedo); ir a + infinitive for the near future."
+lessons:
+  past_did_yesterday:
+    ate: { say: [[ayer], [comi, bebi]], examples: ["Ayer comí una pizza.", "Anoche bebí un té."] }
+    worked: { say: [trabaje, estudie], examples: ["Trabajé mucho.", "No trabajé, estudié."] }
+    ask_did: { say: [que_hiciste], examples: ["¿Qué hiciste ayer?", "¿Qué hizo anoche?"] }
+  past_did_bought:
+    bought: { say: [compre], examples: ["Compré una chaqueta.", "He comprado pan."] }
+    paid: { say: [pague], examples: ["Pagué veinte euros.", "Gasté diez euros."] }
+    saw: { say: [vi], examples: ["Vi una película.", "Vi a mi hermana."] }
+  past_did_week:
+    last_week: { say: [la_semana_pasada], examples: ["La semana pasada trabajé mucho.", "La semana pasada vi a un amigo."] }
+    made: { say: [hice], examples: ["Hice una tarta.", "Hice la compra."] }
+    met: { say: [quede_con, hable], examples: ["Quedé con un amigo.", "Hablé con mi madre."] }
+  past_went_where:
+    went: { say: [fui], examples: ["Ayer fui a la playa.", "Fui a Madrid."] }
+    stayed: { say: [estuve, me_quede], examples: ["Estuve en Barcelona.", "Me quedé en casa."] }
+    ask_where: { say: [adonde_fuiste], examples: ["¿Adónde fuiste?", "¿Adónde fue ayer?"] }
+  past_went_when:
+    left: { say: [sali], examples: ["Salí a las ocho.", "Salí el lunes."] }
+    arrived: { say: [llegue], examples: ["Llegué anoche.", "Llegué a las diez."] }
+    came_back: { say: [volvi], examples: ["Volví el domingo.", "Volví ayer."] }
+  past_went_with:
+    with_whom: { say: [con, solo], examples: ["Fui con un amigo.", "Fui sola."] }
+    ask_with: { say: [con_quien], examples: ["¿Con quién fuiste?", "¿Con quién fue?"] }
+    how_was: { say: [lo_pase_bien, fue_genial], examples: ["Lo pasé muy bien.", "Fue genial."] }
+  weather_today:
+    ask_weather: { say: [que_tiempo_hace], examples: ["¿Qué tiempo hace?", "¿Qué tiempo hace hoy?"] }
+    hot_cold: { say: [hace_calor, hace_frio], examples: ["Hoy hace calor.", "Hace mucho frío."] }
+    sun_rain: { say: [hace_sol, llueve, hace_viento, nieva], examples: ["Hace sol.", "Llueve.", "Hace viento."] }
+  weather_seasons:
+    ask_season: { say: [que_estacion], examples: ["¿Qué estación prefieres?", "¿Cuál es tu estación favorita?"] }
+    favourite: { say: [verano, invierno, primavera, otono], examples: ["Prefiero el verano.", "Me gusta la primavera."] }
+    in_season: { say: [[verano, invierno, primavera, otono], [hace_calor, hace_frio, llueve, nieva, hace_sol, hace_viento]], examples: ["En invierno hace frío.", "En verano hace mucho calor.", "En otoño llueve mucho."] }
+  weather_rain:
+    was: { say: [hizo_frio, llovio], examples: ["Ayer hizo frío.", "Ayer llovió."] }
+    when_rains: { say: [cuando_llueve], examples: ["Cuando llueve me quedo en casa.", "Cuando llueve leo un libro."] }
+    fine_weather: { say: [buen_tiempo], examples: ["Cuando hace buen tiempo voy a la playa.", "Cuando hace buen tiempo salgo."] }
+  restaurant_book:
+    book: { say: [reservar], examples: ["Quisiera reservar una mesa.", "¿Puedo reservar una mesa?"] }
+    how_many: { say: [personas], examples: ["Para dos personas.", "Una mesa para cuatro personas."] }
+    for_when: { say: [para_esta_noche], examples: ["Para esta noche, a las nueve.", "Para mañana por la noche."] }
+  restaurant_order:
+    starter: { say: [de_primero], examples: ["De primero, quiero la sopa.", "De entrante, una ensalada."] }
+    main: { say: [[de_segundo], [carne, pescado, pollo]], examples: ["De segundo, quiero pescado.", "De segundo, pollo con patatas."] }
+    dessert: { say: [postre], examples: ["De postre, un helado.", "Quiero un postre, por favor."] }
+  restaurant_wrong:
+    cold: { say: [frio, salado], examples: ["La sopa está fría.", "Está muy salado."] }
+    missing: { say: [[falta], [tenedor, cuchillo, vaso, pan]], examples: ["Falta un tenedor.", "Faltan los vasos.", "Falta el pan."] }
+    another: { say: [otro], examples: ["¿Me trae otro tenedor?", "Otra copa, por favor."] }
+  health_hurts:
+    not_well: { say: [no_estoy_bien], examples: ["No estoy bien.", "Me encuentro mal."] }
+    hurts: { say: [[me_duele], [cabeza, estomago, garganta, muela, espalda]], examples: ["Me duele la cabeza.", "Tengo dolor de garganta.", "Me duelen las muelas."] }
+    since: { say: [desde_ayer], examples: ["Desde ayer.", "Me duele desde hace dos días."] }
+  health_cold:
+    cold_fever: { say: [estoy_resfriado, tengo_fiebre, tengo_tos], examples: ["Estoy resfriado.", "Tengo fiebre.", "Tengo tos."] }
+    tired: { say: [estoy_cansado], examples: ["Estoy muy cansado.", "Estoy cansada."] }
+    must_rest: { say: [tengo_que_descansar], examples: ["Tengo que descansar.", "Tengo que quedarme en la cama."] }
+  health_help:
+    need: { say: [[necesito], [medico, farmacia]], examples: ["Necesito un médico.", "Necesito una farmacia."] }
+    something_for: { say: [algo_para], examples: ["¿Tiene algo para el dolor de cabeza?", "Quisiera algo para la tos."] }
+    how_often: { say: [cuantas_veces], examples: ["¿Cuántas veces al día?", "¿Cuántas veces tengo que tomarlo?"] }
+  plans_want:
+    want: { say: [quiero, tengo_ganas_de], examples: ["Quiero ir a la playa.", "Tengo ganas de dormir."] }
+    ask_want: { say: [que_quieres_hacer], examples: ["¿Qué quieres hacer?", "¿Qué quiere hacer mañana?"] }
+    can: { say: [puedo, no_puedo], examples: ["El sábado puedo ir.", "El domingo no puedo."] }
+  plans_must:
+    must: { say: [tengo_que], examples: ["Tengo que trabajar el sábado.", "Debo estudiar."] }
+    cannot_because: { say: [[no_puedo], [tengo_que]], examples: ["No puedo, tengo que trabajar.", "No puedo ir porque tengo que estudiar."] }
+    ask_must: { say: [tienes_que], examples: ["¿Tienes que trabajar mañana?", "¿Tiene que trabajar el sábado?"] }
+  plans_going:
+    going_to: { say: [voy_a], examples: ["Mañana voy a ir a la playa.", "Voy a quedarme en casa."] }
+    next_week: { say: [la_semana_que_viene], examples: ["La semana que viene voy a ir a Madrid.", "La próxima semana trabajo."] }
+    about_to: { say: [estoy_a_punto_de], examples: ["Estoy a punto de salir.", "Ya me voy."] }
+vocabulary:
+  # past_did
+  ayer: { t: "ayer", pos: adverb, en: ["yesterday"], forms: ["ayer", "anoche"], ex: ["Ayer trabajé.", "Yesterday I worked."], n: "'Anoche' is last night." }
+  comi: { t: "comí", pos: verb, en: ["I ate"], forms: ["comí", "comimos", "he comido", "hemos comido"], ex: ["Comí un bocadillo.", "I ate a sandwich."], n: "The past of -er and -ir verbs ends in -í: comí, bebí, salí." }
+  bebi: { t: "bebí", pos: verb, en: ["I drank"], forms: ["bebí", "bebimos", "he bebido", "tomé", "he tomado"], ex: ["Bebí un café.", "I drank a coffee."] }
+  trabaje: { t: "trabajé", pos: verb, en: ["I worked"], forms: ["trabajé", "he trabajado"], ex: ["Ayer trabajé hasta las ocho.", "Yesterday I worked until eight."], n: "The past of -ar verbs ends in -é: trabajé, compré, hablé." }
+  estudie: { t: "estudié", pos: verb, en: ["I studied"], forms: ["estudié", "he estudiado"], ex: ["Estudié todo el día.", "I studied all day."] }
+  que_hiciste: { t: "qué hiciste", pos: phrase, en: ["what did you do"], forms: ["qué hiciste", "qué hizo", "qué hicisteis", "qué has hecho", "qué ha hecho"], ex: ["¿Qué hiciste el sábado?", "What did you do on Saturday?"] }
+  compre: { t: "compré", pos: verb, en: ["I bought"], forms: ["compré", "compramos", "he comprado"], ex: ["Compré un sombrero.", "I bought a hat."] }
+  pague: { t: "pagué", pos: verb, en: ["I paid"], forms: ["pagué", "he pagado", "gasté"], ex: ["Pagué diez euros.", "I paid ten euros."], n: "'Gasté' is 'I spent'." }
+  vi: { t: "vi", pos: verb, en: ["I saw"], forms: ["vi", "vimos", "he visto"], ex: ["Vi una película muy buena.", "I saw a very good film."], n: "A person you saw takes a: vi a Marta." }
+  la_semana_pasada: { t: "la semana pasada", pos: phrase, en: ["last week"], forms: ["la semana pasada", "semana pasada"], ex: ["La semana pasada estudié mucho.", "Last week I studied a lot."] }
+  hice: { t: "hice", pos: verb, en: ["I did", "I made"], forms: ["hice", "hicimos", "he hecho"], ex: ["Hice la compra.", "I did the shopping."] }
+  quede_con: { t: "quedé con", pos: phrase, en: ["I met up with", "I met"], forms: ["quedé con", "he quedado con", "me encontré con"], ex: ["Quedé con Marta en la plaza.", "I met up with Marta in the square."] }
+  hable: { t: "hablé", pos: verb, en: ["I spoke", "I talked"], forms: ["hablé", "he hablado"], ex: ["Hablé con el médico.", "I spoke to the doctor."] }
+  # past_went
+  fui: { t: "fui", pos: verb, en: ["I went"], forms: ["fui", "fuimos", "he ido", "hemos ido"], ex: ["Fui al supermercado.", "I went to the supermarket."], n: "The same word is the past of ser: fui feliz, 'I was happy'." }
+  estuve: { t: "estuve", pos: verb, en: ["I was", "I have been"], forms: ["estuve", "estuvimos", "he estado"], ex: ["Estuve en Sevilla.", "I was in Seville."] }
+  me_quede: { t: "me quedé", pos: phrase, en: ["I stayed"], forms: ["me quedé", "me he quedado", "nos quedamos"], ex: ["Me quedé en casa.", "I stayed at home."] }
+  adonde_fuiste: { t: "adónde fuiste", pos: phrase, en: ["where did you go"], forms: ["adónde fuiste", "a dónde fuiste", "dónde fuiste", "adónde fue", "a dónde fue", "adónde fuisteis", "adónde has ido", "dónde has ido"], ex: ["¿Adónde fuiste ayer?", "Where did you go yesterday?"] }
+  sali: { t: "salí", pos: verb, en: ["I left", "I set off", "I went out"], forms: ["salí", "salimos", "he salido"], ex: ["Salí a las siete.", "I left at seven."] }
+  llegue: { t: "llegué", pos: verb, en: ["I arrived"], forms: ["llegué", "llegamos", "he llegado"], ex: ["Llegué a las nueve.", "I arrived at nine."] }
+  volvi: { t: "volví", pos: verb, en: ["I came back", "I returned"], forms: ["volví", "volvimos", "he vuelto", "regresé"], ex: ["Volví el sábado.", "I came back on Saturday."] }
+  con: { t: "con", pos: preposition, en: ["with"], ex: ["Fui con mi hermano.", "I went with my brother."] }
+  solo: { t: "solo", pos: adjective, en: ["alone", "on my own"], forms: ["solo", "sola"], ex: ["Fui sola.", "I went on my own."] }
+  con_quien: { t: "con quién", pos: phrase, en: ["who with", "with whom"], forms: ["con quién", "con quiénes"], ex: ["¿Con quién fuiste?", "Who did you go with?"] }
+  lo_pase_bien: { t: "lo pasé bien", pos: phrase, en: ["I had a good time", "I enjoyed myself"], forms: ["lo pasé bien", "lo pasé muy bien", "me lo pasé bien", "me lo pasé muy bien", "lo he pasado bien", "lo pasamos bien", "me divertí"], ex: ["Lo pasé muy bien en la playa.", "I had a very good time at the beach."] }
+  fue_genial: { t: "fue genial", pos: phrase, en: ["it was great", "it was lovely"], forms: ["fue genial", "fue muy bonito", "fue precioso", "estuvo genial", "estuvo muy bien"], ex: ["Fue genial, gracias.", "It was great, thank you."] }
+  # weather
+  que_tiempo_hace: { t: "qué tiempo hace", pos: phrase, en: ["what is the weather like"], forms: ["qué tiempo hace", "cómo está el tiempo", "qué tal el tiempo"], ex: ["¿Qué tiempo hace en Madrid?", "What is the weather like in Madrid?"] }
+  hace_calor: { t: "hace calor", pos: phrase, en: ["it is hot", "it is warm"], forms: ["hace calor", "hace mucho calor"], ex: ["Hoy hace calor.", "It is hot today."] }
+  hace_frio: { t: "hace frío", pos: phrase, en: ["it is cold"], forms: ["hace frío", "hace mucho frío"], ex: ["Hace frío por la noche.", "It is cold at night."] }
+  hace_sol: { t: "hace sol", pos: phrase, en: ["it is sunny"], forms: ["hace sol", "hay sol"], ex: ["Hoy hace sol.", "It is sunny today."] }
+  llueve: { t: "llueve", pos: verb, en: ["it is raining", "it rains"], forms: ["llueve", "está lloviendo"], ex: ["Llueve desde ayer.", "It has been raining since yesterday."] }
+  hace_viento: { t: "hace viento", pos: phrase, en: ["it is windy"], forms: ["hace viento", "hay viento"], ex: ["Hoy hace viento.", "It is windy today."] }
+  nieva: { t: "nieva", pos: verb, en: ["it is snowing", "it snows"], forms: ["nieva", "está nevando"], ex: ["En la montaña nieva.", "It is snowing in the mountains."] }
+  que_estacion: { t: "qué estación", pos: phrase, en: ["which season"], forms: ["qué estación", "estación favorita", "estación preferida"], ex: ["¿Qué estación te gusta?", "Which season do you like?"], n: "'Estación' is a season as well as a station." }
+  verano: { t: "verano", pos: noun, en: ["summer"], forms: ["verano", "el verano", "en verano"], ex: ["En verano voy a la playa.", "In summer I go to the beach."] }
+  invierno: { t: "invierno", pos: noun, en: ["winter"], forms: ["invierno", "el invierno", "en invierno"], ex: ["En invierno nieva.", "In winter it snows."] }
+  primavera: { t: "primavera", pos: noun, en: ["spring"], forms: ["primavera", "la primavera", "en primavera"], ex: ["La primavera es bonita.", "Spring is lovely."] }
+  otono: { t: "otoño", pos: noun, en: ["autumn", "fall"], forms: ["otoño", "el otoño", "en otoño"], ex: ["En otoño llueve.", "In autumn it rains."] }
+  hizo_frio: { t: "hizo frío", pos: phrase, en: ["it was cold"], forms: ["hizo frío", "hizo calor", "hacía frío", "hacía calor", "hizo sol", "hizo buen tiempo", "hizo mal tiempo"], ex: ["Ayer hizo frío.", "It was cold yesterday."], n: "'Hizo calor' is 'it was hot'." }
+  llovio: { t: "llovió", pos: verb, en: ["it rained"], forms: ["llovió", "ha llovido", "llovía", "nevó"], ex: ["Llovió todo el día.", "It rained all day."] }
+  cuando_llueve: { t: "cuando llueve", pos: phrase, en: ["when it rains"], ex: ["Cuando llueve tomo el autobús.", "When it rains I take the bus."] }
+  buen_tiempo: { t: "buen tiempo", pos: phrase, en: ["fine weather", "good weather"], forms: ["buen tiempo", "hace buen tiempo", "cuando hace buen tiempo"], ex: ["Hoy hace buen tiempo.", "The weather is fine today."] }
+  # restaurant
+  reservar: { t: "reservar", pos: verb, en: ["to book", "to reserve"], forms: ["reservar", "reservar una mesa", "he reservado", "una reserva"], ex: ["Quisiera reservar para mañana.", "I would like to book for tomorrow."] }
+  personas: { t: "personas", pos: noun, en: ["people"], forms: ["personas", "persona"], ex: ["Somos cuatro personas.", "There are four of us."] }
+  para_esta_noche: { t: "para esta noche", pos: phrase, en: ["for tonight", "for this evening"], forms: ["para esta noche", "para hoy", "para mañana", "para mañana por la noche"], ex: ["Una mesa para esta noche.", "A table for tonight."] }
+  de_primero: { t: "de primero", pos: phrase, en: ["as a starter", "as a first course"], forms: ["de primero", "como primero", "de entrante", "como entrante"], ex: ["De primero, una ensalada.", "As a starter, a salad."] }
+  de_segundo: { t: "de segundo", pos: phrase, en: ["as a main course", "as a second course"], forms: ["de segundo", "como segundo", "de plato principal"], ex: ["De segundo, quisiera carne.", "As a main course I would like meat."] }
+  carne: { t: "carne", pos: noun, en: ["meat"], forms: ["carne", "la carne"], ex: ["No como carne.", "I don't eat meat."] }
+  pescado: { t: "pescado", pos: noun, en: ["fish"], forms: ["pescado", "el pescado"], ex: ["El pescado está bueno.", "The fish is good."] }
+  pollo: { t: "pollo", pos: noun, en: ["chicken"], forms: ["pollo", "el pollo"], ex: ["Pollo con patatas.", "Chicken with potatoes."] }
+  postre: { t: "postre", pos: noun, en: ["dessert"], forms: ["postre", "el postre", "un postre", "de postre"], ex: ["De postre, un helado.", "For dessert, an ice cream."] }
+  frio: { t: "frío", pos: adjective, en: ["cold"], forms: ["frío", "fría", "fríos", "frías"], ex: ["La sopa está fría.", "The soup is cold."] }
+  salado: { t: "salado", pos: adjective, en: ["salty"], forms: ["salado", "salada", "muy salado", "muy salada", "demasiado salado"], ex: ["El pescado está muy salado.", "The fish is very salty."] }
+  falta: { t: "falta", pos: verb, en: ["is missing", "there is no"], forms: ["falta", "faltan"], ex: ["Falta un cuchillo.", "A knife is missing."], n: "'Faltan' when several things are missing." }
+  tenedor: { t: "tenedor", pos: noun, en: ["fork"], forms: ["tenedor", "tenedores"], ex: ["Un tenedor, por favor.", "A fork, please."] }
+  cuchillo: { t: "cuchillo", pos: noun, en: ["knife"], forms: ["cuchillo", "cuchillos"], ex: ["El cuchillo está aquí.", "The knife is here."] }
+  vaso: { t: "vaso", pos: noun, en: ["glass"], forms: ["vaso", "vasos", "copa", "copas"], ex: ["Un vaso de agua.", "A glass of water."], n: "A 'copa' is a glass with a stem, for wine." }
+  pan: { t: "pan", pos: noun, en: ["bread"], forms: ["pan", "el pan"], ex: ["¿Un poco más de pan?", "A little more bread?"] }
+  otro: { t: "otro", pos: adjective, en: ["another", "another one"], forms: ["otro", "otra"], ex: ["Quisiera otro café.", "I would like another coffee."], n: "Never 'un otro': otro café, otra cerveza." }
+  # health
+  no_estoy_bien: { t: "no estoy bien", pos: phrase, en: ["I don't feel well", "I am not well"], forms: ["no estoy bien", "no me encuentro bien", "me encuentro mal", "me siento mal", "estoy enfermo", "estoy enferma"], ex: ["Hoy no estoy bien.", "I don't feel well today."] }
+  me_duele: { t: "me duele", pos: phrase, en: ["it hurts", "my ... hurts"], forms: ["me duele", "me duelen", "tengo dolor de"], ex: ["Me duele la espalda.", "My back hurts."], n: "'Me duelen' with a plural: me duelen las muelas." }
+  cabeza: { t: "cabeza", pos: noun, en: ["head"], forms: ["cabeza", "la cabeza"], ex: ["Tengo dolor de cabeza.", "I have a headache."] }
+  estomago: { t: "estómago", pos: noun, en: ["stomach"], forms: ["estómago", "el estómago", "barriga", "tripa"], ex: ["Me duele el estómago.", "My stomach hurts."] }
+  garganta: { t: "garganta", pos: noun, en: ["throat"], forms: ["garganta", "la garganta"], ex: ["Me duele la garganta.", "I have a sore throat."] }
+  muela: { t: "muela", pos: noun, en: ["tooth"], forms: ["muela", "muelas", "diente", "dientes"], ex: ["Me duele una muela.", "I have toothache."] }
+  espalda: { t: "espalda", pos: noun, en: ["back"], forms: ["espalda", "la espalda"], ex: ["Me duele la espalda.", "My back hurts."] }
+  desde_ayer: { t: "desde ayer", pos: phrase, en: ["since yesterday"], forms: ["desde ayer", "desde anoche", "desde hoy", "desde esta mañana", "desde hace dos días", "desde hace tres días", "desde hace unos días", "desde hace una semana"], ex: ["Tengo fiebre desde ayer.", "I have had a fever since yesterday."], n: "'Desde hace' with a length of time: desde hace dos días." }
+  estoy_resfriado: { t: "estoy resfriado", pos: phrase, en: ["I have a cold"], forms: ["estoy resfriado", "estoy resfriada", "tengo un resfriado", "resfriado", "estoy constipado", "estoy constipada", "tengo catarro"], ex: ["Estoy resfriada desde el lunes.", "I have had a cold since Monday."], n: "'Constipado' is a cold, not constipation." }
+  tengo_fiebre: { t: "tengo fiebre", pos: phrase, en: ["I have a fever", "I have a temperature"], forms: ["tengo fiebre", "fiebre"], ex: ["Tengo fiebre alta.", "I have a high fever."] }
+  tengo_tos: { t: "tengo tos", pos: phrase, en: ["I have a cough"], forms: ["tengo tos", "tos"], ex: ["Tengo tos desde hace una semana.", "I have had a cough for a week."] }
+  estoy_cansado: { t: "estoy cansado", pos: phrase, en: ["I am tired"], forms: ["estoy cansado", "estoy cansada", "estoy muy cansado", "estoy muy cansada", "estoy cansadísimo", "estoy cansadísima"], ex: ["Esta noche estoy cansada.", "I am tired tonight."] }
+  tengo_que_descansar: { t: "tengo que descansar", pos: phrase, en: ["I must rest", "I have to rest"], forms: ["tengo que descansar", "debo descansar", "tengo que quedarme en la cama", "tengo que dormir"], ex: ["El médico dice que tengo que descansar.", "The doctor says I must rest."] }
+  necesito: { t: "necesito", pos: verb, en: ["I need"], forms: ["necesito", "me hace falta"], ex: ["Necesito ayuda.", "I need help."] }
+  medico: { t: "médico", pos: noun, en: ["doctor"], forms: ["médico", "un médico", "el médico", "médica", "doctor", "doctora"], ex: ["Tengo que ir al médico.", "I have to go to the doctor."] }
+  algo_para: { t: "algo para", pos: phrase, en: ["something for"], forms: ["algo para", "algo para el", "algo para la", "algo contra"], ex: ["¿Tiene algo para la fiebre?", "Do you have something for a fever?"] }
+  cuantas_veces: { t: "cuántas veces", pos: phrase, en: ["how many times", "how often"], forms: ["cuántas veces", "cuántas veces al día"], ex: ["¿Cuántas veces al día?", "How many times a day?"] }
+  # plans
+  tengo_ganas_de: { t: "tengo ganas de", pos: phrase, en: ["I feel like", "I want to"], ex: ["Tengo ganas de ver el mar.", "I feel like seeing the sea."] }
+  que_quieres_hacer: { t: "qué quieres hacer", pos: phrase, en: ["what do you want to do"], forms: ["qué quieres hacer", "qué quiere hacer", "qué queréis hacer", "qué quieren hacer"], ex: ["¿Qué quieres hacer esta noche?", "What do you want to do tonight?"] }
+  puedo: { t: "puedo", pos: verb, en: ["I can"], forms: ["puedo", "podemos"], ex: ["Mañana puedo ir.", "I can come tomorrow."] }
+  no_puedo: { t: "no puedo", pos: phrase, en: ["I can't", "I cannot"], forms: ["no puedo", "no podemos"], ex: ["Lo siento, no puedo.", "I'm sorry, I can't."] }
+  tengo_que: { t: "tengo que", pos: phrase, en: ["I have to", "I must"], forms: ["tengo que", "tenemos que", "debo"], ex: ["Tengo que comprar pan.", "I have to buy bread."] }
+  tienes_que: { t: "tienes que", pos: phrase, en: ["you have to", "do you have to"], forms: ["tienes que", "tiene que", "tenéis que", "debes"], ex: ["¿Tienes que trabajar el domingo?", "Do you have to work on Sunday?"] }
+  voy_a: { t: "voy a", pos: phrase, en: ["I am going to"], forms: ["voy a", "vamos a"], ex: ["Voy a salir el sábado.", "I am going to leave on Saturday."], n: "Ir a with an infinitive is the everyday future." }
+  la_semana_que_viene: { t: "la semana que viene", pos: phrase, en: ["next week"], forms: ["la semana que viene", "la próxima semana", "la semana próxima"], ex: ["La semana que viene trabajo.", "Next week I am working."] }
+  estoy_a_punto_de: { t: "estoy a punto de", pos: phrase, en: ["I am about to"], forms: ["estoy a punto de", "ya me voy", "me voy ya"], ex: ["Estoy a punto de acostarme.", "I am about to go to bed."], n: "'Ya me voy' is 'I'm off now'." }

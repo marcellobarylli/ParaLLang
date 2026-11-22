@@ -11,6 +11,7 @@ import { AppError, conflictError, retryableError, validationError } from './erro
 import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
+import { roadMethods } from './road/service.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
 export const HELD_NOTE = 'A held objective was said correctly but does not count: an earlier objective comes first. Do not celebrate it or treat it as done, and do not give its answer; the player must say it again after the earlier objective.';
@@ -110,8 +111,12 @@ export const PREFETCH_MAX_GREETINGS = 100;
 const greetingKey = (learnerId, definitionId) => `${learnerId}\u0000${definitionId}`;
 
 export class LearningService {
-  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false, prefetch = false, prefetchDwellMs = PREFETCH_DWELL_MS, prefetchRetries = PREFETCH_RETRIES, narrationRetryMs = NARRATION_RETRY_MS }) {
+  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false, prefetch = false, prefetchDwellMs = PREFETCH_DWELL_MS, prefetchRetries = PREFETCH_RETRIES, narrationRetryMs = NARRATION_RETRY_MS, seedSource = null }) {
     this.provider = provider;
+    // Round 144: where a new road's seed comes from (a test fixes it), and one lookup for a vocabulary id: the pack's
+    // entries first, then the curriculum's own (road/curriculum.js keeps them apart from the pack's).
+    this.seedSource = seedSource;
+    this.lookup = { get: (id) => this.content.vocabularyById.get(id) ?? this.content.curriculum?.vocabulary.byId.get(id) };
     // Round 076: the greeting written while the player reads the map card (off unless switched on). One arrival per
     // learner; greetings by learner and encounter until a start takes them; counters only.
     this.prefetchEnabled = prefetch;
@@ -192,7 +197,20 @@ export class LearningService {
   }
 
   // Round 006: each session plays one encounter definition ({ encounter, character }) from the pack.
-  definition(session) { return this.content.encounters.get(session?.definitionId ?? this.content.defaultEncounterId); }
+  // Round 144: a conversation of The Long Way Home has no authored definition: it is built from the session's road
+  // data (road/service.js), the same one every time.
+  definition(session) {
+    if (session?.road) return this.roadDefinition(session.road);
+    return this.content.encounters.get(session?.definitionId ?? this.content.defaultEncounterId);
+  }
+
+  // Round 144: a vocabulary entry's content version, the pack's or the curriculum's; and every entry of both, for
+  // the checks that look for a learner's cards in a text.
+  entryVersion(id) { return this.content.entryVersion(id) ?? this.content.curriculum?.vocabulary.versionOf(id); }
+  allEntries() {
+    this.everyEntry ??= [...this.content.vocabulary.entries, ...(this.content.curriculum?.vocabulary.entries ?? [])];
+    return this.everyEntry;
+  }
 
   // Round 121: `bonus` is the level's addition to the base ratio, taken when the conversation starts (a session's
   // ratioBonus). The existing cap of 1 applies to the sum.
@@ -224,7 +242,7 @@ export class LearningService {
   // Round 022: a party conversation is set wherever the player stood when it began; other encounters at their location.
   sceneLocationId(session) { return session?.locationId ?? this.definition(session).encounter.location; }
 
-  sceneName(session) { return this.content.world.locationsById.get(this.sceneLocationId(session))?.name ?? this.sceneLocationId(session); }
+  sceneName(session) { return this.definition(session).scene?.name ?? this.content.world.locationsById.get(this.sceneLocationId(session))?.name ?? this.sceneLocationId(session); }
 
   // Round 047 (backlog G4): a home may have deeper party conversations (`after_conversations`). With `count`
   // finished conversations, the deepest one unlocked is offered; count 0 gives the first tier.
@@ -238,13 +256,13 @@ export class LearningService {
   discover(envelope, vocabularyIds, discoveredAt, source) {
     let changed = false;
     for (const vocabularyId of new Set(vocabularyIds)) {
-      const entry = this.content.vocabularyById.get(vocabularyId);
+      const entry = this.lookup.get(vocabularyId);
       if (!entry) continue;
       const bucket = entry.kind === 'phrase' ? envelope.spellbook.phrases : envelope.spellbook.words;
       if (bucket[vocabularyId]) continue;
       bucket[vocabularyId] = {
         vocabularyId,
-        contentVersion: this.content.entryVersion(vocabularyId),
+        contentVersion: this.entryVersion(vocabularyId),
         discoveredAt,
         discoverySource: source,
         schedule: initialSchedule(discoveredAt),
@@ -259,7 +277,7 @@ export class LearningService {
     return envelope.spellbook.words[vocabularyId] ?? envelope.spellbook.phrases[vocabularyId] ?? null;
   }
 
-  isCurrent(item) { return Boolean(this.content.vocabularyById.get(item.vocabularyId)) && item.contentVersion === this.content.entryVersion(item.vocabularyId); }
+  isCurrent(item) { return Boolean(this.lookup.get(item.vocabularyId)) && item.contentVersion === this.entryVersion(item.vocabularyId); }
 
   // Round 029 (backlog C1): the cards to review before a drill encounter's first fight. Per required target group:
   // the group's current Spellbook cards; it blocks when it has some and all are due, and its drill card is the one
@@ -302,8 +320,8 @@ export class LearningService {
     const now = this.clock();
     const cards = [...Object.values(envelope.spellbook.words), ...Object.values(envelope.spellbook.phrases)]
       .map((item) => {
-        const entry = this.content.vocabularyById.get(item.vocabularyId);
-        if (!entry || item.contentVersion !== this.content.entryVersion(entry.id)) return null;
+        const entry = this.lookup.get(item.vocabularyId);
+        if (!entry || item.contentVersion !== this.entryVersion(entry.id)) return null;
         return {
           vocabularyId: entry.id,
           kind: entry.kind,
@@ -326,7 +344,7 @@ export class LearningService {
     // the app keeps that meaning or the example's English back while one of them is due.
     const order = cards.map((card) => card.vocabularyId);
     for (const card of cards) {
-      const lists = this.entryAnswerLists(this.content.vocabularyById.get(card.vocabularyId));
+      const lists = this.entryAnswerLists(this.lookup.get(card.vocabularyId));
       card.formCardIds = order.filter((id) => lists.form.has(id));
       card.exampleCardIds = order.filter((id) => lists.example.has(id));
     }
@@ -395,10 +413,20 @@ export class LearningService {
     return found;
   }
 
+  // Round 144: with the curriculum's vocabulary this runs over many more entries, so each entry is first tried
+  // cheaply: only one whose form (or, for an inflection, whose stem) stands somewhere in the text is read precisely.
+  // The result is the same as reading every entry precisely.
   entryIdsIn(text) {
-    return new Set(this.content.vocabulary.entries
-      .filter((entry) => matchCanonicalVocabulary(text, [entry]).length || inflectsForms(text, entry.surface_variants))
-      .map((entry) => entry.id));
+    this.entryForms ??= this.allEntries().map((entry) => {
+      const forms = entry.surface_variants.map((form) => foldWords(form).trim()).filter(Boolean);
+      return { entry, forms, stems: forms.filter((form) => form.length >= 4 && !form.includes(' ')).map((form) => form.slice(0, -1)) };
+    });
+    const folded = foldWords(text);
+    const words = folded.trim().split(' ');
+    return new Set(this.entryForms
+      .filter(({ entry, forms, stems }) => (forms.some((form) => folded.includes(form.split(' ')[0])) && matchCanonicalVocabulary(text, [entry]).length)
+        || (stems.some((stem) => words.some((word) => word.startsWith(stem))) && inflectsForms(text, entry.surface_variants)))
+      .map(({ entry }) => entry.id));
   }
 
   // Round 090 (review R1.2 of rounds 029–039): the pack entries in an entry's own target and in its example, without
@@ -558,12 +586,14 @@ export class LearningService {
   // that is not itself a form but starts with a form of 4+ letters minus its last letter and is 0–2 letters longer.
   // Measured over 47k English tokens of live narration (docs/rounds/086/results): full recall on synthetic
   // inflections, few English collisions (a dropped footnote is optional flavour).
-  keptFootnote(generated, previousNpc, open = []) {
+  // Round 144: `entries` is the vocabulary a footnote must hold none of: the pack's, or for a road conversation the
+  // words its lines may show (its unit's), since the curriculum's whole vocabulary holds numbers and everyday words.
+  keptFootnote(generated, previousNpc, open = [], entries = this.content.vocabulary.entries) {
     if (typeof generated.footnote !== 'string' || previousNpc?.footnote) return undefined;
     const text = generated.footnote.trim().replace(/\s+/g, ' ');
     if (!text || text.length > FOOTNOTE_MAX_LENGTH) return undefined;
-    if (matchCanonicalVocabulary(text, this.content.vocabulary.entries).length) return undefined;
-    return inflectsAnswer(text, open, this.content.vocabularyById) ? undefined : text;
+    if (matchCanonicalVocabulary(text, entries).length) return undefined;
+    return inflectsAnswer(text, open, this.lookup) ? undefined : text;
   }
 
   // Round 130: the target-language words of a narration, as the model listed them, that the player may tap for a
@@ -582,7 +612,7 @@ export class LearningService {
       const folded = foldEvidenceText(word);
       if (!word || !meaning || word.length > NARRATIVE_WORDS.word || meaning.length > NARRATIVE_WORDS.meaning) continue;
       if (!folded || seen.has(folded) || !atWordBoundaries(narrative, folded)) continue;
-      if (matchCanonicalVocabulary(word, this.content.vocabulary.entries).some((match) => targetIds.has(match.id))) continue;
+      if (matchCanonicalVocabulary(word, definition.scope ?? this.content.vocabulary.entries).some((match) => targetIds.has(match.id))) continue;
       seen.add(folded);
       kept.push({ word, meaning });
       if (kept.length === NARRATIVE_WORDS.max) break;
@@ -607,7 +637,7 @@ export class LearningService {
       meaning: entry.accepted_translations[0],
       spans: wordSpans,
     }));
-    const footnote = this.keptFootnote(generated, previousNpc, open);
+    const footnote = this.keptFootnote(generated, previousNpc, open, definition.scope ? definition.narrationEntries : undefined);
     const narrativeWords = this.keptNarrativeWords(generated, definition);
     return {
       id: randomUUID(), role: 'npc', narrative: generated.narrative,
@@ -660,9 +690,13 @@ export class LearningService {
       location: this.sceneLocationId(encounter),
       partyConversation: Boolean(definition.encounter.party_of),
       ...(encounter.dungeonId ? { dungeonId: encounter.dungeonId, siteId: encounter.siteId } : {}), // rounds 114, 119
+      // Round 144: a conversation of The Long Way Home: its site, its kind and what it is about.
+      ...(encounter.road ? { road: { node: encounter.road.node, ...definition.road } } : {}),
       character: {
         id: definition.character.id, name: definition.character.name, saveable: definition.character.saveable === true,
         ...(definition.character.voice ? { voice: { ...definition.character.voice } } : {}), // round 126
+        // Round 144: a generated character has no figure, only words: who they are and what they look like.
+        ...(encounter.road ? { role: definition.character.species, description: definition.character.appearance } : {}),
       },
       resolvedMessage: definition.encounter.resolved_message ?? null,
       companionBriefing: definition.encounter.companion_briefing ?? null,
@@ -736,12 +770,14 @@ export class LearningService {
   // Without an encounterId the default encounter starts anywhere (the old web client, verify:cli); with one, the player
   // must be at that encounter's location. Round 114: with a dungeonId, a site of that dungeon starts, wherever the player
   // stands on the market map. Round 119: it is the site the player stands at in the dungeon (encounterId, if given, must be its encounter).
-  async startEncounter(learnerId, { restart = false, encounterId = null, dungeonId = null } = {}) {
+  // Round 144: with `road`, the conversation waiting at the learner's site of The Long Way Home starts.
+  async startEncounter(learnerId, { restart = false, encounterId = null, dungeonId = null, road = false } = {}) {
     assertLearnerId(learnerId);
     return this.serialized(learnerId, async () => {
       // Round 076 (critique 1.2): no prefetch starts while a start runs, saving included.
       this.starting.add(learnerId);
       try {
+        if (road) return await this._startRoad(learnerId, restart);
         if (dungeonId !== null) return await this._startDungeonSite(learnerId, restart, encounterId, dungeonId);
         return await this._startEncounter(learnerId, restart, encounterId);
       } finally { this.starting.delete(learnerId); }
@@ -926,7 +962,7 @@ export class LearningService {
 
   // A new conversation: its greeting, the words it exposes, and the session held in memory. Round 114: split out of
   // _startEncounter for the dungeon start; a dungeon's session carries its dungeonId.
-  async openSession(learnerId, envelope, definition, { locationId, dungeonId, siteId } = {}) {
+  async openSession(learnerId, envelope, definition, { locationId, dungeonId, siteId, road } = {}) {
     // Round 087 (review R1.1): greetings for other encounters are no longer needed; they stop holding the provider.
     this.dropGreetings(learnerId, definition.encounter.party_of ? null : greetingKey(learnerId, definition.encounter.id));
     // Round 121: the level raises the target ratio of a dungeon site's conversation, from its first line to its last.
@@ -945,6 +981,7 @@ export class LearningService {
       committedPlayerTurns: 0, transcript: [npcMessage], reveals: {},
       ...(locationId ? { locationId } : {}),
       ...(dungeonId ? { dungeonId, siteId } : {}),
+      ...(road ? { road } : {}), // round 144: the stage sets a road conversation's ratio, so it takes no level bonus
       ...(ratioBonus ? { ratioBonus } : {}),
       // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
       ...(strainedBy.length ? { strained: true, strainedBy } : {}),
@@ -961,12 +998,22 @@ export class LearningService {
       language: this.content.language,
       character: definition.character,
       styleGuide: this.content.styleGuide,
-      locationName: this.sceneName({ definitionId: definition.encounter.id, locationId }),
+      locationName: definition.scene?.name ?? this.sceneName({ definitionId: definition.encounter.id, locationId }),
       objectives: definition.encounter.objectives,
-      vocabularyById: this.content.vocabularyById,
+      vocabularyById: this.lookup,
       targetRatio: this.ratioFor(0, definition, ratioBonus),
       ambientEntries: definition.ambientEntries,
+      ...this.sceneExtras(definition),
     });
+  }
+
+  // Round 144: what a road conversation adds to the narrator's turn data: the place it is in, and for a lesson the
+  // note that its words are new and are to be modelled. Nothing for an authored encounter, whose prompts are pinned.
+  sceneExtras(definition) {
+    return {
+      ...(definition.scene?.place ? { placeName: definition.scene.place } : {}),
+      ...(definition.teachingNote ? { teachingNote: definition.teachingNote } : {}),
+    };
   }
 
   // Round 076: a greeting written on arrival, taken once (ready or still being written); null when there is none or
@@ -1145,7 +1192,9 @@ export class LearningService {
     });
   }
 
-  validateAssessment(raw, objectives, playerInput, schema = gradingResponseSchema) {
+  // Round 144: `entries` is the vocabulary the evidence is read against: the pack's, or the curriculum's for a road
+  // conversation.
+  validateAssessment(raw, objectives, playerInput, schema = gradingResponseSchema, entries = this.content.vocabulary.entries) {
     let assessment;
     try { assessment = schema.parse(raw); }
     catch { throw retryableError('The grading response was invalid. Your answer can be retried unchanged.', 'INVALID_GRADING'); }
@@ -1158,7 +1207,7 @@ export class LearningService {
       const evidenceIds = new Set();
       for (const evidence of result.vocabulary_evidence) {
         if (!objective.target_vocabulary_ids.includes(evidence.vocabulary_id)) throw retryableError('The grader returned evidence for an unrelated vocabulary item.', 'INVALID_GRADING');
-        const excerptIds = new Set(matchCanonicalVocabulary(evidence.evidence, this.content.vocabulary.entries).map((match) => match.id));
+        const excerptIds = new Set(matchCanonicalVocabulary(evidence.evidence, entries).map((match) => match.id));
         // Round 092 (review R1.2; Amendment 1): the evidence must stand in the answer at word boundaries ("pane"
         // quoted from "panettone" does not); graders may quote words around the form ("No estás sola" for sola).
         const folded = foldEvidenceText(evidence.evidence);
@@ -1202,13 +1251,13 @@ export class LearningService {
       const beginner = request.beginner === true;
       const gradingSchema = beginner ? beginnerGradingResponseSchema : gradingResponseSchema;
       const gradingRaw = await this.callProvider(buildGradingMessages({
-        language: this.content.language, objectives, vocabularyById: this.content.vocabularyById,
+        language: this.content.language, objectives, vocabularyById: this.lookup,
         conversationContext: current.transcript.map((item) => item.role === 'player' ? item.text : item.dialogue.native),
         playerInput: message,
         ordered: definition.encounter.objectives_unordered !== true,
         ...(beginner ? { beginner } : {}),
       }), gradingSchema, 'dialogue_assessment', 'The language assessor');
-      const assessment = this.validateAssessment(gradingRaw, objectives, message, gradingSchema);
+      const assessment = this.validateAssessment(gradingRaw, objectives, message, gradingSchema, definition.scope);
 
       // In order: the leading run of passes closes. Unordered (round 045): every passed open objective closes.
       const resultOf = (objective) => assessment.objective_results.find((item) => item.objective_id === objective.id);
@@ -1287,12 +1336,13 @@ export class LearningService {
           styleGuide: this.content.styleGuide,
           locationName: this.sceneName(current),
           objectives: remaining,
-          vocabularyById: this.content.vocabularyById,
+          vocabularyById: this.lookup,
           conversationHistory: history,
           playerInput: message,
           targetRatio: this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0),
           decision,
           ambientEntries: definition.ambientEntries,
+          ...this.sceneExtras(definition),
         }), definition, this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0));
 
         const stagedEnvelope = clone(envelope);
@@ -1320,15 +1370,19 @@ export class LearningService {
         stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
         stagedEncounter.version += 1;
         if (heartLost) stagedEncounter.heartsUsed = heartsUsed + 1; // round 129
+        // Round 144: which objectives a correction closed, for the conversation's score (road/pacing.js).
+        if (forgivenIds.size) stagedEncounter.correctedObjectiveIds = [...new Set([...(current.correctedObjectiveIds ?? []), ...forgivenIds])];
         // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
         // holds the encounter's containment file.
         if (resolved && definition.encounter.party_of) {
           // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
           const member = stagedEnvelope.party.find((candidate) => this.isHomeMember(candidate, definition.encounter.party_of));
           if (member) member.conversations = (member.conversations ?? 0) + 1;
-        } else if (resolved && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
+        } else if (resolved && !stagedEncounter.road && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
           stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
         }
+        // Round 144: a road conversation counts towards the curriculum, in the same save as its resolution.
+        const roadResult = resolved && stagedEncounter.road ? this.finishRoad(stagedEnvelope, stagedEncounter) : null;
         // Round 114: a dungeon's conversation clears its site in the run (round 119: the site the session was opened at).
         if (resolved && stagedEncounter.dungeonId) this.clearSite(stagedEnvelope, stagedEncounter.dungeonId, stagedEncounter.siteId);
         // Round 111: the conversation that bore the strain spends it, in the same save as its resolution and receipt
@@ -1348,6 +1402,7 @@ export class LearningService {
           spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
           xpGained,
           progression: this.progression(stagedEnvelope),
+          ...(roadResult ? { roadResult } : {}),
           replayed: false,
         };
         stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
@@ -1591,11 +1646,11 @@ export class LearningService {
             .find((candidate) => this.isCurrent(candidate) && isDue(candidate.schedule, this.clock()));
       }
       if (!item) return { challenge: null, spellbook: this.spellbookSnapshot(envelope) };
-      const entry = this.content.vocabularyById.get(item.vocabularyId);
-      if (!entry || item.contentVersion !== this.content.entryVersion(entry.id)) throw conflictError('This card belongs to a different content version.', 'STALE_CONTENT');
+      const entry = this.lookup.get(item.vocabularyId);
+      if (!entry || item.contentVersion !== this.entryVersion(entry.id)) throw conflictError('This card belongs to a different content version.', 'STALE_CONTENT');
       const challenge = {
         id: randomUUID(), learnerId, vocabularyId: entry.id,
-        contentVersion: this.content.entryVersion(entry.id), issuedAt: nowIso(this.clock),
+        contentVersion: this.entryVersion(entry.id), issuedAt: nowIso(this.clock),
         practice: !isDue(item.schedule, this.clock()),
       };
       if (!this.reviewChallenges.has(learnerId)) this.reviewChallenges.set(learnerId, new Map());
@@ -1624,8 +1679,8 @@ export class LearningService {
       const challenge = this.reviewChallenges.get(learnerId)?.get(request.challengeId);
       if (!challenge) throw conflictError('That review challenge is stale. Fetch a new due review.', 'STALE_CHALLENGE');
       const item = this.findItem(envelope, challenge.vocabularyId);
-      const entry = this.content.vocabularyById.get(challenge.vocabularyId);
-      if (!item || !entry || challenge.contentVersion !== this.content.entryVersion(entry.id)) throw conflictError('That review card is no longer available.', 'STALE_CONTENT');
+      const entry = this.lookup.get(challenge.vocabularyId);
+      if (!item || !entry || challenge.contentVersion !== this.entryVersion(entry.id)) throw conflictError('That review card is no longer available.', 'STALE_CONTENT');
 
       const stagedEnvelope = clone(envelope);
       const stagedItem = this.findItem(stagedEnvelope, challenge.vocabularyId);
@@ -1673,3 +1728,6 @@ export class LearningService {
     await this.provider.shutdown?.();
   }
 }
+
+// Round 144: The Long Way Home's methods (road/service.js).
+Object.assign(LearningService.prototype, roadMethods);

@@ -57,6 +57,23 @@ export function gradeVocabularyAnswer(entry, answer) {
 
 function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
+// Round 144: the forms of a vocabulary list with their patterns, made once per list. The curriculum's list holds some
+// hundreds of entries and is matched on every answer; a list made for one call (an entry on its own) is made again.
+const prepared = new WeakMap();
+function preparedForms(vocabulary) {
+  const known = Array.isArray(vocabulary) ? prepared.get(vocabulary) : null;
+  if (known && known.length === vocabulary.length) return known.pairs;
+  const pairs = [...vocabulary]
+    .flatMap((entry) => entry.surface_variants.map((variant) => {
+      const form = foldApostrophes(variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase());
+      const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
+      return { entry, form, words: form.split(/\s+/).filter(Boolean), expression: new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu') };
+    }))
+    .sort((a, b) => b.form.length - a.form.length);
+  if (Array.isArray(vocabulary)) prepared.set(vocabulary, { length: vocabulary.length, pairs });
+  return pairs;
+}
+
 export function matchCanonicalVocabulary(text, vocabulary) {
   const source = String(text ?? '');
   // Round 052 (critique 1.4): fold cluster by cluster (a base character with its combining marks) and keep each
@@ -74,14 +91,11 @@ export function matchCanonicalVocabulary(text, vocabulary) {
   }
   // Round 058 (critique 1.2): every (entry, variant) pair, longest folded form first across all entries (a stable sort:
   // ties keep load order), so no entry's short variant takes a span a longer form of another entry would match.
-  const pairs = [...vocabulary]
-    .flatMap((entry) => entry.surface_variants.map((variant) => ({ entry, form: foldApostrophes(variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()) })))
-    .sort((a, b) => b.form.length - a.form.length);
   const occupied = [];
   const matches = [];
-  for (const { entry, form } of pairs) {
-    const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
-    const expression = new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu');
+  for (const { entry, words, expression } of preparedForms(vocabulary)) {
+    // Round 144: a text that lacks one of the form's words cannot hold the form, and needs no pattern run over it.
+    if (!words.every((word) => folded.includes(word))) continue;
     for (const result of folded.matchAll(expression)) {
       const start = startOf[result.index];
       const end = endOf[result.index + result[0].length - 1];

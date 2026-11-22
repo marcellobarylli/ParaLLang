@@ -266,3 +266,70 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .sentence[data-sentence="4"] { color: #2fcb9c; }
 .sentence[data-sentence="5"] { color: #7f9cff; }
 .sentence[data-sentence="6"] { color: #ff8a50; }
+
+/* Round 144: The Long Way Home. The hub card, the kind tags, the map and the curriculum panel, in the same PS1 menu
+   look: hard corners, bevels, no rounding. */
+.road-backdrop { background: linear-gradient(180deg, #7fa5c8 0, #c5d6d4 46%, #62803a 46%, #3f5a2a 100%); }
+.road-card .who { color: var(--gold-hi); }
+.road-card .description, .map-choice .description { color: #d9dbd3; font-size: .86rem; line-height: 1.4; margin: 0; }
+.road-card .what small, .next-line { color: var(--dim); }
+.next-line { margin: 0; font-size: .86rem; line-height: 1.4; }
+.next-line strong { color: var(--ink); }
+.kind-tag { display: inline-block; padding: 0 .35em; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; text-shadow: none; color: #17140a; background: var(--gold); border: 1px solid #000; vertical-align: .08em; }
+.kind-tag.kind-review { background: #9ad8e6; }
+.kind-tag.kind-repair { background: #d9a6e8; }
+.kind-tag.kind-checkpoint { background: #f08a6c; }
+.road-ways button { display: block; }
+.rails-switch { display: flex; align-items: center; justify-content: flex-start; gap: .5rem; flex-wrap: wrap; font-size: .86rem; }
+.rails-switch input { flex: none; width: 20px; height: 20px; min-width: 0; margin: 0; padding: 0; }
+.rails-switch small { color: var(--dim); }
+.road-result { color: var(--gold-hi); }
+.road-banner { display: grid; gap: .6rem; }
+.road-banner p { margin: 0; }
+.curriculum-chip { white-space: nowrap; }
+.road-map-panel, .curriculum-panel { max-width: 760px; margin: 0 auto; padding: .75rem .9rem 2rem; display: grid; gap: .8rem; }
+.road-map { position: relative; width: min(100%, 68vh); margin: 0 auto; aspect-ratio: 1; border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); box-shadow: 0 0 0 1px #000; background: #2f5552; }
+.road-map canvas, .road-map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.road-map canvas { image-rendering: pixelated; }
+.map-way { fill: none; stroke-linejoin: round; }
+.map-way.walked { stroke: #1a1508; stroke-width: 1.3; opacity: .75; }
+.map-way.ahead { stroke: #f6dc8c; stroke-width: .8; stroke-dasharray: 1.6 1.2; }
+.map-way.way-ferry, .map-way.way-ford { stroke: #cfeef5; }
+.map-site { fill: #4b4d4a; stroke: #000; stroke-width: .35; }
+.map-site.cleared { fill: #5f7f5a; }
+.map-here rect { fill: #fff; stroke: #000; stroke-width: .4; }
+.map-here .ring { fill: none; stroke: #fff; stroke-width: .5; }
+.map-ahead { cursor: pointer; }
+.map-ahead rect { fill: var(--gold); stroke: #000; stroke-width: .45; }
+.map-ahead.kind-review rect { fill: #9ad8e6; }
+.map-ahead.kind-repair rect { fill: #d9a6e8; }
+.map-ahead.kind-checkpoint rect { fill: #f08a6c; }
+.map-ahead text { font-size: 4.4px; font-weight: 700; text-anchor: middle; fill: #17140a; text-shadow: none; pointer-events: none; }
+.map-ahead.rails rect { stroke: #fff; stroke-width: .9; }
+.map-ahead.picked rect { outline: .7px solid #fff; outline-offset: .8px; }
+.map-ahead:focus-visible rect { outline: .7px solid var(--link); outline-offset: .8px; }
+.map-legend { margin: 0; color: var(--dim); line-height: 1.5; }
+.map-choice { display: grid; gap: .45rem; padding: .7rem .8rem; background: rgb(0 0 0 / .26); border: 2px solid; border-color: rgb(0 0 0 / .7) rgb(255 255 255 / .3) rgb(255 255 255 / .3) rgb(0 0 0 / .7); }
+.curriculum-totals, .saved-line { margin: 0; line-height: 1.5; }
+.saved-line { color: var(--dim); }
+.stage { display: grid; gap: .5rem; }
+.stage h3 { margin: .6rem 0 0; color: var(--gold); letter-spacing: .05em; text-transform: uppercase; font-size: 1rem; }
+.stage .cefr { display: inline-block; padding: 0 .4em; margin-right: .3em; background: var(--gold); color: #17140a; text-shadow: none; border: 1px solid #000; }
+.stage .can-do { margin: 0; color: #d9dbd3; line-height: 1.4; }
+.units { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.unit { display: grid; gap: .25rem; align-content: start; padding: .6rem .7rem; background: rgb(0 0 0 / .26); border: 2px solid; border-color: rgb(0 0 0 / .7) rgb(255 255 255 / .3) rgb(255 255 255 / .3) rgb(0 0 0 / .7); }
+.unit-head { display: flex; justify-content: space-between; gap: .5rem; align-items: baseline; }
+.unit-state { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); white-space: nowrap; }
+.unit-current { border-color: var(--gold-hi) var(--gold-lo) var(--gold-lo) var(--gold-hi); }
+.unit-current .unit-state { color: var(--gold); }
+.unit-locked { opacity: .6; }
+.unit small { color: var(--dim); line-height: 1.35; }
+.unit .grammar { font-style: italic; }
+.lessons, .journal-list { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; gap: .15rem; font-size: .86rem; }
+.lessons .done { color: #b9dcb3; }
+.lessons .gate { margin-top: .15rem; }
+.journal-list li { line-height: 1.5; }
+.journal-list small { color: var(--dim); }
+.file-button { display: inline-flex; align-items: center; cursor: pointer; }
+.world-place.road rect { fill: #9ad8e6; }
+.road-overlay { background: #161716; }

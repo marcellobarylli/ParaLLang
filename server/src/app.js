@@ -21,12 +21,20 @@ function requireToken(token) {
   };
 }
 
-export function createApp({ service, logger = console, token = null }) {
+export function createApp({ service, logger = console, token = null, saves = null }) {
   const app = express();
   app.use(cors());
   if (token) app.use(requireToken(token));
+  // Round 144: a save put back from the player's own copy. A save is larger than any other request (about 150 kB
+  // after long play), so this one route reads its body with its own limit, before the small one below.
+  app.post('/api/save/restore', express.json({ limit: '2mb' }), async (req, res, next) => {
+    try { res.json(await service.restoreSave(req.body ?? {})); }
+    catch (error) { next(error); }
+  });
   app.use(express.json({ limit: '32kb' }));
-  app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+  // Round 145: with `saves` (where the saves are kept, and whether the last copy to GitHub went through) the health
+  // check says so, so the owner can see from outside that the store is the one they set up.
+  app.get('/api/health', (req, res) => res.json({ status: 'ok', ...(saves ? { saves: saves() } : {}) }));
 
   app.post('/api/learner', async (req, res, next) => {
     try { res.status(req.body?.learnerId ? 200 : 201).json(await service.createOrRecoverLearner(req.body?.learnerId)); }
@@ -70,6 +78,25 @@ export function createApp({ service, logger = console, token = null }) {
   });
   app.post('/api/dungeons/:id/move', async (req, res, next) => {
     try { requireClient(req.body?.client); res.json(await service.moveInDungeon(req.get('X-Learner-Id'), req.params.id, req.body ?? {})); }
+    catch (error) { next(error); }
+  });
+
+  // Round 144: The Long Way Home: the learner's place on the endless graph with what each site ahead offers and the
+  // curriculum's marks; a walk to a site; a new road. And the whole save, for a copy the player keeps.
+  app.get('/api/road', async (req, res, next) => {
+    try { res.json(await service.getRoad(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
+  app.post('/api/road/move', async (req, res, next) => {
+    try { res.json(await service.moveOnRoad(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
+  app.post('/api/road/reset', async (req, res, next) => {
+    try { res.json(await service.resetRoad(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
+  app.get('/api/save', async (req, res, next) => {
+    try { res.json(await service.exportSave(req.get('X-Learner-Id'))); }
     catch (error) { next(error); }
   });
 

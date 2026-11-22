@@ -6,6 +6,7 @@
 // music (round 127): whether the ambient music plays. On unless switched off.
 // voices (round 126): whether the characters read their new lines aloud. On unless switched off.
 // tiltLook (round 125): whether the phone's orientation turns the camera's look at a site. Off unless switched on.
+// rails (round 144): on The Long Way Home, whether the way on is chosen for the player. On unless switched off.
 import { browserStorage } from './api/settings.js';
 
 export const DISPLAY_KEY = 'parallang.display';
@@ -22,11 +23,11 @@ export function clampPanelOpacity(value) {
 export function loadDisplay(storage = browserStorage()) {
   let stored = null;
   try { stored = JSON.parse(storage?.getItem?.(DISPLAY_KEY) ?? 'null'); } catch { stored = null; }
-  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false };
+  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false };
 }
 
 export function saveDisplay(display, storage = browserStorage()) {
-  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false };
+  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false };
   try { storage?.setItem?.(DISPLAY_KEY, JSON.stringify(value)); } catch { /* private mode: kept for this page only */ }
   return value;
 }

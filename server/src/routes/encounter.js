@@ -17,6 +17,7 @@ export function createEncounterRouter(service) {
       if (req.body?.dungeonId != null) requireClient(req.body.client);
       res.json(await service.startEncounter(learnerId(req), {
         restart: req.body?.restart === true, encounterId: req.body?.encounterId ?? null, dungeonId: req.body?.dungeonId ?? null,
+        road: req.body?.road === true, // round 144: the conversation waiting on The Long Way Home
       }));
     }
     catch (error) { next(error); }

@@ -1,0 +1,185 @@
+# Round 144: the curriculum's skeleton, stage A1.2. Language-neutral: what the learner can do, the lessons and what
+# each asks of the player. The words are in content/languages/<code>/curriculum/02_a1_2.yaml. The functions are the
+# second half of the CEFR A1 descriptors: family and people, places in town, directions and transport, the time and
+# the days, the daily routine, shopping. For the owner's review.
+id: a1_2
+cefr: A1
+name: Getting around
+ratio: 0.28
+can_do: >
+  Talk about your family and friends, find a place in town and the way to it, tell the time and name the days,
+  describe your day and buy something in a shop.
+units:
+  - id: family
+    title: Family and people
+    can_do: "Say who is in your family, describe a person, and talk about a friend."
+    grammar: "'To have'; possessives ('my', 'your'); adjectives that agree with the person."
+    roles:
+      - "Genealogist of Lost Relatives: keeps a drawer of unclaimed uncles and is anxious to see them go to good homes"
+      - "Portrait Painter by the Yard: paints families at a fixed rate per head and needs to know how many heads"
+      - "Registrar of Resemblances: certifies who takes after whom in a family, and charges extra for noses"
+      - "Professional Best Friend: is retained by the week and keeps careful notes on the good qualities of every client"
+    lessons:
+      - id: family_who
+        title: Who is in your family
+        objectives:
+          - { id: siblings, ask: "Tell {name} whether you have a brother, a sister or children", cue: "{name} is drawing up a family tree, and yours is so far a stump." }
+          - { id: parents, ask: "Tell {name} what your mother or your father is called" }
+          - { id: ask_family, ask: "Ask {name} whether they have brothers, sisters or children" }
+      - id: family_describe
+        title: What someone is like
+        objectives:
+          - { id: ask_like, ask: "Ask {name} what someone in their family is like" }
+          - { id: looks, ask: "Describe someone in your family to {name}: tall, short, young or old", cue: "{name} has to pick your relative out of a crowd and has only you to go on." }
+          - { id: character, ask: "Say what that person is like: nice, kind or funny" }
+      - id: family_friend
+        title: A friend
+        objectives:
+          - { id: my_friend, ask: "Tell {name} about a friend of yours and say what they are called", cue: "{name} takes the view that everybody has one friend and would like yours named." }
+          - { id: friend_lives, ask: "Tell {name} where your friend lives" }
+          - { id: together, ask: "Say one thing that the two of you do together" }
+
+  - id: places
+    title: Where things are
+    can_do: "Ask where a place is, say what there is in a town, and say where one thing stands in relation to another."
+    grammar: "'There is' and 'there are'; the article with places in town; prepositions of place."
+    roles:
+      - "Town Crier, Retired: still knows where everything is, but only as of the last year of shouting"
+      - "Surveyor of Things That Have Moved: measures the gap between where a building stands and where it ought to, and files a complaint"
+      - "Keeper of the Lost Square: mislaid the town square some time ago and is retracing its steps"
+      - "Guide to the Obvious: points out, for a fee, the buildings directly in front of visitors, and has never lacked for work"
+    lessons:
+      - id: places_where
+        title: Where is it
+        objectives:
+          - { id: looking_for, ask: "Tell {name} that you are looking for a place in town", cue: "{name} can see that you are lost and is waiting to be told how lost." }
+          - { id: where_is, ask: "Ask {name} where the station, the bank, the pharmacy or the square is" }
+          - { id: near, ask: "Ask {name} whether it is near here" }
+      - id: places_there
+        title: What there is
+        objectives:
+          - { id: is_there, ask: "Ask {name} whether there is a bank, a pharmacy or a supermarket near here" }
+          - { id: in_my_town, ask: "Tell {name} one thing that there is in your own town", cue: "{name} keeps a list of what other towns have and suspects this one of being short." }
+          - { id: none, ask: "Tell {name} one thing that your town does not have" }
+      - id: places_next_to
+        title: Next to, in front, behind
+        objectives:
+          - { id: next_to, ask: "Tell {name} that one place is next to another", cue: "{name} has all the right buildings on the map and none of them in the right order." }
+          - { id: front_behind, ask: "Tell {name} that a place is in front of something, or behind it" }
+          - { id: between, ask: "Say that a place is between two others" }
+
+  - id: directions
+    title: Finding the way
+    can_do: "Ask the way and give simple directions, ask how far it is, and buy a ticket for the train or the bus."
+    grammar: "The imperative used for directions ('turn', 'go'); 'to go'; 'by' with transport."
+    roles:
+      - "Signpost Inspector: checks that every sign points at what it says and is, at present, three towns behind"
+      - "Ferryman of the Dry Riverbed: the river left years ago, but the fare is still the fare"
+      - "Ticket Clerk of the Branch Line: sells tickets to places the line has not reached yet, on the grounds that it will"
+      - "Licensed Seller of Shortcuts: holds the rights to every shortcut in the district and can tell when one has been taken unpaid"
+    lessons:
+      - id: directions_ask
+        title: Asking the way
+        objectives:
+          - { id: lost, ask: "Tell {name} that you are lost", cue: "{name} has watched you walk past three times and has started to keep count." }
+          - { id: how_to_get, ask: "Ask {name} how to get to the station or the centre" }
+          - { id: right_road, ask: "Ask {name} whether this is the right road" }
+      - id: directions_turn
+        title: Left, right, straight on
+        objectives:
+          - { id: turn, ask: "Tell {name} to turn left or right", cue: "{name} is holding a map upside down and would rather be told." }
+          - { id: straight, ask: "Tell {name} to go straight on" }
+          - { id: which_street, ask: "Tell {name} which street to take: the first or the second" }
+      - id: directions_transport
+        title: By train or bus
+        objectives:
+          - { id: ticket, ask: "Ask {name} for a ticket to somewhere", cue: "{name} sits behind a small window from which things are evidently sold." }
+          - { id: by_what, ask: "Tell {name} how you are going there: by train, by bus or on foot" }
+          - { id: how_long, ask: "Ask {name} how far it is, or how long it takes" }
+
+  - id: time
+    title: Time and days
+    can_do: "Ask and tell the time, name the days of the week, and say when something happens."
+    grammar: "Telling the time; 'at' with hours; 'today', 'tomorrow' and the days of the week."
+    roles:
+      - "Clockwinder to the District: winds every clock in town by hand and is, as a result, always a little behind"
+      - "Seller of Spare Minutes: deals in time that other people did not use, slightly worn, at a fair price"
+      - "Almanac Proofreader: checks next week for errors before it is issued, and has found several"
+      - "Night Watchman of the Sundial: guards it after dark, when it is at its most vulnerable and least use"
+    lessons:
+      - id: time_clock
+        title: What time is it
+        objectives:
+          - { id: what_time, ask: "Ask {name} what time it is" }
+          - { id: tell_time, ask: "Tell {name} the time, on the hour", cue: "{name} owns several clocks, no two of which agree, and wants a casting vote." }
+          - { id: half_quarter, ask: "Tell {name} a time with a half or a quarter in it" }
+      - id: time_days
+        title: Days of the week
+        objectives:
+          - { id: what_day, ask: "Ask {name} what day it is today" }
+          - { id: today_is, ask: "Tell {name} what day it is today", cue: "{name} has lost a day somewhere this week and is going back over the others." }
+          - { id: tomorrow, ask: "Tell {name} what day it is tomorrow" }
+      - id: time_when
+        title: When
+        objectives:
+          - { id: at_what_time, ask: "Ask {name} at what time it opens, starts or leaves" }
+          - { id: at_hour, ask: "Tell {name} at what time you are coming back: at eight, at nine", cue: "{name} is writing you into an appointment book and has reached the column for the hour." }
+          - { id: part_of_day, ask: "Say whether that is in the morning, in the afternoon or in the evening" }
+
+  - id: routine
+    title: Daily routine
+    can_do: "Describe your day, say how often you do things, and say what you do in your free time."
+    grammar: "The present tense of regular verbs; reflexive verbs ('I get up'); adverbs of frequency."
+    roles:
+      - "Auditor of Habits: inspects daily routines for irregularities and has never yet passed one"
+      - "Understudy to the Rooster: stands ready every dawn in case the rooster cannot go on, and has not been needed so far"
+      - "Timetable Poet: writes verse in which everything happens at a stated hour and nothing rhymes with breakfast"
+      - "Idler, First Class: holds the district record for doing nothing and trains for it daily"
+    lessons:
+      - id: routine_day
+        title: My day
+        objectives:
+          - { id: wake, ask: "Tell {name} at what time you wake up or get up", cue: "{name} has ruled a page into hours and is starting at the top." }
+          - { id: work, ask: "Tell {name} what you do in the day: you work, or you study" }
+          - { id: evening, ask: "Tell {name} how your day ends: you have dinner, you go to bed, you sleep" }
+      - id: routine_often
+        title: How often
+        objectives:
+          - { id: always, ask: "Tell {name} something that you always or often do", cue: "{name} is sorting your habits into piles and the pile marked ALWAYS is empty." }
+          - { id: never, ask: "Tell {name} something that you never do" }
+          - { id: sometimes, ask: "Tell {name} something that you do sometimes, or every day" }
+      - id: routine_free
+        title: Free time
+        objectives:
+          - { id: ask_free, ask: "Ask {name} what they do in their free time" }
+          - { id: free_time, ask: "Tell {name} what you do in yours: you read, watch, listen, play or go out", cue: "{name} cannot imagine what people do when nobody is making them do it." }
+          - { id: weekend, ask: "Say what you do at the weekend" }
+
+  - id: shopping
+    title: Shopping
+    can_do: "Ask for something in a shop, talk about colour and size, try it on and say that you will take it."
+    grammar: "'This' and 'that'; colours that agree with the noun; 'it' as an object ('I'll take it')."
+    roles:
+      - "Tailor of Approximate Sizes: measured everyone once, from a distance, and stands by the figures"
+      - "Colour Merchant: sells colours by the pot and maintains that no two reds have ever been on speaking terms"
+      - "Shopkeeper of the Last One: has exactly one of everything left and is in no hurry to part with it"
+      - "Inspector of Bargains: examines each reduced price for signs of sincerity and has yet to find any"
+    lessons:
+      - id: shopping_ask
+        title: In the shop
+        objectives:
+          - { id: looking_for, ask: "Tell {name} what you are looking for: a shirt, a jacket, a hat, a pair of shoes", cue: "{name} has been standing at your elbow since you came in, radiating helpfulness." }
+          - { id: colour, ask: "Tell {name} which colour you want" }
+          - { id: other_colour, ask: "Ask {name} whether they have it in another colour" }
+      - id: shopping_try
+        title: Trying it on
+        objectives:
+          - { id: try_on, ask: "Ask {name} whether you can try it on" }
+          - { id: wrong_size, ask: "Tell {name} that it is too big or too small", cue: "{name} steps back to admire the fit, which is a matter of opinion." }
+          - { id: take_it, ask: "Tell {name} that you will take it" }
+      - id: shopping_this
+        title: This one, that one
+        objectives:
+          - { id: this_that, ask: "Tell {name} which one you want: this one or that one", cue: "{name} is holding up two of them and plainly prefers the dearer." }
+          - { id: size, ask: "Ask {name} what size it is, or tell them your size" }
+          - { id: bigger, ask: "Ask {name} for a bigger or a smaller one" }

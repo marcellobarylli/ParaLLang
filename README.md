@@ -201,6 +201,39 @@ Since round 115 the web client (`client/`) is one screen, a dungeon crawl throug
   `puppeteer-core` and a Chrome (see the script's header); round 119's pictures are in
   [`docs/rounds/119/shots/`](docs/rounds/119/shots/).
 
+## The Long Way Home: an endless road and a curriculum
+
+Since round 144 the world map has one more place, **The Long Way Home**: an endless landscape with a curriculum
+walked along it. It is in the web client only.
+
+- **The landscape** is generated from a seed by fractal noise (`server/src/road/terrain.js`), and only the ground
+  around the camera exists: 81 chunks of 48 m, built ahead and dropped behind (`aesthetic/src/scene/endless.js`).
+  Each learner has their own seed, kept in the save.
+- **The graph.** A site stands on the flattest dry ground of each 88 m cell, and sites are joined where the ground
+  between them is easy, with a ford, a pass or a ferry where it must be so that no site is a dead end
+  (`server/src/road/graph.js`). The map shows the landscape from above, where the player has been and each site
+  ahead with what waits there.
+- **The curriculum** is content: six stages from A1.1 to B1.2, six units each, three lessons a unit
+  (`content/curriculum/` and each pack's `curriculum/`). What it teaches, in which order, how it is paced and on which
+  sources that rests is in [`docs/curriculum.md`](docs/curriculum.md). `node server/scripts/check-curriculum.js`
+  loads it and names the first content error.
+- **A conversation** is a new lesson, a review of earlier ones, a lesson again, or a unit's gate. The pacing
+  (`server/src/road/pacing.js`) recommends one; on the map the others wait at other sites.
+- **The characters** are generated for each site from the unit's roles and described in words; in the level each is a
+  plain cloaked figure (`server/src/road/characters.js`).
+- **On rails** (a switch, on by default) "Continue" walks to the pacing's own next site. Off the rails the player
+  picks a site, on the hub's card or on the map.
+- **The curriculum panel** (the chip in the top bar) shows every stage, unit and lesson with its marks, the unit the
+  player is in, the recent success rate and the journal.
+
+Pictures are in [`docs/rounds/144/shots/`](docs/rounds/144/shots/). To take them again, and to play the road from
+the world map to a restored save in headless Chromium against a scripted server:
+
+```bash
+npm run build -w client
+node client/scripts/road-shots.mjs
+```
+
 ## Web client on GitHub Pages, server on Render
 
 Round 114 publishes the web client (`client/`) to GitHub Pages and runs the server as a Docker image on Render, where
@@ -273,6 +306,41 @@ would lend it to, and change it in Render (and in each browser's settings) if it
 ## Learning data and saves
 
 The browser keeps a server-issued opaque learner ID in local storage, and the iPhone app keeps its own in the app's storage. The server writes that learner's Spellbook and durable attempt receipts as one atomic JSON document under `server/data/saves/` by default. Override the directory with `PARALLANG_SAVE_DIR`. Each language has its own Spellbook: Spanish saves stay directly in the save directory (where they were before language packs existed), and every other language saves to a subdirectory named after its code, such as `server/data/saves/it/`. The same learner ID starts with an empty Spellbook in a new language and finds its earlier cards again when that language is selected. The directory is resolved independently of the shell's working directory and is gitignored.
+
+### Saves on GitHub (round 145)
+
+The hosted server's disk is lost on every restart on Render's free plan. With two settings the server also writes
+each learner's save to GitHub and reads it back when its disk does not know the learner, so a save outlives the server
+and does not depend on any browser:
+
+| Setting | Value |
+|---|---|
+| `PARALLANG_GITHUB_TOKEN` | A fine-grained personal access token (GitHub → Settings → Developer settings → Fine-grained tokens) for one repository, with **Contents: Read and write** |
+| `PARALLANG_GITHUB_REPO` | That repository, as `owner/name` |
+| `PARALLANG_GITHUB_BRANCH` | Optional; the branch the files go to. Default `saves`. Never `main` |
+| `PARALLANG_GITHUB_DIR` | Optional; the folder on that branch. Default `saves` |
+
+On Render: the service → Environment → add the two, save; the service restarts. `GET /api/health` then answers
+`"saves": { "kind": "github", ... }` with whether the last write went through; without the settings it says
+`"kind": "disk"`, with a `problem` when the settings are there but wrong (one without the other, a repository that
+is not `owner/name`, the branch `main`): the server then runs on its disk alone.
+
+- **What is written.** One file per learner and language, `saves/<language>/<hash>.json`, on a branch of its own
+  that shares no history with the code (the server makes it if it is missing). The file begins with a `summary`: the
+  level, the Spellbook's size and where the learner is in the curriculum (stage, unit, lessons done, every unit's
+  state), then the whole save. The commit's message says the same in a line.
+- **When.** About ten seconds after a save, one write for all the saves of that time, and at once when the server is
+  stopped. A write that fails is logged and made again with the next save; it never fails a turn.
+- **No id in the repository.** The file's name is a hash of the learner's id and the id is left out of the file, so
+  the saves can be in a public repository without handing out what identifies a learner to the server. Progress is
+  still readable by whoever can read the repository: use a private one to keep it to yourself.
+- **No workflow, no deploy.** Every commit message carries `[skip ci]`, and the branch is not `main`.
+
+Since round 144 the web client keeps a copy of the whole save in the browser (`parallang.save` in local storage),
+taken from `GET /api/save` after every finished conversation, review and walk on the road. When the server has lost a
+learner (the hosted server's free plan loses its files on every restart) the page puts the copy back with
+`POST /api/save/restore` and says so. Settings has "Save to a file" and "Load from a file" for a copy outside the
+browser. The copy holds no receipts of past answers, and the server refuses one for another language.
 
 Definitions remain in each pack's `vocabulary/` folder; saves contain canonical IDs, content version, evidence, and review schedules. Encounter transcripts are intentionally in memory only, so a server restart starts a fresh conversation while preserving the Spellbook. Invalid, corrupt, or unsupported saves are reported and left untouched rather than reset.
 

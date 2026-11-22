@@ -18,7 +18,8 @@ const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s moti
 // Round 127: "Ambient music" switches the generated background music (ambience.js).
 // Round 126: "Character voices" switches the reading aloud of new lines, and the sheet says what this browser can do.
 // Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE }) {
+// Round 144: "Your save": when this browser last copied the save, a download of the copy as a file, and a file put back.
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null }) {
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
   const submit = (event) => {
@@ -31,6 +32,24 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
     setTiltAnswer(null);
     if (on) Promise.resolve(site.requestTilt?.() ?? 'granted').then(setTiltAnswer, () => setTiltAnswer('denied'));
     onTiltLook(on);
+  };
+  const [copyNote, setCopyNote] = useState(null);
+  const download = async () => {
+    const text = await onExportCopy();
+    if (!text) { setCopyNote('There is no copy yet: play a conversation first.'); return; }
+    const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+    const link = Object.assign(document.createElement('a'), { href: url, download: `parallang-save-${new Date().toISOString().slice(0, 10)}.json` });
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setCopyNote('The save was written to a file.');
+  };
+  const upload = async (event) => {
+    const [file] = event.target.files ?? [];
+    event.target.value = '';
+    if (!file) return;
+    setCopyNote((await onImportCopy(await file.text())) ? 'The save was loaded.' : 'That file could not be loaded.');
   };
   const percent = Math.round(clampPanelOpacity(panelOpacity) * 100);
   const [newest, setNewest] = useState(null);
@@ -88,6 +107,17 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             </label>
             <small>In a conversation, tilting the phone turns the view a little. The phone may ask for access to motion.</small>
             {tiltLook && TILT_ANSWERS[tiltAnswer] && <small role="status" className="setting-warning">{TILT_ANSWERS[tiltAnswer]}</small>}
+          </>
+        )}
+        {onExportCopy && onImportCopy && (
+          <>
+            <div className="setting-row"><span>Your save</span></div>
+            <small>{savedAt ? `Kept on the server, and copied to this browser at ${new Date(savedAt).toLocaleString()}. If the server loses it, the copy is put back.` : 'Kept on the server. This browser takes a copy after each conversation and puts it back if the server loses it.'}</small>
+            <div className="button-row">
+              <button type="button" className="secondary-button" onClick={download}>Save to a file</button>
+              <label className="secondary-button file-button">Load from a file<input type="file" accept="application/json,.json" onChange={upload} className="sr-only" /></label>
+            </div>
+            {copyNote && <small role="status">{copyNote}</small>}
           </>
         )}
         <label htmlFor="settings-server">Server URL</label>

@@ -56,6 +56,10 @@ export function buildNarrationMessages({
   targetRatio,
   decision = null,
   ambientEntries = [],
+  // Round 144: a conversation of The Long Way Home names its own place and, for a lesson, carries a note that its
+  // words are new. An authored encounter passes neither, and its prompts are unchanged.
+  placeName = 'The Crumbling Market',
+  teachingNote = null,
 }) {
   const system = fillTemplate(loadTemplate('system/base.txt'), {
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
@@ -73,8 +77,8 @@ export function buildNarrationMessages({
     },
   });
   const turnData = playerInput === null
-    ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in The Crumbling Market.` }
-    : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision };
+    ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in ${placeName}.`, ...(teachingNote ? { teaching_note: teachingNote } : {}) }
+    : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision, ...(teachingNote ? { teaching_note: teachingNote } : {}) };
 
   return [
     { role: 'system', content: system },

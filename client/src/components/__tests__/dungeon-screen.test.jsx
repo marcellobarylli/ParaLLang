@@ -194,8 +194,8 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   // is a neighbour. This store holds Ta Prohm alone, so The Kiln has no count and no button here; place-switch.test.jsx
   // plays both.)
   expect(screen.getByRole('region', { name: 'The world map' })).toBeTruthy();
-  expect(screen.getByRole('img', { name: 'A map of 4 places' })).toBeTruthy();
-  expect(siteRows().map((row) => row.split(/(?<=[a-z])(?=[A-Z])/)[0])).toEqual(['Ta Prohm', 'The Kiln', 'Angkor Wat', 'Micromort Mountain']);
+  expect(screen.getByRole('img', { name: 'A map of 5 places' })).toBeTruthy();
+  expect(siteRows().map((row) => row.split(/(?<=[a-z])(?=[A-Z])/)[0])).toEqual(['Ta Prohm', 'The Kiln', 'Angkor Wat', 'Micromort Mountain', 'The Long Way Home']);
   expect(screen.queryByRole('button', { name: 'Enter The Kiln' })).toBeNull();
   expect(screen.getByText('The causeway is under review. Nobody will say by whom.')).toBeTruthy();
   expect(screen.getByText('0 of 7 cleared')).toBeTruthy();
