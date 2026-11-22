@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import yaml from 'js-yaml';
 import { z } from 'zod';
 import { normalizeAnswer } from './language-engine.js';
+import { loadCurriculum } from './road/curriculum.js';
 
 const defaultContentDir = resolve(import.meta.dirname, '..', '..', 'content');
 export const DEFAULT_LANGUAGE = 'it';
@@ -320,6 +321,9 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   return Object.freeze({
     language, styleGuide, onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
     inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
+    // Round 144: the curriculum of The Long Way Home (content/curriculum/ and the pack's curriculum/), with its own
+    // vocabulary, kept apart from the pack's above. Null in a pack that has none.
+    curriculum: loadCurriculum({ contentDir, language }),
     defaultEncounterId,
     // The default encounter, for callers that know only one (the web client's start, verify:cli).
     encounter, character,

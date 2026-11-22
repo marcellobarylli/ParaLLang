@@ -1,0 +1,191 @@
+# Round 144: the Spanish words of curriculum stage A1.1 (the skeleton is content/curriculum/01_a1_1.yaml). Authored by
+# Claude from the functions of the A1 syllabi read for the round; no source page was opened for a single entry. For
+# the owner's review. A vocabulary entry is { t: target, pos, en: [meanings], forms: [...], ex: [example, English] };
+# `forms` defaults to the target, and matching ignores case and accents. `say` is the words that meet an objective:
+# one list means any of them, a list of lists means one from each.
+stage: a1_1
+version: curriculum-a1-1-es-v1
+grammar:
+  greetings: "ser and estar in their first forms (soy, estoy, estás) and llamarse (me llamo, te llamas); tú and usted."
+  origins: "ser de, vivir en, hablar; questions with dónde and de dónde."
+  courtesy: "Polite formulas; no before the verb; puede and puedes with an infinitive."
+  numbers: "Numbers to a hundred; tener for age (tengo ... años); cuánto and cuántos."
+  cafe: "quiero and quisiera with a noun; un and una; y, también."
+  likes: "me gusta and me gustan; mucho, nada; porque."
+lessons:
+  greetings_hello:
+    greet: { say: [hola, buenos_dias, buenas_tardes], examples: ["¡Hola!", "Buenos días."] }
+    how_are_you: { say: [como_estas, que_tal], examples: ["¿Cómo estás?", "Hola, ¿qué tal?"] }
+    goodbye: { say: [adios, hasta_luego, hasta_pronto], examples: ["¡Adiós!", "Hasta luego."] }
+  greetings_name:
+    my_name: { say: [me_llamo], examples: ["Me llamo Sam."] }
+    your_name: { say: [como_te_llamas], examples: ["¿Cómo te llamas?", "¿Cómo se llama?"] }
+    pleased: { say: [mucho_gusto, encantado], examples: ["¡Mucho gusto!", "Encantada."] }
+  greetings_fine:
+    i_am_fine: { say: [estoy_bien, muy_bien, asi_asi, no_estoy_mal], examples: ["Estoy bien.", "Muy bien."] }
+    thanks: { say: [gracias, muchas_gracias], examples: ["¡Gracias!"] }
+    and_you: { say: [y_tu], examples: ["¿Y tú?", "¿Y usted?"] }
+  origins_from:
+    i_am_from: { say: [soy_de, vengo_de], examples: ["Soy de Londres.", "Vengo de Londres."] }
+    where_from: { say: [de_donde_eres], examples: ["¿De dónde eres?", "¿De dónde es usted?"] }
+    react: { say: [que_bonito, interesante], examples: ["¡Qué bonito!", "¡Interesante!"] }
+  origins_live:
+    i_live: { say: [vivo_en], examples: ["Vivo en Londres.", "Vivo en Inglaterra."] }
+    where_live: { say: [donde_vives], examples: ["¿Dónde vives?", "¿Dónde vive?"] }
+    near_far: { say: [cerca, lejos], examples: ["Está lejos de aquí.", "Está muy cerca."] }
+  origins_language:
+    i_speak: { say: [hablo], examples: ["Hablo un poco de español."] }
+    i_learn: { say: [aprendo], examples: ["Aprendo español.", "Estoy aprendiendo español."] }
+    do_you_speak: { say: [hablas_ingles], examples: ["¿Hablas inglés?", "¿Habla inglés?"] }
+  courtesy_please:
+    please: { say: [por_favor], examples: ["Un vaso de agua, por favor."] }
+    thank_you: { say: [muchas_gracias], examples: ["¡Muchas gracias!"] }
+    welcome: { say: [de_nada], examples: ["De nada.", "No hay de qué."] }
+  courtesy_sorry:
+    excuse_me: { say: [perdon], examples: ["¡Perdón!", "Disculpe."] }
+    sorry: { say: [lo_siento], examples: ["¡Lo siento!"] }
+    no_problem: { say: [no_pasa_nada], examples: ["No pasa nada.", "No hay problema."] }
+  courtesy_repeat:
+    not_understand: { say: [no_entiendo], examples: ["No entiendo.", "Perdón, no comprendo."] }
+    repeat: { say: [puede_repetir], examples: ["¿Puede repetir, por favor?", "¿Puedes repetir?"] }
+    slowly: { say: [mas_despacio], examples: ["Más despacio, por favor.", "¿Puede hablar más lento?"] }
+  numbers_count:
+    one_two_three: { say: [[uno], [dos], [tres]], examples: ["Uno, dos, tres."] }
+    a_number: { say: [cuatro, cinco, seis, siete, ocho, nueve, diez], examples: ["Siete.", "¡Diez!"] }
+    how_many: { say: [cuantos], examples: ["¿Cuántos hay?", "¿Cuántas son?"] }
+  numbers_age:
+    my_age: { say: [anos], examples: ["Tengo treinta años.", "Tengo veinticinco años."] }
+    your_age: { say: [cuantos_anos_tienes], examples: ["¿Cuántos años tienes?", "¿Cuántos años tiene?"] }
+    round_number: { say: [veinte, treinta, cuarenta, cincuenta], examples: ["¿Cuarenta?", "¡Cincuenta!"] }
+  numbers_price:
+    how_much: { say: [cuanto_cuesta], examples: ["¿Cuánto cuesta?", "¿Cuánto es?"] }
+    too_much: { say: [muy_caro], examples: ["¡Es muy caro!", "Es demasiado caro."] }
+    deal: { say: [vale, de_acuerdo], examples: ["Vale.", "¡De acuerdo!"] }
+  cafe_order:
+    i_would_like: { say: [quisiera, quiero, para_mi], examples: ["Quisiera pedir.", "Para mí, un café."] }
+    a_drink: { say: [cafe, agua, cerveza, vino, zumo], examples: ["Un café, por favor.", "Quiero una cerveza."] }
+    thanks: { say: [gracias, muchas_gracias], examples: ["¡Gracias!"] }
+  cafe_food:
+    what_is_there: { say: [que_hay], examples: ["¿Qué hay para comer?", "¿Qué tienen?"] }
+    some_food: { say: [bocadillo, tortilla, ensalada, helado, paella, sopa], examples: ["Un bocadillo, por favor.", "Quiero una tortilla."] }
+    also: { say: [tambien], examples: ["Y también un helado.", "También una ensalada, por favor."] }
+  cafe_bill:
+    it_was_good: { say: [muy_bueno, rico, delicioso], examples: ["¡Estaba muy bueno!", "Muy rico, gracias."] }
+    the_bill: { say: [la_cuenta], examples: ["La cuenta, por favor."] }
+    pay: { say: [con_tarjeta, puedo_pagar], examples: ["¿Puedo pagar con tarjeta?"] }
+  likes_like:
+    i_like: { say: [me_gusta], examples: ["Me gusta el café.", "Me gustan los gatos."] }
+    i_dont_like: { say: [no_me_gusta], examples: ["No me gusta la cerveza."] }
+    do_you_like: { say: [te_gusta], examples: ["¿Te gusta el vino?", "¿Le gusta?"] }
+  likes_love:
+    i_love: { say: [me_encanta, adoro], examples: ["¡Me encanta el helado!", "Adoro la paella."] }
+    i_hate: { say: [odio, detesto, no_soporto], examples: ["Odio la lluvia.", "No soporto el ruido."] }
+    how_much: { say: [mucho, nada], examples: ["¡Muchísimo!", "Nada."] }
+  likes_prefer:
+    i_prefer: { say: [prefiero], examples: ["Prefiero el té."] }
+    because: { say: [porque], examples: ["Porque es dulce."] }
+    me_too: { say: [yo_tambien, yo_tampoco, a_mi_tambien], examples: ["¡Yo también!", "A mí también."] }
+vocabulary:
+  # greetings
+  hola: { t: "hola", pos: interjection, en: ["hello", "hi"], ex: ["¡Hola, Marta!", "Hi, Marta!"] }
+  buenos_dias: { t: "buenos días", pos: phrase, en: ["good morning", "good day"], forms: ["buenos días", "buen día"], ex: ["Buenos días, señora.", "Good morning, madam."] }
+  buenas_tardes: { t: "buenas tardes", pos: phrase, en: ["good afternoon", "good evening"], forms: ["buenas tardes", "buenas noches", "buenas"], ex: ["Buenas tardes a todos.", "Good afternoon, everyone."], n: "'Buenas noches' after dark; a plain 'buenas' is a friendly hello at any hour." }
+  como_estas: { t: "cómo estás", pos: phrase, en: ["how are you"], forms: ["cómo estás", "cómo está", "cómo están"], ex: ["Hola, ¿cómo estás?", "Hi, how are you?"], n: "'¿Cómo está?' is the formal form." }
+  que_tal: { t: "qué tal", pos: phrase, en: ["how is it going", "how are things"], ex: ["¿Qué tal, Pablo?", "How is it going, Pablo?"] }
+  adios: { t: "adiós", pos: interjection, en: ["goodbye"], ex: ["Adiós y gracias.", "Goodbye and thank you."] }
+  hasta_luego: { t: "hasta luego", pos: phrase, en: ["see you later"], forms: ["hasta luego", "nos vemos"], ex: ["Me voy, ¡hasta luego!", "I'm off, see you later!"] }
+  hasta_pronto: { t: "hasta pronto", pos: phrase, en: ["see you soon"], forms: ["hasta pronto", "hasta mañana"], ex: ["¡Hasta pronto, amigos!", "See you soon, friends!"] }
+  me_llamo: { t: "me llamo", pos: phrase, en: ["my name is", "I am called"], ex: ["Me llamo Lucía.", "My name is Lucía."] }
+  como_te_llamas: { t: "cómo te llamas", pos: phrase, en: ["what is your name", "what are you called"], forms: ["cómo te llamas", "cómo se llama"], ex: ["Y tú, ¿cómo te llamas?", "And you, what is your name?"], n: "'¿Cómo se llama?' is the formal form." }
+  mucho_gusto: { t: "mucho gusto", pos: phrase, en: ["pleased to meet you", "nice to meet you"], forms: ["mucho gusto", "un placer"], ex: ["Mucho gusto, soy Ana.", "Pleased to meet you, I'm Ana."] }
+  encantado: { t: "encantado", pos: adjective, en: ["delighted", "pleased to meet you"], forms: ["encantado", "encantada"], ex: ["Encantada de conocerte.", "Delighted to meet you."], n: "A man says encantado, a woman encantada." }
+  estoy_bien: { t: "estoy bien", pos: phrase, en: ["I am fine", "I am well"], forms: ["estoy bien", "estoy muy bien"], ex: ["Estoy bien, ¿y tú?", "I'm fine, and you?"] }
+  muy_bien: { t: "muy bien", pos: phrase, en: ["very well", "very good"], forms: ["muy bien", "todo bien"], ex: ["Muy bien, gracias.", "Very well, thanks."] }
+  asi_asi: { t: "así así", pos: phrase, en: ["so-so"], forms: ["así así", "regular", "más o menos"], ex: ["Hoy estoy así así.", "Today I'm so-so."] }
+  no_estoy_mal: { t: "no estoy mal", pos: phrase, en: ["I'm not bad"], forms: ["no estoy mal", "nada mal"], ex: ["No estoy mal, gracias.", "I'm not bad, thanks."] }
+  gracias: { t: "gracias", pos: interjection, en: ["thank you", "thanks"], ex: ["Bien, gracias.", "Fine, thanks."] }
+  y_tu: { t: "y tú", pos: phrase, en: ["and you"], forms: ["y tú", "y usted", "y vosotros", "y ustedes"], ex: ["Yo estoy bien. ¿Y tú?", "I'm fine. And you?"], n: "'¿Y usted?' is the formal form." }
+  # origins
+  soy_de: { t: "soy de", pos: phrase, en: ["I am from"], forms: ["soy de", "soy del"], ex: ["Soy de Sevilla.", "I am from Seville."] }
+  vengo_de: { t: "vengo de", pos: phrase, en: ["I come from"], forms: ["vengo de", "vengo del"], ex: ["Vengo de Escocia.", "I come from Scotland."] }
+  de_donde_eres: { t: "de dónde eres", pos: phrase, en: ["where are you from"], forms: ["de dónde eres", "de dónde es", "de dónde sois", "de dónde son"], ex: ["¿De dónde eres, Pablo?", "Where are you from, Pablo?"] }
+  que_bonito: { t: "qué bonito", pos: phrase, en: ["how nice", "how lovely"], forms: ["qué bonito", "qué bonita", "qué bien"], ex: ["¿Eres de Granada? ¡Qué bonito!", "You're from Granada? How lovely!"] }
+  interesante: { t: "interesante", pos: adjective, en: ["interesting"], forms: ["interesante", "interesantes"], ex: ["Es muy interesante.", "It is very interesting."] }
+  vivo_en: { t: "vivo en", pos: phrase, en: ["I live in"], ex: ["Vivo en Madrid.", "I live in Madrid."] }
+  donde_vives: { t: "dónde vives", pos: phrase, en: ["where do you live"], forms: ["dónde vives", "dónde vive", "dónde vivís"], ex: ["Y tú, ¿dónde vives?", "And you, where do you live?"] }
+  cerca: { t: "cerca", pos: adverb, en: ["near", "close"], ex: ["La estación está cerca.", "The station is near."] }
+  lejos: { t: "lejos", pos: adverb, en: ["far"], ex: ["¿Está lejos de aquí?", "Is it far from here?"] }
+  hablo: { t: "hablo", pos: verb, en: ["I speak"], ex: ["Hablo un poco de español.", "I speak a little Spanish."] }
+  aprendo: { t: "aprendo", pos: verb, en: ["I learn", "I am learning"], forms: ["aprendo", "estoy aprendiendo", "estudio"], ex: ["Aprendo español.", "I am learning Spanish."] }
+  hablas_ingles: { t: "hablas inglés", pos: phrase, en: ["do you speak English"], forms: ["hablas inglés", "habla inglés", "habláis inglés"], ex: ["Perdón, ¿habla inglés?", "Excuse me, do you speak English?"] }
+  # courtesy
+  por_favor: { t: "por favor", pos: phrase, en: ["please"], ex: ["Un café, por favor.", "A coffee, please."] }
+  muchas_gracias: { t: "muchas gracias", pos: phrase, en: ["thank you very much", "many thanks"], forms: ["muchas gracias", "muchísimas gracias", "mil gracias"], ex: ["Muchas gracias por la ayuda.", "Thank you very much for the help."] }
+  de_nada: { t: "de nada", pos: phrase, en: ["you're welcome", "it's nothing"], forms: ["de nada", "no hay de qué"], ex: ["¡Gracias! De nada.", "Thanks! You're welcome."] }
+  perdon: { t: "perdón", pos: interjection, en: ["excuse me", "sorry"], forms: ["perdón", "perdona", "perdone", "disculpe", "disculpa"], ex: ["Perdón, ¿dónde está el baño?", "Excuse me, where is the bathroom?"], n: "'Perdona' to a friend, 'perdone' or 'disculpe' to a stranger." }
+  lo_siento: { t: "lo siento", pos: phrase, en: ["I am sorry"], forms: ["lo siento", "lo siento mucho"], ex: ["Lo siento, llego tarde.", "I am sorry, I am late."] }
+  no_pasa_nada: { t: "no pasa nada", pos: phrase, en: ["no problem", "it's all right"], forms: ["no pasa nada", "no hay problema", "no importa"], ex: ["No pasa nada, tranquilo.", "No problem, don't worry."] }
+  no_entiendo: { t: "no entiendo", pos: phrase, en: ["I don't understand"], forms: ["no entiendo", "no comprendo", "no he entendido"], ex: ["Lo siento, no entiendo.", "I'm sorry, I don't understand."] }
+  puede_repetir: { t: "puede repetir", pos: phrase, en: ["can you repeat"], forms: ["puede repetir", "puedes repetir", "repita", "repite"], ex: ["¿Puede repetir, por favor?", "Can you repeat that, please?"] }
+  mas_despacio: { t: "más despacio", pos: phrase, en: ["more slowly", "slower"], forms: ["más despacio", "más lento", "despacio"], ex: ["¿Puede hablar más despacio?", "Can you speak more slowly?"] }
+  # numbers
+  uno: { t: "uno", pos: number, en: ["one"], ex: ["Uno, por favor.", "One, please."] }
+  dos: { t: "dos", pos: number, en: ["two"], ex: ["Dos cafés.", "Two coffees."] }
+  tres: { t: "tres", pos: number, en: ["three"], ex: ["Tres bocadillos.", "Three sandwiches."] }
+  cuatro: { t: "cuatro", pos: number, en: ["four"], ex: ["Cuatro personas.", "Four people."] }
+  cinco: { t: "cinco", pos: number, en: ["five"], ex: ["Cinco minutos.", "Five minutes."] }
+  seis: { t: "seis", pos: number, en: ["six"], ex: ["Seis euros.", "Six euros."] }
+  siete: { t: "siete", pos: number, en: ["seven"], ex: ["Siete días.", "Seven days."] }
+  ocho: { t: "ocho", pos: number, en: ["eight"], ex: ["A las ocho.", "At eight."] }
+  nueve: { t: "nueve", pos: number, en: ["nine"], ex: ["Nueve euros.", "Nine euros."] }
+  diez: { t: "diez", pos: number, en: ["ten"], ex: ["Diez minutos.", "Ten minutes."] }
+  cuantos: { t: "cuántos", pos: adjective, en: ["how many"], forms: ["cuántos", "cuántas"], ex: ["¿Cuántos hay?", "How many are there?"] }
+  anos: { t: "años", pos: noun, en: ["years", "years old"], forms: ["años", "año"], ex: ["Tengo veinte años.", "I am twenty years old."], n: "Age takes tener: tengo treinta años, 'I have thirty years'." }
+  cuantos_anos_tienes: { t: "cuántos años tienes", pos: phrase, en: ["how old are you"], forms: ["cuántos años tienes", "cuántos años tiene"], ex: ["¿Cuántos años tienes, Sara?", "How old are you, Sara?"] }
+  veinte: { t: "veinte", pos: number, en: ["twenty"], ex: ["Veinte euros.", "Twenty euros."] }
+  treinta: { t: "treinta", pos: number, en: ["thirty"], ex: ["Treinta minutos.", "Thirty minutes."] }
+  cuarenta: { t: "cuarenta", pos: number, en: ["forty"], ex: ["Cuarenta personas.", "Forty people."] }
+  cincuenta: { t: "cincuenta", pos: number, en: ["fifty"], ex: ["Cincuenta euros.", "Fifty euros."] }
+  cuanto_cuesta: { t: "cuánto cuesta", pos: phrase, en: ["how much does it cost", "how much is it"], forms: ["cuánto cuesta", "cuánto cuestan", "cuánto es", "cuánto vale"], ex: ["¿Cuánto cuesta esto?", "How much does this cost?"] }
+  muy_caro: { t: "muy caro", pos: phrase, en: ["very expensive", "too expensive"], forms: ["muy caro", "muy cara", "demasiado caro", "demasiado cara", "carísimo"], ex: ["No, es muy caro.", "No, it is very expensive."] }
+  vale: { t: "vale", pos: interjection, en: ["okay", "all right"], forms: ["vale", "está bien"], ex: ["Vale, me lo llevo.", "Okay, I'll take it."], n: "The everyday 'okay' of Spain." }
+  de_acuerdo: { t: "de acuerdo", pos: phrase, en: ["agreed", "okay"], ex: ["De acuerdo, diez euros.", "Agreed, ten euros."] }
+  # cafe
+  quisiera: { t: "quisiera", pos: verb, en: ["I would like"], forms: ["quisiera", "me gustaría"], ex: ["Quisiera un café.", "I would like a coffee."], n: "Politer than quiero." }
+  quiero: { t: "quiero", pos: verb, en: ["I want"], ex: ["Quiero un té.", "I want a tea."] }
+  para_mi: { t: "para mí", pos: phrase, en: ["for me"], ex: ["Para mí, una cerveza.", "A beer for me."] }
+  cafe: { t: "café", pos: noun, en: ["coffee"], forms: ["café", "cafés"], ex: ["Un café, gracias.", "A coffee, thanks."] }
+  agua: { t: "agua", pos: noun, en: ["water"], ex: ["Un vaso de agua.", "A glass of water."] }
+  cerveza: { t: "cerveza", pos: noun, en: ["beer"], forms: ["cerveza", "cervezas", "caña"], ex: ["Una cerveza pequeña.", "A small beer."] }
+  vino: { t: "vino", pos: noun, en: ["wine"], ex: ["Una copa de vino tinto.", "A glass of red wine."] }
+  zumo: { t: "zumo", pos: noun, en: ["juice"], forms: ["zumo", "jugo"], ex: ["Un zumo de naranja.", "An orange juice."], n: "'Zumo' in Spain, 'jugo' in Latin America." }
+  que_hay: { t: "qué hay", pos: phrase, en: ["what is there"], forms: ["qué hay", "qué tienen", "qué tiene", "qué recomienda"], ex: ["¿Qué hay para comer?", "What is there to eat?"] }
+  bocadillo: { t: "bocadillo", pos: noun, en: ["sandwich", "roll"], forms: ["bocadillo", "bocadillos", "sándwich"], ex: ["Un bocadillo de queso.", "A cheese sandwich."] }
+  tortilla: { t: "tortilla", pos: noun, en: ["omelette", "tortilla"], ex: ["Una tortilla de patatas.", "A potato omelette."] }
+  ensalada: { t: "ensalada", pos: noun, en: ["salad"], ex: ["Una ensalada mixta.", "A mixed salad."] }
+  helado: { t: "helado", pos: noun, en: ["ice cream"], forms: ["helado", "helados"], ex: ["Un helado de limón.", "A lemon ice cream."] }
+  paella: { t: "paella", pos: noun, en: ["paella"], ex: ["Una paella para dos.", "A paella for two."] }
+  sopa: { t: "sopa", pos: noun, en: ["soup"], ex: ["Una sopa caliente.", "A hot soup."] }
+  tambien: { t: "también", pos: adverb, en: ["also", "too"], forms: ["también", "y también", "y además"], ex: ["También un postre, por favor.", "A dessert too, please."] }
+  muy_bueno: { t: "muy bueno", pos: phrase, en: ["very good", "very tasty"], forms: ["muy bueno", "muy buena", "buenísimo", "buenísima"], ex: ["El helado está muy bueno.", "The ice cream is very good."] }
+  rico: { t: "rico", pos: adjective, en: ["tasty", "delicious"], forms: ["rico", "rica", "muy rico", "muy rica", "riquísimo"], ex: ["¡Qué rico!", "How tasty!"] }
+  delicioso: { t: "delicioso", pos: adjective, en: ["delicious"], forms: ["delicioso", "deliciosa"], ex: ["La sopa está deliciosa.", "The soup is delicious."] }
+  la_cuenta: { t: "la cuenta", pos: noun, en: ["the bill", "the check"], forms: ["la cuenta", "cuenta"], ex: ["La cuenta, por favor.", "The bill, please."] }
+  con_tarjeta: { t: "con tarjeta", pos: phrase, en: ["by card", "with a card"], forms: ["con tarjeta", "con la tarjeta", "tarjeta de crédito"], ex: ["Pago con tarjeta.", "I'm paying by card."] }
+  puedo_pagar: { t: "puedo pagar", pos: phrase, en: ["can I pay"], ex: ["¿Puedo pagar aquí?", "Can I pay here?"] }
+  # likes
+  me_gusta: { t: "me gusta", pos: phrase, en: ["I like"], forms: ["me gusta", "me gustan"], ex: ["Me gusta la música.", "I like music."], n: "Literally 'it pleases me'. With a plural: me gustan los libros." }
+  no_me_gusta: { t: "no me gusta", pos: phrase, en: ["I don't like"], forms: ["no me gusta", "no me gustan"], ex: ["No me gusta el frío.", "I don't like the cold."] }
+  te_gusta: { t: "te gusta", pos: phrase, en: ["do you like"], forms: ["te gusta", "te gustan", "le gusta", "le gustan", "os gusta"], ex: ["¿Te gusta el mar?", "Do you like the sea?"] }
+  me_encanta: { t: "me encanta", pos: phrase, en: ["I love"], forms: ["me encanta", "me encantan"], ex: ["Me encanta el chocolate.", "I love chocolate."] }
+  adoro: { t: "adoro", pos: verb, en: ["I adore", "I love"], ex: ["Adoro la montaña.", "I adore the mountains."] }
+  odio: { t: "odio", pos: verb, en: ["I hate"], ex: ["Odio los lunes.", "I hate Mondays."] }
+  detesto: { t: "detesto", pos: verb, en: ["I detest", "I can't stand"], ex: ["Detesto esperar.", "I detest waiting."] }
+  no_soporto: { t: "no soporto", pos: phrase, en: ["I can't stand"], forms: ["no soporto", "no aguanto"], ex: ["No soporto el tráfico.", "I can't stand traffic."] }
+  mucho: { t: "mucho", pos: adverb, en: ["very much", "a lot"], forms: ["mucho", "muchísimo"], ex: ["Me gusta mucho.", "I like it very much."] }
+  nada: { t: "nada", pos: adverb, en: ["not at all", "nothing"], forms: ["nada", "para nada", "en absoluto"], ex: ["No me gusta nada.", "I don't like it at all."] }
+  prefiero: { t: "prefiero", pos: verb, en: ["I prefer"], ex: ["Prefiero el vino tinto.", "I prefer red wine."] }
+  porque: { t: "porque", pos: conjunction, en: ["because"], ex: ["Porque es bueno.", "Because it is good."], n: "'¿Por qué?' in two words asks why; 'porque' in one answers." }
+  yo_tambien: { t: "yo también", pos: phrase, en: ["me too", "so do I"], ex: ["Adoro el mar. ¡Yo también!", "I love the sea. Me too!"] }
+  yo_tampoco: { t: "yo tampoco", pos: phrase, en: ["me neither"], forms: ["yo tampoco", "a mí tampoco"], ex: ["No me gusta. A mí tampoco.", "I don't like it. Me neither."] }
+  a_mi_tambien: { t: "a mí también", pos: phrase, en: ["me too", "I like it too"], ex: ["Me gusta el jazz. A mí también.", "I like jazz. Me too."], n: "The 'me too' that answers 'me gusta'." }

@@ -1,0 +1,195 @@
+# Round 144: the Italian words of curriculum stage A1.1 (the skeleton is content/curriculum/01_a1_1.yaml). Authored by
+# Claude from the functions of the A1 syllabi read for the round; no source page was opened for a single entry. For
+# the owner's review. A vocabulary entry is { t: target, pos, en: [meanings], forms: [...], ex: [example, English] };
+# `forms` defaults to the target, and matching ignores case and accents. `say` is the words that meet an objective:
+# one list means any of them, a list of lists means one from each.
+stage: a1_1
+version: curriculum-a1-1-it-v1
+grammar:
+  greetings: "essere (sono, sei, è) and chiamarsi (mi chiamo, ti chiami); tu and Lei."
+  origins: "essere di, venire da, abitare a; questions with dove and di dove."
+  courtesy: "Polite formulas; non before the verb; può and puoi with an infinitive."
+  numbers: "Numbers to a hundred; avere for age (ho ... anni); quanto and quanti."
+  cafe: "vorrei with a noun; un, uno, una, un'; e, anche."
+  likes: "mi piace and mi piacciono; molto, per niente; perché."
+lessons:
+  greetings_hello:
+    greet: { say: [ciao, buongiorno, buonasera, salve], examples: ["Buongiorno!", "Ciao!"] }
+    how_are_you: { say: [come_stai, come_va], examples: ["Come stai?", "Ciao, come va?"] }
+    goodbye: { say: [arrivederci, a_presto, a_dopo], examples: ["Arrivederci!", "A presto!"] }
+  greetings_name:
+    my_name: { say: [mi_chiamo], examples: ["Mi chiamo Sam."] }
+    your_name: { say: [come_ti_chiami], examples: ["Come ti chiami?", "Come si chiama?"] }
+    pleased: { say: [piacere, molto_lieto], examples: ["Piacere!", "Molto lieto."] }
+  greetings_fine:
+    i_am_fine: { say: [sto_bene, tutto_bene, cosi_cosi, non_ce_male], examples: ["Sto bene.", "Non c'è male."] }
+    thanks: { say: [grazie, grazie_mille], examples: ["Grazie!"] }
+    and_you: { say: [e_tu], examples: ["E tu?", "E Lei?"] }
+  origins_from:
+    i_am_from: { say: [sono_di, vengo_da], examples: ["Sono di Londra.", "Vengo da Londra."] }
+    where_from: { say: [di_dove_sei], examples: ["Di dove sei?", "Da dove vieni?"] }
+    react: { say: [che_bello, interessante], examples: ["Che bello!", "Interessante!"] }
+  origins_live:
+    i_live: { say: [abito, vivo], examples: ["Abito a Londra.", "Vivo in Inghilterra."] }
+    where_live: { say: [dove_abiti], examples: ["Dove abiti?", "Dove vive?"] }
+    near_far: { say: [vicino, lontano], examples: ["È lontano da qui.", "È molto vicino."] }
+  origins_language:
+    i_speak: { say: [parlo], examples: ["Parlo un po' di italiano."] }
+    i_learn: { say: [imparo], examples: ["Imparo l'italiano.", "Sto imparando l'italiano."] }
+    do_you_speak: { say: [parli_inglese], examples: ["Parli inglese?", "Parla inglese?"] }
+  courtesy_please:
+    please: { say: [per_favore], examples: ["Un bicchiere d'acqua, per favore.", "Per piacere!"] }
+    thank_you: { say: [grazie_mille], examples: ["Grazie mille!"] }
+    welcome: { say: [prego, di_niente], examples: ["Prego!", "Di niente."] }
+  courtesy_sorry:
+    excuse_me: { say: [scusi], examples: ["Scusi!", "Scusa!"] }
+    sorry: { say: [mi_dispiace], examples: ["Mi dispiace!"] }
+    no_problem: { say: [nessun_problema], examples: ["Nessun problema.", "Non fa niente."] }
+  courtesy_repeat:
+    not_understand: { say: [non_capisco], examples: ["Non capisco.", "Scusi, non ho capito."] }
+    repeat: { say: [puo_ripetere], examples: ["Può ripetere, per favore?", "Puoi ripetere?"] }
+    slowly: { say: [piu_piano], examples: ["Più piano, per favore.", "Può parlare più lentamente?"] }
+  numbers_count:
+    one_two_three: { say: [[uno], [due], [tre]], examples: ["Uno, due, tre."] }
+    a_number: { say: [quattro, cinque, sei, sette, otto, nove, dieci], examples: ["Sette.", "Dieci!"] }
+    how_many: { say: [quanti], examples: ["Quanti sono?", "Quante sono?"] }
+  numbers_age:
+    my_age: { say: [anni], examples: ["Ho trenta anni.", "Ho venticinque anni."] }
+    your_age: { say: [quanti_anni_hai], examples: ["Quanti anni hai?", "Quanti anni ha?"] }
+    round_number: { say: [venti, trenta, quaranta, cinquanta], examples: ["Quaranta?", "Cinquanta!"] }
+  numbers_price:
+    how_much: { say: [quanto_costa], examples: ["Quanto costa?", "Quant'è?"] }
+    too_much: { say: [troppo_caro], examples: ["È troppo caro!", "Costa troppo."] }
+    deal: { say: [va_bene, d_accordo], examples: ["Va bene.", "D'accordo!"] }
+  cafe_order:
+    i_would_like: { say: [vorrei, prendo, per_me], examples: ["Vorrei ordinare.", "Per me un caffè."] }
+    a_drink: { say: [caffe, te, acqua, birra, vino, succo], examples: ["Un caffè, per favore.", "Vorrei una birra."] }
+    thanks: { say: [grazie, grazie_mille], examples: ["Grazie!"] }
+  cafe_food:
+    what_is_there: { say: [cosa_ce], examples: ["Cosa c'è da mangiare?", "Che cosa avete?"] }
+    some_food: { say: [panino, pizza, cornetto, gelato, pasta, insalata], examples: ["Un panino, per favore.", "Vorrei una pizza."] }
+    also: { say: [anche], examples: ["E anche un gelato.", "Anche una pizza, per favore."] }
+  cafe_bill:
+    it_was_good: { say: [buono, ottimo, delizioso], examples: ["Era buonissimo!", "Molto buono, grazie."] }
+    the_bill: { say: [il_conto], examples: ["Il conto, per favore."] }
+    pay: { say: [con_la_carta, posso_pagare], examples: ["Posso pagare con la carta?"] }
+  likes_like:
+    i_like: { say: [mi_piace], examples: ["Mi piace il caffè.", "Mi piacciono i gatti."] }
+    i_dont_like: { say: [non_mi_piace], examples: ["Non mi piace la birra."] }
+    do_you_like: { say: [ti_piace], examples: ["Ti piace il vino?", "Le piace?"] }
+  likes_love:
+    i_love: { say: [adoro, amo], examples: ["Adoro il gelato!", "Amo la pizza."] }
+    i_hate: { say: [odio, detesto, non_sopporto], examples: ["Odio la pioggia.", "Non sopporto il rumore."] }
+    how_much: { say: [molto, per_niente], examples: ["Moltissimo!", "Per niente."] }
+  likes_prefer:
+    i_prefer: { say: [preferisco], examples: ["Preferisco il tè."] }
+    because: { say: [perche], examples: ["Perché è dolce."] }
+    me_too: { say: [anch_io, neanch_io, anche_a_me], examples: ["Anch'io!", "Anche a me."] }
+vocabulary:
+  # greetings
+  ciao: { t: "ciao", pos: interjection, en: ["hello", "hi", "bye"], ex: ["Ciao, Marta!", "Hi, Marta!"], n: "Informal, for both hello and goodbye." }
+  buongiorno: { t: "buongiorno", pos: interjection, en: ["good morning", "good day", "hello"], forms: ["buongiorno", "buon giorno"], ex: ["Buongiorno, signora.", "Good morning, madam."] }
+  buonasera: { t: "buonasera", pos: interjection, en: ["good evening"], forms: ["buonasera", "buona sera"], ex: ["Buonasera a tutti.", "Good evening, everyone."] }
+  salve: { t: "salve", pos: interjection, en: ["hello"], ex: ["Salve, come va?", "Hello, how is it going?"], n: "Neither formal nor informal: safe with strangers." }
+  come_stai: { t: "come stai", pos: phrase, en: ["how are you"], forms: ["come stai", "come sta"], ex: ["Ciao, come stai?", "Hi, how are you?"], n: "'Come sta?' is the formal form." }
+  come_va: { t: "come va", pos: phrase, en: ["how is it going", "how are things"], ex: ["Allora, come va?", "So, how is it going?"] }
+  arrivederci: { t: "arrivederci", pos: interjection, en: ["goodbye"], forms: ["arrivederci", "arrivederla"], ex: ["Arrivederci e grazie.", "Goodbye and thank you."] }
+  a_presto: { t: "a presto", pos: phrase, en: ["see you soon"], ex: ["Ciao, a presto!", "Bye, see you soon!"] }
+  a_dopo: { t: "a dopo", pos: phrase, en: ["see you later"], forms: ["a dopo", "a più tardi", "ci vediamo"], ex: ["Vado, a dopo!", "I'm off, see you later!"] }
+  mi_chiamo: { t: "mi chiamo", pos: phrase, en: ["my name is", "I am called"], ex: ["Mi chiamo Luca.", "My name is Luca."] }
+  come_ti_chiami: { t: "come ti chiami", pos: phrase, en: ["what is your name", "what are you called"], forms: ["come ti chiami", "come si chiama"], ex: ["E tu, come ti chiami?", "And you, what is your name?"], n: "'Come si chiama?' is the formal form." }
+  piacere: { t: "piacere", pos: interjection, en: ["pleased to meet you", "nice to meet you"], ex: ["Piacere, sono Anna.", "Pleased to meet you, I'm Anna."] }
+  molto_lieto: { t: "molto lieto", pos: phrase, en: ["delighted", "very pleased to meet you"], forms: ["molto lieto", "molto lieta"], ex: ["Molto lieta di conoscerla.", "Very pleased to meet you."] }
+  sto_bene: { t: "sto bene", pos: phrase, en: ["I am fine", "I am well"], forms: ["sto bene", "sto molto bene", "sto benissimo"], ex: ["Sto bene, e tu?", "I'm fine, and you?"] }
+  tutto_bene: { t: "tutto bene", pos: phrase, en: ["all good", "everything is fine"], ex: ["Tutto bene, grazie.", "All good, thanks."] }
+  cosi_cosi: { t: "così così", pos: phrase, en: ["so-so"], ex: ["Oggi sto così così.", "Today I'm so-so."] }
+  non_ce_male: { t: "non c'è male", pos: phrase, en: ["not bad"], ex: ["Non c'è male, grazie.", "Not bad, thanks."] }
+  grazie: { t: "grazie", pos: interjection, en: ["thank you", "thanks"], ex: ["Bene, grazie.", "Fine, thanks."] }
+  e_tu: { t: "e tu", pos: phrase, en: ["and you"], forms: ["e tu", "e lei", "e voi"], ex: ["Io sto bene. E tu?", "I'm fine. And you?"], n: "'E Lei?' is the formal form." }
+  # origins
+  sono_di: { t: "sono di", pos: phrase, en: ["I am from"], ex: ["Sono di Milano.", "I am from Milan."], n: "With a town: sono di Roma." }
+  vengo_da: { t: "vengo da", pos: phrase, en: ["I come from"], forms: ["vengo da", "vengo dal", "vengo dalla", "vengo dagli"], ex: ["Vengo dalla Scozia.", "I come from Scotland."], n: "With a country, da joins the article: dalla Francia, dal Canada." }
+  di_dove_sei: { t: "di dove sei", pos: phrase, en: ["where are you from"], forms: ["di dove sei", "di dov'è", "di dove siete", "da dove vieni", "da dove viene"], ex: ["Di dove sei, Paolo?", "Where are you from, Paolo?"] }
+  che_bello: { t: "che bello", pos: phrase, en: ["how nice", "how lovely"], forms: ["che bello", "che bella", "che bel"], ex: ["Sei di Venezia? Che bello!", "You're from Venice? How lovely!"] }
+  interessante: { t: "interessante", pos: adjective, en: ["interesting"], forms: ["interessante", "interessanti"], ex: ["È molto interessante.", "It is very interesting."] }
+  abito: { t: "abito", pos: verb, en: ["I live"], ex: ["Abito a Torino.", "I live in Turin."], n: "abitare: a with a town, in with a country." }
+  vivo: { t: "vivo", pos: verb, en: ["I live"], ex: ["Vivo in Italia.", "I live in Italy."] }
+  dove_abiti: { t: "dove abiti", pos: phrase, en: ["where do you live"], forms: ["dove abiti", "dove abita", "dove vivi", "dove vive"], ex: ["E tu, dove abiti?", "And you, where do you live?"] }
+  vicino: { t: "vicino", pos: adjective, en: ["near", "close"], forms: ["vicino", "vicina", "vicini"], ex: ["La stazione è vicina.", "The station is near."] }
+  lontano: { t: "lontano", pos: adjective, en: ["far"], forms: ["lontano", "lontana"], ex: ["È lontano da qui?", "Is it far from here?"] }
+  parlo: { t: "parlo", pos: verb, en: ["I speak"], ex: ["Parlo un po' di italiano.", "I speak a little Italian."] }
+  imparo: { t: "imparo", pos: verb, en: ["I learn", "I am learning"], forms: ["imparo", "sto imparando"], ex: ["Imparo l'italiano.", "I am learning Italian."] }
+  parli_inglese: { t: "parli inglese", pos: phrase, en: ["do you speak English"], forms: ["parli inglese", "parla inglese", "parlate inglese"], ex: ["Scusi, parla inglese?", "Excuse me, do you speak English?"] }
+  # courtesy
+  per_favore: { t: "per favore", pos: phrase, en: ["please"], forms: ["per favore", "per piacere", "per cortesia"], ex: ["Un caffè, per favore.", "A coffee, please."] }
+  grazie_mille: { t: "grazie mille", pos: phrase, en: ["thank you very much", "many thanks"], forms: ["grazie mille", "mille grazie", "molte grazie", "grazie tante"], ex: ["Grazie mille per l'aiuto.", "Thank you very much for the help."] }
+  prego: { t: "prego", pos: interjection, en: ["you're welcome"], ex: ["Grazie! Prego.", "Thanks! You're welcome."] }
+  di_niente: { t: "di niente", pos: phrase, en: ["it's nothing", "don't mention it"], forms: ["di niente", "di nulla", "figurati", "si figuri"], ex: ["Di niente, davvero.", "It's nothing, really."] }
+  scusi: { t: "scusi", pos: interjection, en: ["excuse me", "sorry"], forms: ["scusi", "scusa", "mi scusi", "scusami", "scusate"], ex: ["Scusi, dov'è il bagno?", "Excuse me, where is the bathroom?"], n: "'Scusa' to a friend, 'scusi' to a stranger." }
+  mi_dispiace: { t: "mi dispiace", pos: phrase, en: ["I am sorry"], forms: ["mi dispiace", "mi spiace"], ex: ["Mi dispiace per il ritardo.", "I am sorry for the delay."] }
+  nessun_problema: { t: "nessun problema", pos: phrase, en: ["no problem"], forms: ["nessun problema", "non c'è problema", "non fa niente", "non importa"], ex: ["Nessun problema, capita.", "No problem, it happens."] }
+  non_capisco: { t: "non capisco", pos: phrase, en: ["I don't understand"], forms: ["non capisco", "non ho capito"], ex: ["Mi dispiace, non capisco.", "I'm sorry, I don't understand."] }
+  puo_ripetere: { t: "può ripetere", pos: phrase, en: ["can you repeat"], forms: ["può ripetere", "puoi ripetere", "ripeta", "ripeti"], ex: ["Può ripetere, per favore?", "Can you repeat that, please?"] }
+  piu_piano: { t: "più piano", pos: phrase, en: ["more slowly", "slower"], forms: ["più piano", "più lentamente", "lentamente"], ex: ["Può parlare più piano?", "Can you speak more slowly?"] }
+  # numbers
+  uno: { t: "uno", pos: number, en: ["one"], ex: ["Uno, per favore.", "One, please."] }
+  due: { t: "due", pos: number, en: ["two"], ex: ["Due caffè.", "Two coffees."] }
+  tre: { t: "tre", pos: number, en: ["three"], ex: ["Tre panini.", "Three sandwiches."] }
+  quattro: { t: "quattro", pos: number, en: ["four"], ex: ["Quattro persone.", "Four people."] }
+  cinque: { t: "cinque", pos: number, en: ["five"], ex: ["Cinque minuti.", "Five minutes."] }
+  sei: { t: "sei", pos: number, en: ["six"], ex: ["Sei euro.", "Six euros."], n: "Also 'you are' (tu sei): the sentence tells you which." }
+  sette: { t: "sette", pos: number, en: ["seven"], ex: ["Sette giorni.", "Seven days."] }
+  otto: { t: "otto", pos: number, en: ["eight"], ex: ["Alle otto.", "At eight."] }
+  nove: { t: "nove", pos: number, en: ["nine"], ex: ["Nove euro.", "Nine euros."] }
+  dieci: { t: "dieci", pos: number, en: ["ten"], ex: ["Dieci minuti.", "Ten minutes."] }
+  quanti: { t: "quanti", pos: adjective, en: ["how many"], forms: ["quanti", "quante"], ex: ["Quanti sono?", "How many are there?"] }
+  anni: { t: "anni", pos: noun, en: ["years", "years old"], forms: ["anni", "anno"], ex: ["Ho venti anni.", "I am twenty years old."], n: "Age takes avere: ho trent'anni, 'I have thirty years'." }
+  quanti_anni_hai: { t: "quanti anni hai", pos: phrase, en: ["how old are you"], forms: ["quanti anni hai", "quanti anni ha"], ex: ["Quanti anni hai, Sara?", "How old are you, Sara?"] }
+  venti: { t: "venti", pos: number, en: ["twenty"], ex: ["Venti euro.", "Twenty euros."] }
+  trenta: { t: "trenta", pos: number, en: ["thirty"], ex: ["Trenta minuti.", "Thirty minutes."] }
+  quaranta: { t: "quaranta", pos: number, en: ["forty"], ex: ["Quaranta persone.", "Forty people."] }
+  cinquanta: { t: "cinquanta", pos: number, en: ["fifty"], ex: ["Cinquanta euro.", "Fifty euros."] }
+  quanto_costa: { t: "quanto costa", pos: phrase, en: ["how much does it cost", "how much is it"], forms: ["quanto costa", "quanto costano", "quant'è", "quanto viene"], ex: ["Quanto costa questo?", "How much does this cost?"] }
+  troppo_caro: { t: "troppo caro", pos: phrase, en: ["too expensive"], forms: ["troppo caro", "troppo cara", "costa troppo", "è troppo"], ex: ["No, è troppo caro.", "No, it is too expensive."] }
+  va_bene: { t: "va bene", pos: phrase, en: ["all right", "it's fine", "okay"], ex: ["Va bene, lo prendo.", "All right, I'll take it."] }
+  d_accordo: { t: "d'accordo", pos: phrase, en: ["agreed", "okay"], ex: ["D'accordo, dieci euro.", "Agreed, ten euros."] }
+  # cafe
+  vorrei: { t: "vorrei", pos: verb, en: ["I would like"], ex: ["Vorrei un caffè.", "I would like a coffee."], n: "The polite way to ask for anything." }
+  prendo: { t: "prendo", pos: verb, en: ["I'll have", "I take"], ex: ["Prendo un tè.", "I'll have a tea."] }
+  per_me: { t: "per me", pos: phrase, en: ["for me"], ex: ["Per me una birra.", "A beer for me."] }
+  caffe: { t: "caffè", pos: noun, en: ["coffee"], ex: ["Un caffè, grazie.", "A coffee, thanks."] }
+  te: { t: "tè", pos: noun, en: ["tea"], ex: ["Un tè caldo.", "A hot tea."] }
+  acqua: { t: "acqua", pos: noun, en: ["water"], ex: ["Un bicchiere d'acqua.", "A glass of water."] }
+  birra: { t: "birra", pos: noun, en: ["beer"], forms: ["birra", "birre"], ex: ["Una birra piccola.", "A small beer."] }
+  vino: { t: "vino", pos: noun, en: ["wine"], ex: ["Un bicchiere di vino rosso.", "A glass of red wine."] }
+  succo: { t: "succo", pos: noun, en: ["juice"], forms: ["succo", "spremuta"], ex: ["Un succo d'arancia.", "An orange juice."] }
+  cosa_ce: { t: "cosa c'è", pos: phrase, en: ["what is there"], forms: ["cosa c'è", "che cosa c'è", "che c'è", "cosa avete", "che cosa avete", "cosa consiglia"], ex: ["Cosa c'è da mangiare?", "What is there to eat?"] }
+  panino: { t: "panino", pos: noun, en: ["sandwich", "roll"], forms: ["panino", "panini"], ex: ["Un panino al formaggio.", "A cheese sandwich."] }
+  pizza: { t: "pizza", pos: noun, en: ["pizza"], forms: ["pizza", "pizze"], ex: ["Una pizza margherita.", "A margherita pizza."] }
+  cornetto: { t: "cornetto", pos: noun, en: ["croissant"], forms: ["cornetto", "cornetti", "brioche"], ex: ["Un cornetto e un caffè.", "A croissant and a coffee."] }
+  gelato: { t: "gelato", pos: noun, en: ["ice cream"], forms: ["gelato", "gelati"], ex: ["Un gelato al limone.", "A lemon ice cream."] }
+  pasta: { t: "pasta", pos: noun, en: ["pasta"], ex: ["La pasta al pomodoro.", "Pasta with tomato sauce."] }
+  insalata: { t: "insalata", pos: noun, en: ["salad"], ex: ["Un'insalata mista.", "A mixed salad."] }
+  anche: { t: "anche", pos: adverb, en: ["also", "too"], forms: ["anche", "e anche", "e poi"], ex: ["Anche un dolce, per favore.", "A dessert too, please."] }
+  buono: { t: "buono", pos: adjective, en: ["good", "tasty"], forms: ["buono", "buona", "buonissimo", "buonissima", "molto buono", "molto buona"], ex: ["Il gelato è buono.", "The ice cream is good."] }
+  ottimo: { t: "ottimo", pos: adjective, en: ["excellent"], forms: ["ottimo", "ottima"], ex: ["Ottimo, grazie!", "Excellent, thank you!"] }
+  delizioso: { t: "delizioso", pos: adjective, en: ["delicious"], forms: ["delizioso", "deliziosa"], ex: ["La pasta è deliziosa.", "The pasta is delicious."] }
+  il_conto: { t: "il conto", pos: noun, en: ["the bill", "the check"], forms: ["il conto", "conto"], ex: ["Il conto, per favore.", "The bill, please."] }
+  con_la_carta: { t: "con la carta", pos: phrase, en: ["by card", "with a card"], forms: ["con la carta", "con carta", "carta di credito", "col bancomat"], ex: ["Pago con la carta.", "I'm paying by card."] }
+  posso_pagare: { t: "posso pagare", pos: phrase, en: ["can I pay"], ex: ["Posso pagare qui?", "Can I pay here?"] }
+  # likes
+  mi_piace: { t: "mi piace", pos: phrase, en: ["I like"], forms: ["mi piace", "mi piacciono"], ex: ["Mi piace la musica.", "I like music."], n: "Literally 'it pleases me'. With a plural: mi piacciono i libri." }
+  non_mi_piace: { t: "non mi piace", pos: phrase, en: ["I don't like"], forms: ["non mi piace", "non mi piacciono"], ex: ["Non mi piace il freddo.", "I don't like the cold."] }
+  ti_piace: { t: "ti piace", pos: phrase, en: ["do you like"], forms: ["ti piace", "ti piacciono", "le piace", "le piacciono", "vi piace"], ex: ["Ti piace il mare?", "Do you like the sea?"] }
+  adoro: { t: "adoro", pos: verb, en: ["I love", "I adore"], ex: ["Adoro il cioccolato.", "I love chocolate."] }
+  amo: { t: "amo", pos: verb, en: ["I love"], ex: ["Amo la montagna.", "I love the mountains."] }
+  odio: { t: "odio", pos: verb, en: ["I hate"], ex: ["Odio il lunedì.", "I hate Mondays."] }
+  detesto: { t: "detesto", pos: verb, en: ["I detest", "I can't stand"], ex: ["Detesto aspettare.", "I detest waiting."] }
+  non_sopporto: { t: "non sopporto", pos: phrase, en: ["I can't stand"], ex: ["Non sopporto il traffico.", "I can't stand traffic."] }
+  molto: { t: "molto", pos: adverb, en: ["very much", "a lot", "very"], forms: ["molto", "moltissimo", "tanto", "tantissimo"], ex: ["Mi piace molto.", "I like it very much."] }
+  per_niente: { t: "per niente", pos: phrase, en: ["not at all"], forms: ["per niente", "per nulla", "affatto"], ex: ["Non mi piace per niente.", "I don't like it at all."] }
+  preferisco: { t: "preferisco", pos: verb, en: ["I prefer"], ex: ["Preferisco il vino rosso.", "I prefer red wine."] }
+  perche: { t: "perché", pos: conjunction, en: ["because", "why"], ex: ["Perché è buono.", "Because it is good."], n: "The same word asks 'why?' and answers 'because'." }
+  anch_io: { t: "anch'io", pos: phrase, en: ["me too", "so do I"], forms: ["anch'io", "anche io"], ex: ["Adoro il mare. Anch'io!", "I love the sea. Me too!"] }
+  neanch_io: { t: "neanch'io", pos: phrase, en: ["me neither"], forms: ["neanch'io", "neanche io", "nemmeno io", "neanche a me", "nemmeno a me"], ex: ["Non mi piace. Neanche a me.", "I don't like it. Me neither."] }
+  anche_a_me: { t: "anche a me", pos: phrase, en: ["me too", "I like it too"], ex: ["Mi piace il jazz. Anche a me.", "I like jazz. Me too."], n: "The 'me too' that answers 'mi piace'." }

@@ -123,6 +123,22 @@ export function trimEvidence(spellbook, limit = EVIDENCE_LIMIT) {
   return spellbook;
 }
 
+// Round 144: The Long Way Home (road/service.js). Only the container is checked: a road this server cannot read is
+// dropped and the save kept, and the learner starts a new road.
+const SITE_ID = /^-?\d{1,7},-?\d{1,7}$/;
+function validRoad(road) {
+  const ids = (list, max) => Array.isArray(list) && list.length <= max && list.every((id) => typeof id === 'string' && SITE_ID.test(id));
+  const record = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+  return record(road)
+    && Number.isSafeInteger(road.seed) && Number.isSafeInteger(road.step) && road.step >= 0
+    && ids([road.at], 1) && ids(road.trail, 300) && ids(road.cleared, 300)
+    && (road.current === null || (record(road.current) && ids([road.current.node], 1) && Number.isSafeInteger(road.current.step) && record(road.current.activity) && typeof road.current.activity.kind === 'string'))
+    && record(road.progress) && record(road.progress.lessons) && record(road.progress.checkpoints)
+    && Array.isArray(road.progress.recent) && road.progress.recent.length <= 50 && road.progress.recent.every((score) => Number.isFinite(score))
+    && Object.keys(road.progress.lessons).length <= 5000
+    && Array.isArray(road.log) && road.log.length <= 30 && road.log.every(record);
+}
+
 function validWorld(world) {
   const ids = (list) => Array.isArray(list) && list.every((id) => typeof id === 'string');
   return Boolean(world) && typeof world === 'object' && !Array.isArray(world)
@@ -177,6 +193,7 @@ function validateEnvelope(value, learnerId) {
     throw retryableError('The learner save contains invalid dungeon progress. The original file was preserved.', 'SAVE_UNREADABLE');
   }
   for (const [id, run] of Object.entries(value.dungeons)) if (!validDungeonRun(run)) delete value.dungeons[id];
+  if (value.road !== undefined && !validRoad(value.road)) delete value.road;
   // Round 121: experience. A save without it, or with anything but a whole number of XP, has none.
   // Review R1.5: a safe integer, so an edited save with 1e308 XP is not taken for a number of XP.
   if (!Number.isSafeInteger(value.progression?.xp) || value.progression.xp < 0) value.progression = { xp: 0 };

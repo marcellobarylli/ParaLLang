@@ -1,0 +1,337 @@
+// Round 144: The Long Way Home on the server: the learner's place on the endless graph, what each site ahead offers,
+// the conversation at the site they stand at, and what a finished conversation does to the curriculum. These are
+// methods of LearningService (learning-service.js assigns them to its prototype); they live here so that the road
+// can be read in one place.
+//
+// The save holds, under `road`:
+//
+//   seed      the landscape's seed (each learner has their own)
+//   step      conversations finished on the road
+//   at        the site the learner stands at ("i,j")
+//   trail     the sites visited, oldest first, the last ROAD.trail of them; an older site falls out of the trail
+//             and is wilderness again
+//   cleared   the sites whose conversation was finished, the last ROAD.trail of them
+//   current   the conversation waiting at `at`: { node, step, activity }, or null once it is finished
+//   progress  the curriculum's marks (pacing.js)
+//   log       the last ROAD.log conversations, newest first, for the journal
+//
+// Rules: the learner may walk to any site next to a site of the recent trail that is not itself on the trail (the
+// frontier; round 143's rule that everything out of the fog is reachable from anywhere). The pacing's recommended
+// conversation waits at the "rails" site, the others at the rest of the frontier, so the map is a choice between
+// kinds of conversation and "on rails" is the pacing's own order.
+
+import { randomInt } from 'node:crypto';
+import { AppError, conflictError, validationError } from '../errors.js';
+import { isDue } from '../language-engine.js';
+import { assertLearnerId } from '../learning-storage.js';
+import { hash, createTerrain } from './terrain.js';
+import { graphFor, parseNodeId } from './graph.js';
+import { placeName } from './characters.js';
+import { ROAD_PLACE, buildRoadDefinition, describeActivity, objectivesOf } from './encounters.js';
+import { PACING, composeCheckpoint, composeReview, emptyProgress, overview, plan, position, record, scoreOf } from './pacing.js';
+
+export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200 });
+
+const clone = (value) => structuredClone(value);
+const graphOf = (seed) => graphFor(seed, createTerrain);
+
+/** A road that has not been walked: the learner stands at the start with the first lesson waiting. */
+export function freshRoad(seed, curriculum) {
+  const graph = graphOf(seed);
+  const road = { seed, step: 0, at: graph.start, trail: [graph.start], cleared: [], current: null, progress: emptyProgress(), log: [] };
+  const [first] = plan(curriculum, road.progress, 0);
+  road.current = first ? { node: graph.start, step: 0, activity: commit(curriculum, road.progress, 0, first, () => false) } : null;
+  return road;
+}
+
+// An activity as it is fixed when the learner arrives: a review and a checkpoint get their objectives then.
+function commit(curriculum, progress, step, activity, isDueObjective) {
+  const { why, ...kept } = activity;
+  if (activity.kind === 'review') return { ...kept, picks: composeReview(curriculum, progress, step, isDueObjective) };
+  if (activity.kind === 'checkpoint') return { ...kept, picks: composeCheckpoint(curriculum, progress, activity.unitId) };
+  return kept;
+}
+
+/** The sites the learner may walk to, nearest first: [{ id, from }], `from` being the trail site each is joined to. */
+export function frontierOf(graph, road) {
+  const onTrail = new Set(road.trail);
+  const seen = new Set();
+  const out = [];
+  const recent = [road.at, ...road.trail.slice(-ROAD.frontierFrom).reverse().filter((id) => id !== road.at)];
+  for (const from of recent) {
+    for (const id of graph.neighbours(from)) {
+      if (onTrail.has(id) || seen.has(id)) continue;
+      seen.add(id);
+      out.push({ id, from });
+    }
+  }
+  return out;
+}
+
+/**
+ * What waits at each site of the frontier, and which site the rails take: { rails, offers: Map(id -> activity) }.
+ * The rails site is a hashed pick among the sites next to the learner (a random walk that the seed fixes), or the
+ * nearest frontier site when the learner stands at a dead end. It holds the pacing's first choice.
+ */
+export function offersFor(graph, road, curriculum) {
+  const frontier = frontierOf(graph, road);
+  const options = plan(curriculum, road.progress, road.step);
+  if (!frontier.length || !options.length) return { frontier, rails: null, offers: new Map() };
+  const [i, j] = parseNodeId(road.at);
+  const next = frontier.filter((entry) => entry.from === road.at);
+  const rails = (next.length ? next : frontier.slice(0, 1))
+    .map((entry) => { const [ni, nj] = parseNodeId(entry.id); return { entry, order: hash(ni * 7 + i + road.step, nj * 11 - j - road.step, road.seed + 777) }; })
+    .sort((a, b) => a.order - b.order)[0].entry.id;
+  const offers = new Map([[rails, options[0]]]);
+  let turn = 0;
+  for (const { id } of frontier) {
+    if (id === rails) continue;
+    turn += 1;
+    offers.set(id, options[turn % options.length]);
+  }
+  return { frontier, rails, offers };
+}
+
+export const roadMethods = {
+  curriculum() {
+    const { curriculum } = this.content;
+    if (!curriculum) throw new AppError(`${ROAD.name} is not open in ${this.content.language.name} yet.`, { status: 404, code: 'NO_CURRICULUM' });
+    return curriculum;
+  },
+
+  // The road of a save, made whole: a learner who never set foot on it gets a new one (not saved until they move or talk).
+  roadOf(envelope) {
+    const curriculum = this.curriculum();
+    const stored = envelope.road;
+    if (!stored) return freshRoad(this.roadSeed(), curriculum);
+    const graph = graphOf(stored.seed);
+    // Content may have changed under a save: a site that no longer exists, a lesson that was removed.
+    const at = graph.node(stored.at) ? stored.at : graph.start;
+    const road = { ...clone(stored), at, trail: stored.trail.includes(at) ? [...stored.trail] : [...stored.trail, at] };
+    if (road.current && (road.current.node !== at || !objectivesOf(curriculum, road.current.activity).length)) road.current = null;
+    return road;
+  },
+
+  isDueObjective(envelope) {
+    const now = this.clock();
+    return (objective) => objective.target_vocabulary_ids.some((id) => {
+      const item = this.findItem(envelope, id);
+      return Boolean(item) && this.isCurrent(item) && isDue(item.schedule, now);
+    });
+  },
+
+  roadDefinition(session) {
+    this.roadDefinitions ??= new Map();
+    const key = JSON.stringify(session);
+    let definition = this.roadDefinitions.get(key);
+    if (!definition) {
+      const curriculum = this.curriculum();
+      definition = buildRoadDefinition({
+        curriculum, language: this.content.language, seed: session.seed, node: graphOf(session.seed).node(session.node),
+        step: session.step, activity: session.activity, currentUnitId: session.unitId,
+      });
+      this.roadDefinitions.set(key, definition);
+      if (this.roadDefinitions.size > ROAD.definitions) this.roadDefinitions.delete(this.roadDefinitions.keys().next().value);
+    }
+    return definition;
+  },
+
+  // What a session of the conversation waiting at the learner's site holds (plain data: sessions are cloned).
+  roadSession(road, curriculum) {
+    return { seed: road.seed, node: road.current.node, step: road.current.step, activity: road.current.activity, unitId: position(curriculum, road.progress).unit?.id ?? null };
+  },
+
+  roadView(envelope, road = this.roadOf(envelope)) {
+    const curriculum = this.curriculum();
+    const graph = graphOf(road.seed);
+    const currentUnitId = position(curriculum, road.progress).unit?.id ?? null;
+    const site = (id) => { const node = graph.node(id); return { id, name: placeName(road.seed, node), biome: node.biome, at: [Math.round(node.x * 10) / 10, Math.round(node.z * 10) / 10] }; };
+    const offer = (node, step, activity) => {
+      const { unit, stage, title, character } = describeActivity({ curriculum, seed: road.seed, node, step, activity, currentUnitId });
+      return {
+        kind: activity.kind, title, unitId: unit.id, unitTitle: unit.title, cefr: stage.cefr, why: activity.why ?? null,
+        character: { name: character.name, role: character.species, description: character.appearance, hue: character.hue },
+      };
+    };
+    const { frontier, rails, offers } = offersFor(graph, road, curriculum);
+    return {
+      road: {
+        id: ROAD.id, name: ROAD.name, seed: road.seed, step: road.step, at: road.at, here: site(road.at),
+        current: road.current ? offer(graph.node(road.current.node), road.current.step, road.current.activity) : null,
+        trail: road.trail.slice(-ROAD.shownTrail), cleared: road.cleared.slice(-ROAD.shownTrail),
+        frontier: frontier.map(({ id, from }) => ({
+          ...site(id), from, way: graph.edge(from, id).kind, recommended: id === rails,
+          offer: offer(graph.node(id), road.step, offers.get(id)),
+        })),
+        rails,
+        log: road.log,
+      },
+      curriculum: overview(curriculum, road.progress),
+      progression: this.progression(envelope),
+    };
+  },
+
+  async getRoad(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    if (envelope.road) return this.roadView(envelope);
+    // The first look creates the road, so that the seed (and with it the landscape) is fixed from then on.
+    return this.serialized(learnerId, async () => {
+      const latest = await this.loadEnvelope(learnerId);
+      if (latest.road) return this.roadView(latest);
+      const staged = clone(latest);
+      staged.road = freshRoad(this.roadSeed(), this.curriculum());
+      await this.storage.save(staged);
+      return this.roadView(staged);
+    });
+  },
+
+  // A walk to a site of the frontier. The conversation the pacing put there is fixed on arrival. While the road's own
+  // conversation is under way the move is refused, unless `leave` is true, which drops that conversation.
+  async moveOnRoad(learnerId, request) {
+    assertLearnerId(learnerId);
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const curriculum = this.curriculum();
+      const road = this.roadOf(envelope);
+      const graph = graphOf(road.seed);
+      const nodeId = request?.nodeId;
+      if (typeof nodeId !== 'string' || !graph.node(nodeId)) throw validationError('Unknown site.');
+      if (nodeId === road.at) return this.roadView(envelope, road);
+      const { frontier, offers } = offersFor(graph, road, curriculum);
+      if (!frontier.some((entry) => entry.id === nodeId)) {
+        throw conflictError(`You can't get to ${placeName(road.seed, graph.node(nodeId))} from here.`, 'NOT_ADJACENT');
+      }
+      const active = this.encounters.get(learnerId);
+      const own = Boolean(active?.road);
+      if (own && active.state === 'ongoing' && request?.leave !== true) {
+        throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
+      }
+      const staged = clone(envelope);
+      const activity = commit(curriculum, road.progress, road.step, offers.get(nodeId), this.isDueObjective(envelope));
+      staged.road = {
+        ...road, at: nodeId,
+        trail: [...road.trail.filter((id) => id !== nodeId), nodeId].slice(-ROAD.trail),
+        current: { node: nodeId, step: road.step, activity },
+      };
+      await this.storage.save(staged);
+      if (own) this.encounters.delete(learnerId);
+      return this.roadView(staged);
+    });
+  },
+
+  // The conversation waiting at the site the learner stands at. The road's own conversation resumes (a reload);
+  // another conversation under way is never replaced without `restart`.
+  async _startRoad(learnerId, restart) {
+    let envelope = await this.loadEnvelope(learnerId);
+    const curriculum = this.curriculum();
+    const road = this.roadOf(envelope);
+    if (!envelope.road) {
+      envelope = clone(envelope);
+      envelope.road = road;
+      await this.storage.save(envelope);
+    }
+    if (!road.current) throw conflictError('Nobody is waiting here any more. Walk on.', 'NOTHING_HERE');
+    const session = this.roadSession(road, curriculum);
+    const definition = this.roadDefinition(session);
+    const active = this.encounters.get(learnerId);
+    const ownSession = Boolean(active?.road) && this.definition(active) === definition;
+    if (!restart && ownSession && active.state === 'ongoing') {
+      return { encounter: this.serializeEncounter(active), spellbook: this.spellbookSnapshot(envelope) };
+    }
+    if (!restart && !ownSession && active?.state === 'ongoing') {
+      throw conflictError(`Finish your conversation with ${this.definition(active).character.name} first.`, 'CONVERSATION_UNDER_WAY');
+    }
+    return this.openSession(learnerId, envelope, definition, { road: session });
+  },
+
+  // A road conversation resolved: its score goes to the curriculum's marks, the step counts up, the site is cleared
+  // and nobody waits there any more. Called inside the turn's own save, so a replayed attempt records nothing twice.
+  finishRoad(envelope, session) {
+    const stored = envelope.road;
+    if (!stored?.current || stored.current.node !== session.road.node || stored.current.step !== session.road.step) return null;
+    const curriculum = this.curriculum();
+    const definition = this.roadDefinition(session.road);
+    const total = definition.encounter.objectives.length;
+    const corrected = new Set(session.correctedObjectiveIds ?? []);
+    const hinted = definition.encounter.objectives.filter((objective) => !corrected.has(objective.id) && (session.reveals?.[objective.id] ?? []).length > 0).length;
+    const score = scoreOf({ total, corrected: corrected.size, hinted });
+    const { activity } = stored.current;
+    const before = position(curriculum, stored.progress);
+    const step = stored.step + 1;
+    const progress = record(stored.progress, activity, score, step);
+    const after = position(curriculum, progress);
+    const result = {
+      kind: activity.kind, title: definition.road.title, score: Math.round(score * 100) / 100,
+      ...(activity.kind === 'checkpoint' ? { passed: score >= PACING.checkpointPass, needed: PACING.checkpointPass } : {}),
+      ...(before.unit && after.unit?.id !== before.unit.id ? { opened: after.unit ? { unitId: after.unit.id, unitTitle: after.unit.title } : { complete: true } } : {}),
+    };
+    envelope.road = {
+      ...stored, step, progress, current: null,
+      cleared: [...stored.cleared.filter((id) => id !== session.road.node), session.road.node].slice(-ROAD.trail),
+      log: [{
+        step, node: session.road.node, place: definition.road.place, kind: activity.kind, title: definition.road.title,
+        unitTitle: definition.road.unitTitle, character: definition.character.name, role: definition.character.species,
+        score: result.score, at: new Date(this.clock()).toISOString(),
+      }, ...stored.log].slice(0, ROAD.log),
+    };
+    return result;
+  },
+
+  // A new road: another landscape, and the walk starts again. The curriculum's marks are kept unless `forget` is true.
+  async resetRoad(learnerId, request) {
+    assertLearnerId(learnerId);
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const curriculum = this.curriculum();
+      const staged = clone(envelope);
+      const fresh = freshRoad(this.roadSeed(), curriculum);
+      if (request?.forget !== true && envelope.road) {
+        fresh.progress = envelope.road.progress;
+        fresh.step = envelope.road.step;
+        fresh.log = envelope.road.log;
+        const [first] = plan(curriculum, fresh.progress, fresh.step);
+        fresh.current = first ? { node: fresh.at, step: fresh.step, activity: commit(curriculum, fresh.progress, fresh.step, first, this.isDueObjective(envelope)) } : null;
+      }
+      staged.road = fresh;
+      await this.storage.save(staged);
+      if (this.encounters.get(learnerId)?.road) this.encounters.delete(learnerId);
+      return this.roadView(staged);
+    });
+  },
+
+  roadSeed() { return this.seedSource ? this.seedSource() : randomInt(1, 2 ** 31 - 1); },
+
+  // The whole game state of a learner, for a copy outside the server (the hosted server loses its files on a
+  // restart). Without the receipts of past answers: they only stop an answer from counting twice on this server.
+  async exportSave(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    const save = clone(envelope);
+    save.spellbook.processedAssessments = {};
+    return { save, language: this.content.language.code, exportedAt: new Date(this.clock()).toISOString() };
+  },
+
+  // Puts a copy back. Refused when the server holds a save for that learner, unless `replace` is true.
+  async restoreSave(request) {
+    const save = request?.save;
+    if (!save || typeof save !== 'object' || Array.isArray(save)) throw validationError('A save is required.');
+    if (request.language && request.language !== this.content.language.code) {
+      throw conflictError(`That save is for another language (${request.language}); this server teaches ${this.content.language.name}.`, 'WRONG_LANGUAGE');
+    }
+    const learnerId = assertLearnerId(save.learnerId);
+    return this.serialized(learnerId, async () => {
+      let existing = null;
+      try { existing = await this.storage.load(learnerId); } catch { existing = 'unreadable'; }
+      if (existing && request.replace !== true) throw conflictError('The server already holds a save for this learner.', 'SAVE_EXISTS');
+      const staged = clone(save);
+      if (staged.spellbook && typeof staged.spellbook === 'object') staged.spellbook.processedAssessments = {};
+      try { await this.storage.save(staged); }
+      catch (error) {
+        if (error.code === 'SAVE_UNREADABLE') throw validationError('That save cannot be read by this server.');
+        throw error;
+      }
+      this.encounters.delete(learnerId);
+      this.reviewChallenges.delete(learnerId);
+      return { restored: true, learnerId, language: this.content.language };
+    });
+  },
+};

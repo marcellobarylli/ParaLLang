@@ -1,0 +1,189 @@
+# Round 144: the curriculum's skeleton, stage A1.1. Language-neutral: what the learner can do, the lessons and what
+# each asks of the player. The words are in content/languages/<code>/curriculum/01_a1_1.yaml. The order of functions
+# follows the CEFR A1 descriptors and the A1 syllabi read for the round (docs/curriculum.md): greet and introduce,
+# personal data, getting by when you do not understand, numbers, ordering, likes.
+#
+# `roles` are who the player may meet in the unit: "Title: what they are like". One is drawn per site and dressed by
+# server/src/road/characters.js. `{name}` in `ask` and `cue` is the character's name. The roles are in the style
+# guide's voice (content/narration/style_guide.yaml).
+id: a1_1
+cefr: A1
+name: First words
+ratio: 0.2
+can_do: >
+  Greet people, say who you are and where you are from, get by when you have not understood, count, order something
+  and say what you like.
+units:
+  - id: greetings
+    title: Hello and goodbye
+    can_do: "Greet someone, say your name and ask theirs, say how you are, and take your leave."
+    grammar: "First forms of 'to be' and 'to be called'; informal and formal 'you'."
+    roles:
+      - "Greeter, Third Class: is licensed by a guild to say hello professionally and regards amateur greetings with pity"
+      - "Doorkeeper Without a Door: guards an entrance that was removed for cleaning years ago and has not been told"
+      - "Census Taker: has been counting the people on this road since before it was a road and is missing exactly one"
+      - "Retired Echo: used to repeat things for a living and now waits, out of habit, for someone else to speak first"
+    lessons:
+      - id: greetings_hello
+        title: Saying hello
+        objectives:
+          - { id: greet, ask: "Greet {name}", cue: "{name} is plainly waiting to be greeted and will not be the one to start." }
+          - { id: how_are_you, ask: "Ask {name} how they are", cue: "{name} looks like someone with a great deal to report on the subject of how they are." }
+          - { id: goodbye, ask: "Say goodbye to {name}", cue: "{name} has other people to be greeted by." }
+      - id: greetings_name
+        title: Names
+        objectives:
+          - { id: my_name, ask: "Tell {name} your name", cue: "{name} is holding a list and a pencil, and you are not on the list." }
+          - { id: your_name, ask: "Ask {name} what they are called" }
+          - { id: pleased, ask: "Say that you are pleased to meet {name}" }
+      - id: greetings_fine
+        title: How you are
+        objectives:
+          - { id: i_am_fine, ask: "Tell {name} how you are", cue: "{name} has asked how you are and, unusually, wants to know." }
+          - { id: thanks, ask: "Thank {name} for asking" }
+          - { id: and_you, ask: "Ask {name} the same question back" }
+
+  - id: origins
+    title: Where you are from
+    can_do: "Say where you are from and where you live, ask others, and say which languages you speak."
+    grammar: "'To be from', 'to live in', 'to speak'; questions with 'where'."
+    roles:
+      - "Border Official: administers a border that moved away one night and stamps papers so that it will know where to come back to"
+      - "Cartographer of Elsewhere: draws only the places people say they are from, and the map is getting crowded"
+      - "Homesick Milestone: a stone that insists it is from a much better road than this one"
+      - "Innkeeper of the Halfway House: has never found out halfway to where, and asks every guest in case one of them knows"
+    lessons:
+      - id: origins_from
+        title: Where from
+        objectives:
+          - { id: i_am_from, ask: "Tell {name} where you are from", cue: "{name} has a form with a space marked ORIGIN and intends to fill it." }
+          - { id: where_from, ask: "Ask {name} where they are from" }
+          - { id: react, ask: "React to what {name} tells you: say that it is nice, or interesting" }
+      - id: origins_live
+        title: Where you live
+        objectives:
+          - { id: i_live, ask: "Tell {name} where you live" }
+          - { id: where_live, ask: "Ask {name} where they live" }
+          - { id: near_far, ask: "Say whether that is near or far from here" }
+      - id: origins_language
+        title: Languages
+        objectives:
+          - { id: i_speak, ask: "Tell {name} that you speak a little of their language", cue: "{name} has noticed your accent and is being polite about it, with visible effort." }
+          - { id: i_learn, ask: "Say that you are learning it" }
+          - { id: do_you_speak, ask: "Ask {name} whether they speak English" }
+
+  - id: courtesy
+    title: Please, thank you, sorry
+    can_do: "Be polite, apologise, and say so when you have not understood: ask for a thing to be repeated or said slowly."
+    grammar: "Polite formulas; 'not' with a verb; 'can you'."
+    roles:
+      - "Inspector of Manners: issues small fines for rudeness, payable in apologies, and keeps the receipts"
+      - "Fast Talker: was cursed to speak at twice the usual speed and has made peace with being asked to slow down"
+      - "Professional Apologiser: says sorry on behalf of people who are too busy, at a reasonable hourly rate"
+      - "Toll Keeper of the Polite Bridge: the toll is one courteous word, and the bridge knows the difference"
+    lessons:
+      - id: courtesy_please
+        title: Please and thank you
+        objectives:
+          - { id: please, ask: "Ask {name} for something and say please", cue: "{name} has something you need and a firm view of how it should be asked for." }
+          - { id: thank_you, ask: "Thank {name} very much" }
+          - { id: welcome, ask: "{name} thanks you in turn: say that they are welcome" }
+      - id: courtesy_sorry
+        title: Sorry
+        objectives:
+          - { id: excuse_me, ask: "Get {name}'s attention politely", cue: "{name} is busy with something that matters only to {name}." }
+          - { id: sorry, ask: "Apologise to {name}", cue: "You have stepped on something of {name}'s. It was probably important." }
+          - { id: no_problem, ask: "{name} apologises too: say that it is no problem" }
+      - id: courtesy_repeat
+        title: When you have not understood
+        objectives:
+          - { id: not_understand, ask: "Tell {name} that you do not understand", cue: "{name} has just said something long, fast and apparently urgent." }
+          - { id: repeat, ask: "Ask {name} to repeat it" }
+          - { id: slowly, ask: "Ask {name} to speak more slowly" }
+
+  - id: numbers
+    title: Numbers and age
+    can_do: "Count, say how old you are and ask others, ask what something costs and say what you think of the price."
+    grammar: "Numbers to a hundred; 'to have' for age; 'how many' and 'how much'."
+    roles:
+      - "Counter of Sheep: counts them for people who cannot sleep, and is very tired"
+      - "Clerk of Small Sums: adds up things nobody asked about and presents the total with pride"
+      - "Haggler by Appointment: holds a royal warrant for arguing about prices and has never once paid one"
+      - "Keeper of the Birthday Ledger: records everyone's age and disapproves of how quickly people change it"
+    lessons:
+      - id: numbers_count
+        title: Counting
+        objectives:
+          - { id: one_two_three, ask: "Count to three for {name}", cue: "{name} has lost count and needs someone to start again from the beginning." }
+          - { id: a_number, ask: "Tell {name} a number between four and ten" }
+          - { id: how_many, ask: "Ask {name} how many there are" }
+      - id: numbers_age
+        title: How old
+        objectives:
+          - { id: my_age, ask: "Tell {name} how old you are", cue: "{name} has a ledger open at a blank line with your name already on it." }
+          - { id: your_age, ask: "Ask {name} how old they are" }
+          - { id: round_number, ask: "Guess {name}'s age out loud: twenty, thirty, forty or fifty" }
+      - id: numbers_price
+        title: Prices
+        objectives:
+          - { id: how_much, ask: "Ask {name} how much it costs", cue: "{name} is selling something and has not said what it costs, on purpose." }
+          - { id: too_much, ask: "Say that it is too expensive" }
+          - { id: deal, ask: "Agree on a price: say that it is fine" }
+
+  - id: cafe
+    title: Ordering
+    can_do: "Order a drink and something to eat, ask what there is, and ask for the bill."
+    grammar: "'I would like'; the indefinite article; 'and', 'also'."
+    roles:
+      - "Waiter of the Old School: has not written an order down since the war, any war, and has never been right"
+      - "Landlady of the Travelling Inn: the inn follows its customers down the road at a discreet distance"
+      - "Cook Who Does One Dish: it is a very good dish, and the menu is long only out of optimism"
+      - "Tea Lady of the Crossroads: serves refreshment to travellers who cannot decide, and has regulars"
+    lessons:
+      - id: cafe_order
+        title: Something to drink
+        objectives:
+          - { id: i_would_like, ask: "Tell {name} politely that you would like to order", cue: "{name} is standing over you with the patience of someone paid by the hour." }
+          - { id: a_drink, ask: "Order something to drink" }
+          - { id: thanks, ask: "Thank {name} when it arrives" }
+      - id: cafe_food
+        title: Something to eat
+        objectives:
+          - { id: what_is_there, ask: "Ask {name} what there is to eat" }
+          - { id: some_food, ask: "Order something to eat" }
+          - { id: also, ask: "Add one more thing to your order" }
+      - id: cafe_bill
+        title: The bill
+        objectives:
+          - { id: it_was_good, ask: "Tell {name} that it was good", cue: "{name} is hovering near your empty plate, hoping for a review." }
+          - { id: the_bill, ask: "Ask {name} for the bill" }
+          - { id: pay, ask: "Ask whether you can pay by card" }
+
+  - id: likes
+    title: Likes and dislikes
+    can_do: "Say what you like, love, dislike and prefer, give a simple reason, and agree with someone."
+    grammar: "'I like' with singular and plural; 'very', 'not at all'; 'because'."
+    roles:
+      - "Critic of Everything: reviews sunsets, puddles and passers-by, and has given one thing five stars, once, by accident"
+      - "Matchmaker for Objects: introduces people to things they might like and takes a small commission"
+      - "Collector of Opinions: keeps them in jars, labelled, and is short of a few common ones"
+      - "Enthusiast: likes everything, loudly, and is suspicious of anyone who does not"
+    lessons:
+      - id: likes_like
+        title: I like it
+        objectives:
+          - { id: i_like, ask: "Tell {name} something that you like", cue: "{name} wants your opinion and has a pencil ready to take it down." }
+          - { id: i_dont_like, ask: "Tell {name} something that you do not like" }
+          - { id: do_you_like, ask: "Ask {name} whether they like it" }
+      - id: likes_love
+        title: Love and hate
+        objectives:
+          - { id: i_love, ask: "Tell {name} something that you love" }
+          - { id: i_hate, ask: "Tell {name} something that you cannot stand" }
+          - { id: how_much, ask: "Say how much: very much, or not at all" }
+      - id: likes_prefer
+        title: What you prefer
+        objectives:
+          - { id: i_prefer, ask: "Tell {name} which of two things you prefer", cue: "{name} is holding up two things that look, to you, exactly the same." }
+          - { id: because, ask: "Give {name} a reason, with 'because'" }
+          - { id: me_too, ask: "{name} agrees with you: say 'me too' or 'me neither'" }
