@@ -1,4 +1,4 @@
-// Round 144: The Long Way Home on the screen, against the real server logic (src/__tests__/roadServer.js) and with
+// Round 144: The Journey 2 on the screen, against the real server logic (src/__tests__/roadServer.js) and with
 // no WebGL (the backdrop stands in and the camera arrives at once). From the world map: the hub with the character in
 // words, a conversation, the way on by the rails, the map with a site of the player's own choice, the curriculum.
 import { afterAll, afterEach, expect, test, vi } from 'vitest';
@@ -29,7 +29,7 @@ async function mount() {
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
   await user.click(await screen.findByRole('button', { name: 'Enter' }, { timeout: 20_000 }));
-  await user.click(screen.getByRole('button', { name: 'Set out on The Long Way Home' }));
+  await user.click(screen.getByRole('button', { name: 'Set out on The Journey 2: Journathan Returns (again)' }));
   // The first road of a process loads the curriculum (about a second, more on a busy machine).
   await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 });
   return { server, user, s: () => useStore.getState() };
@@ -45,7 +45,7 @@ test('the hub names the place, describes who waits in words, and says where the 
   expect(card.textContent).toContain(current.character.description);
   expect(card.textContent).toContain('A1 · unit 1 of');
   expect(card.textContent).toContain('Saying hello');
-  expect(screen.getByText('The Long Way Home')).toBeTruthy(); // the top bar
+  expect(screen.getByText('The Journey 2: Journathan Returns (again)')).toBeTruthy(); // the top bar
   expect(screen.queryByRole('button', { name: /^Party/ })).toBe(null);
   expect(screen.getByRole('checkbox', { name: /On rails/ }).checked).toBe(true);
   // Round 146: the time of day and the weather of this road, as its seed and the clock give them.

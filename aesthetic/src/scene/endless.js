@@ -5,7 +5,7 @@ import { hexToRgb } from '../palette.js';
 import { MeshBuilder } from './geometry.js';
 import { assembleWorld, createWorldKit } from './world.js';
 
-// Round 144: the endless landscape of The Long Way Home, in the PS1 look. The ground is not built once: it is cut
+// Round 144: the endless landscape of The Journey 2, in the PS1 look. The ground is not built once: it is cut
 // into square chunks, and only the chunks around a point (the camera) exist. `streamTo(x, z)` builds the missing ones
 // nearest first, a few per call, and drops those left behind, so the level is as large as the walk and costs the same
 // at every step.

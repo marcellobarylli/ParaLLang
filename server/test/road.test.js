@@ -1,4 +1,4 @@
-// Round 144: The Long Way Home. The landscape and its graph are deterministic and need no storage; the curriculum
+// Round 144: The Journey 2. The landscape and its graph are deterministic and need no storage; the curriculum
 // loads in both packs and every authored example passes the engine's own answer check; the pacing puts reviews and
 // gates where its rules say; a walk on rails goes through the curriculum; a move obeys the frontier; a finished
 // conversation is recorded once; the whole save can be copied out and put back.
@@ -273,7 +273,7 @@ test('a move obeys the frontier, the map offers a choice of kinds, and a convers
   assert.equal(started.data.encounter.road.kind, 'lesson');
   assert.equal(started.data.encounter.location, 'the_long_way');
   assert.ok(started.data.encounter.character.description && started.data.encounter.character.role);
-  assert.match(runtime.provider.calls[0].messages.at(-1).content, /in The Long Way Home\./);
+  assert.match(runtime.provider.calls[0].messages.at(-1).content, /in The Journey 2: Journathan Returns \(again\)\./);
   assert.match(runtime.provider.calls[0].messages.at(-1).content, /teaching_note/);
   // A reload resumes the same conversation; a walk away needs `leave`.
   assert.equal((await startHere(runtime, learnerId)).data.encounter.id, started.data.encounter.id);

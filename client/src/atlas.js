@@ -5,3 +5,5 @@ import { atlasView } from './dungeonModel.js';
 
 export const ATLAS_FILE = atlas;
 export const ATLAS = atlasView(atlas);
+// Round 152: the road's name, said in one place (the atlas). The server's copy is ROAD_PLACE in server/src/road/encounters.js.
+export const ROAD_NAME = atlas.places.find((place) => place.road).name;

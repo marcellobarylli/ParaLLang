@@ -1,4 +1,4 @@
-// Round 144: plays the built web client along The Long Way Home in headless Chromium and takes the round's pictures.
+// Round 144: plays the built web client along The Journey 2 in headless Chromium and takes the round's pictures.
 // It is the round's end-to-end check: the world map, the road from the sky, the hub, a conversation, the glide to
 // the next site on rails, the map, a choice off the rails, the curriculum, and the save put back on a server that
 // lost it. It fails if the road does not play.
@@ -131,7 +131,7 @@ async function run(browser, size, content) {
     await until(page, (s) => s.connection === 'ready', 'the server');
     await click('Enter');
     await shot('01-world-map');
-    await click(/Set out on The Long Way Home/);
+    await click(/Set out on The Journey 2/);
     let s = await until(page, (v) => v.mode === 'road' && v.at && !v.loading && v.scene?.chunks >= 81, 'the road and its ground');
     await until(page, (v) => v.arrived, 'the camera at the first site');
     report.push(`start ${s.at}, ${s.frontier.length} sites ahead, ${s.scene.chunks} chunks, ${s.scene.triangles} triangles`);
@@ -257,7 +257,7 @@ async function run(browser, size, content) {
     const note = await page.evaluate(() => window.__parallang.store.getState().error);
     if (!/put back from the copy/.test(note ?? '')) fail(`the save was not put back: ${note}`);
     await click('Enter');
-    await click(/Set out on The Long Way Home/);
+    await click(/Set out on The Journey 2/);
     s = await until(page, (v) => v.mode === 'road' && v.at && !v.loading, 'the road again');
     if (s.step !== lost.step || s.at !== lost.at || JSON.stringify(s.totals) !== JSON.stringify(lost.totals)) fail(`the restored road differs: ${JSON.stringify([s, lost])}`);
     await until(page, (v) => v.arrived && v.scene?.chunks >= 81, 'the ground again');

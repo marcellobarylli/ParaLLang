@@ -1,4 +1,4 @@
-// Round 144: helpers for the tests of The Long Way Home. A module, not a test file.
+// Round 144: helpers for the tests of The Journey 2. A module, not a test file.
 import { randomUUID } from 'node:crypto';
 import { loadGameContent } from '../src/content-loader.js';
 import { matchCanonicalVocabulary } from '../src/language-engine.js';

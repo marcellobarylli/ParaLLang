@@ -1,4 +1,4 @@
-// Round 144: who stands at a site of The Long Way Home. There are no assets and no authored cast: a character is
+// Round 144: who stands at a site of The Journey 2. There are no assets and no authored cast: a character is
 // drawn from what the conversation is about. Its trade comes from the roles of the curriculum unit (content, so a
 // unit about ordering is met by waiters and landladies) and the rest (name, temperament, habits, looks, voice) from
 // the pools below, in the style guide's voice: trades, guilds and paperwork taken seriously, the absurd treated as

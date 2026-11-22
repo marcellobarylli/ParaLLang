@@ -3,8 +3,9 @@ import { createTerrain } from '../../../server/src/road/terrain.js';
 import { createGraph } from '../../../server/src/road/graph.js';
 import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
+import { ROAD_NAME } from '../atlas.js';
 
-// Round 144: what the dock and the overlays show on The Long Way Home. The server's view of the road (`state.road`)
+// Round 144: what the dock and the overlays show on The Journey 2. The server's view of the road (`state.road`)
 // says where the player is, who waits there and what each site ahead offers; the curriculum with the player's marks
 // is `state.curriculum`. Nothing here decides anything: a button asks the store, the store asks the server.
 //
@@ -110,8 +111,8 @@ export function HubCard({ state }) {
   const { road, curriculum, roadLoading, roadError, encounterLoading } = state;
   if (!road) {
     return (
-      <section className="card road-card" aria-label="The Long Way Home">
-        <p className="eyebrow">The Long Way Home</p>
+      <section className="card road-card" aria-label={ROAD_NAME}>
+        <p className="eyebrow">{ROAD_NAME}</p>
         <h2>{roadLoading ? 'Finding the road…' : 'The road is not here'}</h2>
         {roadError && <div className="problem" role="alert"><p>{roadError}</p><button type="button" className="secondary-button" onClick={state.openSettings}>Open Settings</button></div>}
         <div className="button-row"><button type="button" className="text-button" onClick={state.leaveRoad}>World map</button></div>

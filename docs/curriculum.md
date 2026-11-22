@@ -1,6 +1,6 @@
 # The curriculum
 
-The curriculum of The Long Way Home (round 144): what is taught, in which order, and how the game paces it. It is
+The curriculum of The Journey 2: Journathan Returns (again) (round 144; called The Long Way Home until round 152): what is taught, in which order, and how the game paces it. It is
 content, played by the endless road in the web client ([round 144's architecture](rounds/144/architecture.md)).
 
 ## Where it is

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Round 144: the endless level behind The Long Way Home. The three.js host (src/scene/roadView.js) loads as its own
+// Round 144: the endless level behind The Journey 2. The three.js host (src/scene/roadView.js) loads as its own
 // chunk, as the dungeon's does. Without WebGL (an old browser, the jsdom tests) a still backdrop stands in and the
 // camera "arrives" at once, so the road stays playable.
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);

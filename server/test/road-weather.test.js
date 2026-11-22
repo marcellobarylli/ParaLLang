@@ -1,4 +1,4 @@
-// Round 146: the time of day and the weather of The Long Way Home. A day of 45 minutes, rain 30 % of the time, no
+// Round 146: the time of day and the weather of The Journey 2. A day of 45 minutes, rain 30 % of the time, no
 // jumps, the same sky for the same clock and seed, and the narrator told what the sky is doing.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -83,7 +83,7 @@ test('the narrator is told the time of day and the weather of the road, at the g
   const started = await startHere(runtime, learnerId);
   const { sentence } = weatherAt(clock.getTime(), 4242);
   const greeting = runtime.provider.calls[0].messages.at(-1).content;
-  assert.ok(greeting.includes(`in The Long Way Home. ${sentence}`), greeting);
+  assert.ok(greeting.includes(`in The Journey 2: Journathan Returns (again). ${sentence}`), greeting);
   await runtime.service.submitDialogue(learnerId, { encounterId: started.data.encounter.id, version: 1, attemptId: 'a1', message: 'Buongiorno!' });
   const turn = JSON.parse(runtime.provider.calls.at(-1).messages.at(-1).content.split('TURN DATA: ').at(-1));
   assert.equal(turn.weather, sentence);

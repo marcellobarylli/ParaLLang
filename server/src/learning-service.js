@@ -198,7 +198,7 @@ export class LearningService {
   }
 
   // Round 006: each session plays one encounter definition ({ encounter, character }) from the pack.
-  // Round 144: a conversation of The Long Way Home has no authored definition: it is built from the session's road
+  // Round 144: a conversation of The Journey 2 has no authored definition: it is built from the session's road
   // data (road/service.js), the same one every time.
   definition(session) {
     if (session?.road) return this.roadDefinition(session.road);
@@ -706,7 +706,7 @@ export class LearningService {
       location: this.sceneLocationId(encounter),
       partyConversation: Boolean(definition.encounter.party_of),
       ...(encounter.dungeonId ? { dungeonId: encounter.dungeonId, siteId: encounter.siteId } : {}), // rounds 114, 119
-      // Round 144: a conversation of The Long Way Home: its site, its kind and what it is about.
+      // Round 144: a conversation of The Journey 2: its site, its kind and what it is about.
       ...(encounter.road ? { road: { node: encounter.road.node, ...definition.road } } : {}),
       character: {
         id: definition.character.id, name: definition.character.name, saveable: definition.character.saveable === true,
@@ -786,7 +786,7 @@ export class LearningService {
   // Without an encounterId the default encounter starts anywhere (the old web client, verify:cli); with one, the player
   // must be at that encounter's location. Round 114: with a dungeonId, a site of that dungeon starts, wherever the player
   // stands on the market map. Round 119: it is the site the player stands at in the dungeon (encounterId, if given, must be its encounter).
-  // Round 144: with `road`, the conversation waiting at the learner's site of The Long Way Home starts.
+  // Round 144: with `road`, the conversation waiting at the learner's site of The Journey 2 starts.
   // Round 148: with `immersion` (the web client's slider) the characters' lines have that share of target language.
   async startEncounter(learnerId, { restart = false, encounterId = null, dungeonId = null, road = false, immersion: asked = null } = {}) {
     assertLearnerId(learnerId);
@@ -1762,5 +1762,5 @@ export class LearningService {
   }
 }
 
-// Round 144: The Long Way Home's methods (road/service.js).
+// Round 144: The Journey 2's methods (road/service.js).
 Object.assign(LearningService.prototype, roadMethods);

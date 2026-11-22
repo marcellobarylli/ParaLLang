@@ -195,7 +195,9 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   // plays both.)
   expect(screen.getByRole('region', { name: 'The world map' })).toBeTruthy();
   expect(screen.getByRole('img', { name: 'A map of 5 places' })).toBeTruthy();
-  expect(siteRows().map((row) => row.split(/(?<=[a-z])(?=[A-Z])/)[0])).toEqual(['Ta Prohm', 'The Kiln', 'Angkor Wat', 'Micromort Mountain', 'The Long Way Home']);
+  expect(siteRows().map((row) => row.split(/(?<=[a-z)])(?=[A-Z])/)[0])).toEqual(['Ta Prohm', 'The Kiln', 'Angkor Wat', 'Micromort Mountain', 'The Journey 2: Journathan Returns (again)']);
+  // Round 152: the road's long name is two lines on the map.
+  expect([...document.querySelectorAll('.world-place.road tspan')].map((line) => line.textContent)).toEqual(['The Journey 2:', 'Journathan Returns (again)']);
   expect(screen.queryByRole('button', { name: 'Enter The Kiln' })).toBeNull();
   expect(screen.getByText('The causeway is under review. Nobody will say by whom.')).toBeTruthy();
   expect(screen.getByText('0 of 7 cleared')).toBeTruthy();

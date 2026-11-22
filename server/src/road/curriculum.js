@@ -1,4 +1,4 @@
-// Round 144: the curriculum of The Long Way Home. It is content: a language-neutral skeleton (content/curriculum/, one
+// Round 144: the curriculum of The Journey 2. It is content: a language-neutral skeleton (content/curriculum/, one
 // file per stage: what the learner can do after each unit, the lessons and what each asks of the player) and, per
 // language pack, the words that do it (content/languages/<code>/curriculum/, one file per stage).
 //

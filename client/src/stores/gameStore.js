@@ -260,7 +260,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     };
 
     return {
-      // Round 144: The Long Way Home (roadSlice.js).
+      // Round 144: The Journey 2 (roadSlice.js).
       ...createRoadSlice({
         set, get, api, quiet, withSpellbook, takeProgression, backup,
         guard: { epoch: () => requestEpoch, site: () => siteRequest, bumpSite: () => { siteRequest += 1; return siteRequest; } },
@@ -654,7 +654,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         if (wasRoad && get().connection === 'ready') { set({ phase: 'world' }); await get().enterRoad(); }
       },
 
-      // Round 144: on The Long Way Home, whether the way on is chosen for the player.
+      // Round 144: on The Journey 2, whether the way on is chosen for the player.
       setRails: (on) => set({ display: saveDisplay({ ...get().display, rails: on !== false }, storage) }),
       // Round 144: this browser's copy of the save as a file's text (a fresh copy when the server answers), and a
       // copy from a file put on the server in place of whatever it holds for that learner.
