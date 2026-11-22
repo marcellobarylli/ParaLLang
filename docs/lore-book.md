@@ -2,7 +2,7 @@
 
 ### A history of the written world, compiled from rumour
 
-*The lore and story of ParaLLang as one linear book. It is drawn from the notes in `parallang_obsidian/` and from the lore already in the game. Where the notes hold two versions of a thing, the book keeps both and says "some say". A list of sources, and of the few things the compiler added to join the parts, is at the end.*
+*The lore and story of ParaLLang as one linear book. It is drawn from the notes in `parallang_obsidian/` and from the lore already in the game. Where the notes hold two versions of a thing, the book keeps both and says "some say". One part near the end, "What the book does not say", is outside the compiler's voice: it holds what nobody in the world knows. A list of sources, and of the few things the compiler added to join the parts, is at the end.*
 
 ---
 
@@ -231,7 +231,28 @@ Every land also has a story about the one who founded it: a mother or father of 
 
 ---
 
-## VIII. The Ring
+## VIII. The roads
+
+Of everything in this book, the roads gave the compiler the least trouble.
+
+Ask anyone who made them and you get the same answer, from the archway to the old sailor: they were built, long ago. Nobody says by whom. And nobody says "some say". In a world where two schools have not spoken for four thousand years over a single word, here is a matter on which everybody agrees, with nothing whatever to go on. It is what is said, and so it is written down.
+
+What can be seen is this.
+
+- **A place is where roads meet.** Every place a traveller can reach stands at a meeting of roads, and no road fails to arrive at one. Which came first, nobody asks.
+- **No road ends.** Every place has a way on. Where a river is in the way the road goes through it as a ford. Where a mountain is in the way it goes over as a pass. Where there is no land at all there is a ferry, and a ferryman who cannot tell you who started the service. The builders, people say, were thorough.
+- **No two roads cross.** They meet at places and nowhere else. People call this good planning.
+- **Nobody mends them.** Nobody has seen a road built, and nobody has seen one repaired. There is a guild that assesses them. Its assessors carry a form and a very sharp pencil, and not one of them owns a shovel.
+- **A road is easier to follow than to leave.** A traveller who stops choosing is carried along all the same, and arrives, and generally finds it was where they needed to be. People put this down to good roads.
+- **A few roads are said to go on further than the land does.** Those who took them describe a sky of the wrong age. They are told they took a wrong turning, and agree that they must have.
+
+There is also a man who says the road moves at night. He has evidence. It is at home.
+
+That is all. It is a comfort, in a book that is mostly seams, to reach one thing that simply holds together.
+
+---
+
+## IX. The Ring
 
 This chapter is thinner than the others, and the compiler trusts it less.
 
@@ -245,7 +266,7 @@ And there is a name, **Anulus Mirabilis**, the wonderful ring. Nobody can say wh
 
 ---
 
-## IX. The story so far
+## X. The story so far
 
 All of the above is history. This part has not finished happening.
 
@@ -271,7 +292,7 @@ And some say it does not end. They say you will reach the last page, and underst
 
 ---
 
-## X. Stories all the way down
+## XI. Stories all the way down
 
 One thing remains, and it is the thing the fish-seller knew.
 
@@ -289,27 +310,60 @@ The world is not finished being said.
 
 ---
 
+## What the book does not say
+
+*This part is not in the compiler's voice, and the compiler has not read it. It is the reference for whoever writes the game's narration, its hints and its deeper texts. The owner set it in GitHub issue #12.*
+
+**The world is a graph, and that has meaning.** Every map of it is places joined by ways. The player was never walking on roads. They were walking on a web.
+
+- **The roads are threads.** A way between two places is a thread of the kind part III describes.
+- **The web is stitched to other worlds.** It does not stop at the edge of this one. Where there is a stitch, the web is sewn to another world's.
+- **No character knows this.** They believe the roads were built long ago (part VIII). The compiler believes it too.
+
+**How the game holds it.**
+
+- A character can speak only of what can be seen: the list in part VIII. Asked directly, they answer with the belief.
+- The narrator never states it. It hints, and does not explain (issue #6).
+- A hint uses a sewing word where a road word is expected: a stitch, its wake, a thread, a knot, a seam. The model is issue #4's line, *the wake of a stitch* (*la scia di un punto*).
+- The plain statement belongs to text the game does not translate (issue #4), so that only a player who has learned the language can read it.
+
+**What follows from the parts above.** These are joins by the compiler of this section, for the owner to overrule.
+
+- A thread has a very slight pull (part III). That is why a road is easier to follow than to leave.
+- In a dead branch the old threads are roots (part VI). A road and a root are the same thing at different ages.
+- The wake of a stitch is what a stitch leaves where it passed: the thread, and the place where it went through.
+
+**Not settled.**
+
+- Who stitched the web, and whether the player's own spells, each of them a stitch (part III), add to it.
+- Whether it is the same web as the realm of part IX, which the compiler compares to one.
+- Where on the map the stitches to other worlds are. Issue #8 puts the old dungeons on nodes beside the road; they may be the stitches.
+
+---
+
 ## Sources
 
 The whole vault was read for this book: all seventeen notes in `parallang_obsidian/` and the template. This table says where each one went.
 
 | Note | Where it is in the book |
 |---|---|
-| `LORE.md` | II, III, V, VI, VII, IX: branches, strings and stitches, weak and strong users, the fish and the water, memes, infohazards, collision and the dead branches, words of power, the 4th wall, Orwell, the Lands, the portal |
-| `Creation Myth.md` | I and X; the market as a page (VII); Errata as the end (IX) |
-| `CHARACTERS.md` | IV (Journathan), V (the Lethargers), VII (the Wizard of Just in Case, the Trepanners), IX (the Companion) |
-| `GAME MECHANICS.md` | Told as customs of the world: words coloured by kind and the Spellbook (III); local memes, the imp and the demon (V); talking past, saving and the party, lands opening by vocabulary, the fog (VII); the narrator, the Companion's limits, the quarter, half and whole (IX); the reread (I, IX). The Black Notebook heading is in VII |
-| `PLOT & QUESTS.md` | VI and IX: the home country, the Inflection Point, bailing with a cup, Collision |
+| `LORE.md` | II, III, V, VI, VII, X: branches, strings and stitches, weak and strong users, the fish and the water, memes, infohazards, collision and the dead branches, words of power, the 4th wall, Orwell, the Lands, the portal |
+| `Creation Myth.md` | I and XI; the market as a page (VII); Errata as the end (X) |
+| `CHARACTERS.md` | IV (Journathan), V (the Lethargers), VII (the Wizard of Just in Case, the Trepanners), X (the Companion) |
+| `GAME MECHANICS.md` | Told as customs of the world: words coloured by kind and the Spellbook (III); local memes, the imp and the demon (V); talking past, saving and the party, lands opening by vocabulary, the fog (VII); the narrator, the Companion's limits, the quarter, half and whole (X); the reread (I, X). The Black Notebook heading is in VII |
+| `PLOT & QUESTS.md` | VI and X: the home country, the Inflection Point, bailing with a cup, Collision |
 | `LOCATIONS.md` | VII: the prototype stage as a painted world, Angkor Wat, the Bone Dome |
 | `Philosophy.md` | I: the veil (maya), the cave and the Forms, Schopenhauer, Nietzsche |
-| `Anulus Mirabilis.md` | VIII, all of it |
+| `Anulus Mirabilis.md` | IX, all of it |
 | `HUB.md` | III: learning as a child does, with repetition kept as the one discipline |
-| `Loose Cannon Stuff (Misc Idea Pit).md` | IX (the three worlds); VII (food, drink and sleep) |
-| `Stories with Ideas Worth Incorporating.md` | The models behind the parts: the Odyssey (IV), the hero's journey (VIII), Lovecraft, Pratchett and SCP (V), Dark Souls (VII), John 1:1, Genesis and the Ainulindalë (I). Rothfuss's true names (III) and Snow Crash's Mesopotamia (VI) are named in `LORE.md` |
+| `Loose Cannon Stuff (Misc Idea Pit).md` | X (the three worlds); VII (food, drink and sleep) |
+| `Stories with Ideas Worth Incorporating.md` | The models behind the parts: the Odyssey (IV), the hero's journey (IX), Lovecraft, Pratchett and SCP (V), Dark Souls (VII), John 1:1, Genesis and the Ainulindalë (I). Rothfuss's true names (III) and Snow Crash's Mesopotamia (VI) are named in `LORE.md` |
 | `QUESTS.md`, `Monkey Island Notes 🐒.md`, `APP & API.md` | Empty notes. The first two appear in VII as places with a heading and a blank page |
 | `EU Grant Pitch.md`, `Development Roadmap.md` | About the product, not the world. Not in the book |
 | `Parallang.md` | The combined copy of the notes above; nothing in it is missing from them |
 | `Templates/Core Template.md` | The note template; no content |
+
+Part VIII and "What the book does not say" are not from the vault. Their source is the owner's GitHub issue #12 (2026-11-22): the world is a graph and that has meaning, the player walked a web and not roads, the web is stitched to other worlds, and no character knows it; they believe the roads were built long ago. *The wake of a stitch* is from issue #4.
 
 Also used, from the game: the ten fragments of *The Journey* (`content/languages/it/lore/fragments.yaml`), the seven character sheets, the market's locations and the world map.
 
@@ -319,11 +373,12 @@ Also used, from the game: the ten fragments of *The Journey* (`content/languages
 
 - The reasons given for why the Companion came (to warn, to recruit, or bringing the danger with it). The notes say only that a portal opens and it enters.
 - That Ta Prohm stands in a dead branch. The notes place the dead branch at Angkor Wat; the game puts the market and its Rift at Ta Prohm.
-- That the Bone Dome may be a skull, that the Lethargers' harvest is "sent somewhere", and the readings of the ring in part VIII. The notes leave all three open.
+- That the Bone Dome may be a skull, that the Lethargers' harvest is "sent somewhere", and the readings of the ring in part IX. The notes leave all three open.
 - The detail that a founder myth is supplied "the way a sentence needs a subject".
 - The glosses on the four philosophers in part I. `Philosophy.md` gives only the names and "the world is an illusion".
 - The four animals matched one to one with the elements. The note lists four animals and four elements without pairing them.
 - That the blank notes "were written and then somebody learned to read them", and that the narrator may be the Telling itself.
+- In part VIII, everything under "What can be seen". The owner gave only the belief that the roads were built long ago. No road ending, no two roads crossing, the ford, the pass and the ferry are how the game's graph is made (`server/src/road/graph.js`); the guild's assessor and the man whose road moves at night are two of the road's generated characters (`server/src/road/characters.js`); being carried along is the game's travel on rails. The roads nobody mends and the roads that go further than the land are new.
 - The lotus-eaters, the forbidden herd and the old dog are from the game's fragments, not from the notes. The Sirens as ancestors of the Lethargers is the owner's.
 
 **Left out:**

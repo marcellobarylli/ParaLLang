@@ -33,6 +33,16 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 151, the lore book says what the roads are (on a branch)
+
+The owner asked for the next GitHub issue that needs nothing first: #12, step 1 of the issues' build order. The
+world's graph is a web, its roads are threads, the web is stitched to other worlds, and no character knows it.
+[`docs/lore-book.md`](docs/lore-book.md) now has this in two places: part VIII, "The roads", in the compiler's voice
+(the belief that the roads were built long ago, and what anyone can see of them), and "What the book does not say",
+outside that voice (the fact, how the game holds it, and what is not settled). The old parts VIII to X are IX to XI.
+A text only: no code, prompt or content changed, and the owner has not read it. It is on
+`claude/modest-einstein-obt6yy`, not on `main`; issue #12 is open ([findings](docs/rounds/151/findings.md)).
+
 ## Addendum 2026-11-22: round 150, the icons are the road's map with a walk on it (deployed)
 
 The owner asked for the top GitHub issue, #22: the app's and the web's icon as a snapshot of the isometric map with
@@ -1472,6 +1482,7 @@ Newest first.
 | 148 | 11-22 | A slider in Settings for how much of the language the characters speak, 100 % by default: the narrator is told to speak the language only, and at 100 % the line's translation shows with it, free; the server's default and the iPhone app unchanged; no model called; deployed | [148](docs/rounds/148/architecture.md) | [findings](docs/rounds/148/findings.md) | round 148 build, merged to `main` |
 | 149 | 11-22 | The translation directly under a character's line, the word buttons after it; the web client only; deployed | [149](docs/rounds/149/architecture.md) | [findings](docs/rounds/149/findings.md) | round 149 build, merged to `main` |
 | 150 | 11-22 | The icons of the web app and the iPhone app are a snapshot of the road's isometric map with a walk on it (issue #22); deployed | [150](docs/rounds/150/architecture.md) | [findings](docs/rounds/150/findings.md) | round 150 build, merged to `main` |
+| 151 | 11-22 | The lore book says what the roads are: the graph is a web of threads stitched to other worlds, and no character knows (issue #12); a text only; on a branch | [151](docs/rounds/151/architecture.md) | [findings](docs/rounds/151/findings.md) | round 151 build |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |
