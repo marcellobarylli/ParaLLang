@@ -292,6 +292,12 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   (`prompts/encounter/light_turn.txt`, schema `lightTurnSchema`) returns what the player meant, the same in correct
   target language, which open objectives that meaning fulfils, and the character's reply. An objective closes on the
   model's word, in any order; there are no hearts, no grader and no evidence rules.
+  From round 154 a light conversation is an exchange of three to five of the player's turns (`LIGHT_EXCHANGE`): it
+  goes on to the third whatever has been said, and ends on the fifth whatever is open.
+  From round 155 the narrator's prompt carries what the character knows of the world (`prompts/system/world.txt`):
+  what everybody knows and each region's lore from `content/world/knowledge.yaml`, and one thing the character has
+  noticed (`world.noticed` on an authored character's sheet; a draw from the region's pools for a character of the
+  road, ordinary at the A levels and more knowing from B1 on).
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

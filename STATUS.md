@@ -33,6 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 155, the characters belong to the world (on the session branch, not deployed)
+
+Issue #3, the third of the eleven. The narrator's prompt now carries what a character knows of the world it was born
+in, in three short layers: what everybody knows, what the character's region knows, and one thing the character has
+noticed ([`content/world/knowledge.yaml`](content/world/knowledge.yaml), `prompts/system/world.txt`). The model is
+asked to let one small detail show in about one reply in three, and to answer "what do you mean?" in character with
+something concrete and partial. On the road, characters of the A levels have noticed ordinary things and those from
+B1 on more knowing ones, and the region acts as Tuscany without a word about Tuscany being written. No character
+knows what the lore book's last part says, and a test holds that. **No model was called**, so what the characters
+then say is not seen, and the issue's "Deployed" waits for the owner: it is on the session branch
+([findings](docs/rounds/155/findings.md)).
+
 ## Addendum 2026-11-22: round 154, a light conversation is an exchange of three to five turns (on the session branch, not deployed)
 
 Issue #2, the second of the eleven. In light mode a conversation now runs **three to five of the player's turns**:
@@ -1526,6 +1538,7 @@ Newest first.
 | 152 | 11-22 | The road's name is The Journey 2: Journathan Returns (again) (issue #10): the world map, the top bar, the narrator's scene, the documents; ids and saves unchanged; deployed | [152](docs/rounds/152/architecture.md) | [findings](docs/rounds/152/findings.md) | round 152 build, merged to `main` |
 | 153 | 11-22 | Light mode beside strict mode (issue #1): one call that reads the answer and replies, nothing checked; a Strict / Light choice in Settings; strict mode unchanged | [153](docs/rounds/153/architecture.md) | [findings](docs/rounds/153/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 154 | 11-22 | A light conversation is an exchange of three to five turns (issue #2): a floor of three, a ceiling of five, the objectives decide between; follow-ups and questions back asked of the model and nudged on the screen | [154](docs/rounds/154/architecture.md) | [findings](docs/rounds/154/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 155 | 11-22 | The characters belong to the world (issue #3): what everybody knows, a region's lore and one thing noticed, as one block of the narrator's prompt; the road acts as Tuscany; A levels ordinary, B levels more knowing | [155](docs/rounds/155/architecture.md) | [findings](docs/rounds/155/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

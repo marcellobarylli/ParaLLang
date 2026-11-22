@@ -5,7 +5,7 @@ import {
   IMMERSION, calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, immersionFrom, initialSchedule,
   foldEvidenceText, isDue, lacksTargetLanguage, levelFor, masteryLabel, matchCanonicalVocabulary, progressionView, ratioBonusFor, scheduleReview,
 } from './language-engine.js';
-import { foldWords } from './content-loader.js';
+import { foldWords, worldFor } from './content-loader.js';
 import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
@@ -1052,7 +1052,13 @@ export class LearningService {
   // Round 144: what a road conversation adds to the narrator's turn data: the place it is in, and for a lesson the
   // note that its words are new and are to be modelled. Nothing for an authored encounter, whose prompts are pinned.
   sceneExtras(definition) {
+    // Round 155 (issue #3): what the character knows of the world: an authored character's region and what it has
+    // noticed are on its sheet; a generated character of the road brings its own (road/encounters.js).
+    const world = definition.world ?? (definition.character.world
+      ? worldFor(this.content.knowledge, this.content.language.code, definition.character.world.region, definition.character.world.noticed)
+      : null);
     return {
+      ...(world ? { world } : {}),
       ...(definition.scene?.place ? { placeName: definition.scene.place } : {}),
       // Round 146: the time of day and the weather on the road, as the player sees them (the same clock and seed).
       ...(definition.scene?.seed !== undefined ? { weather: weatherAt(new Date(this.clock()).getTime(), definition.scene.seed).sentence } : {}),

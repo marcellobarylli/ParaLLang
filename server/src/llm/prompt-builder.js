@@ -69,11 +69,16 @@ export function buildNarrationMessages({
   // there is no decision to express. `objectives` are the ones still open before the answer.
   // Round 154: `light` is { turn, min, max, ending }: where this turn stands in the exchange and whether it may end.
   light = null,
+  // Round 155: what the character knows of the world it lives in ({ global, region, noticed }), as one block after the
+  // character's line (system/world.txt). Without it the prompt is byte for byte as before.
+  world = null,
 }) {
   const dialogueRules = fillTemplate(loadTemplate(full ? 'system/dialogue_full.txt' : 'system/dialogue_mixed.txt'), {
     language: { name: language.name, targetRatio: Math.round(targetRatio * 100), wordsPer20: Math.round(targetRatio * 20) },
   }).trimEnd();
+  const worldBlock = world ? fillTemplate(loadTemplate('system/world.txt'), { enemy: { name: character.name }, world }).trimEnd() : '';
   const system = fillTemplate(loadTemplate('system/base.txt'), {
+    worldBlock,
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
     style: { tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n') },
     language: {

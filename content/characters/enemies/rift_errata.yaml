@@ -31,3 +31,8 @@ defeat_condition:
 saveable: false
 # Round 126: how the web client reads the lines aloud (kind: female, male, creature or funny; pitch 0 to 2; rate 0.5 to 2).
 voice: { kind: funny, pitch: 0.3, rate: 1.25 }  # an infohazard: low and too fast
+# Round 155 (issue #3): the character is of the world: the region whose lore it knows (content/world/knowledge.yaml)
+# and one thing it has noticed. For the narrator; never shown to the player.
+world:
+  region: dead_branch
+  noticed: "It has read the slip of paper that bears its name, and is the only one here who has."

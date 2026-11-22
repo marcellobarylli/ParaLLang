@@ -137,6 +137,8 @@ const characterSchema = z.object({
   }).strict(),
   defeat_condition: z.object({ type: z.string().min(1), description: z.string().min(1) }).strict(),
   saveable: z.boolean(),
+  // Round 155 (issue #3): the region whose lore the character knows and one thing it has noticed (world/knowledge.yaml).
+  world: z.object({ region: z.string().min(1), noticed: z.string().min(1) }).strict().optional(),
   // Round 126: how the character sounds when the web client reads its lines aloud. `kind` picks a system voice;
   // `pitch` (0 to 2) and `rate` (0.5 to 2) are the browser's speech synthesis scales and override the kind's own.
   voice: z.object({
@@ -145,6 +147,31 @@ const characterSchema = z.object({
     rate: z.number().min(0.5).max(2).optional(),
   }).strict().optional(),
 }).strict();
+
+// Round 155 (issue #3): what the people of the world know (content/world/knowledge.yaml, optional).
+const knowledgeSchema = z.object({
+  global: z.string().min(1),
+  regions: z.record(z.object({
+    lore: z.string().min(1),
+    // A real region the model knows, by language code, that this one acts as. Nothing of that region is written here.
+    acts_as: z.record(z.string().min(1)).optional(),
+    noticed: z.object({ plain: z.array(z.string().min(1)).min(1), knowing: z.array(z.string().min(1)).min(1) }).strict().optional(),
+  }).strict()),
+}).strict();
+
+/**
+ * What a character of `regionId` knows, as the narrator's prompt takes it: { global, region, noticed }.
+ * A region that acts as a real one says so, and that the real name is never spoken.
+ */
+export function worldFor(knowledge, languageCode, regionId, noticed) {
+  const region = knowledge?.regions[regionId];
+  if (!region || !noticed) return null;
+  const real = region.acts_as?.[languageCode];
+  const acts = real
+    ? ` This region is this world's ${real}. You know ${real} well: its land, food, weather, towns and habits are this region's, as ordinary life. Never say "${real}" or name its country: nobody here has heard of either.`
+    : '';
+  return { global: knowledge.global, region: `${region.lore}${acts}`, noticed };
+}
 
 const styleGuideSchema = z.object({
   tone: z.string().min(1),
@@ -253,6 +280,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const { default_encounter: defaultEncounterId, ...language } = languageSchema.parse(parseYaml(contentDir, `${pack}/language.yaml`));
   if (language.code !== code) throw new Error(`content/${pack}/language.yaml must declare code ${code}`);
   const styleGuide = styleGuideSchema.parse(parseYaml(contentDir, 'narration/style_guide.yaml'));
+  const knowledge = existsSync(resolve(contentDir, 'world/knowledge.yaml')) ? Object.freeze(knowledgeSchema.parse(parseYaml(contentDir, 'world/knowledge.yaml'))) : null;
   const { begin_label: beginLabel, ...onboardingText } = onboardingSchema.parse(parseYaml(contentDir, 'narration/onboarding.yaml'));
   const onboarding = Object.freeze({ ...onboardingText, notes: Object.freeze(onboardingText.notes), beginLabel });
 
@@ -286,6 +314,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     const encounter = encounterSchema.parse(parseYaml(contentDir, file));
     if (encounters.has(encounter.id)) throw new Error(`Encounter id ${encounter.id} is declared twice`);
     const character = characterSchema.parse(parseYaml(contentDir, encounter.character));
+    if (character.world && knowledge && !knowledge.regions[character.world.region]) throw new Error(`Character ${character.id} names the unknown region ${character.world.region}`);
     validateObjectives(encounter, vocabularyById, referenceIds);
     // Round 009: narration is matched only against the vocabulary files this encounter's objectives draw on (whole
     // files), so one encounter's words never appear as chips or Spellbook entries in another's lines.
@@ -320,7 +349,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const fragments = loadFragments(contentDir, pack, encounters);
   const inscriptions = loadInscriptions(contentDir, pack, world);
   return Object.freeze({
-    language, styleGuide, onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
+    language, styleGuide, knowledge, onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
     inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
     // Round 144: the curriculum of The Journey 2 (content/curriculum/ and the pack's curriculum/), with its own
     // vocabulary, kept apart from the pack's above. Null in a pack that has none. Read on first use: its vocabulary

@@ -4,12 +4,27 @@
 // ambientEntries }), so starting, grading, hints, hearts, the Spellbook and spaced review all work unchanged.
 // Pure: the same road, site, step and activity give the same definition, so one that a restart forgot is built again.
 
+import { worldFor } from '../content-loader.js';
+import { hash } from './terrain.js';
 import { CHECKPOINT_ROLES, REVIEW_ROLES, characterFor, placeName, roleFor } from './characters.js';
 import { PACING } from './pacing.js';
 
 export const ROAD_PLACE = Object.freeze({ id: 'the_long_way', name: 'The Journey 2: Journathan Returns (again)' });
 
 const fill = (text, name) => String(text).replaceAll('{name}', name);
+
+/**
+ * Round 155 (issue #3): what the character of a site knows of the world. The road's region has two pools of things
+ * noticed: ordinary people at the A levels, people who have seen more from B1 on. The draw is fixed by the seed, the
+ * site and the step, like the character itself.
+ */
+export function roadWorld(knowledge, languageCode, { seed, node, step, cefr }) {
+  const pools = knowledge?.regions[ROAD_PLACE.id]?.noticed;
+  if (!pools) return null;
+  const pool = /^A/i.test(cefr) ? pools.plain : pools.knowing;
+  const noticed = pool[Math.min(pool.length - 1, Math.floor(hash(node.i * 71 + step * 3, node.j * 73 - step, seed + 909) * pool.length))];
+  return worldFor(knowledge, languageCode, ROAD_PLACE.id, noticed);
+}
 
 /** The objectives an activity asks for, as the curriculum compiled them (with `{name}` still in their texts). */
 export function objectivesOf(curriculum, activity) {
@@ -46,7 +61,7 @@ export function describeActivity({ curriculum, seed, node, step, activity, curre
  *   activity               { kind, lessonId?, unitId?, picks? }
  *   currentUnitId          the unit the learner is in (a review speaks at its stage's share of target language)
  */
-export function buildRoadDefinition({ curriculum, language, seed, node, step, activity, currentUnitId }) {
+export function buildRoadDefinition({ curriculum, language, seed, node, step, activity, currentUnitId, knowledge = null }) {
   const { unit, stage, lesson, title, character } = describeActivity({ curriculum, seed, node, step, activity, currentUnitId });
   const first = character.name.split(' ')[0];
   const teaches = activity.kind === 'lesson' || activity.kind === 'repair';
@@ -99,6 +114,7 @@ export function buildRoadDefinition({ curriculum, language, seed, node, step, ac
     ambientEntries: Object.freeze([]),
     // What sets a road conversation apart from an authored one (learning-service.js reads these).
     scope: curriculum.vocabulary.entries,
+    world: roadWorld(knowledge, language.code, { seed, node, step, cefr: stage.cefr }), // round 155
     scene: Object.freeze({ name: place, place: ROAD_PLACE.name, seed }), // the seed gives the scene its weather (round 146)
     teachingNote: teaches
       ? `This is a first lesson. The player has never seen the ${language.name} words the learning data asks for. Model each of them naturally in ${first}'s own lines before expecting it back; for this conversation that replaces the rule against using the words of an answer. Never tell the player what to say.`

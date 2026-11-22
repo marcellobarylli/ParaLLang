@@ -168,6 +168,7 @@ export const roadMethods = {
       definition = buildRoadDefinition({
         curriculum, language: this.content.language, seed: session.seed, node: graphOf(session.seed).node(session.node),
         step: session.step, activity: session.activity, currentUnitId: session.unitId,
+        knowledge: this.content.knowledge, // round 155
       });
       this.roadDefinitions.set(key, definition);
       if (this.roadDefinitions.size > ROAD.definitions) this.roadDefinitions.delete(this.roadDefinitions.keys().next().value);

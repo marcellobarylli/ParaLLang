@@ -1,0 +1,70 @@
+# Round 155 (issue #3): what the people of the world know of it. A character is of the world: born in it while the
+# things the lore book describes (docs/lore-book.md) were only starting, and knowing just what can be seen or is said.
+# "Fish don't know they're in water."
+#
+# Three layers go into a character's prompt (prompts/system/world.txt):
+#   global    what everybody knows, wherever they live
+#   region    what the people of one region know: its land, its news, its history
+#   noticed   one thing this character has noticed. An authored character's is on its sheet (`world.noticed`); a
+#             generated character of the road draws one from its region's pools: `plain` at the A levels (ordinary
+#             people), `knowing` from B1 on (people who have seen more).
+#
+# Everything here is English and is for the model, never shown to the player. It states only what part VIII and the
+# other parts of the lore book let a character see. The truth (the roads are threads) is in none of it: a `knowing`
+# line may use a sewing word where a road word is expected, and no more.
+global: >-
+  Everyone here speaks the one language and always has; nobody learns another, since there is nowhere it would be
+  needed. A stranger who speaks a different tongue is rare and slightly alarming: things tend to go their way, doors
+  included, and it is not polite to remark on it. The roads were built long ago; nobody says by whom and nobody
+  wonders. Every place stands where roads meet, no road ends (there is always a ford, a pass or a ferry), no two
+  roads cross, and nobody has ever seen one mended, though a guild sends assessors with a form and a sharp pencil.
+  Everybody knows bits of an old book called The Journey, about a sailor of many tongues who is said to be still on
+  his way home. There are small quick things at the corner of the eye that it is better not to look at, tunes it is
+  better not to hum, and notices saying so. In the last few years odd things have started: a sign that says two
+  things, a word in the mouth that nobody knows, a seam of light somewhere past the market. People mention them the
+  way they mention the weather, and there is generally a form.
+regions:
+  # The generated landscape of the road. It acts as a real region the model already knows, so nothing about that
+  # region is written here.
+  the_long_way:
+    acts_as: { it: Tuscany, es: Castile }
+    lore: >-
+      Rolling country of small sites a short walk apart, each with somebody at it who has a trade and a view. The
+      guild of roads is the nearest thing to a government. The news is local: who has the ferry this year, whose
+      milestone was reassessed, the gatekeeper who would not let the cheese through. Further off there are old ruins
+      that the roads still lead to and that sensible people visit only on business.
+    noticed:
+      plain:
+        - "The road past here is a little straighter than it was last spring, and nobody mended it."
+        - "Travellers who stop choosing a way arrive all the same. It saves a good deal of pointing."
+        - "The sign down the way has started saying its message twice, the second time in letters nobody can read."
+        - "The guild assessor came by with the form and the pencil, measured nothing, and left pleased."
+        - "My grandmother hums a tune she says she never learned, and gets cross when asked where she heard it."
+        - "Some mornings there is a word in my mouth I do not know. It is gone by breakfast."
+        - "The ferry has always run. Nobody remembers anyone hiring the ferryman, the ferryman least of all."
+        - "Strangers who speak oddly get served quickly round here. Gates open for them. One does not mention it."
+        - "There is a milestone on this stretch with no number on it. It has been assessed twice and passed both times."
+        - "The dog will not walk the last part of the road at dusk. It walks beside it, in the grass."
+      knowing:
+        - "Where two roads meet there is always a place, and never a place without them. I asked the assessor which came first and he found something to write down."
+        - "I once saw this road pull tight, like a line with washing on it, when a foreigner said a word on it."
+        - "By the ruin the old roots run exactly where the old road ran. The same line. I paced it."
+        - "A woman told me a road once took her on past the end of the land, under a sky of the wrong age. She agreed afterwards that it was a wrong turning. She did not look as though she agreed."
+        - "When a foreigner talks, a little of the day comes out in their tongue. I have heard the wind do it."
+        - "A darn in a sock and the crossroads at home look the same from above. I keep that to myself."
+        - "The road is easier to keep to than to leave. I tried leaving it once, to prove a point, and was late for my own point."
+        - "My mother called the crossroads the knot. Everybody's mother did. Nobody says it now."
+  # The dead branch: the Crumbling Market and the temple it has moved into (Ta Prohm; The Kiln is the same place burnt).
+  dead_branch:
+    lore: >-
+      The market stands among the roots of an old temple that the jungle is halfway through eating; rent is rent.
+      The stallholders know each other's business: the archway that checks everyone in, the imp with the coffee
+      cart, the charcutier, the fountain that runs rumours, the bookshop that does not like to sell. The High Gate
+      has never been seen open. Past the last cobbles there is a seam of light with dead roots pushing through it,
+      which people call the Rift and walk round. Some of the roots that grip the towers did not grow from seeds;
+      this is known and not discussed.
+  micromort_mountain:
+    lore: >-
+      A mountain with one trail and a signpost that gives the odds: one chance in a million of death for every step.
+      People are told to visit and are not told how. There is said to be a wine festival on the summit, which is the
+      kind of thing people say about summits.
