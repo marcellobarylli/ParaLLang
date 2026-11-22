@@ -314,6 +314,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   shows in turmeric with nothing to tap. The guidebook explains the colour once ("Turmeric text") and keeps the
   passages found. What each text says is in `parallang_obsidian/Understood Later.md`, which the game does not read.
   `node client/scripts/turmeric-check.mjs` plays it.
+  From round 159 an encounter may have a `revelation` (`{ text }`, in the form of a written passage): what its
+  character utters once the encounter is completed. The narrator tells it in the finished conversation, before the
+  last word, and the guidebook keeps it. Marginalia, Bambieshart and Errata have one each.
+  `node client/scripts/revelation-check.mjs` plays Bambieshart's.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

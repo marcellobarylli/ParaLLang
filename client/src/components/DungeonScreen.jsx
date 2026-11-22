@@ -387,6 +387,12 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
             {state.xpGained > 0 && <p className="xp-line">+{state.xpGained} XP{state.levelUp ? ` · Level ${state.levelUp}` : ''}</p>}
           </section>
         )}
+        {/* Round 159 (issue #7): what the character utters once the conversation is over, told by the narrator. */}
+        {resolved && encounter.revelation && (
+          <section className="revelation" aria-label={`What ${name} utters`}>
+            <Narration narration={encounter.revelation} />
+          </section>
+        )}
         {resolved && party && (
           <section className="victory-banner" role="status">
             <p className="narrative">{encounter.resolvedMessage ?? `${name} has said what there was to say.`}</p>

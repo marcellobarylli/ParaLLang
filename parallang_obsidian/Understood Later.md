@@ -43,6 +43,18 @@ Each is set into one passage of `content/narration/passages.yaml`. The Italian a
 | B1 | On a slab of rock in the highlands at B1, and on a lintel of Ta Prohm's library | Dove vedi una radice, un tempo c'era una strada; dove vedi una strada, un giorno ci sarà una radice. | Donde ves una raíz, hubo una vez un camino; donde ves un camino, habrá un día una raíz. | Where you see a root, there was once a road; where you see a road, there will one day be a root. |
 | B1 | Inside the door of a hut at the snow line, at B1 | Se tutti i fili si tendessero insieme, i due mondi si toccherebbero, e nessuna parola avrebbe più senso. | Si todos los hilos se tensaran a la vez, los dos mundos se tocarían, y ninguna palabra tendría ya sentido. | If all the threads were pulled tight together, the two worlds would touch, and no word would mean anything any more. |
 
+## What three characters utter
+
+Added in round 159 (GitHub issue #7). Three characters of the dead branch have come to know more than the road's
+signs say. When their encounter is completed, the narrator tells what they then utter ("… utters the following:"),
+in turmeric. The texts are in the same files; the `revelation` of each encounter sets one.
+
+| Level | Who, and where | Italian | Spanish | What it says |
+|---|---|---|---|---|
+| B1 | Marginalia, at the Old Bookshop (Ta Prohm's library) | Ogni traversata lascia un filo. Vent'anni di traversate sono vent'anni di fili: sono i più antichi della tela, e la reggono ancora. | Cada travesía deja un hilo. Veinte años de travesías son veinte años de hilos: son los más antiguos de la tela, y todavía la sostienen. | Every crossing leaves a thread. Twenty years of crossings are twenty years of threads: they are the oldest in the weave, and they still hold it up. (Journathan's voyage, lore book part IV.) |
+| B2 | Bambieshart, at the High Gate (before the sanctuary) | Quando la maggior parte del mondo sarà raccontata nell'altra lingua, riportarlo indietro sarà come svuotare con una tazza una nave che affonda. | Cuando la mayor parte del mundo se cuente en la otra lengua, traerlo de vuelta será como achicar con una taza un barco que se hunde. | When most of the world is told in the other language, bringing it back will be like bailing a sinking ship with a cup. (The Inflection Point, part VI.) |
+| B2 | Errata, at the Rift (the sanctuary) | In principio era la Parola, e nella Parola c'era un errore. Chi lo correggerà avrà ragione, e quella sarà la fine. | En el principio era la Palabra, y en la Palabra había un error. Quien lo corrija tendrá razón, y ese será el final. | In the beginning was the Word, and in the Word there was a mistake. Whoever corrects it will be right, and that will be the end. (The last rumour of part X.) |
+
 ## What they add up to
 
 Read in order of difficulty, the texts say what no character knows:

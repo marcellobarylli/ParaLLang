@@ -501,6 +501,23 @@ test('light mode: the answer is sent as light and not as a beginner\'s; the repl
   expect(store.getState().display.light).toBe(true);
 });
 
+// Round 159 (issue #7): what a character utters once the conversation is over.
+test('a finished conversation with a revelation shows the narrator\'s line and the text in turmeric, before the last word', async () => {
+  const speech = fakeSpeech();
+  const { store } = await openConversation(speech);
+  expect(screen.queryByRole('region', { name: /^What .* utters$/ })).toBeNull();
+  const revelation = { id: 'revelation_x', segments: [{ text: 'Portia utters the following: ' }, { text: 'Ogni luogo è un nodo.', kind: 'truth', lang: 'it-IT' }] };
+  act(() => store.setState({ encounter: { ...store.getState().encounter, state: 'resolved', resolvedMessage: 'Portia lets you in.', currentObjective: null, openObjectives: [], revelation } }));
+  const region = screen.getByRole('region', { name: /^What .* utters$/ });
+  expect(region.textContent).toBe('Portia utters the following: Ogni luogo è un nodo.');
+  const span = region.querySelector('.narration-truth');
+  expect(span.textContent).toBe('Ogni luogo è un nodo.');
+  expect(region.querySelectorAll('button')).toHaveLength(0);
+  // It stands before the conversation's last word.
+  const last = screen.getByText('Portia lets you in.');
+  expect(region.compareDocumentPosition(last) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});
+
 // Round 129 (amendment): the browser listens in one language at a time, so the microphone can be switched between
 // the target language and English; each stretch of speech is added to the box.
 test('the microphone listens in Italian or in English by a switch, and adds each stretch to the reply box', async () => {

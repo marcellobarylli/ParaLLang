@@ -704,6 +704,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           const closed = (result.assessment?.objectiveResults ?? []).filter((entry) => entry.passed && !entry.held).length;
           const kind = result.encounter.state === 'resolved' ? 'resolved' : closed > 0 ? 'pass' : 'fail';
           const levelUp = takeProgression(result.progression);
+          takeGuide(result.guidebook); // round 159: what a character uttered may have entered a guidebook entry
           set({
             encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: result.assessment, isLoading: false, pendingInput: null, draft: '',
             closedObjectives: get().closedObjectives + closed, beat: { id: (get().beat?.id ?? 0) + 1, kind },

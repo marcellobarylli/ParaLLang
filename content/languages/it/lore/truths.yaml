@@ -40,3 +40,14 @@ truths:
   - id: all_the_threads
     level: B1
     text: "Se tutti i fili si tendessero insieme, i due mondi si toccherebbero, e nessuna parola avrebbe più senso."
+  # Round 159 (issue #7): what three characters of the dead branch utter once the conversation is over (the
+  # `revelation` of their encounters). They know more than the road's signs say.
+  - id: journey_threads
+    level: B1
+    text: "Ogni traversata lascia un filo. Vent'anni di traversate sono vent'anni di fili: sono i più antichi della tela, e la reggono ancora."
+  - id: inflection
+    level: B2
+    text: "Quando la maggior parte del mondo sarà raccontata nell'altra lingua, riportarlo indietro sarà come svuotare con una tazza una nave che affonda."
+  - id: first_word_error
+    level: B2
+    text: "In principio era la Parola, e nella Parola c'era un errore. Chi lo correggerà avrà ragione, e quella sarà la fine."

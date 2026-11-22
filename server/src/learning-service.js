@@ -38,6 +38,8 @@ export const FOOTNOTE_MAX_LENGTH = 200; // round 081
 // in the narration; at most this many.
 export const NARRATIVE_WORDS = Object.freeze({ max: 12, word: 40, meaning: 80 });
 export const BEGINNER_HEARTS = 3;
+// Round 159: the save's `told` keeps a character's revelation under this prefix and the encounter's id.
+export const REVELATION_PREFIX = 'revelation_';
 // Round 153: the quality recorded for a target the player wrote in a light turn: said, with nobody having checked how well.
 export const LIGHT_QUALITY = 4;
 // Round 154: a light conversation is an exchange of this many of the player's turns. Before `min` it goes on even
@@ -275,11 +277,23 @@ export class LearningService {
   // Round 158 (issue #4): the passages told to this learner that hold an untranslatable text, oldest first, so that
   // a text met early can be read again when more of the language is known.
   guideFragments(envelope) {
+    // Round 159: and what a character uttered after an encounter (kept under REVELATION_PREFIX + the encounter's id).
+    const sourceOf = (id) => {
+      if (!id.startsWith(REVELATION_PREFIX)) return this.content.passagesById?.get(id) ?? null;
+      const text = this.content.encounters.get(id.slice(REVELATION_PREFIX.length))?.encounter.revelation?.text;
+      return text ? { id, text } : null;
+    };
     return Object.entries(envelope.told ?? {})
-      .map(([id, at]) => ({ passage: this.content.passagesById?.get(id), at }))
+      .map(([id, at]) => ({ passage: sourceOf(id), at }))
       .filter(({ passage }) => passage && truthIds(passage.text).length)
       .sort((a, b) => a.at.localeCompare(b.at) || a.passage.id.localeCompare(b.passage.id))
       .map(({ passage, at }) => ({ ...passageView(passage, this.narrationPack), at }));
+  }
+  // Round 159 (issue #7): what a character utters once its encounter is completed, as the client is sent it; null
+  // for an encounter without one. It is kept in the save's `told` under this id, for the guidebook.
+  revelationOf(definition) {
+    const text = definition.encounter.revelation?.text;
+    return text ? { id: `${REVELATION_PREFIX}${definition.encounter.id}`, segments: toSegments(text, this.narrationPack) } : null;
   }
   guidebookView(envelope) {
     return { guidebook: { entries: this.guideEntries(envelope), total: (this.content.guide ?? []).length, fragments: this.guideFragments(envelope) } };
@@ -793,6 +807,8 @@ export class LearningService {
         ...(encounter.road ? { role: definition.character.species, description: definition.character.appearance } : {}),
       },
       resolvedMessage: definition.encounter.resolved_message ?? null,
+      // Round 159 (issue #7): what the character utters, told by the narrator once the encounter is completed.
+      revelation: encounter.state === 'resolved' ? this.revelationOf(definition) : null,
       companionBriefing: definition.encounter.companion_briefing ?? null,
       version: encounter.version,
       state: encounter.state,
@@ -1528,6 +1544,13 @@ export class LearningService {
     } else if (resolved && !stagedEncounter.road && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
       stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
     }
+    // Round 159 (issue #7): what the character utters on completion is told now: kept for the guidebook, and, when it
+    // holds an untranslatable text, the guidebook's entry on those is entered with it.
+    const revelation = resolved ? this.revelationOf(definition) : null;
+    if (revelation) {
+      if (!Object.hasOwn(stagedEnvelope.told ?? {}, revelation.id)) stagedEnvelope.told = { ...(stagedEnvelope.told ?? {}), [revelation.id]: timestamp };
+      if (revelation.segments.some((segment) => segment.kind === 'truth')) this.enterGuide(stagedEnvelope, { event: 'truth_shown' });
+    }
     // Round 144: a road conversation counts towards the curriculum, in the same save as its resolution.
     const roadResult = resolved && stagedEncounter.road ? this.finishRoad(stagedEnvelope, stagedEncounter) : null;
     // Round 114: a dungeon's conversation clears its site in the run (round 119: the site the session was opened at).
@@ -1550,6 +1573,7 @@ export class LearningService {
       xpGained,
       progression: this.progression(stagedEnvelope),
       ...(roadResult ? { roadResult } : {}),
+      ...(revelation ? { guidebook: this.guidebookNote(stagedEnvelope) } : {}), // round 159: its entry may be new
       replayed: false,
     };
     stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {

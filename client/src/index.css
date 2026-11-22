@@ -198,6 +198,10 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .guide-fragments { margin-top: 1.4rem; }
 .guide-fragments > h3 { margin: 0; color: #e8a317; font-size: 1rem; letter-spacing: .05em; text-transform: uppercase; }
 .guide-fragments > p { margin: .2rem 0 0; color: #b9bbb4; }
+/* Round 159 (issue #7): what a character utters after the conversation: the narrator's line and the text, set off. */
+.revelation { margin: .8rem .9rem; padding: .8rem .9rem; border: 1px solid rgb(232 163 23 / .45); border-left: 3px solid #e8a317; background: rgb(0 0 0 / .32); }
+.revelation .narration { margin: 0; }
+.revelation .narration-truth { display: block; margin-top: .55rem; font-size: 1.06em; line-height: 1.5; }
 /* Round 156: the narrator's written passages, on a card or in the travel caption. */
 .narration { margin: .2rem 0 .6rem; }
 .caption .narration { display: block; margin: 0; }

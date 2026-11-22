@@ -17,9 +17,9 @@ const it = loadGameContent({ language: 'it' });
 const es = loadGameContent({ language: 'es' });
 const pack = (content) => ({ truths: content.truths, lang: content.language.tag });
 
-test('both packs have the same ten texts, each in its own language only, and harder as the truth gets deeper', () => {
+test('both packs have the same texts, each in its own language only, and harder as the truth gets deeper', () => {
   assert.deepEqual([...it.truths.keys()], [...es.truths.keys()]);
-  assert.equal(it.truths.size, 10);
+  assert.equal(it.truths.size, 13); // ten on the road (round 158), three that characters utter (round 159)
   assert.equal(it.truths.get('wake_of_a_stitch').text, 'Torna indietro! Oltre giace la scia di un punto.'); // the issue's own
   for (const content of [it, es]) {
     for (const truth of content.truths.values()) {
@@ -29,13 +29,13 @@ test('both packs have the same ten texts, each in its own language only, and har
   }
   // The harder the level, the longer the sentence, on average: the plain statements are short, the deep ones are not.
   const mean = (level) => { const of = [...it.truths.values()].filter((truth) => truth.level === level); return of.reduce((sum, truth) => sum + truth.text.length, 0) / of.length; };
-  assert.ok(mean('A1') < mean('A2') && mean('A2') < mean('B1'));
+  assert.ok(mean('A1') < mean('A2') && mean('A2') < mean('B1') && mean('B1') < mean('B2'));
 });
 
 test('no English of them is anywhere the server loads: the meanings are in the vault alone', () => {
   const files = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((entry) => (entry.isDirectory() ? files(join(dir, entry.name)) : [join(dir, entry.name)]));
   const loaded = [...files(contentDir), ...files(resolve(contentDir, '..', 'prompts'))].map((file) => readFileSync(file, 'utf8')).join('\n');
-  assert.doesNotMatch(loaded, /wake of a stitch|is not a road|walked on a web|were sewn|sewn to another/i);
+  assert.doesNotMatch(loaded, /wake of a stitch|is not a road|walked on a web|were sewn|sewn to another|leaves a thread|sinking ship|was a mistake/i);
   const vault = readFileSync(resolve(contentDir, '..', 'parallang_obsidian', 'Understood Later.md'), 'utf8');
   for (const truth of it.truths.values()) assert.ok(vault.includes(truth.text), `the vault lists ${truth.id}`);
   for (const truth of es.truths.values()) assert.ok(vault.includes(truth.text), `the vault lists the Spanish ${truth.id}`);
@@ -66,8 +66,9 @@ test('every passage that holds a text leads up to it and says nothing of what it
     assert.doesNotMatch(passage.text, /\b(means|says that|translat|in other words)\b/i);
     if (passage.when.event === 'road_arrive') assert.equal(passage.once, true, `${passage.id} is told once`);
   }
-  // Every text is set somewhere.
-  assert.deepEqual([...new Set(holding.flatMap((passage) => truthIds(passage.text)))].sort(), [...it.truths.keys()].sort());
+  // Every text is set somewhere: in a passage, or in what a character utters after an encounter (round 159).
+  const uttered = [...it.encounters.values()].flatMap(({ encounter }) => truthIds(encounter.revelation?.text ?? ''));
+  assert.deepEqual([...new Set([...holding.flatMap((passage) => truthIds(passage.text)), ...uttered])].sort(), [...it.truths.keys()].sort());
 });
 
 test('a harder text waits for its stage, and a passage may wait for a number of conversations', () => {

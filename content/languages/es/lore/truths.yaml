@@ -40,3 +40,14 @@ truths:
   - id: all_the_threads
     level: B1
     text: "Si todos los hilos se tensaran a la vez, los dos mundos se tocarían, y ninguna palabra tendría ya sentido."
+  # Round 159 (issue #7): what three characters of the dead branch utter once the conversation is over (the
+  # `revelation` of their encounters). They know more than the road's signs say.
+  - id: journey_threads
+    level: B1
+    text: "Cada travesía deja un hilo. Veinte años de travesías son veinte años de hilos: son los más antiguos de la tela, y todavía la sostienen."
+  - id: inflection
+    level: B2
+    text: "Cuando la mayor parte del mundo se cuente en la otra lengua, traerlo de vuelta será como achicar con una taza un barco que se hunde."
+  - id: first_word_error
+    level: B2
+    text: "En el principio era la Palabra, y en la Palabra había un error. Quien lo corrija tendrá razón, y ese será el final."

@@ -90,6 +90,9 @@ const encounterSchema = z.object({
   max_turns: z.number().int().positive(),
   escalation: z.object({ target_ratio_increase_per_turn: z.number().min(0) }).strict(),
   resolved_message: z.string().min(1).optional(),
+  // Round 159 (issue #7): what the character utters when the encounter is completed: the narrator's line and the
+  // passage, as one text in the form of a written passage (it may hold `{truth:<id>}`).
+  revelation: z.object({ text: z.string().min(1) }).strict().optional(),
   // Round 009: static English lines in which the companion introduces the mechanics (the tutorial sets them).
   companion_briefing: z.array(z.string().min(1)).min(1).max(4).optional(),
   // Round 029 (backlog C1): before a first fight, every due Spellbook card among the objectives' targets is reviewed.
@@ -366,6 +369,9 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     const encounter = encounterSchema.parse(parseYaml(contentDir, file));
     if (encounters.has(encounter.id)) throw new Error(`Encounter id ${encounter.id} is declared twice`);
     const character = characterSchema.parse(parseYaml(contentDir, encounter.character));
+    for (const truthId of truthIds(encounter.revelation?.text ?? '')) {
+      if (hasTruths && !truths.has(truthId)) throw new Error(`Encounter ${encounter.id}'s revelation names the untranslatable text ${truthId}, which the ${language.name} pack does not have`);
+    }
     if (character.world && knowledge && !knowledge.regions[character.world.region]) throw new Error(`Character ${character.id} names the unknown region ${character.world.region}`);
     validateObjectives(encounter, vocabularyById, referenceIds);
     // Round 009: narration is matched only against the vocabulary files this encounter's objectives draw on (whole

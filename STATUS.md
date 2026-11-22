@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-22: round 159, three characters utter a deeper truth (on the session branch, not deployed)
+
+Issue #7, the seventh of the eleven, and the last of the narration's. An encounter may now have a `revelation`:
+what its character utters once the encounter is completed. The narrator tells it in the finished conversation ("…
+and he utters the following:"), in turmeric, before the conversation's last word, and the guidebook keeps it.
+Marginalia, Bambieshart and Errata have one each, in both packs, from parts IV, VI and X of the lore book and in
+harder language (B1 and B2) than the road's signs; what they say is in the vault note. Played with Bambieshart in
+headless Chromium; **the texts are Claude's and unread by a speaker**, and it was not seen on a phone
+([findings](docs/rounds/159/findings.md), picture:
+[`01-bambieshart-utters.jpg`](docs/rounds/159/shots/01-bambieshart-utters.jpg)).
+
 ## Addendum 2026-11-22: round 158, untranslatable text in the narration (on the session branch, not deployed)
 
 Issue #4, the sixth of the eleven. Deep truths about the world now exist only in the language being learned: ten
@@ -1579,6 +1590,7 @@ Newest first.
 | 156 | 11-22 | The italic text is a narrator (issue #6): a storybook told to "you" that knows more than it says, as rules in the style guide; 26 written passages for the road and the dungeons' sites; segments and the save's `told` as hooks for issues #4 and #5; Gerald's pinned prompts regenerated | [156](docs/rounds/156/architecture.md) | [findings](docs/rounds/156/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 157 | 11-22 | The guidebook (issue #5): entries as content, entered when their event first happens, kept in the save, told once on the place's card and read in a panel behind the top bar's "?" | [157](docs/rounds/157/architecture.md) | [findings](docs/rounds/157/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 158 | 11-22 | Untranslatable text in the narration (issue #4): ten texts a pack in the language being learned only, set into written passages in turmeric with nothing to tap; the guidebook's "Turmeric text" entry and the texts found; the vault's "Understood Later" | [158](docs/rounds/158/architecture.md) | [findings](docs/rounds/158/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 159 | 11-22 | Three characters utter a deeper truth (issue #7): an encounter's `revelation`, told by the narrator on completion in turmeric and kept by the guidebook; Marginalia, Bambieshart and Errata | [159](docs/rounds/159/architecture.md) | [findings](docs/rounds/159/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

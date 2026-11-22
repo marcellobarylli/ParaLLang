@@ -12,6 +12,10 @@ defeat_condition:
   description: "Player shows, in Spanish, that they understood two passages of The Journey"
 max_turns: 20
 resolved_message: "Marginalia annotates you as 'promising', sells you a battered copy of The Journey, and goes back to eating the poetry section."
+# Round 159 (issue #7): Marginalia has come to know more of the world than most. When the conversation is over the
+# narrator tells what Marginalia then utters: a passage of lore, in untranslatable text (lore/truths.yaml).
+revelation:
+  text: "Before she goes back to the poetry, Marginalia takes off her spectacles, which nobody has seen her do, and for once does not read it from a book. She utters the following: {truth:journey_threads}"
 escalation:
   target_ratio_increase_per_turn: 0.05
 objectives:

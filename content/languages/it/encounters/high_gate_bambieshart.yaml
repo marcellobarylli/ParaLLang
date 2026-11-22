@@ -11,6 +11,10 @@ defeat_condition:
   description: "Player thanks Bambieshart for the Brocade and asks him about the mountain, in Italian"
 max_turns: 20
 resolved_message: "Bambieshart points at the horizon, nods gravely, and is gone before the nod ends. You will find him later, he assures you, dying."
+# Round 159 (issue #7): Bambieshart has come to know more of the world than most. When the conversation is over the
+# narrator tells what Bambieshart then utters: a passage of lore, in untranslatable text (lore/truths.yaml).
+revelation:
+  text: "Bambieshart looks past you, at the gate that has never opened. When he speaks again it is quietly, and he utters the following: {truth:inflection}"
 escalation:
   target_ratio_increase_per_turn: 0.05
 objectives:
