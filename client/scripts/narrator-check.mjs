@@ -28,7 +28,8 @@ await game.run(async ({ page, check, shot, tap, say, runtime, content }) => {
   await tap(page.getByRole('button', { name: 'Continue' }));
   const caption = page.locator('.caption .narration');
   await caption.waitFor({ timeout: 60000 });
-  const told = await caption.textContent();
+  // Round 166: the caption's last sentence is the game's ("On the way to…"), in its own span; the passage is the rest.
+  const told = await caption.evaluate((element) => [...element.childNodes].filter((node) => !(node.classList?.contains('narration-after'))).map((node) => node.textContent).join('').trim());
   const passage = content.passages.find((entry) => entry.text.replace(/\s+/g, ' ').trim() === told);
   check(Boolean(passage) && passage.when.event === 'road_arrive', `the travel caption tells the way taken ("${told.slice(0, 50)}…")`);
   await shot('03-on-the-way');

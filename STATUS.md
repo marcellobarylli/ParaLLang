@@ -33,6 +33,19 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 166, the narrator's passage stays while the conversation loads
+
+The owner, from the phone: the narrator's passage on the walk to the next site is good, and the bare line that
+replaced it when the camera arrived ("Erasmus is getting ready to talk…") is dull. The passage now **stays in the
+travel caption until the character is ready to talk**, and what the game is doing is its last sentence: "On the way
+to The Lesser Hollow…" while the camera walks, "Henrietta is getting ready to talk…" once it is there. The dungeons'
+caption does the same. A site of which nothing is told still shows the plain line. Web client only; the server is
+unchanged. `node client/scripts/caption-check.mjs` plays it; pictures:
+[the owner's](docs/rounds/166/shots/00-the-owners-picture.jpg),
+[getting ready](docs/rounds/166/shots/02-getting-ready.jpg). The owner's picture is the first sight of the deployed
+game on a real phone in these rounds; this change has not been seen on one.
+[Architecture](docs/rounds/166/architecture.md), [findings](docs/rounds/166/findings.md).
+
 ## Addendum 2026-11-23: round 165, a real map under the chart of the Odyssey
 
 The owner asked that the chart of the Odyssey (round 163) have a real world map under it, accurate, and looking
@@ -109,6 +122,7 @@ is the list.
 | 163 | 11-23 | The narrator on a long journey, and a chart of the Odyssey (issue #13): a remark from a hundred walks when the journey is shown, a guidebook entry, and a chart drawn here in place of a public-domain map that could not be fetched | [163](docs/rounds/163/architecture.md) | [findings](docs/rounds/163/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
 | 164 | 11-23 | The journey as the icon; the stitch and the first pull in the lore book (the owner's lore of 2026-11-23); a proposal for building the first pull | [164](docs/rounds/164/architecture.md) | [findings](docs/rounds/164/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
 | 165 | 11-23 | A real map under the chart of the Odyssey: Natural Earth's coast (public domain), the line between stops by sea, drawn as an old sea chart; two stops' coordinates corrected against the coast | [165](docs/rounds/165/architecture.md) | [findings](docs/rounds/165/findings.md) | on `main` with `0f97296` (the page only) |
+| 166 | 11-23 | The narrator's passage stays in the travel caption until the character is ready to talk, with "… is getting ready to talk…" as its last sentence (the owner, from the phone) | [166](docs/rounds/166/architecture.md) | [findings](docs/rounds/166/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

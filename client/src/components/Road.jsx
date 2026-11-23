@@ -4,7 +4,7 @@ import { createGraph } from '../../../server/src/road/graph.js';
 import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 import { ROAD_NAME } from '../atlas.js';
-import Narration from './Narration.jsx';
+import Narration, { hasNarration } from './Narration.jsx';
 import { GuideNote } from './Guidebook.jsx';
 import OdysseyChart from './OdysseyChart.jsx';
 
@@ -171,8 +171,10 @@ export function RoadCaption({ state }) {
   const waiting = road?.current;
   if (roadError) return <section className="caption caption-problem" role="alert"><span>{roadError}</span></section>;
   const text = roadArrived && encounterLoading ? `${firstName(waiting?.character)} is getting ready to talk…` : road?.here?.dungeon ? `Entering ${road.here.dungeon.name}…` : `On the way to ${road?.here?.name ?? 'the next site'}…`;
-  // Round 156: while the camera walks, the narrator tells the way taken.
-  return <section className="caption" role="status">{!roadArrived && <Narration narration={road?.narration} />}<span>{text}</span></section>;
+  // Round 156: while the camera walks, the narrator tells the way taken. Round 166: the passage stays until the
+  // character is ready to talk, so there is something to read while the conversation loads, and what the game is
+  // doing ("On the way to…", "… is getting ready to talk…") is the passage's last sentence.
+  return <section className="caption" role="status">{hasNarration(road?.narration) ? <Narration narration={road.narration} after={text} /> : <span>{text}</span>}</section>;
 }
 
 /** Under a finished conversation: what it did to the curriculum, and the way on. */

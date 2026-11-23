@@ -14,7 +14,7 @@ import SettingsSheet from './SettingsSheet.jsx';
 import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
 import { ROAD_NAME } from '../atlas.js';
-import Narration from './Narration.jsx';
+import Narration, { hasNarration } from './Narration.jsx';
 import Guidebook, { GuideNote } from './Guidebook.jsx';
 import { siteStatesOf } from '../stores/gameStore.js';
 
@@ -279,8 +279,9 @@ function TravelCaption({ state, site }) {
   const text = cameraArrived && arrival !== 'site'
     ? `${site?.characterName ?? 'Someone'} is getting ready to talk…`
     : `${phase === 'walk' ? 'Walking to' : 'Approaching'} ${site?.name ?? 'the next site'}…`;
-  // Round 156: on the way to a site, the narrator tells what is there.
-  return <section className="caption" role="status">{!cameraArrived && <Narration narration={state.narration} />}<span>{text}</span></section>;
+  // Round 156: on the way to a site, the narrator tells what is there. Round 166: the passage stays until the
+  // character is ready to talk, and what the game is doing is its last sentence (as on the road, Road.jsx).
+  return <section className="caption" role="status">{hasNarration(state.narration) ? <Narration narration={state.narration} after={text} /> : <span>{text}</span>}</section>;
 }
 
 // Round 120: after a saveable character lets the player pass, they may be saved to the party (the app's SAVE / LEAVE

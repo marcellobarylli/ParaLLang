@@ -303,7 +303,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   the narrator knows and never says, and `content/narration/passages.yaml` holds the narrator's written passages,
   told when the player sets out on the road, arrives at a site or stands at a site of a dungeon
   (`server/src/narration.js`; a save keeps what was told under `told`). `node client/scripts/narrator-check.mjs`
-  plays them in headless Chromium.
+  plays them in headless Chromium. From round 166 the passage about the way taken stays in the travel caption until
+  the character is ready to talk, with what the game is doing ("On the way to…", "… is getting ready to talk…") as
+  its last sentence (`RoadCaption` in `Road.jsx`, the same in `DungeonScreen.jsx`);
+  `node client/scripts/caption-check.mjs` plays it.
   From round 157 there is a guidebook: `content/narration/guidebook.yaml` holds its entries (a title, a text and
   the event that enters each), a save keeps the entries a learner has under `guidebook`, `GET /api/guidebook` lists
   them and `POST /api/guidebook/read` marks them read. A new entry is told on the card of the place where it was

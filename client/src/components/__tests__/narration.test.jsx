@@ -37,13 +37,29 @@ test('the road\'s card tells the arrival, and an empty site is told in the narra
   expect(screen.getByText(/Nobody waits here now\. Somebody has left a cairn/).className).toContain('narrative');
 });
 
-test('the travel caption tells the way taken until the camera is there', () => {
-  const told = road({ narration: { id: 'ford_thread', segments: [{ text: 'You wade the ford.' }] } });
+// Round 166 (the owner, 2026-11-23): the passage stays while the conversation loads, and what the game is doing is
+// its last sentence, so there is something to read instead of a bare "… is getting ready to talk…".
+test('the travel caption tells the way taken, and keeps telling it until the character is ready to talk', () => {
+  const told = road({ current: { character: { name: 'Erasmus Quill' } }, narration: { id: 'ford_thread', segments: [{ text: 'You wade the ford.' }] } });
   const { rerender } = render(<RoadCaption state={state({ road: told, roadArrived: false })} />);
-  expect(screen.getByText('You wade the ford.')).toBeTruthy();
-  expect(screen.getByText(/On the way to The Patient Meadow/)).toBeTruthy();
+  const caption = screen.getByRole('status');
+  expect(caption.textContent).toBe('You wade the ford. On the way to The Patient Meadow…');
+  expect(screen.getByText(/On the way to The Patient Meadow/).className).toBe('narration-after');
   rerender(<RoadCaption state={state({ road: told, roadArrived: true, encounterLoading: true })} />);
-  expect(screen.queryByText('You wade the ford.')).toBeNull();
+  expect(caption.textContent).toBe('You wade the ford. Erasmus is getting ready to talk…');
+  // One paragraph in the narrator's voice: the passage, then the game's sentence in its own span.
+  expect(caption.querySelectorAll('p.narration')).toHaveLength(1);
+  expect(caption.querySelector('p.narration').dataset.passage).toBe('ford_thread');
+  expect(screen.getByText('Erasmus is getting ready to talk…').className).toBe('narration-after');
+});
+
+test('with no passage to tell, the travel caption is the plain line it was', () => {
+  const quiet = road({ current: { character: { name: 'Erasmus Quill' } } });
+  const { rerender } = render(<RoadCaption state={state({ road: quiet, roadArrived: false })} />);
+  expect(screen.getByRole('status').textContent).toBe('On the way to The Patient Meadow…');
+  rerender(<RoadCaption state={state({ road: quiet, roadArrived: true, encounterLoading: true })} />);
+  expect(screen.getByRole('status').textContent).toBe('Erasmus is getting ready to talk…');
+  expect(screen.getByRole('status').querySelector('.narration')).toBeNull();
 });
 
 test('a conversation\'s last word is the narrator\'s', () => {
