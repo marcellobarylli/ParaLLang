@@ -47,6 +47,12 @@ function newStore(storage = memoryStorage(HALF)) {
   return { store, storage, s: () => store.getState() };
 }
 
+// Round 173: a reload opens on the title; the run resumes where it was when its place is first entered.
+async function reopen(s) {
+  s().enter();
+  await s().enterPlace('ta_prohm');
+}
+
 // From the title screen (or the temple map) to the open dialogue of the site the player stands at.
 async function openSite(s) {
   if (s().phase === 'attract') s().enter();
@@ -235,6 +241,7 @@ test('the web client plays the dungeon: seven sites by a walk over the map, a he
   // A reload of the page on a finished run: the stored learner is recovered, on the victory screen, and may stay.
   const reloaded = newStore(storage);
   await reloaded.s().initialize();
+  await reopen(reloaded.s);
   assert.equal(reloaded.s().learnerId, s().learnerId);
   assert.equal(reloaded.s().phase, 'victory');
   reloaded.s().stay();
@@ -267,6 +274,7 @@ test('a reload in the middle of a run resumes the conversation under way at the 
 
   const again = newStore(storage);
   await again.s().initialize();
+  await reopen(again.s);
   assert.equal(again.s().learnerId, s().learnerId);
   assert.equal(again.s().phase, 'approach');
   assert.equal(again.s().siteIndex, indexOf('root_court'));
@@ -279,6 +287,7 @@ test('a reload in the middle of a run resumes the conversation under way at the 
   // A third tab leaves the conversation and walks back to the gate: the server drops the conversation at the court.
   const third = newStore(storage);
   await third.s().initialize();
+  await reopen(third.s);
   third.s().onCameraArrived();
   third.s().leaveConversation();
   await third.s().travel('face_gate');
@@ -353,6 +362,7 @@ test('the web client saves Gerald after his site, talks to him as a party member
   // A reload: the party comes back with the map, and the walk on is open as before.
   const reloaded = newStore(storage);
   await reloaded.s().initialize();
+  await reopen(reloaded.s);
   reloaded.s().onCameraArrived();
   assert.equal(reloaded.s().phase, 'site');
   for (let i = 0; i < 50 && reloaded.s().party.length === 0; i += 1) await new Promise((resolve) => setTimeout(resolve, 10));

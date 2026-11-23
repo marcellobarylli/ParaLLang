@@ -11,6 +11,7 @@ import { createGameStore } from '../../stores/gameStore.js';
 import { DUNGEON } from '../../dungeon.js';
 import { ATLAS } from '../../atlas.js';
 import { NAMES, createFakeParty, createFakeRun } from '../../__tests__/fakeRun.js';
+import { openMenu, titleReady, toPlaces } from './menu.js';
 
 const level = vi.hoisted(() => ({ views: [] }));
 vi.mock('../../scene/levelView.js', () => ({
@@ -95,6 +96,10 @@ test('the screen drives the camera over the map, and the camera gates the dialog
   fakeServer();
   const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage() });
   render(<DungeonScreen useStore={store} />);
+  // Round 173: the title is the road's; the dungeon's level starts when the player goes to the other places.
+  await titleReady();
+  expect(level.views.length).toBe(0);
+  await toPlaces(user);
   await waitFor(() => expect(level.views.length).toBe(1));
   const view = level.views[0];
   const arrive = (mode) => act(() => view.options.onArrive(mode));
@@ -104,15 +109,11 @@ test('the screen drives the camera over the map, and the camera gates the dialog
   };
   const shown = () => view.labels.filter((label) => label && !label.hidden).map((label) => label.textContent);
   expect(view.options.dungeon.id).toBe('ta_prohm');
-  await waitFor(() => expect(phases(view)).toEqual(['attract:0:null']));
+  await waitFor(() => expect(phases(view)).toEqual(['world:0:null']));
   // A label per site for the view to place; the fog hides all but the gate's and the two a path leads to.
   await waitFor(() => expect(view.labels.filter(Boolean).length).toBe(7));
   expect(shown()).toEqual(['1The Face Gate', '2', '3']);
-
-  await screen.findByText(/answer in Italian/);
   expect(view.fog).toMatchObject({ face_gate: { state: 'current' }, root_court: { state: 'known' }, library: { state: 'hidden' } });
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
-  expect(phases(view).at(-1)).toBe('world:0:null');
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   expect(phases(view).at(-1)).toBe('overview:0:null');
   arrive('overview'); // an arrival outside a move opens nothing
@@ -168,7 +169,7 @@ test('the screen drives the camera over the map, and the camera gates the dialog
   expect(view.calls.filter(([kind]) => kind === 'encounter').length).toBe(conversations); // the card does not shape the camera
 
   expect(phases(view)).toEqual([
-    'attract:0:null', 'world:0:null', 'overview:0:null', 'approach:0:null', 'encounter:0:null',
+    'world:0:null', 'overview:0:null', 'approach:0:null', 'encounter:0:null',
     'walk:2:0', 'encounter:2:0', 'overview:2:0', 'walk:0:2', 'site:0:2',
   ]);
 
@@ -176,7 +177,7 @@ test('the screen drives the camera over the map, and the camera gates the dialog
   // the conversation: the real view leaves the camera alone in `party` (levelView.setPhase).
   await act(async () => { await store.getState().recruit(encounterOf('root_court')); });
   const before = view.calls.length;
-  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  await openMenu(user, /^Party/);
   await user.click(await screen.findByRole('button', { name: 'Talk to Gerald' }));
   expect(await screen.findByRole('region', { name: 'Gerald, your party' })).toBeTruthy();
   await answer('Con calma.');
@@ -199,10 +200,10 @@ test('the camera arriving before the encounter has loaded waits for it', async (
   }));
   const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage() });
   render(<DungeonScreen useStore={store} />);
+  await titleReady();
+  await toPlaces(user);
   await waitFor(() => expect(level.views.length).toBe(1));
   const view = level.views[0];
-  await screen.findByText(/answer in Italian/);
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
   await waitFor(() => expect(phases(view).at(-1)).toBe('approach:0:null'));
@@ -219,10 +220,12 @@ test('tilt to look hands the level view a source that the phone\'s orientation m
   fakeServer();
   const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage() });
   render(<DungeonScreen useStore={store} />);
+  await titleReady();
+  await toPlaces(userEvent.setup());
   await waitFor(() => expect(level.views.length).toBe(1));
   const view = level.views[0];
   const looks = () => view.calls.filter(([kind]) => kind === 'look').map(([, source]) => source);
-  await waitFor(() => expect(phases(view)).toEqual(['attract:0:null']));
+  await waitFor(() => expect(phases(view)).toEqual(['world:0:null']));
   expect(looks()).toEqual([]); // off by default
   const orient = (angles, timeStamp) => { const event = new Event('deviceorientation'); Object.assign(event, angles); Object.defineProperty(event, 'timeStamp', { value: timeStamp }); window.dispatchEvent(event); };
 
@@ -250,6 +253,9 @@ test('where the browser wants to be asked, a visit with the setting on asks at t
   storage.setItem('parallang.display', '{"tiltLook":true}');
   const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage });
   render(<DungeonScreen useStore={store} />);
+  await titleReady();
+  await toPlaces(userEvent.setup());
+  requestPermission.mockClear(); // the menu's own clicks were the first; the visit is asked from the next
   await waitFor(() => expect(level.views.length).toBe(1));
   await waitFor(() => expect(level.views[0].calls.some(([kind]) => kind === 'look')).toBe(true));
   expect(requestPermission).not.toHaveBeenCalled(); // a page may not ask on its own
@@ -274,9 +280,9 @@ async function openConversation(speech, storage = memoryStorage()) {
   fakeServer();
   const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage });
   render(<DungeonScreen useStore={store} speech={speech} />);
+  await titleReady();
+  await toPlaces(user);
   await waitFor(() => expect(level.views.length).toBe(1));
-  await screen.findByText(/answer in Italian/);
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
   await waitFor(() => expect(store.getState().encounter?.encounterId).toBe(encounterOf('face_gate')));

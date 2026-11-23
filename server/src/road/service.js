@@ -40,6 +40,11 @@ export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40,
 
 const clone = (value) => structuredClone(value);
 const graphOf = (seed) => graphFor(seed, createTerrain);
+/** Round 173: a seed a client proposes for a new road, if it is one the server would have drawn itself (1 to 2^31 - 1). */
+export const proposedSeed = (value) => {
+  const seed = typeof value === 'string' && /^\d{1,10}$/.test(value) ? Number(value) : value;
+  return Number.isInteger(seed) && seed >= 1 && seed <= 2 ** 31 - 1 ? seed : null;
+};
 
 /** A road that has not been walked: the learner stands at the start with the first lesson waiting. */
 export function freshRoad(seed, curriculum) {
@@ -239,7 +244,9 @@ export const roadMethods = {
     };
   },
 
-  async getRoad(learnerId) {
+  // Round 173: `seed` is the landscape the title screen already shows a new player (it is drawn before the server
+  // answers). It is taken only by the first look, which creates the road; a road that exists keeps its own.
+  async getRoad(learnerId, { seed = null } = {}) {
     const envelope = await this.loadEnvelope(learnerId);
     if (envelope.road) return this.roadView(envelope);
     // The first look creates the road, so that the seed (and with it the landscape) is fixed from then on.
@@ -247,7 +254,7 @@ export const roadMethods = {
       const latest = await this.loadEnvelope(learnerId);
       if (latest.road) return this.roadView(latest);
       const staged = clone(latest);
-      staged.road = this.setOut(staged, freshRoad(this.roadSeed(), this.curriculum()));
+      staged.road = this.setOut(staged, freshRoad(proposedSeed(seed) ?? this.roadSeed(), this.curriculum()));
       await this.storage.save(staged);
       return this.roadView(staged);
     });

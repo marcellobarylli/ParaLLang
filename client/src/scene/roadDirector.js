@@ -8,6 +8,10 @@
 //   hold                  at a site: a few steps back from whoever stands there, with a slow sway; each objective
 //                         closed steps the camera in (engage), a verdict is a small push or pull (beat)
 //   wander                at a site where nobody waits: a slow turn around it, to look at the country
+//   title(site)           round 173: the title screen: far over the site, above the clouds, turning slowly round it
+//   arrive(site) from the title  the zoom down from there to the site: the distance shrinks by the same share each
+//                         moment (it falls through the clouds quickly and settles slowly), the camera levels out and
+//                         turns a little round the site on the way
 //
 // The ground is the terrain's heightAt; the camera never goes under it or under the water.
 
@@ -24,7 +28,19 @@ export const ROAD_CAMERA = Object.freeze({
   blend: 0.9, // seconds to leave a hold
   engageMax: 0.34,
   wander: Object.freeze({ radius: 9, rise: 2.6, period: 70 }),
+  // Round 173: the title screen. `distance` is from the site, along a line `pitch` radians under the level; the
+  // frame holds about `across` metres of land across its narrower side, the map's own width (about 1 km at its
+  // closest) taken twice, within the distances given. One turn round the site takes `period` seconds, and the zoom
+  // down takes `descend`.
+  title: Object.freeze({ pitch: 0.96, across: 2100, distance: Object.freeze([1400, 2600]), period: 360, descend: 6.5 }),
 });
+
+/** Round 173: how far the title's camera stands from the site, for a view of `aspect` (width over height) and `fov` (degrees, vertical). */
+export function titleDistance(aspect, fov = 60) {
+  const { across, distance: [near, far] } = ROAD_CAMERA.title;
+  const wide = 2 * Math.tan(((fov / 2) * Math.PI) / 180) * Math.min(1, Math.max(0.1, aspect || 1));
+  return clamp(across / wide, near, far);
+}
 
 const lerp = (a, b, u) => a + (b - a) * u;
 const lerp3 = (a, b, u) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u)];
@@ -61,6 +77,8 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
   let beat = { kind: null, t: 1 };
   let arrived = true;
   let pose = { position: [0, 30, 30], target: [0, 0, 0] };
+  let titleAt = { distance: ROAD_CAMERA.title.distance[0], angle: 0 }; // round 173
+  let descent = null; // round 173: { r0, r1, pitch0, pitch1, yaw0, yaw1, duration } of a zoom down from the title
 
   const siteTarget = () => [site.x, heightAt(site.x, site.z) + ROAD_CAMERA.focus, site.z];
   function holdPose(time) {
@@ -91,6 +109,33 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
     return { position: [x, y, z], target: lerp3(siteTarget(), ahead, near) };
   }
 
+  // Round 173: the title's pose: far over the site, turning round it.
+  function titlePose(time) {
+    const angle = titleAt.angle + (time / ROAD_CAMERA.title.period) * Math.PI * 2;
+    const { pitch } = ROAD_CAMERA.title;
+    const flat = Math.cos(pitch) * titleAt.distance;
+    const base = heightAt(site.x, site.z);
+    return { position: [site.x + Math.cos(angle) * flat, base + Math.sin(pitch) * titleAt.distance, site.z + Math.sin(angle) * flat], target: [site.x, base, site.z] };
+  }
+  // The zoom down: the camera's place seen from the site's focus as a distance, a pitch and a bearing, each eased
+  // from the title's to the hold's (the distance by the same share each moment), and never under the ground.
+  function descentPose(u) {
+    const e = ease(u);
+    const focus = siteTarget();
+    const r = descent.r0 * (descent.r1 / descent.r0) ** e;
+    const pitch = lerp(descent.pitch0, descent.pitch1, e);
+    const yaw = lerp(descent.yaw0, descent.yaw1, e);
+    const [x, z] = [focus[0] + Math.cos(yaw) * Math.cos(pitch) * r, focus[2] + Math.sin(yaw) * Math.cos(pitch) * r];
+    const y = Math.max(focus[1] + Math.sin(pitch) * r, ground(x, z) + ROAD_CAMERA.eye);
+    // The look comes down from the ground under the site to the figure as the camera levels out.
+    return { position: [x, y, z], target: [focus[0], lerp(descent.look0, focus[1], e), focus[2]] };
+  }
+  const polar = (position, focus) => {
+    const [dx, dy, dz] = [position[0] - focus[0], position[1] - focus[1], position[2] - focus[2]];
+    const r = Math.max(0.5, Math.hypot(dx, dy, dz));
+    return { r, pitch: Math.asin(clamp(dy / r, -1, 1)), yaw: Math.atan2(dz, dx) };
+  };
+
   const begin = (next) => { mode = next; t = 0; start = { position: [...pose.position], target: [...pose.target] }; arrived = false; };
   const setSite = (next, facing) => {
     site = { x: next.x, z: next.z };
@@ -108,8 +153,32 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
     get pose() { return pose; },
     get site() { return site; },
 
-    /** Down from the sky to `next` ({ x, z }), seen from `facing` ([x, z]) if given. */
+    /** Round 173: the title screen, far over `next`, turning slowly; `distance` from titleDistance(). */
+    title(next, { distance = titleAt.distance } = {}) {
+      const moved = !site || site.x !== next.x || site.z !== next.z;
+      if (moved || mode !== 'title') {
+        setSite(next, null);
+        titleAt = { distance, angle: Math.atan2(from[1], from[0]) };
+        mode = 'title'; t = 0; start = null; arrived = false;
+      }
+      titleAt.distance = distance;
+      pose = titlePose(t);
+    },
+    /** Round 173: the title's distance, when the view changes shape. */
+    setTitleDistance(distance) { titleAt.distance = distance; },
+
+    /** Down from the sky to `next` ({ x, z }), seen from `facing` ([x, z]) if given. From the title, the zoom down. */
     arrive(next, facing = null) {
+      if (mode === 'title' && site) {
+        // The camera comes down on the side it is on, and turns a little further round on the way.
+        const focus = [next.x, heightAt(next.x, next.z) + ROAD_CAMERA.focus, next.z];
+        const begun = polar(pose.position, focus);
+        setSite(next, [next.x + Math.cos(begun.yaw + 0.7), next.z + Math.sin(begun.yaw + 0.7)]);
+        const end = polar(holdPose(0).position, focus);
+        descent = { r0: begun.r, r1: end.r, pitch0: begun.pitch, pitch1: end.pitch, yaw0: begun.yaw, yaw1: begun.yaw + 0.7, look0: heightAt(next.x, next.z), duration: ROAD_CAMERA.title.descend };
+        begin('descend');
+        return;
+      }
       setSite(next, facing);
       pose = { position: [next.x + from[0] * 24, heightAt(next.x, next.z) + ROAD_CAMERA.sky, next.z + from[1] * 24], target: siteTarget() };
       begin('arrive');
@@ -136,7 +205,7 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
     /** Back to the hold, from a wander. */
     face() { if (site && mode === 'wander') begin('hold'); },
     /** The end of whatever is under way. */
-    skip() { if (mode === 'arrive' || mode === 'travel') { mode = 'hold'; t = 0; start = null; } arrived = true; pose = site ? (mode === 'wander' ? wanderPose(0) : holdPose(0)) : pose; },
+    skip() { if (mode === 'arrive' || mode === 'travel' || mode === 'descend' || mode === 'title') { mode = 'hold'; t = 0; start = null; } arrived = true; pose = site ? (mode === 'wander' ? wanderPose(0) : holdPose(0)) : pose; },
 
     engage(level) { engageTarget = clamp(level, 0, 1) * ROAD_CAMERA.engageMax; },
     beat(kind) { beat = { kind, t: 0 }; },
@@ -146,7 +215,13 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
       t += dt;
       engage += (engageTarget - engage) * (1 - Math.exp(-dt / 0.7));
       if (beat.t < 1) beat.t = Math.min(1, beat.t + dt / 0.9);
-      if (mode === 'arrive') {
+      if (mode === 'title') {
+        pose = titlePose(t);
+      } else if (mode === 'descend') {
+        const u = Math.min(1, t / descent.duration);
+        pose = descentPose(u);
+        if (u >= 1) { mode = 'hold'; t = 0; start = { position: [...pose.position], target: [...pose.target] }; arrived = true; descent = null; }
+      } else if (mode === 'arrive') {
         const u = Math.min(1, t / ROAD_CAMERA.arrive);
         const end = holdPose(0);
         pose = { position: lerp3(start.position, end.position, ease(u)), target: lerp3(start.target, end.target, ease(u)) };

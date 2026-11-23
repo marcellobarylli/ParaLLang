@@ -10,10 +10,14 @@ import { ENDLESS, atmosphereFor, createCairn, createEndlessWorld, createLandmark
 import { createTerrain } from '../../../server/src/road/terrain.js';
 import { createGraph } from '../../../server/src/road/graph.js';
 import { currentWeather, onWeatherPin, pinWeather } from './weatherClock.js';
-import { createRoadDirector } from './roadDirector.js';
+import { createRoadDirector, titleDistance } from './roadDirector.js';
 import { freeRect } from './insets.js';
+import { createFarLand } from './farLand.js';
 
 const FOV = 60;
+// Round 173: how the view stands back with a high camera. `distance` is the camera's from what it looks at.
+const HIGH = Object.freeze({ fogNear: 0.75, fogFar: 2.4, clipFar: 3.5, clipNear: 1 / 400, from: 150, full: 700 });
+const smooth01 = (value) => { const u = Math.min(1, Math.max(0, value)); return u * u * (3 - 2 * u); };
 const FIGURE = { near: 1.4, far: 2.3, bob: 0.02, hop: 0.16 };
 const easeTo = (current, target, dt, tau) => current + (target - current) * (1 - Math.exp(-dt / tau));
 
@@ -25,6 +29,12 @@ const easeTo = (current, target, dt, tau) => current + (target - current) * (1 -
  *                        'stand' (at once)
  *   setTalking(on)       whether somebody is being talked to at the site (else the camera wanders round it)
  *   setEncounter(...)    the conversation's progress, as the dungeon's host takes it
+ *   setTitle(at)         round 173: the title screen: the camera far over the site `at` (an id; the landscape's start
+ *                        if it is not one), above the clouds, turning slowly. The next show({ mode: 'arrive' }) is the
+ *                        zoom down from there. While the camera is high the fog and the clip planes stand back with
+ *                        it, the ground is built round the site, not under the camera, and a coarse sheet of the
+ *                        landscape (farLand.js) fills the view beyond the built ground; once the camera is down
+ *                        that sheet is thrown away.
  */
 export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, now = () => Date.now(), models = true } = {}) {
   const terrain = createTerrain(seed);
@@ -73,6 +83,10 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
   let raf = 0;
   let last = null;
   let disposed = false;
+  let fog = { near: 46, far: 186 }; // the sky's own, as last set
+  let farLand = null; // round 173: the land beyond the built ground, while the camera is high
+  let high = 0; // round 173: 0 on the ground to 1 far up
+  const groundGroup = world.scene.getObjectByName('endless-ground') ?? { visible: true };
   const talk = { beatId: null };
   const anchor = new Vector3();
 
@@ -84,6 +98,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     pipeline.resize();
+    if (director.mode === 'title') director.setTitleDistance(titleDistance(camera.aspect, FOV));
   }
 
   function applyView(dt) {
@@ -163,8 +178,25 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     const pose = director.update(dt);
     camera.position.set(...pose.position);
     camera.lookAt(...pose.target);
-    // Only the ground around the camera exists. A few chunks a frame keep a glide ahead of the fog.
-    world.streamTo(pose.position[0], pose.position[2], world.chunkCount < 9 ? 6 : 2);
+    // Round 173: how high the camera is over what it looks at, and how far from it: the fog and the clip planes
+    // stand back with it (on the ground the sky's own fog is the farther, so nothing changes in play).
+    const distance = Math.hypot(pose.position[0] - pose.target[0], pose.position[1] - pose.target[1], pose.position[2] - pose.target[2]);
+    high = smooth01((pose.position[1] - terrain.heightAt(pose.target[0], pose.target[2]) - HIGH.from) / (HIGH.full - HIGH.from));
+    const [near, far] = [Math.max(0.3, distance * HIGH.clipNear), Math.max(900, distance * HIGH.clipFar)];
+    if (camera.near !== near || camera.far !== far) Object.assign(camera, { near, far });
+    // Only the ground around the camera exists, or, with a high camera, round what it looks at. A few chunks a frame
+    // keep a glide ahead of the fog.
+    const [sx, sz] = high > 0.02 ? [pose.target[0], pose.target[2]] : [pose.position[0], pose.position[2]];
+    world.streamTo(sx, sz, world.chunkCount < 9 ? 6 : 2);
+    // From high up the built ground would show as a tile of another texture in the middle of the far land: it is
+    // built all the same (the world is loading) and shown once the camera is low enough to be over it.
+    groundGroup.visible = high < 0.35;
+    if (high > 0.02) {
+      farLand ??= (() => { const made = createFarLand(terrain, world.uniforms, { x: pose.target[0], z: pose.target[2] }); world.scene.add(made.group); return made; })();
+      farLand.build(2);
+      farLand.setShown(true);
+    } else if (farLand && director.arrived) { farLand.dispose(); farLand = null; }
+    else farLand?.setShown(false);
     sinceLight += dt;
     if (sinceLight > 0.25) {
       sinceLight = 0;
@@ -172,7 +204,10 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
       const light = atmosphereFor(weather);
       world.setAtmosphere(light);
       effects.setAtmosphere(light); // the clouds take their colours from the same sky
+      fog = { near: light.fogNear, far: light.fogFar };
     }
+    world.uniforms.uFogNear.value = Math.max(fog.near, distance * HIGH.fogNear);
+    world.uniforms.uFogFar.value = Math.max(fog.far, distance * HIGH.fogFar);
     if (effects.update(weather, dt, camera).flash) onThunder();
     for (const [id, figure] of figures) {
       const away = Math.hypot(pose.position[0] - figure.x, pose.position[2] - figure.z);
@@ -187,7 +222,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     }
     world.update(dt, camera);
     pipeline.render(world.scene, camera);
-    if (director.arrived && !notified) {
+    if (director.arrived && !notified && director.mode !== 'title') {
       notified = true;
       onArrive(director.mode);
     }
@@ -213,6 +248,16 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     setRoad,
     show,
     setTalking(on) { talking = Boolean(on); },
+    /** Round 173: the title screen, far over the site `siteId` (or the landscape's start). */
+    setTitle(siteId) {
+      const node = graph.node(siteId) ?? graph.node(graph.start);
+      if (!node) return;
+      director.title(node, { distance: titleDistance(camera.aspect, FOV) });
+      // The land under a site the title moved to is another: the sheet is made again round it.
+      if (farLand && Math.hypot(farLand.centre.x - node.x, farLand.centre.z - node.z) > 400) { farLand.dispose(); farLand = null; }
+    },
+    /** Round 173: 0 with the camera on the ground, 1 far over it. */
+    get high() { return high; },
     setEncounter({ closed = 0, resolved = false, beatId = null, beatKind = null } = {}) {
       director.engage(resolved ? 1 : Math.min(0.7, closed * 0.35));
       if (beatId !== null && beatId !== talk.beatId) {
@@ -240,13 +285,14 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     setModels, // round 162
     get effects() { return { ...effects.state }; },
     /** What the scene holds now, for the playthrough script. */
-    get stats() { return { chunks: world.chunkCount, triangles: world.triangleCount, figures: figures.size, tracks: tracks.length, mode: director.mode }; },
+    get stats() { return { chunks: world.chunkCount, triangles: world.triangleCount, figures: figures.size, tracks: tracks.length, mode: director.mode, high, farTiles: farLand?.built ?? 0, highClouds: effects.state.highClouds }; },
     resize,
     step,
     dispose() {
       disposed = true;
       cancelAnimationFrame(raf);
       unpin();
+      farLand?.dispose();
       canvas.removeEventListener('webglcontextlost', onContextLost);
       world.scene.traverse((object) => {
         object.geometry?.dispose?.();

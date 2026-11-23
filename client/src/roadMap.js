@@ -68,6 +68,29 @@ const BAND = { shore: [0, 2], meadow: [1, 36], forest: [1, 36], highland: [36, 5
 const COLOURS = { crown: [58, 112, 60], tree: [26, 62, 42], shallow: [78, 146, 150], deep: [28, 58, 96], haze: [182, 200, 220] };
 const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
 
+// The ground's kind, its biome's colours and its colour before the light, at a point `h` metres up.
+function landAt(terrain, x, z, h) {
+  const cover = terrain.coverAt(x, z, h);
+  // Round 160: meadow and forest take the colours of the biome they lie in.
+  const biome = terrain.biomes?.[terrain.biomeAt?.(x, z)]?.map ?? null;
+  const [low, high] = biome?.[cover] ?? LAND[cover];
+  const climb = clamp((h - BAND[cover][0]) / (BAND[cover][1] - BAND[cover][0]), 0, 1);
+  return { cover, biome, base: low.map((value, i) => value + (high[i] - value) * climb) };
+}
+
+/**
+ * Round 173: the colour of the ground at (x, z) as the map paints it, before its light and its height lines, as
+ * [r, g, b] in 0..1: water by its depth, land by its kind and biome. The title screen's far landscape is painted
+ * with it, so the two agree.
+ */
+export function groundColour(terrain, x, z, h = terrain.heightAt(x, z)) {
+  if (h <= terrain.waterY) {
+    const deep = clamp((terrain.waterY - h) / 9, 0, 1);
+    return COLOURS.shallow.map((value, i) => (value + (COLOURS.deep[i] - value) * deep) / 255);
+  }
+  return landAt(terrain, x, z, h).base.map((value) => value / 255);
+}
+
 /**
  * The picture of `terrain` in `view`: { width, height, data } with `data` the pixels as RGBA bytes, row by row,
  * as a canvas takes them. Every pixel is painted.
@@ -104,11 +127,7 @@ export function renderMap(terrain, view, { columns = ROAD_MAP.columns } = {}) {
         const deep = clamp((terrain.waterY - terrain.heightAt(at.x, at.z)) / 9, 0, 1);
         colour = COLOURS.shallow.map((value, i) => value + (COLOURS.deep[i] - value) * deep);
       } else {
-        const cover = terrain.coverAt(at.x, at.z, h);
-        // Round 160: meadow and forest take the colours of the biome they lie in.
-        const biome = terrain.biomes?.[terrain.biomeAt?.(at.x, at.z)]?.map ?? null;
-        const [low, high] = biome?.[cover] ?? LAND[cover];
-        const climb = clamp((h - BAND[cover][0]) / (BAND[cover][1] - BAND[cover][0]), 0, 1);
+        const { cover, biome, base } = landAt(terrain, at.x, at.z, h);
         // The light comes from the left and a little from behind: a slope that faces it is bright, one that faces
         // away is in shade, and the slopes that face the viewer are a shade darker than the land beyond them.
         const leftward = (ground[index + pad] - ground[index - pad]) / acrossMetres;
@@ -118,7 +137,7 @@ export function renderMap(terrain, view, { columns = ROAD_MAP.columns } = {}) {
         const tree = wood > 0 && hash(Math.floor(at.x / 6), Math.floor(at.z / 6), terrain.seed + 147) < wood;
         // A height line wherever the ground crosses a round height between this sample and the one in front.
         const line = nearer !== null && Math.floor(h / ROAD_MAP.contour) !== Math.floor(nearer / ROAD_MAP.contour) ? 0.86 : 1;
-        colour = low.map((value, i) => value + (high[i] - value) * climb).map((value) => value * light * line);
+        colour = base.map((value) => value * light * line);
         if (tree) crown = [COLOURS.crown.map((value) => value * light), COLOURS.tree.map((value) => value * light)];
       }
       nearer = h;

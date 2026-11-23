@@ -124,7 +124,7 @@ export function HubCard({ state }) {
         <p className="eyebrow">{ROAD_NAME}</p>
         <h2>{roadLoading ? 'Finding the road…' : 'The road is not here'}</h2>
         {roadError && <div className="problem" role="alert"><p>{roadError}</p><button type="button" className="secondary-button" onClick={state.openSettings}>Open Settings</button></div>}
-        <div className="button-row"><button type="button" className="text-button" onClick={state.leaveRoad}>World map</button></div>
+        <div className="button-row"><button type="button" className="text-button" onClick={state.toTitle}>Back to the title</button></div>
       </section>
     );
   }
@@ -156,12 +156,8 @@ export function HubCard({ state }) {
         </>
       )}
       {roadError && <p className="problem" role="alert">{roadError}</p>}
+      {/* Round 173: the map, the curriculum and the ways out are in the top bar and its menu, as everywhere. */}
       <RailsSwitch state={state} />
-      <div className="button-row">
-        <button type="button" className="secondary-button" onClick={() => state.openRoadPanel('map')}>Map</button>
-        <button type="button" className="secondary-button" onClick={() => state.openRoadPanel('curriculum')}>Curriculum</button>
-        <button type="button" className="text-button" onClick={state.leaveRoad}>World map</button>
-      </div>
     </section>
   );
 }
@@ -195,10 +191,6 @@ export function RoadResolved({ state, encounter }) {
       )}
       {recorded ? <WayOn state={state} /> : <p className="next-line" role="status">Writing it down…</p>}
       <RailsSwitch state={state} />
-      <div className="button-row">
-        <button type="button" className="text-button" onClick={() => { state.toRoadHub(); state.openRoadPanel('map'); }} disabled={!recorded || state.roadTravelling}>Map</button>
-        <button type="button" className="text-button" onClick={() => { state.toRoadHub(); state.openRoadPanel('curriculum'); }} disabled={!recorded || state.roadTravelling}>Curriculum</button>
-      </div>
     </>
   );
 }
@@ -211,7 +203,7 @@ const MAP_TILE = (half) => `${-half},0 0,${-half * 0.58} ${half},0 0,${half * 0.
  * lakes show, with the sites visited, the ways between them and each site ahead with what waits there. A tap picks
  * a site; "Walk here" goes.
  */
-export function RoadMap({ state, onClose }) {
+export function RoadMap({ state, onClose, closeLabel = 'Back to the road' }) {
   const { road } = state;
   const { terrain, graph } = useMemo(() => { const made = createTerrain(road.seed); return { terrain: made, graph: createGraph(made) }; }, [road.seed]);
   const canvasRef = useRef(null);
@@ -246,12 +238,13 @@ export function RoadMap({ state, onClose }) {
     .map(([x, z]) => view.project(x, z, terrain.heightAt(x, z)).map((value) => value.toFixed(2)).join(',')).join(' ');
   const cleared = new Set(road.cleared);
   const chosen = road.frontier.find((site) => site.id === picked) ?? null;
-  const busy = state.roadTravelling || state.encounterLoading || state.isLoading;
+  const busy = state.roadTravelling || state.encounterLoading || state.isLoading || state.roadPhase === 'travel';
+  const leaving = state.roadPhase === 'encounter' && state.encounter?.state === 'ongoing';
   return (
     <main className="road-map-panel" aria-label="The map of the road">
       <div className="panel-heading">
         <div><h2>The map</h2><p>{road.here.name} · {road.step} {road.step === 1 ? 'conversation' : 'conversations'} so far</p></div>
-        <button type="button" className="secondary-button" onClick={onClose}>Back to the road</button>
+        <button type="button" className="secondary-button" onClick={onClose}>{closeLabel}</button>
       </div>
       <div className="road-map" style={{ aspectRatio: `${view.width} / ${view.height}` }}>
         <canvas ref={canvasRef} width={ROAD_MAP.columns} height={Math.round((ROAD_MAP.columns * view.height) / view.width)} aria-hidden="true" />
@@ -303,8 +296,9 @@ export function RoadMap({ state, onClose }) {
           <OfferLine offer={chosen.offer} />
           <p className="description">{chosen.offer.character.description}</p>
           <small className="way-why">{chosen.offer.dungeon ? `${chosen.offer.dungeon.name}, beyond ${chosen.name}` : chosen.name}, by {WAY[chosen.way] ?? 'a way'}{chosen.offer.why ? ` · ${chosen.offer.why}` : ''}</small>
-          <button type="button" className="primary-button big-button" onClick={() => state.roadTravel(chosen.id)} disabled={busy || state.encounter?.state === 'ongoing'}>{chosen.offer.dungeon ? `Enter ${chosen.offer.dungeon.name}` : 'Walk here'}</button>
-          {state.encounter?.state === 'ongoing' && <small className="way-why">Finish or leave your conversation first.</small>}
+          {/* Round 173: from a conversation under way too: it is left unfinished, as Leave leaves it. */}
+          <button type="button" className="primary-button big-button" onClick={() => state.roadTravel(chosen.id)} disabled={busy}>{leaving ? 'Leave the conversation and walk here' : chosen.offer.dungeon ? `Enter ${chosen.offer.dungeon.name}` : 'Walk here'}</button>
+          {leaving && <small className="way-why">{state.encounter.character?.name ?? 'They'} will not have let you pass; the conversation can be had again later.</small>}
         </section>
       )}
       <RailsSwitch state={state} />
@@ -313,7 +307,7 @@ export function RoadMap({ state, onClose }) {
 }
 
 /** Where the player is in the curriculum: every stage, unit and lesson with its marks, and how the pacing sees them. */
-export function CurriculumPanel({ state, onClose }) {
+export function CurriculumPanel({ state, onClose, closeLabel = 'Back to the road' }) {
   const { curriculum, road, savedAt } = state;
   if (!curriculum) return null;
   const { totals } = curriculum;
@@ -321,7 +315,7 @@ export function CurriculumPanel({ state, onClose }) {
     <main className="curriculum-panel" aria-label="The curriculum">
       <div className="panel-heading">
         <div><h2>The curriculum</h2><p>{positionLine(curriculum)}</p></div>
-        <button type="button" className="secondary-button" onClick={onClose}>Back to the road</button>
+        <button type="button" className="secondary-button" onClick={onClose}>{closeLabel}</button>
       </div>
       <p className="curriculum-totals">
         {totals.lessonsDone} of {totals.lessonsTotal} lessons · {totals.unitsDone} of {totals.unitsTotal} units · {road?.step ?? 0} conversations.

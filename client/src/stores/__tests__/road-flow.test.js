@@ -240,3 +240,63 @@ test('the journey shown: no remark for a short one; the server\'s remark is kept
   expect(s().guideNote.unread.map((entry) => entry.id)).toContain('the_long_way_round');
 });
 
+
+// Round 173: the title screen is the road's. It shows a landscape before the server answers, reads the road behind
+// it (a new player's road is made on that same landscape), and its button goes straight into the road.
+test('the title shows a landscape at once, the road is read behind it on that seed, and the start goes into the road', async () => {
+  const { TITLE_KEY } = await import('../roadSlice.js');
+  const storage = memoryStorage();
+  const server = createRoadServer({ seed: 4242, titleSeeds: true });
+  const store = createGameStore({ api: server.api, storage, dungeon: DUNGEON, atlas: ATLAS });
+  const s = () => store.getState();
+  const drawn = s().titleSeed;
+  expect(Number.isInteger(drawn) && drawn >= 1).toBe(true);
+  expect([s().phase, s().mode, s().titleAt]).toEqual(['attract', 'dungeon', null]);
+  await s().initialize();
+  await vi.waitFor(() => expect(s().road).not.toBe(null));
+  expect(s().road.seed).toBe(drawn); // not the server's own 4242: the landscape the player was already looking at
+  expect([s().phase, s().mode]).toEqual(['attract', 'dungeon']); // still the title
+  expect(JSON.parse(storage.values.get(TITLE_KEY))).toEqual({ seed: drawn, at: s().road.at });
+  await s().startJourney();
+  expect([s().mode, s().roadPhase, s().roadArrival, s().journeyStarting]).toEqual(['road', 'hub', 'arrive', false]);
+  expect(s().road.seed).toBe(drawn);
+
+  // Back to the title, and a second visit in this browser shows the same landscape over the same site.
+  s().toTitle();
+  expect([s().phase, s().mode]).toEqual(['attract', 'dungeon']);
+  const again = createGameStore({ api: server.api, storage, dungeon: DUNGEON, atlas: ATLAS });
+  expect([again.getState().titleSeed, again.getState().titleAt]).toEqual([drawn, s().road.at]);
+});
+
+test('a road made elsewhere wins over the title\'s seed, and an unreadable kept title draws a new one', async () => {
+  const { TITLE_KEY, titleOf } = await import('../roadSlice.js');
+  expect(titleOf(memoryStorage({ [TITLE_KEY]: '{"seed":77,"at":"1,2"}' }))).toEqual({ seed: 77, at: '1,2' });
+  for (const bad of ['nonsense', '{"seed":0}', '{"seed":1.5}', `{"seed":${2 ** 31}}`]) {
+    expect(titleOf(memoryStorage({ [TITLE_KEY]: bad }), () => 0.5).seed).toBe(1 + Math.floor(0.5 * (2 ** 31 - 2)));
+  }
+  // This learner's road was made on another device, on seed 4242: the title's seed is not taken.
+  const server = createRoadServer({ seed: 4242, titleSeeds: true });
+  const { learnerId } = await server.api.createLearner(null);
+  await server.api.getRoad(learnerId);
+  const storage = memoryStorage({ 'parallang.learnerId': learnerId, [TITLE_KEY]: '{"seed":99,"at":null}' });
+  const store = createGameStore({ api: server.api, storage, dungeon: DUNGEON, atlas: ATLAS });
+  await store.getState().initialize();
+  await vi.waitFor(() => expect(store.getState().road?.seed).toBe(4242));
+  expect(store.getState().titleSeed).toBe(4242);
+});
+
+test('from the map, a conversation under way is left unfinished to walk on', async () => {
+  const ctx = await onTheRoad();
+  const { s } = ctx;
+  s().onRoadArrived();
+  await s().roadTalk();
+  expect([s().roadPhase, s().encounter.state]).toEqual(['encounter', 'ongoing']);
+  const here = s().road.at;
+  s().openRoadPanel('map');
+  expect(s().roadPanel).toBe('map');
+  const away = s().road.frontier[0].id;
+  await s().roadTravel(away);
+  expect(s().road.at).toBe(away);
+  expect(s().road.cleared).not.toContain(here); // it did not let the player pass
+  expect([s().roadPanel, s().roadPhase]).toEqual([null, 'travel']);
+});

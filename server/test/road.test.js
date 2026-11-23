@@ -438,3 +438,20 @@ test('a new road is another landscape with the curriculum kept; the dungeon is u
   assert.equal(dungeon.status, 200);
   assert.equal(dungeon.data.progress.clearedSiteIds.length, 0);
 });
+
+// Round 173: the title screen draws a landscape before the server answers; the first look may propose its seed.
+test('the first look at the road takes the seed the title proposed, and a road that exists keeps its own', async (t) => {
+  const { runtime, learnerId } = await roadRuntime(t, { seed: 4242 });
+  const first = await api(runtime, '/api/road?seed=777', { learnerId });
+  assert.equal(first.status, 200);
+  assert.equal(first.data.road.seed, 777, 'the proposed seed makes the new road');
+  assert.equal(first.data.road.at, createGraph(createTerrain(777)).start, 'and the road starts at that landscape\'s start');
+  const again = await api(runtime, '/api/road?seed=31', { learnerId });
+  assert.equal(again.data.road.seed, 777, 'a road that exists keeps its seed');
+  const other = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
+  for (const bad of ['0', '-3', 'abc', String(2 ** 31), '1.5']) {
+    const fresh = (await api(runtime, '/api/learner', { method: 'POST', body: {} })).data.learnerId;
+    assert.equal((await api(runtime, `/api/road?seed=${bad}`, { learnerId: fresh })).data.road.seed, 4242, `"${bad}" is not a seed: the server draws its own`);
+  }
+  assert.equal((await api(runtime, '/api/road', { learnerId: other })).data.road.seed, 4242, 'with no seed proposed the server draws its own');
+});

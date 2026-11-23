@@ -13,6 +13,7 @@ import { createGameStore } from '../../stores/gameStore.js';
 import { DUNGEON } from '../../dungeon.js';
 import { ATLAS } from '../../atlas.js';
 import { createFakeParty, createFakeRun } from '../../__tests__/fakeRun.js';
+import { openMenu, titleReady, toPlaces } from './menu.js';
 
 const spanishLanguage = { code: 'es', name: 'Spanish', tag: 'es-ES' };
 const italianLanguage = { code: 'it', name: 'Italian', tag: 'it-IT' };
@@ -170,6 +171,21 @@ function renderScreen(options = {}) {
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
+// Round 173: a reload opens on the title; the run resumes where it was when its place is entered from the world map.
+async function resumeRun(user) {
+  await titleReady();
+  await toPlaces(user);
+  await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
+}
+
+// Round 173: how many are in the party, as the menu's Party row says (the menu is opened and closed again).
+async function partyCount(user) {
+  await user.click(screen.getByRole('button', { name: /^Menu/ }));
+  const label = within(screen.getByRole('navigation', { name: 'Game menu' })).getByLabelText(/in your party$/).getAttribute('aria-label');
+  await user.click(within(screen.getByRole('navigation', { name: 'Game menu' })).getByRole('button', { name: 'Close' }));
+  return label;
+}
+
 const siteRows = () => screen.getAllByRole('listitem').filter((item) => item.closest('.site-list')).map((item) => item.textContent);
 const ways = () => within(screen.getByRole('list', { name: 'Ways on' })).getAllByRole('button').map((button) => [button.textContent, button.disabled]);
 // Answers the conversation that is open and waits for the verdict.
@@ -186,9 +202,8 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
 
   // Attract: the title and Enter. The level is a still backdrop here (no WebGL in jsdom).
   expect(screen.getByRole('heading', { name: 'ParaLLang' })).toBeTruthy();
-  await screen.findByText(/answer in Italian/); // the language arrives with the learner
-  expect(screen.getByText(/^7 stand between you and the sanctuary/)).toBeTruthy();
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await titleReady(); // round 173: the title is the road's; the learner and the language arrive behind it
+  await toPlaces(user);
 
   // The world map: Ta Prohm is open, its neighbours are known, The Bone Dome is under the fog. (Round 133: The Kiln
   // is a neighbour. This store holds Ta Prohm alone, so The Kiln has no count and no button here; place-switch.test.jsx
@@ -313,7 +328,7 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
   expect(await screen.findByRole('heading', { name: 'Dungeon cleared' })).toBeTruthy();
   expect(screen.getByLabelText('7 of 7 sites cleared')).toBeTruthy();
   expect(screen.getByText(/^All 7 let you pass/)).toBeTruthy();
-  await user.click(screen.getAllByRole('button', { name: /Spellbook/ })[0]);
+  await openMenu(user, /^Spellbook/);
   expect(await screen.findByRole('heading', { name: 'Spellbook' })).toBeTruthy();
   expect(screen.getByText('2 due for review')).toBeTruthy();
   await user.click(screen.getAllByRole('button', { name: 'Review' })[0]);
@@ -344,6 +359,7 @@ test('Play again starts a new run from the world map, with the fog back', async 
   const user = userEvent.setup();
   const server = fakeServer({ steps: 8 });
   renderScreen();
+  await resumeRun(user);
   // A reload of a finished run opens the victory screen, with both ways out of it.
   expect(await screen.findByRole('heading', { name: 'Dungeon cleared' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Stay in the temple' })).toBeTruthy();
@@ -361,6 +377,7 @@ test('a sealed or hidden way on says why, and a move the server refuses is shown
   // At Bambieshart's site with three sites cleared: the Sanctuary is in sight and sealed.
   const server = fakeServer({ stored: { run: 1, at: 'before_sanctuary', cleared: ['face_gate', 'root_court'], visited: ['face_gate', 'root_court', 'before_sanctuary'] } });
   renderScreen();
+  await resumeRun(user);
   await screen.findByText('Thank Bambieshart.');
   await user.click(screen.getByRole('button', { name: 'Leave' }));
   expect(ways()).toEqual([['Walk to The Face Gate · cleared', false], ['Walk to The Buttress Tree · unexplored', false], ['Walk to The Root Court · cleared', false], ['Walk to The Sunlit Court · unexplored', false], ['Walk to The Sanctuary · unexplored', true]]);
@@ -382,6 +399,7 @@ test('levels on the screen: the level in the top bar, what an answer earned, a l
   // Five sites cleared, 320 XP (level 4): at Bambieshart's site, with the Sanctuary in sight.
   const server = fakeServer({ xp: 320, stored: { run: 1, at: 'before_sanctuary', cleared: ['face_gate', 'buttress_tree', 'root_court', 'sunlit_court', 'library'], visited: ['face_gate', 'buttress_tree', 'root_court', 'sunlit_court', 'library', 'before_sanctuary'] } });
   renderScreen();
+  await resumeRun(user);
   await screen.findByText('Thank Bambieshart.');
   expect(screen.getByRole('img', { name: 'Level 4: 320 XP, level 5 at 360' })).toBeTruthy();
   expect(screen.getByText('Lv 4')).toBeTruthy();
@@ -395,7 +413,7 @@ test('levels on the screen: the level in the top bar, what an answer earned, a l
   expect(siteRows()).toContain('7The Sanctuaryopens at level 5 (you are level 4)');
 
   // A due review answered: 5 XP, level 5. The review says so, and the map opens the Sanctuary.
-  await user.click(screen.getByRole('button', { name: /Spellbook/ }));
+  await openMenu(user, /^Spellbook/);
   await user.click((await screen.findAllByRole('button', { name: 'Review' }))[0]);
   await user.type(await screen.findByLabelText('English meaning'), 'coffee');
   await user.click(screen.getByRole('button', { name: 'Check answer' }));
@@ -410,8 +428,8 @@ test('an answer that reaches a level says so, and a server without experience sh
   const user = userEvent.setup();
   fakeServer({ xp: 30 });
   renderScreen();
-  await screen.findByText(/answer in Italian/);
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await titleReady();
+  await toPlaces(user);
   expect(screen.getByText('Lv 1')).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
@@ -431,8 +449,8 @@ test('an answer that reaches a level says so, and a server without experience sh
     return { ...reply, json: async () => rest };
   }));
   renderScreen();
-  await screen.findByText(/answer in Italian/);
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await titleReady();
+  await toPlaces(user);
   expect(screen.queryByText(/^Lv /)).toBeNull();
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
@@ -446,9 +464,10 @@ test('the party on the screen: the offer after a saveable site, the panel, a tal
   const user = userEvent.setup();
   const server = fakeServer({ stored: { run: 1, at: 'root_court', cleared: ['face_gate'], visited: ['face_gate', 'root_court'] } });
   renderScreen();
+  await resumeRun(user);
   await screen.findByText('Order a coffee using Italian.');
-  expect(screen.getByLabelText('0 in your party')).toBeTruthy();
-  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  expect(await partyCount(user)).toBe('0 in your party');
+  await openMenu(user, /^Party/);
   expect(screen.getByText('No one has joined you yet. Win someone over who is worth keeping.')).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Back to Gerald' }));
 
@@ -459,10 +478,10 @@ test('the party on the screen: the offer after a saveable site, the panel, a tal
   await user.click(within(offer).getByRole('button', { name: 'Save Gerald' }));
   expect((await screen.findByText('Gerald is in your party.')).getAttribute('role')).toBe('status');
   expect(screen.queryByRole('button', { name: 'Save Gerald' })).toBeNull();
-  expect(screen.getByLabelText('1 in your party')).toBeTruthy();
+  expect(await partyCount(user)).toBe('1 in your party');
 
   // The panel: where he was met is the temple's site, not the market's stall; no story is announced (critique 1.3).
-  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  await openMenu(user, /^Party/);
   const member = screen.getByRole('article', { name: 'Gerald, met at The Root Court' });
   expect(within(member).getByText('Met at The Root Court · Conversations: 0')).toBeTruthy();
   expect(within(member).queryByText(/story/i)).toBeNull();
@@ -483,7 +502,7 @@ test('the party on the screen: the offer after a saveable site, the panel, a tal
   // Back on his site's card: he is in the party, and the count went up.
   const card = await screen.findByRole('region', { name: 'The Root Court' });
   expect(within(card).getByText('Gerald is in your party.')).toBeTruthy();
-  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  await openMenu(user, /^Party/);
   expect(await screen.findByText('Met at The Root Court · Conversations: 1')).toBeTruthy();
   expect(server.talks).toBe(1);
   await user.click(screen.getByRole('button', { name: 'Back to the temple' }));
@@ -492,7 +511,7 @@ test('the party on the screen: the offer after a saveable site, the panel, a tal
   await user.click(screen.getByRole('button', { name: /Walk to The Sunlit Court/ }));
   await screen.findByText('Ask Flick the time.');
   // While his conversation is open, Talk waits.
-  await user.click(screen.getByRole('button', { name: /^Party/ }));
+  await openMenu(user, /^Party/);
   expect(screen.getByRole('button', { name: 'Talk to Gerald' }).disabled).toBe(true);
   await user.click(screen.getByRole('button', { name: 'Back to Flick' }));
   await answer(user, 'Flick');
@@ -507,12 +526,13 @@ test('after a reload a cleared site\'s card offers the invitation, and the deepe
   server.party.recruit('imp_coffee_greeting');
   for (let i = 0; i < 3; i += 1) server.party.finished('gerald_coffee_break');
   renderScreen();
+  await resumeRun(user);
   const card = await screen.findByRole('region', { name: 'The Sunlit Court' });
   expect(server.starts).toBe(0); // no conversation is loaded
   await user.click(await within(card).findByRole('button', { name: 'Invite Flick to your party' }));
   expect(await within(card).findByText('Flick is in your party.')).toBeTruthy();
-  await user.click(screen.getByRole('button', { name: /^Party/ }));
-  expect(screen.getByLabelText('2 in your party')).toBeTruthy();
+  await openMenu(user, /^Party/);
+  expect(await partyCount(user)).toBe('2 in your party');
   const gerald = screen.getByRole('article', { name: 'Gerald, met at The Root Court' });
   expect(within(gerald).getByText('Gerald trusts you with a deeper conversation now.')).toBeTruthy();
   expect(within(gerald).getByText('Met at The Root Court · Conversations: 3')).toBeTruthy();
@@ -523,13 +543,13 @@ test('a reload in the middle of a run opens the site the player stands at, and S
   const user = userEvent.setup();
   const server = fakeServer({ stored: { run: 1, at: 'root_court', cleared: ['face_gate'], visited: ['face_gate', 'root_court'] } });
   renderScreen();
+  await resumeRun(user);
   await screen.findByText('Order a coffee using Italian.');
   expect(screen.getByLabelText('1 of 7 sites cleared')).toBeTruthy();
-  expect(screen.queryByRole('button', { name: 'Enter' })).toBeNull();
   await user.click(screen.getByRole('button', { name: 'Start over' }));
   await waitFor(() => expect(server.starts).toBe(2));
   // The Spellbook says where it returns to while a conversation is open.
-  await user.click(screen.getByRole('button', { name: /Spellbook/ }));
+  await openMenu(user, /^Spellbook/);
   await user.click(await screen.findByRole('button', { name: 'Back to Gerald' }));
   expect(screen.getByLabelText('Conversation with Gerald')).toBeTruthy();
 });
@@ -539,10 +559,11 @@ test('the Spellbook hides meanings while a conversation is open, whatever its sn
   const user = userEvent.setup();
   fakeServer({ stored: { run: 1, at: 'root_court', cleared: ['face_gate'], visited: ['face_gate', 'root_court'] } });
   const store = renderScreen();
+  await resumeRun(user);
   await screen.findByText('Order a coffee using Italian.');
   act(() => store.setState({ spellbook: { cards: [{ ...cards[0], due: false, nextReviewAt: '2999-01-01T00:00:00Z' }], dueCount: 0, inEncounter: false } }));
   vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {}))); // the refresh behind the snapshot never answers
-  await user.click(screen.getByRole('button', { name: /Spellbook/ }));
+  await openMenu(user, /^Spellbook/);
   expect(await screen.findByText(/Meanings are hidden and reviews wait/)).toBeTruthy();
   expect(screen.getByText('Meaning hidden')).toBeTruthy();
   expect(screen.queryByText('coffee')).toBeNull();
@@ -553,7 +574,7 @@ test('with no server the title and the maps show, and Start explains and leads t
   const fetchMock = vi.fn();
   vi.stubGlobal('fetch', fetchMock);
   renderScreen({ sameOrigin: false });
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await toPlaces(user);
   expect(screen.getAllByText('Angkor Wat').length).toBe(2); // on the map and in the list
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   expect(screen.getByText('The Face Gate')).toBeTruthy();
@@ -569,8 +590,8 @@ test('a site that fails to start says why and offers another try and the map', a
   const user = userEvent.setup();
   fakeServer({ failFirstStart: true });
   renderScreen();
-  await screen.findByText(/answer in Italian/);
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await titleReady();
+  await toPlaces(user);
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
   await user.click(screen.getByRole('button', { name: 'Start' }));
   expect((await screen.findByRole('alert')).textContent).toMatch(/CLI timed out/);

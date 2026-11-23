@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import DungeonView from './DungeonView.jsx';
 import RoadView from './RoadView.jsx';
-import { CurriculumChip, CurriculumPanel, HubCard, RoadCaption, RoadMap, RoadResolved, useWeather } from './Road.jsx';
+import { CurriculumChip, CurriculumPanel, HubCard, RoadCaption, RoadMap, RoadResolved, positionLine, useWeather } from './Road.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
@@ -59,17 +59,49 @@ function SiteNumber({ index }) {
   return <span className="site-number" aria-hidden="true">{index + 1}</span>;
 }
 
-function TitleCard({ state }) {
-  const { dungeon, language, connection, serverProblem } = state;
+// Round 173: the title screen. Behind it the road's landscape turns slowly, seen from above the clouds (RoadView's
+// `title`); its one way in is The Journey 2. The road is being read meanwhile (preloadRoad), so the start zooms down
+// into a world that is already there.
+function TitleScreen({ state }) {
+  const { connection, serverProblem, journeyStarting } = state;
+  const label = journeyStarting ? (connection === 'ready' ? 'Setting out…' : 'Waking the server…') : ROAD_NAME;
   return (
-    <section className="card title-card">
-      <p className="eyebrow">The dead branch · {dungeon.name}</p>
+    <section className="title-screen" aria-label="ParaLLang" data-connection={connection}>
       <h1>ParaLLang</h1>
-      <p>{dungeon.sites.length} stand between you and the sanctuary. Each lets you pass when you answer in {language?.name ?? 'their language'}.</p>
-      <button type="button" className="primary-button big-button" onClick={state.enter}>Enter</button>
-      {connection === 'connecting' && <p className="connection-note" role="status">Waking the server…</p>}
-      {connection === 'offline' && serverProblem && <p className="connection-note">The server is not connected yet. You can still look around.</p>}
+      <button type="button" className="primary-button big-button title-start" onClick={state.startJourney} disabled={journeyStarting}>{label}</button>
+      {!journeyStarting && connection === 'connecting' && <p className="connection-note" role="status">Waking the server…</p>}
+      {connection === 'offline' && serverProblem && (
+        <div className="problem" role="alert"><p>{serverProblem}</p><button type="button" className="secondary-button" onClick={state.openSettings}>Open Settings</button></div>
+      )}
     </section>
+  );
+}
+
+// Round 173: the game menu, the same everywhere: the map and every record the player keeps, Settings, and the ways
+// out (of a conversation, to the other places, to the title). Each row closes the menu and opens what it names.
+function GameMenu({ state, onClose, onMap, mapLabel: mapName, leave, onLeave }) {
+  const onRoad = state.mode === 'road';
+  const atTitle = !onRoad && state.phase === 'attract';
+  const unread = state.guideNote?.unread?.length ?? 0;
+  const go = (action) => () => { onClose(); action(); };
+  const canTitle = !atTitle && !state.isLoading && (onRoad || ['world', 'overview', 'site', 'victory'].includes(state.phase) || (state.phase === 'encounter' && state.encounter?.state !== 'ongoing'));
+  return (
+    <div className="overlay menu-overlay" onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <nav className="game-menu" aria-label="Game menu">
+        <div className="panel-heading"><h2>Menu</h2><button type="button" className="secondary-button" onClick={onClose}>Close</button></div>
+        <ul className="menu-list">
+          {onMap && <li><button type="button" onClick={go(onMap)}>{mapName}</button></li>}
+          {onRoad && state.curriculum && <li><button type="button" onClick={go(() => state.openRoadPanel('curriculum'))}>Curriculum <small>{positionLine(state.curriculum)}</small></button></li>}
+          <li><button type="button" onClick={go(state.openSpellbook)}>Spellbook {state.spellbook.dueCount > 0 && <span className="due-badge">{state.spellbook.dueCount} due</span>}</button></li>
+          {!onRoad && !atTitle && <li><button type="button" onClick={go(state.openParty)}>Party <span className="due-badge" aria-label={`${state.party.length} in your party`}>{state.party.length}</span></button></li>}
+          <li><button type="button" onClick={go(state.openGuidebook)}>Guidebook {unread > 0 && <span className="due-badge">{unread} new</span>}</button></li>
+          <li><button type="button" onClick={go(state.openSettings)}>Settings</button></li>
+          {leave && <li><button type="button" onClick={go(onLeave)} disabled={state.isLoading || state.encounterLoading}>{leave}</button></li>}
+          {(onRoad || atTitle) && <li><button type="button" onClick={go(onRoad ? state.leaveRoad : state.enter)} disabled={onRoad && state.isLoading}>Other places <small>Ta Prohm, The Kiln</small></button></li>}
+          {!atTitle && <li><button type="button" onClick={go(state.toTitle)} disabled={!canTitle}>Back to the title</button></li>}
+        </ul>
+      </nav>
+    </div>
   );
 }
 
@@ -260,7 +292,6 @@ function SiteCard({ state, sites, site }) {
       <WaysOn state={state} sites={sites} site={site} />
       <div className="button-row">
         <button type="button" className={status.cleared ? 'secondary-button' : 'primary-button big-button'} onClick={state.talk} disabled={state.encounterLoading || state.travelling}>{talkLabel}</button>
-        <button type="button" className="text-button" onClick={state.openMap} disabled={state.travelling}>Map</button>
       </div>
     </section>
   );
@@ -273,7 +304,6 @@ function TravelCaption({ state, site }) {
       <section className="caption caption-problem" role="alert">
         <span>{siteError}</span>
         <button type="button" className="secondary-button" onClick={state.retrySite}>Try again</button>
-        <button type="button" className="text-button" onClick={state.openMap}>Map</button>
       </section>
     );
   }
@@ -408,7 +438,6 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
             {encounter.character?.saveable && <PartyOffer key={encounter.id} state={state} encounter={encounter} />}
             {atGoal && <button type="button" className="primary-button big-button" onClick={state.leaveTemple}>Leave the temple</button>}
             {!atGoal && cleared && <WaysOn state={state} sites={sites} site={site} />}
-            <button type="button" className="text-button" onClick={state.openMap} disabled={state.travelling}>Map</button>
           </section>
         )}
       </div>
@@ -443,6 +472,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   // drops while a line is read aloud and is silent while the microphone listens.
   // Round 132: the conversation panel's height as the player dragged it, kept from one conversation to the next.
   const [sheetHeight, setSheetHeight] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false); // round 173
   const musicWanted = state.display?.music !== false;
   // Round 172: the Audio volumes. The ambience runs while either the music or the effects (the rain, the thunder)
   // can be heard; switching the music off silences its bus and leaves the effects.
@@ -515,51 +545,67 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const conversing = state.encounter?.state === 'ongoing' || state.encounterLoading;
   const spellbook = conversing && !state.spellbook.inEncounter ? { ...state.spellbook, inEncounter: true } : state.spellbook;
 
+  // Round 173: the title screen shows the road's landscape from above the clouds, and stays up after its button is
+  // pressed until the road is here; the camera then zooms down into it.
+  const atTitle = !onRoad && phase === 'attract';
+  const titleShown = atTitle || (onRoad && !state.road);
+  const titleSite = titleShown ? (state.road?.at ?? state.titleAt ?? '') : null;
+  // Round 173: the map is always at hand. On the road it opens over whatever is on the screen, a conversation too;
+  // in a place of the world map it is the place's own map (a conversation under way is left for it, and waits).
+  const dungeonMap = !onRoad && !['attract', 'world', 'overview', 'victory'].includes(phase) && !inParty_;
+  const openMapNow = onRoad ? (state.road ? () => state.openRoadPanel('map') : null)
+    : dungeonMap ? () => { if (inEncounter && state.encounter?.state === 'ongoing') state.leaveConversation(); state.openMap(); } : null;
+  const mapName = onRoad ? 'Map' : 'Map of the place';
+  // What the menu's way out of a conversation does: the conversation waits, unfinished, where it was left.
+  const ongoing = state.encounter?.state === 'ongoing';
+  const leave = roadTalking && ongoing ? ['Leave the conversation', state.leaveRoadConversation]
+    : !onRoad && inEncounter && ongoing ? ['Leave the conversation', state.leaveConversation]
+    : inParty_ && ongoing ? ['Leave the conversation', state.leaveParty] : [null, null];
+  const descending = onRoad && Boolean(state.road) && state.roadArrival === 'arrive' && !state.roadArrived && !state.roadError;
+  const badge = (state.spellbook.dueCount ?? 0) + (state.guideNote?.unread?.length ?? 0);
+  const panelBack = roadTalking ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the road';
+
   return (
-    <div className={`app-shell phase-${shellPhase}${onRoad ? ' on-road' : ''}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
+    <div className={`app-shell phase-${atTitle ? 'title' : shellPhase}${titleShown ? ' at-title' : ''}${onRoad ? ' on-road' : ''}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
       {onRoad && legacy
         ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={null} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
-        : onRoad
-        ? <RoadView models={state.display?.treeModels !== false} road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
+        : onRoad || atTitle
+        ? <RoadView models={state.display?.treeModels !== false} road={state.road} seed={state.titleSeed} title={titleSite} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
 
       <header className="hud" ref={hudRef}>
-        <div className="hud-title"><strong>ParaLLang</strong><span>{onRoad ? ROAD_NAME : dungeon.name}</span></div>
-        <LevelChip progression={state.progression} />
-        {!onRoad && (
+        {!atTitle && <div className="hud-title"><strong>ParaLLang</strong><span>{onRoad ? ROAD_NAME : dungeon.name}</span></div>}
+        {!atTitle && <LevelChip progression={state.progression} />}
+        {!onRoad && !atTitle && phase !== 'world' && (
           <ol className="pips" aria-label={`${cleared.length} of ${dungeon.sites.length} sites cleared`}>
             {dungeon.sites.map((entry, index) => (
               <li key={entry.id} className={cleared.includes(entry.id) ? 'done' : (atSite && index === siteIndex ? 'current' : undefined)} />
             ))}
           </ol>
         )}
+        {/* Round 173: the same two buttons everywhere: the map (when there is one to show) and the menu. */}
         <nav aria-label="Menu">
           {onRoad && <CurriculumChip state={state} />}
-          {!onRoad && <button type="button" className="secondary-button" onClick={state.openParty}>
-            Party <span className="due-badge" aria-label={`${state.party.length} in your party`}>{state.party.length}</span>
-          </button>}
-          <button type="button" className="secondary-button" onClick={state.openSpellbook}>
-            Spellbook <span className="due-badge" aria-label={`${state.spellbook.dueCount} reviews due`}>{state.spellbook.dueCount}</span>
+          {openMapNow && <button type="button" className="secondary-button map-button" onClick={openMapNow} disabled={!onRoad && (state.isLoading || state.travelling)}>Map</button>}
+          <button type="button" className="secondary-button menu-button" onClick={() => setMenuOpen(true)} aria-label={`Menu${badge > 0 ? `, ${badge} new` : ''}`} aria-haspopup="true">
+            <span aria-hidden="true">☰</span> Menu{badge > 0 && <span className="due-badge" aria-hidden="true">{badge}</span>}
           </button>
-          {/* Round 157: the guidebook, with a mark while an entry is unread. */}
-          <button type="button" className="secondary-button guide-button" onClick={state.openGuidebook} aria-label={`Guidebook${state.guideNote?.unread?.length ? `, ${state.guideNote.unread.length} new` : ''}`}>
-            ?{state.guideNote?.unread?.length > 0 && <span className="due-badge guide-badge" aria-hidden="true">{state.guideNote.unread.length}</span>}
-          </button>
-          <button type="button" className="secondary-button" onClick={state.openSettings} aria-label="Settings">⚙︎</button>
         </nav>
       </header>
 
       {state.error && <div className="error-banner" role="alert"><span>{state.error}</span><button type="button" onClick={state.clearError} aria-label="Dismiss error">×</button></div>}
 
       <div className="dock" ref={dockRef}>
-        {onRoad && state.roadPhase === 'hub' && <HubCard state={state} />}
+        {/* Round 173: while the camera comes down from the sky into the road, a line says where to; the site's card
+            comes when it is there (on a phone the card would hide the whole descent). */}
+        {onRoad && state.roadPhase === 'hub' && (descending ? <section className="caption" role="status"><span>Coming down to {state.road.here.name}…</span></section> : <HubCard state={state} />)}
         {onRoad && state.roadPhase === 'travel' && <RoadCaption state={state} />}
         {roadTalking && <EncounterSheet state={state} site={null} sites={{}} speech={speech} height={sheetHeight} onHeight={setSheetHeight}
           road={{ title: roadEncounter?.road.title ?? 'A conversation', subtitle: roadEncounter ? `${roadEncounter.character.name}, ${roadEncounter.character.role} · ${roadEncounter.road.place}` : '' }} />}
-        {!onRoad && phase === 'attract' && <TitleCard state={state} />}
+        {atTitle && <TitleScreen state={state} />}
         {!onRoad && phase === 'world' && <WorldCard state={state} cleared={cleared} />}
         {!onRoad && phase === 'overview' && <OverviewCard state={state} sites={sites} />}
         {!onRoad && (phase === 'approach' || phase === 'walk') && <TravelCaption state={state} site={site} />}
@@ -571,8 +617,8 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
 
       {onRoad && state.roadPanel && state.road && state.view === 'dialogue' && (
         <div className="overlay road-overlay">
-          {state.roadPanel === 'map' && <RoadMap state={state} onClose={state.closeRoadPanel} />}
-          {state.roadPanel === 'curriculum' && <CurriculumPanel state={state} onClose={state.closeRoadPanel} />}
+          {state.roadPanel === 'map' && <RoadMap state={state} onClose={state.closeRoadPanel} closeLabel={panelBack} />}
+          {state.roadPanel === 'curriculum' && <CurriculumPanel state={state} onClose={state.closeRoadPanel} closeLabel={panelBack} />}
         </div>
       )}
 
@@ -589,6 +635,8 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
           />}
         </div>
       )}
+
+      {menuOpen && <GameMenu state={state} onClose={() => setMenuOpen(false)} onMap={openMapNow} mapLabel={mapName} leave={leave[0]} onLeave={leave[1]} />}
 
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}

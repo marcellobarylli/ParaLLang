@@ -7,6 +7,7 @@ import SettingsSheet from '../SettingsSheet.jsx';
 import { measureViewport } from '../../viewport.js';
 import App from '../../App.jsx';
 import { useGameStore } from '../../stores/useGameStore.js';
+import { openMenu, toPlaces } from './menu.js';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
@@ -30,7 +31,7 @@ test('the gear in the top bar opens the sheet over the dungeon screen', async ()
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
   useGameStore.setState({ settingsOpen: false, error: null });
   render(<App />);
-  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await openMenu(user, 'Settings');
   expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Close' }));
   expect(screen.queryByRole('dialog', { name: 'Settings' })).toBeNull();
@@ -60,7 +61,7 @@ test('moving the slider on the dungeon screen sets the panels at once, hides the
   const shell = container.querySelector('.app-shell');
   expect(shell.style.getPropertyValue('--panel-alpha')).toBe('0.7');
   expect(shell.classList.contains('settings-open')).toBe(false);
-  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await openMenu(user, 'Settings');
   expect(shell.classList.contains('settings-open')).toBe(true);
   const requests = fetchMock.mock.calls.length;
   fireEvent.change(screen.getByLabelText('Text panel opacity'), { target: { value: '30' } });
@@ -137,7 +138,7 @@ test('the box on the dungeon screen switches the preference and stores it', asyn
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
   useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false } });
   render(<App />);
-  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await openMenu(user, 'Settings');
   await user.click(screen.getByLabelText('Tilt to look'));
   expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
@@ -173,7 +174,7 @@ test('the voices box on the dungeon screen switches the preference and stores it
   const speech = { speaker: { supported: true, speak: vi.fn(), stop: vi.fn(), prime: vi.fn(), available: () => true }, listener: { supported: false, start: vi.fn(), stop: vi.fn() } };
   const { default: DungeonScreen } = await import('../DungeonScreen.jsx');
   render(<DungeonScreen useStore={useGameStore} speech={speech} />);
-  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await openMenu(user, 'Settings');
   expect(speech.speaker.prime).toHaveBeenCalledOnce(); // the first tap on the page
   await user.click(screen.getByLabelText('Character voices'));
   expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
@@ -194,7 +195,7 @@ test('the music starts at the first tap and not before, follows speech, and the 
   try {
     render(<DungeonScreen useStore={useGameStore} speech={speech} ambience={ambience} />);
     expect(ambience.start).not.toHaveBeenCalled(); // a page may not make sound on its own
-    await user.click(screen.getByRole('button', { name: 'Settings' }));
+    await openMenu(user, 'Settings');
     expect(ambience.start).toHaveBeenCalledOnce();
     // Every 400 ms the music is told whether the browser is speaking or listening.
     act(() => { vi.advanceTimersByTime(450); });
@@ -261,7 +262,7 @@ test('"Beginner mode" is ticked by default, says what it does, and the box on th
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
   useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: false, beginner: true, rails: true, immersion: 1, light: false, treeModels: true } });
   render(<App />);
-  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await openMenu(user, 'Settings');
   const box = screen.getByLabelText('Beginner mode');
   expect(box.checked).toBe(true);
   expect(screen.getByText(/corrected for you and costs one heart; you move on/)).toBeTruthy();
@@ -278,7 +279,7 @@ test('"How answers are checked" is Strict unless Light is picked; the choice is 
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
   useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: false, beginner: true, rails: true, immersion: 1, light: false, treeModels: true }, language: { code: 'it', name: 'Italian', tag: 'it-IT' } });
   render(<App />);
-  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await openMenu(user, 'Settings');
   expect(screen.getByRole('group', { name: 'How answers are checked' })).toBeTruthy();
   expect(screen.getByRole('radio', { name: 'Strict' }).checked).toBe(true);
   expect(screen.getByText(/Strict: each answer is marked against what the conversation asks for/)).toBeTruthy();
@@ -298,7 +299,7 @@ test('"Tree models" is ticked unless switched off, and the choice is stored', as
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
   useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7 } });
   render(<App />);
-  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await openMenu(user, 'Settings');
   const box = screen.getByLabelText('Tree models');
   expect(box.checked).toBe(true);
   await user.click(box);
@@ -314,7 +315,7 @@ test('the language slider starts at 100 %, says what each end means, and stores 
   vi.stubGlobal('fetch', fetchMock);
   useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7 }, language: { code: 'it', name: 'Italian', tag: 'it-IT' } });
   render(<App />);
-  await user.click(screen.getByRole('button', { name: 'Settings' }));
+  await openMenu(user, 'Settings');
   const slider = screen.getByLabelText('How much Italian the characters speak');
   expect(slider.value).toBe('100');
   expect([slider.min, slider.max, slider.step]).toEqual(['10', '100', '10']);

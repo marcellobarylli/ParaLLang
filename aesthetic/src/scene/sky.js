@@ -122,7 +122,8 @@ export function createSky(uniforms, seed = 7) {
     group,
     applyPreset,
     follow(camera, waterY) {
-      group.position.set(camera.position.x, waterY, camera.position.z);
+      // Round 173: a camera high over the land (the title screen) takes the dome up with it, so it stays inside it.
+      group.position.set(camera.position.x, waterY + Math.max(0, camera.position.y - waterY - 200), camera.position.z);
       group.updateMatrixWorld();
       sun.lookAt(group.position);
       halo.lookAt(group.position);

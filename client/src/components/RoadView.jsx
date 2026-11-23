@@ -6,14 +6,19 @@ import { useEffect, useRef, useState } from 'react';
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
-export default function RoadView({ road, shown, arrival, from, talking, insets, onArrive, onThunder = null, closed = 0, resolved = false, beat = null, models = true }) {
+// Round 173: `title` (a site id) is the title screen: the camera far over that site, above the clouds, turning. The
+// landscape is `road.seed`, or `seed` before the server has sent the road. The next camera move the store asks for
+// once `title` is null is the zoom down from there.
+export default function RoadView({ road, seed: titleSeed = null, title = null, shown, arrival, from, talking, insets, onArrive, onThunder = null, closed = 0, resolved = false, beat = null, models = true }) {
   const canvasRef = useRef(null);
   const viewRef = useRef(null);
   const arriveRef = useRef(onArrive);
   arriveRef.current = onArrive;
   const thunderRef = useRef(onThunder);
   thunderRef.current = onThunder;
-  const seed = road?.seed ?? null;
+  const seed = road?.seed ?? titleSeed ?? null;
+  const titleRef = useRef(title);
+  titleRef.current = title;
   const [status, setStatus] = useState(() => (hasWebGL() ? 'loading' : 'unavailable'));
 
   // One view per landscape: a new road (another seed) is another level, on a new canvas.
@@ -41,12 +46,14 @@ export default function RoadView({ road, shown, arrival, from, talking, insets, 
 
   // The markers follow the server's view of the road.
   useEffect(() => { if (status === 'ready' && road) viewRef.current?.setRoad(road); }, [status, road]);
-  // Each camera move the store asks for is taken once (`shown` counts them).
+  // Round 173: the title screen's camera, over the site it names.
+  useEffect(() => { if (status === 'ready' && title !== null) viewRef.current?.setTitle(title); }, [status, title, seed]);
+  // Each camera move the store asks for is taken once (`shown` counts them). Not while the title is up.
   useEffect(() => {
-    if (!road) return;
+    if (!road || titleRef.current !== null) return;
     if (status === 'ready') viewRef.current?.show({ at: road.at, from, mode: arrival });
     else if (status === 'unavailable') arriveRef.current?.(arrival);
-  }, [status, shown, seed]);
+  }, [status, shown, seed, Boolean(road) && title === null]); // round 173: also when the road comes after the title's button
   useEffect(() => { if (status === 'ready') viewRef.current?.setTalking(talking); }, [status, talking]);
   useEffect(() => {
     if (status === 'ready' && talking) viewRef.current?.setEncounter({ closed, resolved, beatId: beat?.id ?? null, beatKind: beat?.kind ?? null });

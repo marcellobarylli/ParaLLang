@@ -9,16 +9,36 @@
 //   world --enterRoad--> hub --roadTalk--> encounter --(resolved) roadContinue | roadTravel(id)--> travel --> encounter
 //   encounter (ongoing) --leaveRoadConversation--> hub        hub --leaveRoad--> world
 //
+// Round 173: the title screen (the dungeon store's `attract` phase) is the road's: it shows the landscape of
+// `titleSeed` from above the clouds, over `titleAt`, both remembered in this browser (TITLE_KEY) from the last road
+// read, or a seed drawn here for a new player. While it is up the road is read (preloadRoad), and a new player's road
+// is made on that same seed. startJourney goes from the title into the road; toTitle comes back. From the map a
+// player in a conversation may walk on: the conversation is left unfinished (roadTravel).
+//
 // The server decides everything (server/src/road/service.js): where the player may walk, what waits at each site
 // and what a finished conversation does to the curriculum. `road` and `curriculum` are its view, as sent. On rails
 // (a display preference, on by default) the way on is the server's `road.rails`: the pacing's own choice.
 
 import { clampImmersion } from '../display.js';
 
-export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgression, guard, backup, takeGuide = () => {} }) {
+// Round 173: the landscape the title screen shows, kept in this browser: { seed, at }.
+export const TITLE_KEY = 'parallang.title';
+const SEED_MAX = 2 ** 31 - 1;
+/** The title's landscape from `storage`, or a new seed (and no site: the landscape's start) when there is none. */
+export function titleOf(storage, random = Math.random) {
+  try {
+    const kept = JSON.parse(storage?.getItem?.(TITLE_KEY) ?? 'null');
+    if (Number.isInteger(kept?.seed) && kept.seed >= 1 && kept.seed <= SEED_MAX) return { seed: kept.seed, at: typeof kept.at === 'string' ? kept.at : null };
+  } catch { /* unreadable: a new one */ }
+  return { seed: 1 + Math.floor(random() * (SEED_MAX - 1)), at: null };
+}
+
+export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgression, guard, backup, takeGuide = () => {}, storage = null }) {
   const usable = (view) => typeof view?.road?.at === 'string' && Array.isArray(view.road.frontier) && Boolean(view.curriculum);
+  const title = titleOf(storage);
   const takeRoad = (view) => {
-    set({ road: view.road, curriculum: view.curriculum });
+    set({ road: view.road, curriculum: view.curriculum, titleSeed: view.road.seed, titleAt: view.road.at });
+    try { storage?.setItem?.(TITLE_KEY, JSON.stringify({ seed: view.road.seed, at: view.road.at })); } catch { /* private mode */ }
     takeProgression(view.progression);
     takeGuide(view.guidebook); // round 157
   };
@@ -64,6 +84,42 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
     journey: null,
     journeyLoading: false,
     journeyRemark: null, // round 163: the narrator's remark on the journey shown ({ id, segments }), or null
+    titleSeed: title.seed, // round 173: the landscape of the title screen
+    titleAt: title.at, // and the site it looks down on (null: the landscape's start)
+    journeyStarting: false, // round 173: the title's button was pressed and the road is not here yet
+
+    // Round 173: the road read while the title is up. The road it brings (and, for a new player, makes on the
+    // title's seed) is kept, so the start finds the world loaded.
+    preloadRoad: async () => {
+      const s = get();
+      if (!s.learnerId || s.mode === 'road' || s.road) return;
+      const learnerId = s.learnerId;
+      const request = ++roadRequest;
+      const epoch = guard.epoch();
+      try {
+        const view = await api.getRoad(learnerId, { seed: get().titleSeed });
+        if (request !== roadRequest || epoch !== guard.epoch() || get().learnerId !== learnerId || !usable(view)) return;
+        takeRoad(view);
+      } catch { /* the start reads it again and says what went wrong */ }
+    },
+
+    // Round 173: the title's one button: into the road. The camera zooms down once the road is here.
+    startJourney: async () => {
+      const s = get();
+      if (!['attract', 'world'].includes(s.phase) || s.mode === 'road' || s.journeyStarting) return;
+      set({ phase: 'world', journeyStarting: true });
+      try { await get().enterRoad(); } finally { set({ journeyStarting: false }); }
+    },
+
+    // Round 173: back to the title screen, from the road or from a place of the world map. A conversation under way
+    // stays on the server, as it does when the road is left.
+    toTitle: () => {
+      const s = get();
+      if (s.isLoading) return;
+      if (s.mode === 'road') get().leaveRoad();
+      else if (!['attract', 'world', 'overview', 'site', 'victory'].includes(s.phase) && !(s.phase === 'encounter' && s.encounter?.state !== 'ongoing')) return;
+      set({ ...quiet, phase: 'attract' });
+    },
 
     // From the world map into the road. The first look creates the road on the server.
     enterRoad: async () => {
@@ -76,7 +132,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
         if (get().mode !== 'road') return;
         if (get().connection !== 'ready') throw new Error(get().serverProblem ?? 'The server is not connected yet.');
         const learnerId = get().learnerId;
-        const view = await api.getRoad(learnerId);
+        const view = await api.getRoad(learnerId, { seed: get().titleSeed });
         if (get().mode !== 'road' || get().learnerId !== learnerId) return;
         if (!usable(view)) throw new Error('The server is being updated. Try again in a few minutes.');
         roadRequest += 1;
@@ -135,7 +191,9 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       const s = get();
       const resolved = s.roadPhase === 'encounter' && s.encounter?.state === 'resolved';
       if (s.mode !== 'road' || !s.road || !s.learnerId || s.roadTravelling || s.encounterLoading || s.isLoading) return;
-      if (s.roadPhase !== 'hub' && !resolved) return;
+      // Round 173: from the map, a conversation under way may be left unfinished to walk on.
+      const leaving = s.roadPhase === 'encounter' && s.encounter?.state === 'ongoing';
+      if (s.roadPhase !== 'hub' && !resolved && !leaving) return;
       if (!s.road.frontier.some((site) => site.id === nodeId)) return;
       const learnerId = s.learnerId;
       const epoch = guard.epoch();

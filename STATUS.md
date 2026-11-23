@@ -33,6 +33,17 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 173, a title over the clouds, and one menu
+
+The page opens on the road's landscape seen from above the clouds, turning slowly, with the weather of the moment and
+one button, **The Journey 2: Journathan Returns (again)**, which zooms the camera down into the first site. A sky shows
+at once; the road is read and the ground built behind the title (a new player's road is made on the seed the title
+already shows: `GET /api/road?seed=`). The top bar is the same everywhere: **Map** and **Menu** (map, curriculum,
+Spellbook, party, guidebook, Settings, leave the conversation, other places, back to the title). The road's map opens
+over a conversation, and walking off from it leaves the conversation unfinished. Ta Prohm and The Kiln are under
+"Other places"; a reload opens on the title. Seen in headless Chromium at phone and desktop size; not on a real phone,
+not deployed. [Architecture](docs/rounds/173/architecture.md), [findings](docs/rounds/173/findings.md).
+
 ## Addendum 2026-11-23: round 172, quieter rain and an Audio category
 
 Rain is about six times quieter and falls 15 % of the time (was 30 %). Settings is in categories; Audio holds Master,
@@ -204,6 +215,7 @@ is the list.
 | 170 | 11-23 | A local setup for friends (`PLAY.md`, `npm run setup`, a Gemini provider): withdrawn by the owner and reverted (`456a521`); its records are in the history of `d9165cd` | none | none | reverted on `main` |
 | 171 | 11-23 | Friends play the hosted link on Gemini: a friend code, their turns on the server's `GEMINI_API_KEY` or their own pasted key, three clear steps when no model is available | [171](docs/rounds/171/architecture.md) | [findings](docs/rounds/171/findings.md) | on `main` (page and server) |
 | 172 | 11-23 | Rain far quieter (on its own effects bus) and 15 % of the time; Settings in categories, with Audio's Master, Music, Effects and Voice volumes | [172](docs/rounds/172/architecture.md) | [findings](docs/rounds/172/findings.md) | on `main` (page and server) |
+| 173 | 11-23 | The title screen over the clouds (the road's landscape turning, the weather, one button, the zoom down; the world loaded behind it); one top bar of Map and Menu; the map over a conversation, which can be left unfinished | [173](docs/rounds/173/architecture.md) | [findings](docs/rounds/173/findings.md) | session branch, not deployed |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

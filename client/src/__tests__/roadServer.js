@@ -15,7 +15,8 @@ const dirs = [];
 export const cleanUp = () => { for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); };
 
 /** A server with an empty save directory. `seed` fixes the landscape of a new road. */
-export function createRoadServer({ seed = 4242 } = {}) {
+// Round 173: `titleSeeds` lets a new road take the seed the title screen proposes; without it every road is `seed`'s.
+export function createRoadServer({ seed = 4242, titleSeeds = false } = {}) {
   content ??= loadGameContent({ language: 'it' });
   const saveDir = mkdtempSync(join(tmpdir(), 'parallang-client-road-'));
   dirs.push(saveDir);
@@ -35,7 +36,7 @@ export function createRoadServer({ seed = 4242 } = {}) {
     getSpellbook: (learnerId) => service.getSpellbook(learnerId),
     createReview: (learnerId, vocabularyId) => service.createReviewChallenge(learnerId, vocabularyId ?? null),
     submitReview: (learnerId, payload) => service.submitReview(learnerId, payload),
-    getRoad: (learnerId) => service.getRoad(learnerId),
+    getRoad: (learnerId, options) => service.getRoad(learnerId, titleSeeds ? options : {}), // round 173
     moveRoad: (learnerId, body) => service.moveOnRoad(learnerId, body),
     resetRoad: (learnerId, body) => service.resetRoad(learnerId, body),
     getRoadWalk: (learnerId) => service.getRoadWalk(learnerId), // round 161

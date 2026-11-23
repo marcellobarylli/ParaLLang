@@ -84,3 +84,34 @@ test('closed objectives step the camera in; with nobody to talk to it wanders ro
   director.skip();
   expect(director.arrived).toBe(true);
 });
+
+// Round 173: the title screen: far over the site, above the clouds, turning slowly; then the zoom down to it.
+test('the title stands far over the site and turns round it; the start zooms down to the hold without a jump or a dip under the ground', async () => {
+  const { titleDistance } = await import('../roadDirector.js');
+  expect(titleDistance(0.46)).toBe(ROAD_CAMERA.title.distance[1]); // a phone held upright: as far as it goes
+  expect(titleDistance(16 / 9)).toBeCloseTo(ROAD_CAMERA.title.across / (2 * Math.tan(Math.PI / 6)), 5);
+  const director = make();
+  director.title(start, { distance: 1800 });
+  expect(director.mode).toBe('title');
+  expect(director.arrived).toBe(false);
+  const first = director.pose;
+  expect(distance(first.position, first.target)).toBeCloseTo(1800, 3);
+  expect(above(first)).toBeGreaterThan(1000); // over the clouds (EFFECTS.high.altitude is 330 m)
+  const later = run(director, 30);
+  expect(distance(later.position, later.target)).toBeCloseTo(1800, 3);
+  const turned = Math.atan2(later.position[2] - start.z, later.position[0] - start.x) - Math.atan2(first.position[2] - start.z, first.position[0] - start.x);
+  expect(Math.abs(Math.atan2(Math.sin(turned), Math.cos(turned)))).toBeCloseTo((30 / ROAD_CAMERA.title.period) * Math.PI * 2, 1);
+  expect(director.mode).toBe('title'); // it turns until the start
+
+  director.arrive(start);
+  expect(director.mode).toBe('descend');
+  let worst = Infinity;
+  const end = run(director, ROAD_CAMERA.title.descend + 2.5, (pose, previous) => {
+    worst = Math.min(worst, above(pose));
+    expect(distance(pose.position, previous.position)).toBeLessThan(120); // no jump (the first moments fall fast)
+  });
+  expect(worst).toBeGreaterThan(ROAD_CAMERA.eye - 0.01);
+  expect(director.arrived).toBe(true);
+  expect(director.mode).toBe('hold');
+  expect(distance(end.position, end.target)).toBeLessThan(ROAD_CAMERA.standoff + 1);
+});

@@ -28,8 +28,8 @@ async function mount() {
   const useStore = createGameStore({ api: server.api, storage: memoryStorage(), dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
-  await user.click(await screen.findByRole('button', { name: 'Enter' }, { timeout: 20_000 }));
-  await user.click(screen.getByRole('button', { name: 'Set out on The Journey 2: Journathan Returns (again)' }));
+  // Round 173: the title screen's one button sets out on the road.
+  await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
   // The first road of a process loads the curriculum (about a second, more on a busy machine).
   await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 });
   return { server, user, s: () => useStore.getState() };
@@ -112,4 +112,62 @@ test('the curriculum panel shows every stage with the unit the player is in and 
   expect(panel.querySelectorAll('.stage:not(.journal)')).toHaveLength(server.content.curriculum.stages.length);
   expect(panel.querySelector('.journal').textContent).toContain('Saying hello');
   expect(panel.querySelector('.lessons .done').textContent).toContain('100 %');
+});
+
+// Round 173: the title screen offers The Journey 2 alone; the top bar has the map and the menu everywhere, the map
+// opens over a conversation, and a conversation can be left unfinished from the menu or by walking off from the map.
+test('the title offers the journey alone; the map and the menu are at hand in a conversation, which can be left unfinished', async () => {
+  const server = createRoadServer();
+  const useStore = createGameStore({ api: server.api, storage: memoryStorage(), dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
+  const user = userEvent.setup();
+  const s = () => useStore.getState();
+  render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
+  const title = screen.getByRole('region', { name: 'ParaLLang' });
+  expect(within(title).getAllByRole('button').map((button) => button.textContent)).toEqual(['The Journey 2: Journathan Returns (again)']);
+  expect(screen.queryByRole('button', { name: /^Enter / })).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Map' })).toBeNull(); // nothing to map yet
+  await vi.waitFor(() => expect(s().road).not.toBe(null), { timeout: 20_000 }); // the world is loaded behind the title
+  expect(s().mode).toBe('dungeon');
+  // The menu on the title: the records, Settings and the other places; no way out of anything.
+  await user.click(screen.getByRole('button', { name: /^Menu/ }));
+  let menu = screen.getByRole('navigation', { name: 'Game menu' });
+  expect(within(menu).getAllByRole('button').map((button) => button.textContent.replace(/\s+/g, ' ').trim())).toEqual(['Close', 'Spellbook', 'Guidebook 1 new', 'Settings', 'Other places Ta Prohm, The Kiln']); // the guidebook's first entry came with the road
+  await user.click(within(menu).getByRole('button', { name: 'Close' }));
+
+  await user.click(screen.getByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }));
+  await user.click(await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 }));
+  const sheet = await screen.findByRole('region', { name: 'Saying hello' });
+  const name = s().encounter.character.name;
+  // The map over the conversation, and back to it.
+  await user.click(screen.getByRole('button', { name: 'Map' }));
+  let map = await screen.findByRole('main', { name: 'The map of the road' });
+  expect(within(map).getByRole('button', { name: 'Leave the conversation and walk here' }).disabled).toBe(false);
+  await user.click(within(map).getByRole('button', { name: `Back to ${name}` }));
+  expect(screen.queryByRole('main', { name: 'The map of the road' })).toBeNull();
+  expect(screen.getByRole('region', { name: 'Saying hello' })).toBe(sheet);
+
+  // The menu in the conversation: the map, the curriculum, the records, Settings and the ways out.
+  await user.click(screen.getByRole('button', { name: /^Menu/ }));
+  menu = screen.getByRole('navigation', { name: 'Game menu' });
+  expect(within(menu).getAllByRole('button').map((button) => button.textContent.replace(/\s+/g, ' ').trim().split(' ')[0])).toEqual(['Close', 'Map', 'Curriculum', 'Spellbook', 'Guidebook', 'Settings', 'Leave', 'Other', 'Back']);
+  await user.click(within(menu).getByRole('button', { name: 'Leave the conversation' }));
+  expect(s().roadPhase).toBe('hub');
+  expect(s().encounter.state).toBe('ongoing'); // it waits, unfinished
+  expect(screen.getByRole('button', { name: 'Back to the conversation' })).toBeTruthy();
+
+  // Back in, and off again by the map: the conversation is left, and the walk goes.
+  await user.click(screen.getByRole('button', { name: 'Back to the conversation' }));
+  const here = s().road.at;
+  await user.click(screen.getByRole('button', { name: 'Map' }));
+  map = await screen.findByRole('main', { name: 'The map of the road' });
+  await user.click(within(map).getByRole('button', { name: 'Leave the conversation and walk here' }));
+  await vi.waitFor(() => expect(s().road.at).not.toBe(here));
+  expect(s().road.cleared).not.toContain(here);
+
+  // And back to the title from the menu.
+  await vi.waitFor(() => expect(s().isLoading).toBe(false));
+  await user.click(screen.getByRole('button', { name: /^Menu/ }));
+  await user.click(within(screen.getByRole('navigation', { name: 'Game menu' })).getByRole('button', { name: 'Back to the title' }));
+  expect([s().phase, s().mode]).toEqual(['attract', 'dungeon']);
+  expect(screen.getByRole('region', { name: 'ParaLLang' })).toBeTruthy();
 });

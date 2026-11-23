@@ -93,7 +93,7 @@ export function createApp({ service, logger = console, token = null, friendCode 
   // Round 144: The Journey 2: the learner's place on the endless graph with what each site ahead offers and the
   // curriculum's marks; a walk to a site; a new road. And the whole save, for a copy the player keeps.
   app.get('/api/road', async (req, res, next) => {
-    try { res.json(await service.getRoad(req.get('X-Learner-Id'))); }
+    try { res.json(await service.getRoad(req.get('X-Learner-Id'), { seed: req.query?.seed ?? null })); } // round 173: the title's seed
     catch (error) { next(error); }
   });
   // Round 161 (issue #9): the whole journey, as the ids of the sites walked to.

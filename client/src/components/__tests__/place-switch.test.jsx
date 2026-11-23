@@ -11,6 +11,7 @@ import { ATLAS } from '../../atlas.js';
 import taProhmFile from '../../../../content/world/dungeons/ta_prohm.yaml';
 import kilnFile from '../../../../content/world/dungeons/the_kiln.yaml';
 import { cleared, isComplete, moved, readRun, siteStates } from '../../../../server/src/dungeon.js';
+import { openMenu, titleReady, toPlaces } from './menu.js';
 
 const FILES = { ta_prohm: taProhmFile, the_kiln: kilnFile };
 const identity = { learnerId: '11111111-1111-4111-8111-111111111111', recovered: true, language: { code: 'it', name: 'Italian', tag: 'it-IT' } };
@@ -71,11 +72,9 @@ test('entering The Kiln switches the dungeon, reads its run, remembers the place
   await settle();
   // The world map's counts: Ta Prohm from its own read, The Kiln from the read beside it.
   expect(s().runs).toEqual({ ta_prohm: { cleared: 1, total: 7, complete: false }, the_kiln: { cleared: 0, total: 7, complete: false } });
-  // A reload of a run with progress resumes at its site; from there, up to the map and out to the world.
-  s().onCameraArrived();
-  expect(s().phase).toBe('site');
-  s().openMap();
-  s().toWorld();
+  // Round 173: a reload opens on the title, whatever the run; the world map is a way on from there.
+  expect(s().phase).toBe('attract');
+  s().enter();
   expect(s().phase).toBe('world');
 
   s().enterPlace('the_kiln');
@@ -107,7 +106,11 @@ test('a place that is entered and left again: back to Ta Prohm with its cleared 
   expect(server.api.getDungeon.mock.calls[0][1]).toBe('the_kiln');
   expect(s().progress.clearedSiteIds).toEqual(['face_gate', 'buttress_tree']);
   expect(s().runs).toMatchObject({ ta_prohm: { cleared: 1 }, the_kiln: { cleared: 2 } });
-  // It resumes in The Kiln, at the site the player stands at.
+  // Round 173: it opens on the title; The Kiln's Start goes down to the site the player stands at.
+  expect(s().phase).toBe('attract');
+  s().enter();
+  s().enterPlace('the_kiln');
+  await s().start();
   expect(s()).toMatchObject({ phase: 'approach', siteIndex: 1 });
   s().onCameraArrived();
   s().openMap();
@@ -128,6 +131,9 @@ test('a reply of the place left is dropped', async () => {
   const { s } = makeStore(server);
   await s().initialize();
   await settle();
+  s().enter(); // round 173: from the title, down to the site the player stands at
+  s().enterPlace('ta_prohm');
+  await s().start();
   s().onCameraArrived();
   // The map's read of Ta Prohm is still on its way when the player goes out and into The Kiln.
   const stale = server.view('ta_prohm');
@@ -178,8 +184,8 @@ test('the world card: two open places, each with its count and its button; The K
   const server = fakeServer({ the_kiln: clearedRun(kilnFile, ['face_gate']) });
   const { store } = makeStore(server);
   render(<DungeonScreen useStore={store} />);
-  await screen.findByText(/answer in Italian/);
-  await user.click(screen.getByRole('button', { name: 'Enter' }));
+  await titleReady();
+  await toPlaces(user);
   expect(screen.getByRole('img', { name: 'A map of 5 places' })).toBeTruthy();
   const rows = () => screen.getAllByRole('listitem').filter((item) => item.closest('.place-list')).map((item) => item.textContent);
   expect(rows()[0]).toMatch(/^Ta Prohm.*0 of 7 cleared$/);

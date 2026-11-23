@@ -398,6 +398,14 @@ export const EFFECTS = Object.freeze({
   // other side); the layer is `top` metres over the camera overhead and `drop` metres lower at its rim, so far
   // clouds stand low over the horizon, where a low sun lights them. `least` is the share there on a clear day.
   clouds: Object.freeze({ count: 80, shapes: 6, reach: 640, top: 108, drop: 72, speed: Object.freeze([2.5, 16]), least: 0.4, glow: 0.4 }),
+  // Round 173: the layer seen from above, on the title screen, where the camera stands a kilometre and more up. It
+  // lies `altitude` metres over the water, higher than any camera of the road goes (a glide from the sky starts 46 m
+  // over a site, and no ground stands higher than 118 m), so in play it is never seen. Its clouds are the same shapes
+  // `scale` times larger, spread `reach` metres round the camera; they show once the camera is over them (`from` to
+  // `full` metres above the layer) and grow from nothing at that height, so a camera coming down sinks through them.
+  // `lift` is where the sky's dome and the stars start to rise with a high camera. `drift` speeds the wind up: from
+  // so far off a breeze would not be seen to move anything.
+  high: Object.freeze({ count: 120, altitude: 330, scale: 2.6, reach: 3400, from: -40, full: 260, least: 0.5, drift: 2.2, lift: 200 }),
 });
 
 // A fixed stream of numbers in [0, 1): the effects need no seed of their own.
@@ -497,6 +505,25 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
     return { mesh, x: (next() - 0.5) * CLOUDS.reach * 2, z: (next() - 0.5) * CLOUDS.reach * 2, size: 0.75 + next() * 0.8, lift: next() * 26 };
   });
   group.add(clouds);
+  // Round 173: the high layer, of the same shapes and material, on its own stream of numbers (the one above is left
+  // as it was, so the lightning keeps its timing).
+  const HIGH = EFFECTS.high;
+  const nextHigh = sequence(173);
+  const highClouds = new Group();
+  highClouds.name = 'clouds-from-above';
+  // Their own copies of the shapes, painted for a view from above (setAtmosphere): from there every face is a top,
+  // so the faces are told apart by how far they lean and how they face the sun, in the sky's own cloud colours.
+  const highShapes = shapes.map((shape) => shape.clone());
+  const highList = Array.from({ length: HIGH.count }, (_, n) => {
+    const mesh = new Mesh(highShapes[(n + 3) % highShapes.length], cloudMaterial);
+    mesh.scale.y = 0.7;
+    mesh.frustumCulled = false;
+    mesh.visible = false;
+    mesh.rotation.y = nextHigh() * Math.PI * 2;
+    highClouds.add(mesh);
+    return { mesh, x: (nextHigh() - 0.5) * HIGH.reach * 2, z: (nextHigh() - 0.5) * HIGH.reach * 2, size: HIGH.scale * (0.7 + nextHigh() * 0.9), lift: nextHigh() * 60 };
+  });
+  group.add(highClouds);
   let painted = '';
   function setAtmosphere(p) {
     const sun = p.sunDisc ?? p.sunDir;
@@ -516,21 +543,37 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
       }
       color.needsUpdate = true;
     }
+    // Round 173: the layer seen from above.
+    for (const shape of highShapes) {
+      const [normal, color] = [shape.attributes.normal, shape.attributes.color];
+      for (let v = 0; v < normal.count; v += 1) {
+        const up = Math.min(1, Math.max(0, normal.getY(v)));
+        const facing = Math.max(0, (normal.getX(v) * sun[0] + normal.getY(v) * sun[1] + normal.getZ(v) * sun[2]) / length);
+        const shade = 0.55 + 0.45 * up * up;
+        const glow = strength * 1.6 * facing * facing;
+        color.setXYZ(v, ...top.map((value, i) => { const base = under[i] + (value - under[i]) * shade; return base + (lit[i] - base) * Math.min(1, glow); }));
+      }
+      color.needsUpdate = true;
+    }
   }
 
-  const state = { rain: 0, snow: 0, stars: 0, fireflies: 0, flash: 0, sway: 0, flashes: 0, clouds: 0 };
+  const state = { rain: 0, snow: 0, stars: 0, fireflies: 0, flash: 0, sway: 0, flashes: 0, clouds: 0, highClouds: 0, above: 0 };
   let clock = 0;
   let drift = 0;
   let sinceFlash = EFFECTS.lightning.everySeconds;
   const wrap = (value, size) => ((value % size) + size) % size;
+  const smooth01 = (value) => { const u = Math.min(1, Math.max(0, value)); return u * u * (3 - 2 * u); };
 
   function update(weather, dt, camera) {
     clock += dt;
     const [cx, cy, cz] = [camera.position.x, camera.position.y, camera.position.z];
     const ground = terrain.heightAt(cx, cz);
     const snowing = ground > EFFECTS.snow.above;
-    state.rain = snowing ? 0 : weather.rain;
-    state.snow = snowing ? weather.rain : 0;
+    // Round 173: over the high layer it does not rain on the camera; the rain is under the clouds, out of sight.
+    const layerY = world.terrain.waterY + HIGH.altitude;
+    state.above = smooth01((cy - layerY) / 150);
+    state.rain = snowing ? 0 : weather.rain * (1 - state.above);
+    state.snow = snowing ? weather.rain * (1 - state.above) : 0;
 
     rain.visible = state.rain > 0.01;
     if (rain.visible) {
@@ -585,11 +628,34 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
       cloud.mesh.scale.setScalar(scale);
     });
 
+    // Round 173: the clouds seen from above. Nothing is done while the camera is under them, which is all of play.
+    const showing = smooth01((cy - layerY - HIGH.from) / (HIGH.full - HIGH.from));
+    state.highClouds = 0;
+    if (showing <= 0.001) {
+      if (highClouds.visible) { highClouds.visible = false; for (const cloud of highList) cloud.mesh.visible = false; }
+    } else {
+      highClouds.visible = true;
+      const wantedHigh = HIGH.count * (HIGH.least + (1 - HIGH.least) * weather.cloud);
+      const highDrift = drift * HIGH.drift;
+      highList.forEach((cloud, n) => {
+        const there = Math.min(1, Math.max(0, wantedHigh - n));
+        const dx = wrap(cloud.x + highDrift - cx + HIGH.reach, HIGH.reach * 2) - HIGH.reach;
+        const dz = wrap(cloud.z - cz + HIGH.reach, HIGH.reach * 2) - HIGH.reach;
+        const rim = Math.min(1, Math.max(0, (1 - Math.hypot(dx, dz) / HIGH.reach) / 0.25));
+        const scale = cloud.size * showing * there * there * (3 - 2 * there) * rim * rim * (3 - 2 * rim);
+        cloud.mesh.visible = scale > 0.02;
+        if (!cloud.mesh.visible) return;
+        state.highClouds += 1;
+        cloud.mesh.position.set(cx + dx, layerY + cloud.lift, cz + dz);
+        cloud.mesh.scale.set(scale, scale * 0.7, scale);
+      });
+    }
+
     // Stars: out when the daylight is gone and the cloud is thin. They turn slowly, as the night does.
     state.stars = Math.max(0, 1 - weather.daylight * 3) * Math.max(0, 1 - weather.cloud * 1.5);
     stars.visible = state.stars > 0.02;
     if (stars.visible) {
-      stars.position.set(cx, world.terrain.waterY, cz);
+      stars.position.set(cx, world.terrain.waterY + Math.max(0, cy - world.terrain.waterY - HIGH.lift), cz); // round 173: round a high camera
       stars.rotation.y = weather.phase * Math.PI * 2;
       stars.material.opacity = 0.9 * state.stars;
     }
@@ -634,6 +700,7 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
       for (const object of [rain, snow, stars, fireflies]) { object.geometry.dispose(); object.material.dispose(); }
       for (const shape of shapes) shape.dispose();
       cloudMaterial.dispose();
+      for (const shape of highShapes) shape.dispose();
     },
   };
 }

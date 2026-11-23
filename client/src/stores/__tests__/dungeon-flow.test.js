@@ -87,6 +87,12 @@ function makeStore(options = {}) {
   return { server, api, store, s: () => store.getState() };
 }
 
+// Round 173: a reload opens on the title; the run resumes when its place is first entered from the world map.
+async function reopen(s) {
+  s().enter();
+  await s().enterPlace('ta_prohm');
+}
+
 function deferred() {
   let resolve; let reject;
   const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
@@ -218,6 +224,7 @@ test('a reload resumes at the site the player stands at: its conversation if it 
   // At Gerald's court, which is not cleared.
   const midway = makeStore({ stored: { run: 1, at: 'root_court', cleared: ['face_gate'], visited: ['face_gate', 'root_court'] }, storage: memoryStorage({ 'parallang.learnerId': identity.learnerId }) });
   await midway.s().initialize();
+  await reopen(midway.s);
   expect(midway.api.createLearner).toHaveBeenCalledWith(identity.learnerId);
   expect(midway.s()).toMatchObject({ phase: 'approach', siteIndex: index('root_court'), walkFrom: null, arrival: 'encounter' });
   expect(midway.s().encounter.encounterId).toBe(encounterOf('root_court'));
@@ -227,6 +234,7 @@ test('a reload resumes at the site the player stands at: its conversation if it 
   // At Mortimer's tree, cleared: no conversation is asked for.
   const cleared = makeStore({ steps: 2 });
   await cleared.s().initialize();
+  await reopen(cleared.s);
   expect(cleared.s()).toMatchObject({ phase: 'approach', siteIndex: index('buttress_tree'), arrival: 'site' });
   expect(cleared.api.startEncounter).not.toHaveBeenCalled();
   cleared.s().onCameraArrived();
@@ -240,6 +248,7 @@ test('a reload resumes at the site the player stands at: its conversation if it 
 
   const done = makeStore({ steps: TOUR.length });
   await done.s().initialize();
+  await reopen(done.s);
   expect(done.s().phase).toBe('victory');
   expect(done.api.startEncounter).not.toHaveBeenCalled();
   // Critique 1.3: the victory screen a reload opens leads back into the finished run.
@@ -313,6 +322,7 @@ test('a conversation only the server holds (a reload) is left on its refusal, an
   // The server holds a replay of Portia's conversation that this store never saw.
   server.session = { id: 'enc-old', siteId: 'face_gate', state: 'ongoing' };
   await s().initialize();
+  await reopen(s);
   s().onCameraArrived();
   expect(s()).toMatchObject({ phase: 'site', encounter: null });
   await s().travel('buttress_tree');
@@ -359,6 +369,7 @@ test('no walk while Talk is with the server, and the map is read again when it o
   const pending = deferred();
   const { api, s } = makeStore({ steps: 1 });
   await s().initialize();
+  await reopen(s);
   s().onCameraArrived();
   expect(s().phase).toBe('site');
   const started = api.startEncounter.getMockImplementation();
@@ -388,6 +399,7 @@ test('a move whose reply comes after a new run has started is dropped, and Stay 
   const slowReset = deferred();
   const { api, server, s } = makeStore({ steps: TOUR.length });
   await s().initialize();
+  await reopen(s);
   expect(s().phase).toBe('victory');
   const reset = api.resetDungeon.getMockImplementation();
   api.resetDungeon.mockImplementationOnce(async (...args) => { await slowReset.promise; return reset(...args); });
@@ -402,6 +414,7 @@ test('a move whose reply comes after a new run has started is dropped, and Stay 
   // A second store plays the other half: a move made in run 1 that answers after the reset.
   const other = makeStore({ steps: TOUR.length });
   await other.s().initialize();
+  await reopen(other.s);
   other.s().stay();
   await other.s().start();
   other.s().onCameraArrived();
@@ -609,6 +622,7 @@ test('the last answer and Play again: the answer\'s own read of the run is dropp
   const { server, api, s } = makeStore({ steps: TOUR.length - 1 });
   server.run.move('sanctuary');
   await s().initialize();
+  await reopen(s);
   s().onCameraArrived();
   expect(s()).toMatchObject({ phase: 'encounter', siteIndex: index('sanctuary') });
   const view = api.getDungeon.getMockImplementation();
@@ -803,6 +817,7 @@ test('Talk is open on the title screen and on the victory screen, and from the r
   server.run.move('sanctuary');
   await s().initialize();
   await vi.waitFor(() => expect(s().party.length).toBe(1));
+  await reopen(s);
   s().onCameraArrived();
   await s().sendMessage('Ecco.'); // Errata is answered: the run is complete, and "Leave the temple" is on the sheet
   expect(s()).toMatchObject({ phase: 'encounter', progress: { complete: true } });
@@ -993,6 +1008,7 @@ test('a level seal: the Sanctuary stays shut at level 4, and a party talk or a r
   server.party.recruit('imp_coffee_greeting');
   await s().initialize();
   await vi.waitFor(() => expect(s().party.length).toBe(1));
+  await reopen(s);
   s().onCameraArrived();
   expect(s()).toMatchObject({ phase: 'site', progression: { level: 4 } });
   expect(siteStatesOf(s()).sanctuary).toMatchObject({ reachable: false, gate: { sealed: true, required: 6, completed: 6, level: { required: 5, current: 4 } } });

@@ -78,6 +78,11 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     if (stored?.dungeonId && bundled.has(stored.dungeonId)) dungeon = bundled.get(stored.dungeonId);
   } catch { /* no storage: the first dungeon */ }
   const startIndex = (of) => Math.max(0, of.sites.findIndex((site) => site.id === of.start));
+  // Round 173: a reload opens on the title. The place the player was last in resumes its run where it was the first
+  // time it is entered from the world map (as a reload itself used to): at the site the player stands at, or on the
+  // victory screen of a finished run.
+  const openedWith = dungeon;
+  let resumed = false;
   let initializationPromise = null;
   let requestEpoch = 0; // a new learner or server: older replies are dropped
   let siteRequest = 0; // the newest site start wins
@@ -225,6 +230,18 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
 
     // Starts the conversation of the site the player stands at (the server knows which) and takes the site from the
     // reply.
+    // Returns the start of the site's conversation, when there is one to wait for.
+    const resumeOnce = (entered) => {
+      if (resumed || entered !== openedWith) return undefined;
+      resumed = true;
+      const { progress } = get();
+      if (!progress) return undefined;
+      if (progress.complete) { showVictory(); return undefined; }
+      if (progress.clearedSiteIds.length > 0 || progress.visitedSiteIds.length > 1) {
+        if (setOff(indexOfSite(progress.at), null, progress)) return loadSite();
+      }
+      return undefined;
+    };
     const loadSite = async ({ restart = false } = {}) => {
       const { learnerId } = get();
       if (!learnerId) return;
@@ -267,7 +284,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     return {
       // Round 144: The Journey 2 (roadSlice.js).
       ...createRoadSlice({
-        set, get, api, quiet, withSpellbook, takeProgression, backup, takeGuide,
+        set, get, api, quiet, withSpellbook, takeProgression, backup, takeGuide, storage,
         guard: { epoch: () => requestEpoch, site: () => siteRequest, bumpSite: () => { siteRequest += 1; return siteRequest; } },
       }),
       savedAt: null, // when this browser's copy of the save was last written (the server's clock)
@@ -364,13 +381,10 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
             }
             takeView(view);
             if (api.getParty) refreshParty(identity.learnerId); // beside the map; the title does not wait for it
-            // A reload resumes from the title. A player who has already gone on to the maps is left there.
-            if (get().phase !== 'attract') return;
-            const { progress } = view;
-            if (progress.complete) showVictory();
-            else if (progress.clearedSiteIds.length > 0 || progress.visitedSiteIds.length > 1) {
-              if (setOff(indexOfSite(progress.at), null, progress)) await loadSite();
-            }
+            // Round 173: the title screen is The Journey 2's. While it is up the road is read (and, for a new player,
+            // made on the landscape the title shows), so that the world is loaded by the time the player starts.
+            // A dungeon's run resumes when its place is entered from the world map.
+            if (get().phase === 'attract' && get().mode !== 'road') get().preloadRoad();
           } catch (error) {
             if (epoch === requestEpoch) set({ connection: 'offline', serverProblem: error.message });
             initializationPromise = null;
@@ -386,7 +400,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       enterPlace: (placeId) => {
         const s = get();
         if (s.phase !== 'world') return;
-        if (!s.atlas) { set({ phase: 'overview' }); return; }
+        if (!s.atlas) { set({ phase: 'overview' }); return resumeOnce(dungeon); }
         const place = s.atlas.places.find((candidate) => candidate.id === placeId);
         const next = place?.dungeonId ? bundled.get(place.dungeonId) : null;
         if (!next) return;
@@ -400,6 +414,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         }
         try { storage?.setItem?.(PLACE_KEY, place.id); } catch { /* private mode: the first dungeon next time */ }
         set({ phase: 'overview' });
+        return resumeOnce(next);
       },
       toWorld: () => { if (get().phase === 'overview') set({ phase: 'world' }); },
 
