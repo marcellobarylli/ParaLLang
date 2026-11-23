@@ -16,3 +16,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 10 | 08:30:00 | 08:30:00 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 11 | 08:30:00 | 08:30:00 | closed | Claude | Status addendum and index row; committed and pushed on the session branch | `../architecture.md` |
 | 12 | 08:40 approx. | 08:41:00 | decision | Owner | "Then deploy", after being told the push to `main` had been blocked by the session's permission check and that the deploy would be the page only | `interview.md` |
+| 13 | 08:31 approx. | 08:34:00 | run | Claude | The deploy of `0f97296` (`[skip render]`, the page only): CI run 45139105526 and Pages run 45139105518 succeeded. Read from GitHub's API; the live page is outside the session's network and was not looked at. Rows 9 to 12 carry times a few minutes ahead of the container's clock, which read 08:33:18 when the runs had finished | `../findings.md` |

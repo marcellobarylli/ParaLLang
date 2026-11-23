@@ -93,3 +93,9 @@ project's; nothing was seen on a real phone; no speaker of Greek or scholar of t
 - The lettering was seen only in the container's serif, which is heavier than Georgia.
 - A scanned public-domain map from an old classical atlas remains possible from a session that can reach Wikimedia
   Commons; `client/public/models/ASSETS.md` says what to record.
+
+## The deploy (2026-11-23)
+
+On the owner's word ("Then deploy"), `main` was moved to `0f97296` with `[skip render]`: the page only, since the
+server does not load the chart's files. CI run 45139105526 and the Pages run 45139105518 succeeded, read from
+GitHub's API. The live page is outside the session's network and was not looked at.

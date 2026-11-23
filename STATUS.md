@@ -49,6 +49,10 @@ and tests keep every stop, leg and name where the coast says it belongs. Source,
 stands is tradition's, and rests on a search's summary of one Wikipedia page. Issue #13 stays open.
 [Architecture](docs/rounds/165/architecture.md), [findings](docs/rounds/165/findings.md).
 
+**Deployed** on the owner's word ("Then deploy"): `main` is at `0f97296`, pushed with `[skip render]`, so the page
+alone was deployed and the server was left as it was. CI run 45139105526 and the Pages run 45139105518 succeeded
+(read from GitHub's API; the live page is outside the session's network and was not looked at).
+
 ## Addendum 2026-11-23: round 164, the journey as the icon; the stitch in the lore book
 
 On waking the owner said the eleven rounds were fine and asked for final touches, then the merge. **The icon** of
@@ -104,7 +108,7 @@ is the list.
 | 162 | #11 | Pulled tree models |
 | 163 | 11-23 | The narrator on a long journey, and a chart of the Odyssey (issue #13): a remark from a hundred walks when the journey is shown, a guidebook entry, and a chart drawn here in place of a public-domain map that could not be fetched | [163](docs/rounds/163/architecture.md) | [findings](docs/rounds/163/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
 | 164 | 11-23 | The journey as the icon; the stitch and the first pull in the lore book (the owner's lore of 2026-11-23); a proposal for building the first pull | [164](docs/rounds/164/architecture.md) | [findings](docs/rounds/164/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
-| 165 | 11-23 | A real map under the chart of the Odyssey: Natural Earth's coast (public domain), the line between stops by sea, drawn as an old sea chart; two stops' coordinates corrected against the coast | [165](docs/rounds/165/architecture.md) | [findings](docs/rounds/165/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 165 | 11-23 | A real map under the chart of the Odyssey: Natural Earth's coast (public domain), the line between stops by sea, drawn as an old sea chart; two stops' coordinates corrected against the coast | [165](docs/rounds/165/architecture.md) | [findings](docs/rounds/165/findings.md) | on `main` with `0f97296` (the page only) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every
