@@ -350,11 +350,37 @@ It comes at each change of level in the curriculum and at no other step: from A1
 3. **The land is pulled.** At every site of the walk so far the ground is drawn straight down, as cloth dips at a stitch that has been pulled tight. It is not pulled without limit, but that is the way it is going. The first sign is small: a valley where there was none. Each later pull takes the sites walked since and draws the earlier ones further down.
 4. **It stays.** The landscape and the map are the pulled ones from then on.
 
+**Where the pulls are going.** *The owner's, 2026-11-23.* A valley is only the first sign. Pulled again and again, the valleys become abyssal chasms: the ground at a stitch goes on down until there is no bottom to be seen from the edge. What is under them is the next part.
+
+**Under the world.** *Set by the owner on 2026-11-23. It is not built.*
+
+- **The roads are only the surface.** The graph the player walks is where the true graph shows through. The roads on top are its surface manifestation. To see the graph itself, its edges and its nodes, the skeleton of the world, one has to go under the ground.
+- **Under the ground there is one huge cave.** Its ceiling is the underside of this world: every encounter the player has had took place on top of it. Its floor is where this world touches the other one.
+- **At every node stands a world tree.** It goes from the ceiling of the cave to its floor. The gap between the two worlds is held open by these trees and by nothing else.
+- **Nothing stands along an edge.** No stitch is made on the way between two places, so there is no tree there.
+- **The edges are roots.** Each way runs along the ceiling of the cave from tree to tree as a root does along the ground, but upside down: roots on the ceiling. They run along the floor as well.
+- **It has to be shown.** The owner wants an explicit mechanism that reveals the skeleton: "a magical event or going underground and seeing the actual graph". Which of the two is not settled.
+
+**The model is Dark Souls**, the first game, and the owner means it closely: "the picture is exactly like dark souls actually", and the view is "to look like dark souls and to feel like it".
+
+- **Ash Lake and the archtrees.** The lowest place in that game is a pale lake in fog out of which trees of impossible size stand, dozens of them into the distance, reached only by climbing down the inside of one (the Great Hollow) and stepping out at its foot onto white sand. The owner's reading, and a common one among its players, is that those trees carry the whole of Lordran above them. The game never says so outright: it shows the trees and leaves the rest to the player, and that silence is part of what is being borrowed. Its opening names them among the first things there were: a land of "gray crags, archtrees and everlasting dragons".
+- **The Abyss.** The same game has a dark sealed beneath its drowned city, and a pit under a ruined town that it calls the Chasm of the Abyss. That is where the valleys of the pulls are going.
+- **The graph is the archtrees.** What the archtrees are to Lordran, the graph is to this world: the thing everything stands on, which nobody up top has seen.
+
+**What follows from the parts above.** Joins by the compiler of this section, for the owner to overrule.
+
+- Part VI already has the old threads of a dead branch as roots "thick as trees". A way is a thread, and under the ground a way is a root: the same thing seen from the other side of the cloth.
+- Part II has most people picture all the worlds as one tree. Nobody in the book has looked under their own.
+- The web that is shown for a moment at each pull (step 2 above) is the surface of this. The cave is the same web seen from below.
+- A character who is sent back goes "down through the ground" (the stitch, above). What they go down is, by this picture, the tree under the place where they stood.
+- A needle's head stands out of the cloth on one side; under the cloth the thread runs on. The cloaked figures are the heads. The trees and roots are the thread.
+
 **How the game holds the stitch.**
 
 - No character says any of it, and the narrator does not state it (as above). The turmeric texts (issue #4) are where it may be said plainly.
 - A character going back down through the ground when an encounter is finished is the owner's picture of it. It is not built: today a finished conversation ends on a written last word, and two of those already have the character gone before the sentence is over.
 - The pulls are not built. The work is GitHub issue #23, and a way to build them is in [`docs/proposals/2026-11-23-the-first-pull.md`](proposals/2026-11-23-the-first-pull.md).
+- The cave under the world is not built. The work is GitHub issue #25: a view of it, and a way for the player to come to see it. Nobody in the world has been there, so nobody speaks of it; when the player sees it, no caption says what it is.
 
 **Not settled.**
 
@@ -363,7 +389,11 @@ It comes at each change of level in the curriculum and at no other step: from A1
 - **Who sends them through**, and whether anyone on the other side is doing the same to people from here.
 - Whether the web is the same web as the realm of part IX, which the compiler compares to one.
 - Whether the old dungeons (issue #8 puts each unit's gate in one) are stitches of another kind: older, larger, or pulled long ago. A dead branch's roots are old threads (part VI), which fits a place that was pulled all the way.
-- How far each pull goes, and what the last one looks like.
+- How far each pull goes, and what the last one looks like. (It is known now where they are going: chasms, and the cave under them.)
+- **The trees hold the worlds apart, and the stitches pull them together.** Both are the owner's. What a pull does to the tree under it is not said: whether the tree shortens, or breaks, or whether the chasm is the tree's own hollow, as the way down to Ash Lake is the inside of a tree.
+- **Whether every node has a tree, or only a stitched one.** The owner said "at each node". The reason given for the bare edges is that no stitch happens there, which would also leave a node bare until an encounter is finished at it.
+- **How the skeleton is revealed:** a magical event, a way down, or the first and then the second.
+- **What the floor of the cave is to the people of the other world:** their sky, their ground, or something they have not seen either.
 
 ---
 
@@ -383,13 +413,13 @@ The whole vault was read for this book: all seventeen notes in `parallang_obsidi
 | `Anulus Mirabilis.md` | IX, all of it |
 | `HUB.md` | III: learning as a child does, with repetition kept as the one discipline |
 | `Loose Cannon Stuff (Misc Idea Pit).md` | X (the three worlds); VII (food, drink and sleep) |
-| `Stories with Ideas Worth Incorporating.md` | The models behind the parts: the Odyssey (IV), the hero's journey (IX), Lovecraft, Pratchett and SCP (V), Dark Souls (VII), John 1:1, Genesis and the Ainulindalë (I). Rothfuss's true names (III) and Snow Crash's Mesopotamia (VI) are named in `LORE.md` |
+| `Stories with Ideas Worth Incorporating.md` | The models behind the parts: the Odyssey (IV), the hero's journey (IX), Lovecraft, Pratchett and SCP (V), Dark Souls (VII, and the cave under the world in "What the book does not say"), John 1:1, Genesis and the Ainulindalë (I). Rothfuss's true names (III) and Snow Crash's Mesopotamia (VI) are named in `LORE.md` |
 | `QUESTS.md`, `Monkey Island Notes 🐒.md`, `APP & API.md` | Empty notes. The first two appear in VII as places with a heading and a blank page |
 | `EU Grant Pitch.md`, `Development Roadmap.md` | About the product, not the world. Not in the book |
 | `Parallang.md` | The combined copy of the notes above; nothing in it is missing from them |
 | `Templates/Core Template.md` | The note template; no content |
 
-Part VIII and "What the book does not say" are not from the vault. Their source is the owner's GitHub issue #12 (2026-11-22): the world is a graph and that has meaning, the player walked a web and not roads, the web is stitched to other worlds, and no character knows it; they believe the roads were built long ago. *The wake of a stitch* is from issue #4. "The stitch" and "The first pull" in that part are the owner's words in a chat of 2026-11-23 (recorded in `docs/rounds/164/trail/interview.md`): a stitch is two passes, the characters have made the first and the player makes the second, a rift is a stitch seen from the side, the walk is a seam, and the land is pulled down at the walk's sites at each change of level in the curriculum, A1 to A2 and so on (first said of A2 to B1 alone, then of "all the medium to major transitions", then settled as the changes of level).
+Part VIII and "What the book does not say" are not from the vault. Their source is the owner's GitHub issue #12 (2026-11-22): the world is a graph and that has meaning, the player walked a web and not roads, the web is stitched to other worlds, and no character knows it; they believe the roads were built long ago. *The wake of a stitch* is from issue #4. "The stitch" and "The first pull" in that part are the owner's words in a chat of 2026-11-23 (recorded in `docs/rounds/164/trail/interview.md`): a stitch is two passes, the characters have made the first and the player makes the second, a rift is a stitch seen from the side, the walk is a seam, and the land is pulled down at the walk's sites at each change of level in the curriculum, A1 to A2 and so on (first said of A2 to B1 alone, then of "all the medium to major transitions", then settled as the changes of level). "Where the pulls are going" and "Under the world" are the owner's words in the same chat later that day (recorded in `docs/rounds/167/trail/interview.md`): the valleys become abyssal chasms; the graph is to this world what the archtrees of Dark Souls are to Lordran; the roads are the surface manifestation of a true graph that is under the ground; a huge cave, a world tree at each node from its ceiling to its floor, where it touches the other world; no trees on the edges, which run along the ceiling and the floor as roots. What is said there of Dark Souls itself was looked up on 2026-11-23 (the opening's words; Ash Lake and the Great Hollow; the Abyss under New Londo and the Chasm of the Abyss under Oolacile); that the archtrees carry Lordran is a reading of the game, not something it states.
 
 Also used, from the game: the ten fragments of *The Journey* (`content/languages/it/lore/fragments.yaml`), the seven character sheets, the market's locations and the world map.
 

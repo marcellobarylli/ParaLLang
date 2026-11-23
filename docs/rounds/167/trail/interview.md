@@ -1,0 +1,30 @@
+# Interview: round 167
+
+### Q1 (2026-11-23): not asked; the owner's message after the deploy of round 166
+- **Question:** none.
+- **Options offered:** none.
+- **Answer** (the message reads as dictated, and is kept as sent):
+
+> Amazing let's refine the law book with the following information. Most of it is already in there but specific
+> references. The dark souls are not yet in there so for example the valleys eventually turning into abyssal chasms
+> should be added and the graph being an analog to the world trees that carry all of Lord Ran and dark souls one
+> world is a very strong parallel and the nature events that show this is already in our design but we should have
+> some explicit mechanism that reveals the the world skeleton which is the graph so this could be a magical event or
+> going underground and seeing the actual graph so that that we can say that the roads we see on top that we walk
+> are just the surface manifestations of the actual graph and you have to go underground to see the true graph edges
+> and notes that are like the world trees of Ash Lake. I think the best picture we have is very very similar so you
+> go under the ground and see that everything is an a huge cave and the ceiling of the cave. Has these massive trees
+> really the picture is exactly like dark souls actually so at each note there is a world tree that goes from the
+> ceiling of the cave where the player encounters are to the to the ground level of the cave, which is where it
+> touches the other world and so the gap between world is supported by these trees of course there are no trees on
+> the edges because the edges don't matter no stitches happen here but we do see the edges run along the ceiling
+> like inverted roots and along the floor by inverted roots I mean roots running along the ceiling rather than the
+> ground, let's add this to the lower book and unopen an issue to generate a view of this. We really wanted to look
+> like dark souls and to feel like it.
+
+- **Read as:** "law book" and "lower book" are the lore book; "Lord Ran" is Lordran; "notes" are nodes; "unopen an
+  issue" is "and open an issue"; "the nature events" are the world events (the pulls). Add to the lore book: the
+  valleys becoming abyssal chasms; the graph as this world's archtrees; the cave, the world trees and the roots; an
+  explicit mechanism that reveals the skeleton. Open an issue for a view of it that looks and feels like Dark Souls.
+- **Not asked, and decided here:** to say in the book that the archtrees carrying Lordran is a reading of the game;
+  the joins to parts II and VI and to the stitch; the four questions under "Not settled".
