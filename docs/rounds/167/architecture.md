@@ -42,6 +42,26 @@ caption), a suggested approach on the code as it is (the same graph read from be
 the two ways the owner named for getting there, acceptance and open questions. It says that the feel and the
 composition are the brief and that models, textures and music must be the project's own or licensed.
 
+## Amendment (2026-11-23): what a pull does to a tree
+
+The owner sent a final clarification the same day (Q2 of the interview). It settles the tension this round had
+listed: the trees, joined by the roots, support the separation of the worlds, holding this one up and the two apart;
+a stitch pulls on the tree under it and shrinks it, which is the valley on the surface; past a certain force the
+tree collapses and both worlds are destroyed at that place; space is warped there, so what is left is not an open
+gate but an expansion into a massive dark void, and that is what an abyssal chasm is.
+
+- The lore book's "Where the pulls are going" becomes **"What a pull does, and where the pulls are going"**, after
+  "Under the world", with those five points. The tree's point in "Under the world" says the trees hold the worlds
+  apart as well as up.
+- Two joins are added, marked as the compiler's: a collapsed tree is part VI's Collision at one place, so Collision
+  can come a chasm at a time; and a chasm, unlike a rift, cannot be stepped through.
+- "Not settled" drops the tension and gains what the clarification leaves open: how many pulls a tree bears; what a
+  collapse does to the trees next to it; what is in the void and whether a chasm can be mended; and that the
+  player's own progress is what brings the chasms, where part VI has translating as what holds Collision back.
+- Issue #25 is updated to match: a stitched tree is a shorter tree, a collapsed one leaves a void, and how a void
+  is drawn is among its open questions. `docs/proposals/2026-11-23-the-first-pull.md` gains an amendment: a pull's
+  depth is the tree's shortening and has a limit; a chasm is its own piece of work.
+
 ## Tests
 
 None: no code or content the game loads is changed. `python3 tools/round_log_check.py 167`.

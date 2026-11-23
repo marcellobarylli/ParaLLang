@@ -71,3 +71,16 @@ through the ground (`client/src/scene/roadView.js` already moves the figures eac
 - **How deep and how wide** the first pull is: a dip that needs the map to notice, or a valley seen from the road?
 - **Is it shown once**, or can the player watch it again from the guidebook?
 - **Does the web stay visible** on the map after the event (faintly), or only during it?
+
+## Amendment (2026-11-23): what the pull is a pull on
+
+The owner clarified the lore later the same day ([`docs/lore-book.md`](../lore-book.md), "Under the world" and "What
+a pull does"). Under every site stands a world tree that holds the two worlds apart; a stitch pulls on it and it
+shrinks, which is the valley this proposal builds. Past a certain force the tree collapses and the place becomes an
+abyssal chasm: not a hole to the other world but space expanded into a dark void. For this proposal that means:
+
+- `depth` in a pull is the tree's shortening, so it should have a limit (the tree's breaking point), not only grow.
+- A site past the limit is a different thing from a deep valley and is not built here: a chasm is its own piece of
+  work, with the view from below ([issue #25](https://github.com/marcellobarylli/ParaLLang/issues/25)).
+- "A site never goes under water" stands for valleys. What a chasm does to water is open.
+

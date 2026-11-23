@@ -28,3 +28,22 @@
   explicit mechanism that reveals the skeleton. Open an issue for a view of it that looks and feels like Dark Souls.
 - **Not asked, and decided here:** to say in the book that the archtrees carrying Lordran is a reading of the game;
   the joins to parts II and VI and to the stitch; the four questions under "Not settled".
+
+### Q2 (2026-11-23): put to the owner at the end of the round, as the first item under "Not settled"
+- **Question:** "The trees hold the worlds apart and the stitches pull them together, so what does a pull do to the
+  tree under it?" (with three others: whether every node has a tree, how the skeleton is revealed, what the cave's
+  floor is to the other world).
+- **Options offered:** none.
+- **Answer:**
+
+> Final clarification: the world trees (at nodes), connected by inverted roots, are what support the separation
+> between worlds. Not only do they hold the world up, the hold the worlds apart. By stitching we are creating a pull
+> on the trees, which shrinks them and manifests as valleys on the surface. At a certain point, the force is too
+> much, the tree collapses and an abyssal chasm remains since both worlds are destroyed at that point. Space is
+> warped around here, so it's not as simple as just an open gate between worlds. Instead, the collapse leads to a
+> subsequent expansion, which is a massive void. This is why the chasms exist: the space there has expanded into a
+> massive dark void
+
+- **Read as:** the answer to the first question. The other three are not answered and stay under "Not settled"
+  ("the world trees (at nodes)" is read as a tree at every node).
+

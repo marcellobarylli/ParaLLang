@@ -41,8 +41,9 @@ only the surface of the true graph; under the ground is one huge cave, its ceili
 its floor where it touches the other; a world tree stands at every node from ceiling to floor and the trees hold
 the gap between the worlds; nothing stands along an edge, and the edges run along the ceiling and the floor as
 roots. The model is named: Dark Souls' Ash Lake and archtrees, and its Abyss. That the archtrees carry Lordran is
-written as a reading of that game, which is what the lookups found it to be. One tension is listed under "Not
-settled": the trees hold the worlds apart and the stitches pull them together. **Issue #25** asks for a view of it
+written as a reading of that game, which is what the lookups found it to be. The owner's final clarification is in
+too: a stitch **pulls on the tree and shrinks it** (the valley), and past a certain force the tree **collapses**, both
+worlds are destroyed there and space expands into a massive dark void (the chasm), which is not a gate. **Issue #25** asks for a view of it
 that looks and feels like Dark Souls, and a way for the player to reach it. No code is changed and nothing is built.
 [Architecture](docs/rounds/167/architecture.md), [findings](docs/rounds/167/findings.md).
 

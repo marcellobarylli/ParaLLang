@@ -350,16 +350,22 @@ It comes at each change of level in the curriculum and at no other step: from A1
 3. **The land is pulled.** At every site of the walk so far the ground is drawn straight down, as cloth dips at a stitch that has been pulled tight. It is not pulled without limit, but that is the way it is going. The first sign is small: a valley where there was none. Each later pull takes the sites walked since and draws the earlier ones further down.
 4. **It stays.** The landscape and the map are the pulled ones from then on.
 
-**Where the pulls are going.** *The owner's, 2026-11-23.* A valley is only the first sign. Pulled again and again, the valleys become abyssal chasms: the ground at a stitch goes on down until there is no bottom to be seen from the edge. What is under them is the next part.
-
 **Under the world.** *Set by the owner on 2026-11-23. It is not built.*
 
 - **The roads are only the surface.** The graph the player walks is where the true graph shows through. The roads on top are its surface manifestation. To see the graph itself, its edges and its nodes, the skeleton of the world, one has to go under the ground.
 - **Under the ground there is one huge cave.** Its ceiling is the underside of this world: every encounter the player has had took place on top of it. Its floor is where this world touches the other one.
-- **At every node stands a world tree.** It goes from the ceiling of the cave to its floor. The gap between the two worlds is held open by these trees and by nothing else.
+- **At every node stands a world tree.** It goes from the ceiling of the cave to its floor. The trees, joined to one another by the roots, are what supports the separation of the two worlds. They do not only hold this world up. They hold the worlds apart.
 - **Nothing stands along an edge.** No stitch is made on the way between two places, so there is no tree there.
 - **The edges are roots.** Each way runs along the ceiling of the cave from tree to tree as a root does along the ground, but upside down: roots on the ceiling. They run along the floor as well.
 - **It has to be shown.** The owner wants an explicit mechanism that reveals the skeleton: "a magical event or going underground and seeing the actual graph". Which of the two is not settled.
+
+**What a pull does, and where the pulls are going.** *The owner's, 2026-11-23, as a final clarification the same day.*
+
+- **A stitch pulls on the tree under it.** Every stitch the player completes draws the two worlds together at that place, and what it draws on is the tree.
+- **The tree shrinks.** A pulled tree is shorter. On the surface that shows as the ground going down: this is the valley of the pulls, above. A valley is the top of a tree that has been drawn in.
+- **Then the tree gives way.** Past a certain force the tree cannot hold. It collapses, and at that place both worlds are destroyed.
+- **What is left is not a gate.** Space is warped there. A collapse does not leave a hole through which one world can be seen from the other. It is followed by an expansion: the space where the tree stood grows into a massive dark void.
+- **That is what an abyssal chasm is.** The chasms exist because the space there has expanded. A chasm is larger inside than the place it took.
 
 **The model is Dark Souls**, the first game, and the owner means it closely: "the picture is exactly like dark souls actually", and the view is "to look like dark souls and to feel like it".
 
@@ -374,6 +380,8 @@ It comes at each change of level in the curriculum and at no other step: from A1
 - The web that is shown for a moment at each pull (step 2 above) is the surface of this. The cave is the same web seen from below.
 - A character who is sent back goes "down through the ground" (the stitch, above). What they go down is, by this picture, the tree under the place where they stood.
 - A needle's head stands out of the cloth on one side; under the cloth the thread runs on. The cloaked figures are the heads. The trees and roots are the thread.
+- Part VI has Collision as the end of two whole branches: both lose their meaning and both die. A collapsed tree is the same thing at one place. Collision, by this picture, need not come all at once; it can come a chasm at a time, along the seam.
+- A rift is a stitch seen from the side (above), and a rift can be stepped through. A chasm cannot: it is what is left where there is no longer anything to stitch.
 
 **How the game holds the stitch.**
 
@@ -389,9 +397,11 @@ It comes at each change of level in the curriculum and at no other step: from A1
 - **Who sends them through**, and whether anyone on the other side is doing the same to people from here.
 - Whether the web is the same web as the realm of part IX, which the compiler compares to one.
 - Whether the old dungeons (issue #8 puts each unit's gate in one) are stitches of another kind: older, larger, or pulled long ago. A dead branch's roots are old threads (part VI), which fits a place that was pulled all the way.
-- How far each pull goes, and what the last one looks like. (It is known now where they are going: chasms, and the cave under them.)
-- **The trees hold the worlds apart, and the stitches pull them together.** Both are the owner's. What a pull does to the tree under it is not said: whether the tree shortens, or breaks, or whether the chasm is the tree's own hollow, as the way down to Ash Lake is the inside of a tree.
-- **Whether every node has a tree, or only a stitched one.** The owner said "at each node". The reason given for the bare edges is that no stitch happens there, which would also leave a node bare until an encounter is finished at it.
+- **How many pulls a tree bears before it gives way**, and whether the player is ever shown a tree close to it. (Where the pulls go is settled: the tree shrinks, then collapses, and a void expands where it stood.)
+- **What a collapse does to the trees next to it.** The trees are joined by the roots and carry the separation together. Whether one collapse loads its neighbours, so that chasms spread along the web, is not said.
+- **What is in the void**, and whether anything can be done in or about a chasm once it is there. The lore book has "Errata" and a reread as other ends (part X); whether a chasm can be mended is not said.
+- **Whether every node has a tree, or only a stitched one.** The owner said "at each node", and later "the world trees (at nodes)". The reason given for the bare edges is that no stitch happens there. Read plainly: every node has a tree, and only a stitched one is pulled.
+- **What it means for the player that their own progress does this.** Every finished encounter is a stitch, every stitch pulls a tree, and enough pulls destroy both worlds at that place. Part VI has translating things home as the work that holds Collision back; here learning is what brings the chasms. Both are in the book.
 - **How the skeleton is revealed:** a magical event, a way down, or the first and then the second.
 - **What the floor of the cave is to the people of the other world:** their sky, their ground, or something they have not seen either.
 
@@ -419,7 +429,7 @@ The whole vault was read for this book: all seventeen notes in `parallang_obsidi
 | `Parallang.md` | The combined copy of the notes above; nothing in it is missing from them |
 | `Templates/Core Template.md` | The note template; no content |
 
-Part VIII and "What the book does not say" are not from the vault. Their source is the owner's GitHub issue #12 (2026-11-22): the world is a graph and that has meaning, the player walked a web and not roads, the web is stitched to other worlds, and no character knows it; they believe the roads were built long ago. *The wake of a stitch* is from issue #4. "The stitch" and "The first pull" in that part are the owner's words in a chat of 2026-11-23 (recorded in `docs/rounds/164/trail/interview.md`): a stitch is two passes, the characters have made the first and the player makes the second, a rift is a stitch seen from the side, the walk is a seam, and the land is pulled down at the walk's sites at each change of level in the curriculum, A1 to A2 and so on (first said of A2 to B1 alone, then of "all the medium to major transitions", then settled as the changes of level). "Where the pulls are going" and "Under the world" are the owner's words in the same chat later that day (recorded in `docs/rounds/167/trail/interview.md`): the valleys become abyssal chasms; the graph is to this world what the archtrees of Dark Souls are to Lordran; the roads are the surface manifestation of a true graph that is under the ground; a huge cave, a world tree at each node from its ceiling to its floor, where it touches the other world; no trees on the edges, which run along the ceiling and the floor as roots. What is said there of Dark Souls itself was looked up on 2026-11-23 (the opening's words; Ash Lake and the Great Hollow; the Abyss under New Londo and the Chasm of the Abyss under Oolacile); that the archtrees carry Lordran is a reading of the game, not something it states.
+Part VIII and "What the book does not say" are not from the vault. Their source is the owner's GitHub issue #12 (2026-11-22): the world is a graph and that has meaning, the player walked a web and not roads, the web is stitched to other worlds, and no character knows it; they believe the roads were built long ago. *The wake of a stitch* is from issue #4. "The stitch" and "The first pull" in that part are the owner's words in a chat of 2026-11-23 (recorded in `docs/rounds/164/trail/interview.md`): a stitch is two passes, the characters have made the first and the player makes the second, a rift is a stitch seen from the side, the walk is a seam, and the land is pulled down at the walk's sites at each change of level in the curriculum, A1 to A2 and so on (first said of A2 to B1 alone, then of "all the medium to major transitions", then settled as the changes of level). "Where the pulls are going" and "Under the world" are the owner's words in the same chat later that day (recorded in `docs/rounds/167/trail/interview.md`): the valleys become abyssal chasms; the graph is to this world what the archtrees of Dark Souls are to Lordran; the roads are the surface manifestation of a true graph that is under the ground; a huge cave, a world tree at each node from its ceiling to its floor, where it touches the other world; no trees on the edges, which run along the ceiling and the floor as roots. What is said there of Dark Souls itself was looked up on 2026-11-23 (the opening's words; Ash Lake and the Great Hollow; the Abyss under New Londo and the Chasm of the Abyss under Oolacile); that the archtrees carry Lordran is a reading of the game, not something it states. "What a pull does" is the owner's final clarification of the same day (recorded there as Q2): the trees joined by inverted roots support the separation of the worlds, holding this one up and the two apart; stitching pulls on the trees and shrinks them, which shows as valleys; past a certain force a tree collapses and both worlds are destroyed there; space being warped, what follows is not an open gate but an expansion into a massive dark void, and that is why the chasms exist.
 
 Also used, from the game: the ten fragments of *The Journey* (`content/languages/it/lore/fragments.yaml`), the seven character sheets, the market's locations and the world map.
 
