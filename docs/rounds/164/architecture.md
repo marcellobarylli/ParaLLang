@@ -45,6 +45,14 @@ animation on the map.
 `[skip render]`: the page and the server are both deployed, because the page's new features (light mode, the
 guidebook, the journey) need the server's.
 
+## Amendment (2026-11-23): the pull comes at every larger step
+
+After the deploy the owner said: "Actually, let's make it at all the medium to major transitions so not every single
+unit but maybe A1 to a two and so on". The lore book's "The first pull" is now "The pulls": the event comes at the
+curriculum's larger steps (A1 to A2, A2 to B1, and so on), each pull taking the sites walked since and drawing the
+earlier ones further down. The proposal is amended the same way. Which steps count as "medium" (the steps between
+the two stages of a level, or only the changes of level) is asked in both. Still nothing of it is built.
+
 ## Tests
 
 - `client/src/__tests__/pages.test.js`: the icon's walk is 120 walks from the start, every site of it is inside

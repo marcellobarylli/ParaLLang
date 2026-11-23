@@ -1,14 +1,19 @@
-# Proposal: the first pull
+# Proposal: the pulls
 
 *2026-11-23. Not built. Written because the owner described the event and said "we need to kind of think of how to
 implement that animation and then permanently update the world map". No second opinion was taken (the cloud session
 has no Codex); the questions at the end are for the owner.*
 
+**Amendment, 2026-11-23.** The owner then said: "let's make it at all the medium to major transitions so not every
+single unit but maybe A1 to a two and so on". The event is no longer one moment at A2 to B1: it comes at each larger
+step of the curriculum. Sections 3 and 4 below are changed for that, and the first question is new.
+
 ## Goal
 
-At the step from A2 to B1 the player sees what they have been walking on and what their walk has done to it
-([`docs/lore-book.md`](../lore-book.md), "The first pull"): the map draws back, the whole graph grows out from where
-they stand like a wave, and then the land is pulled down at every site of their walk, for good.
+At each larger step of the curriculum (A1 to A2, A2 to B1, and so on; not every unit) the player sees what they have
+been walking on and what their walk has done to it ([`docs/lore-book.md`](../lore-book.md), "The pulls"): the map
+draws back, the whole graph grows out from where they stand like a wave, and then the land is pulled down at every
+site of their walk, for good.
 
 ## Problem
 
@@ -19,8 +24,9 @@ server and the client stop agreeing on where the ground is.
 
 ## Change
 
-**1. The pull is data in the save, and the land is still a function.** When the event happens the road keeps
-`pulled: { step, sites: [node ids] }`: the sites of the walk so far, each once. `createTerrain(seed, { pulls })`
+**1. The pull is data in the save, and the land is still a function.** Each time the event happens the road adds
+to `pulled` an entry `{ step, sites: [node ids], depth }`: the sites walked since the last pull, each once (the
+earlier entries are kept and count again, deeper). `createTerrain(seed, { pulls })`
 takes their positions and lowers the ground round each:
 
     height(x, z) = base(x, z) − Σ depth · k(distance to the site / radius),   k(t) = (1 − t²)² for t < 1, else 0
@@ -34,9 +40,10 @@ The pulls are indexed by the graph's cell, so a height asks nine cells at most.
 and every saved walk stays valid; only a site's height is read from the pulled land. (Otherwise a pull could flood a
 way or move a site, and old saves would point at nothing.)
 
-**3. The event.** `finishRoad` already knows when a conversation opens a new unit. When the unit it opens is the
-first of B1, it writes `pulled` in the same save and the reply carries `worldEvent: 'first_pull'`. The client then
-plays, on the map:
+**3. The event.** `finishRoad` already knows when a conversation opens a new unit, and each unit knows its stage
+(`content/curriculum/`: six stages, two to a level). When the unit it opens is the first of a new stage or level
+(which of the two is the first question below), it adds to `pulled` in the same save and the reply carries
+`worldEvent: 'pull'` with its number. The client then plays, on the map:
 
 - *the map draws back*: the journey's frame (round 161), a little wider;
 - *the web*: every site and way within a radius that grows from the player outward over a few seconds, drawn as the
@@ -48,14 +55,19 @@ plays, on the map:
 After it the 3D level builds its chunks from the pulled land, and the map and the icon-like picture of the journey
 show the valleys from then on.
 
-**4. Later pulls.** `pulled` can hold more than one moment (`[{ step, sites, depth }]`), each deeper than the last:
-"not pulled without limit, but that is the way it is going".
+**4. Each pull is deeper than the last.** A site's depth is the sum over the pulls it has been in, so the first
+sites of the walk sink furthest and the newest are only dimpled: "not pulled without limit, but that is the way it
+is going". The same cap keeps every site above water. A change of level can pull harder than a step inside a level,
+and can be the one that shows the whole web; a step inside a level can be the pull alone, without the web.
 
 **5. The characters going back.** Separate and small: at the end of a conversation on the road the stand-in sinks
 through the ground (`client/src/scene/roadView.js` already moves the figures each frame).
 
 ## Questions for the owner
 
+- **Which steps**: all five steps between the curriculum's six stages (A1.1 to A1.2, A1.2 to A2.1, …), with the
+  two changes of level (A1 to A2, A2 to B1) as the major ones, or the changes of level alone? With today's
+  curriculum (A1 to B1) the second gives two events in all.
 - **Which sites are pulled**: every site walked to, or only those where a conversation was finished (a completed
   stitch, by the lore)?
 - **How deep and how wide** the first pull is: a dip that needs the map to notice, or a valley seen from the road?

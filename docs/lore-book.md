@@ -341,20 +341,20 @@ The world is not finished being said.
 - **A rift is a stitch seen from the side.** The rifts of part VI and the portal of part X are this and nothing else. A gate opens when someone stitches through to this side. It closes into a stitch when they are sent back.
 - **The walk is a seam.** The player has completed a stitch at every place they have talked their way past. The line of the whole journey, as the map can paint it, is a line of stitches, and a seam is where two pieces of cloth are drawn together. That is why the player's own walk is where the worlds begin to meet: Collision (part VI) starts along it.
 
-**The first pull.** *The owner's, of the same day. A world event; it is not built.*
+**The pulls.** *The owner's, of the same day. A world event that comes more than once; it is not built.*
 
-It comes at the step from A2 to B1 in the curriculum.
+It comes at the curriculum's larger steps, not at every unit: from A1 to A2, from A2 to B1, and so on. (The owner first put it at A2 to B1 alone, and then at "all the medium to major transitions".) Each time:
 
 1. **The map draws back** further than it ever has.
 2. **The web is shown.** For a moment the graph itself appears: not the roads the player took but all of them, growing outward from where the player stands like a wave, until the map is covered. It is not a web that goes somewhere. It is everywhere. It is the place.
-3. **The land is pulled.** At every site of the walk so far the ground is drawn straight down, as cloth dips at a stitch that has been pulled tight. It is not pulled without limit, but that is the way it is going. The first sign is small: a valley where there was none.
+3. **The land is pulled.** At every site of the walk so far the ground is drawn straight down, as cloth dips at a stitch that has been pulled tight. It is not pulled without limit, but that is the way it is going. The first sign is small: a valley where there was none. Each later pull takes the sites walked since and draws the earlier ones further down.
 4. **It stays.** The landscape and the map are the pulled ones from then on.
 
 **How the game holds the stitch.**
 
 - No character says any of it, and the narrator does not state it (as above). The turmeric texts (issue #4) are where it may be said plainly.
 - A character going back down through the ground when an encounter is finished is the owner's picture of it. It is not built: today a finished conversation ends on a written last word, and two of those already have the character gone before the sentence is over.
-- The first pull is not built. A way to build it is in [`docs/proposals/2026-11-23-the-first-pull.md`](proposals/2026-11-23-the-first-pull.md).
+- The pulls are not built. A way to build them is in [`docs/proposals/2026-11-23-the-first-pull.md`](proposals/2026-11-23-the-first-pull.md).
 
 **Not settled.**
 
@@ -363,7 +363,8 @@ It comes at the step from A2 to B1 in the curriculum.
 - **Who sends them through**, and whether anyone on the other side is doing the same to people from here.
 - Whether the web is the same web as the realm of part IX, which the compiler compares to one.
 - Whether the old dungeons (issue #8 puts each unit's gate in one) are stitches of another kind: older, larger, or pulled long ago. A dead branch's roots are old threads (part VI), which fits a place that was pulled all the way.
-- How far the pull goes after the first, and what the last one looks like.
+- **Which steps count.** The curriculum has six stages, two to a level (A1.1, A1.2, A2.1, …), so five steps between stages, of which two change the level. "Medium to major" may mean all five, with the two changes of level the major ones, or the changes of level alone.
+- How far each pull goes, and what the last one looks like.
 
 ---
 
@@ -389,7 +390,7 @@ The whole vault was read for this book: all seventeen notes in `parallang_obsidi
 | `Parallang.md` | The combined copy of the notes above; nothing in it is missing from them |
 | `Templates/Core Template.md` | The note template; no content |
 
-Part VIII and "What the book does not say" are not from the vault. Their source is the owner's GitHub issue #12 (2026-11-22): the world is a graph and that has meaning, the player walked a web and not roads, the web is stitched to other worlds, and no character knows it; they believe the roads were built long ago. *The wake of a stitch* is from issue #4. "The stitch" and "The first pull" in that part are the owner's words in a chat of 2026-11-23 (recorded in `docs/rounds/164/trail/interview.md`): a stitch is two passes, the characters have made the first and the player makes the second, a rift is a stitch seen from the side, the walk is a seam, and the land is pulled down at the walk's sites at the step from A2 to B1.
+Part VIII and "What the book does not say" are not from the vault. Their source is the owner's GitHub issue #12 (2026-11-22): the world is a graph and that has meaning, the player walked a web and not roads, the web is stitched to other worlds, and no character knows it; they believe the roads were built long ago. *The wake of a stitch* is from issue #4. "The stitch" and "The first pull" in that part are the owner's words in a chat of 2026-11-23 (recorded in `docs/rounds/164/trail/interview.md`): a stitch is two passes, the characters have made the first and the player makes the second, a rift is a stitch seen from the side, the walk is a seam, and the land is pulled down at the walk's sites at the curriculum's larger steps (first said of A2 to B1, then of "all the medium to major transitions").
 
 Also used, from the game: the ten fragments of *The Journey* (`content/languages/it/lore/fragments.yaml`), the seven character sheets, the market's locations and the world map.
 

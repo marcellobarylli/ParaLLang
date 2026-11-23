@@ -55,3 +55,13 @@ Claude's reading, which the owner has not confirmed:
   "Let's add it to the book": into `docs/lore-book.md`.
 - "That's fine … then merge and deploy": merge to `main` and deploy the page and the server. It does not say
   whether #11 and #13 close; they are left open.
+
+### Q2 (2026-11-23): the owner's message after the deploy (no question was asked of this point)
+- **Options offered:** none.
+- **Answer:** "Actually, let's make it at all the medium to major transitions so not every single unit but maybe A1
+  to a two and so on"
+
+Claude's reading, which the owner has not confirmed: "it" is the world event of the pull; "A1 to a two" is A1 to
+A2. The event comes at the curriculum's larger steps and not at one. Whether "medium" means the step between the
+two stages of a level (A1.1 to A1.2) is not said, and is asked in the lore book and the proposal.
+
