@@ -33,6 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 171, friends play the hosted link on Gemini
+
+Round 170 (a local setup for friends) was withdrawn by the owner and reverted (`456a521`). Reconceived: friends open
+the same hosted link, so they always play the latest build. **`PARALLANG_FRIEND_CODE`** is a second access code; a
+friend's turns run on **Gemini** (`server/src/llm/friend-router.js`): on the server's `GEMINI_API_KEY`, or, when there
+is none, it is refused or its free allowance is spent, on a key the friend pastes into the page after three steps
+(`client/src/components/AccessGate.jsx`), kept in their browser and never stored by the server. The owner's turns
+stay on `LLM_PROVIDER`. Played in headless Chromium against a production-mode server up to the steps and a refused
+key; no Gemini turn has been played (no real key here). **On `main`**, page and server. The owner's step:
+`GEMINI_API_KEY` and `PARALLANG_FRIEND_CODE` in Render's Environment.
+[Architecture](docs/rounds/171/architecture.md), [findings](docs/rounds/171/findings.md).
+
 ## Addendum 2026-11-23: round 169, whether the followers of the void are right
 
 The owner set the moral centre of the story. It is **not clear whether the followers of the void are good or
@@ -183,6 +195,8 @@ is the list.
 | 167 | 11-23 | The lore of what is under the world: the valleys become chasms; a cave, a world tree at every node, the ways as roots (Dark Souls' Ash Lake named as the model); issue #25 opened for a view of it; the followers of the void, with roots in Taoism | [167](docs/rounds/167/architecture.md) | [findings](docs/rounds/167/findings.md) | on `main` (docs only; nothing deployed) |
 | 168 | 11-23 | The religion of the place below: its canon (the place under the ground is hell) in the lore book and in what every character knows; believers, doubters and people who go along among the road's characters | [168](docs/rounds/168/architecture.md) | [findings](docs/rounds/168/findings.md) | on `main` with `bb61bb1` (page and server) |
 | 169 | 11-23 | Whether the followers of the void are right: they believe the void is a birthplace; nobody knows; the player chooses; the early encounters say the collapse must be prevented and its proponents speak only later (after Dark Souls) | [169](docs/rounds/169/architecture.md) | [findings](docs/rounds/169/findings.md) | on `main` (docs only; nothing deployed) |
+| 170 | 11-23 | A local setup for friends (`PLAY.md`, `npm run setup`, a Gemini provider): withdrawn by the owner and reverted (`456a521`); its records are in the history of `d9165cd` | none | none | reverted on `main` |
+| 171 | 11-23 | Friends play the hosted link on Gemini: a friend code, their turns on the server's `GEMINI_API_KEY` or their own pasted key, three clear steps when no model is available | [171](docs/rounds/171/architecture.md) | [findings](docs/rounds/171/findings.md) | on `main` (page and server) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

@@ -39,3 +39,25 @@ export function settingsProblem({ serverUrl }, { sameOrigin = SAME_ORIGIN_API } 
   if (serverUrl && !/^https?:\/\/[^\s/]+/i.test(serverUrl)) return 'The server URL must start with https:// (or http:// for a local server).';
   return null;
 }
+
+// Round 171: a friend's own Gemini key (from Google AI Studio), kept in this browser only and sent as X-Gemini-Key.
+// The server uses it for that friend's turns and never stores it.
+export const GEMINI_KEY_STORAGE = 'parallang.geminiKey';
+export const GEMINI_KEY_HEADER = 'X-Gemini-Key';
+export function loadGeminiKey(storage = browserStorage()) {
+  try { return String(storage?.getItem?.(GEMINI_KEY_STORAGE) ?? '').trim(); } catch { return ''; }
+}
+export function saveGeminiKey(key, storage = browserStorage()) {
+  const value = String(key ?? '').trim();
+  try { if (value) storage?.setItem?.(GEMINI_KEY_STORAGE, value); else storage?.removeItem?.(GEMINI_KEY_STORAGE); } catch { /* private mode */ }
+  return value;
+}
+
+// Round 171: the answers after which the page asks for the friend code (401) or for a Gemini key (the MODEL_ codes).
+export const ACCESS_EVENT = 'parallang:access';
+export const MODEL_CODES = new Set(['MODEL_SETUP_REQUIRED', 'MODEL_KEY_INVALID', 'MODEL_QUOTA_EXHAUSTED']);
+export function announceAccessProblem(status, code) {
+  const kind = status === 401 ? 'code' : MODEL_CODES.has(code) ? 'model' : null;
+  if (!kind || typeof globalThis.dispatchEvent !== 'function' || typeof globalThis.CustomEvent !== 'function') return;
+  globalThis.dispatchEvent(new CustomEvent(ACCESS_EVENT, { detail: { kind, code } }));
+}

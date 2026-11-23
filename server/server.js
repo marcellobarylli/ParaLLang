@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 import { createLLMAdapter } from './src/llm/index.js';
+import { FriendRouter } from './src/llm/friend-router.js';
 import { listenHostForProvider, loadRootEnv, productionTokenProblem, resolveTargetLanguage, saveDirForLanguage } from './src/config.js';
 import { loadGameContent } from './src/content-loader.js';
 import { JsonLearningStorage } from './src/learning-storage.js';
@@ -25,7 +26,13 @@ const content = loadGameContent({ language: resolveTargetLanguage() });
 const curriculumLine = content.curriculum
   ? `Curriculum: ${content.curriculum.stages.length} stages, ${content.curriculum.units.length} units, ${content.curriculum.lessonsById.size} lessons`
   : 'Curriculum: none in this language pack';
-const provider = createLLMAdapter();
+// Round 171: with PARALLANG_FRIEND_CODE set, friends' turns run on Gemini (their own key, or GEMINI_API_KEY) and the
+// owner's on LLM_PROVIDER.
+const friendCode = (process.env.PARALLANG_FRIEND_CODE || '').trim() || null;
+const primaryProvider = createLLMAdapter();
+const provider = friendCode
+  ? new FriendRouter({ primary: primaryProvider, geminiKey: (process.env.GEMINI_API_KEY || '').trim() || null, geminiModel: (process.env.GEMINI_MODEL || '').trim() || null })
+  : primaryProvider;
 const disk = new JsonLearningStorage({
   saveDir: saveDirForLanguage(process.env.PARALLANG_SAVE_DIR || resolve(import.meta.dirname, 'data', 'saves'), content.language.code),
 });
@@ -43,12 +50,13 @@ const storage = github
 const flag = (name) => (process.env[name] || '').trim().toLowerCase() === 'on';
 const service = new LearningService({ provider, storage, content, atmosphere: flag('PARALLANG_ATMOSPHERE'), prefetch: flag('PARALLANG_PREFETCH') });
 // Round 040 (critique 1.2): the ends are trimmed, as fetch trims header values.
-const app = createApp({ service, token: (process.env.PARALLANG_TOKEN || '').trim() || null, saves: () => (github ? { ...storage.status } : { kind: 'disk', ...(githubSettings?.problem ? { problem: githubSettings.problem } : {}) }) });
+const app = createApp({ service, token: (process.env.PARALLANG_TOKEN || '').trim() || null, friendCode, saves: () => (github ? { ...storage.status } : { kind: 'disk', ...(githubSettings?.problem ? { problem: githubSettings.problem } : {}) }) });
 
 if (process.env.NODE_ENV !== 'test') {
   const server = app.listen(port, host, () => {
     console.log(`ParaLLang server listening on http://${host}:${port}`);
     console.log(`LLM provider: ${selectedProvider}`);
+    if (friendCode) console.log(`Friends (PARALLANG_FRIEND_CODE): Gemini, ${process.env.GEMINI_API_KEY ? 'on the server\'s GEMINI_API_KEY or their own key' : 'on their own key only (no GEMINI_API_KEY)'}`);
     console.log(`Target language: ${content.language.name} (${content.language.code})`);
     console.log(`Spellbook saves: ${storage.saveDir}`);
     console.log(curriculumLine);

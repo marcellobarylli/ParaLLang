@@ -32,6 +32,7 @@ Choose one narration/grading provider in the root `.env`:
 
 - `LLM_PROVIDER=codex-cli`: install the official Codex CLI, run `codex login`, and complete the ChatGPT browser sign-in. API-key login does not satisfy this mode.
 - `LLM_PROVIDER=claude-cli`: install the official Claude Code CLI, run `claude auth login`, and use native `claude.ai` subscription authentication. API keys and third-party providers do not satisfy this mode. A subscription OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) is also accepted and passed to the Claude CLI only; `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL` and the Bedrock/Vertex switches are refused either way.
+- `LLM_PROVIDER=gemini` (round 170/171): set `GEMINI_API_KEY` (from https://aistudio.google.com/apikey); the default model is `gemini-3.8-flash` (`GEMINI_MODEL` or `LLM_MODEL` changes it), through Google's OpenAI-compatible endpoint.
 - `LLM_PROVIDER=openai`: set `OPENAI_API_KEY`; the default model is `gpt-4o-mini`.
 - `LLM_PROVIDER=ollama`: ensure the configured `OLLAMA_BASE_URL` is already reachable; the default model is `llama3.1`.
 - `LLM_MODEL` optionally selects a model for any provider. When it is blank, `claude-cli` gets `sonnet` (round 126; `LLM_MODEL=default` gives the account's own default model, `haiku` is the fastest) and `codex-cli` uses its own default; ParaLLang never supplies the OpenAI API default to a CLI.
@@ -380,6 +381,24 @@ Owner steps (done once; they cannot be done from the cluster):
 
 Anyone with the Pages URL and the token spends your Claude subscription, so share the token only with people you
 would lend it to, and change it in Render (and in each browser's settings) if it leaks.
+
+### Friends play the hosted build on Gemini (round 171)
+
+Friends open the same Pages link and always get the latest build. Their turns run on Google Gemini, not on your
+subscription.
+
+1. Make a key at https://aistudio.google.com/apikey (free).
+2. Render → the service → Environment: add `GEMINI_API_KEY` (that key) and `PARALLANG_FRIEND_CODE` (a code you choose
+   for friends; not your `PARALLANG_TOKEN`). Save; the service restarts.
+3. Send friends the Pages link and the friend code.
+
+A friend who opens the link is asked for the code once. When no model is available for them (no `GEMINI_API_KEY`,
+the free allowance shared by all friends is spent for now, or a key Google refuses), the page shows three steps for a
+free key of their own; it is kept in their browser and sent with their turns (`X-Gemini-Key`), never stored by the
+server. You keep entering `PARALLANG_TOKEN`, and your turns stay on `LLM_PROVIDER`. On the free tier, Google may use
+the prompts to improve its products. `server/src/llm/friend-router.js` routes the requests;
+`client/src/components/AccessGate.jsx` is the page's side. `GEMINI_MODEL` changes the model (default
+`gemini-3.8-flash`).
 
 ## Learning data and saves
 

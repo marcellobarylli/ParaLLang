@@ -449,3 +449,8 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 /* Round 160: a legacy dungeon's node on the road's map: a pale stepped gate, gold when picked. */
 .map-ahead.dungeon .sign, .map-ahead.dungeon.kind-checkpoint .sign { fill: #d8d2bc; stroke: #101110; stroke-width: .5; }
 .map-ahead.dungeon.picked .sign, .map-ahead.dungeon.kind-checkpoint.picked .sign { fill: var(--gold); }
+/* Round 171: the friend code and the Gemini key steps, over everything, on a darker backdrop. */
+.access-gate { z-index: 40; background: rgb(0 0 0 / .6); align-items: center; }
+.access-gate .settings-sheet { border-bottom: 2px solid var(--lo); }
+.access-steps { margin: .2rem 0 .4rem; padding-left: 1.3rem; display: grid; gap: .35rem; line-height: 1.45; }
+.access-steps a { color: var(--gold); }

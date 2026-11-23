@@ -45,6 +45,20 @@ const definitions = {
     code: 'CLI_PROCESS_FAILURE', status: 503, retryable: true,
     message: 'The selected CLI process did not complete successfully. Check provider setup, then retry.',
   },
+  // Round 171: a friend's turn on the hosted server runs on Gemini (llm/friend-router.js). These three tell the page to
+  // show the steps for connecting a free key.
+  'model-setup': {
+    code: 'MODEL_SETUP_REQUIRED', status: 503, retryable: false,
+    message: 'No AI model is connected for you yet. Add a free Gemini key to play.',
+  },
+  'model-key-invalid': {
+    code: 'MODEL_KEY_INVALID', status: 503, retryable: false,
+    message: 'Google did not accept the Gemini key. Check it, or make a new one.',
+  },
+  'model-quota': {
+    code: 'MODEL_QUOTA_EXHAUSTED', status: 429, retryable: true,
+    message: 'The free Gemini allowance in use has run out for now. Add your own free key to keep playing, or try again later.',
+  },
   provider: {
     code: 'PROVIDER_FAILURE', status: 503, retryable: true,
     message: 'The selected provider is temporarily unavailable. Your progress was not changed; retry in a moment.',

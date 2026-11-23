@@ -3,6 +3,7 @@ import cors from 'cors';
 import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { createEncounterRouter } from './routes/encounter.js';
 import { AppError, OUTDATED_CLIENT, requireClient } from './errors.js';
+import { requestContext } from './request-context.js';
 
 const digest = (value) => createHash('sha256').update(String(value)).digest();
 
@@ -11,20 +12,28 @@ const digest = (value) => createHash('sha256').update(String(value)).digest();
 // matches it (Express 5 is case-insensitive and ignores a trailing slash), so /API/world is not a way around it.
 // Unknown paths are 401 without the token, not 404. CORS preflights are answered by cors() before this check.
 const isHealth = (path) => path.toLowerCase().replace(/\/+$/, '') === '/api/health';
-function requireToken(token) {
+// Round 171: PARALLANG_FRIEND_CODE is a second code that opens the same game to the owner's friends. Their turns run
+// on Gemini (llm/friend-router.js); the request's access ('owner' or 'friend') and the friend's own Gemini key, if they
+// sent one as X-Gemini-Key, are kept in the request context for the rest of the request.
+const matches = (given, expected) => Boolean(given && expected && timingSafeEqual(digest(given), expected));
+function requireToken(token, friendCode) {
   const expected = digest(token);
+  const friend = friendCode ? digest(friendCode) : null;
   return (req, res, next) => {
     if (isHealth(req.path)) return next();
     const given = req.get('X-ParaLLang-Token');
-    if (given && timingSafeEqual(digest(given), expected)) return next();
+    if (matches(given, expected)) return requestContext.run({ access: 'owner' }, next);
+    if (matches(given, friend)) return requestContext.run({ access: 'friend', geminiKey: req.get(GEMINI_KEY_HEADER)?.trim() || null }, next);
     return next(new AppError('A valid X-ParaLLang-Token header is required.', { status: 401, code: 'UNAUTHORIZED' }));
   };
 }
+export const GEMINI_KEY_HEADER = 'X-Gemini-Key';
 
-export function createApp({ service, logger = console, token = null, saves = null }) {
+export function createApp({ service, logger = console, token = null, friendCode = null, saves = null }) {
   const app = express();
   app.use(cors());
-  if (token) app.use(requireToken(token));
+  if (token) app.use(requireToken(token, friendCode));
+  else app.use((req, res, next) => requestContext.run({ access: 'owner' }, next));
   // Round 144: a save put back from the player's own copy. A save is larger than any other request (about 150 kB
   // after long play), so this one route reads its body with its own limit, before the small one below.
   app.post('/api/save/restore', express.json({ limit: '2mb' }), async (req, res, next) => {

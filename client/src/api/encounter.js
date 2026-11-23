@@ -1,4 +1,4 @@
-import { TOKEN_HEADER, loadSettings } from './settings.js';
+import { GEMINI_KEY_HEADER, TOKEN_HEADER, announceAccessProblem, loadGeminiKey, loadSettings } from './settings.js';
 
 // Round 114: requests go to the server URL from the settings (empty: this page's origin, as with the dev proxy) and
 // carry the access token, when one is set, as X-ParaLLang-Token.
@@ -6,9 +6,10 @@ import { TOKEN_HEADER, loadSettings } from './settings.js';
 // on tells an older page to reload.
 export const CLIENT_CONTRACT = 121;
 
-export function createLearningApi({ getSettings = () => loadSettings(), fetchImpl } = {}) {
+export function createLearningApi({ getSettings = () => loadSettings(), getGeminiKey = () => loadGeminiKey(), fetchImpl } = {}) {
   async function request(path, { learnerId, method = 'GET', body, signal } = {}) {
     const { serverUrl, token } = getSettings();
+    const geminiKey = getGeminiKey();
     const doFetch = fetchImpl ?? globalThis.fetch;
     let response;
     try {
@@ -18,6 +19,7 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
           ...(body ? { 'Content-Type': 'application/json' } : {}),
           ...(learnerId ? { 'X-Learner-Id': learnerId } : {}),
           ...(token ? { [TOKEN_HEADER]: token } : {}),
+          ...(geminiKey ? { [GEMINI_KEY_HEADER]: geminiKey } : {}),
         },
         body: body ? JSON.stringify(body) : undefined,
         signal,
@@ -30,6 +32,7 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     try { data = await response.json(); }
     catch { throw Object.assign(new Error(`The server returned an unreadable response (${response.status}).`), { status: response.status }); }
     if (!response.ok) {
+      announceAccessProblem(response.status, data.error?.code); // round 171: the friend code or a Gemini key is asked for
       const message = response.status === 401 ? 'The server refused the access token. Check it in Settings.' : data.error?.message || `Request failed (${response.status}).`;
       throw Object.assign(new Error(message), {
         status: response.status,

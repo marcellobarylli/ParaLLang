@@ -1,10 +1,12 @@
 import { OpenAIAdapter } from './adapters/openai.js';
 import { OllamaAdapter } from './adapters/ollama.js';
+import { GeminiAdapter } from './adapters/gemini.js';
 import { CodexCLIAdapter } from './adapters/codex-cli.js';
 import { ClaudeCLIAdapter } from './adapters/claude-cli.js';
 
 const providers = {
   openai: OpenAIAdapter,
+  gemini: GeminiAdapter,
   ollama: OllamaAdapter,
   'codex-cli': CodexCLIAdapter,
   'claude-cli': ClaudeCLIAdapter,

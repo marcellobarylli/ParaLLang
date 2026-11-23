@@ -21,6 +21,13 @@ services:
         sync: false
       - key: PARALLANG_TOKEN
         sync: false
+      # Round 171: friends. PARALLANG_FRIEND_CODE is a second code the owner gives to friends; their turns run on Gemini,
+      # on GEMINI_API_KEY (a key from https://aistudio.google.com/apikey) or, when it has none or its free allowance is
+      # spent, on a key the friend pastes into the page. The owner's own turns stay on LLM_PROVIDER.
+      - key: PARALLANG_FRIEND_CODE
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
       # Round 145: with these two set, every save is also written as a JSON file to the `saves` branch of that
       # repository and read back when the disk has lost it (server/src/github-saves.js). The token is a fine-grained
       # personal access token with "Contents: Read and write" on that one repository; the repository is owner/name.
