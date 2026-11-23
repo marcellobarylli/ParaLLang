@@ -30,7 +30,8 @@ Works on macOS, Linux and Windows. No Mac or iPhone is needed for the browser ga
    `npm run setup` installs dependencies, creates `.env`, picks `claude-cli` or `codex-cli` from what is on PATH,
    and checks the sign-in without spending any usage. It ends with `✓ Ready.` or names the one thing to fix.
    To choose the provider: `npm run setup -- claude-cli` or `npm run setup -- codex-cli`.
-4. **Start it:** `npm run dev`, leave it running, and have the user open **http://localhost:5173**.
+4. **Start it:** `npm run dev`, leave it running, and have the user open **http://localhost:5173** in a desktop
+   browser (it is 3D; Chrome, Firefox or Safari), then pick *The Journey 2* on the world map.
    The server is ready when the log shows `ParaLLang server listening on http://127.0.0.1:3001`.
    Check: `curl http://127.0.0.1:3001/api/health` returns `{"status":"ok",...}`.
 
@@ -64,10 +65,12 @@ More detail: the README's "Run locally" and "CLI troubleshooting".
 
 ## For the player: how to play
 
-- **The world map** opens first. Start at **Ta Prohm**, a jungle temple. The Kiln and *The Journey 2* (an endless
-  road with a lesson plan from beginner A1 to B1) are open too.
-- **Walk** to a site and talk to its character. Each has a small goal (greet them, order a coffee, …). Answer in the
-  target language; the more you manage, the more of it they speak.
+- **The world map** opens first. Pick **The Journey 2: Journathan Returns (again)**: an endless landscape with a
+  course from beginner (A1) to B1, one lesson per character you meet along the road. It is open from the start.
+  (Ta Prohm and The Kiln, two temple dungeons, are open too.)
+- **Each site** has a character with a lesson: a small goal (say hello, give your name, …). Answer in the target
+  language; the more you manage, the more of it they speak. **Continue** walks you to the next lesson ("On rails");
+  untick it to choose sites yourself on the **Map**. The **A1** chip at the top shows the whole course.
 - **Stuck?** The help buttons reveal a word's or the whole line's meaning, and your companion's card gives hints.
 - **The Spellbook** keeps every word you have met and brings them back for review at the right time.
 - **Accents:** on a Mac hold a letter (e, a) to get è, à; on Windows use the international keyboard or just type
