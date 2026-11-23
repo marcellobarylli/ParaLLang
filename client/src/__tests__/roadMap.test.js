@@ -76,7 +76,7 @@ describe('the map\'s picture', () => {
   test('a hill stands up out of the plain: its top is drawn above its foot, and it hides the ground behind it', () => {
     // A flat meadow with one square block of rock, 50 m high, in the middle.
     const inBlock = (x, z) => Math.abs(x) < 60 && Math.abs(z) < 60;
-    const terrain = { seed: 1, waterY: 0, heightAt: (x, z) => (inBlock(x, z) ? 50 : 2), biomeAt: (_x, _z, h) => (h > 36 ? 'highland' : 'meadow') };
+    const terrain = { seed: 1, waterY: 0, heightAt: (x, z) => (inBlock(x, z) ? 50 : 2), coverAt: (_x, _z, h) => (h > 36 ? 'highland' : 'meadow') };
     const view = createMapView([{ x: -200, z: -200, y: 2 }, { x: 200, z: 200, y: 2 }, { x: -200, z: 200, y: 2 }, { x: 200, z: -200, y: 2 }]);
     const picture = renderMap(terrain, view);
     const green = ([r, g, b]) => g > r && g > b;

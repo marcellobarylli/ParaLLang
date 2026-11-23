@@ -13,6 +13,21 @@ export const ROAD_PLACE = Object.freeze({ id: 'the_long_way', name: 'The Journey
 
 const fill = (text, name) => String(text).replaceAll('{name}', name);
 
+// Round 160 (issue #8): the legacy dungeons as nodes of the road. A unit of the curriculum ends at its gate, and the
+// gate stands in one of the old dungeons: the site of the road where a gate is offered is a dungeon's node, and
+// walking to it enters the dungeon. Which dungeon follows from the curriculum alone: the unit's place in it, taken
+// round LEGACY_ORDER (the first unit's gate is Ta Prohm, in the jungle the road starts in). Nothing is drawn at random.
+export const LEGACY_ORDER = Object.freeze(['ta_prohm', 'the_kiln', 'micromort_mountain']);
+/** The dungeon a unit's gate stands in ({ id, name, level, site: { id, name } }, the site being its start), or null. */
+export function legacyDungeonFor(dungeons, curriculum, unitId) {
+  const known = [...LEGACY_ORDER.filter((id) => dungeons?.has(id)), ...[...(dungeons?.keys() ?? [])].filter((id) => !LEGACY_ORDER.includes(id))];
+  const index = curriculum.units.findIndex((unit) => unit.id === unitId);
+  if (!known.length || index < 0) return null;
+  const dungeon = dungeons.get(known[index % known.length]);
+  const site = dungeon.sites.find((candidate) => candidate.id === dungeon.start) ?? dungeon.sites[0];
+  return Object.freeze({ id: dungeon.id, name: dungeon.name, level: dungeon.level, site: Object.freeze({ id: site.id, name: site.name }) });
+}
+
 /**
  * Round 155 (issue #3): what the character of a site knows of the world. The road's region has two pools of things
  * noticed: ordinary people at the A levels, people who have seen more from B1 on. The draw is fixed by the seed, the
@@ -39,7 +54,7 @@ function unitOf(curriculum, activity, currentUnitId) {
 }
 
 /** What the map and the site card say of an activity at a site, without building its conversation. */
-export function describeActivity({ curriculum, seed, node, step, activity, currentUnitId }) {
+export function describeActivity({ curriculum, seed, node, step, activity, currentUnitId, dungeons = null }) {
   const unit = unitOf(curriculum, activity, currentUnitId);
   const stage = curriculum.stages.find((candidate) => candidate.id === unit.stageId);
   const lesson = activity.lessonId ? curriculum.lessonsById.get(activity.lessonId)?.lesson : null;
@@ -50,7 +65,9 @@ export function describeActivity({ curriculum, seed, node, step, activity, curre
     : activity.kind === 'repair' ? `${lesson.title}, again`
       : activity.kind === 'checkpoint' ? `The gate: ${unit.title}` : 'Old words, mixed';
   const character = characterFor({ seed, node, step, role, ratio: stage.ratio, focus: { vocabulary: unit.title, grammar: unit.grammar } });
-  return { unit, stage, lesson, role, title, character };
+  // Round 160: a unit's gate stands in a legacy dungeon.
+  const dungeon = activity.kind === 'checkpoint' ? legacyDungeonFor(dungeons, curriculum, unit.id) : null;
+  return { unit, stage, lesson, role, title, character, dungeon };
 }
 
 /**
@@ -61,8 +78,8 @@ export function describeActivity({ curriculum, seed, node, step, activity, curre
  *   activity               { kind, lessonId?, unitId?, picks? }
  *   currentUnitId          the unit the learner is in (a review speaks at its stage's share of target language)
  */
-export function buildRoadDefinition({ curriculum, language, seed, node, step, activity, currentUnitId, knowledge = null }) {
-  const { unit, stage, lesson, title, character } = describeActivity({ curriculum, seed, node, step, activity, currentUnitId });
+export function buildRoadDefinition({ curriculum, language, seed, node, step, activity, currentUnitId, knowledge = null, dungeons = null }) {
+  const { unit, stage, lesson, title, character, dungeon } = describeActivity({ curriculum, seed, node, step, activity, currentUnitId, dungeons });
   const first = character.name.split(' ')[0];
   const teaches = activity.kind === 'lesson' || activity.kind === 'repair';
   const source = objectivesOf(curriculum, activity);
@@ -93,7 +110,8 @@ export function buildRoadDefinition({ curriculum, language, seed, node, step, ac
     ? unit.lessons.flatMap((other) => other.objectives.flatMap((objective) => objective.target_vocabulary_ids))
     : objectives.flatMap((objective) => objective.target_vocabulary_ids));
   for (const objective of objectives) for (const id of objective.target_vocabulary_ids) chipIds.add(id);
-  const place = placeName(seed, node);
+  // Round 160: a gate in a legacy dungeon is set at that dungeon's first site.
+  const place = dungeon ? `${dungeon.site.name}, ${dungeon.name}` : placeName(seed, node);
   return Object.freeze({
     encounter: Object.freeze({
       id: `road_${activity.kind}_${activity.lessonId ?? activity.unitId ?? 'mixed'}`,
@@ -115,13 +133,14 @@ export function buildRoadDefinition({ curriculum, language, seed, node, step, ac
     // What sets a road conversation apart from an authored one (learning-service.js reads these).
     scope: curriculum.vocabulary.entries,
     world: roadWorld(knowledge, language.code, { seed, node, step, cefr: stage.cefr }), // round 155
-    scene: Object.freeze({ name: place, place: ROAD_PLACE.name, seed }), // the seed gives the scene its weather (round 146)
+    scene: Object.freeze({ name: dungeon ? dungeon.site.name : place, place: dungeon ? dungeon.name : ROAD_PLACE.name, seed }), // the seed gives the scene its weather (round 146)
     teachingNote: teaches
       ? `This is a first lesson. The player has never seen the ${language.name} words the learning data asks for. Model each of them naturally in ${first}'s own lines before expecting it back; for this conversation that replaces the rule against using the words of an answer. Never tell the player what to say.`
       : null,
     road: Object.freeze({
       kind: activity.kind, title, unitId: unit.id, unitTitle: unit.title, stageId: stage.id, cefr: stage.cefr,
       lessonId: lesson?.id ?? null, place, role: character.species, description: character.appearance,
+      ...(dungeon ? { dungeon: { id: dungeon.id, name: dungeon.name } } : {}),
     }),
   });
 }

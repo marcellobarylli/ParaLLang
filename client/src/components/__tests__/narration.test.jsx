@@ -26,7 +26,7 @@ test('nothing is drawn for no passage', () => {
 });
 
 const road = (extra = {}) => ({
-  id: 'the_long_way', name: 'The Journey 2', seed: 7, step: 0, at: '0,0', here: { id: '0,0', name: 'The Patient Meadow', biome: 'meadow', at: [0, 0] },
+  id: 'the_long_way', name: 'The Journey 2', seed: 7, step: 0, at: '0,0', here: { id: '0,0', name: 'The Patient Meadow', cover: 'meadow', at: [0, 0] },
   current: null, trail: ['0,0'], cleared: [], frontier: [], rails: null, log: [], narration: null, ...extra,
 });
 const state = (extra = {}) => ({ road: road(), curriculum: null, display: {}, openRoadPanel() {}, leaveRoad() {}, setRails() {}, ...extra });
@@ -49,4 +49,28 @@ test('the travel caption tells the way taken until the camera is there', () => {
 test('a conversation\'s last word is the narrator\'s', () => {
   render(<RoadResolved state={state({ roadResult: null })} encounter={{ resolvedMessage: 'Barnaby stamps something, possibly you, and waves you on.', character: { name: 'Barnaby Thrupp' } }} />);
   expect(screen.getByText(/Barnaby stamps something/).className).toBe('narrative');
+});
+
+// Round 160 (issue #8): biomes, and the legacy dungeons as nodes of the road.
+test('a place has its biome under its name, with how far the unit\'s gate is and the dungeon it stands in', () => {
+  const here = { id: '0,0', name: 'The Patient Meadow', cover: 'meadow', biome: 'jungle', biomeName: 'Jungle', at: [0, 0], dungeon: null };
+  const { rerender } = render(<HubCard state={state({ road: road({ here, gate: { unitTitle: 'Hello and goodbye', hops: 3, dungeon: { id: 'ta_prohm', name: 'Ta Prohm' } } }) })} />);
+  expect(screen.getByText('Jungle · Ta Prohm in 3 conversations or more')).toBeTruthy();
+  rerender(<HubCard state={state({ road: road({ here, gate: { unitTitle: 'Hello and goodbye', hops: 0, dungeon: { id: 'ta_prohm', name: 'Ta Prohm' } } }) })} />);
+  expect(screen.getByText('Jungle · Ta Prohm is near')).toBeTruthy();
+  // Standing in the dungeon: the place is the dungeon's first site.
+  rerender(<HubCard state={state({ road: road({ here: { ...here, dungeon: { id: 'ta_prohm', name: 'Ta Prohm', siteName: 'The Face Gate' } } }) })} />);
+  expect(screen.getByRole('heading', { name: 'Ta Prohm: The Face Gate' })).toBeTruthy();
+  expect(screen.queryByText(/Jungle/)).toBeNull();
+});
+
+test('the way on to a legacy dungeon\'s node says so: "Enter Ta Prohm"', () => {
+  const offer = (extra = {}) => ({ kind: 'checkpoint', title: 'The gate: Hello and goodbye', unitId: 'greetings', unitTitle: 'Hello and goodbye', cefr: 'A1', why: null, dungeon: null, character: { name: 'Osbert Hinge', role: 'Gatekeeper of the Next Bit', description: 'A tall, folded person.', hue: 0.2 }, ...extra });
+  const site = (extra) => ({ id: '1,0', name: 'The Lower Ford', cover: 'meadow', biome: 'jungle', at: [88, 0], from: '0,0', way: 'path', recommended: true, offer: offer(extra) });
+  const withGate = road({ frontier: [site({ dungeon: { id: 'ta_prohm', name: 'Ta Prohm', siteName: 'The Face Gate' } })], rails: '1,0' });
+  const { rerender } = render(<HubCard state={state({ road: withGate, roadContinue() {} })} />);
+  expect(screen.getByRole('button', { name: 'Enter Ta Prohm' })).toBeTruthy();
+  expect(screen.getByText(/in Ta Prohm, beyond The Lower Ford\./)).toBeTruthy();
+  rerender(<HubCard state={state({ road: road({ frontier: [site()], rails: '1,0' }), roadContinue() {} })} />);
+  expect(screen.getByRole('button', { name: 'Continue' })).toBeTruthy();
 });

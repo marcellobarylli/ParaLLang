@@ -72,15 +72,15 @@ test('every passage that holds a text leads up to it and says nothing of what it
 });
 
 test('a harder text waits for its stage, and a passage may wait for a number of conversations', () => {
-  const arrive = (facts) => ({ event: 'road_arrive', way: 'path', biome: 'meadow', kind: 'lesson', cefr: 'A1', step: 0, ...facts });
+  const arrive = (facts) => ({ event: 'road_arrive', way: 'path', cover: 'meadow', kind: 'lesson', cefr: 'A1', step: 0, ...facts });
   const told = (facts, have = {}) => selectPassage(it.passages, arrive(facts), { told: have })?.id;
-  assert.equal(told({ biome: 'forest', step: 1 }), 'path_forest');
-  assert.equal(told({ biome: 'forest', step: 2 }), 'truth_forest_edge');
-  assert.equal(told({ biome: 'forest', step: 9 }, { truth_forest_edge: 'x' }), 'path_forest');
+  assert.equal(told({ cover: 'forest', step: 1 }), 'path_forest');
+  assert.equal(told({ cover: 'forest', step: 2 }), 'truth_forest_edge');
+  assert.equal(told({ cover: 'forest', step: 9 }, { truth_forest_edge: 'x' }), 'path_forest');
   assert.equal(told({ step: 4 }), 'path_meadow');
   assert.equal(told({ step: 5 }), 'truth_milestone');
-  assert.equal(told({ biome: 'highland', cefr: 'A2', step: 50 }, { truth_path_a2: 'x' }), 'path_highland');
-  assert.equal(told({ biome: 'highland', cefr: 'B1', step: 90 }, { truth_path_b1: 'x' }), 'truth_highland_b1');
+  assert.equal(told({ cover: 'highland', cefr: 'A2', step: 50 }, { truth_path_a2: 'x' }), 'path_highland');
+  assert.equal(told({ cover: 'highland', cefr: 'B1', step: 90 }, { truth_path_b1: 'x' }), 'truth_highland_b1');
   for (const passage of it.passages.filter((entry) => entry.when.cefr)) {
     const levels = truthIds(passage.text).map((id) => it.truths.get(id).level);
     assert.ok(levels.every((level) => level <= passage.when.cefr), `${passage.id} is not harder than its stage`);
@@ -94,7 +94,7 @@ test('on the road: the first forest after two conversations tells the text; the 
   for (let walked = 0; walked < 60 && !found; walked += 1) {
     await talkHere(runtime, learnerId);
     const view = (await road(runtime, learnerId)).data.road;
-    const moved = (await moveTo(runtime, learnerId, (view.frontier.find((site) => site.biome === 'forest') ?? view.frontier.find((site) => site.recommended) ?? view.frontier[0]).id)).data;
+    const moved = (await moveTo(runtime, learnerId, (view.frontier.find((site) => site.cover === 'forest') ?? view.frontier.find((site) => site.recommended) ?? view.frontier[0]).id)).data;
     if (moved.road.narration?.segments.some((segment) => segment.kind === 'truth')) found = moved;
   }
   assert.ok(found, 'a passage with a text was told within sixty conversations');

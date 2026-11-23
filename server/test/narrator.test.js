@@ -38,15 +38,15 @@ test('the written passages keep the voice: told to "you", in the present, and no
 
 test('choosing a passage: a once-only one first, then the most particular, and the place picks among equals', () => {
   const { passages } = content;
-  assert.equal(matches(byId('ford_thread'), { event: 'road_arrive', way: 'ford', biome: 'forest' }), true);
+  assert.equal(matches(byId('ford_thread'), { event: 'road_arrive', way: 'ford', cover: 'forest' }), true);
   assert.equal(matches(byId('ford_thread'), { event: 'road_arrive', way: 'path' }), false);
   assert.equal(selectPassage(passages, { event: 'road_enter' }).id, 'road_first_step');
   assert.equal(selectPassage(passages, { event: 'road_enter' }, { told: { road_first_step: '2026-01-01T00:00:00.000Z' } }), null);
   // A path through a forest has its own passage; a path through water (no passage of its own) gets a general one.
-  assert.equal(selectPassage(passages, { event: 'road_arrive', way: 'path', biome: 'forest' }).id, 'path_forest');
+  assert.equal(selectPassage(passages, { event: 'road_arrive', way: 'path', cover: 'forest' }).id, 'path_forest');
   const general = ['path_bends', 'path_unmended', 'path_host', 'path_milestone'];
-  assert.deepEqual([0, 0.26, 0.51, 0.99].map((pick) => selectPassage(passages, { event: 'road_arrive', way: 'path', biome: 'water' }, { pick }).id), general);
-  assert.deepEqual([0, 0.6].map((pick) => selectPassage(passages, { event: 'road_arrive', way: 'ferry', biome: 'shore' }, { pick }).id), ['ferry_rope', 'ferry_sky']);
+  assert.deepEqual([0, 0.26, 0.51, 0.99].map((pick) => selectPassage(passages, { event: 'road_arrive', way: 'path', cover: 'water' }, { pick }).id), general);
+  assert.deepEqual([0, 0.6].map((pick) => selectPassage(passages, { event: 'road_arrive', way: 'ferry', cover: 'shore' }, { pick }).id), ['ferry_rope', 'ferry_sky']);
   assert.equal(selectPassage(passages, { event: 'no_such_event' }), null);
   assert.equal(selectPassage([], { event: 'road_enter' }), null);
 });
@@ -71,7 +71,7 @@ test('the road: the first step is told once, each arrival has its passage, and t
   const passage = byId(moved.narration.id);
   assert.equal(passage.when.event, 'road_arrive');
   assert.equal(passage.when.way, target.way);
-  if (passage.when.biome) assert.equal(passage.when.biome, target.biome);
+  if (passage.when.cover) assert.equal(passage.when.cover, target.cover);
   assert.equal((await road(runtime, learnerId)).data.road.narration.id, moved.narration.id);
   const save = await runtime.storage.load(learnerId);
   assert.deepEqual(Object.keys(save.told).sort(), ['road_first_step', moved.narration.id].sort());

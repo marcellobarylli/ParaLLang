@@ -37,7 +37,7 @@ test('the landscape is a pure function of its seed, with dry land at the start a
   assert.deepEqual(a.treesIn(3, -2), b.treesIn(3, -2));
   for (const tree of a.treesIn(3, -2)) {
     assert.ok(tree.x >= 3 * TERRAIN.chunk && tree.x < 4 * TERRAIN.chunk && tree.z >= -2 * TERRAIN.chunk && tree.z < -TERRAIN.chunk, 'a tree stands in its own chunk');
-    assert.ok(tree.y >= TERRAIN.waterY && ['fir', 'round'].includes(tree.kind));
+    assert.ok(tree.y >= TERRAIN.waterY && ['fir', 'round', 'palm', 'broad', 'shrub'].includes(tree.kind));
   }
 });
 

@@ -202,6 +202,8 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .revelation { margin: .8rem .9rem; padding: .8rem .9rem; border: 1px solid rgb(232 163 23 / .45); border-left: 3px solid #e8a317; background: rgb(0 0 0 / .32); }
 .revelation .narration { margin: 0; }
 .revelation .narration-truth { display: block; margin-top: .55rem; font-size: 1.06em; line-height: 1.5; }
+/* Round 160 (issue #8): the biome under a place's name, and a legacy dungeon's node on the road's map. */
+.biome-line { margin: 0; color: #a9c79a; font-size: .85rem; letter-spacing: .04em; }
 /* Round 156: the narrator's written passages, on a card or in the travel caption. */
 .narration { margin: .2rem 0 .6rem; }
 .caption .narration { display: block; margin: 0; }
@@ -389,3 +391,6 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .guide-steps ul { padding-left: 1.1rem; margin-top: .25rem; display: grid; gap: .2rem; color: #d9dbd3; }
 .guide-steps code { background: #151615; padding: 0 .25em; border: 1px solid #000; overflow-wrap: anywhere; }
 .guide-steps a { color: var(--link); }
+/* Round 160: a legacy dungeon's node on the road's map: a pale stepped gate, gold when picked. */
+.map-ahead.dungeon .sign, .map-ahead.dungeon.kind-checkpoint .sign { fill: #d8d2bc; stroke: #101110; stroke-width: .5; }
+.map-ahead.dungeon.picked .sign, .map-ahead.dungeon.kind-checkpoint.picked .sign { fill: var(--gold); }

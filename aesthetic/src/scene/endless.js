@@ -10,7 +10,7 @@ import { assembleWorld, createWorldKit } from './world.js';
 // nearest first, a few per call, and drops those left behind, so the level is as large as the walk and costs the same
 // at every step.
 //
-// The package does not know the landscape: the host passes `terrain` ({ heightAt, biomeAt, treesIn, waterY }), the
+// The package does not know the landscape: the host passes `terrain` ({ heightAt, coverAt, treesIn, waterY }), the
 // pure functions of server/src/road/terrain.js, so the server's graph and this ground always agree. Trees are very
 // simple on purpose: a trunk and a cone or two (a fir), or a trunk and a faceted ball (a round tree).
 
@@ -22,8 +22,8 @@ export const ENDLESS = Object.freeze({
 });
 
 const SAND = [1.5, 1.22, 0.9]; // a tint over the grass texture, as the Angkor level tints its dirt
-const BIOME_TINT = { shore: SAND, meadow: [1.06, 1.04, 0.86], forest: [0.82, 0.92, 0.74], highland: [1, 1, 1], snow: [1, 1, 1], water: [0.9, 0.86, 0.72] };
-const BIOME_KEY = { shore: 'ground', meadow: 'ground', forest: 'ground', water: 'ground', highland: 'rock', snow: 'snow' };
+const COVER_TINT = { shore: SAND, meadow: [1.06, 1.04, 0.86], forest: [0.82, 0.92, 0.74], highland: [1, 1, 1], snow: [1, 1, 1], water: [0.9, 0.86, 0.72] };
+const COVER_KEY = { shore: 'ground', meadow: 'ground', forest: 'ground', water: 'ground', highland: 'rock', snow: 'snow' };
 
 function geometryFrom({ positions, normals, uvs, colors }) {
   const g = new BufferGeometry();
@@ -84,6 +84,35 @@ function ball(out, x, y, z, radius, height, color, turn = 0) {
   }
 }
 
+// Round 160 (issue #8): the trees of the other biomes, as simple as the first two.
+// A palm: a thin leaning trunk and a star of drooping fronds, each one triangle.
+function palm(bark, leaves, x, y, z, height, color, turn, detail) {
+  const lean = 0.12 * height;
+  const [tx, tz] = [x + Math.cos(turn) * lean, z + Math.sin(turn) * lean];
+  if (detail) {
+    const r = 0.16 + height * 0.006;
+    const base = [[x - r, y - 0.2, z], [x + r, y - 0.2, z], [x, y - 0.2, z + r]];
+    const top = [tx, y + height, tz];
+    for (let k = 0; k < 3; k += 1) tri(bark, base[(k + 1) % 3], base[k], top, [0.66, 0.56, 0.42].map((v) => v * (0.85 + 0.15 * k)), [[1, 0], [0, 0], [0.5, 1]]);
+  }
+  const fronds = detail ? 6 : 4;
+  const reach = height * 0.34;
+  for (let k = 0; k < fronds; k += 1) {
+    const a = turn + (k / fronds) * Math.PI * 2;
+    const [ax, az] = [Math.cos(a), Math.sin(a)];
+    const [sx, sz] = [-az * reach * 0.22, ax * reach * 0.22];
+    const crown = [tx, y + height, tz];
+    const tip = [tx + ax * reach, y + height - reach * 0.42, tz + az * reach];
+    const shade = color.map((v) => v * (0.82 + 0.18 * (k % 3) / 2));
+    tri(leaves, [tx + sx, y + height + 0.05, tz + sz], tip, [tx - sx, y + height + 0.05, tz - sz], shade);
+    tri(leaves, crown, [tx - sx, y + height + 0.05, tz - sz], tip, shade.map((v) => v * 0.8));
+  }
+}
+// A broad-leaved tree of the jungle: a tall trunk and a wide, flat crown.
+function broad(leaves, x, y, z, height, color, turn) {
+  ball(leaves, x, y + height * 0.78, z, height * 0.5, height * 0.36, color, turn);
+}
+
 /** The meshes of one chunk: ground by material, water where the ground dips under it, and the chunk's trees. */
 export function buildChunk(terrain, materials, cx, cz, { detail = true } = {}) {
   const { chunk, cells } = ENDLESS;
@@ -110,9 +139,11 @@ export function buildChunk(terrain, materials, cx, cz, { detail = true } = {}) {
       const corners = [[i, j], [i, j + 1], [i + 1, j + 1], [i + 1, j]];
       const middle = (h(i, j) + h(i + 1, j) + h(i, j + 1) + h(i + 1, j + 1)) / 4;
       lowest = Math.min(lowest, h(i, j), h(i + 1, j), h(i, j + 1), h(i + 1, j + 1));
-      const biome = terrain.biomeAt(x0 + (i + 0.5) * size, z0 + (j + 0.5) * size, middle);
-      const out = grounds[BIOME_KEY[biome]];
-      const tint = BIOME_TINT[biome];
+      const [mx, mz] = [x0 + (i + 0.5) * size, z0 + (j + 0.5) * size];
+      const cover = terrain.coverAt(mx, mz, middle);
+      const out = grounds[COVER_KEY[cover]];
+      // Round 160: the grass takes the tint of the biome it grows in (a terrain without biomes keeps the first look).
+      const tint = terrain.biomes?.[terrain.biomeAt(mx, mz)]?.tint?.[cover] ?? COVER_TINT[cover];
       // A chequer of two shades, the faceted look of a PS1 field.
       const shade = (((cx * cells + i) + (cz * cells + j)) & 1 ? 0.94 : 1.03) * (middle < terrain.waterY ? 0.7 : 1);
       for (const k of [0, 1, 2, 0, 2, 3]) {
@@ -138,7 +169,19 @@ export function buildChunk(terrain, materials, cx, cz, { detail = true } = {}) {
   const leaves = bucket();
   for (const tree of terrain.treesIn(cx, cz)) {
     const { x, z, y, height } = tree;
-    const green = tree.kind === 'fir' ? [0.5 + 0.2 * tree.tint, 0.82 + 0.18 * tree.tint, 0.6 + 0.2 * tree.tint] : [0.86 + 0.3 * tree.tint, 1.05, 0.62 + 0.3 * tree.tint];
+    const green = tree.kind === 'fir' ? [0.5 + 0.2 * tree.tint, 0.82 + 0.18 * tree.tint, 0.6 + 0.2 * tree.tint]
+      : tree.kind === 'palm' ? [0.66 + 0.2 * tree.tint, 1.08, 0.5 + 0.16 * tree.tint]
+        : tree.kind === 'broad' ? [0.56 + 0.22 * tree.tint, 0.96 + 0.1 * tree.tint, 0.5 + 0.18 * tree.tint]
+          : tree.kind === 'shrub' ? [1.0 + 0.2 * tree.tint, 1.02, 0.6 + 0.2 * tree.tint]
+            : [0.86 + 0.3 * tree.tint, 1.05, 0.62 + 0.3 * tree.tint];
+    // Round 160: the jungle's and the steppe's trees.
+    if (tree.kind === 'palm') { palm(bark, leaves, x, y, z, height, green, tree.tint * 6, detail); continue; }
+    if (tree.kind === 'shrub') { ball(leaves, x, y + height * 0.3, z, height * 0.62, height * 0.9, green, tree.tint * 6); continue; }
+    if (tree.kind === 'broad') {
+      if (detail) trunk(bark, x, y - 0.2, z, 0.3 + height * 0.014, height * 0.66, 4, [0.62, 0.54, 0.44]);
+      broad(leaves, x, y, z, height, green, tree.tint * 6);
+      continue;
+    }
     if (detail) trunk(bark, x, y - 0.2, z, 0.26 + height * 0.012, height * 0.42, 4, [0.72, 0.62, 0.52]);
     if (tree.kind === 'fir') {
       cone(leaves, x, y + height * 0.22, z, height * 0.3, height * 0.5, 6, green, tree.tint * 6);
@@ -249,6 +292,26 @@ export function createStandIn(materials, { hue = 0.1 } = {}) {
   group.name = 'stand-in';
   group.add(new Mesh(geometryFrom(data), materials.plain));
   return { group, focus: 1.55, height: 2.02, triangles: data.positions.length / 9 };
+}
+
+/**
+ * Round 160 (issue #8): the mark of a legacy dungeon's node, seen from the road: a ruined gate about 9 m tall, two
+ * leaning piers, a lintel and a stepped top, in weathered stone. One mesh in the plain material.
+ */
+export function createLandmark(materials) {
+  const data = bucket();
+  const stone = [0.6, 0.6, 0.52];
+  trunk(data, -1.9, -0.3, 0, 0.95, 6.4, 4, stone);
+  trunk(data, 1.9, -0.3, 0, 0.95, 6.4, 4, stone.map((v) => v * 0.92));
+  ball(data, 0, 6.2, 0, 3.3, 1.5, stone.map((v) => v * 1.06), Math.PI / 4);
+  ball(data, 0, 7.3, 0, 2.2, 1.4, stone.map((v) => v * 0.96), Math.PI / 4);
+  cone(data, 0, 7.9, 0, 1.2, 1.9, 4, stone.map((v) => v * 1.1), Math.PI / 4);
+  // Roots down one pier, as the jungle would have it.
+  trunk(data, -2.5, -0.3, 0.7, 0.3, 5.2, 3, [0.46, 0.42, 0.3]);
+  const group = new Group();
+  group.name = 'landmark';
+  group.add(new Mesh(geometryFrom(data), materials.plain));
+  return { group, focus: 3.2, height: 9.8, triangles: data.positions.length / 9 };
 }
 
 /** A cairn for a site whose conversation is finished: three stacked stones. */

@@ -279,6 +279,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       language: null,
       dungeon,
       atlas,
+      legacy: Object.fromEntries(bundled), // round 160: the bundled dungeons by id: the road's gates are played in them
       enterable: [...bundled.keys()], // round 133: the dungeons this client holds; a place opens only one of these
       runs: {}, // round 133: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
       progress: null,

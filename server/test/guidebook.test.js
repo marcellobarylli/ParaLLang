@@ -24,9 +24,9 @@ test('which entries an event enters: those that fit and are not had yet', () => 
   const ids = (event, have) => entriesFor(content.guide, event, have).map((entry) => entry.id);
   assert.deepEqual(ids({ event: 'road_enter' }), ['the_road']);
   assert.deepEqual(ids({ event: 'road_enter' }, { the_road: { at: 'x', read: true } }), []);
-  assert.deepEqual(ids({ event: 'road_arrive', way: 'path', biome: 'meadow', kind: 'lesson' }), []);
-  assert.deepEqual(ids({ event: 'road_arrive', way: 'ford', biome: 'shore', kind: 'review' }), ['second_tellings']);
-  assert.deepEqual(ids({ event: 'road_arrive', way: 'path', biome: 'meadow', kind: 'checkpoint' }), ['the_gate']);
+  assert.deepEqual(ids({ event: 'road_arrive', way: 'path', cover: 'meadow', kind: 'lesson' }), []);
+  assert.deepEqual(ids({ event: 'road_arrive', way: 'ford', cover: 'shore', kind: 'review' }), ['second_tellings']);
+  assert.deepEqual(ids({ event: 'road_arrive', way: 'path', cover: 'meadow', kind: 'checkpoint' }), ['the_gate']);
   assert.deepEqual(ids({ event: 'site_arrive', dungeon: 'the_kiln', site: 'library' }), ['talked_past']);
 });
 

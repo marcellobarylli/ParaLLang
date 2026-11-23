@@ -17,7 +17,7 @@ const game = await openGame({
     for (let walked = 0; walked < 60 && !told; walked += 1) {
       await talkHere(runtime, learnerId);
       const view = (await road(runtime, learnerId)).data.road;
-      const moved = (await moveTo(runtime, learnerId, (view.frontier.find((site) => site.biome === 'forest') ?? view.frontier.find((site) => site.recommended) ?? view.frontier[0]).id)).data;
+      const moved = (await moveTo(runtime, learnerId, (view.frontier.find((site) => site.cover === 'forest') ?? view.frontier.find((site) => site.recommended) ?? view.frontier[0]).id)).data;
       if (moved.road.narration?.segments.some((segment) => segment.kind === 'truth')) told = moved.road.narration;
     }
     return learnerId;

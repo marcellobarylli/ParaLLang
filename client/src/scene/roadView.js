@@ -6,7 +6,7 @@
 // The landscape and its graph are the server's own functions (server/src/road/terrain.js and graph.js), bundled
 // here: the seed the server sends is all the client needs to stand on the same ground.
 import { Group, PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
-import { ENDLESS, atmosphereFor, createCairn, createEndlessWorld, createPS1Pipeline, createStandIn, createTrack, createWeatherEffects } from '@parallang/aesthetic';
+import { ENDLESS, atmosphereFor, createCairn, createEndlessWorld, createLandmark, createPS1Pipeline, createStandIn, createTrack, createWeatherEffects } from '@parallang/aesthetic';
 import { createTerrain } from '../../../server/src/road/terrain.js';
 import { createGraph } from '../../../server/src/road/graph.js';
 import { currentWeather, onWeatherPin, pinWeather } from './weatherClock.js';
@@ -105,7 +105,8 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
       figures.set(id, { ...made, x: node.x, z: node.z, ground: node.y, hop: 0, kind });
     };
     if (road.current) place(road.at, createStandIn(world.materials, { hue: road.current.character.hue }), 'figure');
-    for (const site of road.frontier) place(site.id, createStandIn(world.materials, { hue: site.offer.character.hue }), 'figure');
+    // Round 160: a site ahead that is a legacy dungeon's node shows the dungeon's gate, not a figure.
+    for (const site of road.frontier) place(site.id, site.offer.dungeon ? createLandmark(world.materials) : createStandIn(world.materials, { hue: site.offer.character.hue }), site.offer.dungeon ? 'landmark' : 'figure');
     for (const id of road.cleared) place(id, createCairn(world.materials), 'cairn');
     const laid = new Set();
     const lay = (a, b) => {

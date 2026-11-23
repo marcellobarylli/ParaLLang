@@ -318,6 +318,12 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   character utters once the encounter is completed. The narrator tells it in the finished conversation, before the
   last word, and the guidebook keeps it. Marginalia, Bambieshart and Errata have one each.
   `node client/scripts/revelation-check.mjs` plays Bambieshart's.
+  From round 160 the endless landscape has biomes (`BIOMES` in `server/src/road/terrain.js`: jungle, woodland,
+  steppe; the road always starts in the jungle), and what was called a point's biome (shore, meadow, forest, …) is
+  its `cover`. A unit's gate stands in a legacy dungeon: the site of the road where the gate is offered is that
+  dungeon's node (`legacyDungeonFor` in `server/src/road/encounters.js`: the units go round Ta Prohm, The Kiln and
+  Micromort Mountain in order), the map and the way on read "Enter Ta Prohm", and the gate's conversation is played
+  in the dungeon's own level. `node client/scripts/dungeon-node-check.mjs` plays the first unit's.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

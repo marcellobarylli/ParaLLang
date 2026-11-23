@@ -29,8 +29,10 @@ export function selectPassage(passages, event, { told = {}, pick = 0 } = {}) {
   if (first) return first;
   const lasting = fitting.filter((passage) => !passage.once);
   if (!lasting.length) return null;
-  const most = Math.max(...lasting.map((passage) => Object.keys(passage.when).length));
-  const best = lasting.filter((passage) => Object.keys(passage.when).length === most);
+  // Round 160: a passage that asks for a dungeon is more particular than any that does not.
+  const weight = (passage) => Object.keys(passage.when).length + ('dungeon' in passage.when ? 10 : 0);
+  const most = Math.max(...lasting.map(weight));
+  const best = lasting.filter((passage) => weight(passage) === most);
   return best[Math.min(best.length - 1, Math.floor(Math.max(0, pick) * best.length))];
 }
 

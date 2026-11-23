@@ -19,6 +19,11 @@ export const KIND = Object.freeze({
   repair: { label: 'Again', mark: 'A', what: 'A lesson again' },
   checkpoint: { label: 'Gate', mark: 'G', what: 'The gate of the unit, without hints' },
 });
+/** Round 160: " · Ta Prohm in 3 conversations or more": how far the unit's gate is, and the dungeon it stands in. */
+export function gateLine(gate) {
+  if (!gate?.dungeon) return '';
+  return gate.hops > 0 ? ` · ${gate.dungeon.name} in ${gate.hops} ${gate.hops === 1 ? 'conversation' : 'conversations'} or more` : ` · ${gate.dungeon.name} is near`;
+}
 const WAY = Object.freeze({ path: 'a path', ford: 'a ford through water', pass: 'a steep pass', ferry: 'a ferry across the water' });
 const percent = (value) => `${Math.round((value ?? 0) * 100)} %`;
 const firstName = (character) => character?.name?.split(' ')[0] ?? 'them';
@@ -58,7 +63,7 @@ function OfferLine({ offer }) {
   return (
     <span className="site-text">
       <strong><span className={`kind-tag kind-${offer.kind}`}>{KIND[offer.kind].label}</span> {offer.title}</strong>
-      <small>{offer.character.name}, {offer.character.role} · {offer.unitTitle}</small>
+      <small>{offer.character.name}, {offer.character.role} · {offer.unitTitle}{offer.dungeon ? ` · in ${offer.dungeon.name}` : ''}</small>
     </span>
   );
 }
@@ -102,8 +107,9 @@ function WayOn({ state }) {
   if (!rails || !next) return <WaysAhead state={state} />;
   return (
     <>
-      <p className="next-line">Next: <strong>{next.offer.title}</strong> ({KIND[next.offer.kind].what.toLowerCase()}) with {next.offer.character.name}, {next.offer.character.role}, at {next.name}.</p>
-      <button type="button" className="primary-button big-button" onClick={state.roadContinue} disabled={busy}>{state.roadTravelling ? 'Setting off…' : 'Continue'}</button>
+      <p className="next-line">Next: <strong>{next.offer.title}</strong> ({KIND[next.offer.kind].what.toLowerCase()}) with {next.offer.character.name}, {next.offer.character.role}, {next.offer.dungeon ? `in ${next.offer.dungeon.name}, beyond ${next.name}` : `at ${next.name}`}.</p>
+      {/* Round 160: the next site is a legacy dungeon's node: the way on enters the dungeon. */}
+      <button type="button" className="primary-button big-button" onClick={state.roadContinue} disabled={busy}>{state.roadTravelling ? 'Setting off…' : next.offer.dungeon ? `Enter ${next.offer.dungeon.name}` : 'Continue'}</button>
     </>
   );
 }
@@ -128,8 +134,10 @@ export function HubCard({ state }) {
   return (
     <section className="card road-card" aria-label={road.here.name}>
       <p className="eyebrow">{positionLine(curriculum)}</p>
-      <h2>{road.here.name}</h2>
-      <WeatherLine seed={road.seed} />
+      {/* Round 160: in a legacy dungeon the place is the dungeon's; on the road it has its biome beside its name. */}
+      <h2>{road.here.dungeon ? `${road.here.dungeon.name}: ${road.here.dungeon.siteName}` : road.here.name}</h2>
+      {!road.here.dungeon && road.here.biomeName && <p className="biome-line">{road.here.biomeName}{gateLine(road.gate)}</p>}
+      {!road.here.dungeon && <WeatherLine seed={road.seed} />}
       {/* Round 156: what the narrator said of the arrival here. */}
       <Narration narration={road.narration} />
       <GuideNote note={state.guideNote} onOpen={state.openGuidebook} />
@@ -161,7 +169,7 @@ export function RoadCaption({ state }) {
   const { road, roadArrived, encounterLoading, roadError } = state;
   const waiting = road?.current;
   if (roadError) return <section className="caption caption-problem" role="alert"><span>{roadError}</span></section>;
-  const text = roadArrived && encounterLoading ? `${firstName(waiting?.character)} is getting ready to talk…` : `On the way to ${road?.here?.name ?? 'the next site'}…`;
+  const text = roadArrived && encounterLoading ? `${firstName(waiting?.character)} is getting ready to talk…` : road?.here?.dungeon ? `Entering ${road.here.dungeon.name}…` : `On the way to ${road?.here?.name ?? 'the next site'}…`;
   // Round 156: while the camera walks, the narrator tells the way taken.
   return <section className="caption" role="status">{!roadArrived && <Narration narration={road?.narration} />}<span>{text}</span></section>;
 }
@@ -244,27 +252,30 @@ export function RoadMap({ state, onClose }) {
           {sites.trail.filter((site) => site.id !== road.at).map((site, index) => <polygon key={`s${index}${site.id}`} className={`map-site ${cleared.has(site.id) ? 'cleared' : 'visited'}`} points={MAP_TILE(1.5)} transform={at(site)} />)}
           {sites.here && <g className="map-here" transform={at(sites.here)}><polygon className="ring" points={MAP_TILE(4.2)} /><polygon points={MAP_TILE(2.3)} /><line y2="-5" /><rect x="-1.1" y="-7.2" width="2.2" height="2.2" /></g>}
           {road.frontier.map((site, index) => sites.ahead[index] && (
-            <g key={site.id} className={`map-ahead kind-${site.offer.kind}${site.id === picked ? ' picked' : ''}${site.recommended ? ' rails' : ''}`} transform={at(sites.ahead[index])}
-              role="button" tabIndex="0" aria-label={`${site.name}: ${KIND[site.offer.kind].label}, ${site.offer.title}`} aria-pressed={site.id === picked}
+            <g key={site.id} className={`map-ahead kind-${site.offer.kind}${site.offer.dungeon ? ' dungeon' : ''}${site.id === picked ? ' picked' : ''}${site.recommended ? ' rails' : ''}`} transform={at(sites.ahead[index])}
+              role="button" tabIndex="0" aria-label={`${site.offer.dungeon ? `${site.offer.dungeon.name}, beyond ${site.name}` : site.name}: ${KIND[site.offer.kind].label}, ${site.offer.title}`} aria-pressed={site.id === picked}
               onClick={() => setPicked(site.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setPicked(site.id); } }}>
               <rect className="hit" x="-4.4" y="-10.4" width="8.8" height="12" />
               <ellipse className="foot" rx="2" ry="1.1" />
               <line className="stem" y2="-3.2" />
-              <rect className="sign" x="-2.9" y="-9" width="5.8" height="5.8" />
-              <text y="-4.7">{KIND[site.offer.kind].mark}</text>
+              {/* Round 160: a legacy dungeon's node is a gate with a stepped top, not a sign. */}
+              {site.offer.dungeon
+                ? <polygon className="sign" points="-3.6,-3.2 -3.6,-8.4 -2,-8.4 -2,-10 -0.9,-10 -0.9,-11.4 0.9,-11.4 0.9,-10 2,-10 2,-8.4 3.6,-8.4 3.6,-3.2 1.3,-3.2 1.3,-6.2 -1.3,-6.2 -1.3,-3.2" />
+                : <rect className="sign" x="-2.9" y="-9" width="5.8" height="5.8" />}
+              {!site.offer.dungeon && <text y="-4.7">{KIND[site.offer.kind].mark}</text>}
             </g>
           ))}
         </svg>
       </div>
       <p className="map-legend"><small>
-        <span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate. The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
+        <span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate, which stands in an old place (the stepped gate on the map).{gateLine(road.gate)} The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
       </small></p>
       {chosen && (
         <section className="map-choice" aria-live="polite">
           <OfferLine offer={chosen.offer} />
           <p className="description">{chosen.offer.character.description}</p>
-          <small className="way-why">{chosen.name}, by {WAY[chosen.way] ?? 'a way'}{chosen.offer.why ? ` · ${chosen.offer.why}` : ''}</small>
-          <button type="button" className="primary-button big-button" onClick={() => state.roadTravel(chosen.id)} disabled={busy || state.encounter?.state === 'ongoing'}>Walk here</button>
+          <small className="way-why">{chosen.offer.dungeon ? `${chosen.offer.dungeon.name}, beyond ${chosen.name}` : chosen.name}, by {WAY[chosen.way] ?? 'a way'}{chosen.offer.why ? ` · ${chosen.offer.why}` : ''}</small>
+          <button type="button" className="primary-button big-button" onClick={() => state.roadTravel(chosen.id)} disabled={busy || state.encounter?.state === 'ongoing'}>{chosen.offer.dungeon ? `Enter ${chosen.offer.dungeon.name}` : 'Walk here'}</button>
           {state.encounter?.state === 'ongoing' && <small className="way-why">Finish or leave your conversation first.</small>}
         </section>
       )}

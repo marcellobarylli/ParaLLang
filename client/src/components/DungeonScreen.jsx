@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import DungeonView from './DungeonView.jsx';
 import RoadView from './RoadView.jsx';
 import { CurriculumChip, CurriculumPanel, HubCard, RoadCaption, RoadMap, RoadResolved, useWeather } from './Road.jsx';
@@ -480,6 +480,21 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const onRoad = state.mode === 'road';
   const roadTalking = onRoad && state.roadPhase === 'encounter';
   const roadEncounter = roadTalking && state.encounter?.road ? state.encounter : null;
+  // Round 160 (issue #8): on the road a unit's gate stands in a legacy dungeon. While the player stands at that
+  // dungeon's node the level behind the road's panels is the dungeon's own, at its first site (loaded only now: the
+  // dungeon's host is its own chunk). The gate's keeper is a character without a model, so the site shows its beacon.
+  const legacyId = onRoad ? state.road?.here?.dungeon?.id ?? null : null;
+  const legacy = useMemo(() => {
+    const bundle = legacyId ? state.legacy?.[legacyId] : null;
+    if (!bundle) return null;
+    const startIndex = Math.max(0, bundle.sites.findIndex((entry) => entry.id === bundle.start));
+    return {
+      dungeon: { ...bundle, sites: bundle.sites.map((entry, index) => (index === startIndex ? { ...entry, figure: null } : entry)) },
+      startIndex,
+      sites: Object.fromEntries(bundle.sites.map((entry, index) => [entry.id, { state: index === startIndex ? 'current' : 'visited', cleared: false, reachable: false }])),
+    };
+  }, [legacyId, state.legacy]);
+  const legacyPhase = { hub: 'site', travel: 'approach', encounter: 'encounter' }[state.roadPhase] ?? 'site';
   const shellPhase = onRoad ? ({ hub: 'site', travel: 'walk', encounter: 'encounter' }[state.roadPhase] ?? 'site') : phase;
   const returnLabel = onRoad ? (roadTalking ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the road')
     : inEncounter || inParty_ ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the temple';
@@ -492,7 +507,10 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
 
   return (
     <div className={`app-shell phase-${shellPhase}${onRoad ? ' on-road' : ''}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
-      {onRoad
+      {onRoad && legacy
+        ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={null} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
+          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
+        : onRoad
         ? <RoadView road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (musicWanted) ambience.thunder?.(); }}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}

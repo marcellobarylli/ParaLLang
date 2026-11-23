@@ -22,6 +22,51 @@ export const TERRAIN = Object.freeze({
   home: 260, // around the origin the land is lifted clear of the water, so a new player starts on dry ground
 });
 
+// Round 160 (issue #8): biomes. A biome is a kind of country, hundreds of metres across: it says how wet the ground
+// has to be before trees close over it, how thickly each kind of ground is wooded, which trees grow, and what colour
+// the grass is. Within a biome a point still has its `cover` (water, shore, meadow, forest, highland, snow), which
+// comes from its height and its moisture as before. The road starts in the jungle: around the origin the biome is
+// always the first of BIOME.order, out to BIOME.home metres, and beyond that a very low noise chooses.
+//
+//   name      what the player is shown
+//   wet       the moisture above which the ground is forest
+//   density   the chance that a tree candidate stands, by cover
+//   trees     [share, kind] pairs: a hashed draw below `share` takes the kind (the last pair takes the rest)
+//   tall      [least, spread]: a tree's height in metres, by kind
+//   tint      the ground's tint over the grass texture, for meadow and forest (the level's builder reads it)
+//   map       the map's colours, low and high, for meadow and forest (the map's painter reads it)
+export const BIOMES = Object.freeze({
+  jungle: Object.freeze({
+    name: 'Jungle', wet: 0.38,
+    density: Object.freeze({ water: 0, shore: 0.14, meadow: 0.26, forest: 0.84, highland: 0.3, snow: 0 }),
+    trees: Object.freeze([[0.4, 'palm'], [1, 'broad']]),
+    tint: Object.freeze({ meadow: [0.8, 1.0, 0.62], forest: [0.6, 0.88, 0.54] }),
+    map: Object.freeze({ meadow: [[78, 146, 66], [148, 184, 92]], forest: [[28, 94, 50], [70, 130, 62]], wood: 0.32 }),
+  }),
+  woodland: Object.freeze({
+    name: 'Woodland', wet: 0.5,
+    density: Object.freeze({ water: 0, shore: 0.03, meadow: 0.1, forest: 0.62, highland: 0.16, snow: 0 }),
+    trees: Object.freeze([[0.3, 'fir'], [1, 'round']]),
+    tint: Object.freeze({ meadow: [1.06, 1.04, 0.86], forest: [0.82, 0.92, 0.74] }),
+    map: Object.freeze({ meadow: [[104, 150, 72], [186, 190, 104]], forest: [[52, 108, 58], [112, 142, 72]], wood: 0.2 }),
+  }),
+  steppe: Object.freeze({
+    name: 'Steppe', wet: 0.7,
+    density: Object.freeze({ water: 0, shore: 0.01, meadow: 0.035, forest: 0.3, highland: 0.06, snow: 0 }),
+    trees: Object.freeze([[0.65, 'shrub'], [1, 'round']]),
+    tint: Object.freeze({ meadow: [1.3, 1.14, 0.72], forest: [1.02, 1.0, 0.7] }),
+    map: Object.freeze({ meadow: [[176, 168, 98], [208, 198, 132]], forest: [[112, 132, 74], [152, 152, 92]], wood: 0.08 }),
+  }),
+});
+export const BIOME = Object.freeze({
+  order: Object.freeze(['jungle', 'woodland', 'steppe']), // the first is the starting biome
+  home: 620, // metres round the origin that are always the starting biome
+  edge: 380, // and the width of the margin over which the noise takes over
+  scale: 2400, // metres: the size of the noise that chooses a biome
+  cuts: Object.freeze([0.56, 0.44]), // the noise above the first is the first biome, above the second the second
+});
+const TREE_HEIGHT = Object.freeze({ fir: [5, 6], round: [5, 6], palm: [7, 6], broad: [6, 7], shrub: [1.4, 1.6] });
+
 const imul = Math.imul;
 function hash2(x, y, seed) {
   let h = imul(x | 0, 374761393) ^ imul(y | 0, 668265263) ^ imul(seed | 0, 1442695041);
@@ -88,8 +133,9 @@ export function ridged(x, y, seed, octaves = 4) {
  *
  *   heightAt(x, z)   ground height in metres (below TERRAIN.waterY the ground is under water)
  *   slopeAt(x, z)    rise over run, from heights 3 m apart
- *   biomeAt(x, z)    'water' | 'shore' | 'meadow' | 'forest' | 'highland' | 'snow'
- *   treesIn(cx, cz)  the trees of chunk (cx, cz): [{ x, z, y, height, kind: 'fir' | 'round', tint }]
+ *   coverAt(x, z)    'water' | 'shore' | 'meadow' | 'forest' | 'highland' | 'snow'
+ *   biomeAt(x, z)    the biome the point lies in: a key of BIOMES (round 160)
+ *   treesIn(cx, cz)  the trees of chunk (cx, cz): [{ x, z, y, height, kind: 'fir' | 'round' | 'palm' | 'broad' | 'shrub', tint }]
  */
 export function createTerrain(seed = 1) {
   const s = (Number(seed) | 0) || 1;
@@ -118,16 +164,20 @@ export function createTerrain(seed = 1) {
 
   const moistureAt = (x, z) => fbm(x / 420 - 51.2, z / 420 + 18.9, s + 71, 3);
 
-  function biomeAt(x, z, h = heightAt(x, z)) {
+  // Round 160: the biome of a point. Round the origin it is the starting biome; further out a very low noise chooses.
+  function biomeAt(x, z) {
+    const home = 1 - smoothstep(BIOME.home, BIOME.home + BIOME.edge, Math.hypot(x, z));
+    const n = fbm(x / BIOME.scale + 3.3, z / BIOME.scale - 8.1, s + 83, 2) + home;
+    return n > BIOME.cuts[0] ? BIOME.order[0] : n > BIOME.cuts[1] ? BIOME.order[1] : BIOME.order[2];
+  }
+
+  function coverAt(x, z, h = heightAt(x, z)) {
     if (h < TERRAIN.waterY) return 'water';
     if (h < 1.6) return 'shore';
     if (h > 58) return 'snow';
     if (h > 36) return 'highland';
-    return moistureAt(x, z) > 0.5 ? 'forest' : 'meadow';
+    return moistureAt(x, z) > BIOMES[biomeAt(x, z)].wet ? 'forest' : 'meadow';
   }
-
-  // How likely a tree candidate is to stand, by biome.
-  const DENSITY = { water: 0, shore: 0.03, meadow: 0.1, forest: 0.62, highland: 0.16, snow: 0 };
 
   function treesIn(cx, cz) {
     const trees = [];
@@ -140,14 +190,18 @@ export function createTerrain(seed = 1) {
         const x = (gx + 0.15 + 0.7 * hash2(gx, gz, s + 301)) * treeGrid;
         const z = (gz + 0.15 + 0.7 * hash2(gx, gz, s + 302)) * treeGrid;
         const y = heightAt(x, z);
-        const biome = biomeAt(x, z, y);
-        if (hash2(gx, gz, s + 303) >= DENSITY[biome]) continue;
+        const cover = coverAt(x, z, y);
+        const biome = BIOMES[biomeAt(x, z)];
+        if (hash2(gx, gz, s + 303) >= biome.density[cover]) continue;
         if (slopeAt(x, z) > 0.7) continue;
-        const cold = y > 30 || hash2(gx, gz, s + 304) < 0.3;
+        // High ground is fir country in every biome; lower down the biome's own trees grow, by a hashed draw.
+        const draw = hash2(gx, gz, s + 304);
+        const kind = y > 30 ? 'fir' : biome.trees.find(([share]) => draw < share)[1];
+        const [least, spread] = TREE_HEIGHT[kind];
         trees.push({
           x, z, y,
-          height: 5 + 6 * hash2(gx, gz, s + 305),
-          kind: cold ? 'fir' : 'round',
+          height: least + spread * hash2(gx, gz, s + 305),
+          kind,
           tint: hash2(gx, gz, s + 306),
         });
       }
@@ -155,5 +209,5 @@ export function createTerrain(seed = 1) {
     return trees;
   }
 
-  return Object.freeze({ seed: s, waterY: TERRAIN.waterY, heightAt, slopeAt, biomeAt, moistureAt, treesIn });
+  return Object.freeze({ seed: s, waterY: TERRAIN.waterY, heightAt, slopeAt, coverAt, biomeAt, biomes: BIOMES, moistureAt, treesIn });
 }

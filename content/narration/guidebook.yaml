@@ -6,7 +6,7 @@
 #   title   the entry's heading in the guidebook
 #   when    what enters it: an event and the facts it must have, as in passages.yaml. Events and their facts:
 #             road_enter                                       the first step on The Journey 2
-#             road_arrive  way, biome, kind: lesson|review|repair|checkpoint   an arrival at a site of the road
+#             road_arrive  way, cover, kind: lesson|review|repair|checkpoint   an arrival at a site of the road
 #             site_arrive  dungeon, site                       standing at a site of a dungeon
 #             truth_shown                                      (round 158) a passage with an untranslatable text was told
 #   text    the entry, in English, in the narrator's voice. It may say how things are done here; like every other
