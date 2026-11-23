@@ -22,7 +22,7 @@ await game.run(async ({ page, check, shot, tap }) => {
 
   await tap(button);
   await page.getByRole('main', { name: 'Guidebook' }).waitFor();
-  await page.getByText('1 of 5 entries').waitFor({ timeout: 20000 });
+  await page.getByText('1 of 6 entries').waitFor({ timeout: 20000 });
   check(await page.getByRole('heading', { name: /The road/ }).count() === 1, 'the guidebook lists the entry');
   check(await page.locator('.guide-new').count() === 1, 'and marks it new');
   await shot('02-guidebook');
@@ -31,7 +31,7 @@ await game.run(async ({ page, check, shot, tap }) => {
   check(await note.count() === 0, 'back on the road, the entry is told no more');
   check(await page.getByRole('button', { name: /^Guidebook/ }).getAttribute('aria-label') === 'Guidebook', 'and the button\'s mark is gone');
   await tap(page.getByRole('button', { name: /^Guidebook/ }));
-  await page.getByText('1 of 5 entries').waitFor({ timeout: 20000 });
+  await page.getByText('1 of 6 entries').waitFor({ timeout: 20000 });
   await page.waitForTimeout(300);
   check(await page.locator('.guide-new').count() === 0, 'opened again, nothing is new');
   await shot('03-read');

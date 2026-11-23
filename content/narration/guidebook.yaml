@@ -9,6 +9,7 @@
 #             road_arrive  way, cover, kind: lesson|review|repair|checkpoint   an arrival at a site of the road
 #             site_arrive  dungeon, site                       standing at a site of a dungeon
 #             truth_shown                                      (round 158) a passage with an untranslatable text was told
+#             journey_remarked                                 (round 163) the narrator remarked on a long journey shown whole
 #   text    the entry, in English, in the narrator's voice. It may say how things are done here; like every other
 #           narration it does not say why the world is so.
 entries:
@@ -26,6 +27,14 @@ entries:
     text: >-
       Turmeric coloured text cannot be translated. It holds fragments of the truth of the world; to understand you
       must become a proficient speaker.
+  # Round 163 (issue #13): entered with the narrator's remark on a journey of a hundred walks.
+  - id: the_long_way_round
+    title: The long way round
+    when: { event: journey_remarked }
+    text: >-
+      A walk on rails goes where the road sends it, and a road sends a traveller as a breeze sends a leaf. Drawn
+      whole, such a walk has no direction, only a length. The sailor of the oldest story drew one like it across a
+      whole sea, and it brought him home.
   - id: talked_past
     title: Being let past
     when: { event: site_arrive }

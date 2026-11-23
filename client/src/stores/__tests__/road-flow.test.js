@@ -220,3 +220,23 @@ test('the journey: turned on, the whole walk is read from the server; walked on 
   expect(s().journey.nodes).toHaveLength(2); // kept for the next time it is shown
 });
 
+// Round 163 (issue #13): the narrator's remark on a journey of a hundred walks.
+test('the journey shown: no remark for a short one; the server\'s remark is kept beside a long one and the guidebook hears of it', async () => {
+  const game = await onTheRoad();
+  const { s, server } = game;
+  await s().toggleJourney();
+  expect(s().journeyRemark).toBe(null);
+  await s().toggleJourney();
+  // A hundred walks on, made on the server (a walk needs no finished conversation).
+  for (let n = 0; n < 100; n += 1) {
+    const view = await server.api.getRoad(s().learnerId);
+    await server.api.moveRoad(s().learnerId, { nodeId: view.road.rails ?? view.road.frontier[0].id, leave: true });
+  }
+  await s().refreshRoad();
+  expect(s().road.hops).toBe(100);
+  await s().toggleJourney();
+  expect(s().journey.hops).toBe(100);
+  expect(s().journeyRemark.id).toBe('journey_random_walk');
+  expect(s().guideNote.unread.map((entry) => entry.id)).toContain('the_long_way_round');
+});
+

@@ -90,7 +90,7 @@ test('the store: the first step on the road brings an unread entry; opening the 
   await vi.waitFor(() => expect(s().guideNote.unread).toEqual([]));
   // The panel keeps its "New" marks for this visit.
   expect(s().guidebook.entries.map((item) => [item.id, item.unread])).toEqual([['the_road', true]]);
-  expect(s().guidebook.total).toBe(5);
+  expect(s().guidebook.total).toBe(6);
   expect(s().guidebook.fragments).toEqual([]);
   s().returnToDialogue();
   expect(s().view).toBe('dialogue');

@@ -14,7 +14,7 @@ test('a new road\'s journey is its start; each walk adds the site walked to, and
   const { runtime, learnerId } = await roadRuntime(t);
   const first = (await road(runtime, learnerId)).data.road;
   assert.equal(first.hops, 0);
-  assert.deepEqual((await walkOf(runtime, learnerId)).data, { walk: { seed: 4242, nodes: [first.at], hops: 0, kept: 1 } });
+  assert.deepEqual((await walkOf(runtime, learnerId)).data.walk, { seed: 4242, nodes: [first.at], hops: 0, kept: 1 });
   const visited = [first.at];
   let view = first;
   for (let n = 0; n < 6; n += 1) {
@@ -88,3 +88,33 @@ test('the walk needs a learner', async (t) => {
   const { runtime } = await roadRuntime(t);
   assert.equal((await api(runtime, '/api/road/walk', { learnerId: '00000000-0000-4000-8000-000000000000' })).status, 400);
 });
+
+// Round 163 (issue #13): the narrator remarks on a long journey when it is shown whole.
+test('a journey under a hundred walks is shown without a word; from a hundred the narrator remarks on it, and the guidebook gains an entry once', async (t) => {
+  const { runtime, learnerId } = await roadRuntime(t);
+  let view = (await road(runtime, learnerId)).data.road;
+  await api(runtime, '/api/guidebook/read', { learnerId, method: 'POST', body: {} }); // "The road" is read
+  for (let n = 0; n < 99; n += 1) view = (await moveTo(runtime, learnerId, view.rails ?? view.frontier[0].id)).data.road;
+  assert.equal(view.hops, 99);
+  const quiet = (await walkOf(runtime, learnerId)).data;
+  assert.equal(quiet.narration, null);
+  assert.ok(!quiet.guidebook.unread.some((entry) => entry.id === 'the_long_way_round'));
+  assert.equal(Object.hasOwn((await runtime.storage.load(learnerId)).told ?? {}, 'journey_random_walk'), false);
+  view = (await moveTo(runtime, learnerId, view.rails ?? view.frontier[0].id)).data.road;
+  assert.equal(view.hops, 100);
+  const remarked = (await walkOf(runtime, learnerId)).data;
+  assert.equal(remarked.walk.hops, 100);
+  assert.equal(remarked.walk.nodes.length, 101);
+  assert.equal(remarked.narration.id, 'journey_random_walk');
+  assert.match(remarked.narration.segments[0].text, /^You unroll the whole of it\. It does not look like a journey\./);
+  assert.ok(remarked.guidebook.unread.some((entry) => entry.id === 'the_long_way_round'));
+  const save = await runtime.storage.load(learnerId);
+  assert.ok(Object.hasOwn(save.told, 'journey_random_walk'));
+  assert.equal(save.guidebook.the_long_way_round.read, false);
+  // Shown again: the remark again, and nothing more is written.
+  const at = save.guidebook.the_long_way_round.at;
+  const again = (await walkOf(runtime, learnerId)).data;
+  assert.equal(again.narration.id, 'journey_random_walk');
+  assert.equal((await runtime.storage.load(learnerId)).guidebook.the_long_way_round.at, at);
+});
+

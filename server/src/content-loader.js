@@ -202,6 +202,7 @@ const passagesSchema = z.object({
     when: z.object({ event: z.string().min(1) }).catchall(z.union([z.string(), z.number(), z.boolean()])),
     once: z.boolean().optional(),
     min_step: z.number().int().min(0).optional(), // round 158
+    min_hops: z.number().int().min(0).optional(), // round 163
     text: z.string().min(1),
   }).strict()),
 }).strict();

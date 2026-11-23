@@ -33,6 +33,50 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: rounds 153 to 163, the eleven open issues, on one branch awaiting the owner's word
+
+The owner asked for every open issue, one after the other, and went to sleep. All eleven are built, one round each,
+in the issues' own build order, on the branch `claude/modest-einstein-obt6yy`. **None is on `main`, so none is
+deployed and no issue is closed**: a merge to `main` deploys the page and restarts the server, which is the owner's
+word to give. Each round's addendum is below; this is the list.
+
+| Round | Issue | What |
+|---|---|---|
+| 153 | #1 | Light mode beside strict mode |
+| 154 | #2 | A light conversation of three to five turns |
+| 155 | #3 | The characters belong to the world |
+| 156 | #6 | The italic text is a narrator |
+| 157 | #5 | The guidebook |
+| 158 | #4 | Untranslatable (turmeric) text, and the vault's "Understood Later" |
+| 159 | #7 | Three characters utter a deeper truth |
+| 160 | #8 | Biomes, and the legacy dungeons as nodes of the road |
+| 161 | #9 | The whole journey, saved and painted on the map |
+| 162 | #11 | Pulled tree models |
+| 163 | 11-23 | The narrator on a long journey, and a chart of the Odyssey (issue #13): a remark from a hundred walks when the journey is shown, a guidebook entry, and a chart drawn here in place of a public-domain map that could not be fetched | [163](docs/rounds/163/architecture.md) | [findings](docs/rounds/163/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
+
+**What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every
+prompt was tested for what it says and not for what a model then writes. Nothing was seen on a phone; the screens
+were played in headless Chromium at a phone's size. Every text in Italian and Spanish is Claude's and unread by a
+speaker. The iPhone app is unchanged. Tests at the end: server 567, web client 281, the aesthetic package 95 (505,
+258 and 87 before).
+
+**What is not as the issues asked.** #3's "Deployed" waits for the merge. #11 pulled trees only: dungeon pieces and
+characters need a network that reaches the usual CC0 libraries. #13 shows a chart drawn here, not a public-domain
+map: Wikimedia Commons could not be reached to find one and read its licence.
+
+## Addendum 2026-11-23: round 163, the narrator on a long journey, and a chart of the Odyssey (on the session branch, not deployed)
+
+Issue #13, the last of the eleven. When the journey shown on the map is a hundred walks or more, the narrator
+remarks on it ("It does not look like a journey. It looks like what a fly does in a quiet room …") and the guidebook
+gains "The long way round". Beside the remark the map shows a **chart of the voyage of Odysseus**: the poem's stops
+in order, each where tradition most often puts it, joined by the same gold line. **It is a sketch drawn in this
+repository, not a public-domain map**: Wikimedia Commons and every page tried were outside the session's network,
+so no map's licence could be read and none was taken; `client/public/models/ASSETS.md` says how to put a real one
+in. Played in headless Chromium with 60 and 120 walks, not on a phone
+([findings](docs/rounds/163/findings.md), picture:
+[`03-the-narrator-and-the-odyssey.jpg`](docs/rounds/163/shots/03-the-narrator-and-the-odyssey.jpg)).
+
 ## Addendum 2026-11-23: round 162, pulled tree models for the road (on the session branch, not deployed)
 
 Issue #11, the tenth of the eleven. The web client now ships one file of pulled 3D models,

@@ -11,8 +11,10 @@
 #                          biome: jungle|woodland|steppe                 (round 160) in that biome,
 #                          dungeon: <id>               (round 160) into a legacy dungeon, where a unit's gate stands
 #            site_arrive   dungeon, site               standing at a site of a dungeon
+#            journey_shown hops                        (round 163) the whole journey is shown on the map
 #   once   true: told once to a learner, and before any other passage that fits
 #   min_step   (round 158) the fewest conversations finished on the road before the passage can be told
+#   min_hops   (round 163) the fewest walks the journey must be for the passage to be told (the event's `hops`)
 #   text   the passage, in English. Round 158 (issue #4): `{truth:<id>}` sets one of the pack's untranslatable
 #          texts into it (content/languages/<code>/lore/truths.yaml): a sentence in the language being learned,
 #          shown in a colour of its own, which nothing in the game translates. The passage leads up to it and says
@@ -26,6 +28,17 @@ passages:
     text: >-
       You step onto the road. It was built long ago, people will tell you, and it has the patience of a thing that
       already knows where you are going. Behind you the way you came closes over like water.
+
+  # Round 163 (issue #13): the whole journey, shown on the map once it is a hundred walks long. A walk on rails goes
+  # where the road sends it, and drawn whole it looks like a random walk; so does the Odyssey when it is mapped, and
+  # the client shows a chart of that beside this (content/world/odyssey.yaml).
+  - id: journey_random_walk
+    when: { event: journey_shown }
+    min_hops: 100
+    text: >-
+      You unroll the whole of it. It does not look like a journey. It looks like what a fly does in a quiet room,
+      twice round the same hill. One other line is drawn like it, by a sailor who took ten years over a few days'
+      sail. He got home. Nobody has ever accused him of the direct route.
 
   # Round 158 (issue #4): passages that hold an untranslatable text. Each is told once, at the first arrival that
   # fits after `min_step` conversations, so they are spread along the walk; the harder ones wait for the stage

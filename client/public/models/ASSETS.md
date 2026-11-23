@@ -58,6 +58,22 @@ Issue #11 also names dungeon pieces, characters and the isometric map. None was 
 - **The isometric map** is painted from the landscape itself, pixel by pixel (`client/src/roadMap.js`), and uses no
   asset.
 
+## The Odyssey's route (round 163, issue #13)
+
+Issue #13 asks that a royalty-free or public-domain map of the Odyssey's route be shown beside the narrator's remark
+on a long journey, if one exists, with its source and licence on record. **None was taken.** Wikimedia Commons,
+where such maps are, and every other page tried were outside the network of the session that built the feature, so
+no map's licence could be read; a web search alone named only maps under non-free licences.
+
+What the game shows instead is **a chart drawn in this repository**: `client/src/components/OdysseyChart.jsx` draws
+it from `content/world/odyssey.yaml`, a line through the poem's stops at the places tradition most often gives them.
+It is this project's own work and needs no licence from anyone. It is a sketch with no coastline, and the yaml file
+says what its places and coordinates rest on.
+
+To show a real map instead: put the image in `client/public/maps/`, add its source, author, date and licence here in
+the source's own words, and have `OdysseyChart.jsx` show it (an old engraved map from a nineteenth-century classical
+atlas, or a public-domain or CC0 route map on Wikimedia Commons, would do).
+
 ## Adding an asset
 
 1. Read the licence at the source, and take only what is public domain, CC0 or as permissive.

@@ -24,7 +24,10 @@ export function matches(passage, event) {
  */
 export function selectPassage(passages, event, { told = {}, pick = 0 } = {}) {
   // Round 158: a passage may wait for a number of conversations finished on the road (`min_step`).
-  const fitting = passages.filter((passage) => matches(passage, event) && (passage.min_step === undefined || (event.step ?? 0) >= passage.min_step));
+  // Round 163: or for a journey of a number of walks (`min_hops`).
+  const fitting = passages.filter((passage) => matches(passage, event)
+    && (passage.min_step === undefined || (event.step ?? 0) >= passage.min_step)
+    && (passage.min_hops === undefined || (event.hops ?? 0) >= passage.min_hops));
   const first = fitting.find((passage) => passage.once && !Object.hasOwn(told, passage.id));
   if (first) return first;
   const lasting = fitting.filter((passage) => !passage.once);

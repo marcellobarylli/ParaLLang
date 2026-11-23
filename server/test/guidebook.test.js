@@ -12,7 +12,7 @@ const guidebook = (runtime, learnerId) => api(runtime, '/api/guidebook', { learn
 const read = (runtime, learnerId) => api(runtime, '/api/guidebook/read', { learnerId, method: 'POST', body: {} });
 
 test('the entries are content: a title, a text and what enters each', () => {
-  assert.deepEqual(content.guide.map((entry) => entry.id), ['the_road', 'turmeric_text', 'talked_past', 'second_tellings', 'the_gate']);
+  assert.deepEqual(content.guide.map((entry) => entry.id), ['the_road', 'turmeric_text', 'the_long_way_round', 'talked_past', 'second_tellings', 'the_gate']);
   for (const entry of content.guide) {
     assert.ok(entry.title.length > 2 && entry.text.length > 40);
     assert.equal(typeof entry.when.event, 'string');
@@ -32,7 +32,7 @@ test('which entries an event enters: those that fit and are not had yet', () => 
 
 test('a new learner has an empty guidebook; the first step on the road enters "The road", unread, and the road\'s view tells it', async (t) => {
   const { runtime, learnerId } = await roadRuntime(t);
-  assert.deepEqual((await guidebook(runtime, learnerId)).data, { guidebook: { entries: [], total: 5, fragments: [] } });
+  assert.deepEqual((await guidebook(runtime, learnerId)).data, { guidebook: { entries: [], total: 6, fragments: [] } });
   const view = (await road(runtime, learnerId)).data;
   assert.equal(view.guidebook.count, 1);
   assert.deepEqual(view.guidebook.unread.map(({ id, title, unread }) => [id, title, unread]), [['the_road', 'The road', true]]);

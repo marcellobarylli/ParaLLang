@@ -63,6 +63,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
     journeyShown: false,
     journey: null,
     journeyLoading: false,
+    journeyRemark: null, // round 163: the narrator's remark on the journey shown ({ id, segments }), or null
 
     // From the world map into the road. The first look creates the road on the server.
     enterRoad: async () => {
@@ -201,7 +202,9 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       try {
         const data = await api.getRoadWalk(learnerId);
         if (epoch !== guard.epoch() || get().learnerId !== learnerId) return;
-        if (Array.isArray(data?.walk?.nodes)) set({ journey: data.walk });
+        // Round 163: with the narrator's remark on a long journey, when it has one, and what it did to the guidebook.
+        if (Array.isArray(data?.walk?.nodes)) set({ journey: data.walk, journeyRemark: data.narration ?? null });
+        takeGuide(data?.guidebook);
       } catch (error) {
         if (epoch === guard.epoch()) set({ journeyShown: false, roadError: error.code === 'RUN_LOST' ? null : `The journey could not be read: ${error.message}` });
       } finally { if (epoch === guard.epoch()) set({ journeyLoading: false }); }

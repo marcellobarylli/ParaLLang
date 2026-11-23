@@ -6,6 +6,7 @@ import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 import { ROAD_NAME } from '../atlas.js';
 import Narration from './Narration.jsx';
 import { GuideNote } from './Guidebook.jsx';
+import OdysseyChart from './OdysseyChart.jsx';
 
 // Round 144: what the dock and the overlays show on The Journey 2. The server's view of the road (`state.road`)
 // says where the player is, who waits there and what each site ahead offers; the curriculum with the player's marks
@@ -284,6 +285,14 @@ export function RoadMap({ state, onClose }) {
         </button>
         {state.journeyShown && <small role="status">{journey ? `${journey.hops} ${journey.hops === 1 ? 'walk' : 'walks'} from where you began${journey.kept <= journey.hops ? ` (the last ${journey.kept - 1} are kept)` : ''}.` : 'Reading the journey…'}</small>}
       </div>
+      {/* Round 163 (issue #13): a journey of a hundred walks, shown whole: the narrator remarks on it, and shows the
+          one other line like it. */}
+      {journey && state.journeyRemark && (
+        <aside className="journey-remark" aria-label="The narrator, on your journey">
+          <Narration narration={state.journeyRemark} />
+          <OdysseyChart />
+        </aside>
+      )}
       <p className="map-legend"><small>
         <span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate, which stands in an old place (the stepped gate on the map).{road.gate?.dungeon ? ` The next is ${road.gate.dungeon.name}${road.gate.hops > 0 ? `, in ${road.gate.hops} ${road.gate.hops === 1 ? 'conversation' : 'conversations'} or more` : ', and it is near'}.` : ''} The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
       </small></p>

@@ -332,6 +332,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   asset's source and licence, and `client/scripts/make-models.mjs` makes the file from the sources. It is loaded
   when the road is open and "Tree models" is on in Settings, and the five chunks of ground nearest the camera take
   their trees from it (`aesthetic/src/scene/models.js`). `node client/scripts/models-check.mjs` plays it.
+  From round 163, when the journey shown is a hundred walks or more, the narrator remarks on it (the passage
+  `journey_random_walk`, which also enters the guidebook's "The long way round") and the map shows a chart of the
+  voyage of Odysseus beside the remark, drawn from `content/world/odyssey.yaml`
+  (`client/src/components/OdysseyChart.jsx`). `node client/scripts/journey-check.mjs <outDir> 120` plays it.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

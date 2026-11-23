@@ -43,6 +43,21 @@ await game.run(async ({ page, check, shot, tap }) => {
   await page.waitForTimeout(400);
   await shot('02-journey');
 
+  // Round 163 (issue #13): from a hundred walks the narrator remarks on the journey and shows the Odyssey's chart.
+  const remark = page.getByRole('complementary', { name: 'The narrator, on your journey' });
+  if (HOPS >= 100) {
+    check(await remark.count() === 1 && (await remark.textContent()).startsWith('You unroll the whole of it.'), 'the narrator remarks on a journey this long');
+    check(await remark.getByRole('img', { name: /The Odyssey, as tradition maps it/ }).count() === 1, 'and shows the chart of the Odyssey beside the remark');
+    check(await remark.locator('.odyssey-stops li').count() === 14, 'with its fourteen stops listed');
+    check(/new/.test(await page.getByRole('button', { name: /^Guidebook/ }).getAttribute('aria-label').catch(() => 'hidden new')), 'the guidebook has heard of it');
+    await remark.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
+    await shot('03-the-narrator-and-the-odyssey');
+    await remark.locator('figcaption').scrollIntoViewIfNeeded();
+    await shot('04-the-chart');
+  } else {
+    check(await remark.count() === 0, 'under a hundred walks the narrator says nothing of it');
+  }
   await tap(page.getByRole('button', { name: 'Hide the journey' }));
   check(await page.locator('.map-journey').count() === 0 && await page.locator('.map-ahead').count() > 0, 'hidden again, the usual map is back');
 });

@@ -33,6 +33,7 @@ import { BIOMES, hash, createTerrain } from './terrain.js';
 import { graphFor, parseNodeId } from './graph.js';
 import { placeName } from './characters.js';
 import { ROAD_PLACE, buildRoadDefinition, describeActivity, legacyDungeonFor, objectivesOf } from './encounters.js';
+import { entriesFor, selectPassage } from '../narration.js';
 import { PACING, composeCheckpoint, composeReview, emptyProgress, overview, plan, position, record, scoreOf } from './pacing.js';
 
 export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200, walk: 20000 });
@@ -278,10 +279,35 @@ export const roadMethods = {
 
   // Round 161 (issue #9): the whole journey: every site walked to, in order, as node ids. Asked for apart from the
   // road's view, which is sent after every answer and walk and would carry it each time.
+  // Round 163 (issue #13): asking for it is the map's "Show Journey so far". Once the journey is a hundred walks
+  // long the narrator remarks on it (a written passage, told each time it is shown), and the first time that
+  // enters a guidebook entry; only then is anything written.
   async getRoadWalk(learnerId) {
     const envelope = await this.loadEnvelope(learnerId);
-    const road = this.roadOf(envelope);
-    return { walk: { seed: road.seed, nodes: road.walk, hops: road.hops, kept: road.walk.length } };
+    const view = (from) => {
+      const road = this.roadOf(from);
+      const event = { event: 'journey_shown', hops: road.hops };
+      const passage = selectPassage(this.content.passages ?? [], event, { told: from.told ?? {} });
+      return { road, passage };
+    };
+    const answer = (from, { road, passage }) => ({
+      walk: { seed: road.seed, nodes: road.walk, hops: road.hops, kept: road.walk.length },
+      narration: passage ? this.toldView(passage.id) : null,
+      guidebook: this.guidebookNote(from),
+    });
+    const first = view(envelope);
+    const fresh = first.passage && (!Object.hasOwn(envelope.told ?? {}, first.passage.id) || entriesFor(this.content.guide ?? [], { event: 'journey_remarked' }, envelope.guidebook ?? {}).length > 0);
+    if (!fresh) return answer(envelope, first);
+    return this.serialized(learnerId, async () => {
+      const staged = clone(await this.loadEnvelope(learnerId));
+      const again = view(staged);
+      if (again.passage) {
+        this.tell(staged, { event: 'journey_shown', hops: again.road.hops });
+        this.enterGuide(staged, { event: 'journey_remarked' });
+        await this.storage.save(staged);
+      }
+      return answer(staged, again);
+    });
   },
 
   // A walk to a site of the frontier. The conversation the pacing put there is fixed on arrival. While the road's own
