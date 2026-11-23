@@ -1,58 +1,68 @@
 // Round 150: writes the icons of the web app (client/public/) and of the iPhone app (mobile/assets/icon.png). The
 // icon is a snapshot of the road's map (src/roadMap.js: the landscape seen from above at an angle) with a walk
-// along the graph of sites drawn on it, as the map draws the trail. The landscape, the graph and the walk are pure
-// functions of SEED, so a run writes the same files every time. Pure Node (zlib), no image library.
+// along the graph of sites drawn on it. The landscape, the graph and the walk are pure functions of SEED, so a run
+// writes the same files every time. Pure Node (zlib), no image library.
+// Round 164: the picture is the whole journey as the map's "Show Journey so far" paints it (round 161): a walk of
+// 120 on rails, seen from as far off as it takes to hold all of it, in the map's gold line with a pale mark where
+// it began and the post where the walker stands. The owner picked it from round 163's picture of exactly this walk.
 // Run: node client/scripts/make-icons.mjs
 import { writeFileSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
+import { loadGameContent } from '../../server/src/content-loader.js';
 import { createGraph } from '../../server/src/road/graph.js';
-import { createTerrain, hash } from '../../server/src/road/terrain.js';
-import { createMapView, renderMap } from '../src/roadMap.js';
+import { ROAD, freshRoad, offersFor } from '../../server/src/road/service.js';
+import { createTerrain } from '../../server/src/road/terrain.js';
+import { ROAD_MAP, createMapView, renderMap } from '../src/roadMap.js';
 
 const PUBLIC = new URL('../public/', import.meta.url);
 const MOBILE = new URL('../../mobile/assets/', import.meta.url);
 
 export const ICON = Object.freeze({
-  seed: 3, // the landscape of the picture: a lake, its shore, a wood and a mountain's foot (the owner's pick)
-  hops: 9, // the ways walked
-  frame: 62, // the picture's side in the map's units: the smaller, the closer (the map shows 1 m as 0.095 at most)
-  columns: 88, // the landscape's pixels across; drawn small and shown large, as the map is
+  seed: 4242, // the landscape of the picture (the owner's pick: round 163's picture of the whole walk)
+  hops: 120, // the walks of the journey, each the rails' own choice
+  frame: 100, // the picture's side in the map's units
+  columns: 200, // the landscape's pixels across; drawn small and shown large, as the map is
+  margin: Object.freeze({ side: 7, top: 9, bottom: 7 }), // room around the walk
   // A maskable icon may be cut to a circle of 80 % of the side: it shows more land around the same walk, so that
   // the walk keeps inside the circle.
-  maskable: 78,
-  margin: Object.freeze({ side: 13, top: 15, bottom: 12 }), // room around the walk
-  way: 1.15, // half the width of the walked line, in the map's units
-  edge: 0.55, // the dark line around every mark
+  maskable: Object.freeze({ side: 21, top: 22, bottom: 20 }),
+  way: 0.62, // half the width of the walked line, in the map's units
+  edge: 0.42, // the dark line around every mark
 });
 
-const COLOURS = { way: [255, 243, 207], edge: [16, 18, 16], site: [169, 211, 155], here: [255, 255, 255] };
+// The map's own colours for a journey (client/src/index.css: --gold, and the journey's pale start).
+const COLOURS = { way: [228, 184, 71], edge: [11, 12, 11], start: [244, 239, 224], here: [255, 255, 255] };
 
-/** A walk of `hops` ways from the graph's start: a hashed pick among the sites next door, new ones first. */
-export function iconWalk(graph, hops = ICON.hops) {
-  const walk = [graph.start];
-  for (let step = 0; step < hops; step += 1) {
-    const at = walk[walk.length - 1];
-    const next = graph.neighbours(at);
-    const fresh = next.filter((id) => !walk.includes(id));
-    const order = (id) => { const [i, j] = id.split(',').map(Number); return hash(i * 7 + step, j * 11 - step, graph.seed + 777); };
-    const pick = (fresh.length ? fresh : next).sort((a, b) => order(a) - order(b))[0];
-    if (!pick) break;
-    walk.push(pick);
+/**
+ * The journey of `hops` walks on the road of `seed`, as a learner on rails who walks on without talking makes it:
+ * at every site the rails' own choice (server/src/road/service.js, `offersFor`). The ids of the sites, the start first.
+ */
+export function iconWalk(seed = ICON.seed, hops = ICON.hops) {
+  const { curriculum } = loadGameContent({ language: 'it' });
+  const graph = createGraph(createTerrain(seed));
+  let road = freshRoad(seed, curriculum);
+  const walk = [road.at];
+  for (let n = 0; n < hops; n += 1) {
+    const { frontier, rails } = offersFor(graph, road, curriculum);
+    const next = rails ?? frontier[0]?.id;
+    if (!next) break;
+    road = { ...road, at: next, trail: [...road.trail.filter((id) => id !== next), next].slice(-ROAD.trail) };
+    walk.push(next);
   }
   return walk;
 }
 
-/** The icon's scene: the landscape's pixels and the marks of the walk, in the map's units. */
-export function iconScene({ seed = ICON.seed, hops = ICON.hops, frame = ICON.frame } = {}) {
+/** The icon's scene: the landscape's pixels and the marks of the journey, in the map's units. */
+export function iconScene({ seed = ICON.seed, hops = ICON.hops, margin = ICON.margin } = {}) {
   const terrain = createTerrain(seed);
   const graph = createGraph(terrain);
-  const walk = iconWalk(graph, hops);
+  const walk = iconWalk(seed, hops);
   const nodes = walk.map((id) => graph.node(id));
-  const view = createMapView(nodes, { width: frame, height: frame, margin: ICON.margin });
-  const place = (x, z) => view.project(x, z, terrain.heightAt(x, z));
-  // A way lies on the ground: every point of it is drawn at its own height.
-  const line = walk.slice(1).flatMap((id, index) => graph.pathPoints(walk[index], id).map(([x, z]) => place(x, z)));
-  return { walk, view, frame, picture: renderMap(terrain, view, { columns: Math.round((ICON.columns * frame) / ICON.frame) }), line, sites: nodes.map((node) => place(node.x, node.z)) };
+  const frame = ICON.frame;
+  const view = createMapView(nodes, { width: frame, height: frame, margin, farthest: ROAD_MAP.journey });
+  // The journey is one line through the sites in order, each at its own height, as the map paints it.
+  const line = nodes.map((node) => view.project(node.x, node.z, node.y));
+  return { walk, view, frame, picture: renderMap(terrain, view, { columns: ICON.columns }), line, sites: line };
 }
 
 // Distances in the map's units; below zero is inside.
@@ -67,10 +77,10 @@ const toBox = (x, y, left, top, right, bottom) => Math.max(left - x, x - right, 
 
 /** The icon as the RGB bytes of `size` × `size` pixels. */
 export function iconPixels(scene, size) {
-  const { picture, line, sites, frame } = scene;
+  const { picture, line, frame } = scene;
   const unit = frame / size; // the map's units per pixel
-  const here = sites[sites.length - 1];
-  const before = sites.slice(0, -1);
+  const start = line[0];
+  const here = line[line.length - 1];
   const out = Buffer.alloc(size * size * 3);
   for (let py = 0; py < size; py += 1) {
     for (let px = 0; px < size; px += 1) {
@@ -86,10 +96,10 @@ export function iconPixels(scene, size) {
       let way = Infinity;
       for (let n = 1; n < line.length; n += 1) way = Math.min(way, toSegment(x, y, line[n - 1], line[n]));
       mark(way - ICON.way, COLOURS.way);
-      mark(Math.min(...before.map((site) => toTile(x, y, site, 2.6))), COLOURS.site);
-      // Where the walker stands: a white tile with a post and a flag, as on the map.
-      mark(toTile(x, y, here, 3.8), COLOURS.here);
-      mark(Math.min(toBox(x, y, here[0] - 0.45, here[1] - 8, here[0] + 0.45, here[1]), toBox(x, y, here[0] - 1.9, here[1] - 11.4, here[0] + 1.9, here[1] - 7.6)), COLOURS.here);
+      // Where the journey began: a pale dot. Where the walker stands: a white tile with a post and a flag, as on the map.
+      mark(Math.hypot(x - start[0], y - start[1]) - 1.5, COLOURS.start);
+      mark(toTile(x, y, here, 2.6), COLOURS.here);
+      mark(Math.min(toBox(x, y, here[0] - 0.4, here[1] - 5.2, here[0] + 0.4, here[1]), toBox(x, y, here[0] - 1.2, here[1] - 7.6, here[0] + 1.2, here[1] - 5.2)), COLOURS.here);
       out.set(colour.map(Math.round), (py * size + px) * 3);
     }
   }
@@ -143,7 +153,7 @@ export const ICON_FILES = Object.freeze([
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const scenes = new Map();
-  const sceneOf = (frame) => scenes.get(frame) ?? scenes.set(frame, iconScene({ frame })).get(frame);
-  for (const [folder, name, size, frame = ICON.frame] of ICON_FILES) writeFileSync(new URL(name, folder), png(size, iconPixels(sceneOf(frame), size)));
-  console.log(`wrote ${ICON_FILES.length} icons: a walk of ${ICON.hops} ways on the landscape of seed ${ICON.seed}`);
+  const sceneOf = (margin) => scenes.get(margin) ?? scenes.set(margin, iconScene({ margin })).get(margin);
+  for (const [folder, name, size, margin = ICON.margin] of ICON_FILES) writeFileSync(new URL(name, folder), png(size, iconPixels(sceneOf(margin), size)));
+  console.log(`wrote ${ICON_FILES.length} icons: a journey of ${ICON.hops} walks on the landscape of seed ${ICON.seed}`);
 }

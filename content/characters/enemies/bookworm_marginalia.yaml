@@ -32,3 +32,8 @@ defeat_condition:
 saveable: true
 # Round 126: how the web client reads the lines aloud (kind: female, male, creature or funny; pitch 0 to 2; rate 0.5 to 2).
 voice: { kind: creature, pitch: 1.45, rate: 0.85 }  # a soft, careful reader
+# Round 155 (issue #3): the character is of the world: the region whose lore it knows (content/world/knowledge.yaml)
+# and one thing it has noticed. For the narrator; never shown to the player.
+world:
+  region: dead_branch
+  noticed: "Loose pages of The Journey turn up between other books, in the right order, without anybody bringing them. She files them and does not ask."

@@ -458,6 +458,66 @@ test('the answer is sent as a beginner\'s while the mode is on, and plainly when
   expect('beginner' in body()).toBe(false);
 });
 
+// Round 153 (issue #1): light mode. Nothing is marked: the answer goes out as `light`, and what comes back is shown as
+// what was understood, with the sentence in the language under it.
+test('light mode: the answer is sent as light and not as a beginner\'s; the reply shows what was understood, without hearts', async () => {
+  const speech = fakeSpeech();
+  const { user, store } = await openConversation(speech);
+  act(() => store.getState().setLight(true));
+  act(() => store.setState({ encounter: { ...store.getState().encounter, hearts: { used: 0, limit: 3 } } }));
+  expect(screen.queryByLabelText(/hearts left/)).toBeNull();
+  expect(screen.getByText(/Light mode: nothing is marked\./)).toBeTruthy();
+  // Round 154 (issue #2): the exchange of turns, and the nudge to ask something back.
+  act(() => store.setState({ encounter: { ...store.getState().encounter, exchange: { turn: 1, min: 3, max: 5 } } }));
+  expect(screen.getByText(/Turn 2 of 3 to 5\. You can ask \w+ questions back\./)).toBeTruthy();
+  const open = store.getState().encounter;
+  act(() => store.setState({ encounter: { ...open, currentObjective: null, openObjectives: [] } }));
+  expect(screen.getByText('Keep talking')).toBeTruthy();
+  expect(screen.queryByText('Conversation complete')).toBeNull();
+  expect(screen.getByLabelText('Your response')).toBeTruthy();
+  act(() => store.setState({ encounter: open }));
+  await user.type(screen.getByLabelText('Your response'), 'good morning');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  await waitFor(() => expect(dialogueCalls()).toHaveLength(1));
+  const body = JSON.parse(dialogueCalls()[0][1].body);
+  expect(body.light).toBe(true);
+  expect('beginner' in body).toBe(false);
+  await waitFor(() => expect(screen.getByLabelText('Your response').value).toBe(''));
+  act(() => store.setState({
+    encounter: { ...store.getState().encounter, version: store.getState().encounter.version + 1 },
+    assessment: { light: true, overallFeedback: 'Good morning!', correction: { text: 'Buongiorno!', translation: 'Good morning!', heartLost: false, light: true },
+      objectiveResults: [{ objectiveId: 'objective-0', passed: true, feedback: 'Greet Portia.' }, { objectiveId: 'objective-1', passed: false, feedback: 'Say your name.' }] },
+  }));
+  expect(screen.getByText('Understood')).toBeTruthy();
+  expect(screen.queryByText('Assessment')).toBeNull();
+  const card = screen.getByRole('region', { name: 'What you meant' });
+  expect(card.textContent).toContain('In Italian');
+  expect(card.textContent).toContain('Buongiorno!');
+  expect(screen.queryByText(/No hearts left/)).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Put it in the reply box' })).toBeNull();
+  // Only what the answer covered is listed: nothing is marked as missing.
+  expect(screen.getByText(/✓ Greet Portia\./)).toBeTruthy();
+  expect(screen.queryByText(/Say your name\./)).toBeNull();
+  expect(store.getState().display.light).toBe(true);
+});
+
+// Round 159 (issue #7): what a character utters once the conversation is over.
+test('a finished conversation with a revelation shows the narrator\'s line and the text in turmeric, before the last word', async () => {
+  const speech = fakeSpeech();
+  const { store } = await openConversation(speech);
+  expect(screen.queryByRole('region', { name: /^What .* utters$/ })).toBeNull();
+  const revelation = { id: 'revelation_x', segments: [{ text: 'Portia utters the following: ' }, { text: 'Ogni luogo è un nodo.', kind: 'truth', lang: 'it-IT' }] };
+  act(() => store.setState({ encounter: { ...store.getState().encounter, state: 'resolved', resolvedMessage: 'Portia lets you in.', currentObjective: null, openObjectives: [], revelation } }));
+  const region = screen.getByRole('region', { name: /^What .* utters$/ });
+  expect(region.textContent).toBe('Portia utters the following: Ogni luogo è un nodo.');
+  const span = region.querySelector('.narration-truth');
+  expect(span.textContent).toBe('Ogni luogo è un nodo.');
+  expect(region.querySelectorAll('button')).toHaveLength(0);
+  // It stands before the conversation's last word.
+  const last = screen.getByText('Portia lets you in.');
+  expect(region.compareDocumentPosition(last) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});
+
 // Round 129 (amendment): the browser listens in one language at a time, so the microphone can be switched between
 // the target language and English; each stretch of speech is added to the box.
 test('the microphone listens in Italian or in English by a switch, and adds each stretch to the reply box', async () => {

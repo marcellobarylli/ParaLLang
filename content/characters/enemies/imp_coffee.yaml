@@ -28,3 +28,8 @@ defeat_condition:
 saveable: true
 # Round 126: how the web client reads the lines aloud (kind: female, male, creature or funny; pitch 0 to 2; rate 0.5 to 2).
 voice: { kind: creature, pitch: 1.7, rate: 1.15 }  # a tiny barista, quick and sharp
+# Round 155 (issue #3): the character is of the world: the region whose lore it knows (content/world/knowledge.yaml)
+# and one thing it has noticed. For the narrator; never shown to the player.
+world:
+  region: dead_branch
+  noticed: "The beans come up a road on which nobody has ever seen a cart. He has asked the guild about it twice and been sent a form about milk."

@@ -11,12 +11,15 @@ import NarrativeText from './NarrativeText.jsx';
 // out of the top of the text, a one-line bar is pinned there: a tap unfolds the objectives, another folds them.
 
 // What the box and the unfolded bar both show: the objectives open now.
-function ObjectiveContent({ encounter, language, beginner }) {
+function ObjectiveContent({ encounter, language, beginner, light }) {
   const open = encounter.openObjectives ?? [];
+  const name = encounter.character?.name?.split(' ')[0] ?? 'them';
   return (
     <>
       {/* Round 131: every objective still open, since one answer of a paragraph may meet several. */}
-      {!encounter.currentObjective && <strong>Conversation complete</strong>}
+      {!encounter.currentObjective && encounter.state !== 'ongoing' && <strong>Conversation complete</strong>}
+      {/* Round 154: a light exchange goes on to its third turn even when everything asked for has been said. */}
+      {!encounter.currentObjective && encounter.state === 'ongoing' && <><strong>Keep talking</strong><p>You have said everything {name} needed. The conversation goes on a little: answer, or ask {name} something.</p></>}
       {encounter.currentObjective && !(open.length > 1) && <><strong>Current objective</strong><p>{encounter.currentObjective.prompt}</p></>}
       {encounter.currentObjective && open.length > 1 && (
         <>
@@ -26,7 +29,14 @@ function ObjectiveContent({ encounter, language, beginner }) {
         </>
       )}
       <small>{language?.name ?? 'Target-language'} target: {Math.round(encounter.difficulty * 100)}% · Hints: {encounter.hints.remaining}/{encounter.hints.limit}</small>
-      {beginner && encounter.hearts && (
+      {/* Round 153: light mode marks nothing, so it has no hearts. */}
+      {light && encounter.state === 'ongoing' && (
+        <small className="light-note">
+          Light mode: nothing is marked. Say it as well as you can, in {language?.name ?? 'the language'} or in English.
+          {encounter.exchange && <> Turn {Math.min(encounter.exchange.max, encounter.exchange.turn + 1)} of {encounter.exchange.min} to {encounter.exchange.max}. You can ask {name} questions back.</>}
+        </small>
+      )}
+      {beginner && !light && encounter.hearts && (
         <small className="hearts" aria-label={`${encounter.hearts.limit - encounter.hearts.used} of ${encounter.hearts.limit} hearts left`}>
           {'♥'.repeat(Math.max(0, encounter.hearts.limit - encounter.hearts.used))}{'♡'.repeat(Math.min(encounter.hearts.limit, encounter.hearts.used))}
         </small>
@@ -66,7 +76,7 @@ function useScrolledPast(element, changes) {
   return past;
 }
 
-export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null, beginner = false }) {
+export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null, beginner = false, light = false }) {
   const [box, setBox] = useState(null);
   const past = useScrolledPast(box, `${encounter?.id}:${encounter?.version}:${encounter?.transcript?.length}:${isLoading}`);
   const [unfolded, setUnfolded] = useState(false);
@@ -96,16 +106,16 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
           <div className={`objective-bar${unfolded ? ' unfolded' : ''}`}>
             <button type="button" className="objective-toggle" aria-expanded={unfolded} onClick={() => setUnfolded(!unfolded)}>
               <span>Objective</span>
-              <small>{todo === 0 ? 'complete' : `${todo} to do`}</small>
+              <small>{todo === 0 ? (encounter.state === 'ongoing' ? 'keep talking' : 'complete') : `${todo} to do`}</small>
               <span aria-hidden="true">{unfolded ? '▴' : '▾'}</span>
             </button>
-            {unfolded && <div className="objective-card objective-unfolded"><ObjectiveContent encounter={encounter} language={language} beginner={beginner} /></div>}
+            {unfolded && <div className="objective-card objective-unfolded"><ObjectiveContent encounter={encounter} language={language} beginner={beginner} light={light} /></div>}
           </div>
         )}
       </div>
       {opening && line(opening)}
       <section className="objective-card" aria-live="polite" ref={setBox}>
-        <ObjectiveContent encounter={encounter} language={language} beginner={beginner} />
+        <ObjectiveContent encounter={encounter} language={language} beginner={beginner} light={light} />
       </section>
       {briefing.length > 0 && encounter.committedPlayerTurns === 0 && (
         <aside className="briefing-card" aria-label="Your companion's briefing">

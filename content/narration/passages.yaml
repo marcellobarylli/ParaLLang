@@ -1,0 +1,267 @@
+# Round 156 (issue #6): the narrator's own passages: narration that is written down, not generated. The voice is the
+# one content/narration/style_guide.yaml asks of the generated narration: a storybook told to "you", in the present
+# tense, that describes a thing and does not finish the thought. It never explains the world. Where a passage hints,
+# it puts a word for sewing where a word for a road is expected (docs/lore-book.md, "What the book does not say").
+#
+#   id     a name, unique
+#   when   the event and the facts it must have. Events and their facts:
+#            road_enter                                the first step on The Journey 2
+#            road_arrive   way: path|ford|pass|ferry   an arrival at a site of the road, by that kind of way,
+#                          cover: shore|meadow|forest|highland|snow     in that kind of country,
+#                          biome: jungle|woodland|steppe                 (round 160) in that biome,
+#                          dungeon: <id>               (round 160) into a legacy dungeon, where a unit's gate stands
+#            site_arrive   dungeon, site               standing at a site of a dungeon
+#            journey_shown hops                        (round 163) the whole journey is shown on the map
+#   once   true: told once to a learner, and before any other passage that fits
+#   min_step   (round 158) the fewest conversations finished on the road before the passage can be told
+#   min_hops   (round 163) the fewest walks the journey must be for the passage to be told (the event's `hops`)
+#   text   the passage, in English. Round 158 (issue #4): `{truth:<id>}` sets one of the pack's untranslatable
+#          texts into it (content/languages/<code>/lore/truths.yaml): a sentence in the language being learned,
+#          shown in a colour of its own, which nothing in the game translates. The passage leads up to it and says
+#          nothing of what it means
+#
+# Among the passages that fit an event, those that ask for the most facts win, and the place picks among them.
+passages:
+  - id: road_first_step
+    when: { event: road_enter }
+    once: true
+    text: >-
+      You step onto the road. It was built long ago, people will tell you, and it has the patience of a thing that
+      already knows where you are going. Behind you the way you came closes over like water.
+
+  # Round 163 (issue #13): the whole journey, shown on the map once it is a hundred walks long. A walk on rails goes
+  # where the road sends it, and drawn whole it looks like a random walk; so does the Odyssey when it is mapped, and
+  # the client shows a chart of that beside this (content/world/odyssey.yaml).
+  - id: journey_random_walk
+    when: { event: journey_shown }
+    min_hops: 100
+    text: >-
+      You unroll the whole of it. It does not look like a journey. It looks like what a fly does in a quiet room,
+      twice round the same hill. One other line is drawn like it, by a sailor who took ten years over a few days'
+      sail. He got home. Nobody has ever accused him of the direct route.
+
+  # Round 158 (issue #4): passages that hold an untranslatable text. Each is told once, at the first arrival that
+  # fits after `min_step` conversations, so they are spread along the walk; the harder ones wait for the stage
+  # (`cefr`: the stage of the curriculum the learner is in) whose language they are written in.
+  - id: truth_forest_edge
+    when: { event: road_arrive, cover: forest }
+    once: true
+    min_step: 2
+    text: >-
+      You walk to the edge of the forest, peering into the darkness between the trees. Etched into the wood you
+      see a crude message: {truth:wake_of_a_stitch}
+  - id: truth_milestone
+    when: { event: road_arrive, way: path, cover: meadow }
+    once: true
+    min_step: 5
+    text: >-
+      A milestone leans in the grass. The distance has been scraped off it, carefully, and something shorter cut
+      in its place: {truth:not_a_road}
+  - id: truth_ford
+    when: { event: road_arrive, way: ford }
+    once: true
+    min_step: 3
+    text: >-
+      You wade the ford. On a flat stone in the middle of the stream, where only someone crossing would see it,
+      three words are scratched: {truth:a_thread_passes}
+  - id: truth_pass
+    when: { event: road_arrive, way: pass }
+    once: true
+    min_step: 4
+    text: >-
+      You come to the top of the pass. There is a cairn, and on its top stone a line in charcoal that the rain has
+      not managed to move: {truth:every_place_a_knot}
+  - id: truth_shore
+    when: { event: road_arrive, cover: shore, cefr: A2 }
+    once: true
+    text: >-
+      The tide is out. Below the weed line somebody has written in the wet sand with a stick, in a neat hand, and
+      the sea has left it alone: {truth:a_word_a_stitch}
+  - id: truth_path_a2
+    when: { event: road_arrive, way: path, cefr: A2 }
+    once: true
+    min_step: 20
+    text: >-
+      A fingerpost stands where the path forks. One arm names the place ahead. The other has been painted over
+      and written on again, small, as if for one reader: {truth:walked_on_a_web}
+  - id: truth_path_b1
+    when: { event: road_arrive, way: path, cefr: B1 }
+    once: true
+    text: >-
+      The guild has put up a notice about the upkeep of this stretch. Underneath it, in older paint, the wall says
+      something the notice was hung to cover and does not quite cover: {truth:sewn_not_built}
+  - id: truth_ferry_b1
+    when: { event: road_arrive, way: ferry, cefr: B1 }
+    once: true
+    text: >-
+      The ferry's rail is carved along its whole length, the letters worn almost flat by a great many hands. The
+      ferryman has never read it. He says it came with the boat: {truth:sewn_to_another}
+  - id: truth_highland_b1
+    when: { event: road_arrive, cover: highland, cefr: B1 }
+    once: true
+    text: >-
+      You climb. High on the hill a slab of rock stands clear of the turf. Whoever cut the words in it cut them deep, and
+      meant them to last longer than the hill: {truth:roots_and_roads}
+  - id: truth_snow_b1
+    when: { event: road_arrive, cover: snow, cefr: B1 }
+    once: true
+    text: >-
+      You find a hut at the snow line with nobody in it. On the inside of the door, where the last person out
+      would have stood to write, a long sentence runs from the latch to the floor: {truth:all_the_threads}
+
+  # Round 160 (issue #8): the road comes to an old place. A unit's gate stands in one of the legacy dungeons, and
+  # the site where it is offered is that dungeon's node.
+  - id: enter_ta_prohm
+    when: { event: road_arrive, dungeon: ta_prohm }
+    text: >-
+      The road goes in under the trees and does not come out the other side. Where it stops there is a wall, and
+      in the wall a gate, and over the gate a stone face that has been expecting somebody.
+  - id: enter_the_kiln
+    when: { event: road_arrive, dungeon: the_kiln }
+    text: >-
+      The ground turns black underfoot and stays warm. The road ends at a gate you have seen before, in another
+      place, before whatever happened here happened to it.
+  - id: enter_micromort_mountain
+    when: { event: road_arrive, dungeon: micromort_mountain }
+    text: >-
+      The road gives up being level. A signpost states the odds of the climb per step, to six places, and somebody
+      is sitting on a ledge above it who looks as though the odds have just been collected.
+  # The jungle the road starts in. They ask for as many facts as the passages by cover below, so the place picks.
+  - id: jungle_milestone
+    when: { event: road_arrive, way: path, biome: jungle }
+    text: >-
+      The jungle closes over the road and the road does not seem to mind. Something large has grown round a
+      milestone and kept the milestone, the way a tree keeps a nail.
+  - id: jungle_drip
+    when: { event: road_arrive, way: path, biome: jungle }
+    text: >-
+      You walk under leaves the size of doors. It rained here an hour ago, or will in an hour; the dripping is
+      the same either way, and keeps better time than you do.
+
+  # Arrivals by an ordinary path, whatever the country.
+  - id: path_bends
+    when: { event: road_arrive, way: path }
+    text: >-
+      You follow the path between the hills. It bends where you would have bent, a moment before you do.
+  - id: path_unmended
+    when: { event: road_arrive, way: path }
+    text: >-
+      The path runs on, neither mended nor worn. Whoever laid it does not seem to have expected to come back and
+      check.
+  - id: path_host
+    when: { event: road_arrive, way: path }
+    text: >-
+      You walk. The road keeps a hand on your shoulder, lightly, the way a good host steers a guest towards the
+      door.
+  - id: path_milestone
+    when: { event: road_arrive, way: path }
+    text: >-
+      A milestone stands at the verge with nothing cut in it. It has the air of a thing still waiting to be told
+      the distance.
+
+  # Arrivals by a path, by the country.
+  - id: path_shore
+    when: { event: road_arrive, way: path, cover: shore }
+    text: >-
+      You come down to the shore. The tide has left a line of weed along the sand, as straight as a hem.
+  - id: path_forest
+    when: { event: road_arrive, way: path, cover: forest }
+    text: >-
+      You walk in under the trees. Their roots cross the path here and there, and only, it turns out, where
+      another path does.
+  - id: path_meadow
+    when: { event: road_arrive, way: path, cover: meadow }
+    text: >-
+      The meadow opens around you. From the rise you can see three roads meeting at the place ahead. Roads here
+      are never seen to meet anywhere that is not a place.
+  - id: path_highland
+    when: { event: road_arrive, way: path, cover: highland }
+    text: >-
+      The ground climbs. Stone shows through the turf like an elbow through a sleeve.
+  - id: path_snow
+    when: { event: road_arrive, way: path, cover: snow }
+    text: >-
+      Snow lies on everything but the road. The road is clear, though nobody clears it.
+
+  # The other ways.
+  - id: ford_thread
+    when: { event: road_arrive, way: ford }
+    text: >-
+      You wade the ford. The water is cold to the knee, and the road goes on beneath it unbothered, as a thread
+      goes on through cloth.
+  - id: ford_footprints
+    when: { event: road_arrive, way: ford }
+    text: >-
+      The river has been asked to make room and has made it, grudgingly. On the far bank your wet footprints are
+      the only proof that you crossed.
+  - id: pass_folds
+    when: { event: road_arrive, way: pass }
+    text: >-
+      You climb to the pass. From up here the land shows its folds, and for a moment the roads below look less
+      like roads than like something pulled tight.
+  - id: pass_cairn
+    when: { event: road_arrive, way: pass }
+    text: >-
+      The pass is narrow and old. Somebody has left a cairn. Somebody else has left a complaint under its top
+      stone.
+  - id: ferry_rope
+    when: { event: road_arrive, way: ferry }
+    text: >-
+      The ferry takes you over. The ferryman does not ask where you are going, and has never been told who he
+      works for. The rope hums a little as it runs, like a plucked string.
+  - id: ferry_sky
+    when: { event: road_arrive, way: ferry }
+    text: >-
+      You cross by ferry. Halfway over, the water is the colour of the sky, and it is briefly unclear which of the
+      two is holding the boat up.
+
+  # Sites of the dead branch (Ta Prohm; The Kiln is the same temple, burnt, and has its own).
+  - id: ta_prohm_face_gate
+    when: { event: site_arrive, dungeon: ta_prohm, site: face_gate }
+    text: >-
+      You stand before the gate. A stone face looks down from the tower with the expression of someone who has
+      watched a great many people be surprised.
+  - id: ta_prohm_buttress_tree
+    when: { event: site_arrive, dungeon: ta_prohm, site: buttress_tree }
+    text: >-
+      A tree has sat down on the gallery and the gallery has let it. Between the buttresses someone has hung
+      hams, with the confidence of a tenant.
+  - id: ta_prohm_root_court
+    when: { event: site_arrive, dungeon: ta_prohm, site: root_court }
+    text: >-
+      Roots as thick as your body grip the walls of the court. Not all of them, you see, come up out of the
+      ground.
+  - id: ta_prohm_sunlit_court
+    when: { event: site_arrive, dungeon: ta_prohm, site: sunlit_court }
+    text: >-
+      The court is open to the sky. A basin stands dry in the middle of it, and something is humming, which the
+      basin would like you to know is not the basin.
+  - id: ta_prohm_library
+    when: { event: site_arrive, dungeon: ta_prohm, site: library }
+    text: >-
+      The library has lost its roof and kept its silence. On one lintel a line of script runs on past the edge of
+      the stone, as though the wall had once been longer. What is left of it reads: {truth:roots_and_roads}
+  - id: ta_prohm_before_sanctuary
+    when: { event: site_arrive, dungeon: ta_prohm, site: before_sanctuary }
+    text: >-
+      The last gate before the sanctuary has never, by all accounts, been open. A signpost beside it has one arm,
+      and points with great conviction.
+  - id: ta_prohm_sanctuary
+    when: { event: site_arrive, dungeon: ta_prohm, site: sanctuary }
+    text: >-
+      The sanctuary is very still. Light comes in through a seam that the masons did not leave.
+  - id: the_kiln_face_gate
+    when: { event: site_arrive, dungeon: the_kiln, site: face_gate }
+    text: >-
+      You stand before the gate. The stone face on the tower is black with soot and still warm, and its
+      expression has not changed, which is somehow worse.
+  - id: the_kiln_sanctuary
+    when: { event: site_arrive, dungeon: the_kiln, site: sanctuary }
+    text: >-
+      The furnace glows without burning anything. The seam in its wall is the same seam; only the light through
+      it is a different age.
+  - id: micromort_ankle_ledge
+    when: { event: site_arrive, dungeon: micromort_mountain, site: ankle_ledge }
+    text: >-
+      You come out onto a ledge halfway up the mountain. Far above, the summit is strung with lights. The trail
+      between is one line, drawn without lifting the pen.

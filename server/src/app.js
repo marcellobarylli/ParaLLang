@@ -87,6 +87,11 @@ export function createApp({ service, logger = console, token = null, saves = nul
     try { res.json(await service.getRoad(req.get('X-Learner-Id'))); }
     catch (error) { next(error); }
   });
+  // Round 161 (issue #9): the whole journey, as the ids of the sites walked to.
+  app.get('/api/road/walk', async (req, res, next) => {
+    try { res.json(await service.getRoadWalk(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
   app.post('/api/road/move', async (req, res, next) => {
     try { res.json(await service.moveOnRoad(req.get('X-Learner-Id'), req.body ?? {})); }
     catch (error) { next(error); }
@@ -119,6 +124,16 @@ export function createApp({ service, logger = console, token = null, saves = nul
   });
   app.post('/api/spellbook/review/submit', async (req, res, next) => {
     try { res.json(await service.submitReview(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
+
+  // Round 157 (issue #5): the guidebook: the entries the learner has, and their being read when it is opened.
+  app.get('/api/guidebook', async (req, res, next) => {
+    try { res.json(await service.getGuidebook(req.get('X-Learner-Id'))); }
+    catch (error) { next(error); }
+  });
+  app.post('/api/guidebook/read', async (req, res, next) => {
+    try { res.json(await service.readGuidebook(req.get('X-Learner-Id'))); }
     catch (error) { next(error); }
   });
 

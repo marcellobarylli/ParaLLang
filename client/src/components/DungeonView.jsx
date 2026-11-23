@@ -39,6 +39,8 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
     return () => {
       cancelled = true;
       viewRef.current = null;
+      // Round 160: a level that is left is gone: on the road no dungeon exists until one is entered.
+      if (typeof window !== 'undefined' && window.__parallangLevel === view) window.__parallangLevel = undefined;
       view?.dispose();
     };
   }, [dungeon.id, dungeon.level]);

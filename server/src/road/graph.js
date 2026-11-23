@@ -35,7 +35,7 @@ export function parseNodeId(id) {
 const ORTHOGONAL = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 
 export function createGraph(terrain) {
-  const { seed, heightAt, slopeAt, biomeAt } = terrain;
+  const { seed, heightAt, slopeAt, coverAt, biomeAt } = terrain;
   const nodes = new Map();
   const edges = new Map();
   const forced = new Map();
@@ -54,7 +54,7 @@ export function createGraph(terrain) {
       const score = slopeAt(x, z) * 10 + (y < 3 ? 0.6 : 0) + (y > 60 ? 1.5 : 0) + 0.2 * hash(i + k, j - k, seed + 403);
       if (!best || score < best.score) best = { score, x, z, y };
     }
-    const node = best ? Object.freeze({ id, i, j, x: best.x, z: best.z, y: best.y, biome: biomeAt(best.x, best.z, best.y) }) : null;
+    const node = best ? Object.freeze({ id, i, j, x: best.x, z: best.z, y: best.y, cover: coverAt(best.x, best.z, best.y), biome: biomeAt ? biomeAt(best.x, best.z) : null }) : null; // `biome`: round 160
     return remember(nodes, id, node);
   }
 

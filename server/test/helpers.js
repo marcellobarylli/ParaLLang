@@ -123,6 +123,17 @@ export class FixtureProvider {
   }
 }
 
+// Round 153: light mode's replies. Each entry of the queue is the `player` block; the narration around it is the fixture's.
+export class LightProvider extends FixtureProvider {
+  constructor(queue = []) { super(); this.queue = [...queue]; }
+  narrate(messages) {
+    const reply = super.narrate(messages);
+    const turn = JSON.parse(messages.at(-1).content.split('TURN DATA: ').at(-1).trim());
+    if (turn.task !== 'light_turn') return reply;
+    const next = this.queue.shift();
+    return { ...reply, player: typeof next === 'function' ? next(turn) : next };
+  }
+}
 // Round 114: grades any encounter in any pack. An objective passes when the answer holds an authored form of a target
 // from each of its required groups (the evidence the service checks); narration is the shared fixture's.
 export class PassingProvider extends FixtureProvider {

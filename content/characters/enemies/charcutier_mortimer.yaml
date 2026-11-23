@@ -26,3 +26,8 @@ defeat_condition:
 saveable: true
 # Round 126: how the web client reads the lines aloud (kind: female, male, creature or funny; pitch 0 to 2; rate 0.5 to 2).
 voice: { kind: male, pitch: 0.7, rate: 0.95 }  # deep
+# Round 155 (issue #3): the character is of the world: the region whose lore it knows (content/world/knowledge.yaml)
+# and one thing it has noticed. For the narrator; never shown to the player.
+world:
+  region: dead_branch
+  noticed: "He asks permission before he cuts, as every butcher does. He could not say why: it is simply done, and it is in the old book somewhere."

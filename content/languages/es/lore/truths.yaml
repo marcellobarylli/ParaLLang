@@ -1,0 +1,53 @@
+# Round 158 (issue #4): the untranslatable texts of the Spanish pack. Deep truths about the world exist only in the
+# language being learned: these sentences are set into the narrator's written passages (content/narration/
+# passages.yaml, as {truth:<id>}) in a colour of their own, and nothing in the game translates them. There is no
+# English here on purpose: the server cannot send what it does not hold. What each one says, for the owner, is in
+# parallang_obsidian/Understood Later.md.
+#
+#   id      the name a passage uses
+#   level   how hard the language is (the stage of the curriculum at which a learner can read it)
+#   text    the sentence, in Spanish only
+#
+# The texts follow docs/lore-book.md, "What the book does not say". The deeper the truth, the harder the language.
+truths:
+  - id: wake_of_a_stitch
+    level: A2
+    text: "¡Vuelve atrás! Más allá yace la estela de una puntada."
+  - id: not_a_road
+    level: A1
+    text: "El camino no es un camino."
+  - id: a_thread_passes
+    level: A1
+    text: "Por aquí pasa un hilo."
+  - id: every_place_a_knot
+    level: A1
+    text: "Cada lugar es un nudo."
+  - id: walked_on_a_web
+    level: A2
+    text: "No has caminado por un camino. Has caminado sobre una tela."
+  - id: a_word_a_stitch
+    level: A2
+    text: "Quien aprende una palabra da una puntada."
+  - id: sewn_not_built
+    level: B1
+    text: "Los caminos no fueron construidos: fueron cosidos."
+  - id: sewn_to_another
+    level: B1
+    text: "La tela no termina donde termina el mundo: está cosida a otra."
+  - id: roots_and_roads
+    level: B1
+    text: "Donde ves una raíz, hubo una vez un camino; donde ves un camino, habrá un día una raíz."
+  - id: all_the_threads
+    level: B1
+    text: "Si todos los hilos se tensaran a la vez, los dos mundos se tocarían, y ninguna palabra tendría ya sentido."
+  # Round 159 (issue #7): what three characters of the dead branch utter once the conversation is over (the
+  # `revelation` of their encounters). They know more than the road's signs say.
+  - id: journey_threads
+    level: B1
+    text: "Cada travesía deja un hilo. Veinte años de travesías son veinte años de hilos: son los más antiguos de la tela, y todavía la sostienen."
+  - id: inflection
+    level: B2
+    text: "Cuando la mayor parte del mundo se cuente en la otra lengua, traerlo de vuelta será como achicar con una taza un barco que se hunde."
+  - id: first_word_error
+    level: B2
+    text: "En el principio era la Palabra, y en la Palabra había un error. Quien lo corrija tendrá razón, y ese será el final."

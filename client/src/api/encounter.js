@@ -53,6 +53,8 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     // Round 144: The Journey 2: the learner's place on the endless graph with what waits ahead and the
     // curriculum's marks; a walk to a site (`leave` drops the road's conversation under way); a new road.
     getRoad: (learnerId) => request('/api/road', { learnerId }),
+    // Round 161: the whole journey, as the ids of the sites walked to, for the map's "Show Journey so far".
+    getRoadWalk: (learnerId) => request('/api/road/walk', { learnerId }),
     moveRoad: (learnerId, body) => request('/api/road/move', { learnerId, method: 'POST', body }),
     resetRoad: (learnerId, body = {}) => request('/api/road/reset', { learnerId, method: 'POST', body }),
     // Round 144: the whole save, for the copy this browser keeps, and the copy put back on a server that lost it.
@@ -72,6 +74,9 @@ export function createLearningApi({ getSettings = () => loadSettings(), fetchImp
     currentEncounter: (learnerId) => request('/api/encounter/current', { learnerId }),
     sendDialogue: (learnerId, payload) => request('/api/encounter/dialogue', { learnerId, method: 'POST', body: payload }),
     revealHelp: (learnerId, payload) => request('/api/encounter/help', { learnerId, method: 'POST', body: payload }),
+    // Round 157: the guidebook's entries, and their being read when it is opened.
+    getGuidebook: (learnerId) => request('/api/guidebook', { learnerId }),
+    readGuidebook: (learnerId) => request('/api/guidebook/read', { learnerId, method: 'POST', body: {} }),
     getSpellbook: (learnerId) => request('/api/spellbook', { learnerId }),
     createReview: (learnerId, vocabularyId) => request('/api/spellbook/review', { learnerId, method: 'POST', body: vocabularyId ? { vocabularyId } : {} }),
     submitReview: (learnerId, payload) => request('/api/spellbook/review/submit', { learnerId, method: 'POST', body: payload }),

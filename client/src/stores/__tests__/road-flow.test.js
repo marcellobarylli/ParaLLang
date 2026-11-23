@@ -197,3 +197,46 @@ test('by default the lines are in full Italian with their translation; the slide
   expect(narrations().at(-1).messages[0].content).toMatch(/Dialogue is entirely in Italian/);
   expect(typeof line().dialogue.translation).toBe('string');
 });
+
+// Round 161 (issue #9): the map's "Show Journey so far".
+test('the journey: turned on, the whole walk is read from the server; walked on and opened again, it is read again', async () => {
+  const game = await onTheRoad();
+  const { s } = game;
+  expect([s().journeyShown, s().journey]).toEqual([false, null]);
+  expect(s().road.hops).toBe(0);
+  await s().toggleJourney();
+  expect(s().journeyShown).toBe(true);
+  expect(s().journey).toEqual({ seed: 4242, nodes: ['0,0'], hops: 0, kept: 1 });
+  await s().roadTalk();
+  await finish(game);
+  const next = s().road.rails;
+  await s().roadContinue();
+  expect(s().road.hops).toBe(1);
+  s().openRoadPanel('map');
+  await vi.waitFor(() => expect(s().journey.nodes).toEqual(['0,0', next]));
+  expect(s().journey.hops).toBe(1);
+  await s().toggleJourney();
+  expect(s().journeyShown).toBe(false);
+  expect(s().journey.nodes).toHaveLength(2); // kept for the next time it is shown
+});
+
+// Round 163 (issue #13): the narrator's remark on a journey of a hundred walks.
+test('the journey shown: no remark for a short one; the server\'s remark is kept beside a long one and the guidebook hears of it', async () => {
+  const game = await onTheRoad();
+  const { s, server } = game;
+  await s().toggleJourney();
+  expect(s().journeyRemark).toBe(null);
+  await s().toggleJourney();
+  // A hundred walks on, made on the server (a walk needs no finished conversation).
+  for (let n = 0; n < 100; n += 1) {
+    const view = await server.api.getRoad(s().learnerId);
+    await server.api.moveRoad(s().learnerId, { nodeId: view.road.rails ?? view.road.frontier[0].id, leave: true });
+  }
+  await s().refreshRoad();
+  expect(s().road.hops).toBe(100);
+  await s().toggleJourney();
+  expect(s().journey.hops).toBe(100);
+  expect(s().journeyRemark.id).toBe('journey_random_walk');
+  expect(s().guideNote.unread.map((entry) => entry.id)).toContain('the_long_way_round');
+});
+

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import DungeonView from './DungeonView.jsx';
 import RoadView from './RoadView.jsx';
 import { CurriculumChip, CurriculumPanel, HubCard, RoadCaption, RoadMap, RoadResolved, useWeather } from './Road.jsx';
@@ -14,6 +14,8 @@ import SettingsSheet from './SettingsSheet.jsx';
 import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
 import { ROAD_NAME } from '../atlas.js';
+import Narration from './Narration.jsx';
+import Guidebook, { GuideNote } from './Guidebook.jsx';
 import { siteStatesOf } from '../stores/gameStore.js';
 
 // Round 115: the web client's one screen, the dungeon. The level fills the screen; over it lie the top bar and the
@@ -248,6 +250,9 @@ function SiteCard({ state, sites, site }) {
         <SiteNumber index={state.siteIndex} />
         <span className="site-text"><strong>{site.name}</strong><small>{name}{status.cleared ? ' · cleared' : ' has not let you pass yet'}</small></span>
       </header>
+      {/* Round 156: what the narrator says of this site. */}
+      <Narration narration={state.narration} />
+      <GuideNote note={state.guideNote} onOpen={state.openGuidebook} />
       {status.cleared && site.saveable && (inParty(state.party, site.encounterId)
         ? <p className="party-note" role="status">{name} is in your party.</p>
         : <button type="button" className="secondary-button" onClick={() => state.recruit(site.encounterId)} disabled={state.recruiting}>Invite {name} to your party</button>)}
@@ -274,7 +279,8 @@ function TravelCaption({ state, site }) {
   const text = cameraArrived && arrival !== 'site'
     ? `${site?.characterName ?? 'Someone'} is getting ready to talk…`
     : `${phase === 'walk' ? 'Walking to' : 'Approaching'} ${site?.name ?? 'the next site'}…`;
-  return <section className="caption" role="status">{text}</section>;
+  // Round 156: on the way to a site, the narrator tells what is there.
+  return <section className="caption" role="status">{!cameraArrived && <Narration narration={state.narration} />}<span>{text}</span></section>;
 }
 
 // Round 120: after a saveable character lets the player pass, they may be saved to the party (the app's SAVE / LEAVE
@@ -371,25 +377,32 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
         )}
       </header>
       <div className="sheet-scroll" ref={scrollRef}>
-        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} beginner={state.display?.beginner !== false} />
+        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} beginner={state.display?.beginner !== false} light={state.display?.light === true} />
         {assessment && (
           <section className="assessment-banner" aria-live="polite">
-            <strong>Assessment</strong><p>{assessment.overallFeedback}</p>
-            {assessment.correction && <CorrectionCard key={encounter?.version} correction={assessment.correction} language={language} speaker={speaker} listener={listener} onUse={resolved ? null : state.setDraft} />}
-            {assessment.objectiveResults.map((result) => <p key={result.objectiveId}>{result.corrected ? '✎' : result.passed ? '✓' : '→'} {result.feedback}</p>)}
+            {/* Round 153: a light turn is not an assessment: what was understood, and what of the objectives it covered. */}
+            <strong>{assessment.light ? 'Understood' : 'Assessment'}</strong><p>{assessment.overallFeedback}</p>
+            {assessment.correction && <CorrectionCard key={encounter?.version} correction={assessment.correction} language={language} speaker={speaker} listener={listener} onUse={resolved || assessment.light ? null : state.setDraft} />}
+            {assessment.objectiveResults.filter((result) => !assessment.light || result.passed).map((result) => <p key={result.objectiveId}>{result.corrected ? '✎' : result.passed ? '✓' : '→'} {result.feedback}</p>)}
             {state.xpGained > 0 && <p className="xp-line">+{state.xpGained} XP{state.levelUp ? ` · Level ${state.levelUp}` : ''}</p>}
+          </section>
+        )}
+        {/* Round 159 (issue #7): what the character utters once the conversation is over, told by the narrator. */}
+        {resolved && encounter.revelation && (
+          <section className="revelation" aria-label={`What ${name} utters`}>
+            <Narration narration={encounter.revelation} />
           </section>
         )}
         {resolved && party && (
           <section className="victory-banner" role="status">
-            <p>{encounter.resolvedMessage ?? `${name} has said what there was to say.`}</p>
+            <p className="narrative">{encounter.resolvedMessage ?? `${name} has said what there was to say.`}</p>
             <button type="button" className="primary-button big-button" onClick={state.leaveParty}>Back to the temple</button>
           </section>
         )}
         {resolved && road && <section className="victory-banner road-banner"><RoadResolved state={state} encounter={encounter} /></section>}
         {resolved && !party && !road && (
           <section className="victory-banner" role="status">
-            <p>{encounter.resolvedMessage ?? `${name} lets you pass.`}</p>
+            <p className="narrative">{encounter.resolvedMessage ?? `${name} lets you pass.`}</p>
             {encounter.character?.saveable && <PartyOffer key={encounter.id} state={state} encounter={encounter} />}
             {atGoal && <button type="button" className="primary-button big-button" onClick={state.leaveTemple}>Leave the temple</button>}
             {!atGoal && cleared && <WaysOn state={state} sites={sites} site={site} />}
@@ -467,6 +480,21 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const onRoad = state.mode === 'road';
   const roadTalking = onRoad && state.roadPhase === 'encounter';
   const roadEncounter = roadTalking && state.encounter?.road ? state.encounter : null;
+  // Round 160 (issue #8): on the road a unit's gate stands in a legacy dungeon. While the player stands at that
+  // dungeon's node the level behind the road's panels is the dungeon's own, at its first site (loaded only now: the
+  // dungeon's host is its own chunk). The gate's keeper is a character without a model, so the site shows its beacon.
+  const legacyId = onRoad ? state.road?.here?.dungeon?.id ?? null : null;
+  const legacy = useMemo(() => {
+    const bundle = legacyId ? state.legacy?.[legacyId] : null;
+    if (!bundle) return null;
+    const startIndex = Math.max(0, bundle.sites.findIndex((entry) => entry.id === bundle.start));
+    return {
+      dungeon: { ...bundle, sites: bundle.sites.map((entry, index) => (index === startIndex ? { ...entry, figure: null } : entry)) },
+      startIndex,
+      sites: Object.fromEntries(bundle.sites.map((entry, index) => [entry.id, { state: index === startIndex ? 'current' : 'visited', cleared: false, reachable: false }])),
+    };
+  }, [legacyId, state.legacy]);
+  const legacyPhase = { hub: 'site', travel: 'approach', encounter: 'encounter' }[state.roadPhase] ?? 'site';
   const shellPhase = onRoad ? ({ hub: 'site', travel: 'walk', encounter: 'encounter' }[state.roadPhase] ?? 'site') : phase;
   const returnLabel = onRoad ? (roadTalking ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the road')
     : inEncounter || inParty_ ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the temple';
@@ -479,8 +507,11 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
 
   return (
     <div className={`app-shell phase-${shellPhase}${onRoad ? ' on-road' : ''}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
-      {onRoad
-        ? <RoadView road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (musicWanted) ambience.thunder?.(); }}
+      {onRoad && legacy
+        ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={null} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
+          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
+        : onRoad
+        ? <RoadView models={state.display?.treeModels !== false} road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (musicWanted) ambience.thunder?.(); }}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
@@ -502,6 +533,10 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
           </button>}
           <button type="button" className="secondary-button" onClick={state.openSpellbook}>
             Spellbook <span className="due-badge" aria-label={`${state.spellbook.dueCount} reviews due`}>{state.spellbook.dueCount}</span>
+          </button>
+          {/* Round 157: the guidebook, with a mark while an entry is unread. */}
+          <button type="button" className="secondary-button guide-button" onClick={state.openGuidebook} aria-label={`Guidebook${state.guideNote?.unread?.length ? `, ${state.guideNote.unread.length} new` : ''}`}>
+            ?{state.guideNote?.unread?.length > 0 && <span className="due-badge guide-badge" aria-hidden="true">{state.guideNote.unread.length}</span>}
           </button>
           <button type="button" className="secondary-button" onClick={state.openSettings} aria-label="Settings">⚙︎</button>
         </nav>
@@ -534,6 +569,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.view !== 'dialogue' && (
         <div className="overlay">
           {state.view === 'party' && <PartyPanel party={state.party} sites={dungeon.sites} held={held} starting={state.partyStarting} canTalk={canTalk} isLoading={state.isLoading || state.travelling} onTalk={state.talkTo} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
+          {state.view === 'guidebook' && <Guidebook guidebook={state.guidebook} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
           {state.view === 'spellbook' && <Spellbook spellbook={spellbook} language={state.language} isLoading={state.isLoading} onReview={state.startReview} onReturn={state.returnToDialogue} returnLabel={returnLabel} />}
           {state.view === 'review' && <ReviewPanel
             key={state.reviewChallenge?.id ?? 'result'}
@@ -546,6 +582,8 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
 
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
+        light={state.display?.light === true} onLight={state.setLight}
+        treeModels={state.display?.treeModels !== false} onTreeModels={state.setTreeModels}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
         voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }}

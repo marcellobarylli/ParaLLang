@@ -12,6 +12,10 @@ defeat_condition:
   description: "Player asks Errata for a coffee and a meat, tells it to stop now and says their name is Nobody, all in Italian"
 max_turns: 20
 resolved_message: "Errata cannot read Nobody. It folds itself up like a letter sent to the wrong address, the seam of light narrows to a hairline, and the market sounds like itself again."
+# Round 159 (issue #7): Errata has come to know more of the world than most. When the conversation is over the
+# narrator tells what Errata then utters: a passage of lore, in untranslatable text (lore/truths.yaml).
+revelation:
+  text: "For the length of one sentence nothing about Errata is misaligned. It utters the following: {truth:first_word_error}"
 escalation:
   # Round 015 (critique 1.4): a fixed mix, so the corruption stays half English however long the fight runs.
   target_ratio_increase_per_turn: 0

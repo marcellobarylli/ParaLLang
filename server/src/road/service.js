@@ -14,6 +14,11 @@
 //   current   the conversation waiting at `at`: { node, step, activity }, or null once it is finished
 //   progress  the curriculum's marks (pacing.js)
 //   log       the last ROAD.log conversations, newest first, for the journal
+//   narration the id of the narrator's passage for the last arrival (round 156), or null
+//   walk      every site walked to, in order, the start first (round 161): the whole journey, as node ids alone,
+//             since the graph is the same graph every time it is read. The last ROAD.walk of them; `hops` counts
+//             every walk made, also those that have fallen out of the list
+//   dungeon   the id of the legacy dungeon the learner stands in (round 160: a unit's gate is in one), or null
 //
 // Rules: the learner may walk to any site next to a site of the recent trail that is not itself on the trail (the
 // frontier; round 143's rule that everything out of the fog is reachable from anywhere). The pacing's recommended
@@ -24,13 +29,14 @@ import { randomInt } from 'node:crypto';
 import { AppError, conflictError, validationError } from '../errors.js';
 import { isDue, levelFor } from '../language-engine.js';
 import { assertLearnerId } from '../learning-storage.js';
-import { hash, createTerrain } from './terrain.js';
+import { BIOMES, hash, createTerrain } from './terrain.js';
 import { graphFor, parseNodeId } from './graph.js';
 import { placeName } from './characters.js';
-import { ROAD_PLACE, buildRoadDefinition, describeActivity, objectivesOf } from './encounters.js';
+import { ROAD_PLACE, buildRoadDefinition, describeActivity, legacyDungeonFor, objectivesOf } from './encounters.js';
+import { entriesFor, selectPassage } from '../narration.js';
 import { PACING, composeCheckpoint, composeReview, emptyProgress, overview, plan, position, record, scoreOf } from './pacing.js';
 
-export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200 });
+export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200, walk: 20000 });
 
 const clone = (value) => structuredClone(value);
 const graphOf = (seed) => graphFor(seed, createTerrain);
@@ -38,7 +44,7 @@ const graphOf = (seed) => graphFor(seed, createTerrain);
 /** A road that has not been walked: the learner stands at the start with the first lesson waiting. */
 export function freshRoad(seed, curriculum) {
   const graph = graphOf(seed);
-  const road = { seed, step: 0, at: graph.start, trail: [graph.start], cleared: [], current: null, progress: emptyProgress(), log: [] };
+  const road = { seed, step: 0, at: graph.start, trail: [graph.start], cleared: [], current: null, progress: emptyProgress(), log: [], walk: [graph.start], hops: 0 };
   const [first] = plan(curriculum, road.progress, 0);
   road.current = first ? { node: graph.start, step: 0, activity: commit(curriculum, road.progress, 0, first, () => false) } : null;
   return road;
@@ -88,11 +94,19 @@ export function offersFor(graph, road, curriculum) {
     .map((entry) => { const [ni, nj] = parseNodeId(entry.id); return { entry, order: hash(ni * 7 + i + road.step, nj * 11 - j - road.step, road.seed + 777) }; })
     .sort((a, b) => a.order - b.order)[0].entry.id;
   const offers = new Map([[rails, options[0]]]);
+  // Round 160: a unit's gate stands in a legacy dungeon, and a dungeon is one place: the gate is offered at one site
+  // (the rails', when it is the pacing's first choice; else the first other site), and the rest offer something else.
+  const gate = options.find((option) => option.kind === 'checkpoint') ?? null;
+  const rest = options.filter((option) => option !== gate);
+  let gateOffered = options[0] === gate;
   let turn = 0;
   for (const { id } of frontier) {
     if (id === rails) continue;
     turn += 1;
-    offers.set(id, options[turn % options.length]);
+    let option = options[turn % options.length];
+    if (option === gate && (gateOffered || !rest.length)) option = rest.length ? rest[turn % rest.length] : gate;
+    if (option === gate) gateOffered = true;
+    offers.set(id, option);
   }
   return { frontier, rails, offers };
 }
@@ -147,6 +161,10 @@ export const roadMethods = {
     // Content may have changed under a save: a site that no longer exists, a lesson that was removed.
     const at = graph.node(stored.at) ? stored.at : graph.start;
     const road = { ...clone(stored), at, trail: stored.trail.includes(at) ? [...stored.trail] : [...stored.trail, at] };
+    // Round 161: a road from before the walk was kept has its trail for one (the sites visited, each once, in order).
+    if (!Array.isArray(road.walk)) road.walk = [...road.trail];
+    if (road.walk.at(-1) !== at) road.walk = [...road.walk, at];
+    if (!Number.isSafeInteger(road.hops)) road.hops = road.walk.length - 1;
     if (road.current && (road.current.node !== at || !objectivesOf(curriculum, road.current.activity).length)) road.current = null;
     return road;
   },
@@ -168,6 +186,8 @@ export const roadMethods = {
       definition = buildRoadDefinition({
         curriculum, language: this.content.language, seed: session.seed, node: graphOf(session.seed).node(session.node),
         step: session.step, activity: session.activity, currentUnitId: session.unitId,
+        knowledge: this.content.knowledge, // round 155
+        dungeons: this.content.dungeons, // round 160
       });
       this.roadDefinitions.set(key, definition);
       if (this.roadDefinitions.size > ROAD.definitions) this.roadDefinitions.delete(this.roadDefinitions.keys().next().value);
@@ -184,20 +204,28 @@ export const roadMethods = {
     const curriculum = this.curriculum();
     const graph = graphOf(road.seed);
     const currentUnitId = position(curriculum, road.progress).unit?.id ?? null;
-    const site = (id) => { const node = graph.node(id); return { id, name: placeName(road.seed, node), biome: node.biome, at: [Math.round(node.x * 10) / 10, Math.round(node.z * 10) / 10] }; };
+    const site = (id) => { const node = graph.node(id); return { id, name: placeName(road.seed, node), cover: node.cover, biome: node.biome, biomeName: BIOMES[node.biome]?.name ?? null, at: [Math.round(node.x * 10) / 10, Math.round(node.z * 10) / 10] }; };
     const offer = (node, step, activity) => {
-      const { unit, stage, title, character } = describeActivity({ curriculum, seed: road.seed, node, step, activity, currentUnitId });
+      const { unit, stage, title, character, dungeon } = describeActivity({ curriculum, seed: road.seed, node, step, activity, currentUnitId, dungeons: this.content.dungeons });
       return {
         kind: activity.kind, title, unitId: unit.id, unitTitle: unit.title, cefr: stage.cefr, why: activity.why ?? null,
+        // Round 160: a gate stands in a legacy dungeon: walking to its site enters that dungeon.
+        dungeon: dungeon ? { id: dungeon.id, name: dungeon.name, siteName: dungeon.site.name } : null,
         character: { name: character.name, role: character.species, description: character.appearance, hue: character.hue },
       };
     };
     const { frontier, rails, offers } = offersFor(graph, road, curriculum);
     return {
       road: {
-        id: ROAD.id, name: ROAD.name, seed: road.seed, step: road.step, at: road.at, here: site(road.at),
+        id: ROAD.id, name: ROAD.name, seed: road.seed, step: road.step, at: road.at,
+        // Round 160: `here.dungeon` while the learner stands in a legacy dungeon (the site they walked to held a gate).
+        here: { ...site(road.at), dungeon: this.standingIn(road) },
+        // And how far the unit's gate is: the conversations it takes at least, and the dungeon it stands in.
+        gate: this.gateAhead(curriculum, road),
+        hops: road.hops, // round 161: how many walks the journey is; the walk itself is asked for apart (getRoadWalk)
         current: road.current ? offer(graph.node(road.current.node), road.current.step, road.current.activity) : null,
         trail: road.trail.slice(-ROAD.shownTrail), cleared: road.cleared.slice(-ROAD.shownTrail),
+        narration: this.toldView(road.narration ?? null), // round 156: what the narrator said of the last arrival
         frontier: frontier.map(({ id, from }) => ({
           ...site(id), from, way: graph.edge(from, id).kind, recommended: id === rails,
           offer: offer(graph.node(id), road.step, offers.get(id)),
@@ -207,6 +235,7 @@ export const roadMethods = {
       },
       curriculum: overview(curriculum, road.progress),
       progression: this.progression(envelope),
+      guidebook: this.guidebookNote(envelope), // round 157
     };
   },
 
@@ -218,9 +247,66 @@ export const roadMethods = {
       const latest = await this.loadEnvelope(learnerId);
       if (latest.road) return this.roadView(latest);
       const staged = clone(latest);
-      staged.road = freshRoad(this.roadSeed(), this.curriculum());
+      staged.road = this.setOut(staged, freshRoad(this.roadSeed(), this.curriculum()));
       await this.storage.save(staged);
       return this.roadView(staged);
+    });
+  },
+
+  // Round 160: the legacy dungeon the learner stands in ({ id, name, siteName }), or null.
+  standingIn(road) {
+    const dungeon = road.dungeon ? this.content.dungeons?.get(road.dungeon) : null;
+    if (!dungeon) return null;
+    const first = dungeon.sites.find((candidate) => candidate.id === dungeon.start) ?? dungeon.sites[0];
+    return { id: dungeon.id, name: dungeon.name, siteName: first.name };
+  },
+
+  // Round 160: the gate of the unit the learner is in: { unitTitle, hops, dungeon }. `hops` is the fewest
+  // conversations before the gate can be offered: the unit's lessons still to do and the pause before a gate
+  // (pacing.js); reviews and repairs on the way add to it. Null once the curriculum is finished.
+  gateAhead(curriculum, road) {
+    const { unit, complete } = position(curriculum, road.progress);
+    if (complete || !unit) return null;
+    const pending = unit.lessons.filter((lesson) => !(road.progress.lessons?.[lesson.id]?.done > 0)).length;
+    const dungeon = legacyDungeonFor(this.content.dungeons, curriculum, unit.id);
+    return { unitId: unit.id, unitTitle: unit.title, hops: pending + (pending > 0 ? PACING.checkpointGap : 0), dungeon: dungeon ? { id: dungeon.id, name: dungeon.name } : null };
+  },
+
+  // Round 156: the narrator's passage for the first step on a new road (told once to a learner; null after that).
+  setOut(envelope, road) {
+    return { ...road, narration: this.tell(envelope, { event: 'road_enter' })?.id ?? null };
+  },
+
+  // Round 161 (issue #9): the whole journey: every site walked to, in order, as node ids. Asked for apart from the
+  // road's view, which is sent after every answer and walk and would carry it each time.
+  // Round 163 (issue #13): asking for it is the map's "Show Journey so far". Once the journey is a hundred walks
+  // long the narrator remarks on it (a written passage, told each time it is shown), and the first time that
+  // enters a guidebook entry; only then is anything written.
+  async getRoadWalk(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    const view = (from) => {
+      const road = this.roadOf(from);
+      const event = { event: 'journey_shown', hops: road.hops };
+      const passage = selectPassage(this.content.passages ?? [], event, { told: from.told ?? {} });
+      return { road, passage };
+    };
+    const answer = (from, { road, passage }) => ({
+      walk: { seed: road.seed, nodes: road.walk, hops: road.hops, kept: road.walk.length },
+      narration: passage ? this.toldView(passage.id) : null,
+      guidebook: this.guidebookNote(from),
+    });
+    const first = view(envelope);
+    const fresh = first.passage && (!Object.hasOwn(envelope.told ?? {}, first.passage.id) || entriesFor(this.content.guide ?? [], { event: 'journey_remarked' }, envelope.guidebook ?? {}).length > 0);
+    if (!fresh) return answer(envelope, first);
+    return this.serialized(learnerId, async () => {
+      const staged = clone(await this.loadEnvelope(learnerId));
+      const again = view(staged);
+      if (again.passage) {
+        this.tell(staged, { event: 'journey_shown', hops: again.road.hops });
+        this.enterGuide(staged, { event: 'journey_remarked' });
+        await this.storage.save(staged);
+      }
+      return answer(staged, again);
     });
   },
 
@@ -247,10 +333,21 @@ export const roadMethods = {
       }
       const staged = clone(envelope);
       const activity = commit(curriculum, road.progress, road.step, offers.get(nodeId), this.isDueObjective(envelope));
+      // Round 156: the narrator's passage for the arrival: by the kind of way taken and the country arrived in.
+      const [ni, nj] = parseNodeId(nodeId);
+      // Round 160: a gate's site is a legacy dungeon's node; the learner is in that dungeon until they walk on.
+      const entered = activity.kind === 'checkpoint' ? legacyDungeonFor(this.content.dungeons, curriculum, activity.unitId) : null;
+      const arrival = { event: 'road_arrive', ...(entered ? { dungeon: entered.id } : {}), way: graph.edge(frontier.find((entry) => entry.id === nodeId).from, nodeId).kind, cover: graph.node(nodeId).cover, biome: graph.node(nodeId).biome, kind: activity.kind, // `kind`: round 157
+        // Round 158: the stage of the curriculum the learner is in, and the conversations finished: a passage with a
+        // harder untranslatable text waits for its stage, and one may wait for a number of conversations.
+        cefr: curriculum.stages.find((stage) => stage.id === position(curriculum, road.progress).unit?.stageId)?.cefr ?? curriculum.stages.at(-1).cefr, step: road.step };
       staged.road = {
         ...road, at: nodeId,
         trail: [...road.trail.filter((id) => id !== nodeId), nodeId].slice(-ROAD.trail),
         current: { node: nodeId, step: road.step, activity },
+        walk: [...road.walk, nodeId].slice(-ROAD.walk), hops: road.hops + 1, // round 161: the whole journey
+        dungeon: entered?.id ?? null,
+        narration: this.tell(staged, arrival, hash(ni * 13 + road.step, nj * 17 - road.step, road.seed + 1212))?.id ?? null,
       };
       await this.storage.save(staged);
       if (own) this.encounters.delete(learnerId);
@@ -266,7 +363,7 @@ export const roadMethods = {
     const road = this.roadOf(envelope);
     if (!envelope.road) {
       envelope = clone(envelope);
-      envelope.road = road;
+      envelope.road = this.setOut(envelope, road);
       await this.storage.save(envelope);
     }
     if (!road.current) throw conflictError('Nobody is waiting here any more. Walk on.', 'NOTHING_HERE');
@@ -293,8 +390,11 @@ export const roadMethods = {
     const definition = this.roadDefinition(session.road);
     const total = definition.encounter.objectives.length;
     const corrected = new Set(session.correctedObjectiveIds ?? []);
-    const hinted = definition.encounter.objectives.filter((objective) => !corrected.has(objective.id) && (session.reveals?.[objective.id] ?? []).length > 0).length;
-    const score = scoreOf({ total, corrected: corrected.size, hinted });
+    // Round 154: a light exchange may end with an objective never met; it is neither corrected nor hinted, it is missed.
+    const passed = new Set(session.passedObjectiveIds ?? []);
+    const missed = definition.encounter.objectives.filter((objective) => !passed.has(objective.id)).length;
+    const hinted = definition.encounter.objectives.filter((objective) => passed.has(objective.id) && !corrected.has(objective.id) && (session.reveals?.[objective.id] ?? []).length > 0).length;
+    const score = scoreOf({ total, corrected: corrected.size, hinted, missed });
     const { activity } = stored.current;
     const before = position(curriculum, stored.progress);
     const step = stored.step + 1;
@@ -332,7 +432,7 @@ export const roadMethods = {
         const [first] = plan(curriculum, fresh.progress, fresh.step);
         fresh.current = first ? { node: fresh.at, step: fresh.step, activity: commit(curriculum, fresh.progress, fresh.step, first, this.isDueObjective(envelope)) } : null;
       }
-      staged.road = fresh;
+      staged.road = this.setOut(staged, fresh);
       await this.storage.save(staged);
       if (this.encounters.get(learnerId)?.road) this.encounters.delete(learnerId);
       return this.roadView(staged);

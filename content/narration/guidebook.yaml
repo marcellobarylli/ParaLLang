@@ -1,0 +1,55 @@
+# Round 157 (issue #5): the guidebook. An entry is a piece of narration that is written down and that the player
+# keeps: the first time the thing it speaks of happens, the narrator tells it, and it is entered in the guidebook,
+# where it can be read again at any time. The save holds which entries a learner has (`guidebook`).
+#
+#   id      a name, unique
+#   title   the entry's heading in the guidebook
+#   when    what enters it: an event and the facts it must have, as in passages.yaml. Events and their facts:
+#             road_enter                                       the first step on The Journey 2
+#             road_arrive  way, cover, kind: lesson|review|repair|checkpoint   an arrival at a site of the road
+#             site_arrive  dungeon, site                       standing at a site of a dungeon
+#             truth_shown                                      (round 158) a passage with an untranslatable text was told
+#             journey_remarked                                 (round 163) the narrator remarked on a long journey shown whole
+#   text    the entry, in English, in the narrator's voice. It may say how things are done here; like every other
+#           narration it does not say why the world is so.
+entries:
+  - id: the_road
+    title: The road
+    when: { event: road_enter }
+    text: >-
+      No road ends. Where water is in the way the road goes through it as a ford; where a mountain is in the way,
+      over it as a pass; and where there is no land at all there is a ferry. A traveller who stops choosing is
+      carried along all the same, and arrives.
+  # Round 158 (issue #4): the entry issue #5 gave as its example, entered with the first turmeric text.
+  - id: turmeric_text
+    title: Turmeric text
+    when: { event: truth_shown }
+    text: >-
+      Turmeric coloured text cannot be translated. It holds fragments of the truth of the world; to understand you
+      must become a proficient speaker.
+  # Round 163 (issue #13): entered with the narrator's remark on a journey of a hundred walks.
+  - id: the_long_way_round
+    title: The long way round
+    when: { event: journey_remarked }
+    text: >-
+      A walk on rails goes where the road sends it, and a road sends a traveller as a breeze sends a leaf. Drawn
+      whole, such a walk has no direction, only a length. The sailor of the oldest story drew one like it across a
+      whole sea, and it brought him home.
+  - id: talked_past
+    title: Being let past
+    when: { event: site_arrive }
+    text: >-
+      Nobody here is killed. Whoever stands in your way is talked past: answer them in their language and they let
+      you through. One you have come to like can be asked to come with you.
+  - id: second_tellings
+    title: Old words
+    when: { event: road_arrive, kind: review }
+    text: >-
+      Nothing is properly said until it has been said twice, some days apart. Those who ask you for old words are
+      not testing you. They are keeping something from going slack.
+  - id: the_gate
+    title: Gates
+    when: { event: road_arrive, kind: checkpoint }
+    text: >-
+      Each stretch of the road ends at a gate, and its keeper asks for what the stretch taught. No hint is given at
+      a gate. A traveller who is turned back is sent to say a lesson again, and is then asked other questions.

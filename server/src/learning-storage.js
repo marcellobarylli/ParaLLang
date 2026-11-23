@@ -69,6 +69,7 @@ function validParty(party) {
 // companion's strain is pending, then the encounter whose finished conversation spent it. As for lines, only the
 // container is strict: an invalid or repeated entry is dropped and the save kept.
 export const ANNEX_LIMIT = 20;
+export const TOLD_LIMIT = 1000; // round 156
 function validAnnexRecord(record) {
   return Boolean(record) && typeof record === 'object' && !Array.isArray(record)
     && typeof record.id === 'string' && record.id.length > 0 && record.id.length <= 100
@@ -136,7 +137,10 @@ function validRoad(road) {
     && record(road.progress) && record(road.progress.lessons) && record(road.progress.checkpoints)
     && Array.isArray(road.progress.recent) && road.progress.recent.length <= 50 && road.progress.recent.every((score) => Number.isFinite(score))
     && Object.keys(road.progress.lessons).length <= 5000
-    && Array.isArray(road.log) && road.log.length <= 30 && road.log.every(record);
+    && Array.isArray(road.log) && road.log.length <= 30 && road.log.every(record)
+    // Round 161: the whole walk (a road from before it has none).
+    && (road.walk === undefined || ids(road.walk, 20000))
+    && (road.hops === undefined || (Number.isSafeInteger(road.hops) && road.hops >= 0));
 }
 
 function validWorld(world) {
@@ -198,6 +202,18 @@ function validateEnvelope(value, learnerId) {
   // Review R1.5: a safe integer, so an edited save with 1e308 XP is not taken for a number of XP.
   if (!Number.isSafeInteger(value.progression?.xp) || value.progression.xp < 0) value.progression = { xp: 0 };
   else value.progression = { xp: value.progression.xp };
+  // Round 156: the narrator's passages told to this learner ({ id: when }). Anything else is dropped and the save kept.
+  if (value.told !== undefined) {
+    const entries = value.told && typeof value.told === 'object' && !Array.isArray(value.told) ? Object.entries(value.told) : [];
+    value.told = Object.fromEntries(entries.filter(([id, at]) => id.length <= 100 && typeof at === 'string' && Number.isFinite(Date.parse(at))).slice(0, TOLD_LIMIT));
+  }
+  // Round 157: the guidebook: the entries this learner has ({ id: { at, read } }). Anything else is dropped.
+  if (value.guidebook !== undefined) {
+    const entries = value.guidebook && typeof value.guidebook === 'object' && !Array.isArray(value.guidebook) ? Object.entries(value.guidebook) : [];
+    value.guidebook = Object.fromEntries(entries
+      .filter(([id, entry]) => id.length <= 100 && entry && typeof entry === 'object' && typeof entry.at === 'string' && Number.isFinite(Date.parse(entry.at)))
+      .slice(0, TOLD_LIMIT).map(([id, entry]) => [id, { at: entry.at, read: entry.read === true }]));
+  }
   if (value.annexes !== undefined) {
     if (!Array.isArray(value.annexes)) throw retryableError('The learner save contains invalid annex records. The original file was preserved.', 'SAVE_UNREADABLE');
     value.annexes = value.annexes.filter(validAnnexRecord).filter((record, index, all) => all.findIndex((other) => other.id === record.id) === index).slice(0, ANNEX_LIMIT);

@@ -7,6 +7,8 @@
 // voices (round 126): whether the characters read their new lines aloud. On unless switched off.
 // tiltLook (round 125): whether the phone's orientation turns the camera's look at a site. Off unless switched on.
 // rails (round 144): on The Journey 2, whether the way on is chosen for the player. On unless switched off.
+// light (round 153): whether answers go unchecked: the character works out what was meant and replies. Off unless switched on.
+// treeModels (round 162): on the road, whether the trees nearest the camera are the pulled models. On unless switched off.
 // immersion (round 148): the share of a character's lines in the language being learned, 0.1 to 1. 1 unless moved.
 import { browserStorage } from './api/settings.js';
 
@@ -34,11 +36,11 @@ export function clampImmersion(value) {
 export function loadDisplay(storage = browserStorage()) {
   let stored = null;
   try { stored = JSON.parse(storage?.getItem?.(DISPLAY_KEY) ?? 'null'); } catch { stored = null; }
-  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion) };
+  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), light: stored?.light === true, treeModels: stored?.treeModels !== false };
 }
 
 export function saveDisplay(display, storage = browserStorage()) {
-  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion) };
+  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), light: display?.light === true, treeModels: display?.treeModels !== false };
   try { storage?.setItem?.(DISPLAY_KEY, JSON.stringify(value)); } catch { /* private mode: kept for this page only */ }
   return value;
 }

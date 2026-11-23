@@ -4,6 +4,7 @@ import yaml from 'js-yaml';
 import { z } from 'zod';
 import { normalizeAnswer } from './language-engine.js';
 import { loadCurriculum } from './road/curriculum.js';
+import { truthIds } from './narration.js';
 
 const defaultContentDir = resolve(import.meta.dirname, '..', '..', 'content');
 export const DEFAULT_LANGUAGE = 'it';
@@ -89,6 +90,9 @@ const encounterSchema = z.object({
   max_turns: z.number().int().positive(),
   escalation: z.object({ target_ratio_increase_per_turn: z.number().min(0) }).strict(),
   resolved_message: z.string().min(1).optional(),
+  // Round 159 (issue #7): what the character utters when the encounter is completed: the narrator's line and the
+  // passage, as one text in the form of a written passage (it may hold `{truth:<id>}`).
+  revelation: z.object({ text: z.string().min(1) }).strict().optional(),
   // Round 009: static English lines in which the companion introduces the mechanics (the tutorial sets them).
   companion_briefing: z.array(z.string().min(1)).min(1).max(4).optional(),
   // Round 029 (backlog C1): before a first fight, every due Spellbook card among the objectives' targets is reviewed.
@@ -137,6 +141,8 @@ const characterSchema = z.object({
   }).strict(),
   defeat_condition: z.object({ type: z.string().min(1), description: z.string().min(1) }).strict(),
   saveable: z.boolean(),
+  // Round 155 (issue #3): the region whose lore the character knows and one thing it has noticed (world/knowledge.yaml).
+  world: z.object({ region: z.string().min(1), noticed: z.string().min(1) }).strict().optional(),
   // Round 126: how the character sounds when the web client reads its lines aloud. `kind` picks a system voice;
   // `pitch` (0 to 2) and `rate` (0.5 to 2) are the browser's speech synthesis scales and override the kind's own.
   voice: z.object({
@@ -146,10 +152,69 @@ const characterSchema = z.object({
   }).strict().optional(),
 }).strict();
 
+// Round 155 (issue #3): what the people of the world know (content/world/knowledge.yaml, optional).
+const knowledgeSchema = z.object({
+  global: z.string().min(1),
+  regions: z.record(z.object({
+    lore: z.string().min(1),
+    // A real region the model knows, by language code, that this one acts as. Nothing of that region is written here.
+    acts_as: z.record(z.string().min(1)).optional(),
+    noticed: z.object({ plain: z.array(z.string().min(1)).min(1), knowing: z.array(z.string().min(1)).min(1) }).strict().optional(),
+  }).strict()),
+}).strict();
+
+/**
+ * What a character of `regionId` knows, as the narrator's prompt takes it: { global, region, noticed }.
+ * A region that acts as a real one says so, and that the real name is never spoken.
+ */
+export function worldFor(knowledge, languageCode, regionId, noticed) {
+  const region = knowledge?.regions[regionId];
+  if (!region || !noticed) return null;
+  const real = region.acts_as?.[languageCode];
+  const acts = real
+    ? ` This region is this world's ${real}. You know ${real} well: its land, food, weather, towns and habits are this region's, as ordinary life. Never say "${real}" or name its country: nobody here has heard of either.`
+    : '';
+  return { global: knowledge.global, region: `${region.lore}${acts}`, noticed };
+}
+
 const styleGuideSchema = z.object({
   tone: z.string().min(1),
   narrator_voice: z.string().min(1),
+  // Round 156 (issue #6): the rules of the narrative field and what the narrator knows and never says.
+  narrator: z.object({ rules: z.array(z.string().min(1)).min(1), knows: z.string().min(1) }).strict().optional(),
   rules: z.array(z.string().min(1)).min(1),
+}).strict();
+
+// Round 157 (issue #5): the guidebook's entries (content/narration/guidebook.yaml, optional; narration.js).
+const guidebookSchema = z.object({
+  entries: z.array(z.object({
+    id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+    title: z.string().min(1),
+    when: z.object({ event: z.string().min(1) }).catchall(z.union([z.string(), z.number(), z.boolean()])),
+    text: z.string().min(1),
+  }).strict()),
+}).strict();
+
+// Round 156 (issue #6): the narrator's written passages (content/narration/passages.yaml, optional; narration.js).
+const passagesSchema = z.object({
+  passages: z.array(z.object({
+    id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+    when: z.object({ event: z.string().min(1) }).catchall(z.union([z.string(), z.number(), z.boolean()])),
+    once: z.boolean().optional(),
+    min_step: z.number().int().min(0).optional(), // round 158
+    min_hops: z.number().int().min(0).optional(), // round 163
+    text: z.string().min(1),
+  }).strict()),
+}).strict();
+
+// Round 158 (issue #4): the pack's untranslatable texts (content/languages/<code>/lore/truths.yaml, optional). In the
+// language being learned only: there is no field for a translation.
+const truthsSchema = z.object({
+  truths: z.array(z.object({
+    id: z.string().regex(/^[a-z][a-z0-9_]*$/),
+    level: z.enum(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']),
+    text: z.string().min(1),
+  }).strict()),
 }).strict();
 
 // Round 027: the philosophy statement shown once before the map (content/narration/onboarding.yaml).
@@ -253,6 +318,25 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const { default_encounter: defaultEncounterId, ...language } = languageSchema.parse(parseYaml(contentDir, `${pack}/language.yaml`));
   if (language.code !== code) throw new Error(`content/${pack}/language.yaml must declare code ${code}`);
   const styleGuide = styleGuideSchema.parse(parseYaml(contentDir, 'narration/style_guide.yaml'));
+  const allPassages = existsSync(resolve(contentDir, 'narration/passages.yaml'))
+    ? passagesSchema.parse(parseYaml(contentDir, 'narration/passages.yaml')).passages.map((passage) => Object.freeze(passage)) : [];
+  unique(allPassages.map((passage) => passage.id), 'Narration passages');
+  const guide = Object.freeze(existsSync(resolve(contentDir, 'narration/guidebook.yaml'))
+    ? guidebookSchema.parse(parseYaml(contentDir, 'narration/guidebook.yaml')).entries.map((entry) => Object.freeze(entry)) : []);
+  unique(guide.map((entry) => entry.id), 'Guidebook entries');
+  // A pack with untranslatable texts must have every one a passage names. A pack with none at all (no file) plays
+  // without the passages that hold one.
+  const hasTruths = existsSync(resolve(contentDir, `${pack}/lore/truths.yaml`));
+  const truthList = hasTruths ? truthsSchema.parse(parseYaml(contentDir, `${pack}/lore/truths.yaml`)).truths : [];
+  unique(truthList.map((truth) => truth.id), 'Untranslatable texts');
+  const truths = new Map(truthList.map((truth) => [truth.id, Object.freeze(truth)]));
+  if (hasTruths) {
+    for (const { id, text } of allPassages) {
+      for (const truthId of truthIds(text)) if (!truths.has(truthId)) throw new Error(`Narration ${id} names the untranslatable text ${truthId}, which the ${language.name} pack does not have`);
+    }
+  }
+  const passages = Object.freeze(hasTruths ? allPassages : allPassages.filter((passage) => truthIds(passage.text).length === 0));
+  const knowledge = existsSync(resolve(contentDir, 'world/knowledge.yaml')) ? Object.freeze(knowledgeSchema.parse(parseYaml(contentDir, 'world/knowledge.yaml'))) : null;
   const { begin_label: beginLabel, ...onboardingText } = onboardingSchema.parse(parseYaml(contentDir, 'narration/onboarding.yaml'));
   const onboarding = Object.freeze({ ...onboardingText, notes: Object.freeze(onboardingText.notes), beginLabel });
 
@@ -286,6 +370,10 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
     const encounter = encounterSchema.parse(parseYaml(contentDir, file));
     if (encounters.has(encounter.id)) throw new Error(`Encounter id ${encounter.id} is declared twice`);
     const character = characterSchema.parse(parseYaml(contentDir, encounter.character));
+    for (const truthId of truthIds(encounter.revelation?.text ?? '')) {
+      if (hasTruths && !truths.has(truthId)) throw new Error(`Encounter ${encounter.id}'s revelation names the untranslatable text ${truthId}, which the ${language.name} pack does not have`);
+    }
+    if (character.world && knowledge && !knowledge.regions[character.world.region]) throw new Error(`Character ${character.id} names the unknown region ${character.world.region}`);
     validateObjectives(encounter, vocabularyById, referenceIds);
     // Round 009: narration is matched only against the vocabulary files this encounter's objectives draw on (whole
     // files), so one encounter's words never appear as chips or Spellbook entries in another's lines.
@@ -320,7 +408,7 @@ export function loadGameContent({ contentDir = defaultContentDir, language: code
   const fragments = loadFragments(contentDir, pack, encounters);
   const inscriptions = loadInscriptions(contentDir, pack, world);
   return Object.freeze({
-    language, styleGuide, onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
+    language, styleGuide, knowledge, guide, truths, passages, passagesById: new Map(passages.map((passage) => [passage.id, passage])), onboarding, vocabulary, vocabularyById, world, dungeons, encounters, fragments,
     inscriptions, inscriptionsByLocation: new Map(inscriptions.map((inscription) => [inscription.location, inscription])),
     // Round 144: the curriculum of The Journey 2 (content/curriculum/ and the pack's curriculum/), with its own
     // vocabulary, kept apart from the pack's above. Null in a pack that has none. Read on first use: its vocabulary

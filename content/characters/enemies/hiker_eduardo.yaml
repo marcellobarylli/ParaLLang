@@ -26,3 +26,8 @@ defeat_condition:
     Player offers Eduardo help, asks where he was going and asks whether there is wine up there.
 saveable: false
 voice: { kind: male, pitch: 1.0, rate: 1.0 }
+# Round 155 (issue #3): the character is of the world: the region whose lore it knows (content/world/knowledge.yaml)
+# and one thing it has noticed. For the narrator; never shown to the player.
+world:
+  region: micromort_mountain
+  noticed: "He counts his steps because the signpost does. The trail is easier to keep to than to leave, which he found out with his ankle."

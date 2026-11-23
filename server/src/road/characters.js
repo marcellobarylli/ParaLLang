@@ -99,7 +99,7 @@ const pickFrom = (list, value) => list[Math.min(list.length - 1, Math.floor(valu
 export function placeName(seed, node) {
   const draw = drawer(seed, node.i, node.j);
   const qualifier = draw(3) < 0.4 ? ` ${pickFrom(PLACE_QUALIFIERS, draw(4))}` : '';
-  return `The ${pickFrom(PLACE_ADJECTIVES, draw(1))} ${pickFrom(PLACE_NOUNS[node.biome] ?? PLACE_NOUNS.meadow, draw(2))}${qualifier}`;
+  return `The ${pickFrom(PLACE_ADJECTIVES, draw(1))} ${pickFrom(PLACE_NOUNS[node.cover] ?? PLACE_NOUNS.meadow, draw(2))}${qualifier}`;
 }
 
 /**

@@ -33,10 +33,14 @@ export const PACING = Object.freeze({
 
 export const emptyProgress = () => ({ lessons: {}, checkpoints: {}, recent: [], sinceReview: 0 });
 
-/** A conversation's score: the share of its objectives met cleanly. One met by a correction or after a hint counts half. */
-export function scoreOf({ total, corrected = 0, hinted = 0 }) {
+/**
+ * A conversation's score: the share of its objectives met cleanly. One met by a correction or after a hint counts half.
+ * Round 154: one not met at all (a light exchange that ran out of turns) counts nothing.
+ */
+export function scoreOf({ total, corrected = 0, hinted = 0, missed = 0 }) {
   if (!(total > 0)) return 0;
-  return Math.max(0, Math.min(1, (total - 0.5 * Math.min(total, corrected + hinted)) / total));
+  const met = Math.max(0, total - missed);
+  return Math.max(0, Math.min(1, (met - 0.5 * Math.min(met, corrected + hinted)) / total));
 }
 
 /** The mean score of the last conversations, or null before there are two. */

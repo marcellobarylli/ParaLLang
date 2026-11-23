@@ -75,6 +75,8 @@ A portal opens and the [[CHARACTERS#The Companion|Companion]] enters the world o
 
 ## CREATION MYTH: [[Creation Myth]]
 In the beginning was the Word, and it could not be left alone. A branch is a retelling, the first stitch is the first translation, and it is stories all the way up and down.
+2. ## UNDERSTOOD LATER: [[Understood Later]]
+What the game's untranslatable (turmeric) text says. Spoilers: the player can read it only by learning the language.
 
 
 

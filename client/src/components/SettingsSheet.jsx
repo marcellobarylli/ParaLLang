@@ -19,8 +19,9 @@ const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s moti
 // Round 127: "Ambient music" switches the generated background music (ambience.js).
 // Round 126: "Character voices" switches the reading aloud of new lines, and the sheet says what this browser can do.
 // Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
+// Round 153: "Checking": strict (an answer is marked) or light (nothing is marked; the character works out what was meant).
 // Round 144: "Your save": when this browser last copied the save, a download of the copy as a file, and a file put back.
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, immersion = IMMERSION.default, onImmersion, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, treeModels = true, onTreeModels, immersion = IMMERSION.default, onImmersion, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -83,13 +84,25 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
               : `About ${immersionPercent}% of each line is in ${languageName ?? 'the language you are learning'} and the rest in English. The translation of the line you are answering is a hint. At 100% it is free.`} It applies from the character's next line.</small>
           </>
         )}
+        {onLight && (
+          <>
+            <fieldset className="setting-choice">
+              <legend>How answers are checked</legend>
+              <label><input type="radio" name="settings-checking" checked={!light} onChange={() => onLight(false)} /><span>Strict</span></label>
+              <label><input type="radio" name="settings-checking" checked={light} onChange={() => onLight(true)} /><span>Light</span></label>
+            </fieldset>
+            <small>{light
+              ? `Light: nothing is marked. The character works out what you meant, you are shown it in ${languageName ?? 'the language you are learning'}, and the conversation goes on. Each turn is quicker.`
+              : 'Strict: each answer is marked against what the conversation asks for before the character replies.'} It applies from your next answer.</small>
+          </>
+        )}
         {onBeginner && (
           <>
             <label className="setting-check" htmlFor="settings-beginner">
-              <input id="settings-beginner" type="checkbox" checked={beginner} onChange={(event) => onBeginner(event.target.checked)} />
+              <input id="settings-beginner" type="checkbox" checked={beginner} onChange={(event) => onBeginner(event.target.checked)} disabled={light} />
               <span>Beginner mode</span>
             </label>
-            <small>Answer in the language you are learning, in English or in a mixture. A mistake, or English, is corrected for you and costs one heart; you move on. Off: an answer must be right to count, and nothing is corrected.</small>
+            <small>{light ? 'Beginner mode belongs to strict checking. ' : ''}Answer in the language you are learning, in English or in a mixture. A mistake, or English, is corrected for you and costs one heart; you move on. Off: an answer must be right to count, and nothing is corrected.</small>
           </>
         )}
         {onMusic && (
@@ -109,6 +122,15 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             </label>
             <small>{speechSupport.speak ? 'Each character reads its lines aloud in its own voice. A line\'s 🔊 repeats it.' : 'This browser cannot read aloud.'}</small>
             <small>{speechSupport.listen ? 'The 🎤 beside the reply box writes what you say. You send it.' : 'This browser cannot listen. The keyboard\'s own microphone key still writes what you say.'}</small>
+          </>
+        )}
+        {onTreeModels && (
+          <>
+            <label className="setting-check" htmlFor="settings-tree-models">
+              <input id="settings-tree-models" type="checkbox" checked={treeModels} onChange={(event) => onTreeModels(event.target.checked)} />
+              <span>Tree models</span>
+            </label>
+            <small>On the road, the trees nearest you are drawn from models (a small file, loaded when the road opens). Off: every tree is the simple kind.</small>
           </>
         )}
         {onTiltLook && (

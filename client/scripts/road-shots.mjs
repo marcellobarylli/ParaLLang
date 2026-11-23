@@ -215,13 +215,13 @@ async function run(browser, size, content) {
 
     // On rails: Continue glides to the pacing's site and the next conversation opens there.
     const before = s.at;
-    await click('Continue');
+    await click(/^(Continue|Enter )/);
     await until(page, (v) => v.roadPhase === 'travel' || v.roadPhase === 'encounter', 'the glide');
     await sleep(1400);
     await shot('06-glide');
     s = await converse('second');
     if (s.at === before || s.step !== 2) fail(`the rails did not move on: ${JSON.stringify(s)}`);
-    for (let n = 0; n < 2; n += 1) { await click('Continue'); s = await converse(`rails ${n + 3}`); }
+    for (let n = 0; n < 2; n += 1) { await click(/^(Continue|Enter )/); s = await converse(`rails ${n + 3}`); }
     report.push(`on rails to step ${s.step}: ${JSON.stringify(s.totals)}`);
 
     // Off the rails: the map, a site of the player's own choosing.
@@ -237,7 +237,7 @@ async function run(browser, size, content) {
     s = await converse('chosen');
     if (s.at !== other[0]) fail(`the walk went to ${s.at}, not to ${other[0]}`);
     report.push(`off the rails to ${s.at} (${other[1]})`);
-    for (let n = 0; n < 2; n += 1) { await click('Continue'); s = await converse(`more ${n}`); }
+    for (let n = 0; n < 2; n += 1) { await click(/^(Continue|Enter )/); s = await converse(`more ${n}`); }
 
     await toEnd();
     await click('Curriculum');

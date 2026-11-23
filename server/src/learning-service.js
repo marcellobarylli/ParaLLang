@@ -1,17 +1,18 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { beginnerGradingResponseSchema, gradingResponseSchema, encounterResponseSchema, locationAtmosphereSchema } from './llm/schemas.js';
+import { beginnerGradingResponseSchema, gradingResponseSchema, encounterResponseSchema, lightTurnSchema, locationAtmosphereSchema } from './llm/schemas.js';
 import { buildAtmosphereMessages, buildGradingMessages, buildNarrationMessages } from './llm/prompt-builder.js';
 import {
   IMMERSION, calculateTargetRatio, capAssistedQuality, gradeVocabularyAnswer, immersionFrom, initialSchedule,
   foldEvidenceText, isDue, lacksTargetLanguage, levelFor, masteryLabel, matchCanonicalVocabulary, progressionView, ratioBonusFor, scheduleReview,
 } from './language-engine.js';
-import { foldWords } from './content-loader.js';
+import { foldWords, worldFor } from './content-loader.js';
 import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
 import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
 import { roadMethods } from './road/service.js';
+import { entriesFor, passageView, selectPassage, toSegments, truthIds } from './narration.js';
 import { weatherAt } from './road/weather.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
@@ -37,6 +38,18 @@ export const FOOTNOTE_MAX_LENGTH = 200; // round 081
 // in the narration; at most this many.
 export const NARRATIVE_WORDS = Object.freeze({ max: 12, word: 40, meaning: 80 });
 export const BEGINNER_HEARTS = 3;
+// Round 159: the save's `told` keeps a character's revelation under this prefix and the encounter's id.
+export const REVELATION_PREFIX = 'revelation_';
+// Round 153: the quality recorded for a target the player wrote in a light turn: said, with nobody having checked how well.
+export const LIGHT_QUALITY = 4;
+// Round 154: a light conversation is an exchange of this many of the player's turns. Before `min` it goes on even
+// when every objective is met; from `min` it ends once none is open; at `max` it ends whatever is open.
+export const LIGHT_EXCHANGE = Object.freeze({ min: 3, max: 5 });
+const LIGHT_ENDING = Object.freeze({
+  go_on: 'Not yet: the conversation goes on after this reply, whatever has been met. Do not say goodbye.',
+  if_done: 'If no objective is left open after this answer, this reply is the last of the conversation: wind it up warmly, as the character would, and ask nothing more. Otherwise the conversation goes on.',
+  now: 'Now: this reply is the last of the conversation, whatever is still open. Wind it up warmly, as the character would, and ask nothing more.',
+});
 export const CORRECTION_MAX_LENGTH = 600; // round 131: an answer may be a paragraph (300 before)
 const CORRECTED_NOTE = 'An objective marked corrected was said with slips, or in English; the player was understood and has been shown the correct form. Treat it as met. Answer what the player meant. Do not mock the slips, do not remark on which language the player used, and do not repeat the correction.';
 
@@ -238,6 +251,84 @@ export class LearningService {
     return { targetRatio: this.ratioFor(turns, definition, session?.ratioBonus ?? 0, immersion), ...(immersion !== null && immersion >= IMMERSION.full ? { full: true } : {}) };
   }
 
+  // Round 156 (issue #6): the narrator's written passage for something that happened (narration.js), or null. It is
+  // marked as told in the envelope given, which the caller saves (or does not: a passage of a view that writes
+  // nothing is chosen again the same way). `pick` chooses among passages that fit equally.
+  tell(envelope, event, pick = 0) {
+    this.enterGuide(envelope, event);
+    const passage = selectPassage(this.content.passages ?? [], event, { told: envelope.told ?? {}, pick });
+    if (passage && !Object.hasOwn(envelope.told ?? {}, passage.id)) envelope.told = { ...(envelope.told ?? {}), [passage.id]: nowIso(this.clock) };
+    // Round 158 (issue #4): a passage with an untranslatable text in it; the guidebook has an entry for the first.
+    if (passage && truthIds(passage.text).length) this.enterGuide(envelope, { event: 'truth_shown' });
+    return passage;
+  }
+  // Round 158: what turns a written text into segments: the pack's untranslatable texts and the language's tag.
+  get narrationPack() { return { truths: this.content.truths ?? new Map(), lang: this.content.language.tag }; }
+  // Round 157 (issue #5): the guidebook. What happened may enter entries (content/narration/guidebook.yaml): each is
+  // entered once, unread, in the envelope given, which the caller saves. Returns whether any was entered.
+  enterGuide(envelope, event) {
+    const entering = entriesFor(this.content.guide ?? [], event, envelope.guidebook ?? {});
+    if (!entering.length) return false;
+    const at = nowIso(this.clock);
+    envelope.guidebook = { ...(envelope.guidebook ?? {}), ...Object.fromEntries(entering.map((entry) => [entry.id, { at, read: false }])) };
+    return true;
+  }
+  guideEntry(entry, record) { return { id: entry.id, title: entry.title, segments: toSegments(entry.text, this.narrationPack), at: record.at, unread: !record.read }; }
+  // Round 158 (issue #4): the passages told to this learner that hold an untranslatable text, oldest first, so that
+  // a text met early can be read again when more of the language is known.
+  guideFragments(envelope) {
+    // Round 159: and what a character uttered after an encounter (kept under REVELATION_PREFIX + the encounter's id).
+    const sourceOf = (id) => {
+      if (!id.startsWith(REVELATION_PREFIX)) return this.content.passagesById?.get(id) ?? null;
+      const text = this.content.encounters.get(id.slice(REVELATION_PREFIX.length))?.encounter.revelation?.text;
+      return text ? { id, text } : null;
+    };
+    return Object.entries(envelope.told ?? {})
+      .map(([id, at]) => ({ passage: sourceOf(id), at }))
+      .filter(({ passage }) => passage && truthIds(passage.text).length)
+      .sort((a, b) => a.at.localeCompare(b.at) || a.passage.id.localeCompare(b.passage.id))
+      .map(({ passage, at }) => ({ ...passageView(passage, this.narrationPack), at }));
+  }
+  // Round 159 (issue #7): what a character utters once its encounter is completed, as the client is sent it; null
+  // for an encounter without one. It is kept in the save's `told` under this id, for the guidebook.
+  revelationOf(definition) {
+    const text = definition.encounter.revelation?.text;
+    return text ? { id: `${REVELATION_PREFIX}${definition.encounter.id}`, segments: toSegments(text, this.narrationPack) } : null;
+  }
+  guidebookView(envelope) {
+    return { guidebook: { entries: this.guideEntries(envelope), total: (this.content.guide ?? []).length, fragments: this.guideFragments(envelope) } };
+  }
+  // The learner's entries, in the order they were entered (the file's order within one moment).
+  guideEntries(envelope) {
+    const have = envelope.guidebook ?? {};
+    return (this.content.guide ?? []).filter((entry) => Object.hasOwn(have, entry.id))
+      .map((entry, index) => ({ entry: this.guideEntry(entry, have[entry.id]), index }))
+      .sort((a, b) => a.entry.at.localeCompare(b.entry.at) || a.index - b.index).map(({ entry }) => entry);
+  }
+  // What every view of a place carries: how many entries the learner has, and those not yet read, to be told there.
+  guidebookNote(envelope) {
+    const entries = this.guideEntries(envelope);
+    return { count: entries.length, unread: entries.filter((entry) => entry.unread) };
+  }
+  async getGuidebook(learnerId) {
+    return this.guidebookView(await this.loadEnvelope(learnerId));
+  }
+  // The guidebook was opened: every entry is read.
+  async readGuidebook(learnerId) {
+    assertLearnerId(learnerId);
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      if (!Object.values(envelope.guidebook ?? {}).some((entry) => !entry.read)) return this.getGuidebook(learnerId);
+      const staged = clone(envelope);
+      for (const entry of Object.values(staged.guidebook)) entry.read = true;
+      await this.storage.save(staged);
+      return this.guidebookView(staged);
+    });
+  }
+
+  // A passage by its id, as the client is sent it; null for none or one the content no longer has.
+  toldView(passageId) { return passageView(this.content.passagesById?.get(passageId) ?? null, this.narrationPack); }
+
   progression(envelope) { return progressionView(envelope.progression?.xp ?? 0); }
   level(envelope) { return levelFor(envelope.progression?.xp ?? 0); }
 
@@ -245,7 +336,8 @@ export class LearningService {
   // on; unordered, every objective not yet passed. The current objective is the first open one.
   activeObjectives(session) {
     const { objectives, objectives_unordered: unordered } = this.definition(session).encounter;
-    if (!unordered) return objectives.slice(session.objectiveIndex);
+    // Round 153: a light turn may close an objective out of order; from then on the session goes by what was passed.
+    if (!unordered && !session.loose) return objectives.slice(session.objectiveIndex);
     const passed = new Set(session.passedObjectiveIds ?? []);
     return objectives.filter((objective) => !passed.has(objective.id));
   }
@@ -715,6 +807,8 @@ export class LearningService {
         ...(encounter.road ? { role: definition.character.species, description: definition.character.appearance } : {}),
       },
       resolvedMessage: definition.encounter.resolved_message ?? null,
+      // Round 159 (issue #7): what the character utters, told by the narrator once the encounter is completed.
+      revelation: encounter.state === 'resolved' ? this.revelationOf(definition) : null,
       companionBriefing: definition.encounter.companion_briefing ?? null,
       version: encounter.version,
       state: encounter.state,
@@ -730,6 +824,8 @@ export class LearningService {
       openObjectives: encounter.state === 'ongoing' ? this.activeObjectives(encounter).map(({ id, prompt }) => ({ id, prompt })) : [],
       // Round 129: the hearts of beginner mode. A new conversation (and Start over) has them all.
       hearts: { used: encounter.heartsUsed ?? 0, limit: BEGINNER_HEARTS },
+      // Round 154: where a light conversation stands in its exchange of turns (the player's turns so far).
+      exchange: { turn: encounter.committedPlayerTurns, min: LIGHT_EXCHANGE.min, max: LIGHT_EXCHANGE.max },
       transcript,
     };
   }
@@ -844,6 +940,9 @@ export class LearningService {
         paths: dungeon.paths.map(({ between, via }) => ({ between: [...between], via: via.map((point) => [...point]) })),
       },
       progress: { run: run.run, at: run.at, complete: isComplete(dungeon, run), clearedSiteIds: run.cleared, visitedSiteIds: run.visited, sites },
+      // Round 156: the narrator's passage for the site the player stands at (the same one every time; nothing is saved).
+      narration: passageView(selectPassage(this.content.passages ?? [], { event: 'site_arrive', dungeon: dungeon.id, site: run.at }), this.narrationPack),
+      guidebook: this.guidebookNote(envelope), // round 157
       progression: this.progression(envelope),
     };
   }
@@ -899,6 +998,7 @@ export class LearningService {
       if (siteId === run.at) return this.dungeonView(envelope, dungeon);
       const staged = clone(envelope);
       this.saveRun(staged, dungeon, moved(dungeon, run, siteId));
+      this.tell(staged, { event: 'site_arrive', dungeon: dungeon.id, site: siteId }); // rounds 157 and 158: the guidebook's entries, and the site's passage as told
       await this.storage.save(staged);
       // The conversation belongs to the site the player has left (a resolved one is over; an ongoing one was left).
       if (own) this.encounters.delete(learnerId);
@@ -1001,6 +1101,9 @@ export class LearningService {
     const npcMessage = this.canonicalizeNarration(generated, definition);
     const stagedEnvelope = clone(envelope);
     this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
+    // Round 157: the first conversation at a dungeon's site may enter a guidebook entry (a map only read enters none).
+    // Round 158: and the site's passage counts as told (one with an untranslatable text is kept for the guidebook).
+    if (dungeonId) this.tell(stagedEnvelope, { event: 'site_arrive', dungeon: dungeonId, site: siteId });
     // Round 111 (review R1.12): computed once. Round 112 (critique 1.5): only the oldest pending read strains a
     // session, so with two reads pending each costs its own finished conversation (no stacking, none free).
     const strainedBy = this.pendingStrainIds(envelope).slice(0, 1);
@@ -1017,7 +1120,7 @@ export class LearningService {
     };
     await this.storage.save(stagedEnvelope);
     this.encounters.set(learnerId, encounter);
-    return { encounter: this.serializeEncounter(encounter), spellbook: this.spellbookSnapshot(stagedEnvelope) };
+    return { encounter: this.serializeEncounter(encounter), spellbook: this.spellbookSnapshot(stagedEnvelope), guidebook: this.guidebookNote(stagedEnvelope) };
   }
 
   // Round 076 (critique 1.6): the greeting's prompt, the same for a start and a prefetch. It depends on content only,
@@ -1039,7 +1142,13 @@ export class LearningService {
   // Round 144: what a road conversation adds to the narrator's turn data: the place it is in, and for a lesson the
   // note that its words are new and are to be modelled. Nothing for an authored encounter, whose prompts are pinned.
   sceneExtras(definition) {
+    // Round 155 (issue #3): what the character knows of the world: an authored character's region and what it has
+    // noticed are on its sheet; a generated character of the road brings its own (road/encounters.js).
+    const world = definition.world ?? (definition.character.world
+      ? worldFor(this.content.knowledge, this.content.language.code, definition.character.world.region, definition.character.world.noticed)
+      : null);
     return {
+      ...(world ? { world } : {}),
       ...(definition.scene?.place ? { placeName: definition.scene.place } : {}),
       // Round 146: the time of day and the weather on the road, as the player sees them (the same clock and seed).
       ...(definition.scene?.seed !== undefined ? { weather: weatherAt(new Date(this.clock()).getTime(), definition.scene.seed).sentence } : {}),
@@ -1192,6 +1301,8 @@ export class LearningService {
       this.validateVersion(current, request.encounterId, request.version);
       if (current.state !== 'ongoing') throw validationError('This encounter no longer has an active learning objective.');
       const objective = this.currentObjective(current);
+      // Round 154: a light exchange may go on with every objective met; then there is nothing left to hint at.
+      if (!objective) throw conflictError('No translation hints remain for this objective.', 'HINTS_EXHAUSTED');
       const activeMessage = [...current.transcript].reverse().find((message) => message.role === 'npc');
       if (!activeMessage || request.messageId !== activeMessage.id) throw conflictError(`Help is only available for the current ${this.definition(current).character.name} message.`, 'STALE_MESSAGE');
       let key;
@@ -1279,6 +1390,10 @@ export class LearningService {
       if (immersion !== null) current.immersion = immersion; // the reply to this answer follows the slider as it stands
       const definition = this.definition(current);
       const objectives = this.activeObjectives(current);
+      // Round 153: light mode, asked for by the client with each answer: nothing is checked, and one call reads the
+      // answer and replies to it.
+      // Round 154: nor is there anything to mark once every objective is met and the exchange is still going.
+      if (request.light === true || objectives.length === 0) return this.lightTurn({ learnerId, request, fingerprint, envelope, current, definition, objectives, message });
       // Round 129: beginner mode, asked for by the client with each answer. The grader also says what the player
       // tried and gives their answer in correct target language; a heart pays for a corrected answer.
       const beginner = request.beginner === true;
@@ -1287,7 +1402,7 @@ export class LearningService {
         language: this.content.language, objectives, vocabularyById: this.lookup,
         conversationContext: current.transcript.map((item) => item.role === 'player' ? item.text : item.dialogue.native),
         playerInput: message,
-        ordered: definition.encounter.objectives_unordered !== true,
+        ordered: definition.encounter.objectives_unordered !== true && !current.loose,
         ...(beginner ? { beginner } : {}),
       }), gradingSchema, 'dialogue_assessment', 'The language assessor');
       const assessment = this.validateAssessment(gradingRaw, objectives, message, gradingSchema, definition.scope);
@@ -1303,7 +1418,7 @@ export class LearningService {
       const corrected = beginner && correctionText !== '' && assessment.objective_results.some((result) => result.attempted || result.passed);
       const heartLost = corrected && heartsUsed < BEGINNER_HEARTS;
       const forgivenOf = (objective) => heartLost && !passedOf(objective) && resultOf(objective)?.attempted === true;
-      const unordered = definition.encounter.objectives_unordered === true;
+      const unordered = definition.encounter.objectives_unordered === true || current.loose === true;
       const closing = [];
       for (const objective of objectives) {
         if (passedOf(objective) || forgivenOf(objective)) closing.push(objective);
@@ -1378,75 +1493,145 @@ export class LearningService {
           ...this.sceneExtras(definition),
         }), definition, this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0, current.immersion ?? null));
 
-        const stagedEnvelope = clone(envelope);
-        const stagedEncounter = clone(current);
-        const timestamp = nowIso(this.clock);
-        const advancedObjectiveIds = new Set(closing.map((objective) => objective.id));
-        for (const result of assessment.objective_results) {
-          for (const evidence of result.vocabulary_evidence) {
-            this.discover(stagedEnvelope, [evidence.vocabulary_id], timestamp, 'dialogue_assessment');
-            const item = this.findItem(stagedEnvelope, evidence.vocabulary_id);
-            const effectiveQuality = evidence.effective_quality;
-            item.evidence.push({ at: timestamp, kind: 'dialogue', objectiveId: result.objective_id, quality: effectiveQuality, passed: result.passed });
-            if (advancedObjectiveIds.has(result.objective_id) && result.passed && isDue(item.schedule, this.clock())) {
-              item.schedule = scheduleReview(item.schedule, effectiveQuality, this.clock());
-            }
-          }
-        }
-        const previousNpc = [...current.transcript].reverse().find((item) => item.role === 'npc');
-        const npcMessage = this.canonicalizeNarration(generated, definition, previousNpc, remaining);
-        this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
-        stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
-        stagedEncounter.objectiveIndex = nextObjectiveIndex;
-        stagedEncounter.passedObjectiveIds = nextPassedIds;
-        stagedEncounter.committedPlayerTurns = nextTurns;
-        stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
-        stagedEncounter.version += 1;
-        if (heartLost) stagedEncounter.heartsUsed = heartsUsed + 1; // round 129
-        // Round 144: which objectives a correction closed, for the conversation's score (road/pacing.js).
-        if (forgivenIds.size) stagedEncounter.correctedObjectiveIds = [...new Set([...(current.correctedObjectiveIds ?? []), ...forgivenIds])];
-        // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
-        // holds the encounter's containment file.
-        if (resolved && definition.encounter.party_of) {
-          // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
-          const member = stagedEnvelope.party.find((candidate) => this.isHomeMember(candidate, definition.encounter.party_of));
-          if (member) member.conversations = (member.conversations ?? 0) + 1;
-        } else if (resolved && !stagedEncounter.road && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
-          stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
-        }
-        // Round 144: a road conversation counts towards the curriculum, in the same save as its resolution.
-        const roadResult = resolved && stagedEncounter.road ? this.finishRoad(stagedEnvelope, stagedEncounter) : null;
-        // Round 114: a dungeon's conversation clears its site in the run (round 119: the site the session was opened at).
-        if (resolved && stagedEncounter.dungeonId) this.clearSite(stagedEnvelope, stagedEncounter.dungeonId, stagedEncounter.siteId);
-        // Round 111: the conversation that bore the strain spends it, in the same save as its resolution and receipt
-        // (a replay returns the receipt and spends nothing again; a failed save spends nothing). Any finished
-        // conversation spends it, a replayed party conversation or a completed place's restart too (decision 4).
-        if (resolved && stagedEncounter.strained) {
-          const by = new Set(stagedEncounter.strainedBy ?? []);
-          for (const record of stagedEnvelope.annexes ?? []) if (record.strainSpentOn === null && by.has(record.id)) record.strainSpentOn = definition.encounter.id;
-        }
-        // Round 121: experience for the objectives this turn closed and for a resolve, in the same save as the turn
-        // and its receipt, so a replayed attempt earns nothing again.
-        const xpGained = XP.objective * passedCount + (resolved ? XP.resolve : 0);
-        stagedEnvelope.progression = { xp: (stagedEnvelope.progression?.xp ?? 0) + xpGained };
-        const response = {
-          encounter: this.serializeEncounter(stagedEncounter),
-          assessment: responseAssessment,
-          spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
-          xpGained,
-          progression: this.progression(stagedEnvelope),
-          ...(roadResult ? { roadResult } : {}),
-          replayed: false,
-        };
-        stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
-          kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response: forReceipt(response),
-        };
-        await this.storage.save(stagedEnvelope, { keepReceiptId: request.attemptId });
-        this.encounters.set(learnerId, stagedEncounter);
-        return response;
+        const evidence = assessment.objective_results.flatMap((result) => result.vocabulary_evidence.map((item) => ({
+          objectiveId: result.objective_id, vocabularyId: item.vocabulary_id, quality: item.effective_quality, passed: result.passed,
+        })));
+        return await this.commitTurn({
+          learnerId, request, fingerprint, envelope, current, definition, message, generated, closing, remaining, resolved,
+          evidence, responseAssessment, correctedIds: forgivenIds, heartLost,
+        });
       } finally {
         if (this.turnProgress.get(learnerId)?.run === run) this.turnProgress.delete(learnerId);
       }
+    });
+  }
+
+  // Round 153: what a turn does to the save and the session once its verdict and its reply are known. The strict turn
+  // and the light one both end here. `evidence` is [{ objectiveId, vocabularyId, quality, passed }]; `correctedIds`
+  // are the objectives this turn closed that the player did not say cleanly (the road's score reads them).
+  async commitTurn({ learnerId, request, fingerprint, envelope, current, definition, message, generated, closing, remaining, resolved, evidence, responseAssessment, correctedIds = new Set(), heartLost = false, sessionPatch = {} }) {
+    const stagedEnvelope = clone(envelope);
+    const stagedEncounter = clone(current);
+    const timestamp = nowIso(this.clock);
+    const advancedObjectiveIds = new Set(closing.map((objective) => objective.id));
+    for (const item of evidence) {
+      this.discover(stagedEnvelope, [item.vocabularyId], timestamp, 'dialogue_assessment');
+      const card = this.findItem(stagedEnvelope, item.vocabularyId);
+      card.evidence.push({ at: timestamp, kind: 'dialogue', objectiveId: item.objectiveId, quality: item.quality, passed: item.passed });
+      if (advancedObjectiveIds.has(item.objectiveId) && item.passed && isDue(card.schedule, this.clock())) {
+        card.schedule = scheduleReview(card.schedule, item.quality, this.clock());
+      }
+    }
+    const previousNpc = [...current.transcript].reverse().find((item) => item.role === 'npc');
+    const npcMessage = this.canonicalizeNarration(generated, definition, previousNpc, remaining);
+    this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), timestamp, 'encounter_exposure');
+    stagedEncounter.transcript.push({ id: randomUUID(), role: 'player', text: message }, npcMessage);
+    stagedEncounter.objectiveIndex = current.objectiveIndex + closing.length;
+    stagedEncounter.passedObjectiveIds = [...(current.passedObjectiveIds ?? []), ...closing.map((objective) => objective.id)];
+    stagedEncounter.committedPlayerTurns = current.committedPlayerTurns + 1;
+    stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
+    stagedEncounter.version += 1;
+    Object.assign(stagedEncounter, sessionPatch);
+    if (heartLost) stagedEncounter.heartsUsed = (current.heartsUsed ?? 0) + 1; // round 129
+    // Round 144: which objectives a correction closed, for the conversation's score (road/pacing.js).
+    if (correctedIds.size) stagedEncounter.correctedObjectiveIds = [...new Set([...(current.correctedObjectiveIds ?? []), ...correctedIds])];
+    // Round 028: progress is recorded before the response is built, so the resolving turn's spellbook already
+    // holds the encounter's containment file.
+    if (resolved && definition.encounter.party_of) {
+      // Round 022: a party conversation counts towards the member, not the map (the Rift gate is unchanged).
+      const member = stagedEnvelope.party.find((candidate) => this.isHomeMember(candidate, definition.encounter.party_of));
+      if (member) member.conversations = (member.conversations ?? 0) + 1;
+    } else if (resolved && !stagedEncounter.road && !stagedEnvelope.world.completedEncounterIds.includes(definition.encounter.id)) {
+      stagedEnvelope.world.completedEncounterIds.push(definition.encounter.id);
+    }
+    // Round 159 (issue #7): what the character utters on completion is told now: kept for the guidebook, and, when it
+    // holds an untranslatable text, the guidebook's entry on those is entered with it.
+    const revelation = resolved ? this.revelationOf(definition) : null;
+    if (revelation) {
+      if (!Object.hasOwn(stagedEnvelope.told ?? {}, revelation.id)) stagedEnvelope.told = { ...(stagedEnvelope.told ?? {}), [revelation.id]: timestamp };
+      if (revelation.segments.some((segment) => segment.kind === 'truth')) this.enterGuide(stagedEnvelope, { event: 'truth_shown' });
+    }
+    // Round 144: a road conversation counts towards the curriculum, in the same save as its resolution.
+    const roadResult = resolved && stagedEncounter.road ? this.finishRoad(stagedEnvelope, stagedEncounter) : null;
+    // Round 114: a dungeon's conversation clears its site in the run (round 119: the site the session was opened at).
+    if (resolved && stagedEncounter.dungeonId) this.clearSite(stagedEnvelope, stagedEncounter.dungeonId, stagedEncounter.siteId);
+    // Round 111: the conversation that bore the strain spends it, in the same save as its resolution and receipt
+    // (a replay returns the receipt and spends nothing again; a failed save spends nothing). Any finished
+    // conversation spends it, a replayed party conversation or a completed place's restart too (decision 4).
+    if (resolved && stagedEncounter.strained) {
+      const by = new Set(stagedEncounter.strainedBy ?? []);
+      for (const record of stagedEnvelope.annexes ?? []) if (record.strainSpentOn === null && by.has(record.id)) record.strainSpentOn = definition.encounter.id;
+    }
+    // Round 121: experience for the objectives this turn closed and for a resolve, in the same save as the turn
+    // and its receipt, so a replayed attempt earns nothing again.
+    const xpGained = XP.objective * closing.length + (resolved ? XP.resolve : 0);
+    stagedEnvelope.progression = { xp: (stagedEnvelope.progression?.xp ?? 0) + xpGained };
+    const response = {
+      encounter: this.serializeEncounter(stagedEncounter),
+      assessment: responseAssessment,
+      spellbook: this.spellbookSnapshot(stagedEnvelope, stagedEncounter),
+      xpGained,
+      progression: this.progression(stagedEnvelope),
+      ...(roadResult ? { roadResult } : {}),
+      ...(revelation ? { guidebook: this.guidebookNote(stagedEnvelope) } : {}), // round 159: its entry may be new
+      replayed: false,
+    };
+    stagedEnvelope.spellbook.processedAssessments[request.attemptId] = {
+      kind: 'dialogue', payloadHash: fingerprint, committedAt: timestamp, response: forReceipt(response),
+    };
+    await this.storage.save(stagedEnvelope, { keepReceiptId: request.attemptId });
+    this.encounters.set(learnerId, stagedEncounter);
+    return response;
+  }
+
+  // Round 153: light mode's turn. One call to the model returns what the player meant, the same in correct target
+  // language, which open objectives that meaning fulfils, and the character's reply. Nothing is checked against the
+  // answer: no grader, no evidence rules, no hearts, no retry of the line. An objective closes on the model's word, in
+  // any order. Round 154: the conversation is an exchange of LIGHT_EXCHANGE turns, and the model is told where in it
+  // this turn stands. The Spellbook still learns from the turn: a target of a closed objective that stands in the player's
+  // own text (found by the vocabulary matcher, not by a judge) is recorded as said.
+  async lightTurn({ learnerId, request, fingerprint, envelope, current, definition, objectives, message }) {
+    const nextTurns = current.committedPlayerTurns + 1;
+    const history = current.transcript.map((item) => item.role === 'player'
+      ? { role: 'user', content: item.text }
+      : { role: 'assistant', content: item.dialogue.native });
+    const generated = await this.callProvider(buildNarrationMessages({
+      language: this.content.language,
+      character: definition.character,
+      styleGuide: this.content.styleGuide,
+      locationName: this.sceneName(current),
+      objectives,
+      vocabularyById: this.lookup,
+      conversationHistory: history,
+      playerInput: message,
+      ...this.shareOf(nextTurns, definition, current),
+      ambientEntries: definition.ambientEntries,
+      ...this.sceneExtras(definition),
+      light: { turn: nextTurns, min: LIGHT_EXCHANGE.min, max: LIGHT_EXCHANGE.max, ending: LIGHT_ENDING[nextTurns >= LIGHT_EXCHANGE.max ? 'now' : nextTurns >= LIGHT_EXCHANGE.min ? 'if_done' : 'go_on'] },
+    }), lightTurnSchema, 'light_turn', definition.character.name);
+    const { player } = generated;
+    const met = new Set(player.objectives_met);
+    const closing = objectives.filter((objective) => met.has(objective.id));
+    const closingIds = new Set(closing.map((objective) => objective.id));
+    const remaining = objectives.filter((objective) => !closingIds.has(objective.id));
+    // Round 154: the exchange's end: nothing open from the third turn on, or the fifth turn whatever is open.
+    const resolved = nextTurns >= LIGHT_EXCHANGE.max || (remaining.length === 0 && nextTurns >= LIGHT_EXCHANGE.min);
+    const tidy = (text) => String(text).trim().replace(/\s+/g, ' ').slice(0, CORRECTION_MAX_LENGTH);
+    const said = new Set(matchCanonicalVocabulary(message, definition.scope ?? this.content.vocabulary.entries).map((match) => match.id));
+    const anyReveal = objectives.some((objective) => (current.reveals[objective.id] ?? []).length > 0);
+    const evidence = closing.flatMap((objective) => objective.target_vocabulary_ids.filter((id) => said.has(id)).map((id) => ({
+      objectiveId: objective.id, vocabularyId: id, quality: capAssistedQuality(LIGHT_QUALITY, anyReveal), passed: true,
+    })));
+    const responseAssessment = {
+      light: true,
+      overallFeedback: tidy(player.meant),
+      objectiveResults: objectives.map((objective) => ({ objectiveId: objective.id, passed: closingIds.has(objective.id), feedback: objective.prompt, vocabularyEvidence: [] })),
+      // What the player meant, in correct target language, when their own answer was not that already.
+      ...(player.clean ? {} : { correction: { text: tidy(player.target), translation: tidy(player.meant), heartLost: false, light: true } }),
+    };
+    return this.commitTurn({
+      learnerId, request, fingerprint, envelope, current, definition, message, generated, closing, remaining, resolved,
+      evidence, responseAssessment, correctedIds: player.clean ? new Set() : closingIds, sessionPatch: { loose: true },
     });
   }
 

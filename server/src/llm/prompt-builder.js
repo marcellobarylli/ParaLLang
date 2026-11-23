@@ -65,13 +65,28 @@ export function buildNarrationMessages({
   // Round 148: true when the player chose a share that makes the lines wholly target language. The dialogue's rules
   // are then the full ones; otherwise they are the mixed ones, byte for byte as before.
   full = false,
+  // Round 153: light mode's turn. The one reply reads the player's answer and answers it (encounter/light_turn.txt);
+  // there is no decision to express. `objectives` are the ones still open before the answer.
+  // Round 154: `light` is { turn, min, max, ending }: where this turn stands in the exchange and whether it may end.
+  light = null,
+  // Round 155: what the character knows of the world it lives in ({ global, region, noticed }), as one block after the
+  // character's line (system/world.txt). Without it the prompt is byte for byte as before.
+  world = null,
 }) {
   const dialogueRules = fillTemplate(loadTemplate(full ? 'system/dialogue_full.txt' : 'system/dialogue_mixed.txt'), {
     language: { name: language.name, targetRatio: Math.round(targetRatio * 100), wordsPer20: Math.round(targetRatio * 20) },
   }).trimEnd();
+  const worldBlock = world ? fillTemplate(loadTemplate('system/world.txt'), { enemy: { name: character.name }, world }).trimEnd() : '';
   const system = fillTemplate(loadTemplate('system/base.txt'), {
+    worldBlock,
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
-    style: { tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n') },
+    style: {
+      tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n'),
+      // Round 156 (issue #6): the narrator's own rules and what it knows and never says; nothing for a style guide without them.
+      narrator: styleGuide.narrator
+        ? `\n\nTHE NARRATOR (the \`narrative\` field):\n${styleGuide.narrator.rules.map((rule) => `- ${rule}`).join('\n')}\nWHAT THE NARRATOR KNOWS AND NEVER SAYS: ${styleGuide.narrator.knows}.`
+        : '',
+    },
     language: {
       name: language.name,
       targetRatio: Math.round(targetRatio * 100),
@@ -87,12 +102,15 @@ export function buildNarrationMessages({
   });
   const turnData = playerInput === null
     ? { task: 'greeting', scene: `The player approaches ${character.name} at ${locationName} in ${placeName}.${weather ? ` ${weather}` : ''}`, ...(teachingNote ? { teaching_note: teachingNote } : {}) }
-    : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision, ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) };
+    : light
+      ? { task: 'light_turn', exchange: light, player_answer: playerInput, open_objectives: objectives.map(({ id, intent, reference_meaning }) => ({ id, intent, reference_meaning })), ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) }
+      : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision, ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) };
+  const turnTemplate = playerInput === null ? 'encounter/greeting.txt' : light ? 'encounter/light_turn.txt' : 'encounter/dialogue_turn.txt';
 
   return [
     { role: 'system', content: system },
     ...conversationHistory,
-    { role: 'user', content: fillTemplate(loadTemplate(playerInput === null ? 'encounter/greeting.txt' : 'encounter/dialogue_turn.txt'), {
+    { role: 'user', content: fillTemplate(loadTemplate(turnTemplate), {
       language, enemy: { name: character.name }, location: { name: locationName }, turnData: JSON.stringify(turnData),
     }) },
   ];

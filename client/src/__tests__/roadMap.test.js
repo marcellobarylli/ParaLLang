@@ -76,7 +76,7 @@ describe('the map\'s picture', () => {
   test('a hill stands up out of the plain: its top is drawn above its foot, and it hides the ground behind it', () => {
     // A flat meadow with one square block of rock, 50 m high, in the middle.
     const inBlock = (x, z) => Math.abs(x) < 60 && Math.abs(z) < 60;
-    const terrain = { seed: 1, waterY: 0, heightAt: (x, z) => (inBlock(x, z) ? 50 : 2), biomeAt: (_x, _z, h) => (h > 36 ? 'highland' : 'meadow') };
+    const terrain = { seed: 1, waterY: 0, heightAt: (x, z) => (inBlock(x, z) ? 50 : 2), coverAt: (_x, _z, h) => (h > 36 ? 'highland' : 'meadow') };
     const view = createMapView([{ x: -200, z: -200, y: 2 }, { x: 200, z: 200, y: 2 }, { x: -200, z: 200, y: 2 }, { x: 200, z: -200, y: 2 }]);
     const picture = renderMap(terrain, view);
     const green = ([r, g, b]) => g > r && g > b;
@@ -92,3 +92,19 @@ describe('the map\'s picture', () => {
     expect(green(pixel(picture, behind, view))).toBe(true);
   });
 });
+
+// Round 161 (issue #9): the whole journey is shown from as far off as it takes.
+test('a frame for the whole journey holds sites many kilometres apart, where the usual frame would not', () => {
+  const points = [{ x: 0, z: 0, y: 4 }, { x: 9000, z: -2500, y: 30 }, { x: -6000, z: 7000, y: 12 }];
+  const usual = createMapView(points);
+  const journey = createMapView(points, { farthest: ROAD_MAP.journey });
+  const inside = (view) => points.every((point) => { const [x, y] = view.project(point.x, point.z, point.y); return x >= 0 && x <= view.width && y >= 0 && y <= view.height; });
+  expect(usual.scale).toBe(ROAD_MAP.farthest);
+  expect(inside(usual)).toBe(false);
+  expect(journey.scale).toBeLessThan(ROAD_MAP.farthest);
+  expect(journey.scale).toBeGreaterThanOrEqual(ROAD_MAP.journey);
+  expect(inside(journey)).toBe(true);
+  // A short journey is not shown from further off than the usual map.
+  expect(createMapView(points.slice(0, 1), { farthest: ROAD_MAP.journey }).scale).toBe(ROAD_MAP.closest);
+});
+

@@ -6,7 +6,7 @@
 // The landscape and its graph are the server's own functions (server/src/road/terrain.js and graph.js), bundled
 // here: the seed the server sends is all the client needs to stand on the same ground.
 import { Group, PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
-import { ENDLESS, atmosphereFor, createCairn, createEndlessWorld, createPS1Pipeline, createStandIn, createTrack, createWeatherEffects } from '@parallang/aesthetic';
+import { ENDLESS, atmosphereFor, createCairn, createEndlessWorld, createLandmark, createPS1Pipeline, createStandIn, createTrack, createWeatherEffects, loadModels } from '@parallang/aesthetic';
 import { createTerrain } from '../../../server/src/road/terrain.js';
 import { createGraph } from '../../../server/src/road/graph.js';
 import { currentWeather, onWeatherPin, pinWeather } from './weatherClock.js';
@@ -26,12 +26,26 @@ const easeTo = (current, target, dt, tau) => current + (target - current) * (1 -
  *   setTalking(on)       whether somebody is being talked to at the site (else the camera wanders round it)
  *   setEncounter(...)    the conversation's progress, as the dungeon's host takes it
  */
-export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, now = () => Date.now() } = {}) {
+export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, now = () => Date.now(), models = true } = {}) {
   const terrain = createTerrain(seed);
   const graph = createGraph(terrain);
   const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 2));
   const world = createEndlessWorld({ terrain, seed: 7 });
+  // Round 162 (issue #11): the trees' models (client/public/models/, see ASSETS.md there). One small file, asked for
+  // the first time models are wanted (the road is open by then); until it is here, and if it never comes, the
+  // level's own simple trees stand. `setModels(false)` goes back to those.
+  let templates = null; // null: not asked for; a promise while loading; the templates once here
+  let modelsWanted = false;
+  const setModels = (on) => {
+    modelsWanted = on !== false && on !== null;
+    if (!modelsWanted) { world.setModels(null); return; }
+    if (templates && typeof templates.then !== 'function') { world.setModels(templates); return; }
+    templates ??= loadModels(typeof on === 'string' ? on : `${import.meta.env?.BASE_URL ?? '/'}models/nature.glb`)
+      .then((loaded) => { templates = loaded; if (!disposed && modelsWanted) world.setModels(loaded); return loaded; })
+      .catch((error) => { templates = null; console.warn('The trees\' models could not be loaded; the simple trees stay:', error?.message ?? error); return null; });
+  };
+  if (models !== false) setModels(models);
   const camera = new PerspectiveCamera(FOV, 1, 0.3, 900);
   const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
   const director = createRoadDirector({ heightAt: terrain.heightAt, waterY: terrain.waterY });
@@ -105,7 +119,8 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
       figures.set(id, { ...made, x: node.x, z: node.z, ground: node.y, hop: 0, kind });
     };
     if (road.current) place(road.at, createStandIn(world.materials, { hue: road.current.character.hue }), 'figure');
-    for (const site of road.frontier) place(site.id, createStandIn(world.materials, { hue: site.offer.character.hue }), 'figure');
+    // Round 160: a site ahead that is a legacy dungeon's node shows the dungeon's gate, not a figure.
+    for (const site of road.frontier) place(site.id, site.offer.dungeon ? createLandmark(world.materials) : createStandIn(world.materials, { hue: site.offer.character.hue }), site.offer.dungeon ? 'landmark' : 'figure');
     for (const id of road.cleared) place(id, createCairn(world.materials), 'cairn');
     const laid = new Set();
     const lay = (a, b) => {
@@ -222,6 +237,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     /** Round 146: the weather showing now, and a way to hold one still ({ phase, rain, cloud, wind }, or null for the clock's). */
     get weather() { return weather; },
     pinWeather,
+    setModels, // round 162
     get effects() { return { ...effects.state }; },
     /** What the scene holds now, for the playthrough script. */
     get stats() { return { chunks: world.chunkCount, triangles: world.triangleCount, figures: figures.size, tracks: tracks.length, mode: director.mode }; },

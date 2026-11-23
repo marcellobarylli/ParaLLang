@@ -49,6 +49,9 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .dock > * { pointer-events: auto; }
 .settings-open .dock { visibility: hidden; }
 .card { width: min(560px, 100%); background: var(--panel); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); border-bottom: 0; box-shadow: 0 0 0 1px #000; padding: 1rem 1.1rem calc(max(1.1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); display: grid; gap: .6rem; }
+/* Round 158: a card is never taller than the screen under the top bar; a long one scrolls inside. (A card with the
+   narrator's passage, a guidebook entry and a long description of a character was taller than a phone.) */
+.card { max-height: calc(100vh - 4.4rem); max-height: calc(100dvh - 4.4rem); overflow-y: auto; overscroll-behavior: contain; }
 .card h1, .card h2, .card p { margin: 0; }
 .card h1 { color: var(--gold); letter-spacing: .14em; font-size: 1.8rem; text-shadow: 2px 2px 0 #000; }
 .card h2 { color: var(--gold); font-size: 1.25rem; letter-spacing: .06em; text-transform: uppercase; text-shadow: 2px 2px 0 #000; }
@@ -110,8 +113,11 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .hud-title span { display: none; }
   .pips { grid-area: pips; margin: 0; gap: .25rem; }
   .pips li { width: 9px; height: 9px; }
-  .hud nav { grid-area: nav; gap: .3rem; }
-  .hud nav .secondary-button { padding: .5rem .45rem; font-size: .82rem; }
+  /* Round 157: a fourth button (the guidebook) shares the row, so each gives up a little. */
+  .hud nav { grid-area: nav; gap: .2rem; }
+  .hud nav .secondary-button { padding: .5rem .32rem; font-size: .8rem; }
+  .hud nav .due-badge { margin-left: .2rem; min-width: 1.15rem; }
+  .hud-title strong { letter-spacing: .03em; }
 }
 .problem { display: grid; gap: .5rem; border: 2px solid; border-color: #2a0d14 #a2485a #a2485a #2a0d14; background: #3a1620; padding: .7rem .8rem; color: #ffd6dc; }
 .caption { margin: 0 .75rem calc(max(1rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); padding: .55rem .9rem; background: rgb(34 36 35 / .86); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); box-shadow: 0 0 0 1px #000; color: var(--ink); display: flex; align-items: center; gap: .75rem; }
@@ -175,6 +181,33 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .objective-card small, .protected-note, small { color: var(--dim); }
 .npc-message { margin: 1rem 0 1.5rem; }
 .narrative { color: #b9bbb4; font-style: italic; line-height: 1.55; }
+/* Round 157: the guidebook: its panel, the note of a new entry on a card, and its button's mark. */
+.guidebook { max-width: 46rem; margin: 0 auto; padding: 1rem; }
+.guide-list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .8rem; }
+.guide-entry { padding: .7rem .9rem; background: rgb(34 36 35 / .8); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); }
+.guide-entry h3 { margin: 0 0 .3rem; color: var(--gold); font-size: 1rem; letter-spacing: .05em; text-transform: uppercase; display: flex; align-items: center; gap: .6rem; }
+.guide-entry .narration, .guide-note .narration { margin: 0; }
+.guide-note { margin: .2rem 0 .7rem; padding: .55rem .7rem; border-left: 3px solid var(--gold); background: rgb(0 0 0 / .28); display: grid; gap: .35rem; }
+.guide-note strong { color: var(--gold); letter-spacing: .05em; text-transform: uppercase; font-size: .85rem; }
+.guide-note small { color: #b9bbb4; }
+.hud nav .guide-button { position: relative; min-width: 2rem; padding-left: .35rem; padding-right: .35rem; }
+.guide-badge { position: absolute; top: -.35rem; right: -.35rem; margin: 0; min-width: 1.1rem; height: 1.1rem; font-size: .7rem; }
+/* Round 158 (issue #4): untranslatable text. Turmeric, upright in the italic narration, and not selectable into a
+   translator by a slip of the thumb. */
+.narration-truth { color: #e8a317; font-style: normal; font-weight: 600; letter-spacing: .01em; text-shadow: 1px 1px 0 #000, 0 0 6px rgb(232 163 23 / .25); }
+.guide-fragments { margin-top: 1.4rem; }
+.guide-fragments > h3 { margin: 0; color: #e8a317; font-size: 1rem; letter-spacing: .05em; text-transform: uppercase; }
+.guide-fragments > p { margin: .2rem 0 0; color: #b9bbb4; }
+/* Round 159 (issue #7): what a character utters after the conversation: the narrator's line and the text, set off. */
+.revelation { margin: .8rem .9rem; padding: .8rem .9rem; border: 1px solid rgb(232 163 23 / .45); border-left: 3px solid #e8a317; background: rgb(0 0 0 / .32); }
+.revelation .narration { margin: 0; }
+.revelation .narration-truth { display: block; margin-top: .55rem; font-size: 1.06em; line-height: 1.5; }
+/* Round 160 (issue #8): the biome under a place's name, and a legacy dungeon's node on the road's map. */
+.biome-line { margin: 0; color: #a9c79a; font-size: .85rem; letter-spacing: .04em; }
+/* Round 156: the narrator's written passages, on a card or in the travel caption. */
+.narration { margin: .2rem 0 .6rem; }
+.caption .narration { display: block; margin: 0; }
+.caption:has(.narration) { flex-direction: column; align-items: flex-start; gap: .35rem; }
 .speaker { color: var(--gold); display: block; margin-bottom: .3rem; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
 .native-line { line-height: 1.7; font-size: 1.02rem; }
 .translation { color: #c6c8c1; border-left: 2px solid #8a8c86; padding-left: .75rem; }
@@ -220,6 +253,12 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .setting-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
 .setting-row output { color: var(--gold); font-weight: 700; }
 .setting-check { display: flex; align-items: center; gap: .7rem; min-height: 44px; }
+/* Round 153: strict or light checking, a pair of radio buttons in one row. */
+.setting-choice { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1.2rem; border: 0; padding: 0; margin: 0; min-height: 44px; }
+.setting-choice legend { padding: 0; margin-bottom: .2rem; }
+.setting-choice label { display: flex; align-items: center; gap: .5rem; min-height: 44px; }
+.settings-sheet .setting-choice input { flex: none; width: 24px; height: 24px; min-height: 0; padding: 0; margin: 0; accent-color: var(--gold); }
+.light-note { display: block; }
 .settings-sheet .setting-check input { flex: none; width: 26px; height: 26px; min-height: 0; padding: 0; margin: 0; accent-color: var(--gold); border-radius: 0; }
 .setting-warning { color: var(--gold); }
 .speaker-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
@@ -352,3 +391,30 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .guide-steps ul { padding-left: 1.1rem; margin-top: .25rem; display: grid; gap: .2rem; color: #d9dbd3; }
 .guide-steps code { background: #151615; padding: 0 .25em; border: 1px solid #000; overflow-wrap: anywhere; }
 .guide-steps a { color: var(--link); }
+/* Round 161 (issue #9): the journey painted on the map: a gold line with a dark edge, and where it began. */
+.map-journey-edge { fill: none; stroke: #0b0c0b; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; opacity: .85; }
+.map-journey { fill: none; stroke: var(--gold); stroke-width: .75; stroke-linejoin: round; stroke-linecap: round; }
+.map-journey-start circle { fill: #f4efe0; stroke: #0b0c0b; stroke-width: .5; }
+.journey-row { align-items: center; margin: .5rem 0 0; }
+.journey-row small { color: #cfd1ca; }
+/* Round 163 (issue #13): the narrator's remark on a long journey, and the chart of the Odyssey beside it. */
+.journey-remark { margin: .8rem 0; padding: .7rem .8rem; border-left: 3px solid var(--gold); background: rgb(0 0 0 / .3); display: grid; gap: .6rem; }
+.journey-remark .narration { margin: 0; }
+.odyssey-chart { margin: 0; display: grid; gap: .5rem; }
+.odyssey-chart svg { width: 100%; height: auto; display: block; border: 2px solid; border-color: var(--lo) var(--hi) var(--hi) var(--lo); }
+.odyssey-chart .sea { fill: #1d3144; }
+.odyssey-chart .grid { stroke: rgb(255 255 255 / .09); stroke-width: .2; }
+.odyssey-chart .route-edge { fill: none; stroke: #0b0c0b; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; opacity: .85; }
+.odyssey-chart .route { fill: none; stroke: var(--gold); stroke-width: .75; stroke-linejoin: round; stroke-linecap: round; }
+.odyssey-chart .stop circle { fill: #f4efe0; stroke: #0b0c0b; stroke-width: .35; }
+.odyssey-chart .stop.end circle { fill: var(--gold); }
+.odyssey-chart .stop.unplaced circle { fill: none; stroke: #f4efe0; stroke-dasharray: .7 .5; }
+.odyssey-chart .stop text { font-size: 2.3px; font-weight: 700; text-anchor: middle; fill: #0b0c0b; }
+.odyssey-chart .stop.unplaced text { fill: #f4efe0; }
+.odyssey-stops { margin: 0; padding: 0; list-style-position: inside; columns: 2; column-gap: 1.2rem; font-size: .78rem; line-height: 1.35; }
+.odyssey-stops li { break-inside: avoid; }
+.odyssey-stops small { color: #b9bbb4; }
+.odyssey-chart figcaption { font-size: .8rem; color: #cfd1ca; }
+/* Round 160: a legacy dungeon's node on the road's map: a pale stepped gate, gold when picked. */
+.map-ahead.dungeon .sign, .map-ahead.dungeon.kind-checkpoint .sign { fill: #d8d2bc; stroke: #101110; stroke-width: .5; }
+.map-ahead.dungeon.picked .sign, .map-ahead.dungeon.kind-checkpoint.picked .sign { fill: var(--gold); }

@@ -24,6 +24,7 @@ export const ROAD_MAP = Object.freeze({
   treePixels: 2, // how many pixels a tree stands over its ground
   contour: 10, // metres between the height lines
   recent: 12, // the sites of the trail the frame always holds
+  journey: 0.003, // round 161: overlay units per metre at least when the whole journey is shown: up to about 30 km across
 });
 
 const TAN30 = Math.tan(Math.PI / 6);
@@ -34,14 +35,15 @@ const RISE = 1 / Math.cos(Math.PI / 6);
  * `project(x, z, h)` (the overlay position of a point `h` metres above the water) and `ground(sx, sy)` (the point
  * of the water plane drawn at an overlay position).
  */
-export function createMapView(points, { width = ROAD_MAP.width, height = ROAD_MAP.height, relief = ROAD_MAP.relief, margin = ROAD_MAP.margin } = {}) {
+export function createMapView(points, { width = ROAD_MAP.width, height = ROAD_MAP.height, relief = ROAD_MAP.relief, margin = ROAD_MAP.margin, farthest = ROAD_MAP.farthest } = {}) {
   // Per unit of scale: how far across each point is, and how far down the picture, its height taken off.
   const across = points.map((point) => point.x - point.z);
   const down = points.map((point) => (point.x + point.z) * TAN30 - Math.max(0, point.y ?? 0) * RISE * relief);
   const [minP, maxP, minD, maxD] = [Math.min(...across), Math.max(...across), Math.min(...down), Math.max(...down)];
   const room = { x: width - 2 * margin.side, y: height - margin.top - margin.bottom };
   const fit = Math.min(room.x / Math.max(1, maxP - minP), room.y / Math.max(1, maxD - minD));
-  const scale = Math.max(ROAD_MAP.farthest, Math.min(ROAD_MAP.closest, fit));
+  // Round 161: the whole journey is shown from as far off as it takes (`farthest` is then ROAD_MAP.journey).
+  const scale = Math.max(farthest, Math.min(ROAD_MAP.closest, fit));
   const [cx, cy] = [width / 2 - ((minP + maxP) / 2) * scale, margin.top + room.y / 2 - ((minD + maxD) / 2) * scale];
   const lift = scale * RISE * relief; // overlay units per metre of height
   return Object.freeze({
@@ -102,15 +104,17 @@ export function renderMap(terrain, view, { columns = ROAD_MAP.columns } = {}) {
         const deep = clamp((terrain.waterY - terrain.heightAt(at.x, at.z)) / 9, 0, 1);
         colour = COLOURS.shallow.map((value, i) => value + (COLOURS.deep[i] - value) * deep);
       } else {
-        const biome = terrain.biomeAt(at.x, at.z, h);
-        const [low, high] = LAND[biome];
-        const climb = clamp((h - BAND[biome][0]) / (BAND[biome][1] - BAND[biome][0]), 0, 1);
+        const cover = terrain.coverAt(at.x, at.z, h);
+        // Round 160: meadow and forest take the colours of the biome they lie in.
+        const biome = terrain.biomes?.[terrain.biomeAt?.(at.x, at.z)]?.map ?? null;
+        const [low, high] = biome?.[cover] ?? LAND[cover];
+        const climb = clamp((h - BAND[cover][0]) / (BAND[cover][1] - BAND[cover][0]), 0, 1);
         // The light comes from the left and a little from behind: a slope that faces it is bright, one that faces
         // away is in shade, and the slopes that face the viewer are a shade darker than the land beyond them.
         const leftward = (ground[index + pad] - ground[index - pad]) / acrossMetres;
         const toViewer = (ground[index - pad * wide] - h) / intoMetres;
         const light = clamp(1 + leftward * 1.5 - toViewer * 0.5, 0.5, 1.38);
-        const wood = biome === 'forest' ? 0.2 : biome === 'meadow' ? 0.03 : biome === 'highland' ? 0.04 : 0;
+        const wood = cover === 'forest' ? (biome?.wood ?? 0.2) : cover === 'meadow' ? 0.03 : cover === 'highland' ? 0.04 : 0;
         const tree = wood > 0 && hash(Math.floor(at.x / 6), Math.floor(at.z / 6), terrain.seed + 147) < wood;
         // A height line wherever the ground crosses a round height between this sample and the one in front.
         const line = nearer !== null && Math.floor(h / ROAD_MAP.contour) !== Math.floor(nearer / ROAD_MAP.contour) ? 0.86 : 1;

@@ -1,0 +1,18 @@
+The player answered {{enemy.name}}; the answer is in TURN DATA. Nothing is marked right or wrong in this conversation. Do two things in the one reply.
+
+1. Read the answer for what the player meant. They may write {{language.name}} with slips, English, or a mixture of the two. Fill `player`:
+- `meant`: what they meant, in plain English, in one or two sentences.
+- `target`: the same in correct, simple {{language.name}}: their own words mended and their English put into {{language.name}}, in their order, with nothing added.
+- `clean`: true only when their answer was already correct {{language.name}} throughout.
+- `objectives_met`: the ids of the objectives under `open_objectives` in TURN DATA that the player's meaning fulfils, in whatever language they wrote it. Judge by meaning and be generous. An empty list when it fulfils none.
+
+2. Reply as {{enemy.name}} to what the player meant, in `narrative` and `dialogue`. Do not correct the player, and do not remark on their slips or on which language they used: the mended sentence is shown to them apart from your reply.
+
+THE EXCHANGE: this conversation is a real back-and-forth of `exchange.min` to `exchange.max` of the player's turns, and this answer is turn `exchange.turn`.
+- Respond first to what the player actually said, and follow up on it: pick up a detail of their answer, react to it as {{enemy.name}} would, and build the next question on it.
+- If the player asked {{enemy.name}} something, answer it properly, in character, before anything else.
+- While an objective is still open, bring it in as part of that follow-up, as the conversation rules say. When none is open and the conversation goes on, simply talk: there is nothing left to ask for.
+- Invite the player to ask something back: {{enemy.name}} is someone with a trade, a place and opinions, and is glad to be asked about them. Say so in {{enemy.name}}'s own way, not as an instruction.
+- Whether this reply ends the conversation is under `exchange.ending`; follow it exactly.
+
+TURN DATA: {{turnData}}

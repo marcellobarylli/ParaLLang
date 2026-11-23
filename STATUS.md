@@ -33,6 +33,184 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 164, the journey as the icon; the stitch in the lore book
+
+On waking the owner said the eleven rounds were fine and asked for final touches, then the merge. **The icon** of
+the web app and of the iPhone app is now the picture the owner picked: the whole journey of 120 walks painted on
+the map (`client/scripts/make-icons.mjs`). **The lore book** has the owner's new lore in "What the book does not
+say": a stitch is two passes; every character the player meets has come through from the other world and is an
+impostor here; finishing an encounter sends them back through the ground and completes the stitch; a rift is a
+stitch seen from the side; and the player's walk is a seam. It also has **the first pull**, a world event at the
+step from A2 to B1: the map draws back, the whole graph grows out like a wave, and the land is pulled down at
+every site of the walk, for good. The event is not built;
+[`docs/proposals/2026-11-23-the-first-pull.md`](docs/proposals/2026-11-23-the-first-pull.md) says how it could be
+([findings](docs/rounds/164/findings.md), picture: [`01-icon-512.png`](docs/rounds/164/shots/01-icon-512.png)).
+
+## Addendum 2026-11-23: rounds 153 to 163, the eleven open issues, on one branch awaiting the owner's word
+
+The owner asked for every open issue, one after the other, and went to sleep. All eleven are built, one round each,
+in the issues' own build order, on the branch `claude/modest-einstein-obt6yy`. **None is on `main`, so none is
+deployed and no issue is closed**: a merge to `main` deploys the page and restarts the server, which is the owner's
+word to give. Each round's addendum is below; this is the list.
+
+| Round | Issue | What |
+|---|---|---|
+| 153 | #1 | Light mode beside strict mode |
+| 154 | #2 | A light conversation of three to five turns |
+| 155 | #3 | The characters belong to the world |
+| 156 | #6 | The italic text is a narrator |
+| 157 | #5 | The guidebook |
+| 158 | #4 | Untranslatable (turmeric) text, and the vault's "Understood Later" |
+| 159 | #7 | Three characters utter a deeper truth |
+| 160 | #8 | Biomes, and the legacy dungeons as nodes of the road |
+| 161 | #9 | The whole journey, saved and painted on the map |
+| 162 | #11 | Pulled tree models |
+| 163 | 11-23 | The narrator on a long journey, and a chart of the Odyssey (issue #13): a remark from a hundred walks when the journey is shown, a guidebook entry, and a chart drawn here in place of a public-domain map that could not be fetched | [163](docs/rounds/163/architecture.md) | [findings](docs/rounds/163/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 164 | 11-23 | The journey as the icon; the stitch and the first pull in the lore book (the owner's lore of 2026-11-23); a proposal for building the first pull | [164](docs/rounds/164/architecture.md) | [findings](docs/rounds/164/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
+
+**What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every
+prompt was tested for what it says and not for what a model then writes. Nothing was seen on a phone; the screens
+were played in headless Chromium at a phone's size. Every text in Italian and Spanish is Claude's and unread by a
+speaker. The iPhone app is unchanged. Tests at the end: server 567, web client 281, the aesthetic package 95 (505,
+258 and 87 before).
+
+**What is not as the issues asked.** #3's "Deployed" waits for the merge. #11 pulled trees only: dungeon pieces and
+characters need a network that reaches the usual CC0 libraries. #13 shows a chart drawn here, not a public-domain
+map: Wikimedia Commons could not be reached to find one and read its licence.
+
+## Addendum 2026-11-23: round 163, the narrator on a long journey, and a chart of the Odyssey (on the session branch, not deployed)
+
+Issue #13, the last of the eleven. When the journey shown on the map is a hundred walks or more, the narrator
+remarks on it ("It does not look like a journey. It looks like what a fly does in a quiet room …") and the guidebook
+gains "The long way round". Beside the remark the map shows a **chart of the voyage of Odysseus**: the poem's stops
+in order, each where tradition most often puts it, joined by the same gold line. **It is a sketch drawn in this
+repository, not a public-domain map**: Wikimedia Commons and every page tried were outside the session's network,
+so no map's licence could be read and none was taken; `client/public/models/ASSETS.md` says how to put a real one
+in. Played in headless Chromium with 60 and 120 walks, not on a phone
+([findings](docs/rounds/163/findings.md), picture:
+[`03-the-narrator-and-the-odyssey.jpg`](docs/rounds/163/shots/03-the-narrator-and-the-odyssey.jpg)).
+
+## Addendum 2026-11-23: round 162, pulled tree models for the road (on the session branch, not deployed)
+
+Issue #11, the tenth of the eleven. The web client now ships one file of pulled 3D models,
+[`client/public/models/nature.glb`](client/public/models/ASSETS.md): fifteen models (palms, broad-leaved trees,
+pines, bushes, stones) from flo-bit's "low poly nature pack", **CC0**, cut from 17 617 triangles to 1 672 and from
+1.77 MB to **34 kB** by `client/scripts/make-models.mjs`. `ASSETS.md` beside it records the source, the licence in
+the source's own words and each file's checksum. On the road the five chunks of ground nearest the camera take
+their trees from it; the file is asked for only there, and "Tree models" in Settings switches it off. The level
+stays inside its 64 000 triangles (57 709 at the start). **The cut-down trees are ragged**, and whether they beat
+the simple ones is the owner's call; dungeon pieces and characters were not pulled, because the usual CC0 libraries
+are outside this session's network. Seen in headless Chromium, not on a phone
+([findings](docs/rounds/162/findings.md), pictures:
+[with](docs/rounds/162/shots/02-jungle-with-models.jpg) and
+[without](docs/rounds/162/shots/03-jungle-without-models.jpg)).
+
+## Addendum 2026-11-23: round 161, the whole journey, saved and painted on the map (on the session branch, not deployed)
+
+Issue #9, the ninth of the eleven. The save now holds the whole walk of the road: the id of every site walked to,
+in order (`road.walk`, the last 20 000) and the count of walks. Ids are enough, because the graph is the same graph
+whenever it is read. The road's map has a switch, **"Show Journey so far"**: it reads the walk
+(`GET /api/road/walk`) and paints it as one gold line over the landscape, from as far off as it takes to hold all of
+it, with a mark where it began. Played in headless Chromium with a walk of sixty, not on a phone
+([findings](docs/rounds/161/findings.md), picture: [`02-journey.jpg`](docs/rounds/161/shots/02-journey.jpg)).
+
+## Addendum 2026-11-23: round 160, biomes, and the legacy dungeons as nodes of the road (on the session branch, not deployed)
+
+Issue #8, the eighth of the eleven. **Biomes.** The endless landscape has kinds of country (`BIOMES` in
+`server/src/road/terrain.js`): jungle, woodland and steppe, each with its own trees, density and colours. Every road
+starts in the jungle (palms and broad-leaved trees) and a very low noise chooses further out. What the code called
+a point's biome (shore, meadow, forest, …) is now its *cover*. **Dungeons.** A unit's gate stands in a legacy
+dungeon: the site where the gate is offered is that dungeon's node, a stepped gate on the map and a ruined gate
+seen from the road; the way on reads "Enter Ta Prohm", and the gate's conversation is played in the dungeon's own
+level, which is built only then. The units go round Ta Prohm, The Kiln and Micromort Mountain in order, and a
+place's card counts down ("Jungle · Ta Prohm in 3 conversations or more"). The issue's two questions are answered in
+the findings: the terrain and the graph are seeded throughout, with no `Math.random`, and nothing is generated or
+loaded ahead. Played in headless Chromium, not on a phone
+([findings](docs/rounds/160/findings.md), pictures: [`01b-jungle-level.jpg`](docs/rounds/160/shots/01b-jungle-level.jpg),
+[`02-map-with-ta-prohm.jpg`](docs/rounds/160/shots/02-map-with-ta-prohm.jpg)).
+
+## Addendum 2026-11-22: round 159, three characters utter a deeper truth (on the session branch, not deployed)
+
+Issue #7, the seventh of the eleven, and the last of the narration's. An encounter may now have a `revelation`:
+what its character utters once the encounter is completed. The narrator tells it in the finished conversation ("…
+and he utters the following:"), in turmeric, before the conversation's last word, and the guidebook keeps it.
+Marginalia, Bambieshart and Errata have one each, in both packs, from parts IV, VI and X of the lore book and in
+harder language (B1 and B2) than the road's signs; what they say is in the vault note. Played with Bambieshart in
+headless Chromium; **the texts are Claude's and unread by a speaker**, and it was not seen on a phone
+([findings](docs/rounds/159/findings.md), picture:
+[`01-bambieshart-utters.jpg`](docs/rounds/159/shots/01-bambieshart-utters.jpg)).
+
+## Addendum 2026-11-22: round 158, untranslatable text in the narration (on the session branch, not deployed)
+
+Issue #4, the sixth of the eleven. Deep truths about the world now exist only in the language being learned: ten
+short texts in each pack (`content/languages/<code>/lore/truths.yaml`), the first of them the owner's *Torna
+indietro! Oltre giace la scia di un punto.*, harder in language as the truth gets deeper (A1 to B1). Eleven of the
+narrator's written passages lead up to one each, as a message cut in a tree or scratched on a stone in a ford, and
+show it in **turmeric**. Nothing translates them: the pack's file has no field for a translation, the server sends
+the text alone, and the screen has nothing to tap. The guidebook explains the colour once ("Turmeric text") and
+keeps the texts found for a later reading. What each one says is in
+[`parallang_obsidian/Understood Later.md`](parallang_obsidian/Understood%20Later.md), which the game does not read.
+A place's card, which had outgrown a phone's screen, now scrolls. **The Italian and Spanish are Claude's and unread
+by a speaker.** Seen in headless Chromium, not on a phone ([findings](docs/rounds/158/findings.md), picture:
+[`01-turmeric-on-the-road.jpg`](docs/rounds/158/shots/01-turmeric-on-the-road.jpg)).
+
+## Addendum 2026-11-22: round 157, the guidebook (on the session branch, not deployed)
+
+Issue #5, the fifth of the eleven. The web client has a **guidebook**, the "?" in the top bar, open at any time. Its
+entries are content ([`content/narration/guidebook.yaml`](content/narration/guidebook.yaml)): a title, a text in the
+narrator's voice and the event that enters it. An entry is entered the first time its event happens, is kept in the
+save, is told once on the card of the place ("Entered in your guidebook"), and is read when the guidebook is opened.
+There are four: The road, Being let past, Old words and Gates; issue #4 adds "Turmeric text". Seen in headless
+Chromium at a phone's size, not on a phone ([findings](docs/rounds/157/findings.md), picture:
+[`02-guidebook.jpg`](docs/rounds/157/shots/02-guidebook.jpg)).
+
+## Addendum 2026-11-22: round 156, the italic text is a narrator (on the session branch, not deployed)
+
+Issue #6, the fourth of the eleven. The narration a model writes for each line is now asked for as a storybook told
+to "you" in the present tense, which describes a thing as an old inventory does, leaves the thought unfinished and
+never explains the world; the model is given the truth of the lore book's last part and told never to state it, with
+at most one hint a conversation (a word for sewing where a word for a road is expected). The narrator also has 26
+**written passages** ([`content/narration/passages.yaml`](content/narration/passages.yaml)), told on the first step
+of the road, on each arrival (by the way taken and the country) and at a dungeon's sites; a conversation's last line
+is set as narration too. A passage is sent as segments, where issue #4's untranslatable spans will go, and the save
+keeps what was told, which issue #5's guidebook will hang on. Gerald's pinned prompts were regenerated. **No model
+was called**; seen in headless Chromium, not on a phone ([findings](docs/rounds/156/findings.md), picture:
+[`03-on-the-way.jpg`](docs/rounds/156/shots/03-on-the-way.jpg)).
+
+## Addendum 2026-11-22: round 155, the characters belong to the world (on the session branch, not deployed)
+
+Issue #3, the third of the eleven. The narrator's prompt now carries what a character knows of the world it was born
+in, in three short layers: what everybody knows, what the character's region knows, and one thing the character has
+noticed ([`content/world/knowledge.yaml`](content/world/knowledge.yaml), `prompts/system/world.txt`). The model is
+asked to let one small detail show in about one reply in three, and to answer "what do you mean?" in character with
+something concrete and partial. On the road, characters of the A levels have noticed ordinary things and those from
+B1 on more knowing ones, and the region acts as Tuscany without a word about Tuscany being written. No character
+knows what the lore book's last part says, and a test holds that. **No model was called**, so what the characters
+then say is not seen, and the issue's "Deployed" waits for the owner: it is on the session branch
+([findings](docs/rounds/155/findings.md)).
+
+## Addendum 2026-11-22: round 154, a light conversation is an exchange of three to five turns (on the session branch, not deployed)
+
+Issue #2, the second of the eleven. In light mode a conversation now runs **three to five of the player's turns**:
+it goes on to the third even when everything asked for has been said, ends from the third once no objective is open,
+and ends on the fifth whatever is open. The model is told where each turn stands, is asked to follow up on what the
+player said and to answer and invite questions, and the objective card says "Turn 2 of 3 to 5. You can ask Portia
+questions back." On the road an objective never met counts nothing in the score. Strict mode is unchanged. Played in
+headless Chromium with a scripted model; **no live model**, not on a phone
+([findings](docs/rounds/154/findings.md), picture: [`03-understood.jpg`](docs/rounds/154/shots/03-understood.jpg)).
+
+## Addendum 2026-11-22: round 153, light mode beside strict mode (on the session branch, not deployed)
+
+The owner asked for every open issue, one after the other, and went to sleep; this is the first, #1 (step 3 of the
+build order). Settings in the web client has "How answers are checked": **Strict** (as before, the default) or
+**Light**. In light mode nothing is marked: one call to the model returns what the player meant, the same in the
+target language, which open objectives it covers, and the character's reply, so a turn is one call instead of two.
+An objective closes on the model's word, in any order; there are no hearts. The Spellbook still records the target
+words the player wrote, and the road's score still tells a clean answer from a mended one. Strict mode's prompts and
+tests are unchanged. **No model was called** (the tests script it), and it is on the branch
+`claude/modest-einstein-obt6yy`, not on `main` ([findings](docs/rounds/153/findings.md)).
+
 ## Addendum 2026-11-22: round 152, the road is The Journey 2: Journathan Returns (again) (deployed)
 
 The owner asked for the next GitHub issue: #10, step 2 of the build order. The endless road, The Long Way Home until
@@ -1503,6 +1681,16 @@ Newest first.
 | 150 | 11-22 | The icons of the web app and the iPhone app are a snapshot of the road's isometric map with a walk on it (issue #22); deployed | [150](docs/rounds/150/architecture.md) | [findings](docs/rounds/150/findings.md) | round 150 build, merged to `main` |
 | 151 | 11-22 | The lore book says what the roads are: the graph is a web of threads stitched to other worlds, and no character knows (issue #12); a text only; on `main` | [151](docs/rounds/151/architecture.md) | [findings](docs/rounds/151/findings.md) | round 151 build, merged to `main` |
 | 152 | 11-22 | The road's name is The Journey 2: Journathan Returns (again) (issue #10): the world map, the top bar, the narrator's scene, the documents; ids and saves unchanged; deployed | [152](docs/rounds/152/architecture.md) | [findings](docs/rounds/152/findings.md) | round 152 build, merged to `main` |
+| 153 | 11-22 | Light mode beside strict mode (issue #1): one call that reads the answer and replies, nothing checked; a Strict / Light choice in Settings; strict mode unchanged | [153](docs/rounds/153/architecture.md) | [findings](docs/rounds/153/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 154 | 11-22 | A light conversation is an exchange of three to five turns (issue #2): a floor of three, a ceiling of five, the objectives decide between; follow-ups and questions back asked of the model and nudged on the screen | [154](docs/rounds/154/architecture.md) | [findings](docs/rounds/154/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 155 | 11-22 | The characters belong to the world (issue #3): what everybody knows, a region's lore and one thing noticed, as one block of the narrator's prompt; the road acts as Tuscany; A levels ordinary, B levels more knowing | [155](docs/rounds/155/architecture.md) | [findings](docs/rounds/155/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 156 | 11-22 | The italic text is a narrator (issue #6): a storybook told to "you" that knows more than it says, as rules in the style guide; 26 written passages for the road and the dungeons' sites; segments and the save's `told` as hooks for issues #4 and #5; Gerald's pinned prompts regenerated | [156](docs/rounds/156/architecture.md) | [findings](docs/rounds/156/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 157 | 11-22 | The guidebook (issue #5): entries as content, entered when their event first happens, kept in the save, told once on the place's card and read in a panel behind the top bar's "?" | [157](docs/rounds/157/architecture.md) | [findings](docs/rounds/157/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 158 | 11-22 | Untranslatable text in the narration (issue #4): ten texts a pack in the language being learned only, set into written passages in turmeric with nothing to tap; the guidebook's "Turmeric text" entry and the texts found; the vault's "Understood Later" | [158](docs/rounds/158/architecture.md) | [findings](docs/rounds/158/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 159 | 11-22 | Three characters utter a deeper truth (issue #7): an encounter's `revelation`, told by the narrator on completion in turmeric and kept by the guidebook; Marginalia, Bambieshart and Errata | [159](docs/rounds/159/architecture.md) | [findings](docs/rounds/159/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 160 | 11-23 | Biomes, and the legacy dungeons as nodes of the road (issue #8): jungle, woodland and steppe, the road starting in the jungle; a point's old "biome" renamed cover; a unit's gate stands in a legacy dungeon whose node is on the map ("Enter Ta Prohm") and whose level is built on entry | [160](docs/rounds/160/architecture.md) | [findings](docs/rounds/160/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 161 | 11-23 | The whole journey, saved and painted on the map (issue #9): `road.walk` as node ids, its own route, and the map's "Show Journey so far" | [161](docs/rounds/161/architecture.md) | [findings](docs/rounds/161/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 162 | 11-23 | Pulled tree models for the road (issue #11): fifteen CC0 models by flo-bit in one 34 kB file, its source and licence in `ASSETS.md`, stamped into the five nearest chunks, loaded on the road only, with a switch in Settings | [162](docs/rounds/162/architecture.md) | [findings](docs/rounds/162/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

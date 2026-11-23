@@ -148,10 +148,14 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       set({ progression: incoming });
       return current && incoming.level > current.level ? incoming.level : null;
     };
+    // Round 157: what a view says of the guidebook ({ count, unread }); a server before it says nothing.
+    const takeGuide = (note) => { if (note && Array.isArray(note.unread)) set({ guideNote: note }); };
     // Round 133: what the world map shows of a dungeon's run.
     const runOf = (of, progress) => ({ cleared: of.sites.filter((site) => progress.sites[site.id]?.cleared).length, total: of.sites.length, complete: Boolean(progress.complete) });
     const takeView = (view) => {
-      set({ progress: view.progress, dungeon: mergeDungeon(dungeon, view.dungeon), runs: { ...get().runs, [dungeon.id]: runOf(dungeon, view.progress) } });
+      // Round 156: with the narrator's passage for the site the player stands at (null from a server before it).
+      takeGuide(view.guidebook);
+      set({ progress: view.progress, narration: view.narration ?? null, dungeon: mergeDungeon(dungeon, view.dungeon), runs: { ...get().runs, [dungeon.id]: runOf(dungeon, view.progress) } });
       takeProgression(view.progression);
     };
     // The runs of the dungeons the player is not in, for the world map's counts. Nothing waits for them.
@@ -239,6 +243,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           result = await startSite(true);
         }
         if (stale()) return;
+        takeGuide(result.guidebook); // round 157: the first conversation in a dungeon may have entered an entry
         const patch = { encounter: result.encounter, spellbook: withSpellbook(result.spellbook), encounterLoading: false, assessment: null, closedObjectives: 0, draft: '', pendingInput: null };
         const index = siteIndexOf(result.encounter.encounterId);
         // Another tab moved the player: the camera goes to the site the server started.
@@ -262,7 +267,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     return {
       // Round 144: The Journey 2 (roadSlice.js).
       ...createRoadSlice({
-        set, get, api, quiet, withSpellbook, takeProgression, backup,
+        set, get, api, quiet, withSpellbook, takeProgression, backup, takeGuide,
         guard: { epoch: () => requestEpoch, site: () => siteRequest, bumpSite: () => { siteRequest += 1; return siteRequest; } },
       }),
       savedAt: null, // when this browser's copy of the save was last written (the server's clock)
@@ -274,9 +279,13 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       language: null,
       dungeon,
       atlas,
+      legacy: Object.fromEntries(bundled), // round 160: the bundled dungeons by id: the road's gates are played in them
       enterable: [...bundled.keys()], // round 133: the dungeons this client holds; a place opens only one of these
       runs: {}, // round 133: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
       progress: null,
+      guideNote: null, // round 157: { count, unread }: the guidebook's size and the entries not yet read
+      guidebook: null, // the guidebook as last read ({ entries, total }), while its panel is open
+      narration: null, // round 156: the narrator's passage for the dungeon site the player stands at
       progression: null, // round 121: { xp, level, levelStartsAt, nextLevelAt }, or null with a server that sends none
       xpGained: 0, // what the last answer earned
       levelUp: null, // the level the last answer or review reached, if it raised it
@@ -386,7 +395,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           siteRequest += 1;
           progressRequest += 1;
           runEpoch += 1;
-          set({ ...quiet, dungeon, progress: null, siteIndex: startIndex(dungeon), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, starting: false, partyReturn: null, error: null });
+          set({ ...quiet, dungeon, progress: null, narration: null, siteIndex: startIndex(dungeon), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, starting: false, partyReturn: null, error: null });
           if (s.learnerId) refreshProgress(s.learnerId);
         }
         try { storage?.setItem?.(PLACE_KEY, place.id); } catch { /* private mode: the first dungeon next time */ }
@@ -621,6 +630,10 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value) }, storage) }),
       // Round 129: beginner mode, sent with each answer.
       setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
+      // Round 162: whether the road's nearest trees are the pulled models.
+      setTreeModels: (on) => set({ display: saveDisplay({ ...get().display, treeModels: on !== false }, storage) }),
+      // Round 153: strict or light checking of answers, sent with each answer.
+      setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       // The server no longer knows this learner (see `api` above): everything of the old run is dropped, the learner
@@ -640,8 +653,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         initializationPromise = null;
         const phase = ['attract', 'world'].includes(get().phase) ? get().phase : 'overview';
         set({
-          settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
-          mode: 'dungeon', road: null, curriculum: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false,
+          settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, narration: null, guideNote: null, guidebook: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
+          mode: 'dungeon', road: null, curriculum: null, journey: null, journeyShown: false, journeyLoading: false, journeyRemark: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false,
           party: [], partyReturn: null, partyStarting: null, recruiting: false,
           progression: null, xpGained: 0, levelUp: null,
           phase, siteIndex: startIndex(dungeon), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, encounter: null, encounterLoading: false, siteError: null, starting: false,
@@ -687,12 +700,14 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         set({ isLoading: true, error: null, pendingInput: text, draft: text });
         try {
           // Round 129: beginner mode travels with the answer (the server grades strictly without it).
-          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(state.display?.beginner !== false ? { beginner: true } : {}), immersion: immersionOf(state) });
+          // Round 153: so does light mode, in which the server checks nothing; it takes the place of beginner mode.
+          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(state.display?.light === true ? { light: true } : state.display?.beginner !== false ? { beginner: true } : {}), immersion: immersionOf(state) });
           if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
           // A held pass (said too early in an ordered encounter) closes nothing (round 051).
           const closed = (result.assessment?.objectiveResults ?? []).filter((entry) => entry.passed && !entry.held).length;
           const kind = result.encounter.state === 'resolved' ? 'resolved' : closed > 0 ? 'pass' : 'fail';
           const levelUp = takeProgression(result.progression);
+          takeGuide(result.guidebook); // round 159: what a character uttered may have entered a guidebook entry
           set({
             encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: result.assessment, isLoading: false, pendingInput: null, draft: '',
             closedObjectives: get().closedObjectives + closed, beat: { id: (get().beat?.id ?? 0) + 1, kind },
@@ -738,6 +753,22 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
           // Not over a newer Spellbook: a read sent before a conversation opened would show its meanings (R1.4).
           const fresh = epoch === requestEpoch && version === spellbookVersion && get().learnerId === learnerId && get().view === 'spellbook';
           if (fresh && spellbook?.cards) set({ spellbook: withSpellbook(spellbook) });
+        }).catch(() => {});
+      },
+      // Round 157: the guidebook. It shows what the store last read at once, then the server's, and opening it reads
+      // every entry (the notes on the cards go).
+      openGuidebook: () => {
+        set({ view: 'guidebook', reviewChallenge: null, reviewResult: null, error: null });
+        const { learnerId } = get();
+        if (!learnerId || !api.getGuidebook) return;
+        const epoch = requestEpoch;
+        const current = () => epoch === requestEpoch && get().learnerId === learnerId;
+        api.getGuidebook(learnerId).then((data) => {
+          if (!current() || !data?.guidebook) return;
+          set({ guidebook: data.guidebook });
+          if (!data.guidebook.entries.some((entry) => entry.unread)) return;
+          // The panel keeps its "New" marks for this visit; the notes elsewhere are done with.
+          return api.readGuidebook(learnerId).then(() => { if (current()) set({ guideNote: { count: data.guidebook.entries.length, unread: [] } }); });
         }).catch(() => {});
       },
       returnToDialogue: () => set({ view: 'dialogue', reviewChallenge: null, reviewResult: null, error: null }),

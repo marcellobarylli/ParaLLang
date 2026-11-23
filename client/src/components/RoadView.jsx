@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
-export default function RoadView({ road, shown, arrival, from, talking, insets, onArrive, onThunder = null, closed = 0, resolved = false, beat = null }) {
+export default function RoadView({ road, shown, arrival, from, talking, insets, onArrive, onThunder = null, closed = 0, resolved = false, beat = null, models = true }) {
   const canvasRef = useRef(null);
   const viewRef = useRef(null);
   const arriveRef = useRef(onArrive);
@@ -24,7 +24,7 @@ export default function RoadView({ road, shown, arrival, from, talking, insets, 
     setStatus('loading');
     import('../scene/roadView.js').then(({ createRoadView }) => {
       if (cancelled) return;
-      view = createRoadView(canvasRef.current, { seed, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
+      view = createRoadView(canvasRef.current, { seed, models: false, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
       viewRef.current = view;
       if (typeof window !== 'undefined') window.__parallangRoad = view; // for the screenshot script and the console
       setStatus('ready');
@@ -52,6 +52,8 @@ export default function RoadView({ road, shown, arrival, from, talking, insets, 
     if (status === 'ready' && talking) viewRef.current?.setEncounter({ closed, resolved, beatId: beat?.id ?? null, beatKind: beat?.kind ?? null });
   }, [status, talking, closed, resolved, beat]);
   useEffect(() => { if (status === 'ready' && insets) viewRef.current?.setInsets(insets); }, [status, insets]);
+  // Round 162: the trees' models, as Settings has them. The file is fetched the first time they are wanted.
+  useEffect(() => { if (status === 'ready') viewRef.current?.setModels(models); }, [status, models]);
 
   return (
     <div className={`level level-${status}`} aria-hidden="true">
