@@ -25,17 +25,17 @@ async function open(t, queue) {
 }
 
 test('the exchange is three to five turns', () => {
-  assert.deepEqual(LIGHT_EXCHANGE, { min: 3, max: 5 });
+  assert.deepEqual(LIGHT_EXCHANGE, { min: 3, max: 5 }); // round 174: in the game both are capped at the limit of three replies
 });
 
 test('every objective met on the first turn: the conversation goes on to the third turn and ends there', async (t) => {
   const { runtime, encounter, say } = await open(t, [all, none, none]);
-  assert.deepEqual(encounter.exchange, { turn: 0, min: 3, max: 5 });
+  assert.deepEqual(encounter.exchange, { turn: 0, min: 3, max: 5, limit: null });
   const first = await say('Ciao, mi chiamo Ada. E tu?', encounter);
   assert.equal(first.encounter.state, 'ongoing');
   assert.deepEqual(first.encounter.openObjectives, []);
   assert.equal(first.encounter.currentObjective, null);
-  assert.deepEqual(first.encounter.exchange, { turn: 1, min: 3, max: 5 });
+  assert.deepEqual(first.encounter.exchange, { turn: 1, min: 3, max: 5, limit: null });
   assert.equal(first.xpGained, 30); // three objectives; the conversation is not finished
   const second = await say('E cosa fai qui?', first.encounter);
   assert.equal(second.encounter.state, 'ongoing');

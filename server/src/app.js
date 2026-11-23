@@ -105,6 +105,11 @@ export function createApp({ service, logger = console, token = null, friendCode 
     try { res.json(await service.moveOnRoad(req.get('X-Learner-Id'), req.body ?? {})); }
     catch (error) { next(error); }
   });
+  // Round 173: streamlined mode (Settings): { streamlined: true | false }.
+  app.post('/api/road/mode', async (req, res, next) => {
+    try { res.json(await service.setRoadMode(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
   app.post('/api/road/reset', async (req, res, next) => {
     try { res.json(await service.resetRoad(req.get('X-Learner-Id'), req.body ?? {})); }
     catch (error) { next(error); }

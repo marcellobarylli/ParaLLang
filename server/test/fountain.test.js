@@ -80,7 +80,7 @@ for (const code of Object.keys(packs)) {
     const content = loadGameContent({ language: code });
     assert.equal(content.world.locationsById.get('cracked_fountain').encounter, 'cracked_fountain_letharger');
     const provider = new FountainProvider(code);
-    const service = new LearningService({ provider, storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow });
+    const service = new LearningService({ provider, storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow, exchangeLimit: Infinity }); // round 174: a long scenario
     const { learnerId } = await service.createOrRecoverLearner();
     for (const locationId of route(content.world, content.world.start, 'cracked_fountain')) await service.moveTo(learnerId, { locationId });
 
@@ -194,7 +194,7 @@ for (const [code, pack] of Object.entries(timePacks)) {
     const saveDir = await mkdtemp(join(tmpdir(), 'parallang-fountain-'));
     t.after(() => rm(saveDir, { recursive: true, force: true }));
     const content = loadGameContent({ language: code });
-    const service = new LearningService({ provider: new FountainProvider(code), storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow });
+    const service = new LearningService({ provider: new FountainProvider(code), storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow, exchangeLimit: Infinity }); // round 174: a long scenario
     const { learnerId } = await service.createOrRecoverLearner();
     for (const locationId of route(content.world, content.world.start, 'cracked_fountain')) await service.moveTo(learnerId, { locationId });
     let { encounter } = await service.startEncounter(learnerId, { encounterId: 'cracked_fountain_letharger' });
@@ -221,7 +221,7 @@ async function fountainAt(t, code) {
   t.after(() => rm(saveDir, { recursive: true, force: true }));
   const content = loadGameContent({ language: code });
   const provider = new FountainProvider(code);
-  const service = new LearningService({ provider, storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow });
+  const service = new LearningService({ provider, storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow, exchangeLimit: Infinity }); // round 174: a long scenario
   const { learnerId } = await service.createOrRecoverLearner();
   for (const locationId of route(content.world, content.world.start, 'cracked_fountain')) await service.moveTo(learnerId, { locationId });
   const { encounter } = await service.startEncounter(learnerId, { encounterId: 'cracked_fountain_letharger' });

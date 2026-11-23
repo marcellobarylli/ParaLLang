@@ -56,6 +56,14 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
     } catch { return null; }
   };
 
+  // Round 173: the view of the road in this browser's streamlined mode: as it is, or as the server answers once told
+  // (a server from before the mode answers views without `streamlined` and is left as it is).
+  const modeFor = async (learnerId, view) => {
+    const wanted = get().display?.streamlined !== false;
+    if (!api.setRoadMode || (view.road.streamlined ?? wanted) === wanted) return view;
+    try { const told = await api.setRoadMode(learnerId, wanted); return usable(told) ? told : view; } catch { return view; }
+  };
+
   // The conversation is on the screen once the camera is there and the conversation of this site is loaded.
   const maybeOpen = () => {
     const s = get();
@@ -132,9 +140,12 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
         if (get().mode !== 'road') return;
         if (get().connection !== 'ready') throw new Error(get().serverProblem ?? 'The server is not connected yet.');
         const learnerId = get().learnerId;
-        const view = await api.getRoad(learnerId, { seed: get().titleSeed });
+        let view = await api.getRoad(learnerId, { seed: get().titleSeed });
         if (get().mode !== 'road' || get().learnerId !== learnerId) return;
         if (!usable(view)) throw new Error('The server is being updated. Try again in a few minutes.');
+        // Round 173: the road takes this browser's streamlined setting before it is shown.
+        view = await modeFor(learnerId, view);
+        if (get().mode !== 'road' || get().learnerId !== learnerId) return;
         roadRequest += 1;
         takeRoad(view);
         set({ roadLoading: false });
@@ -222,6 +233,19 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
         set({ roadTravelling: false, roadError: error.code === 'RUN_LOST' ? null : error.message });
         await refreshRoad(learnerId);
       }
+    },
+
+    // Round 173: the server's road in the streamlined mode of this browser's setting, after the setting changed.
+    // Only once the road is read; entering the road tells it too. A failed call is tried again on the next entry.
+    syncRoadMode: async () => {
+      const s = get();
+      if (!s.road || !s.learnerId) return;
+      const learnerId = s.learnerId;
+      const epoch = guard.epoch();
+      const view = await modeFor(learnerId, { road: s.road, curriculum: s.curriculum });
+      if (view.road === s.road || epoch !== guard.epoch() || get().learnerId !== learnerId || get().mode !== 'road') return;
+      roadRequest += 1;
+      takeRoad(view);
     },
 
     // On rails: the pacing's own next site.

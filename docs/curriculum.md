@@ -67,6 +67,11 @@ Every conversation is with a generated character and has objectives: things to s
 | **Again** (repair) | A lesson that went badly, with someone else | 2 | Yes |
 | **Gate** (checkpoint) | One objective from each lesson of the unit, one from the unit before; at the end of a stage, from three other units of the stage | 0 | No |
 
+**Streamlined mode** (round 173, Settings, on by default) replaces the four kinds with one, **Unit**: the first
+objective of each of the unit's lessons, in one conversation, taught as a lesson is (three hints). Finishing it
+completes the unit whatever the score, and every site ahead offers the next unit; there are no reviews, repairs or
+gates until the curriculum is finished. The rules below are the pacing with the mode switched off.
+
 A conversation's **score** is the share of its objectives said cleanly; an objective closed by a correction (beginner
 mode) or after a hint counts half.
 

@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 176, the camera follows the shortest walk, smoothed
+
+Between two sites the camera now follows the shortest walk along the graph's ways (`graph.route`), on a line smoothed
+so that it curves near the ways without hard edges, and with its height smoothed along the ground
+(`client/src/scene/roadPath.js`, `roadDirector.js`). Before, it flew straight over the country when the two sites
+were not joined. Rounds 173 and 174 were made on `main` by another session at the same time; this session's title
+round is 175 and `main` is merged in. **Deployed** on the owner's word ("deploy everything"), with round 175.
+[Architecture](docs/rounds/176/architecture.md), [findings](docs/rounds/176/findings.md).
+
 ## Addendum 2026-11-23: round 175, a title over the clouds, and one menu
 
 The page opens on the road's landscape seen from above the clouds, turning slowly, with the weather of the moment and
@@ -41,8 +50,27 @@ at once; the road is read and the ground built behind the title (a new player's 
 already shows: `GET /api/road?seed=`). The top bar is the same everywhere: **Map** and **Menu** (map, curriculum,
 Spellbook, party, guidebook, Settings, leave the conversation, other places, back to the title). The road's map opens
 over a conversation, and walking off from it leaves the conversation unfinished. Ta Prohm and The Kiln are under
-"Other places"; a reload opens on the title. Seen in headless Chromium at phone and desktop size; not on a real phone,
-not deployed. [Architecture](docs/rounds/175/architecture.md), [findings](docs/rounds/175/findings.md).
+"Other places"; a reload opens on the title. Seen in headless Chromium at phone and desktop size; not on a real phone.
+**Deployed** with round 176. [Architecture](docs/rounds/175/architecture.md), [findings](docs/rounds/175/findings.md).
+## Addendum 2026-11-23: round 174, three replies and the conversation is complete
+
+Every conversation, strict or light, on the road or in a dungeon, is **complete on the player's third reply**
+(strict: sooner when every objective is met); a counter says "Reply 1 of 3". After that **"Keep chatting"** goes on
+with the character and counts nothing; "Done chatting" brings the way on back. Played in headless Chromium with a
+scripted provider. [Architecture](docs/rounds/174/architecture.md), [findings](docs/rounds/174/findings.md).
+
+**Deployed** with round 173 on the owner's word ("push and deploy"): `main` is at `bc4ef51`. CI run 45278675005
+succeeded; the Pages run 45278675009 failed on its first attempt (GitHub found no uploaded artifact) and succeeded on
+the second. Render's deployment was not looked at; the live page and server are outside the session's network.
+
+## Addendum 2026-11-23: round 173, streamlined mode
+
+**Streamlined**, in Settings under Language and learning, on by default: on the road each unit (Hello and goodbye,
+Where you are from, ...) is one conversation of the first objective of each of its lessons; finishing it completes
+the unit whatever the score, and every site ahead offers the next unit. No reviews, repairs or gates until the
+curriculum is finished. Switching it on completes a unit already begun. Off, the full pacing of round 144 is back.
+Kept on the road (`POST /api/road/mode`). Not played in a browser.
+[Architecture](docs/rounds/173/architecture.md), [findings](docs/rounds/173/findings.md).
 
 ## Addendum 2026-11-23: round 172, quieter rain and an Audio category
 
@@ -215,7 +243,10 @@ is the list.
 | 170 | 11-23 | A local setup for friends (`PLAY.md`, `npm run setup`, a Gemini provider): withdrawn by the owner and reverted (`456a521`); its records are in the history of `d9165cd` | none | none | reverted on `main` |
 | 171 | 11-23 | Friends play the hosted link on Gemini: a friend code, their turns on the server's `GEMINI_API_KEY` or their own pasted key, three clear steps when no model is available | [171](docs/rounds/171/architecture.md) | [findings](docs/rounds/171/findings.md) | on `main` (page and server) |
 | 172 | 11-23 | Rain far quieter (on its own effects bus) and 15 % of the time; Settings in categories, with Audio's Master, Music, Effects and Voice volumes | [172](docs/rounds/172/architecture.md) | [findings](docs/rounds/172/findings.md) | on `main` (page and server) |
-| 175 | 11-23 | The title screen over the clouds (the road's landscape turning, the weather, one button, the zoom down; the world loaded behind it); one top bar of Map and Menu; the map over a conversation, which can be left unfinished | [175](docs/rounds/175/architecture.md) | [findings](docs/rounds/175/findings.md) | session branch, not deployed |
+| 173 | 11-23 | Streamlined mode, on by default: one conversation a unit, finishing it completes the unit, every site offers the next unit | [173](docs/rounds/173/architecture.md) | [findings](docs/rounds/173/findings.md) | on `main` with `bc4ef51` (page and server) |
+| 174 | 11-23 | Every conversation complete on the third reply, with a counter; Keep chatting after, which counts nothing | [174](docs/rounds/174/architecture.md) | [findings](docs/rounds/174/findings.md) | on `main` with `bc4ef51` (page and server) |
+| 175 | 11-23 | The title screen over the clouds (the road's landscape turning, the weather, one button, the zoom down; the world loaded behind it); one top bar of Map and Menu; the map over a conversation, which can be left unfinished | [175](docs/rounds/175/architecture.md) | [findings](docs/rounds/175/findings.md) | on `main` with round 176 |
+| 176 | 11-23 | The camera between sites follows the shortest walk along the ways, smoothed in plan and in height | [176](docs/rounds/176/architecture.md) | [findings](docs/rounds/176/findings.md) | on `main` (page and server) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

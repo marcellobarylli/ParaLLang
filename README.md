@@ -320,6 +320,9 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   Spellbook, the party, the guidebook, Settings, leaving a conversation, the other places, back to the title); the
   road's map opens over a conversation, and walking off from it leaves the conversation unfinished. Ta Prohm and The
   Kiln are under the menu's "Other places". `node client/scripts/title-check.mjs [outDir] [phone|desktop]` plays it.
+  From round 176 the camera goes from one site to another along the shortest walk over the ways (`graph.route`),
+  on a line smoothed in plan and in height (`client/src/scene/roadPath.js`); `node client/scripts/travel-check.mjs`
+  measures it in headless Chromium.
   From round 157 there is a guidebook: `content/narration/guidebook.yaml` holds its entries (a title, a text and
   the event that enters each), a save keeps the entries a learner has under `guidebook`, `GET /api/guidebook` lists
   them and `POST /api/guidebook/read` marks them read. A new entry is told on the card of the place where it was

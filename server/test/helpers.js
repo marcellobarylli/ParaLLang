@@ -168,7 +168,10 @@ export async function createRuntime({ provider = new FixtureProvider(), clock = 
   const saveDir = baseSaveDir ?? await makeTempDir('parallang-test-');
   const actualStorage = storage ?? new JsonLearningStorage({ saveDir });
   const content = givenContent ?? loadGameContent({ language }); // round 045: a test may pass edited content
-  const service = new LearningService({ provider, storage: actualStorage, content, clock, ...serviceOptions }); // round 076: options
+  // Round 174: the game ends a conversation on the third reply; the tests of long scenarios (rejections, held passes,
+  // many receipts) keep their conversations open. The limit itself is tested with `exchangeLimit: 3`
+  // (test/exchange-limit.test.js).
+  const service = new LearningService({ provider, storage: actualStorage, content, clock, exchangeLimit: Infinity, ...serviceOptions }); // round 076: options
   // Test servers bind 127.0.0.1 and are protected by a random PARALLANG_TOKEN-style secret.
   const token = randomUUID();
   const app = createApp({ service, logger: { error() {} }, token, ...(saves ? { saves } : {}) }); // round 146: a test may say where its saves are kept

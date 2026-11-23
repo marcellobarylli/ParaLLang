@@ -15,7 +15,7 @@ import { characterFor, placeName } from '../src/road/characters.js';
 import { buildRoadDefinition } from '../src/road/encounters.js';
 import { frontierOf, freshRoad, offersFor } from '../src/road/service.js';
 import { api, createRuntime } from './helpers.js';
-import { RoadProvider, answer, fullAnswer, moveTo, road, roadRuntime, startHere, talkHere } from './road-helpers.js';
+import { RoadProvider, answer, fullAnswer, moveTo, road, roadRuntime, setMode, startHere, talkHere } from './road-helpers.js';
 
 test('the landscape is a pure function of its seed, with dry land at the start and water elsewhere', () => {
   const [a, b, other] = [createTerrain(7), createTerrain(7), createTerrain(8)];
@@ -427,6 +427,7 @@ test('a new road is another landscape with the curriculum kept; the dungeon is u
   t.after(runtime.close);
   const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
   assert.equal((await road(runtime, learnerId)).data.road.seed, 11);
+  await setMode(runtime, learnerId, false);
   await talkHere(runtime, learnerId);
   const reset = await api(runtime, '/api/road/reset', { learnerId, method: 'POST', body: {} });
   assert.equal(reset.data.road.seed, 22);
@@ -441,7 +442,8 @@ test('a new road is another landscape with the curriculum kept; the dungeon is u
 
 // Round 175: the title screen draws a landscape before the server answers; the first look may propose its seed.
 test('the first look at the road takes the seed the title proposed, and a road that exists keeps its own', async (t) => {
-  const { runtime, learnerId } = await roadRuntime(t, { seed: 4242 });
+  // `streamlined: true` leaves the mode alone, which would make the road before its first look.
+  const { runtime, learnerId } = await roadRuntime(t, { seed: 4242, streamlined: true });
   const first = await api(runtime, '/api/road?seed=777', { learnerId });
   assert.equal(first.status, 200);
   assert.equal(first.data.road.seed, 777, 'the proposed seed makes the new road');

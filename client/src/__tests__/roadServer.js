@@ -39,6 +39,7 @@ export function createRoadServer({ seed = 4242, titleSeeds = false } = {}) {
     getRoad: (learnerId, options) => service.getRoad(learnerId, titleSeeds ? options : {}), // round 175
     moveRoad: (learnerId, body) => service.moveOnRoad(learnerId, body),
     resetRoad: (learnerId, body) => service.resetRoad(learnerId, body),
+    setRoadMode: (learnerId, streamlined) => service.setRoadMode(learnerId, { streamlined }), // round 173
     getRoadWalk: (learnerId) => service.getRoadWalk(learnerId), // round 161
     getGuidebook: (learnerId) => service.getGuidebook(learnerId), // round 157
     readGuidebook: (learnerId) => service.readGuidebook(learnerId),

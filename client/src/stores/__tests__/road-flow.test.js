@@ -17,7 +17,10 @@ function memoryStorage(entries = {}) {
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
 }
 
-async function onTheRoad({ storage = memoryStorage(), server = createRoadServer() } = {}) {
+// Round 173: the full pacing, so streamlined mode is off unless a test's storage says otherwise.
+const fullPacing = () => memoryStorage({ 'parallang.display': JSON.stringify({ streamlined: false }) });
+
+async function onTheRoad({ storage = fullPacing(), server = createRoadServer() } = {}) {
   const store = createGameStore({ api: server.api, storage, dungeon: DUNGEON, atlas: ATLAS });
   const s = () => store.getState();
   await s().initialize();
@@ -299,4 +302,40 @@ test('from the map, a conversation under way is left unfinished to walk on', asy
   expect(s().road.at).toBe(away);
   expect(s().road.cleared).not.toContain(here); // it did not let the player pass
   expect([s().roadPanel, s().roadPhase]).toEqual([null, 'travel']);
+});
+
+// Round 173: streamlined mode is on unless switched off: one conversation a unit, and the next is the next unit.
+test('streamlined by default: each unit is one conversation, and switching it off in Settings gives the lessons back', async () => {
+  const ctx = await onTheRoad({ storage: memoryStorage() });
+  const { s } = ctx;
+  expect(s().display.streamlined).toBe(true);
+  expect([s().road.streamlined, s().road.current.kind, s().road.current.unitId]).toEqual([true, 'unit', 'greetings']);
+  await s().roadTalk();
+  await finish(ctx);
+  expect(s().curriculum.position.unitId).toBe('origins');
+  expect(s().road.frontier.every((site) => site.offer.kind === 'unit' && site.offer.unitId === 'origins')).toBe(true);
+  await s().roadContinue();
+  await vi.waitFor(() => expect(s().encounter?.road?.unitId).toBe('origins'));
+  await s().setStreamlined(false);
+  expect(JSON.parse(ctx.storage.values.get('parallang.display')).streamlined).toBe(false);
+  expect([s().road.streamlined, s().road.current.kind]).toEqual([false, 'lesson']);
+});
+
+// Round 174: a conversation is complete on the third reply, and the player may keep chatting after it.
+test('three replies complete a conversation whatever is said; keep chatting goes on and counts nothing', async () => {
+  const ctx = await onTheRoad();
+  const { s } = ctx;
+  await s().roadTalk();
+  expect(s().encounter.exchange.limit).toBe(3);
+  for (const reply of ['Non lo so.', 'Boh.', 'Niente.']) await s().sendMessage(reply);
+  expect(s().encounter.state).toBe('resolved');
+  await vi.waitFor(() => expect(s().road.current).toBe(null));
+  const step = s().road.step;
+  const lines = s().encounter.transcript.length;
+  await s().sendMessage('Ancora?'); // not without asking to chat
+  expect(s().encounter.transcript.length).toBe(lines);
+  s().keepChatting();
+  await s().sendMessage('Come va?');
+  expect([s().encounter.state, s().encounter.transcript.length, s().assessment]).toEqual(['resolved', lines + 2, null]);
+  expect(s().road.step).toBe(step);
 });

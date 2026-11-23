@@ -69,4 +69,5 @@ commit; nothing here is frozen.
 
 ## Status
 
-Built, tested and seen in headless Chromium at 390 × 844 and 1440 × 900. Not seen on a real phone; not deployed.
+Built, tested and seen in headless Chromium at 390 × 844 and 1440 × 900. Not seen on a real phone. Deployed with
+round 176 on the owner's word.

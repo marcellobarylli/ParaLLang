@@ -70,7 +70,7 @@ async function runtime(t, code) {
   const content = loadGameContent({ language: code });
   const provider = new RiftProvider(code);
   const storage = new JsonLearningStorage({ saveDir });
-  const service = new LearningService({ provider, storage, content, clock: () => fixedNow });
+  const service = new LearningService({ provider, storage, content, clock: () => fixedNow, exchangeLimit: Infinity }); // round 174: a long scenario
   const { learnerId } = await service.createOrRecoverLearner();
   const seed = async (world) => { const envelope = await storage.load(learnerId); envelope.world = world; await storage.save(envelope); };
   return { content, provider, service, learnerId, seed };

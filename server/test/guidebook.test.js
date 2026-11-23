@@ -31,7 +31,7 @@ test('which entries an event enters: those that fit and are not had yet', () => 
 });
 
 test('a new learner has an empty guidebook; the first step on the road enters "The road", unread, and the road\'s view tells it', async (t) => {
-  const { runtime, learnerId } = await roadRuntime(t);
+  const { runtime, learnerId } = await roadRuntime(t, { streamlined: true }) // no mode call: it would make the road;
   assert.deepEqual((await guidebook(runtime, learnerId)).data, { guidebook: { entries: [], total: 6, fragments: [] } });
   const view = (await road(runtime, learnerId)).data;
   assert.equal(view.guidebook.count, 1);
