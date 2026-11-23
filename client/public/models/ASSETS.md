@@ -60,21 +60,44 @@ Issue #11 also names dungeon pieces, characters and the isometric map. None was 
 - **The isometric map** is painted from the landscape itself, pixel by pixel (`client/src/roadMap.js`), and uses no
   asset.
 
-## The Odyssey's route (round 163, issue #13)
+## The Odyssey's route (round 163, issue #13; the map under it, round 165)
 
 Issue #13 asks that a royalty-free or public-domain map of the Odyssey's route be shown beside the narrator's remark
-on a long journey, if one exists, with its source and licence on record. **None was taken.** Wikimedia Commons,
-where such maps are, and every other page tried were outside the network of the session that built the feature, so
-no map's licence could be read; a web search alone named only maps under non-free licences.
+on a long journey, if one exists, with its source and licence on record. No finished map of the route was taken:
+Wikimedia Commons, where such maps are, was outside the network of the sessions that built the feature, and a web
+search alone named only maps under non-free licences.
 
-What the game shows instead is **a chart drawn in this repository**: `client/src/components/OdysseyChart.jsx` draws
-it from `content/world/odyssey.yaml`, a line through the poem's stops at the places tradition most often gives them.
-It is this project's own work and needs no licence from anyone. It is a sketch with no coastline, and the yaml file
-says what its places and coordinates rest on.
+What the game shows is **a chart drawn in this repository on a real coast**. `client/src/components/OdysseyChart.jsx`
+draws it from two files: `content/world/odyssey.yaml` (the poem's stops at the places tradition most often gives
+them, and the names written on the map) and `content/world/odyssey-map.json` (the coast, and the line between the
+stops).
 
-To show a real map instead: put the image in `client/public/maps/`, add its source, author, date and licence here in
-the source's own words, and have `OdysseyChart.jsx` show it (an old engraved map from a nineteenth-century classical
-atlas, or a public-domain or CC0 route map on Wikimedia Commons, would do).
+**The coast is Natural Earth's.**
+
+| | |
+|---|---|
+| Data | Natural Earth, land boundaries ("Land"), 1:10m, the most detailed of its three scales; version 4.1.0 |
+| Taken from | the npm package `world-atlas` 2.0.2, file `land-10m.json` (TopoJSON, unprojected decimal degrees). Its README calls itself "a convenient redistribution of Natural Earth's vector data, version 4.1.0 as TopoJSON" and says this file is "derived from the Natural Earth's land boundaries, 1:10m large scale" |
+| sha256 of `land-10m.json` | `9b9f584709c119d63fbadf484ce425260497697b7166be7a2fe360e8c0b171a8` |
+| Licence of the data | Public domain. Natural Earth's `LICENSE.md` (https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/LICENSE.md, read 2026-11-23): "All versions of Natural Earth raster + vector map data found on this website are in the public domain." and "No permission is needed to use Natural Earth. Crediting the authors is unnecessary." |
+| Licence of the package | ISC, "Copyright 2013-2019 Michael Bostock" (the package's `LICENSE`). Only the data is used; none of the package is in the repository |
+| Credit shown | "Coast: Natural Earth, public domain." under the chart. Natural Earth asks for none and suggests "Made with Natural Earth." |
+
+`client/scripts/make-odyssey-map.mjs` makes `odyssey-map.json` from that file: it cuts the land to the chart's frame,
+thins it (bends of the coast under about 1.3 km and the smallest islets are lost; 76 of the frame's 122 pieces of
+land are kept, in 3 138 points), and finds the line between two stops as the shortest way by sea on the unthinned
+coast. Run it again when a stop or the frame in `odyssey.yaml` changes:
+
+```
+npm install --no-save world-atlas topojson-client     # anywhere Node finds them; not dependencies of the repo
+node client/scripts/make-odyssey-map.mjs <path to>/world-atlas/land-10m.json
+```
+
+**What is whose.** The coast is real and is Natural Earth's. The places of the stops are tradition's, and most are
+disputed (`odyssey.yaml` says what they rest on). The line between the stops, the look of an old sea chart, the
+compass rose and the names written on the map are this project's own work. Natural Earth's own site
+(naturalearthdata.com) was outside the session's network, so its terms page was not read; the licence above is the
+one in its repository.
 
 ## Adding an asset
 

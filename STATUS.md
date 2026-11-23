@@ -33,6 +33,22 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 165, a real map under the chart of the Odyssey
+
+The owner asked that the chart of the Odyssey (round 163) have a real world map under it, accurate, and looking
+like a world map from a myth. It has: the coast is **Natural Earth's land at 1:10m (public domain)**, cut and
+thinned by `client/scripts/make-odyssey-map.mjs` into `content/world/odyssey-map.json`, and
+`client/src/components/OdysseyChart.jsx` draws it as an old sea chart (shore lines, a compass rose and its winds,
+names, a title plate, stained paper, a border of whole degrees). The line between two stops now goes **by sea**,
+found by the same script; it is not the poem's, and the caption says so. Checking the stops against the coast found
+two of round 163's coordinates wrong (Scylla and Charybdis inland, the Underworld on Corsica); both are corrected
+and tests keep every stop, leg and name where the coast says it belongs. Source, licence and checksum:
+[`client/public/models/ASSETS.md`](client/public/models/ASSETS.md). Pictures:
+[the map](docs/rounds/165/shots/chart-large.jpg),
+[in the game](docs/rounds/165/shots/03-the-narrator-and-the-odyssey.jpg). Not seen on a real phone. Where each stop
+stands is tradition's, and rests on a search's summary of one Wikipedia page. Issue #13 stays open.
+[Architecture](docs/rounds/165/architecture.md), [findings](docs/rounds/165/findings.md).
+
 ## Addendum 2026-11-23: round 164, the journey as the icon; the stitch in the lore book
 
 On waking the owner said the eleven rounds were fine and asked for final touches, then the merge. **The icon** of
@@ -88,6 +104,7 @@ is the list.
 | 162 | #11 | Pulled tree models |
 | 163 | 11-23 | The narrator on a long journey, and a chart of the Odyssey (issue #13): a remark from a hundred walks when the journey is shown, a guidebook entry, and a chart drawn here in place of a public-domain map that could not be fetched | [163](docs/rounds/163/architecture.md) | [findings](docs/rounds/163/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
 | 164 | 11-23 | The journey as the icon; the stitch and the first pull in the lore book (the owner's lore of 2026-11-23); a proposal for building the first pull | [164](docs/rounds/164/architecture.md) | [findings](docs/rounds/164/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
+| 165 | 11-23 | A real map under the chart of the Odyssey: Natural Earth's coast (public domain), the line between stops by sea, drawn as an old sea chart; two stops' coordinates corrected against the coast | [165](docs/rounds/165/architecture.md) | [findings](docs/rounds/165/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

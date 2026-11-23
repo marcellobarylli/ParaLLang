@@ -336,6 +336,10 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   `journey_random_walk`, which also enters the guidebook's "The long way round") and the map shows a chart of the
   voyage of Odysseus beside the remark, drawn from `content/world/odyssey.yaml`
   (`client/src/components/OdysseyChart.jsx`). `node client/scripts/journey-check.mjs <outDir> 120` plays it.
+  From round 165 the chart has a real map under it and is drawn as an old sea chart: the coast is Natural Earth's
+  land at 1:10m (public domain), and the line between two stops is the shortest way by sea, both in
+  `content/world/odyssey-map.json`, made by `client/scripts/make-odyssey-map.mjs` (source, licence and how to run
+  it: `client/public/models/ASSETS.md`). `node client/scripts/odyssey-shot.mjs <outDir>` draws the chart alone.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

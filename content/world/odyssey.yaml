@@ -1,12 +1,12 @@
-# Round 163 (issue #13): the voyage of Odysseus as tradition places it, for the chart the narrator shows beside its
-# remark on a long walk ("on rails" play, drawn whole, looks like a random walk, and so does the Odyssey when it is
-# mapped). Bundled by the web client (client/src/components/OdysseyChart.jsx); the server does not load it.
+# Round 163 (issue #13), redrawn in round 165: the voyage of Odysseus as tradition places it, for the chart the narrator
+# shows beside its remark on a long walk ("on rails" play, drawn whole, looks like a random walk, and so does the
+# Odyssey when it is mapped). Bundled by the web client (client/src/components/OdysseyChart.jsx); the server does not
+# load it.
 #
-# This is a drawing made here, not a map taken from anywhere: a line through the stops in the poem's order, each at
-# the place tradition most often gives it. Issue #13 asks for a royalty-free or public-domain map of the route if one
-# exists; the session that built this could not reach Wikimedia Commons (or any page at all) to look for one and read
-# its licence, so none was taken. To use a real map instead, see "The Odyssey's route" in
-# client/public/models/ASSETS.md.
+# The chart has a real map under it since round 165: the coast is Natural Earth's land boundaries at 1:10m (public
+# domain), cut to `frame` and thinned by client/scripts/make-odyssey-map.mjs into content/world/odyssey-map.json. The
+# same script finds the line between two stops: the shortest way by sea. Run it again when a stop or the frame
+# changes. Source, licence and checksum: "The Odyssey's route" in client/public/models/ASSETS.md.
 #
 # Sources and their limits:
 #   - The stops and their order are the poem's own (Odyssey, books 9 to 12 for the wanderings as Odysseus tells them,
@@ -18,29 +18,62 @@
 #     for Ogygia, Corfu for Scheria. The same results call the Laestrygonians contested (south-east Sicily in one
 #     source, Trapani and Erice in another) and give alternatives for most of the others. The page itself could not be
 #     opened, only the search's summary of it.
-#   - The coordinates are the well-known positions of those modern places, to a tenth of a degree, written from
-#     memory and not checked against a gazetteer in this session. The chart is a sketch: nothing should be measured
-#     on it.
+#   - The coordinates were first written from memory, to a tenth of a degree. Round 165 checked each against the
+#     coast: the island stops (Djerba, Lipari, Gozo, Corfu, Ithaca) fall on islands of the right size at those
+#     positions, and the others on or beside the coast they name. Two were wrong and are corrected: Scylla and
+#     Charybdis stood inland in Calabria and now stand in the strait, and the Underworld stood on Corsica and now
+#     stands in open sea. A test (client/src/components/__tests__/odyssey.test.jsx) keeps every placed stop on or
+#     beside land. No gazetteer was read.
+#   - The line between two stops is not the poem's: the poem names almost nothing between them. It is the shortest
+#     way a ship could go, kept a little off the shore. Where the poem does name the way the line agrees with it:
+#     Odysseus is blown off his course at Cape Malea, past Cythera, and carried nine days to the Lotus-eaters
+#     (book 9, in A. T. Murray's translation at https://www.theoi.com/Text/HomerOdyssey9.html, read through a web
+#     search on 2026-11-23), and the shortest way by sea from Thrace to Djerba rounds Malea too.
 #   - `disputed: true` marks a stop whose place the sources above call contested; `unplaced: true` one that tradition
-#     itself puts off the map.
+#     itself puts off the map (it is drawn in open sea at the chart's western edge, towards Ocean).
+#   - `label: [right, down]` moves a stop's number off its place, in the chart's units, where stops crowd (around the
+#     Strait of Messina, and where the line would run under the number); a thin line joins the number to the place.
+#   - `labels` are the names written on the map (`turn` in degrees clockwise; `isle` is land, written smaller). A
+#     test keeps each land name on land and each sea name on the sea. "The stream of Ocean" is the poem's: the ship comes to "the deep waters of the river
+#     Oceanus" and the crew go "beside the stream of Oceanus" to the place of the dead (book 11, in Samuel Butler's
+#     and Murray's translations, read through a web search on 2026-11-23). "Aegean Sea" is written north of Crete,
+#     in the part also called the Sea of Crete, which the sources a search returned (Britannica, and Wikipedia
+#     quoting the International Hydrographic Organization) count as the Aegean's southern end. `rose` is where the compass rose stands, `cartouche` the title drawn on the map.
 title: "The Odyssey, as tradition maps it"
 caption: >-
-  A sketch of the voyage home of Odysseus, each stop where tradition most often puts it. Nearly every place on it is
-  disputed. Troy to Ithaca is a few days' sail; it took him ten years.
-frame: { west: 8, east: 28, south: 32.5, north: 42.5 }
+  The voyage home of Odysseus on the real coast, each stop where tradition most often puts it. Nearly every place on
+  it is disputed, and the line between two stops is only the shortest way by sea. Troy to Ithaca is a few days' sail;
+  it took him ten years.
+credit: "Coast: Natural Earth, public domain."
+rose: { lon: 18.7, lat: 34.3 }
+cartouche: ["The Wanderings", "of Odysseus"]
+labels:
+  - { text: Italy, kind: land, lon: 14.75, lat: 41.4, turn: 38 }
+  - { text: Greece, kind: land, lon: 21.75, lat: 39.5 }
+  - { text: Thrace, kind: land, lon: 25.6, lat: 42.0 }
+  - { text: Asia, kind: land, lon: 28.0, lat: 38.4, turn: 90 }
+  - { text: Africa, kind: land, lon: 8.0, lat: 34.6 }
+  - { text: Sicily, kind: isle, lon: 14.1, lat: 37.2 }
+  - { text: Sardinia, kind: isle, lon: 9.1, lat: 40.05, turn: -90 }
+  - { text: Tyrrhenian Sea, kind: sea, lon: 11.15, lat: 39.5, turn: -90 }
+  - { text: Ionian Sea, kind: sea, lon: 18.3, lat: 36.9 }
+  - { text: Adriatic Sea, kind: sea, lon: 17.2, lat: 42.15, turn: 30 }
+  - { text: Aegean Sea, kind: sea, lon: 24.95, lat: 35.93 }
+  - { text: the stream of Ocean, kind: myth, lon: 5.9, lat: 40.0, turn: -90 }
+frame: { west: 5.5, east: 28.5, south: 32.2, north: 43.2 }
 stops:
-  - { name: Troy, place: "Hisarlik, in the Troad", lon: 26.2, lat: 40.0 }
+  - { name: Troy, place: "Hisarlik, in the Troad", lon: 26.24, lat: 39.96 }
   - { name: The Cicones, place: "Ismarus, in Thrace", lon: 25.5, lat: 40.9 }
   - { name: The Lotus-eaters, place: "Djerba", lon: 10.9, lat: 33.8, disputed: true }
-  - { name: The Cyclopes, place: "Sicily", lon: 15.1, lat: 37.6, disputed: true }
-  - { name: Aeolus, place: "Lipari, in the Aeolian Islands", lon: 14.9, lat: 38.5, disputed: true }
+  - { name: The Cyclopes, place: "Sicily", lon: 15.1, lat: 37.6, disputed: true, label: [4.6, 1.0] }
+  - { name: Aeolus, place: "Lipari, in the Aeolian Islands", lon: 14.95, lat: 38.48, disputed: true, label: [-3.4, -3.6] }
   - { name: The Laestrygonians, place: "the west of Sicily", lon: 12.6, lat: 38.0, disputed: true }
   - { name: Circe, place: "Monte Circeo", lon: 13.1, lat: 41.2, disputed: true }
-  - { name: The Underworld, place: "beyond the stream of Ocean", lon: 9.2, lat: 41.9, unplaced: true }
+  - { name: The Underworld, place: "beyond the stream of Ocean", lon: 6.95, lat: 40.4, unplaced: true }
   - { name: Circe again, place: "Monte Circeo", lon: 13.1, lat: 41.2, disputed: true, again: true }
-  - { name: The Sirens, place: "a headland by the Strait of Messina", lon: 15.6, lat: 38.4, disputed: true }
-  - { name: Scylla and Charybdis, place: "the Strait of Messina", lon: 15.7, lat: 38.1 }
-  - { name: Thrinacia, place: "Sicily", lon: 15.2, lat: 37.3, disputed: true }
-  - { name: Calypso, place: "Gozo", lon: 14.3, lat: 36.0, disputed: true }
-  - { name: The Phaeacians, place: "Corfu", lon: 19.9, lat: 39.6 }
+  - { name: The Sirens, place: "a headland by the Strait of Messina", lon: 15.6, lat: 38.4, disputed: true, label: [2.4, -4.6] }
+  - { name: Scylla and Charybdis, place: "the Strait of Messina", lon: 15.6, lat: 38.2, label: [5.7, 0.3] }
+  - { name: Thrinacia, place: "Sicily", lon: 15.2, lat: 37.3, disputed: true, label: [3.0, 4.6] }
+  - { name: Calypso, place: "Gozo", lon: 14.25, lat: 36.05, disputed: true, label: [1.2, 4.3] }
+  - { name: The Phaeacians, place: "Corfu", lon: 19.9, lat: 39.6, label: [-3.6, -1.9] }
   - { name: Ithaca, place: "Ithaca", lon: 20.7, lat: 38.4 }

@@ -401,20 +401,51 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .journey-remark { margin: .8rem 0; padding: .7rem .8rem; border-left: 3px solid var(--gold); background: rgb(0 0 0 / .3); display: grid; gap: .6rem; }
 .journey-remark .narration { margin: 0; }
 .odyssey-chart { margin: 0; display: grid; gap: .5rem; }
-.odyssey-chart svg { width: 100%; height: auto; display: block; border: 2px solid; border-color: var(--lo) var(--hi) var(--hi) var(--lo); }
-.odyssey-chart .sea { fill: #1d3144; }
-.odyssey-chart .grid { stroke: rgb(255 255 255 / .09); stroke-width: .2; }
-.odyssey-chart .route-edge { fill: none; stroke: #0b0c0b; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; opacity: .85; }
-.odyssey-chart .route { fill: none; stroke: var(--gold); stroke-width: .75; stroke-linejoin: round; stroke-linecap: round; }
-.odyssey-chart .stop circle { fill: #f4efe0; stroke: #0b0c0b; stroke-width: .35; }
-.odyssey-chart .stop.end circle { fill: var(--gold); }
-.odyssey-chart .stop.unplaced circle { fill: none; stroke: #f4efe0; stroke-dasharray: .7 .5; }
-.odyssey-chart .stop text { font-size: 2.3px; font-weight: 700; text-anchor: middle; fill: #0b0c0b; }
-.odyssey-chart .stop.unplaced text { fill: #f4efe0; }
+/* Round 165: the chart is drawn as an old sea chart on paper: ink, a red line for the voyage, the sea shaded along the shore. */
+.odyssey-chart svg { width: 100%; height: auto; display: block; font-family: Georgia, 'Times New Roman', serif; font-style: normal; font-weight: 400; letter-spacing: 0; text-shadow: none; }
+.odyssey-chart .mount { fill: #e6d6aa; }
+.odyssey-chart .sea { fill: #bfcab6; }
+.odyssey-chart .shore use { fill: none; stroke-linejoin: round; }
+.odyssey-chart .shore-ink { stroke: #5f7a72; }
+.odyssey-chart .shore-0 { stroke: #8fa69a; }
+.odyssey-chart .shore-1 { stroke: #76908a; }
+.odyssey-chart .shore-gap { stroke: #bfcab6; }
+.odyssey-chart .wind { stroke: #6b4a26; stroke-width: .12; opacity: .3; }
+.odyssey-chart .wind.main { opacity: .46; }
+.odyssey-chart .land { fill: #ecdcb0; stroke: #4a3018; stroke-width: .28; stroke-linejoin: round; }
+.odyssey-chart .name { text-anchor: middle; fill: #4a3018; }
+.odyssey-chart .name.land { font-size: 2.2px; letter-spacing: .6px; text-transform: uppercase; opacity: .78; }
+.odyssey-chart .name.isle { font-size: 1.6px; letter-spacing: .3px; text-transform: uppercase; opacity: .78; }
+.odyssey-chart .name.sea { font-size: 1.9px; font-style: italic; letter-spacing: .15px; fill: #2f4a45; stroke: #bfcab6; stroke-width: .55; stroke-linejoin: round; paint-order: stroke; opacity: .9; }
+.odyssey-chart .name.myth { font-size: 1.8px; font-style: italic; letter-spacing: .25px; fill: #7a1d12; opacity: .8; }
+.odyssey-chart .rose-ring { fill: none; stroke: #4a3018; stroke-width: .14; }
+.odyssey-chart .rose-dark { fill: #4a3018; stroke: #4a3018; stroke-width: .08; }
+.odyssey-chart .rose-light { fill: #f1e4bd; stroke: #4a3018; stroke-width: .08; }
+.odyssey-chart .rose-north { font-size: 2px; font-weight: 700; text-anchor: middle; fill: #4a3018; }
+.odyssey-chart .plate { fill: #f1e4bd; stroke: #4a3018; stroke-width: .3; }
+.odyssey-chart .plate-rule { fill: none; stroke: #4a3018; stroke-width: .12; }
+.odyssey-chart .plate-title, .odyssey-chart .plate-line { text-anchor: middle; fill: #3b2613; font-size: 2.1px; text-transform: uppercase; }
+.odyssey-chart .plate-line { font-size: 1.9px; }
+.odyssey-chart .route-edge { fill: none; stroke: #f1e4bd; stroke-width: 1.15; stroke-linejoin: round; stroke-linecap: round; opacity: .7; }
+.odyssey-chart .route { fill: none; stroke: #9a1f14; stroke-width: .5; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1.5 .75; }
+.odyssey-chart .route.off { stroke-dasharray: .1 .95; stroke-width: .55; }
+.odyssey-chart .stop .disc { fill: #f6ecd0; stroke: #3b2613; stroke-width: .3; }
+.odyssey-chart .stop.end .disc { fill: #9a1f14; }
+.odyssey-chart .stop.unplaced .disc { fill: #d9dcc6; stroke-dasharray: .7 .5; }
+.odyssey-chart .stop .place { fill: #9a1f14; stroke: #3b2613; stroke-width: .15; }
+.odyssey-chart .stop .lead { stroke: #3b2613; stroke-width: .16; }
+.odyssey-chart .stop text { font-size: 2.3px; font-weight: 700; text-anchor: middle; fill: #3b2613; font-family: inherit; }
+.odyssey-chart .stop.end text { fill: #f6ecd0; }
+.odyssey-chart .paper { fill-opacity: 0; pointer-events: none; }
+.odyssey-chart .age { pointer-events: none; }
+.odyssey-chart .bar { fill: #4a3018; }
+.odyssey-chart .neat { fill: none; stroke: #4a3018; stroke-width: .2; }
+.odyssey-chart .neat.outer { stroke-width: .45; }
 .odyssey-stops { margin: 0; padding: 0; list-style-position: inside; columns: 2; column-gap: 1.2rem; font-size: .78rem; line-height: 1.35; }
 .odyssey-stops li { break-inside: avoid; }
 .odyssey-stops small { color: #b9bbb4; }
 .odyssey-chart figcaption { font-size: .8rem; color: #cfd1ca; }
+.odyssey-chart .credit { color: #9a9c95; }
 /* Round 160: a legacy dungeon's node on the road's map: a pale stepped gate, gold when picked. */
 .map-ahead.dungeon .sign, .map-ahead.dungeon.kind-checkpoint .sign { fill: #d8d2bc; stroke: #101110; stroke-width: .5; }
 .map-ahead.dungeon.picked .sign, .map-ahead.dungeon.kind-checkpoint.picked .sign { fill: var(--gold); }
