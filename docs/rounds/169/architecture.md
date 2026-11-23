@@ -69,6 +69,26 @@ the model is the painted world of Dark Souls.
 - "Not settled" gains three questions: the one above; what the trees are in the cycle; whether the player can go
   down into a new world.
 
+## Amendment 2 (2026-11-23): what the cycle makes of this world
+
+The owner drew the consequence (Q3 of the interview) and asked what is still to be ironed out: if every collapse
+bears a world, this world was created by an earlier collision of languages; then why are there two parallel language
+worlds now, how did this world come out of that as a story within a story, is a new language a mixing of the two
+before it, and do we exist only because that condition exists?
+
+- The lore book gains **"What the cycle makes of this world"**: the owner's four questions as questions, then a
+  proposal marked as the compiler's and not taken by the owner.
+- **The proposal.** Two motions make the cycle: a retelling makes two worlds from one (part II), a collision makes
+  one from two. So this world was born as one, with a language mixed from its parents', and has branched since; the
+  world of the language being learned is a relative; the new language passes through the "jumble of the two lost
+  tongues" and the spores' dream (both already in part VI); the oldest inscriptions would be the parents' tongues;
+  and yes, on this reading this world exists only because two collapsed.
+- **A mirror in the game's own languages, looked up and offered as a mirror only:** the Romance languages are one
+  language retold; English after 1066 is a meeting of a Germanic and a Romance tongue (not a creole, by most
+  linguists); and mixed languages arise among people who speak both parents.
+- "Not settled" gains the owner's questions and one more: what collided to make this world, and whether anything of
+  it can be found.
+
 ## Tests
 
 None: no code or content the game loads is changed. `python3 tools/round_log_check.py 169`.
@@ -77,6 +97,9 @@ None: no code or content the game loads is changed. `python3 tools/round_log_che
 
 - What is said of Dark Souls beyond the owner's own words rests on a web search of 2026-11-23 (fan wikis and gaming
   outlets), and is written as players' accounts.
+- What is said of real languages rests on three web searches of the same day (Britannica for the Romance languages;
+  encyclopedic and dictionary pages for English and for mixed languages). The share of English words from French is
+  given as the range the sources give, and the classing of Michif is disputed among linguists.
 - The joins are the compiler's.
 - Nothing of it is built: no follower, no proponent, no sign in the void, no choice.
 

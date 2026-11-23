@@ -42,3 +42,19 @@
   for the messages before it (docs only). Whether this states the truth of the world or the followers' belief is
   put to the owner under "Not settled".
 
+### Q3 (2026-11-23): not asked; the owner's next message
+- **Question:** none.
+- **Answer** (the message reads as dictated, and is kept as sent):
+
+> Another thing is that this implies that we are in a world that was created by a previous collision of languages we
+> have to still iron out the fact that why are there two parallel language worlds where we are now how did where we
+> are now? Result as a story with a story so how does that translate? Is it a mixing of the previous two languages
+> that creates a new language but the implication is that this is the natural creation cycle? So we only exist
+> because this condition exists?
+
+- **Read as:** questions put to the design and to the assistant, not a setting: the cycle implies this world came
+  of an earlier collision; why there are two parallel language worlds now; how this world is a story within a story
+  by that; whether a new language is a mixing of the two before it; whether we exist only because of the cycle.
+- **Not asked, and done here:** the questions are written into the lore book as the owner's, with a proposal
+  marked as the compiler's; pushed to the session branch and to `main` (docs only).
+

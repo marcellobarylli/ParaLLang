@@ -27,6 +27,16 @@ The lore book read against the owner's message; the particulars of Dark Souls lo
 
 | (Next message) Every time a world collapses a new world is born: a story within a story being created; the natural creation cycle; like the painted world | "The creation cycle"; "Not settled" (truth or doctrine) |
 
+| (After that) This implies our world was created by a previous collision; why two parallel worlds now; is the new language a mixing of the two; do we exist only because of it | "What the cycle makes of this world": the questions, and a proposal not yet taken; "Not settled" |
+
+| Statement about real languages | What the lookups returned |
+|---|---|
+| The Romance languages (Italian, Spanish among them) derive from Vulgar Latin | Confirmed (Britannica) |
+| A third to two thirds of English vocabulary is of French origin, mostly after 1066 | Confirmed as the range of estimates |
+| Middle English as a creole | Proposed in 1977; the consensus has largely turned away from it |
+| A mixed language arises among a bilingual group and combines its two sources | Confirmed as the definition |
+| Michif has Cree verb phrases and French noun phrases | Confirmed as the usual description; its classing is disputed |
+
 | Statement about Dark Souls | What the lookup returned |
 |---|---|
 | One serpent gives the player the quest to link the fire | Confirmed (Kingseeker Frampt) |
@@ -50,6 +60,8 @@ The lore book read against the owner's message; the particulars of Dark Souls lo
   another" was already there.
 - **The cycle is written as the owner's, and its standing is flagged.** It could be read as settling what the last
   message left open. The book keeps the game silent on it either way and asks the owner which it is.
+- **The owner's questions are kept as questions.** The answer written under them is a proposal and is labelled so
+  in the book, in "Not settled" and here.
 - **Nothing is put into the game.** The owner asked for it to be added and pushed, not built. What is built today
   puts neither case.
 

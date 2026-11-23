@@ -43,7 +43,9 @@ the player to believe the collapse must be prevented, and only later do its prop
 [`docs/lore-book.md`](docs/lore-book.md) has it as "Whether the followers are right". A join of round 167 that had
 called the followers a sect is made two-sided, and the book's own part VI is named as one of the early voices. The owner
 added **the creation cycle**: every time a world collapses a new world is born, a story within a story (part XI),
-after Dark Souls' painted world; whether that is the world's truth or the followers' doctrine is put to the owner. No
+after Dark Souls' painted world; whether that is the world's truth or the followers' doctrine is put to the owner. The owner's questions on
+what the cycle makes of this world (was it born of an earlier collision; why two worlds now) are in the book with a
+proposal that the owner has not taken. No
 code is changed and none of it is built: in the game today neither case is put.
 [Architecture](docs/rounds/169/architecture.md), [findings](docs/rounds/169/findings.md).
 
