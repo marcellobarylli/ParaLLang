@@ -10,3 +10,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 11:09 approx. | 11:11:00 | run | Claude | Cloud session container. Server 568 tests, web client 288, the aesthetic package's 95 and the iPhone app's 320 pass. No model called | `../findings.md` |
 | 5 | 11:11:00 | 11:11:00 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 6 | 11:11:00 | 11:11:00 | closed | Claude | Status addendum and index row; committed and pushed on the session branch and to `main` on the owner's word ("then deploy"), with the server | `../architecture.md` |
+| 7 | 11:13 approx. | 11:15:00 | run | Claude | The deploy of `bb61bb1`, page and server: CI run 45162719786 and Pages run 45162719934 succeeded; Render's deployment "main - parallang" reports success. Read from GitHub's API; the live page and server are outside the session's network and were not looked at | `../findings.md` |

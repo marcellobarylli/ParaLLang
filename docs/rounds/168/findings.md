@@ -66,3 +66,9 @@ different noticed line than before.
 - The authored characters (the market, Ta Prohm, the mountain) know the teaching but have no line of their own
   about it. Portia or Mortimer with a view on hell would be written by hand.
 - The compiler's own book (parts I to XI) has no chapter on the religion. The compiler would know the canon.
+
+## The deploy (2026-11-23)
+
+On the owner's word ("then deploy"), `main` was moved to `bb61bb1` without `[skip render]`: page and server. CI run
+45162719786 and the Pages run 45162719934 succeeded, and Render's deployment "main - parallang" reports success, read
+from GitHub's API. The live page and server are outside the session's network and were not looked at.

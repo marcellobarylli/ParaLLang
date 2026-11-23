@@ -45,6 +45,10 @@ believer's, a doubter's or one who goes along. It shows as other details of the 
 No character is told what is truly below. No live model was called, so how a character speaks of it has not been
 heard. [Architecture](docs/rounds/168/architecture.md), [findings](docs/rounds/168/findings.md).
 
+**Deployed** on the owner's word ("then deploy"): `main` is at `bb61bb1`, page and server. CI run 45162719786 and
+the Pages run 45162719934 succeeded, and Render's deployment "main - parallang" reports success (read from GitHub's
+API; the live page and server are outside the session's network and were not looked at).
+
 ## Addendum 2026-11-23: round 167, the lore of what is under the world, and the followers of the void
 
 The owner refined the lore of round 164. [`docs/lore-book.md`](docs/lore-book.md), "What the book does not say",
@@ -161,7 +165,7 @@ is the list.
 | 165 | 11-23 | A real map under the chart of the Odyssey: Natural Earth's coast (public domain), the line between stops by sea, drawn as an old sea chart; two stops' coordinates corrected against the coast | [165](docs/rounds/165/architecture.md) | [findings](docs/rounds/165/findings.md) | on `main` with `0f97296` (the page only) |
 | 166 | 11-23 | The narrator's passage stays in the travel caption until the character is ready to talk, with "… is getting ready to talk…" as its last sentence (the owner, from the phone) | [166](docs/rounds/166/architecture.md) | [findings](docs/rounds/166/findings.md) | on `main` with `b2ba4bc` (the page only) |
 | 167 | 11-23 | The lore of what is under the world: the valleys become chasms; a cave, a world tree at every node, the ways as roots (Dark Souls' Ash Lake named as the model); issue #25 opened for a view of it; the followers of the void, with roots in Taoism | [167](docs/rounds/167/architecture.md) | [findings](docs/rounds/167/findings.md) | on `main` (docs only; nothing deployed) |
-| 168 | 11-23 | The religion of the place below: its canon (the place under the ground is hell) in the lore book and in what every character knows; believers, doubters and people who go along among the road's characters | [168](docs/rounds/168/architecture.md) | [findings](docs/rounds/168/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 168 | 11-23 | The religion of the place below: its canon (the place under the ground is hell) in the lore book and in what every character knows; believers, doubters and people who go along among the road's characters | [168](docs/rounds/168/architecture.md) | [findings](docs/rounds/168/findings.md) | on `main` with `bb61bb1` (page and server) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every
