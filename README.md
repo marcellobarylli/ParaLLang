@@ -2,6 +2,8 @@
 
 ParaLLang is a conversational language-learning game. It teaches Italian by default, and Spanish is also available. The prototype is The Crumbling Market: six places on a map, an encounter at each (Portia's tutorial at the entrance, Gerald, Mortimer, Flick, Marginalia, and Errata in the sealed Rift), tracked companion help, a Spellbook of canonical vocabulary with spaced-repetition reviews, a party of saved NPCs with their own conversations, and fragments of the in-world book *The Journey*. For running a session with testers, see [`docs/playtest/guide.md`](docs/playtest/guide.md).
 
+**Just want to play?** See [`PLAY.md`](PLAY.md): hand it to your coding agent, or run `npm run setup` then `npm run dev`.
+
 ## Design notes and project records
 
 - `parallang.md` is the vision and lore; `prototype.md` is the technical blueprint.
