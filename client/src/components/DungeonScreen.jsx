@@ -8,6 +8,7 @@ import CorrectionCard from './CorrectionCard.jsx';
 import SheetHandle from './SheetHandle.jsx';
 import { browserSpeech } from '../speech.js';
 import { browserAmbience } from '../ambience.js';
+import { volumesOf } from '../display.js';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
@@ -443,8 +444,16 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   // Round 132: the conversation panel's height as the player dragged it, kept from one conversation to the next.
   const [sheetHeight, setSheetHeight] = useState(null);
   const musicWanted = state.display?.music !== false;
+  // Round 172: the Audio volumes. The ambience runs while either the music or the effects (the rain, the thunder)
+  // can be heard; switching the music off silences its bus and leaves the effects.
+  const volume = volumesOf(state.display?.volume);
+  const audioWanted = volume.master > 0 && (musicWanted || volume.effects > 0);
   useEffect(() => {
-    if (!musicWanted || !ambience.supported || typeof window === 'undefined') return undefined;
+    ambience.setVolumes?.({ master: volume.master, music: musicWanted ? volume.music : 0, effects: volume.effects });
+  }, [ambience, musicWanted, volume.master, volume.music, volume.effects]);
+  useEffect(() => { if (speech.speaker) speech.speaker.volume = volume.voice * volume.master; }, [speech, volume.voice, volume.master]);
+  useEffect(() => {
+    if (!audioWanted || !ambience.supported || typeof window === 'undefined') return undefined;
     const begin = () => ambience.start();
     window.addEventListener('click', begin, { once: true, capture: true });
     const watch = window.setInterval(() => ambience.setLevel(speech.listener.listening ? 'mute' : speech.speaker.speaking ? 'duck' : 'full'), 400);
@@ -453,7 +462,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       window.clearInterval(watch);
       ambience.stop();
     };
-  }, [musicWanted, ambience, speech]);
+  }, [audioWanted, ambience, speech]);
   // Round 126: iOS Safari lets a page speak on its own only after it has spoken from inside a tap. The first tap does.
   const voicesWanted = state.display?.voices !== false;
   useEffect(() => {
@@ -465,7 +474,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   // Round 146: on the road the rain is heard under the music, as heavy as it falls; elsewhere it is dry.
   const roadWeather = useWeather(state.mode === 'road' ? state.road?.seed ?? null : null);
   const rainNow = roadWeather?.rain ?? 0;
-  useEffect(() => { ambience.setRain?.(musicWanted ? rainNow : 0); }, [ambience, musicWanted, rainNow]);
+  useEffect(() => { ambience.setRain?.(audioWanted ? rainNow : 0); }, [ambience, audioWanted, rainNow]);
   const { initialize, dungeon, phase, siteIndex, progress } = state;
   useEffect(() => { initialize(); }, [initialize]);
   const hudRef = useRef(null);
@@ -512,7 +521,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={null} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
         : onRoad
-        ? <RoadView models={state.display?.treeModels !== false} road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (musicWanted) ambience.thunder?.(); }}
+        ? <RoadView models={state.display?.treeModels !== false} road={state.road} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
@@ -587,6 +596,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         treeModels={state.display?.treeModels !== false} onTreeModels={state.setTreeModels}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
+        volume={volume} onVolume={(channel, value) => { state.setVolume(channel, value); if (value > 0) ambience.start(); }}
         voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }}
         savedAt={state.savedAt} onExportCopy={state.exportCopy} onImportCopy={state.importCopy} saveStore={state.saveStore} />}
     </div>

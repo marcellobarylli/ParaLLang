@@ -454,3 +454,10 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .access-gate .settings-sheet { border-bottom: 2px solid var(--lo); }
 .access-steps { margin: .2rem 0 .4rem; padding-left: 1.3rem; display: grid; gap: .35rem; line-height: 1.45; }
 .access-steps a { color: var(--gold); }
+/* Round 172: the categories of the settings sheet. */
+.settings-group { border-top: 2px solid var(--lo); padding-top: .2rem; }
+.settings-group summary { display: flex; align-items: center; justify-content: space-between; min-height: 44px; cursor: pointer; list-style: none; color: var(--gold); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.settings-group summary::-webkit-details-marker { display: none; }
+.settings-group summary::after { content: '+'; font-size: 1.2rem; }
+.settings-group[open] summary::after { content: '−'; }
+.settings-group-body { display: grid; gap: .45rem; padding-bottom: .6rem; }

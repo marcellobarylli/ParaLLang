@@ -5,7 +5,7 @@
 //   The day    turns once in WEATHER.cycleMs (45 minutes of real time). Phase 0 is sunrise; the sun is up for
 //              WEATHER.dayShare of the cycle and the moon for the rest.
 //   Rain       Time is cut into slots of WEATHER.slotMs. A slot is rainy with probability WEATHER.rainShare (a hash
-//              of the slot and the seed), so it rains 30 % of the time. Each rainy slot has a strength; rain fades
+//              of the slot and the seed), so it rains 15 % of the time (30 % until round 163). Each rainy slot has a strength; rain fades
 //              in and out inside its slot, clouds gather before it and clear after it, and strong rain is a storm.
 
 import { hash, smoothstep } from './terrain.js';
@@ -14,7 +14,7 @@ export const WEATHER = Object.freeze({
   cycleMs: 45 * 60_000,
   dayShare: 0.56, // the share of the cycle with the sun up
   slotMs: 3 * 60_000, // 15 slots a cycle
-  rainShare: 0.3,
+  rainShare: 0.15,
   rampMs: 25_000, // rain fades in and out over this, inside its slot
   cloudMs: 70_000, // clouds gather this long before rain and take as long to clear
   stormAbove: 0.8, // rain this strong comes with lightning

@@ -42,9 +42,16 @@ export const AMBIENCE = Object.freeze({
   levels: Object.freeze({ full: 0.14, duck: 0.045, mute: 0 }),
   // Round 146: the weather of The Journey 2. Rain is filtered noise under the chords, as loud as it is heavy;
   // thunder is a low rumble that swells and dies away.
-  rain: Object.freeze({ gain: 1.4, low: 700, high: 5200, ease: 1.5 }),
-  thunder: Object.freeze({ gain: 2.2, cutoff: 140, swell: 0.35, lasts: 3.2 }),
+  // Round 172: both are sound effects on a bus of their own (the Effects volume), and far quieter: a downpour peaks
+  // at 0.035, under a fifth of what it was (1.4 × the music's 0.14), so the rain stays in the background.
+  rain: Object.freeze({ gain: 0.035, low: 700, high: 5200, ease: 1.5 }),
+  thunder: Object.freeze({ gain: 0.09, cutoff: 140, swell: 0.35, lasts: 3.2 }),
+  // The effects bus by level: it drops a little under a spoken line and is silent while the microphone listens.
+  effectLevels: Object.freeze({ full: 1, duck: 0.6, mute: 0 }),
 });
+
+/** A volume from the Settings sliders: 0 to 1, and 1 for anything that is not a number. */
+const volumeOf = (value) => (typeof value === 'number' && Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 1);
 
 /**
  * The ambience of this browser.
@@ -56,6 +63,8 @@ export const AMBIENCE = Object.freeze({
  *   setLevel(name)       'full', 'duck' (a line is spoken) or 'mute' (the microphone listens)
  *   setRain(amount)      0 (dry) to 1 (a downpour): the sound of rain under the music (round 146)
  *   thunder()            one rumble
+ *   setVolumes({ master, music, effects })   0 to 1 each (round 172). The chain is
+ *                        chords → level → music → out ← effects ← rain, thunder; out (the master volume) → speakers.
  */
 export function createAmbience({ scope = typeof window !== 'undefined' ? window : {}, random = Math.random } = {}) {
   const Context = scope.AudioContext ?? scope.webkitAudioContext;
@@ -67,6 +76,7 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
   let live = null; // { context, master, input, timer, chord }
   let level = 'full';
   let rain = 0;
+  let volumes = { master: 1, music: 1, effects: 1 };
 
   // Two seconds of noise, played round and round: the rain's and the thunder's raw material.
   function noise(context) {
@@ -77,7 +87,7 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
     return buffer;
   }
   // The rain's chain, from a looping noise source to the master gain. Null where the browser lacks a part of it.
-  function rainChain(context, master) {
+  function rainChain(context, effects) {
     if (!context.createBufferSource || !context.createBiquadFilter) return null;
     try {
       const source = context.createBufferSource();
@@ -94,7 +104,7 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       source.connect(high);
       high.connect(low);
       low.connect(gain);
-      gain.connect(master);
+      gain.connect(effects);
       source.start?.();
       return { gain, buffer: source.buffer };
     } catch { return null; }
@@ -158,10 +168,20 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       let context;
       try { context = new Context(); } catch { return false; }
       quietly(context, 'resume');
+      const out = context.createGain();
+      out.gain.value = volumes.master;
+      out.connect(context.destination);
+      const music = context.createGain();
+      music.gain.value = volumes.music;
+      music.connect(out);
+      const effects = context.createGain();
+      effects.gain.setValueAtTime(0, context.currentTime);
+      effects.gain.linearRampToValueAtTime(AMBIENCE.effectLevels[level] * volumes.effects, context.currentTime + AMBIENCE.fadeIn);
+      effects.connect(out);
       const master = context.createGain();
       master.gain.setValueAtTime(0, context.currentTime);
       master.gain.linearRampToValueAtTime(AMBIENCE.levels[level], context.currentTime + AMBIENCE.fadeIn);
-      master.connect(context.destination);
+      master.connect(music);
       const filter = context.createBiquadFilter();
       filter.type = 'lowpass';
       filter.frequency.value = AMBIENCE.cutoff;
@@ -183,7 +203,7 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       reverb.connect(wet);
       dry.connect(master);
       wet.connect(master);
-      live = { context, master, input: filter, timer: null, chord: null, rain: rainChain(context, master) };
+      live = { context, master, out, music, effects, input: filter, timer: null, chord: null, rain: rainChain(context, effects) };
       live.rain?.gain.gain.setTargetAtTime?.(rain * AMBIENCE.rain.gain, context.currentTime, AMBIENCE.rain.ease);
       scope.document?.addEventListener?.('visibilitychange', onVisibility);
       tick(live);
@@ -195,9 +215,9 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       live = null;
       cancel(session.timer);
       scope.document?.removeEventListener?.('visibilitychange', onVisibility);
-      const { context, master } = session;
-      master.gain.cancelScheduledValues?.(context.currentTime);
-      master.gain.setTargetAtTime(0, context.currentTime, AMBIENCE.fadeOut / 4);
+      const { context, out } = session;
+      out.gain.cancelScheduledValues?.(context.currentTime);
+      out.gain.setTargetAtTime(0, context.currentTime, AMBIENCE.fadeOut / 4);
       later(() => quietly(context, 'close'), AMBIENCE.fadeOut * 1000 + 100);
     },
     get rain() { return rain; },
@@ -209,7 +229,7 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
     },
     thunder() {
       if (!live?.rain) return false;
-      const { context, master } = live;
+      const { context, effects } = live;
       try {
         const source = context.createBufferSource();
         source.buffer = live.rain.buffer;
@@ -223,7 +243,7 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
         gain.gain.linearRampToValueAtTime(0, at + AMBIENCE.thunder.lasts);
         source.connect(filter);
         filter.connect(gain);
-        gain.connect(master);
+        gain.connect(effects);
         source.start(at);
         source.stop(at + AMBIENCE.thunder.lasts + 0.1);
         return true;
@@ -233,9 +253,22 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       if (!Object.hasOwn(AMBIENCE.levels, name) || name === level) return;
       level = name;
       if (!live) return;
-      const { context, master } = live;
+      const { context, master, effects } = live;
+      const ease = name === 'full' ? 0.8 : 0.15;
       master.gain.cancelScheduledValues?.(context.currentTime);
-      master.gain.setTargetAtTime(AMBIENCE.levels[name], context.currentTime, name === 'full' ? 0.8 : 0.15);
+      master.gain.setTargetAtTime(AMBIENCE.levels[name], context.currentTime, ease);
+      effects.gain.cancelScheduledValues?.(context.currentTime);
+      effects.gain.setTargetAtTime(AMBIENCE.effectLevels[name] * volumes.effects, context.currentTime, ease);
+    },
+    get volumes() { return { ...volumes }; },
+    setVolumes(next = {}) {
+      volumes = { master: volumeOf(next.master ?? volumes.master), music: volumeOf(next.music ?? volumes.music), effects: volumeOf(next.effects ?? volumes.effects) };
+      if (!live) return;
+      const { context } = live;
+      live.out.gain.setTargetAtTime(volumes.master, context.currentTime, 0.05);
+      live.music.gain.setTargetAtTime(volumes.music, context.currentTime, 0.05);
+      live.effects.gain.cancelScheduledValues?.(context.currentTime);
+      live.effects.gain.setTargetAtTime(AMBIENCE.effectLevels[level] * volumes.effects, context.currentTime, 0.05);
     },
   };
   return api;

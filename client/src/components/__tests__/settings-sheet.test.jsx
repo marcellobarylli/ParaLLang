@@ -65,8 +65,8 @@ test('moving the slider on the dungeon screen sets the panels at once, hides the
   const requests = fetchMock.mock.calls.length;
   fireEvent.change(screen.getByLabelText('Text panel opacity'), { target: { value: '30' } });
   expect(shell.style.getPropertyValue('--panel-alpha')).toBe('0.3');
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
   expect(fetchMock.mock.calls.length).toBe(requests);
   await user.click(screen.getByRole('button', { name: 'Close' }));
@@ -139,8 +139,8 @@ test('the box on the dungeon screen switches the preference and stores it', asyn
   render(<App />);
   await user.click(screen.getByRole('button', { name: 'Settings' }));
   await user.click(screen.getByLabelText('Tilt to look'));
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(screen.getByLabelText('Tilt to look').checked).toBe(true);
   await user.click(screen.getByLabelText('Tilt to look'));
   expect(useGameStore.getState().display.tiltLook).toBe(false);
@@ -176,7 +176,7 @@ test('the voices box on the dungeon screen switches the preference and stores it
   await user.click(screen.getByRole('button', { name: 'Settings' }));
   expect(speech.speaker.prime).toHaveBeenCalledOnce(); // the first tap on the page
   await user.click(screen.getByLabelText('Character voices'));
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false, music: true, beginner: true, rails: true, immersion: 1, light: false, treeModels: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(JSON.parse(localStorage.getItem('parallang.display')).voices).toBe(false);
   await user.click(screen.getByLabelText('Character voices'));
   expect(useGameStore.getState().display.voices).toBe(true);
@@ -189,7 +189,7 @@ test('the music starts at the first tap and not before, follows speech, and the 
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
   useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: true } });
   const speech = { speaker: { supported: true, speaking: false, speak: vi.fn(), stop: vi.fn(), prime: vi.fn(), available: () => true }, listener: { supported: true, listening: false, start: vi.fn(), stop: vi.fn() } };
-  const ambience = { supported: true, start: vi.fn(), stop: vi.fn(), setLevel: vi.fn() };
+  const ambience = { supported: true, start: vi.fn(), stop: vi.fn(), setLevel: vi.fn(), setVolumes: vi.fn() };
   const { default: DungeonScreen } = await import('../DungeonScreen.jsx');
   try {
     render(<DungeonScreen useStore={useGameStore} speech={speech} ambience={ambience} />);
@@ -208,17 +208,45 @@ test('the music starts at the first tap and not before, follows speech, and the 
     // The box.
     const box = screen.getByLabelText('Ambient music');
     expect(box.checked).toBe(true);
+    // Round 172: off silences the music's bus; the effects (the rain) go on, so the ambience keeps running.
     await user.click(box);
-    expect(ambience.stop).toHaveBeenCalledOnce();
+    expect(ambience.stop).not.toHaveBeenCalled();
+    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 0, effects: 1 });
     expect(useGameStore.getState().display.music).toBe(false);
     expect(JSON.parse(localStorage.getItem('parallang.display')).music).toBe(false);
-    const calls = ambience.setLevel.mock.calls.length;
-    act(() => { vi.advanceTimersByTime(1000); });
-    expect(ambience.setLevel.mock.calls.length).toBe(calls); // off: nobody is watching
     await user.click(screen.getByLabelText('Ambient music'));
     expect(ambience.start).toHaveBeenCalledTimes(2); // the tick is the tap
+    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 1, effects: 1 });
     expect(useGameStore.getState().display.music).toBe(true);
+    // The Audio sliders: each is stored; Master and Effects at 0 with the music off leave nothing to hear.
+    fireEvent.change(screen.getByLabelText('Effects volume'), { target: { value: '25' } });
+    expect(useGameStore.getState().display.volume).toEqual({ master: 1, music: 1, effects: 0.25, voice: 1 });
+    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 1, effects: 0.25 });
+    fireEvent.change(screen.getByLabelText('Voice volume'), { target: { value: '50' } });
+    fireEvent.change(screen.getByLabelText('Master volume'), { target: { value: '80' } });
+    expect(speech.speaker.volume).toBeCloseTo(0.4);
+    expect(JSON.parse(localStorage.getItem('parallang.display')).volume).toEqual({ master: 0.8, music: 1, effects: 0.25, voice: 0.5 });
+    fireEvent.change(screen.getByLabelText('Master volume'), { target: { value: '0' } });
+    expect(ambience.stop).toHaveBeenCalledOnce();
+    const calls = ambience.setLevel.mock.calls.length;
+    act(() => { vi.advanceTimersByTime(1000); });
+    expect(ambience.setLevel.mock.calls.length).toBe(calls); // silent: nobody is watching
   } finally { vi.useRealTimers(); }
+});
+
+// Round 172: the sheet's categories, and the four Audio sliders.
+test('the sheet is in categories, and Audio holds the Master, Music, Effects and Voice sliders', () => {
+  const onVolume = vi.fn();
+  const { container } = render(<SettingsSheet settings={{ serverUrl: '', token: '' }} onSave={vi.fn()} onClose={vi.fn()} music onMusic={vi.fn()} voices onVoices={vi.fn()}
+    volume={{ master: 1, music: 0.5, effects: 0.3, voice: 1 }} onVolume={onVolume} panelOpacity={0.7} onPanelOpacity={vi.fn()} onBeginner={vi.fn()} />);
+  expect([...container.querySelectorAll('.settings-group summary')].map((n) => n.textContent)).toEqual(['Audio', 'Language and learning', 'Display and controls', 'Connection', 'This build']);
+  const audio = container.querySelector('.settings-group');
+  expect(audio.open).toBe(true);
+  expect([...audio.querySelectorAll('input[type=range]')].map((n) => n.id)).toEqual(['settings-volume-master', 'settings-volume-music', 'settings-volume-effects', 'settings-volume-voice']);
+  expect(screen.getByLabelText('Effects volume').value).toBe('30');
+  expect(screen.getByText(/Rain, thunder/)).toBeTruthy();
+  fireEvent.change(screen.getByLabelText('Music volume'), { target: { value: '15' } });
+  expect(onVolume).toHaveBeenCalledWith('music', 0.15);
 });
 
 test('Settings says when the browser cannot play the music', () => {

@@ -1,4 +1,4 @@
-// Round 146: the time of day and the weather of The Journey 2. A day of 45 minutes, rain 30 % of the time, no
+// Round 146: the time of day and the weather of The Journey 2. A day of 45 minutes, rain 15 % of the time, no
 // jumps, the same sky for the same clock and seed, and the narrator told what the sky is doing.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -33,7 +33,7 @@ test('a day turns in 45 minutes: the same sky one cycle later, dawn to night in 
   assert.deepEqual(weatherAt(start, 7), weatherAt(start, 7));
 });
 
-test('it rains 30 % of the time, in spells that fade in and out, and a storm is the strong end of it', () => {
+test('it rains 15 % of the time, in spells that fade in and out, and a storm is the strong end of it', () => {
   for (const seed of [1, 4242, 99]) {
     let wet = 0;
     let storms = 0;

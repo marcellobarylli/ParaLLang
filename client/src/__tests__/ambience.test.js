@@ -82,7 +82,11 @@ function fakeAudio({ hidden = false } = {}) {
   return scope;
 }
 const voices = (context) => context.made.filter((n) => n.kind === 'oscillator' && n.type === 'triangle');
-const master = (context) => context.made.find((n) => n.kind === 'gain' && n.to.includes(context.destination));
+// Round 172: out (the master volume) → speakers; the music's level node → music volume → out; effects → out.
+const out = (context) => context.made.find((n) => n.kind === 'gain' && n.to.includes(context.destination));
+const buses = (context) => context.made.filter((n) => n.kind === 'gain' && n.to.includes(out(context)));
+const master = (context) => context.made.find((n) => n.kind === 'gain' && n.to.includes(buses(context)[0]));
+const effectsBus = (context) => buses(context)[1];
 
 describe('the ambience', () => {
   test('nothing is made before the start; a start builds the chain, fades in quietly and plays the first chord', () => {
@@ -179,7 +183,7 @@ describe('the ambience', () => {
     ambience.stop();
     ambience.stop();
     expect(ambience.running).toBe(false);
-    expect(master(context).gain.events.at(-1)).toEqual(['target', 0, 0, AMBIENCE.fadeOut / 4]);
+    expect(out(context).gain.events.at(-1)).toEqual(['target', 0, 0, AMBIENCE.fadeOut / 4]);
     expect(scope.timers[0].cancelled).toBe(true);
     expect(scope.document.listeners.visibilitychange).toBeUndefined();
     expect(context.closed).toBe(false);
@@ -234,7 +238,7 @@ describe('rain and thunder', () => {
     expect(source.to[0].type).toBe('highpass');
     expect(source.to[0].to[0].type).toBe('lowpass');
     const gain = rainGain(context);
-    expect(gain.to).toEqual([master(context)]); // under the master: it ducks and mutes with the music
+    expect(gain.to).toEqual([effectsBus(context)]); // on the effects bus, which ducks and mutes with the music
     expect(gain.gain.value).toBe(0);
     expect(gain.gain.events.at(-1)).toEqual(['target', 0.4 * AMBIENCE.rain.gain, 0, AMBIENCE.rain.ease]);
     ambience.setRain(1);
@@ -262,6 +266,28 @@ describe('rain and thunder', () => {
     const [filter] = rumble.to;
     expect([filter.type, filter.frequency.value]).toEqual(['lowpass', AMBIENCE.thunder.cutoff]);
     expect(filter.to[0].gain.events).toEqual([['set', 0, 12], ['ramp', AMBIENCE.thunder.gain, 12 + AMBIENCE.thunder.swell], ['ramp', 0, 12 + AMBIENCE.thunder.lasts]]);
+  });
+
+  test('the rain stays in the background: a downpour is far below the music', () => {
+    expect(AMBIENCE.rain.gain).toBeLessThan(AMBIENCE.levels.full / 2);
+    expect(AMBIENCE.thunder.gain).toBeLessThanOrEqual(AMBIENCE.levels.full);
+  });
+
+  test('the volumes: master, music and effects each on their own gain; nonsense is full', () => {
+    const scope = withNoise();
+    const ambience = createAmbience({ scope, random: () => 0.5 });
+    ambience.setVolumes({ master: 0.5, music: 0.2, effects: 0.4 }); // before the start: remembered
+    ambience.start();
+    const context = scope.contexts[0];
+    expect(out(context).gain.value).toBe(0.5);
+    expect(buses(context)[0].gain.value).toBe(0.2);
+    expect(effectsBus(context).gain.events.at(-1)).toEqual(['ramp', 0.4 * AMBIENCE.effectLevels.full, AMBIENCE.fadeIn]);
+    ambience.setVolumes({ effects: 0.8 });
+    expect(effectsBus(context).gain.events.at(-1)).toEqual(['target', 0.8, 0, 0.05]);
+    ambience.setLevel('mute');
+    expect(effectsBus(context).gain.events.at(-1)).toEqual(['target', 0, 0, 0.15]);
+    ambience.setVolumes({ master: 'loud' });
+    expect(ambience.volumes).toEqual({ master: 1, music: 0.2, effects: 0.8 });
   });
 
   test('a browser without a noise source plays the music and no rain', () => {

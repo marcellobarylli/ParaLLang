@@ -73,8 +73,12 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
   const supported = Boolean(synthesis && typeof Utterance === 'function');
   let primed = false;
   const voices = () => (supported ? synthesis.getVoices?.() ?? [] : []);
+  let volume = 1;
   return {
     supported,
+    /** Round 172: the loudness of each new line, 0 to 1 (the Voice volume times the Master volume). */
+    get volume() { return volume; },
+    set volume(value) { volume = typeof value === 'number' && Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 1; },
     /** True while the browser is reading a line aloud (round 127: the music drops under it). */
     get speaking() { return supported && synthesis.speaking === true; },
     available: (tag) => ofLanguage(voices(), tag).length > 0,
@@ -89,6 +93,7 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
       if (chosen) utterance.voice = chosen;
       utterance.pitch = profile.pitch;
       utterance.rate = profile.rate;
+      utterance.volume = volume;
       synthesis.cancel?.();
       synthesis.speak(utterance);
       primed = true;

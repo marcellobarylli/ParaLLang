@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
-import { clampImmersion, loadDisplay, saveDisplay } from '../display.js';
+import { clampImmersion, clampVolume, loadDisplay, saveDisplay, volumesOf } from '../display.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
 
@@ -626,6 +626,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       setVoices: (on) => set({ display: saveDisplay({ ...get().display, voices: on !== false }, storage) }),
       // Round 127: whether the ambient music plays.
       setMusic: (on) => set({ display: saveDisplay({ ...get().display, music: on !== false }, storage) }),
+      // Round 172: one of the Audio volumes ('master', 'music', 'effects' or 'voice'), 0 to 1.
+      setVolume: (channel, value) => set({ display: saveDisplay({ ...get().display, volume: { ...volumesOf(get().display?.volume), [channel]: clampVolume(value) } }, storage) }),
       // Round 148: how much of a character's lines is in the language being learned; sent with each start and answer.
       setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value) }, storage) }),
       // Round 129: beginner mode, sent with each answer.
