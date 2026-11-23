@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 174, three replies and the conversation is complete
+
+Every conversation, strict or light, on the road or in a dungeon, is **complete on the player's third reply**
+(strict: sooner when every objective is met); a counter says "Reply 1 of 3". After that **"Keep chatting"** goes on
+with the character and counts nothing; "Done chatting" brings the way on back. Played in headless Chromium with a
+scripted provider. [Architecture](docs/rounds/174/architecture.md), [findings](docs/rounds/174/findings.md).
+
 ## Addendum 2026-11-23: round 173, streamlined mode
 
 **Streamlined**, in Settings under Language and learning, on by default: on the road each unit (Hello and goodbye,
@@ -214,6 +221,7 @@ is the list.
 | 171 | 11-23 | Friends play the hosted link on Gemini: a friend code, their turns on the server's `GEMINI_API_KEY` or their own pasted key, three clear steps when no model is available | [171](docs/rounds/171/architecture.md) | [findings](docs/rounds/171/findings.md) | on `main` (page and server) |
 | 172 | 11-23 | Rain far quieter (on its own effects bus) and 15 % of the time; Settings in categories, with Audio's Master, Music, Effects and Voice volumes | [172](docs/rounds/172/architecture.md) | [findings](docs/rounds/172/findings.md) | on `main` (page and server) |
 | 173 | 11-23 | Streamlined mode, on by default: one conversation a unit, finishing it completes the unit, every site offers the next unit | [173](docs/rounds/173/architecture.md) | [findings](docs/rounds/173/findings.md) | session branch |
+| 174 | 11-23 | Every conversation complete on the third reply, with a counter; Keep chatting after, which counts nothing | [174](docs/rounds/174/architecture.md) | [findings](docs/rounds/174/findings.md) | session branch |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

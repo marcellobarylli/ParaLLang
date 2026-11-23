@@ -260,3 +260,22 @@ test('streamlined by default: each unit is one conversation, and switching it of
   expect(JSON.parse(ctx.storage.values.get('parallang.display')).streamlined).toBe(false);
   expect([s().road.streamlined, s().road.current.kind]).toEqual([false, 'lesson']);
 });
+
+// Round 174: a conversation is complete on the third reply, and the player may keep chatting after it.
+test('three replies complete a conversation whatever is said; keep chatting goes on and counts nothing', async () => {
+  const ctx = await onTheRoad();
+  const { s } = ctx;
+  await s().roadTalk();
+  expect(s().encounter.exchange.limit).toBe(3);
+  for (const reply of ['Non lo so.', 'Boh.', 'Niente.']) await s().sendMessage(reply);
+  expect(s().encounter.state).toBe('resolved');
+  await vi.waitFor(() => expect(s().road.current).toBe(null));
+  const step = s().road.step;
+  const lines = s().encounter.transcript.length;
+  await s().sendMessage('Ancora?'); // not without asking to chat
+  expect(s().encounter.transcript.length).toBe(lines);
+  s().keepChatting();
+  await s().sendMessage('Come va?');
+  expect([s().encounter.state, s().encounter.transcript.length, s().assessment]).toEqual(['resolved', lines + 2, null]);
+  expect(s().road.step).toBe(step);
+});

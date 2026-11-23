@@ -63,7 +63,7 @@ for (const code of Object.keys(packs)) {
     const content = loadGameContent({ language: code });
     assert.equal(content.world.locationsById.get('old_bookshop').encounter, 'old_bookshop_bookworm');
     const provider = new BookshopProvider(code);
-    const service = new LearningService({ provider, storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow });
+    const service = new LearningService({ provider, storage: new JsonLearningStorage({ saveDir }), content, clock: () => fixedNow, exchangeLimit: Infinity }); // round 174: a long scenario
     const { learnerId } = await service.createOrRecoverLearner();
     const walk = route(content.world, content.world.start, 'old_bookshop');
     assert.equal(walk.length, 3);

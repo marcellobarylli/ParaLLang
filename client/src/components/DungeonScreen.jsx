@@ -17,7 +17,7 @@ import { dockInsets } from '../scene/insets.js';
 import { ROAD_NAME } from '../atlas.js';
 import Narration, { hasNarration } from './Narration.jsx';
 import Guidebook, { GuideNote } from './Guidebook.jsx';
-import { siteStatesOf } from '../stores/gameStore.js';
+import { chatKeyOf, siteStatesOf } from '../stores/gameStore.js';
 
 // Round 115: the web client's one screen, the dungeon. The level fills the screen; over it lie the top bar and the
 // dock, which holds the panel of the current phase: the title (attract), the world map (world), the temple map
@@ -323,6 +323,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   }, [voicesOn, lineKey, language?.tag]);
   useEffect(() => () => speaker.stop(), [speaker]);
   const resolved = encounter?.state === 'resolved';
+  const chatting = resolved && state.chatKey !== null && state.chatKey === chatKeyOf(encounter); // round 174
   const name = encounter?.character?.name ?? (party || road ? null : site?.characterName) ?? 'them';
   const atGoal = !party && !road && site?.id === state.dungeon.goal;
   // The ways on wait for the server's word that the site is cleared (the run is read again after the last answer).
@@ -390,19 +391,19 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
           </section>
         )}
         {/* Round 159 (issue #7): what the character utters once the conversation is over, told by the narrator. */}
-        {resolved && encounter.revelation && (
+        {resolved && !chatting && encounter.revelation && (
           <section className="revelation" aria-label={`What ${name} utters`}>
             <Narration narration={encounter.revelation} />
           </section>
         )}
-        {resolved && party && (
+        {resolved && !chatting && party && (
           <section className="victory-banner" role="status">
             <p className="narrative">{encounter.resolvedMessage ?? `${name} has said what there was to say.`}</p>
             <button type="button" className="primary-button big-button" onClick={state.leaveParty}>Back to the temple</button>
           </section>
         )}
-        {resolved && road && <section className="victory-banner road-banner"><RoadResolved state={state} encounter={encounter} /></section>}
-        {resolved && !party && !road && (
+        {resolved && !chatting && road && <section className="victory-banner road-banner"><RoadResolved state={state} encounter={encounter} /></section>}
+        {resolved && !chatting && !party && !road && (
           <section className="victory-banner" role="status">
             <p className="narrative">{encounter.resolvedMessage ?? `${name} lets you pass.`}</p>
             {encounter.character?.saveable && <PartyOffer key={encounter.id} state={state} encounter={encounter} />}
@@ -411,8 +412,17 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
             <button type="button" className="text-button" onClick={state.openMap} disabled={state.travelling}>Map</button>
           </section>
         )}
+        {/* Round 174: after the end, the player may go on talking; nothing more is counted. */}
+        {resolved && (chatting
+          ? (
+            <p className="chat-note" role="status">Chatting on with {name}. The conversation is complete: nothing more is counted.{' '}
+              <button type="button" className="text-button" onClick={state.stopChatting} disabled={isLoading}>Done chatting</button>
+            </p>
+          )
+          : <button type="button" className="secondary-button chat-on" onClick={state.keepChatting} disabled={isLoading}>Keep chatting with {name}</button>)}
       </div>
-      {!resolved && (
+      {/* Round 174: a complete conversation can go on as a chat that changes nothing. */}
+      {(!resolved || chatting) && (
         <InputBar value={state.draft} onChange={state.setDraft} onSend={(text) => { speaker.stop(); state.sendMessage(text); }} name={name} loading={isLoading} disabled={isLoading || encounterLoading || !encounter}
           listener={listener} language={language} onListen={() => speaker.stop()} />
       )}

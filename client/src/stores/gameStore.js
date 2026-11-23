@@ -48,6 +48,8 @@ const MOVING = new Set(['approach', 'walk']);
 export const OLD_SERVER = 'The server is being updated. Try again in a few minutes.';
 
 /** Each site's fog state and reachability, by id: the server's, or the unexplored map before it has answered. */
+// Round 174: which conversation the player chose to keep chatting in, after it was complete (its id and first line).
+export const chatKeyOf = (encounter) => (encounter ? `${encounter.id}:${encounter.transcript?.[0]?.id ?? ''}` : null);
 export const siteStatesOf = (state) => state.progress?.sites ?? unexploredSites(state.dungeon);
 
 function browserStorage() {
@@ -313,6 +315,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       // Round 116: what the camera follows in a conversation. closedObjectives counts the objectives closed in it,
       // and beat numbers each verdict ({ id, kind }: 'pass', 'fail' or 'resolved').
       closedObjectives: 0,
+      chatKey: null, // round 174: chatKeyOf the complete conversation the player keeps chatting in
       beat: null,
       draft: '',
       pendingInput: null,
@@ -693,10 +696,15 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         } catch (error) { set({ error: `The save could not be loaded: ${error.message}` }); return false; }
       },
 
+      // Round 174: after a conversation is complete, the player may go on talking; nothing more is counted.
+      stopChatting: () => set({ chatKey: null }), // back to the end of the conversation and the way on
+      keepChatting: () => { const { encounter } = get(); if (encounter?.state === 'resolved') set({ chatKey: chatKeyOf(encounter), assessment: null }); },
+
       sendMessage: async (providedText) => {
         const state = get();
         const text = String(providedText ?? state.draft).trim();
-        if (!text || !state.learnerId || !state.encounter || state.encounter.state !== 'ongoing' || state.isLoading) return;
+        const chat = state.encounter?.state === 'resolved' && state.chatKey === chatKeyOf(state.encounter);
+        if (!text || !state.learnerId || !state.encounter || (state.encounter.state !== 'ongoing' && !chat) || state.isLoading) return;
         const learnerId = state.learnerId;
         const encounterId = state.encounter.id;
         const version = state.encounter.version;
@@ -705,8 +713,10 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         try {
           // Round 129: beginner mode travels with the answer (the server grades strictly without it).
           // Round 153: so does light mode, in which the server checks nothing; it takes the place of beginner mode.
-          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(state.display?.light === true ? { light: true } : state.display?.beginner !== false ? { beginner: true } : {}), immersion: immersionOf(state) });
+          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(chat ? { chat: true } : state.display?.light === true ? { light: true } : state.display?.beginner !== false ? { beginner: true } : {}), immersion: immersionOf(state) });
           if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
+          // A chat after the end: only the conversation grows.
+          if (chat) { set({ encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: null, isLoading: false, pendingInput: null, draft: '' }); return; }
           // A held pass (said too early in an ordered encounter) closes nothing (round 051).
           const closed = (result.assessment?.objectiveResults ?? []).filter((entry) => entry.passed && !entry.held).length;
           const kind = result.encounter.state === 'resolved' ? 'resolved' : closed > 0 ? 'pass' : 'fail';

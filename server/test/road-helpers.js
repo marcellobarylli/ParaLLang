@@ -9,6 +9,13 @@ import { PassingProvider, api, createRuntime } from './helpers.js';
 export class RoadProvider extends PassingProvider {
   constructor(content) { super(content); this.spoil = new Set(); this.correct = false; }
 
+  // Round 174: a light turn (a chat after the end) meets nothing.
+  narrate(messages) {
+    const reply = super.narrate(messages);
+    const turn = JSON.parse(messages.at(-1).content.split('TURN DATA: ').at(-1).trim());
+    return turn.task === 'light_turn' ? { ...reply, player: { meant: 'Just chatting.', target: 'Due chiacchiere.', clean: true, objectives_met: [] } } : reply;
+  }
+
   grade(messages) {
     const marker = 'AUTHORED RUBRIC: ';
     const system = messages[0].content;
@@ -36,10 +43,10 @@ export class RoadProvider extends PassingProvider {
 }
 
 // Round 173: streamlined mode is on by default; the tests of the full pacing switch it off (`streamlined: true` keeps it).
-export async function roadRuntime(t, { language = 'it', seed = 4242, streamlined = false } = {}) {
+export async function roadRuntime(t, { language = 'it', seed = 4242, streamlined = false, serviceOptions = {} } = {}) {
   const content = loadGameContent({ language });
   const provider = new RoadProvider(content);
-  const runtime = await createRuntime({ language, content, provider, serviceOptions: { seedSource: () => seed } });
+  const runtime = await createRuntime({ language, content, provider, serviceOptions: { seedSource: () => seed, ...serviceOptions } });
   t?.after(runtime.close);
   const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
   if (!streamlined) await setMode(runtime, learnerId, false);

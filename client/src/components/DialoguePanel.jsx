@@ -10,6 +10,8 @@ import NarrativeText from './NarrativeText.jsx';
 // should answer, then the tutorial's briefing, then the rest of the conversation. When the box has been scrolled
 // out of the top of the text, a one-line bar is pinned there: a tap unfolds the objectives, another folds them.
 
+const ordinal = (n) => ({ 1: 'first', 2: 'second', 3: 'third', 4: 'fourth', 5: 'fifth' })[n] ?? `${n}th`;
+
 // What the box and the unfolded bar both show: the objectives open now.
 function ObjectiveContent({ encounter, language, beginner, light }) {
   const open = encounter.openObjectives ?? [];
@@ -33,8 +35,12 @@ function ObjectiveContent({ encounter, language, beginner, light }) {
       {light && encounter.state === 'ongoing' && (
         <small className="light-note">
           Light mode: nothing is marked. Say it as well as you can, in {language?.name ?? 'the language'} or in English.
-          {encounter.exchange && <> Turn {Math.min(encounter.exchange.max, encounter.exchange.turn + 1)} of {encounter.exchange.min} to {encounter.exchange.max}. You can ask {name} questions back.</>}
+          {encounter.exchange && !encounter.exchange.limit && <> Turn {Math.min(encounter.exchange.max, encounter.exchange.turn + 1)} of {encounter.exchange.min} to {encounter.exchange.max}.</>} You can ask {name} questions back.
         </small>
+      )}
+      {/* Round 174: the conversation is complete on the player's third reply. */}
+      {encounter.state === 'ongoing' && encounter.exchange?.limit && (
+        <small className="exchange-count">Reply {Math.min(encounter.exchange.limit, encounter.exchange.turn + 1)} of {encounter.exchange.limit}. The conversation is complete after your {ordinal(encounter.exchange.limit)} reply.</small>
       )}
       {beginner && !light && encounter.hearts && (
         <small className="hearts" aria-label={`${encounter.hearts.limit - encounter.hearts.used} of ${encounter.hearts.limit} hearts left`}>

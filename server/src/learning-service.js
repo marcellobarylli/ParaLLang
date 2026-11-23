@@ -44,7 +44,11 @@ export const REVELATION_PREFIX = 'revelation_';
 export const LIGHT_QUALITY = 4;
 // Round 154: a light conversation is an exchange of this many of the player's turns. Before `min` it goes on even
 // when every objective is met; from `min` it ends once none is open; at `max` it ends whatever is open.
-export const LIGHT_EXCHANGE = Object.freeze({ min: 3, max: 5 });
+// Round 174: every conversation, strict or light, authored or on the road, is complete on the player's third reply
+// (strict, sooner when every objective is met). After that the player may keep chatting: such a turn is answered and
+// changes nothing (no marks, no Spellbook, no XP, no curriculum).
+export const EXCHANGE_LIMIT = 3;
+export const LIGHT_EXCHANGE = Object.freeze({ min: 3, max: 5 }); // round 154; under the limit of round 174, both are 3
 const LIGHT_ENDING = Object.freeze({
   go_on: 'Not yet: the conversation goes on after this reply, whatever has been met. Do not say goodbye.',
   if_done: 'If no objective is left open after this answer, this reply is the last of the conversation: wind it up warmly, as the character would, and ask nothing more. Otherwise the conversation goes on.',
@@ -125,8 +129,10 @@ export const PREFETCH_MAX_GREETINGS = 100;
 const greetingKey = (learnerId, definitionId) => `${learnerId}\u0000${definitionId}`;
 
 export class LearningService {
-  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false, prefetch = false, prefetchDwellMs = PREFETCH_DWELL_MS, prefetchRetries = PREFETCH_RETRIES, narrationRetryMs = NARRATION_RETRY_MS, seedSource = null }) {
+  constructor({ provider, storage, content, clock = () => new Date(), atmosphere = false, prefetch = false, prefetchDwellMs = PREFETCH_DWELL_MS, prefetchRetries = PREFETCH_RETRIES, narrationRetryMs = NARRATION_RETRY_MS, seedSource = null, exchangeLimit = EXCHANGE_LIMIT }) {
     this.provider = provider;
+    // Round 174: the player's replies after which a conversation is complete (the tests of long scenarios raise it).
+    this.exchangeLimit = exchangeLimit;
     // Round 144: where a new road's seed comes from (a test fixes it), and one lookup for a vocabulary id: the pack's
     // entries first, then the curriculum's own (road/curriculum.js keeps them apart from the pack's).
     this.seedSource = seedSource;
@@ -761,7 +767,8 @@ export class LearningService {
 
   serializeEncounter(encounter) {
     const definition = this.definition(encounter);
-    const objective = this.currentObjective(encounter);
+    // Round 174: a conversation completed by the limit of replies has no current objective, though one was left open.
+    const objective = encounter.state === 'ongoing' ? this.currentObjective(encounter) : null;
     const currentNpc = [...encounter.transcript].reverse().find((message) => message.role === 'npc');
     const revealKeys = this.currentRevealKeys(encounter);
     const transcript = encounter.transcript.map((message) => {
@@ -825,7 +832,7 @@ export class LearningService {
       // Round 129: the hearts of beginner mode. A new conversation (and Start over) has them all.
       hearts: { used: encounter.heartsUsed ?? 0, limit: BEGINNER_HEARTS },
       // Round 154: where a light conversation stands in its exchange of turns (the player's turns so far).
-      exchange: { turn: encounter.committedPlayerTurns, min: LIGHT_EXCHANGE.min, max: LIGHT_EXCHANGE.max },
+      exchange: { turn: encounter.committedPlayerTurns, ...this.lightExchange(), limit: Number.isFinite(this.exchangeLimit) ? this.exchangeLimit : null }, // round 174: the replies to completion
       transcript,
     };
   }
@@ -1386,9 +1393,11 @@ export class LearningService {
       }
       const current = this.encounters.get(learnerId);
       this.validateVersion(current, request.encounterId, request.version);
-      if (current.state !== 'ongoing') throw validationError('This encounter is already complete. Restart to play again.');
+      if (current.state !== 'ongoing' && request.chat !== true) throw validationError('This encounter is already complete. Restart to play again.');
       if (immersion !== null) current.immersion = immersion; // the reply to this answer follows the slider as it stands
       const definition = this.definition(current);
+      // Round 174: chatting on after the conversation is complete.
+      if (current.state !== 'ongoing') return this.chatTurn({ learnerId, request, fingerprint, envelope, current, definition, message });
       const objectives = this.activeObjectives(current);
       // Round 153: light mode, asked for by the client with each answer: nothing is checked, and one call reads the
       // answer and replies to it.
@@ -1431,8 +1440,9 @@ export class LearningService {
       const remaining = unordered
         ? definition.encounter.objectives.filter((objective) => !nextPassedIds.includes(objective.id))
         : definition.encounter.objectives.slice(nextObjectiveIndex);
-      const resolved = remaining.length === 0;
       const nextTurns = current.committedPlayerTurns + 1;
+      // Round 174: complete when every objective is met, or on the player's third reply whatever is open.
+      const resolved = remaining.length === 0 || nextTurns >= this.exchangeLimit;
       // Round 051 (backlog H1): in order, a pass after a failed objective does not close. It is `held`: not banked,
       // and the narrator is told not to treat it as done. The field is present only when true (pinned prompts).
       const closingIds = new Set(closing.map((objective) => objective.id));
@@ -1529,7 +1539,7 @@ export class LearningService {
     stagedEncounter.objectiveIndex = current.objectiveIndex + closing.length;
     stagedEncounter.passedObjectiveIds = [...(current.passedObjectiveIds ?? []), ...closing.map((objective) => objective.id)];
     stagedEncounter.committedPlayerTurns = current.committedPlayerTurns + 1;
-    stagedEncounter.state = resolved ? 'resolved' : 'ongoing';
+    stagedEncounter.state = resolved || current.state === 'resolved' ? 'resolved' : 'ongoing'; // round 174: a chat after the end stays resolved
     stagedEncounter.version += 1;
     Object.assign(stagedEncounter, sessionPatch);
     if (heartLost) stagedEncounter.heartsUsed = (current.heartsUsed ?? 0) + 1; // round 129
@@ -1592,6 +1602,7 @@ export class LearningService {
   // own text (found by the vocabulary matcher, not by a judge) is recorded as said.
   async lightTurn({ learnerId, request, fingerprint, envelope, current, definition, objectives, message }) {
     const nextTurns = current.committedPlayerTurns + 1;
+    const { min, max } = this.lightExchange(); // round 174: within the exchange limit
     const history = current.transcript.map((item) => item.role === 'player'
       ? { role: 'user', content: item.text }
       : { role: 'assistant', content: item.dialogue.native });
@@ -1607,7 +1618,7 @@ export class LearningService {
       ...this.shareOf(nextTurns, definition, current),
       ambientEntries: definition.ambientEntries,
       ...this.sceneExtras(definition),
-      light: { turn: nextTurns, min: LIGHT_EXCHANGE.min, max: LIGHT_EXCHANGE.max, ending: LIGHT_ENDING[nextTurns >= LIGHT_EXCHANGE.max ? 'now' : nextTurns >= LIGHT_EXCHANGE.min ? 'if_done' : 'go_on'] },
+      light: { turn: nextTurns, min, max, ending: LIGHT_ENDING[nextTurns >= max ? 'now' : nextTurns >= min ? 'if_done' : 'go_on'] },
     }), lightTurnSchema, 'light_turn', definition.character.name);
     const { player } = generated;
     const met = new Set(player.objectives_met);
@@ -1615,7 +1626,7 @@ export class LearningService {
     const closingIds = new Set(closing.map((objective) => objective.id));
     const remaining = objectives.filter((objective) => !closingIds.has(objective.id));
     // Round 154: the exchange's end: nothing open from the third turn on, or the fifth turn whatever is open.
-    const resolved = nextTurns >= LIGHT_EXCHANGE.max || (remaining.length === 0 && nextTurns >= LIGHT_EXCHANGE.min);
+    const resolved = nextTurns >= max || (remaining.length === 0 && nextTurns >= min);
     const tidy = (text) => String(text).trim().replace(/\s+/g, ' ').slice(0, CORRECTION_MAX_LENGTH);
     const said = new Set(matchCanonicalVocabulary(message, definition.scope ?? this.content.vocabulary.entries).map((match) => match.id));
     const anyReveal = objectives.some((objective) => (current.reveals[objective.id] ?? []).length > 0);
@@ -1632,6 +1643,38 @@ export class LearningService {
     return this.commitTurn({
       learnerId, request, fingerprint, envelope, current, definition, message, generated, closing, remaining, resolved,
       evidence, responseAssessment, correctedIds: player.clean ? new Set() : closingIds, sessionPatch: { loose: true },
+    });
+  }
+
+  // Round 174: light mode's exchange within the limit of replies.
+  lightExchange() {
+    return { min: Math.min(LIGHT_EXCHANGE.min, this.exchangeLimit), max: Math.min(LIGHT_EXCHANGE.max, this.exchangeLimit) };
+  }
+
+  // Round 174: a turn after the conversation is complete. The character answers as in a light turn with nothing
+  // open; only the transcript grows. Nothing is marked or recorded, and the conversation stays complete.
+  async chatTurn({ learnerId, request, fingerprint, envelope, current, definition, message }) {
+    const turn = current.committedPlayerTurns + 1;
+    const history = current.transcript.map((item) => item.role === 'player'
+      ? { role: 'user', content: item.text }
+      : { role: 'assistant', content: item.dialogue.native });
+    const generated = await this.callProvider(buildNarrationMessages({
+      language: this.content.language,
+      character: definition.character,
+      styleGuide: this.content.styleGuide,
+      locationName: this.sceneName(current),
+      objectives: [],
+      vocabularyById: this.lookup,
+      conversationHistory: history,
+      playerInput: message,
+      ...this.shareOf(turn, definition, current),
+      ambientEntries: definition.ambientEntries,
+      ...this.sceneExtras(definition),
+      light: { turn, ...this.lightExchange(), ending: LIGHT_ENDING.go_on },
+    }), lightTurnSchema, 'light_turn', definition.character.name);
+    return this.commitTurn({
+      learnerId, request, fingerprint, envelope, current, definition, message, generated, closing: [], remaining: [], resolved: false,
+      evidence: [], responseAssessment: null,
     });
   }
 
