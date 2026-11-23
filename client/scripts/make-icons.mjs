@@ -22,9 +22,11 @@ export const ICON = Object.freeze({
   hops: 120, // the walks of the journey, each the rails' own choice
   frame: 100, // the picture's side in the map's units
   columns: 200, // the landscape's pixels across; drawn small and shown large, as the map is
-  margin: Object.freeze({ side: 7, top: 9, bottom: 7 }), // room around the walk
-  // A maskable icon may be cut to a circle of 80 % of the side: it shows more land around the same walk, so that
-  // the walk keeps inside the circle.
+  // Room around the walk. The owner picked the view from further off (2026-11-23): the journey small in the middle
+  // of its country, with the lakes, the far shore and the mountain's foot round it. It was the maskable icon's view,
+  // and is now every icon's.
+  margin: Object.freeze({ side: 21, top: 22, bottom: 20 }),
+  // A maskable icon may be cut to a circle of 80 % of the side; at this distance the walk keeps inside the circle.
   maskable: Object.freeze({ side: 21, top: 22, bottom: 20 }),
   way: 0.62, // half the width of the walked line, in the map's units
   edge: 0.42, // the dark line around every mark

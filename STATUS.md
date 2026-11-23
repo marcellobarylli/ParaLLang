@@ -61,6 +61,10 @@ book's part is now "The pulls" and the proposal is amended. Asked which steps, t
 of level (A1 to A2, A2 to B1). Not built: it is **issue #23**. The owner also did not intend round 162's cutting down
 of the tree models; **issue #24** is to use them at their original poly counts.
 
+**Amendment (2026-11-23): the icon from further off.** The owner picked the maskable icon's view ("a bit more
+zoomed out") for the app icon: every icon is now the journey small in the middle of its country
+([`01-icon-512.png`](docs/rounds/164/shots/01-icon-512.png)). #11 and #13 stay open on the owner's word.
+
 ## Addendum 2026-11-23: rounds 153 to 163, the eleven open issues, on one branch awaiting the owner's word
 
 The owner asked for every open issue, one after the other, and went to sleep. All eleven are built, one round each,

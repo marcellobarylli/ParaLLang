@@ -64,6 +64,14 @@ from both. The owner also asked for two issues, and they are open:
   level inside its budget of 64 000; the owner did not intend that ("they're low poly assets anyway"). The issue
   names what has to give: the file's size, the budget, and drawing the trees as instances.
 
+## Amendment 3 (2026-11-23): every icon is the view from further off
+
+The owner sent the maskable icon's picture ("a bit more zoomed out") and asked for it as the app icon. Every icon
+now has that view: the journey small in the middle of its country, with the lakes and the mountain's foot round it
+(`ICON.margin` in `client/scripts/make-icons.mjs` is the maskable icon's). The six files are written again. The
+owner also said #11 and #13 stay open, and that whether the characters know they are impostors is still to be
+thought about.
+
 ## Tests
 
 - `client/src/__tests__/pages.test.js`: the icon's walk is 120 walks from the start, every site of it is inside

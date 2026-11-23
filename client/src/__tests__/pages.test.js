@@ -123,6 +123,8 @@ test('the icon is the map with the whole journey on it, which a round mask does 
   // Every site of the journey is inside the picture.
   for (const [x, y] of scene.line) expect(x > 0 && x < ICON.frame && y > 0 && y < ICON.frame).toBe(true);
   // A maskable icon is safe inside a circle of 80 % of its side; the flag stands 7.6 units over the last site.
+  // Round 164, amended: every icon has the maskable icon's view from further off (the owner's pick).
+  expect(ICON.margin).toEqual(ICON.maskable);
   const masked = iconScene({ margin: ICON.maskable });
   const [last] = masked.line.slice(-1);
   for (const [x, y] of [...masked.line, [last[0] - 1.2, last[1] - 7.6], [last[0] + 1.2, last[1] - 7.6]]) expect(Math.hypot(x - ICON.frame / 2, y - ICON.frame / 2)).toBeLessThan(ICON.frame * 0.4);
@@ -130,7 +132,7 @@ test('the icon is the map with the whole journey on it, which a round mask does 
   const pixels = iconPixels(scene, 192);
   let way = 0;
   for (let n = 0; n < pixels.length; n += 3) if (pixels[n] === 228 && pixels[n + 1] === 184 && pixels[n + 2] === 71) way += 1;
-  expect(way).toBeGreaterThan(200);
+  expect(way).toBeGreaterThan(80);
   expect(png(192, pixels).readUInt32BE(16)).toBe(192);
   for (const [folder, name, size] of ICON_FILES) {
     const file = readFileSync(new URL(name, folder));

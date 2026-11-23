@@ -81,3 +81,15 @@ original poly counts. "then deploy": what is new is text only (the lore book, th
 goes to `main` marked to build and restart nothing. The message does not say whether #11 and #13 close or whether
 the characters know they are impostors; both are left as they were.
 
+### Q4 (2026-11-23): the owner's message after the two issues were opened (no question was asked)
+- **Options offered:** none. (The reply before it had said that #11 and #13 were still open and that whether the
+  characters know they are impostors was still unsettled.)
+- **Answer** (with a picture: the maskable icon, the journey seen from further off): "All good, so I think we can
+  keep these as open. I'll think about whether the character rest also still open one final thing to do is I
+  really like this view of the map which is a bit more zoomed out that you generated earlier let's make this the app
+  icon and deploy everything that is left to deploy"
+
+Claude's reading, which the owner has not confirmed: #11 and #13 stay open; the question of the characters stays
+open while the owner thinks about it; every icon (the web app's and the iPhone app's) takes the view of the picture
+sent; and the page is deployed. The server has nothing new, so the merge is marked `[skip render]`.
+

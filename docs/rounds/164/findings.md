@@ -24,8 +24,11 @@ The icons written and looked at; every test suite run; the page built.
 | The iPhone app's tests | 320 of 320 (not run in rounds 153 to 163; its code is unchanged) |
 | The client build | builds; `dist/` holds the five icons |
 
-Pictures: [the owner's picture](shots/00-the-owners-picture.jpg), [the icon at 512](shots/01-icon-512.png), [the
-maskable icon](shots/02-icon-maskable-512.png), [the icon at 64](shots/03-icon-64.png).
+Pictures: [the owner's first picture](shots/00-the-owners-picture.jpg), [the owner's second, from further
+off](shots/04-the-owners-second-picture.jpg), [the icon at 512](shots/01-icon-512.png), [the maskable
+icon](shots/02-icon-maskable-512.png), [the icon at 64](shots/03-icon-64.png). The icon files shown are the final
+ones, from further off (Amendment 3 of the architecture); the first build's were the closer view of the first
+picture.
 
 ## Decision
 
