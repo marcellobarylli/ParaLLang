@@ -9,3 +9,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 3 | 21:00 approx. | 21:10:00 | built | Claude | `ambience.js`, `weather.js`, `display.js`, `speech.js`, `gameStore.js`, `DungeonScreen.jsx`, `SettingsSheet.jsx`, `index.css`, and their tests | `../../../../client/src/ambience.js` |
 | 4 | 21:05 approx. | 21:10:00 | run | Claude | Web client 295, server 578, aesthetic 95 tests pass; build and a phone-width screenshot of Settings | `../findings.md` |
 | 5 | 21:10:00 | 21:10:00 | closed | Claude | Records, status row; committed and pushed on the session branch | `../architecture.md` |
+| 6 | 21:20:00 | 21:20:00 | decision | Owner | "Push to main": fast-forwarded `main` to the round's commit | `../architecture.md` |

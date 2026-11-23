@@ -203,7 +203,7 @@ is the list.
 | 169 | 11-23 | Whether the followers of the void are right: they believe the void is a birthplace; nobody knows; the player chooses; the early encounters say the collapse must be prevented and its proponents speak only later (after Dark Souls) | [169](docs/rounds/169/architecture.md) | [findings](docs/rounds/169/findings.md) | on `main` (docs only; nothing deployed) |
 | 170 | 11-23 | A local setup for friends (`PLAY.md`, `npm run setup`, a Gemini provider): withdrawn by the owner and reverted (`456a521`); its records are in the history of `d9165cd` | none | none | reverted on `main` |
 | 171 | 11-23 | Friends play the hosted link on Gemini: a friend code, their turns on the server's `GEMINI_API_KEY` or their own pasted key, three clear steps when no model is available | [171](docs/rounds/171/architecture.md) | [findings](docs/rounds/171/findings.md) | on `main` (page and server) |
-| 172 | 11-23 | Rain far quieter (on its own effects bus) and 15 % of the time; Settings in categories, with Audio's Master, Music, Effects and Voice volumes | [172](docs/rounds/172/architecture.md) | [findings](docs/rounds/172/findings.md) | on the session branch |
+| 172 | 11-23 | Rain far quieter (on its own effects bus) and 15 % of the time; Settings in categories, with Audio's Master, Music, Effects and Voice volumes | [172](docs/rounds/172/architecture.md) | [findings](docs/rounds/172/findings.md) | on `main` (page and server) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every
