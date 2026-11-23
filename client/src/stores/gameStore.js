@@ -630,6 +630,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value) }, storage) }),
       // Round 129: beginner mode, sent with each answer.
       setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
+      // Round 162: whether the road's nearest trees are the pulled models.
+      setTreeModels: (on) => set({ display: saveDisplay({ ...get().display, treeModels: on !== false }, storage) }),
       // Round 153: strict or light checking of answers, sent with each answer.
       setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),

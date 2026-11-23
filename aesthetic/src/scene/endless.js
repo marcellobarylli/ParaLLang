@@ -4,6 +4,7 @@ import { createPS1Material } from '../ps1/material.js';
 import { hexToRgb } from '../palette.js';
 import { MeshBuilder } from './geometry.js';
 import { assembleWorld, createWorldKit } from './world.js';
+import { stampModel } from './models.js';
 
 // Round 144: the endless landscape of The Journey 2, in the PS1 look. The ground is not built once: it is cut
 // into square chunks, and only the chunks around a point (the camera) exist. `streamTo(x, z)` builds the missing ones
@@ -18,6 +19,12 @@ export const ENDLESS = Object.freeze({
   chunk: 48, // metres; must equal the terrain's chunk (the trees are asked for per chunk)
   cells: 8, // quads per side
   radius: 4, // chunks kept on each side of the camera's chunk
+  detail: 5, // a chunk within this squared distance (in chunks) of the camera's has trunks and second cones
+  // Round 162: a chunk within `models` (squared distance) has its trees as models, when the host has loaded some:
+  // the camera's own chunk and the four beside it. One that was near keeps them until it is beyond `modelsKept`,
+  // so a camera on a chunk's edge does not build the same chunks over and over.
+  models: 1,
+  modelsKept: 2,
   fog: Object.freeze({ near: 46, far: 186 }), // the far edge of the kept chunks is hidden in the fog
 });
 
@@ -114,7 +121,7 @@ function broad(leaves, x, y, z, height, color, turn) {
 }
 
 /** The meshes of one chunk: ground by material, water where the ground dips under it, and the chunk's trees. */
-export function buildChunk(terrain, materials, cx, cz, { detail = true } = {}) {
+export function buildChunk(terrain, materials, cx, cz, { detail = true, models = null } = {}) {
   const { chunk, cells } = ENDLESS;
   const size = chunk / cells;
   const [x0, z0] = [cx * chunk, cz * chunk];
@@ -167,8 +174,17 @@ export function buildChunk(terrain, materials, cx, cz, { detail = true } = {}) {
   }
   const bark = bucket();
   const leaves = bucket();
+  const solid = bucket(); // round 162: trees stamped from models, coloured by vertex alone
   for (const tree of terrain.treesIn(cx, cz)) {
     const { x, z, y, height } = tree;
+    // Round 162 (issue #11): with models, a tree is one of its kind's, picked and turned by the tree's own number.
+    const shapes = models?.[tree.kind];
+    if (shapes?.length) {
+      const shape = shapes[Math.min(shapes.length - 1, Math.floor(tree.tint * shapes.length))];
+      const light = 0.86 + 0.28 * ((tree.tint * 7) % 1);
+      stampModel(solid, shape, x, y - 0.15, z, height, tree.tint * Math.PI * 2, [light, light, light * 0.96]);
+      continue;
+    }
     const green = tree.kind === 'fir' ? [0.5 + 0.2 * tree.tint, 0.82 + 0.18 * tree.tint, 0.6 + 0.2 * tree.tint]
       : tree.kind === 'palm' ? [0.66 + 0.2 * tree.tint, 1.08, 0.5 + 0.16 * tree.tint]
         : tree.kind === 'broad' ? [0.56 + 0.22 * tree.tint, 0.96 + 0.1 * tree.tint, 0.5 + 0.18 * tree.tint]
@@ -202,6 +218,7 @@ export function buildChunk(terrain, materials, cx, cz, { detail = true } = {}) {
   for (const [key, data] of Object.entries(grounds)) add(data, materials[key]);
   add(bark, materials.bark);
   add(leaves, materials.leaves);
+  add(solid, materials.plain);
   add(water, materials.water, 5);
   return group;
 }
@@ -226,12 +243,21 @@ export function createEndlessWorld({ terrain, seed = 7, preset = 'day', radius =
   const ground = new Group();
   ground.name = 'endless-ground';
   world.scene.add(ground);
-  const chunks = new Map();
+  const chunks = new Map(); // "cx,cz" -> { group, level }
+  let models = null; // round 162: templates by kind (models.js), once the host has loaded some
   const drop = (key) => {
-    const group = chunks.get(key);
+    const { group } = chunks.get(key);
     ground.remove(group);
     group.traverse((object) => object.geometry?.dispose?.());
     chunks.delete(key);
+  };
+  // How much a chunk carries, by its squared distance from the camera's chunk: 2 its trees as models, 1 trunks and
+  // second cones, 0 the least (it is in the fog).
+  const levelAt = (distance) => (models && distance <= ENDLESS.models ? 2 : distance <= ENDLESS.detail ? 1 : 0);
+  const build = (cx, cz, level) => {
+    const group = buildChunk(terrain, world.materials, cx, cz, { detail: level >= 1, models: level >= 2 ? models : null });
+    chunks.set(`${cx},${cz}`, { group, level });
+    ground.add(group);
   };
 
   function streamTo(x, z, budget = 2) {
@@ -240,30 +266,42 @@ export function createEndlessWorld({ terrain, seed = 7, preset = 'day', radius =
       const [kx, kz] = key.split(',').map(Number);
       if (Math.max(Math.abs(kx - ccx), Math.abs(kz - ccz)) > radius + 1) drop(key);
     }
+    // Missing chunks first, nearest first; then, round 162, chunks that were built for further away than they now
+    // are (the camera has walked up to them, or models have arrived) are built again at what they should carry.
     const missing = [];
+    const poorer = [];
     for (let i = -radius; i <= radius; i += 1) {
       for (let j = -radius; j <= radius; j += 1) {
-        if (!chunks.has(`${ccx + i},${ccz + j}`)) missing.push([i * i + j * j, ccx + i, ccz + j]);
+        const have = chunks.get(`${ccx + i},${ccz + j}`);
+        const distance = i * i + j * j;
+        if (!have) missing.push([distance, ccx + i, ccz + j]);
+        // A chunk too poor for where it now is, or still carrying models the camera has left behind.
+        else if (have.level < levelAt(distance) || (have.level === 2 && (!models || distance > ENDLESS.modelsKept))) poorer.push([distance, ccx + i, ccz + j]);
       }
     }
     missing.sort((a, b) => a[0] - b[0]);
-    for (const [distance, cx, cz] of missing.slice(0, budget)) {
-      // Far chunks carry less: one cone a fir, no trunks. They are in the fog.
-      const group = buildChunk(terrain, world.materials, cx, cz, { detail: distance <= 5 });
-      chunks.set(`${cx},${cz}`, group);
-      ground.add(group);
+    poorer.sort((a, b) => a[0] - b[0]);
+    const work = [...missing, ...poorer].slice(0, budget);
+    for (const [distance, cx, cz] of work) {
+      if (chunks.has(`${cx},${cz}`)) drop(`${cx},${cz}`);
+      build(cx, cz, levelAt(distance));
     }
-    return Math.max(0, missing.length - budget);
+    return Math.max(0, missing.length + poorer.length - work.length);
   }
+  /** Round 162: the host's models (models.js: templates by kind), or null for none. The near chunks follow. */
+  const setModels = (templates) => { models = templates && Object.keys(templates).length ? templates : null; };
 
   const triangles = () => {
     let n = 0;
     ground.traverse((object) => { if (object.isMesh) n += object.geometry.attributes.position.count / 3; });
     return n;
   };
-  Object.assign(world, { terrain, streamTo });
+  Object.assign(world, { terrain, streamTo, setModels });
   // Live counts (Object.assign would copy a getter's value of the moment).
-  Object.defineProperties(world, { chunkCount: { get: () => chunks.size }, triangleCount: { get: triangles } });
+  Object.defineProperties(world, {
+    chunkCount: { get: () => chunks.size }, triangleCount: { get: triangles },
+    modelChunks: { get: () => [...chunks.values()].filter((chunk) => chunk.level === 2).length }, // round 162
+  });
   return world;
 }
 

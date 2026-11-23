@@ -33,6 +33,21 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 162, pulled tree models for the road (on the session branch, not deployed)
+
+Issue #11, the tenth of the eleven. The web client now ships one file of pulled 3D models,
+[`client/public/models/nature.glb`](client/public/models/ASSETS.md): fifteen models (palms, broad-leaved trees,
+pines, bushes, stones) from flo-bit's "low poly nature pack", **CC0**, cut from 17 617 triangles to 1 672 and from
+1.77 MB to **34 kB** by `client/scripts/make-models.mjs`. `ASSETS.md` beside it records the source, the licence in
+the source's own words and each file's checksum. On the road the five chunks of ground nearest the camera take
+their trees from it; the file is asked for only there, and "Tree models" in Settings switches it off. The level
+stays inside its 64 000 triangles (57 709 at the start). **The cut-down trees are ragged**, and whether they beat
+the simple ones is the owner's call; dungeon pieces and characters were not pulled, because the usual CC0 libraries
+are outside this session's network. Seen in headless Chromium, not on a phone
+([findings](docs/rounds/162/findings.md), pictures:
+[with](docs/rounds/162/shots/02-jungle-with-models.jpg) and
+[without](docs/rounds/162/shots/03-jungle-without-models.jpg)).
+
 ## Addendum 2026-11-23: round 161, the whole journey, saved and painted on the map (on the session branch, not deployed)
 
 Issue #9, the ninth of the eleven. The save now holds the whole walk of the road: the id of every site walked to,
@@ -1617,6 +1632,7 @@ Newest first.
 | 159 | 11-22 | Three characters utter a deeper truth (issue #7): an encounter's `revelation`, told by the narrator on completion in turmeric and kept by the guidebook; Marginalia, Bambieshart and Errata | [159](docs/rounds/159/architecture.md) | [findings](docs/rounds/159/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 160 | 11-23 | Biomes, and the legacy dungeons as nodes of the road (issue #8): jungle, woodland and steppe, the road starting in the jungle; a point's old "biome" renamed cover; a unit's gate stands in a legacy dungeon whose node is on the map ("Enter Ta Prohm") and whose level is built on entry | [160](docs/rounds/160/architecture.md) | [findings](docs/rounds/160/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 161 | 11-23 | The whole journey, saved and painted on the map (issue #9): `road.walk` as node ids, its own route, and the map's "Show Journey so far" | [161](docs/rounds/161/architecture.md) | [findings](docs/rounds/161/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 162 | 11-23 | Pulled tree models for the road (issue #11): fifteen CC0 models by flo-bit in one 34 kB file, its source and licence in `ASSETS.md`, stamped into the five nearest chunks, loaded on the road only, with a switch in Settings | [162](docs/rounds/162/architecture.md) | [findings](docs/rounds/162/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

@@ -21,7 +21,7 @@ const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s moti
 // Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
 // Round 153: "Checking": strict (an answer is marked) or light (nothing is marked; the character works out what was meant).
 // Round 144: "Your save": when this browser last copied the save, a download of the copy as a file, and a file put back.
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, immersion = IMMERSION.default, onImmersion, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, treeModels = true, onTreeModels, immersion = IMMERSION.default, onImmersion, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -122,6 +122,15 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             </label>
             <small>{speechSupport.speak ? 'Each character reads its lines aloud in its own voice. A line\'s 🔊 repeats it.' : 'This browser cannot read aloud.'}</small>
             <small>{speechSupport.listen ? 'The 🎤 beside the reply box writes what you say. You send it.' : 'This browser cannot listen. The keyboard\'s own microphone key still writes what you say.'}</small>
+          </>
+        )}
+        {onTreeModels && (
+          <>
+            <label className="setting-check" htmlFor="settings-tree-models">
+              <input id="settings-tree-models" type="checkbox" checked={treeModels} onChange={(event) => onTreeModels(event.target.checked)} />
+              <span>Tree models</span>
+            </label>
+            <small>On the road, the trees nearest you are drawn from models (a small file, loaded when the road opens). Off: every tree is the simple kind.</small>
           </>
         )}
         {onTiltLook && (

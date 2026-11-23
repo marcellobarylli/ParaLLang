@@ -13,6 +13,8 @@ export { createWorld, WORLDS } from './worlds.js';
 export { EFFECTS, ENDLESS, buildChunk, createCairn, createEndlessWorld, createLandmark, createStandIn, createTrack, createWeatherEffects } from './scene/endless.js';
 // Round 146: the endless level's sky and light at any time of day and in any weather.
 export { ATMOSPHERE, atmosphereFor } from './scene/atmosphere.js';
+// Round 162: models pulled from outside, stamped into the endless level's near chunks.
+export { MODEL_KINDS, MODEL_LIFT, loadModels, stampModel, templateFrom, templatesFrom } from './scene/models.js';
 export { MeshBuilder } from './scene/geometry.js';
 export { FIGURES, createFigure } from './scene/figures.js';
 export { createCameraRig, TOUR } from './camera.js';
