@@ -33,6 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 169, whether the followers of the void are right
+
+The owner set the moral centre of the story. It is **not clear whether the followers of the void are good or
+bad**: they believe the void is the birthplace of everything, so that a collapse creates new worlds and new life;
+nobody knows whether that is true, though there may be signs of a world being born in the abyss; and the player
+chooses to foster it or prevent it. The telling is ordered as Dark Souls orders its own: **the early encounters lead
+the player to believe the collapse must be prevented, and only later do its proponents speak.**
+[`docs/lore-book.md`](docs/lore-book.md) has it as "Whether the followers are right". A join of round 167 that had
+called the followers a sect is made two-sided, and the book's own part VI is named as one of the early voices. No
+code is changed and none of it is built: in the game today neither case is put.
+[Architecture](docs/rounds/169/architecture.md), [findings](docs/rounds/169/findings.md).
+
 ## Addendum 2026-11-23: round 168, the religion of the place below
 
 The owner added a main religion: it sort of knows of the gap between the worlds, perhaps its higher-ups know the
@@ -166,6 +178,7 @@ is the list.
 | 166 | 11-23 | The narrator's passage stays in the travel caption until the character is ready to talk, with "… is getting ready to talk…" as its last sentence (the owner, from the phone) | [166](docs/rounds/166/architecture.md) | [findings](docs/rounds/166/findings.md) | on `main` with `b2ba4bc` (the page only) |
 | 167 | 11-23 | The lore of what is under the world: the valleys become chasms; a cave, a world tree at every node, the ways as roots (Dark Souls' Ash Lake named as the model); issue #25 opened for a view of it; the followers of the void, with roots in Taoism | [167](docs/rounds/167/architecture.md) | [findings](docs/rounds/167/findings.md) | on `main` (docs only; nothing deployed) |
 | 168 | 11-23 | The religion of the place below: its canon (the place under the ground is hell) in the lore book and in what every character knows; believers, doubters and people who go along among the road's characters | [168](docs/rounds/168/architecture.md) | [findings](docs/rounds/168/findings.md) | on `main` with `bb61bb1` (page and server) |
+| 169 | 11-23 | Whether the followers of the void are right: they believe the void is a birthplace; nobody knows; the player chooses; the early encounters say the collapse must be prevented and its proponents speak only later (after Dark Souls) | [169](docs/rounds/169/architecture.md) | [findings](docs/rounds/169/findings.md) | on `main` (docs only; nothing deployed) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every
