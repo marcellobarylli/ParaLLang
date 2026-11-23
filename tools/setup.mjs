@@ -26,11 +26,13 @@ const has = (cli) => run(cli, ['--version'], { stdio: 'ignore' }).status === 0;
 const requested = process.argv[2];
 let provider = requested
   ?? (current && current !== 'codex-cli' ? current : undefined)
-  ?? (has('claude') ? 'claude-cli' : has('codex') ? 'codex-cli' : undefined);
+  ?? (has('claude') ? 'claude-cli' : has('codex') ? 'codex-cli' : undefined)
+  ?? (/^GEMINI_API_KEY=\S/m.test(env) ? 'gemini' : undefined);
 if (!provider) {
   fail('Neither the Claude Code CLI (`claude`) nor the Codex CLI (`codex`) is on PATH.\n'
     + '  Install one and sign in with a subscription (`claude auth login` or `codex login`), then run `npm run setup` again.\n'
-    + '  Or pass a provider: `npm run setup -- openai` (with OPENAI_API_KEY in .env) or `npm run setup -- ollama`.');
+    + '  Or use Google Gemini: put GEMINI_API_KEY=<key from https://aistudio.google.com/apikey> in .env and run `npm run setup -- gemini`.\n'
+    + '  Or `npm run setup -- openai` (with OPENAI_API_KEY in .env) or `npm run setup -- ollama`.');
 }
 env = /^LLM_PROVIDER=.*$/m.test(env) ? env.replace(/^LLM_PROVIDER=.*$/m, `LLM_PROVIDER=${provider}`) : `${env}\nLLM_PROVIDER=${provider}\n`;
 writeFileSync(envPath, env);
@@ -39,7 +41,9 @@ console.log(`✓ LLM_PROVIDER=${provider} in .env`);
 console.log('… checking the provider (no inference request)');
 if (run('npm', ['run', '--silent', 'check:provider'], { stdio: 'inherit' }).status !== 0) {
   const login = { 'claude-cli': 'claude auth login', 'codex-cli': 'codex login' }[provider];
-  fail(`The provider check failed.${login ? ` Sign in with \`${login}\`, then run \`npm run setup\` again.` : ''}`);
+  const fix = login ? ` Sign in with \`${login}\`, then run \`npm run setup\` again.`
+    : provider === 'gemini' ? ' Put GEMINI_API_KEY=<key from https://aistudio.google.com/apikey> in .env, then run `npm run setup -- gemini` again.' : '';
+  fail(`The provider check failed.${fix}`);
 }
 
 console.log('\n✓ Ready. Start the game with `npm run dev` and open http://localhost:5173');

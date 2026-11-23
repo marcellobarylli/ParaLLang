@@ -22,7 +22,8 @@ No model was called.
 | `npm ci` | 277 packages, about 5 s |
 | `npm run dev` with `claude-cli` | Server on 127.0.0.1:3001, `/api/health` 200; client on 5173, 200; `/api/health` through its proxy, 200 |
 | `npm run setup` with no `.env` | Created `.env`, wrote `LLM_PROVIDER=claude-cli`, `check:provider` gave `CLI_AUTH_REQUIRED`, ended with "Sign in with `claude auth login`, then run `npm run setup` again" and exit 1 |
-| Server tests | 568 of 568 (unchanged) |
+| Server tests | 573 of 573 (568 before; five Gemini tests) |
+| `check:provider` with `gemini` | No key: "LLM_PROVIDER=gemini needs GEMINI_API_KEY in .env"; a key: provider `gemini`, model `gemini-3.8-flash`, no request made |
 | Web client tests | 288 of 288 (unchanged) |
 | The aesthetic package's tests | 95 of 95 |
 | The iPhone app's tests | 320 of 320 (needs `npm ci --prefix mobile` first; the root `npm test` stops at `jest: not found` without it) |
@@ -39,7 +40,9 @@ No model was called.
   Simulator.
 - **The example's `codex-cli` is not taken as a choice.** `.env.example` names `codex-cli`, so a fresh `.env` would
   otherwise always pick Codex even where only Claude Code is installed.
-- **Not on `main`.** Moving `main` deploys the page; that is the owner's word to give.
+- **Gemini by its OpenAI-compatible endpoint**, not a new SDK: no dependency, and the OpenAI adapter's requests are
+  reused. A Gemini CLI route (a subscription, like Claude's and Codex's) was not built.
+- **On `main` on the owner's word** ("push everything"); that deploys the page and the server.
 
 ## Claim boundary
 
@@ -47,6 +50,6 @@ As in the architecture: Linux only; the path past the sign-in was not walked; un
 
 ## Open items
 
-- Merge to `main`, so that a plain clone has `PLAY.md`.
+- Play a conversation with a real Gemini key and see whether the strict schema or the fallback is what answers.
 - Walk `npm run setup` on a Mac and on Windows with a signed-in CLI, through a first conversation.
 - The root `npm test` fails without the iPhone app's dependencies installed; a note or a guard would help.

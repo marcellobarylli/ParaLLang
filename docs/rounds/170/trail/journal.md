@@ -12,3 +12,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 6 | 19:10 approx. | 19:16:00 | request | Owner | "Do it": log the work as a round | `interview.md` |
 | 7 | 19:12 approx. | 19:16:00 | run | Claude | Server 568 tests, web client 288, the aesthetic package's 95, the iPhone app's 320 (after `npm ci --prefix mobile`) pass | `../findings.md` |
 | 8 | 19:16:00 | 19:16:00 | closed | Claude | Records, status addendum and index row; committed and pushed on the session branch | `../architecture.md` |
+| 9 | 19:17 approx. | 19:23:00 | request | Owner | "Lets quickly add gemini and push everything" | `interview.md` |
+| 10 | 19:19 approx. | 19:23:00 | built | Claude | `server/src/llm/adapters/gemini.js`, its config, tests, `.env.example`, setup, `PLAY.md`, README. Google's pages read through search (the docs host is not reachable from the session) | `../../../../server/src/llm/adapters/gemini.js` |
+| 11 | 19:21 approx. | 19:23:00 | run | Claude | Server 573 tests pass; `check:provider` with and without a key. No Gemini call (no key) | `../findings.md` |
+| 12 | 19:23:00 | 19:23:00 | closed | Claude | Pushed on the session branch and merged to `main` | `../architecture.md` |

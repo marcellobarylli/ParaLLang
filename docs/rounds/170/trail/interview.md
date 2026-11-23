@@ -23,3 +23,13 @@
 
 - **Read as:** log it as round 170. The same message had also named merging the branch into `main` as a step
   before the friend can use it; that is a push to `main` and is left for the owner's explicit word.
+
+### Q3 (2026-11-23): not asked; the owner's message after a question on how models are loaded
+- **Answer:**
+
+> Lets quickly add gemini and push everything
+
+- **Read as:** a `gemini` provider; commit and push it all, and merge to `main` (the open question of the earlier
+  answer was "Do you want me to merge it?").
+- **Not asked, and decided here:** the Gemini API by key through its OpenAI-compatible endpoint, not the Gemini CLI;
+  the default model.

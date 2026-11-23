@@ -38,9 +38,26 @@ settings worth changing (`TARGET_LANGUAGE`, `LLM_MODEL`, `LLM_PROVIDER`), what n
 committing `.env`) and the error codes with their fixes. For the player: where to start and how a conversation,
 help and the Spellbook work, and that a slow turn is the model.
 
+## Gemini (the owner's third message)
+
+The owner asked for Gemini. `LLM_PROVIDER=gemini` (`server/src/llm/adapters/gemini.js`) calls Google's
+OpenAI-compatible endpoint (`https://generativelanguage.googleapis.com/v1beta/openai/`, from Google's "OpenAI
+compatibility" page) with the existing `openai` package, a key in `GEMINI_API_KEY` and `gemini-3.8-flash` by default
+(Google's models pages list it as the stable Flash model). Two things are its own:
+
+- **A fallback.** Developer-forum reports say the endpoint has refused or ignored some strict JSON schemas. A
+  structured request it refuses (HTTP 400, or a reply that is not JSON) is asked once more in JSON mode with the
+  schema in the prompt, as the Ollama adapter does; the reply is checked against the schema either way.
+- **Room to think.** The Flash models think, and the thinking counts against `max_tokens`, so the cap is at least
+  8192.
+
+`npm run setup -- gemini` selects it, and `npm run setup` picks it when no CLI is on PATH and `.env` has a key. It is
+an API key, not a subscription: Google's own billing and limits apply.
+
 ## Tests
 
-None added: the script is setup glue around commands that are tested already (`check:provider`). It was run by hand
+`server/test/gemini.test.js` (five tests, a fake client): the config and default model; the missing-key message; the
+strict schema first; the fallback; no retry on other errors. Nothing else added: the script is setup glue around commands that are tested already (`check:provider`). It was run by hand
 (findings).
 
 ## Claim boundary
@@ -49,8 +66,12 @@ None added: the script is setup glue around commands that are tested already (`c
   `npm`, `claude` and `codex` resolve on Windows too; that is untried.
 - No signed-in CLI was available, so the path past the sign-in (`✓ Ready.`, a conversation) was not walked. That a
   first conversation works rests on the earlier rounds' tests and on the owner's own play.
+- Gemini was not called: there is no key. The endpoint, the model name and the forum reports were read from search
+  results of Google's pages, whose host the session cannot fetch. Whether `gemini-3.8-flash` follows the game's
+  prompts well is unknown.
 - `PLAY.md` assumes the repository is public (round 114's Pages step made it so) and that the work is on `main`.
 
 ## Outcome
 
-Built and recorded. Committed and pushed on `claude/playable-agent-setup-204zb5`; not on `main`.
+Built and recorded. Pushed on `claude/playable-agent-setup-204zb5` and, on the owner's word ("push everything"),
+merged to `main`.

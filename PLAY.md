@@ -2,7 +2,7 @@
 
 A language-learning game: you walk a 3D world and talk to absurd characters who speak more and more Italian (or
 Spanish) as you answer them. It runs in your browser on your own computer, and the characters are voiced by your own
-Claude or ChatGPT subscription.
+Claude or ChatGPT subscription, or by Google Gemini with a free API key.
 
 **Hand this file to your coding agent** (Claude Code, Codex, …) and say: *"Set up ParaLLang for me using PLAY.md."*
 
@@ -17,6 +17,9 @@ Works on macOS, Linux and Windows. No Mac or iPhone is needed for the browser ga
    - Claude Code: `claude` on PATH, signed in with `claude auth login` (a claude.ai Pro/Max subscription).
    - Codex: `codex` on PATH, signed in with `codex login` (ChatGPT sign-in, not an API key).
 
+   - Or Google Gemini, with no subscription: a free API key from https://aistudio.google.com/apikey, put in `.env`
+     as `GEMINI_API_KEY=...` (create `.env` by copying `.env.example`); then use `npm run setup -- gemini` below.
+
    If you are Claude Code or Codex yourself, the CLI is already installed; check that it is signed in with a
    subscription. The sign-in opens a browser, so ask the user to complete it.
 3. **Clone and set up:**
@@ -29,7 +32,7 @@ Works on macOS, Linux and Windows. No Mac or iPhone is needed for the browser ga
 
    `npm run setup` installs dependencies, creates `.env`, picks `claude-cli` or `codex-cli` from what is on PATH,
    and checks the sign-in without spending any usage. It ends with `✓ Ready.` or names the one thing to fix.
-   To choose the provider: `npm run setup -- claude-cli` or `npm run setup -- codex-cli`.
+   To choose the provider: `npm run setup -- claude-cli`, `npm run setup -- codex-cli` or `npm run setup -- gemini`.
 4. **Start it:** `npm run dev`, leave it running, and have the user open **http://localhost:5173** in a desktop
    browser (it is 3D; Chrome, Firefox or Safari), then pick *The Journey 2* on the world map.
    The server is ready when the log shows `ParaLLang server listening on http://127.0.0.1:3001`.
@@ -41,7 +44,8 @@ Works on macOS, Linux and Windows. No Mac or iPhone is needed for the browser ga
 |---|---|
 | `TARGET_LANGUAGE` | `it` Italian (default), `es` Spanish |
 | `LLM_MODEL` | Blank = Sonnet for claude-cli. `haiku` is faster and uses less of the subscription |
-| `LLM_PROVIDER` | `claude-cli`, `codex-cli`, or `openai` (needs `OPENAI_API_KEY`) / `ollama` (a local model) |
+| `LLM_PROVIDER` | `claude-cli`, `codex-cli`, `gemini` (needs `GEMINI_API_KEY`), `openai` (needs `OPENAI_API_KEY`), `ollama` (a local model) |
+| `GEMINI_MODEL` | Blank = `gemini-3.8-flash` |
 
 ### Do not
 
