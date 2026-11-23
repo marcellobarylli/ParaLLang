@@ -63,7 +63,9 @@ of the tree models; **issue #24** is to use them at their original poly counts.
 
 **Amendment (2026-11-23): the icon from further off.** The owner picked the maskable icon's view ("a bit more
 zoomed out") for the app icon: every icon is now the journey small in the middle of its country
-([`01-icon-512.png`](docs/rounds/164/shots/01-icon-512.png)). #11 and #13 stay open on the owner's word.
+([`01-icon-512.png`](docs/rounds/164/shots/01-icon-512.png)). #11 and #13 stay open on the owner's word. It went to `main` as
+`973068f` with `[skip render]`: CI run 45134979154 and Pages run 45134979253 succeeded (08:00 to 08:01 UTC), and no
+server deployment was made for it (read from GitHub's API; the live page was not looked at).
 
 ## Addendum 2026-11-23: rounds 153 to 163, the eleven open issues, on one branch awaiting the owner's word
 
