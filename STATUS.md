@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 161, the whole journey, saved and painted on the map (on the session branch, not deployed)
+
+Issue #9, the ninth of the eleven. The save now holds the whole walk of the road: the id of every site walked to,
+in order (`road.walk`, the last 20 000) and the count of walks. Ids are enough, because the graph is the same graph
+whenever it is read. The road's map has a switch, **"Show Journey so far"**: it reads the walk
+(`GET /api/road/walk`) and paints it as one gold line over the landscape, from as far off as it takes to hold all of
+it, with a mark where it began. Played in headless Chromium with a walk of sixty, not on a phone
+([findings](docs/rounds/161/findings.md), picture: [`02-journey.jpg`](docs/rounds/161/shots/02-journey.jpg)).
+
 ## Addendum 2026-11-23: round 160, biomes, and the legacy dungeons as nodes of the road (on the session branch, not deployed)
 
 Issue #8, the eighth of the eleven. **Biomes.** The endless landscape has kinds of country (`BIOMES` in
@@ -1607,6 +1616,7 @@ Newest first.
 | 158 | 11-22 | Untranslatable text in the narration (issue #4): ten texts a pack in the language being learned only, set into written passages in turmeric with nothing to tap; the guidebook's "Turmeric text" entry and the texts found; the vault's "Understood Later" | [158](docs/rounds/158/architecture.md) | [findings](docs/rounds/158/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 159 | 11-22 | Three characters utter a deeper truth (issue #7): an encounter's `revelation`, told by the narrator on completion in turmeric and kept by the guidebook; Marginalia, Bambieshart and Errata | [159](docs/rounds/159/architecture.md) | [findings](docs/rounds/159/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 160 | 11-23 | Biomes, and the legacy dungeons as nodes of the road (issue #8): jungle, woodland and steppe, the road starting in the jungle; a point's old "biome" renamed cover; a unit's gate stands in a legacy dungeon whose node is on the map ("Enter Ta Prohm") and whose level is built on entry | [160](docs/rounds/160/architecture.md) | [findings](docs/rounds/160/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 161 | 11-23 | The whole journey, saved and painted on the map (issue #9): `road.walk` as node ids, its own route, and the map's "Show Journey so far" | [161](docs/rounds/161/architecture.md) | [findings](docs/rounds/161/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 145 | 11-22 | Saves written to GitHub by the server: one JSON file per learner on a `saves` branch, with the place in the curriculum, read back when the disk has lost it; off until the owner sets a token; rounds 144 and 145 deployed | [145](docs/rounds/145/architecture.md) | [findings](docs/rounds/145/findings.md) | round 145 build, merged to `main` |
 | 144 | 11-22 | The Long Way Home: an endless fractal landscape, a graph of sites over it, a curriculum from A1 to B1 with generated characters and pacing, travel on rails or by the map, and a copy of the save that survives the server (on a branch) | [144](docs/rounds/144/architecture.md) | [findings](docs/rounds/144/findings.md) | round 144 build on `claude/admiring-mendel-zuqioq` |
 | 141 | 11-20 | The answer boxes grow with their text, up to twelve lines | [141](docs/rounds/141/architecture.md) | [findings](docs/rounds/141/findings.md) | round 141 build |

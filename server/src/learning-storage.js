@@ -137,7 +137,10 @@ function validRoad(road) {
     && record(road.progress) && record(road.progress.lessons) && record(road.progress.checkpoints)
     && Array.isArray(road.progress.recent) && road.progress.recent.length <= 50 && road.progress.recent.every((score) => Number.isFinite(score))
     && Object.keys(road.progress.lessons).length <= 5000
-    && Array.isArray(road.log) && road.log.length <= 30 && road.log.every(record);
+    && Array.isArray(road.log) && road.log.length <= 30 && road.log.every(record)
+    // Round 161: the whole walk (a road from before it has none).
+    && (road.walk === undefined || ids(road.walk, 20000))
+    && (road.hops === undefined || (Number.isSafeInteger(road.hops) && road.hops >= 0));
 }
 
 function validWorld(world) {

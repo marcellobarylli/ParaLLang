@@ -92,3 +92,19 @@ describe('the map\'s picture', () => {
     expect(green(pixel(picture, behind, view))).toBe(true);
   });
 });
+
+// Round 161 (issue #9): the whole journey is shown from as far off as it takes.
+test('a frame for the whole journey holds sites many kilometres apart, where the usual frame would not', () => {
+  const points = [{ x: 0, z: 0, y: 4 }, { x: 9000, z: -2500, y: 30 }, { x: -6000, z: 7000, y: 12 }];
+  const usual = createMapView(points);
+  const journey = createMapView(points, { farthest: ROAD_MAP.journey });
+  const inside = (view) => points.every((point) => { const [x, y] = view.project(point.x, point.z, point.y); return x >= 0 && x <= view.width && y >= 0 && y <= view.height; });
+  expect(usual.scale).toBe(ROAD_MAP.farthest);
+  expect(inside(usual)).toBe(false);
+  expect(journey.scale).toBeLessThan(ROAD_MAP.farthest);
+  expect(journey.scale).toBeGreaterThanOrEqual(ROAD_MAP.journey);
+  expect(inside(journey)).toBe(true);
+  // A short journey is not shown from further off than the usual map.
+  expect(createMapView(points.slice(0, 1), { farthest: ROAD_MAP.journey }).scale).toBe(ROAD_MAP.closest);
+});
+

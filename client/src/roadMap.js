@@ -24,6 +24,7 @@ export const ROAD_MAP = Object.freeze({
   treePixels: 2, // how many pixels a tree stands over its ground
   contour: 10, // metres between the height lines
   recent: 12, // the sites of the trail the frame always holds
+  journey: 0.003, // round 161: overlay units per metre at least when the whole journey is shown: up to about 30 km across
 });
 
 const TAN30 = Math.tan(Math.PI / 6);
@@ -34,14 +35,15 @@ const RISE = 1 / Math.cos(Math.PI / 6);
  * `project(x, z, h)` (the overlay position of a point `h` metres above the water) and `ground(sx, sy)` (the point
  * of the water plane drawn at an overlay position).
  */
-export function createMapView(points, { width = ROAD_MAP.width, height = ROAD_MAP.height, relief = ROAD_MAP.relief, margin = ROAD_MAP.margin } = {}) {
+export function createMapView(points, { width = ROAD_MAP.width, height = ROAD_MAP.height, relief = ROAD_MAP.relief, margin = ROAD_MAP.margin, farthest = ROAD_MAP.farthest } = {}) {
   // Per unit of scale: how far across each point is, and how far down the picture, its height taken off.
   const across = points.map((point) => point.x - point.z);
   const down = points.map((point) => (point.x + point.z) * TAN30 - Math.max(0, point.y ?? 0) * RISE * relief);
   const [minP, maxP, minD, maxD] = [Math.min(...across), Math.max(...across), Math.min(...down), Math.max(...down)];
   const room = { x: width - 2 * margin.side, y: height - margin.top - margin.bottom };
   const fit = Math.min(room.x / Math.max(1, maxP - minP), room.y / Math.max(1, maxD - minD));
-  const scale = Math.max(ROAD_MAP.farthest, Math.min(ROAD_MAP.closest, fit));
+  // Round 161: the whole journey is shown from as far off as it takes (`farthest` is then ROAD_MAP.journey).
+  const scale = Math.max(farthest, Math.min(ROAD_MAP.closest, fit));
   const [cx, cy] = [width / 2 - ((minP + maxP) / 2) * scale, margin.top + room.y / 2 - ((minD + maxD) / 2) * scale];
   const lift = scale * RISE * relief; // overlay units per metre of height
   return Object.freeze({

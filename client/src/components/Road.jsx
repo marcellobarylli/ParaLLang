@@ -218,8 +218,14 @@ export function RoadMap({ state, onClose }) {
     const point = (id) => graph.node(id);
     return { trail: road.trail.map(point).filter(Boolean), here: point(road.at), ahead: road.frontier.map((site) => point(site.id)) };
   }, [graph, road.trail, road.at, road.frontier]);
+  // Round 161 (issue #9): "Show Journey so far". The whole walk, as the server keeps it, painted on the map; the frame
+  // then holds all of it, from as far off as that takes. The walk is of this landscape (its seed) or it is not shown.
+  const journey = state.journeyShown && state.journey?.seed === road.seed ? state.journey : null;
+  const walked = useMemo(() => (journey ? journey.nodes.map((id) => graph.node(id)).filter(Boolean) : null), [journey, graph]);
   // The frame holds the last sites of the trail and every site ahead; the rest of the trail shows where it falls.
-  const view = useMemo(() => createMapView([...sites.trail.slice(-ROAD_MAP.recent), ...sites.ahead, sites.here].filter(Boolean)), [sites]);
+  const view = useMemo(() => (walked?.length
+    ? createMapView([...walked, sites.here].filter(Boolean), { farthest: ROAD_MAP.journey })
+    : createMapView([...sites.trail.slice(-ROAD_MAP.recent), ...sites.ahead, sites.here].filter(Boolean))), [sites, walked]);
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext?.('2d');
@@ -247,11 +253,15 @@ export function RoadMap({ state, onClose }) {
       <div className="road-map" style={{ aspectRatio: `${view.width} / ${view.height}` }}>
         <canvas ref={canvasRef} width={ROAD_MAP.columns} height={Math.round((ROAD_MAP.columns * view.height) / view.width)} aria-hidden="true" />
         <svg viewBox={`0 0 ${view.width} ${view.height}`} role="img" aria-label={`A map with ${road.frontier.length} ${road.frontier.length === 1 ? 'site' : 'sites'} ahead`}>
-          {sites.trail.slice(1).map((site, index) => <polyline key={`t${index}${site.id}`} className="map-way walked" points={line(sites.trail[index].id, site.id)} />)}
-          {road.frontier.map((site) => <polyline key={`f${site.id}`} className={`map-way ahead way-${site.way}`} points={line(site.from, site.id)} />)}
-          {sites.trail.filter((site) => site.id !== road.at).map((site, index) => <polygon key={`s${index}${site.id}`} className={`map-site ${cleared.has(site.id) ? 'cleared' : 'visited'}`} points={MAP_TILE(1.5)} transform={at(site)} />)}
+          {!walked && sites.trail.slice(1).map((site, index) => <polyline key={`t${index}${site.id}`} className="map-way walked" points={line(sites.trail[index].id, site.id)} />)}
+          {!walked && road.frontier.map((site) => <polyline key={`f${site.id}`} className={`map-way ahead way-${site.way}`} points={line(site.from, site.id)} />)}
+          {/* Round 161: the journey: one line through every site walked to, in order, and a mark where it began. */}
+          {walked && walked.length > 1 && <polyline className="map-journey-edge" points={walked.map((node) => place(node).map((value) => value.toFixed(2)).join(',')).join(' ')} />}
+          {walked && walked.length > 1 && <polyline className="map-journey" points={walked.map((node) => place(node).map((value) => value.toFixed(2)).join(',')).join(' ')} />}
+          {walked && walked[0] && <g className="map-journey-start" transform={at(walked[0])}><circle r="1.5" /><title>Where the journey began</title></g>}
+          {!walked && sites.trail.filter((site) => site.id !== road.at).map((site, index) => <polygon key={`s${index}${site.id}`} className={`map-site ${cleared.has(site.id) ? 'cleared' : 'visited'}`} points={MAP_TILE(1.5)} transform={at(site)} />)}
           {sites.here && <g className="map-here" transform={at(sites.here)}><polygon className="ring" points={MAP_TILE(4.2)} /><polygon points={MAP_TILE(2.3)} /><line y2="-5" /><rect x="-1.1" y="-7.2" width="2.2" height="2.2" /></g>}
-          {road.frontier.map((site, index) => sites.ahead[index] && (
+          {!walked && road.frontier.map((site, index) => sites.ahead[index] && (
             <g key={site.id} className={`map-ahead kind-${site.offer.kind}${site.offer.dungeon ? ' dungeon' : ''}${site.id === picked ? ' picked' : ''}${site.recommended ? ' rails' : ''}`} transform={at(sites.ahead[index])}
               role="button" tabIndex="0" aria-label={`${site.offer.dungeon ? `${site.offer.dungeon.name}, beyond ${site.name}` : site.name}: ${KIND[site.offer.kind].label}, ${site.offer.title}`} aria-pressed={site.id === picked}
               onClick={() => setPicked(site.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setPicked(site.id); } }}>
@@ -267,10 +277,17 @@ export function RoadMap({ state, onClose }) {
           ))}
         </svg>
       </div>
+      {/* Round 161 (issue #9): the whole walk so far, painted on the map. */}
+      <div className="button-row journey-row">
+        <button type="button" className="secondary-button" aria-pressed={state.journeyShown === true} onClick={state.toggleJourney} disabled={state.journeyLoading}>
+          {state.journeyShown ? 'Hide the journey' : 'Show Journey so far'}
+        </button>
+        {state.journeyShown && <small role="status">{journey ? `${journey.hops} ${journey.hops === 1 ? 'walk' : 'walks'} from where you began${journey.kept <= journey.hops ? ` (the last ${journey.kept - 1} are kept)` : ''}.` : 'Reading the journey…'}</small>}
+      </div>
       <p className="map-legend"><small>
-        <span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate, which stands in an old place (the stepped gate on the map).{gateLine(road.gate)} The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
+        <span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate, which stands in an old place (the stepped gate on the map).{road.gate?.dungeon ? ` The next is ${road.gate.dungeon.name}${road.gate.hops > 0 ? `, in ${road.gate.hops} ${road.gate.hops === 1 ? 'conversation' : 'conversations'} or more` : ', and it is near'}.` : ''} The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
       </small></p>
-      {chosen && (
+      {chosen && !walked && (
         <section className="map-choice" aria-live="polite">
           <OfferLine offer={chosen.offer} />
           <p className="description">{chosen.offer.character.description}</p>

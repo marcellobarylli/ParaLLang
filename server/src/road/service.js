@@ -15,6 +15,9 @@
 //   progress  the curriculum's marks (pacing.js)
 //   log       the last ROAD.log conversations, newest first, for the journal
 //   narration the id of the narrator's passage for the last arrival (round 156), or null
+//   walk      every site walked to, in order, the start first (round 161): the whole journey, as node ids alone,
+//             since the graph is the same graph every time it is read. The last ROAD.walk of them; `hops` counts
+//             every walk made, also those that have fallen out of the list
 //   dungeon   the id of the legacy dungeon the learner stands in (round 160: a unit's gate is in one), or null
 //
 // Rules: the learner may walk to any site next to a site of the recent trail that is not itself on the trail (the
@@ -32,7 +35,7 @@ import { placeName } from './characters.js';
 import { ROAD_PLACE, buildRoadDefinition, describeActivity, legacyDungeonFor, objectivesOf } from './encounters.js';
 import { PACING, composeCheckpoint, composeReview, emptyProgress, overview, plan, position, record, scoreOf } from './pacing.js';
 
-export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200 });
+export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200, walk: 20000 });
 
 const clone = (value) => structuredClone(value);
 const graphOf = (seed) => graphFor(seed, createTerrain);
@@ -40,7 +43,7 @@ const graphOf = (seed) => graphFor(seed, createTerrain);
 /** A road that has not been walked: the learner stands at the start with the first lesson waiting. */
 export function freshRoad(seed, curriculum) {
   const graph = graphOf(seed);
-  const road = { seed, step: 0, at: graph.start, trail: [graph.start], cleared: [], current: null, progress: emptyProgress(), log: [] };
+  const road = { seed, step: 0, at: graph.start, trail: [graph.start], cleared: [], current: null, progress: emptyProgress(), log: [], walk: [graph.start], hops: 0 };
   const [first] = plan(curriculum, road.progress, 0);
   road.current = first ? { node: graph.start, step: 0, activity: commit(curriculum, road.progress, 0, first, () => false) } : null;
   return road;
@@ -157,6 +160,10 @@ export const roadMethods = {
     // Content may have changed under a save: a site that no longer exists, a lesson that was removed.
     const at = graph.node(stored.at) ? stored.at : graph.start;
     const road = { ...clone(stored), at, trail: stored.trail.includes(at) ? [...stored.trail] : [...stored.trail, at] };
+    // Round 161: a road from before the walk was kept has its trail for one (the sites visited, each once, in order).
+    if (!Array.isArray(road.walk)) road.walk = [...road.trail];
+    if (road.walk.at(-1) !== at) road.walk = [...road.walk, at];
+    if (!Number.isSafeInteger(road.hops)) road.hops = road.walk.length - 1;
     if (road.current && (road.current.node !== at || !objectivesOf(curriculum, road.current.activity).length)) road.current = null;
     return road;
   },
@@ -214,6 +221,7 @@ export const roadMethods = {
         here: { ...site(road.at), dungeon: this.standingIn(road) },
         // And how far the unit's gate is: the conversations it takes at least, and the dungeon it stands in.
         gate: this.gateAhead(curriculum, road),
+        hops: road.hops, // round 161: how many walks the journey is; the walk itself is asked for apart (getRoadWalk)
         current: road.current ? offer(graph.node(road.current.node), road.current.step, road.current.activity) : null,
         trail: road.trail.slice(-ROAD.shownTrail), cleared: road.cleared.slice(-ROAD.shownTrail),
         narration: this.toldView(road.narration ?? null), // round 156: what the narrator said of the last arrival
@@ -268,6 +276,14 @@ export const roadMethods = {
     return { ...road, narration: this.tell(envelope, { event: 'road_enter' })?.id ?? null };
   },
 
+  // Round 161 (issue #9): the whole journey: every site walked to, in order, as node ids. Asked for apart from the
+  // road's view, which is sent after every answer and walk and would carry it each time.
+  async getRoadWalk(learnerId) {
+    const envelope = await this.loadEnvelope(learnerId);
+    const road = this.roadOf(envelope);
+    return { walk: { seed: road.seed, nodes: road.walk, hops: road.hops, kept: road.walk.length } };
+  },
+
   // A walk to a site of the frontier. The conversation the pacing put there is fixed on arrival. While the road's own
   // conversation is under way the move is refused, unless `leave` is true, which drops that conversation.
   async moveOnRoad(learnerId, request) {
@@ -303,6 +319,7 @@ export const roadMethods = {
         ...road, at: nodeId,
         trail: [...road.trail.filter((id) => id !== nodeId), nodeId].slice(-ROAD.trail),
         current: { node: nodeId, step: road.step, activity },
+        walk: [...road.walk, nodeId].slice(-ROAD.walk), hops: road.hops + 1, // round 161: the whole journey
         dungeon: entered?.id ?? null,
         narration: this.tell(staged, arrival, hash(ni * 13 + road.step, nj * 17 - road.step, road.seed + 1212))?.id ?? null,
       };

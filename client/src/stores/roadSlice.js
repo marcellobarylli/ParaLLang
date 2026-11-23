@@ -58,6 +58,11 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
     roadError: null,
     roadResult: null, // what the last finished conversation did: { kind, score, passed?, opened? }
     roadPanel: null, // 'map' | 'curriculum' | 'journal' | null
+    // Round 161 (issue #9): the map's "Show Journey so far". `journey` is the whole walk as the server keeps it
+    // ({ seed, nodes, hops, kept }), read when the switch is turned on and after each walk while it is on.
+    journeyShown: false,
+    journey: null,
+    journeyLoading: false,
 
     // From the world map into the road. The first look creates the road on the server.
     enterRoad: async () => {
@@ -181,10 +186,33 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
     },
     restartRoadConversation: () => { if (get().roadPhase === 'encounter' && !get().isLoading) return get().roadTalk({ restart: true }); return undefined; },
 
+    toggleJourney: async () => {
+      const s = get();
+      if (s.mode !== 'road' || !s.learnerId) return;
+      if (s.journeyShown) { set({ journeyShown: false }); return; }
+      set({ journeyShown: true });
+      await get().readJourney();
+    },
+    readJourney: async () => {
+      const { learnerId } = get();
+      if (!learnerId || !api.getRoadWalk || get().journeyLoading) return;
+      const epoch = guard.epoch();
+      set({ journeyLoading: true });
+      try {
+        const data = await api.getRoadWalk(learnerId);
+        if (epoch !== guard.epoch() || get().learnerId !== learnerId) return;
+        if (Array.isArray(data?.walk?.nodes)) set({ journey: data.walk });
+      } catch (error) {
+        if (epoch === guard.epoch()) set({ journeyShown: false, roadError: error.code === 'RUN_LOST' ? null : `The journey could not be read: ${error.message}` });
+      } finally { if (epoch === guard.epoch()) set({ journeyLoading: false }); }
+    },
+
     openRoadPanel: (panel) => {
       set({ roadPanel: panel, error: null });
       const { learnerId } = get();
       if (learnerId && get().mode === 'road') refreshRoad(learnerId);
+      // The journey shown is read again: the player may have walked since.
+      if (panel === 'map' && get().journeyShown) get().readJourney();
     },
     closeRoadPanel: () => set({ roadPanel: null }),
 

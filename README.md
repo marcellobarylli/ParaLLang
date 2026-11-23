@@ -324,6 +324,9 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   dungeon's node (`legacyDungeonFor` in `server/src/road/encounters.js`: the units go round Ta Prohm, The Kiln and
   Micromort Mountain in order), the map and the way on read "Enter Ta Prohm", and the gate's conversation is played
   in the dungeon's own level. `node client/scripts/dungeon-node-check.mjs` plays the first unit's.
+  From round 161 the whole journey is in the save: `road.walk`, the ids of every site walked to, in order (the last
+  20 000), and `road.hops`. `GET /api/road/walk` serves it, and the map's "Show Journey so far" paints it over the
+  landscape, from as far off as it takes to hold it. `node client/scripts/journey-check.mjs` plays it.
   From round 130 the narration is English prose with a few target-language words dropped in (half the share of the
   character's line, at most 30%). The model lists them with meanings in `narrative_words`; the server keeps those
   that stand in the narration and are not an objective's answer, and the web client shows each as a word to tap for

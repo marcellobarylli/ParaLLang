@@ -197,3 +197,26 @@ test('by default the lines are in full Italian with their translation; the slide
   expect(narrations().at(-1).messages[0].content).toMatch(/Dialogue is entirely in Italian/);
   expect(typeof line().dialogue.translation).toBe('string');
 });
+
+// Round 161 (issue #9): the map's "Show Journey so far".
+test('the journey: turned on, the whole walk is read from the server; walked on and opened again, it is read again', async () => {
+  const game = await onTheRoad();
+  const { s } = game;
+  expect([s().journeyShown, s().journey]).toEqual([false, null]);
+  expect(s().road.hops).toBe(0);
+  await s().toggleJourney();
+  expect(s().journeyShown).toBe(true);
+  expect(s().journey).toEqual({ seed: 4242, nodes: ['0,0'], hops: 0, kept: 1 });
+  await s().roadTalk();
+  await finish(game);
+  const next = s().road.rails;
+  await s().roadContinue();
+  expect(s().road.hops).toBe(1);
+  s().openRoadPanel('map');
+  await vi.waitFor(() => expect(s().journey.nodes).toEqual(['0,0', next]));
+  expect(s().journey.hops).toBe(1);
+  await s().toggleJourney();
+  expect(s().journeyShown).toBe(false);
+  expect(s().journey.nodes).toHaveLength(2); // kept for the next time it is shown
+});
+
