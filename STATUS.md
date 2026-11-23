@@ -46,6 +46,10 @@ unchanged. `node client/scripts/caption-check.mjs` plays it; pictures:
 game on a real phone in these rounds; this change has not been seen on one.
 [Architecture](docs/rounds/166/architecture.md), [findings](docs/rounds/166/findings.md).
 
+**Deployed** on the owner's word ("and deploy"): `main` is at `b2ba4bc`, pushed with `[skip render]`, so the page
+alone was deployed. CI run 45151015231 and the Pages run 45151015525 succeeded (read from GitHub's API; the live page
+is outside the session's network and was not looked at).
+
 ## Addendum 2026-11-23: round 165, a real map under the chart of the Odyssey
 
 The owner asked that the chart of the Odyssey (round 163) have a real world map under it, accurate, and looking
@@ -122,7 +126,7 @@ is the list.
 | 163 | 11-23 | The narrator on a long journey, and a chart of the Odyssey (issue #13): a remark from a hundred walks when the journey is shown, a guidebook entry, and a chart drawn here in place of a public-domain map that could not be fetched | [163](docs/rounds/163/architecture.md) | [findings](docs/rounds/163/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
 | 164 | 11-23 | The journey as the icon; the stitch and the first pull in the lore book (the owner's lore of 2026-11-23); a proposal for building the first pull | [164](docs/rounds/164/architecture.md) | [findings](docs/rounds/164/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
 | 165 | 11-23 | A real map under the chart of the Odyssey: Natural Earth's coast (public domain), the line between stops by sea, drawn as an old sea chart; two stops' coordinates corrected against the coast | [165](docs/rounds/165/architecture.md) | [findings](docs/rounds/165/findings.md) | on `main` with `0f97296` (the page only) |
-| 166 | 11-23 | The narrator's passage stays in the travel caption until the character is ready to talk, with "… is getting ready to talk…" as its last sentence (the owner, from the phone) | [166](docs/rounds/166/architecture.md) | [findings](docs/rounds/166/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 166 | 11-23 | The narrator's passage stays in the travel caption until the character is ready to talk, with "… is getting ready to talk…" as its last sentence (the owner, from the phone) | [166](docs/rounds/166/architecture.md) | [findings](docs/rounds/166/findings.md) | on `main` with `b2ba4bc` (the page only) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

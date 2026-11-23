@@ -13,3 +13,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 7 | 09:51 approx. | 09:53:00 | run | Claude | Cloud session container. Web client 288 tests, server 567, the aesthetic package's 95 and the iPhone app's 320 pass; the client builds | `../findings.md` |
 | 8 | 09:53:00 | 09:53:00 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 9 | 09:53:00 | 09:53:00 | closed | Claude | Status addendum and index row; committed and pushed on the session branch, then to `main` on the owner's word ("and deploy"), the page only | `../architecture.md` |
+| 10 | 09:55 approx. | 09:57:00 | run | Claude | The deploy of `b2ba4bc` (`[skip render]`, the page only): CI run 45151015231 and Pages run 45151015525 succeeded. Read from GitHub's API; the live page is outside the session's network and was not looked at | `../findings.md` |

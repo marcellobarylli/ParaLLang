@@ -60,3 +60,9 @@ called, so how long the caption stays in real play is not measured.
 
 - A passage is told once per arrival and some are marked to be told once ever; a site of which nothing is told
   still shows the bare line. Whether every arrival should have something to read is the owner's to say.
+
+## The deploy (2026-11-23)
+
+On the owner's word ("and deploy"), `main` was moved to `b2ba4bc` with `[skip render]`: the page only, since the
+server is unchanged. CI run 45151015231 and the Pages run 45151015525 succeeded, read from GitHub's API. The live
+page is outside the session's network and was not looked at.
