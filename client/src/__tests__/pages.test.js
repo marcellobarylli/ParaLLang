@@ -113,21 +113,25 @@ test('the stylesheet has no rounded corner, and the panel background follows --p
 });
 
 // Round 150: the icons are a snapshot of the road's map with a walk on it, written by scripts/make-icons.mjs.
-test('the icon is the map with a walk that a round mask does not cut, and every file has its size', async () => {
+// Round 164: the walk is the whole journey of 120 walks on rails, as "Show Journey so far" paints it.
+test('the icon is the map with the whole journey on it, which a round mask does not cut, and every file has its size', async () => {
   const { ICON, ICON_FILES, iconScene, iconPixels, png } = await import('../../scripts/make-icons.mjs');
   const scene = iconScene();
   expect(scene.walk).toHaveLength(ICON.hops + 1);
-  expect(new Set(scene.walk).size).toBe(scene.walk.length);
-  // A maskable icon is safe inside a circle of 80 % of its side; the flag's corners stand 11.4 units over the last site.
-  const masked = iconScene({ frame: ICON.maskable });
-  const [last] = masked.sites.slice(-1);
-  for (const [x, y] of [...masked.line, ...masked.sites, [last[0] - 1.9, last[1] - 11.4], [last[0] + 1.9, last[1] - 11.4]]) expect(Math.hypot(x - ICON.maskable / 2, y - ICON.maskable / 2)).toBeLessThan(ICON.maskable * 0.4);
-  // The walked line is on the picture: some of its pixels have the line's own colour, nothing mixed in.
-  const pixels = iconPixels(scene, 64);
+  expect(scene.walk[0]).toBe('0,0');
+  expect(scene.line).toHaveLength(ICON.hops + 1);
+  // Every site of the journey is inside the picture.
+  for (const [x, y] of scene.line) expect(x > 0 && x < ICON.frame && y > 0 && y < ICON.frame).toBe(true);
+  // A maskable icon is safe inside a circle of 80 % of its side; the flag stands 7.6 units over the last site.
+  const masked = iconScene({ margin: ICON.maskable });
+  const [last] = masked.line.slice(-1);
+  for (const [x, y] of [...masked.line, [last[0] - 1.2, last[1] - 7.6], [last[0] + 1.2, last[1] - 7.6]]) expect(Math.hypot(x - ICON.frame / 2, y - ICON.frame / 2)).toBeLessThan(ICON.frame * 0.4);
+  // The journey's line is on the picture: some of its pixels have the line's own gold, nothing mixed in.
+  const pixels = iconPixels(scene, 192);
   let way = 0;
-  for (let n = 0; n < pixels.length; n += 3) if (pixels[n] === 255 && pixels[n + 1] === 243 && pixels[n + 2] === 207) way += 1;
-  expect(way).toBeGreaterThan(20);
-  expect(png(64, pixels).readUInt32BE(16)).toBe(64);
+  for (let n = 0; n < pixels.length; n += 3) if (pixels[n] === 228 && pixels[n + 1] === 184 && pixels[n + 2] === 71) way += 1;
+  expect(way).toBeGreaterThan(200);
+  expect(png(192, pixels).readUInt32BE(16)).toBe(192);
   for (const [folder, name, size] of ICON_FILES) {
     const file = readFileSync(new URL(name, folder));
     expect([name, file.readUInt32BE(16), file.readUInt32BE(20), file[25]]).toEqual([name, size, size, 2]);

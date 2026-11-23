@@ -33,6 +33,19 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 164, the journey as the icon; the stitch in the lore book
+
+On waking the owner said the eleven rounds were fine and asked for final touches, then the merge. **The icon** of
+the web app and of the iPhone app is now the picture the owner picked: the whole journey of 120 walks painted on
+the map (`client/scripts/make-icons.mjs`). **The lore book** has the owner's new lore in "What the book does not
+say": a stitch is two passes; every character the player meets has come through from the other world and is an
+impostor here; finishing an encounter sends them back through the ground and completes the stitch; a rift is a
+stitch seen from the side; and the player's walk is a seam. It also has **the first pull**, a world event at the
+step from A2 to B1: the map draws back, the whole graph grows out like a wave, and the land is pulled down at
+every site of the walk, for good. The event is not built;
+[`docs/proposals/2026-11-23-the-first-pull.md`](docs/proposals/2026-11-23-the-first-pull.md) says how it could be
+([findings](docs/rounds/164/findings.md), picture: [`01-icon-512.png`](docs/rounds/164/shots/01-icon-512.png)).
+
 ## Addendum 2026-11-23: rounds 153 to 163, the eleven open issues, on one branch awaiting the owner's word
 
 The owner asked for every open issue, one after the other, and went to sleep. All eleven are built, one round each,
@@ -53,6 +66,7 @@ word to give. Each round's addendum is below; this is the list.
 | 161 | #9 | The whole journey, saved and painted on the map |
 | 162 | #11 | Pulled tree models |
 | 163 | 11-23 | The narrator on a long journey, and a chart of the Odyssey (issue #13): a remark from a hundred walks when the journey is shown, a guidebook entry, and a chart drawn here in place of a public-domain map that could not be fetched | [163](docs/rounds/163/architecture.md) | [findings](docs/rounds/163/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 164 | 11-23 | The journey as the icon; the stitch and the first pull in the lore book (the owner's lore of 2026-11-23); a proposal for building the first pull | [164](docs/rounds/164/architecture.md) | [findings](docs/rounds/164/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every
