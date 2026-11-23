@@ -56,3 +56,10 @@ run against the prompts of rounds 153 to 156; the deploy is the first time one w
 - The owner's read of the lore book's new parts, and the questions in its "Not settled" list.
 - The first pull, and the characters going back through the ground: not built.
 - The first live conversations after the deploy: light mode, the narrator's voice, the characters' hints.
+
+## The deploy (2026-11-23, 07:39 to 07:42 UTC)
+
+Merged to `main` as `5ae0627` with rounds 153 to 163. CI run 45132679028 and Pages run 45132679072 succeeded, and
+Render's deployment "main - parallang" for the commit reports success (GitHub's API; the live page and the hosted
+server were not looked at from the cloud session). Issues #1 to #9 were closed; #11 and #13 are open.
+

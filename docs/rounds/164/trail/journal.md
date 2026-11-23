@@ -10,3 +10,5 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 07:38 approx. | 07:40:00 | run | Claude | Cloud session container. Server 567 tests, web client 281, the aesthetic package's 95 and the iPhone app's 320 pass; the client builds with the new icons | `../shots/` |
 | 5 | 07:40:00 | 07:40:00 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 6 | 07:40:00 | 07:40:00 | closed | Claude | Status addendum and index row; committed and pushed on the session branch, to be merged to `main` next on the owner's word | `../architecture.md` |
+| 7 | 07:39:19 | 07:46:00 | decision | Owner | "merge and deploy" (the message that opened the round): the twelve rounds merged to `main` as `5ae0627`, without `[skip render]` | `interview.md` |
+| 8 | 07:42 approx. | 07:46:00 | run | Claude | The deploy of `5ae0627`: CI run 45132679028 and Pages run 45132679072 succeeded; Render's deployment "main - parallang" reports success. Read from GitHub's API, the live page and server not looked at. Issues #1 to #9 closed; #11 and #13 left open | `../findings.md` |
