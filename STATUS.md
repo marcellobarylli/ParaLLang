@@ -46,8 +46,10 @@ too: a stitch **pulls on the tree and shrinks it** (the valley), and past a cert
 worlds are destroyed there and space expands into a massive dark void (the chasm), which is not a gate. **Issue #25** asks for a view of it
 that looks and feels like Dark Souls, and a way for the player to reach it. The book also gains **the followers of
 the void**: a faction within the world that seeks to accelerate the collapse, with roots in Taoism (four passages of
-the *Tao Te Ching*, looked up), written as a sect that has left its own teaching; what they know, and what the
-player is to them, are under "Not settled". No code is changed and nothing is built.
+the *Tao Te Ching*, looked up), written as a sect that has left its own teaching. On the owner's correction the book no longer says that no character
+knows the world is a web: most do not, and a few, the followers among them, know more. Three questions are **left
+open on purpose** (born here or came through; an end or a beginning; the player their enemy or their instrument),
+and a player can oppose the followers or join them. No code is changed and nothing is built.
 [Architecture](docs/rounds/167/architecture.md), [findings](docs/rounds/167/findings.md).
 
 ## Addendum 2026-11-23: round 166, the narrator's passage stays while the conversation loads

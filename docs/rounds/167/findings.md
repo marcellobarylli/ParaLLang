@@ -30,6 +30,9 @@ The lore book read against the owner's message; the statements about Dark Souls 
 
 | (Later) There have to be followers of the void: a faction within the world that seeks to accelerate the collapse and create the void, like the Abyss, with roots in Taoism | "The followers of the void", "What they took from the Taoists", "Why it fits this world" |
 
+| (Correction) The book should not say no character knows: most do not, and special characters know more, the followers among them | "Most characters do not know this", "A few know more"; "How the game holds it" |
+| (Later) Kept open: born here or came through; an end or a beginning or both; enemy or instrument. A player can oppose them or join them, and if they join, are they being used | "Left open on purpose"; the choice under "The followers of the void" |
+
 | Statement about Taoism | What the lookups returned |
 |---|---|
 | Chapter 40: all things are born of being, and being of non-being (*wu*) | Confirmed in several translations |
@@ -59,6 +62,8 @@ The lore book read against the owner's message; the statements about Dark Souls 
 - **The followers are written as a sect that has left its teaching.** The owner asked for roots in Taoism. Its book
   praises emptiness and counsels stillness; a faction that accelerates a collapse is not following it. The lore
   book says so and marks it as the compiler's reading.
+- **Two kinds of open question are kept apart.** "Left open on purpose" is what the game is never to answer;
+  "Not settled" is what the design has still to decide. The owner's message drew that line.
 - **No name, no character.** "The followers of the void" is the owner's working name and is kept.
 - **On `main`, without a deploy.** The owner asked for everything to be pushed to `main`. Nothing the page or the
   server serves has changed, so the push carries `[skip ci] [skip render]` and starts no workflow.

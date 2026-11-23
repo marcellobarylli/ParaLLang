@@ -80,6 +80,28 @@ the collapse and create the void, like the Abyss, with roots in Taoism.
   world is a web, and a faction that seeks the collapse must know something.
 - No name is invented for them, and nothing of them is put into the game.
 
+## Amendment 3 (2026-11-23): a few characters know more; three questions left open on purpose
+
+The owner read Amendment 2 and corrected one thing and set another (Q4 of the interview).
+
+- **The correction.** The section said "No character knows this" of the web, since round 151 (issue #12). The
+  owner: the book should not say that; the early characters and most characters do not know, and there are special
+  characters with a deeper knowledge of the world, of whom the followers of the void are one. The book now says
+  "Most characters do not know this" and "A few know more", and "How the game holds it" speaks of an ordinary
+  character and names what the game already has of the other kind (the more knowing line from B1 on, round 155; the
+  three revelations of issue #7). The question "What the followers know", which Amendment 2 had listed as a tension,
+  is gone; how much they know stays open.
+- **Left open on purpose.** The owner liked three of Amendment 2's questions as questions and wants them kept so:
+  whether the followers were born here or came through; whether they want an end or a beginning, or both; whether
+  the player is their enemy or their instrument. The owner added the choice behind the third: a player can oppose
+  them, becoming their enemy, or join them, and then the question is whether they are only using the player as a
+  tool. The book has them under a new heading, apart from "Not settled", with how they are to be held: raised in
+  the narrative as things nobody knows, or left implicit for the observant player.
+- "Not settled" keeps what is a matter of design and not of mystery: how much the followers know, how they
+  accelerate the collapse, what they are called, how the player's choice is made in play, who else knows more.
+- Not changed: `content/world/knowledge.yaml`, which tells every character the belief about the roads, and the
+  prompts. A character who truly knows the web would need writing; none exists.
+
 ## Tests
 
 None: no code or content the game loads is changed. `python3 tools/round_log_check.py 167`.

@@ -62,3 +62,26 @@
 - **Not asked, and decided here:** which Taoist passages; that the followers have left their own teaching; that
   they may need the foreigner; the five questions under "Not settled".
 
+### Q4 (2026-11-23): the questions listed under "Not settled" at the end of Amendment 2
+- **Question:** as reported to the owner: "What they know: the book says no character knows the world is a web, yet
+  a faction seeking the collapse must know something"; "How they accelerate it, and whether they were born here or
+  came through"; "What they are called"; "Whether they want an end or a beginning"; "What the player is to them:
+  enemy or instrument".
+- **Options offered:** none.
+- **Answer** (the message reads as dictated, and is kept as sent):
+
+> The book doesn't say no character knows sorry maybe we have to update the book on this. I meant the early most
+> characters don't but there are special characters that of course have deeper knowledge of the world and this is
+> one great example of such so these these people know more. I think the rest of the things that aren't settled is
+> really cool like we don't know whether they were born or came through. We don't know if they want an indoor
+> beginning or if they think of both and whether it is an enemy or an instrument at the player that is also a great
+> question I think as a player you can choose to oppose them becoming their enemy and if you choose to join them the
+> question is are they just using you as a tool for their ends? All of this can be kind of sprinkled into the
+> narrative as open questions that we don't know or maybe maybe that's already implicit there so the observant
+> player will realise these things on their own. Please update and then push.
+
+- **Read as:** the book is not to say that no character knows: "the early most characters don't", and special
+  characters know more, the followers being one example. "an indoor beginning" is "an end or beginning". The three
+  questions stay open in the game itself; the player can oppose the followers or join them. Update the book and
+  push ("push" read as before: the session branch and `main`).
+
