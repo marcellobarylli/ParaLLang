@@ -298,6 +298,9 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   what everybody knows and each region's lore from `content/world/knowledge.yaml`, and one thing the character has
   noticed (`world.noticed` on an authored character's sheet; a draw from the region's pools for a character of the
   road, ordinary at the A levels and more knowing from B1 on).
+  From round 168 what everybody knows includes the world's main religion and its teaching that the place under the
+  ground is hell, and some of the road's noticed lines are a believer's or a doubter's (the lore book, "The religion
+  of the place below").
   From round 156 the italic text is a narrator: `narrator` in `content/narration/style_guide.yaml` holds the rules of
   the `narrative` field (a storybook told to "you", in the present tense, that does not finish the thought) and what
   the narrator knows and never says, and `content/narration/passages.yaml` holds the narrator's written passages,

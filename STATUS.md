@@ -33,6 +33,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 168, the religion of the place below
+
+The owner added a main religion: it sort of knows of the gap between the worlds, perhaps its higher-ups know the
+world's nature, and its canon is that the place below is hell or Hades, which keeps the general population afraid,
+away and in the dark. [`docs/lore-book.md`](docs/lore-book.md) has it as "The religion of the place below". **In the
+game:** every character is now told the teaching as something everybody knows
+([`content/world/knowledge.yaml`](content/world/knowledge.yaml): most people keep the one faith, more or less; the
+place under the ground is hell; nobody should go down looking for it), and six of the road's "noticed" lines are a
+believer's, a doubter's or one who goes along. It shows as other details of the world do: now and then, in passing.
+No character is told what is truly below. No live model was called, so how a character speaks of it has not been
+heard. [Architecture](docs/rounds/168/architecture.md), [findings](docs/rounds/168/findings.md).
+
 ## Addendum 2026-11-23: round 167, the lore of what is under the world, and the followers of the void
 
 The owner refined the lore of round 164. [`docs/lore-book.md`](docs/lore-book.md), "What the book does not say",
@@ -149,6 +161,7 @@ is the list.
 | 165 | 11-23 | A real map under the chart of the Odyssey: Natural Earth's coast (public domain), the line between stops by sea, drawn as an old sea chart; two stops' coordinates corrected against the coast | [165](docs/rounds/165/architecture.md) | [findings](docs/rounds/165/findings.md) | on `main` with `0f97296` (the page only) |
 | 166 | 11-23 | The narrator's passage stays in the travel caption until the character is ready to talk, with "… is getting ready to talk…" as its last sentence (the owner, from the phone) | [166](docs/rounds/166/architecture.md) | [findings](docs/rounds/166/findings.md) | on `main` with `b2ba4bc` (the page only) |
 | 167 | 11-23 | The lore of what is under the world: the valleys become chasms; a cave, a world tree at every node, the ways as roots (Dark Souls' Ash Lake named as the model); issue #25 opened for a view of it; the followers of the void, with roots in Taoism | [167](docs/rounds/167/architecture.md) | [findings](docs/rounds/167/findings.md) | on `main` (docs only; nothing deployed) |
+| 168 | 11-23 | The religion of the place below: its canon (the place under the ground is hell) in the lore book and in what every character knows; believers, doubters and people who go along among the road's characters | [168](docs/rounds/168/architecture.md) | [findings](docs/rounds/168/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

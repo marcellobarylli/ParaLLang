@@ -34,11 +34,34 @@ test('the content has the three layers: what everybody knows, a lore for each re
 test('the layers are short, and none states what no character knows', () => {
   const { knowledge } = it;
   const words = (text) => text.split(/\s+/).length;
-  assert.ok(words(knowledge.global) < 220, 'the global blurb is short');
+  assert.ok(words(knowledge.global) < 280, 'the global blurb is short'); // 220 until round 168 added the faith
   for (const region of Object.values(knowledge.regions)) assert.ok(words(region.lore) < 110, 'a region blurb is short');
   const everything = JSON.stringify(knowledge) + [...it.encounters.values()].map(({ character }) => character.world.noticed).join(' ');
   // The lore book, "What the book does not say": the roads are threads, the world is a web or a graph, stitched to others.
   assert.doesNotMatch(everything, /roads? (?:are|is) (?:a )?threads?|\bgraph\b|\bweb\b|stitched|other worlds/i);
+});
+
+// Round 168 (the owner, 2026-11-23): the world's main religion teaches that the place under the ground is hell. That
+// keeps people from going there. Everybody knows the teaching; each person stands to it in their own way.
+test('everybody knows the faith and its hell under the ground, and people stand to it differently', () => {
+  const { knowledge } = it;
+  assert.match(knowledge.global, /keep the one faith, more or less/);
+  assert.match(knowledge.global, /the place under the ground is hell and that nobody should go down looking for it/);
+  assert.match(knowledge.global, /some are devout and afraid, some go along, some\s+doubt what they have never seen for themselves/);
+  const { plain, knowing } = knowledge.regions.the_long_way.noticed;
+  const of = (pool, pattern) => pool.filter((line) => pattern.test(line));
+  // Among ordinary people: the afraid, one who goes along, and one who has never seen it for themselves.
+  assert.equal(of(plain, /in no hurry to see hell|where that door goes/).length, 2);
+  assert.equal(of(plain, /I keep the faith the way I keep the gate/).length, 1);
+  assert.equal(of(plain, /I have never seen it for myself/).length, 1);
+  // Among those who have seen more: doubt of the people who teach it, not knowledge of what is there.
+  assert.equal(of(knowing, /priests|preacher/).length, 2);
+  // The faith is one thing among many a character may have noticed, not the only one.
+  assert.ok(of(plain, /hell|faith|door goes/).length < plain.length / 2);
+  // Nobody says what is truly below: no tree, cave, root of the world or void is in any line about it.
+  for (const line of [...plain, ...knowing].filter((text) => /hell|faith|priest|preacher/.test(text))) assert.doesNotMatch(line, /tree|cave|void|abyss|chasm/i);
+  // And it reaches a character's prompt with the rest of what everybody knows.
+  assert.match(worldFor(knowledge, 'it', 'the_long_way', plain.at(-1)).global, /the place under the ground is hell/);
 });
 
 test('the road acts as a region the model knows, and nothing about that region is written into the content', () => {

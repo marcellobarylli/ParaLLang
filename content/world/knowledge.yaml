@@ -12,6 +12,11 @@
 # Everything here is English and is for the model, never shown to the player. It states only what part VIII and the
 # other parts of the lore book let a character see. The truth (the roads are threads) is in none of it: a `knowing`
 # line may use a sewing word where a road word is expected, and no more.
+#
+# Round 168: the faith. The world's main religion teaches that the place under the ground is hell (the lore book,
+# "The religion of the place below"). Everybody knows the teaching, so it is in `global`; how a person stands to it
+# is their own, so some of the road's `noticed` lines are a believer's, some are of one who goes along, and some a
+# doubter's. None says what is truly below: nobody who says these lines has been.
 global: >-
   Everyone here speaks the one language and always has; nobody learns another, since there is nowhere it would be
   needed. A stranger who speaks a different tongue is rare and slightly alarming: things tend to go their way, doors
@@ -22,7 +27,10 @@ global: >-
   his way home. There are small quick things at the corner of the eye that it is better not to look at, tunes it is
   better not to hum, and notices saying so. In the last few years odd things have started: a sign that says two
   things, a word in the mouth that nobody knows, a seam of light somewhere past the market. People mention them the
-  way they mention the weather, and there is generally a form.
+  way they mention the weather, and there is generally a form. Most people keep the one faith, more or less. It
+  teaches that the place under the ground is hell and that nobody should go down looking for it, so caves, wells
+  and deep cellars get a wide berth. People differ as people do: some are devout and afraid, some go along, some
+  doubt what they have never seen for themselves.
 regions:
   # The generated landscape of the road. It acts as a real region the model already knows, so nothing about that
   # region is written here.
@@ -45,6 +53,10 @@ regions:
         - "Strangers who speak oddly get served quickly round here. Gates open for them. One does not mention it."
         - "There is a milestone on this stretch with no number on it. It has been assessed twice and passed both times."
         - "The dog will not walk the last part of the road at dusk. It walks beside it, in the grass."
+        - "I do not go down into the cellar after dark. Below is below, and I am in no hurry to see hell."
+        - "My aunt will not have a well dug. She says a hole is a door, and everybody knows where that door goes."
+        - "They say hell is under our feet. I have never seen it for myself, and I have dug a good many post holes."
+        - "I keep the faith the way I keep the gate: it was here when I came, and it does no harm to shut it at night."
       knowing:
         - "Where two roads meet there is always a place, and never a place without them. I asked the assessor which came first and he found something to write down."
         - "I once saw this road pull tight, like a line with washing on it, when a foreigner said a word on it."
@@ -54,6 +66,8 @@ regions:
         - "A darn in a sock and the crossroads at home look the same from above. I keep that to myself."
         - "The road is easier to keep to than to leave. I tried leaving it once, to prove a point, and was late for my own point."
         - "My mother called the crossroads the knot. Everybody's mother did. Nobody says it now."
+        - "The priests are very sure what is under the ground, for people who say nobody may go and look."
+        - "A preacher told me hell is below us. I asked how far below. He changed the subject to my soul, which is not deep at all."
   # The dead branch: the Crumbling Market and the temple it has moved into (Ta Prohm; The Kiln is the same place burnt).
   dead_branch:
     lore: >-
