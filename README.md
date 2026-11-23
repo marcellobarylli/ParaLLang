@@ -2,8 +2,6 @@
 
 ParaLLang is a conversational language-learning game. It teaches Italian by default, and Spanish is also available. The prototype is The Crumbling Market: six places on a map, an encounter at each (Portia's tutorial at the entrance, Gerald, Mortimer, Flick, Marginalia, and Errata in the sealed Rift), tracked companion help, a Spellbook of canonical vocabulary with spaced-repetition reviews, a party of saved NPCs with their own conversations, and fragments of the in-world book *The Journey*. For running a session with testers, see [`docs/playtest/guide.md`](docs/playtest/guide.md).
 
-**Just want to play?** See [`PLAY.md`](PLAY.md): hand it to your coding agent, or run `npm run setup` then `npm run dev`.
-
 ## Design notes and project records
 
 - `parallang.md` is the vision and lore; `prototype.md` is the technical blueprint.
@@ -34,7 +32,6 @@ Choose one narration/grading provider in the root `.env`:
 
 - `LLM_PROVIDER=codex-cli`: install the official Codex CLI, run `codex login`, and complete the ChatGPT browser sign-in. API-key login does not satisfy this mode.
 - `LLM_PROVIDER=claude-cli`: install the official Claude Code CLI, run `claude auth login`, and use native `claude.ai` subscription authentication. API keys and third-party providers do not satisfy this mode. A subscription OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) is also accepted and passed to the Claude CLI only; `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL` and the Bedrock/Vertex switches are refused either way.
-- `LLM_PROVIDER=gemini` (round 170): set `GEMINI_API_KEY` (from https://aistudio.google.com/apikey); the default model is `gemini-3.8-flash` (`GEMINI_MODEL` or `LLM_MODEL` changes it). It uses Google's OpenAI-compatible endpoint and falls back to JSON mode when a strict schema is refused.
 - `LLM_PROVIDER=openai`: set `OPENAI_API_KEY`; the default model is `gpt-4o-mini`.
 - `LLM_PROVIDER=ollama`: ensure the configured `OLLAMA_BASE_URL` is already reachable; the default model is `llama3.1`.
 - `LLM_MODEL` optionally selects a model for any provider. When it is blank, `claude-cli` gets `sonnet` (round 126; `LLM_MODEL=default` gives the account's own default model, `haiku` is the fastest) and `codex-cli` uses its own default; ParaLLang never supplies the OpenAI API default to a CLI.

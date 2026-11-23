@@ -4,7 +4,6 @@
   "private": true,
   "workspaces": ["client", "server", "aesthetic"],
   "scripts": {
-    "setup": "node tools/setup.mjs",
     "dev": "concurrently -n client,server -c cyan,green \"npm run dev -w client\" \"npm run dev -w server\"",
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",

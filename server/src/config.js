@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 export const ROOT_DIR = resolve(import.meta.dirname, '..', '..');
 export const ROOT_ENV_PATH = resolve(ROOT_DIR, '.env');
 export const CLI_PROVIDERS = new Set(['codex-cli', 'claude-cli']);
-export const PROVIDERS = new Set(['openai', 'gemini', 'ollama', ...CLI_PROVIDERS]);
+export const PROVIDERS = new Set(['openai', 'ollama', ...CLI_PROVIDERS]);
 
 export function loadRootEnv({ env = process.env, override = false, path = ROOT_ENV_PATH } = {}) {
   return dotenv.config({ path, processEnv: env, override });
@@ -51,18 +51,6 @@ export function resolveLLMConfig(overrides = {}, env = process.env) {
       timeoutMs: parseCliTimeout(overrides.timeoutMs ?? env.LLM_CLI_TIMEOUT_MS),
       runner: overrides.runner,
       childEnv: overrides.childEnv,
-    };
-  }
-  // Round 170: Google Gemini through its OpenAI-compatible endpoint.
-  if (provider === 'gemini') {
-    return {
-      provider,
-      model: sharedModel ?? nonBlank(env.GEMINI_MODEL),
-      apiKey: overrides.apiKey ?? nonBlank(env.GEMINI_API_KEY),
-      baseUrl: overrides.baseUrl,
-      timeoutMs: overrides.timeoutMs,
-      maxRetries: overrides.maxRetries,
-      client: overrides.client,
     };
   }
   if (provider === 'ollama') {

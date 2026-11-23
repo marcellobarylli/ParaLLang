@@ -33,18 +33,6 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-23: round 170, playable by a friend
-
-The owner asked for the game to be playable by a friend whose coding agent sets it up. [`PLAY.md`](PLAY.md) is the
-guide for that agent and for the player, and `npm run setup` (`tools/setup.mjs`) installs, writes `.env` with the
-`claude` or `codex` CLI found on PATH and checks its sign-in without a model call. The friend plays the browser game
-on their own computer and subscription; the hosted page, which spends the owner's, is not offered. Run in the cloud
-container only, where no CLI is signed in, so the path past the sign-in was not walked. The owner then asked for
-**Gemini**: `LLM_PROVIDER=gemini` with a key in `GEMINI_API_KEY` (Google's OpenAI-compatible endpoint,
-`gemini-3.8-flash` by default, a JSON-mode fallback when a strict schema is refused); not called, as there is no key.
-**On `main`** on the owner's word ("push everything").
-[Architecture](docs/rounds/170/architecture.md), [findings](docs/rounds/170/findings.md).
-
 ## Addendum 2026-11-23: round 169, whether the followers of the void are right
 
 The owner set the moral centre of the story. It is **not clear whether the followers of the void are good or
@@ -195,7 +183,6 @@ is the list.
 | 167 | 11-23 | The lore of what is under the world: the valleys become chasms; a cave, a world tree at every node, the ways as roots (Dark Souls' Ash Lake named as the model); issue #25 opened for a view of it; the followers of the void, with roots in Taoism | [167](docs/rounds/167/architecture.md) | [findings](docs/rounds/167/findings.md) | on `main` (docs only; nothing deployed) |
 | 168 | 11-23 | The religion of the place below: its canon (the place under the ground is hell) in the lore book and in what every character knows; believers, doubters and people who go along among the road's characters | [168](docs/rounds/168/architecture.md) | [findings](docs/rounds/168/findings.md) | on `main` with `bb61bb1` (page and server) |
 | 169 | 11-23 | Whether the followers of the void are right: they believe the void is a birthplace; nobody knows; the player chooses; the early encounters say the collapse must be prevented and its proponents speak only later (after Dark Souls) | [169](docs/rounds/169/architecture.md) | [findings](docs/rounds/169/findings.md) | on `main` (docs only; nothing deployed) |
-| 170 | 11-23 | Playable by a friend: `PLAY.md` for the friend's coding agent and `npm run setup`, on the friend's own subscription; a Gemini provider by API key | [170](docs/rounds/170/architecture.md) | [findings](docs/rounds/170/findings.md) | on `main` (page and server) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every
