@@ -48,6 +48,27 @@ book; and the player has been doing the followers' work from the first conversat
 **"Not settled" gains three design questions:** what the signs are; when the proponents first speak; what fostering
 and preventing are in play, and how each ends.
 
+## Amendment (2026-11-23): the creation cycle
+
+The owner's next message (Q2 of the interview) ties the part above to the book's oldest idea: every time a world
+collapses a new world is born; that is a story within a story being created; it is the natural creation cycle; and
+the model is the painted world of Dark Souls.
+
+- The lore book gains **"The creation cycle"** after "Whether the followers are right", with those points. The
+  painted world is from the owner's own notes; that a rotting painted world is burned so that a new one can be
+  painted was looked up this round and is given as players' accounts.
+- **One thing is recorded and not smoothed over.** A message earlier the owner said nobody knows whether the
+  followers' belief is true; this message states the cycle. The book reads them together (this is how the parts fit
+  for whoever writes, and what the followers would say; the game still does not say it) and lists, under "Not
+  settled", whether the cycle is the truth of the world or the followers' doctrine. It also notes that a true cycle
+  would not settle whether the followers are good: the birth costs two places and everyone in them.
+- Five joins are the compiler's, each to a line already in the book or the notes: the new world is *down* (part
+  XI); this world may have begun in somebody's chasm ("It hung in the nothing", part I; stories all the way up); the
+  spores as the mechanism (part VI; the notes); it comes round (part I); and, if the cycle is natural, holding the
+  worlds apart is the fire that was kept.
+- "Not settled" gains three questions: the one above; what the trees are in the cycle; whether the player can go
+  down into a new world.
+
 ## Tests
 
 None: no code or content the game loads is changed. `python3 tools/round_log_check.py 169`.

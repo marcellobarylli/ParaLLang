@@ -25,12 +25,15 @@ The lore book read against the owner's message; the particulars of Dark Souls lo
 | Each character follows their own interest and beliefs | Sixth point |
 | The parallel to Dark Souls, without following its exact story | "The model, again, is Dark Souls" |
 
+| (Next message) Every time a world collapses a new world is born: a story within a story being created; the natural creation cycle; like the painted world | "The creation cycle"; "Not settled" (truth or doctrine) |
+
 | Statement about Dark Souls | What the lookup returned |
 |---|---|
 | One serpent gives the player the quest to link the fire | Confirmed (Kingseeker Frampt) |
 | Another wants the same king defeated so that an Age of Dark begins, and says he resisted nature | Confirmed as players' accounts of his speech (Darkstalker Kaathe) |
 | He is met in the Abyss, after its boss, if the first serpent's way has not been taken | Confirmed |
 | There is an ending for each | Confirmed |
+| A painted world that rots is to be burned so that a new one can be painted (the third game) | Confirmed as players' accounts of Ashes of Ariandel; that its painter made the first game's painted world is a fan theory and is not used |
 | Players disagree about which to trust; one reading has each looking out for itself | Confirmed as a disagreement |
 
 | Changed because of it | Before | Now |
@@ -45,6 +48,8 @@ The lore book read against the owner's message; the particulars of Dark Souls lo
 - **Part VI is left as it is.** It is the compiler's voice, and the compiler believing that nothing grows after
   Collision is now useful: it is the early telling. The line "the end of one world is, some say, the seed of
   another" was already there.
+- **The cycle is written as the owner's, and its standing is flagged.** It could be read as settling what the last
+  message left open. The book keeps the game silent on it either way and asks the owner which it is.
 - **Nothing is put into the game.** The owner asked for it to be added and pushed, not built. What is built today
   puts neither case.
 

@@ -41,7 +41,9 @@ nobody knows whether that is true, though there may be signs of a world being bo
 chooses to foster it or prevent it. The telling is ordered as Dark Souls orders its own: **the early encounters lead
 the player to believe the collapse must be prevented, and only later do its proponents speak.**
 [`docs/lore-book.md`](docs/lore-book.md) has it as "Whether the followers are right". A join of round 167 that had
-called the followers a sect is made two-sided, and the book's own part VI is named as one of the early voices. No
+called the followers a sect is made two-sided, and the book's own part VI is named as one of the early voices. The owner
+added **the creation cycle**: every time a world collapses a new world is born, a story within a story (part XI),
+after Dark Souls' painted world; whether that is the world's truth or the followers' doctrine is put to the owner. No
 code is changed and none of it is built: in the game today neither case is put.
 [Architecture](docs/rounds/169/architecture.md), [findings](docs/rounds/169/findings.md).
 
