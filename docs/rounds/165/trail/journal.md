@@ -15,3 +15,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 9 | 08:27 approx. | 08:30:00 | run | Claude | Cloud session container. Web client 287 tests, server 567, the aesthetic package's 95 and the iPhone app's 320 pass; the client builds | `../findings.md` |
 | 10 | 08:30:00 | 08:30:00 | outcome | Claude | findings.md and Outcome written | `../findings.md` |
 | 11 | 08:30:00 | 08:30:00 | closed | Claude | Status addendum and index row; committed and pushed on the session branch | `../architecture.md` |
+| 12 | 08:40 approx. | 08:41:00 | decision | Owner | "Then deploy", after being told the push to `main` had been blocked by the session's permission check and that the deploy would be the page only | `interview.md` |

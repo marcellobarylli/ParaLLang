@@ -15,3 +15,10 @@
   one was generated from public-domain coast data.
 - **Not asked, and decided here:** that the line between the stops should go by sea; that the frame should widen;
   English names; where the Underworld is drawn. Each is in `../findings.md` under Decision.
+
+### Q2 (2026-11-23): asked at the end of the round
+- **Question:** "Say \"deploy\" and I will try again, page only (the server does not load the chart's files)."
+- **Options offered:** deploy the page, or leave the round on the session branch.
+- **Answer:**
+
+> Then deploy
