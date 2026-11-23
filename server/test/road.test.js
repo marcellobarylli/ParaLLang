@@ -15,7 +15,7 @@ import { characterFor, placeName } from '../src/road/characters.js';
 import { buildRoadDefinition } from '../src/road/encounters.js';
 import { frontierOf, freshRoad, offersFor } from '../src/road/service.js';
 import { api, createRuntime } from './helpers.js';
-import { RoadProvider, answer, fullAnswer, moveTo, road, roadRuntime, startHere, talkHere } from './road-helpers.js';
+import { RoadProvider, answer, fullAnswer, moveTo, road, roadRuntime, setMode, startHere, talkHere } from './road-helpers.js';
 
 test('the landscape is a pure function of its seed, with dry land at the start and water elsewhere', () => {
   const [a, b, other] = [createTerrain(7), createTerrain(7), createTerrain(8)];
@@ -427,6 +427,7 @@ test('a new road is another landscape with the curriculum kept; the dungeon is u
   t.after(runtime.close);
   const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
   assert.equal((await road(runtime, learnerId)).data.road.seed, 11);
+  await setMode(runtime, learnerId, false);
   await talkHere(runtime, learnerId);
   const reset = await api(runtime, '/api/road/reset', { learnerId, method: 'POST', body: {} });
   assert.equal(reset.data.road.seed, 22);

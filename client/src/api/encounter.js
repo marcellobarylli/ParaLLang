@@ -60,6 +60,8 @@ export function createLearningApi({ getSettings = () => loadSettings(), getGemin
     getRoadWalk: (learnerId) => request('/api/road/walk', { learnerId }),
     moveRoad: (learnerId, body) => request('/api/road/move', { learnerId, method: 'POST', body }),
     resetRoad: (learnerId, body = {}) => request('/api/road/reset', { learnerId, method: 'POST', body }),
+    // Round 173: streamlined mode on or off; answers with the road's view.
+    setRoadMode: (learnerId, streamlined) => request('/api/road/mode', { learnerId, method: 'POST', body: { streamlined } }),
     // Round 144: the whole save, for the copy this browser keeps, and the copy put back on a server that lost it.
     exportSave: (learnerId) => request('/api/save', { learnerId }),
     // Round 146: the server's health check, which says where it keeps its saves (round 145). No token is needed.

@@ -21,6 +21,7 @@ const TILT_ANSWERS = { denied: 'This browser refused access to the phone\'s moti
 // Round 125: "Tilt to look". Ticking the box is the tap from which the page may ask iOS for the phone's orientation.
 // Round 153: "Checking": strict (an answer is marked) or light (nothing is marked; the character works out what was meant).
 // Round 144: "Your save": when this browser last copied the save, a download of the copy as a file, and a file put back.
+// Round 173: "Streamlined": on The Journey 2, each unit is one conversation; finishing it completes the unit.
 // Round 172: the sheet is in categories (Audio, Language and learning, Display and controls, Your save, Connection,
 // This build), each a section that opens and closes. Audio holds four volume sliders: Master, Music, Effects (the
 // rain, the thunder and the other sounds of the place) and Voices.
@@ -56,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, treeModels = true, onTreeModels, immersion = IMMERSION.default, onImmersion, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, treeModels = true, onTreeModels, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -129,7 +130,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             )}
           </Group>
         )}
-        {(onImmersion || onLight || onBeginner) && (
+        {(onImmersion || onLight || onBeginner || onStreamlined) && (
           <Group title="Language and learning">
             {onImmersion && (
               <>
@@ -151,6 +152,17 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                 <small>{light
                   ? `Light: nothing is marked. The character works out what you meant, you are shown it in ${languageName ?? 'the language you are learning'}, and the conversation goes on. Each turn is quicker.`
                   : 'Strict: each answer is marked against what the conversation asks for before the character replies.'} It applies from your next answer.</small>
+              </>
+            )}
+            {onStreamlined && (
+              <>
+                <label className="setting-check" htmlFor="settings-streamlined">
+                  <input id="settings-streamlined" type="checkbox" checked={streamlined} onChange={(event) => onStreamlined(event.target.checked)} />
+                  <span>Streamlined</span>
+                </label>
+                <small>{streamlined
+                  ? 'On the road, each unit (Hello and goodbye, Where you are from, ...) is one conversation. Finish it and the unit is done; the next conversation is the next unit. No reviews, repeats or gates.'
+                  : 'On the road, each unit is three lessons, with reviews, a lesson again when one went badly, and a gate to pass before the next unit.'}</small>
               </>
             )}
             {onBeginner && (

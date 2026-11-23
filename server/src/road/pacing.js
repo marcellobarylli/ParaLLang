@@ -11,6 +11,9 @@
 //   checkpoint  the unit's gate: one objective from each of its lessons and some from earlier units, without hints,
 //               taken at least one conversation after the unit's last lesson (a test after a delay, not straight
 //               after teaching). The next unit opens at PACING.checkpointPass.
+//   unit        (round 173, streamlined mode) the whole unit in one conversation: the first objective of each of its
+//               lessons, taught as a lesson is. Finishing it completes the unit, whatever the score, and the next
+//               conversation is the next unit's. No reviews, repairs or gates until the curriculum is finished.
 //
 // How often a review comes depends on how the last conversations went: the target is about 85 % of objectives met
 // cleanly. Above PACING.easyAbove reviews thin out, below PACING.hardBelow each new lesson is followed by one.
@@ -26,7 +29,7 @@ export const PACING = Object.freeze({
   repairGap: 2, // ... once this many conversations have passed
   checkpointPass: 0.8,
   checkpointGap: 1, // conversations between a unit's last lesson (or a failed try) and its checkpoint
-  hints: Object.freeze({ lesson: 3, repair: 2, review: 1, checkpoint: 0 }),
+  hints: Object.freeze({ lesson: 3, unit: 3, repair: 2, review: 1, checkpoint: 0 }),
   escalation: 0.05, // the share of target language rises by this much per turn
   recent: 8, // scores kept
 });
@@ -53,6 +56,27 @@ const lessonState = (progress, id) => progress.lessons?.[id] ?? null;
 const isDone = (progress, id) => (lessonState(progress, id)?.done ?? 0) > 0;
 const passedUnit = (progress, unit) => progress.checkpoints?.[unit.id]?.passed === true;
 
+/**
+ * Round 173: the progress as streamlined mode reads it: a unit of which any lesson was finished (one conversation
+ * covered it) counts as complete. Pure; marks such a unit's checkpoint `streamlined: true`.
+ */
+export function streamlineProgress(curriculum, progress, step) {
+  const touched = curriculum.units.filter((unit) => !passedUnit(progress, unit) && unit.lessons.some((lesson) => isDone(progress, lesson.id)));
+  if (!touched.length) return progress;
+  const checkpoints = { ...(progress.checkpoints ?? {}) };
+  for (const unit of touched) {
+    const before = checkpoints[unit.id];
+    checkpoints[unit.id] = { tries: before?.tries ?? 0, best: before?.best ?? 0, last: before?.last ?? 0, passed: true, step: before?.step ?? step, streamlined: true };
+  }
+  return { ...progress, checkpoints };
+}
+
+/** Round 173: the objectives of a unit conversation (streamlined mode): the first of each of the unit's lessons. */
+export function composeUnit(curriculum, unitId) {
+  const unit = curriculum.units.find((candidate) => candidate.id === unitId);
+  return unit ? unit.lessons.map((lesson) => [lesson.id, lesson.objectives[0].id]) : [];
+}
+
 /** Where the learner is: the first unit whose checkpoint is not passed, and the totals. */
 export function position(curriculum, progress) {
   const unit = curriculum.units.find((candidate) => !passedUnit(progress, candidate)) ?? null;
@@ -73,9 +97,11 @@ const doneLessons = (curriculum, progress) => curriculum.units.flatMap((unit) =>
 /**
  * What may be played now, the recommended conversation first: [{ kind, lessonId?, unitId?, why }]. `step` is the
  * number of conversations finished so far. On rails the first is taken; on the map the others are offered beside it.
+ * Round 173: `streamlined` offers only the current unit, in one conversation, at every site.
  */
-export function plan(curriculum, progress, step) {
+export function plan(curriculum, progress, step, { streamlined = false } = {}) {
   const pos = position(curriculum, progress);
+  if (streamlined && !pos.complete) return [{ kind: 'unit', unitId: pos.unit.id, why: 'The next exercise, in one conversation.' }];
   const done = doneLessons(curriculum, progress);
   const reviewable = done.length >= 2;
   const rate = successRate(progress);
@@ -194,7 +220,15 @@ export function record(progress, activity, score, step) {
     if (!before && !change.done) return; // a review cannot finish a lesson that was never taught
     next.lessons[lessonId] = { done: 0, best: 0, last: 0, step, ...(before ?? {}), ...change, seen: step };
   };
-  if (activity.kind === 'lesson' || activity.kind === 'repair') {
+  if (activity.kind === 'unit') {
+    // Round 173: the whole unit in one conversation: each of its lessons counts as done, and the unit is complete.
+    for (const lessonId of new Set((activity.picks ?? []).map(([id]) => id))) {
+      const before = next.lessons[lessonId];
+      touch(lessonId, { done: (before?.done ?? 0) + 1, best: Math.max(before?.best ?? 0, score), last: score, step, first: before?.first ?? before?.step ?? step });
+    }
+    const before = next.checkpoints[activity.unitId];
+    next.checkpoints[activity.unitId] = { tries: (before?.tries ?? 0) + 1, best: Math.max(before?.best ?? 0, score), last: score, passed: true, step, streamlined: true };
+  } else if (activity.kind === 'lesson' || activity.kind === 'repair') {
     const before = next.lessons[activity.lessonId];
     touch(activity.lessonId, { done: (before?.done ?? 0) + 1, best: Math.max(before?.best ?? 0, score), last: score, step, first: before?.first ?? before?.step ?? step });
   } else {

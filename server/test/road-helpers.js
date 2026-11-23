@@ -35,15 +35,18 @@ export class RoadProvider extends PassingProvider {
   }
 }
 
-export async function roadRuntime(t, { language = 'it', seed = 4242 } = {}) {
+// Round 173: streamlined mode is on by default; the tests of the full pacing switch it off (`streamlined: true` keeps it).
+export async function roadRuntime(t, { language = 'it', seed = 4242, streamlined = false } = {}) {
   const content = loadGameContent({ language });
   const provider = new RoadProvider(content);
   const runtime = await createRuntime({ language, content, provider, serviceOptions: { seedSource: () => seed } });
   t?.after(runtime.close);
   const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
+  if (!streamlined) await setMode(runtime, learnerId, false);
   return { runtime, content, provider, learnerId };
 }
 
+export const setMode = (runtime, learnerId, streamlined) => api(runtime, '/api/road/mode', { learnerId, method: 'POST', body: { streamlined } });
 export const road = (runtime, learnerId) => api(runtime, '/api/road', { learnerId });
 export const moveTo = (runtime, learnerId, nodeId, extra = {}) => api(runtime, '/api/road/move', { learnerId, method: 'POST', body: { nodeId, ...extra } });
 export const startHere = (runtime, learnerId, extra = {}) => api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { road: true, ...extra } });

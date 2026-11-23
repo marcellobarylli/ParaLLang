@@ -10,7 +10,7 @@ import { JsonLearningStorage } from '../src/learning-storage.js';
 import { GitHubSaves, MirroredLearningStorage, githubSavesConfig, saveFilePath } from '../src/github-saves.js';
 import { saveSummary } from '../src/road/service.js';
 import { api, createRuntime, makeTempDir } from './helpers.js';
-import { RoadProvider, road, talkHere } from './road-helpers.js';
+import { RoadProvider, road, setMode, talkHere } from './road-helpers.js';
 
 // GitHub, as far as the server uses it: one repository, branches of files, commits with their messages.
 function fakeGitHub({ repo = 'owner/saves' } = {}) {
@@ -92,7 +92,7 @@ test('a finished conversation is written to a branch of its own as a file that s
   const github = fakeGitHub();
   const { runtime, storage } = await mirrored(t, github);
   const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
-  await road(runtime, learnerId);
+  await setMode(runtime, learnerId, false); // round 173: the full pacing
   await talkHere(runtime, learnerId);
   assert.equal(github.state.commits.length, 0, 'nothing is written while the copy waits');
   await storage.flush();

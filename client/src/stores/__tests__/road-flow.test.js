@@ -17,7 +17,10 @@ function memoryStorage(entries = {}) {
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
 }
 
-async function onTheRoad({ storage = memoryStorage(), server = createRoadServer() } = {}) {
+// Round 173: the full pacing, so streamlined mode is off unless a test's storage says otherwise.
+const fullPacing = () => memoryStorage({ 'parallang.display': JSON.stringify({ streamlined: false }) });
+
+async function onTheRoad({ storage = fullPacing(), server = createRoadServer() } = {}) {
   const store = createGameStore({ api: server.api, storage, dungeon: DUNGEON, atlas: ATLAS });
   const s = () => store.getState();
   await s().initialize();
@@ -240,3 +243,20 @@ test('the journey shown: no remark for a short one; the server\'s remark is kept
   expect(s().guideNote.unread.map((entry) => entry.id)).toContain('the_long_way_round');
 });
 
+
+// Round 173: streamlined mode is on unless switched off: one conversation a unit, and the next is the next unit.
+test('streamlined by default: each unit is one conversation, and switching it off in Settings gives the lessons back', async () => {
+  const ctx = await onTheRoad({ storage: memoryStorage() });
+  const { s } = ctx;
+  expect(s().display.streamlined).toBe(true);
+  expect([s().road.streamlined, s().road.current.kind, s().road.current.unitId]).toEqual([true, 'unit', 'greetings']);
+  await s().roadTalk();
+  await finish(ctx);
+  expect(s().curriculum.position.unitId).toBe('origins');
+  expect(s().road.frontier.every((site) => site.offer.kind === 'unit' && site.offer.unitId === 'origins')).toBe(true);
+  await s().roadContinue();
+  await vi.waitFor(() => expect(s().encounter?.road?.unitId).toBe('origins'));
+  await s().setStreamlined(false);
+  expect(JSON.parse(ctx.storage.values.get('parallang.display')).streamlined).toBe(false);
+  expect([s().road.streamlined, s().road.current.kind]).toEqual([false, 'lesson']);
+});

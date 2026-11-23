@@ -19,6 +19,8 @@
 //             since the graph is the same graph every time it is read. The last ROAD.walk of them; `hops` counts
 //             every walk made, also those that have fallen out of the list
 //   dungeon   the id of the legacy dungeon the learner stands in (round 160: a unit's gate is in one), or null
+//   streamlined  (round 173) false when the learner switched streamlined mode off; absent or true, it is on: each
+//             unit is one conversation, finishing it completes the unit, and every site offers the next unit
 //
 // Rules: the learner may walk to any site next to a site of the recent trail that is not itself on the trail (the
 // frontier; round 143's rule that everything out of the fog is reachable from anywhere). The pacing's recommended
@@ -34,20 +36,41 @@ import { graphFor, parseNodeId } from './graph.js';
 import { placeName } from './characters.js';
 import { ROAD_PLACE, buildRoadDefinition, describeActivity, legacyDungeonFor, objectivesOf } from './encounters.js';
 import { entriesFor, selectPassage } from '../narration.js';
-import { PACING, composeCheckpoint, composeReview, emptyProgress, overview, plan, position, record, scoreOf } from './pacing.js';
+import { PACING, composeCheckpoint, composeReview, composeUnit, emptyProgress, overview, plan, position, record, scoreOf, streamlineProgress } from './pacing.js';
 
 export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200, walk: 20000 });
 
 const clone = (value) => structuredClone(value);
 const graphOf = (seed) => graphFor(seed, createTerrain);
 
+/** Round 173: whether a road is in streamlined mode (on unless switched off). */
+export const isStreamlined = (road) => road?.streamlined !== false;
+const modeOf = (road) => ({ streamlined: isStreamlined(road) });
+
 /** A road that has not been walked: the learner stands at the start with the first lesson waiting. */
-export function freshRoad(seed, curriculum) {
+export function freshRoad(seed, curriculum, streamlined = true) {
   const graph = graphOf(seed);
-  const road = { seed, step: 0, at: graph.start, trail: [graph.start], cleared: [], current: null, progress: emptyProgress(), log: [], walk: [graph.start], hops: 0 };
-  const [first] = plan(curriculum, road.progress, 0);
+  const road = { seed, step: 0, at: graph.start, trail: [graph.start], cleared: [], current: null, progress: emptyProgress(), log: [], walk: [graph.start], hops: 0, streamlined };
+  const [first] = plan(curriculum, road.progress, 0, modeOf(road));
   road.current = first ? { node: graph.start, step: 0, activity: commit(curriculum, road.progress, 0, first, () => false) } : null;
   return road;
+}
+
+/**
+ * Round 173: a road as streamlined mode reads it. A unit that one finished conversation covered is complete, and a
+ * conversation waiting here that is not the next unit's is replaced by it. Deterministic (a unit conversation needs
+ * no clock), so the session started from it and the finish that records it agree. A road not streamlined is unchanged.
+ */
+export function streamline(curriculum, road) {
+  if (!isStreamlined(road)) return road;
+  const progress = streamlineProgress(curriculum, road.progress, road.step);
+  let { current } = road;
+  if (current) {
+    const [first] = plan(curriculum, progress, road.step, { streamlined: true });
+    const same = current.activity.kind === 'unit' && current.activity.unitId === first?.unitId;
+    if (first?.kind === 'unit' && !same) current = { ...current, activity: commit(curriculum, progress, road.step, first, () => false) };
+  }
+  return progress === road.progress && current === road.current ? road : { ...road, progress, current };
 }
 
 // An activity as it is fixed when the learner arrives: a review and a checkpoint get their objectives then.
@@ -55,6 +78,7 @@ function commit(curriculum, progress, step, activity, isDueObjective) {
   const { why, ...kept } = activity;
   if (activity.kind === 'review') return { ...kept, picks: composeReview(curriculum, progress, step, isDueObjective) };
   if (activity.kind === 'checkpoint') return { ...kept, picks: composeCheckpoint(curriculum, progress, activity.unitId) };
+  if (activity.kind === 'unit') return { ...kept, picks: composeUnit(curriculum, activity.unitId) };
   return kept;
 }
 
@@ -86,7 +110,7 @@ export function frontierOf(graph, road) {
  */
 export function offersFor(graph, road, curriculum) {
   const frontier = frontierOf(graph, road);
-  const options = plan(curriculum, road.progress, road.step);
+  const options = plan(curriculum, road.progress, road.step, modeOf(road));
   if (!frontier.length || !options.length) return { frontier, rails: null, offers: new Map() };
   const [i, j] = parseNodeId(road.at);
   const next = frontier.filter((entry) => entry.from === road.at);
@@ -157,6 +181,12 @@ export const roadMethods = {
     const curriculum = this.curriculum();
     const stored = envelope.road;
     if (!stored) return freshRoad(this.roadSeed(), curriculum);
+    return streamline(curriculum, this.wholeRoad(stored));
+  },
+
+  // A stored road made whole, before streamlined mode reads it.
+  wholeRoad(stored) {
+    const curriculum = this.curriculum();
     const graph = graphOf(stored.seed);
     // Content may have changed under a save: a site that no longer exists, a lesson that was removed.
     const at = graph.node(stored.at) ? stored.at : graph.start;
@@ -222,6 +252,7 @@ export const roadMethods = {
         here: { ...site(road.at), dungeon: this.standingIn(road) },
         // And how far the unit's gate is: the conversations it takes at least, and the dungeon it stands in.
         gate: this.gateAhead(curriculum, road),
+        streamlined: isStreamlined(road), // round 173
         hops: road.hops, // round 161: how many walks the journey is; the walk itself is asked for apart (getRoadWalk)
         current: road.current ? offer(graph.node(road.current.node), road.current.step, road.current.activity) : null,
         trail: road.trail.slice(-ROAD.shownTrail), cleared: road.cleared.slice(-ROAD.shownTrail),
@@ -267,6 +298,8 @@ export const roadMethods = {
   gateAhead(curriculum, road) {
     const { unit, complete } = position(curriculum, road.progress);
     if (complete || !unit) return null;
+    // Round 173: streamlined mode has no gates: the unit is complete with its one conversation.
+    if (isStreamlined(road)) return { unitId: unit.id, unitTitle: unit.title, hops: 1, dungeon: null };
     const pending = unit.lessons.filter((lesson) => !(road.progress.lessons?.[lesson.id]?.done > 0)).length;
     const dungeon = legacyDungeonFor(this.content.dungeons, curriculum, unit.id);
     return { unitId: unit.id, unitTitle: unit.title, hops: pending + (pending > 0 ? PACING.checkpointGap : 0), dungeon: dungeon ? { id: dungeon.id, name: dungeon.name } : null };
@@ -395,10 +428,16 @@ export const roadMethods = {
     const missed = definition.encounter.objectives.filter((objective) => !passed.has(objective.id)).length;
     const hinted = definition.encounter.objectives.filter((objective) => passed.has(objective.id) && !corrected.has(objective.id) && (session.reveals?.[objective.id] ?? []).length > 0).length;
     const score = scoreOf({ total, corrected: corrected.size, hinted, missed });
-    const { activity } = stored.current;
-    const before = position(curriculum, stored.progress);
+    // Round 173: the conversation's own activity is recorded (in streamlined mode the one waiting may have been
+    // replaced by the unit's while an older conversation was under way). Streamlined, a unit that the conversation
+    // covered is complete.
+    const activity = session.road.activity ?? stored.current.activity;
+    const streamlined = isStreamlined(stored);
+    const was = streamlined ? streamlineProgress(curriculum, stored.progress, stored.step) : stored.progress;
+    const before = position(curriculum, was);
     const step = stored.step + 1;
-    const progress = record(stored.progress, activity, score, step);
+    const recorded = record(was, activity, score, step);
+    const progress = streamlined ? streamlineProgress(curriculum, recorded, step) : recorded;
     const after = position(curriculum, progress);
     const result = {
       kind: activity.kind, title: definition.road.title, score: Math.round(score * 100) / 100,
@@ -424,17 +463,39 @@ export const roadMethods = {
       const envelope = await this.loadEnvelope(learnerId);
       const curriculum = this.curriculum();
       const staged = clone(envelope);
-      const fresh = freshRoad(this.roadSeed(), curriculum);
+      const fresh = freshRoad(this.roadSeed(), curriculum, isStreamlined(envelope.road));
       if (request?.forget !== true && envelope.road) {
-        fresh.progress = envelope.road.progress;
+        fresh.progress = isStreamlined(fresh) ? streamlineProgress(curriculum, envelope.road.progress, envelope.road.step) : envelope.road.progress;
         fresh.step = envelope.road.step;
         fresh.log = envelope.road.log;
-        const [first] = plan(curriculum, fresh.progress, fresh.step);
+        const [first] = plan(curriculum, fresh.progress, fresh.step, modeOf(fresh));
         fresh.current = first ? { node: fresh.at, step: fresh.step, activity: commit(curriculum, fresh.progress, fresh.step, first, this.isDueObjective(envelope)) } : null;
       }
       staged.road = this.setOut(staged, fresh);
       await this.storage.save(staged);
       if (this.encounters.get(learnerId)?.road) this.encounters.delete(learnerId);
+      return this.roadView(staged);
+    });
+  },
+
+  // Round 173: streamlined mode on or off (Settings). Stored on the road; switching it on completes every unit that a
+  // finished conversation covered, and the conversation waiting here becomes the next unit's.
+  async setRoadMode(learnerId, request) {
+    assertLearnerId(learnerId);
+    if (typeof request?.streamlined !== 'boolean') throw validationError('streamlined must be true or false.');
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const curriculum = this.curriculum();
+      const staged = clone(envelope);
+      const road = envelope.road ? this.wholeRoad(envelope.road) : freshRoad(this.roadSeed(), curriculum, request.streamlined);
+      staged.road = streamline(curriculum, { ...road, streamlined: request.streamlined });
+      // Switched off, a unit conversation waiting here becomes the pacing's own choice.
+      if (!request.streamlined && staged.road.current?.activity.kind === 'unit') {
+        const [first] = plan(curriculum, road.progress, road.step);
+        staged.road.current = first ? { ...road.current, activity: commit(curriculum, road.progress, road.step, first, this.isDueObjective(envelope)) } : null;
+      }
+      if (!envelope.road) staged.road = this.setOut(staged, staged.road);
+      await this.storage.save(staged);
       return this.roadView(staged);
     });
   },

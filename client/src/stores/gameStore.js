@@ -669,6 +669,8 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         if (wasRoad && get().connection === 'ready') { set({ phase: 'world' }); await get().enterRoad(); }
       },
 
+      // Round 173: streamlined mode: kept in this browser and told to the server's road.
+      setStreamlined: (on) => { set({ display: saveDisplay({ ...get().display, streamlined: on !== false }, storage) }); return get().syncRoadMode(); },
       // Round 144: on The Journey 2, whether the way on is chosen for the player.
       setRails: (on) => set({ display: saveDisplay({ ...get().display, rails: on !== false }, storage) }),
       // Round 144: this browser's copy of the save as a file's text (a fresh copy when the server answers), and a

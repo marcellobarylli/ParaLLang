@@ -16,8 +16,9 @@ vi.setConfig({ testTimeout: 30_000 });
 afterEach(cleanup);
 afterAll(cleanUp);
 
+// Round 173: these tests play the full pacing, so streamlined mode is off in this browser.
 function memoryStorage() {
-  const values = new Map();
+  const values = new Map([['parallang.display', JSON.stringify({ streamlined: false })]]);
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
 }
 const silent = { speaker: { supported: false, speaking: false, speak() {}, stop() {}, prime() {} }, listener: { supported: false, listening: false, start() { return false; }, stop() {} } };

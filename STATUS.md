@@ -33,6 +33,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-23: round 173, streamlined mode
+
+**Streamlined**, in Settings under Language and learning, on by default: on the road each unit (Hello and goodbye,
+Where you are from, ...) is one conversation of the first objective of each of its lessons; finishing it completes
+the unit whatever the score, and every site ahead offers the next unit. No reviews, repairs or gates until the
+curriculum is finished. Switching it on completes a unit already begun. Off, the full pacing of round 144 is back.
+Kept on the road (`POST /api/road/mode`). Not played in a browser.
+[Architecture](docs/rounds/173/architecture.md), [findings](docs/rounds/173/findings.md).
+
 ## Addendum 2026-11-23: round 172, quieter rain and an Audio category
 
 Rain is about six times quieter and falls 15 % of the time (was 30 %). Settings is in categories; Audio holds Master,
@@ -204,6 +213,7 @@ is the list.
 | 170 | 11-23 | A local setup for friends (`PLAY.md`, `npm run setup`, a Gemini provider): withdrawn by the owner and reverted (`456a521`); its records are in the history of `d9165cd` | none | none | reverted on `main` |
 | 171 | 11-23 | Friends play the hosted link on Gemini: a friend code, their turns on the server's `GEMINI_API_KEY` or their own pasted key, three clear steps when no model is available | [171](docs/rounds/171/architecture.md) | [findings](docs/rounds/171/findings.md) | on `main` (page and server) |
 | 172 | 11-23 | Rain far quieter (on its own effects bus) and 15 % of the time; Settings in categories, with Audio's Master, Music, Effects and Voice volumes | [172](docs/rounds/172/architecture.md) | [findings](docs/rounds/172/findings.md) | on `main` (page and server) |
+| 173 | 11-23 | Streamlined mode, on by default: one conversation a unit, finishing it completes the unit, every site offers the next unit | [173](docs/rounds/173/architecture.md) | [findings](docs/rounds/173/findings.md) | session branch |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

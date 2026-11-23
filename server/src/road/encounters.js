@@ -62,6 +62,7 @@ export function describeActivity({ curriculum, seed, node, step, activity, curre
     : activity.kind === 'checkpoint' ? roleFor(seed, node, step, CHECKPOINT_ROLES)
       : roleFor(seed, node, step, unit.roles);
   const title = activity.kind === 'lesson' ? lesson.title
+    : activity.kind === 'unit' ? unit.title // round 173: streamlined mode, the whole unit at once
     : activity.kind === 'repair' ? `${lesson.title}, again`
       : activity.kind === 'checkpoint' ? `The gate: ${unit.title}` : 'Old words, mixed';
   const character = characterFor({ seed, node, step, role, ratio: stage.ratio, focus: { vocabulary: unit.title, grammar: unit.grammar } });
@@ -81,7 +82,7 @@ export function describeActivity({ curriculum, seed, node, step, activity, curre
 export function buildRoadDefinition({ curriculum, language, seed, node, step, activity, currentUnitId, knowledge = null, dungeons = null }) {
   const { unit, stage, lesson, title, character, dungeon } = describeActivity({ curriculum, seed, node, step, activity, currentUnitId, dungeons });
   const first = character.name.split(' ')[0];
-  const teaches = activity.kind === 'lesson' || activity.kind === 'repair';
+  const teaches = activity.kind === 'lesson' || activity.kind === 'repair' || activity.kind === 'unit';
   const source = objectivesOf(curriculum, activity);
   if (!source.length) throw new Error(`The activity ${JSON.stringify(activity)} has no objectives in this curriculum.`);
   const byId = curriculum.vocabulary.byId;

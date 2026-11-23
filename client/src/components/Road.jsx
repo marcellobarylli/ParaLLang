@@ -16,6 +16,7 @@ import OdysseyChart from './OdysseyChart.jsx';
 
 export const KIND = Object.freeze({
   lesson: { label: 'New', mark: 'N', what: 'New words' },
+  unit: { label: 'Unit', mark: 'U', what: 'The whole unit in one conversation' }, // round 173: streamlined mode
   review: { label: 'Review', mark: 'R', what: 'Earlier words, mixed' },
   repair: { label: 'Again', mark: 'A', what: 'A lesson again' },
   checkpoint: { label: 'Gate', mark: 'G', what: 'The gate of the unit, without hints' },
@@ -296,7 +297,7 @@ export function RoadMap({ state, onClose }) {
         </aside>
       )}
       <p className="map-legend"><small>
-        <span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate, which stands in an old place (the stepped gate on the map).{road.gate?.dungeon ? ` The next is ${road.gate.dungeon.name}${road.gate.hops > 0 ? `, in ${road.gate.hops} ${road.gate.hops === 1 ? 'conversation' : 'conversations'} or more` : ', and it is near'}.` : ''} The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
+        {road.streamlined && <><span className="kind-tag kind-unit">U</span> a whole unit in one conversation (streamlined, in Settings) · </>}<span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate, which stands in an old place (the stepped gate on the map).{road.gate?.dungeon ? ` The next is ${road.gate.dungeon.name}${road.gate.hops > 0 ? `, in ${road.gate.hops} ${road.gate.hops === 1 ? 'conversation' : 'conversations'} or more` : ', and it is near'}.` : ''} The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
       </small></p>
       {chosen && !walked && (
         <section className="map-choice" aria-live="polite">
