@@ -311,7 +311,7 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   the character is ready to talk, with what the game is doing ("On the way to…", "… is getting ready to talk…") as
   its last sentence (`RoadCaption` in `Road.jsx`, the same in `DungeonScreen.jsx`);
   `node client/scripts/caption-check.mjs` plays it.
-  From round 173 the page opens on a title screen that is the road's: the landscape of the player's road (or, for a
+  From round 175 the page opens on a title screen that is the road's: the landscape of the player's road (or, for a
   new player, of a seed drawn in the browser and proposed to the server with `GET /api/road?seed=`) seen from above
   the clouds and turning slowly, with the weather of the moment, and one button, The Journey 2, which zooms the
   camera down into the site (`TitleScreen` in `DungeonScreen.jsx`, `title` and `descend` in `roadDirector.js`, the
@@ -323,7 +323,7 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   From round 157 there is a guidebook: `content/narration/guidebook.yaml` holds its entries (a title, a text and
   the event that enters each), a save keeps the entries a learner has under `guidebook`, `GET /api/guidebook` lists
   them and `POST /api/guidebook/read` marks them read. A new entry is told on the card of the place where it was
-  entered, and the top bar's "?" opens the guidebook (from round 173 its menu's Guidebook row does).
+  entered, and the top bar's "?" opens the guidebook (from round 175 its menu's Guidebook row does).
   `node client/scripts/guidebook-check.mjs` plays it.
   From round 158 deep truths about the world exist only in the language being learned:
   `content/languages/<code>/lore/truths.yaml` holds the pack's untranslatable texts (no field for a translation),

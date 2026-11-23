@@ -171,14 +171,14 @@ function renderScreen(options = {}) {
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
-// Round 173: a reload opens on the title; the run resumes where it was when its place is entered from the world map.
+// Round 175: a reload opens on the title; the run resumes where it was when its place is entered from the world map.
 async function resumeRun(user) {
   await titleReady();
   await toPlaces(user);
   await user.click(screen.getByRole('button', { name: 'Enter Ta Prohm' }));
 }
 
-// Round 173: how many are in the party, as the menu's Party row says (the menu is opened and closed again).
+// Round 175: how many are in the party, as the menu's Party row says (the menu is opened and closed again).
 async function partyCount(user) {
   await user.click(screen.getByRole('button', { name: /^Menu/ }));
   const label = within(screen.getByRole('navigation', { name: 'Game menu' })).getByLabelText(/in your party$/).getAttribute('aria-label');
@@ -202,7 +202,7 @@ test('a whole run on the screen: title, world map, temple map, seven conversatio
 
   // Attract: the title and Enter. The level is a still backdrop here (no WebGL in jsdom).
   expect(screen.getByRole('heading', { name: 'ParaLLang' })).toBeTruthy();
-  await titleReady(); // round 173: the title is the road's; the learner and the language arrive behind it
+  await titleReady(); // round 175: the title is the road's; the learner and the language arrive behind it
   await toPlaces(user);
 
   // The world map: Ta Prohm is open, its neighbours are known, The Bone Dome is under the fog. (Round 133: The Kiln

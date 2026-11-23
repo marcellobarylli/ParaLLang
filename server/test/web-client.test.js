@@ -47,7 +47,7 @@ function newStore(storage = memoryStorage(HALF)) {
   return { store, storage, s: () => store.getState() };
 }
 
-// Round 173: a reload opens on the title; the run resumes where it was when its place is first entered.
+// Round 175: a reload opens on the title; the run resumes where it was when its place is first entered.
 async function reopen(s) {
   s().enter();
   await s().enterPlace('ta_prohm');

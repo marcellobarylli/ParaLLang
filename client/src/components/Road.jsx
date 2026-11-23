@@ -156,7 +156,7 @@ export function HubCard({ state }) {
         </>
       )}
       {roadError && <p className="problem" role="alert">{roadError}</p>}
-      {/* Round 173: the map, the curriculum and the ways out are in the top bar and its menu, as everywhere. */}
+      {/* Round 175: the map, the curriculum and the ways out are in the top bar and its menu, as everywhere. */}
       <RailsSwitch state={state} />
     </section>
   );
@@ -296,7 +296,7 @@ export function RoadMap({ state, onClose, closeLabel = 'Back to the road' }) {
           <OfferLine offer={chosen.offer} />
           <p className="description">{chosen.offer.character.description}</p>
           <small className="way-why">{chosen.offer.dungeon ? `${chosen.offer.dungeon.name}, beyond ${chosen.name}` : chosen.name}, by {WAY[chosen.way] ?? 'a way'}{chosen.offer.why ? ` · ${chosen.offer.why}` : ''}</small>
-          {/* Round 173: from a conversation under way too: it is left unfinished, as Leave leaves it. */}
+          {/* Round 175: from a conversation under way too: it is left unfinished, as Leave leaves it. */}
           <button type="button" className="primary-button big-button" onClick={() => state.roadTravel(chosen.id)} disabled={busy}>{leaving ? 'Leave the conversation and walk here' : chosen.offer.dungeon ? `Enter ${chosen.offer.dungeon.name}` : 'Walk here'}</button>
           {leaving && <small className="way-why">{state.encounter.character?.name ?? 'They'} will not have let you pass; the conversation can be had again later.</small>}
         </section>

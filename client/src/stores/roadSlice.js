@@ -9,7 +9,7 @@
 //   world --enterRoad--> hub --roadTalk--> encounter --(resolved) roadContinue | roadTravel(id)--> travel --> encounter
 //   encounter (ongoing) --leaveRoadConversation--> hub        hub --leaveRoad--> world
 //
-// Round 173: the title screen (the dungeon store's `attract` phase) is the road's: it shows the landscape of
+// Round 175: the title screen (the dungeon store's `attract` phase) is the road's: it shows the landscape of
 // `titleSeed` from above the clouds, over `titleAt`, both remembered in this browser (TITLE_KEY) from the last road
 // read, or a seed drawn here for a new player. While it is up the road is read (preloadRoad), and a new player's road
 // is made on that same seed. startJourney goes from the title into the road; toTitle comes back. From the map a
@@ -21,7 +21,7 @@
 
 import { clampImmersion } from '../display.js';
 
-// Round 173: the landscape the title screen shows, kept in this browser: { seed, at }.
+// Round 175: the landscape the title screen shows, kept in this browser: { seed, at }.
 export const TITLE_KEY = 'parallang.title';
 const SEED_MAX = 2 ** 31 - 1;
 /** The title's landscape from `storage`, or a new seed (and no site: the landscape's start) when there is none. */
@@ -84,11 +84,11 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
     journey: null,
     journeyLoading: false,
     journeyRemark: null, // round 163: the narrator's remark on the journey shown ({ id, segments }), or null
-    titleSeed: title.seed, // round 173: the landscape of the title screen
+    titleSeed: title.seed, // round 175: the landscape of the title screen
     titleAt: title.at, // and the site it looks down on (null: the landscape's start)
-    journeyStarting: false, // round 173: the title's button was pressed and the road is not here yet
+    journeyStarting: false, // round 175: the title's button was pressed and the road is not here yet
 
-    // Round 173: the road read while the title is up. The road it brings (and, for a new player, makes on the
+    // Round 175: the road read while the title is up. The road it brings (and, for a new player, makes on the
     // title's seed) is kept, so the start finds the world loaded.
     preloadRoad: async () => {
       const s = get();
@@ -103,7 +103,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       } catch { /* the start reads it again and says what went wrong */ }
     },
 
-    // Round 173: the title's one button: into the road. The camera zooms down once the road is here.
+    // Round 175: the title's one button: into the road. The camera zooms down once the road is here.
     startJourney: async () => {
       const s = get();
       if (!['attract', 'world'].includes(s.phase) || s.mode === 'road' || s.journeyStarting) return;
@@ -111,7 +111,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       try { await get().enterRoad(); } finally { set({ journeyStarting: false }); }
     },
 
-    // Round 173: back to the title screen, from the road or from a place of the world map. A conversation under way
+    // Round 175: back to the title screen, from the road or from a place of the world map. A conversation under way
     // stays on the server, as it does when the road is left.
     toTitle: () => {
       const s = get();
@@ -191,7 +191,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       const s = get();
       const resolved = s.roadPhase === 'encounter' && s.encounter?.state === 'resolved';
       if (s.mode !== 'road' || !s.road || !s.learnerId || s.roadTravelling || s.encounterLoading || s.isLoading) return;
-      // Round 173: from the map, a conversation under way may be left unfinished to walk on.
+      // Round 175: from the map, a conversation under way may be left unfinished to walk on.
       const leaving = s.roadPhase === 'encounter' && s.encounter?.state === 'ongoing';
       if (s.roadPhase !== 'hub' && !resolved && !leaving) return;
       if (!s.road.frontier.some((site) => site.id === nodeId)) return;

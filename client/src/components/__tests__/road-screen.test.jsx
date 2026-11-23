@@ -28,7 +28,7 @@ async function mount() {
   const useStore = createGameStore({ api: server.api, storage: memoryStorage(), dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
-  // Round 173: the title screen's one button sets out on the road.
+  // Round 175: the title screen's one button sets out on the road.
   await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
   // The first road of a process loads the curriculum (about a second, more on a busy machine).
   await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 });
@@ -114,7 +114,7 @@ test('the curriculum panel shows every stage with the unit the player is in and 
   expect(panel.querySelector('.lessons .done').textContent).toContain('100 %');
 });
 
-// Round 173: the title screen offers The Journey 2 alone; the top bar has the map and the menu everywhere, the map
+// Round 175: the title screen offers The Journey 2 alone; the top bar has the map and the menu everywhere, the map
 // opens over a conversation, and a conversation can be left unfinished from the menu or by walking off from the map.
 test('the title offers the journey alone; the map and the menu are at hand in a conversation, which can be left unfinished', async () => {
   const server = createRoadServer();

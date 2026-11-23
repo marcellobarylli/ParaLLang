@@ -78,7 +78,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
     if (stored?.dungeonId && bundled.has(stored.dungeonId)) dungeon = bundled.get(stored.dungeonId);
   } catch { /* no storage: the first dungeon */ }
   const startIndex = (of) => Math.max(0, of.sites.findIndex((site) => site.id === of.start));
-  // Round 173: a reload opens on the title. The place the player was last in resumes its run where it was the first
+  // Round 175: a reload opens on the title. The place the player was last in resumes its run where it was the first
   // time it is entered from the world map (as a reload itself used to): at the site the player stands at, or on the
   // victory screen of a finished run.
   const openedWith = dungeon;
@@ -381,7 +381,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
             }
             takeView(view);
             if (api.getParty) refreshParty(identity.learnerId); // beside the map; the title does not wait for it
-            // Round 173: the title screen is The Journey 2's. While it is up the road is read (and, for a new player,
+            // Round 175: the title screen is The Journey 2's. While it is up the road is read (and, for a new player,
             // made on the landscape the title shows), so that the world is loaded by the time the player starts.
             // A dungeon's run resumes when its place is entered from the world map.
             if (get().phase === 'attract' && get().mode !== 'road') get().preloadRoad();

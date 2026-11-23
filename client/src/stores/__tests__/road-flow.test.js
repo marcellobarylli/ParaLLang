@@ -241,7 +241,7 @@ test('the journey shown: no remark for a short one; the server\'s remark is kept
 });
 
 
-// Round 173: the title screen is the road's. It shows a landscape before the server answers, reads the road behind
+// Round 175: the title screen is the road's. It shows a landscape before the server answers, reads the road behind
 // it (a new player's road is made on that same landscape), and its button goes straight into the road.
 test('the title shows a landscape at once, the road is read behind it on that seed, and the start goes into the road', async () => {
   const { TITLE_KEY } = await import('../roadSlice.js');

@@ -462,7 +462,7 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .settings-group[open] summary::after { content: '−'; }
 .settings-group-body { display: grid; gap: .45rem; padding-bottom: .6rem; }
 
-/* Round 173: the title screen. The road's landscape from above the clouds fills the screen; over it the name, and at
+/* Round 175: the title screen. The road's landscape from above the clouds fills the screen; over it the name, and at
    the foot its one button. Until the 3D view has started a sky stands in, with clouds drifting across it, so the
    page shows something at once. */
 .at-title .level { background: linear-gradient(180deg, #4f7398 0%, #86a6c2 42%, #c8d6df 74%, #e7ece9 100%); }
@@ -481,14 +481,14 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .title-screen .problem { width: min(460px, 100%); text-align: left; }
 .phase-title .hud { background: none; justify-content: flex-end; }
 
-/* Round 173: the top bar is the same everywhere: the map and the menu, on the right. */
+/* Round 175: the top bar is the same everywhere: the map and the menu, on the right. */
 .hud nav .menu-button { position: relative; }
 .hud nav .menu-button .due-badge { margin-left: .35rem; }
 @media (max-width: 720px) {
   .hud nav .menu-button > span[aria-hidden="true"]:first-child { margin-right: .15rem; }
 }
 
-/* Round 173: the game menu, over whatever is on the screen; a tap beside it closes it. */
+/* Round 175: the game menu, over whatever is on the screen; a tap beside it closes it. */
 .menu-overlay { z-index: 9; display: grid; justify-items: end; align-content: start; background: rgb(10 11 10 / .55); padding: max(.5rem, env(safe-area-inset-top)) max(.5rem, env(safe-area-inset-right)) .5rem max(.5rem, env(safe-area-inset-left)); }
 .game-menu { box-sizing: border-box; width: min(360px, 100%); display: grid; gap: .6rem; background: var(--panel), rgb(30 32 31 / .94); border: 2px solid; border-color: var(--hi) var(--lo) var(--lo) var(--hi); box-shadow: 0 0 0 1px #000; padding: .8rem .9rem 1rem; }
 .menu-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }

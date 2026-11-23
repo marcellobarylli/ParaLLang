@@ -79,7 +79,7 @@ function landAt(terrain, x, z, h) {
 }
 
 /**
- * Round 173: the colour of the ground at (x, z) as the map paints it, before its light and its height lines, as
+ * Round 175: the colour of the ground at (x, z) as the map paints it, before its light and its height lines, as
  * [r, g, b] in 0..1: water by its depth, land by its kind and biome. The title screen's far landscape is painted
  * with it, so the two agree.
  */

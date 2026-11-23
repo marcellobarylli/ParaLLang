@@ -439,7 +439,7 @@ test('a new road is another landscape with the curriculum kept; the dungeon is u
   assert.equal(dungeon.data.progress.clearedSiteIds.length, 0);
 });
 
-// Round 173: the title screen draws a landscape before the server answers; the first look may propose its seed.
+// Round 175: the title screen draws a landscape before the server answers; the first look may propose its seed.
 test('the first look at the road takes the seed the title proposed, and a road that exists keeps its own', async (t) => {
   const { runtime, learnerId } = await roadRuntime(t, { seed: 4242 });
   const first = await api(runtime, '/api/road?seed=777', { learnerId });
@@ -454,4 +454,23 @@ test('the first look at the road takes the seed the title proposed, and a road t
     assert.equal((await api(runtime, `/api/road?seed=${bad}`, { learnerId: fresh })).data.road.seed, 4242, `"${bad}" is not a seed: the server draws its own`);
   }
   assert.equal((await api(runtime, '/api/road', { learnerId: other })).data.road.seed, 4242, 'with no seed proposed the server draws its own');
+});
+
+// Round 176: the camera follows the shortest walk along the ways from one site to another.
+test('route is the shortest walk along the ways between two sites, and every step of it is a way', () => {
+  const graph = createGraph(createTerrain(4242));
+  const start = graph.start;
+  // Two hops out, by the first neighbours.
+  const one = graph.neighbours(start)[0];
+  const two = graph.neighbours(one).find((id) => id !== start && !graph.neighbours(start).includes(id));
+  const walk = graph.route(start, two);
+  assert.equal(walk[0], start);
+  assert.equal(walk.at(-1), two);
+  for (let n = 1; n < walk.length; n += 1) assert.ok(graph.neighbours(walk[n - 1]).includes(walk[n]), `${walk[n - 1]} to ${walk[n]} is a way`);
+  const length = (ids) => ids.slice(1).reduce((sum, id, n) => sum + graph.pathPoints(ids[n], id).reduce((s, p, k, ps) => (k ? s + Math.hypot(p[0] - ps[k - 1][0], p[1] - ps[k - 1][1]) : 0), 0), 0);
+  assert.ok(length(walk) <= length([start, one, two]) + 1e-6, 'no longer than the walk through the first neighbour');
+  assert.deepEqual(graph.route(start, start), [start]);
+  assert.deepEqual(graph.route(start, graph.neighbours(start)[0]).length, 2, 'a neighbour is one way off, unless a shorter walk goes round');
+  assert.equal(graph.route(start, '999999,999999', { limit: 50 }), null, 'a walk not found within the limit');
+  assert.equal(graph.route('nonsense', start), null);
 });

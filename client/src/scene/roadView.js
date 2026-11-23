@@ -13,9 +13,10 @@ import { currentWeather, onWeatherPin, pinWeather } from './weatherClock.js';
 import { createRoadDirector, titleDistance } from './roadDirector.js';
 import { freeRect } from './insets.js';
 import { createFarLand } from './farLand.js';
+import { travelLine } from './roadPath.js';
 
 const FOV = 60;
-// Round 173: how the view stands back with a high camera. `distance` is the camera's from what it looks at.
+// Round 175: how the view stands back with a high camera. `distance` is the camera's from what it looks at.
 const HIGH = Object.freeze({ fogNear: 0.75, fogFar: 2.4, clipFar: 3.5, clipNear: 1 / 400, from: 150, full: 700 });
 const smooth01 = (value) => { const u = Math.min(1, Math.max(0, value)); return u * u * (3 - 2 * u); };
 const FIGURE = { near: 1.4, far: 2.3, bob: 0.02, hop: 0.16 };
@@ -29,7 +30,7 @@ const easeTo = (current, target, dt, tau) => current + (target - current) * (1 -
  *                        'stand' (at once)
  *   setTalking(on)       whether somebody is being talked to at the site (else the camera wanders round it)
  *   setEncounter(...)    the conversation's progress, as the dungeon's host takes it
- *   setTitle(at)         round 173: the title screen: the camera far over the site `at` (an id; the landscape's start
+ *   setTitle(at)         round 175: the title screen: the camera far over the site `at` (an id; the landscape's start
  *                        if it is not one), above the clouds, turning slowly. The next show({ mode: 'arrive' }) is the
  *                        zoom down from there. While the camera is high the fog and the clip planes stand back with
  *                        it, the ground is built round the site, not under the camera, and a coarse sheet of the
@@ -84,8 +85,8 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
   let last = null;
   let disposed = false;
   let fog = { near: 46, far: 186 }; // the sky's own, as last set
-  let farLand = null; // round 173: the land beyond the built ground, while the camera is high
-  let high = 0; // round 173: 0 on the ground to 1 far up
+  let farLand = null; // round 175: the land beyond the built ground, while the camera is high
+  let high = 0; // round 175: 0 on the ground to 1 far up
   const groundGroup = world.scene.getObjectByName('endless-ground') ?? { visible: true };
   const talk = { beatId: null };
   const anchor = new Vector3();
@@ -156,8 +157,9 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     if (!node) return;
     const previous = from ? graph.node(from) : null;
     if (mode === 'travel' && previous && !reducedMotion) {
-      // Along the way when the two sites are joined; straight over the country when they are not.
-      const points = graph.pathPoints(from, siteId) ?? [[previous.x, previous.z], [node.x, node.z]];
+      // Round 176: along the shortest walk over the ways, smoothed (roadPath.js); straight over the country only when
+      // no walk is found.
+      const points = travelLine(graph, from, siteId)?.points ?? [[previous.x, previous.z], [node.x, node.z]];
       director.travel(points, node);
       notified = false;
     } else if (mode === 'arrive' && !reducedMotion) {
@@ -178,7 +180,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     const pose = director.update(dt);
     camera.position.set(...pose.position);
     camera.lookAt(...pose.target);
-    // Round 173: how high the camera is over what it looks at, and how far from it: the fog and the clip planes
+    // Round 175: how high the camera is over what it looks at, and how far from it: the fog and the clip planes
     // stand back with it (on the ground the sky's own fog is the farther, so nothing changes in play).
     const distance = Math.hypot(pose.position[0] - pose.target[0], pose.position[1] - pose.target[1], pose.position[2] - pose.target[2]);
     high = smooth01((pose.position[1] - terrain.heightAt(pose.target[0], pose.target[2]) - HIGH.from) / (HIGH.full - HIGH.from));
@@ -248,7 +250,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     setRoad,
     show,
     setTalking(on) { talking = Boolean(on); },
-    /** Round 173: the title screen, far over the site `siteId` (or the landscape's start). */
+    /** Round 175: the title screen, far over the site `siteId` (or the landscape's start). */
     setTitle(siteId) {
       const node = graph.node(siteId) ?? graph.node(graph.start);
       if (!node) return;
@@ -256,7 +258,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
       // The land under a site the title moved to is another: the sheet is made again round it.
       if (farLand && Math.hypot(farLand.centre.x - node.x, farLand.centre.z - node.z) > 400) { farLand.dispose(); farLand = null; }
     },
-    /** Round 173: 0 with the camera on the ground, 1 far over it. */
+    /** Round 175: 0 with the camera on the ground, 1 far over it. */
     get high() { return high; },
     setEncounter({ closed = 0, resolved = false, beatId = null, beatKind = null } = {}) {
       director.engage(resolved ? 1 : Math.min(0.7, closed * 0.35));

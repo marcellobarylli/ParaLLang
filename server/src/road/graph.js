@@ -194,7 +194,45 @@ export function createGraph(terrain) {
     throw new Error(`The landscape of seed ${seed} has no dry ground near its origin.`);
   }
 
-  return Object.freeze({ seed, terrain, nodeAt, node, neighbours, edge, pathPoints, nodesNear, start: start() });
+  const lengthOf = (points) => points.reduce((sum, point, n) => (n ? sum + Math.hypot(point[0] - points[n - 1][0], point[1] - points[n - 1][1]) : 0), 0);
+  /**
+   * Round 176: the shortest walk along the ways from `fromId` to `toId`, by the length of the ways walked (A*, the
+   * straight distance as the estimate): the ids of the sites in walking order, both ends included. Null when either
+   * site does not exist or no walk is found within `limit` sites looked at.
+   */
+  function route(fromId, toId, { limit = 4000 } = {}) {
+    const [a, b] = [node(fromId), node(toId)];
+    if (!a || !b) return null;
+    if (a.id === b.id) return [a.id];
+    const guess = (n) => Math.hypot(n.x - b.x, n.z - b.z);
+    const walked = new Map([[a.id, 0]]);
+    const came = new Map();
+    const open = [{ id: a.id, f: guess(a) }];
+    const done = new Set();
+    while (open.length && done.size < limit) {
+      let best = 0;
+      for (let k = 1; k < open.length; k += 1) if (open[k].f < open[best].f) best = k;
+      const { id } = open.splice(best, 1)[0];
+      if (done.has(id)) continue;
+      if (id === b.id) {
+        const path = [id];
+        while (came.has(path[0])) path.unshift(came.get(path[0]));
+        return path;
+      }
+      done.add(id);
+      for (const next of neighbours(id)) {
+        if (done.has(next)) continue;
+        const cost = walked.get(id) + lengthOf(pathPoints(id, next));
+        if (cost >= (walked.get(next) ?? Infinity)) continue;
+        walked.set(next, cost);
+        came.set(next, id);
+        open.push({ id: next, f: cost + guess(node(next)) });
+      }
+    }
+    return null;
+  }
+
+  return Object.freeze({ seed, terrain, nodeAt, node, neighbours, edge, pathPoints, nodesNear, route, start: start() });
 }
 
 // A few graphs are kept by seed: each learner's road has its own, and a request needs only a handful of sites.

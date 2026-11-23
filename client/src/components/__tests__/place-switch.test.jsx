@@ -72,7 +72,7 @@ test('entering The Kiln switches the dungeon, reads its run, remembers the place
   await settle();
   // The world map's counts: Ta Prohm from its own read, The Kiln from the read beside it.
   expect(s().runs).toEqual({ ta_prohm: { cleared: 1, total: 7, complete: false }, the_kiln: { cleared: 0, total: 7, complete: false } });
-  // Round 173: a reload opens on the title, whatever the run; the world map is a way on from there.
+  // Round 175: a reload opens on the title, whatever the run; the world map is a way on from there.
   expect(s().phase).toBe('attract');
   s().enter();
   expect(s().phase).toBe('world');
@@ -106,7 +106,7 @@ test('a place that is entered and left again: back to Ta Prohm with its cleared 
   expect(server.api.getDungeon.mock.calls[0][1]).toBe('the_kiln');
   expect(s().progress.clearedSiteIds).toEqual(['face_gate', 'buttress_tree']);
   expect(s().runs).toMatchObject({ ta_prohm: { cleared: 1 }, the_kiln: { cleared: 2 } });
-  // Round 173: it opens on the title; The Kiln's Start goes down to the site the player stands at.
+  // Round 175: it opens on the title; The Kiln's Start goes down to the site the player stands at.
   expect(s().phase).toBe('attract');
   s().enter();
   s().enterPlace('the_kiln');
@@ -131,7 +131,7 @@ test('a reply of the place left is dropped', async () => {
   const { s } = makeStore(server);
   await s().initialize();
   await settle();
-  s().enter(); // round 173: from the title, down to the site the player stands at
+  s().enter(); // round 175: from the title, down to the site the player stands at
   s().enterPlace('ta_prohm');
   await s().start();
   s().onCameraArrived();

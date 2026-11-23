@@ -1,4 +1,4 @@
-// Round 173: the title screen in a real browser. The page shows a sky at once; the road's landscape comes up behind
+// Round 175: the title screen in a real browser. The page shows a sky at once; the road's landscape comes up behind
 // it, seen from above the clouds and turning slowly; its one button zooms the camera down into the first site. The
 // map and the menu are in the top bar in a conversation too. Pictures go to the round's shots/.
 //
@@ -9,7 +9,7 @@ import { DESKTOP, PHONE, openGame } from './lib/play.mjs';
 
 const desktop = process.argv[3] === 'desktop';
 const tag = desktop ? 'desktop-' : '';
-const game = await openGame({ out: process.argv[2] ?? 'docs/rounds/173/shots', device: desktop ? DESKTOP : PHONE, provider: (content) => new RoadProvider(content), serviceOptions: { seedSource: () => 4242 } });
+const game = await openGame({ out: process.argv[2] ?? 'docs/rounds/175/shots', device: desktop ? DESKTOP : PHONE, provider: (content) => new RoadProvider(content), serviceOptions: { seedSource: () => 4242 } });
 const JOURNEY = 'The Journey 2: Journathan Returns (again)';
 const stats = (page) => page.evaluate(() => window.__parallangRoad?.stats ?? null);
 

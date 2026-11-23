@@ -40,7 +40,7 @@ export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40,
 
 const clone = (value) => structuredClone(value);
 const graphOf = (seed) => graphFor(seed, createTerrain);
-/** Round 173: a seed a client proposes for a new road, if it is one the server would have drawn itself (1 to 2^31 - 1). */
+/** Round 175: a seed a client proposes for a new road, if it is one the server would have drawn itself (1 to 2^31 - 1). */
 export const proposedSeed = (value) => {
   const seed = typeof value === 'string' && /^\d{1,10}$/.test(value) ? Number(value) : value;
   return Number.isInteger(seed) && seed >= 1 && seed <= 2 ** 31 - 1 ? seed : null;
@@ -244,7 +244,7 @@ export const roadMethods = {
     };
   },
 
-  // Round 173: `seed` is the landscape the title screen already shows a new player (it is drawn before the server
+  // Round 175: `seed` is the landscape the title screen already shows a new player (it is drawn before the server
   // answers). It is taken only by the first look, which creates the road; a road that exists keeps its own.
   async getRoad(learnerId, { seed = null } = {}) {
     const envelope = await this.loadEnvelope(learnerId);

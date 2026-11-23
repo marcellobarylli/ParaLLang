@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
-// Round 173: `title` (a site id) is the title screen: the camera far over that site, above the clouds, turning. The
+// Round 175: `title` (a site id) is the title screen: the camera far over that site, above the clouds, turning. The
 // landscape is `road.seed`, or `seed` before the server has sent the road. The next camera move the store asks for
 // once `title` is null is the zoom down from there.
 export default function RoadView({ road, seed: titleSeed = null, title = null, shown, arrival, from, talking, insets, onArrive, onThunder = null, closed = 0, resolved = false, beat = null, models = true }) {
@@ -46,14 +46,14 @@ export default function RoadView({ road, seed: titleSeed = null, title = null, s
 
   // The markers follow the server's view of the road.
   useEffect(() => { if (status === 'ready' && road) viewRef.current?.setRoad(road); }, [status, road]);
-  // Round 173: the title screen's camera, over the site it names.
+  // Round 175: the title screen's camera, over the site it names.
   useEffect(() => { if (status === 'ready' && title !== null) viewRef.current?.setTitle(title); }, [status, title, seed]);
   // Each camera move the store asks for is taken once (`shown` counts them). Not while the title is up.
   useEffect(() => {
     if (!road || titleRef.current !== null) return;
     if (status === 'ready') viewRef.current?.show({ at: road.at, from, mode: arrival });
     else if (status === 'unavailable') arriveRef.current?.(arrival);
-  }, [status, shown, seed, Boolean(road) && title === null]); // round 173: also when the road comes after the title's button
+  }, [status, shown, seed, Boolean(road) && title === null]); // round 175: also when the road comes after the title's button
   useEffect(() => { if (status === 'ready') viewRef.current?.setTalking(talking); }, [status, talking]);
   useEffect(() => {
     if (status === 'ready' && talking) viewRef.current?.setEncounter({ closed, resolved, beatId: beat?.id ?? null, beatKind: beat?.kind ?? null });

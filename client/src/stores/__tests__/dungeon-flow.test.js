@@ -87,7 +87,7 @@ function makeStore(options = {}) {
   return { server, api, store, s: () => store.getState() };
 }
 
-// Round 173: a reload opens on the title; the run resumes when its place is first entered from the world map.
+// Round 175: a reload opens on the title; the run resumes when its place is first entered from the world map.
 async function reopen(s) {
   s().enter();
   await s().enterPlace('ta_prohm');

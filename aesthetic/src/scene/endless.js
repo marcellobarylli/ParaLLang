@@ -398,7 +398,7 @@ export const EFFECTS = Object.freeze({
   // other side); the layer is `top` metres over the camera overhead and `drop` metres lower at its rim, so far
   // clouds stand low over the horizon, where a low sun lights them. `least` is the share there on a clear day.
   clouds: Object.freeze({ count: 80, shapes: 6, reach: 640, top: 108, drop: 72, speed: Object.freeze([2.5, 16]), least: 0.4, glow: 0.4 }),
-  // Round 173: the layer seen from above, on the title screen, where the camera stands a kilometre and more up. It
+  // Round 175: the layer seen from above, on the title screen, where the camera stands a kilometre and more up. It
   // lies `altitude` metres over the water, higher than any camera of the road goes (a glide from the sky starts 46 m
   // over a site, and no ground stands higher than 118 m), so in play it is never seen. Its clouds are the same shapes
   // `scale` times larger, spread `reach` metres round the camera; they show once the camera is over them (`from` to
@@ -505,7 +505,7 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
     return { mesh, x: (next() - 0.5) * CLOUDS.reach * 2, z: (next() - 0.5) * CLOUDS.reach * 2, size: 0.75 + next() * 0.8, lift: next() * 26 };
   });
   group.add(clouds);
-  // Round 173: the high layer, of the same shapes and material, on its own stream of numbers (the one above is left
+  // Round 175: the high layer, of the same shapes and material, on its own stream of numbers (the one above is left
   // as it was, so the lightning keeps its timing).
   const HIGH = EFFECTS.high;
   const nextHigh = sequence(173);
@@ -543,7 +543,7 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
       }
       color.needsUpdate = true;
     }
-    // Round 173: the layer seen from above.
+    // Round 175: the layer seen from above.
     for (const shape of highShapes) {
       const [normal, color] = [shape.attributes.normal, shape.attributes.color];
       for (let v = 0; v < normal.count; v += 1) {
@@ -569,7 +569,7 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
     const [cx, cy, cz] = [camera.position.x, camera.position.y, camera.position.z];
     const ground = terrain.heightAt(cx, cz);
     const snowing = ground > EFFECTS.snow.above;
-    // Round 173: over the high layer it does not rain on the camera; the rain is under the clouds, out of sight.
+    // Round 175: over the high layer it does not rain on the camera; the rain is under the clouds, out of sight.
     const layerY = world.terrain.waterY + HIGH.altitude;
     state.above = smooth01((cy - layerY) / 150);
     state.rain = snowing ? 0 : weather.rain * (1 - state.above);
@@ -628,7 +628,7 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
       cloud.mesh.scale.setScalar(scale);
     });
 
-    // Round 173: the clouds seen from above. Nothing is done while the camera is under them, which is all of play.
+    // Round 175: the clouds seen from above. Nothing is done while the camera is under them, which is all of play.
     const showing = smooth01((cy - layerY - HIGH.from) / (HIGH.full - HIGH.from));
     state.highClouds = 0;
     if (showing <= 0.001) {
@@ -655,7 +655,7 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
     state.stars = Math.max(0, 1 - weather.daylight * 3) * Math.max(0, 1 - weather.cloud * 1.5);
     stars.visible = state.stars > 0.02;
     if (stars.visible) {
-      stars.position.set(cx, world.terrain.waterY + Math.max(0, cy - world.terrain.waterY - HIGH.lift), cz); // round 173: round a high camera
+      stars.position.set(cx, world.terrain.waterY + Math.max(0, cy - world.terrain.waterY - HIGH.lift), cz); // round 175: round a high camera
       stars.rotation.y = weather.phase * Math.PI * 2;
       stars.material.opacity = 0.9 * state.stars;
     }

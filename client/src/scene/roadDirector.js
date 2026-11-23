@@ -8,7 +8,7 @@
 //   hold                  at a site: a few steps back from whoever stands there, with a slow sway; each objective
 //                         closed steps the camera in (engage), a verdict is a small push or pull (beat)
 //   wander                at a site where nobody waits: a slow turn around it, to look at the country
-//   title(site)           round 173: the title screen: far over the site, above the clouds, turning slowly round it
+//   title(site)           round 175: the title screen: far over the site, above the clouds, turning slowly round it
 //   arrive(site) from the title  the zoom down from there to the site: the distance shrinks by the same share each
 //                         moment (it falls through the clouds quickly and settles slowly), the camera levels out and
 //                         turns a little round the site on the way
@@ -21,21 +21,24 @@ export const ROAD_CAMERA = Object.freeze({
   focus: 1.5, // where on a figure it looks
   lookAhead: 14, // metres along the way, while travelling
   speed: 16, // metres per second of a glide, between the limits below
-  travel: Object.freeze({ min: 3.2, max: 9 }), // seconds
+  travel: Object.freeze({ min: 3.2, max: 12 }), // seconds (round 176: a walk of several ways may take longer)
+  // Round 176: the height the camera keeps on a glide: the highest ground within `reach` metres before and after,
+  // smoothed over `smooth` metres, so it rises and sinks with the land in long curves and not with every bump.
+  clearance: Object.freeze({ step: 2, reach: 8, smooth: 14 }),
   lift: Object.freeze({ share: 0.07, max: 18 }), // how high a glide rises: a share of its length
   arrive: 2.8, // seconds from the sky
   sky: 46, // metres above the site
   blend: 0.9, // seconds to leave a hold
   engageMax: 0.34,
   wander: Object.freeze({ radius: 9, rise: 2.6, period: 70 }),
-  // Round 173: the title screen. `distance` is from the site, along a line `pitch` radians under the level; the
+  // Round 175: the title screen. `distance` is from the site, along a line `pitch` radians under the level; the
   // frame holds about `across` metres of land across its narrower side, the map's own width (about 1 km at its
   // closest) taken twice, within the distances given. One turn round the site takes `period` seconds, and the zoom
   // down takes `descend`.
   title: Object.freeze({ pitch: 0.96, across: 2100, distance: Object.freeze([1400, 2600]), period: 360, descend: 6.5 }),
 });
 
-/** Round 173: how far the title's camera stands from the site, for a view of `aspect` (width over height) and `fov` (degrees, vertical). */
+/** Round 175: how far the title's camera stands from the site, for a view of `aspect` (width over height) and `fov` (degrees, vertical). */
 export function titleDistance(aspect, fov = 60) {
   const { across, distance: [near, far] } = ROAD_CAMERA.title;
   const wide = 2 * Math.tan(((fov / 2) * Math.PI) / 180) * Math.min(1, Math.max(0.1, aspect || 1));
@@ -66,6 +69,37 @@ function measured(points) {
 
 export function createRoadDirector({ heightAt, waterY = 0 }) {
   const ground = (x, z) => Math.max(heightAt(x, z), waterY);
+  // Round 176: the smoothed height of the ground along `line` (see ROAD_CAMERA.clearance), as a function of the
+  // distance along it.
+  function profile(line, length, smooth = ROAD_CAMERA.clearance.smooth) {
+    const { step, reach } = ROAD_CAMERA.clearance;
+    const count = Math.max(1, Math.ceil(length / step));
+    const raw = Array.from({ length: count + 1 }, (_, n) => ground(...line.at(n * step)));
+    const sigma = smooth / step;
+    const r = Math.ceil(sigma * 2.5);
+    // The highest ground as far each way as the smoothing reaches: every sample the smoothing takes at a point is then
+    // at least that point's ground, so the smoothed height is never under it.
+    const wide = Math.max(Math.round(reach / step), r);
+    const envelope = raw.map((_, n) => Math.max(...raw.slice(Math.max(0, n - wide), n + wide + 1)));
+    const smoothed = envelope.map((_, n) => {
+      let [sum, weight] = [0, 0];
+      for (let k = -r; k <= r; k += 1) {
+        const value = envelope[Math.min(count, Math.max(0, n + k))];
+        const w = Math.exp(-(k * k) / (2 * sigma * sigma));
+        sum += value * w; weight += w;
+      }
+      return sum / weight;
+    });
+    // Read between the samples on a Catmull-Rom curve, so that the slope has no break at each sample either.
+    const at = (n) => smoothed[Math.min(count, Math.max(0, n))];
+    return (s) => {
+      const f = clamp(s / step, 0, count);
+      const n = Math.min(count - 1, Math.floor(f));
+      const u = f - n;
+      const [p0, p1, p2, p3] = [at(n - 1), at(n), at(n + 1), at(n + 2)];
+      return p1 + 0.5 * u * (p2 - p0 + u * (2 * p0 - 5 * p1 + 4 * p2 - p3 + u * (3 * (p1 - p2) + p3 - p0)));
+    };
+  }
   let mode = 'idle';
   let t = 0;
   let site = null; // { x, z }
@@ -77,8 +111,8 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
   let beat = { kind: null, t: 1 };
   let arrived = true;
   let pose = { position: [0, 30, 30], target: [0, 0, 0] };
-  let titleAt = { distance: ROAD_CAMERA.title.distance[0], angle: 0 }; // round 173
-  let descent = null; // round 173: { r0, r1, pitch0, pitch1, yaw0, yaw1, duration } of a zoom down from the title
+  let titleAt = { distance: ROAD_CAMERA.title.distance[0], angle: 0 }; // round 175
+  let descent = null; // round 175: { r0, r1, pitch0, pitch1, yaw0, yaw1, duration } of a zoom down from the title
 
   const siteTarget = () => [site.x, heightAt(site.x, site.z) + ROAD_CAMERA.focus, site.z];
   function holdPose(time) {
@@ -102,14 +136,17 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
     const [x, z] = way.at(s);
     const [ax, az] = way.at(s + ROAD_CAMERA.lookAhead);
     const rise = Math.sin(Math.PI * u) * way.lift;
-    // Clear of the ground here and a little ahead, so a rise in the way does not swallow the camera.
-    const y = Math.max(ground(x, z), ground(...way.at(s + 4))) + ROAD_CAMERA.eye + rise;
+    // Round 176: on the smoothed profile of the ground along the way, and never under the ground here.
+    // Over the last fifth it settles onto the ground here, where the hold takes it up.
+    const here = ground(x, z);
+    const settle = ease(clamp((u - 0.8) / 0.2, 0, 1));
+    const y = here + (Math.max(way.floor(s), here) - here) * (1 - settle) + ROAD_CAMERA.eye + rise;
     const near = clamp((way.total - s) / ROAD_CAMERA.lookAhead, 0, 1); // towards the end the look settles on the site
     const ahead = [ax, ground(ax, az) + ROAD_CAMERA.eye * 0.8 + rise * 0.4, az];
     return { position: [x, y, z], target: lerp3(siteTarget(), ahead, near) };
   }
 
-  // Round 173: the title's pose: far over the site, turning round it.
+  // Round 175: the title's pose: far over the site, turning round it.
   function titlePose(time) {
     const angle = titleAt.angle + (time / ROAD_CAMERA.title.period) * Math.PI * 2;
     const { pitch } = ROAD_CAMERA.title;
@@ -153,7 +190,7 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
     get pose() { return pose; },
     get site() { return site; },
 
-    /** Round 173: the title screen, far over `next`, turning slowly; `distance` from titleDistance(). */
+    /** Round 175: the title screen, far over `next`, turning slowly; `distance` from titleDistance(). */
     title(next, { distance = titleAt.distance } = {}) {
       const moved = !site || site.x !== next.x || site.z !== next.z;
       if (moved || mode !== 'title') {
@@ -164,7 +201,7 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
       titleAt.distance = distance;
       pose = titlePose(t);
     },
-    /** Round 173: the title's distance, when the view changes shape. */
+    /** Round 175: the title's distance, when the view changes shape. */
     setTitleDistance(distance) { titleAt.distance = distance; },
 
     /** Down from the sky to `next` ({ x, z }), seen from `facing` ([x, z]) if given. From the title, the zoom down. */
@@ -190,9 +227,13 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
       const stop = Math.max(0, line.total - ROAD_CAMERA.standoff);
       const before = line.at(Math.max(0, stop - 2));
       setSite(next, before);
+      const duration = clamp(stop / ROAD_CAMERA.speed, ROAD_CAMERA.travel.min, ROAD_CAMERA.travel.max);
+      // The faster the glide, the longer the stretch of ground its height is smoothed over: about a second of it at
+      // the glide's top speed (an eased glide's top speed is 1.5 times its mean).
+      const smooth = Math.max(ROAD_CAMERA.clearance.smooth, (1.5 * stop) / duration);
       way = {
-        total: stop, at: line.at,
-        duration: clamp(stop / ROAD_CAMERA.speed, ROAD_CAMERA.travel.min, ROAD_CAMERA.travel.max),
+        total: stop, at: line.at, floor: profile(line, stop + ROAD_CAMERA.lookAhead, smooth),
+        duration,
         lift: Math.min(ROAD_CAMERA.lift.max, stop * ROAD_CAMERA.lift.share),
       };
       begin('travel');

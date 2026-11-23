@@ -96,7 +96,7 @@ test('the screen drives the camera over the map, and the camera gates the dialog
   fakeServer();
   const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage() });
   render(<DungeonScreen useStore={store} />);
-  // Round 173: the title is the road's; the dungeon's level starts when the player goes to the other places.
+  // Round 175: the title is the road's; the dungeon's level starts when the player goes to the other places.
   await titleReady();
   expect(level.views.length).toBe(0);
   await toPlaces(user);

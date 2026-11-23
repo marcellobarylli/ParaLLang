@@ -59,7 +59,7 @@ function SiteNumber({ index }) {
   return <span className="site-number" aria-hidden="true">{index + 1}</span>;
 }
 
-// Round 173: the title screen. Behind it the road's landscape turns slowly, seen from above the clouds (RoadView's
+// Round 175: the title screen. Behind it the road's landscape turns slowly, seen from above the clouds (RoadView's
 // `title`); its one way in is The Journey 2. The road is being read meanwhile (preloadRoad), so the start zooms down
 // into a world that is already there.
 function TitleScreen({ state }) {
@@ -77,7 +77,7 @@ function TitleScreen({ state }) {
   );
 }
 
-// Round 173: the game menu, the same everywhere: the map and every record the player keeps, Settings, and the ways
+// Round 175: the game menu, the same everywhere: the map and every record the player keeps, Settings, and the ways
 // out (of a conversation, to the other places, to the title). Each row closes the menu and opens what it names.
 function GameMenu({ state, onClose, onMap, mapLabel: mapName, leave, onLeave }) {
   const onRoad = state.mode === 'road';
@@ -472,7 +472,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   // drops while a line is read aloud and is silent while the microphone listens.
   // Round 132: the conversation panel's height as the player dragged it, kept from one conversation to the next.
   const [sheetHeight, setSheetHeight] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false); // round 173
+  const [menuOpen, setMenuOpen] = useState(false); // round 175
   const musicWanted = state.display?.music !== false;
   // Round 172: the Audio volumes. The ambience runs while either the music or the effects (the rain, the thunder)
   // can be heard; switching the music off silences its bus and leaves the effects.
@@ -545,12 +545,12 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const conversing = state.encounter?.state === 'ongoing' || state.encounterLoading;
   const spellbook = conversing && !state.spellbook.inEncounter ? { ...state.spellbook, inEncounter: true } : state.spellbook;
 
-  // Round 173: the title screen shows the road's landscape from above the clouds, and stays up after its button is
+  // Round 175: the title screen shows the road's landscape from above the clouds, and stays up after its button is
   // pressed until the road is here; the camera then zooms down into it.
   const atTitle = !onRoad && phase === 'attract';
   const titleShown = atTitle || (onRoad && !state.road);
   const titleSite = titleShown ? (state.road?.at ?? state.titleAt ?? '') : null;
-  // Round 173: the map is always at hand. On the road it opens over whatever is on the screen, a conversation too;
+  // Round 175: the map is always at hand. On the road it opens over whatever is on the screen, a conversation too;
   // in a place of the world map it is the place's own map (a conversation under way is left for it, and waits).
   const dungeonMap = !onRoad && !['attract', 'world', 'overview', 'victory'].includes(phase) && !inParty_;
   const openMapNow = onRoad ? (state.road ? () => state.openRoadPanel('map') : null)
@@ -586,7 +586,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
             ))}
           </ol>
         )}
-        {/* Round 173: the same two buttons everywhere: the map (when there is one to show) and the menu. */}
+        {/* Round 175: the same two buttons everywhere: the map (when there is one to show) and the menu. */}
         <nav aria-label="Menu">
           {onRoad && <CurriculumChip state={state} />}
           {openMapNow && <button type="button" className="secondary-button map-button" onClick={openMapNow} disabled={!onRoad && (state.isLoading || state.travelling)}>Map</button>}
@@ -599,7 +599,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.error && <div className="error-banner" role="alert"><span>{state.error}</span><button type="button" onClick={state.clearError} aria-label="Dismiss error">×</button></div>}
 
       <div className="dock" ref={dockRef}>
-        {/* Round 173: while the camera comes down from the sky into the road, a line says where to; the site's card
+        {/* Round 175: while the camera comes down from the sky into the road, a line says where to; the site's card
             comes when it is there (on a phone the card would hide the whole descent). */}
         {onRoad && state.roadPhase === 'hub' && (descending ? <section className="caption" role="status"><span>Coming down to {state.road.here.name}…</span></section> : <HubCard state={state} />)}
         {onRoad && state.roadPhase === 'travel' && <RoadCaption state={state} />}

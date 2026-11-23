@@ -85,7 +85,7 @@ test('closed objectives step the camera in; with nobody to talk to it wanders ro
   expect(director.arrived).toBe(true);
 });
 
-// Round 173: the title screen: far over the site, above the clouds, turning slowly; then the zoom down to it.
+// Round 175: the title screen: far over the site, above the clouds, turning slowly; then the zoom down to it.
 test('the title stands far over the site and turns round it; the start zooms down to the hold without a jump or a dip under the ground', async () => {
   const { titleDistance } = await import('../roadDirector.js');
   expect(titleDistance(0.46)).toBe(ROAD_CAMERA.title.distance[1]); // a phone held upright: as far as it goes
@@ -114,4 +114,25 @@ test('the title stands far over the site and turns round it; the start zooms dow
   expect(director.arrived).toBe(true);
   expect(director.mode).toBe('hold');
   expect(distance(end.position, end.target)).toBeLessThan(ROAD_CAMERA.standoff + 1);
+});
+
+// Round 176: a glide along a smoothed walk of several ways keeps clear of the ground and rises and sinks without jolts.
+test('a glide along the shortest walk is smooth in height as well as in plan, and never under the ground', async () => {
+  const { travelLine } = await import('../roadPath.js');
+  const here = graph.node(graph.start);
+  const far = graph.nodesNear(here.x, here.z, 3).map((node) => node.id).find((id) => id !== graph.start && (graph.route(graph.start, id)?.length ?? 0) >= 4);
+  const { points } = travelLine(graph, graph.start, far);
+  const director = make();
+  director.stand(here);
+  director.travel(points, graph.node(far));
+  const heights = [];
+  run(director, ROAD_CAMERA.travel.max + 3, (pose) => {
+    expect(above(pose)).toBeGreaterThan(ROAD_CAMERA.eye - 0.01);
+    if (director.mode === 'travel') heights.push(pose.position[1]);
+  });
+  // Vertical acceleration, per frame squared: a jolt would be a spike.
+  let worst = 0;
+  for (let n = 2; n < heights.length; n += 1) worst = Math.max(worst, Math.abs(heights[n] - 2 * heights[n - 1] + heights[n - 2]));
+  expect(worst).toBeLessThan(0.08);
+  expect(director.mode).toBe('hold');
 });

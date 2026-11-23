@@ -1,4 +1,4 @@
-# Round 173 architecture
+# Round 175 architecture
 
 **Conversational round, recorded after the build.** Opened on 2026-11-23 on the owner's message in
 [`trail/interview.md`](trail/interview.md); the events are in [`trail/journal.md`](trail/journal.md). No pre-run
@@ -65,7 +65,7 @@ commit; nothing here is frozen.
 ## Tests
 
 `npm test -w server` (579), `npx vitest run` in `client/` (300), `npm test -w aesthetic` (95), `npx vite build`, and
-`node client/scripts/title-check.mjs docs/rounds/173/shots [desktop]` after the build.
+`node client/scripts/title-check.mjs docs/rounds/175/shots [desktop]` after the build.
 
 ## Status
 

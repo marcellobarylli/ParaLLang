@@ -61,7 +61,7 @@ export async function openGame({ provider, out, language = 'it', display = {}, d
     // From the title to the first conversation of Ta Prohm (Portia).
     async toPortia() {
       await game.open();
-      // Round 173: the title is the road's; the other places are in its menu.
+      // Round 175: the title is the road's; the other places are in its menu.
       await tap(page.getByRole('button', { name: /^Menu/ }), { timeout: 60000 });
       await tap(page.getByRole('button', { name: /^Other places/ }));
       await tap(page.getByRole('button', { name: 'Enter Ta Prohm' }));
@@ -71,7 +71,7 @@ export async function openGame({ provider, out, language = 'it', display = {}, d
     // From the title to the first site of the road.
     async toRoad() {
       await game.open();
-      await tap(page.getByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }), { timeout: 60000 }); // round 173
+      await tap(page.getByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }), { timeout: 60000 }); // round 175
       await page.getByRole('button', { name: /^Talk to / }).waitFor({ timeout: 60000 });
     },
     // Brings a thing in the conversation's text into view as the player's own scrolling would (the sheet puts any

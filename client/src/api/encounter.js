@@ -55,7 +55,7 @@ export function createLearningApi({ getSettings = () => loadSettings(), getGemin
     },
     // Round 144: The Journey 2: the learner's place on the endless graph with what waits ahead and the
     // curriculum's marks; a walk to a site (`leave` drops the road's conversation under way); a new road.
-    getRoad: (learnerId, { seed = null } = {}) => request(seed ? `/api/road?seed=${encodeURIComponent(seed)}` : '/api/road', { learnerId }), // round 173: the title's seed for a new road
+    getRoad: (learnerId, { seed = null } = {}) => request(seed ? `/api/road?seed=${encodeURIComponent(seed)}` : '/api/road', { learnerId }), // round 175: the title's seed for a new road
     // Round 161: the whole journey, as the ids of the sites walked to, for the map's "Show Journey so far".
     getRoadWalk: (learnerId) => request('/api/road/walk', { learnerId }),
     moveRoad: (learnerId, body) => request('/api/road/move', { learnerId, method: 'POST', body }),
