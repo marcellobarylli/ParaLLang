@@ -62,6 +62,24 @@ gate but an expansion into a massive dark void, and that is what an abyssal chas
   is drawn is among its open questions. `docs/proposals/2026-11-23-the-first-pull.md` gains an amendment: a pull's
   depth is the tree's shortening and has a limit; a chasm is its own piece of work.
 
+## Amendment 2 (2026-11-23): the followers of the void
+
+The owner added a faction (Q3 of the interview): followers of the void, within the world, who seek to accelerate
+the collapse and create the void, like the Abyss, with roots in Taoism.
+
+- The lore book gains **"The followers of the void"** (the owner's two points), **"What they took from the
+  Taoists"** (four passages of the *Tao Te Ching*, chapters 6, 11, 16 and 40, looked up this round) and **"Why it
+  fits this world"** (the compiler's joins).
+- The joins lean on what is already in the book: a place is where roads meet, as spokes meet in a hub (chapter 11
+  and part VIII); the ways are roots and things "return to their root" (chapter 16); the first sign of a pull is a
+  valley and "the valley spirit never dies" (chapter 6); the world is a Telling and the void is what was not said.
+- Two joins go further than the owner did and are marked for the owner to overrule: that the followers have left
+  their own teaching (the old book counsels stillness and not forcing; they accelerate), and that they may need the
+  foreigner, since it is the player who completes stitches.
+- "Not settled" gains five questions, the first a real one against the rest of the part: no character knows the
+  world is a web, and a faction that seeks the collapse must know something.
+- No name is invented for them, and nothing of them is put into the game.
+
 ## Tests
 
 None: no code or content the game loads is changed. `python3 tools/round_log_check.py 167`.
@@ -70,9 +88,13 @@ None: no code or content the game loads is changed. `python3 tools/round_log_che
 
 - What is said of Dark Souls rests on web searches of 2026-11-23 (fan wikis, guides and encyclopedic pages), not on
   the game played or on any statement by its makers.
+- What is said of Taoism rests on web searches of the same day that returned several translations of four chapters
+  of the *Tao Te Ching* and encyclopedic glosses of *wu wei*. Translations differ; no scholar of the text was read
+  at length, and the Zhuangzi was not looked up.
 - The joins are the compiler's, not the owner's.
 - Nothing of the cave, the trees or the way down exists in the game.
 
 ## Outcome
 
-Written and recorded in one sitting. The lore book has the two parts; issue #25 is open.
+Written and recorded in one sitting. The lore book has the two parts, the owner's clarification of them and the
+followers of the void; issue #25 is open. On `main` on the owner's word ("push everything to me main").

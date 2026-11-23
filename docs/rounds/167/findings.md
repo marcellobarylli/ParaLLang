@@ -28,6 +28,16 @@ The lore book read against the owner's message; the statements about Dark Souls 
 | Open an issue to generate a view of it, to look and feel like Dark Souls | [issue #25](https://github.com/marcellobarylli/ParaLLang/issues/25) |
 | (Final clarification) The trees hold the world up and the worlds apart; stitching pulls on them and shrinks them, which shows as valleys; a tree collapses past a certain force, both worlds are destroyed there, and space expands into a massive dark void, the chasm | "What a pull does, and where the pulls are going"; issue #25, updated |
 
+| (Later) There have to be followers of the void: a faction within the world that seeks to accelerate the collapse and create the void, like the Abyss, with roots in Taoism | "The followers of the void", "What they took from the Taoists", "Why it fits this world" |
+
+| Statement about Taoism | What the lookups returned |
+|---|---|
+| Chapter 40: all things are born of being, and being of non-being (*wu*) | Confirmed in several translations |
+| Chapter 11: thirty spokes meet in one hub; the wheel's use depends on the empty space; the pot and the room | Confirmed (Legge's translation and others) |
+| Chapter 16: emptiness to the utmost, stillness guarded; things return to their root, and that is stillness | Confirmed (Legge's translation and others) |
+| Chapter 6: the valley spirit never dies; its gate is the root of heaven and earth | Confirmed in several translations |
+| *Wu wei* is non-action or effortless action, not literal doing nothing | Confirmed as the usual gloss; one source says the classical philosophers shared no single definition |
+
 | Statement about Dark Souls | What the lookups returned |
 |---|---|
 | The opening names "gray crags, archtrees and everlasting dragons" | Confirmed by several transcriptions |
@@ -46,7 +56,12 @@ The lore book read against the owner's message; the statements about Dark Souls 
   the chasms, while part VI has translating as the work that holds Collision back. Both are in the book.
 - **The issue asks for a view and a way to reach it**, and leaves the choice between an event and a way down open,
   since the owner named both.
-- **Not deployed.** Nothing the page or the server serves has changed. The lore book is on the session branch.
+- **The followers are written as a sect that has left its teaching.** The owner asked for roots in Taoism. Its book
+  praises emptiness and counsels stillness; a faction that accelerates a collapse is not following it. The lore
+  book says so and marks it as the compiler's reading.
+- **No name, no character.** "The followers of the void" is the owner's working name and is kept.
+- **On `main`, without a deploy.** The owner asked for everything to be pushed to `main`. Nothing the page or the
+  server serves has changed, so the push carries `[skip ci] [skip render]` and starts no workflow.
 
 ## Evidence
 

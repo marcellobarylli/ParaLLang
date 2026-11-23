@@ -33,7 +33,7 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-23: round 167, the lore of what is under the world (on the session branch)
+## Addendum 2026-11-23: round 167, the lore of what is under the world, and the followers of the void
 
 The owner refined the lore of round 164. [`docs/lore-book.md`](docs/lore-book.md), "What the book does not say",
 gains **"Where the pulls are going"** (the valleys become abyssal chasms) and **"Under the world"**: the roads are
@@ -44,7 +44,10 @@ roots. The model is named: Dark Souls' Ash Lake and archtrees, and its Abyss. Th
 written as a reading of that game, which is what the lookups found it to be. The owner's final clarification is in
 too: a stitch **pulls on the tree and shrinks it** (the valley), and past a certain force the tree **collapses**, both
 worlds are destroyed there and space expands into a massive dark void (the chasm), which is not a gate. **Issue #25** asks for a view of it
-that looks and feels like Dark Souls, and a way for the player to reach it. No code is changed and nothing is built.
+that looks and feels like Dark Souls, and a way for the player to reach it. The book also gains **the followers of
+the void**: a faction within the world that seeks to accelerate the collapse, with roots in Taoism (four passages of
+the *Tao Te Ching*, looked up), written as a sect that has left its own teaching; what they know, and what the
+player is to them, are under "Not settled". No code is changed and nothing is built.
 [Architecture](docs/rounds/167/architecture.md), [findings](docs/rounds/167/findings.md).
 
 ## Addendum 2026-11-23: round 166, the narrator's passage stays while the conversation loads
@@ -141,7 +144,7 @@ is the list.
 | 164 | 11-23 | The journey as the icon; the stitch and the first pull in the lore book (the owner's lore of 2026-11-23); a proposal for building the first pull | [164](docs/rounds/164/architecture.md) | [findings](docs/rounds/164/findings.md) | on `main` with `5ae0627` (the deploy of rounds 153 to 164) |
 | 165 | 11-23 | A real map under the chart of the Odyssey: Natural Earth's coast (public domain), the line between stops by sea, drawn as an old sea chart; two stops' coordinates corrected against the coast | [165](docs/rounds/165/architecture.md) | [findings](docs/rounds/165/findings.md) | on `main` with `0f97296` (the page only) |
 | 166 | 11-23 | The narrator's passage stays in the travel caption until the character is ready to talk, with "… is getting ready to talk…" as its last sentence (the owner, from the phone) | [166](docs/rounds/166/architecture.md) | [findings](docs/rounds/166/findings.md) | on `main` with `b2ba4bc` (the page only) |
-| 167 | 11-23 | The lore of what is under the world: the valleys become chasms; a cave, a world tree at every node, the ways as roots (Dark Souls' Ash Lake named as the model); issue #25 opened for a view of it | [167](docs/rounds/167/architecture.md) | [findings](docs/rounds/167/findings.md) | on the session branch `claude/modest-einstein-obt6yy` |
+| 167 | 11-23 | The lore of what is under the world: the valleys become chasms; a cave, a world tree at every node, the ways as roots (Dark Souls' Ash Lake named as the model); issue #25 opened for a view of it; the followers of the void, with roots in Taoism | [167](docs/rounds/167/architecture.md) | [findings](docs/rounds/167/findings.md) | on `main` (docs only; nothing deployed) |
 | 163 | #13 | The narrator on a long journey, and a chart of the Odyssey |
 
 **What holds for all of them.** No model was called: the cloud session's `claude` CLI is not signed in, so every

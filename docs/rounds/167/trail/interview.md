@@ -47,3 +47,18 @@
 - **Read as:** the answer to the first question. The other three are not answered and stay under "Not settled"
   ("the world trees (at nodes)" is read as a tree at every node).
 
+### Q3 (2026-11-23): not asked; the owner's next message
+- **Question:** none.
+- **Answer** (the message reads as dictated, and is kept as sent):
+
+> Amazing let's add another thing to the Laura book there have to be followers of the void so there is a affection
+> within the world that seeks to accelerate the collapse and create the void like the abyss. This should have roots
+> in taoism as there is a lot of talk about void nothingness and such in this Skool of Thought please add it to the
+> logbook and push everything to me main
+
+- **Read as:** "the Laura book" and "the logbook" are the lore book; "a affection" is a faction; "Skool of Thought"
+  is school of thought; "to me main" is to `main`. Add the followers of the void to the lore book with roots in
+  Taoism, and push everything to `main`.
+- **Not asked, and decided here:** which Taoist passages; that the followers have left their own teaching; that
+  they may need the foreigner; the five questions under "Not settled".
+
