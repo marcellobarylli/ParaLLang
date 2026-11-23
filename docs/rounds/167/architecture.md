@@ -102,6 +102,25 @@ The owner read Amendment 2 and corrected one thing and set another (Q4 of the in
 - Not changed: `content/world/knowledge.yaml`, which tells every character the belief about the roads, and the
   prompts. A character who truly knows the web would need writing; none exists.
 
+## Amendment 4 (2026-11-23): everything under the world is written
+
+The owner's last addition of the day (Q5 of the interview): the graph and its world trees have to mesh with the idea
+that reality itself is written, and they do so by being written on. On the trees, the roots and everything under
+the world there is a countless myriad of words, and the player sees it on entering the place: a narrative element
+of that moment.
+
+- The lore book gains **"Everything down there is written"**, between "Under the world" and "What a pull does",
+  with the owner's three points.
+- Six joins under it are the compiler's, each to a line already in the book: "Nothing was made that was not first
+  said" (part I); going down "into a text" is reading (part XI); part I's cave, where "the Forms are the words";
+  only a foreigner notices the page (parts II and XI); the oldest tongues are nearest the root (parts II and VI);
+  and a chasm as the place where the page is blank, which ties the writing to the void and to its followers.
+- "Not settled" gains four questions: what language the words are in and whether the trees are made of them; how
+  much the player can read (with a suggestion marked as not the owner's: the words they have learned); whether it
+  is still being written; what a pull does to the words.
+- Issue #25 is updated: the writing is part of the picture, of the look (a texture from far off, lines nearer,
+  words at the foot of the tree), of the suggested approach (an atlas of the game's own text) and of the acceptance.
+
 ## Tests
 
 None: no code or content the game loads is changed. `python3 tools/round_log_check.py 167`.

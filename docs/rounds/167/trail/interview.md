@@ -85,3 +85,18 @@
   questions stay open in the game itself; the player can oppose the followers or join them. Update the book and
   push ("push" read as before: the session branch and `main`).
 
+### Q5 (2026-11-23): not asked; the owner's next message
+- **Question:** none.
+- **Answer** (the message reads as dictated, and is kept as sent):
+
+> Cool one final edition for now so this graph world tree thing we've just introduced has to somehow mesh with the
+> idea that realities itself is written. I think we can make this a narrative element that occurs once the player
+> actually enters the lake place and basically we should see that on these trees and on the roots and everything
+> there are countless myriad of words written.
+
+- **Read as:** "one final edition" is one final addition; "the lake place" is the place under the world (after Ash
+  Lake). Add to the lore book that the trees, the roots and everything under the world are covered in written
+  words, which the player sees on entering, and that this is how the web and the written world are one thing.
+- **Not asked, and done here:** issue #25 updated to match; the push to the session branch and to `main`, as for
+  the two messages before this one (docs only).
+

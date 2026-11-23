@@ -49,7 +49,9 @@ the void**: a faction within the world that seeks to accelerate the collapse, wi
 the *Tao Te Ching*, looked up), written as a sect that has left its own teaching. On the owner's correction the book no longer says that no character
 knows the world is a web: most do not, and a few, the followers among them, know more. Three questions are **left
 open on purpose** (born here or came through; an end or a beginning; the player their enemy or their instrument),
-and a player can oppose the followers or join them. No code is changed and nothing is built.
+and a player can oppose the followers or join them. Last, **everything under the world is written**: the trees, the
+roots and all of it are covered in countless words, which the player sees on entering, and which is how the web and
+the written world of part I are one thing. No code is changed and nothing is built.
 [Architecture](docs/rounds/167/architecture.md), [findings](docs/rounds/167/findings.md).
 
 ## Addendum 2026-11-23: round 166, the narrator's passage stays while the conversation loads
