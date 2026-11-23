@@ -57,7 +57,9 @@ first test of light mode, the narrator's voice and the characters' hints.
 
 **Amendment (2026-11-23): the pull comes at every larger step.** After the deploy the owner moved the world event
 from the one step A2 to B1 to "all the medium to major transitions", not every unit: A1 to A2, and so on. The lore
-book's part is now "The pulls" and the proposal is amended; which steps count as medium is asked in both. Not built.
+book's part is now "The pulls" and the proposal is amended. Asked which steps, the owner settled it: only the changes
+of level (A1 to A2, A2 to B1). Not built: it is **issue #23**. The owner also did not intend round 162's cutting down
+of the tree models; **issue #24** is to use them at their original poly counts.
 
 ## Addendum 2026-11-23: rounds 153 to 163, the eleven open issues, on one branch awaiting the owner's word
 

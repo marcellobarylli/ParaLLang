@@ -53,6 +53,17 @@ curriculum's larger steps (A1 to A2, A2 to B1, and so on), each pull taking the 
 earlier ones further down. The proposal is amended the same way. Which steps count as "medium" (the steps between
 the two stages of a level, or only the changes of level) is asked in both. Still nothing of it is built.
 
+## Amendment 2 (2026-11-23): only the changes of level; two issues opened
+
+Asked which steps count, the owner said: "Really only do A1 to A2 and so on". The pulls come at each change of level
+(A1 to A2, A2 to B1) and at no step inside a level; the lore book and the proposal say so and the question is gone
+from both. The owner also asked for two issues, and they are open:
+
+- **#23**, the pulls: the event itself, from the proposal.
+- **#24**, tree models at their original poly counts. Round 162 cut each tree to about 160 triangles to keep the
+  level inside its budget of 64 000; the owner did not intend that ("they're low poly assets anyway"). The issue
+  names what has to give: the file's size, the budget, and drawing the trees as instances.
+
 ## Tests
 
 - `client/src/__tests__/pages.test.js`: the icon's walk is 120 walks from the start, every site of it is inside

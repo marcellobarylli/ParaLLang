@@ -65,3 +65,19 @@ Claude's reading, which the owner has not confirmed: "it" is the world event of 
 A2. The event comes at the curriculum's larger steps and not at one. Whether "medium" means the step between the
 two stages of a level (A1.1 to A1.2) is not said, and is asked in the lore book and the proposal.
 
+### Q3 (2026-11-23): asked after the amendment
+- **Question:** "what counts as 'medium'? […] All five steps […] Changes of level only", "Should #11 and #13 be
+  closed too […]?", "Do the characters know they are impostors?", "Do you want the first pull filed as a GitHub
+  issue?"
+- **Options offered:** all five steps between stages, or the changes of level alone; close or leave; yes or no.
+- **Answer:** "Really only do A1 to A2 and so onRegarding the rest yes open the issue for the actual implementation
+  and I'm wondering if we should open another issue because it seems like the assets were shrunken down in their
+  potty count poly count which is not necessarily the intention so we can keep the original poly counts seems fine
+  since they're  low poly assets anyway. So we could open another issue on this then deploy."
+
+Claude's reading, which the owner has not confirmed: the pulls come at the changes of level alone. "yes open the
+issue" answers the last question; issue #23 is opened. A second issue, #24, is opened for the models at their
+original poly counts. "then deploy": what is new is text only (the lore book, the proposal, the records), so it
+goes to `main` marked to build and restart nothing. The message does not say whether #11 and #13 close or whether
+the characters know they are impostors; both are left as they were.
+

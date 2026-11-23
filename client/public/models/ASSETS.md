@@ -19,6 +19,8 @@ its models are stamped into the five chunks of ground nearest the camera (`aesth
   them :)". The pack's own `nature-pack/Readme.md` says: "cc0, do whatever you want with it, credits are appreciated
   though".
 - **Credit** (asked for, not required): flo-bit, https://flo-bit.dev.
+- **To be undone:** the owner did not intend the models to be cut down (2026-11-23: "we can keep the original poly
+  counts seems fine since they're low poly assets anyway"). GitHub issue #24 is to use them as they are.
 - **What was done to them:** `client/scripts/make-models.mjs` drops each model's normals and texture coordinates
   (the level shades every triangle flat and colours it from the material), welds its vertices, simplifies it to the
   share of its triangles in the script's `MODELS`, names it after its file, puts all fifteen into one file and
