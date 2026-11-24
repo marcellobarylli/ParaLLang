@@ -93,7 +93,7 @@ export function buildRoadDefinition({ curriculum, language, seed, node, step, ac
       id: objective.id,
       prompt: fill(objective.prompt, first),
       intent: teaches
-        ? `${first} gives the player a natural reason to do this: ${ask}. The words for it (${forms}) are new to the player, so ${first} uses one or two of them in ${first}'s own lines first, as part of what ${first} is saying and never as an instruction, and then leaves room for the player to use them back.`
+        ? `${first} gives the player a natural reason to do this: ${ask}. The words for it (${forms}) are new to the player, so ${first} uses one or two of them in ${first}'s own lines first, as part of what ${first} is saying about ${first}'s own situation, and then leaves room for the player to use them back. Never as an instruction, never as what someone says or should say (no "everyone says X", no "I answer X", no quoted reply), and never in the very line that asks for them.`
         : `${first} gives the player a natural reason to do this: ${ask}. The player has learned the words for it before. ${first} never says them (in dialogue or narration) before the player has, and does not tell the player what to say.`,
       target_vocabulary_ids: objective.target_vocabulary_ids,
       required_target_groups: objective.required_target_groups,
@@ -136,7 +136,7 @@ export function buildRoadDefinition({ curriculum, language, seed, node, step, ac
     world: roadWorld(knowledge, language.code, { seed, node, step, cefr: stage.cefr }), // round 155
     scene: Object.freeze({ name: dungeon ? dungeon.site.name : place, place: dungeon ? dungeon.name : ROAD_PLACE.name, seed }), // the seed gives the scene its weather (round 146)
     teachingNote: teaches
-      ? `This is a first lesson. The player has never seen the ${language.name} words the learning data asks for. Model each of them naturally in ${first}'s own lines before expecting it back; for this conversation that replaces the rule against using the words of an answer. Never tell the player what to say.`
+      ? `This is a first lesson. The player has never seen the ${language.name} words the learning data asks for. Model each of them naturally in ${first}'s own lines before expecting it back, about ${first}'s own situation; for this conversation that replaces the rule against using the words of an answer. Never tell the player what to say, and never put the words in a quoted reply or in what "people say".`
       : null,
     road: Object.freeze({
       kind: activity.kind, title, unitId: unit.id, unitTitle: unit.title, stageId: stage.id, cefr: stage.cefr,

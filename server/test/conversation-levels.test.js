@@ -36,6 +36,7 @@ test('A1 keeps to the conversation\'s words and accepts a goodbye; A2 and B1 tal
   const a1 = systemAt('A1');
   assert.equal(systemAt(), a1, 'an authored encounter speaks at A1');
   assert.match(a1, /one or two short sentences of plain words/);
+  assert.match(a1, /it is still funny: most lines carry one short absurd touch/);
   assert.match(a1, /Do not open new topics that need new words/);
   assert.match(a1, /a question answered by yes or no, or by one word, is good here/);
   assert.match(a1, /When the player says goodbye, Gerald says goodbye back/);
