@@ -49,7 +49,7 @@ test('at full immersion the narrator speaks the language only, from the greeting
   // The narration around the line stays English with a few words of the language (round 130's cap of 30 %).
   assert.match(greeting, /Narrative text is English prose with a few Italian words dropped in: about 30% of its words/);
   // The rest of the prompt is what it was: the conversation's rules and the learning data.
-  assert.match(greeting, /Never the words of an answer\./);
+  assert.match(greeting, /Never say the phrase the player is meant to say as a model answer/); // round 177
   assert.match(greeting, /ACTIVE LEARNING DATA: \[/);
 
   // The translation of the line being answered is there without a hint spent.

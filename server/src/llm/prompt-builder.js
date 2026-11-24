@@ -34,6 +34,21 @@ function targetData(objectives, vocabularyById, { forms = false } = {}) {
   }));
 }
 
+// Round 177: the conversation rules for a CEFR level, after the playtest of 2026-11-24
+// (docs/playtests/2026-11-24-conversations): one question a line, about the player and never about the character's own
+// work, at every level; at A1 short lines kept to the conversation's words; from A2 a conversation about the player.
+export const CONVERSATION_LEVELS = Object.freeze(['A1', 'A2', 'B1']);
+export function conversationLevel(level) {
+  const band = String(level ?? '').trim().toUpperCase().slice(0, 2);
+  return CONVERSATION_LEVELS.includes(band) ? band : band.startsWith('B') || band.startsWith('C') ? 'B1' : 'A1';
+}
+export function conversationRules(level, variables) {
+  const band = conversationLevel(level);
+  const rules = [loadTemplate(`system/conversation_${band.toLowerCase()}.txt`), loadTemplate('system/conversation_shared.txt')]
+    .map((text) => fillTemplate(text, variables).trimEnd()).join('\n');
+  return { level: band, rules };
+}
+
 // Round 019: an encounter's ambient vocabulary, as one extra line after the learning data; empty when it has none, so
 // prompts without it stay byte-identical (Gerald's golden prompts).
 function ambientLine(language, entries) {
@@ -72,13 +87,18 @@ export function buildNarrationMessages({
   // Round 155: what the character knows of the world it lives in ({ global, region, noticed }), as one block after the
   // character's line (system/world.txt). Without it the prompt is byte for byte as before.
   world = null,
+  // Round 177: the learner's CEFR level ('A1', 'A2', 'B1'), which picks the conversation rules (system/conversation_*.txt).
+  // A conversation without one (the authored encounters of the market) is spoken at A1.
+  level = 'A1',
 }) {
+  const conversation = conversationRules(level, { enemy: { name: character.name }, language: { name: language.name } });
   const dialogueRules = fillTemplate(loadTemplate(full ? 'system/dialogue_full.txt' : 'system/dialogue_mixed.txt'), {
     language: { name: language.name, targetRatio: Math.round(targetRatio * 100), wordsPer20: Math.round(targetRatio * 20) },
   }).trimEnd();
   const worldBlock = world ? fillTemplate(loadTemplate('system/world.txt'), { enemy: { name: character.name }, world }).trimEnd() : '';
   const system = fillTemplate(loadTemplate('system/base.txt'), {
     worldBlock,
+    conversation,
     enemy: { name: character.name, species: character.species, tone: character.personality.tone, quirks: character.personality.quirks.join('; ') },
     style: {
       tone: styleGuide.tone, narratorVoice: styleGuide.narrator_voice, rules: styleGuide.rules.map((rule) => `- ${rule}`).join('\n'),

@@ -77,14 +77,16 @@ test('the last objective met on the fourth turn ends the conversation there', as
   assert.equal(turn.encounter.state, 'resolved');
 });
 
-test('the model is asked to follow up on what was said, to answer questions and to invite them', async (t) => {
+test('the model is asked to follow up on what was said, to answer questions and to end on one question about the player', async (t) => {
   const { runtime, encounter, say } = await open(t, [none]);
   await say('Ciao', encounter);
   const prompt = lightCalls(runtime)[0].messages.at(-1).content;
   assert.match(prompt, /a real back-and-forth of `exchange\.min` to `exchange\.max` of the player's turns/);
   assert.match(prompt, /Respond first to what the player actually said, and follow up on it/);
   assert.match(prompt, /If the player asked Portia something, answer it properly, in character, before anything else/);
-  assert.match(prompt, /Invite the player to ask something back/);
+  // Round 177: no invitation to ask about the character's trade; one question, about the player.
+  assert.doesNotMatch(prompt, /Invite the player to ask something back|a trade, a place and opinions/);
+  assert.match(prompt, /End as the conversation rules say: one question, about the player\./);
   assert.match(prompt, /`exchange\.ending`; follow it exactly/);
 });
 

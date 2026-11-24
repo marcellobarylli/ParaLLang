@@ -1160,6 +1160,7 @@ export class LearningService {
       // Round 146: the time of day and the weather on the road, as the player sees them (the same clock and seed).
       ...(definition.scene?.seed !== undefined ? { weather: weatherAt(new Date(this.clock()).getTime(), definition.scene.seed).sentence } : {}),
       ...(definition.teachingNote ? { teachingNote: definition.teachingNote } : {}),
+      ...(definition.road?.cefr ? { level: definition.road.cefr } : {}), // round 177: the conversation rules of the stage
     };
   }
 
