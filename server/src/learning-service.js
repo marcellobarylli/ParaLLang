@@ -50,7 +50,8 @@ export const LIGHT_QUALITY = 4;
 export const EXCHANGE_LIMIT = 3;
 export const LIGHT_EXCHANGE = Object.freeze({ min: 3, max: 5 }); // round 154; under the limit of round 174, both are 3
 const LIGHT_ENDING = Object.freeze({
-  go_on: 'Not yet: the conversation goes on after this reply, whatever has been met. Do not say goodbye.',
+  // Round 177: a player's own goodbye is answered (the playtest found it refused); the character never ends it first.
+  go_on: 'Not yet: the conversation goes on after this reply, whatever has been met. Do not end it yourself. If the player says goodbye, say goodbye back warmly and ask nothing more.',
   if_done: 'If no objective is left open after this answer, this reply is the last of the conversation: wind it up warmly, as the character would, and ask nothing more. Otherwise the conversation goes on.',
   now: 'Now: this reply is the last of the conversation, whatever is still open. Wind it up warmly, as the character would, and ask nothing more.',
 });
