@@ -27,6 +27,8 @@ export function clampPanelOpacity(value) {
   return Math.round(Math.min(PANEL_OPACITY.max, Math.max(PANEL_OPACITY.min, stepped)) * 100) / 100;
 }
 
+// Round 177: `immersionAuto` (on by default, and for a display saved before it): the characters speak the stage's share
+// of the language; the slider's share applies once it is moved.
 export const IMMERSION = Object.freeze({ min: 0.1, max: 1, step: 0.1, default: 1 });
 
 /** A share on the slider's scale: clamped, rounded to the step; the default (all of it) for anything that is not a number. */
@@ -36,6 +38,10 @@ export function clampImmersion(value) {
   const stepped = Math.round(number / IMMERSION.step) * IMMERSION.step;
   return Math.round(Math.min(IMMERSION.max, Math.max(IMMERSION.min, stepped)) * 100) / 100;
 }
+
+// Round 177: the share sent with a start or an answer: null (the stage's share, the server's own) while the share
+// follows the learner's level.
+export const immersionOf = (state) => (state?.display?.immersionAuto !== false ? null : clampImmersion(state?.display?.immersion));
 
 export const VOLUME = Object.freeze({ min: 0, max: 1, step: 0.05, default: 1 });
 export const VOLUME_CHANNELS = Object.freeze(['master', 'music', 'effects', 'voice']);
@@ -53,11 +59,11 @@ export const volumesOf = (volume) => Object.fromEntries(VOLUME_CHANNELS.map((cha
 export function loadDisplay(storage = browserStorage()) {
   let stored = null;
   try { stored = JSON.parse(storage?.getItem?.(DISPLAY_KEY) ?? 'null'); } catch { stored = null; }
-  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), light: stored?.light === true, treeModels: stored?.treeModels !== false, streamlined: stored?.streamlined !== false, volume: volumesOf(stored?.volume) };
+  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), immersionAuto: stored?.immersionAuto !== false, light: stored?.light === true, treeModels: stored?.treeModels !== false, streamlined: stored?.streamlined !== false, volume: volumesOf(stored?.volume) };
 }
 
 export function saveDisplay(display, storage = browserStorage()) {
-  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), light: display?.light === true, treeModels: display?.treeModels !== false, streamlined: display?.streamlined !== false, volume: volumesOf(display?.volume) };
+  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), immersionAuto: display?.immersionAuto !== false, light: display?.light === true, treeModels: display?.treeModels !== false, streamlined: display?.streamlined !== false, volume: volumesOf(display?.volume) };
   try { storage?.setItem?.(DISPLAY_KEY, JSON.stringify(value)); } catch { /* private mode: kept for this page only */ }
   return value;
 }

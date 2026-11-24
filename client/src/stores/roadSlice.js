@@ -19,7 +19,7 @@
 // and what a finished conversation does to the curriculum. `road` and `curriculum` are its view, as sent. On rails
 // (a display preference, on by default) the way on is the server's `road.rails`: the pacing's own choice.
 
-import { clampImmersion } from '../display.js';
+import { immersionOf } from '../display.js';
 
 // Round 175: the landscape the title screen shows, kept in this browser: { seed, at }.
 export const TITLE_KEY = 'parallang.title';
@@ -176,7 +176,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       const epoch = guard.epoch();
       const stale = () => request !== guard.site() || epoch !== guard.epoch() || get().mode !== 'road';
       set({ encounterLoading: true, roadError: null, error: null });
-      const start = (again) => api.startEncounter(learnerId, { road: true, restart: again, immersion: clampImmersion(get().display?.immersion) });
+      const start = (again) => api.startEncounter(learnerId, { road: true, restart: again, immersion: immersionOf(get()) });
       try {
         let result;
         try { result = await start(restart); }

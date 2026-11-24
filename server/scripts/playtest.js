@@ -5,7 +5,7 @@
 //       The CLI child gets this process's whole environment and the adapter's sign-in check is skipped: it is for a
 //       development machine or a cloud session whose CLI is signed in some other way, never for the game's server.
 //
-//   node scripts/playtest.js start --port 3101 --dir <dir> --unit <unitId> [--lesson <lessonId>] [--mode beginner|light|strict] [--immersion 1] [--seed N]
+//   node scripts/playtest.js start --port 3101 --dir <dir> --unit <unitId> [--lesson <lessonId>] [--mode beginner|light|strict] [--immersion auto|0.1..1] [--seed N]
 //       A new learner at that unit (streamlined: the unit conversation) or lesson; prints the character's greeting.
 //
 //   node scripts/playtest.js say --port 3101 --dir <dir> --learner <id> "what the player says"
@@ -118,8 +118,10 @@ async function start() {
   const { learnerId } = await call('/api/learner', { method: 'POST', body: {} });
   await call('/api/road', { learnerId });
   await call('/playtest/place', { method: 'POST', body: { learnerId, unitId: option('unit'), lessonId: option('lesson') } });
-  const immersion = Number(option('immersion', 1));
-  const started = await call('/api/encounter/start', { method: 'POST', learnerId, body: { road: true, immersion } });
+  // Round 177: the game's default is the learner's level (no share sent): --immersion auto, the default here too.
+  const raw = option('immersion', 'auto');
+  const immersion = raw === 'auto' ? null : Number(raw);
+  const started = await call('/api/encounter/start', { method: 'POST', learnerId, body: { road: true, ...(immersion !== null ? { immersion } : {}) } });
   const encounter = started.encounter;
   const session = { learnerId, encounterId: encounter.id, version: encounter.version, mode: option('mode', 'beginner'), immersion, unit: option('unit'), lesson: option('lesson'), road: encounter.road ?? null };
   writeFileSync(sessionPath(learnerId), JSON.stringify(session, null, 2));
@@ -139,7 +141,7 @@ async function say() {
   const session = JSON.parse(readFileSync(sessionPath(learnerId), 'utf8'));
   const chat = session.complete === true;
   const flags = chat ? { chat: true } : session.mode === 'light' ? { light: true } : session.mode === 'beginner' ? { beginner: true } : {};
-  const result = await call('/api/encounter/dialogue', { method: 'POST', learnerId, body: { encounterId: session.encounterId, version: session.version, attemptId: randomUUID(), message, immersion: session.immersion, ...flags } });
+  const result = await call('/api/encounter/dialogue', { method: 'POST', learnerId, body: { encounterId: session.encounterId, version: session.version, attemptId: randomUUID(), message, ...(session.immersion != null ? { immersion: session.immersion } : {}), ...flags } });
   const encounter = result.encounter;
   session.version = encounter.version;
   if (encounter.state !== 'ongoing') session.complete = true;

@@ -9,8 +9,8 @@
 
 import { hash } from './terrain.js';
 
-const FIRST = ['Barnaby', 'Ottoline', 'Mungo', 'Perpetua', 'Ignatius', 'Dorcas', 'Septimus', 'Eudora', 'Aloysius', 'Winifred', 'Horatio', 'Prudence', 'Cuthbert', 'Mafalda', 'Leopold', 'Hepzibah', 'Ambrose', 'Clementina', 'Tobias', 'Griselda', 'Erasmus', 'Philippa', 'Bartholomew', 'Sidonie', 'Fergus', 'Ludmilla', 'Osbert', 'Tabitha', 'Wilfred', 'Araminta', 'Gideon', 'Bettina', 'Thaddeus', 'Marigold', 'Lazlo', 'Henrietta'];
-const LAST = ['Thrupp', 'Crumb', 'Wattle', 'Pennyfeather', 'Gristle', 'Tuffet', 'Quillfeather', 'Nettlebed', 'Marrow', 'Sprocket', 'Dimwiddy', 'Hobbleton', 'Fennel', 'Stoat', 'Underhedge', 'Bracket', 'Tallow', 'Mudlark', 'Pocket', 'Windlestraw', 'Clodpole', 'Garnish', 'Inkpen', 'Ladle', 'Thimble', 'Scuttle', 'Parsnip', 'Lintel', 'Oddfellow', 'Brisket', 'Wimple', 'Cobbett', 'Furrow', 'Saltmarsh', 'Hinge', 'Larder'];
+const FIRST = ['Barnaby', 'Ottoline', 'Mungo', 'Perpetua', 'Ignatius', 'Dorcas', 'Septimus', 'Eudora', 'Aloysius', 'Winifred', 'Horatio', 'Prudence', 'Cuthbert', 'Mafalda', 'Leopold', 'Hepzibah', 'Ambrose', 'Clementina', 'Tobias', 'Griselda', 'Erasmus', 'Philippa', 'Bartholomew', 'Sidonie', 'Fergus', 'Ludmilla', 'Osbert', 'Tabitha', 'Wilfred', 'Araminta', 'Gideon', 'Bettina', 'Thaddeus', 'Marigold', 'Lazlo', 'Henrietta', 'Wilhelmina', 'Euphemia', 'Lancelot', 'Ebenezer', 'Cordelia', 'Fitzroy', 'Jedediah', 'Lavinia', 'Montague', 'Ottilie', 'Peregrine', 'Rosamund', 'Silas', 'Theodora', 'Valentine', 'Zachariah', 'Beatrix', 'Cornelius', 'Drusilla', 'Ferdinand', 'Gwendolen'];
+const LAST = ['Thrupp', 'Crumb', 'Wattle', 'Pennyfeather', 'Gristle', 'Tuffet', 'Quillfeather', 'Nettlebed', 'Marrow', 'Sprocket', 'Dimwiddy', 'Hobbleton', 'Fennel', 'Stoat', 'Underhedge', 'Bracket', 'Tallow', 'Mudlark', 'Pocket', 'Windlestraw', 'Clodpole', 'Garnish', 'Inkpen', 'Ladle', 'Thimble', 'Scuttle', 'Parsnip', 'Lintel', 'Oddfellow', 'Brisket', 'Wimple', 'Cobbett', 'Furrow', 'Saltmarsh', 'Hinge', 'Larder', 'Blotting', 'Cobblestone', 'Draper', 'Elderberry', 'Fiddlewick', 'Gumboot', 'Hatchment', 'Inkwell', 'Jumble', 'Kettleby', 'Lampwick', 'Muddle', 'Nutmeg', 'Oddsock', 'Puddingstone', 'Quibble', 'Rummage', 'Saltcellar', 'Vestry', 'Whitlow', 'Yarrow', 'Bobbin'];
 const TONES = [
   'weary and exact, like a clerk at the end of a very long form',
   'cheerfully mistaken about nearly everything and generous with it',
@@ -25,14 +25,15 @@ const TONES = [
   'eager and slightly breathless, like someone who has waited all day for a customer',
   'suspicious on principle, though never of the right thing',
 ];
+// Round 177: a quirk shows now and then; the playtest found quirks worded "at every opportunity" in every line.
 const QUIRKS = [
-  'Keeps a ledger of everything said to them and reads the last line back for accuracy',
+  'Keeps a ledger of everything said to them, and once in a while checks an entry for accuracy',
   'Refers to the guild rulebook for matters the rulebook was never meant to cover',
   'Treats the weather as a personal acquaintance who has let them down',
-  'Has a rubber stamp and is looking for a reason to use it',
+  'Has a rubber stamp and is waiting for the one occasion that deserves it',
   'Measures distances in sandwiches, since that is what a walk costs',
   'Believes the road moves at night and has evidence, which is at home',
-  'Is saving up for a hat and mentions the fund at every opportunity',
+  'Is saving up for a hat, and the fund comes up once, at the least suitable moment',
   'Counts the people who pass and is disappointed when the total is even',
   'Explains a thing by comparing it with something far more complicated',
   'Has a cousin who did it better, whatever it is',
@@ -44,9 +45,9 @@ const QUIRKS = [
   'Offers a small biscuit as a mark of official approval and takes it back if things go badly',
   'Keeps strictly to opening hours that nobody else has ever seen written down',
   'Is certain they have met the player before and is polite about being wrong',
-  'Thinks in lists and numbers the points out loud',
+  'Thinks in lists, and once in a conversation cannot help numbering the points out loud',
   'Has a great respect for queues and forms one even when alone',
-  'Is training a successor who has not turned up yet, and leaves pauses for them',
+  'Is training a successor who has not turned up yet, and once leaves a pause for them',
   'Distrusts anything that was not in the original instructions, which are lost',
   'Narrates their own tidy habits as though dictating a manual',
   'Holds that everything was better before the last reorganisation, of which there have been nine',

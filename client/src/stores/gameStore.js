@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
-import { clampImmersion, clampVolume, loadDisplay, saveDisplay, volumesOf } from '../display.js';
+import { clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf } from '../display.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
 
 // Round 148: the share of target language the player chose (Settings), as the server takes it.
-export const immersionOf = (state) => clampImmersion(state?.display?.immersion);
+export { immersionOf } from '../display.js';
 
 // Round 115: the web client plays a dungeon. Round 119: the dungeon is a map under a world map. The flow:
 //
@@ -647,7 +647,9 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       // Round 172: one of the Audio volumes ('master', 'music', 'effects' or 'voice'), 0 to 1.
       setVolume: (channel, value) => set({ display: saveDisplay({ ...get().display, volume: { ...volumesOf(get().display?.volume), [channel]: clampVolume(value) } }, storage) }),
       // Round 148: how much of a character's lines is in the language being learned; sent with each start and answer.
-      setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value) }, storage) }),
+      setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value), immersionAuto: false }, storage) }),
+      // Round 177: whether the share follows the learner's level (the stage's share) instead of the slider.
+      setImmersionAuto: (on) => set({ display: saveDisplay({ ...get().display, immersionAuto: on !== false }, storage) }),
       // Round 129: beginner mode, sent with each answer.
       setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
       // Round 162: whether the road's nearest trees are the pulled models.
@@ -728,7 +730,7 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
         try {
           // Round 129: beginner mode travels with the answer (the server grades strictly without it).
           // Round 153: so does light mode, in which the server checks nothing; it takes the place of beginner mode.
-          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(chat ? { chat: true } : state.display?.light === true ? { light: true } : state.display?.beginner !== false ? { beginner: true } : {}), immersion: immersionOf(state) });
+          const result = await api.sendDialogue(learnerId, { encounterId, version, attemptId: attemptId(), message: text, ...(chat ? { chat: true } : state.display?.light === true ? { light: true } : state.display?.beginner !== false ? { beginner: true } : {}), ...(immersionOf(state) !== null ? { immersion: immersionOf(state) } : {}) });
           if (epoch !== requestEpoch || get().learnerId !== learnerId || get().encounter?.version !== version) return;
           // A chat after the end: only the conversation grows.
           if (chat) { set({ encounter: result.encounter, spellbook: withSpellbook(result.spellbook), assessment: null, isLoading: false, pendingInput: null, draft: '' }); return; }

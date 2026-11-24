@@ -653,7 +653,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         light={state.display?.light === true} onLight={state.setLight}
         treeModels={state.display?.treeModels !== false} onTreeModels={state.setTreeModels}
         streamlined={state.display?.streamlined !== false} onStreamlined={state.setStreamlined}
-        immersion={state.display?.immersion} onImmersion={state.setImmersion} languageName={state.language?.name}
+        immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
         volume={volume} onVolume={(channel, value) => { state.setVolume(channel, value); if (value > 0) ambience.start(); }}
         voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }}

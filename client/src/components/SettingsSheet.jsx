@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, treeModels = true, onTreeModels, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, treeModels = true, onTreeModels, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -134,10 +134,18 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
           <Group title="Language and learning">
             {onImmersion && (
               <>
-                <div className="setting-row"><label htmlFor="settings-immersion">{`How much ${languageName ?? 'of the language'} the characters speak`}</label><output htmlFor="settings-immersion">{immersionPercent}%</output></div>
+                {onImmersionAuto && (
+                  <label className="setting-check" htmlFor="settings-immersion-auto">
+                    <input id="settings-immersion-auto" type="checkbox" checked={immersionAuto} onChange={(event) => onImmersionAuto(event.target.checked)} />
+                    <span>Follow my level</span>
+                  </label>
+                )}
+                <div className="setting-row"><label htmlFor="settings-immersion">{`How much ${languageName ?? 'of the language'} the characters speak`}</label><output htmlFor="settings-immersion">{immersionAuto && onImmersionAuto ? 'My level' : `${immersionPercent}%`}</output></div>
                 <input id="settings-immersion" type="range" min={IMMERSION.min * 100} max={IMMERSION.max * 100} step={IMMERSION.step * 100}
                   value={immersionPercent} aria-valuetext={`${immersionPercent}%`} onChange={(event) => onImmersion(Number(event.target.value) / 100)} />
-                <small>{immersionPercent >= 100
+                <small>{immersionAuto && onImmersionAuto
+                  ? `Following your level: a beginner hears mostly English with ${languageName ?? 'the language'} woven in, and more ${languageName ?? 'of the language'} as you go on. Move the slider to choose a share yourself.`
+                  : immersionPercent >= 100
                   ? `Every line a character speaks is in ${languageName ?? 'the language you are learning'}. Its translation shows under it, sentence by sentence in matching colours, and costs nothing.`
                   : `About ${immersionPercent}% of each line is in ${languageName ?? 'the language you are learning'} and the rest in English. The translation of the line you are answering is a hint. At 100% it is free.`} It applies from the character's next line.</small>
               </>

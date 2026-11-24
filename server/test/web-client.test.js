@@ -433,17 +433,18 @@ test('the web client sends the token from its settings', async () => {
   } finally { wrapper.token = true; }
 });
 
-// Round 148: the page as it is first opened asks for the language only, and the line being answered comes with its
-// translation without a hint spent.
-test('the web client as first opened: the line comes with its translation, and no hint is used for it', async () => {
+// Round 148: the page as it is first opened asks for the language only. Round 177: and the share follows the
+// learner's level: no share is sent, the lines are mixed at the content's share, and the translation is a hint.
+test('the web client as first opened: the share follows the level, and the line is mixed with its translation as a hint', async () => {
   const { s } = newStore(memoryStorage());
   await s().initialize();
-  assert.equal(s().display.immersion, 1);
+  assert.equal(s().display.immersionAuto, true);
   await openSite(s);
   const line = s().encounter.transcript.findLast((message) => message.role !== 'player');
   assert.equal(line.protected, true);
-  assert.equal(typeof line.dialogue.translation, 'string');
+  assert.equal(line.dialogue.translation, undefined);
   assert.equal(s().encounter.hints.used, 0);
   const system = runtime.provider.calls.filter((call) => call.options.schemaName === 'encounter_narration').at(-1).messages[0].content;
-  assert.match(system, /Dialogue is entirely in Spanish/);
+  assert.match(system, /of the words in each dialogue line are Spanish/);
+  assert.doesNotMatch(system, /Dialogue is entirely in Spanish/);
 });
