@@ -137,9 +137,12 @@ test('the player types NFD accents and double spaces, the grader quotes NFC with
   assert.equal(encounter.state, 'resolved');
 });
 
-test('evidence that is not in the answer is still refused', async () => {
-  await assert.rejects(
-    fountainTurns(() => 'è l’una', ['Fermati!']),
-    (error) => error.code === 'INVALID_GRADING',
-  );
+// Round 177: evidence not in the answer is dropped, never recorded; the grader's pass stands as understood (closed as
+// corrected, without the word's evidence), where before the turn failed with INVALID_GRADING.
+test('evidence that is not in the answer is never recorded', async () => {
+  const { turns } = await fountainTurns(() => 'è l’una', ['Fermati!']);
+  const [result] = turns[0].assessment.objectiveResults;
+  assert.equal(result.passed, true, 'understood');
+  assert.equal(result.corrected, true, 'closed as corrected, not as a pass');
+  assert.deepEqual(result.vocabularyEvidence ?? [], []);
 });

@@ -89,12 +89,16 @@ export function buildRoadDefinition({ curriculum, language, seed, node, step, ac
   const objectives = source.map((objective, index) => {
     const forms = objective.target_vocabulary_ids.map((id) => `"${byId.get(id).target}"`).join(', ');
     const ask = fill(objective.ask, first);
+    const recall = `${first} gives the player a natural reason to do this: ${ask}. The player has met the words for it before. ${first} never says them (in dialogue or narration) before the player has, and does not tell the player what to say.`;
     return {
       id: objective.id,
       prompt: fill(objective.prompt, first),
       intent: teaches
         ? `${first} gives the player a natural reason to do this: ${ask}. The words for it (${forms}) are new to the player, so ${first} uses one or two of them in ${first}'s own lines first, as part of what ${first} is saying about ${first}'s own situation, and then leaves room for the player to use them back. Never as an instruction, never as what someone says or should say (no "everyone says X", no "I answer X", no quoted reply), and never in the very line that asks for them.`
-        : `${first} gives the player a natural reason to do this: ${ask}. The player has learned the words for it before. ${first} never says them (in dialogue or narration) before the player has, and does not tell the player what to say.`,
+        : recall,
+      // Round 177: a taught objective whose words the learner had met when the conversation began is asked for as a
+      // review's is: the character does not say the words first (learning-service.js, voiced).
+      ...(teaches ? { recall_intent: recall } : {}),
       target_vocabulary_ids: objective.target_vocabulary_ids,
       required_target_groups: objective.required_target_groups,
       grammar_constraints: objective.grammar_constraints.map((line) => fill(line, first)),

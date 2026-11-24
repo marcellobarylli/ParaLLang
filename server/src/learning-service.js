@@ -55,6 +55,11 @@ const LIGHT_ENDING = Object.freeze({
   if_done: 'If no objective is left open after this answer, this reply is the last of the conversation: wind it up warmly, as the character would, and ask nothing more. Otherwise the conversation goes on.',
   now: 'Now: this reply is the last of the conversation, whatever is still open. Wind it up warmly, as the character would, and ask nothing more.',
 });
+// Round 177: two texts that differ only in accents, apostrophes, capitals, punctuation or spacing.
+export function sameLetters(a, b) {
+  const fold = (text) => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+  return fold(a) !== '' && fold(a) === fold(b);
+}
 export const CORRECTION_MAX_LENGTH = 600; // round 131: an answer may be a paragraph (300 before)
 const CORRECTED_NOTE = 'An objective marked corrected was said with slips, or in English; the player was understood and has been shown the correct form. Treat it as met. Answer what the player meant. Do not mock the slips, do not remark on which language the player used, and do not repeat the correction.';
 
@@ -1104,8 +1109,11 @@ export class LearningService {
     // Round 148: a greeting written ahead was written at the content's share; with a share of the player's own it is
     // dropped and the greeting is written now.
     if (immersion !== null && !definition.encounter.party_of) this.dropGreeting(greetingKey(learnerId, definition.encounter.id));
-    const generated = (immersion === null ? await this.prefetchedGreeting(learnerId, definition) : null)
-      ?? await this.narrate(this.greetingMessages(definition, locationId, ratioBonus, immersion), definition, this.ratioFor(0, definition, ratioBonus, immersion));
+    // Round 177: the taught objectives whose words the learner had met before this conversation (fixed now, so the
+    // character's own lines in it do not change it).
+    const known = this.knownObjectiveIds(envelope, definition);
+    const generated = (immersion === null && !known.length ? await this.prefetchedGreeting(learnerId, definition) : null)
+      ?? await this.narrate(this.greetingMessages(definition, locationId, ratioBonus, immersion, known), definition, this.ratioFor(0, definition, ratioBonus, immersion));
     const npcMessage = this.canonicalizeNarration(generated, definition);
     const stagedEnvelope = clone(envelope);
     this.discover(stagedEnvelope, npcMessage.dialogue.words.map((word) => word.vocabularyId), nowIso(this.clock), 'encounter_exposure');
@@ -1123,6 +1131,7 @@ export class LearningService {
       ...(road ? { road } : {}), // round 144: the stage sets a road conversation's ratio, so it takes no level bonus
       ...(ratioBonus ? { ratioBonus } : {}),
       ...(immersion !== null ? { immersion } : {}), // round 148
+      ...(known.length ? { known } : {}), // round 177
       // Round 111: a session started while the companion's strain is pending has a hint fewer per objective.
       ...(strainedBy.length ? { strained: true, strainedBy } : {}),
     };
@@ -1133,23 +1142,37 @@ export class LearningService {
 
   // Round 076 (critique 1.6): the greeting's prompt, the same for a start and a prefetch. It depends on content only,
   // which is loaded once for the service's lifetime, so a prefetched greeting is the one the start would ask for.
-  greetingMessages(definition, locationId, ratioBonus = 0, immersion = null) {
+  greetingMessages(definition, locationId, ratioBonus = 0, immersion = null, known = []) {
     return buildNarrationMessages({
       language: this.content.language,
       character: definition.character,
       styleGuide: this.content.styleGuide,
       locationName: definition.scene?.name ?? this.sceneName({ definitionId: definition.encounter.id, locationId }),
-      objectives: definition.encounter.objectives,
+      objectives: this.voiced(definition.encounter.objectives, known),
       vocabularyById: this.lookup,
       ...this.shareOf(0, definition, { ratioBonus, immersion }),
       ambientEntries: definition.ambientEntries,
-      ...this.sceneExtras(definition),
+      ...this.sceneExtras(definition, known),
     });
+  }
+
+  // Round 177: the owner's rule: a character says an objective's words first only when the learner has truly never
+  // met them. The ids of the taught objectives (those with a `recall_intent`) of which some word is in the Spellbook.
+  knownObjectiveIds(envelope, definition) {
+    return definition.encounter.objectives
+      .filter((objective) => objective.recall_intent && objective.target_vocabulary_ids.some((id) => this.findItem(envelope, id)))
+      .map((objective) => objective.id);
+  }
+
+  // Round 177: objectives as the narrator is told them: a known one asks for recall, not modelling.
+  voiced(objectives, known = []) {
+    const ids = new Set(known);
+    return objectives.map((objective) => (ids.has(objective.id) ? { ...objective, intent: objective.recall_intent } : objective));
   }
 
   // Round 144: what a road conversation adds to the narrator's turn data: the place it is in, and for a lesson the
   // note that its words are new and are to be modelled. Nothing for an authored encounter, whose prompts are pinned.
-  sceneExtras(definition) {
+  sceneExtras(definition, known = []) {
     // Round 155 (issue #3): what the character knows of the world: an authored character's region and what it has
     // noticed are on its sheet; a generated character of the road brings its own (road/encounters.js).
     const world = definition.world ?? (definition.character.world
@@ -1160,7 +1183,8 @@ export class LearningService {
       ...(definition.scene?.place ? { placeName: definition.scene.place } : {}),
       // Round 146: the time of day and the weather on the road, as the player sees them (the same clock and seed).
       ...(definition.scene?.seed !== undefined ? { weather: weatherAt(new Date(this.clock()).getTime(), definition.scene.seed).sentence } : {}),
-      ...(definition.teachingNote ? { teachingNote: definition.teachingNote } : {}),
+      // Round 177: the note that the words are new, only while some taught objective's words are.
+      ...(definition.teachingNote && definition.encounter.objectives.some((objective) => objective.recall_intent && !known.includes(objective.id)) ? { teachingNote: definition.teachingNote } : {}),
       ...(definition.road?.cefr ? { level: definition.road.cefr } : {}), // round 177: the conversation rules of the stage
     };
   }
@@ -1355,23 +1379,27 @@ export class LearningService {
       const objective = allowed.get(result.objective_id);
       if (!objective || seen.has(result.objective_id)) throw retryableError('The grader assessed an unknown or duplicate objective. Your progress was not changed.', 'INVALID_GRADING');
       seen.add(result.objective_id);
+      // Round 177: evidence that cannot be verified in the answer (an unrelated item, a form the vocabulary does not
+      // list, a quote not in the answer, a repeat) is dropped, never recorded. Before, it failed the whole turn with
+      // INVALID_GRADING, and a correct answer in a form the vocabulary lacks ("che cosa c'è che non va?") could not
+      // be given at all (the playtest of 2026-11-24).
       const evidenceIds = new Set();
-      for (const evidence of result.vocabulary_evidence) {
-        if (!objective.target_vocabulary_ids.includes(evidence.vocabulary_id)) throw retryableError('The grader returned evidence for an unrelated vocabulary item.', 'INVALID_GRADING');
+      result.vocabulary_evidence = result.vocabulary_evidence.filter((evidence) => {
+        if (!objective.target_vocabulary_ids.includes(evidence.vocabulary_id) || evidenceIds.has(evidence.vocabulary_id)) return false;
         const excerptIds = new Set(matchCanonicalVocabulary(evidence.evidence, entries).map((match) => match.id));
         // Round 092 (review R1.2; Amendment 1): the evidence must stand in the answer at word boundaries ("pane"
         // quoted from "panettone" does not); graders may quote words around the form ("No estás sola" for sola).
-        const folded = foldEvidenceText(evidence.evidence);
-        const inContext = atWordBoundaries(foldEvidenceText(playerInput), folded);
-        if (evidenceIds.has(evidence.vocabulary_id)
-          || !excerptIds.has(evidence.vocabulary_id)
-          || !inContext) {
-          throw retryableError('The grader returned vocabulary evidence that is not present in the answer.', 'INVALID_GRADING');
-        }
+        if (!excerptIds.has(evidence.vocabulary_id) || !atWordBoundaries(foldEvidenceText(playerInput), foldEvidenceText(evidence.evidence))) return false;
         evidenceIds.add(evidence.vocabulary_id);
-      }
+        return true;
+      });
+      // Round 177: a pass without the required evidence that stands is the grader's judgement of the meaning: it is not
+      // a pass (nothing of its words is recorded) but it is understood, and closes as a corrected objective would.
       if (result.passed && objective.required_target_groups.some((group) => !group.some((id) => evidenceIds.has(id)))) {
-        throw retryableError(`The grader passed an objective without the required ${this.content.language.name} evidence.`, 'INVALID_GRADING');
+        result.passed = false;
+        result.attempted = true;
+        result.understood = true;
+        result.vocabulary_evidence = [];
       }
     }
     if (seen.size !== objectives.length || objectives.some((objective) => !seen.has(objective.id))) {
@@ -1427,8 +1455,12 @@ export class LearningService {
       const heartsUsed = current.heartsUsed ?? 0;
       const correctionText = beginner && typeof assessment.correction === 'string' ? assessment.correction.trim().replace(/\s+/g, ' ').slice(0, CORRECTION_MAX_LENGTH) : '';
       const corrected = beginner && correctionText !== '' && assessment.objective_results.some((result) => result.attempted || result.passed);
-      const heartLost = corrected && heartsUsed < BEGINNER_HEARTS;
-      const forgivenOf = (objective) => heartLost && !passedOf(objective) && resultOf(objective)?.attempted === true;
+      // Round 177: a correction that only mends accents, apostrophes, capitals or punctuation costs no heart and closes
+      // what was tried (the playtest lost hearts for "Si" for "Sì"); it is still shown.
+      const trivial = corrected && sameLetters(correctionText, message);
+      const heartLost = corrected && !trivial && heartsUsed < BEGINNER_HEARTS;
+      // Round 177: understood (a pass whose words could not be verified) closes without a heart.
+      const forgivenOf = (objective) => !passedOf(objective) && (resultOf(objective)?.understood === true || ((heartLost || trivial) && resultOf(objective)?.attempted === true));
       const unordered = definition.encounter.objectives_unordered === true || current.loose === true;
       const closing = [];
       for (const objective of objectives) {
@@ -1495,14 +1527,14 @@ export class LearningService {
           character: definition.character,
           styleGuide: this.content.styleGuide,
           locationName: this.sceneName(current),
-          objectives: remaining,
+          objectives: this.voiced(remaining, current.known),
           vocabularyById: this.lookup,
           conversationHistory: history,
           playerInput: message,
           ...this.shareOf(nextTurns, definition, current),
           decision,
           ambientEntries: definition.ambientEntries,
-          ...this.sceneExtras(definition),
+          ...this.sceneExtras(definition, current.known),
         }), definition, this.ratioFor(nextTurns, definition, current.ratioBonus ?? 0, current.immersion ?? null));
 
         const evidence = assessment.objective_results.flatMap((result) => result.vocabulary_evidence.map((item) => ({
@@ -1613,13 +1645,13 @@ export class LearningService {
       character: definition.character,
       styleGuide: this.content.styleGuide,
       locationName: this.sceneName(current),
-      objectives,
+      objectives: this.voiced(objectives, current.known),
       vocabularyById: this.lookup,
       conversationHistory: history,
       playerInput: message,
       ...this.shareOf(nextTurns, definition, current),
       ambientEntries: definition.ambientEntries,
-      ...this.sceneExtras(definition),
+      ...this.sceneExtras(definition, current.known),
       light: { turn: nextTurns, min, max, ending: LIGHT_ENDING[nextTurns >= max ? 'now' : nextTurns >= min ? 'if_done' : 'go_on'] },
     }), lightTurnSchema, 'light_turn', definition.character.name);
     const { player } = generated;
@@ -1671,7 +1703,7 @@ export class LearningService {
       playerInput: message,
       ...this.shareOf(turn, definition, current),
       ambientEntries: definition.ambientEntries,
-      ...this.sceneExtras(definition),
+      ...this.sceneExtras(definition, current.known),
       light: { turn, ...this.lightExchange(), ending: LIGHT_ENDING.go_on },
     }), lightTurnSchema, 'light_turn', definition.character.name);
     return this.commitTurn({

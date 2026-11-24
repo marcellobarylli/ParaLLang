@@ -76,9 +76,13 @@ test('invalid or failed grading is retryable and leaves encounter state unchange
     ],
     overall_feedback: 'wrong',
   };
+  // Round 177: evidence that does not stand in the answer is dropped rather than failing the turn; nothing is recorded.
   response = await submit(runtime, session.learnerId, session.started.encounter, 'Un café.', crypto.randomUUID());
-  assert.equal(response.status, 503);
-  assert.equal(response.data.error.code, 'INVALID_GRADING');
+  assert.equal(response.status, 200);
+  assert.equal(response.data.assessment.objectiveResults[0].corrected, true);
+  assert.deepEqual(response.data.assessment.objectiveResults[0].vocabularyEvidence, []);
+  assert.equal(response.data.spellbook.cards.find((card) => card.vocabularyId === 'cafe')?.lastOutcome ?? null, null);
+  return;
 
   runtime.provider.failNextGrade = true;
   response = await submit(runtime, session.learnerId, session.started.encounter, 'Un café.', crypto.randomUUID());

@@ -25,14 +25,14 @@ async function started(t) {
 }
 const say = (service, learnerId, encounter, message) => service.submitDialogue(learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: randomUUID(), message });
 
-test('a form quoted from inside a longer word is INVALID_GRADING; nothing is recorded', async (t) => {
+// Round 177: the quote is dropped and nothing is recorded for it; the turn is no longer refused.
+test('a form quoted from inside a longer word is never evidence; nothing is recorded for it', async (t) => {
   const { service, learnerId, encounter, runtime } = await started(t);
-  await assert.rejects(say(service, learnerId, encounter, 'Quiero una cafetera, por favor.'),
-    { code: 'INVALID_GRADING', message: 'The grader returned vocabulary evidence that is not present in the answer.' });
-  assert.equal(service.encounters.get(learnerId).version, encounter.version);
-  assert.deepEqual(Object.keys((await runtime.storage.load(learnerId)).spellbook.processedAssessments), []);
-  const fine = await say(service, learnerId, encounter, 'Quiero un café, por favor.');
-  assert.equal(fine.assessment.objectiveResults[0].passed, true);
+  const turn = await say(service, learnerId, encounter, 'Quiero una cafetera, por favor.');
+  assert.equal(turn.assessment.objectiveResults[0].corrected, true, 'understood, closed as corrected');
+  assert.deepEqual(turn.assessment.objectiveResults[0].vocabularyEvidence, []);
+  const card = (await runtime.storage.load(learnerId)).spellbook.words.cafe;
+  assert.ok(!card || card.evidence.length === 0, 'no evidence for café from "cafetera"');
 });
 
 test('ordered: a sentence reveal on the first objective caps the second closed in the same turn', async (t) => {

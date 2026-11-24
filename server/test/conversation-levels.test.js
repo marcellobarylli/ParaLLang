@@ -49,3 +49,11 @@ test('A1 keeps to the conversation\'s words; A2 and B1 talk about the player', (
   assert.match(systemAt('A2'), /End with one question about the player that an elementary learner can answer/);
   assert.match(systemAt('B1'), /End with one open question about the player: their experience, their opinion and why/);
 });
+
+test('a correction that mends only accents, apostrophes, capitals or punctuation is told apart (it costs no heart)', async () => {
+  const { sameLetters } = await import('../src/learning-service.js');
+  assert.equal(sameLetters('Sì, grazie.', 'si grazie'), true);
+  assert.equal(sameLetters("Cos'è?", 'cose'), true);
+  assert.equal(sameLetters('Sono di Londra.', 'Sono da Londra'), false);
+  assert.equal(sameLetters('', ''), false);
+});
