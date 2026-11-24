@@ -33,6 +33,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-24: round 178, three save slots
+
+Menu, **Save slots**: up to three games in one browser, each its own learner and save; Play or New game reloads the
+page into a slot, and a slot not in use can be emptied. Today's save is slot 1, untouched. Client only; the server is
+unchanged. **Merged to `main` and deployed** with round 177.
+[Architecture](docs/rounds/178/architecture.md), [findings](docs/rounds/178/findings.md).
+
 ## Addendum 2026-11-24: round 177, conversations by level, after a playtest
 
 Subagents played 32 road conversations against the live model and scored 218 character lines: "what do you think of

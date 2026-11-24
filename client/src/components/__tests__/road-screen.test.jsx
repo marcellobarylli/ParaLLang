@@ -132,7 +132,7 @@ test('the title offers the journey alone; the map and the menu are at hand in a 
   // The menu on the title: the records, Settings and the other places; no way out of anything.
   await user.click(screen.getByRole('button', { name: /^Menu/ }));
   let menu = screen.getByRole('navigation', { name: 'Game menu' });
-  expect(within(menu).getAllByRole('button').map((button) => button.textContent.replace(/\s+/g, ' ').trim())).toEqual(['Close', 'Spellbook', 'Guidebook 1 new', 'Settings', 'Other places Ta Prohm, The Kiln']); // the guidebook's first entry came with the road
+  expect(within(menu).getAllByRole('button').map((button) => button.textContent.replace(/\s+/g, ' ').trim())).toEqual(['Close', 'Spellbook', 'Guidebook 1 new', 'Settings', 'Save slots Slot 1', 'Other places Ta Prohm, The Kiln']); // the guidebook's first entry came with the road
   await user.click(within(menu).getByRole('button', { name: 'Close' }));
 
   await user.click(screen.getByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }));
@@ -150,7 +150,7 @@ test('the title offers the journey alone; the map and the menu are at hand in a 
   // The menu in the conversation: the map, the curriculum, the records, Settings and the ways out.
   await user.click(screen.getByRole('button', { name: /^Menu/ }));
   menu = screen.getByRole('navigation', { name: 'Game menu' });
-  expect(within(menu).getAllByRole('button').map((button) => button.textContent.replace(/\s+/g, ' ').trim().split(' ')[0])).toEqual(['Close', 'Map', 'Curriculum', 'Spellbook', 'Guidebook', 'Settings', 'Leave', 'Other', 'Back']);
+  expect(within(menu).getAllByRole('button').map((button) => button.textContent.replace(/\s+/g, ' ').trim().split(' ')[0])).toEqual(['Close', 'Map', 'Curriculum', 'Spellbook', 'Guidebook', 'Settings', 'Save', 'Leave', 'Other', 'Back']);
   await user.click(within(menu).getByRole('button', { name: 'Leave the conversation' }));
   expect(s().roadPhase).toBe('hub');
   expect(s().encounter.state).toBe('ongoing'); // it waits, unfinished

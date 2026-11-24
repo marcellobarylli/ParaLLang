@@ -12,6 +12,7 @@ import { volumesOf } from '../display.js';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
+import SaveSlots from './SaveSlots.jsx';
 import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
 import { ROAD_NAME } from '../atlas.js';
@@ -96,6 +97,7 @@ function GameMenu({ state, onClose, onMap, mapLabel: mapName, leave, onLeave }) 
           {!onRoad && !atTitle && <li><button type="button" onClick={go(state.openParty)}>Party <span className="due-badge" aria-label={`${state.party.length} in your party`}>{state.party.length}</span></button></li>}
           <li><button type="button" onClick={go(state.openGuidebook)}>Guidebook {unread > 0 && <span className="due-badge">{unread} new</span>}</button></li>
           <li><button type="button" onClick={go(state.openSettings)}>Settings</button></li>
+          {state.openSlots && <li><button type="button" onClick={go(state.openSlots)}>Save slots <small>Slot {state.slot}</small></button></li>}
           {leave && <li><button type="button" onClick={go(onLeave)} disabled={state.isLoading || state.encounterLoading}>{leave}</button></li>}
           {(onRoad || atTitle) && <li><button type="button" onClick={go(onRoad ? state.leaveRoad : state.enter)} disabled={onRoad && state.isLoading}>Other places <small>Ta Prohm, The Kiln</small></button></li>}
           {!atTitle && <li><button type="button" onClick={go(state.toTitle)} disabled={!canTitle}>Back to the title</button></li>}
@@ -648,6 +650,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
 
       {menuOpen && <GameMenu state={state} onClose={() => setMenuOpen(false)} onMap={openMapNow} mapLabel={mapName} leave={leave[0]} onLeave={leave[1]} />}
 
+      {state.slotsOpen && <SaveSlots slots={state.saveSlots} onSwitch={state.switchSlot} onClear={state.clearSlot} onClose={state.closeSlots} />}
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}

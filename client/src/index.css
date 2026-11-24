@@ -500,3 +500,12 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .menu-list button:hover:not(:disabled), .menu-list button:focus-visible { border-color: var(--gold-hi) var(--gold-lo) var(--gold-lo) var(--gold-hi); }
 .menu-list button:disabled { opacity: .5; cursor: default; }
 .menu-list small { color: var(--dim); font-size: .78rem; }
+/* Round 178: save slots. */
+.save-slots .slot-list { list-style: none; margin: .3rem 0 0; padding: 0; display: grid; gap: .45rem; }
+.save-slots .slot { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .55rem .6rem; border: 2px solid; border-color: var(--lo) var(--hi) var(--hi) var(--lo); }
+.save-slots .slot.current { border-color: var(--gold-lo) var(--gold-hi) var(--gold-hi) var(--gold-lo); }
+.save-slots .slot-text { display: grid; gap: .15rem; flex: 1 1 12rem; min-width: 0; }
+.save-slots .slot-actions { display: flex; gap: .4rem; flex-wrap: wrap; }
+.save-slots .danger { color: #f08a7a; }
+.save-slots { background: #262827; }
+.save-slots .slot { background: #1b1c1b; }

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
 import { clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf } from '../display.js';
+import { chooseSlot, clearSlot, currentSlot, slotSummaries, slottedStorage } from '../slots.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
 
@@ -71,7 +72,10 @@ function mergeDungeon(bundled, served) {
 // requests read them from this store, so a saved change applies to the next request (round 114).
 // Round 133: `dungeons` is every dungeon a place on the world map may open (`dungeon`, the first one, is always among
 // them). The store plays one at a time: `enterPlace` switches, and a reload opens the place last entered.
-export function createGameStore({ api: givenApi, storage = browserStorage(), dungeon: firstDungeon, dungeons = null, atlas = null, sameOrigin = SAME_ORIGIN_API } = {}) {
+export function createGameStore({ api: givenApi, storage: baseStorage = browserStorage(), dungeon: firstDungeon, dungeons = null, atlas = null, sameOrigin = SAME_ORIGIN_API, reload = () => globalThis.location?.reload?.() } = {}) {
+  // Round 178: the save slot this page plays; every per-learner key the store reads or writes is the slot's own.
+  const slot = currentSlot(baseStorage);
+  const storage = slottedStorage(baseStorage, slot);
   if (!firstDungeon) throw new Error('createGameStore needs the dungeon (src/dungeon.js)');
   const bundled = new Map([firstDungeon, ...(dungeons ?? [])].map((entry) => [entry.id, entry]));
   let dungeon = firstDungeon; // the bundled file of the dungeon the player is in
@@ -339,6 +343,24 @@ export function createGameStore({ api: givenApi, storage = browserStorage(), dun
       isLoading: false,
       error: null,
 
+      // Round 178: save slots. Switching stores the choice and reloads the page into that slot; an empty slot starts a
+      // new game there. A slot other than the one in use can be emptied.
+      slot,
+      slotsOpen: false,
+      saveSlots: [],
+      openSlots: () => set({ slotsOpen: true, saveSlots: slotSummaries(baseStorage) }),
+      closeSlots: () => set({ slotsOpen: false }),
+      switchSlot: (next) => {
+        if (next === slot) { set({ slotsOpen: false }); return false; }
+        if (!chooseSlot(baseStorage, next)) return false;
+        reload();
+        return true;
+      },
+      clearSlot: (which) => {
+        const done = clearSlot(baseStorage, which);
+        set({ saveSlots: slotSummaries(baseStorage) });
+        return done;
+      },
       setDraft: (draft) => set({ draft }),
       clearError: () => set({ error: null }),
 
