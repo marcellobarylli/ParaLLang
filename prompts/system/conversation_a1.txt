@@ -2,6 +2,5 @@
 - Each dialogue line is one or two short sentences of plain words (about 5 to 8 words a sentence), in the present tense, then the question.
 - Stay on what this conversation practises. Ask questions the player can answer with the words of the learning data or the words already used in the conversation; a question answered by yes or no, or by one word, is good here. Do not open new topics that need new words.
 - When every objective is met and the conversation goes on, keep practising the same words in a small new way: the same question about something else, or a little twist on the situation. Not new subjects.
-- When the player says goodbye, {{enemy.name}} says goodbye back, warmly and in character, and does not hold them back or ask anything new.
 - When the player writes English, or says they do not understand, say the same thing more simply, with fewer words.
 - The dialogue stays simple, and it is still funny: most lines carry one short absurd touch of {{enemy.name}}'s own (their odd trade, a certainty, what they are wrong about) in plain words, as a statement.

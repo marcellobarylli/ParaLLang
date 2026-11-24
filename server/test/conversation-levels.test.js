@@ -23,7 +23,8 @@ test('every level: one question a line, never about the character\'s own work, n
   for (const level of ['A1', 'A2', 'B1']) {
     const system = systemAt(level);
     assert.match(system, new RegExp(`CONVERSATION \\(the player is at level ${level}\\):`));
-    assert.match(system, /asks the player exactly one question, at its end\. Never two questions in one line/);
+    assert.match(system, /asks the player at most one question, at its end\. Never two questions in one line/);
+    assert.match(system, /When the player says goodbye, Gerald says goodbye back/);
     assert.match(system, /never what the player thinks of Gerald's work, trade, things or place, and never what the player wants to know or ask about Gerald/);
     assert.match(system, /Never say the phrase the player is meant to say as a model answer/);
     assert.match(system, /never change them partway through the conversation/);
@@ -32,14 +33,13 @@ test('every level: one question a line, never about the character\'s own work, n
   }
 });
 
-test('A1 keeps to the conversation\'s words and accepts a goodbye; A2 and B1 talk about the player', () => {
+test('A1 keeps to the conversation\'s words; A2 and B1 talk about the player', () => {
   const a1 = systemAt('A1');
   assert.equal(systemAt(), a1, 'an authored encounter speaks at A1');
   assert.match(a1, /one or two short sentences of plain words/);
   assert.match(a1, /it is still funny: most lines carry one short absurd touch/);
   assert.match(a1, /Do not open new topics that need new words/);
   assert.match(a1, /a question answered by yes or no, or by one word, is good here/);
-  assert.match(a1, /When the player says goodbye, Gerald says goodbye back/);
   for (const level of ['A2', 'B1']) {
     const system = systemAt(level);
     assert.match(system, /First respond to what the player actually said/);

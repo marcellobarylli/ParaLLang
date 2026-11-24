@@ -146,7 +146,7 @@ test("Gerald's narration prompts match the round 177 fixture and carry the style
     assert.match(greeting[0].content, /WHAT THE NARRATOR KNOWS AND NEVER SAYS: The world is a web\. Its roads are threads[^\n]+\.\n\nLANGUAGE RULES:/);
     assert.doesNotMatch(greeting[0].content, /Narrative text is always/);
     assert.match(greeting[0].content, /CONVERSATION \(the player is at level A1\):\n- The player is a beginner who knows only a handful of Italian words|CONVERSATION \(the player is at level A1\):\n- The player is a beginner who knows only a handful of Spanish words/);
-    assert.match(greeting[0].content, /- Every dialogue line, the greeting included, asks the player exactly one question, at its end\./);
+    assert.match(greeting[0].content, /- A dialogue line asks the player at most one question, at its end\./);
     assert.match(greeting[0].content, /never what the player thinks of Gerald's work, trade, things or place/);
     assert.match(greeting[0].content, /When the player says goodbye, Gerald says goodbye back/);
     assert.doesNotMatch(greeting[0].content, /Ask in one go for everything|what they make of Gerald's trade|Never a question that yes or no would answer/);
