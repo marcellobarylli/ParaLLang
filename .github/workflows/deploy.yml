@@ -19,11 +19,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  # Round 178: built and uploaded in one job, deployed in another. In one job, deploy-pages asked for the artifact
+  # within a second of its upload and GitHub's listing did not have it yet ("No artifacts named github-pages"), three
+  # runs in a row; a job that starts after the upload's job has finished finds it.
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,5 +43,13 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: client/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
