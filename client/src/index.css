@@ -509,3 +509,4 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .save-slots .danger { color: #f08a7a; }
 .save-slots { background: #262827; }
 .save-slots .slot { background: #1b1c1b; }
+.save-slots .slot-warning { flex-basis: 100%; color: #f08a7a; }

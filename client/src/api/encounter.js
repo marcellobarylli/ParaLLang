@@ -64,6 +64,8 @@ export function createLearningApi({ getSettings = () => loadSettings(), getGemin
     setRoadMode: (learnerId, streamlined) => request('/api/road/mode', { learnerId, method: 'POST', body: { streamlined } }),
     // Round 144: the whole save, for the copy this browser keeps, and the copy put back on a server that lost it.
     exportSave: (learnerId) => request('/api/save', { learnerId }),
+    // Round 179: a save slot deleted or started over removes its learner's save on the server (round 039's route).
+    deleteLearner: (learnerId) => request('/api/learner', { learnerId, method: 'DELETE' }),
     // Round 146: the server's health check, which says where it keeps its saves (round 145). No token is needed.
     getHealth: () => request('/api/health'),
     restoreSave: (copy) => request('/api/save/restore', { method: 'POST', body: copy }),

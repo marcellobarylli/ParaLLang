@@ -66,3 +66,31 @@ test('the store plays the slot chosen: a new slot asks for a new learner and lea
   expect(storage.values.get(SLOT_KEY)).toBe('1');
   expect(reload).toHaveBeenCalledTimes(1);
 });
+
+// Round 179: deleting a slot removes its save on the server too; the slot in use is started over (deleted, reloaded).
+test('deleting another slot removes its save from the server and the browser; starting over the slot in use reloads into a new game', async () => {
+  const storage = memoryStorage({ 'parallang.learnerId': 'first', 'parallang.save': '{"save":{"learnerId":"first"}}', 'parallang.learnerId.2': 'second', 'parallang.title.2': '{}' });
+  const deleteLearner = vi.fn(async () => ({ deleted: true }));
+  const reload = vi.fn();
+  const store = createGameStore({ api: { createLearner: async () => ({ learnerId: 'first' }), getDungeon: async () => { throw new Error('offline'); }, deleteLearner }, storage, dungeon: DUNGEON, atlas: ATLAS, reload });
+  const s = () => store.getState();
+  s().openSlots();
+  expect(await s().deleteSlot(2)).toEqual({ done: true, serverDeleted: true, reloading: false });
+  expect(deleteLearner).toHaveBeenLastCalledWith('second');
+  expect([storage.values.has('parallang.learnerId.2'), storage.values.has('parallang.title.2')]).toEqual([false, false]);
+  expect(s().saveSlots.map((entry) => entry.used)).toEqual([true, false, false]);
+  expect(reload).not.toHaveBeenCalled();
+  // The slot in use: its save goes, and the page reloads into a new game in the same slot.
+  expect(await s().deleteSlot(1)).toEqual({ done: true, serverDeleted: true, reloading: true });
+  expect(deleteLearner).toHaveBeenLastCalledWith('first');
+  expect([storage.values.has('parallang.learnerId'), storage.values.has('parallang.save')]).toEqual([false, false]);
+  expect(storage.values.get('parallang.slot') ?? '1').toBe('1');
+  expect(reload).toHaveBeenCalledTimes(1);
+});
+
+test('a server that cannot be reached still empties the slot, and says so', async () => {
+  const storage = memoryStorage({ 'parallang.learnerId.3': 'third' });
+  const store = createGameStore({ api: { createLearner: async () => ({ learnerId: 'x' }), getDungeon: async () => { throw new Error('offline'); }, deleteLearner: async () => { throw new Error('offline'); } }, storage, dungeon: DUNGEON, atlas: ATLAS, reload: vi.fn() });
+  expect(await store.getState().deleteSlot(3)).toEqual({ done: true, serverDeleted: false, reloading: false });
+  expect(storage.values.has('parallang.learnerId.3')).toBe(false);
+});

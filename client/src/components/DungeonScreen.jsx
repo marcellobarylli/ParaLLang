@@ -650,7 +650,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
 
       {menuOpen && <GameMenu state={state} onClose={() => setMenuOpen(false)} onMap={openMapNow} mapLabel={mapName} leave={leave[0]} onLeave={leave[1]} />}
 
-      {state.slotsOpen && <SaveSlots slots={state.saveSlots} onSwitch={state.switchSlot} onClear={state.clearSlot} onClose={state.closeSlots} />}
+      {state.slotsOpen && <SaveSlots slots={state.saveSlots} onSwitch={state.switchSlot} onDelete={state.deleteSlot} onClose={state.closeSlots} />}
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}

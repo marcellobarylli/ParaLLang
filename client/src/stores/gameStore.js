@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
 import { clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf } from '../display.js';
-import { chooseSlot, clearSlot, currentSlot, slotSummaries, slottedStorage } from '../slots.js';
+import { chooseSlot, clearSlot, currentSlot, learnerOf, slotSummaries, slottedStorage } from '../slots.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
 
@@ -356,10 +356,19 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
         reload();
         return true;
       },
-      clearSlot: (which) => {
-        const done = clearSlot(baseStorage, which);
+      // Round 179: a slot deleted: its save is removed from the server, then from this browser. The slot in use is
+      // started over: deleted the same way, and the page reloads into a new game in it. A server that cannot be
+      // reached leaves its copy (unreachable from this browser); the slot is emptied all the same.
+      deleteSlot: async (which) => {
+        const id = learnerOf(baseStorage, which);
+        let serverDeleted = !id;
+        if (id && rawApi.deleteLearner) {
+          try { await rawApi.deleteLearner(id); serverDeleted = true; } catch { serverDeleted = false; }
+        }
+        const done = clearSlot(baseStorage, which, { current: true });
+        if (done && which === slot) { reload(); return { done, serverDeleted, reloading: true }; }
         set({ saveSlots: slotSummaries(baseStorage) });
-        return done;
+        return { done, serverDeleted, reloading: false };
       },
       setDraft: (draft) => set({ draft }),
       clearError: () => set({ error: null }),

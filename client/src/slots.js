@@ -52,9 +52,15 @@ export function chooseSlot(storage, slot) {
   try { storage?.setItem?.(SLOT_KEY, String(slot)); return true; } catch { return false; }
 }
 
-/** Empties a slot other than the one in use: its next load starts a new game. */
-export function clearSlot(storage, slot) {
-  if (!Number.isInteger(slot) || slot < 1 || slot > SLOT_COUNT || slot === currentSlot(storage)) return false;
+/** The learner id a slot holds, or null. */
+export const learnerOf = (storage, slot) => read(storage, keyIn('parallang.learnerId', slot)) || null;
+
+/**
+ * Empties a slot: its next load starts a new game. Round 179: the slot in use too (that is starting over), when
+ * `current` is allowed.
+ */
+export function clearSlot(storage, slot, { current = false } = {}) {
+  if (!Number.isInteger(slot) || slot < 1 || slot > SLOT_COUNT || (slot === currentSlot(storage) && !current)) return false;
   for (const key of SLOTTED_KEYS) { try { storage?.removeItem?.(keyIn(key, slot)); } catch { /* private mode */ } }
   return true;
 }

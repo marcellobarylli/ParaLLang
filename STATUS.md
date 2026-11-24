@@ -33,6 +33,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-24: round 179, deleting a save and starting over
+
+In Save slots, **Delete** removes a game not in use, on the server too, and **Start over** deletes the game being
+played and reloads into a new one in the same slot; each asks for a second press. **Merged to `main` and deployed.**
+[Architecture](docs/rounds/179/architecture.md), [findings](docs/rounds/179/findings.md).
+
 ## Addendum 2026-11-24: round 178, three save slots
 
 Menu, **Save slots**: up to three games in one browser, each its own learner and save; Play or New game reloads the
