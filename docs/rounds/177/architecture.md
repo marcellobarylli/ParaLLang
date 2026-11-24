@@ -44,13 +44,30 @@ commit; nothing here is frozen.
 6. **"Che cosa c'è che non va?"** and its variants are forms of `che_succede`. The grader passed them by meaning with
    evidence the matcher did not know, and the turn failed with `INVALID_GRADING`.
 
+7. **Words said first only when never met** (the owner's decision). A taught objective carries a `recall_intent`;
+   when the conversation starts, the objectives of which some word is already in the learner's Spellbook are fixed as
+   `known` on the session and are told to the narrator as recall (the character does not say the words first). The
+   teaching note goes only while some taught objective's words are new.
+8. **Unverifiable evidence no longer fails a turn.** Evidence for an unrelated item, a form the vocabulary lacks, a
+   quote not in the answer or a repeat is dropped and never recorded; a pass left without its required evidence is
+   *understood*: it closes as a corrected objective does (half credit, no word recorded, no heart). A malformed,
+   unknown or incomplete grading still fails with INVALID_GRADING.
+9. **Accent-only corrections cost no heart.** A correction whose letters equal the answer's once accents,
+   apostrophes, capitals, punctuation and spacing are folded (`sameLetters`) is shown, closes what was tried, and
+   costs nothing. The beginner grader is told never to swap a correct word or construction for one it prefers.
+10. **Follow my level** (Settings, on by default, and for a display saved before it): no share is sent with a start or
+   an answer, and the server speaks the stage's share (20 % at A1.1, rising 5 points a turn); moving the slider
+   chooses a share and turns it off. Before, the default was 1: every line wholly Italian at every stage.
+11. **Repetition.** Five quirks worded to recur in every line ("mentions the fund at every opportunity") now show once;
+   the shared rules say a quirk shows now and then; the name pools grew from 36 to 60 first names and 59 surnames.
+
 ## Tests
 
-`npm test -w server` (589; `conversation-levels.test.js` new; Gerald's pinned prompts regenerated as
+`npm test -w server` (592; `known-words.test.js` new; `conversation-levels.test.js` new; Gerald's pinned prompts regenerated as
 `gerald-prompts-r177.json`; `immersion` and `light-exchange` tests follow the new wording);
-`node server/scripts/check-curriculum.js`. Live: 44 conversations by subagents through the harness (findings).
+`node server/scripts/check-curriculum.js`; `npx vitest run` in `client/` (305; the default share and the display's shape follow Follow my level); `npm test -w aesthetic` (95); `npx vite build`. The tests that pinned INVALID_GRADING for unverifiable evidence now pin that nothing of it is recorded. Live: 44 conversations by subagents through the harness (findings).
 
 ## Status
 
-Built, tested, playtested against the live model; pushed on the session branch `claude/kind-meitner-ruc2aj`, not
-merged or deployed.
+Built, tested, playtested against the live model; merged to `main` and pushed on the owner's word ("merge and
+deploy").

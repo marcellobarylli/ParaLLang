@@ -26,3 +26,8 @@ work?"):
 After the playtest's summary and the proposed fix, the owner's reply, verbatim:
 
 > Yes!
+
+After the re-test's summary and the four questions, the owner's reply, verbatim:
+
+> If the words have truly never been encountered before then yes, they should say them first if not then not.
+> Go ahead on the rest merge and deploy

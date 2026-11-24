@@ -41,8 +41,11 @@ goodbyes were refused. The cause was the system prompt's conversation rules, the
 by the stage's CEFR (`prompts/system/conversation_*.txt`): one question a line, about the player, never the
 character's own work; A1 short and kept to the conversation's words; A2 and B1 react to the player and ask about them.
 On the final version: none of the work questions, no stacked questions, goodbyes answered, still funny.
-`server/scripts/playtest.js` plays any unit against the live model. **On the session branch, not deployed.** Open:
-whether an A1 lesson's character should say its words first, grading of accents, the default immersion.
+Then, on the owner's decisions: a character says an objective's words first only when the learner has never met them;
+a grading whose evidence cannot be verified no longer fails the turn; an accent-only correction costs no heart; the
+share of the language **follows the learner's level** by default (Settings: Follow my level); repeating quirks
+reworded. `server/scripts/playtest.js` plays any unit against the live model. **Merged to `main` and deployed** on
+the owner's word.
 [Architecture](docs/rounds/177/architecture.md), [findings](docs/rounds/177/findings.md),
 [playtest](docs/playtests/2026-11-24-conversations/README.md).
 

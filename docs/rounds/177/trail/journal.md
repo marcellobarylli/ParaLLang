@@ -11,4 +11,7 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | afternoon | afternoon | built | Claude | `system/conversation_a1/a2/b1/shared.txt` chosen by the stage's CEFR; light and greeting prompts changed | `../architecture.md` |
 | 6 | afternoon | afternoon | run | Claude | Four subagents re-test (128 lines); goodbye, opener, modelling and grading fixes made from their reports | `../findings.md` |
 | 7 | afternoon | afternoon | run | Claude | Final check by two subagents (36 lines); server tests 589 pass | `../findings.md` |
-| 8 | afternoon | afternoon | closed | Claude | Records, status row; pushed on the session branch, not deployed | `../architecture.md` |
+| 8 | afternoon | afternoon | decision | Owner | Words said first only when never met; go ahead on grading, immersion and repetition; merge and deploy | `interview.md` |
+| 9 | afternoon | evening | built | Claude | Known objectives asked as recall; unverifiable evidence dropped; accent-only corrections free; Follow my level; quirks reworded | `../architecture.md` |
+| 10 | evening | evening | run | Claude | Server 592, client 305, aesthetic 95 pass; build; one live A1 conversation at the new default | `../findings.md` |
+| 11 | evening | evening | closed | Claude | Records, status row; merged to `main` and pushed on the owner's word ("merge and deploy") | `../architecture.md` |

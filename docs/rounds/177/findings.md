@@ -41,16 +41,19 @@ The full table, reports and transcripts are in
 - Italian only; the Spanish prompts are the same templates and were not played.
 - The market's and the dungeons' authored encounters get the A1 rules and were not played.
 
+## After the owner's decisions
+
+One live A1 conversation (greetings) at the new default, Follow my level: lines mostly English with Italian woven in
+("Sto bene, but my boots are così così. E tu?"), one question a line, the goodbye answered ("Arrivederci, Tom! I will
+keep the rain company, since nobody has told it goodbye."). "Si, bene." was corrected to "Sì, sto bene." and cost a
+heart: the grader added a word, so it is not an accent-only correction. Not played again at A2 or B1.
+
 ## Open items
 
-- **Modelling at A1.** A lesson's character says its new words first by design (curriculum rule 3), and testers read
-  it as giving the answer away: 9 of 9 objectives at A1 were said by the character first. The owner decides between
-  modelling the words in another sentence, modelling only in the narration, or not at all.
-- **Grading.** Hearts lost for "Si" for "Sì" and for correct answers the grader rewrote; correct answers not credited
-  ("Ieri pioveva molto", "Sì, volentieri"). A correct form not in the vocabulary still fails a turn with
-  `INVALID_GRADING` (bare "Che c'è?"); treating such a turn as not yet met instead is a decision for the owner.
-- **Immersion.** The default (1) makes every line wholly Italian at every stage; the stage's share (20 % at A1.1) is
-  used only below it.
-- **Repetition across characters.** Generated characters share surnames, tics and gags (`characters.js` pools).
+- **Grading** still rewrites some correct answers ("Si, bene." to "Sì, sto bene.") and misses some ("Ieri pioveva
+  molto", "Sì, volentieri"); the prompt now forbids the first, untested at scale.
+- **Repetition across characters** is reduced, not removed: characters are drawn independently per site and step, so
+  two in a row may still share a name or quirk.
 - **Narration.** Off-level Italian words in the narration at A1, repeated images, objectives whose cue the character
   never acts out (the Fast Talker who never talks fast).
+- **The iPhone app** (`mobile/`) does not have Follow my level; it sends no share and so already speaks the stage's.
