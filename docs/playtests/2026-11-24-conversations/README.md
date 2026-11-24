@@ -47,3 +47,21 @@ add one absurd detail and end on one concrete question about the player.
   place and opinions, and is glad to be asked about them" (1, in keep-chatting and light turns).
 - The client's default immersion is 1, which makes the line wholly Italian whatever the stage's share (20 % at A1.1):
   `ratioFor` returns the immersion when one is sent.
+
+## After the fix (round 177)
+
+The same harness and brief, blind to the first reports. Round 2 (`r1` to `r4`) ran on the first version of the
+level rules; the final check (`f1`, `f2`) on the version with the goodbye, opener, modelling and grading fixes.
+
+| Measure | Before (a1-a6, 218 lines) | Round 2 (r1-r4, 128 lines) | Final (f1-f2, 36 lines) |
+|---|---|---|---|
+| Ends on "what do you think of / want to know about my work" | about 157 (74 %) | 1 clear, about 9 borderline | 0 (3 borderline) |
+| More than one question in a line | 204 | 1 | 0 |
+| A1 lines off level or too long | most | 3 of 24 (first units) | 3 of 17 |
+| Goodbye refused or ignored | most | 14 of 15 | 0 of 4 |
+| Target phrase said before the player | frequent | 3 to 11 a report | 9 of 17 at A1 (lessons model their words), 3 of 19 at A2/B1 |
+| Weather or time contradictions | in 4 of 6 reports | 2 a report | 1 |
+| "Che cosa c'è che non va?" | INVALID_GRADING (3) | INVALID_GRADING (5) | accepted |
+
+Reports: [r1](r1.md) A1 first units, [r2](r2.md) A1 later, [r3](r3.md) A2, [r4](r4.md) B1 and light mode,
+[f1](f1.md) A1 final, [f2](f2.md) A2/B1 final.

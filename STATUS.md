@@ -33,6 +33,19 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-24: round 177, conversations by level, after a playtest
+
+Subagents played 32 road conversations against the live model and scored 218 character lines: "what do you think of
+my work" ended about three lines in four, nearly every line stacked two or more questions, A1 drifted off level and
+goodbyes were refused. The cause was the system prompt's conversation rules, the same at every level. The rules are now
+by the stage's CEFR (`prompts/system/conversation_*.txt`): one question a line, about the player, never the
+character's own work; A1 short and kept to the conversation's words; A2 and B1 react to the player and ask about them.
+On the final version: none of the work questions, no stacked questions, goodbyes answered, still funny.
+`server/scripts/playtest.js` plays any unit against the live model. **On the session branch, not deployed.** Open:
+whether an A1 lesson's character should say its words first, grading of accents, the default immersion.
+[Architecture](docs/rounds/177/architecture.md), [findings](docs/rounds/177/findings.md),
+[playtest](docs/playtests/2026-11-24-conversations/README.md).
+
 ## Addendum 2026-11-23: round 176, the camera follows the shortest walk, smoothed
 
 Between two sites the camera now follows the shortest walk along the graph's ways (`graph.route`), on a line smoothed
