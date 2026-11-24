@@ -25,6 +25,12 @@ slots set in storage, the menu opened and the sheet read and photographed.
 Found on the way: the shared sheet background follows the panel-opacity setting and let the title show through; the
 slots sheet is opaque.
 
+## The deploy
+
+The Pages deploy failed three times in a row (rounds 177 and 178, a re-run and a manual run): `deploy-pages` asked for
+the artifact within a second of its upload and found none, or after a re-run two. The workflow now builds and uploads
+in one job and deploys in another that waits for it (`c433290`); its first run deployed (run 45378014844).
+
 ## Claim boundary
 
 - Slots live in one browser: another browser or device has its own three.

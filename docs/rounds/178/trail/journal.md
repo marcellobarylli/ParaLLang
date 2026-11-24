@@ -9,3 +9,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 3 | 10:55 approx. | 11:10:00 | built | Claude | `client/src/slots.js`, `SaveSlots.jsx`, the store's slot actions, a menu row | `../../../../client/src/slots.js` |
 | 4 | 11:05 approx. | 11:10:00 | run | Claude | Client 308, server 592 pass; build; the sheet seen in headless Chromium at phone size | `../findings.md` |
 | 5 | 11:10:00 | 11:10:00 | closed | Claude | Records, status row; merged to `main` and pushed on the owner's word | `../architecture.md` |
+| 6 | 10:46 approx. | 10:50:00 | built | Claude | Pages deploy failed three times (the artifact not yet listed); the workflow split into build and deploy jobs; deployed | `../findings.md` |
