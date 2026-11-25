@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import DungeonView from './DungeonView.jsx';
 import RoadView from './RoadView.jsx';
-import { CurriculumChip, CurriculumPanel, HubCard, RoadCaption, RoadMap, RoadResolved, positionLine, useWeather } from './Road.jsx';
+import { CurriculumChip, CurriculumPanel, HubCard, WelcomeCard, RoadCaption, RoadMap, RoadResolved, positionLine, useWeather } from './Road.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
@@ -631,7 +631,8 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       <div className="dock" ref={dockRef}>
         {/* Round 175: while the camera comes down from the sky into the road, a line says where to; the site's card
             comes when it is there (on a phone the card would hide the whole descent). */}
-        {onRoad && state.roadPhase === 'hub' && (descending ? <section className="caption" role="status"><span>Coming down to {state.road.here.name}…</span></section> : <HubCard state={state} />)}
+        {onRoad && state.roadPhase === 'hub' && (descending ? <section className="caption" role="status"><span>Coming down to {state.road.here.name}…</span></section>
+          : state.road && !state.roadWelcomed ? <WelcomeCard onClose={state.dismissWelcome} /> : <HubCard state={state} />)}
         {onRoad && state.roadPhase === 'travel' && <RoadCaption state={state} />}
         {roadTalking && <EncounterSheet state={state} site={null} sites={{}} speech={speech} height={sheetHeight} onHeight={setSheetHeight}
           road={{ title: roadEncounter?.road.title ?? 'A conversation', subtitle: roadEncounter ? `${roadEncounter.character.name}, ${roadEncounter.character.role} · ${roadEncounter.road.place}` : '' }} />}

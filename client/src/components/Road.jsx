@@ -117,6 +117,23 @@ function WayOn({ state }) {
 }
 
 /** The player stands at a site with no conversation open. */
+// Round 180: the opening message. The camera has come down to the start of the journey and the first character
+// stands there behind it; the arrival's card waits until it is closed.
+export function WelcomeCard({ onClose }) {
+  return (
+    <div className="welcome-backdrop">
+      <section className="card welcome-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+        <p className="eyebrow">Before you set out</p>
+        <h2 id="welcome-title">In the beginning was the Word</h2>
+        <p>We believe a language is learned best the way you learned your first one: by living in it.</p>
+        <p>So this world is learned by talking to the people who live in it. Ask them things, get to know them, pick up their words as they use them, and some of what they would rather you did not ask.</p>
+        <p className="welcome-teaser">Listen closely, though. Lately the words here have begun to mean a little more than they should, and something is pulling at the seams. Whatever it is seems to be pulling from your side.</p>
+        <button type="button" className="primary-button big-button" onClick={onClose} autoFocus>Set out</button>
+      </section>
+    </div>
+  );
+}
+
 export function HubCard({ state }) {
   const { road, curriculum, roadLoading, roadError, encounterLoading } = state;
   if (!road) {

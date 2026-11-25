@@ -24,13 +24,20 @@ function memoryStorage() {
 const silent = { speaker: { supported: false, speaking: false, speak() {}, stop() {}, prime() {} }, listener: { supported: false, listening: false, start() { return false; }, stop() {} } };
 const noMusic = { supported: false, start() {}, stop() {}, setLevel() {} };
 
-async function mount() {
+// Round 180: the opening message, once the camera is down at the start of the journey; closed by Set out.
+async function welcome(user) {
+  const dialog = await screen.findByRole('dialog', { name: 'In the beginning was the Word' }, { timeout: 20_000 });
+  await user.click(within(dialog).getByRole('button', { name: 'Set out' }));
+}
+
+async function mount({ storage = memoryStorage() } = {}) {
   const server = createRoadServer();
-  const useStore = createGameStore({ api: server.api, storage: memoryStorage(), dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
+  const useStore = createGameStore({ api: server.api, storage, dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
   // Round 175: the title screen's one button sets out on the road.
   await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
+  if (storage.getItem('parallang.welcomed') !== '1') await welcome(user);
   // The first road of a process loads the curriculum (about a second, more on a busy machine).
   await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 });
   return { server, user, s: () => useStore.getState() };
@@ -54,6 +61,26 @@ test('the hub names the place, describes who waits in words, and says where the 
   const line = card.querySelector('.weather-line');
   const labels = [weatherAt(Date.now() - 5000, s().road.seed).label, weatherAt(Date.now(), s().road.seed).label];
   expect(labels).toContain(line.textContent.replace(/^\S+ /, ''));
+});
+
+test('the journey opens on a message about learning by conversation; closed, it does not come again in this slot', async () => {
+  const server = createRoadServer();
+  const storage = memoryStorage();
+  const useStore = createGameStore({ api: server.api, storage, dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
+  const user = userEvent.setup();
+  render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
+  await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
+  const dialog = await screen.findByRole('dialog', { name: 'In the beginning was the Word' }, { timeout: 20_000 });
+  expect(dialog.textContent).toContain('by living in it');
+  expect(dialog.textContent).toContain('talking to the people who live in it');
+  expect(screen.queryByRole('button', { name: /^Talk to / })).toBeNull(); // the arrival's card waits behind it
+  await user.click(within(dialog).getByRole('button', { name: 'Set out' }));
+  expect(await screen.findByRole('button', { name: /^Talk to / })).toBeTruthy();
+  expect(storage.getItem('parallang.welcomed')).toBe('1');
+  cleanup();
+  // The same slot again: straight to the arrival's card.
+  await mount({ storage });
+  expect(screen.queryByRole('dialog', { name: 'In the beginning was the Word' })).toBeNull();
 });
 
 test('a conversation on the road, then Continue takes the rails to the next one', async () => {
@@ -136,6 +163,7 @@ test('the title offers the journey alone; the map and the menu are at hand in a 
   await user.click(within(menu).getByRole('button', { name: 'Close' }));
 
   await user.click(screen.getByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }));
+  await welcome(user);
   await user.click(await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 }));
   const sheet = await screen.findByRole('region', { name: 'Saying hello' });
   const name = s().encounter.character.name;

@@ -514,3 +514,10 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .save-slots { background: #262827; }
 .save-slots .slot { background: #1b1c1b; }
 .save-slots .slot-warning { flex-basis: 100%; color: #f08a7a; }
+
+/* Round 180: the opening message, in the middle of the screen over the start of the journey. The backdrop is light,
+   so the landscape and the first character stay in view behind it. */
+.welcome-backdrop { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgb(0 0 0 / .28); pointer-events: auto; }
+.welcome-backdrop .welcome-card { width: min(440px, 100%); border-bottom: 2px solid var(--lo); padding-bottom: 1.1rem; gap: .7rem; text-align: left; }
+.welcome-card .welcome-teaser { color: var(--gold-hi); font-style: italic; }
+.welcome-card .big-button { margin-top: .3rem; }
