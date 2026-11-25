@@ -82,7 +82,7 @@ function useScrolledPast(element, changes) {
   return past;
 }
 
-export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null, beginner = false, light = false }) {
+export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null, onSayWord = null, beginner = false, light = false }) {
   const [box, setBox] = useState(null);
   const past = useScrolledPast(box, `${encounter?.id}:${encounter?.version}:${encounter?.transcript?.length}:${isLoading}`);
   const [unfolded, setUnfolded] = useState(false);
@@ -93,7 +93,7 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
   const todo = encounter.currentObjective ? Math.max(1, encounter.openObjectives?.length ?? 1) : 0;
   const line = (message) => (message.role === 'npc' ? (
     <article className="npc-message" key={message.id}>
-      <NarrativeText narrative={message.narrative} words={message.narrativeWords} language={language} />
+      <NarrativeText narrative={message.narrative} words={message.narrativeWords} language={language} onSay={onSayWord} />
       <div className="speaker-row">
         <strong className="speaker">{message.dialogue.speaker}</strong>
         {onSpeak && <button type="button" className="icon-button speak-button" onClick={() => onSpeak(message)} aria-label={`Hear ${message.dialogue.speaker} say this line`} title="Hear this line">🔊</button>}

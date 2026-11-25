@@ -191,3 +191,15 @@ describe('the listener', () => {
     expect(scope.made).toHaveLength(0);
   });
 });
+
+// Round 184: the microphone gets a 'play-and-record' session; the music's 'playback' comes back when it ends.
+describe('the listener and the audio session', () => {
+  test('listening switches the session to play-and-record and back', () => {
+    const scope = fakeRecognition();
+    scope.navigator = { audioSession: { type: 'playback' } };
+    createListener(scope).start({ tag: 'it-IT' });
+    expect(scope.navigator.audioSession.type).toBe('play-and-record');
+    scope.made[0].onend();
+    expect(scope.navigator.audioSession.type).toBe('playback');
+  });
+});

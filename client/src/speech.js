@@ -9,6 +9,8 @@
 // Listening. `SpeechRecognition` (`webkitSpeechRecognition` in Safari) in the target language writes what it hears
 // into the reply box. The player sends it.
 
+import { audioSessionType, setAudioSession } from './audioSession.js';
+
 // Pitch and rate on SpeechSynthesisUtterance's scales (pitch 0 to 2, rate 1 is normal). `names` are voices to prefer,
 // best first: Apple's and Google's Italian, Spanish and French (round 181) voices by gender, and Apple's novelty voices
 // for `funny`.
@@ -141,10 +143,14 @@ export function createListener(scope = typeof window !== 'undefined' ? window : 
       api.stop();
       let recognition;
       try { recognition = new Recognition(); } catch { onEnd('failed'); return false; }
+      // Round 184: the microphone needs a 'play-and-record' audio session; the type before it comes back after.
+      const before = audioSessionType(scope);
+      if (before !== null) setAudioSession('play-and-record', scope);
       const session = { recognition, problem: null, ended: false };
       const end = () => {
         if (session.ended) return;
         session.ended = true;
+        if (before !== null) setAudioSession(before, scope);
         if (current === session) current = null;
         onEnd(session.problem);
       };

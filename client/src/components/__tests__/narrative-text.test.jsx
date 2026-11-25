@@ -1,6 +1,6 @@
 // Round 130: the narration's target-language words are buttons in the text; a tap shows the meaning.
 import React from 'react';
-import { afterEach, expect, test } from 'vitest';
+import { afterEach, expect, test, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import NarrativeText, { narrativePieces } from '../NarrativeText.jsx';
@@ -45,4 +45,16 @@ test('a narration without listed words is plain text with no buttons', () => {
   const { container } = render(<NarrativeText narrative={STALL} language={italian} />);
   expect(container.querySelector('p.narrative').textContent).toBe(STALL);
   expect(screen.queryAllByRole('button')).toEqual([]);
+});
+
+// Round 184: a tap that shows a word's meaning also says the word; the tap that hides it is silent.
+test('with onSay, opening a word says it aloud', async () => {
+  const user = userEvent.setup();
+  const onSay = vi.fn();
+  render(<NarrativeText narrative={STALL} words={WORDS} language={italian} onSay={onSay} />);
+  const [stall] = screen.getAllByRole('button');
+  await user.click(stall);
+  expect(onSay).toHaveBeenCalledWith('bancarella');
+  await user.click(stall);
+  expect(onSay).toHaveBeenCalledTimes(1);
 });

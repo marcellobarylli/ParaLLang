@@ -3,6 +3,7 @@ import { useState } from 'react';
 // Round 130: the narration, with its target-language words as buttons in the text. The server sends
 // `narrativeWords` ({ word, meaning }) for the words the narrator dropped in; a tap shows the meaning after the word,
 // another hides it. It is free: the narration is not graded. Without the list the narration is plain text.
+// Round 184: with `onSay`, a tap that shows the meaning also says the word aloud (the browser's voice: no model call).
 const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** The narration cut into plain strings and { word, meaning } pieces, in order. */
@@ -24,7 +25,7 @@ export function narrativePieces(narrative, words = []) {
   return pieces;
 }
 
-export default function NarrativeText({ narrative, words, language }) {
+export default function NarrativeText({ narrative, words, language, onSay = null }) {
   const [open, setOpen] = useState(() => new Set());
   const toggle = (index) => setOpen((current) => { const next = new Set(current); if (!next.delete(index)) next.add(index); return next; });
   return (
@@ -32,7 +33,7 @@ export default function NarrativeText({ narrative, words, language }) {
       {narrativePieces(narrative, words).map((piece, index) => (typeof piece === 'string' ? piece : (
         // eslint-disable-next-line react/no-array-index-key
         <span key={index}>
-          <button type="button" className="gloss" lang={language?.tag} aria-expanded={open.has(index)} onClick={() => toggle(index)}
+          <button type="button" className="gloss" lang={language?.tag} aria-expanded={open.has(index)} onClick={() => { if (!open.has(index)) onSay?.(piece.word); toggle(index); }}
             aria-label={open.has(index) ? `${piece.word}: ${piece.meaning}` : `Translate ${piece.word}`}>{piece.word}</button>
           {open.has(index) && <span className="gloss-meaning" role="status"> ({piece.meaning})</span>}
         </span>

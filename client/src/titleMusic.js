@@ -7,6 +7,8 @@
 // Track: "The Journey - Tibetan Cloudlands 01" by WanderingArc (Pixabay, Pixabay Content Licence), re-encoded at
 // 128 kbps.
 
+import { setAudioSession } from './audioSession.js';
+
 export const TITLE_MUSIC = Object.freeze({
   src: 'music/title.mp3', // relative to the site's base
   fadeIn: 2, // seconds, on the title
@@ -89,6 +91,7 @@ export function createTitleMusic({ scope = typeof window !== 'undefined' ? windo
       cancel(pauseTimer);
       pauseTimer = null;
       playing = true;
+      setAudioSession('playback', scope); // round 184: the silent switch does not mute the music
       try { Promise.resolve(chain.context.resume?.()).catch(() => {}); } catch { /* not yet allowed */ }
       const { element, context } = chain;
       // Refused before the first tap (NotAllowedError); the context of a page without one stays suspended.

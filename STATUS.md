@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-25: round 184, music on a silent iPhone, spoken narration words
+
+The ambient music waited for the microphone because iOS mutes Web Audio with the silent switch, and recording
+switches the page to a session the switch leaves alone. The page now asks for a `'playback'` audio session (Safari
+16.4 and later), and every tap wakes a suspended context. A tap on a yellow word of the narration also says it, in the
+browser's voice (no model call). Tested with fakes; not heard on an iPhone. **On the branch, not merged.**
+[Architecture](docs/rounds/184/architecture.md), [findings](docs/rounds/184/findings.md).
+
 ## Addendum 2026-11-25: round 183, friends on Claude Sonnet
 
 With `CLAUDE_API_KEY` set (a Claude API key paid from the owner's monthly Max API credit), friends' turns run on

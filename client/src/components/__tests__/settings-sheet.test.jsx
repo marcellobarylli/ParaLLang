@@ -190,13 +190,15 @@ test('the music starts at the first tap and not before, follows speech, and the 
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
   useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: true } });
   const speech = { speaker: { supported: true, speaking: false, speak: vi.fn(), stop: vi.fn(), prime: vi.fn(), available: () => true }, listener: { supported: true, listening: false, start: vi.fn(), stop: vi.fn() } };
-  const ambience = { supported: true, start: vi.fn(), stop: vi.fn(), setLevel: vi.fn(), setVolumes: vi.fn() };
+  // Round 184: every touch or key reaches the ambience: the first starts it, later ones only wake it (resume).
+  const ambience = { supported: true, running: false, start: vi.fn(() => { ambience.running = true; }), resume: vi.fn(), stop: vi.fn(() => { ambience.running = false; }), setLevel: vi.fn(), setVolumes: vi.fn() };
   const { default: DungeonScreen } = await import('../DungeonScreen.jsx');
   try {
     render(<DungeonScreen useStore={useGameStore} speech={speech} ambience={ambience} />);
     expect(ambience.start).not.toHaveBeenCalled(); // a page may not make sound on its own
     await openMenu(user, 'Settings');
     expect(ambience.start).toHaveBeenCalledOnce();
+    expect(ambience.resume).toHaveBeenCalled(); // the same tap's later events (pointerup, then click)
     // Every 400 ms the music is told whether the browser is speaking or listening.
     act(() => { vi.advanceTimersByTime(450); });
     expect(ambience.setLevel).toHaveBeenLastCalledWith('full');

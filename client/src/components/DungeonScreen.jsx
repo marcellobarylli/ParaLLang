@@ -383,6 +383,8 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   const voicesOn = state.display?.voices !== false;
   const lastLine = encounter?.transcript?.findLast((message) => message.role === 'npc') ?? null;
   const lineKey = lastLine ? `${encounter.id}:${encounter.transcript.length}:${lastLine.id}` : null; // a new line, not a revealed translation
+  // Round 184: a target-language word of the narration is said in the language's plain voice when tapped.
+  const sayWord = (word) => speaker.speak({ text: word, tag: language?.tag });
   const speakLine = (message) => speaker.speak({ text: message.dialogue.native, tag: language?.tag, voice: encounter?.character?.voice });
   useEffect(() => {
     if (voicesOn && lastLine && speaker.supported) speakLine(lastLine);
@@ -447,7 +449,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
         )}
       </header>
       <div className="sheet-scroll" ref={scrollRef}>
-        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} beginner={state.display?.beginner !== false} light={state.display?.light === true} />
+        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} onSayWord={voicesOn && speaker.supported ? sayWord : null} beginner={state.display?.beginner !== false} light={state.display?.light === true} />
         {assessment && (
           <section className="assessment-banner" aria-live="polite">
             {/* Round 153: a light turn is not an assessment: what was understood, and what of the objectives it covered. */}
@@ -569,11 +571,13 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   useEffect(() => { if (speech.speaker) speech.speaker.volume = volume.voice * volume.master; }, [speech, volume.voice, volume.master]);
   useEffect(() => {
     if (!audioWanted || !ambience.supported || typeof window === 'undefined') return undefined;
-    const begin = () => ambience.start();
-    window.addEventListener('click', begin, { once: true, capture: true });
+    // Round 184: any touch or key starts it (not only a click), and later ones wake a context iOS suspended or
+    // interrupted (a call, Siri, another app's sound).
+    const begin = () => { if (ambience.running) ambience.resume?.(); else ambience.start(); };
+    for (const name of GESTURES) window.addEventListener(name, begin, { capture: true });
     const watch = window.setInterval(() => ambience.setLevel(speech.listener.listening ? 'mute' : speech.speaker.speaking ? 'duck' : 'full'), 400);
     return () => {
-      window.removeEventListener('click', begin, { capture: true });
+      for (const name of GESTURES) window.removeEventListener(name, begin, { capture: true });
       window.clearInterval(watch);
       ambience.stop();
     };

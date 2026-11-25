@@ -299,3 +299,28 @@ describe('rain and thunder', () => {
     expect(ambience.rain).toBe(1);
   });
 });
+
+// Round 184: iOS mutes Web Audio's default ("ambient") session with the silent switch, so the music asks for 'playback'.
+describe('the audio session', () => {
+  test('a start sets the session to playback, and resume() wakes a suspended context inside a later tap', () => {
+    const scope = fakeAudio();
+    scope.navigator = { audioSession: { type: 'auto' } };
+    const ambience = createAmbience({ scope, random: () => 0 });
+    expect(ambience.resume()).toBe(false); // nothing started yet
+    ambience.start();
+    expect(scope.navigator.audioSession.type).toBe('playback');
+    const context = scope.contexts[0];
+    const before = context.resumed;
+    expect(ambience.resume()).toBe(false); // running already
+    context.state = 'interrupted';
+    scope.navigator.audioSession.type = 'auto';
+    expect(ambience.resume()).toBe(true);
+    expect(context.resumed).toBe(before + 1);
+    expect(scope.navigator.audioSession.type).toBe('playback');
+  });
+
+  test('a browser without the Audio Session API starts as before', () => {
+    const scope = fakeAudio();
+    expect(createAmbience({ scope, random: () => 0 }).start()).toBe(true);
+  });
+});

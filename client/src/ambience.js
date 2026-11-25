@@ -2,6 +2,10 @@
 // file: slow, beatless chords fade into each other, each chosen as the music goes, so it never repeats. The chords
 // are this game's own (a table in D flat major). The music keeps out of the way of speech: `setLevel('duck')` while
 // a character's line is read aloud, `setLevel('mute')` while the microphone listens.
+// Round 184: the page's audio session is set to 'playback' (audioSession.js), so the iPhone's silent switch does not
+// mute the music, and `resume()` wakes a context iOS suspended or interrupted.
+
+import { setAudioSession } from './audioSession.js';
 
 // A4 = 440 Hz is MIDI note 69.
 export const noteFrequency = (midi) => 440 * 2 ** ((midi - 69) / 12);
@@ -59,6 +63,7 @@ const volumeOf = (value) => (typeof value === 'number' && Number.isFinite(value)
  *   supported            the browser has the Web Audio API
  *   running
  *   start()              call inside a tap (browsers let a page make sound only after one)
+ *   resume()             call inside a tap: wakes a context that is suspended or interrupted (iOS)
  *   stop()
  *   setLevel(name)       'full', 'duck' (a line is spoken) or 'mute' (the microphone listens)
  *   setRain(amount)      0 (dry) to 1 (a downpour): the sound of rain under the music (round 146)
@@ -165,6 +170,7 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
     get chord() { return live?.chord ?? null; },
     start() {
       if (!supported || live) return false;
+      setAudioSession('playback', scope);
       let context;
       try { context = new Context(); } catch { return false; }
       quietly(context, 'resume');
@@ -207,6 +213,13 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       live.rain?.gain.gain.setTargetAtTime?.(rain * AMBIENCE.rain.gain, context.currentTime, AMBIENCE.rain.ease);
       scope.document?.addEventListener?.('visibilitychange', onVisibility);
       tick(live);
+      return true;
+    },
+    resume() {
+      if (!live || scope.document?.hidden) return false;
+      if (live.context.state === 'running') return false;
+      setAudioSession('playback', scope);
+      quietly(live.context, 'resume');
       return true;
     },
     stop() {
