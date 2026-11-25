@@ -47,7 +47,7 @@ containment_file:
     id: "cm002_seam_minutes"
     title: "Annex A: minutes of the seam"
     redaction: "Your companion has blacked out every line of it. \"Not this one. This is the thing itself talking, not a file about it. If you read it, I will need a while to get over it: a hint fewer for each objective of the next conversation you finish.\""
-    text: "Procès-verbal de la fissure. Quand les branches se rapprochent, les mots perdent leur sens là où ils se touchent. Erreur ? Non. Ce qui reste d'un parler, quand tous la comprennent mal, a cette forme. Dessous gît une voix ancienne, près de la racine de l'arbre. Celle-là ne se trompe jamais. Elle attend."
+    text: "Procès-verbal de la fissure. Quand les branches se rapprochent, les mots perdent leur sens là où ils se touchent. Erreur ? Non. Ce qui reste d'un parler, quand tous le comprennent mal, a cette forme. Dessous gît la voix ancienne, près de la racine de l'arbre. Celle-là ne se trompe jamais. Elle attend."
     translation: "Minutes of the seam. When the branches draw near, words lose their meaning where they touch. A mistake? No. What remains of a tongue, when everyone understands it badly, has this shape. Beneath lies an ancient voice, near the root of the tree. That one never makes mistakes. It waits."
     glossary:
       - { word: "procès-verbal", meaning: "minutes" }
@@ -57,7 +57,7 @@ containment_file:
       - { word: "ne se trompe jamais", meaning: "never makes mistakes" }
       - { word: "ce qui reste", meaning: "what remains" }
       - { word: "parler", meaning: "tongue, speech" }
-      - { word: "la comprennent mal", meaning: "understand it badly" }
+      - { word: "le comprennent mal", meaning: "understand it badly" }
       - { word: "racine", meaning: "root" }
       - { word: "attend", meaning: "waits" }
     exposure_note: "Exposure log: read in full by the bearer of this Spellbook. The seam has noted the reader's address. Containment of the reader is pending."

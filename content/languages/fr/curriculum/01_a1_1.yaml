@@ -1,6 +1,6 @@
-# Round 144: the Italian words of curriculum stage A1.1 (the skeleton is content/curriculum/01_a1_1.yaml). Authored by
-# Claude from the functions of the A1 syllabi read for the round; no source page was opened for a single entry. For
-# the owner's review. A vocabulary entry is { t: target, pos, en: [meanings], forms: [...], ex: [example, English] };
+# Round 144: the words of curriculum stage A1.1 (the skeleton is content/curriculum/01_a1_1.yaml). The Italian
+# original was authored by Claude from the functions of the A1 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. A vocabulary entry is { t: target, pos, en: [meanings], forms: [...], ex: [example, English] };
 # `forms` defaults to the target, and matching ignores case and accents. `say` is the words that meet an objective:
 # one list means any of them, a list of lists means one from each.
 # Round 180: the French version, authored by Claude from the Italian file; it awaits a native speaker's review. Elided
