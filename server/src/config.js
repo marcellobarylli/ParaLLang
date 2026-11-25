@@ -58,6 +58,7 @@ export function resolveLLMConfig(overrides = {}, env = process.env) {
     return {
       provider,
       model: sharedModel ?? nonBlank(env.GEMINI_MODEL),
+      fallbackModel: nonBlank(env.GEMINI_FALLBACK_MODEL) ?? undefined, // round 182; 'none' turns it off
       apiKey: overrides.apiKey ?? nonBlank(env.GEMINI_API_KEY),
       baseUrl: overrides.baseUrl,
       timeoutMs: overrides.timeoutMs,

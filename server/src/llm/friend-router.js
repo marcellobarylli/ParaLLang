@@ -9,10 +9,11 @@ import { ProviderError } from './provider-error.js';
 const MAX_CACHED_KEYS = 32;
 
 export class FriendRouter {
-  constructor({ primary, geminiKey = null, geminiModel = null, createGemini = (config) => new GeminiAdapter(config) }) {
+  constructor({ primary, geminiKey = null, geminiModel = null, geminiFallbackModel = undefined, createGemini = (config) => new GeminiAdapter(config) }) {
     this.primary = primary;
     this.serverGeminiKey = geminiKey || null;
     this.geminiModel = geminiModel || null;
+    this.geminiFallbackModel = geminiFallbackModel; // round 182: undefined means the adapter's default
     this.createGemini = createGemini;
     this.geminiByKey = new Map();
   }
@@ -24,7 +25,7 @@ export class FriendRouter {
     if (!key) throw new ProviderError('model-setup', { provider: 'gemini' });
     let adapter = this.geminiByKey.get(key);
     if (!adapter) {
-      adapter = this.createGemini({ apiKey: key, model: this.geminiModel });
+      adapter = this.createGemini({ apiKey: key, model: this.geminiModel, ...(this.geminiFallbackModel !== undefined ? { fallbackModel: this.geminiFallbackModel } : {}) });
       if (this.geminiByKey.size >= MAX_CACHED_KEYS) this.geminiByKey.delete(this.geminiByKey.keys().next().value);
       this.geminiByKey.set(key, adapter);
     }

@@ -32,7 +32,7 @@ const curriculumLine = (content) => (content.curriculum
 const friendCode = (process.env.PARALLANG_FRIEND_CODE || '').trim() || null;
 const primaryProvider = createLLMAdapter();
 const provider = friendCode
-  ? new FriendRouter({ primary: primaryProvider, geminiKey: (process.env.GEMINI_API_KEY || '').trim() || null, geminiModel: (process.env.GEMINI_MODEL || '').trim() || null })
+  ? new FriendRouter({ primary: primaryProvider, geminiKey: (process.env.GEMINI_API_KEY || '').trim() || null, geminiModel: (process.env.GEMINI_MODEL || '').trim() || null, geminiFallbackModel: (process.env.GEMINI_FALLBACK_MODEL || '').trim() || undefined })
   : primaryProvider;
 // Round 145: with a GitHub token and repository the saves are also written to GitHub and read back from there when
 // the disk has lost them (github-saves.js). Wrong settings do not stop the server (the game would be down for a

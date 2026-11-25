@@ -34,6 +34,16 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-25: round 182, a character's convenient excuse
+
+A friend's turns reach Gemini on the owner's key (tested from the session); they failed because Google's
+`gemini-3.8-flash` was overloaded (503 "high demand"), slower than 60 seconds, or its free allowance spent for the
+minute. A failed turn now says so, after a joke: "<name> isn't feeling it right now. His convenient excuse: Gemini
+answered 503 UNAVAILABLE: \"This model is currently experiencing high demand…\" (tried 3 times: …)". Google's words
+are kept (its error list is unwrapped). A passing failure is tried again within 150 s, then on `gemini-3.5-flash`
+(`GEMINI_FALLBACK_MODEL`). **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/182/architecture.md), [findings](docs/rounds/182/findings.md).
+
 ## Addendum 2026-11-25: round 181, French
 
 French is the third language: a whole pack (`content/languages/fr/`: the market's encounters and vocabulary, the
