@@ -31,6 +31,10 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
+      # Round 182: friends' turns that Google answers with an overload (503) or too slowly are tried again, then on this
+      # second model (default gemini-3.5-flash; `none` turns it off). Unset keeps the default.
+      # - key: GEMINI_FALLBACK_MODEL
+      #   value: gemini-3.5-flash
       # Round 145: with these two set, every save is also written as a JSON file to the `saves` branch of that
       # repository and read back when the disk has lost it (server/src/github-saves.js). The token is a fine-grained
       # personal access token with "Contents: Read and write" on that one repository; the repository is owner/name.

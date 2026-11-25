@@ -21,11 +21,11 @@ test('the excuse names the character, then the reason, and says progress is kept
 test('Google\'s error list is unwrapped, so its own words reach the excuse', async () => {
   const client = new OpenAI({ apiKey: 'k', baseURL: 'https://example.invalid/', maxRetries: 0,
     fetch: (url, init) => unwrapGoogleErrors(url, init, googleReplying(503, overloaded)) });
-  const adapter = new GeminiAdapter({ client });
+  const adapter = new GeminiAdapter({ client, pausesMs: [0, 0] });
   const error = await adapter.structuredChat([{ role: 'user', content: 'hi' }], z.object({ a: z.string() })).catch((caught) => caught);
   assert.equal(error.status, 503);
   assert.equal(describeFailure(error),
-    'Gemini answered 503 UNAVAILABLE: "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."');
+    'Gemini answered 503 UNAVAILABLE: "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later." (tried 3 times: gemini-3.8-flash ×2, gemini-3.5-flash).');
 });
 
 test('a refused key in Google\'s list is still the key error with its own steps', async () => {

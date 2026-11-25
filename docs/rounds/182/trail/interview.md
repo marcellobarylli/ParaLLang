@@ -8,3 +8,8 @@ progress was not changed. Please retry in a moment." on the hosted page, played 
 > could you make the failure messages more informative if a friend encounters an error? We want to know that this is
 > actually the case. But it should be preceded by a funny message: "<encounter character name> isn't feeling it right
 > now. His conventient excuse: (error message)
+
+After the first build, asked whether to merge and deploy, and to build the reliability fixes (longer timeout, retries
+of a 503, a second Flash model, the clear message):
+
+> yes pls to both

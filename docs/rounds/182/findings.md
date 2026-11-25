@@ -27,9 +27,11 @@ from the secret), a road encounter started as a friend.
 | Plain completions (curl, 6 calls) | 503 "high demand", 3 past 90 s, 2 answered in 38–43 s |
 | Friend path in Node, before the change (3 turns) | OK in 38.7 s; timed out at 60 s; 503 "(no body)" |
 | `gemini-3.5-flash-lite` | 1.5 s, but its reply did not fit the encounter schema (`narrative_words` null) |
-| Server tests | 602 of 602 (5 new) |
+| Server tests | 604 of 604 |
 | Local server as a friend, model `gemini-no-such-model` | "Lazlo Tallow isn't feeling it right now. His convenient excuse: Gemini answered 404 NOT_FOUND: \"models/gemini-no-such-model is not found…\"" |
 | Local server as a friend, `gemini-3.8-flash` | "Clementina Inkpen isn't feeling it right now. His convenient excuse: Gemini answered 503 UNAVAILABLE: \"This model is currently experiencing high demand…\""; the next call: `MODEL_QUOTA_EXHAUSTED` |
+| Google's 429, a few minutes later | gone: `gemini-3.8-flash` answered; `gemini-3.5-flash` answered 503 |
+| Local server as a friend, with retries and fallback (3 encounters) | each ended in "… 503 UNAVAILABLE … (tried 2 times: gemini-3.8-flash, gemini-3.5-flash)": the first model's allowance was spent, the fallback overloaded. The tries mark was added after these runs |
 
 ## Claim boundary
 
@@ -40,6 +42,8 @@ from the secret), a road encounter started as a friend.
 
 ## Open items
 
-- The owner merges and deploys, then a friend sees the message on the hosted page.
-- Fewer failures: a longer timeout, retries of a 503, a second Flash model (not built).
+- A friend sees the message, or a turn that recovers on a retry, on the hosted page.
+- No turn was seen to recover through a retry against the real service; the retry plan is tested with fakes only.
+- The free allowance runs out after a few calls a minute; an encounter's turn makes two or three. A paid key, or one
+  per friend, is the lasting answer.
 - The quota message (`MODEL_QUOTA_EXHAUSTED`) still has no Google detail (per minute or per day).

@@ -7,7 +7,9 @@ commit; nothing here is frozen.
 - **Design source:** the owner's messages; round 171 (friends on Gemini, `server/src/llm/friend-router.js`).
 - **Findings:** [`findings.md`](findings.md).
 - **Artifact:** `server/src/llm/excuse.js` (new), `server/src/llm/adapters/gemini.js`, `server/src/learning-service.js`
-  (`callProvider`), `server/test/excuse.test.js` (new).
+  (`callProvider`), `server/src/llm/adapters/openai.js` (per-request model and timeout), `server/src/llm/friend-router.js`,
+  `server/server.js`, `server/src/config.js` (`GEMINI_FALLBACK_MODEL`), `render.yaml` (a comment),
+  `server/test/excuse.test.js` (new), `server/test/gemini.test.js`.
 
 ## Decisions
 
@@ -26,13 +28,21 @@ commit; nothing here is frozen.
 4. **For everyone.** The message is the same for the owner and friends; the owner's claude-cli failures are mostly
    provider errors with their own messages, which are unchanged, as are the three Gemini key and quota errors.
 5. **"His".** As the owner wrote it, for every character, including female ones.
+6. **Fewer failures (second build, on the owner's word).** A Gemini call that fails for a passing reason (a 5xx such
+   as 503 "high demand", 408, a timeout, no connection) is tried again: the configured model after 2 s, again after
+   3 s on the fallback model (`GEMINI_FALLBACK_MODEL`, default `gemini-3.5-flash`; `none` keeps the configured
+   model). Each attempt may take 90 s (it was 60 s), all three within 150 s; no attempt starts with less than 15 s
+   left. The OpenAI library's own retry is off, so the plan is the only one.
+7. **A spent allowance** (429) is counted per model, so it goes straight to the fallback model; when both are spent,
+   the page shows the quota steps as before. A refused key is never tried again.
+8. **The tries in the excuse.** After more than one try, the reason ends with them, e.g. "(tried 3 times:
+   gemini-3.8-flash ×2, gemini-3.5-flash)", a model whose allowance was spent marked "(allowance spent)".
 
 ## Tests
 
-`npm test` in `server/` (602; 5 new in `test/excuse.test.js`); the server run locally with a friend code against the
+`npm test` in `server/` (604; 5 new in `test/excuse.test.js`, 3 Gemini tests new or rewritten); the server run locally with a friend code against the
 real Gemini endpoint (see findings).
 
 ## Status
 
-Built and tested; committed and pushed on the session branch `claude/loving-lamport-s6pjlu`. Not merged to `main`
-and not deployed: the owner has not asked for it.
+Built and tested; merged to `main` and pushed on the owner's word ("yes pls to both"); Render deploys `main`.

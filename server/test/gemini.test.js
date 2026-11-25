@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { z } from 'zod';
 import { createLLMAdapter } from '../src/llm/index.js';
 import { resolveLLMConfig } from '../src/config.js';
-import { GeminiAdapter, GEMINI_BASE_URL, GEMINI_DEFAULT_MODEL } from '../src/llm/adapters/gemini.js';
+import { GeminiAdapter, GEMINI_BASE_URL, GEMINI_DEFAULT_MODEL, GEMINI_FALLBACK_MODEL } from '../src/llm/adapters/gemini.js';
 
 const schema = z.object({ reply: z.string() });
 
@@ -53,18 +53,54 @@ test('gemini falls back to JSON mode with the schema in the prompt when the sche
   assert.match(client.calls[1].messages.at(-1).content, /"reply"/);
 });
 
-test('gemini does not retry other errors, and still checks the reply against the schema', async () => {
-  const outage = Object.assign(new Error('500 internal'), { status: 500 });
-  const client = fakeClient([outage]);
-  await assert.rejects(new GeminiAdapter({ client }).structuredChat([], schema), /500/);
-  assert.equal(client.calls.length, 1);
+test('round 182: a passing failure (5xx, timeout) is tried again, then on the fallback model; the reply is still checked', async () => {
+  const outage = () => Object.assign(new Error('500 internal'), { status: 500 });
+  const client = fakeClient([outage(), outage(), outage()]);
+  const error = await new GeminiAdapter({ client, pausesMs: [0, 0] }).structuredChat([], schema).catch((caught) => caught);
+  assert.match(error.message, /500/);
+  assert.deepEqual(client.calls.map((call) => call.model), [GEMINI_DEFAULT_MODEL, GEMINI_DEFAULT_MODEL, GEMINI_FALLBACK_MODEL]);
+  assert.deepEqual(error.attempts, [GEMINI_DEFAULT_MODEL, GEMINI_DEFAULT_MODEL, GEMINI_FALLBACK_MODEL]);
+  const overloaded = Object.assign(new Error('503'), { status: 503 });
+  const recovering = fakeClient([overloaded, '{"reply":"ciao"}']);
+  assert.deepEqual(await new GeminiAdapter({ client: recovering, pausesMs: [0, 0] }).structuredChat([], schema), { reply: 'ciao' });
+  assert.equal(recovering.calls.length, 2);
   const refused = Object.assign(new Error('400'), { status: 400 });
   await assert.rejects(new GeminiAdapter({ client: fakeClient([refused, '{"other":1}']) }).structuredChat([], schema));
 });
 
+test('round 182: a timeout is tried again; GEMINI_FALLBACK_MODEL=none keeps the configured model', async () => {
+  const slow = () => Object.assign(new Error('Request timed out.'), { name: 'APIConnectionTimeoutError' });
+  const client = fakeClient([slow(), slow(), '{"reply":"ciao"}']);
+  const adapter = new GeminiAdapter({ client, fallbackModel: 'none', pausesMs: [0, 0] });
+  assert.deepEqual(await adapter.structuredChat([], schema), { reply: 'ciao' });
+  assert.deepEqual(client.calls.map((call) => call.model), [GEMINI_DEFAULT_MODEL, GEMINI_DEFAULT_MODEL, GEMINI_DEFAULT_MODEL]);
+  const config = resolveLLMConfig({}, { LLM_PROVIDER: 'gemini', GEMINI_API_KEY: 'k', GEMINI_FALLBACK_MODEL: 'gemini-y' });
+  assert.equal(config.fallbackModel, 'gemini-y');
+});
+
+test('round 182: no attempt starts once the deadline is too close, and a spent allowance is not tried again', async () => {
+  const overloaded = () => Object.assign(new Error('503'), { status: 503 });
+  const client = fakeClient([overloaded(), overloaded(), overloaded()]);
+  await assert.rejects(new GeminiAdapter({ client, deadlineMs: 10_000, pausesMs: [0, 0] }).structuredChat([], schema), /503/);
+  assert.equal(client.calls.length, 1);
+  const quota = fakeClient([Object.assign(new Error('429'), { status: 429 })]);
+  await assert.rejects(new GeminiAdapter({ client: quota, fallbackModel: 'none', pausesMs: [0, 0] }).structuredChat([], schema), { code: 'MODEL_QUOTA_EXHAUSTED' });
+  assert.equal(quota.calls.length, 1);
+  const spent = () => Object.assign(new Error('429'), { status: 429 });
+  const other = fakeClient([spent(), '{"reply":"ciao"}']);
+  assert.deepEqual(await new GeminiAdapter({ client: other, pausesMs: [0, 0] }).structuredChat([], schema), { reply: 'ciao' });
+  assert.deepEqual(other.calls.map((call) => call.model), [GEMINI_DEFAULT_MODEL, GEMINI_FALLBACK_MODEL]);
+  const both = fakeClient([spent(), spent()]);
+  await assert.rejects(new GeminiAdapter({ client: both, pausesMs: [0, 0] }).structuredChat([], schema), { code: 'MODEL_QUOTA_EXHAUSTED' });
+  assert.equal(both.calls.length, 2);
+  const thenBusy = fakeClient([spent(), Object.assign(new Error('503'), { status: 503 })]);
+  const error = await new GeminiAdapter({ client: thenBusy, pausesMs: [0, 0] }).structuredChat([], schema).catch((caught) => caught);
+  assert.deepEqual(error.attempts, [`${GEMINI_DEFAULT_MODEL} (allowance spent)`, GEMINI_FALLBACK_MODEL]);
+});
+
 test('round 171: a spent allowance and a refused key become the codes the page answers with the key steps', async () => {
   const quota = Object.assign(new Error('429 RESOURCE_EXHAUSTED'), { status: 429 });
-  await assert.rejects(new GeminiAdapter({ client: fakeClient([quota]) }).structuredChat([], schema), { code: 'MODEL_QUOTA_EXHAUSTED' });
+  await assert.rejects(new GeminiAdapter({ client: fakeClient([quota]), fallbackModel: 'none' }).structuredChat([], schema), { code: 'MODEL_QUOTA_EXHAUSTED' });
   const badKey = Object.assign(new Error('400 API key not valid. Please pass a valid API key.'), { status: 400 });
   const client = fakeClient([badKey]);
   await assert.rejects(new GeminiAdapter({ client }).structuredChat([], schema), { code: 'MODEL_KEY_INVALID' });

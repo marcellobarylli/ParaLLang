@@ -1,8 +1,12 @@
 import OpenAI from 'openai';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
-// Round 087 (review R1.4): a caller's AbortSignal reaches the request.
-const requestOptions = (options) => (options.signal ? { signal: options.signal } : undefined);
+// Round 087 (review R1.4): a caller's AbortSignal reaches the request. Round 182: so can a per-request timeout (the
+// Gemini adapter's attempts share one deadline).
+const requestOptions = (options) => {
+  const given = { ...(options.signal ? { signal: options.signal } : {}), ...(options.timeoutMs ? { timeout: options.timeoutMs } : {}) };
+  return Object.keys(given).length ? given : undefined;
+};
 
 export class OpenAIAdapter {
   constructor(config = {}) {
@@ -16,7 +20,7 @@ export class OpenAIAdapter {
 
   async chat(messages, options = {}) {
     const response = await this.client.chat.completions.create({
-      model: this.model, messages,
+      model: options.model ?? this.model, messages,
       temperature: options.temperature ?? 0.8,
       max_tokens: options.maxTokens ?? 1024,
     }, requestOptions(options));
@@ -28,7 +32,7 @@ export class OpenAIAdapter {
     // Strict mode requires the root to be the object schema itself; naming would wrap it in a $ref.
     const { $schema: _ignored, ...jsonSchema } = zodToJsonSchema(schema, { target: 'openAi', $refStrategy: 'none' });
     const response = await this.client.chat.completions.create({
-      model: this.model, messages,
+      model: options.model ?? this.model, messages,
       temperature: options.temperature ?? 0.2,
       max_tokens: options.maxTokens ?? 1400,
       response_format: {

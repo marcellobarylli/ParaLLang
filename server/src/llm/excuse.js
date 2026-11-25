@@ -19,7 +19,24 @@ function zodIssues(error) {
   }).join('; ');
 }
 
+// Round 182: after retries, the excuse says how often and on which models it was tried.
+function triesNote(error) {
+  const tried = Array.isArray(error?.attempts) ? error.attempts : [];
+  if (tried.length < 2) return '';
+  const counts = new Map();
+  for (const model of tried) counts.set(model, (counts.get(model) ?? 0) + 1);
+  const list = [...counts].map(([model, n]) => (n > 1 ? `${model} ×${n}` : model)).join(', ');
+  return ` (tried ${tried.length} times: ${list})`;
+}
+
 export function describeFailure(error, providerName = null) {
+  const reason = describeOnce(error, providerName);
+  const note = triesNote(error);
+  if (!note) return reason;
+  return reason.endsWith('.') ? `${reason.slice(0, -1)}${note}.` : `${reason}${note}.`;
+}
+
+function describeOnce(error, providerName) {
   const who = PROVIDER_NAMES[error?.provider ?? providerName] ?? 'the AI model';
   const name = error?.name ?? '';
   if (name === 'ZodError') return `${who}'s reply did not fit the game's format (${clip(zodIssues(error))}).`;
