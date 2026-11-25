@@ -124,7 +124,7 @@ export function WelcomeCard({ onClose }) {
     <div className="welcome-backdrop">
       <section className="card welcome-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
         <p className="eyebrow">Before you set out</p>
-        <h2 id="welcome-title">A word first</h2>
+        <h2 id="welcome-title">In the beginning was the Word</h2>
         <p>We believe a language is learned best the way you learned your first one: by living in it.</p>
         <p>So this world is learned by talking to the people who live in it. Ask them things, get to know them, pick up their words as they use them, and some of what they would rather you did not ask.</p>
         <p className="welcome-teaser">Listen closely, though. Lately the words here have begun to mean a little more than they should, and something is pulling at the seams. Whatever it is seems to be pulling from your side.</p>

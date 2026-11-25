@@ -22,7 +22,8 @@ commit; nothing here is frozen.
 3. **What it says.** Three short paragraphs: the belief (a language is learned best by living in it), the game (learn
    this world and its language by talking to the people who live in it), and a teaser (the words here have begun to
    mean more than they should; something pulls at the seams, from the player's side). The teaser hints at the
-   strings and the collision without naming them.
+   strings and the collision without naming them. The heading, on the owner's word after the first deploy, is "In
+   the beginning was the Word" (John 1:1, "Am Anfang war das Wort"); it was "A word first".
 4. **How often.** Once per save slot: closing it stores `parallang.welcomed`, a per-slot key, so a new game or a
    started-over slot greets the player again. A player with a save from before this round sees it once.
 5. **The browser checks.** `scripts/lib/play.mjs` marks the message read unless a check asks for it

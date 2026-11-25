@@ -26,7 +26,7 @@ const noMusic = { supported: false, start() {}, stop() {}, setLevel() {} };
 
 // Round 180: the opening message, once the camera is down at the start of the journey; closed by Set out.
 async function welcome(user) {
-  const dialog = await screen.findByRole('dialog', { name: 'A word first' }, { timeout: 20_000 });
+  const dialog = await screen.findByRole('dialog', { name: 'In the beginning was the Word' }, { timeout: 20_000 });
   await user.click(within(dialog).getByRole('button', { name: 'Set out' }));
 }
 
@@ -70,7 +70,7 @@ test('the journey opens on a message about learning by conversation; closed, it 
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
   await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
-  const dialog = await screen.findByRole('dialog', { name: 'A word first' }, { timeout: 20_000 });
+  const dialog = await screen.findByRole('dialog', { name: 'In the beginning was the Word' }, { timeout: 20_000 });
   expect(dialog.textContent).toContain('by living in it');
   expect(dialog.textContent).toContain('talking to the people who live in it');
   expect(screen.queryByRole('button', { name: /^Talk to / })).toBeNull(); // the arrival's card waits behind it
@@ -80,7 +80,7 @@ test('the journey opens on a message about learning by conversation; closed, it 
   cleanup();
   // The same slot again: straight to the arrival's card.
   await mount({ storage });
-  expect(screen.queryByRole('dialog', { name: 'A word first' })).toBeNull();
+  expect(screen.queryByRole('dialog', { name: 'In the beginning was the Word' })).toBeNull();
 });
 
 test('a conversation on the road, then Continue takes the rails to the next one', async () => {

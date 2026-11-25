@@ -18,7 +18,7 @@ await game.run(async ({ page, check, shot, tap }) => {
   await page.waitForFunction(() => window.__parallangRoad?.stats?.mode === 'title', null, { timeout: 120000 });
   await tap(page.getByRole('button', { name: JOURNEY }));
   check(await page.getByRole('dialog').count() === 0, 'no message during the zoom down');
-  const dialog = page.getByRole('dialog', { name: 'A word first' });
+  const dialog = page.getByRole('dialog', { name: 'In the beginning was the Word' });
   await dialog.waitFor({ timeout: 60000 });
   const mode = await page.evaluate(() => window.__parallangRoad?.stats.mode);
   check(mode === 'hold' || mode === 'wander', `the message comes once the camera is down (${mode})`);
