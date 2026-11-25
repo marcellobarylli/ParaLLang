@@ -35,9 +35,11 @@ export const GEMINI_KEY_HEADER = 'X-Gemini-Key';
 export const LANGUAGE_HEADER = 'X-ParaLLang-Language';
 
 export function createApp({ service, services: given = null, defaultLanguage = null, logger = console, token = null, friendCode = null, saves = null }) {
-  const services = new Map(given ? Object.entries(given) : [[service.content.language.code, service]]);
+  // A service without content (a test's stub) plays under its own key and lists no language.
+  const services = new Map(given ? Object.entries(given) : [[service.content?.language?.code ?? 'default', service]]);
   const fallback = defaultLanguage && services.has(defaultLanguage) ? defaultLanguage : services.keys().next().value;
-  const languages = [...services.values()].map(({ content: { language: { code, name, tag } } }) => ({ code, name, tag }));
+  const languages = [...services.values()].filter((each) => each.content?.language)
+    .map(({ content: { language: { code, name, tag } } }) => ({ code, name, tag }));
   const app = express();
   app.use(cors());
   // Round 145: with `saves` (where the saves are kept, and whether the last copy to GitHub went through) the health

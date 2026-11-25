@@ -1,171 +1,172 @@
-# Round 144: the Italian words of curriculum stage A2.2 (the skeleton is content/curriculum/04_a2_2.yaml). Authored by
-# Claude from the functions of the A2 syllabi read for the round; no source page was opened for a single entry. For
-# the owner's review. The vocabulary shares one namespace with the earlier stages: an id defined in an earlier file is
-# reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 144: the words of curriculum stage A2.2 (the skeleton is content/curriculum/04_a2_2.yaml). The Italian
+# original was authored by Claude from the functions of the A2 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
+# defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 180: the French version, authored by Claude from the Italian file; it awaits a native speaker's review.
 stage: a2_2
-version: curriculum-a2-2-it-v1
+version: curriculum-a2-2-fr-v1
 grammar:
-  invitations: "ti va di + infinitive, vuoi venire; andiamo, che ne dici di; volentieri, purtroppo non posso."
-  comparisons: "più ... di and meno ... di (di joins the article: del, della); meglio and migliore, peggio and peggiore; il migliore; come."
-  travel: "vorrei with a noun (una camera doppia); non funziona, non c'è; questions with a che ora and è inclusa."
-  used_to: "Imperfetto: ero, avevo, abitavo, andavo, giocavo; c'era and c'erano; da piccolo; adesso, non ... più."
-  future: "Futuro semplice: andrò, farò, sarà, tornerò; l'anno prossimo; forse, probabilmente; ti prometto che."
-  work: "faccio il / la + a job, sono + a job with no article; comincio a, finisco di; vorrei diventare."
+  invitations: "tu veux + infinitive, ça te dit de + infinitive; on y va, si on allait + imparfait for a suggestion; volontiers, avec plaisir; malheureusement, je ne peux pas."
+  comparisons: "plus ... que and moins ... que (plus grand que toi); meilleur with a noun and mieux with a verb, pire; le meilleur, la meilleure; aussi ... que; pareil, différent."
+  travel: "je voudrais with a noun (une chambre double); ça ne marche pas, il n'y a pas de; questions with à quelle heure and est compris."
+  used_to: "Imparfait (the nous stem + -ais, -ait): j'étais, j'avais, j'habitais, j'allais, je jouais; il y avait; quand j'étais petit; maintenant, ne ... plus."
+  future: "Futur simple (the infinitive + -ai, with irregular stems): j'irai, je ferai, ce sera, je reviendrai; l'année prochaine; peut-être, probablement; je te promets que."
+  work: "je suis + a job with no article (je suis infirmier), je travaille comme; je commence à, je finis à; je voudrais devenir, j'aimerais devenir."
 lessons:
   invitations_invite:
-    invite: { say: [ti_va_di, vuoi_venire], examples: ["Ti va di andare al cinema?", "Vuoi venire a cena da me?", "Le va di prendere un caffè?"] }
-    suggest: { say: [che_ne_dici, andiamo], examples: ["Andiamo al cinema sabato?", "Che ne dici di una pizza?"] }
-    where_meet: { say: [dove_ci_vediamo], examples: ["Dove ci vediamo?", "A che ora ci vediamo?"] }
+    invite: { say: [ca_te_dit, tu_veux_venir], examples: ["Ça te dit d'aller au cinéma ?", "Tu veux venir dîner chez moi ?", "Ça vous dirait de prendre un café ?"] }
+    suggest: { say: [qu_est_ce_que_tu_dis_de, on_y_va], examples: ["Si on allait au cinéma samedi ?", "Qu'est-ce que tu dis de samedi ?"] }
+    where_meet: { say: [on_se_retrouve_ou], examples: ["On se retrouve où ?", "On se voit à quelle heure ?"] }
   invitations_accept:
-    accept: { say: [volentieri, certo], examples: ["Volentieri!", "Certo, con piacere."] }
-    good_idea: { say: [buona_idea], examples: ["Buona idea!", "È un'ottima idea."] }
-    bring: { say: [porto_qualcosa], examples: ["Porto qualcosa?", "Devo portare qualcosa?"] }
+    accept: { say: [volontiers, bien_sur], examples: ["Volontiers !", "Bien sûr, avec plaisir."] }
+    good_idea: { say: [bonne_idee], examples: ["Bonne idée !", "C'est une excellente idée."] }
+    bring: { say: [j_apporte_quelque_chose], examples: ["J'apporte quelque chose ?", "Je dois apporter quelque chose ?"] }
   invitations_decline:
-    decline: { say: [purtroppo, non_posso], examples: ["Purtroppo non posso.", "Mi dispiace, sabato non posso."] }
-    excuse: { say: [sono_impegnato], examples: ["Sono impegnato.", "Ho già un impegno."] }
-    another_time: { say: [un_altra_volta], examples: ["Facciamo un'altra volta?", "Magari un altro giorno."] }
+    decline: { say: [malheureusement, je_ne_peux_pas], examples: ["Malheureusement, je ne peux pas.", "Désolé, samedi je ne peux pas."] }
+    excuse: { say: [je_suis_occupe], examples: ["Je suis occupé.", "J'ai déjà quelque chose de prévu."] }
+    another_time: { say: [une_autre_fois], examples: ["On remet ça à une autre fois ?", "Peut-être un autre jour."] }
   comparisons_more:
-    ask_which: { say: [quale], examples: ["Quale è più grande?", "Quale costa di più?"] }
-    bigger_than: { say: [piu_grande_di, piu_piccolo_di], examples: ["Roma è più grande di Milano.", "La mia casa è più piccola della tua."] }
-    cheaper: { say: [meno_caro, piu_caro], examples: ["Il treno è più economico dell'aereo.", "Questo costa meno.", "Il pesce è più caro della carne."] }
+    ask_which: { say: [lequel], examples: ["Lequel est le plus grand ?", "Laquelle coûte le plus cher ?"] }
+    bigger_than: { say: [plus_grand_que, plus_petit_que], examples: ["Mon frère est plus grand que moi.", "Ma maison est plus petite que la tienne."] }
+    cheaper: { say: [moins_cher, plus_cher], examples: ["Le train est moins cher que l'avion.", "Ça coûte moins cher.", "Le poisson est plus cher que la viande."] }
   comparisons_better:
-    better: { say: [meglio], examples: ["Questo è meglio.", "Il vino rosso è migliore del bianco."] }
-    worse: { say: [peggio], examples: ["Questo è peggio.", "Il tempo oggi è peggiore di ieri."] }
-    the_best: { say: [il_migliore], examples: ["Questa pizza è la migliore.", "È il migliore di tutti."] }
+    better: { say: [mieux], examples: ["C'est mieux.", "Le vin rouge est meilleur que le blanc."] }
+    worse: { say: [pire], examples: ["C'est pire.", "Aujourd'hui, le temps est pire qu'hier."] }
+    the_best: { say: [le_meilleur], examples: ["Cette baguette est la meilleure.", "C'est le meilleur de tous."] }
   comparisons_same:
-    as_as: { say: [come], examples: ["Mio fratello è alto come me.", "Questa camera è grande come l'altra."] }
-    same: { say: [uguale], examples: ["Sono uguali.", "È lo stesso."] }
-    different: { say: [diverso], examples: ["Sono diversi.", "No, questa è diversa."] }
+    as_as: { say: [aussi_grand_que], examples: ["Mon frère est aussi grand que moi.", "Cette chambre est aussi grande que l'autre."] }
+    same: { say: [pareil], examples: ["Ils sont pareils.", "C'est la même chose."] }
+    different: { say: [different], examples: ["Ils sont différents.", "Non, celle-ci est différente."] }
   travel_room:
-    room: { say: [camera], examples: ["Vorrei una camera doppia.", "Avete una camera singola?"] }
-    nights: { say: [notte], examples: ["Per due notti.", "Resto tre notti."] }
-    booking: { say: [a_nome, prenotare], examples: ["Ho una prenotazione a nome Rossi.", "Ho prenotato una camera a nome di Sam."] }
+    room: { say: [chambre], examples: ["Je voudrais une chambre double.", "Vous avez une chambre simple ?"] }
+    nights: { say: [nuit], examples: ["Pour deux nuits.", "Je reste trois nuits."] }
+    booking: { say: [au_nom_de, reserver], examples: ["J'ai une réservation au nom de Martin.", "J'ai réservé une chambre au nom de Sam."] }
   travel_problem:
-    not_working: { say: [non_funziona], examples: ["La doccia non funziona.", "Il riscaldamento è rotto."] }
-    no_water: { say: [acqua_calda, troppo_rumore], examples: ["Non c'è acqua calda.", "C'è troppo rumore."] }
-    change_room: { say: [cambiare_camera], examples: ["Posso cambiare camera?", "Vorrei un'altra camera."] }
+    not_working: { say: [ca_ne_marche_pas], examples: ["La douche ne marche pas.", "Le chauffage est cassé."] }
+    no_water: { say: [eau_chaude, trop_de_bruit], examples: ["Il n'y a pas d'eau chaude.", "Il y a trop de bruit."] }
+    change_room: { say: [changer_de_chambre], examples: ["Est-ce que je peux changer de chambre ?", "Je voudrais une autre chambre."] }
   travel_ask:
-    breakfast: { say: [colazione], examples: ["La colazione è inclusa?", "A che ora servite la colazione?"] }
-    checkout: { say: [lasciare_la_camera], examples: ["A che ora devo lasciare la camera?", "Quando devo liberare la camera?"] }
-    delayed: { say: [in_ritardo], examples: ["Il treno è in ritardo?", "Quanti minuti di ritardo ha?"] }
+    breakfast: { say: [petit_dejeuner], examples: ["Le petit-déjeuner est compris ?", "À quelle heure est le petit-déjeuner ?"] }
+    checkout: { say: [liberer_la_chambre], examples: ["À quelle heure je dois libérer la chambre ?", "Quand est-ce que je dois quitter la chambre ?"] }
+    delayed: { say: [en_retard], examples: ["Le train est en retard ?", "Il a combien de minutes de retard ?"] }
   used_to_child:
-    was_like: { say: [[da_piccolo], [ero]], examples: ["Da piccolo ero timido.", "Da bambina ero molto alta."] }
-    lived: { say: [abitavo], examples: ["Abitavo in un paese piccolo.", "Vivevo a Londra con i miei genitori."] }
-    had: { say: [avevo], examples: ["Avevo un cane.", "Avevo una bicicletta rossa."] }
+    was_like: { say: [[quand_j_etais_petit], [j_etais]], examples: ["Quand j'étais petit, j'étais timide.", "Quand j'étais petite, j'étais très grande."] }
+    lived: { say: [j_habitais], examples: ["J'habitais dans un petit village.", "Je vivais à Londres avec mes parents."] }
+    had: { say: [j_avais], examples: ["J'avais un chien.", "J'avais un vélo rouge."] }
   used_to_habits:
-    used_to: { say: [giocavo, andavo], examples: ["Giocavo a calcio con mio fratello.", "Andavo al mare con i nonni."] }
-    how_often: { say: [ogni_estate], examples: ["Ogni estate andavo al mare.", "Ogni domenica mangiavamo dai nonni."] }
-    liked: { say: [mi_piaceva], examples: ["Mi piaceva leggere.", "Non mi piaceva la scuola."] }
+    used_to: { say: [je_jouais, j_allais], examples: ["Je jouais au foot avec mon frère.", "J'allais à la mer avec mes grands-parents."] }
+    how_often: { say: [tous_les_etes], examples: ["Tous les étés, j'allais à la mer.", "Tous les dimanches, on mangeait chez mes grands-parents."] }
+    liked: { say: [j_aimais], examples: ["J'aimais lire.", "Je n'aimais pas l'école."] }
   used_to_place:
-    there_was: { say: [c_era], examples: ["Qui c'era un cinema.", "C'erano molti negozi."] }
-    it_was: { say: [era], examples: ["Era più piccola.", "La città era tranquilla."] }
-    now: { say: [adesso, non_c_e_piu], examples: ["Adesso c'è un supermercato.", "Il cinema non c'è più."] }
+    there_was: { say: [il_y_avait], examples: ["Ici, il y avait un cinéma.", "Il y avait beaucoup de magasins."] }
+    it_was: { say: [c_etait], examples: ["C'était plus petit.", "La ville était tranquille."] }
+    now: { say: [maintenant, il_n_y_a_plus], examples: ["Maintenant, il y a un supermarché.", "Le cinéma n'existe plus."] }
   future_next_year:
-    will_go: { say: [andro], examples: ["L'anno prossimo andrò in Italia.", "Andrò a Roma."] }
-    will_do: { say: [[l_anno_prossimo], [studiero, lavorero, viaggero, faro]], examples: ["L'anno prossimo studierò l'italiano.", "Il prossimo anno viaggerò molto."] }
-    ask_will: { say: [cosa_farai], examples: ["Cosa farai l'anno prossimo?", "Che cosa farà?"] }
+    will_go: { say: [j_irai], examples: ["L'année prochaine, j'irai en France.", "J'irai à Paris."] }
+    will_do: { say: [[l_annee_prochaine], [j_etudierai, je_travaillerai, je_voyagerai, je_ferai]], examples: ["L'année prochaine, j'étudierai le français.", "L'an prochain, je voyagerai beaucoup."] }
+    ask_will: { say: [qu_est_ce_que_tu_feras], examples: ["Qu'est-ce que tu feras l'année prochaine ?", "Que ferez-vous ?"] }
   future_predict:
-    weather: { say: [piovera], examples: ["Domani pioverà.", "Domani farà freddo."] }
-    will_be: { say: [sara], examples: ["Sarà difficile.", "Sarà una bella giornata."] }
-    perhaps: { say: [forse], examples: ["Forse pioverà.", "Probabilmente arriverò tardi."] }
+    weather: { say: [il_pleuvra], examples: ["Demain, il pleuvra.", "Demain, il fera froid."] }
+    will_be: { say: [ce_sera], examples: ["Ce sera difficile.", "Ce sera une belle journée."] }
+    perhaps: { say: [peut_etre], examples: ["Il pleuvra peut-être.", "J'arriverai probablement en retard."] }
   future_promise:
-    promise: { say: [ti_prometto], examples: ["Ti prometto che tornerò.", "Lo prometto!"] }
-    will_return: { say: [tornero, scrivero, chiamero], examples: ["Tornerò presto.", "Ti scriverò.", "La chiamerò domani."] }
-    not_forget: { say: [non_dimentichero], examples: ["Non lo dimenticherò.", "Non dimenticherò mai."] }
+    promise: { say: [je_te_promets], examples: ["Je te promets que je reviendrai.", "Je le promets !"] }
+    will_return: { say: [je_reviendrai, je_t_ecrirai, je_t_appellerai], examples: ["Je reviendrai bientôt.", "Je t'écrirai.", "Je vous appellerai demain."] }
+    not_forget: { say: [je_n_oublierai_pas], examples: ["Je ne l'oublierai pas.", "Je n'oublierai jamais."] }
   work_job:
-    ask_job: { say: [che_lavoro_fai], examples: ["Che lavoro fai?", "Di cosa si occupa?"] }
-    my_job: { say: [lavoro_come, sono_studente, insegnante, impiegato, cuoco, infermiere, medico], examples: ["Faccio il cuoco.", "Sono insegnante.", "Sono studentessa."] }
-    where_work: { say: [in_ufficio, in_una_scuola, in_un_negozio, da_casa], examples: ["Lavoro in un ufficio.", "Lavoro da casa."] }
+    ask_job: { say: [qu_est_ce_que_tu_fais_dans_la_vie], examples: ["Qu'est-ce que tu fais dans la vie ?", "Quel est votre métier ?"] }
+    my_job: { say: [je_travaille_comme, je_suis_etudiant, professeur, employe, cuisinier, infirmier, medecin], examples: ["Je suis cuisinier.", "Je suis professeur.", "Je suis étudiante."] }
+    where_work: { say: [dans_un_bureau, dans_une_ecole, dans_un_magasin, de_chez_moi], examples: ["Je travaille dans un bureau.", "Je travaille de chez moi."] }
   work_day:
-    start: { say: [comincio], examples: ["Comincio alle nove.", "Inizio a lavorare alle otto."] }
-    finish: { say: [finisco], examples: ["Finisco alle cinque.", "Finisco di lavorare alle sei."] }
-    like_job: { say: [il_mio_lavoro], examples: ["Mi piace il mio lavoro.", "Il mio lavoro è interessante."] }
+    start: { say: [je_commence], examples: ["Je commence à neuf heures.", "Je commence à travailler à huit heures."] }
+    finish: { say: [je_finis], examples: ["Je finis à cinq heures.", "Je termine le travail à six heures."] }
+    like_job: { say: [mon_travail], examples: ["J'aime mon travail.", "Mon travail est intéressant."] }
   work_become:
-    become: { say: [vorrei_diventare], examples: ["Vorrei diventare medico.", "Mi piacerebbe diventare insegnante."] }
-    why: { say: [[perche], [interessante, utile, ben_pagato]], examples: ["Perché è un lavoro interessante.", "Perché è utile.", "Perché è ben pagato."] }
-    ask_dream: { say: [cosa_volevi_fare], examples: ["Cosa volevi fare da grande?", "Cosa voleva diventare da piccolo?"] }
+    become: { say: [je_voudrais_devenir], examples: ["Je voudrais devenir médecin.", "J'aimerais devenir professeur."] }
+    why: { say: [[parce_que], [interessant, utile, bien_paye]], examples: ["Parce que c'est un travail intéressant.", "Parce que c'est utile.", "Parce que c'est bien payé."] }
+    ask_dream: { say: [qu_est_ce_que_tu_voulais_faire], examples: ["Qu'est-ce que tu voulais faire quand tu étais petit ?", "Que vouliez-vous devenir quand vous étiez petite ?"] }
 vocabulary:
   # invitations
-  ti_va_di: { t: "ti va di", pos: phrase, en: ["do you fancy", "do you feel like"], forms: ["ti va di", "le va di", "vi va di", "ti andrebbe di"], ex: ["Ti va di uscire stasera?", "Do you fancy going out this evening?"], n: "Followed by an infinitive or a noun: ti va di un caffè?" }
-  vuoi_venire: { t: "vuoi venire", pos: phrase, en: ["do you want to come"], forms: ["vuoi venire", "vuole venire", "volete venire"], ex: ["Vuoi venire al mare con noi?", "Do you want to come to the sea with us?"] }
-  che_ne_dici: { t: "che ne dici", pos: phrase, en: ["what do you say", "what about"], forms: ["che ne dici", "che ne dice", "che ne dite", "che ne pensi"], ex: ["Che ne dici di sabato?", "What about Saturday?"] }
-  andiamo: { t: "andiamo", pos: verb, en: ["let's go", "shall we go", "we go"], forms: ["andiamo", "usciamo"], ex: ["Andiamo a mangiare una pizza?", "Shall we go and eat a pizza?"] }
-  dove_ci_vediamo: { t: "dove ci vediamo", pos: phrase, en: ["where shall we meet"], forms: ["dove ci vediamo", "a che ora ci vediamo", "quando ci vediamo"], ex: ["Dove ci vediamo domani?", "Where shall we meet tomorrow?"] }
-  volentieri: { t: "volentieri", pos: adverb, en: ["gladly", "with pleasure", "I'd love to"], forms: ["volentieri", "molto volentieri", "con piacere"], ex: ["Sì, volentieri!", "Yes, gladly!"] }
-  certo: { t: "certo", pos: adverb, en: ["of course", "certainly"], forms: ["certo", "certamente"], ex: ["Certo, vengo.", "Of course, I'm coming."] }
-  buona_idea: { t: "buona idea", pos: phrase, en: ["good idea"], forms: ["buona idea", "ottima idea", "bella idea", "che bella idea"], ex: ["È una buona idea.", "It is a good idea."] }
-  porto_qualcosa: { t: "porto qualcosa", pos: phrase, en: ["shall I bring something"], forms: ["porto qualcosa", "devo portare qualcosa", "posso portare qualcosa", "cosa porto"], ex: ["Porto qualcosa da bere?", "Shall I bring something to drink?"] }
-  purtroppo: { t: "purtroppo", pos: adverb, en: ["unfortunately"], forms: ["purtroppo", "peccato"], ex: ["Purtroppo lavoro.", "Unfortunately I am working."], n: "'Peccato!' is 'what a pity!'." }
-  sono_impegnato: { t: "sono impegnato", pos: phrase, en: ["I am busy"], forms: ["sono impegnato", "sono impegnata", "sono occupato", "sono occupata", "ho un impegno", "ho già un impegno", "ho da fare"], ex: ["Sabato sono impegnata.", "On Saturday I am busy."], n: "'Ho un impegno' is 'I have something on'." }
-  un_altra_volta: { t: "un'altra volta", pos: phrase, en: ["another time"], forms: ["un'altra volta", "un altro giorno", "la prossima volta"], ex: ["Facciamo un'altra volta.", "Let's do it another time."] }
+  ca_te_dit: { t: "ça te dit", pos: phrase, en: ["do you fancy", "do you feel like", "how about"], forms: ["ça te dit", "ça vous dit", "ça te dirait", "ça vous dirait", "tu as envie de", "tu as envie d", "t'as envie de", "vous avez envie de", "vous avez envie d"], ex: ["Ça te dit de sortir ce soir ?", "Do you fancy going out this evening?"], n: "Followed by de + an infinitive, or by a noun: ça te dit, un café ?" }
+  tu_veux_venir: { t: "tu veux venir", pos: phrase, en: ["do you want to come"], forms: ["tu veux venir", "veux-tu venir", "veux tu venir", "vous voulez venir", "voulez-vous venir", "voulez vous venir"], ex: ["Tu veux venir à la mer avec nous ?", "Do you want to come to the sea with us?"] }
+  qu_est_ce_que_tu_dis_de: { t: "qu'est-ce que tu dis de", pos: phrase, en: ["what do you say to", "what about"], forms: ["qu'est-ce que tu dis de", "qu'est-ce que vous dites de", "que dis-tu de", "que dis tu de", "que dites-vous de", "que dites vous de", "qu'en dis-tu", "qu'en dis tu", "qu'en dites-vous", "qu'en dites vous"], ex: ["Qu'est-ce que tu dis de samedi ?", "What about Saturday?"] }
+  on_y_va: { t: "on y va", pos: phrase, en: ["let's go", "shall we go"], forms: ["on y va", "allons-y", "allons y", "allons", "si on allait", "si on sortait"], ex: ["Si on allait manger une pizza ?", "Shall we go and eat a pizza?"], n: "Si on + the imparfait makes a suggestion: si on allait au cinéma ?" }
+  on_se_retrouve_ou: { t: "on se retrouve où", pos: phrase, en: ["where shall we meet"], forms: ["on se retrouve où", "où est-ce qu'on se retrouve", "où on se retrouve", "on se voit où", "on se retrouve à quelle heure", "on se voit à quelle heure", "à quelle heure on se retrouve", "à quelle heure on se voit", "on se voit quand", "quand est-ce qu'on se voit"], ex: ["On se retrouve où demain ?", "Where shall we meet tomorrow?"] }
+  volontiers: { t: "volontiers", pos: adverb, en: ["gladly", "with pleasure", "I'd love to"], forms: ["volontiers", "très volontiers", "avec plaisir", "avec grand plaisir"], ex: ["Oui, volontiers !", "Yes, gladly!"] }
+  bien_sur: { t: "bien sûr", pos: adverb, en: ["of course", "certainly"], forms: ["bien sûr", "bien entendu", "évidemment", "certainement"], ex: ["Bien sûr, je viens.", "Of course, I'm coming."] }
+  bonne_idee: { t: "bonne idée", pos: phrase, en: ["good idea"], forms: ["bonne idée", "très bonne idée", "excellente idée", "quelle bonne idée", "super idée"], ex: ["C'est une bonne idée.", "It is a good idea."] }
+  j_apporte_quelque_chose: { t: "j'apporte quelque chose", pos: phrase, en: ["shall I bring something"], forms: ["j'apporte quelque chose", "je dois apporter quelque chose", "je peux apporter quelque chose", "j'apporte quoi", "qu'est-ce que j'apporte", "j'amène quelque chose"], ex: ["J'apporte quelque chose à boire ?", "Shall I bring something to drink?"] }
+  malheureusement: { t: "malheureusement", pos: adverb, en: ["unfortunately"], forms: ["malheureusement", "dommage", "c'est dommage"], ex: ["Malheureusement, je travaille.", "Unfortunately I am working."], n: "'Dommage !' is 'what a pity!'." }
+  je_suis_occupe: { t: "je suis occupé", pos: phrase, en: ["I am busy"], forms: ["je suis occupé", "je suis occupée", "je suis pris", "je suis prise", "j'ai quelque chose de prévu", "j'ai déjà quelque chose de prévu", "j'ai un empêchement", "j'ai déjà un rendez-vous"], ex: ["Samedi, je suis prise.", "On Saturday I am busy."], n: "'J'ai quelque chose de prévu' is 'I have something on'." }
+  une_autre_fois: { t: "une autre fois", pos: phrase, en: ["another time"], forms: ["une autre fois", "un autre jour", "la prochaine fois", "une prochaine fois"], ex: ["On fera ça une autre fois.", "We'll do it another time."] }
   # comparisons
-  quale: { t: "quale", pos: adjective, en: ["which", "which one"], forms: ["quale", "quali", "qual è"], ex: ["Quale preferisci?", "Which one do you prefer?"] }
-  piu_grande_di: { t: "più grande di", pos: phrase, en: ["bigger than"], forms: ["più grande di", "più grande del", "più grande della", "più grandi di"], ex: ["Milano è più grande di Bologna.", "Milan is bigger than Bologna."], n: "'Than' is di, and it joins the article: più grande del mio." }
-  piu_piccolo_di: { t: "più piccolo di", pos: phrase, en: ["smaller than"], forms: ["più piccolo di", "più piccola di", "più piccolo del", "più piccola del", "più piccolo della", "più piccola della"], ex: ["La camera è più piccola della cucina.", "The bedroom is smaller than the kitchen."] }
-  meno_caro: { t: "meno caro", pos: phrase, en: ["cheaper", "less expensive"], forms: ["meno caro", "meno cara", "più economico", "più economica", "costa meno"], ex: ["L'autobus è meno caro del treno.", "The bus is cheaper than the train."] }
-  piu_caro: { t: "più caro", pos: phrase, en: ["more expensive", "dearer"], forms: ["più caro", "più cara", "costa di più"], ex: ["Il vino è più caro della birra.", "Wine is more expensive than beer."] }
-  meglio: { t: "meglio", pos: adverb, en: ["better"], forms: ["meglio", "migliore", "migliori"], ex: ["Oggi sto meglio.", "I feel better today."], n: "'Meglio' with a verb, 'migliore' with a noun." }
-  peggio: { t: "peggio", pos: adverb, en: ["worse"], forms: ["peggio", "peggiore", "peggiori"], ex: ["Oggi sto peggio.", "I feel worse today."] }
-  il_migliore: { t: "il migliore", pos: phrase, en: ["the best"], forms: ["il migliore", "la migliore", "i migliori", "le migliori", "il più buono", "la più buona", "il più bello", "la più bella"], ex: ["Questo gelato è il migliore.", "This ice cream is the best."] }
-  come: { t: "come", pos: conjunction, en: ["as", "like"], ex: ["Sono alta come mia madre.", "I am as tall as my mother."], n: "'As ... as' needs only come: alto come me." }
-  uguale: { t: "uguale", pos: adjective, en: ["the same", "equal"], forms: ["uguale", "uguali", "lo stesso", "la stessa", "gli stessi", "le stesse"], ex: ["Il prezzo è uguale.", "The price is the same."] }
-  diverso: { t: "diverso", pos: adjective, en: ["different"], forms: ["diverso", "diversa", "diversi", "diverse", "differente", "differenti"], ex: ["Il colore è diverso.", "The colour is different."] }
+  lequel: { t: "lequel", pos: pronoun, en: ["which one", "which"], forms: ["lequel", "laquelle", "lesquels", "lesquelles"], ex: ["Lequel tu préfères ?", "Which one do you prefer?"], n: "It agrees with the thing: laquelle for a feminine noun." }
+  plus_grand_que: { t: "plus grand que", pos: phrase, en: ["bigger than", "taller than"], forms: ["plus grand que", "plus grande que", "plus grands que", "plus grandes que", "plus grand qu", "plus grande qu"], ex: ["Lyon est plus grand que Dijon.", "Lyon is bigger than Dijon."], n: "'Than' is que: plus grand que moi." }
+  plus_petit_que: { t: "plus petit que", pos: phrase, en: ["smaller than", "shorter than"], forms: ["plus petit que", "plus petite que", "plus petits que", "plus petites que", "plus petit qu", "plus petite qu"], ex: ["La chambre est plus petite que la cuisine.", "The bedroom is smaller than the kitchen."] }
+  moins_cher: { t: "moins cher", pos: phrase, en: ["cheaper", "less expensive"], forms: ["moins cher", "moins chère", "moins chers", "moins chères", "coûte moins", "coûte moins cher"], ex: ["Le bus est moins cher que le train.", "The bus is cheaper than the train."] }
+  plus_cher: { t: "plus cher", pos: phrase, en: ["more expensive", "dearer"], forms: ["plus cher", "plus chère", "plus chers", "plus chères", "coûte plus", "coûte plus cher"], ex: ["Le vin est plus cher que la bière.", "Wine is more expensive than beer."] }
+  mieux: { t: "mieux", pos: adverb, en: ["better"], forms: ["mieux", "meilleur", "meilleure", "meilleurs", "meilleures"], ex: ["Aujourd'hui, je vais mieux.", "I feel better today."], n: "'Mieux' with a verb, 'meilleur' with a noun: c'est mieux, un meilleur vin." }
+  pire: { t: "pire", pos: adjective, en: ["worse"], forms: ["pire", "pires", "moins bien", "plus mauvais", "plus mauvaise"], ex: ["C'est encore pire.", "It is even worse."] }
+  le_meilleur: { t: "le meilleur", pos: phrase, en: ["the best"], forms: ["le meilleur", "la meilleure", "les meilleurs", "les meilleures", "le mieux", "le plus beau", "la plus belle"], ex: ["Cette glace est la meilleure.", "This ice cream is the best."] }
+  aussi_grand_que: { t: "aussi grand que", pos: phrase, en: ["as tall as", "as big as", "as ... as"], forms: ["aussi grand que", "aussi grande que", "aussi grands que", "aussi grandes que", "aussi petit que", "aussi petite que", "aussi bon que", "aussi bonne que", "aussi bien que", "aussi cher que", "aussi chère que", "aussi beau que", "aussi belle que", "autant que"], ex: ["Je suis aussi grande que ma mère.", "I am as tall as my mother."], n: "Aussi + any adjective + que: aussi cher que, aussi beau que." }
+  pareil: { t: "pareil", pos: adjective, en: ["the same", "alike"], forms: ["pareil", "pareille", "pareils", "pareilles", "la même chose", "le même", "la même", "les mêmes", "identique", "identiques"], ex: ["Le prix est pareil.", "The price is the same."] }
+  different: { t: "différent", pos: adjective, en: ["different"], forms: ["différent", "différente", "différents", "différentes"], ex: ["La couleur est différente.", "The colour is different."] }
   # travel
-  camera: { t: "camera", pos: noun, en: ["room", "bedroom"], forms: ["camera", "una camera", "camera singola", "camera doppia", "una camera singola", "una camera doppia", "stanza", "una stanza"], ex: ["La camera è al primo piano.", "The room is on the first floor."], n: "'Singola' for one person, 'doppia' for two." }
-  notte: { t: "notte", pos: noun, en: ["night"], forms: ["notte", "notti"], ex: ["Una camera per una notte.", "A room for one night."] }
-  a_nome: { t: "a nome", pos: phrase, en: ["in the name of", "under the name"], forms: ["a nome", "a nome di", "a mio nome"], ex: ["La camera è a nome Bianchi.", "The room is in the name of Bianchi."] }
-  non_funziona: { t: "non funziona", pos: phrase, en: ["it doesn't work", "it is not working"], forms: ["non funziona", "non funzionano", "è rotto", "è rotta"], ex: ["La luce non funziona.", "The light doesn't work."], n: "'È rotto' is 'it is broken'." }
-  acqua_calda: { t: "acqua calda", pos: phrase, en: ["hot water"], forms: ["acqua calda", "l'acqua calda"], ex: ["Non c'è acqua calda in bagno.", "There is no hot water in the bathroom."] }
-  troppo_rumore: { t: "troppo rumore", pos: phrase, en: ["too much noise"], forms: ["troppo rumore", "molto rumore", "rumore"], ex: ["Di notte c'è troppo rumore.", "At night there is too much noise."] }
-  cambiare_camera: { t: "cambiare camera", pos: phrase, en: ["to change rooms"], forms: ["cambiare camera", "cambiare stanza", "cambiare la camera", "un'altra camera", "un'altra stanza"], ex: ["Vorrei cambiare camera.", "I would like to change rooms."] }
-  colazione: { t: "colazione", pos: noun, en: ["breakfast"], forms: ["colazione", "la colazione"], ex: ["La colazione è alle otto.", "Breakfast is at eight."] }
-  lasciare_la_camera: { t: "lasciare la camera", pos: phrase, en: ["to leave the room", "to check out"], forms: ["lasciare la camera", "lasciare la stanza", "liberare la camera", "il check-out", "check-out"], ex: ["Devo lasciare la camera alle dieci.", "I have to leave the room at ten."] }
-  in_ritardo: { t: "in ritardo", pos: phrase, en: ["late", "delayed"], forms: ["in ritardo", "ritardo", "minuti di ritardo"], ex: ["L'autobus è in ritardo.", "The bus is late."] }
+  chambre: { t: "chambre", pos: noun, en: ["room", "bedroom"], forms: ["chambre", "une chambre", "chambre simple", "chambre double", "une chambre simple", "une chambre double", "chambre individuelle", "une chambre individuelle"], ex: ["La chambre est au premier étage.", "The room is on the first floor."], n: "'Simple' for one person, 'double' for two." }
+  nuit: { t: "nuit", pos: noun, en: ["night"], forms: ["nuit", "nuits"], ex: ["Une chambre pour une nuit.", "A room for one night."] }
+  au_nom_de: { t: "au nom de", pos: phrase, en: ["in the name of", "under the name"], forms: ["au nom de", "au nom", "à mon nom"], ex: ["La chambre est au nom de Dubois.", "The room is in the name of Dubois."] }
+  ca_ne_marche_pas: { t: "ça ne marche pas", pos: phrase, en: ["it doesn't work", "it is not working"], forms: ["ça ne marche pas", "ça marche pas", "ne marche pas", "ne marchent pas", "ne fonctionne pas", "ne fonctionnent pas", "est cassé", "est cassée", "c'est cassé"], ex: ["La lumière ne marche pas.", "The light doesn't work."], n: "'C'est cassé' is 'it is broken'." }
+  eau_chaude: { t: "eau chaude", pos: phrase, en: ["hot water"], forms: ["eau chaude", "l'eau chaude"], ex: ["Il n'y a pas d'eau chaude dans la salle de bains.", "There is no hot water in the bathroom."] }
+  trop_de_bruit: { t: "trop de bruit", pos: phrase, en: ["too much noise"], forms: ["trop de bruit", "beaucoup de bruit", "du bruit", "bruit", "bruyant", "bruyante"], ex: ["La nuit, il y a trop de bruit.", "At night there is too much noise."] }
+  changer_de_chambre: { t: "changer de chambre", pos: phrase, en: ["to change rooms"], forms: ["changer de chambre", "changer la chambre", "une autre chambre"], ex: ["Je voudrais changer de chambre.", "I would like to change rooms."] }
+  petit_dejeuner: { t: "petit-déjeuner", pos: noun, en: ["breakfast"], forms: ["petit-déjeuner", "petit déjeuner", "le petit-déjeuner", "le petit déjeuner", "petit-déj", "petit déj"], ex: ["Le petit-déjeuner est à huit heures.", "Breakfast is at eight."] }
+  liberer_la_chambre: { t: "libérer la chambre", pos: phrase, en: ["to leave the room", "to check out"], forms: ["libérer la chambre", "quitter la chambre", "rendre la chambre", "le check-out", "check-out"], ex: ["Je dois libérer la chambre à dix heures.", "I have to leave the room at ten."] }
+  en_retard: { t: "en retard", pos: phrase, en: ["late", "delayed"], forms: ["en retard", "retard", "de retard", "minutes de retard"], ex: ["Le bus est en retard.", "The bus is late."] }
   # used_to
-  da_piccolo: { t: "da piccolo", pos: phrase, en: ["as a child", "when I was little"], forms: ["da piccolo", "da piccola", "da bambino", "da bambina", "quando ero piccolo", "quando ero piccola", "quando ero bambino", "quando ero bambina"], ex: ["Da piccola abitavo a Bari.", "As a child I lived in Bari."] }
-  ero: { t: "ero", pos: verb, en: ["I was", "I used to be"], forms: ["ero", "eravamo"], ex: ["Ero un bambino tranquillo.", "I was a quiet child."], n: "The imperfetto describes how things were: ero, avevo, abitavo." }
-  abitavo: { t: "abitavo", pos: verb, en: ["I lived", "I used to live"], forms: ["abitavo", "abitavamo", "vivevo", "vivevamo"], ex: ["Abitavo vicino al mare.", "I used to live near the sea."] }
-  avevo: { t: "avevo", pos: verb, en: ["I had", "I used to have"], forms: ["avevo", "avevamo"], ex: ["Avevo un gatto nero.", "I had a black cat."] }
-  giocavo: { t: "giocavo", pos: verb, en: ["I played", "I used to play"], forms: ["giocavo", "giocavamo"], ex: ["Giocavo in piazza.", "I used to play in the square."] }
-  andavo: { t: "andavo", pos: verb, en: ["I went", "I used to go"], forms: ["andavo", "andavamo"], ex: ["Andavo a scuola a piedi.", "I used to walk to school."] }
-  ogni_estate: { t: "ogni estate", pos: phrase, en: ["every summer"], forms: ["ogni estate", "tutte le estati", "ogni domenica", "tutte le domeniche", "ogni sabato", "ogni anno", "tutti gli anni"], ex: ["Ogni estate andavamo in montagna.", "Every summer we went to the mountains."], n: "Ogni never changes: ogni domenica, ogni anno." }
-  mi_piaceva: { t: "mi piaceva", pos: phrase, en: ["I liked", "I used to like"], forms: ["mi piaceva", "mi piacevano", "non mi piaceva", "non mi piacevano"], ex: ["Mi piaceva giocare a calcio.", "I liked playing football."] }
-  c_era: { t: "c'era", pos: phrase, en: ["there was", "there used to be"], forms: ["c'era", "c'erano"], ex: ["In piazza c'era un bar.", "There was a bar in the square."], n: "'C'erano' for several things." }
-  era: { t: "era", pos: verb, en: ["it was", "he was", "she was"], forms: ["era", "erano"], ex: ["La casa era piccola.", "The house was small."] }
-  adesso: { t: "adesso", pos: adverb, en: ["now"], forms: ["adesso", "ora"], ex: ["Adesso abito a Roma.", "Now I live in Rome."] }
-  non_c_e_piu: { t: "non c'è più", pos: phrase, en: ["it is no longer there", "there is no longer"], forms: ["non c'è più", "non ci sono più"], ex: ["Il bar non c'è più.", "The bar is no longer there."] }
+  quand_j_etais_petit: { t: "quand j'étais petit", pos: phrase, en: ["as a child", "when I was little"], forms: ["quand j'étais petit", "quand j'étais petite", "quand j'étais enfant", "quand j'étais jeune", "étant enfant", "dans mon enfance"], ex: ["Quand j'étais petite, j'habitais à Bordeaux.", "As a child I lived in Bordeaux."] }
+  j_etais: { t: "j'étais", pos: verb, en: ["I was", "I used to be"], forms: ["j'étais", "nous étions", "on était"], ex: ["J'étais un enfant calme.", "I was a quiet child."], n: "The imparfait describes how things were: j'étais, j'avais, j'habitais." }
+  j_habitais: { t: "j'habitais", pos: verb, en: ["I lived", "I used to live"], forms: ["j'habitais", "nous habitions", "on habitait", "je vivais", "nous vivions", "on vivait"], ex: ["J'habitais près de la mer.", "I used to live near the sea."] }
+  j_avais: { t: "j'avais", pos: verb, en: ["I had", "I used to have"], forms: ["j'avais", "nous avions", "on avait"], ex: ["J'avais un chat noir.", "I had a black cat."] }
+  je_jouais: { t: "je jouais", pos: verb, en: ["I played", "I used to play"], forms: ["je jouais", "nous jouions", "on jouait"], ex: ["Je jouais sur la place.", "I used to play in the square."] }
+  j_allais: { t: "j'allais", pos: verb, en: ["I went", "I used to go"], forms: ["j'allais", "nous allions", "on allait"], ex: ["J'allais à l'école à pied.", "I used to walk to school."] }
+  tous_les_etes: { t: "tous les étés", pos: phrase, en: ["every summer"], forms: ["tous les étés", "chaque été", "tous les dimanches", "chaque dimanche", "tous les samedis", "chaque samedi", "tous les ans", "chaque année"], ex: ["Tous les étés, on allait à la montagne.", "Every summer we went to the mountains."], n: "Tous les + a plural, or chaque + a singular: tous les ans, chaque année." }
+  j_aimais: { t: "j'aimais", pos: phrase, en: ["I liked", "I used to like"], forms: ["j'aimais", "je n'aimais pas", "j'aimais pas", "j'adorais", "je détestais"], ex: ["J'aimais jouer au foot.", "I liked playing football."] }
+  il_y_avait: { t: "il y avait", pos: phrase, en: ["there was", "there were", "there used to be"], forms: ["il y avait", "y avait"], ex: ["Sur la place, il y avait un café.", "There was a café in the square."], n: "The same for one thing or several: il y avait des magasins." }
+  c_etait: { t: "c'était", pos: verb, en: ["it was", "he was", "she was"], forms: ["c'était", "était", "étaient", "il était", "elle était"], ex: ["La maison était petite.", "The house was small."] }
+  maintenant: { t: "maintenant", pos: adverb, en: ["now"], forms: ["maintenant", "à présent", "actuellement"], ex: ["Maintenant, j'habite à Paris.", "Now I live in Paris."], n: "'Actuellement' is 'at present', not 'actually'." }
+  il_n_y_a_plus: { t: "il n'y a plus", pos: phrase, en: ["there is no longer", "it is no longer there"], forms: ["il n'y a plus", "il y a plus", "n'existe plus", "existe plus", "n'est plus là"], ex: ["Le café n'existe plus.", "The café is no longer there."], n: "Ne ... plus is 'no longer'." }
   # future
-  andro: { t: "andrò", pos: verb, en: ["I will go"], forms: ["andrò", "andremo"], ex: ["Domani andrò dal medico.", "Tomorrow I will go to the doctor."] }
-  l_anno_prossimo: { t: "l'anno prossimo", pos: phrase, en: ["next year"], forms: ["l'anno prossimo", "il prossimo anno", "anno prossimo"], ex: ["L'anno prossimo cambio lavoro.", "Next year I am changing jobs."] }
-  studiero: { t: "studierò", pos: verb, en: ["I will study"], forms: ["studierò", "imparerò"], ex: ["Studierò tutta la sera.", "I will study all evening."], n: "'Imparerò' is 'I will learn'." }
-  lavorero: { t: "lavorerò", pos: verb, en: ["I will work"], ex: ["Lavorerò in una scuola.", "I will work in a school."] }
-  viaggero: { t: "viaggerò", pos: verb, en: ["I will travel"], forms: ["viaggerò", "viaggeremo"], ex: ["Viaggerò in treno.", "I will travel by train."] }
-  faro: { t: "farò", pos: verb, en: ["I will do", "I will make"], forms: ["farò", "faremo"], ex: ["Farò un viaggio in Sicilia.", "I will take a trip to Sicily."] }
-  cosa_farai: { t: "cosa farai", pos: phrase, en: ["what will you do"], forms: ["cosa farai", "che cosa farai", "che farai", "cosa farà", "che cosa farà", "cosa farete"], ex: ["Cosa farai domani?", "What will you do tomorrow?"] }
-  piovera: { t: "pioverà", pos: verb, en: ["it will rain"], forms: ["pioverà", "nevicherà", "farà freddo", "farà caldo", "farà bel tempo", "ci sarà il sole"], ex: ["Stasera pioverà.", "It will rain this evening."], n: "'Farà caldo' is 'it will be hot'." }
-  sara: { t: "sarà", pos: verb, en: ["it will be", "he will be", "she will be"], forms: ["sarà", "saranno"], ex: ["Sarà una bella serata.", "It will be a lovely evening."] }
-  forse: { t: "forse", pos: adverb, en: ["perhaps", "maybe"], forms: ["forse", "probabilmente", "magari"], ex: ["Forse vengo anch'io.", "Perhaps I will come too."], n: "'Probabilmente' is 'probably'." }
-  ti_prometto: { t: "ti prometto", pos: phrase, en: ["I promise you", "I promise"], forms: ["ti prometto", "le prometto", "vi prometto", "te lo prometto", "lo prometto", "prometto"], ex: ["Ti prometto che verrò.", "I promise you that I will come."] }
-  tornero: { t: "tornerò", pos: verb, en: ["I will come back", "I will return"], forms: ["tornerò", "torneremo", "ritornerò"], ex: ["Tornerò l'anno prossimo.", "I will come back next year."] }
-  scrivero: { t: "scriverò", pos: verb, en: ["I will write"], forms: ["scriverò", "ti scriverò", "le scriverò"], ex: ["Ti scriverò da Roma.", "I will write to you from Rome."] }
-  chiamero: { t: "chiamerò", pos: verb, en: ["I will call"], forms: ["chiamerò", "ti chiamerò", "la chiamerò", "telefonerò"], ex: ["Ti chiamerò stasera.", "I will call you this evening."] }
-  non_dimentichero: { t: "non dimenticherò", pos: phrase, en: ["I will not forget"], forms: ["non dimenticherò", "non lo dimenticherò", "non ti dimenticherò", "non mi dimenticherò"], ex: ["Non dimenticherò questo viaggio.", "I will not forget this trip."] }
+  j_irai: { t: "j'irai", pos: verb, en: ["I will go"], forms: ["j'irai", "nous irons", "on ira"], ex: ["Demain, j'irai chez le médecin.", "Tomorrow I will go to the doctor."] }
+  l_annee_prochaine: { t: "l'année prochaine", pos: phrase, en: ["next year"], forms: ["l'année prochaine", "année prochaine", "l'an prochain", "an prochain"], ex: ["L'année prochaine, je change de travail.", "Next year I am changing jobs."] }
+  j_etudierai: { t: "j'étudierai", pos: verb, en: ["I will study"], forms: ["j'étudierai", "j'apprendrai"], ex: ["J'étudierai toute la soirée.", "I will study all evening."], n: "'J'apprendrai' is 'I will learn'." }
+  je_travaillerai: { t: "je travaillerai", pos: verb, en: ["I will work"], ex: ["Je travaillerai dans une école.", "I will work in a school."] }
+  je_voyagerai: { t: "je voyagerai", pos: verb, en: ["I will travel"], forms: ["je voyagerai", "nous voyagerons", "on voyagera"], ex: ["Je voyagerai en train.", "I will travel by train."] }
+  je_ferai: { t: "je ferai", pos: verb, en: ["I will do", "I will make"], forms: ["je ferai", "nous ferons", "on fera"], ex: ["Je ferai un voyage en Bretagne.", "I will take a trip to Brittany."] }
+  qu_est_ce_que_tu_feras: { t: "qu'est-ce que tu feras", pos: phrase, en: ["what will you do"], forms: ["qu'est-ce que tu feras", "tu feras quoi", "que feras-tu", "que feras tu", "qu'est-ce que vous ferez", "vous ferez quoi", "que ferez-vous", "que ferez vous", "qu'est-ce que tu vas faire", "tu vas faire quoi", "qu'est-ce que vous allez faire"], ex: ["Qu'est-ce que tu feras demain ?", "What will you do tomorrow?"] }
+  il_pleuvra: { t: "il pleuvra", pos: verb, en: ["it will rain"], forms: ["il pleuvra", "il neigera", "il fera froid", "il fera chaud", "il fera beau", "il y aura du soleil", "il va pleuvoir", "il va neiger", "il va faire beau", "il va faire froid", "il va faire chaud"], ex: ["Ce soir, il pleuvra.", "It will rain this evening."], n: "'Il fera chaud' is 'it will be hot'." }
+  ce_sera: { t: "ce sera", pos: verb, en: ["it will be", "he will be", "she will be"], forms: ["ce sera", "ça sera", "sera", "seront"], ex: ["Ce sera une belle soirée.", "It will be a lovely evening."] }
+  peut_etre: { t: "peut-être", pos: adverb, en: ["perhaps", "maybe"], forms: ["peut-être", "peut être", "probablement", "sans doute"], ex: ["Peut-être que je viendrai aussi.", "Perhaps I will come too."], n: "'Probablement' is 'probably'; 'sans doute' is 'no doubt, probably'." }
+  je_te_promets: { t: "je te promets", pos: phrase, en: ["I promise you", "I promise"], forms: ["je te promets", "je vous promets", "je te le promets", "je vous le promets", "je le promets", "c'est promis", "promis"], ex: ["Je te promets que je viendrai.", "I promise you that I will come."] }
+  je_reviendrai: { t: "je reviendrai", pos: verb, en: ["I will come back", "I will return"], forms: ["je reviendrai", "nous reviendrons", "on reviendra", "je rentrerai", "je repasserai"], ex: ["Je reviendrai l'année prochaine.", "I will come back next year."] }
+  je_t_ecrirai: { t: "je t'écrirai", pos: verb, en: ["I will write to you", "I will write"], forms: ["je t'écrirai", "je vous écrirai", "j'écrirai"], ex: ["Je t'écrirai de Paris.", "I will write to you from Paris."] }
+  je_t_appellerai: { t: "je t'appellerai", pos: verb, en: ["I will call you", "I will call"], forms: ["je t'appellerai", "je vous appellerai", "j'appellerai", "je te téléphonerai", "je vous téléphonerai", "je téléphonerai"], ex: ["Je t'appellerai ce soir.", "I will call you this evening."] }
+  je_n_oublierai_pas: { t: "je n'oublierai pas", pos: phrase, en: ["I will not forget"], forms: ["je n'oublierai pas", "j'oublierai pas", "je n'oublierai jamais", "je ne l'oublierai pas", "je l'oublierai pas", "je ne l'oublierai jamais", "je ne t'oublierai pas", "je t'oublierai pas", "je ne vous oublierai pas"], ex: ["Je n'oublierai pas ce voyage.", "I will not forget this trip."] }
   # work
-  che_lavoro_fai: { t: "che lavoro fai", pos: phrase, en: ["what do you do for a living", "what is your job"], forms: ["che lavoro fai", "che lavoro fa", "di cosa ti occupi", "di cosa si occupa", "cosa fai nella vita"], ex: ["E tu, che lavoro fai?", "And you, what do you do for a living?"] }
-  lavoro_come: { t: "lavoro come", pos: phrase, en: ["I work as"], forms: ["lavoro come", "faccio il", "faccio la"], ex: ["Lavoro come infermiera.", "I work as a nurse."], n: "'Faccio il cuoco' says the same: 'I am a cook'." }
-  sono_studente: { t: "sono studente", pos: phrase, en: ["I am a student"], forms: ["sono studente", "sono studentessa", "sono uno studente", "sono una studentessa"], ex: ["Sono studentessa a Bologna.", "I am a student in Bologna."] }
-  insegnante: { t: "insegnante", pos: noun, en: ["teacher"], forms: ["insegnante", "professore", "professoressa", "maestro", "maestra"], ex: ["Mia madre è insegnante.", "My mother is a teacher."], n: "No article after essere: sono insegnante." }
-  impiegato: { t: "impiegato", pos: noun, en: ["office worker", "clerk"], forms: ["impiegato", "impiegata"], ex: ["Sono impiegata in una banca.", "I am a clerk in a bank."] }
-  cuoco: { t: "cuoco", pos: noun, en: ["cook", "chef"], forms: ["cuoco", "cuoca"], ex: ["Mio fratello è cuoco.", "My brother is a cook."] }
-  infermiere: { t: "infermiere", pos: noun, en: ["nurse"], forms: ["infermiere", "infermiera"], ex: ["Sono infermiere da dieci anni.", "I have been a nurse for ten years."] }
-  in_ufficio: { t: "in ufficio", pos: phrase, en: ["in an office", "at the office"], forms: ["in ufficio", "in un ufficio", "ufficio"], ex: ["Oggi sono in ufficio.", "Today I am at the office."] }
-  in_una_scuola: { t: "in una scuola", pos: phrase, en: ["in a school"], forms: ["in una scuola", "a scuola", "scuola"], ex: ["Lavoro in una scuola.", "I work in a school."] }
-  in_un_negozio: { t: "in un negozio", pos: phrase, en: ["in a shop"], forms: ["in un negozio", "negozio"], ex: ["Lavoro in un negozio di scarpe.", "I work in a shoe shop."] }
-  da_casa: { t: "da casa", pos: phrase, en: ["from home", "at home"], forms: ["da casa", "a casa"], ex: ["Il venerdì lavoro da casa.", "On Fridays I work from home."] }
-  comincio: { t: "comincio", pos: verb, en: ["I start", "I begin"], forms: ["comincio", "inizio", "comincio a lavorare", "inizio a lavorare"], ex: ["Comincio alle otto e mezza.", "I start at half past eight."] }
-  finisco: { t: "finisco", pos: verb, en: ["I finish"], forms: ["finisco", "finisco di lavorare"], ex: ["Finisco alle sei.", "I finish at six."] }
-  il_mio_lavoro: { t: "il mio lavoro", pos: phrase, en: ["my job", "my work"], ex: ["Il mio lavoro mi piace molto.", "I like my job very much."] }
-  vorrei_diventare: { t: "vorrei diventare", pos: phrase, en: ["I would like to become"], forms: ["vorrei diventare", "mi piacerebbe diventare", "voglio diventare", "vorrei fare il", "vorrei fare la"], ex: ["Vorrei diventare cuoco.", "I would like to become a cook."] }
-  utile: { t: "utile", pos: adjective, en: ["useful"], forms: ["utile", "utili"], ex: ["È un lavoro utile.", "It is a useful job."] }
-  ben_pagato: { t: "ben pagato", pos: phrase, en: ["well paid"], forms: ["ben pagato", "ben pagata", "pagato bene", "si guadagna bene"], ex: ["Non è un lavoro ben pagato.", "It is not a well-paid job."] }
-  cosa_volevi_fare: { t: "cosa volevi fare", pos: phrase, en: ["what did you want to be", "what did you want to do"], forms: ["cosa volevi fare", "che cosa volevi fare", "cosa voleva fare", "cosa volevi diventare", "cosa voleva diventare"], ex: ["Cosa volevi fare da grande?", "What did you want to be when you grew up?"] }
+  qu_est_ce_que_tu_fais_dans_la_vie: { t: "qu'est-ce que tu fais dans la vie", pos: phrase, en: ["what do you do for a living", "what is your job"], forms: ["qu'est-ce que tu fais dans la vie", "tu fais quoi dans la vie", "que fais-tu dans la vie", "que fais tu dans la vie", "qu'est-ce que vous faites dans la vie", "vous faites quoi dans la vie", "que faites-vous dans la vie", "que faites vous dans la vie", "quel est ton métier", "quel est votre métier", "c'est quoi ton métier", "c'est quoi ton travail"], ex: ["Et toi, qu'est-ce que tu fais dans la vie ?", "And you, what do you do for a living?"] }
+  je_travaille_comme: { t: "je travaille comme", pos: phrase, en: ["I work as"], forms: ["je travaille comme", "je travaille en tant que"], ex: ["Je travaille comme infirmière.", "I work as a nurse."], n: "'Je suis cuisinier' says the same, with no article: 'I am a cook'." }
+  je_suis_etudiant: { t: "je suis étudiant", pos: phrase, en: ["I am a student"], forms: ["je suis étudiant", "je suis étudiante", "étudiant", "étudiante"], ex: ["Je suis étudiante à Lyon.", "I am a student in Lyon."] }
+  professeur: { t: "professeur", pos: noun, en: ["teacher"], forms: ["professeur", "professeure", "prof", "enseignant", "enseignante", "instituteur", "institutrice"], ex: ["Ma mère est professeure.", "My mother is a teacher."], n: "No article after être: je suis professeur. An 'instituteur' teaches young children." }
+  employe: { t: "employé", pos: noun, en: ["office worker", "clerk", "employee"], forms: ["employé", "employée", "employé de bureau", "employée de bureau"], ex: ["Je suis employée dans une banque.", "I am a clerk in a bank."] }
+  cuisinier: { t: "cuisinier", pos: noun, en: ["cook", "chef"], forms: ["cuisinier", "cuisinière"], ex: ["Mon frère est cuisinier.", "My brother is a cook."] }
+  infirmier: { t: "infirmier", pos: noun, en: ["nurse"], forms: ["infirmier", "infirmière"], ex: ["Je suis infirmier depuis dix ans.", "I have been a nurse for ten years."] }
+  dans_un_bureau: { t: "dans un bureau", pos: phrase, en: ["in an office", "at the office"], forms: ["dans un bureau", "au bureau", "bureau"], ex: ["Aujourd'hui, je suis au bureau.", "Today I am at the office."] }
+  dans_une_ecole: { t: "dans une école", pos: phrase, en: ["in a school"], forms: ["dans une école", "à l'école", "école"], ex: ["Je travaille dans une école.", "I work in a school."] }
+  dans_un_magasin: { t: "dans un magasin", pos: phrase, en: ["in a shop"], forms: ["dans un magasin", "magasin", "dans une boutique", "boutique"], ex: ["Je travaille dans un magasin de chaussures.", "I work in a shoe shop."] }
+  de_chez_moi: { t: "de chez moi", pos: phrase, en: ["from home", "at home"], forms: ["de chez moi", "à la maison", "chez moi", "en télétravail", "à domicile"], ex: ["Le vendredi, je travaille de chez moi.", "On Fridays I work from home."], n: "'En télétravail' is 'working remotely'." }
+  je_commence: { t: "je commence", pos: verb, en: ["I start", "I begin"], forms: ["je commence", "je commence à travailler", "je commence le travail", "je démarre"], ex: ["Je commence à huit heures et demie.", "I start at half past eight."] }
+  je_finis: { t: "je finis", pos: verb, en: ["I finish"], forms: ["je finis", "je finis de travailler", "je finis le travail", "je termine", "je termine le travail"], ex: ["Je finis à six heures.", "I finish at six."] }
+  mon_travail: { t: "mon travail", pos: phrase, en: ["my job", "my work"], forms: ["mon travail", "mon métier", "mon boulot"], ex: ["J'aime beaucoup mon travail.", "I like my job very much."], n: "'Boulot' is the everyday word." }
+  je_voudrais_devenir: { t: "je voudrais devenir", pos: phrase, en: ["I would like to become"], forms: ["je voudrais devenir", "j'aimerais devenir", "je veux devenir", "je voudrais être", "j'aimerais être"], ex: ["Je voudrais devenir cuisinier.", "I would like to become a cook."] }
+  utile: { t: "utile", pos: adjective, en: ["useful"], forms: ["utile", "utiles"], ex: ["C'est un travail utile.", "It is a useful job."] }
+  bien_paye: { t: "bien payé", pos: phrase, en: ["well paid"], forms: ["bien payé", "bien payée", "ça paie bien", "ça paye bien", "on gagne bien sa vie"], ex: ["Ce n'est pas un travail bien payé.", "It is not a well-paid job."] }
+  qu_est_ce_que_tu_voulais_faire: { t: "qu'est-ce que tu voulais faire", pos: phrase, en: ["what did you want to be", "what did you want to do"], forms: ["qu'est-ce que tu voulais faire", "tu voulais faire quoi", "que voulais-tu faire", "que voulais tu faire", "qu'est-ce que tu voulais devenir", "tu voulais devenir quoi", "que voulais-tu devenir", "que voulais tu devenir", "qu'est-ce que vous vouliez faire", "que vouliez-vous faire", "que vouliez vous faire", "qu'est-ce que vous vouliez devenir", "que vouliez-vous devenir", "que vouliez vous devenir"], ex: ["Qu'est-ce que tu voulais faire plus tard ?", "What did you want to be when you grew up?"] }

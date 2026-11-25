@@ -1,152 +1,153 @@
-# Round 144: the Italian words of curriculum stage B1.2 (the skeleton is content/curriculum/06_b1_2.yaml). Authored by
-# Claude from the functions of the B1 syllabi read for the round; no source page was opened for a single entry. For
-# the owner's review. The vocabulary shares one namespace with the earlier stages: an id defined in an earlier file is
-# reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 144: the words of curriculum stage B1.2 (the skeleton is content/curriculum/06_b1_2.yaml). The Italian
+# original was authored by Claude from the functions of the B1 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
+# defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 180: the French version, authored by Claude from the Italian file; it awaits a native speaker's review.
 stage: b1_2
-version: curriculum-b1-2-it-v1
+version: curriculum-b1-2-fr-v1
 grammar:
-  hopes: "Congiuntivo presente after spero che, voglio che, è importante che (faccia, arrivi, venga, sia, vada); spero di + infinitive when the subject is the same; buon viaggio, in bocca al lupo."
-  hypotheses: "se + present for real conditions (se piove, resto a casa); se + congiuntivo imperfetto + condizionale as fixed chunks (se potessi, se avessi, se vincessi ... comprerei, andrei, farei)."
-  retelling: "ha detto che, mi ha chiesto se, mi ha chiesto di + infinitive; ho sentito che, dicono che; ci credo, non ci credo, ne dubito."
-  customs: "The impersonal si (si mangia, si festeggia); invece and mentre for contrast; mi ha colpito; essere abituato a."
-  persuading: "propongo di + infinitive; da una parte ... dall'altra; però, tuttavia, in ogni caso; dai, fidati; su questo hai ragione."
-  life_story: "sono nato / nata, sono cresciuto / cresciuta; the present with da for what still goes on (abito qui da dieci anni); non ho mai, non ... ancora with the passato prossimo."
+  hopes: "j'espère que takes the indicative, often the future (j'espère qu'il fera beau); the subjonctif présent comes after je veux que, il faut que and il est important que (que tu viennes, qu'il fasse, que tu sois, que tu partes); j'espère + infinitive when the subject is the same; bon voyage, bonne chance."
+  hypotheses: "si + present for real conditions (s'il pleut, je reste à la maison); si + imparfait + conditionnel for unreal ones (si je pouvais, si j'avais, si je gagnais ... j'achèterais, j'irais, je ferais); never the conditionnel after si."
+  retelling: "il a dit que, il m'a demandé si, il m'a demandé de + infinitive; after a past verb the present becomes the imparfait (il a dit qu'il arrivait); j'ai entendu dire que, on dit que; je le crois, je n'y crois pas, j'en doute."
+  customs: "on for people in general (on mange, on fête Noël); par contre and alors que for contrast; ça m'a frappé; être habitué à."
+  persuading: "je propose de + infinitive; d'un côté ... de l'autre; mais, pourtant, de toute façon; allez, fais-moi confiance; là-dessus, tu as raison."
+  life_story: "je suis né / née, j'ai grandi, j'ai déménagé; the present with depuis for what still goes on (j'habite ici depuis dix ans); ne ... jamais and ne ... pas encore with the passé composé."
 lessons:
   hopes_hope:
-    hope_that: { say: [spero_che], examples: ["Spero che domani faccia bel tempo.", "Spero che il treno arrivi presto."] }
-    hope_to: { say: [spero_di], examples: ["Spero di tornare presto.", "Spero di rivederti."] }
-    hope_so: { say: [spero_di_si], examples: ["Spero di sì.", "Speriamo di no!"] }
+    hope_that: { say: [j_espere_que], examples: ["J'espère qu'il fera beau demain.", "J'espère que le train arrivera bientôt."] }
+    hope_to: { say: [j_espere], examples: ["J'espère revenir bientôt.", "J'espère te revoir."] }
+    hope_so: { say: [j_espere_que_oui], examples: ["J'espère que oui.", "Espérons que non !"] }
   hopes_wish:
-    good_luck: { say: [buona_fortuna], examples: ["Buona fortuna!", "In bocca al lupo!"] }
-    good_journey: { say: [buon_viaggio], examples: ["Buon viaggio!", "Buona giornata!", "Buone vacanze!"] }
-    get_well: { say: [guarisci_presto], examples: ["Guarisci presto!", "Spero che tu stia meglio presto."] }
+    good_luck: { say: [bonne_chance], examples: ["Bonne chance !", "Je croise les doigts pour toi !"] }
+    good_journey: { say: [bon_voyage], examples: ["Bon voyage !", "Bonne journée !", "Bonnes vacances !"] }
+    get_well: { say: [bon_retablissement], examples: ["Bon rétablissement !", "J'espère que tu iras vite mieux."] }
   hopes_want:
-    hope_you_like: { say: [ti_piaccia], examples: ["Spero che ti piaccia.", "Spero che Le piaccia il regalo."] }
-    want_you_to: { say: [voglio_che], examples: ["Voglio che tu venga con noi.", "Non voglio che tu parta."] }
-    important_that: { say: [e_importante_che], examples: ["È importante che tutti siano d'accordo.", "È necessario che tu vada adesso."] }
+    hope_you_like: { say: [ca_te_plaira], examples: ["J'espère que ça te plaira.", "J'espère que le cadeau vous plaira."] }
+    want_you_to: { say: [je_veux_que], examples: ["Je veux que tu viennes avec nous.", "Je ne veux pas que tu partes."] }
+    important_that: { say: [il_est_important_que], examples: ["Il est important que tout le monde soit d'accord.", "Il faut que tu partes maintenant."] }
   hypotheses_real:
-    if_weather: { say: [se_piove], examples: ["Se piove, resto a casa.", "Se fa bel tempo, vado al mare."] }
-    if_time: { say: [se_ho_tempo], examples: ["Se ho tempo, ti chiamo.", "Se posso, vengo domani."] }
-    if_you_want: { say: [se_vuoi], examples: ["Se vuoi, andiamo insieme.", "Se vuole, La aiuto."] }
+    if_weather: { say: [s_il_pleut], examples: ["S'il pleut, je reste à la maison.", "S'il fait beau, je vais à la mer."] }
+    if_time: { say: [si_j_ai_le_temps], examples: ["Si j'ai le temps, je t'appelle.", "Si je peux, je viens demain."] }
+    if_you_want: { say: [si_tu_veux], examples: ["Si tu veux, on y va ensemble.", "Si vous voulez, je vous aide."] }
   hypotheses_unreal:
-    if_could: { say: [se_potessi, se_avessi], examples: ["Se potessi, resterei qui.", "Se avessi più tempo, viaggerei di più."] }
-    if_won: { say: [se_vincessi], examples: ["Se vincessi la lotteria, comprerei una casa.", "Se fossi ricca, non lavorerei."] }
-    would_do: { say: [comprerei, andrei, farei], examples: ["Comprerei una casa al mare.", "Andrei in Giappone.", "Farei il giro del mondo."] }
+    if_could: { say: [si_je_pouvais, si_j_avais], examples: ["Si je pouvais, je resterais ici.", "Si j'avais plus de temps, je voyagerais plus."] }
+    if_won: { say: [si_je_gagnais], examples: ["Si je gagnais au loto, j'achèterais une maison.", "Si j'étais riche, je ne travaillerais pas."] }
+    would_do: { say: [j_acheterais, j_irais, je_ferais], examples: ["J'achèterais une maison au bord de la mer.", "J'irais au Japon.", "Je ferais le tour du monde."] }
   hypotheses_then:
-    what_if: { say: [cosa_succede_se], examples: ["Cosa succede se perdo il treno?", "E se non c'è posto?"] }
-    in_that_case: { say: [in_quel_caso], examples: ["In quel caso prendo un taxi.", "In questo caso resto qui."] }
-    otherwise: { say: [altrimenti], examples: ["Altrimenti torno domani.", "Devo partire adesso, se no perdo il treno."] }
+    what_if: { say: [qu_est_ce_qui_se_passe_si], examples: ["Qu'est-ce qui se passe si je rate le train ?", "Et si le train est en retard ?"] }
+    in_that_case: { say: [dans_ce_cas], examples: ["Dans ce cas, je prends un taxi.", "Dans ce cas-là, je reste ici."] }
+    otherwise: { say: [sinon], examples: ["Sinon, je rentre demain.", "Je dois partir maintenant, autrement je rate le train."] }
   retelling_said:
-    said_that: { say: [ha_detto_che], examples: ["Mia sorella ha detto che arriva domani.", "Mi ha detto che il museo è chiuso."] }
-    asked: { say: [mi_ha_chiesto], examples: ["Mi ha chiesto se parlo italiano.", "Mi ha chiesto di aspettare."] }
-    answered: { say: [ho_risposto], examples: ["Ho risposto di sì.", "Le ho detto che non lo so."] }
+    said_that: { say: [il_a_dit_que], examples: ["Ma sœur a dit qu'elle arrivait demain.", "Il m'a dit que le musée était fermé."] }
+    asked: { say: [il_m_a_demande], examples: ["Il m'a demandé si je parlais français.", "Elle m'a demandé d'attendre."] }
+    answered: { say: [j_ai_repondu], examples: ["J'ai répondu que oui.", "Je lui ai dit que je ne savais pas."] }
   retelling_heard:
-    heard: { say: [ho_sentito_che], examples: ["Ho sentito che domani c'è sciopero.", "Dicono che il treno non parte."] }
-    is_it_true: { say: [e_vero_che], examples: ["È vero che il museo è chiuso?", "Davvero?"] }
-    who_told: { say: [chi_te_l_ha_detto], examples: ["Chi te l'ha detto?", "Chi lo dice?"] }
+    heard: { say: [j_ai_entendu_dire_que], examples: ["J'ai entendu dire qu'il y a une grève demain.", "On dit que le train ne part pas."] }
+    is_it_true: { say: [c_est_vrai_que], examples: ["C'est vrai que le musée est fermé ?", "Vraiment ?"] }
+    who_told: { say: [qui_te_l_a_dit], examples: ["Qui te l'a dit ?", "Qui dit ça ?"] }
   retelling_believe:
-    believe: { say: [ci_credo], examples: ["Ci credo.", "È possibile."] }
-    doubt: { say: [non_ci_credo], examples: ["Non ci credo.", "Ne dubito."] }
-    who_knows: { say: [chissa], examples: ["Chissà!", "Vedremo."] }
+    believe: { say: [je_le_crois], examples: ["Je te crois.", "Je crois que oui."] }
+    doubt: { say: [je_n_y_crois_pas], examples: ["Je n'y crois pas.", "J'en doute."] }
+    who_knows: { say: [qui_sait], examples: ["Qui sait !", "On verra."] }
   customs_home:
-    in_my_country: { say: [nel_mio_paese], examples: ["Nel mio paese si cena presto.", "Da noi si beve molto tè."] }
-    festival: { say: [festa, natale], examples: ["La festa più importante è Natale.", "C'è una festa a maggio."] }
-    one_does: { say: [si_mangia], examples: ["A Natale si mangia il tacchino.", "Si festeggia in famiglia."] }
+    in_my_country: { say: [dans_mon_pays], examples: ["Dans mon pays, on dîne tôt.", "Chez nous, on boit beaucoup de thé."] }
+    festival: { say: [fete, noel], examples: ["La fête la plus importante, c'est Noël.", "Il y a une fête en mai."] }
+    one_does: { say: [on_mange], examples: ["À Noël, on mange de la dinde.", "On fait la fête en famille."] }
   customs_compare:
-    whereas: { say: [invece, mentre], examples: ["Qui si cena tardi, invece da noi si cena presto.", "Da noi si beve il tè, mentre qui si beve il caffè."] }
-    similar: { say: [simile], examples: ["Anche da noi è così.", "È molto simile."] }
-    prefer: { say: [[preferisco], [perche]], examples: ["Preferisco cenare presto, perché poi dormo meglio.", "Preferisco il caffè italiano perché è più forte."] }
+    whereas: { say: [par_contre, pendant_que], examples: ["Ici, on dîne tard ; chez nous, par contre, on dîne tôt.", "Chez nous, on boit du thé, alors qu'ici on boit du café."] }
+    similar: { say: [semblable], examples: ["Chez nous aussi, c'est comme ça.", "C'est très semblable."] }
+    prefer: { say: [[je_prefere], [parce_que]], examples: ["Je préfère dîner tôt, parce que je dors mieux après.", "Je préfère le café d'ici parce que c'est plus fort."] }
   customs_surprise:
-    struck_me: { say: [mi_ha_colpito, sono_sorpreso], examples: ["Mi ha colpito il silenzio.", "Quello che mi ha sorpreso è l'orario dei negozi."] }
-    not_used: { say: [non_sono_abituato], examples: ["Non sono abituato a cenare così tardi.", "Mi sto abituando."] }
-    find_it: { say: [mi_sembra], examples: ["Mi sembra una bella abitudine.", "La trovo un po' strana."] }
+    struck_me: { say: [ca_m_a_frappe, je_suis_surpris], examples: ["Le silence m'a frappé.", "Ce qui m'a surpris, c'est l'horaire des magasins."] }
+    not_used: { say: [je_ne_suis_pas_habitue], examples: ["Je ne suis pas habitué à dîner si tard.", "Je commence à m'habituer."] }
+    find_it: { say: [ca_me_semble], examples: ["Ça me semble être une bonne habitude.", "Je la trouve un peu étrange."] }
   persuading_propose:
-    propose: { say: [propongo_di], examples: ["Propongo di partire presto.", "Perché non andiamo a piedi?"] }
-    advantage: { say: [il_vantaggio, conviene], examples: ["Il vantaggio è che costa meno.", "Conviene andare in treno."] }
-    come_on: { say: [dai], examples: ["Dai, vieni con noi!", "Fidati, vedrai che è bello."] }
+    propose: { say: [je_propose_de], examples: ["Je propose de partir tôt.", "Pourquoi ne pas y aller à pied ?"] }
+    advantage: { say: [l_avantage, il_vaut_mieux], examples: ["L'avantage, c'est que ça coûte moins cher.", "Il vaut mieux y aller en train."] }
+    come_on: { say: [allez], examples: ["Allez, viens avec nous !", "Fais-moi confiance, c'est très beau."] }
   persuading_argue:
-    two_sides: { say: [da_una_parte], examples: ["Da una parte è caro, dall'altra è comodo.", "Da un lato hai ragione."] }
-    however: { say: [pero], examples: ["Sì, però è lontano.", "È bello, tuttavia costa troppo."] }
-    anyway: { say: [in_ogni_caso, vale_la_pena], examples: ["In ogni caso, io ci vado.", "Vale la pena provare."] }
+    two_sides: { say: [d_un_cote], examples: ["D'un côté c'est cher, de l'autre c'est pratique.", "D'un côté, tu as raison."] }
+    however: { say: [cependant], examples: ["Oui, mais c'est loin.", "C'est beau, cependant ça coûte trop cher."] }
+    anyway: { say: [de_toute_facon, ca_vaut_la_peine], examples: ["De toute façon, moi, j'y vais.", "Ça vaut la peine d'essayer."] }
   persuading_settle:
-    concede: { say: [su_questo_hai_ragione], examples: ["Su questo hai ragione, ma è tardi.", "In effetti, è un po' caro."] }
-    compromise: { say: [facciamo_cosi], examples: ["Facciamo così: oggi il museo, domani il mare.", "Troviamo un compromesso."] }
-    settled: { say: [mi_va_bene], examples: ["Per me va bene.", "Affare fatto!"] }
+    concede: { say: [la_dessus_tu_as_raison], examples: ["Là-dessus, tu as raison, mais il est tard.", "En effet, c'est un peu cher."] }
+    compromise: { say: [on_fait_comme_ca], examples: ["On fait comme ça : aujourd'hui le musée, demain la mer.", "Trouvons un compromis."] }
+    settled: { say: [ca_me_va], examples: ["Pour moi, ça me va.", "Marché conclu !"] }
   life_story_born:
-    born: { say: [sono_nato], examples: ["Sono nato a Londra.", "Sono nata nel 1990."] }
-    grew_up: { say: [sono_cresciuto], examples: ["Sono cresciuto in campagna.", "Sono cresciuta a Manchester."] }
-    moved: { say: [mi_sono_trasferito], examples: ["Mi sono trasferito a Londra dieci anni fa.", "A vent'anni sono andata a vivere a Parigi."] }
+    born: { say: [je_suis_ne], examples: ["Je suis né à Londres.", "Je suis née en 1990."] }
+    grew_up: { say: [j_ai_grandi], examples: ["J'ai grandi à la campagne.", "J'ai grandi à Manchester."] }
+    moved: { say: [j_ai_demenage], examples: ["J'ai déménagé à Londres il y a dix ans.", "À vingt ans, je suis allée vivre à Paris."] }
   life_story_since:
-    how_long: { say: [[da], [anni, mesi]], examples: ["Abito a Londra da dieci anni.", "Vivo qui da sei mesi."] }
-    learning: { say: [[da], [imparo, studio]], examples: ["Studio l'italiano da un anno.", "Imparo l'italiano da tre mesi."] }
-    ask_how_long: { say: [da_quanto_tempo], examples: ["Da quanto tempo abiti qui?", "Da quanto fa questo lavoro?"] }
+    how_long: { say: [[depuis], [ans, mois]], examples: ["J'habite à Londres depuis dix ans.", "Je vis ici depuis six mois."] }
+    learning: { say: [[depuis], [j_apprends, j_etudie]], examples: ["J'étudie le français depuis un an.", "J'apprends le français depuis trois mois."] }
+    ask_how_long: { say: [depuis_combien_de_temps], examples: ["Depuis combien de temps tu habites ici ?", "Depuis quand faites-vous ce travail ?"] }
   life_story_never:
-    never: { say: [non_ho_mai, mai], examples: ["Non ho mai visto il mare.", "Non sono mai stata in Giappone."] }
-    not_yet: { say: [non_ancora], examples: ["Non ho ancora visitato Roma.", "Non ancora."] }
-    one_day: { say: [prima_o_poi], examples: ["Prima o poi voglio vedere il Giappone.", "Il mio sogno è scrivere un libro."] }
+    never: { say: [je_n_ai_jamais, jamais], examples: ["Je n'ai jamais vu la mer.", "Je ne suis jamais allée au Japon."] }
+    not_yet: { say: [pas_encore], examples: ["Je n'ai pas encore visité Rome.", "Pas encore."] }
+    one_day: { say: [tot_ou_tard], examples: ["Tôt ou tard, je veux voir le Japon.", "Mon rêve, c'est d'écrire un livre."] }
 vocabulary:
   # hopes
-  spero_che: { t: "spero che", pos: phrase, en: ["I hope that"], forms: ["spero che", "speriamo che"], ex: ["Spero che tu stia bene.", "I hope that you are well."], n: "The verb after it is in the congiuntivo: spero che sia, che venga, che faccia." }
-  spero_di: { t: "spero di", pos: phrase, en: ["I hope to"], forms: ["spero di", "speriamo di"], ex: ["Spero di arrivare in tempo.", "I hope to arrive in time."], n: "With an infinitive, when you hope something for yourself." }
-  spero_di_si: { t: "spero di sì", pos: phrase, en: ["I hope so"], forms: ["spero di sì", "spero di no", "speriamo di sì", "speriamo di no", "speriamo", "speriamo bene"], ex: ["Viene anche Marta? Spero di sì.", "Is Marta coming too? I hope so."], n: "'Spero di no' is 'I hope not'." }
-  buona_fortuna: { t: "buona fortuna", pos: phrase, en: ["good luck"], forms: ["buona fortuna", "in bocca al lupo", "auguri", "tanti auguri"], ex: ["Buona fortuna per domani!", "Good luck for tomorrow!"], n: "'In bocca al lupo' is the usual wish before a test; the answer is 'crepi'." }
-  buon_viaggio: { t: "buon viaggio", pos: phrase, en: ["have a good journey", "have a good trip"], forms: ["buon viaggio", "buona giornata", "buona serata", "buone vacanze", "buon lavoro", "buon fine settimana", "buon appetito"], ex: ["Buon viaggio e a presto!", "Have a good journey, and see you soon!"], n: "The same pattern wishes anything: buona giornata, buone vacanze." }
-  guarisci_presto: { t: "guarisci presto", pos: phrase, en: ["get well soon"], forms: ["guarisci presto", "guarisca presto", "buona guarigione", "rimettiti presto", "si rimetta presto", "spero che tu stia meglio", "spero che stia meglio"], ex: ["Guarisci presto, mi raccomando.", "Get well soon, now."] }
-  ti_piaccia: { t: "ti piaccia", pos: phrase, en: ["you like it", "that you like it"], forms: ["ti piaccia", "le piaccia", "vi piaccia", "ti piacciano", "le piacciano"], ex: ["Spero che ti piaccia la città.", "I hope that you like the town."], n: "The congiuntivo of ti piace, after spero che." }
-  voglio_che: { t: "voglio che", pos: phrase, en: ["I want ... to", "I want that"], forms: ["voglio che", "non voglio che", "desidero che"], ex: ["Voglio che tu sia felice.", "I want you to be happy."], n: "Italian says 'I want that you come': voglio che tu venga." }
-  e_importante_che: { t: "è importante che", pos: phrase, en: ["it is important that"], forms: ["è importante che", "è necessario che", "bisogna che", "è meglio che"], ex: ["È importante che tu riposi.", "It is important that you rest."], n: "'È meglio che' is 'it is better that'." }
+  j_espere_que: { t: "j'espère que", pos: phrase, en: ["I hope that"], forms: ["j'espère que", "j'espère qu", "on espère que", "nous espérons que", "espérons que", "espérons qu"], ex: ["J'espère que tu vas bien.", "I hope that you are well."], n: "The indicative follows, often the future: j'espère qu'il viendra." }
+  j_espere: { t: "j'espère", pos: phrase, en: ["I hope to", "I hope"], forms: ["j'espère", "on espère", "nous espérons"], ex: ["J'espère arriver à l'heure.", "I hope to arrive in time."], n: "With an infinitive, when you hope something for yourself: j'espère partir." }
+  j_espere_que_oui: { t: "j'espère que oui", pos: phrase, en: ["I hope so"], forms: ["j'espère que oui", "j'espère que non", "j'espère bien", "j'espère pas", "espérons que oui", "espérons que non", "espérons-le", "espérons le"], ex: ["Marie vient aussi ? J'espère que oui.", "Is Marie coming too? I hope so."], n: "'J'espère que non' is 'I hope not'." }
+  bonne_chance: { t: "bonne chance", pos: phrase, en: ["good luck"], forms: ["bonne chance", "je croise les doigts", "on croise les doigts", "bon courage", "meilleurs vœux", "tous mes vœux"], ex: ["Bonne chance pour demain !", "Good luck for tomorrow!"], n: "'Bon courage' wishes strength for something hard. Before an exam or a show, friends may say 'merde !', the way an actor is told to break a leg." }
+  bon_voyage: { t: "bon voyage", pos: phrase, en: ["have a good journey", "have a good trip"], forms: ["bon voyage", "bonne journée", "bonne soirée", "bonnes vacances", "bon week-end", "bon weekend", "bonne route", "bon appétit"], ex: ["Bon voyage et à bientôt !", "Have a good journey, and see you soon!"], n: "The same pattern wishes anything: bonne journée, bonnes vacances." }
+  bon_retablissement: { t: "bon rétablissement", pos: phrase, en: ["get well soon"], forms: ["bon rétablissement", "prompt rétablissement", "remets-toi vite", "remets toi vite", "remettez-vous vite", "remettez vous vite", "soigne-toi bien", "soigne toi bien", "j'espère que tu iras mieux", "j'espère que tu iras vite mieux", "j'espère que vous irez mieux", "j'espère que vous irez vite mieux"], ex: ["Bon rétablissement, et repose-toi bien.", "Get well soon, and rest well."] }
+  ca_te_plaira: { t: "ça te plaira", pos: phrase, en: ["you will like it"], forms: ["ça te plaira", "ça vous plaira", "te plaira", "vous plaira", "te plairont", "vous plairont", "ça va te plaire", "ça va vous plaire"], ex: ["J'espère que la ville te plaira.", "I hope that you like the town."], n: "After j'espère que, the future: j'espère que ça te plaira." }
+  je_veux_que: { t: "je veux que", pos: phrase, en: ["I want ... to", "I want that"], forms: ["je veux que", "je veux qu", "je ne veux pas que", "je veux pas que", "je voudrais que", "j'aimerais que", "je souhaite que"], ex: ["Je veux que tu sois heureux.", "I want you to be happy."], n: "French says 'I want that you come', with the subjonctif: je veux que tu viennes." }
+  il_est_important_que: { t: "il est important que", pos: phrase, en: ["it is important that"], forms: ["il est important que", "c'est important que", "il faut que", "il faut qu", "il faudrait que", "il est nécessaire que", "il vaut mieux que"], ex: ["Il est important que tu te reposes.", "It is important that you rest."], n: "The subjonctif follows: il faut que tu partes, qu'il fasse, que tu sois." }
   # hypotheses
-  se_piove: { t: "se piove", pos: phrase, en: ["if it rains"], forms: ["se piove", "se fa bel tempo", "se c'è il sole", "se fa freddo", "se fa caldo", "se nevica"], ex: ["Se piove, prendo l'autobus.", "If it rains, I take the bus."], n: "A real condition takes the plain present in both halves." }
-  se_ho_tempo: { t: "se ho tempo", pos: phrase, en: ["if I have time"], forms: ["se ho tempo", "se posso", "se avrò tempo", "se potrò"], ex: ["Se ho tempo, passo da te.", "If I have time, I'll drop by."], n: "'Se posso' is 'if I can'." }
-  se_vuoi: { t: "se vuoi", pos: phrase, en: ["if you want", "if you like"], forms: ["se vuoi", "se vuole", "se volete", "se ti va", "se le va"], ex: ["Se vuoi, ti accompagno.", "If you like, I'll come with you."] }
-  se_potessi: { t: "se potessi", pos: phrase, en: ["if I could"], ex: ["Se potessi, partirei domani.", "If I could, I would leave tomorrow."], n: "A fixed chunk, followed by the condizionale." }
-  se_avessi: { t: "se avessi", pos: phrase, en: ["if I had"], forms: ["se avessi", "se avessi tempo", "se avessi più tempo", "se avessi i soldi"], ex: ["Se avessi tempo, leggerei di più.", "If I had time, I would read more."] }
-  se_vincessi: { t: "se vincessi", pos: phrase, en: ["if I won"], forms: ["se vincessi", "se vincessi la lotteria", "se fossi ricco", "se fossi ricca"], ex: ["Se vincessi, farei una festa.", "If I won, I would throw a party."], n: "'Se fossi ricco' is 'if I were rich'." }
-  comprerei: { t: "comprerei", pos: verb, en: ["I would buy"], forms: ["comprerei", "compreremmo"], ex: ["Comprerei una barca.", "I would buy a boat."] }
-  andrei: { t: "andrei", pos: verb, en: ["I would go"], forms: ["andrei", "andremmo"], ex: ["Andrei a vivere al mare.", "I would go and live by the sea."] }
-  farei: { t: "farei", pos: verb, en: ["I would do", "I would make"], forms: ["farei", "faremmo"], ex: ["Farei un lungo viaggio.", "I would take a long trip."] }
-  cosa_succede_se: { t: "cosa succede se", pos: phrase, en: ["what happens if"], forms: ["cosa succede se", "che succede se", "che cosa succede se", "e se"], ex: ["Cosa succede se arrivo tardi?", "What happens if I arrive late?"], n: "'E se ...?' is 'what if ...?'." }
-  in_quel_caso: { t: "in quel caso", pos: phrase, en: ["in that case"], forms: ["in quel caso", "in questo caso", "in tal caso"], ex: ["In quel caso ti chiamo.", "In that case I'll call you."] }
-  altrimenti: { t: "altrimenti", pos: adverb, en: ["otherwise", "or else"], forms: ["altrimenti", "se no", "sennò"], ex: ["Corri, altrimenti perdi il treno.", "Run, otherwise you'll miss the train."] }
+  s_il_pleut: { t: "s'il pleut", pos: phrase, en: ["if it rains"], forms: ["s'il pleut", "s'il fait beau", "s'il y a du soleil", "s'il fait froid", "s'il fait chaud", "s'il neige"], ex: ["S'il pleut, je prends le bus.", "If it rains, I take the bus."], n: "Si becomes s' before il. A real condition takes the plain present." }
+  si_j_ai_le_temps: { t: "si j'ai le temps", pos: phrase, en: ["if I have time"], forms: ["si j'ai le temps", "si j'ai du temps", "si je peux", "si on peut"], ex: ["Si j'ai le temps, je passe chez toi.", "If I have time, I'll drop by."], n: "'Si je peux' is 'if I can'." }
+  si_tu_veux: { t: "si tu veux", pos: phrase, en: ["if you want", "if you like"], forms: ["si tu veux", "si vous voulez", "si ça te dit", "si ça vous dit"], ex: ["Si tu veux, je t'accompagne.", "If you like, I'll come with you."] }
+  si_je_pouvais: { t: "si je pouvais", pos: phrase, en: ["if I could"], forms: ["si je pouvais", "si on pouvait"], ex: ["Si je pouvais, je partirais demain.", "If I could, I would leave tomorrow."], n: "Si + the imparfait, then the conditionnel." }
+  si_j_avais: { t: "si j'avais", pos: phrase, en: ["if I had"], forms: ["si j'avais", "si j'avais le temps", "si j'avais plus de temps", "si j'avais de l'argent"], ex: ["Si j'avais le temps, je lirais plus.", "If I had time, I would read more."] }
+  si_je_gagnais: { t: "si je gagnais", pos: phrase, en: ["if I won"], forms: ["si je gagnais", "si je gagnais au loto", "si on gagnait", "si j'étais riche"], ex: ["Si je gagnais, je ferais une fête.", "If I won, I would throw a party."], n: "'Si j'étais riche' is 'if I were rich'." }
+  j_acheterais: { t: "j'achèterais", pos: verb, en: ["I would buy"], forms: ["j'achèterais", "nous achèterions", "on achèterait"], ex: ["J'achèterais un bateau.", "I would buy a boat."] }
+  j_irais: { t: "j'irais", pos: verb, en: ["I would go"], forms: ["j'irais", "nous irions", "on irait"], ex: ["J'irais vivre au bord de la mer.", "I would go and live by the sea."] }
+  je_ferais: { t: "je ferais", pos: verb, en: ["I would do", "I would make"], forms: ["je ferais", "nous ferions", "on ferait"], ex: ["Je ferais un long voyage.", "I would take a long trip."] }
+  qu_est_ce_qui_se_passe_si: { t: "qu'est-ce qui se passe si", pos: phrase, en: ["what happens if"], forms: ["qu'est-ce qui se passe si", "qu'est-ce qui se passe s'il", "qu'est-ce qui arrive si", "que se passe-t-il si", "que se passe t il si", "et si", "et s'il"], ex: ["Qu'est-ce qui se passe si j'arrive en retard ?", "What happens if I arrive late?"], n: "'Et si ... ?' is 'what if ...?'." }
+  dans_ce_cas: { t: "dans ce cas", pos: phrase, en: ["in that case"], forms: ["dans ce cas", "dans ce cas-là", "dans ce cas là", "en ce cas", "si c'est le cas"], ex: ["Dans ce cas, je t'appelle.", "In that case I'll call you."] }
+  sinon: { t: "sinon", pos: adverb, en: ["otherwise", "or else"], forms: ["sinon", "autrement"], ex: ["Cours, sinon tu vas rater le train.", "Run, otherwise you'll miss the train."] }
   # retelling
-  ha_detto_che: { t: "ha detto che", pos: phrase, en: ["he said that", "she said that"], forms: ["ha detto che", "mi ha detto che", "mi ha detto", "hanno detto che", "mi hanno detto che", "dice che"], ex: ["Paolo ha detto che viene.", "Paolo said that he is coming."] }
-  mi_ha_chiesto: { t: "mi ha chiesto", pos: phrase, en: ["he asked me", "she asked me"], forms: ["mi ha chiesto", "mi ha chiesto se", "mi ha chiesto di", "mi hanno chiesto", "mi ha domandato"], ex: ["Mi ha chiesto se ho fratelli.", "She asked me whether I have brothers."], n: "'Se' for a question, 'di' with an infinitive for a request." }
-  ho_risposto: { t: "ho risposto", pos: phrase, en: ["I answered", "I replied"], forms: ["ho risposto", "ho risposto che", "gli ho risposto", "le ho risposto", "ho detto che", "gli ho detto che", "le ho detto che", "ho detto di sì", "ho detto di no"], ex: ["Ho risposto che non potevo.", "I answered that I couldn't."] }
-  ho_sentito_che: { t: "ho sentito che", pos: phrase, en: ["I heard that"], forms: ["ho sentito che", "ho sentito dire che", "ho saputo che", "ho letto che", "dicono che", "si dice che"], ex: ["Ho sentito che il bar chiude.", "I heard that the bar is closing."], n: "'Dicono che' is 'they say that'." }
-  e_vero_che: { t: "è vero che", pos: phrase, en: ["is it true that"], forms: ["è vero che", "davvero", "sul serio", "veramente"], ex: ["È vero che parti domani?", "Is it true that you are leaving tomorrow?"], n: "'Davvero?' on its own is 'really?'." }
-  chi_te_l_ha_detto: { t: "chi te l'ha detto", pos: phrase, en: ["who told you"], forms: ["chi te l'ha detto", "chi te lo ha detto", "chi gliel'ha detto", "chi l'ha detto", "chi lo dice"], ex: ["E chi te l'ha detto?", "And who told you?"] }
-  ci_credo: { t: "ci credo", pos: phrase, en: ["I believe it"], forms: ["ci credo", "lo credo", "credo di sì", "penso di sì", "è possibile", "può essere"], ex: ["Sì, ci credo.", "Yes, I believe it."], n: "'Credo di sì' is 'I think so'." }
-  non_ci_credo: { t: "non ci credo", pos: phrase, en: ["I don't believe it"], forms: ["non ci credo", "ne dubito", "ho dei dubbi", "mi sembra strano", "non può essere"], ex: ["Mi dispiace, non ci credo.", "I'm sorry, I don't believe it."], n: "'Ne dubito' is 'I doubt it'." }
-  chissa: { t: "chissà", pos: adverb, en: ["who knows"], forms: ["chissà", "chi lo sa", "vedremo", "staremo a vedere"], ex: ["Chissà se è vero.", "Who knows whether it is true."], n: "'Vedremo' is 'we shall see'." }
+  il_a_dit_que: { t: "il a dit que", pos: phrase, en: ["he said that", "she said that"], forms: ["il a dit que", "elle a dit que", "a dit que", "a dit qu", "il m'a dit que", "elle m'a dit que", "m'a dit que", "m'a dit qu", "m'a dit", "ils ont dit que", "on m'a dit que", "il dit que", "elle dit que"], ex: ["Paul a dit qu'il venait.", "Paul said that he was coming."], n: "After a past verb the present becomes the imparfait: il a dit qu'il venait." }
+  il_m_a_demande: { t: "il m'a demandé", pos: phrase, en: ["he asked me", "she asked me"], forms: ["il m'a demandé", "elle m'a demandé", "m'a demandé", "m'a demandé si", "m'a demandé de", "m'a demandé d", "ils m'ont demandé", "on m'a demandé"], ex: ["Elle m'a demandé si j'avais des frères.", "She asked me whether I had brothers."], n: "'Si' for a question, 'de' with an infinitive for a request." }
+  j_ai_repondu: { t: "j'ai répondu", pos: phrase, en: ["I answered", "I replied"], forms: ["j'ai répondu", "j'ai répondu que", "je lui ai répondu", "je lui ai dit", "je lui ai dit que", "j'ai dit que", "j'ai dit oui", "j'ai dit non", "j'ai dit que oui", "j'ai dit que non"], ex: ["J'ai répondu que je ne pouvais pas.", "I answered that I couldn't."] }
+  j_ai_entendu_dire_que: { t: "j'ai entendu dire que", pos: phrase, en: ["I heard that"], forms: ["j'ai entendu dire que", "j'ai entendu dire qu", "j'ai entendu que", "j'ai appris que", "j'ai lu que", "on dit que", "on dit qu", "il paraît que", "il paraît qu"], ex: ["J'ai entendu dire que le café ferme.", "I heard that the café is closing."], n: "'On dit que' is 'they say that'; 'il paraît que' is 'apparently'." }
+  c_est_vrai_que: { t: "c'est vrai que", pos: phrase, en: ["is it true that"], forms: ["c'est vrai que", "c'est vrai qu", "est-ce que c'est vrai", "est-il vrai que", "vraiment", "sérieusement", "sans blague"], ex: ["C'est vrai que tu pars demain ?", "Is it true that you are leaving tomorrow?"], n: "'Vraiment ?' on its own is 'really?'." }
+  qui_te_l_a_dit: { t: "qui te l'a dit", pos: phrase, en: ["who told you"], forms: ["qui te l'a dit", "qui vous l'a dit", "qui t'a dit ça", "qui vous a dit ça", "qui a dit ça", "qui dit ça"], ex: ["Et qui te l'a dit ?", "And who told you?"] }
+  je_le_crois: { t: "je le crois", pos: phrase, en: ["I believe it", "I believe you"], forms: ["je le crois", "je te crois", "je vous crois", "je crois que oui", "je pense que oui", "c'est bien possible"], ex: ["Oui, je te crois.", "Yes, I believe you."], n: "'Je crois que oui' is 'I think so'." }
+  je_n_y_crois_pas: { t: "je n'y crois pas", pos: phrase, en: ["I don't believe it"], forms: ["je n'y crois pas", "j'y crois pas", "je ne te crois pas", "je te crois pas", "je ne vous crois pas", "j'en doute", "ça m'étonnerait", "c'est impossible"], ex: ["Désolé, je n'y crois pas.", "I'm sorry, I don't believe it."], n: "'J'en doute' is 'I doubt it'; 'ça m'étonnerait' is 'I'd be surprised'." }
+  qui_sait: { t: "qui sait", pos: phrase, en: ["who knows"], forms: ["qui sait", "on verra", "nous verrons", "on va voir"], ex: ["Qui sait si c'est vrai ?", "Who knows whether it is true?"], n: "'On verra' is 'we shall see'." }
   # customs
-  nel_mio_paese: { t: "nel mio paese", pos: phrase, en: ["in my country"], forms: ["nel mio paese", "da noi", "dalle mie parti", "a casa mia"], ex: ["Nel mio paese piove spesso.", "In my country it rains often."], n: "'Da noi' is 'where I come from'." }
-  festa: { t: "festa", pos: noun, en: ["festival", "holiday", "party"], forms: ["festa", "la festa", "una festa", "feste", "festa nazionale"], ex: ["Domani è festa.", "Tomorrow is a holiday."] }
-  natale: { t: "Natale", pos: noun, en: ["Christmas"], forms: ["Natale", "a Natale", "Capodanno", "a Capodanno", "Pasqua", "a Pasqua"], ex: ["A Natale torno a casa.", "At Christmas I go home."], n: "'Capodanno' is New Year, 'Pasqua' is Easter." }
-  si_mangia: { t: "si mangia", pos: phrase, en: ["people eat", "one eats"], forms: ["si mangia", "si mangiano", "si beve", "si cena", "si pranza", "si festeggia", "si fa festa", "si fanno regali", "si usa"], ex: ["Qui si mangia bene.", "People eat well here."], n: "Si with the verb says what people in general do." }
-  invece: { t: "invece", pos: adverb, en: ["whereas", "instead", "on the other hand"], forms: ["invece", "al contrario"], ex: ["Io prendo il tè, lui invece il caffè.", "I have tea, whereas he has coffee."] }
-  simile: { t: "simile", pos: adjective, en: ["similar", "alike"], forms: ["simile", "simili", "anche da noi", "come da noi", "più o meno uguale"], ex: ["Le due feste sono simili.", "The two festivals are similar."], n: "'Anche da noi' is 'at home too'." }
-  mi_ha_colpito: { t: "mi ha colpito", pos: phrase, en: ["it struck me", "it surprised me"], forms: ["mi ha colpito", "mi ha stupito", "quello che mi ha sorpreso", "la cosa che mi ha sorpreso"], ex: ["Mi ha colpito la gentilezza della gente.", "The kindness of the people struck me."] }
-  non_sono_abituato: { t: "non sono abituato", pos: phrase, en: ["I am not used to it", "I am not used to"], forms: ["non sono abituato", "non sono abituata", "non ci sono abituato", "non ci sono abituata", "mi sto abituando", "mi sono abituato", "mi sono abituata"], ex: ["Non sono abituata al caldo.", "I am not used to the heat."], n: "'Mi sto abituando' is 'I am getting used to it'." }
-  mi_sembra: { t: "mi sembra", pos: phrase, en: ["it seems to me", "I find it"], forms: ["mi sembra", "mi sembrano", "mi pare", "lo trovo", "la trovo"], ex: ["Mi sembra una buona abitudine.", "It seems a good habit to me."] }
+  dans_mon_pays: { t: "dans mon pays", pos: phrase, en: ["in my country"], forms: ["dans mon pays", "chez nous", "dans ma région", "là d'où je viens"], ex: ["Dans mon pays, il pleut souvent.", "In my country it rains often."], n: "'Chez nous' is 'where I come from'." }
+  fete: { t: "fête", pos: noun, en: ["festival", "holiday", "party"], forms: ["fête", "la fête", "une fête", "fêtes", "fête nationale", "jour férié"], ex: ["Demain, c'est un jour férié.", "Tomorrow is a public holiday."], n: "The fête nationale is the 14th of July." }
+  noel: { t: "Noël", pos: noun, en: ["Christmas"], forms: ["Noël", "à Noël", "le Nouvel An", "Nouvel An", "le jour de l'An", "Pâques", "à Pâques"], ex: ["À Noël, je rentre chez mes parents.", "At Christmas I go home to my parents."], n: "'Le Nouvel An' is New Year, 'Pâques' is Easter." }
+  on_mange: { t: "on mange", pos: phrase, en: ["people eat", "we eat", "one eats"], forms: ["on mange", "on boit", "on dîne", "on déjeune", "on fête", "on fait la fête", "on se fait des cadeaux", "on a l'habitude de", "on a l'habitude d"], ex: ["Ici, on mange bien.", "People eat well here."], n: "On with the verb says what people in general do." }
+  par_contre: { t: "par contre", pos: adverb, en: ["whereas", "on the other hand", "instead"], forms: ["par contre", "en revanche", "au contraire"], ex: ["Moi, je prends du thé ; lui, par contre, prend du café.", "I have tea, whereas he has coffee."] }
+  semblable: { t: "semblable", pos: adjective, en: ["similar", "alike"], forms: ["semblable", "semblables", "similaire", "similaires", "chez nous aussi", "comme chez nous", "c'est pareil chez nous"], ex: ["Les deux fêtes sont semblables.", "The two festivals are similar."], n: "'Chez nous aussi' is 'at home too'." }
+  ca_m_a_frappe: { t: "ça m'a frappé", pos: phrase, en: ["it struck me", "it surprised me"], forms: ["ça m'a frappé", "m'a frappé", "m'a frappée", "ça m'a étonné", "m'a étonné", "m'a étonnée", "ce qui m'a frappé", "ce qui m'a surpris", "ce qui m'a étonné"], ex: ["La gentillesse des gens m'a frappé.", "The kindness of the people struck me."] }
+  je_ne_suis_pas_habitue: { t: "je ne suis pas habitué", pos: phrase, en: ["I am not used to it", "I am not used to"], forms: ["je ne suis pas habitué", "je ne suis pas habituée", "je suis pas habitué", "je suis pas habituée", "je n'ai pas l'habitude", "j'ai pas l'habitude", "je commence à m'habituer", "je m'habitue", "je me suis habitué", "je me suis habituée"], ex: ["Je ne suis pas habituée à la chaleur.", "I am not used to the heat."], n: "'Je commence à m'habituer' is 'I am getting used to it'." }
+  ca_me_semble: { t: "ça me semble", pos: phrase, en: ["it seems to me", "I find it"], forms: ["ça me semble", "il me semble", "ça me paraît", "je le trouve", "je la trouve", "je les trouve"], ex: ["Ça me paraît une bonne habitude.", "It seems a good habit to me."] }
   # persuading
-  propongo_di: { t: "propongo di", pos: phrase, en: ["I suggest", "I propose"], forms: ["propongo di", "propongo", "ti propongo", "le propongo", "perché non"], ex: ["Propongo di andare a piedi.", "I suggest going on foot."], n: "'Perché non ...?' is 'why don't we ...?'." }
-  il_vantaggio: { t: "il vantaggio", pos: noun, en: ["the advantage"], forms: ["il vantaggio", "un vantaggio", "il vantaggio è che"], ex: ["Il vantaggio è che è vicino.", "The advantage is that it is near."] }
-  conviene: { t: "conviene", pos: verb, en: ["it is worth", "it is better to", "it pays to"], forms: ["conviene", "ci conviene", "è più veloce", "è più comodo", "è più facile"], ex: ["Conviene partire presto.", "It is better to leave early."] }
-  dai: { t: "dai", pos: interjection, en: ["come on"], forms: ["dai", "forza", "fidati", "si fidi", "vedrai"], ex: ["Dai, andiamo!", "Come on, let's go!"], n: "'Fidati' is 'trust me'; 'vedrai' is 'you'll see'." }
-  da_una_parte: { t: "da una parte", pos: phrase, en: ["on the one hand"], forms: ["da una parte", "da un lato", "dall'altra parte", "dall'altra", "dall'altro lato", "dall'altro"], ex: ["Da una parte mi piace, dall'altra costa troppo.", "On the one hand I like it, on the other it costs too much."], n: "'Dall'altra' is 'on the other'." }
-  pero: { t: "però", pos: conjunction, en: ["however", "but"], forms: ["però", "tuttavia", "eppure"], ex: ["È bello, però è caro.", "It is nice, but it is expensive."] }
-  in_ogni_caso: { t: "in ogni caso", pos: phrase, en: ["in any case", "anyway"], forms: ["in ogni caso", "comunque", "ad ogni modo"], ex: ["In ogni caso, ci vediamo domani.", "In any case, see you tomorrow."] }
-  vale_la_pena: { t: "vale la pena", pos: phrase, en: ["it is worth it", "it is worth"], forms: ["vale la pena", "ne vale la pena"], ex: ["È lontano, ma vale la pena.", "It is far, but it is worth it."] }
-  su_questo_hai_ragione: { t: "su questo hai ragione", pos: phrase, en: ["you are right about that"], forms: ["su questo hai ragione", "su questo ha ragione", "lo ammetto", "devo ammettere", "devo ammettere che", "in effetti"], ex: ["Su questo hai ragione, lo ammetto.", "You are right about that, I admit it."], n: "'In effetti' is 'indeed, admittedly'." }
-  facciamo_cosi: { t: "facciamo così", pos: phrase, en: ["let's do this", "let's do it this way"], forms: ["facciamo così", "facciamo a metà", "un compromesso", "troviamo un compromesso", "una via di mezzo"], ex: ["Facciamo così: pago io oggi e tu domani.", "Let's do this: I pay today and you pay tomorrow."], n: "'Facciamo a metà' is 'let's go halves'." }
-  mi_va_bene: { t: "mi va bene", pos: phrase, en: ["that suits me", "that is fine by me"], forms: ["mi va bene", "per me va bene", "siamo d'accordo", "allora siamo d'accordo", "affare fatto"], ex: ["Alle otto mi va bene.", "Eight o'clock suits me."], n: "'Affare fatto' is 'it's a deal'." }
+  je_propose_de: { t: "je propose de", pos: phrase, en: ["I suggest", "I propose"], forms: ["je propose de", "je propose d", "je propose", "je te propose de", "je vous propose de", "je te propose", "je vous propose", "pourquoi ne pas", "pourquoi pas"], ex: ["Je propose d'y aller à pied.", "I suggest going on foot."], n: "'Pourquoi ne pas ... ?' is 'why not ...?'." }
+  l_avantage: { t: "l'avantage", pos: noun, en: ["the advantage"], forms: ["l'avantage", "un avantage", "l'avantage c'est que"], ex: ["L'avantage, c'est que c'est près.", "The advantage is that it is near."] }
+  il_vaut_mieux: { t: "il vaut mieux", pos: phrase, en: ["it is better to", "it is worth", "it pays to"], forms: ["il vaut mieux", "mieux vaut", "c'est plus pratique", "c'est plus rapide", "c'est plus simple", "c'est plus facile"], ex: ["Il vaut mieux partir tôt.", "It is better to leave early."] }
+  allez: { t: "allez", pos: interjection, en: ["come on"], forms: ["allez", "vas-y", "vas y", "fais-moi confiance", "fais moi confiance", "faites-moi confiance", "faites moi confiance", "tu verras", "vous verrez"], ex: ["Allez, on y va !", "Come on, let's go!"], n: "'Fais-moi confiance' is 'trust me'; 'tu verras' is 'you'll see'." }
+  d_un_cote: { t: "d'un côté", pos: phrase, en: ["on the one hand"], forms: ["d'un côté", "d'une part", "de l'autre côté", "de l'autre", "d'autre part"], ex: ["D'un côté ça me plaît, de l'autre ça coûte trop cher.", "On the one hand I like it, on the other it costs too much."], n: "'De l'autre' is 'on the other'." }
+  cependant: { t: "cependant", pos: conjunction, en: ["however", "but"], forms: ["cependant", "pourtant", "toutefois", "mais"], ex: ["C'est beau, mais c'est cher.", "It is nice, but it is expensive."] }
+  de_toute_facon: { t: "de toute façon", pos: phrase, en: ["in any case", "anyway"], forms: ["de toute façon", "en tout cas", "quoi qu'il en soit"], ex: ["En tout cas, on se voit demain.", "In any case, see you tomorrow."] }
+  ca_vaut_la_peine: { t: "ça vaut la peine", pos: phrase, en: ["it is worth it", "it is worth"], forms: ["ça vaut la peine", "ça en vaut la peine", "ça vaut le coup", "ça en vaut le coup", "vaut la peine", "vaut le coup"], ex: ["C'est loin, mais ça vaut la peine.", "It is far, but it is worth it."] }
+  la_dessus_tu_as_raison: { t: "là-dessus tu as raison", pos: phrase, en: ["you are right about that"], forms: ["là-dessus tu as raison", "là-dessus vous avez raison", "là-dessus", "là dessus", "je l'admets", "je dois admettre", "je dois avouer", "je te l'accorde", "je vous l'accorde", "en effet"], ex: ["Là-dessus, tu as raison, je l'admets.", "You are right about that, I admit it."], n: "'En effet' is 'indeed, admittedly'." }
+  on_fait_comme_ca: { t: "on fait comme ça", pos: phrase, en: ["let's do this", "let's do it this way"], forms: ["on fait comme ça", "faisons comme ça", "moitié-moitié", "moitié moitié", "un compromis", "trouvons un compromis", "un juste milieu", "on coupe la poire en deux"], ex: ["On fait comme ça : je paie aujourd'hui et toi demain.", "Let's do this: I pay today and you pay tomorrow."], n: "'Couper la poire en deux' is 'to meet halfway'." }
+  ca_me_va: { t: "ça me va", pos: phrase, en: ["that suits me", "that is fine by me"], forms: ["ça me va", "ça me convient", "on est d'accord", "alors on est d'accord", "marché conclu"], ex: ["À huit heures, ça me va.", "Eight o'clock suits me."], n: "'Marché conclu' is 'it's a deal'." }
   # life_story
-  sono_nato: { t: "sono nato", pos: phrase, en: ["I was born"], forms: ["sono nato", "sono nata"], ex: ["Sono nata a Bristol.", "I was born in Bristol."] }
-  sono_cresciuto: { t: "sono cresciuto", pos: phrase, en: ["I grew up"], forms: ["sono cresciuto", "sono cresciuta"], ex: ["Sono cresciuto in una piccola città.", "I grew up in a small town."] }
-  mi_sono_trasferito: { t: "mi sono trasferito", pos: phrase, en: ["I moved"], forms: ["mi sono trasferito", "mi sono trasferita", "ci siamo trasferiti", "sono andato a vivere", "sono andata a vivere"], ex: ["Mi sono trasferita a Roma nel 2015.", "I moved to Rome in 2015."] }
-  da: { t: "da", pos: preposition, en: ["for", "since"], ex: ["Lavoro qui da due anni.", "I have worked here for two years."], n: "For what still goes on, Italian uses the present with da: abito qui da un anno." }
-  mesi: { t: "mesi", pos: noun, en: ["months"], forms: ["mesi", "mese"], ex: ["Sono qui da tre mesi.", "I have been here for three months."] }
-  da_quanto_tempo: { t: "da quanto tempo", pos: phrase, en: ["how long", "for how long"], forms: ["da quanto tempo", "da quanto", "da quando"], ex: ["Da quanto tempo studi l'italiano?", "How long have you been studying Italian?"] }
-  non_ho_mai: { t: "non ho mai", pos: phrase, en: ["I have never"], forms: ["non ho mai", "non sono mai", "non sono mai stato", "non sono mai stata"], ex: ["Non ho mai mangiato il sushi.", "I have never eaten sushi."], n: "'Non sono mai stato a ...' is 'I have never been to ...'." }
-  non_ancora: { t: "non ancora", pos: phrase, en: ["not yet"], forms: ["non ancora", "ancora non", "non ho ancora", "non sono ancora"], ex: ["Non ho ancora finito.", "I have not finished yet."] }
-  prima_o_poi: { t: "prima o poi", pos: phrase, en: ["sooner or later", "one day"], forms: ["prima o poi", "un giorno vorrei", "il mio sogno è", "sogno di"], ex: ["Prima o poi imparerò a nuotare.", "Sooner or later I will learn to swim."], n: "'Il mio sogno è' is 'my dream is'." }
+  je_suis_ne: { t: "je suis né", pos: phrase, en: ["I was born"], forms: ["je suis né", "je suis née"], ex: ["Je suis née à Bristol.", "I was born in Bristol."] }
+  j_ai_grandi: { t: "j'ai grandi", pos: phrase, en: ["I grew up"], forms: ["j'ai grandi", "on a grandi", "nous avons grandi"], ex: ["J'ai grandi dans une petite ville.", "I grew up in a small town."] }
+  j_ai_demenage: { t: "j'ai déménagé", pos: phrase, en: ["I moved"], forms: ["j'ai déménagé", "on a déménagé", "nous avons déménagé", "je suis allé vivre", "je suis allée vivre", "je suis parti vivre", "je suis partie vivre", "je me suis installé", "je me suis installée"], ex: ["Je me suis installée à Paris en 2015.", "I moved to Paris in 2015."] }
+  depuis: { t: "depuis", pos: preposition, en: ["for", "since"], ex: ["Je travaille ici depuis deux ans.", "I have worked here for two years."], n: "For what still goes on, French uses the present with depuis: j'habite ici depuis un an." }
+  mois: { t: "mois", pos: noun, en: ["months", "month"], ex: ["Je suis ici depuis trois mois.", "I have been here for three months."] }
+  depuis_combien_de_temps: { t: "depuis combien de temps", pos: phrase, en: ["how long", "for how long"], forms: ["depuis combien de temps", "ça fait combien de temps", "depuis quand"], ex: ["Depuis combien de temps tu étudies le français ?", "How long have you been studying French?"] }
+  je_n_ai_jamais: { t: "je n'ai jamais", pos: phrase, en: ["I have never"], forms: ["je n'ai jamais", "j'ai jamais", "nous n'avons jamais", "on n'a jamais", "je ne suis jamais", "je suis jamais", "je ne suis jamais allé", "je ne suis jamais allée"], ex: ["Je n'ai jamais mangé de sushis.", "I have never eaten sushi."], n: "'Je ne suis jamais allé à ...' is 'I have never been to ...'." }
+  pas_encore: { t: "pas encore", pos: phrase, en: ["not yet"], forms: ["pas encore", "je n'ai pas encore", "j'ai pas encore", "je ne suis pas encore", "toujours pas"], ex: ["Je n'ai pas encore fini.", "I have not finished yet."] }
+  tot_ou_tard: { t: "tôt ou tard", pos: phrase, en: ["sooner or later", "one day"], forms: ["tôt ou tard", "un jour ou l'autre", "mon rêve", "mon rêve est", "je rêve de", "je rêve d"], ex: ["Tôt ou tard, j'apprendrai à nager.", "Sooner or later I will learn to swim."], n: "'Mon rêve, c'est de ...' is 'my dream is to ...'." }
