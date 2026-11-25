@@ -3,7 +3,7 @@
 // after a joke: "<name> isn't feeling it right now. His convenient excuse: <the reason>". The reason is built here from
 // the error the model's library threw. It names the provider and Google's (or OpenAI's) own words, never a key.
 
-const PROVIDER_NAMES = { gemini: 'Gemini', openai: 'OpenAI', ollama: 'Ollama' };
+const PROVIDER_NAMES = { gemini: 'Gemini', openai: 'OpenAI', ollama: 'Ollama', anthropic: 'Claude' };
 const MAX_DETAIL = 240;
 
 function clip(text) {
@@ -41,8 +41,10 @@ function describeOnce(error, providerName) {
   const name = error?.name ?? '';
   if (name === 'ZodError') return `${who}'s reply did not fit the game's format (${clip(zodIssues(error))}).`;
   if (Number.isInteger(error?.status)) {
-    const said = error?.error?.message;
-    const label = error?.error?.status ? ` ${error.error.status}` : '';
+    // Google's unwrapped body carries { message, status }; Anthropic's library gives apiMessage and type (round 183).
+    const said = error?.error?.message ?? error?.apiMessage;
+    const kind = error?.error?.status ?? (typeof error?.type === 'string' ? error.type : null);
+    const label = kind ? ` ${kind}` : '';
     if (said) return `${who} answered ${error.status}${label}: "${clip(said)}"`;
     return `${who} answered with error ${error.status}${error.status >= 500 ? ' (a fault or overload on its side)' : ''}.`;
   }

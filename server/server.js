@@ -28,11 +28,12 @@ const curriculumLine = (content) => (content.curriculum
   ? `Curriculum (${content.language.code}): ${content.curriculum.stages.length} stages, ${content.curriculum.units.length} units, ${content.curriculum.lessonsById.size} lessons`
   : `Curriculum (${content.language.code}): none in this language pack`);
 // Round 171: with PARALLANG_FRIEND_CODE set, friends' turns run on Gemini (their own key, or GEMINI_API_KEY) and the
-// owner's on LLM_PROVIDER.
+// owner's on LLM_PROVIDER. Round 183: with CLAUDE_API_KEY, friends without a key of their own play on Claude.
 const friendCode = (process.env.PARALLANG_FRIEND_CODE || '').trim() || null;
 const primaryProvider = createLLMAdapter();
 const provider = friendCode
-  ? new FriendRouter({ primary: primaryProvider, geminiKey: (process.env.GEMINI_API_KEY || '').trim() || null, geminiModel: (process.env.GEMINI_MODEL || '').trim() || null, geminiFallbackModel: (process.env.GEMINI_FALLBACK_MODEL || '').trim() || undefined })
+  ? new FriendRouter({ primary: primaryProvider, geminiKey: (process.env.GEMINI_API_KEY || '').trim() || null, geminiModel: (process.env.GEMINI_MODEL || '').trim() || null, geminiFallbackModel: (process.env.GEMINI_FALLBACK_MODEL || '').trim() || undefined,
+    claudeKey: (process.env.CLAUDE_API_KEY || '').trim() || null, claudeModel: (process.env.FRIENDS_CLAUDE_MODEL || '').trim() || null })
   : primaryProvider;
 // Round 145: with a GitHub token and repository the saves are also written to GitHub and read back from there when
 // the disk has lost them (github-saves.js). Wrong settings do not stop the server (the game would be down for a
@@ -67,7 +68,8 @@ if (process.env.NODE_ENV !== 'test') {
   const server = app.listen(port, host, () => {
     console.log(`ParaLLang server listening on http://${host}:${port}`);
     console.log(`LLM provider: ${selectedProvider}`);
-    if (friendCode) console.log(`Friends (PARALLANG_FRIEND_CODE): Gemini, ${process.env.GEMINI_API_KEY ? 'on the server\'s GEMINI_API_KEY or their own key' : 'on their own key only (no GEMINI_API_KEY)'}`);
+    if (friendCode && process.env.CLAUDE_API_KEY) console.log(`Friends (PARALLANG_FRIEND_CODE): Claude (${process.env.FRIENDS_CLAUDE_MODEL || 'claude-sonnet-5-5'}) on CLAUDE_API_KEY${process.env.GEMINI_API_KEY ? ', Gemini when Claude fails' : ''}; Gemini when they add their own key`);
+    else if (friendCode) console.log(`Friends (PARALLANG_FRIEND_CODE): Gemini, ${process.env.GEMINI_API_KEY ? 'on the server\'s GEMINI_API_KEY or their own key' : 'on their own key only (no GEMINI_API_KEY)'}`);
     for (const each of Object.values(services)) {
       const { language } = each.content;
       console.log(`Target language: ${language.name} (${language.code})${language.code === defaultLanguage ? ', the default' : ''}; saves: ${each.storage.saveDir}`);

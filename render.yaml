@@ -31,6 +31,11 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
+      # Round 183: friends without a Gemini key of their own play on the Claude API with this key (a Console organization
+      # that receives the owner's monthly Max API credit); Gemini is tried when a Claude call fails. FRIENDS_CLAUDE_MODEL
+      # picks the model (default claude-sonnet-5-5). The owner's turns stay on LLM_PROVIDER; the CLI never sees this key.
+      - key: CLAUDE_API_KEY
+        sync: false
       # Round 182: friends' turns that Google answers with an overload (503) or too slowly are tried again, then on this
       # second model (default gemini-3.5-flash; `none` turns it off). Unset keeps the default.
       # - key: GEMINI_FALLBACK_MODEL
