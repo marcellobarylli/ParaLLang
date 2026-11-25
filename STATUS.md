@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-25: round 185, the gates back in streamlined mode
+
+After every three units, streamlined mode now has their gate in a legacy dungeon (Ta Prohm first, then The Kiln and
+Micromort Mountain): three encounters, one for each unit, at three of the dungeon's sites, each asking an objective of
+each of its unit's lessons without saying the words first. Each counts whatever the score; the next unit opens after
+the third. Tested with the scripted provider; not played in a browser. **On the branch, not merged.**
+[Architecture](docs/rounds/185/architecture.md), [findings](docs/rounds/185/findings.md).
+
 ## Addendum 2026-11-25: round 184, music on a silent iPhone, spoken narration words
 
 The ambient music waited for the microphone because iOS mutes Web Audio with the silent switch, and recording

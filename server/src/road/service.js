@@ -19,6 +19,7 @@
 //             since the graph is the same graph every time it is read. The last ROAD.walk of them; `hops` counts
 //             every walk made, also those that have fallen out of the list
 //   dungeon   the id of the legacy dungeon the learner stands in (round 160: a unit's gate is in one), or null
+//   dungeonSite  (round 185) the site of that dungeon the learner stands at, or null for its start
 //   streamlined  (round 173) false when the learner switched streamlined mode off; absent or true, it is on: each
 //             unit is one conversation, finishing it completes the unit, and every site offers the next unit
 //
@@ -34,9 +35,9 @@ import { assertLearnerId } from '../learning-storage.js';
 import { BIOMES, hash, createTerrain } from './terrain.js';
 import { graphFor, parseNodeId } from './graph.js';
 import { placeName } from './characters.js';
-import { ROAD_PLACE, buildRoadDefinition, describeActivity, legacyDungeonFor, objectivesOf } from './encounters.js';
+import { ROAD_PLACE, buildRoadDefinition, describeActivity, legacyDungeonFor, legacyGateFor, objectivesOf } from './encounters.js';
 import { entriesFor, selectPassage } from '../narration.js';
-import { PACING, composeCheckpoint, composeReview, composeUnit, emptyProgress, overview, plan, position, record, scoreOf, streamlineProgress } from './pacing.js';
+import { PACING, composeCheckpoint, composeGatePart, composeReview, composeUnit, emptyProgress, nextGate, overview, plan, position, record, scoreOf, streamlineProgress } from './pacing.js';
 
 export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200, walk: 20000 });
 
@@ -72,8 +73,12 @@ export function streamline(curriculum, road) {
   let { current } = road;
   if (current) {
     const [first] = plan(curriculum, progress, road.step, { streamlined: true });
-    const same = current.activity.kind === 'unit' && current.activity.unitId === first?.unitId;
+    const same = current.activity.kind === first?.kind && (first.kind === 'gate'
+      ? current.activity.gateId === first.gateId && current.activity.part === first.part
+      : current.activity.unitId === first.unitId);
     if (first?.kind === 'unit' && !same) current = { ...current, activity: commit(curriculum, progress, road.step, first, () => false) };
+    // Round 185: a gate is played in its dungeon, so a conversation waiting out here gives way to the walk there.
+    if (first?.kind === 'gate' && !same) current = null;
   }
   return progress === road.progress && current === road.current ? road : { ...road, progress, current };
 }
@@ -84,6 +89,7 @@ function commit(curriculum, progress, step, activity, isDueObjective) {
   if (activity.kind === 'review') return { ...kept, picks: composeReview(curriculum, progress, step, isDueObjective) };
   if (activity.kind === 'checkpoint') return { ...kept, picks: composeCheckpoint(curriculum, progress, activity.unitId) };
   if (activity.kind === 'unit') return { ...kept, picks: composeUnit(curriculum, activity.unitId) };
+  if (activity.kind === 'gate') return { ...kept, picks: composeGatePart(curriculum, activity.unitId) }; // round 185
   return kept;
 }
 
@@ -295,8 +301,9 @@ export const roadMethods = {
   standingIn(road) {
     const dungeon = road.dungeon ? this.content.dungeons?.get(road.dungeon) : null;
     if (!dungeon) return null;
-    const first = dungeon.sites.find((candidate) => candidate.id === dungeon.start) ?? dungeon.sites[0];
-    return { id: dungeon.id, name: dungeon.name, siteName: first.name };
+    // Round 185: a gate of streamlined mode has its conversations at several of the dungeon's sites.
+    const first = dungeon.sites.find((candidate) => candidate.id === (road.dungeonSite ?? dungeon.start)) ?? dungeon.sites.find((candidate) => candidate.id === dungeon.start) ?? dungeon.sites[0];
+    return { id: dungeon.id, name: dungeon.name, siteName: first.name, siteId: first.id };
   },
 
   // Round 160: the gate of the unit the learner is in: { unitTitle, hops, dungeon }. `hops` is the fewest
@@ -305,8 +312,13 @@ export const roadMethods = {
   gateAhead(curriculum, road) {
     const { unit, complete } = position(curriculum, road.progress);
     if (complete || !unit) return null;
-    // Round 173: streamlined mode has no gates: the unit is complete with its one conversation.
-    if (isStreamlined(road)) return { unitId: unit.id, unitTitle: unit.title, hops: 1, dungeon: null };
+    // Round 173: in streamlined mode the unit is complete with its one conversation. Round 185: its gates come after
+    // every PACING.gateEvery units, in a legacy dungeon.
+    if (isStreamlined(road)) {
+      const gate = nextGate(curriculum, road.progress);
+      const dungeon = gate ? legacyGateFor(this.content.dungeons, curriculum, gate.gateId) : null;
+      return { unitId: unit.id, unitTitle: unit.title, hops: gate?.hops ?? 1, dungeon: dungeon ? { id: dungeon.id, name: dungeon.name } : null };
+    }
     const pending = unit.lessons.filter((lesson) => !(road.progress.lessons?.[lesson.id]?.done > 0)).length;
     const dungeon = legacyDungeonFor(this.content.dungeons, curriculum, unit.id);
     return { unitId: unit.id, unitTitle: unit.title, hops: pending + (pending > 0 ? PACING.checkpointGap : 0), dungeon: dungeon ? { id: dungeon.id, name: dungeon.name } : null };
@@ -376,7 +388,8 @@ export const roadMethods = {
       // Round 156: the narrator's passage for the arrival: by the kind of way taken and the country arrived in.
       const [ni, nj] = parseNodeId(nodeId);
       // Round 160: a gate's site is a legacy dungeon's node; the learner is in that dungeon until they walk on.
-      const entered = activity.kind === 'checkpoint' ? legacyDungeonFor(this.content.dungeons, curriculum, activity.unitId) : null;
+      const entered = activity.kind === 'checkpoint' ? legacyDungeonFor(this.content.dungeons, curriculum, activity.unitId)
+        : activity.kind === 'gate' ? legacyGateFor(this.content.dungeons, curriculum, activity.gateId, activity.part) : null; // round 185
       const arrival = { event: 'road_arrive', ...(entered ? { dungeon: entered.id } : {}), way: graph.edge(frontier.find((entry) => entry.id === nodeId).from, nodeId).kind, cover: graph.node(nodeId).cover, biome: graph.node(nodeId).biome, kind: activity.kind, // `kind`: round 157
         // Round 158: the stage of the curriculum the learner is in, and the conversations finished: a passage with a
         // harder untranslatable text waits for its stage, and one may wait for a number of conversations.
@@ -387,6 +400,7 @@ export const roadMethods = {
         current: { node: nodeId, step: road.step, activity },
         walk: [...road.walk, nodeId].slice(-ROAD.walk), hops: road.hops + 1, // round 161: the whole journey
         dungeon: entered?.id ?? null,
+        dungeonSite: entered?.site.id ?? null, // round 185
         narration: this.tell(staged, arrival, hash(ni * 13 + road.step, nj * 17 - road.step, road.seed + 1212))?.id ?? null,
       };
       await this.storage.save(staged);
@@ -449,6 +463,7 @@ export const roadMethods = {
     const result = {
       kind: activity.kind, title: definition.road.title, score: Math.round(score * 100) / 100,
       ...(activity.kind === 'checkpoint' ? { passed: score >= PACING.checkpointPass, needed: PACING.checkpointPass } : {}),
+      ...(activity.kind === 'gate' ? { part: (activity.part ?? 0) + 1, of: activity.unitIds?.length ?? 1 } : {}), // round 185
       ...(before.unit && after.unit?.id !== before.unit.id ? { opened: after.unit ? { unitId: after.unit.id, unitTitle: after.unit.title } : { complete: true } } : {}),
     };
     envelope.road = {
@@ -497,7 +512,7 @@ export const roadMethods = {
       const road = envelope.road ? this.wholeRoad(envelope.road) : freshRoad(this.roadSeed(), curriculum, request.streamlined);
       staged.road = streamline(curriculum, { ...road, streamlined: request.streamlined });
       // Switched off, a unit conversation waiting here becomes the pacing's own choice.
-      if (!request.streamlined && staged.road.current?.activity.kind === 'unit') {
+      if (!request.streamlined && ['unit', 'gate'].includes(staged.road.current?.activity.kind)) { // round 185: a gate too
         const [first] = plan(curriculum, road.progress, road.step);
         staged.road.current = first ? { ...road.current, activity: commit(curriculum, road.progress, road.step, first, this.isDueObjective(envelope)) } : null;
       }

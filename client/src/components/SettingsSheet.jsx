@@ -169,7 +169,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                   <span>Streamlined</span>
                 </label>
                 <small>{streamlined
-                  ? 'On the road, each unit (Hello and goodbye, Where you are from, ...) is one conversation. Finish it and the unit is done; the next conversation is the next unit. No reviews, repeats or gates.'
+                  ? 'On the road, each unit (Hello and goodbye, Where you are from, ...) is one conversation. Finish it and the unit is done; the next conversation is the next unit. After every three units, their gate: three conversations in an old place, one for each. No reviews or repeats.'
                   : 'On the road, each unit is three lessons, with reviews, a lesson again when one went badly, and a gate to pass before the next unit.'}</small>
               </>
             )}

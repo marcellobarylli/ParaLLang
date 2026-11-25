@@ -324,7 +324,7 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .kind-tag { display: inline-block; padding: 0 .35em; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; text-shadow: none; color: #17140a; background: var(--gold); border: 1px solid #000; vertical-align: .08em; }
 .kind-tag.kind-review { background: #9ad8e6; }
 .kind-tag.kind-repair { background: #d9a6e8; }
-.kind-tag.kind-checkpoint { background: #f08a6c; }
+.kind-tag.kind-checkpoint, .kind-tag.kind-gate { background: #f08a6c; }
 .road-ways button { display: block; }
 .rails-switch { display: flex; align-items: center; justify-content: flex-start; gap: .5rem; flex-wrap: wrap; font-size: .86rem; }
 .rails-switch input { flex: none; width: 20px; height: 20px; min-width: 0; margin: 0; padding: 0; }
@@ -354,7 +354,7 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .map-ahead .sign { fill: var(--gold); stroke: #000; stroke-width: .45; }
 .map-ahead.kind-review .sign { fill: #9ad8e6; }
 .map-ahead.kind-repair .sign { fill: #d9a6e8; }
-.map-ahead.kind-checkpoint .sign { fill: #f08a6c; }
+.map-ahead.kind-checkpoint .sign, .map-ahead.kind-gate .sign { fill: #f08a6c; }
 .map-ahead text { font-size: 4px; font-weight: 700; text-anchor: middle; fill: #17140a; text-shadow: none; pointer-events: none; }
 .map-ahead.rails .sign { stroke: #fff; stroke-width: .9; }
 .map-ahead.picked .sign { outline: .7px solid #fff; outline-offset: .8px; }

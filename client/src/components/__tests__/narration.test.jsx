@@ -90,3 +90,12 @@ test('the way on to a legacy dungeon\'s node says so: "Enter Ta Prohm"', () => {
   rerender(<HubCard state={state({ road: road({ frontier: [site()], rails: '1,0' }), roadContinue() {} })} />);
   expect(screen.getByRole('button', { name: 'Continue' })).toBeTruthy();
 });
+
+// Round 185: streamlined mode's gate is three conversations; each says how far in the player is.
+test('a conversation of a streamlined gate says which of three it was', () => {
+  const encounter = { resolvedMessage: 'The keeper nods.', character: { name: 'Keeper' } };
+  const { rerender } = render(<RoadResolved state={state({ roadResult: { kind: 'gate', score: 0.5, part: 1, of: 3 } })} encounter={encounter} />);
+  expect(screen.getByText(/The gate, 1 of 3: 50 % said cleanly\. Further in, someone else is waiting\./)).toBeTruthy();
+  rerender(<RoadResolved state={state({ roadResult: { kind: 'gate', score: 1, part: 3, of: 3, opened: { unitTitle: 'Numbers' } } })} encounter={encounter} />);
+  expect(screen.getByText(/Through the gate: all 3 conversations.*A new unit begins: Numbers\./)).toBeTruthy();
+});

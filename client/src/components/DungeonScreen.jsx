@@ -612,17 +612,20 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   // Round 160 (issue #8): on the road a unit's gate stands in a legacy dungeon. While the player stands at that
   // dungeon's node the level behind the road's panels is the dungeon's own, at its first site (loaded only now: the
   // dungeon's host is its own chunk). The gate's keeper is a character without a model, so the site shows its beacon.
+  // Round 185: a gate of streamlined mode has a conversation at each of several of the dungeon's sites (`siteId`).
   const legacyId = onRoad ? state.road?.here?.dungeon?.id ?? null : null;
+  const legacySite = onRoad ? state.road?.here?.dungeon?.siteId ?? null : null;
   const legacy = useMemo(() => {
     const bundle = legacyId ? state.legacy?.[legacyId] : null;
     if (!bundle) return null;
-    const startIndex = Math.max(0, bundle.sites.findIndex((entry) => entry.id === bundle.start));
+    const at = bundle.sites.findIndex((entry) => entry.id === legacySite);
+    const startIndex = at >= 0 ? at : Math.max(0, bundle.sites.findIndex((entry) => entry.id === bundle.start));
     return {
       dungeon: { ...bundle, sites: bundle.sites.map((entry, index) => (index === startIndex ? { ...entry, figure: null } : entry)) },
       startIndex,
       sites: Object.fromEntries(bundle.sites.map((entry, index) => [entry.id, { state: index === startIndex ? 'current' : 'visited', cleared: false, reachable: false }])),
     };
-  }, [legacyId, state.legacy]);
+  }, [legacyId, legacySite, state.legacy]);
   const legacyPhase = { hub: 'site', travel: 'approach', encounter: 'encounter' }[state.roadPhase] ?? 'site';
   const shellPhase = onRoad ? ({ hub: 'site', travel: 'walk', encounter: 'encounter' }[state.roadPhase] ?? 'site') : phase;
   const returnLabel = onRoad ? (roadTalking ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the road')

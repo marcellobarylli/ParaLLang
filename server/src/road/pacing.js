@@ -13,7 +13,11 @@
 //               after teaching). The next unit opens at PACING.checkpointPass.
 //   unit        (round 173, streamlined mode) the whole unit in one conversation: the first objective of each of its
 //               lessons, taught as a lesson is. Finishing it completes the unit, whatever the score, and the next
-//               conversation is the next unit's. No reviews, repairs or gates until the curriculum is finished.
+//               conversation is the next unit's. No reviews or repairs until the curriculum is finished.
+//   gate        (round 185, streamlined mode) after every PACING.gateEvery units, the gate of those units in a legacy
+//               dungeon: one conversation for each of them, in turn, each asking for an objective of each of the
+//               unit's lessons (another than the unit conversation asked for), without the words said first. Each
+//               counts whatever the score; the next unit opens after the last of them.
 //
 // How often a review comes depends on how the last conversations went: the target is about 85 % of objectives met
 // cleanly. Above PACING.easyAbove reviews thin out, below PACING.hardBelow each new lesson is followed by one.
@@ -29,12 +33,13 @@ export const PACING = Object.freeze({
   repairGap: 2, // ... once this many conversations have passed
   checkpointPass: 0.8,
   checkpointGap: 1, // conversations between a unit's last lesson (or a failed try) and its checkpoint
-  hints: Object.freeze({ lesson: 3, unit: 3, repair: 2, review: 1, checkpoint: 0 }),
+  hints: Object.freeze({ lesson: 3, unit: 3, repair: 2, review: 1, checkpoint: 0, gate: 2 }),
+  gateEvery: 3, // round 185: streamlined mode's gate comes after this many units
   escalation: 0.05, // the share of target language rises by this much per turn
   recent: 8, // scores kept
 });
 
-export const emptyProgress = () => ({ lessons: {}, checkpoints: {}, recent: [], sinceReview: 0 });
+export const emptyProgress = () => ({ lessons: {}, checkpoints: {}, gates: {}, recent: [], sinceReview: 0 });
 
 /**
  * A conversation's score: the share of its objectives met cleanly. One met by a correction or after a hint counts half.
@@ -77,6 +82,42 @@ export function composeUnit(curriculum, unitId) {
   return unit ? unit.lessons.map((lesson) => [lesson.id, lesson.objectives[0].id]) : [];
 }
 
+/**
+ * Round 185: the gate streamlined mode owes now, as an activity, or null. A gate is owed when the units completed are
+ * a multiple of PACING.gateEvery (or the curriculum is finished, the last ones being fewer) and its conversations are
+ * not all played: `progress.gates[gateId].parts` counts those played. `gateId` is the id of the gate's last unit.
+ */
+export function gateDue(curriculum, progress) {
+  const pos = position(curriculum, progress);
+  const done = pos.complete ? curriculum.units.length : pos.unit.index;
+  if (done === 0 || (!pos.complete && done % PACING.gateEvery !== 0)) return null;
+  const from = pos.complete ? Math.floor((done - 1) / PACING.gateEvery) * PACING.gateEvery : done - PACING.gateEvery;
+  const units = curriculum.units.slice(from, done);
+  const gateId = units.at(-1).id;
+  const part = progress.gates?.[gateId]?.parts ?? 0;
+  if (part >= units.length) return null;
+  return { kind: 'gate', gateId, unitIds: units.map((unit) => unit.id), part, unitId: units[part].id, why: `The gate of the last units, ${part + 1} of ${units.length}.` };
+}
+
+/**
+ * Round 185: how far streamlined mode's next gate is: { gateId, hops } (`hops` the unit conversations before it, 0
+ * when it is owed now), or null once the curriculum is finished and its last gate played.
+ */
+export function nextGate(curriculum, progress) {
+  const due = gateDue(curriculum, progress);
+  if (due) return { gateId: due.gateId, hops: 0 };
+  const pos = position(curriculum, progress);
+  if (pos.complete) return null;
+  const end = Math.min(curriculum.units.length, (Math.floor(pos.unit.index / PACING.gateEvery) + 1) * PACING.gateEvery);
+  return { gateId: curriculum.units[end - 1].id, hops: end - pos.unit.index };
+}
+
+/** Round 185: the objectives of one conversation of a gate: an objective of each of the unit's lessons, the second where there is one. */
+export function composeGatePart(curriculum, unitId) {
+  const unit = curriculum.units.find((candidate) => candidate.id === unitId);
+  return unit ? unit.lessons.map((lesson) => [lesson.id, lesson.objectives[1 % lesson.objectives.length].id]) : [];
+}
+
 /** Where the learner is: the first unit whose checkpoint is not passed, and the totals. */
 export function position(curriculum, progress) {
   const unit = curriculum.units.find((candidate) => !passedUnit(progress, candidate)) ?? null;
@@ -101,7 +142,12 @@ const doneLessons = (curriculum, progress) => curriculum.units.flatMap((unit) =>
  */
 export function plan(curriculum, progress, step, { streamlined = false } = {}) {
   const pos = position(curriculum, progress);
-  if (streamlined && !pos.complete) return [{ kind: 'unit', unitId: pos.unit.id, why: 'The next exercise, in one conversation.' }];
+  if (streamlined) {
+    // Round 185: every PACING.gateEvery units, their gate in a legacy dungeon, before the next unit.
+    const gate = gateDue(curriculum, progress);
+    if (gate) return [gate];
+    if (!pos.complete) return [{ kind: 'unit', unitId: pos.unit.id, why: 'The next exercise, in one conversation.' }];
+  }
   const done = doneLessons(curriculum, progress);
   const reviewable = done.length >= 2;
   const rate = successRate(progress);
@@ -212,6 +258,7 @@ export function record(progress, activity, score, step) {
   const next = {
     lessons: { ...(progress.lessons ?? {}) },
     checkpoints: { ...(progress.checkpoints ?? {}) },
+    gates: { ...(progress.gates ?? {}) },
     recent: [...(progress.recent ?? []), score].slice(-PACING.recent),
     sinceReview: activity.kind === 'lesson' ? (progress.sinceReview ?? 0) + 1 : 0,
   };
@@ -233,6 +280,11 @@ export function record(progress, activity, score, step) {
     touch(activity.lessonId, { done: (before?.done ?? 0) + 1, best: Math.max(before?.best ?? 0, score), last: score, step, first: before?.first ?? before?.step ?? step });
   } else {
     for (const [lessonId] of activity.picks ?? []) touch(lessonId, {});
+  }
+  if (activity.kind === 'gate') {
+    // Round 185: one more of the gate's conversations played, whatever the score.
+    const before = next.gates[activity.gateId];
+    next.gates[activity.gateId] = { parts: Math.max(before?.parts ?? 0, (activity.part ?? 0) + 1), scores: [...(before?.scores ?? []), score], step };
   }
   if (activity.kind === 'checkpoint') {
     const before = next.checkpoints[activity.unitId];

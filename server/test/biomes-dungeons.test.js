@@ -128,7 +128,7 @@ test('the first unit: the gate is counted down, offered at a site that is Ta Pro
 
   // Entering it.
   const entered = (await moveTo(runtime, learnerId, gateSite.id)).data.road;
-  assert.deepEqual(entered.here.dungeon, { id: 'ta_prohm', name: 'Ta Prohm', siteName: 'The Face Gate' });
+  assert.deepEqual(entered.here.dungeon, { id: 'ta_prohm', name: 'Ta Prohm', siteName: 'The Face Gate', siteId: 'face_gate' });
   assert.equal(entered.current.dungeon.id, 'ta_prohm');
   assert.equal(entered.narration.id, 'enter_ta_prohm');
   assert.equal((await runtime.storage.load(learnerId)).road.dungeon, 'ta_prohm');

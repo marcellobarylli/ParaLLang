@@ -20,6 +20,8 @@ export const KIND = Object.freeze({
   review: { label: 'Review', mark: 'R', what: 'Earlier words, mixed' },
   repair: { label: 'Again', mark: 'A', what: 'A lesson again' },
   checkpoint: { label: 'Gate', mark: 'G', what: 'The gate of the unit, without hints' },
+  // Round 185: streamlined mode's gate, after every three units: one conversation for each, in an old place.
+  gate: { label: 'Gate', mark: 'G', what: 'The gate of the last three units, one conversation for each' },
 });
 /** Round 160: " · Ta Prohm in 3 conversations or more": how far the unit's gate is, and the dungeon it stands in. */
 export function gateLine(gate) {
@@ -202,7 +204,9 @@ export function RoadResolved({ state, encounter }) {
         <p className="road-result" role="status">
           {result.kind === 'checkpoint'
             ? (result.passed ? `Through the gate, with ${percent(result.score)}.` : `Not through the gate yet: ${percent(result.score)}, and it opens at ${percent(result.needed)}. A lesson again first, then another try with other questions.`)
-            : `${KIND[result.kind].label}: ${percent(result.score)} said cleanly.`}
+            : result.kind === 'gate'
+              ? (result.part < result.of ? `The gate, ${result.part} of ${result.of}: ${percent(result.score)} said cleanly. Further in, someone else is waiting.` : `Through the gate: all ${result.of} conversations, the last with ${percent(result.score)} said cleanly.`)
+              : `${KIND[result.kind].label}: ${percent(result.score)} said cleanly.`}
           {result.opened?.unitTitle && ` A new unit begins: ${result.opened.unitTitle}.`}
           {result.opened?.complete && ' That was the last unit of the curriculum. The road goes on as review.'}
         </p>
@@ -307,7 +311,7 @@ export function RoadMap({ state, onClose, closeLabel = 'Back to the road' }) {
         </aside>
       )}
       <p className="map-legend"><small>
-        {road.streamlined && <><span className="kind-tag kind-unit">U</span> a whole unit in one conversation (streamlined, in Settings) · </>}<span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> the unit's gate, which stands in an old place (the stepped gate on the map).{road.gate?.dungeon ? ` The next is ${road.gate.dungeon.name}${road.gate.hops > 0 ? `, in ${road.gate.hops} ${road.gate.hops === 1 ? 'conversation' : 'conversations'} or more` : ', and it is near'}.` : ''} The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
+        {road.streamlined && <><span className="kind-tag kind-unit">U</span> a whole unit in one conversation (streamlined, in Settings) · </>}<span className="kind-tag kind-lesson">N</span> new words · <span className="kind-tag kind-review">R</span> review · <span className="kind-tag kind-repair">A</span> a lesson again · <span className="kind-tag kind-checkpoint">G</span> {road.streamlined ? 'the gate of the last three units, three conversations' : 'the unit\'s gate'}, which stands in an old place (the stepped gate on the map).{road.gate?.dungeon ? ` The next is ${road.gate.dungeon.name}${road.gate.hops > 0 ? `, in ${road.gate.hops} ${road.gate.hops === 1 ? 'conversation' : 'conversations'} or more` : ', and it is near'}.` : ''} The ringed sign is the pacing's choice; the small tiles are where you have been, and the white post is where you stand. Heights are drawn taller than they are.
       </small></p>
       {chosen && !walked && (
         <section className="map-choice" aria-live="polite">

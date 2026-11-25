@@ -29,6 +29,22 @@ export function legacyDungeonFor(dungeons, curriculum, unitId) {
 }
 
 /**
+ * Round 185: the dungeon a gate of streamlined mode stands in, at the site of its `part`-th conversation (the start
+ * first, then the dungeon's other sites in order), in the same shape as legacyDungeonFor's. The gates go round
+ * LEGACY_ORDER as the units' gates do: the first gate (after units 1 to 3) is Ta Prohm's.
+ */
+export function legacyGateFor(dungeons, curriculum, gateId, part = 0) {
+  const known = [...LEGACY_ORDER.filter((id) => dungeons?.has(id)), ...[...(dungeons?.keys() ?? [])].filter((id) => !LEGACY_ORDER.includes(id))];
+  const index = curriculum.units.findIndex((unit) => unit.id === gateId);
+  if (!known.length || index < 0) return null;
+  const dungeon = dungeons.get(known[Math.floor(index / PACING.gateEvery) % known.length]);
+  const start = dungeon.sites.find((candidate) => candidate.id === dungeon.start) ?? dungeon.sites[0];
+  const order = [start, ...dungeon.sites.filter((candidate) => candidate !== start)];
+  const site = order[part % order.length];
+  return Object.freeze({ id: dungeon.id, name: dungeon.name, level: dungeon.level, site: Object.freeze({ id: site.id, name: site.name }) });
+}
+
+/**
  * Round 155 (issue #3): what the character of a site knows of the world. The road's region has two pools of things
  * noticed: ordinary people at the A levels, people who have seen more from B1 on. The draw is fixed by the seed, the
  * site and the step, like the character itself.
@@ -59,15 +75,18 @@ export function describeActivity({ curriculum, seed, node, step, activity, curre
   const stage = curriculum.stages.find((candidate) => candidate.id === unit.stageId);
   const lesson = activity.lessonId ? curriculum.lessonsById.get(activity.lessonId)?.lesson : null;
   const role = activity.kind === 'review' ? roleFor(seed, node, step, REVIEW_ROLES)
-    : activity.kind === 'checkpoint' ? roleFor(seed, node, step, CHECKPOINT_ROLES)
+    : activity.kind === 'checkpoint' || activity.kind === 'gate' ? roleFor(seed, node, step, CHECKPOINT_ROLES)
       : roleFor(seed, node, step, unit.roles);
+  // Round 185: a gate of streamlined mode is legacyGateFor's dungeon, at the site of its conversation.
+  const gateDungeon = activity.kind === 'gate' ? legacyGateFor(dungeons, curriculum, activity.gateId, activity.part) : null;
   const title = activity.kind === 'lesson' ? lesson.title
+    : activity.kind === 'gate' ? `The gate, ${(activity.part ?? 0) + 1} of ${activity.unitIds?.length ?? 1}: ${unit.title}`
     : activity.kind === 'unit' ? unit.title // round 173: streamlined mode, the whole unit at once
     : activity.kind === 'repair' ? `${lesson.title}, again`
       : activity.kind === 'checkpoint' ? `The gate: ${unit.title}` : 'Old words, mixed';
   const character = characterFor({ seed, node, step, role, ratio: stage.ratio, focus: { vocabulary: unit.title, grammar: unit.grammar } });
   // Round 160: a unit's gate stands in a legacy dungeon.
-  const dungeon = activity.kind === 'checkpoint' ? legacyDungeonFor(dungeons, curriculum, unit.id) : null;
+  const dungeon = activity.kind === 'checkpoint' ? legacyDungeonFor(dungeons, curriculum, unit.id) : gateDungeon;
   return { unit, stage, lesson, role, title, character, dungeon };
 }
 

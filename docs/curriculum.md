@@ -69,8 +69,13 @@ Every conversation is with a generated character and has objectives: things to s
 
 **Streamlined mode** (round 173, Settings, on by default) replaces the four kinds with one, **Unit**: the first
 objective of each of the unit's lessons, in one conversation, taught as a lesson is (three hints). Finishing it
-completes the unit whatever the score, and every site ahead offers the next unit; there are no reviews, repairs or
-gates until the curriculum is finished. The rules below are the pacing with the mode switched off.
+completes the unit whatever the score, and every site ahead offers the next unit; there are no reviews or repairs
+until the curriculum is finished. After every three units comes their **gate** (round 185) in a legacy dungeon (Ta
+Prohm, then The Kiln, then Micromort Mountain, in turn): three conversations, one for each of the three units, at
+three of the dungeon's sites. Each asks for an objective of each of its unit's lessons (the second, where the lesson
+has one; the unit conversation asked for the first), as a review does: the words are not said first, two hints an
+objective. Each counts whatever the score, and the next unit opens after the third. The rules below are the pacing
+with the mode switched off.
 
 A conversation's **score** is the share of its objectives said cleanly; an objective closed by a correction (beginner
 mode) or after a hint counts half.
