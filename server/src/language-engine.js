@@ -4,7 +4,7 @@ const DAY_MS = 86_400_000;
 // unit for one, so offsets into the source do not move. Before NFKC, which would split ´ into a space and an accent.
 const APOSTROPHES = /[\u2019\u2018\u02BC\u0060\u00B4\u2032]/gu;
 export function foldApostrophes(text) { return String(text ?? '').replace(APOSTROPHES, "'"); }
-// Round 180: French writes œ and æ as one letter that no Unicode normalization takes apart (cœur, sœur, ex æquo), and
+// Round 181: French writes œ and æ as one letter that no Unicode normalization takes apart (cœur, sœur, ex æquo), and
 // a player types oe. Both fold to the two letters, in lower case (call it after lower-casing).
 export function foldLigatures(text) { return String(text ?? '').replace(/œ/gu, 'oe').replace(/æ/gu, 'ae'); }
 
@@ -18,7 +18,7 @@ export function normalizeAnswer(value, { stripAccents = false } = {}) {
   let normalized = foldApostrophes(value)
     .normalize('NFKC')
     .toLocaleLowerCase('en')
-    .replace(/[.,!?;¿¡:"'()“”‘’«»‹›]+/gu, ' ') // round 180: French guillemets
+    .replace(/[.,!?;¿¡:"'()“”‘’«»‹›]+/gu, ' ') // round 181: French guillemets
     .replace(/\s+/gu, ' ')
     .trim();
   if (stripAccents) normalized = foldLigatures(normalized.normalize('NFD').replace(/\p{M}/gu, '').normalize('NFC'));

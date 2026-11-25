@@ -1,6 +1,6 @@
 # Round 113: The High Gate. Bambieshart from Zanzibart gives the player a brocade and a mountain to visit; the player
 # thanks him and asks about Micromort Mountain.
-# Round 180: French version authored by Claude; awaits a native speaker's review.
+# Round 181: French version authored by Claude; awaits a native speaker's review.
 id: high_gate_bambieshart
 character: characters/enemies/wanderer_bambieshart.yaml
 location: the_high_gate

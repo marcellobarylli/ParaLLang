@@ -1,6 +1,6 @@
 # Micromort Mountain, the minimal version: Eduardo has sprained his ankle halfway up. The player offers help, asks how far
 # it is to the top and asks whether there is a festival up there.
-# Round 180: French version authored by Claude; awaits a native speaker's review.
+# Round 181: French version authored by Claude; awaits a native speaker's review.
 id: micromort_eduardo
 character: characters/enemies/hiker_eduardo.yaml
 location: micromort_trail

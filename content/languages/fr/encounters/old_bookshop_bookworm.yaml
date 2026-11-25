@@ -1,7 +1,7 @@
 # Round 013: The Old Bookshop (backlog A6, with B2). Marginalia the Bookworm reads two passages of The Journey and
 # asks about each; the player answers in French. The passages are in each objective's intent, so they reach the
 # narration prompt.
-# Round 180: French version authored by Claude; awaits a native speaker's review.
+# Round 181: French version authored by Claude; awaits a native speaker's review.
 id: old_bookshop_bookworm
 character: characters/enemies/bookworm_marginalia.yaml
 location: old_bookshop

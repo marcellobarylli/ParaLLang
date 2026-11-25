@@ -1,7 +1,7 @@
 # Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
 # were not opened from the build container; listed for the owner's content review.
 # Round 050 (backlog G5): telling the time (il est ... heures, il est une heure, midi, minuit) and Flick's question.
-# Round 180: the French version, authored by Claude; it awaits a native speaker's review.
+# Round 181: the French version, authored by Claude; it awaits a native speaker's review.
 version: fountain-riddles-fr-v1
 references:
   - id: larousse-arreter

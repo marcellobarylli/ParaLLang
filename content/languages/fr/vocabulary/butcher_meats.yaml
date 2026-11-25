@@ -1,6 +1,6 @@
 # Round 010: The Butcher's Stall (meats, quantities, numbers). Reference URLs follow the existing patterns and
 # were not opened from the build container; listed for the owner's content review.
-# Round 180: French version authored by Claude; it awaits a native speaker's review.
+# Round 181: French version authored by Claude; it awaits a native speaker's review.
 version: butcher-meats-fr-v1
 references:
   - id: larousse-jambon

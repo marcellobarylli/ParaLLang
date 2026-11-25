@@ -6,7 +6,7 @@ import { GEMINI_KEY_HEADER, TOKEN_HEADER, announceAccessProblem, loadGeminiKey, 
 // on tells an older page to reload.
 export const CLIENT_CONTRACT = 121;
 
-// Round 180: the language of this game, sent as X-ParaLLang-Language (server/src/app.js). None: the server's default.
+// Round 181: the language of this game, sent as X-ParaLLang-Language (server/src/app.js). None: the server's default.
 export const LANGUAGE_HEADER = 'X-ParaLLang-Language';
 
 export function createLearningApi({ getSettings = () => loadSettings(), getGeminiKey = () => loadGeminiKey(), getLanguage = () => null, fetchImpl } = {}) {

@@ -1,7 +1,7 @@
 // Round 178: the save slots: up to three games in this browser, each its own learner and save. The one in use is
 // marked; another is played by switching to it (the page reloads into it), and an empty one starts a new game.
 // Round 179: any game can be deleted (its save goes from the server too); the one in use is started over instead.
-// Round 180: each game has its language. A new game, or the one started over, is played in the language picked here,
+// Round 181: each game has its language. A new game, or the one started over, is played in the language picked here,
 // from those the server plays.
 import { useState } from 'react';
 

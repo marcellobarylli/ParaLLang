@@ -21,7 +21,7 @@ if (tokenProblem) {
 const port = Number(process.env.PORT || 3001);
 const selectedProvider = process.env.LLM_PROVIDER || 'openai';
 const host = listenHostForProvider(selectedProvider);
-// Round 180: every language the server plays is loaded now, default first (TARGET_LANGUAGES, or TARGET_LANGUAGE alone).
+// Round 181: every language the server plays is loaded now, default first (TARGET_LANGUAGES, or TARGET_LANGUAGE alone).
 const contents = resolveTargetLanguages().map((language) => loadGameContent({ language }));
 // Round 144: the curriculum is read now (the loader reads it on first use), so its content errors stop the start.
 const curriculumLine = (content) => (content.curriculum
@@ -58,7 +58,7 @@ const services = Object.fromEntries(contents.map((content) => [content.language.
 const [defaultLanguage] = Object.keys(services);
 const service = services[defaultLanguage];
 const storages = Object.values(services).map((each) => each.storage);
-// Round 180: the saves' status is the default language's store's (they share the GitHub settings and repository).
+// Round 181: the saves' status is the default language's store's (they share the GitHub settings and repository).
 const savesStatus = () => (github ? { ...service.storage.status } : { kind: 'disk', ...(githubSettings?.problem ? { problem: githubSettings.problem } : {}) });
 // Round 040 (critique 1.2): the ends are trimmed, as fetch trims header values.
 const app = createApp({ services, defaultLanguage, token: (process.env.PARALLANG_TOKEN || '').trim() || null, friendCode, saves: savesStatus });

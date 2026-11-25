@@ -2,8 +2,8 @@
 // the place last entered and the title's landscape. Slot 1 keeps the keys as they always were, so a save made before
 // slots is slot 1; slots 2 and 3 suffix them (`parallang.learnerId.2`). Settings and display are shared by all slots.
 // The game reads the slot chosen (SLOT_KEY) when the page loads; switching slots stores the choice and reloads.
-// Round 180: each slot also keeps its game's language (`parallang.language`, a code the server plays). A slot without
-// one plays the server's default, which is what every game before round 180 was (Italian).
+// Round 181: each slot also keeps its game's language (`parallang.language`, a code the server plays). A slot without
+// one plays the server's default, which is what every game before round 181 was (Italian).
 
 export const SLOT_KEY = 'parallang.slot';
 export const SLOT_COUNT = 3;
@@ -68,7 +68,7 @@ export function clearSlot(storage, slot, { current = false } = {}) {
   return true;
 }
 
-/** Round 180: sets the language of slot `slot`'s game (an empty slot's next game, or the game it holds). */
+/** Round 181: sets the language of slot `slot`'s game (an empty slot's next game, or the game it holds). */
 export function setSlotLanguage(storage, slot, code) {
   if (!Number.isInteger(slot) || slot < 1 || slot > SLOT_COUNT || typeof code !== 'string' || !code) return false;
   try { storage?.setItem?.(keyIn(LANGUAGE_KEY, slot), code); return true; } catch { return false; }

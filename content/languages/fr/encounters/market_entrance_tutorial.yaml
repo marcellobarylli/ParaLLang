@@ -1,6 +1,6 @@
 # Round 009: the Market Entrance tutorial (backlog A3). Portia the Archway asks for a greeting, the player's name
 # and her own name back (greetings, pronouns); the companion briefing introduces the mechanics.
-# Round 180: French version authored by Claude; awaits a native speaker's review.
+# Round 181: French version authored by Claude; awaits a native speaker's review.
 id: market_entrance_tutorial
 character: characters/enemies/archway_portia.yaml
 location: market_entrance

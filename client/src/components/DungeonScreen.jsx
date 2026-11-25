@@ -60,7 +60,7 @@ function SiteNumber({ index }) {
   return <span className="site-number" aria-hidden="true">{index + 1}</span>;
 }
 
-// Round 180: the language of the game. A new game's can be chosen on the title (the page reloads into it); a game
+// Round 181: the language of the game. A new game's can be chosen on the title (the page reloads into it); a game
 // under way names its own.
 function TitleLanguage({ state, disabled }) {
   const { languages, language, freshGame, chooseLanguage } = state;

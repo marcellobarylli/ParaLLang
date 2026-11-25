@@ -110,7 +110,7 @@ export function resolveTargetLanguage(env = process.env) {
   return nonBlank(env.TARGET_LANGUAGE) ?? 'it';
 }
 
-// Round 180: the languages one server plays, default first. TARGET_LANGUAGES is a comma list (`it,fr,es`); without it
+// Round 181: the languages one server plays, default first. TARGET_LANGUAGES is a comma list (`it,fr,es`); without it
 // the server plays TARGET_LANGUAGE alone, as before. TARGET_LANGUAGE, when it is in the list, is the default: the
 // language of a request that names none.
 export function resolveTargetLanguages(env = process.env) {

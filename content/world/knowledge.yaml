@@ -35,7 +35,7 @@ regions:
   # The generated landscape of the road. It acts as a real region the model already knows, so nothing about that
   # region is written here.
   the_long_way:
-    acts_as: { it: Tuscany, es: Castile, fr: Burgundy } # round 180: French
+    acts_as: { it: Tuscany, es: Castile, fr: Burgundy } # round 181: French
     lore: >-
       Rolling country of small sites a short walk apart, each with somebody at it who has a trade and a view. The
       guild of roads is the nearest thing to a government. The news is local: who has the ferry this year, whose

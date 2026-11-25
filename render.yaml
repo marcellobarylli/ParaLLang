@@ -17,7 +17,7 @@ services:
         value: claude-cli
       - key: TARGET_LANGUAGE
         value: it
-      # Round 180: the server plays all three; each game picks its own (TARGET_LANGUAGE is the default).
+      # Round 181: the server plays all three; each game picks its own (TARGET_LANGUAGE is the default).
       - key: TARGET_LANGUAGES
         value: it,fr,es
       - key: CLAUDE_CODE_OAUTH_TOKEN

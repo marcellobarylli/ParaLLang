@@ -1,6 +1,6 @@
 # Round 009: Market Entrance tutorial (greetings, pronouns). Reference URLs follow the Gerald file's patterns and were
 # not opened from the build container; listed for the owner's content review.
-# Round 180: French version authored by Claude; awaits a native speaker's review.
+# Round 181: French version authored by Claude; awaits a native speaker's review.
 version: entrance-greetings-fr-v1
 references:
   - id: larousse-salut

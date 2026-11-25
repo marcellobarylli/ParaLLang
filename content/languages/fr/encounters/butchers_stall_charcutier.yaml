@@ -1,6 +1,6 @@
 # Round 010: The Butcher's Stall (backlog A4). Mortimer the Charcutier calls everything ham (jambon); the player names
 # the real cut and says how much they want.
-# Round 180: French version authored by Claude; it awaits a native speaker's review.
+# Round 181: French version authored by Claude; it awaits a native speaker's review.
 id: butchers_stall_charcutier
 character: characters/enemies/charcutier_mortimer.yaml
 location: butchers_stall

@@ -11,7 +11,7 @@ The entry point for agents: the current state, how the project is logged, and th
   blueprint) and [`parallang_obsidian/`](parallang_obsidian/Parallang.md), the owner's Obsidian notes on design,
   lore, characters, locations and quests. The notes are a copy of the vault in `~/Documents/Parallang`, taken
   2026-10-31.
-- **Language.** Italian is the default target language; French ([round 180](docs/rounds/180/architecture.md)) and
+- **Language.** Italian is the default target language; French ([round 181](docs/rounds/181/architecture.md)) and
   Spanish are also available, and the hosted server plays all three, each game picking its own. `TARGET_LANGUAGE` (`it` or
   `es`) selects a pack under `content/languages/`, and each language has its own Spellbook
   ([round 003](docs/rounds/003/architecture.md)).
@@ -34,7 +34,7 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-25: round 180, French
+## Addendum 2026-11-25: round 181, French
 
 French is the third language: a whole pack (`content/languages/fr/`: the market's encounters and vocabulary, the
 curriculum A1 to B1, lore and truths), written by subagents from the Italian and not yet read by a native speaker.
@@ -42,7 +42,7 @@ One server now plays several languages (`TARGET_LANGUAGES=it,fr,es`, Italian the
 language (`X-ParaLLang-Language`) and keeps its own saves. A new game's language is chosen on the title or in Save
 slots; today's games stay Italian. œ and æ fold to oe and ae, and « » are punctuation, wherever answers are matched.
 **Merged to `main` and deployed** on the owner's word.
-[Architecture](docs/rounds/180/architecture.md), [findings](docs/rounds/180/findings.md).
+[Architecture](docs/rounds/181/architecture.md), [findings](docs/rounds/181/findings.md).
 
 ## Addendum 2026-11-24: round 179, deleting a save and starting over
 

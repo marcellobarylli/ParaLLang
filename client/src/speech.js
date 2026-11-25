@@ -10,7 +10,7 @@
 // into the reply box. The player sends it.
 
 // Pitch and rate on SpeechSynthesisUtterance's scales (pitch 0 to 2, rate 1 is normal). `names` are voices to prefer,
-// best first: Apple's and Google's Italian, Spanish and French (round 180) voices by gender, and Apple's novelty voices
+// best first: Apple's and Google's Italian, Spanish and French (round 181) voices by gender, and Apple's novelty voices
 // for `funny`.
 export const VOICE_KINDS = Object.freeze({
   female: { pitch: 1.1, rate: 0.95, names: ['Alice', 'Federica', 'Emma', 'Paola', 'Mónica', 'Monica', 'Paulina', 'Marisol', 'Flo', 'Sandy', 'Shelley', 'Elsa', 'Isabella', 'Elvira', 'Helena', 'Laura', 'Sabina', 'Amélie', 'Amelie', 'Audrey', 'Aurélie', 'Aurelie', 'Marie', 'Chantal', 'female', 'donna', 'mujer', 'femme'] },

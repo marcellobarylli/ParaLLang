@@ -1,4 +1,4 @@
-# Round 180 architecture
+# Round 181 architecture
 
 **Conversational round, recorded after the build.** Opened on 2026-11-25 on the owner's message in
 [`trail/interview.md`](trail/interview.md); the events are in [`trail/journal.md`](trail/journal.md). No pre-run

@@ -29,9 +29,9 @@ function requireToken(token, friendCode) {
 }
 export const GEMINI_KEY_HEADER = 'X-Gemini-Key';
 
-// Round 180: one server plays several languages. Each language has its own service (content, saves, Spellbook), and a
+// Round 181: one server plays several languages. Each language has its own service (content, saves, Spellbook), and a
 // request names its game's language in X-ParaLLang-Language; a request without it plays the server's default, as
-// every client before round 180 did. A language the server does not play is refused, not swapped for another.
+// every client before round 181 did. A language the server does not play is refused, not swapped for another.
 export const LANGUAGE_HEADER = 'X-ParaLLang-Language';
 
 export function createApp({ service, services: given = null, defaultLanguage = null, logger = console, token = null, friendCode = null, saves = null }) {
@@ -44,7 +44,7 @@ export function createApp({ service, services: given = null, defaultLanguage = n
   app.use(cors());
   // Round 145: with `saves` (where the saves are kept, and whether the last copy to GitHub went through) the health
   // check says so, so the owner can see from outside that the store is the one they set up.
-  // Round 180: the languages are public, as the health check is, so a page can offer them before it has a token.
+  // Round 181: the languages are public, as the health check is, so a page can offer them before it has a token.
   app.get('/api/health', (req, res) => res.json({ status: 'ok', languages, defaultLanguage: fallback, ...(saves ? { saves: saves() } : {}) }));
   if (token) app.use(requireToken(token, friendCode));
   else app.use((req, res, next) => requestContext.run({ access: 'owner' }, next));
@@ -85,7 +85,7 @@ function gameRoutes(service, languages) {
   app.use(express.json({ limit: '32kb' }));
 
   app.post('/api/learner', async (req, res, next) => {
-    // Round 180: with the languages the server plays, so a new game's title can offer them without another request.
+    // Round 181: with the languages the server plays, so a new game's title can offer them without another request.
     try { res.status(req.body?.learnerId ? 200 : 201).json({ ...(await service.createOrRecoverLearner(req.body?.learnerId)), languages }); }
     catch (error) { next(error); }
   });

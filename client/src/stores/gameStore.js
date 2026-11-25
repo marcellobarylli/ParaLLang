@@ -76,7 +76,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
   // Round 178: the save slot this page plays; every per-learner key the store reads or writes is the slot's own.
   const slot = currentSlot(baseStorage);
   const storage = slottedStorage(baseStorage, slot);
-  // Round 180: the slot's game language (none: the server's default), and whether this page opened on a new game,
+  // Round 181: the slot's game language (none: the server's default), and whether this page opened on a new game,
   // whose language can still be chosen on the title.
   const readSlot = (key) => { try { return storage?.getItem?.(key) || null; } catch { return null; } };
   const freshGame = !readSlot(LEARNER_KEY);
@@ -128,8 +128,8 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       try { const copy = JSON.parse(storage?.getItem?.(BACKUP_KEY) ?? 'null'); return typeof copy?.save?.learnerId === 'string' ? copy : null; }
       catch { return null; }
     };
-    // Round 180: the languages the server plays, for the title of a new game and the Save slots' new games. A server
-    // before round 180 lists none, and the choice is not offered.
+    // Round 181: the languages the server plays, for the title of a new game and the Save slots' new games. A server
+    // before round 181 lists none, and the choice is not offered.
     let languagesRead = null;
     const readLanguages = () => {
       if (languagesRead || !rawApi.getHealth) return languagesRead;
@@ -315,7 +315,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       settingsOpen: false,
       learnerId: null,
       language: null,
-      // Round 180: the languages the server plays ({ code, name, tag }), from its health check; null until read.
+      // Round 181: the languages the server plays ({ code, name, tag }), from its health check; null until read.
       languages: null,
       freshGame,
       dungeon,
@@ -371,7 +371,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
         if (!get().languages) readLanguages();
       },
       closeSlots: () => set({ slotsOpen: false }),
-      // Round 180: an empty slot's new game is played in `language` (a code), when one is given.
+      // Round 181: an empty slot's new game is played in `language` (a code), when one is given.
       switchSlot: (next, language = null) => {
         if (next === slot) { set({ slotsOpen: false }); return false; }
         if (!chooseSlot(baseStorage, next)) return false;
@@ -382,7 +382,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       // Round 179: a slot deleted: its save is removed from the server, then from this browser. The slot in use is
       // started over: deleted the same way, and the page reloads into a new game in it. A server that cannot be
       // reached leaves its copy (unreachable from this browser); the slot is emptied all the same.
-      // Round 180: the slot in use starts over in `language`, when one is given.
+      // Round 181: the slot in use starts over in `language`, when one is given.
       deleteSlot: async (which, language = null) => {
         const id = learnerOf(baseStorage, which);
         let serverDeleted = !id;
@@ -398,7 +398,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
         set({ saveSlots: slotSummaries(baseStorage) });
         return { done, serverDeleted, reloading: false };
       },
-      // Round 180: on the title of a new game, the language it is played in. The empty learner the page made on load
+      // Round 181: on the title of a new game, the language it is played in. The empty learner the page made on load
       // is removed from the server (in its own language), and the page reloads into a new game in the language chosen.
       chooseLanguage: async (code) => {
         if (!freshGame || !code || code === (get().language?.code ?? readSlot(LANGUAGE_KEY))) return false;
@@ -431,7 +431,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
             const identity = await api.createLearner(storedId);
             if (epoch !== requestEpoch) return;
             try { storage?.setItem?.(LEARNER_KEY, identity.learnerId); } catch { /* private mode: a new learner next time */ }
-            // Round 180: the slot remembers the language its game is in, so a change of the server's default leaves it.
+            // Round 181: the slot remembers the language its game is in, so a change of the server's default leaves it.
             if (identity.language?.code && !readSlot(LANGUAGE_KEY)) { try { storage?.setItem?.(LANGUAGE_KEY, identity.language.code); } catch { /* private mode */ } }
             if (Array.isArray(identity.languages)) set({ languages: identity.languages });
             // Round 144: the server did not know this learner and has made an empty save for the id. If this browser

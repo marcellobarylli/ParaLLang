@@ -57,7 +57,7 @@ const LIGHT_ENDING = Object.freeze({
 });
 // Round 177: two texts that differ only in accents, apostrophes, capitals, punctuation or spacing.
 export function sameLetters(a, b) {
-  const fold = (text) => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/œ/gu, 'oe').replace(/æ/gu, 'ae').replace(/[^\p{L}\p{N}]+/gu, ''); // round 180: ligatures
+  const fold = (text) => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/œ/gu, 'oe').replace(/æ/gu, 'ae').replace(/[^\p{L}\p{N}]+/gu, ''); // round 181: ligatures
   return fold(a) !== '' && fold(a) === fold(b);
 }
 export const CORRECTION_MAX_LENGTH = 600; // round 131: an answer may be a paragraph (300 before)

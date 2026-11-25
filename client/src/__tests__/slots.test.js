@@ -96,7 +96,7 @@ test('a server that cannot be reached still empties the slot, and says so', asyn
   expect(storage.values.has('parallang.learnerId.3')).toBe(false);
 });
 
-// Round 180: each slot's game has its language, sent with every request; a new game's is chosen on the title or in
+// Round 181: each slot's game has its language, sent with every request; a new game's is chosen on the title or in
 // Save slots.
 test('a slot keeps its language, and requests name it', async () => {
   const storage = memoryStorage({ 'parallang.learnerId.2': 'second', 'parallang.language.2': 'fr' });

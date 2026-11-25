@@ -3,7 +3,7 @@
 # for a single entry. For the owner's review. A vocabulary entry is { t: target, pos, en: [meanings], forms: [...], ex: [example, English] };
 # `forms` defaults to the target, and matching ignores case and accents. `say` is the words that meet an objective:
 # one list means any of them, a list of lists means one from each.
-# Round 180: the French version, authored by Claude from the Italian file; it awaits a native speaker's review. Elided
+# Round 181: the French version, authored by Claude from the Italian file; it awaits a native speaker's review. Elided
 # and unelided forms, the spoken negation without ne, and inversion with and without hyphens are listed as forms.
 stage: a1_1
 version: curriculum-a1-1-fr-v1

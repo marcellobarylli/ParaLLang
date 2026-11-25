@@ -1,6 +1,6 @@
 # Round 013: The Old Bookshop (abstract nouns, reading comprehension; The Journey). Reference URLs follow the
 # existing patterns and were not opened from the build container; listed for the owner's content review.
-# Round 180: French version authored by Claude; awaits a native speaker's review.
+# Round 181: French version authored by Claude; awaits a native speaker's review.
 version: bookshop-journey-fr-v1
 references:
   - id: larousse-histoire
@@ -95,7 +95,7 @@ entries:
     note: Langue means both language and the tongue in your mouth.
     reference_ids:
       - larousse-langue
-  # Round 180: the singular an is not a form, as it is also an English word (players mix English in).
+  # Round 181: the singular an is not a form, as it is also an English word (players mix English in).
   - id: ans
     kind: word
     target: ans

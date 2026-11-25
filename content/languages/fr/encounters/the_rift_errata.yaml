@@ -1,7 +1,7 @@
 # Round 015: The Rift (backlog A7b, with B3). Errata, an infohazard made of mistranslations, reviews words from every
 # earlier encounter: a request from the market's stalls, a command to stop now, and the Cyclops trick from
 # The Journey (your name is Nobody). No new vocabulary: every objective targets entries already authored.
-# French version authored by Claude in round 180 (from the Italian file, as the Spanish pack adapted it); it awaits a
+# French version authored by Claude in round 181 (from the Italian file, as the Spanish pack adapted it); it awaits a
 # native speaker's review.
 id: the_rift_errata
 character: characters/enemies/rift_errata.yaml
