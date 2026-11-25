@@ -11,3 +11,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 15:55 approx. | 16:10:00 | decision | Claude | The A1 entry for bare "à" replaced by "à + hour" (bare "à" would match English "a" and the verb "a") | `../findings.md` |
 | 6 | 16:00 approx. | 16:10:00 | run | Claude | All suites pass (server 597, client 313, aesthetic 95, mobile 320); client build; title in headless Chromium | `../findings.md` |
 | 7 | 16:10:00 | 16:10:00 | closed | Claude | Records, status addendum; merged to `main` and pushed on the owner's word ("push and deploy") | `../architecture.md` |
+| 8 | 16:11 | 16:30:00 | deploy | Claude | Pages deploy failed with a GitHub server error (500) after build and tests passed; the failed job re-run at 16:29 succeeded. Render not reachable from this session (network policy) | `../findings.md` |
