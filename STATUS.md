@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-25: round 183, friends on Claude Sonnet
+
+With `CLAUDE_API_KEY` set (a Claude API key paid from the owner's monthly Max API credit), friends' turns run on
+Claude Sonnet 5.5 (`FRIENDS_CLAUDE_MODEL`), with Gemini tried when a Claude call fails; a friend's own Gemini key
+still wins, and the owner's turns stay on claude-cli. Tested with fakes only; the first real call is a friend's turn.
+**Merged to `main` and deployed.** [Architecture](docs/rounds/183/architecture.md),
+[findings](docs/rounds/183/findings.md).
+
 ## Addendum 2026-11-25: round 182, a character's convenient excuse
 
 A friend's turns reach Gemini on the owner's key (tested from the session); they failed because Google's
