@@ -63,7 +63,7 @@ const volumeOf = (value) => (typeof value === 'number' && Number.isFinite(value)
  *   setLevel(name)       'full', 'duck' (a line is spoken) or 'mute' (the microphone listens)
  *   setRain(amount)      0 (dry) to 1 (a downpour): the sound of rain under the music (round 146)
  *   thunder()            one rumble
- *   setVolumes({ master, music, effects })   0 to 1 each (round 172). The chain is
+ *   setVolumes({ master, music, effects }, { ease })   0 to 1 each (round 172). The chain is
  *                        chords → level → music → out ← effects ← rain, thunder; out (the master volume) → speakers.
  */
 export function createAmbience({ scope = typeof window !== 'undefined' ? window : {}, random = Math.random } = {}) {
@@ -261,12 +261,14 @@ export function createAmbience({ scope = typeof window !== 'undefined' ? window 
       effects.gain.setTargetAtTime(AMBIENCE.effectLevels[name] * volumes.effects, context.currentTime, ease);
     },
     get volumes() { return { ...volumes }; },
-    setVolumes(next = {}) {
+    // `ease` (seconds, a time constant) for the music bus: the title music hands over to the chords slowly.
+    setVolumes(next = {}, { ease = 0.05 } = {}) {
       volumes = { master: volumeOf(next.master ?? volumes.master), music: volumeOf(next.music ?? volumes.music), effects: volumeOf(next.effects ?? volumes.effects) };
       if (!live) return;
       const { context } = live;
       live.out.gain.setTargetAtTime(volumes.master, context.currentTime, 0.05);
-      live.music.gain.setTargetAtTime(volumes.music, context.currentTime, 0.05);
+      live.music.gain.cancelScheduledValues?.(context.currentTime);
+      live.music.gain.setTargetAtTime(volumes.music, context.currentTime, ease);
       live.effects.gain.cancelScheduledValues?.(context.currentTime);
       live.effects.gain.setTargetAtTime(AMBIENCE.effectLevels[level] * volumes.effects, context.currentTime, 0.05);
     },

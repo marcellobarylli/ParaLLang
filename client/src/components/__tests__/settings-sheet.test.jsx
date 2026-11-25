@@ -212,17 +212,17 @@ test('the music starts at the first tap and not before, follows speech, and the 
     // Round 172: off silences the music's bus; the effects (the rain) go on, so the ambience keeps running.
     await user.click(box);
     expect(ambience.stop).not.toHaveBeenCalled();
-    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 0, effects: 1 });
+    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 0, effects: 1 }, expect.anything());
     expect(useGameStore.getState().display.music).toBe(false);
     expect(JSON.parse(localStorage.getItem('parallang.display')).music).toBe(false);
     await user.click(screen.getByLabelText('Ambient music'));
     expect(ambience.start).toHaveBeenCalledTimes(2); // the tick is the tap
-    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 1, effects: 1 });
+    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 1, effects: 1 }, expect.anything());
     expect(useGameStore.getState().display.music).toBe(true);
     // The Audio sliders: each is stored; Master and Effects at 0 with the music off leave nothing to hear.
     fireEvent.change(screen.getByLabelText('Effects volume'), { target: { value: '25' } });
     expect(useGameStore.getState().display.volume).toEqual({ master: 1, music: 1, effects: 0.25, voice: 1 });
-    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 1, effects: 0.25 });
+    expect(ambience.setVolumes).toHaveBeenLastCalledWith({ master: 1, music: 1, effects: 0.25 }, expect.anything());
     fireEvent.change(screen.getByLabelText('Voice volume'), { target: { value: '50' } });
     fireEvent.change(screen.getByLabelText('Master volume'), { target: { value: '80' } });
     expect(speech.speaker.volume).toBeCloseTo(0.4);

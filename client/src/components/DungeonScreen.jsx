@@ -8,6 +8,7 @@ import CorrectionCard from './CorrectionCard.jsx';
 import SheetHandle from './SheetHandle.jsx';
 import { browserSpeech } from '../speech.js';
 import { browserAmbience } from '../ambience.js';
+import { TITLE_MUSIC, browserTitleMusic } from '../titleMusic.js';
 import { volumesOf } from '../display.js';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
@@ -76,6 +77,8 @@ function TitleLanguage({ state, disabled }) {
     </div>
   );
 }
+
+const AMBIENCE_HANDOVER = 1.5; // seconds: the title music's fade when the music is switched off on the title
 
 // Round 175: the title screen. Behind it the road's landscape turns slowly, seen from above the clouds (RoadView's
 // `title`); its one way in is The Journey 2. The road is being read meanwhile (preloadRoad), so the start zooms down
@@ -496,7 +499,7 @@ function VictoryCard({ state }) {
   );
 }
 
-export default function DungeonScreen({ useStore, speech = browserSpeech(), ambience = browserAmbience() }) {
+export default function DungeonScreen({ useStore, speech = browserSpeech(), ambience = browserAmbience(), titleMusic = browserTitleMusic() }) {
   const state = useStore();
   // Round 127: ambient music. Browsers let a page make sound only after a tap, so it starts at the first one. It
   // drops while a line is read aloud and is silent while the microphone listens.
@@ -508,9 +511,31 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   // can be heard; switching the music off silences its bus and leaves the effects.
   const volume = volumesOf(state.display?.volume);
   const audioWanted = volume.master > 0 && (musicWanted || volume.effects > 0);
+  // The title music (titleMusic.js) loops on the title. Setting out fades it away over 30 seconds; the generated
+  // chords stay silent until it has gone, then come in. Switching the music off on the title stops it quickly.
+  const onTitle = state.mode !== 'road' && state.phase === 'attract';
+  const titleWanted = onTitle && musicWanted && volume.master > 0 && volume.music > 0 && titleMusic.supported;
+  const [titleHold, setTitleHold] = useState(titleWanted);
+  useEffect(() => { titleMusic.setVolume?.(volume.master * volume.music); }, [titleMusic, volume.master, volume.music]);
   useEffect(() => {
-    ambience.setVolumes?.({ master: volume.master, music: musicWanted ? volume.music : 0, effects: volume.effects });
-  }, [ambience, musicWanted, volume.master, volume.music, volume.effects]);
+    if (titleWanted) {
+      setTitleHold(true);
+      titleMusic.play();
+      if (typeof window === 'undefined') return undefined;
+      const retry = () => titleMusic.play(); // the browser refused sound before this tap
+      window.addEventListener('click', retry, { once: true, capture: true });
+      return () => window.removeEventListener('click', retry, { capture: true });
+    }
+    if (!titleMusic.playing) { setTitleHold(false); return undefined; }
+    const seconds = onTitle ? AMBIENCE_HANDOVER : TITLE_MUSIC.fadeOut;
+    titleMusic.fadeOut(seconds);
+    const timer = setTimeout(() => setTitleHold(false), seconds * 1000);
+    return () => clearTimeout(timer);
+    // onTitle is read only when titleWanted changes
+  }, [titleWanted, titleMusic]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    ambience.setVolumes?.({ master: volume.master, music: musicWanted && !titleHold ? volume.music : 0, effects: volume.effects }, { ease: titleHold ? 0.05 : 2 });
+  }, [ambience, musicWanted, titleHold, volume.master, volume.music, volume.effects]);
   useEffect(() => { if (speech.speaker) speech.speaker.volume = volume.voice * volume.master; }, [speech, volume.voice, volume.master]);
   useEffect(() => {
     if (!audioWanted || !ambience.supported || typeof window === 'undefined') return undefined;
