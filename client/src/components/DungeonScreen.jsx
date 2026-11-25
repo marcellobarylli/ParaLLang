@@ -78,16 +78,30 @@ function TitleLanguage({ state, disabled }) {
   );
 }
 
+// The events that count as the player's tap for a browser's autoplay rule (a touch that ends as a scroll still
+// ends with touchend). Each one tries the title music again until it is heard.
+const GESTURES = ['pointerup', 'touchend', 'click', 'keydown'];
+const GATE_DELAY = 450; // ms
 const AMBIENCE_HANDOVER = 1.5; // seconds: the title music's fade when the music is switched off on the title
 
 // Round 175: the title screen. Behind it the road's landscape turns slowly, seen from above the clouds (RoadView's
 // `title`); its one way in is The Journey 2. The road is being read meanwhile (preloadRoad), so the start zooms down
 // into a world that is already there.
-function TitleScreen({ state }) {
+// With `gate` 'blocked' the browser wants a tap before any sound: the title shows only its name and "Tap to begin",
+// and the tap (anywhere) starts the music and brings in the rest. 'checking' shows only the name, for a moment.
+function TitleScreen({ state, gate = 'open' }) {
   const { connection, serverProblem, journeyStarting } = state;
   const label = journeyStarting ? (connection === 'ready' ? 'Setting out…' : 'Waking the server…') : ROAD_NAME;
+  if (gate !== 'open') {
+    return (
+      <section className={`title-screen title-gate ${gate}`} aria-label="ParaLLang" data-connection={connection}>
+        <h1>ParaLLang</h1>
+        {gate === 'blocked' && <button type="button" className="title-tap">Tap to begin</button>}
+      </section>
+    );
+  }
   return (
-    <section className="title-screen" aria-label="ParaLLang" data-connection={connection}>
+    <section className="title-screen title-open" aria-label="ParaLLang" data-connection={connection}>
       <h1>ParaLLang</h1>
       <button type="button" className="primary-button big-button title-start" onClick={state.startJourney} disabled={journeyStarting}>{label}</button>
       <TitleLanguage state={state} disabled={journeyStarting} />
@@ -516,16 +530,32 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const onTitle = state.mode !== 'road' && state.phase === 'attract';
   const titleWanted = onTitle && musicWanted && volume.master > 0 && volume.music > 0 && titleMusic.supported;
   const [titleHold, setTitleHold] = useState(titleWanted);
+  // The title's gate: 'checking' while the first play() is tried, 'blocked' when the browser wants a tap first (the
+  // title then shows only "Tap to begin"), 'open' otherwise. Any touch or key on the title starts the music.
+  const [titleGate, setTitleGate] = useState(titleWanted ? 'checking' : 'open');
   useEffect(() => { titleMusic.setVolume?.(volume.master * volume.music); }, [titleMusic, volume.master, volume.music]);
   useEffect(() => {
     if (titleWanted) {
       setTitleHold(true);
       titleMusic.play();
-      if (typeof window === 'undefined') return undefined;
-      const retry = () => titleMusic.play(); // the browser refused sound before this tap
-      window.addEventListener('click', retry, { once: true, capture: true });
-      return () => window.removeEventListener('click', retry, { capture: true });
+      let current = true;
+      titleMusic.audible.then((heard) => { if (current) setTitleGate((gate) => (gate === 'checking' ? (heard ? 'open' : 'blocked') : gate)); });
+      if (typeof window === 'undefined') return () => { current = false; };
+      // The rest of the title comes in a moment after the tap, so the tap's own click (iOS sends it after touchend)
+      // cannot land on the Journey button that takes the place of "Tap to begin".
+      let opening = null;
+      const begin = () => {
+        if (!titleMusic.heard) titleMusic.play();
+        opening ??= window.setTimeout(() => { if (current) setTitleGate('open'); }, GATE_DELAY);
+      };
+      for (const name of GESTURES) window.addEventListener(name, begin, { capture: true });
+      return () => {
+        current = false;
+        window.clearTimeout(opening);
+        for (const name of GESTURES) window.removeEventListener(name, begin, { capture: true });
+      };
     }
+    setTitleGate('open');
     if (!titleMusic.playing) { setTitleHold(false); return undefined; }
     const seconds = onTitle ? AMBIENCE_HANDOVER : TITLE_MUSIC.fadeOut;
     titleMusic.fadeOut(seconds);
@@ -661,7 +691,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         {onRoad && state.roadPhase === 'travel' && <RoadCaption state={state} />}
         {roadTalking && <EncounterSheet state={state} site={null} sites={{}} speech={speech} height={sheetHeight} onHeight={setSheetHeight}
           road={{ title: roadEncounter?.road.title ?? 'A conversation', subtitle: roadEncounter ? `${roadEncounter.character.name}, ${roadEncounter.character.role} · ${roadEncounter.road.place}` : '' }} />}
-        {atTitle && <TitleScreen state={state} />}
+        {atTitle && <TitleScreen state={state} gate={titleGate} />}
         {!onRoad && phase === 'world' && <WorldCard state={state} cleared={cleared} />}
         {!onRoad && phase === 'overview' && <OverviewCard state={state} sites={sites} />}
         {!onRoad && (phase === 'approach' || phase === 'walk') && <TravelCaption state={state} site={site} />}

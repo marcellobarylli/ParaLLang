@@ -486,6 +486,13 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .title-language { margin: 0; display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; justify-content: center; color: #f0f1ec; text-shadow: 1px 1px 0 #000; } /* round 181 */
 .title-language .secondary-button { padding: .35rem .8rem; }
 .title-language .secondary-button.chosen { border-color: var(--gold); color: var(--gold); }
+/* The title before the browser allows sound: only the name and "Tap to begin", which pulses; a tap brings in the rest. */
+.title-gate { min-height: 6rem; align-content: end; }
+.title-tap { background: none; border: 0; padding: .9rem 1.4rem; color: #f0f1ec; font: inherit; font-size: 1.05rem; letter-spacing: .2em; text-transform: uppercase; text-shadow: 2px 2px 0 #000; cursor: pointer; animation: title-tap 2.4s ease-in-out infinite; }
+.title-open { animation: title-in .8s ease-out; }
+@keyframes title-tap { 50% { opacity: .35; } }
+@keyframes title-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .title-tap, .title-open { animation: none; } }
 .phase-title .hud { background: none; justify-content: flex-end; }
 
 /* Round 175: the top bar is the same everywhere: the map and the menu, on the right. */

@@ -81,3 +81,34 @@ describe('the title music', () => {
     vi.restoreAllMocks();
   });
 });
+
+describe('whether the browser let it play', () => {
+  test('audible is false when the browser refuses play() before a tap', async () => {
+    const { scope } = fakeScope();
+    scope.Audio.prototype.play = function () { return Promise.reject(Object.assign(new Error('no'), { name: 'NotAllowedError' })); };
+    const music = createTitleMusic({ scope, src: 'title.mp3' });
+    music.play();
+    await expect(music.audible).resolves.toBe(false);
+    expect(music.heard).toBe(false);
+  });
+
+  test('audible is true when the track plays in a running context', async () => {
+    const { scope } = fakeScope();
+    const Base = scope.AudioContext;
+    scope.AudioContext = class extends Base { constructor() { super(); this.state = 'running'; } };
+    const music = createTitleMusic({ scope, src: 'title.mp3' });
+    music.play();
+    await expect(music.audible).resolves.toBe(true);
+    expect(music.heard).toBe(true);
+  });
+
+  test('a context left suspended counts as blocked once the verdict time is up', async () => {
+    const { scope, timers } = fakeScope();
+    const Base = scope.AudioContext;
+    scope.AudioContext = class extends Base { constructor() { super(); this.state = 'suspended'; } };
+    const music = createTitleMusic({ scope, src: 'title.mp3' });
+    music.play();
+    timers.find((timer) => timer.ms === TITLE_MUSIC.verdict).fn();
+    await expect(music.audible).resolves.toBe(false);
+  });
+});
