@@ -24,6 +24,9 @@ import { immersionOf } from '../display.js';
 // Round 175: the landscape the title screen shows, kept in this browser: { seed, at }.
 export const TITLE_KEY = 'parallang.title';
 const SEED_MAX = 2 ** 31 - 1;
+// Round 180: the opening message at the start of the journey, shown once per save slot.
+export const WELCOME_KEY = 'parallang.welcomed';
+const welcomedIn = (storage) => { try { return storage?.getItem?.(WELCOME_KEY) === '1'; } catch { return false; } };
 /** The title's landscape from `storage`, or a new seed (and no site: the landscape's start) when there is none. */
 export function titleOf(storage, random = Math.random) {
   try {
@@ -95,6 +98,12 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
     titleSeed: title.seed, // round 175: the landscape of the title screen
     titleAt: title.at, // and the site it looks down on (null: the landscape's start)
     journeyStarting: false, // round 175: the title's button was pressed and the road is not here yet
+    // Round 180: false until the opening message, shown once the camera has come down, is closed (in this slot).
+    roadWelcomed: welcomedIn(storage),
+    dismissWelcome: () => {
+      try { storage?.setItem?.(WELCOME_KEY, '1'); } catch { /* private mode: it greets again next time */ }
+      set({ roadWelcomed: true });
+    },
 
     // Round 175: the road read while the title is up. The road it brings (and, for a new player, makes on the
     // title's seed) is kept, so the start finds the world loaded.

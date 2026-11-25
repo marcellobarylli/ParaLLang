@@ -33,6 +33,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-25: round 180, an opening message
+
+Once the camera has zoomed down at the start of the journey, a short pop-up comes first, with the landscape and the
+first character behind it: the belief (a language is learned best by living in it), the game (learn the world and its
+language by talking to its people) and a teaser about the seams of the world. **Set out** closes it and the arrival's
+card follows; it is shown once per save slot. **Merged to `main` and deployed.**
+[Architecture](docs/rounds/180/architecture.md), [findings](docs/rounds/180/findings.md).
+
 ## Addendum 2026-11-24: round 179, deleting a save and starting over
 
 In Save slots, **Delete** removes a game not in use, on the server too, and **Start over** deletes the game being

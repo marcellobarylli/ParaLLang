@@ -1,11 +1,12 @@
 // Round 178: save slots. A slot is this browser's own record of one learner: the learner id, the copy of the save,
 // the place last entered and the title's landscape. Slot 1 keeps the keys as they always were, so a save made before
-// slots is slot 1; slots 2 and 3 suffix them (`parallang.learnerId.2`). Settings and display are shared by all slots.
+// slots is slot 1; slots 2 and 3 suffix them. Round 180: the opening message's dismissal is per slot too,
+// so a new game greets the player again; (`parallang.learnerId.2`). Settings and display are shared by all slots.
 // The game reads the slot chosen (SLOT_KEY) when the page loads; switching slots stores the choice and reloads.
 
 export const SLOT_KEY = 'parallang.slot';
 export const SLOT_COUNT = 3;
-export const SLOTTED_KEYS = Object.freeze(['parallang.learnerId', 'parallang.save', 'parallang.placeId', 'parallang.title']);
+export const SLOTTED_KEYS = Object.freeze(['parallang.learnerId', 'parallang.save', 'parallang.placeId', 'parallang.title', 'parallang.welcomed']);
 
 const read = (storage, key) => { try { return storage?.getItem?.(key) ?? null; } catch { return null; } };
 
