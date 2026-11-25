@@ -34,12 +34,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-25: round 186, the conversation panel opens full
+
+The conversation panel now opens covering the screen under the top bar (the height of a drag to the top), instead of
+62 % of it; a dragged height still wins. **Merged to `main` and deployed with rounds 184 and 185** on the owner's word.
+[Architecture](docs/rounds/186/architecture.md), [findings](docs/rounds/186/findings.md).
+
 ## Addendum 2026-11-25: round 185, the gates back in streamlined mode
 
 After every three units, streamlined mode now has their gate in a legacy dungeon (Ta Prohm first, then The Kiln and
 Micromort Mountain): three encounters, one for each unit, at three of the dungeon's sites, each asking an objective of
 each of its unit's lessons without saying the words first. Each counts whatever the score; the next unit opens after
-the third. Tested with the scripted provider; not played in a browser. **On the branch, not merged.**
+the third. Tested with the scripted provider; not played in a browser. **Merged to `main` and deployed** (round 186).
 [Architecture](docs/rounds/185/architecture.md), [findings](docs/rounds/185/findings.md).
 
 ## Addendum 2026-11-25: round 184, music on a silent iPhone, spoken narration words
@@ -47,7 +53,7 @@ the third. Tested with the scripted provider; not played in a browser. **On the 
 The ambient music waited for the microphone because iOS mutes Web Audio with the silent switch, and recording
 switches the page to a session the switch leaves alone. The page now asks for a `'playback'` audio session (Safari
 16.4 and later), and every tap wakes a suspended context. A tap on a yellow word of the narration also says it, in the
-browser's voice (no model call). Tested with fakes; not heard on an iPhone. **On the branch, not merged.**
+browser's voice (no model call). Tested with fakes; not heard on an iPhone. **Merged to `main` and deployed** (round 186).
 [Architecture](docs/rounds/184/architecture.md), [findings](docs/rounds/184/findings.md).
 
 ## Addendum 2026-11-25: round 183, friends on Claude Sonnet

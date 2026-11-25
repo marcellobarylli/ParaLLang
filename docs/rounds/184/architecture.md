@@ -35,4 +35,4 @@ commit; nothing here is frozen.
 
 ## Status
 
-Built and tested with fakes, on `claude/loving-lamport-s6pjlu`; not merged, not deployed, not heard on an iPhone.
+Built and tested with fakes, merged to `main` and deployed in round 186; not heard on an iPhone.

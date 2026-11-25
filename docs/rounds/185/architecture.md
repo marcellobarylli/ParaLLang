@@ -40,5 +40,5 @@ commit; nothing here is frozen.
 
 ## Status
 
-Built and tested with the scripted provider, on `claude/loving-lamport-s6pjlu`; not merged, not deployed, not played in
+Built and tested with the scripted provider, merged to `main` and deployed in round 186; not played in
 a browser.

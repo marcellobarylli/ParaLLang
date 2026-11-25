@@ -1,8 +1,10 @@
-import { useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 // Round 132: the grip at the top of the conversation panel. Dragged up, the panel grows to the bottom edge of the
 // top bar; dragged down, only this strip is left and the temple is uncovered. `height` is the panel's height in
-// pixels, or null for its own (62% of the screen); `onHeight` takes the new one.
+// pixels, or null for its own; `onHeight` takes the new one.
+// Round 186: its own is the whole screen under the top bar (the owner: the text should cover the character until the
+// player drags it down), kept in `--sheet-full` and measured again when the window changes size.
 export const SHEET_SNAP = 28; // pixels: this near to an end, the panel goes to it
 export const SHEET_STEP = 60; // pixels for an arrow key
 
@@ -30,6 +32,14 @@ export default function SheetHandle({ height, onHeight }) {
   const drag = useRef(null);
   const current = () => ref.current?.closest?.('.sheet')?.getBoundingClientRect?.().height ?? height ?? 0;
   const clamp = (value, { min, max }) => Math.min(max, Math.max(min, value));
+  useLayoutEffect(() => {
+    const sheet = ref.current?.closest?.('.sheet');
+    if (height !== null || !sheet || typeof window === 'undefined') return undefined;
+    const fit = () => sheet.style.setProperty('--sheet-full', `${sheetLimits(ref.current).max}px`);
+    fit();
+    window.addEventListener('resize', fit);
+    return () => { window.removeEventListener('resize', fit); sheet.style.removeProperty('--sheet-full'); };
+  }, [height]);
   const down = (event) => {
     if (event.button > 0) return;
     drag.current = { y: event.clientY, from: current(), moved: false, limits: sheetLimits(ref.current) };

@@ -180,3 +180,14 @@ test('a tap on the strip of a panel that is down brings it back; the keys move i
   fireEvent.keyDown(handle, { key: 'a' });
   expect(keys).toHaveBeenCalledTimes(4);
 });
+
+// Round 186: before it is dragged, the panel fills the room under the top bar.
+test('the panel\'s own height is the whole room under the top bar, measured again on a resize, and a dragged height replaces it', () => {
+  const handle = mount(() => {});
+  const sheet = handle.closest('.sheet');
+  act(() => { window.dispatchEvent(new Event('resize')); });
+  expect(sheet.style.getPropertyValue('--sheet-full')).toBe('740px');
+  cleanup();
+  const dragged = render(<section className="sheet"><SheetHandle height={300} onHeight={() => {}} /></section>);
+  expect(dragged.container.querySelector('.sheet').style.getPropertyValue('--sheet-full')).toBe('');
+});
