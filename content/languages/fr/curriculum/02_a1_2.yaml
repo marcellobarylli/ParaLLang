@@ -59,7 +59,7 @@ lessons:
     tomorrow: { say: [[demain], [lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche]], examples: ["Demain, c'est mardi.", "Demain, on est dimanche."] }
   time_when:
     at_what_time: { say: [a_quelle_heure], examples: ["À quelle heure ça ouvre ?", "À quelle heure part le train ?"] }
-    at_hour: { say: [[a], [heures]], examples: ["Je rentre à huit heures.", "À neuf heures.", "À midi."] }
+    at_hour: { say: [a_heure], examples: ["Je rentre à huit heures.", "À neuf heures.", "À midi."] }
     part_of_day: { say: [le_matin, l_apres_midi, le_soir], examples: ["Le matin.", "À huit heures du soir.", "L'après-midi."] }
   routine_day:
     wake: { say: [je_me_reveille, je_me_leve], examples: ["Je me réveille à sept heures.", "Je me lève à huit heures."] }
@@ -150,7 +150,8 @@ vocabulary:
   aujourd_hui: { t: "aujourd'hui", pos: adverb, en: ["today"], ex: ["Aujourd'hui, c'est vendredi.", "Today is Friday."] }
   demain: { t: "demain", pos: adverb, en: ["tomorrow"], ex: ["Demain, c'est samedi.", "Tomorrow is Saturday."] }
   a_quelle_heure: { t: "à quelle heure", pos: phrase, en: ["at what time", "what time"], ex: ["À quelle heure ferme la banque ?", "What time does the bank close?"] }
-  a: { t: "à", pos: preposition, en: ["at"], ex: ["Le train part à six heures.", "The train leaves at six."], n: "'At' with an hour: à deux heures, à midi." }
+  # Round 180: "à" alone would also match the verb a (il a) and English "a"; the hour is part of the form.
+  a_heure: { t: "à huit heures", pos: phrase, en: ["at eight", "at ... o'clock"], forms: ["à une heure", "à deux heures", "à trois heures", "à quatre heures", "à cinq heures", "à six heures", "à sept heures", "à huit heures", "à neuf heures", "à dix heures", "à onze heures", "à douze heures", "à midi", "à minuit"], ex: ["Le train part à six heures.", "The train leaves at six."], n: "'At' with an hour: à deux heures, à midi." }
   le_matin: { t: "le matin", pos: phrase, en: ["in the morning"], forms: ["le matin", "du matin", "ce matin", "matin"], ex: ["Je travaille le matin.", "I work in the morning."] }
   l_apres_midi: { t: "l'après-midi", pos: phrase, en: ["in the afternoon"], forms: ["l'après-midi", "après-midi", "après midi", "de l'après-midi", "cet après-midi"], ex: ["J'étudie l'après-midi.", "I study in the afternoon."] }
   le_soir: { t: "le soir", pos: phrase, en: ["in the evening"], forms: ["le soir", "du soir", "ce soir", "soir"], ex: ["Je sors le soir.", "I go out in the evening."] }

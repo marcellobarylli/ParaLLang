@@ -151,7 +151,7 @@ vocabulary:
   quarante: { t: "quarante", pos: number, en: ["forty"], ex: ["Quarante personnes.", "Forty people."] }
   cinquante: { t: "cinquante", pos: number, en: ["fifty"], ex: ["Cinquante euros.", "Fifty euros."] }
   combien_ca_coute: { t: "combien ça coûte", pos: phrase, en: ["how much does it cost", "how much is it"], forms: ["combien ça coûte", "ça coûte combien", "c'est combien", "combien c'est", "ça fait combien", "combien ça fait", "combien coûte", "combien coûtent"], ex: ["Combien coûte ce livre ?", "How much does this book cost?"] }
-  trop_cher: { t: "trop cher", pos: phrase, en: ["too expensive"], forms: ["trop cher", "trop chère", "trop chers", "trop chères", "ça coûte trop", "c'est trop"], ex: ["Non, c'est trop cher.", "No, it is too expensive."] }
+  trop_cher: { t: "trop cher", pos: phrase, en: ["too expensive"], forms: ["trop cher", "trop chère", "trop chers", "trop chères", "ça coûte trop"], ex: ["Non, c'est trop cher.", "No, it is too expensive."] }
   d_accord: { t: "d'accord", pos: phrase, en: ["agreed", "okay", "all right"], forms: ["d'accord", "entendu"], ex: ["D'accord, dix euros.", "Agreed, ten euros."] }
   ca_marche: { t: "ça marche", pos: phrase, en: ["it's a deal", "okay", "that works"], ex: ["Ça marche, je le prends.", "All right, I'll take it."] }
   # cafe

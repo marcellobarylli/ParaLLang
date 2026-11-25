@@ -2,177 +2,177 @@
 # Claude from the functions of the A2 syllabi read for the round; no source page was opened for a single entry. For
 # the owner's review. The vocabulary shares one namespace with the earlier stages: an id defined in an earlier file is
 # reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 180: the French version, authored by Claude from the Italian file; it awaits a native speaker's review.
 stage: a2_1
-version: curriculum-a2-1-it-v1
+version: curriculum-a2-1-fr-v1
 grammar:
-  past_did: "Passato prossimo with avere: ho + participle (mangiato, bevuto, visto, fatto); ieri, la settimana scorsa."
-  past_went: "Passato prossimo with essere: sono andato, sono andata (the participle agrees with the speaker); con."
-  weather: "fa caldo, fa freddo, c'è il sole, piove; in estate, d'inverno; quando."
-  restaurant: "vorrei with an infinitive (vorrei prenotare); come antipasto, come primo, come secondo; un altro, un'altra."
-  health: "mi fa male and mi fanno male; avere with ailments (ho la febbre, ho mal di ...); devo with an infinitive."
-  plans: "volere, dovere and potere with an infinitive (voglio, devo, posso); the present, penso di and sto per for the near future."
+  past_did: "Passé composé with avoir: j'ai + participle (mangé, bu, vu, fait, acheté); the participle does not agree with the subject; hier, la semaine dernière."
+  past_went: "Passé composé with être for verbs of movement (je suis allé, parti, arrivé, rentré, resté): the participle agrees with the speaker (je suis allée, nous sommes partis); avec, tout seul."
+  weather: "il fait chaud, il fait froid, il fait beau, il y a du soleil, il pleut, il neige; en été, en hiver, en automne but au printemps; quand."
+  restaurant: "je voudrais with an infinitive (je voudrais réserver); en entrée, comme plat, en dessert; un autre, une autre; il manque."
+  health: "avoir mal à with the article (j'ai mal à la tête, au ventre, aux dents); avoir with ailments (j'ai de la fièvre, j'ai un rhume); depuis with the present; je dois with an infinitive."
+  plans: "vouloir, devoir and pouvoir with an infinitive (je veux, je dois, je peux); the futur proche, aller + infinitive (je vais partir); être sur le point de."
 lessons:
   past_did_yesterday:
-    ate: { say: [[ieri], [ho_mangiato, ho_bevuto]], examples: ["Ieri ho mangiato una pizza.", "Ieri sera ho bevuto un tè."] }
-    worked: { say: [ho_lavorato, ho_studiato], examples: ["Ho lavorato molto.", "Non ho lavorato, ho studiato."] }
-    ask_did: { say: [cosa_hai_fatto], examples: ["Cosa hai fatto ieri?", "Che cosa ha fatto ieri sera?"] }
+    ate: { say: [[hier], [j_ai_mange, j_ai_bu]], examples: ["Hier, j'ai mangé une pizza.", "Hier soir, j'ai bu un thé."] }
+    worked: { say: [j_ai_travaille, j_ai_etudie], examples: ["J'ai travaillé toute la journée.", "Je n'ai pas travaillé, j'ai étudié."] }
+    ask_did: { say: [qu_est_ce_que_tu_as_fait], examples: ["Qu'est-ce que tu as fait hier ?", "Qu'avez-vous fait hier soir ?"] }
   past_did_bought:
-    bought: { say: [ho_comprato], examples: ["Ho comprato una giacca.", "Ho comprato il pane."] }
-    paid: { say: [ho_pagato], examples: ["Ho pagato venti euro.", "Ho speso dieci euro."] }
-    saw: { say: [ho_visto], examples: ["Ho visto un film.", "Ho visto mia sorella."] }
+    bought: { say: [j_ai_achete], examples: ["J'ai acheté une veste.", "J'ai acheté du pain."] }
+    paid: { say: [j_ai_paye], examples: ["J'ai payé vingt euros.", "J'ai dépensé dix euros."] }
+    saw: { say: [j_ai_vu], examples: ["J'ai vu un film.", "J'ai vu ma sœur."] }
   past_did_week:
-    last_week: { say: [la_settimana_scorsa], examples: ["La settimana scorsa ho lavorato molto.", "La settimana scorsa ho visto un amico."] }
-    made: { say: [ho_fatto], examples: ["Ho fatto una torta.", "Ho fatto una passeggiata."] }
-    met: { say: [ho_incontrato, ho_parlato], examples: ["Ho incontrato un amico.", "Ho parlato con mia madre."] }
+    last_week: { say: [la_semaine_derniere], examples: ["La semaine dernière, j'ai beaucoup travaillé.", "La semaine dernière, j'ai vu un ami."] }
+    made: { say: [j_ai_fait], examples: ["J'ai fait un gâteau.", "J'ai fait une promenade."] }
+    met: { say: [j_ai_rencontre, j_ai_parle], examples: ["J'ai rencontré un ami.", "J'ai parlé avec ma mère."] }
   past_went_where:
-    went: { say: [sono_andato], examples: ["Ieri sono andato al mare.", "Sono andata a Roma."] }
-    stayed: { say: [sono_stato, sono_rimasto], examples: ["Sono stato a Milano.", "Sono rimasta a casa."] }
-    ask_where: { say: [dove_sei_andato], examples: ["Dove sei andato?", "Dov'è andata ieri?"] }
+    went: { say: [je_suis_alle], examples: ["Hier, je suis allé à la mer.", "Je suis allée à Paris."] }
+    stayed: { say: [j_ai_ete, je_suis_reste], examples: ["J'ai été à Lyon.", "Je suis restée à la maison."] }
+    ask_where: { say: [ou_es_tu_alle], examples: ["Où es-tu allé ?", "Où êtes-vous allée hier ?"] }
   past_went_when:
-    left: { say: [sono_partito], examples: ["Sono partito alle otto.", "Sono partita lunedì."] }
-    arrived: { say: [sono_arrivato], examples: ["Sono arrivato ieri sera.", "Sono arrivata alle dieci."] }
-    came_back: { say: [sono_tornato], examples: ["Sono tornato domenica.", "Sono tornata ieri."] }
+    left: { say: [je_suis_parti], examples: ["Je suis parti à huit heures.", "Je suis partie lundi."] }
+    arrived: { say: [je_suis_arrive], examples: ["Je suis arrivé hier soir.", "Je suis arrivée à dix heures."] }
+    came_back: { say: [je_suis_rentre], examples: ["Je suis rentré dimanche.", "Je suis revenue hier."] }
   past_went_with:
-    with_whom: { say: [con, da_solo], examples: ["Sono andato con un amico.", "Sono andata da sola."] }
-    ask_with: { say: [con_chi], examples: ["Con chi sei andato?", "Con chi è andata?"] }
-    how_was: { say: [mi_sono_divertito, e_stato_bello], examples: ["Mi sono divertito molto.", "È stato bellissimo."] }
+    with_whom: { say: [avec, tout_seul], examples: ["Je suis allé avec un ami.", "Je suis allée toute seule."] }
+    ask_with: { say: [avec_qui], examples: ["Avec qui es-tu allé ?", "Avec qui êtes-vous allée ?"] }
+    how_was: { say: [je_me_suis_amuse, c_etait_bien], examples: ["Je me suis bien amusé.", "C'était super."] }
   weather_today:
-    ask_weather: { say: [che_tempo_fa], examples: ["Che tempo fa?", "Che tempo fa oggi?"] }
-    hot_cold: { say: [fa_caldo, fa_freddo], examples: ["Oggi fa caldo.", "Fa molto freddo."] }
-    sun_rain: { say: [c_e_il_sole, piove, c_e_vento, nevica], examples: ["C'è il sole.", "Piove.", "C'è vento."] }
+    ask_weather: { say: [quel_temps_fait_il], examples: ["Quel temps fait-il ?", "Quel temps fait-il aujourd'hui ?"] }
+    hot_cold: { say: [il_fait_chaud, il_fait_froid], examples: ["Aujourd'hui, il fait chaud.", "Il fait très froid."] }
+    sun_rain: { say: [il_y_a_du_soleil, il_pleut, il_y_a_du_vent, il_neige], examples: ["Il y a du soleil.", "Il pleut.", "Il y a du vent."] }
   weather_seasons:
-    ask_season: { say: [quale_stagione], examples: ["Quale stagione preferisci?", "Qual è la tua stagione preferita?"] }
-    favourite: { say: [estate, inverno, primavera, autunno], examples: ["Preferisco l'estate.", "Mi piace la primavera."] }
-    in_season: { say: [[estate, inverno, primavera, autunno], [fa_caldo, fa_freddo, piove, nevica, c_e_il_sole, c_e_vento]], examples: ["In inverno fa freddo.", "D'estate fa molto caldo.", "In autunno piove spesso."] }
+    ask_season: { say: [quelle_saison], examples: ["Quelle saison préfères-tu ?", "Quelle est ta saison préférée ?"] }
+    favourite: { say: [ete, hiver, printemps, automne], examples: ["Je préfère l'été.", "J'aime le printemps."] }
+    in_season: { say: [[ete, hiver, printemps, automne], [il_fait_chaud, il_fait_froid, il_pleut, il_neige, il_y_a_du_soleil, il_y_a_du_vent]], examples: ["En hiver, il fait froid.", "En été, il fait très chaud.", "En automne, il pleut souvent."] }
   weather_rain:
-    was: { say: [ha_fatto_freddo, ha_piovuto], examples: ["Ieri ha fatto freddo.", "Ieri ha piovuto."] }
-    when_rains: { say: [quando_piove], examples: ["Quando piove resto a casa.", "Quando piove leggo un libro."] }
-    fine_weather: { say: [bel_tempo], examples: ["Quando fa bel tempo vado al mare.", "Quando c'è bel tempo esco."] }
+    was: { say: [il_a_fait_froid, il_a_plu], examples: ["Hier, il a fait froid.", "Hier, il a plu."] }
+    when_rains: { say: [quand_il_pleut], examples: ["Quand il pleut, je reste à la maison.", "Quand il pleut, je lis un livre."] }
+    fine_weather: { say: [beau_temps], examples: ["Quand il fait beau, je vais à la mer.", "Quand il fait beau, je sors."] }
   restaurant_book:
-    book: { say: [prenotare], examples: ["Vorrei prenotare un tavolo.", "Posso prenotare un tavolo?"] }
-    how_many: { say: [persone], examples: ["Per due persone.", "Un tavolo per quattro persone."] }
-    for_when: { say: [per_stasera], examples: ["Per stasera, alle otto.", "Per domani sera."] }
+    book: { say: [reserver], examples: ["Je voudrais réserver une table.", "Est-ce que je peux réserver une table ?"] }
+    how_many: { say: [personnes], examples: ["Pour deux personnes.", "Une table pour quatre personnes."] }
+    for_when: { say: [pour_ce_soir], examples: ["Pour ce soir, à huit heures.", "Pour demain soir."] }
   restaurant_order:
-    starter: { say: [come_antipasto, come_primo], examples: ["Come antipasto prendo il prosciutto.", "Come primo vorrei la pasta."] }
-    main: { say: [[come_secondo], [carne, pesce, pollo]], examples: ["Come secondo prendo il pesce.", "Di secondo vorrei il pollo."] }
-    dessert: { say: [dolce], examples: ["Come dolce prendo il tiramisù.", "Un dolce, per favore."] }
+    starter: { say: [en_entree], examples: ["En entrée, je prends la soupe à l'oignon.", "Pour commencer, je voudrais une salade."] }
+    main: { say: [[comme_plat], [viande, poisson, poulet]], examples: ["Comme plat, je prends le poisson.", "En plat principal, je voudrais le poulet."] }
+    dessert: { say: [dessert], examples: ["Comme dessert, je prends une crème brûlée.", "Un dessert, s'il vous plaît."] }
   restaurant_wrong:
-    cold: { say: [freddo, salato], examples: ["La zuppa è fredda.", "È troppo salato."] }
-    missing: { say: [[manca], [forchetta, coltello, bicchiere, pane]], examples: ["Manca una forchetta.", "Mancano i bicchieri.", "Manca il pane."] }
-    another: { say: [un_altro], examples: ["Posso avere un'altra forchetta?", "Un altro bicchiere, per favore."] }
+    cold: { say: [froid, sale], examples: ["La soupe est froide.", "C'est trop salé."] }
+    missing: { say: [[il_manque], [fourchette, couteau, verre, pain]], examples: ["Il manque une fourchette.", "Il manque des verres.", "Il manque le pain."] }
+    another: { say: [un_autre], examples: ["Est-ce que je peux avoir une autre fourchette ?", "Un autre verre, s'il vous plaît."] }
   health_hurts:
-    not_well: { say: [non_sto_bene], examples: ["Non sto bene.", "Mi sento male."] }
-    hurts: { say: [[mi_fa_male], [testa, stomaco, gola, dente, schiena]], examples: ["Mi fa male la testa.", "Ho mal di gola.", "Mi fanno male i denti."] }
-    since: { say: [da_ieri], examples: ["Da ieri.", "Mi fa male da due giorni."] }
+    not_well: { say: [je_ne_me_sens_pas_bien], examples: ["Je ne me sens pas bien.", "Je suis malade."] }
+    hurts: { say: [[j_ai_mal], [tete, ventre, gorge, dent, dos]], examples: ["J'ai mal à la tête.", "J'ai mal à la gorge.", "J'ai mal aux dents."] }
+    since: { say: [depuis_hier], examples: ["Depuis hier.", "J'ai mal depuis deux jours."] }
   health_cold:
-    cold_fever: { say: [ho_il_raffreddore, ho_la_febbre, ho_la_tosse], examples: ["Ho il raffreddore.", "Ho la febbre.", "Ho la tosse."] }
-    tired: { say: [sono_stanco], examples: ["Sono molto stanco.", "Sono stanca."] }
-    must_rest: { say: [devo_riposare], examples: ["Devo riposare.", "Devo stare a letto."] }
+    cold_fever: { say: [j_ai_un_rhume, j_ai_de_la_fievre, je_tousse], examples: ["J'ai un rhume.", "J'ai de la fièvre.", "Je tousse."] }
+    tired: { say: [je_suis_fatigue], examples: ["Je suis très fatigué.", "Je suis fatiguée."] }
+    must_rest: { say: [je_dois_me_reposer], examples: ["Je dois me reposer.", "Je dois rester au lit."] }
   health_help:
-    need: { say: [[ho_bisogno_di], [medico, farmacia]], examples: ["Ho bisogno di un medico.", "Ho bisogno di una farmacia.", "Mi serve un medico."] }
-    something_for: { say: [qualcosa_per], examples: ["Ha qualcosa per il mal di testa?", "Vorrei qualcosa per la tosse."] }
-    how_often: { say: [quante_volte], examples: ["Quante volte al giorno?", "Quante volte devo prenderlo?"] }
+    need: { say: [[j_ai_besoin_d], [medecin, pharmacie]], examples: ["J'ai besoin d'un médecin.", "J'ai besoin d'une pharmacie.", "Il me faut un médecin."] }
+    something_for: { say: [quelque_chose_pour], examples: ["Vous avez quelque chose pour le mal de tête ?", "Je voudrais quelque chose contre la toux."] }
+    how_often: { say: [combien_de_fois], examples: ["Combien de fois par jour ?", "Combien de fois je dois le prendre ?"] }
   plans_want:
-    want: { say: [voglio], examples: ["Voglio andare al mare.", "Questo fine settimana voglio dormire."] }
-    ask_want: { say: [cosa_vuoi_fare], examples: ["Cosa vuoi fare?", "Che cosa vuole fare domani?"] }
-    can: { say: [posso, non_posso], examples: ["Sabato posso venire.", "Domenica non posso."] }
+    want: { say: [je_veux], examples: ["Je veux aller à la mer.", "Ce week-end, je veux dormir."] }
+    ask_want: { say: [qu_est_ce_que_tu_veux_faire], examples: ["Qu'est-ce que tu veux faire ?", "Que voulez-vous faire demain ?"] }
+    can: { say: [je_peux, je_ne_peux_pas], examples: ["Samedi, je peux venir.", "Dimanche, je ne peux pas."] }
   plans_must:
-    must: { say: [devo], examples: ["Devo lavorare sabato.", "Devo studiare."] }
-    cannot_because: { say: [[non_posso], [devo]], examples: ["Non posso, devo lavorare.", "Non posso venire perché devo studiare."] }
-    ask_must: { say: [devi], examples: ["Devi lavorare domani?", "Deve lavorare sabato?"] }
+    must: { say: [je_dois], examples: ["Je dois travailler samedi.", "Je dois étudier."] }
+    cannot_because: { say: [[je_ne_peux_pas], [je_dois]], examples: ["Je ne peux pas, je dois travailler.", "Je ne peux pas venir parce que je dois étudier."] }
+    ask_must: { say: [tu_dois], examples: ["Tu dois travailler demain ?", "Vous devez travailler samedi ?"] }
   plans_going:
-    going_to: { say: [penso_di], examples: ["Domani penso di andare al mare.", "Penso di restare a casa."] }
-    next_week: { say: [la_settimana_prossima], examples: ["La settimana prossima vado a Roma.", "La prossima settimana lavoro."] }
-    about_to: { say: [sto_per], examples: ["Sto per partire.", "Sto per uscire."] }
+    going_to: { say: [je_vais], examples: ["Demain, je vais aller à la mer.", "Je vais rester à la maison."] }
+    next_week: { say: [la_semaine_prochaine], examples: ["La semaine prochaine, je vais à Paris.", "La semaine prochaine, je travaille."] }
+    about_to: { say: [sur_le_point_de], examples: ["Je suis sur le point de partir.", "Je m'apprête à sortir."] }
 vocabulary:
   # past_did
-  ieri: { t: "ieri", pos: adverb, en: ["yesterday"], forms: ["ieri", "ieri sera", "ieri mattina"], ex: ["Ieri ho lavorato.", "Yesterday I worked."] }
-  ho_mangiato: { t: "ho mangiato", pos: phrase, en: ["I ate", "I have eaten"], forms: ["ho mangiato", "abbiamo mangiato"], ex: ["Ho mangiato un panino.", "I ate a sandwich."], n: "The past of most verbs: ho + the participle, which does not change." }
-  ho_bevuto: { t: "ho bevuto", pos: phrase, en: ["I drank", "I have drunk"], forms: ["ho bevuto", "abbiamo bevuto"], ex: ["Ho bevuto un caffè.", "I drank a coffee."] }
-  ho_lavorato: { t: "ho lavorato", pos: phrase, en: ["I worked", "I have worked"], forms: ["ho lavorato", "abbiamo lavorato"], ex: ["Ieri ho lavorato fino alle otto.", "Yesterday I worked until eight."] }
-  ho_studiato: { t: "ho studiato", pos: phrase, en: ["I studied", "I have studied"], forms: ["ho studiato", "abbiamo studiato"], ex: ["Ho studiato tutto il giorno.", "I studied all day."] }
-  cosa_hai_fatto: { t: "cosa hai fatto", pos: phrase, en: ["what did you do"], forms: ["cosa hai fatto", "che cosa hai fatto", "che hai fatto", "cosa ha fatto", "che cosa ha fatto", "cosa avete fatto"], ex: ["Cosa hai fatto sabato?", "What did you do on Saturday?"] }
-  ho_comprato: { t: "ho comprato", pos: phrase, en: ["I bought", "I have bought"], forms: ["ho comprato", "abbiamo comprato"], ex: ["Ho comprato un cappello.", "I bought a hat."] }
-  ho_pagato: { t: "ho pagato", pos: phrase, en: ["I paid"], forms: ["ho pagato", "ho speso"], ex: ["Ho pagato dieci euro.", "I paid ten euros."], n: "'Ho speso' is 'I spent'." }
-  ho_visto: { t: "ho visto", pos: phrase, en: ["I saw", "I have seen"], forms: ["ho visto", "abbiamo visto"], ex: ["Ho visto un bel film.", "I saw a good film."] }
-  la_settimana_scorsa: { t: "la settimana scorsa", pos: phrase, en: ["last week"], forms: ["la settimana scorsa", "settimana scorsa", "la scorsa settimana"], ex: ["La settimana scorsa ho studiato molto.", "Last week I studied a lot."] }
-  ho_fatto: { t: "ho fatto", pos: phrase, en: ["I did", "I made"], forms: ["ho fatto", "abbiamo fatto"], ex: ["Ho fatto la spesa.", "I did the shopping."] }
-  ho_incontrato: { t: "ho incontrato", pos: phrase, en: ["I met"], forms: ["ho incontrato", "abbiamo incontrato"], ex: ["Ho incontrato Marta in piazza.", "I met Marta in the square."] }
-  ho_parlato: { t: "ho parlato", pos: phrase, en: ["I spoke", "I talked"], forms: ["ho parlato", "abbiamo parlato"], ex: ["Ho parlato con il medico.", "I spoke to the doctor."] }
+  hier: { t: "hier", pos: adverb, en: ["yesterday"], forms: ["hier", "hier soir", "hier matin"], ex: ["Hier, j'ai travaillé.", "Yesterday I worked."] }
+  j_ai_mange: { t: "j'ai mangé", pos: phrase, en: ["I ate", "I have eaten"], forms: ["j'ai mangé", "on a mangé", "nous avons mangé"], ex: ["J'ai mangé un sandwich.", "I ate a sandwich."], n: "The past of most verbs: j'ai + the participle, which does not change." }
+  j_ai_bu: { t: "j'ai bu", pos: phrase, en: ["I drank", "I have drunk"], forms: ["j'ai bu", "on a bu", "nous avons bu"], ex: ["J'ai bu un café.", "I drank a coffee."] }
+  j_ai_travaille: { t: "j'ai travaillé", pos: phrase, en: ["I worked", "I have worked"], forms: ["j'ai travaillé", "on a travaillé", "nous avons travaillé"], ex: ["Hier, j'ai travaillé jusqu'à huit heures.", "Yesterday I worked until eight."] }
+  j_ai_etudie: { t: "j'ai étudié", pos: phrase, en: ["I studied", "I have studied"], forms: ["j'ai étudié", "on a étudié", "nous avons étudié", "j'ai révisé"], ex: ["J'ai étudié toute la journée.", "I studied all day."], n: "'J'ai révisé' is 'I revised', for an exam." }
+  qu_est_ce_que_tu_as_fait: { t: "qu'est-ce que tu as fait", pos: phrase, en: ["what did you do"], forms: ["qu'est-ce que tu as fait", "tu as fait quoi", "t'as fait quoi", "qu'as-tu fait", "qu'as tu fait", "qu'est-ce que vous avez fait", "vous avez fait quoi", "qu'avez-vous fait", "qu'avez vous fait"], ex: ["Qu'est-ce que tu as fait samedi ?", "What did you do on Saturday?"] }
+  j_ai_achete: { t: "j'ai acheté", pos: phrase, en: ["I bought", "I have bought"], forms: ["j'ai acheté", "on a acheté", "nous avons acheté"], ex: ["J'ai acheté un chapeau.", "I bought a hat."] }
+  j_ai_paye: { t: "j'ai payé", pos: phrase, en: ["I paid"], forms: ["j'ai payé", "j'ai dépensé", "on a payé", "nous avons payé"], ex: ["J'ai payé dix euros.", "I paid ten euros."], n: "'J'ai dépensé' is 'I spent'." }
+  j_ai_vu: { t: "j'ai vu", pos: phrase, en: ["I saw", "I have seen"], forms: ["j'ai vu", "on a vu", "nous avons vu"], ex: ["J'ai vu un bon film.", "I saw a good film."] }
+  la_semaine_derniere: { t: "la semaine dernière", pos: phrase, en: ["last week"], forms: ["la semaine dernière", "semaine dernière", "la semaine passée"], ex: ["La semaine dernière, j'ai beaucoup étudié.", "Last week I studied a lot."] }
+  j_ai_fait: { t: "j'ai fait", pos: phrase, en: ["I did", "I made"], forms: ["j'ai fait", "on a fait", "nous avons fait"], ex: ["J'ai fait les courses.", "I did the shopping."] }
+  j_ai_rencontre: { t: "j'ai rencontré", pos: phrase, en: ["I met"], forms: ["j'ai rencontré", "on a rencontré", "nous avons rencontré", "j'ai croisé"], ex: ["J'ai rencontré Marie sur la place.", "I met Marie in the square."], n: "'J'ai croisé' is 'I ran into'." }
+  j_ai_parle: { t: "j'ai parlé", pos: phrase, en: ["I spoke", "I talked"], forms: ["j'ai parlé", "on a parlé", "nous avons parlé"], ex: ["J'ai parlé avec le médecin.", "I spoke to the doctor."] }
   # past_went
-  sono_andato: { t: "sono andato", pos: phrase, en: ["I went"], forms: ["sono andato", "sono andata", "siamo andati", "siamo andate"], ex: ["Sono andato al supermercato.", "I went to the supermarket."], n: "Verbs of movement take essere, and the participle agrees: a woman says sono andata." }
-  sono_stato: { t: "sono stato", pos: phrase, en: ["I was", "I have been"], forms: ["sono stato", "sono stata", "siamo stati", "siamo state"], ex: ["Sono stata a Venezia.", "I have been to Venice."] }
-  sono_rimasto: { t: "sono rimasto", pos: phrase, en: ["I stayed"], forms: ["sono rimasto", "sono rimasta", "sono restato", "sono restata"], ex: ["Sono rimasto a casa.", "I stayed at home."] }
-  dove_sei_andato: { t: "dove sei andato", pos: phrase, en: ["where did you go"], forms: ["dove sei andato", "dove sei andata", "dov'è andato", "dov'è andata", "dove siete andati"], ex: ["Dove sei andato ieri?", "Where did you go yesterday?"] }
-  sono_partito: { t: "sono partito", pos: phrase, en: ["I left", "I set off"], forms: ["sono partito", "sono partita", "siamo partiti", "siamo partite", "sono uscito", "sono uscita"], ex: ["Sono partita alle sette.", "I left at seven."] }
-  sono_arrivato: { t: "sono arrivato", pos: phrase, en: ["I arrived"], forms: ["sono arrivato", "sono arrivata", "siamo arrivati", "siamo arrivate"], ex: ["Sono arrivato alle nove.", "I arrived at nine."] }
-  sono_tornato: { t: "sono tornato", pos: phrase, en: ["I came back", "I returned"], forms: ["sono tornato", "sono tornata", "siamo tornati", "siamo tornate"], ex: ["Sono tornata sabato.", "I came back on Saturday."] }
-  con: { t: "con", pos: preposition, en: ["with"], ex: ["Sono andato con mio fratello.", "I went with my brother."] }
-  da_solo: { t: "da solo", pos: phrase, en: ["alone", "on my own"], forms: ["da solo", "da sola"], ex: ["Sono andata da sola.", "I went on my own."] }
-  con_chi: { t: "con chi", pos: phrase, en: ["who with", "with whom"], ex: ["Con chi sei andato?", "Who did you go with?"] }
-  mi_sono_divertito: { t: "mi sono divertito", pos: phrase, en: ["I enjoyed myself", "I had fun"], forms: ["mi sono divertito", "mi sono divertita", "ci siamo divertiti", "ci siamo divertite"], ex: ["Mi sono divertita molto.", "I enjoyed myself a lot."] }
-  e_stato_bello: { t: "è stato bello", pos: phrase, en: ["it was lovely", "it was nice"], forms: ["è stato bello", "è stata bella", "è stato bellissimo", "è stata bellissima", "è stato molto bello", "è stato fantastico"], ex: ["È stato bello, grazie.", "It was lovely, thank you."] }
+  je_suis_alle: { t: "je suis allé", pos: phrase, en: ["I went"], forms: ["je suis allé", "je suis allée", "nous sommes allés", "nous sommes allées", "on est allés", "on est allé"], ex: ["Je suis allé au supermarché.", "I went to the supermarket."], n: "Verbs of movement take être, and the participle agrees: a woman says je suis allée." }
+  j_ai_ete: { t: "j'ai été", pos: phrase, en: ["I have been", "I went"], forms: ["j'ai été", "on a été", "nous avons été"], ex: ["J'ai été à Venise l'an dernier.", "I went to Venice last year."], n: "Everyday speech for 'I have been to'; the careful form is je suis allé." }
+  je_suis_reste: { t: "je suis resté", pos: phrase, en: ["I stayed"], forms: ["je suis resté", "je suis restée", "nous sommes restés", "on est restés"], ex: ["Je suis resté à la maison.", "I stayed at home."] }
+  ou_es_tu_alle: { t: "où es-tu allé", pos: phrase, en: ["where did you go"], forms: ["où es-tu allé", "où es tu allé", "où es-tu allée", "où es tu allée", "tu es allé où", "tu es allée où", "t'es allé où", "où est-ce que tu es allé", "où est-ce que tu es allée", "où êtes-vous allé", "où êtes vous allé", "où êtes-vous allée", "où êtes vous allée", "où êtes-vous allés", "vous êtes allés où"], ex: ["Où es-tu allé hier ?", "Where did you go yesterday?"] }
+  je_suis_parti: { t: "je suis parti", pos: phrase, en: ["I left", "I set off"], forms: ["je suis parti", "je suis partie", "nous sommes partis", "nous sommes parties", "on est partis", "je suis sorti", "je suis sortie"], ex: ["Je suis partie à sept heures.", "I left at seven."] }
+  je_suis_arrive: { t: "je suis arrivé", pos: phrase, en: ["I arrived"], forms: ["je suis arrivé", "je suis arrivée", "nous sommes arrivés", "nous sommes arrivées", "on est arrivés"], ex: ["Je suis arrivé à neuf heures.", "I arrived at nine."] }
+  je_suis_rentre: { t: "je suis rentré", pos: phrase, en: ["I came back", "I came home", "I returned"], forms: ["je suis rentré", "je suis rentrée", "je suis revenu", "je suis revenue", "je suis retourné", "je suis retournée", "nous sommes rentrés", "on est rentrés"], ex: ["Je suis rentrée samedi.", "I came back on Saturday."], n: "'Rentrer' is to come back home; 'revenir' is to come back." }
+  avec: { t: "avec", pos: preposition, en: ["with"], ex: ["Je suis allé avec mon frère.", "I went with my brother."] }
+  tout_seul: { t: "tout seul", pos: phrase, en: ["alone", "on my own"], forms: ["tout seul", "toute seule", "seul", "seule"], ex: ["Je suis allée toute seule.", "I went on my own."] }
+  avec_qui: { t: "avec qui", pos: phrase, en: ["who with", "with whom"], ex: ["Avec qui es-tu allé ?", "Who did you go with?"] }
+  je_me_suis_amuse: { t: "je me suis amusé", pos: phrase, en: ["I enjoyed myself", "I had fun"], forms: ["je me suis amusé", "je me suis amusée", "je me suis bien amusé", "je me suis bien amusée", "nous nous sommes amusés", "on s'est amusés", "on s'est bien amusés"], ex: ["Je me suis bien amusée.", "I enjoyed myself a lot."] }
+  c_etait_bien: { t: "c'était bien", pos: phrase, en: ["it was nice", "it was good", "it was lovely"], forms: ["c'était bien", "c'était très bien", "c'était super", "c'était génial", "c'était beau", "c'était magnifique", "c'était sympa"], ex: ["C'était bien, merci.", "It was nice, thank you."] }
   # weather
-  che_tempo_fa: { t: "che tempo fa", pos: phrase, en: ["what is the weather like"], forms: ["che tempo fa", "com'è il tempo"], ex: ["Che tempo fa a Roma?", "What is the weather like in Rome?"] }
-  fa_caldo: { t: "fa caldo", pos: phrase, en: ["it is hot", "it is warm"], forms: ["fa caldo", "fa molto caldo"], ex: ["Oggi fa caldo.", "It is hot today."] }
-  fa_freddo: { t: "fa freddo", pos: phrase, en: ["it is cold"], forms: ["fa freddo", "fa molto freddo"], ex: ["Fa freddo stasera.", "It is cold this evening."] }
-  c_e_il_sole: { t: "c'è il sole", pos: phrase, en: ["it is sunny", "the sun is out"], forms: ["c'è il sole", "c'è sole"], ex: ["Oggi c'è il sole.", "It is sunny today."] }
-  piove: { t: "piove", pos: verb, en: ["it is raining", "it rains"], forms: ["piove", "sta piovendo"], ex: ["Piove da ieri.", "It has been raining since yesterday."] }
-  c_e_vento: { t: "c'è vento", pos: phrase, en: ["it is windy"], forms: ["c'è vento", "tira vento"], ex: ["Oggi c'è vento.", "It is windy today."] }
-  nevica: { t: "nevica", pos: verb, en: ["it is snowing", "it snows"], forms: ["nevica", "sta nevicando"], ex: ["In montagna nevica.", "It is snowing in the mountains."] }
-  quale_stagione: { t: "quale stagione", pos: phrase, en: ["which season"], forms: ["quale stagione", "che stagione", "stagione preferita"], ex: ["Quale stagione ti piace?", "Which season do you like?"] }
-  estate: { t: "estate", pos: noun, en: ["summer"], forms: ["estate", "l'estate", "in estate", "d'estate"], ex: ["In estate vado al mare.", "In summer I go to the sea."] }
-  inverno: { t: "inverno", pos: noun, en: ["winter"], forms: ["inverno", "l'inverno", "in inverno", "d'inverno"], ex: ["In inverno nevica.", "In winter it snows."] }
-  primavera: { t: "primavera", pos: noun, en: ["spring"], forms: ["primavera", "la primavera", "in primavera"], ex: ["La primavera è bella.", "Spring is lovely."] }
-  autunno: { t: "autunno", pos: noun, en: ["autumn", "fall"], forms: ["autunno", "l'autunno", "in autunno"], ex: ["In autunno piove.", "In autumn it rains."] }
-  ha_fatto_freddo: { t: "ha fatto freddo", pos: phrase, en: ["it was cold"], forms: ["ha fatto freddo", "ha fatto caldo", "faceva freddo", "faceva caldo", "ha fatto bel tempo", "ha fatto brutto tempo"], ex: ["Ieri ha fatto freddo.", "It was cold yesterday."], n: "'Ha fatto caldo' is 'it was hot'." }
-  ha_piovuto: { t: "ha piovuto", pos: phrase, en: ["it rained"], forms: ["ha piovuto", "è piovuto", "pioveva", "ha nevicato", "è nevicato"], ex: ["Ha piovuto tutto il giorno.", "It rained all day."] }
-  quando_piove: { t: "quando piove", pos: phrase, en: ["when it rains"], ex: ["Quando piove prendo l'autobus.", "When it rains I take the bus."] }
-  bel_tempo: { t: "bel tempo", pos: phrase, en: ["fine weather", "good weather"], forms: ["bel tempo", "fa bel tempo", "c'è bel tempo", "quando fa bel tempo"], ex: ["Oggi fa bel tempo.", "The weather is fine today."] }
+  quel_temps_fait_il: { t: "quel temps fait-il", pos: phrase, en: ["what is the weather like"], forms: ["quel temps fait-il", "quel temps fait il", "quel temps il fait", "il fait quel temps"], ex: ["Quel temps fait-il à Paris ?", "What is the weather like in Paris?"] }
+  il_fait_chaud: { t: "il fait chaud", pos: phrase, en: ["it is hot", "it is warm"], forms: ["il fait chaud", "il fait très chaud"], ex: ["Aujourd'hui, il fait chaud.", "It is hot today."] }
+  il_fait_froid: { t: "il fait froid", pos: phrase, en: ["it is cold"], forms: ["il fait froid", "il fait très froid"], ex: ["Il fait froid ce soir.", "It is cold this evening."] }
+  il_y_a_du_soleil: { t: "il y a du soleil", pos: phrase, en: ["it is sunny", "the sun is out"], forms: ["il y a du soleil", "il fait soleil", "il fait du soleil", "le soleil brille"], ex: ["Aujourd'hui, il y a du soleil.", "It is sunny today."] }
+  il_pleut: { t: "il pleut", pos: verb, en: ["it is raining", "it rains"], ex: ["Il pleut depuis hier.", "It has been raining since yesterday."] }
+  il_y_a_du_vent: { t: "il y a du vent", pos: phrase, en: ["it is windy"], forms: ["il y a du vent", "il fait du vent", "il vente"], ex: ["Aujourd'hui, il y a du vent.", "It is windy today."] }
+  il_neige: { t: "il neige", pos: verb, en: ["it is snowing", "it snows"], ex: ["Il neige à la montagne.", "It is snowing in the mountains."] }
+  quelle_saison: { t: "quelle saison", pos: phrase, en: ["which season"], forms: ["quelle saison", "saison préférée", "ta saison préférée", "votre saison préférée"], ex: ["Quelle saison est-ce que tu aimes ?", "Which season do you like?"] }
+  ete: { t: "été", pos: noun, en: ["summer"], forms: ["été", "l'été", "en été"], ex: ["En été, je vais à la mer.", "In summer I go to the sea."] }
+  hiver: { t: "hiver", pos: noun, en: ["winter"], forms: ["hiver", "l'hiver", "en hiver"], ex: ["En hiver, il neige.", "In winter it snows."] }
+  printemps: { t: "printemps", pos: noun, en: ["spring"], forms: ["printemps", "le printemps", "au printemps"], ex: ["Le printemps est beau.", "Spring is lovely."], n: "Au printemps, but en été, en automne, en hiver." }
+  automne: { t: "automne", pos: noun, en: ["autumn", "fall"], forms: ["automne", "l'automne", "en automne"], ex: ["En automne, il pleut.", "In autumn it rains."] }
+  il_a_fait_froid: { t: "il a fait froid", pos: phrase, en: ["it was cold"], forms: ["il a fait froid", "il a fait chaud", "il faisait froid", "il faisait chaud", "il a fait beau", "il faisait beau", "il a fait mauvais", "il faisait mauvais"], ex: ["Hier, il a fait froid.", "It was cold yesterday."], n: "'Il a fait chaud' is 'it was hot'; 'il faisait' describes the weather as a background." }
+  il_a_plu: { t: "il a plu", pos: phrase, en: ["it rained"], forms: ["il a plu", "il pleuvait", "il a neigé", "il neigeait"], ex: ["Il a plu toute la journée.", "It rained all day."] }
+  quand_il_pleut: { t: "quand il pleut", pos: phrase, en: ["when it rains"], ex: ["Quand il pleut, je prends le bus.", "When it rains I take the bus."] }
+  beau_temps: { t: "beau temps", pos: phrase, en: ["fine weather", "good weather"], forms: ["beau temps", "il fait beau", "il fait très beau", "quand il fait beau"], ex: ["Aujourd'hui, il fait beau.", "The weather is fine today."] }
   # restaurant
-  prenotare: { t: "prenotare", pos: verb, en: ["to book", "to reserve"], forms: ["prenotare", "prenotare un tavolo", "ho prenotato", "una prenotazione"], ex: ["Vorrei prenotare per domani.", "I would like to book for tomorrow."] }
-  persone: { t: "persone", pos: noun, en: ["people"], forms: ["persone", "persona"], ex: ["Siamo quattro persone.", "There are four of us."] }
-  per_stasera: { t: "per stasera", pos: phrase, en: ["for this evening", "for tonight"], forms: ["per stasera", "per questa sera", "per domani", "per domani sera", "per oggi"], ex: ["Un tavolo per stasera.", "A table for this evening."] }
-  come_antipasto: { t: "come antipasto", pos: phrase, en: ["as a starter"], forms: ["come antipasto", "per antipasto", "di antipasto"], ex: ["Come antipasto prendo l'insalata.", "As a starter I'll have the salad."] }
-  come_primo: { t: "come primo", pos: phrase, en: ["as a first course"], forms: ["come primo", "per primo", "di primo"], ex: ["Come primo prendo la pasta.", "As a first course I'll have the pasta."], n: "The 'primo' is pasta, rice or soup; the 'secondo' is meat or fish." }
-  come_secondo: { t: "come secondo", pos: phrase, en: ["as a main course", "as a second course"], forms: ["come secondo", "per secondo", "di secondo"], ex: ["Come secondo vorrei la carne.", "As a main course I would like the meat."] }
-  carne: { t: "carne", pos: noun, en: ["meat"], forms: ["carne", "la carne"], ex: ["Non mangio carne.", "I don't eat meat."] }
-  pesce: { t: "pesce", pos: noun, en: ["fish"], forms: ["pesce", "il pesce"], ex: ["Il pesce è buono.", "The fish is good."] }
-  pollo: { t: "pollo", pos: noun, en: ["chicken"], forms: ["pollo", "il pollo"], ex: ["Pollo con patate.", "Chicken with potatoes."] }
-  dolce: { t: "dolce", pos: noun, en: ["dessert", "sweet"], forms: ["dolce", "il dolce", "un dolce", "come dolce", "dessert"], ex: ["Prendo un dolce.", "I'll have a dessert."], n: "Also the adjective 'sweet'." }
-  freddo: { t: "freddo", pos: adjective, en: ["cold"], forms: ["freddo", "fredda", "freddi", "fredde"], ex: ["La pasta è fredda.", "The pasta is cold."] }
-  salato: { t: "salato", pos: adjective, en: ["salty"], forms: ["salato", "salata", "troppo salato", "troppo salata"], ex: ["Il pesce è troppo salato.", "The fish is too salty."] }
-  manca: { t: "manca", pos: verb, en: ["is missing", "there is no"], forms: ["manca", "mancano"], ex: ["Manca un coltello.", "A knife is missing."], n: "'Mancano' when several things are missing." }
-  forchetta: { t: "forchetta", pos: noun, en: ["fork"], forms: ["forchetta", "forchette"], ex: ["Una forchetta, per favore.", "A fork, please."] }
-  coltello: { t: "coltello", pos: noun, en: ["knife"], forms: ["coltello", "coltelli"], ex: ["Il coltello è qui.", "The knife is here."] }
-  bicchiere: { t: "bicchiere", pos: noun, en: ["glass"], forms: ["bicchiere", "bicchieri"], ex: ["Un bicchiere di vino.", "A glass of wine."] }
-  pane: { t: "pane", pos: noun, en: ["bread"], forms: ["pane", "il pane"], ex: ["Ancora un po' di pane?", "A little more bread?"] }
-  un_altro: { t: "un altro", pos: phrase, en: ["another", "another one"], forms: ["un altro", "un'altra"], ex: ["Vorrei un altro caffè.", "I would like another coffee."] }
+  reserver: { t: "réserver", pos: verb, en: ["to book", "to reserve"], forms: ["réserver", "réserver une table", "j'ai réservé", "une réservation", "réservation"], ex: ["Je voudrais réserver pour demain.", "I would like to book for tomorrow."] }
+  personnes: { t: "personnes", pos: noun, en: ["people"], forms: ["personnes", "personne"], ex: ["Nous sommes quatre personnes.", "There are four of us."] }
+  pour_ce_soir: { t: "pour ce soir", pos: phrase, en: ["for this evening", "for tonight"], forms: ["pour ce soir", "pour demain", "pour demain soir", "pour aujourd'hui", "pour ce midi"], ex: ["Une table pour ce soir.", "A table for this evening."] }
+  en_entree: { t: "en entrée", pos: phrase, en: ["as a starter"], forms: ["en entrée", "comme entrée", "pour l'entrée", "pour commencer"], ex: ["En entrée, je prends la salade.", "As a starter I'll have the salad."], n: "In France the 'entrée' is the starter; the main course is the 'plat'." }
+  comme_plat: { t: "comme plat", pos: phrase, en: ["as a main course"], forms: ["comme plat", "en plat", "en plat principal", "comme plat principal", "le plat principal"], ex: ["Comme plat, je voudrais la viande.", "As a main course I would like the meat."] }
+  viande: { t: "viande", pos: noun, en: ["meat"], forms: ["viande", "la viande", "de la viande"], ex: ["Je ne mange pas de viande.", "I don't eat meat."] }
+  poisson: { t: "poisson", pos: noun, en: ["fish"], forms: ["poisson", "le poisson", "du poisson"], ex: ["Le poisson est bon.", "The fish is good."] }
+  poulet: { t: "poulet", pos: noun, en: ["chicken"], forms: ["poulet", "le poulet", "du poulet"], ex: ["Poulet avec des frites.", "Chicken with chips."] }
+  dessert: { t: "dessert", pos: noun, en: ["dessert"], forms: ["dessert", "un dessert", "le dessert", "en dessert", "comme dessert"], ex: ["Je prends un dessert.", "I'll have a dessert."] }
+  froid: { t: "froid", pos: adjective, en: ["cold"], forms: ["froid", "froide", "froids", "froides"], ex: ["Les pâtes sont froides.", "The pasta is cold."] }
+  sale: { t: "salé", pos: adjective, en: ["salty"], forms: ["salé", "salée", "trop salé", "trop salée", "c'est trop salé"], ex: ["Le poisson est trop salé.", "The fish is too salty."] }
+  il_manque: { t: "il manque", pos: verb, en: ["is missing", "there is no"], forms: ["il manque", "il me manque", "il nous manque"], ex: ["Il manque un couteau.", "A knife is missing."], n: "Il manque stays singular: il manque deux verres." }
+  fourchette: { t: "fourchette", pos: noun, en: ["fork"], forms: ["fourchette", "fourchettes"], ex: ["Une fourchette, s'il vous plaît.", "A fork, please."] }
+  couteau: { t: "couteau", pos: noun, en: ["knife"], forms: ["couteau", "couteaux"], ex: ["Le couteau est ici.", "The knife is here."] }
+  verre: { t: "verre", pos: noun, en: ["glass"], forms: ["verre", "verres"], ex: ["Un verre de vin.", "A glass of wine."] }
+  pain: { t: "pain", pos: noun, en: ["bread"], forms: ["pain", "le pain", "du pain"], ex: ["Encore un peu de pain ?", "A little more bread?"] }
+  un_autre: { t: "un autre", pos: phrase, en: ["another", "another one"], forms: ["un autre", "une autre", "encore un", "encore une"], ex: ["Je voudrais un autre café.", "I would like another coffee."] }
   # health
-  non_sto_bene: { t: "non sto bene", pos: phrase, en: ["I don't feel well", "I am not well"], forms: ["non sto bene", "sto male", "mi sento male", "non mi sento bene"], ex: ["Oggi non sto bene.", "I don't feel well today."] }
-  mi_fa_male: { t: "mi fa male", pos: phrase, en: ["it hurts", "my ... hurts"], forms: ["mi fa male", "mi fanno male", "ho mal di"], ex: ["Mi fa male la schiena.", "My back hurts."], n: "'Ho mal di testa' says the same with avere." }
-  testa: { t: "testa", pos: noun, en: ["head"], forms: ["testa", "la testa"], ex: ["Ho mal di testa.", "I have a headache."] }
-  stomaco: { t: "stomaco", pos: noun, en: ["stomach"], forms: ["stomaco", "lo stomaco", "pancia", "la pancia"], ex: ["Mi fa male lo stomaco.", "My stomach hurts."] }
-  gola: { t: "gola", pos: noun, en: ["throat"], forms: ["gola", "la gola"], ex: ["Ho mal di gola.", "I have a sore throat."] }
-  dente: { t: "dente", pos: noun, en: ["tooth"], forms: ["dente", "un dente", "denti", "i denti"], ex: ["Mi fa male un dente.", "I have toothache."] }
-  schiena: { t: "schiena", pos: noun, en: ["back"], forms: ["schiena", "la schiena"], ex: ["Ho mal di schiena.", "I have backache."] }
-  da_ieri: { t: "da ieri", pos: phrase, en: ["since yesterday"], forms: ["da ieri", "da ieri sera", "da oggi", "da stamattina", "da due giorni", "da tre giorni", "da qualche giorno", "da una settimana"], ex: ["Ho la febbre da ieri.", "I have had a fever since yesterday."], n: "Da with the present says how long: sto male da due giorni." }
-  ho_il_raffreddore: { t: "ho il raffreddore", pos: phrase, en: ["I have a cold"], forms: ["ho il raffreddore", "il raffreddore", "raffreddore", "sono raffreddato", "sono raffreddata"], ex: ["Ho il raffreddore da lunedì.", "I have had a cold since Monday."] }
-  ho_la_febbre: { t: "ho la febbre", pos: phrase, en: ["I have a fever", "I have a temperature"], forms: ["ho la febbre", "la febbre", "febbre"], ex: ["Ho la febbre alta.", "I have a high fever."] }
-  ho_la_tosse: { t: "ho la tosse", pos: phrase, en: ["I have a cough"], forms: ["ho la tosse", "la tosse", "tosse"], ex: ["Ho la tosse da una settimana.", "I have had a cough for a week."] }
-  sono_stanco: { t: "sono stanco", pos: phrase, en: ["I am tired"], forms: ["sono stanco", "sono stanca", "sono molto stanco", "sono molto stanca", "sono stanchissimo", "sono stanchissima"], ex: ["Stasera sono stanca.", "I am tired this evening."] }
-  devo_riposare: { t: "devo riposare", pos: phrase, en: ["I must rest", "I have to rest"], forms: ["devo riposare", "devo riposarmi", "devo stare a letto", "devo restare a letto", "devo dormire"], ex: ["Il medico dice che devo riposare.", "The doctor says I must rest."] }
-  ho_bisogno_di: { t: "ho bisogno di", pos: phrase, en: ["I need"], forms: ["ho bisogno di", "ho bisogno", "mi serve", "mi serve un", "mi serve una"], ex: ["Ho bisogno di aiuto.", "I need help."] }
-  medico: { t: "medico", pos: noun, en: ["doctor"], forms: ["medico", "un medico", "il medico", "dottore", "dottoressa"], ex: ["Devo andare dal medico.", "I have to go to the doctor."] }
-  qualcosa_per: { t: "qualcosa per", pos: phrase, en: ["something for"], forms: ["qualcosa per", "qualcosa per il", "qualcosa per la", "qualcosa contro"], ex: ["Ha qualcosa per la febbre?", "Do you have something for a fever?"] }
-  quante_volte: { t: "quante volte", pos: phrase, en: ["how many times", "how often"], forms: ["quante volte", "quante volte al giorno"], ex: ["Quante volte al giorno?", "How many times a day?"] }
+  je_ne_me_sens_pas_bien: { t: "je ne me sens pas bien", pos: phrase, en: ["I don't feel well", "I am not well"], forms: ["je ne me sens pas bien", "je me sens pas bien", "je me sens mal", "je ne vais pas bien", "je vais pas bien", "ça ne va pas", "ça va pas", "je suis malade"], ex: ["Aujourd'hui, je ne me sens pas bien.", "I don't feel well today."], n: "'Je suis malade' is 'I am ill'." }
+  j_ai_mal: { t: "j'ai mal", pos: phrase, en: ["it hurts", "my ... hurts"], forms: ["j'ai mal", "j'ai mal à", "j'ai mal au", "j'ai mal aux", "ça fait mal", "ça me fait mal"], ex: ["J'ai mal au dos.", "My back hurts."], n: "À joins the article: au ventre, aux dents, à la tête." }
+  tete: { t: "tête", pos: noun, en: ["head"], forms: ["tête", "la tête"], ex: ["J'ai mal à la tête.", "I have a headache."] }
+  ventre: { t: "ventre", pos: noun, en: ["stomach", "belly"], forms: ["ventre", "le ventre", "estomac", "l'estomac"], ex: ["J'ai mal au ventre.", "My stomach hurts."] }
+  gorge: { t: "gorge", pos: noun, en: ["throat"], forms: ["gorge", "la gorge"], ex: ["J'ai mal à la gorge.", "I have a sore throat."] }
+  dent: { t: "dent", pos: noun, en: ["tooth"], forms: ["dent", "une dent", "dents", "les dents"], ex: ["J'ai mal à une dent.", "I have toothache."] }
+  dos: { t: "dos", pos: noun, en: ["back"], forms: ["dos", "le dos"], ex: ["J'ai mal au dos.", "I have backache."] }
+  depuis_hier: { t: "depuis hier", pos: phrase, en: ["since yesterday"], forms: ["depuis hier", "depuis hier soir", "depuis ce matin", "depuis deux jours", "depuis trois jours", "depuis quelques jours", "depuis une semaine"], ex: ["J'ai de la fièvre depuis hier.", "I have had a fever since yesterday."], n: "Depuis with the present says how long: je suis malade depuis deux jours." }
+  j_ai_un_rhume: { t: "j'ai un rhume", pos: phrase, en: ["I have a cold"], forms: ["j'ai un rhume", "un rhume", "rhume", "je suis enrhumé", "je suis enrhumée"], ex: ["J'ai un rhume depuis lundi.", "I have had a cold since Monday."] }
+  j_ai_de_la_fievre: { t: "j'ai de la fièvre", pos: phrase, en: ["I have a fever", "I have a temperature"], forms: ["j'ai de la fièvre", "de la fièvre", "la fièvre", "fièvre"], ex: ["J'ai beaucoup de fièvre.", "I have a high fever."] }
+  je_tousse: { t: "je tousse", pos: phrase, en: ["I have a cough", "I am coughing"], forms: ["je tousse", "j'ai de la toux", "la toux", "toux"], ex: ["Je tousse depuis une semaine.", "I have had a cough for a week."] }
+  je_suis_fatigue: { t: "je suis fatigué", pos: phrase, en: ["I am tired"], forms: ["je suis fatigué", "je suis fatiguée", "je suis très fatigué", "je suis très fatiguée", "je suis crevé", "je suis crevée"], ex: ["Ce soir, je suis fatiguée.", "I am tired this evening."], n: "'Crevé' is familiar: 'worn out'." }
+  je_dois_me_reposer: { t: "je dois me reposer", pos: phrase, en: ["I must rest", "I have to rest"], forms: ["je dois me reposer", "je dois rester au lit", "je dois rester couché", "je dois rester couchée", "je dois dormir"], ex: ["Le médecin dit que je dois me reposer.", "The doctor says I must rest."] }
+  j_ai_besoin_d: { t: "j'ai besoin de", pos: phrase, en: ["I need"], forms: ["j'ai besoin de", "j'ai besoin d", "j'ai besoin", "il me faut"], ex: ["J'ai besoin d'aide.", "I need help."], n: "De becomes d' before a vowel: j'ai besoin d'un médecin." }
+  medecin: { t: "médecin", pos: noun, en: ["doctor"], forms: ["médecin", "un médecin", "le médecin", "docteur", "le docteur"], ex: ["Je dois aller chez le médecin.", "I have to go to the doctor."], n: "One goes chez le médecin, to the doctor's." }
+  quelque_chose_pour: { t: "quelque chose pour", pos: phrase, en: ["something for"], forms: ["quelque chose pour", "quelque chose pour le", "quelque chose pour la", "quelque chose contre"], ex: ["Vous avez quelque chose pour la fièvre ?", "Do you have something for a fever?"] }
+  combien_de_fois: { t: "combien de fois", pos: phrase, en: ["how many times", "how often"], forms: ["combien de fois", "combien de fois par jour"], ex: ["Combien de fois par jour ?", "How many times a day?"] }
   # plans
-  voglio: { t: "voglio", pos: verb, en: ["I want"], forms: ["voglio", "vogliamo", "ho voglia di"], ex: ["Voglio vedere il mare.", "I want to see the sea."], n: "Plainer than vorrei: for plans, not for ordering." }
-  cosa_vuoi_fare: { t: "cosa vuoi fare", pos: phrase, en: ["what do you want to do"], forms: ["cosa vuoi fare", "che cosa vuoi fare", "che vuoi fare", "cosa vuole fare", "che cosa vuole fare", "cosa volete fare"], ex: ["Cosa vuoi fare stasera?", "What do you want to do this evening?"] }
-  posso: { t: "posso", pos: verb, en: ["I can"], forms: ["posso", "possiamo"], ex: ["Domani posso venire.", "I can come tomorrow."] }
-  non_posso: { t: "non posso", pos: phrase, en: ["I can't", "I cannot"], forms: ["non posso", "non possiamo"], ex: ["Mi dispiace, non posso.", "I'm sorry, I can't."] }
-  devo: { t: "devo", pos: verb, en: ["I must", "I have to"], forms: ["devo", "dobbiamo"], ex: ["Devo comprare il pane.", "I have to buy bread."] }
-  devi: { t: "devi", pos: verb, en: ["you must", "do you have to"], forms: ["devi", "deve", "dovete"], ex: ["Devi lavorare domenica?", "Do you have to work on Sunday?"] }
-  penso_di: { t: "penso di", pos: phrase, en: ["I am thinking of", "I plan to"], forms: ["penso di", "pensiamo di", "ho intenzione di"], ex: ["Penso di partire sabato.", "I plan to leave on Saturday."] }
-  la_settimana_prossima: { t: "la settimana prossima", pos: phrase, en: ["next week"], forms: ["la settimana prossima", "la prossima settimana", "settimana prossima"], ex: ["La settimana prossima lavoro.", "Next week I am working."], n: "The present tense with a time is enough for a plan." }
-  sto_per: { t: "sto per", pos: phrase, en: ["I am about to"], forms: ["sto per", "stiamo per"], ex: ["Sto per andare a letto.", "I am about to go to bed."] }
+  je_veux: { t: "je veux", pos: verb, en: ["I want"], forms: ["je veux", "nous voulons", "on veut", "j'ai envie de", "j'ai envie d"], ex: ["Je veux voir la mer.", "I want to see the sea."], n: "Plainer than je voudrais: for plans, not for ordering. 'J'ai envie de' is 'I feel like'." }
+  qu_est_ce_que_tu_veux_faire: { t: "qu'est-ce que tu veux faire", pos: phrase, en: ["what do you want to do"], forms: ["qu'est-ce que tu veux faire", "tu veux faire quoi", "que veux-tu faire", "que veux tu faire", "qu'est-ce que vous voulez faire", "vous voulez faire quoi", "que voulez-vous faire", "que voulez vous faire"], ex: ["Qu'est-ce que tu veux faire ce soir ?", "What do you want to do this evening?"] }
+  je_peux: { t: "je peux", pos: verb, en: ["I can"], forms: ["je peux", "nous pouvons", "on peut"], ex: ["Demain, je peux venir.", "I can come tomorrow."] }
+  je_ne_peux_pas: { t: "je ne peux pas", pos: phrase, en: ["I can't", "I cannot"], forms: ["je ne peux pas", "je peux pas", "nous ne pouvons pas", "on ne peut pas", "on peut pas"], ex: ["Désolé, je ne peux pas.", "I'm sorry, I can't."], n: "Speech often drops the ne: je peux pas." }
+  je_dois: { t: "je dois", pos: verb, en: ["I must", "I have to"], forms: ["je dois", "nous devons", "on doit"], ex: ["Je dois acheter du pain.", "I have to buy bread."] }
+  tu_dois: { t: "tu dois", pos: verb, en: ["you must", "do you have to"], forms: ["tu dois", "vous devez", "dois-tu", "dois tu", "devez-vous", "devez vous"], ex: ["Tu dois travailler dimanche ?", "Do you have to work on Sunday?"] }
+  je_vais: { t: "je vais", pos: verb, en: ["I am going to"], forms: ["je vais", "nous allons", "je compte", "j'ai l'intention de", "j'ai l'intention d"], ex: ["Je vais partir samedi.", "I am going to leave on Saturday."], n: "The futur proche: aller + an infinitive, je vais partir." }
+  la_semaine_prochaine: { t: "la semaine prochaine", pos: phrase, en: ["next week"], forms: ["la semaine prochaine", "la prochaine semaine", "semaine prochaine"], ex: ["La semaine prochaine, je travaille.", "Next week I am working."], n: "The present tense with a time is enough for a plan." }
+  sur_le_point_de: { t: "sur le point de", pos: phrase, en: ["about to"], forms: ["sur le point de", "sur le point d", "je suis sur le point de", "nous sommes sur le point de", "je m'apprête à"], ex: ["Je suis sur le point d'aller au lit.", "I am about to go to bed."] }
