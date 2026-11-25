@@ -1,0 +1,65 @@
+# Round 180: French version authored by Claude; awaits a native speaker's review.
+id: imp_coffee_greeting
+character: characters/enemies/imp_coffee.yaml
+location: coffee_cart
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player orders a coffee without milk in French"
+max_turns: 20
+resolved_message: "Gerald grudgingly approves. The coffee order is complete."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: order_coffee
+    prompt: "Order a coffee from Gerald, using French for the coffee request."
+    intent: "The player asks Gerald for coffee for themself."
+    target_vocabulary_ids: [je_voudrais, cafe, express, cafe_noir]
+    required_target_groups:
+      - [cafe, express, cafe_noir]
+    grammar_constraints:
+      - "Use a first-person request or an unambiguous direct order."
+      - "The coffee target must be expressed in French; an English-only order does not pass."
+    accepted_examples:
+      - "Je voudrais un café."
+      - "Un café, s'il vous plaît."
+      - "I would like un café, please."
+    negative_examples:
+      - text: "I want coffee."
+        reason: "English-only; it does not demonstrate the French coffee target."
+      - text: "Gerald said, 'un café'."
+        reason: "A quotation is not the player's own order."
+      - text: "She wants un café."
+        reason: "It orders for someone else rather than the player."
+    reference_meaning: "A direct request by the player for coffee."
+    hint_limit: 2
+    next_objective: no_milk
+    assessment_reference_ids: [larousse-cafe, larousse-express, larousse-vouloir]
+  - id: no_milk
+    prompt: "Make clear that your coffee must have no milk, using French."
+    intent: "The player orders their coffee without milk or as black coffee."
+    target_vocabulary_ids: [sans_lait, cafe_noir]
+    required_target_groups:
+      - [sans_lait, cafe_noir]
+    grammar_constraints:
+      - "Use one authored French no-milk or black-coffee expression in the player's own order."
+      - "Reject negated, contradicted, quoted, third-person, and off-topic occurrences."
+    accepted_examples:
+      - "Je voudrais un café sans lait."
+      - "I want my café noir, please."
+      - "Sans lait, s'il vous plaît."
+    negative_examples:
+      - text: "Pas sans lait, avec du lait."
+        reason: "The phrase is explicitly negated and contradicted by 'with milk'."
+      - text: "The sign says 'sans lait'."
+        reason: "A quotation about a sign is not an order."
+      - text: "My friend takes café noir."
+        reason: "It describes someone else's preference."
+      - text: "Sans lait is two words."
+        reason: "It discusses the phrase rather than ordering coffee."
+    reference_meaning: "The player's established coffee order contains no milk."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [larousse-cafe, larousse-sans, larousse-lait]

@@ -1,0 +1,237 @@
+# Round 180: French version authored by Claude; it awaits a native speaker's review.
+version: flick-party-fr-v1
+references:
+  - id: larousse-aller
+    title: 'Larousse, Dictionnaire de français: aller'
+    url: https://www.larousse.fr/dictionnaires/francais/aller
+  - id: larousse-ensemble
+    title: 'Larousse, Dictionnaire de français: ensemble'
+    url: https://www.larousse.fr/dictionnaires/francais/ensemble
+  - id: wiktionary-on-y-va
+    title: 'Wiktionary: on y va (French)'
+    url: https://en.wiktionary.org/wiki/on_y_va
+  - id: wiktionary-deux
+    title: 'Wiktionary: deux (French)'
+    url: https://en.wiktionary.org/wiki/deux
+  - id: wiktionary-quatre
+    title: 'Wiktionary: quatre (French)'
+    url: https://en.wiktionary.org/wiki/quatre
+  - id: wiktionary-cinq
+    title: 'Wiktionary: cinq (French)'
+    url: https://en.wiktionary.org/wiki/cinq
+  - id: wiktionary-six
+    title: 'Wiktionary: six (French)'
+    url: https://en.wiktionary.org/wiki/six
+  - id: wiktionary-sept
+    title: 'Wiktionary: sept (French)'
+    url: https://en.wiktionary.org/wiki/sept
+  - id: wiktionary-huit
+    title: 'Wiktionary: huit (French)'
+    url: https://en.wiktionary.org/wiki/huit
+  - id: wiktionary-neuf
+    title: 'Wiktionary: neuf (French)'
+    url: https://en.wiktionary.org/wiki/neuf
+  - id: wiktionary-dix
+    title: 'Wiktionary: dix (French)'
+    url: https://en.wiktionary.org/wiki/dix
+  - id: wiktionary-onze
+    title: 'Wiktionary: onze (French)'
+    url: https://en.wiktionary.org/wiki/onze
+  - id: wiktionary-douze
+    title: 'Wiktionary: douze (French)'
+    url: https://en.wiktionary.org/wiki/douze
+  - id: wiktionary-minute
+    title: 'Wiktionary: minute (French)'
+    url: https://en.wiktionary.org/wiki/minute
+entries:
+  - id: on_y_va
+    kind: phrase
+    target: on y va
+    part_of_speech: phrase
+    accepted_translations:
+      - let's go
+      - we're going
+      - here we go
+    surface_variants:
+      - on y va
+      - allons-y
+      - allons y
+    accent_insensitive: false
+    example:
+      target: On y va, au marché !
+      english: Let's go to the market!
+    note: 'From aller, to go: on y va (everyday) and allons-y (a little more formal) both mean "let''s go". On y va ? also asks "shall we go?".'
+    reference_ids:
+      - larousse-aller
+      - wiktionary-on-y-va
+  - id: ensemble
+    kind: word
+    target: ensemble
+    part_of_speech: adverb
+    accepted_translations:
+      - together
+    surface_variants:
+      - ensemble
+    accent_insensitive: false
+    example:
+      target: On y va ensemble.
+      english: Let's go together.
+    reference_ids:
+      - larousse-ensemble
+  - id: deux
+    kind: word
+    target: deux
+    part_of_speech: numeral
+    accepted_translations:
+      - two
+    surface_variants:
+      - deux
+    accent_insensitive: false
+    example:
+      target: Il est deux heures.
+      english: "It is two o'clock."
+    reference_ids:
+      - wiktionary-deux
+  - id: quatre
+    kind: word
+    target: quatre
+    part_of_speech: numeral
+    accepted_translations:
+      - four
+    surface_variants:
+      - quatre
+    accent_insensitive: false
+    example:
+      target: Il est quatre heures.
+      english: "It is four o'clock."
+    reference_ids:
+      - wiktionary-quatre
+  - id: cinq
+    kind: word
+    target: cinq
+    part_of_speech: numeral
+    accepted_translations:
+      - five
+    surface_variants:
+      - cinq
+    accent_insensitive: false
+    example:
+      target: Il est cinq heures.
+      english: "It is five o'clock."
+    reference_ids:
+      - wiktionary-cinq
+  - id: six
+    kind: word
+    target: six
+    part_of_speech: numeral
+    accepted_translations:
+      - six
+    surface_variants:
+      - six
+    accent_insensitive: false
+    example:
+      target: Il est six heures.
+      english: "It is six o'clock."
+    reference_ids:
+      - wiktionary-six
+  - id: sept
+    kind: word
+    target: sept
+    part_of_speech: numeral
+    accepted_translations:
+      - seven
+    surface_variants:
+      - sept
+    accent_insensitive: false
+    example:
+      target: Il est sept heures.
+      english: "It is seven o'clock."
+    reference_ids:
+      - wiktionary-sept
+  - id: huit
+    kind: word
+    target: huit
+    part_of_speech: numeral
+    accepted_translations:
+      - eight
+    surface_variants:
+      - huit
+    accent_insensitive: false
+    example:
+      target: Il est huit heures.
+      english: "It is eight o'clock."
+    reference_ids:
+      - wiktionary-huit
+  - id: neuf
+    kind: word
+    target: neuf
+    part_of_speech: numeral
+    accepted_translations:
+      - nine
+    surface_variants:
+      - neuf
+    accent_insensitive: false
+    example:
+      target: Il est neuf heures.
+      english: "It is nine o'clock."
+    reference_ids:
+      - wiktionary-neuf
+  - id: dix
+    kind: word
+    target: dix
+    part_of_speech: numeral
+    accepted_translations:
+      - ten
+    surface_variants:
+      - dix
+    accent_insensitive: false
+    example:
+      target: Il est dix heures.
+      english: "It is ten o'clock."
+    reference_ids:
+      - wiktionary-dix
+  - id: onze
+    kind: word
+    target: onze
+    part_of_speech: numeral
+    accepted_translations:
+      - eleven
+    surface_variants:
+      - onze
+    accent_insensitive: false
+    example:
+      target: Il est onze heures.
+      english: "It is eleven o'clock."
+    reference_ids:
+      - wiktionary-onze
+  - id: douze
+    kind: word
+    target: douze
+    part_of_speech: numeral
+    accepted_translations:
+      - twelve
+    surface_variants:
+      - douze
+    accent_insensitive: false
+    example:
+      target: "Douze œufs, s'il vous plaît."
+      english: "Twelve eggs, please."
+    reference_ids:
+      - wiktionary-douze
+  - id: minutes
+    kind: word
+    target: minutes
+    part_of_speech: noun
+    accepted_translations:
+      - minutes
+      - minute
+    surface_variants:
+      - minute
+      - minutes
+    accent_insensitive: false
+    example:
+      target: Encore cinq minutes.
+      english: Five more minutes.
+    note: 'Singular minute, feminine: une minute, one minute.'
+    reference_ids:
+      - wiktionary-minute

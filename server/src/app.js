@@ -29,11 +29,51 @@ function requireToken(token, friendCode) {
 }
 export const GEMINI_KEY_HEADER = 'X-Gemini-Key';
 
-export function createApp({ service, logger = console, token = null, friendCode = null, saves = null }) {
+// Round 180: one server plays several languages. Each language has its own service (content, saves, Spellbook), and a
+// request names its game's language in X-ParaLLang-Language; a request without it plays the server's default, as
+// every client before round 180 did. A language the server does not play is refused, not swapped for another.
+export const LANGUAGE_HEADER = 'X-ParaLLang-Language';
+
+export function createApp({ service, services: given = null, defaultLanguage = null, logger = console, token = null, friendCode = null, saves = null }) {
+  const services = new Map(given ? Object.entries(given) : [[service.content.language.code, service]]);
+  const fallback = defaultLanguage && services.has(defaultLanguage) ? defaultLanguage : services.keys().next().value;
+  const languages = [...services.values()].map(({ content: { language: { code, name, tag } } }) => ({ code, name, tag }));
   const app = express();
   app.use(cors());
+  // Round 145: with `saves` (where the saves are kept, and whether the last copy to GitHub went through) the health
+  // check says so, so the owner can see from outside that the store is the one they set up.
+  // Round 180: the languages are public, as the health check is, so a page can offer them before it has a token.
+  app.get('/api/health', (req, res) => res.json({ status: 'ok', languages, defaultLanguage: fallback, ...(saves ? { saves: saves() } : {}) }));
   if (token) app.use(requireToken(token, friendCode));
   else app.use((req, res, next) => requestContext.run({ access: 'owner' }, next));
+  const routers = new Map([...services].map(([code, each]) => [code, gameRoutes(each, languages)]));
+  app.use((req, res, next) => {
+    const asked = req.get(LANGUAGE_HEADER)?.trim().toLowerCase() || fallback;
+    const router = routers.get(asked);
+    if (!router) {
+      return next(new AppError(`This server does not play the language "${asked}". It plays: ${[...services.keys()].join(', ')}.`, {
+        status: 400, code: 'LANGUAGE_UNAVAILABLE', details: { languages: [...services.keys()] },
+      }));
+    }
+    return router(req, res, next);
+  });
+  app.use((error, req, res, _next) => {
+    const requestId = randomUUID();
+    const isAppError = error instanceof AppError;
+    const appError = isAppError ? error : new AppError('An unexpected server error occurred.');
+    const safeFields = appError.logFields ? ` ${JSON.stringify(appError.logFields)}` : '';
+    const unexpectedMessage = isAppError ? '' : ` ${error.message}`;
+    logger.error?.(`[${requestId}] ${appError.code}${safeFields}${unexpectedMessage}`);
+    res.status(appError.status).json({
+      error: { code: appError.code, message: appError.message, retryable: appError.retryable, requestId, details: appError.details },
+    });
+  });
+  return app;
+}
+
+// The game's routes for one language's service.
+function gameRoutes(service, languages) {
+  const app = express.Router();
   // Round 144: a save put back from the player's own copy. A save is larger than any other request (about 150 kB
   // after long play), so this one route reads its body with its own limit, before the small one below.
   app.post('/api/save/restore', express.json({ limit: '2mb' }), async (req, res, next) => {
@@ -41,12 +81,10 @@ export function createApp({ service, logger = console, token = null, friendCode 
     catch (error) { next(error); }
   });
   app.use(express.json({ limit: '32kb' }));
-  // Round 145: with `saves` (where the saves are kept, and whether the last copy to GitHub went through) the health
-  // check says so, so the owner can see from outside that the store is the one they set up.
-  app.get('/api/health', (req, res) => res.json({ status: 'ok', ...(saves ? { saves: saves() } : {}) }));
 
   app.post('/api/learner', async (req, res, next) => {
-    try { res.status(req.body?.learnerId ? 200 : 201).json(await service.createOrRecoverLearner(req.body?.learnerId)); }
+    // Round 180: with the languages the server plays, so a new game's title can offer them without another request.
+    try { res.status(req.body?.learnerId ? 200 : 201).json({ ...(await service.createOrRecoverLearner(req.body?.learnerId)), languages }); }
     catch (error) { next(error); }
   });
   // Round 039: deletes the learner named by X-Learner-Id (the app's "Remove" on the Saves screen).
@@ -157,16 +195,5 @@ export function createApp({ service, logger = console, token = null, friendCode 
     catch (error) { next(error); }
   });
 
-  app.use((error, req, res, _next) => {
-    const requestId = randomUUID();
-    const isAppError = error instanceof AppError;
-    const appError = isAppError ? error : new AppError('An unexpected server error occurred.');
-    const safeFields = appError.logFields ? ` ${JSON.stringify(appError.logFields)}` : '';
-    const unexpectedMessage = isAppError ? '' : ` ${error.message}`;
-    logger.error?.(`[${requestId}] ${appError.code}${safeFields}${unexpectedMessage}`);
-    res.status(appError.status).json({
-      error: { code: appError.code, message: appError.message, retryable: appError.retryable, requestId, details: appError.details },
-    });
-  });
   return app;
 }

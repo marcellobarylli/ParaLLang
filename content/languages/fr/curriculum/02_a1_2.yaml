@@ -1,0 +1,198 @@
+# Round 144: the Italian words of curriculum stage A1.2 (the skeleton is content/curriculum/02_a1_2.yaml). Authored by
+# Claude from the functions of the A1 syllabi read for the round; no source page was opened for a single entry. For
+# the owner's review. The vocabulary shares one namespace with the earlier stages: an id defined in 01_a1_1.yaml is
+# reused here, never redefined, and no new entry repeats an earlier entry's form.
+stage: a1_2
+version: curriculum-a1-2-it-v1
+grammar:
+  family: "avere (ho, hai, ha); mio, mia, tuo, tua, with the article (la mia amica) and without it (mia madre); adjectives in -o/-a and in -e."
+  places: "c'è and ci sono; il, la, l' with places in town; accanto a, davanti a, dietro, tra, with a + article (al, alla)."
+  directions: "The imperative for directions (gira, vai; formal giri, vada); andare (vado, vai, va); in treno, in autobus, a piedi."
+  time: "Che ore sono? Sono le ... (è l'una); alle with hours; oggi, domani and the days of the week."
+  routine: "The first person of -are, -ere and -ire verbs; reflexives (mi sveglio, mi alzo); sempre, spesso, and non ... mai."
+  shopping: "questo and quello; colours that agree (rosso, rossa) and one that does not (blu); lo and la before the verb (lo prendo)."
+lessons:
+  family_who:
+    siblings: { say: [fratello, sorella, figlio], examples: ["Ho un fratello.", "Ho due sorelle.", "Non ho figli."] }
+    parents: { say: [mia_madre, mio_padre], examples: ["Mia madre si chiama Anna.", "Mio padre si chiama Paolo."] }
+    ask_family: { say: [hai_fratelli], examples: ["Hai fratelli o sorelle?", "Ha figli?"] }
+  family_describe:
+    ask_like: { say: [com_e], examples: ["Com'è tua sorella?", "Come sono i tuoi fratelli?"] }
+    looks: { say: [alto, basso, giovane, anziano], examples: ["Mio fratello è alto.", "Mia madre è bassa.", "Mio padre è anziano."] }
+    character: { say: [simpatico, gentile, divertente], examples: ["È molto simpatica.", "È gentile e divertente."] }
+  family_friend:
+    my_friend: { say: [amico], examples: ["Ho un amico che si chiama Luca.", "La mia amica si chiama Sara."] }
+    friend_lives: { say: [abita], examples: ["Abita a Roma.", "Il mio amico vive a Londra."] }
+    together: { say: [insieme], examples: ["Studiamo insieme.", "Mangiamo spesso insieme."] }
+  places_where:
+    looking_for: { say: [[cerco], [stazione, banca, farmacia, piazza, supermercato]], examples: ["Cerco la stazione.", "Sto cercando una farmacia."] }
+    where_is: { say: [[dov_e], [stazione, banca, farmacia, piazza, supermercato]], examples: ["Dov'è la banca?", "Scusi, dov'è la stazione?"] }
+    near: { say: [qui_vicino, vicino, lontano], examples: ["È qui vicino?", "È lontano?"] }
+  places_there:
+    is_there: { say: [[c_e], [stazione, banca, farmacia, piazza, supermercato]], examples: ["C'è una banca qui vicino?", "C'è un supermercato?"] }
+    in_my_town: { say: [c_e], examples: ["Nella mia città c'è una piazza grande.", "Ci sono due farmacie."] }
+    none: { say: [non_c_e], examples: ["Non c'è una stazione.", "Non ci sono supermercati."] }
+  places_next_to:
+    next_to: { say: [accanto_a], examples: ["La banca è accanto alla farmacia.", "Il bar è accanto al supermercato."] }
+    front_behind: { say: [davanti_a, dietro], examples: ["La farmacia è davanti alla stazione.", "È dietro la banca."] }
+    between: { say: [tra], examples: ["È tra la banca e la farmacia."] }
+  directions_ask:
+    lost: { say: [mi_sono_perso], examples: ["Mi sono perso.", "Scusi, mi sono persa."] }
+    how_to_get: { say: [come_arrivo], examples: ["Come arrivo alla stazione?", "Scusi, come si va in centro?"] }
+    right_road: { say: [strada], examples: ["È questa la strada giusta?", "È questa la strada per la stazione?"] }
+  directions_turn:
+    turn: { say: [[gira], [a_sinistra, a_destra]], examples: ["Gira a sinistra.", "Giri a destra, per favore."] }
+    straight: { say: [sempre_dritto], examples: ["Vai sempre dritto.", "Vada dritto."] }
+    which_street: { say: [la_prima], examples: ["Prendi la prima a destra.", "È la seconda strada a sinistra."] }
+  directions_transport:
+    ticket: { say: [biglietto], examples: ["Un biglietto per Roma, per favore.", "Vorrei due biglietti per Milano."] }
+    by_what: { say: [in_treno, in_autobus, a_piedi], examples: ["Vado in treno.", "Vado a piedi.", "Prendo l'autobus."] }
+    how_long: { say: [quanto_ci_vuole, quanto_dista], examples: ["Quanto ci vuole in treno?", "Quanto dista la stazione?"] }
+  time_clock:
+    what_time: { say: [che_ore_sono], examples: ["Che ore sono?", "Scusi, che ora è?"] }
+    tell_time: { say: [sono_le], examples: ["Sono le tre.", "Sono le dieci.", "È l'una."] }
+    half_quarter: { say: [e_mezza, e_un_quarto], examples: ["Sono le due e mezza.", "Sono le sei e un quarto."] }
+  time_days:
+    what_day: { say: [che_giorno_e], examples: ["Che giorno è oggi?", "Che giorno è?"] }
+    today_is: { say: [[oggi], [lunedi, martedi, mercoledi, giovedi, venerdi, sabato, domenica]], examples: ["Oggi è lunedì.", "Oggi è sabato."] }
+    tomorrow: { say: [[domani], [lunedi, martedi, mercoledi, giovedi, venerdi, sabato, domenica]], examples: ["Domani è martedì.", "Domani è domenica."] }
+  time_when:
+    at_what_time: { say: [a_che_ora], examples: ["A che ora apre?", "A che ora parte il treno?"] }
+    at_hour: { say: [alle], examples: ["Torno alle otto.", "Alle nove."] }
+    part_of_day: { say: [di_mattina, di_pomeriggio, di_sera], examples: ["Di mattina.", "Alle otto di sera.", "Nel pomeriggio."] }
+  routine_day:
+    wake: { say: [mi_sveglio, mi_alzo], examples: ["Mi sveglio alle sette.", "Mi alzo alle otto."] }
+    work: { say: [lavoro, studio], examples: ["Lavoro in un ufficio.", "Studio all'università."] }
+    evening: { say: [ceno, vado_a_letto, dormo], examples: ["Ceno alle otto.", "Vado a letto alle dieci.", "Dormo otto ore."] }
+  routine_often:
+    always: { say: [sempre, spesso], examples: ["Bevo sempre un caffè.", "Vado spesso al cinema."] }
+    never: { say: [mai], examples: ["Non bevo mai birra.", "Non guardo mai la televisione."] }
+    sometimes: { say: [qualche_volta, ogni_giorno], examples: ["Qualche volta cucino.", "Lavoro tutti i giorni."] }
+  routine_free:
+    ask_free: { say: [tempo_libero, cosa_fai], examples: ["Cosa fai nel tempo libero?", "Che cosa fa nel tempo libero?"] }
+    free_time: { say: [leggo, guardo, ascolto, gioco, esco], examples: ["Leggo molto.", "Guardo un film o ascolto musica.", "Gioco a calcio."] }
+    weekend: { say: [il_fine_settimana], examples: ["Il fine settimana esco con gli amici.", "Nel weekend dormo molto."] }
+  shopping_ask:
+    looking_for: { say: [camicia, scarpe, giacca, cappello], examples: ["Cerco una camicia.", "Vorrei un paio di scarpe."] }
+    colour: { say: [rosso, blu, verde, nero, bianco, giallo], examples: ["Vorrei una camicia bianca.", "In nero, per favore."] }
+    other_colour: { say: [altro_colore, avete], examples: ["Avete un altro colore?", "Ce l'avete in verde?"] }
+  shopping_try:
+    try_on: { say: [posso_provare], examples: ["Posso provarla?", "Posso provare questa giacca?"] }
+    wrong_size: { say: [troppo_grande, troppo_piccolo], examples: ["È troppo grande.", "È troppo piccola."] }
+    take_it: { say: [lo_prendo], examples: ["Va bene, lo prendo.", "La prendo."] }
+  shopping_this:
+    this_that: { say: [questo, quello], examples: ["Vorrei questo.", "Quella, per favore."] }
+    size: { say: [taglia], examples: ["Che taglia è?", "Porto la taglia media."] }
+    bigger: { say: [piu_grande, piu_piccolo], examples: ["Avete una taglia più grande?", "Ne avete uno più piccolo?"] }
+vocabulary:
+  # family
+  fratello: { t: "fratello", pos: noun, en: ["brother"], forms: ["fratello", "fratelli"], ex: ["Ho un fratello a Torino.", "I have a brother in Turin."] }
+  sorella: { t: "sorella", pos: noun, en: ["sister"], forms: ["sorella", "sorelle"], ex: ["Mia sorella si chiama Elena.", "My sister is called Elena."] }
+  figlio: { t: "figlio", pos: noun, en: ["son", "child"], forms: ["figlio", "figlia", "figli", "figlie"], ex: ["Ho un figlio e una figlia.", "I have a son and a daughter."], n: "'Figlia' is a daughter; 'figli' is sons, or children of either sex." }
+  mia_madre: { t: "mia madre", pos: phrase, en: ["my mother"], forms: ["mia madre", "mia mamma", "la mia mamma"], ex: ["Mia madre è di Napoli.", "My mother is from Naples."], n: "No article with one relative: mia madre, but la mia amica." }
+  mio_padre: { t: "mio padre", pos: phrase, en: ["my father"], forms: ["mio padre", "mio papà", "il mio papà", "mio babbo"], ex: ["Mio padre ha sessanta anni.", "My father is sixty."] }
+  hai_fratelli: { t: "hai fratelli", pos: phrase, en: ["do you have brothers", "do you have any brothers or sisters"], forms: ["hai fratelli", "ha fratelli", "hai sorelle", "ha sorelle", "hai figli", "ha figli", "avete figli"], ex: ["Hai fratelli o sorelle?", "Do you have brothers or sisters?"] }
+  com_e: { t: "com'è", pos: phrase, en: ["what is he like", "what is she like", "what is it like"], forms: ["com'è", "come è", "come sono"], ex: ["Com'è tuo fratello?", "What is your brother like?"] }
+  alto: { t: "alto", pos: adjective, en: ["tall"], forms: ["alto", "alta", "alti", "alte"], ex: ["Mia sorella è molto alta.", "My sister is very tall."] }
+  basso: { t: "basso", pos: adjective, en: ["short"], forms: ["basso", "bassa", "bassi", "basse"], ex: ["Mio padre è basso.", "My father is short."] }
+  giovane: { t: "giovane", pos: adjective, en: ["young"], forms: ["giovane", "giovani"], ex: ["Mia madre è ancora giovane.", "My mother is still young."] }
+  anziano: { t: "anziano", pos: adjective, en: ["old", "elderly"], forms: ["anziano", "anziana", "vecchio", "vecchia"], ex: ["Mio nonno è anziano.", "My grandfather is old."], n: "Of a person, 'anziano' is kinder than 'vecchio'." }
+  simpatico: { t: "simpatico", pos: adjective, en: ["nice", "likeable"], forms: ["simpatico", "simpatica", "simpatici", "simpatiche"], ex: ["Tuo fratello è simpatico.", "Your brother is nice."] }
+  gentile: { t: "gentile", pos: adjective, en: ["kind"], forms: ["gentile", "gentili"], ex: ["È una persona gentile.", "He is a kind person."] }
+  divertente: { t: "divertente", pos: adjective, en: ["funny", "fun"], forms: ["divertente", "divertenti"], ex: ["Mia sorella è divertente.", "My sister is funny."] }
+  amico: { t: "amico", pos: noun, en: ["friend"], forms: ["amico", "amica", "amici", "amiche"], ex: ["Luca è un mio amico.", "Luca is a friend of mine."] }
+  abita: { t: "abita", pos: verb, en: ["he lives", "she lives"], forms: ["abita", "vive"], ex: ["La mia amica abita a Firenze.", "My friend lives in Florence."] }
+  insieme: { t: "insieme", pos: adverb, en: ["together"], ex: ["Mangiamo insieme.", "We eat together."] }
+  # places
+  cerco: { t: "cerco", pos: verb, en: ["I am looking for", "I look for"], forms: ["cerco", "sto cercando"], ex: ["Cerco una banca.", "I am looking for a bank."] }
+  stazione: { t: "stazione", pos: noun, en: ["station"], forms: ["stazione", "la stazione", "stazioni"], ex: ["La stazione è lontana.", "The station is far."] }
+  banca: { t: "banca", pos: noun, en: ["bank"], forms: ["banca", "la banca", "banche"], ex: ["La banca apre alle nove.", "The bank opens at nine."] }
+  farmacia: { t: "farmacia", pos: noun, en: ["pharmacy", "chemist's"], forms: ["farmacia", "la farmacia", "farmacie"], ex: ["Cerco una farmacia.", "I am looking for a pharmacy."] }
+  piazza: { t: "piazza", pos: noun, en: ["square"], forms: ["piazza", "la piazza", "piazze"], ex: ["La piazza è molto bella.", "The square is very beautiful."] }
+  supermercato: { t: "supermercato", pos: noun, en: ["supermarket"], forms: ["supermercato", "il supermercato", "supermercati"], ex: ["Il supermercato è aperto.", "The supermarket is open."] }
+  dov_e: { t: "dov'è", pos: phrase, en: ["where is"], forms: ["dov'è", "dove è", "dove si trova", "dove sono"], ex: ["Dov'è la farmacia?", "Where is the pharmacy?"], n: "With a plural: dove sono le scarpe?" }
+  qui_vicino: { t: "qui vicino", pos: phrase, en: ["near here", "nearby"], forms: ["qui vicino", "qua vicino", "vicino a qui"], ex: ["C'è un bar qui vicino?", "Is there a bar near here?"] }
+  c_e: { t: "c'è", pos: phrase, en: ["there is", "is there"], forms: ["c'è", "ci sono"], ex: ["C'è una farmacia in piazza.", "There is a pharmacy in the square."], n: "'C'è' for one thing, 'ci sono' for several." }
+  non_c_e: { t: "non c'è", pos: phrase, en: ["there is no", "there isn't"], forms: ["non c'è", "non ci sono"], ex: ["Qui non c'è una banca.", "There is no bank here."] }
+  accanto_a: { t: "accanto a", pos: phrase, en: ["next to", "beside"], forms: ["accanto a", "accanto al", "accanto alla", "accanto", "di fianco a", "di fianco al", "di fianco alla"], ex: ["La banca è accanto al bar.", "The bank is next to the bar."], n: "'A' joins the article: accanto al bar, accanto alla banca." }
+  davanti_a: { t: "davanti a", pos: phrase, en: ["in front of", "opposite"], forms: ["davanti a", "davanti al", "davanti alla", "davanti", "di fronte a", "di fronte al", "di fronte alla", "di fronte"], ex: ["Sono davanti alla stazione.", "I am in front of the station."] }
+  dietro: { t: "dietro", pos: preposition, en: ["behind"], forms: ["dietro", "dietro a", "dietro al", "dietro alla"], ex: ["Il supermercato è dietro la piazza.", "The supermarket is behind the square."] }
+  tra: { t: "tra", pos: preposition, en: ["between"], forms: ["tra", "fra"], ex: ["Il bar è tra la banca e la stazione.", "The bar is between the bank and the station."] }
+  # directions
+  mi_sono_perso: { t: "mi sono perso", pos: phrase, en: ["I am lost", "I got lost"], forms: ["mi sono perso", "mi sono persa"], ex: ["Scusi, mi sono perso.", "Excuse me, I am lost."], n: "A man says perso, a woman persa." }
+  come_arrivo: { t: "come arrivo", pos: phrase, en: ["how do I get", "how do I get to"], forms: ["come arrivo", "come si arriva", "come si va", "come vado", "come posso arrivare"], ex: ["Come arrivo in piazza?", "How do I get to the square?"] }
+  strada: { t: "strada", pos: noun, en: ["road", "street", "way"], forms: ["strada", "la strada", "strada giusta", "la strada giusta"], ex: ["È la strada per il centro.", "It is the road to the centre."] }
+  gira: { t: "gira", pos: verb, en: ["turn"], forms: ["gira", "giri", "girate", "svolta", "svolti"], ex: ["Gira a destra dopo la banca.", "Turn right after the bank."], n: "'Gira' to a friend, 'giri' to a stranger." }
+  a_sinistra: { t: "a sinistra", pos: phrase, en: ["left", "on the left", "to the left"], forms: ["a sinistra", "sinistra"], ex: ["La farmacia è a sinistra.", "The pharmacy is on the left."] }
+  a_destra: { t: "a destra", pos: phrase, en: ["right", "on the right", "to the right"], forms: ["a destra", "destra"], ex: ["Il bar è a destra.", "The bar is on the right."] }
+  sempre_dritto: { t: "sempre dritto", pos: phrase, en: ["straight on", "straight ahead"], forms: ["sempre dritto", "dritto", "sempre diritto", "diritto"], ex: ["Vai sempre dritto fino alla piazza.", "Go straight on as far as the square."] }
+  la_prima: { t: "la prima", pos: phrase, en: ["the first", "the first one"], forms: ["la prima", "la seconda", "la terza", "la prima strada", "la seconda strada", "la prima via", "la seconda via"], ex: ["Prendi la prima a sinistra.", "Take the first on the left."], n: "La prima, la seconda, la terza: the first, second and third street." }
+  biglietto: { t: "biglietto", pos: noun, en: ["ticket"], forms: ["biglietto", "biglietti", "un biglietto"], ex: ["Un biglietto per Napoli.", "A ticket to Naples."] }
+  in_treno: { t: "in treno", pos: phrase, en: ["by train"], forms: ["in treno", "col treno", "con il treno", "treno"], ex: ["Vado a Milano in treno.", "I am going to Milan by train."] }
+  in_autobus: { t: "in autobus", pos: phrase, en: ["by bus"], forms: ["in autobus", "con l'autobus", "autobus", "in pullman"], ex: ["Vado al lavoro in autobus.", "I go to work by bus."] }
+  a_piedi: { t: "a piedi", pos: phrase, en: ["on foot"], ex: ["Vado in centro a piedi.", "I am going to the centre on foot."] }
+  quanto_ci_vuole: { t: "quanto ci vuole", pos: phrase, en: ["how long does it take"], forms: ["quanto ci vuole", "quanto tempo ci vuole", "quanto ci mette"], ex: ["Quanto ci vuole a piedi?", "How long does it take on foot?"] }
+  quanto_dista: { t: "quanto dista", pos: phrase, en: ["how far is it", "how far is"], forms: ["quanto dista", "quanto è lontano", "quant'è lontano"], ex: ["Quanto dista il centro?", "How far is the centre?"] }
+  # time
+  che_ore_sono: { t: "che ore sono", pos: phrase, en: ["what time is it"], forms: ["che ore sono", "che ora è"], ex: ["Scusi, che ore sono?", "Excuse me, what time is it?"] }
+  sono_le: { t: "sono le", pos: phrase, en: ["it is ... o'clock", "it is"], forms: ["sono le", "è l'una", "è mezzogiorno", "è mezzanotte"], ex: ["Sono le quattro.", "It is four o'clock."], n: "Only one o'clock is singular: è l'una." }
+  e_mezza: { t: "e mezza", pos: phrase, en: ["half past"], forms: ["e mezza", "e mezzo"], ex: ["Sono le sette e mezza.", "It is half past seven."] }
+  e_un_quarto: { t: "e un quarto", pos: phrase, en: ["a quarter past"], forms: ["e un quarto", "meno un quarto"], ex: ["Sono le nove e un quarto.", "It is a quarter past nine."], n: "'Meno un quarto' is a quarter to." }
+  che_giorno_e: { t: "che giorno è", pos: phrase, en: ["what day is it"], forms: ["che giorno è", "che giorno è oggi"], ex: ["Che giorno è oggi?", "What day is it today?"] }
+  lunedi: { t: "lunedì", pos: noun, en: ["Monday"], ex: ["Oggi è lunedì.", "Today is Monday."] }
+  martedi: { t: "martedì", pos: noun, en: ["Tuesday"], ex: ["Martedì lavoro.", "On Tuesday I work."] }
+  mercoledi: { t: "mercoledì", pos: noun, en: ["Wednesday"], ex: ["Domani è mercoledì.", "Tomorrow is Wednesday."] }
+  giovedi: { t: "giovedì", pos: noun, en: ["Thursday"], ex: ["Il giovedì studio.", "On Thursdays I study."] }
+  venerdi: { t: "venerdì", pos: noun, en: ["Friday"], ex: ["Venerdì esco.", "On Friday I am going out."] }
+  sabato: { t: "sabato", pos: noun, en: ["Saturday"], ex: ["Sabato dormo.", "On Saturday I sleep."] }
+  domenica: { t: "domenica", pos: noun, en: ["Sunday"], ex: ["La domenica non lavoro.", "On Sundays I don't work."] }
+  oggi: { t: "oggi", pos: adverb, en: ["today"], ex: ["Oggi è venerdì.", "Today is Friday."] }
+  domani: { t: "domani", pos: adverb, en: ["tomorrow"], ex: ["Domani è sabato.", "Tomorrow is Saturday."] }
+  a_che_ora: { t: "a che ora", pos: phrase, en: ["at what time", "what time"], ex: ["A che ora chiude la banca?", "What time does the bank close?"] }
+  alle: { t: "alle", pos: preposition, en: ["at"], forms: ["alle", "all'una", "a mezzogiorno", "a mezzanotte"], ex: ["Il treno parte alle sei.", "The train leaves at six."], n: "'At' with an hour: alle due, alle otto; but all'una, a mezzogiorno." }
+  di_mattina: { t: "di mattina", pos: phrase, en: ["in the morning"], forms: ["di mattina", "la mattina", "al mattino", "mattina"], ex: ["Lavoro di mattina.", "I work in the morning."] }
+  di_pomeriggio: { t: "di pomeriggio", pos: phrase, en: ["in the afternoon"], forms: ["di pomeriggio", "il pomeriggio", "nel pomeriggio", "pomeriggio"], ex: ["Studio di pomeriggio.", "I study in the afternoon."] }
+  di_sera: { t: "di sera", pos: phrase, en: ["in the evening"], forms: ["di sera", "la sera", "sera", "stasera"], ex: ["Esco di sera.", "I go out in the evening."] }
+  # routine
+  mi_sveglio: { t: "mi sveglio", pos: phrase, en: ["I wake up"], ex: ["Mi sveglio alle sei.", "I wake up at six."] }
+  mi_alzo: { t: "mi alzo", pos: phrase, en: ["I get up"], ex: ["Mi alzo alle sette.", "I get up at seven."] }
+  lavoro: { t: "lavoro", pos: verb, en: ["I work"], ex: ["Lavoro in una banca.", "I work in a bank."], n: "Also the noun: il lavoro, 'work'." }
+  studio: { t: "studio", pos: verb, en: ["I study"], ex: ["Studio italiano.", "I study Italian."] }
+  ceno: { t: "ceno", pos: verb, en: ["I have dinner"], ex: ["Ceno alle otto.", "I have dinner at eight."] }
+  vado_a_letto: { t: "vado a letto", pos: phrase, en: ["I go to bed"], forms: ["vado a letto", "vado a dormire"], ex: ["Vado a letto alle dieci.", "I go to bed at ten."] }
+  dormo: { t: "dormo", pos: verb, en: ["I sleep"], ex: ["Dormo sette ore.", "I sleep for seven hours."] }
+  sempre: { t: "sempre", pos: adverb, en: ["always"], ex: ["Mangio sempre a casa.", "I always eat at home."] }
+  spesso: { t: "spesso", pos: adverb, en: ["often"], ex: ["Leggo spesso.", "I read often."] }
+  mai: { t: "mai", pos: adverb, en: ["never"], ex: ["Non dormo mai di pomeriggio.", "I never sleep in the afternoon."], n: "With non before the verb: non bevo mai." }
+  qualche_volta: { t: "qualche volta", pos: phrase, en: ["sometimes"], forms: ["qualche volta", "a volte", "ogni tanto"], ex: ["Qualche volta vado a piedi.", "Sometimes I go on foot."] }
+  ogni_giorno: { t: "ogni giorno", pos: phrase, en: ["every day"], forms: ["ogni giorno", "tutti i giorni"], ex: ["Studio ogni giorno.", "I study every day."] }
+  tempo_libero: { t: "tempo libero", pos: phrase, en: ["free time", "spare time"], forms: ["tempo libero", "nel tempo libero"], ex: ["Nel tempo libero leggo.", "In my free time I read."] }
+  cosa_fai: { t: "cosa fai", pos: phrase, en: ["what do you do", "what are you doing"], forms: ["cosa fai", "che cosa fai", "che fai", "cosa fa", "che cosa fa"], ex: ["Cosa fai domani?", "What are you doing tomorrow?"] }
+  leggo: { t: "leggo", pos: verb, en: ["I read"], ex: ["Leggo un libro.", "I am reading a book."] }
+  guardo: { t: "guardo", pos: verb, en: ["I watch", "I look at"], ex: ["Guardo la televisione.", "I watch television."] }
+  ascolto: { t: "ascolto", pos: verb, en: ["I listen to"], ex: ["Ascolto la radio.", "I listen to the radio."] }
+  gioco: { t: "gioco", pos: verb, en: ["I play"], ex: ["Gioco a tennis.", "I play tennis."], n: "A game or a sport takes a: gioco a calcio." }
+  esco: { t: "esco", pos: verb, en: ["I go out"], ex: ["Esco con gli amici.", "I go out with friends."] }
+  il_fine_settimana: { t: "il fine settimana", pos: phrase, en: ["the weekend", "at the weekend"], forms: ["il fine settimana", "nel fine settimana", "fine settimana", "il weekend", "nel weekend", "weekend"], ex: ["Il fine settimana non lavoro.", "At the weekend I don't work."] }
+  # shopping
+  camicia: { t: "camicia", pos: noun, en: ["shirt"], forms: ["camicia", "camicie"], ex: ["Una camicia bianca.", "A white shirt."] }
+  scarpe: { t: "scarpe", pos: noun, en: ["shoes"], forms: ["scarpe", "scarpa", "un paio di scarpe"], ex: ["Le scarpe sono nere.", "The shoes are black."] }
+  giacca: { t: "giacca", pos: noun, en: ["jacket"], forms: ["giacca", "giacche"], ex: ["Questa giacca è bella.", "This jacket is nice."] }
+  cappello: { t: "cappello", pos: noun, en: ["hat"], forms: ["cappello", "cappelli"], ex: ["Un cappello verde.", "A green hat."] }
+  rosso: { t: "rosso", pos: adjective, en: ["red"], forms: ["rosso", "rossa", "rossi", "rosse"], ex: ["Una giacca rossa.", "A red jacket."] }
+  blu: { t: "blu", pos: adjective, en: ["blue"], forms: ["blu", "azzurro", "azzurra"], ex: ["Una camicia blu.", "A blue shirt."], n: "'Blu' never changes; 'azzurro' is a lighter blue." }
+  verde: { t: "verde", pos: adjective, en: ["green"], forms: ["verde", "verdi"], ex: ["Un cappello verde.", "A green hat."] }
+  nero: { t: "nero", pos: adjective, en: ["black"], forms: ["nero", "nera", "neri", "nere"], ex: ["Le scarpe nere.", "The black shoes."] }
+  bianco: { t: "bianco", pos: adjective, en: ["white"], forms: ["bianco", "bianca", "bianchi", "bianche"], ex: ["Una camicia bianca.", "A white shirt."] }
+  giallo: { t: "giallo", pos: adjective, en: ["yellow"], forms: ["giallo", "gialla", "gialli", "gialle"], ex: ["Un cappello giallo.", "A yellow hat."] }
+  avete: { t: "avete", pos: verb, en: ["do you have", "you have"], forms: ["avete", "ce l'avete", "ce l'ha", "ce l'hai"], ex: ["Avete una camicia verde?", "Do you have a green shirt?"], n: "A shop is 'you all': avete." }
+  altro_colore: { t: "un altro colore", pos: phrase, en: ["another colour"], forms: ["un altro colore", "altro colore", "altri colori"], ex: ["C'è in un altro colore?", "Is there another colour?"] }
+  posso_provare: { t: "posso provare", pos: phrase, en: ["can I try", "can I try it on"], forms: ["posso provare", "posso provarlo", "posso provarla", "posso provarle", "posso provarli"], ex: ["Posso provare la giacca?", "Can I try the jacket on?"] }
+  troppo_grande: { t: "troppo grande", pos: phrase, en: ["too big"], forms: ["troppo grande", "troppo grandi", "troppo largo", "troppo larga"], ex: ["La giacca è troppo grande.", "The jacket is too big."] }
+  troppo_piccolo: { t: "troppo piccolo", pos: phrase, en: ["too small"], forms: ["troppo piccolo", "troppo piccola", "troppo piccoli", "troppo piccole", "troppo stretto", "troppo stretta"], ex: ["Il cappello è troppo piccolo.", "The hat is too small."] }
+  lo_prendo: { t: "lo prendo", pos: phrase, en: ["I'll take it"], forms: ["lo prendo", "la prendo", "li prendo", "le prendo"], ex: ["È bello, lo prendo.", "It is nice, I'll take it."], n: "'Lo' for a masculine thing, 'la' for a feminine one." }
+  questo: { t: "questo", pos: adjective, en: ["this", "this one"], forms: ["questo", "questa", "questi", "queste"], ex: ["Mi piace questo.", "I like this one."] }
+  quello: { t: "quello", pos: adjective, en: ["that", "that one"], forms: ["quello", "quella", "quelli", "quelle", "quel"], ex: ["Preferisco quello.", "I prefer that one."] }
+  taglia: { t: "taglia", pos: noun, en: ["size"], forms: ["taglia", "la taglia", "misura"], ex: ["Che taglia porta?", "What size do you take?"] }
+  piu_grande: { t: "più grande", pos: phrase, en: ["bigger", "larger"], forms: ["più grande", "più grandi"], ex: ["Vorrei una taglia più grande.", "I would like a bigger size."] }
+  piu_piccolo: { t: "più piccolo", pos: phrase, en: ["smaller"], forms: ["più piccolo", "più piccola", "più piccoli", "più piccole"], ex: ["Avete una taglia più piccola?", "Do you have a smaller size?"] }

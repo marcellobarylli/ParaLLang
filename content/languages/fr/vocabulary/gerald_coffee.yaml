@@ -1,0 +1,115 @@
+# Round 180: French version authored by Claude; awaits a native speaker's review. Reference URLs follow the existing
+# patterns and were not opened from the build container.
+version: gerald-coffee-fr-v1
+references:
+  - id: larousse-cafe
+    title: "Larousse, Dictionnaire de français: café"
+    url: "https://www.larousse.fr/dictionnaires/francais/caf%C3%A9"
+  - id: larousse-vouloir
+    title: "Larousse, Dictionnaire de français: vouloir"
+    url: "https://www.larousse.fr/dictionnaires/francais/vouloir"
+  - id: larousse-sans
+    title: "Larousse, Dictionnaire de français: sans"
+    url: "https://www.larousse.fr/dictionnaires/francais/sans"
+  - id: larousse-lait
+    title: "Larousse, Dictionnaire de français: lait"
+    url: "https://www.larousse.fr/dictionnaires/francais/lait"
+  - id: larousse-express
+    title: "Larousse, Dictionnaire de français: express"
+    url: "https://www.larousse.fr/dictionnaires/francais/express"
+  - id: larousse-noir
+    title: "Larousse, Dictionnaire de français: noir"
+    url: "https://www.larousse.fr/dictionnaires/francais/noir"
+  - id: cnrtl-cafe
+    title: "CNRTL, TLFi: café"
+    url: "https://www.cnrtl.fr/definition/caf%C3%A9"
+  - id: cnrtl-express
+    title: "CNRTL, TLFi: express"
+    url: "https://www.cnrtl.fr/definition/express"
+  - id: wiktionary-cafe
+    title: "Wiktionary: café (French)"
+    url: "https://en.wiktionary.org/wiki/caf%C3%A9"
+  - id: wiktionary-voudrais
+    title: "Wiktionary: voudrais (French)"
+    url: "https://en.wiktionary.org/wiki/voudrais"
+  - id: wiktionary-sans
+    title: "Wiktionary: sans (French)"
+    url: "https://en.wiktionary.org/wiki/sans"
+  - id: wiktionary-lait
+    title: "Wiktionary: lait (French)"
+    url: "https://en.wiktionary.org/wiki/lait"
+  - id: wiktionary-expresso
+    title: "Wiktionary: expresso (French)"
+    url: "https://en.wiktionary.org/wiki/expresso"
+entries:
+  - id: cafe
+    kind: word
+    target: "café"
+    part_of_speech: noun
+    accepted_translations: ["coffee", "a coffee", "espresso", "an espresso"]
+    surface_variants: ["café", "cafe"]
+    accent_insensitive: true
+    example:
+      target: "Un café, s'il vous plaît."
+      english: "A coffee, please."
+    note: "In a French café, un café on its own is a small black coffee made with an espresso machine. Café is masculine: le café, un café."
+    reference_ids: [larousse-cafe, cnrtl-cafe, wiktionary-cafe]
+  - id: je_voudrais
+    kind: phrase
+    target: "je voudrais"
+    part_of_speech: verb_phrase
+    accepted_translations: ["I would like", "I'd like"]
+    surface_variants: ["je voudrais"]
+    accent_insensitive: false
+    example:
+      target: "Je voudrais un café."
+      english: "I would like a coffee."
+    note: "First-person conditional of vouloir, used for polite requests; reviewed as je voudrais, not the infinitive vouloir."
+    reference_ids: [larousse-vouloir, wiktionary-voudrais]
+  - id: sans_lait
+    kind: phrase
+    target: "sans lait"
+    part_of_speech: prepositional_phrase
+    accepted_translations: ["without milk", "no milk"]
+    surface_variants: ["sans lait"]
+    accent_insensitive: false
+    example:
+      target: "Je voudrais un café sans lait."
+      english: "I would like a coffee without milk."
+    reference_ids: [larousse-sans, larousse-lait, wiktionary-sans, wiktionary-lait]
+  - id: express
+    kind: word
+    target: "express"
+    part_of_speech: noun
+    accepted_translations: ["espresso", "an espresso"]
+    surface_variants: ["express", "expresso"]
+    accent_insensitive: false
+    example:
+      target: "Vous me faites un express ?"
+      english: "Could you make me an espresso?"
+    note: "Un express or un expresso: coffee made to order with an espresso machine. Both spellings are common; in a café, un café usually means the same thing."
+    reference_ids: [larousse-express, cnrtl-express, wiktionary-expresso]
+  - id: cafe_noir
+    kind: phrase
+    target: "café noir"
+    part_of_speech: noun_phrase
+    accepted_translations: ["black coffee", "coffee without milk"]
+    surface_variants: ["café noir", "cafe noir"]
+    accent_insensitive: true
+    example:
+      target: "Je prends mon café noir."
+      english: "I take my coffee black."
+    note: "Un café noir is coffee without milk."
+    reference_ids: [larousse-cafe, larousse-noir]
+  - id: avec_du_lait
+    kind: phrase
+    target: "avec du lait"
+    part_of_speech: prepositional_phrase
+    accepted_translations: ["with milk"]
+    surface_variants: ["avec du lait", "au lait"]
+    accent_insensitive: false
+    example:
+      target: "Je ne veux pas de café au lait."
+      english: "I do not want coffee with milk."
+    note: "Avec du lait, or au lait as in un café au lait: with milk. An espresso with steamed milk is often ordered as un crème."
+    reference_ids: [larousse-lait, wiktionary-lait]

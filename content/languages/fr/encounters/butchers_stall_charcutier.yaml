@@ -1,0 +1,66 @@
+# Round 010: The Butcher's Stall (backlog A4). Mortimer the Charcutier calls everything ham (jambon); the player names
+# the real cut and says how much they want.
+# Round 180: French version authored by Claude; it awaits a native speaker's review.
+id: butchers_stall_charcutier
+character: characters/enemies/charcutier_mortimer.yaml
+location: butchers_stall
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player asks for a meat that is not ham by its French name and says how much they want"
+max_turns: 20
+resolved_message: "Mortimer weighs your order twice, wraps it in paper labelled with the wrong word, and lets you go."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: name_meat
+    prompt: "Mortimer says everything is ham. Ask him for a different meat, by its French name."
+    intent: "The player asks Mortimer for a meat other than ham, naming it in French."
+    target_vocabulary_ids: ["saucisson", "saucisse", "poulet"]
+    required_target_groups:
+      - ["saucisson", "saucisse", "poulet"]
+    grammar_constraints:
+      - "The player's own request for a meat that is not ham, with the meat named in French."
+      - "Asking for ham does not pass; reject quotations, remarks about what Mortimer says, and English-only requests."
+    accepted_examples:
+      - "Je voudrais du saucisson, s'il vous plaît."
+      - "Deux saucisses, s'il vous plaît."
+      - "I'd like some poulet, please."
+    negative_examples:
+      - text: "Je voudrais du jambon."
+        reason: "It asks for ham, which Mortimer insists everything is; the objective is to name a different cut."
+      - text: "I want sausage, please."
+        reason: "English-only; the meat must be named in French."
+      - text: "Mortimer says it is all saucisson."
+        reason: "A remark about what he says is not the player's own request."
+    reference_meaning: "The player asks for a specific meat other than ham."
+    hint_limit: 2
+    next_objective: quantity
+    assessment_reference_ids: ["larousse-saucisson", "larousse-saucisse", "larousse-poulet"]
+  - id: quantity
+    prompt: "Tell Mortimer how much you want, in French."
+    intent: "The player says how much of the meat they want: a number or a half, with a unit of weight."
+    target_vocabulary_ids: ["livre", "kilo", "grammes", "trois", "cent", "demi"]
+    required_target_groups:
+      - ["livre", "kilo", "grammes"]
+    grammar_constraints:
+      - "A quantity in French: a number, un/une or a half, together with a unit of weight; a bare unit does not pass."
+      - "The player's own order; reject price questions, quotations and English-only quantities."
+    accepted_examples:
+      - "Deux cents grammes, s'il vous plaît."
+      - "Un kilo."
+      - "Un demi-kilo de saucisses, s'il vous plaît."
+      - "Trois cents grammes, please."
+    negative_examples:
+      - text: "Grammes."
+        reason: "A bare unit is not a quantity."
+      - text: "Two hundred grams."
+        reason: "English-only; the quantity must be in French."
+      - text: "How much is un kilo?"
+        reason: "It asks about a price rather than saying how much the player wants."
+    reference_meaning: "The player states the amount they want to buy."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["larousse-livre", "larousse-kilo", "larousse-gramme"]

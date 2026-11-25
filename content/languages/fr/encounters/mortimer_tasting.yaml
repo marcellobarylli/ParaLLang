@@ -1,0 +1,72 @@
+# Round 180: French version authored by Claude; it awaits a native speaker's review.
+id: mortimer_tasting
+character: characters/enemies/charcutier_mortimer.yaml
+party_of: butchers_stall_charcutier
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player says they like Mortimer's slice and asks for more, in French
+max_turns: 20
+resolved_message: Mortimer weighs your appetite and declares it Certified Ham, First Class.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+# Round 045 (backlog G3): saying you like it and asking for more may come in either order.
+objectives_unordered: true
+objectives:
+  - id: like_it
+    prompt: Mortimer, now in your party, offers you a slice from his travelling hamper. Tell him you like it, using French.
+    intent: Mortimer, now travelling in the player's party, has cut the player one slice from his travelling hamper and waits for the player's own verdict. He does not say "j'aime", "ça me plaît" or "encore" himself before the player has.
+    target_vocabulary_ids:
+      - j_aime
+    required_target_groups:
+      - - j_aime
+    grammar_constraints:
+      - The player says in French that they like the slice, in their own words, with j'aime (j'aime bien, j'aime beaucoup) or ça me plaît.
+      - 'One slice: the singular (ça me plaît, not ils me plaisent).'
+      - Reject English-only answers, negated verdicts (je n'aime pas, also without ne), questions back to Mortimer, and quotations.
+    accepted_examples:
+      - J'aime bien !
+      - J'aime beaucoup, Mortimer.
+      - Ça me plaît, c'est délicieux.
+    negative_examples:
+      - text: I like it.
+        reason: English-only; it does not use the French phrase.
+      - text: Je n'aime pas ça.
+        reason: A negated verdict is not liking it.
+      - text: Tu aimes ?
+        reason: It asks Mortimer instead of giving the player's own verdict.
+      - text: Mortimer says j'aime.
+        reason: It reports someone else's words.
+    reference_meaning: The player says they like the slice.
+    hint_limit: 2
+    next_objective: ask_more
+    assessment_reference_ids:
+      - larousse-aimer
+  - id: ask_more
+    prompt: Ask Mortimer for more, using French.
+    intent: The player asks Mortimer for more of the meat.
+    target_vocabulary_ids:
+      - encore
+    required_target_groups:
+      - - encore
+    grammar_constraints:
+      - The player asks for more in French.
+      - Reject English-only requests, refusals, and talk about the word.
+    accepted_examples:
+      - Encore, s'il te plaît !
+      - Encore un peu ?
+      - Je peux en avoir encore ?
+    negative_examples:
+      - text: More, please.
+        reason: English-only; it does not use the French word.
+      - text: Pas encore.
+        reason: '"Not yet" refuses rather than asks for more.'
+      - text: Encore is French for more.
+        reason: It discusses the word rather than asking for more.
+    reference_meaning: The player asks for more.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - larousse-encore

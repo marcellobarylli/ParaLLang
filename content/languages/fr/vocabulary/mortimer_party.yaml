@@ -1,0 +1,50 @@
+# Round 180: French version authored by Claude; it awaits a native speaker's review.
+version: mortimer-party-fr-v1
+references:
+  - id: larousse-aimer
+    title: 'Larousse, Dictionnaire de français: aimer'
+    url: https://www.larousse.fr/dictionnaires/francais/aimer
+  - id: larousse-plaire
+    title: 'Larousse, Dictionnaire de français: plaire'
+    url: https://www.larousse.fr/dictionnaires/francais/plaire
+  - id: larousse-encore
+    title: 'Larousse, Dictionnaire de français: encore'
+    url: https://www.larousse.fr/dictionnaires/francais/encore
+entries:
+  - id: j_aime
+    kind: phrase
+    target: j'aime
+    part_of_speech: phrase
+    accepted_translations:
+      - I like it
+      - I like
+      - I love it
+    surface_variants:
+      - j'aime
+      - ça me plaît
+    accent_insensitive: false
+    example:
+      target: J'aime le jambon.
+      english: I like ham.
+    note: 'J''aime bien: I like it (aimer bien is milder than aimer). Ça me plaît, literally "it pleases me", says the same of one thing.'
+    reference_ids:
+      - larousse-aimer
+      - larousse-plaire
+  - id: encore
+    kind: word
+    target: encore
+    part_of_speech: adverb
+    accepted_translations:
+      - more
+      - again
+      - some more
+    surface_variants:
+      - encore
+      - encore un peu
+    accent_insensitive: false
+    example:
+      target: Encore un peu, s'il te plaît.
+      english: A little more, please.
+    note: 'Encore un peu: a little more. Encore also means still and again; pas encore is not yet.'
+    reference_ids:
+      - larousse-encore

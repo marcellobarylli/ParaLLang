@@ -1,0 +1,165 @@
+# Round 011: The Cracked Fountain (backlog A5). Flick the Letharger distracts the player with riddles; the player
+# takes control: tells it to stop, tells it which way to go, and insists on now rather than later.
+# Round 050 (backlog G5): a fourth objective between direction and now, telling Flick the time.
+# Round 180: the French version, authored by Claude; it awaits a native speaker's review.
+id: cracked_fountain_letharger
+character: characters/enemies/letharger_flick.yaml
+location: cracked_fountain
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player tells Flick to stop, tells it which way to go, tells it the time and insists on now, all in French"
+max_turns: 20
+resolved_message: "Flick holds still for almost a whole second, points the way you told it, and is gone before you can look straight at it. The fountain is quieter, and the jingle has almost left your head."
+# Round 025 (backlog B3): a containment notice for the Fountain's infohazard, Flick's jingle.
+companion_briefing:
+  - "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high."
+  - "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations."
+  - "Containment procedure: do not hum along."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+# Round 028 (backlog B4): the Spellbook's containment file for the Fountain's infohazard (LORE.md: properties
+# Virulence, Harm, Incubation, Vector, Containment, in the deadpan SCP voice). Shown once the Fountain is visited.
+containment_file:
+  designation: "CM-001"
+  name: "Après, après, demain !"
+  class: "Brainrot (mild)"
+  virulence: "Very high. It spreads from host to host faster than it can be filed."
+  harm: "Low. Hosts put things off, beginning with reading this file."
+  incubation: "Immediate on understanding. Listeners who do not understand it are unaffected, and slightly smug about it."
+  vector: "Song: a three-word jingle, hummed at the end of every sentence by Flick the Letharger."
+  containment: "Do not hum along. Do not translate it for anyone who has not asked. If humming begins, do the thing you were putting off."
+  notes:
+    - "Recovered at the Cracked Fountain, whose plaque reads PLEASE DO NOT HUM."
+    - "Native speakers of the realm's language are immune. The author of this file is not."
+  # Round 111 (backlog B8): the companion's redaction (LORE.md, Infohazards, "Gameplay hooks"). Read anyway, it costs
+  # a hint per objective in the next conversation finished. The text holds no answer (server test). Authored, not
+  # generated; pending a native speaker's review.
+  annex:
+    id: "cm001_second_verse"
+    title: "Annex A: the second verse"
+    redaction: "Your companion has blacked out every line of it. \"Trust me on this. If you read it, I will need a while to get over it: a hint fewer for each objective of the next conversation you finish.\""
+    text: "Deuxième couplet, à ne pas chanter. Qui le lit le fredonne ; qui le fredonne l'enseigne ; qui l'enseigne l'oublie, et le retrouve la nuit même sur les lèvres d'un inconnu. Ce couplet n'a pas de fin : il n'a qu'un retour."
+    translation: "Second verse, not to be sung. Whoever reads it hums it; whoever hums it teaches it; whoever teaches it forgets it, and finds it again that same night on the lips of a stranger. This verse has no end: it only has a return."
+    glossary:
+      - { word: "couplet", meaning: "verse" }
+      - { word: "qui le lit", meaning: "whoever reads it" }
+      - { word: "le fredonne", meaning: "hums it" }
+      - { word: "l'enseigne", meaning: "teaches it" }
+      - { word: "l'oublie", meaning: "forgets it" }
+      - { word: "le retrouve", meaning: "finds it again" }
+      - { word: "la nuit même", meaning: "that same night" }
+      - { word: "lèvres", meaning: "lips" }
+      - { word: "un inconnu", meaning: "a stranger" }
+      - { word: "retour", meaning: "return" }
+    exposure_note: "Exposure log: read in full by the bearer of this Spellbook, who has been added to the list of hosts. Containment of the reader is pending."
+objectives:
+  - id: stop
+    prompt: "Flick will not hold still. Tell it to stop, in French."
+    intent: "The player tells Flick to stop or keep still, as a command in French."
+    target_vocabulary_ids: ["arrete", "ne_bouge_plus", "ca_suffit"]
+    required_target_groups:
+      - ["arrete", "ne_bouge_plus", "ca_suffit"]
+    grammar_constraints:
+      - "The player's own command to stop, keep still or that's enough, in French."
+      - "Other commands (look, listen) do not pass; reject quotations, remarks about Flick and English-only commands."
+    accepted_examples:
+      - "Arrête !"
+      - "Ça suffit, Flick !"
+      - "Ne bouge plus, s'il te plaît."
+    negative_examples:
+      - text: "Regarde !"
+        reason: "A command, but it tells Flick to look, not to stop."
+      - text: "Stop moving!"
+        reason: "English-only; the command must be in French."
+      - text: "Flick ne dit jamais ça suffit."
+        reason: "A remark about Flick is not the player's own command."
+    reference_meaning: "The player commands Flick to stop moving."
+    hint_limit: 2
+    next_objective: direction
+    assessment_reference_ids: ["larousse-arreter", "larousse-bouger", "larousse-suffire"]
+  - id: direction
+    prompt: "Flick has lost its way again. Tell it which way to go, in French."
+    intent: "The player tells Flick a direction to go: left, right or straight on, in French."
+    target_vocabulary_ids: ["droite", "gauche", "tout_droit"]
+    required_target_groups:
+      - ["droite", "gauche", "tout_droit"]
+    grammar_constraints:
+      - "The player's own direction for Flick, in French; any of left, right or straight on passes."
+      - "Reject a question back, quotations and English-only directions."
+    accepted_examples:
+      - "À gauche !"
+      - "Va à droite."
+      - "Tout droit, Flick."
+    negative_examples:
+      - text: "Left."
+        reason: "English-only; the direction must be in French."
+      - text: "À droite ou à gauche ?"
+        reason: "A question back is not a direction for Flick."
+    reference_meaning: "The player gives Flick a direction."
+    hint_limit: 2
+    next_objective: time
+    assessment_reference_ids: ["larousse-droite", "larousse-gauche", "larousse-droit"]
+  - id: time
+    prompt: "Flick swears it is far too early to do anything. Tell it what time it is, in French."
+    intent: "The fountain's clock stopped long ago, and Flick insists it is always far too early to do anything. The player tells Flick what time it is now, in French: an hour, or midday, or midnight. Flick may ask what time it is, but never says a time itself."
+    target_vocabulary_ids: ["heures", "une_heure", "midi", "minuit"]
+    required_target_groups:
+      - ["heures", "une_heure", "midi", "minuit"]
+    grammar_constraints:
+      - "The player's own statement of the current time, in French, with one of: il est, an hour and heures (minutes optional), il est une heure, midi or minuit. The hour is a French number word or digits; a clear hour with an agreement slip (trois heure, une heures) passes, and the feedback may name the slip in English."
+      - "Fails: now without a time (that is the next objective), a question back, scheduling something for a time instead of saying what time it is, the bare starter without an hour, an impossible hour, an English number, quotations and English-only times."
+    accepted_examples:
+      - "Il est trois heures."
+      - "Il est une heure, Flick."
+      - "Il est midi !"
+      - "Il est dix heures et demie."
+    negative_examples:
+      - text: "Maintenant !"
+        reason: "It says now, not what time it is."
+      - text: "Quelle heure est-il ?"
+        reason: "A question back is not the time."
+      - text: "Il est trois heures ?"
+        reason: "A question back, even with a time in it, is not telling Flick the time."
+      - text: "Je le fais à midi."
+        reason: "It schedules something for midday; it does not say what time it is now."
+      - text: "Il est three heures."
+        reason: "The hour is an English number."
+      - text: "Il est."
+        reason: "The starter alone gives no hour."
+      - text: "It is three o'clock."
+        reason: "English-only; the time must be in French."
+    reference_meaning: "The player tells Flick what time it is."
+    hint_limit: 2
+    next_objective: now
+    assessment_reference_ids: ["larousse-heure", "larousse-midi", "larousse-minuit"]
+  - id: now
+    prompt: "Flick says you can do it later. Insist on now, in French."
+    intent: "The player refuses to put it off and says now, in French. Flick keeps humming its jingle, \"Après, après, demain !\" (later, later, tomorrow), a mild brainrot infohazard that makes listeners put things off. Repeating the jingle or agreeing to later does not pass; a refusal that names later or tomorrow and insists on now passes."
+    target_vocabulary_ids: ["maintenant", "tout_de_suite"]
+    required_target_groups:
+      - ["maintenant", "tout_de_suite"]
+    grammar_constraints:
+      - "The player's own insistence on now, in French."
+      - "Agreeing to later or tomorrow does not pass; reject quotations and English-only answers."
+    accepted_examples:
+      - "Non, maintenant !"
+      - "Tout de suite, Flick."
+      - "Maintenant, pas demain."
+    negative_examples:
+      - text: "Demain."
+        reason: "It agrees to put it off until tomorrow, which is what Flick wants."
+      - text: "D'accord, après."
+        reason: "It agrees to later."
+      - text: "Now!"
+        reason: "English-only; the answer must be in French."
+      - text: "Après, après, demain !"
+        reason: "Humming Flick's jingle back puts it off; it does not insist on now."
+      - text: "Il est quelle heure, maintenant ?"
+        reason: "It asks the time; here maintenant does not insist on doing it now."
+    reference_meaning: "The player insists on doing it now."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["larousse-maintenant", "larousse-suite"]

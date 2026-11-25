@@ -1,0 +1,30 @@
+# Round 180: the French version, authored by Claude; it awaits a native speaker's review.
+version: flick-lotus-fr-v1
+references:
+  - id: larousse-reveiller
+    title: "Larousse, Dictionnaire de français: réveiller"
+    url: "https://www.larousse.fr/dictionnaires/francais/r%C3%A9veiller"
+  - id: larousse-courage
+    title: "Larousse, Dictionnaire de français: courage"
+    url: "https://www.larousse.fr/dictionnaires/francais/courage"
+entries:
+  - id: reveille_toi
+    kind: phrase
+    target: "réveille-toi"
+    part_of_speech: verb
+    accepted_translations: ["wake up"]
+    surface_variants: ["réveille-toi", "réveille toi", "réveillez-vous", "réveillez vous"]
+    accent_insensitive: false
+    example: { target: "Réveille-toi, Flick !", english: "Wake up, Flick!" }
+    note: "The imperative of 'se réveiller' (to wake up), said to one person you call 'tu'; 'réveillez-vous' is the 'vous' form."
+    reference_ids: [larousse-reveiller]
+  - id: courage
+    kind: word
+    target: "courage"
+    part_of_speech: noun
+    accepted_translations: ["courage", "come on", "chin up"]
+    surface_variants: ["courage"]
+    accent_insensitive: false
+    example: { target: "Courage, Flick !", english: "Come on, Flick, you can do it!" }
+    note: "'Courage' is courage; said on its own, it is an encouragement: 'come on, you can do it'."
+    reference_ids: [larousse-courage]

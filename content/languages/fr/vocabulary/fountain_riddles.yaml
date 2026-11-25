@@ -1,0 +1,320 @@
+# Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+# Round 050 (backlog G5): telling the time (il est ... heures, il est une heure, midi, minuit) and Flick's question.
+# Round 180: the French version, authored by Claude; it awaits a native speaker's review.
+version: fountain-riddles-fr-v1
+references:
+  - id: larousse-arreter
+    title: 'Larousse, Dictionnaire de français: arrêter'
+    url: https://www.larousse.fr/dictionnaires/francais/arr%C3%AAter
+  - id: larousse-bouger
+    title: 'Larousse, Dictionnaire de français: bouger'
+    url: https://www.larousse.fr/dictionnaires/francais/bouger
+  - id: larousse-suffire
+    title: 'Larousse, Dictionnaire de français: suffire'
+    url: https://www.larousse.fr/dictionnaires/francais/suffire
+  - id: larousse-regarder
+    title: 'Larousse, Dictionnaire de français: regarder'
+    url: https://www.larousse.fr/dictionnaires/francais/regarder
+  - id: larousse-droite
+    title: 'Larousse, Dictionnaire de français: droite'
+    url: https://www.larousse.fr/dictionnaires/francais/droite
+  - id: larousse-gauche
+    title: 'Larousse, Dictionnaire de français: gauche'
+    url: https://www.larousse.fr/dictionnaires/francais/gauche
+  - id: larousse-droit
+    title: 'Larousse, Dictionnaire de français: droit'
+    url: https://www.larousse.fr/dictionnaires/francais/droit
+  - id: larousse-maintenant
+    title: 'Larousse, Dictionnaire de français: maintenant'
+    url: https://www.larousse.fr/dictionnaires/francais/maintenant
+  - id: larousse-suite
+    title: 'Larousse, Dictionnaire de français: suite'
+    url: https://www.larousse.fr/dictionnaires/francais/suite
+  - id: larousse-apres
+    title: 'Larousse, Dictionnaire de français: après'
+    url: https://www.larousse.fr/dictionnaires/francais/apr%C3%A8s
+  - id: larousse-demain
+    title: 'Larousse, Dictionnaire de français: demain'
+    url: https://www.larousse.fr/dictionnaires/francais/demain
+  - id: larousse-heure
+    title: 'Larousse, Dictionnaire de français: heure'
+    url: https://www.larousse.fr/dictionnaires/francais/heure
+  - id: larousse-midi
+    title: 'Larousse, Dictionnaire de français: midi'
+    url: https://www.larousse.fr/dictionnaires/francais/midi
+  - id: larousse-minuit
+    title: 'Larousse, Dictionnaire de français: minuit'
+    url: https://www.larousse.fr/dictionnaires/francais/minuit
+entries:
+  - id: arrete
+    kind: word
+    target: arrête
+    part_of_speech: verb
+    accepted_translations:
+      - stop
+      - stop it
+      - hold still
+    surface_variants:
+      - arrête
+      - arrêtez
+    accent_insensitive: false
+    example:
+      target: Arrête, Flick !
+      english: Stop, Flick!
+    note: Imperative of arrêter (to stop), informal tu form; arrête-toi is the same, and arrêtez is the vous form.
+    reference_ids:
+      - larousse-arreter
+  - id: ne_bouge_plus
+    kind: phrase
+    target: ne bouge plus
+    part_of_speech: verb_phrase
+    accepted_translations:
+      - keep still
+      - hold still
+      - don't move
+      - stop
+    surface_variants:
+      - ne bouge plus
+      - bouge plus
+      - ne bouge pas
+      - bouge pas
+      - ne bougez plus
+      - bougez plus
+      - ne bougez pas
+      - bougez pas
+    accent_insensitive: false
+    example:
+      target: Ne bouge plus !
+      english: Keep still!
+    note: 'Ne bouge plus ! or ne bouge pas ! works as a command: hold still. Spoken French often drops the ne (bouge pas !); bougez is the vous form.'
+    reference_ids:
+      - larousse-bouger
+  - id: ca_suffit
+    kind: phrase
+    target: ça suffit
+    part_of_speech: interjection
+    accepted_translations:
+      - enough
+      - stop
+      - that is enough
+    surface_variants:
+      - ça suffit
+    accent_insensitive: false
+    example:
+      target: Ça suffit, s'il te plaît !
+      english: Enough, please!
+    note: From suffire (to be enough). Players who type ca suffit, without the cedilla, are matched too.
+    reference_ids:
+      - larousse-suffire
+  - id: regarde
+    kind: word
+    target: regarde
+    part_of_speech: verb
+    accepted_translations:
+      - look
+    surface_variants:
+      - regarde
+      - regardez
+    accent_insensitive: false
+    example:
+      target: Regarde la fontaine !
+      english: Look at the fountain!
+    note: Imperative of regarder, informal tu form; regardez is the vous form.
+    reference_ids:
+      - larousse-regarder
+  - id: droite
+    kind: word
+    target: droite
+    part_of_speech: noun
+    accepted_translations:
+      - right
+      - the right
+    surface_variants:
+      - droite
+    accent_insensitive: false
+    example:
+      target: Tourne à droite.
+      english: Turn right.
+    note: 'À droite: to the right.'
+    reference_ids:
+      - larousse-droite
+  - id: gauche
+    kind: word
+    target: gauche
+    part_of_speech: noun
+    accepted_translations:
+      - left
+      - the left
+    surface_variants:
+      - gauche
+    accent_insensitive: false
+    example:
+      target: Va à gauche.
+      english: Go left.
+    note: 'À gauche: to the left.'
+    reference_ids:
+      - larousse-gauche
+  - id: tout_droit
+    kind: phrase
+    target: tout droit
+    part_of_speech: adverb
+    accepted_translations:
+      - straight
+      - straight on
+      - straight ahead
+    surface_variants:
+      - tout droit
+    accent_insensitive: false
+    example:
+      target: Continue tout droit.
+      english: Keep going straight on.
+    note: Droit (straight) does not change here; à droite (to the right) is another word.
+    reference_ids:
+      - larousse-droit
+  - id: maintenant
+    kind: word
+    target: maintenant
+    part_of_speech: adverb
+    accepted_translations:
+      - now
+      - right now
+    surface_variants:
+      - maintenant
+    accent_insensitive: false
+    example:
+      target: Maintenant, pas demain.
+      english: Now, not tomorrow.
+    reference_ids:
+      - larousse-maintenant
+  - id: tout_de_suite
+    kind: phrase
+    target: tout de suite
+    part_of_speech: adverb
+    accepted_translations:
+      - right now
+      - right away
+      - now
+      - immediately
+    surface_variants:
+      - tout de suite
+    accent_insensitive: false
+    example:
+      target: Tout de suite, ça suffit.
+      english: Right now, that is enough.
+    note: Right away, at once; more insistent than maintenant.
+    reference_ids:
+      - larousse-suite
+  - id: apres
+    kind: word
+    target: après
+    part_of_speech: adverb
+    accepted_translations:
+      - later
+      - afterwards
+      - after
+    surface_variants:
+      - après
+    accent_insensitive: false
+    example:
+      target: Je le fais après.
+      english: I'll do it later.
+    note: Plus tard also means later.
+    reference_ids:
+      - larousse-apres
+  - id: demain
+    kind: word
+    target: demain
+    part_of_speech: adverb
+    accepted_translations:
+      - tomorrow
+    surface_variants:
+      - demain
+    accent_insensitive: false
+    example:
+      target: À demain !
+      english: See you tomorrow!
+    reference_ids:
+      - larousse-demain
+  - id: heures
+    kind: word
+    target: heures
+    part_of_speech: noun
+    accepted_translations:
+      - o'clock
+      - hours
+      - it is o'clock
+    surface_variants:
+      - heures
+    accent_insensitive: false
+    example:
+      target: Il est trois heures.
+      english: It is three o'clock.
+    note: "The time is il est, the hour and heures: il est deux heures, il est trois heures. One o'clock is singular: il est une heure."
+    reference_ids:
+      - larousse-heure
+  - id: une_heure
+    kind: phrase
+    target: il est une heure
+    part_of_speech: verb_phrase
+    accepted_translations:
+      - it is one o'clock
+      - one o'clock
+    surface_variants:
+      - il est une heure
+      - une heure
+    accent_insensitive: false
+    example:
+      target: Il est une heure, Flick.
+      english: It is one o'clock, Flick.
+    note: "Singular, because une (one) is one hour: il est une heure, but il est deux heures."
+    reference_ids:
+      - larousse-heure
+  - id: midi
+    kind: word
+    target: midi
+    part_of_speech: noun
+    accepted_translations:
+      - midday
+      - noon
+    surface_variants:
+      - midi
+    accent_insensitive: false
+    example:
+      target: Il est midi.
+      english: It is midday.
+    note: No article and no heures; le Midi is also the south of France.
+    reference_ids:
+      - larousse-midi
+  - id: minuit
+    kind: word
+    target: minuit
+    part_of_speech: noun
+    accepted_translations:
+      - midnight
+    surface_variants:
+      - minuit
+    accent_insensitive: false
+    example:
+      target: Il est minuit.
+      english: It is midnight.
+    reference_ids:
+      - larousse-minuit
+  - id: quelle_heure_est_il
+    kind: phrase
+    target: quelle heure est-il
+    part_of_speech: question
+    accepted_translations:
+      - what time is it
+    surface_variants:
+      - quelle heure est-il
+      - quelle heure est il
+      - il est quelle heure
+      - quelle heure il est
+    accent_insensitive: false
+    example:
+      target: Quelle heure est-il, Flick ?
+      english: What time is it, Flick?
+    note: Il est quelle heure ? is the everyday spoken form.
+    reference_ids:
+      - larousse-heure

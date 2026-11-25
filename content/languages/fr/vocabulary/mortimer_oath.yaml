@@ -1,0 +1,30 @@
+# Round 180: French version authored by Claude; it awaits a native speaker's review.
+version: mortimer-oath-fr-v1
+references:
+  - id: larousse-calmer
+    title: "Larousse, Dictionnaire de français: calmer"
+    url: "https://www.larousse.fr/dictionnaires/francais/calmer"
+  - id: larousse-promettre
+    title: "Larousse, Dictionnaire de français: promettre"
+    url: "https://www.larousse.fr/dictionnaires/francais/promettre"
+entries:
+  - id: calme_toi
+    kind: phrase
+    target: "calme-toi"
+    part_of_speech: phrase
+    accepted_translations: ["calm down", "calm yourself", "don't worry"]
+    surface_variants: ["calme-toi", "calme toi", "calmez-vous", "calmez vous", "du calme"]
+    accent_insensitive: false
+    example: { target: "Calme-toi, Mortimer.", english: "Calm down, Mortimer." }
+    note: "Imperative of 'se calmer', to someone you call tu; to someone you call vous, 'calmez-vous'. 'Du calme !' says the same."
+    reference_ids: [larousse-calmer]
+  - id: je_promets
+    kind: phrase
+    target: "je promets"
+    part_of_speech: phrase
+    accepted_translations: ["I promise"]
+    surface_variants: ["je promets", "je le promets", "je te le promets", "je vous le promets", "je te promets", "je vous promets"]
+    accent_insensitive: false
+    example: { target: "Je te le promets.", english: "I promise you." }
+    note: "First person of 'promettre'. 'Je te le promets' is 'I promise (it to) you'."
+    reference_ids: [larousse-promettre]

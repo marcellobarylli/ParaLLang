@@ -60,6 +60,23 @@ function SiteNumber({ index }) {
   return <span className="site-number" aria-hidden="true">{index + 1}</span>;
 }
 
+// Round 180: the language of the game. A new game's can be chosen on the title (the page reloads into it); a game
+// under way names its own.
+function TitleLanguage({ state, disabled }) {
+  const { languages, language, freshGame, chooseLanguage } = state;
+  if (!language) return null;
+  if (!freshGame || !Array.isArray(languages) || languages.length < 2) return <p className="title-language">Learning {language.name}</p>;
+  return (
+    <div className="title-language" role="group" aria-label="Language to learn">
+      <span>Learn</span>
+      {languages.map((entry) => (
+        <button key={entry.code} type="button" className={entry.code === language.code ? 'secondary-button chosen' : 'secondary-button'}
+          aria-pressed={entry.code === language.code} lang={entry.tag} disabled={disabled} onClick={() => chooseLanguage(entry.code)}>{entry.name}</button>
+      ))}
+    </div>
+  );
+}
+
 // Round 175: the title screen. Behind it the road's landscape turns slowly, seen from above the clouds (RoadView's
 // `title`); its one way in is The Journey 2. The road is being read meanwhile (preloadRoad), so the start zooms down
 // into a world that is already there.
@@ -70,6 +87,7 @@ function TitleScreen({ state }) {
     <section className="title-screen" aria-label="ParaLLang" data-connection={connection}>
       <h1>ParaLLang</h1>
       <button type="button" className="primary-button big-button title-start" onClick={state.startJourney} disabled={journeyStarting}>{label}</button>
+      <TitleLanguage state={state} disabled={journeyStarting} />
       {!journeyStarting && connection === 'connecting' && <p className="connection-note" role="status">Waking the server…</p>}
       {connection === 'offline' && serverProblem && (
         <div className="problem" role="alert"><p>{serverProblem}</p><button type="button" className="secondary-button" onClick={state.openSettings}>Open Settings</button></div>
@@ -650,7 +668,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
 
       {menuOpen && <GameMenu state={state} onClose={() => setMenuOpen(false)} onMap={openMapNow} mapLabel={mapName} leave={leave[0]} onLeave={leave[1]} />}
 
-      {state.slotsOpen && <SaveSlots slots={state.saveSlots} onSwitch={state.switchSlot} onDelete={state.deleteSlot} onClose={state.closeSlots} />}
+      {state.slotsOpen && <SaveSlots slots={state.saveSlots} languages={state.languages} onSwitch={state.switchSlot} onDelete={state.deleteSlot} onClose={state.closeSlots} />}
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}

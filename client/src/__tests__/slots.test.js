@@ -1,7 +1,8 @@
 // Round 178: save slots.
 import { expect, test, vi } from 'vitest';
-import { SLOT_KEY, chooseSlot, clearSlot, currentSlot, keyIn, slotSummaries, slottedStorage } from '../slots.js';
+import { LANGUAGE_KEY, SLOT_KEY, chooseSlot, clearSlot, currentSlot, keyIn, slotSummaries, slottedStorage } from '../slots.js';
 import { createGameStore } from '../stores/gameStore.js';
+import { LANGUAGE_HEADER, createLearningApi } from '../api/encounter.js';
 import { DUNGEON } from '../dungeon.js';
 import { ATLAS } from '../atlas.js';
 
@@ -31,9 +32,9 @@ test('the summaries, choosing a slot, and emptying one that is not in use', () =
   const copy = { exportedAt: '2026-11-24T10:00:00.000Z', save: { learnerId: 'old', road: { step: 7 }, spellbook: { words: { a: {}, b: {} }, phrases: { c: {} } } } };
   const storage = memoryStorage({ 'parallang.learnerId': 'old', 'parallang.save': JSON.stringify(copy), 'parallang.learnerId.3': 'third' });
   expect(slotSummaries(storage)).toEqual([
-    { slot: 1, current: true, used: true, savedAt: copy.exportedAt, conversations: 7, words: 3 },
-    { slot: 2, current: false, used: false, savedAt: null, conversations: null, words: null },
-    { slot: 3, current: false, used: true, savedAt: null, conversations: null, words: null },
+    { slot: 1, current: true, used: true, language: null, savedAt: copy.exportedAt, conversations: 7, words: 3 },
+    { slot: 2, current: false, used: false, language: null, savedAt: null, conversations: null, words: null },
+    { slot: 3, current: false, used: true, language: null, savedAt: null, conversations: null, words: null },
   ]);
   expect(clearSlot(storage, 1)).toBe(false); // the slot in use is never emptied
   expect(chooseSlot(storage, 4)).toBe(false);
@@ -93,4 +94,54 @@ test('a server that cannot be reached still empties the slot, and says so', asyn
   const store = createGameStore({ api: { createLearner: async () => ({ learnerId: 'x' }), getDungeon: async () => { throw new Error('offline'); }, deleteLearner: async () => { throw new Error('offline'); } }, storage, dungeon: DUNGEON, atlas: ATLAS, reload: vi.fn() });
   expect(await store.getState().deleteSlot(3)).toEqual({ done: true, serverDeleted: false, reloading: false });
   expect(storage.values.has('parallang.learnerId.3')).toBe(false);
+});
+
+// Round 180: each slot's game has its language, sent with every request; a new game's is chosen on the title or in
+// Save slots.
+test('a slot keeps its language, and requests name it', async () => {
+  const storage = memoryStorage({ 'parallang.learnerId.2': 'second', 'parallang.language.2': 'fr' });
+  expect(keyIn(LANGUAGE_KEY, 2)).toBe('parallang.language.2');
+  expect(slotSummaries(storage).map((entry) => entry.language)).toEqual([null, 'fr', null]);
+  const seen = [];
+  const fetchImpl = async (url, init) => { seen.push(init.headers); return { ok: true, status: 200, json: async () => ({}) }; };
+  const api = createLearningApi({ getSettings: () => ({ serverUrl: '', token: '' }), getGeminiKey: () => null, getLanguage: () => 'fr', fetchImpl });
+  await api.getRoad('second');
+  expect(seen[0][LANGUAGE_HEADER]).toBe('fr');
+  const plain = createLearningApi({ getSettings: () => ({ serverUrl: '', token: '' }), getGeminiKey: () => null, fetchImpl });
+  await plain.getRoad('second');
+  expect(Object.hasOwn(seen[1], LANGUAGE_HEADER)).toBe(false); // none: the server's default
+});
+
+test('a new game in an empty slot, or a game started over, is played in the language picked', async () => {
+  const storage = memoryStorage({ 'parallang.learnerId': 'first', 'parallang.language': 'it' });
+  const reload = vi.fn();
+  const store = createGameStore({ api: { createLearner: async () => ({ learnerId: 'first' }), getDungeon: async () => { throw new Error('offline'); }, deleteLearner: async () => ({}) }, storage, dungeon: DUNGEON, atlas: ATLAS, reload });
+  const s = () => store.getState();
+  expect(s().freshGame).toBe(false);
+  expect(s().switchSlot(2, 'fr')).toBe(true);
+  expect(storage.values.get('parallang.language.2')).toBe('fr');
+  await s().deleteSlot(1, 'es');
+  expect(storage.values.get('parallang.language')).toBe('es');
+  expect(storage.values.has('parallang.learnerId')).toBe(false);
+});
+
+test('the title of a new game changes its language: the empty learner goes and the page reloads', async () => {
+  const storage = memoryStorage({});
+  const deleteLearner = vi.fn(async () => ({}));
+  const reload = vi.fn();
+  const languages = [{ code: 'it', name: 'Italian', tag: 'it-IT' }, { code: 'fr', name: 'French', tag: 'fr-FR' }];
+  const store = createGameStore({
+    api: { createLearner: async () => ({ learnerId: 'new', recovered: false, language: languages[0], languages }), getDungeon: async () => { throw new Error('offline'); }, deleteLearner },
+    storage, dungeon: DUNGEON, atlas: ATLAS, reload,
+  });
+  const s = () => store.getState();
+  expect(s().freshGame).toBe(true);
+  await s().initialize();
+  expect(storage.values.get('parallang.language')).toBe('it'); // the slot remembers the server's default
+  expect(s().languages).toEqual(languages); // given with the learner
+  expect(await s().chooseLanguage('fr')).toBe(true);
+  expect(deleteLearner).toHaveBeenCalledWith('new');
+  expect(storage.values.get('parallang.language')).toBe('fr');
+  expect(storage.values.has('parallang.learnerId')).toBe(false);
+  expect(reload).toHaveBeenCalledTimes(1);
 });

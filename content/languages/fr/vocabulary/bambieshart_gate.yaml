@@ -1,0 +1,19 @@
+# Round 113: The High Gate (a place; thanks reuses Gerald's word). Reference URLs follow the existing patterns and were not opened from the
+# build container; listed for the owner's content review.
+# Round 180: French version authored by Claude; awaits a native speaker's review.
+version: bambieshart-gate-fr-v1
+references:
+  - id: larousse-montagne
+    title: "Larousse, Dictionnaire de français: montagne"
+    url: "https://www.larousse.fr/dictionnaires/francais/montagne"
+entries:
+  - id: montagne
+    kind: word
+    target: "montagne"
+    part_of_speech: noun
+    accepted_translations: ["mountain"]
+    surface_variants: ["montagne", "montagnes"]
+    accent_insensitive: false
+    example: { target: "La montagne est loin.", english: "The mountain is far away." }
+    note: "'Montagne' is feminine: la montagne, plural les montagnes."
+    reference_ids: [larousse-montagne]

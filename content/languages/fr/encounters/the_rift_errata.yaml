@@ -1,0 +1,140 @@
+# Round 015: The Rift (backlog A7b, with B3). Errata, an infohazard made of mistranslations, reviews words from every
+# earlier encounter: a request from the market's stalls, a command to stop now, and the Cyclops trick from
+# The Journey (your name is Nobody). No new vocabulary: every objective targets entries already authored.
+# French version authored by Claude in round 180 (from the Italian file, as the Spanish pack adapted it); it awaits a
+# native speaker's review.
+id: the_rift_errata
+character: characters/enemies/rift_errata.yaml
+location: the_rift
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player asks Errata for a coffee and a meat, tells it to stop now and says their name is Nobody, all in French"
+max_turns: 20
+resolved_message: "Errata cannot read Nobody. It folds itself up like a letter sent to the wrong address, the seam of light narrows to a hairline, and the market sounds like itself again."
+# Round 159 (issue #7): Errata has come to know more of the world than most. When the conversation is over the
+# narrator tells what Errata then utters: a passage of lore, in untranslatable text (lore/truths.yaml).
+revelation:
+  text: "For the length of one sentence nothing about Errata is misaligned. It utters the following: {truth:first_word_error}"
+escalation:
+  # Round 015 (critique 1.4): a fixed mix, so the corruption stays half English however long the fight runs.
+  target_ratio_increase_per_turn: 0
+# Round 029 (backlog C1): forced repetition: every due card among the targets is reviewed before the first fight.
+drill_before: true
+companion_briefing:
+  - "Careful. That thing is made of both our languages and neither."
+  - "It can only hurt you if you understand it, and you understand quite a lot now."
+  - "Everything you learned in the market works here. Use it."
+# Round 028 (backlog B4): the Spellbook's containment file for Errata (LORE.md, deadpan SCP voice). Filed once the
+# Rift encounter is completed (round 112: the comment said "visited").
+containment_file:
+  designation: "CM-002"
+  name: "Errata"
+  class: "Rift-born (corruption)"
+  virulence: "Unknown. It does not spread so much as leak, through the seam where the two languages touch."
+  harm: "Moderate. The host's own language turns çùršęd. It reads anyone whose name it learns."
+  incubation: "Begins as soon as the host understands one of its sentences. The host understands quite a lot by now."
+  vector: "Speech, in both languages at the same time, slightly wrong in each."
+  containment: "Do not understand it more than necessary. Do not tell it who you are."
+  notes:
+    - "Recovered at the Rift, after the other five encounters were filed."
+    - "It talks in fragments of this file. This file would prefer that it did not."
+  # Round 112: an annex in Errata's own voice (LORE.md, Infohazards: the root language; the branches' collision), as
+  # round 111's on CM-001. The text holds no answer (server test). Authored, not generated; pending a native review.
+  annex:
+    id: "cm002_seam_minutes"
+    title: "Annex A: minutes of the seam"
+    redaction: "Your companion has blacked out every line of it. \"Not this one. This is the thing itself talking, not a file about it. If you read it, I will need a while to get over it: a hint fewer for each objective of the next conversation you finish.\""
+    text: "Procès-verbal de la fissure. Quand les branches se rapprochent, les mots perdent leur sens là où ils se touchent. Erreur ? Non. Ce qui reste d'un parler, quand tous la comprennent mal, a cette forme. Dessous gît une voix ancienne, près de la racine de l'arbre. Celle-là ne se trompe jamais. Elle attend."
+    translation: "Minutes of the seam. When the branches draw near, words lose their meaning where they touch. A mistake? No. What remains of a tongue, when everyone understands it badly, has this shape. Beneath lies an ancient voice, near the root of the tree. That one never makes mistakes. It waits."
+    glossary:
+      - { word: "procès-verbal", meaning: "minutes" }
+      - { word: "fissure", meaning: "crack (the seam)" }
+      - { word: "branches", meaning: "branches" }
+      - { word: "perdent leur sens", meaning: "lose their meaning" }
+      - { word: "ne se trompe jamais", meaning: "never makes mistakes" }
+      - { word: "ce qui reste", meaning: "what remains" }
+      - { word: "parler", meaning: "tongue, speech" }
+      - { word: "la comprennent mal", meaning: "understand it badly" }
+      - { word: "racine", meaning: "root" }
+      - { word: "attend", meaning: "waits" }
+    exposure_note: "Exposure log: read in full by the bearer of this Spellbook. The seam has noted the reader's address. Containment of the reader is pending."
+objectives:
+  - id: order
+    prompt: "The Rift has swallowed the market's stalls. Ask it for a coffee and a meat they sold, in French."
+    intent: "The player asks Errata, in French, for both a coffee and a meat from the market's stalls."
+    target_vocabulary_ids: ["je_voudrais", "cafe", "express", "cafe_noir", "jambon", "saucisson", "saucisse", "poulet"]
+    required_target_groups:
+      - ["cafe", "express", "cafe_noir"]
+      - ["jambon", "saucisson", "saucisse", "poulet"]
+    grammar_constraints:
+      - "The player's own request for both a coffee and a meat, in French, in one answer; bare items named as an order also pass. Ham passes here."
+      - "A coffee alone or a meat alone does not pass yet."
+      - "Reject remarks about the market or its stallholders, quotations and English-only requests."
+    accepted_examples:
+      - "Je voudrais un café et du saucisson."
+      - "Un express et deux cents grammes de saucisse, s'il vous plaît."
+      - "Café noir et poulet."
+    negative_examples:
+      - text: "A coffee, please."
+        reason: "English-only; the request must be in French."
+      - text: "Je voudrais un café."
+        reason: "A coffee but no meat; both are needed."
+      - text: "Gerald vend du café."
+        reason: "A remark about Gerald, not the player's own request."
+    reference_meaning: "The player asks for a coffee and a meat."
+    hint_limit: 2
+    next_objective: stop_now
+    assessment_reference_ids: ["larousse-vouloir", "larousse-cafe", "larousse-express", "larousse-jambon", "larousse-saucisson", "larousse-saucisse", "larousse-poulet"]
+  - id: stop_now
+    prompt: "It is pulling the market in through the seam. Tell it to stop, now, in French."
+    intent: "The player commands Errata to stop and insists on now, both in French."
+    target_vocabulary_ids: ["arrete", "ne_bouge_plus", "ca_suffit", "maintenant", "tout_de_suite"]
+    required_target_groups:
+      - ["arrete", "ne_bouge_plus", "ca_suffit"]
+      - ["maintenant", "tout_de_suite"]
+    grammar_constraints:
+      - "The player's own command to stop, together with now, in French; both parts are needed."
+      - "Agreeing to later or tomorrow does not pass; reject quotations and English-only commands."
+    accepted_examples:
+      - "Ça suffit, maintenant !"
+      - "Arrête tout de suite !"
+      - "Ne bouge plus ! Maintenant !"
+    negative_examples:
+      - text: "Arrête demain."
+        reason: "It puts the stop off until tomorrow instead of now."
+      - text: "Stop now!"
+        reason: "English-only; the command must be in French."
+    reference_meaning: "The player tells Errata to stop now."
+    hint_limit: 2
+    next_objective: nobody
+    assessment_reference_ids: ["larousse-arreter", "larousse-bouger", "larousse-suffire", "larousse-maintenant", "larousse-suite"]
+  - id: nobody
+    prompt: "It wants your name so it can read you. Do as Journathan did with the Cyclops: tell it your name is Nobody, in French."
+    intent: "The player introduces themselves to Errata in French with the name Nobody, as Journathan did with the Cyclops."
+    target_vocabulary_ids: ["je_m_appelle", "je_suis", "nom", "personne"]
+    required_target_groups:
+      - ["je_m_appelle", "je_suis"]
+      - ["personne"]
+    grammar_constraints:
+      - "The player's own introduction with the name Nobody, in French: an introduction with je m'appelle or je suis, and the name."
+      - "The player's real name does not pass. A statement about Journathan, quotations and English-only answers do not pass."
+    accepted_examples:
+      - "Je m'appelle Personne."
+      - "Je suis Personne."
+      - "Moi, je suis Personne."
+    negative_examples:
+      - text: "Je m'appelle Sam."
+        reason: "That is the player's real name; Errata would read them."
+      - text: "Journathan s'appelle Personne."
+        reason: "A statement about Journathan, not the player's own introduction."
+      - text: "My name is Nobody."
+        reason: "English-only; the introduction must be in French."
+      - text: "Mon nom est Personne."
+        reason: "Right name, but this review asks for the Market Entrance's introduction: je m'appelle or je suis."
+    reference_meaning: "The player says their name is Nobody."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["larousse-appeler", "larousse-etre", "larousse-nom", "larousse-personne"]

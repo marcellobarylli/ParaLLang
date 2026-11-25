@@ -1,0 +1,147 @@
+# Round 013: The Old Bookshop (abstract nouns, reading comprehension; The Journey). Reference URLs follow the
+# existing patterns and were not opened from the build container; listed for the owner's content review.
+# Round 180: French version authored by Claude; awaits a native speaker's review.
+version: bookshop-journey-fr-v1
+references:
+  - id: larousse-histoire
+    title: 'Larousse, Dictionnaire de français: histoire'
+    url: https://www.larousse.fr/dictionnaires/francais/histoire
+  - id: larousse-voyage
+    title: 'Larousse, Dictionnaire de français: voyage'
+    url: https://www.larousse.fr/dictionnaires/francais/voyage
+  - id: larousse-maison
+    title: 'Larousse, Dictionnaire de français: maison'
+    url: https://www.larousse.fr/dictionnaires/francais/maison
+  - id: larousse-langue
+    title: 'Larousse, Dictionnaire de français: langue'
+    url: https://www.larousse.fr/dictionnaires/francais/langue
+  - id: larousse-an
+    title: 'Larousse, Dictionnaire de français: an'
+    url: https://www.larousse.fr/dictionnaires/francais/an
+  - id: larousse-nom
+    title: 'Larousse, Dictionnaire de français: nom'
+    url: https://www.larousse.fr/dictionnaires/francais/nom
+  - id: larousse-personne
+    title: 'Larousse, Dictionnaire de français: personne'
+    url: https://www.larousse.fr/dictionnaires/francais/personne
+entries:
+  - id: histoire
+    kind: word
+    target: histoire
+    part_of_speech: noun
+    accepted_translations:
+      - story
+      - history
+    surface_variants:
+      - histoire
+      - histoires
+    accent_insensitive: false
+    example:
+      target: Voici l'histoire de Journathan.
+      english: This is the story of Journathan.
+    note: Histoire means both story and history. Feminine, with an elided article before its silent h, l'histoire.
+    reference_ids:
+      - larousse-histoire
+  - id: voyage
+    kind: word
+    target: voyage
+    part_of_speech: noun
+    accepted_translations:
+      - journey
+      - trip
+      - voyage
+    surface_variants:
+      - voyage
+      - voyages
+    accent_insensitive: false
+    example:
+      target: Son voyage dure vingt ans.
+      english: His journey lasts twenty years.
+    note: Masculine, le voyage, although it ends in -e.
+    reference_ids:
+      - larousse-voyage
+  - id: maison
+    kind: word
+    target: maison
+    part_of_speech: noun
+    accepted_translations:
+      - home
+      - house
+    surface_variants:
+      - maison
+      - chez lui
+      - chez soi
+    accent_insensitive: false
+    example:
+      target: Journathan rentre à la maison.
+      english: Journathan is going home.
+    note: "À la maison: (at or to) home. Chez lui (at his place) says the same of him: il rentre chez lui."
+    reference_ids:
+      - larousse-maison
+  - id: langue
+    kind: word
+    target: langue
+    part_of_speech: noun
+    accepted_translations:
+      - language
+      - tongue
+    surface_variants:
+      - langue
+      - langues
+    accent_insensitive: false
+    example:
+      target: L'homme aux mille langues.
+      english: The man of a thousand tongues.
+    note: Langue means both language and the tongue in your mouth.
+    reference_ids:
+      - larousse-langue
+  # Round 180: the singular an is not a form, as it is also an English word (players mix English in).
+  - id: ans
+    kind: word
+    target: ans
+    part_of_speech: noun
+    accepted_translations:
+      - years
+    surface_variants:
+      - ans
+      - années
+      - année
+    accent_insensitive: true
+    example:
+      target: Vingt ans.
+      english: Twenty years.
+    note: Singular an (year). With a number French says ans (vingt ans); année is the year as a stretch of time (une longue année).
+    reference_ids:
+      - larousse-an
+  - id: nom
+    kind: word
+    target: nom
+    part_of_speech: noun
+    accepted_translations:
+      - name
+    surface_variants:
+      - nom
+      - noms
+    accent_insensitive: false
+    example:
+      target: Mon nom est Personne.
+      english: My name is Nobody.
+    reference_ids:
+      - larousse-nom
+  - id: personne
+    kind: word
+    target: personne
+    part_of_speech: pronoun
+    accepted_translations:
+      - nobody
+      - no one
+      - Nobody
+    surface_variants:
+      - personne
+    accent_insensitive: false
+    example:
+      target: Personne ne le sait.
+      english: Nobody knows.
+    note: In French translations of the Odyssey the hero tells the Cyclops his name is Personne. As a noun, une personne is a person; as a pronoun, with ne, it means nobody.
+    reference_ids:
+      - larousse-personne

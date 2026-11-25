@@ -1,0 +1,31 @@
+# Round 180: French version authored by Claude; awaits a native speaker's review. Reference URLs follow the existing
+# patterns and were not opened from the build container.
+version: marginalia-folded-page-fr-v1
+references:
+  - id: larousse-voici
+    title: "Larousse, Dictionnaire de français: voici"
+    url: "https://www.larousse.fr/dictionnaires/francais/voici"
+  - id: larousse-seul
+    title: "Larousse, Dictionnaire de français: seul"
+    url: "https://www.larousse.fr/dictionnaires/francais/seul"
+entries:
+  - id: me_voici
+    kind: phrase
+    target: "me voici"
+    part_of_speech: phrase
+    accepted_translations: ["here I am"]
+    surface_variants: ["me voici", "me voilà"]
+    accent_insensitive: true
+    example: { target: "Me voici, Marginalia !", english: "Here I am, Marginalia!" }
+    note: "'Voici' (here is) with 'me' (me) in front: 'here I am'. 'Me voilà' says the same and is more common in speech."
+    reference_ids: [larousse-voici]
+  - id: seule
+    kind: word
+    target: "seule"
+    part_of_speech: adjective
+    accepted_translations: ["alone"]
+    surface_variants: ["seule"]
+    accent_insensitive: false
+    example: { target: "Tu n'es pas seule.", english: "You are not alone." }
+    note: "Feminine of 'seul' (alone), said to or about a woman; the two sound the same, only the spelling shows it. 'Tu n'es pas seule' is 'you are not alone'."
+    reference_ids: [larousse-seul]

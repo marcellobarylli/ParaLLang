@@ -2,10 +2,13 @@
 // the place last entered and the title's landscape. Slot 1 keeps the keys as they always were, so a save made before
 // slots is slot 1; slots 2 and 3 suffix them (`parallang.learnerId.2`). Settings and display are shared by all slots.
 // The game reads the slot chosen (SLOT_KEY) when the page loads; switching slots stores the choice and reloads.
+// Round 180: each slot also keeps its game's language (`parallang.language`, a code the server plays). A slot without
+// one plays the server's default, which is what every game before round 180 was (Italian).
 
 export const SLOT_KEY = 'parallang.slot';
 export const SLOT_COUNT = 3;
-export const SLOTTED_KEYS = Object.freeze(['parallang.learnerId', 'parallang.save', 'parallang.placeId', 'parallang.title']);
+export const LANGUAGE_KEY = 'parallang.language';
+export const SLOTTED_KEYS = Object.freeze(['parallang.learnerId', 'parallang.save', 'parallang.placeId', 'parallang.title', LANGUAGE_KEY]);
 
 const read = (storage, key) => { try { return storage?.getItem?.(key) ?? null; } catch { return null; } };
 
@@ -28,7 +31,7 @@ export function slottedStorage(storage, slot = currentSlot(storage)) {
   };
 }
 
-/** What each slot holds, for the menu: [{ slot, current, used, savedAt, conversations, words }]. */
+/** What each slot holds, for the menu: [{ slot, current, used, language, savedAt, conversations, words }]. */
 export function slotSummaries(storage) {
   const current = currentSlot(storage);
   return Array.from({ length: SLOT_COUNT }, (_, index) => {
@@ -38,7 +41,7 @@ export function slotSummaries(storage) {
     try { copy = JSON.parse(read(storage, keyIn('parallang.save', slot)) ?? 'null'); } catch { copy = null; }
     const save = copy?.save ?? null;
     return {
-      slot, current: slot === current, used,
+      slot, current: slot === current, used, language: read(storage, keyIn(LANGUAGE_KEY, slot)) || copy?.language || null,
       savedAt: typeof copy?.exportedAt === 'string' ? copy.exportedAt : null,
       conversations: Number.isInteger(save?.road?.step) ? save.road.step : null,
       words: save?.spellbook ? Object.keys(save.spellbook.words ?? {}).length + Object.keys(save.spellbook.phrases ?? {}).length : null,
@@ -63,4 +66,10 @@ export function clearSlot(storage, slot, { current = false } = {}) {
   if (!Number.isInteger(slot) || slot < 1 || slot > SLOT_COUNT || (slot === currentSlot(storage) && !current)) return false;
   for (const key of SLOTTED_KEYS) { try { storage?.removeItem?.(keyIn(key, slot)); } catch { /* private mode */ } }
   return true;
+}
+
+/** Round 180: sets the language of slot `slot`'s game (an empty slot's next game, or the game it holds). */
+export function setSlotLanguage(storage, slot, code) {
+  if (!Number.isInteger(slot) || slot < 1 || slot > SLOT_COUNT || typeof code !== 'string' || !code) return false;
+  try { storage?.setItem?.(keyIn(LANGUAGE_KEY, slot), code); return true; } catch { return false; }
 }

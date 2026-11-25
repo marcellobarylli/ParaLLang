@@ -1,0 +1,229 @@
+# Round 180: French version authored by Claude; awaits a native speaker's review.
+# Round 030 (backlog A9): fragments of The Journey, found after an encounter and kept in the Spellbook. Optional to
+# translate (parallang_obsidian/CHARACTERS.md, Journathan). Authored, not generated. No fragment contains an
+# objective target of the pack (server test), so the Spellbook may show them at any time. `title`, `found` and
+# `translation` are the same English text in every pack (tested). Pending a native speaker's review.
+# Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
+# Round 083: every fragment also passes the inscriptions' answer check (server/test/answer-check.js: no word or 4-letter
+# stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
+# Round 109: the proem (after the Entrance tutorial, first in story order) and Journathan today, an ageing hero still
+# on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
+# Round 110: spores on the Dead Branch's roots (LORE.md: the consumer dreams of another language, creating a new
+# world from it), after the Butcher's Stall's first completion, after the Dead Branch in story order.
+fragments:
+  - id: journey_proem
+    title: The archway's telling
+    found_after: market_entrance_tutorial
+    found: "Painted on the inside of the archway, where you only see it after you have walked through."
+    text: >-
+      Chante, ô Muse, l'homme aux idiomes innombrables, qui erra vingt hivers de branche en branche du monde. Qui
+      vint d'abord, le héros ou l'ouvrage qui le raconte ? Même l'ouvrage l'a oublié.
+    translation: >-
+      Sing to me, Muse, of the man of countless tongues, who wandered twenty winters from branch to branch of the
+      world. Which came first, the hero or the book that tells of him? Not even the book remembers.
+    glossary:
+      - { word: "chante, ô Muse", meaning: "sing, Muse" }
+      - { word: "idiomes innombrables", meaning: "countless tongues" }
+      - { word: "erra", meaning: "wandered (passé simple of errer)" }
+      - { word: "hivers", meaning: "winters" }
+      - { word: "de branche en branche", meaning: "from branch to branch" }
+      - { word: "héros", meaning: "hero" }
+      - { word: "le raconte", meaning: "tells of him" }
+      - { word: "l'ouvrage", meaning: "the book, the work" }
+      - { word: "l'a oublié", meaning: "has forgotten it" }
+  - id: journey_first_stitch
+    title: The first stitch
+    found_after: old_bookshop_bookworm
+    found: "Folded inside the battered copy of The Journey that Marginalia sold you, in a hand that changes language halfway through a word."
+    text: >-
+      À chaque changement de branche, Journathan laissait un fil dans son sillage. Vingt hivers de traversées : vingt
+      hivers de fils. On dit que les premiers soutiennent toujours la trame du monde. Peut-être le premier point
+      fut-il le sien.
+    translation: >-
+      Each time Journathan passed from one branch to another, a thread stayed behind him. Twenty winters of crossings:
+      twenty winters of threads. They say the oldest still hold up the weave of the world. Perhaps the first stitch
+      was his.
+    glossary:
+      - { word: "branche", meaning: "branch" }
+      - { word: "fil", meaning: "thread" }
+      - { word: "traversées", meaning: "crossings" }
+      - { word: "sillage", meaning: "wake (of a ship); behind him" }
+      - { word: "soutiennent", meaning: "they hold up" }
+      - { word: "trame", meaning: "weave; also plot" }
+      - { word: "point", meaning: "stitch; also point" }
+      - { word: "fut-il", meaning: "was (passé simple of être, inverted after peut-être)" }
+  - id: journey_sirens
+    title: The Sirens
+    found_after: cracked_fountain_letharger
+    found: "Scratched into the rim of the fountain, under the plaque, at exactly the height of the corner of your eye."
+    text: >-
+      Les sirènes chantaient aux marges de la vue, là où l'œil n'arrive jamais complètement. Journathan se fit attacher
+      au mât du navire : il désirait les écouter, non virer vers elles. Les marins, de la cire dans les oreilles,
+      ramaient et n'entendaient rien. Le chant, dit-on, était toujours le même refrain, répété à l'infini.
+    translation: >-
+      The Sirens sang at the edges of sight, where the eye never quite reaches. Journathan had himself tied to the
+      ship's mast: he wanted to listen without steering towards them. The sailors, wax in their ears, rowed and
+      heard nothing. The song, they say, was always the same refrain, repeated forever.
+    glossary:
+      - { word: "marges", meaning: "edges" }
+      - { word: "se fit attacher", meaning: "had himself tied" }
+      - { word: "mât", meaning: "mast" }
+      - { word: "virer", meaning: "to veer, to turn the ship" }
+      - { word: "cire", meaning: "wax" }
+      - { word: "ramaient", meaning: "they rowed" }
+      - { word: "refrain", meaning: "refrain" }
+  - id: journey_shroud
+    title: The shroud
+    found_after: the_rift_errata
+    found: "Left behind when the Rift narrowed to a hairline: a loose thread, and the words that were stitched along it."
+    text: >-
+      Sur son île, la femme de Journathan tissait un linceul de l'aube au crépuscule et le défaisait la nuit. Les
+      prétendants croyaient qu'elle gagnait du temps. En vérité, elle tenait séparées les branches du monde, point par
+      point, jusqu'à son retour.
+    translation: >-
+      On her island, Journathan's wife wove a shroud by day and unpicked it by night. The suitors believed she was
+      buying time. In truth she was holding the branches of the world apart, stitch by stitch, until he came
+      back.
+    glossary:
+      - { word: "tissait", meaning: "she wove" }
+      - { word: "linceul", meaning: "shroud" }
+      - { word: "défaisait", meaning: "she unpicked, undid" }
+      - { word: "prétendants", meaning: "suitors" }
+      - { word: "gagnait du temps", meaning: "she was buying time" }
+      - { word: "séparées", meaning: "apart, separated" }
+      - { word: "jusqu'à son retour", meaning: "until he came back (until his return)" }
+  - id: journey_dead_branch
+    title: The word for it
+    found_after: imp_coffee_greeting
+    after_conversations: 3
+    found: "On your third coffee break, Gerald recites a passage he swears he learned as a barista in the Dead Branch."
+    text: >-
+      Dans la Branche Morte, Journathan but un breuvage sombre et amer, servi dans des tasses de la taille d'un dé à
+      coudre. Qui y goûtait pleurait. Le mot pour le dire a disparu : il périt en même temps que la branche, et
+      aujourd'hui nul dictionnaire ne s'en souvient.
+    translation: >-
+      In the Dead Branch, Journathan drank something dark and bitter, served in very small cups. Whoever tasted it
+      wept. The word for it no longer exists: it died with the branch, and today not even a dictionary remembers it.
+    glossary:
+      - { word: "Branche Morte", meaning: "Dead Branch" }
+      - { word: "but", meaning: "he drank (passé simple of boire)" }
+      - { word: "breuvage", meaning: "brew, drink" }
+      - { word: "amer", meaning: "bitter" }
+      - { word: "tasses", meaning: "cups" }
+      - { word: "de la taille d'un dé à coudre", meaning: "the size of a thimble" }
+      - { word: "goûtait", meaning: "tasted" }
+      - { word: "pleurait", meaning: "wept" }
+      - { word: "nul", meaning: "no, not a single" }
+      - { word: "dictionnaire", meaning: "dictionary" }
+  - id: journey_spores
+    title: Spores
+    found_after: butchers_stall_charcutier
+    found: "Folded around a jar of dried mushrooms at the back of Mortimer's stall, labelled NOT FOR SALE in several different hands."
+    text: >-
+      Sur les racines de la Branche Morte poussaient des champignons pâles, qui dévoraient le monde achevé pour en
+      faire de la terre. Journathan en respira les spores et fit des songes dans un idiome qu'aucune âme vivante n'avait
+      jamais parlé. Quand il rouvrit les yeux, un monde à peine né l'entourait, qui le parlait déjà. Certains disent
+      que cet ouvrage aussi naquit ainsi.
+    translation: >-
+      On the roots of the Dead Branch grew pale mushrooms, which devoured the finished world to make soil of it.
+      Journathan breathed in their spores and dreamed in a tongue no living soul had ever spoken. When he woke, around him
+      stood a world just born, and it already spoke it. Some say this book was born the same way.
+    glossary:
+      - { word: "racines", meaning: "roots" }
+      - { word: "poussaient", meaning: "grew" }
+      - { word: "champignons pâles", meaning: "pale mushrooms" }
+      - { word: "dévoraient", meaning: "devoured" }
+      - { word: "respira", meaning: "breathed in" }
+      - { word: "spores", meaning: "spores" }
+      - { word: "fit des songes", meaning: "dreamed" }
+      - { word: "âme vivante", meaning: "living soul" }
+      - { word: "rouvrit les yeux", meaning: "opened his eyes again, woke" }
+      - { word: "naquit ainsi", meaning: "was born the same way" }
+  - id: journey_forbidden_herd
+    title: The forbidden herd
+    found_after: butchers_stall_charcutier
+    after_conversations: 3
+    found: "On your third tasting, Mortimer lowers his voice and recites the one passage of The Journey he refuses to slice."
+    text: >-
+      Sur l'île du Soleil paissaient des troupeaux sacrés. Journathan défendit à ses compagnons d'y toucher. La faim,
+      pourtant, l'emporta sur le serment : ils rôtirent les bêtes, et la viande meuglait sur la broche. Depuis, qui
+      découpe la viande sollicite d'abord la permission.
+    translation: >-
+      On the island of the Sun grazed sacred herds. Journathan told his companions not to touch them. But hunger was
+      stronger than the oath: they roasted the beasts, and the meat lowed on the spit. Since then, whoever cuts meat
+      asks permission.
+    glossary:
+      - { word: "paissaient", meaning: "grazed" }
+      - { word: "troupeaux", meaning: "herds" }
+      - { word: "l'emporta sur", meaning: "was stronger than, prevailed over" }
+      - { word: "serment", meaning: "oath" }
+      - { word: "rôtirent", meaning: "they roasted" }
+      - { word: "meuglait", meaning: "lowed, mooed" }
+      - { word: "broche", meaning: "spit (for roasting)" }
+      - { word: "permission", meaning: "permission" }
+  - id: journey_lotus
+    title: The lotus
+    found_after: cracked_fountain_letharger
+    after_conversations: 3
+    found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
+    text: >-
+      Sur un rivage tiède, certains marins de Journathan mangèrent la fleur du lotus. Ils oublièrent le cap, le retour,
+      jusqu'à l'envie de partir. « Un instant », disaient-ils, étendus sur le sable, puis un autre instant. Journathan
+      dut les traîner jusqu'aux navires, et ils pleuraient.
+    translation: >-
+      On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
+      the wish to leave. "Just a moment," they said, lying on the sand, and then another moment. Journathan had to drag
+      them to the ships, and they wept.
+    glossary:
+      - { word: "tiède", meaning: "lukewarm" }
+      - { word: "lotus", meaning: "lotus" }
+      - { word: "cap", meaning: "course, heading" }
+      - { word: "jusqu'à l'envie", meaning: "even the wish" }
+      - { word: "instant", meaning: "moment, instant" }
+      - { word: "étendus", meaning: "lying down, stretched out" }
+      - { word: "sable", meaning: "sand" }
+      - { word: "les traîner", meaning: "to drag them" }
+  - id: journey_old_dog
+    title: The old dog
+    found_after: old_bookshop_bookworm
+    after_conversations: 3
+    found: "On your third reading, Marginalia turns to a page she keeps folded down and reads it without looking."
+    text: >-
+      Journathan rentra sur son île déguisé en mendiant, et les siens ne le reconnurent point. Il n'y eut qu'un vieux
+      chien, couché sur le fumier devant la porte, pour dresser les oreilles et remuer la queue. Il l'avait attendu si
+      longtemps. Puis il ferma les yeux, content.
+    translation: >-
+      Journathan came back to his island dressed as a beggar, and his own people did not know him. Only an old dog,
+      lying on the dung heap before the door, raised its ears and moved its tail. It had waited for him all that time.
+      Then it closed its eyes, content.
+    glossary:
+      - { word: "mendiant", meaning: "beggar" }
+      - { word: "reconnurent", meaning: "they recognised" }
+      - { word: "chien", meaning: "dog" }
+      - { word: "fumier", meaning: "dung heap" }
+      - { word: "dresser", meaning: "to raise, prick up" }
+      - { word: "queue", meaning: "tail" }
+      - { word: "content", meaning: "content, happy" }
+  - id: journey_still_on_his_way
+    title: Still on his way
+    found_after: imp_coffee_greeting
+    found: "Pinned under Gerald's tip jar, on the back of an unpaid bill signed with a flourish."
+    text: >-
+      Le récit le fait rentrer sur son île ; il jure n'y être jamais arrivé. Aujourd'hui, ce vieux héros aux genoux qui
+      grincent reste, techniquement, toujours en chemin. Qu'on l'interroge sur sa destination, il répond que le chemin
+      compte davantage que le but. Puis il soupire, las de l'entendre à son tour.
+    translation: >-
+      The book has him come back to his island; he swears he never arrived. Today he is an old hero with creaking
+      knees, technically still on his way. Ask him where he is going and he says it is about the journey, not the
+      destination. Then he sighs: he is tired of hearing it too.
+    glossary:
+      - { word: "jure", meaning: "he swears" }
+      - { word: "jamais arrivé", meaning: "never arrived" }
+      - { word: "genoux", meaning: "knees" }
+      - { word: "grincent", meaning: "creak" }
+      - { word: "en chemin", meaning: "on his way" }
+      - { word: "compte", meaning: "matters, counts" }
+      - { word: "chemin", meaning: "path, way; here the journey" }
+      - { word: "le but", meaning: "the goal, the destination" }
+      - { word: "soupire", meaning: "he sighs" }
+      - { word: "las de l'entendre", meaning: "tired of hearing it" }

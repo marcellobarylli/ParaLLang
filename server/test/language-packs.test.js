@@ -68,13 +68,14 @@ async function submit(runtime, learnerId, encounter, message) {
 }
 
 test('both packs load, Italian is the default, and an unknown code lists the packs', () => {
-  assert.deepEqual(availableLanguages(), ['es', 'it']);
+  assert.deepEqual(availableLanguages(), ['es', 'fr', 'it']);
   assert.equal(resolveTargetLanguage({}), 'it');
   assert.equal(resolveTargetLanguage({ TARGET_LANGUAGE: ' es ' }), 'es');
   assert.equal(loadGameContent().language.code, 'it');
   assert.equal(loadGameContent({ language: 'es' }).language.name, 'Spanish');
   assert.deepEqual(italian.language, { code: 'it', name: 'Italian', tag: 'it-IT' });
-  assert.throws(() => loadGameContent({ language: 'fr' }), /Unknown target language: fr\. Available: es, it/);
+  assert.equal(loadGameContent({ language: 'fr' }).language.name, 'French');
+  assert.throws(() => loadGameContent({ language: 'de' }), /Unknown target language: de\. Available: es, fr, it/);
 });
 
 test('Italian matching prefers the longest phrase and ignores accents and elision', () => {
@@ -86,7 +87,7 @@ test('Italian matching prefers the longest phrase and ignores accents and elisio
 });
 
 test('prompts name the selected language and leave no placeholder unfilled', () => {
-  for (const [code, name] of [['it', 'Italian'], ['es', 'Spanish']]) {
+  for (const [code, name] of [['it', 'Italian'], ['es', 'Spanish'], ['fr', 'French']]) {
     const content = loadGameContent({ language: code });
     const shared = { language: content.language, objectives: content.encounter.objectives, vocabularyById: content.vocabularyById };
     const prompts = [
@@ -97,7 +98,7 @@ test('prompts name the selected language and leave no placeholder unfilled', () 
     assert.match(prompts, new RegExp(`about 30% of the words in each dialogue line are ${name}`));
     assert.match(prompts, new RegExp(`strict contextual ${name}-learning assessor`));
     assert.doesNotMatch(prompts, /\{\{/);
-    assert.doesNotMatch(prompts, new RegExp(name === 'Italian' ? 'Spanish' : 'Italian'));
+    for (const other of ['Italian', 'Spanish', 'French'].filter((each) => each !== name)) assert.doesNotMatch(prompts, new RegExp(other));
   }
 });
 

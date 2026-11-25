@@ -68,8 +68,9 @@ const packStageSchema = z.object({
   vocabulary: z.record(idSchema, packEntrySchema),
 }).strict();
 
-// A form as the matcher compares it: without accents, in lower case, apostrophes alike, white space as one space.
-const foldForm = (form) => String(form).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[\u2019\u2018\u02BC\u0060\u00B4\u2032]/gu, "'").replace(/\s+/gu, ' ').trim();
+// A form as the matcher compares it: without accents, in lower case, œ and æ as two letters (round 180), apostrophes
+// alike, white space as one space.
+const foldForm = (form) => String(form).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/œ/gu, 'oe').replace(/æ/gu, 'ae').replace(/[\u2019\u2018\u02BC\u0060\u00B4\u2032]/gu, "'").replace(/\s+/gu, ' ').trim();
 const yamlFiles = (dir) => (existsSync(dir) ? readdirSync(dir).filter((name) => name.endsWith('.yaml')).sort() : []);
 function parse(path) {
   try { return yaml.load(readFileSync(path, 'utf8')); }

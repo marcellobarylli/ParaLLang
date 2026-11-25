@@ -10,10 +10,11 @@
 // into the reply box. The player sends it.
 
 // Pitch and rate on SpeechSynthesisUtterance's scales (pitch 0 to 2, rate 1 is normal). `names` are voices to prefer,
-// best first: Apple's and Google's Italian and Spanish voices by gender, and Apple's novelty voices for `funny`.
+// best first: Apple's and Google's Italian, Spanish and French (round 180) voices by gender, and Apple's novelty voices
+// for `funny`.
 export const VOICE_KINDS = Object.freeze({
-  female: { pitch: 1.1, rate: 0.95, names: ['Alice', 'Federica', 'Emma', 'Paola', 'Mónica', 'Monica', 'Paulina', 'Marisol', 'Flo', 'Sandy', 'Shelley', 'Elsa', 'Isabella', 'Elvira', 'Helena', 'Laura', 'Sabina', 'female', 'donna', 'mujer'] },
-  male: { pitch: 0.8, rate: 0.95, names: ['Luca', 'Cosimo', 'Diego', 'Jorge', 'Juan', 'Carlos', 'Eddy', 'Reed', 'Rocko', 'Diego', 'Pablo', 'Alvaro', 'Álvaro', 'Raul', 'Raúl', 'male', 'uomo', 'hombre'] },
+  female: { pitch: 1.1, rate: 0.95, names: ['Alice', 'Federica', 'Emma', 'Paola', 'Mónica', 'Monica', 'Paulina', 'Marisol', 'Flo', 'Sandy', 'Shelley', 'Elsa', 'Isabella', 'Elvira', 'Helena', 'Laura', 'Sabina', 'Amélie', 'Amelie', 'Audrey', 'Aurélie', 'Aurelie', 'Marie', 'Chantal', 'female', 'donna', 'mujer', 'femme'] },
+  male: { pitch: 0.8, rate: 0.95, names: ['Luca', 'Cosimo', 'Diego', 'Jorge', 'Juan', 'Carlos', 'Eddy', 'Reed', 'Rocko', 'Diego', 'Pablo', 'Alvaro', 'Álvaro', 'Raul', 'Raúl', 'Thomas', 'Nicolas', 'Jacques', 'male', 'uomo', 'hombre', 'homme'] },
   creature: { pitch: 1.6, rate: 1.05, names: ['Shelley', 'Sandy', 'Flo', 'Eddy'] },
   funny: { pitch: 0.5, rate: 0.8, names: ['Grandpa', 'Grandma', 'Rocko', 'Reed'] },
 });
@@ -32,7 +33,7 @@ const ofLanguage = (voices, tag) => {
   const wanted = primary(tag);
   if (!wanted) return [];
   const all = (voices ?? []).filter((voice) => primary(voice.lang) === wanted);
-  // The pack's own region first (it-IT before it-CH, es-ES before es-MX).
+  // The pack's own region first (it-IT before it-CH, es-ES before es-MX, fr-FR before fr-CA).
   const exact = all.filter((voice) => String(voice.lang).replace('_', '-').toLowerCase() === String(tag).toLowerCase());
   return [...exact, ...all.filter((voice) => !exact.includes(voice))];
 };

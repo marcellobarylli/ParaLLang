@@ -4,6 +4,9 @@ const DAY_MS = 86_400_000;
 // unit for one, so offsets into the source do not move. Before NFKC, which would split ´ into a space and an accent.
 const APOSTROPHES = /[\u2019\u2018\u02BC\u0060\u00B4\u2032]/gu;
 export function foldApostrophes(text) { return String(text ?? '').replace(APOSTROPHES, "'"); }
+// Round 180: French writes œ and æ as one letter that no Unicode normalization takes apart (cœur, sœur, ex æquo), and
+// a player types oe. Both fold to the two letters, in lower case (call it after lower-casing).
+export function foldLigatures(text) { return String(text ?? '').replace(/œ/gu, 'oe').replace(/æ/gu, 'ae'); }
 
 // Round 054 (critique 1.3): the grader-evidence presence check compares texts folded alike: apostrophes, NFC, every
 // whitespace run (no-break space included) to one space, case.
@@ -15,10 +18,10 @@ export function normalizeAnswer(value, { stripAccents = false } = {}) {
   let normalized = foldApostrophes(value)
     .normalize('NFKC')
     .toLocaleLowerCase('en')
-    .replace(/[.,!?;¿¡:"'()“”‘’]+/gu, ' ')
+    .replace(/[.,!?;¿¡:"'()“”‘’«»‹›]+/gu, ' ') // round 180: French guillemets
     .replace(/\s+/gu, ' ')
     .trim();
-  if (stripAccents) normalized = normalized.normalize('NFD').replace(/\p{M}/gu, '').normalize('NFC');
+  if (stripAccents) normalized = foldLigatures(normalized.normalize('NFD').replace(/\p{M}/gu, '').normalize('NFC'));
   return normalized;
 }
 
@@ -65,7 +68,7 @@ function preparedForms(vocabulary) {
   if (known && known.length === vocabulary.length) return known.pairs;
   const pairs = [...vocabulary]
     .flatMap((entry) => entry.surface_variants.map((variant) => {
-      const form = foldApostrophes(variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase());
+      const form = foldLigatures(foldApostrophes(variant.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()));
       const pattern = escapeRegExp(form).replace(/\s+/g, '\\s+');
       return { entry, form, words: form.split(/\s+/).filter(Boolean), expression: new RegExp(`(?<![\\p{L}\\p{N}_])${pattern}(?![\\p{L}\\p{N}_])`, 'gu') };
     }))
@@ -82,7 +85,7 @@ export function matchCanonicalVocabulary(text, vocabulary) {
   const startOf = [];
   const endOf = [];
   for (const cluster of source.matchAll(/\P{M}\p{M}*|\p{M}+/gsu)) {
-    const piece = foldApostrophes(cluster[0].normalize('NFD').replace(/\p{M}/gu, '').toLowerCase());
+    const piece = foldLigatures(foldApostrophes(cluster[0].normalize('NFD').replace(/\p{M}/gu, '').toLowerCase())); // œ is two folded units
     for (let i = 0; i < piece.length; i += 1) {
       startOf.push(cluster.index);
       endOf.push(cluster.index + cluster[0].length);

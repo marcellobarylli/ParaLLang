@@ -1,0 +1,196 @@
+# Round 144: the Italian words of curriculum stage A1.1 (the skeleton is content/curriculum/01_a1_1.yaml). Authored by
+# Claude from the functions of the A1 syllabi read for the round; no source page was opened for a single entry. For
+# the owner's review. A vocabulary entry is { t: target, pos, en: [meanings], forms: [...], ex: [example, English] };
+# `forms` defaults to the target, and matching ignores case and accents. `say` is the words that meet an objective:
+# one list means any of them, a list of lists means one from each.
+# Round 180: the French version, authored by Claude from the Italian file; it awaits a native speaker's review. Elided
+# and unelided forms, the spoken negation without ne, and inversion with and without hyphens are listed as forms.
+stage: a1_1
+version: curriculum-a1-1-fr-v1
+grammar:
+  greetings: "être (je suis, tu es, il est) and s'appeler (je m'appelle, tu t'appelles); tu and vous."
+  origins: "être de, venir de, habiter à; questions with où and d'où; à with a town, en with most countries (en France, au Canada)."
+  courtesy: "Polite formulas; ne ... pas around the verb (spoken French often drops ne); vous pouvez and tu peux with an infinitive."
+  numbers: "Numbers to a hundred; avoir for age (j'ai ... ans); combien and combien de."
+  cafe: "je voudrais with a noun; un and une, and the partitive du, de la, de l', des (du café, de l'eau); et, aussi."
+  likes: "aimer, adorer, détester with the definite article (j'aime le café); ne ... pas (je n'aime pas); beaucoup, pas du tout; parce que, and pourquoi to ask."
+lessons:
+  greetings_hello:
+    greet: { say: [bonjour, bonsoir, salut, coucou], examples: ["Bonjour !", "Salut !"] }
+    how_are_you: { say: [comment_vas_tu, ca_va], examples: ["Comment vas-tu ?", "Salut, ça va ?"] }
+    goodbye: { say: [au_revoir, a_bientot, a_plus_tard], examples: ["Au revoir !", "À bientôt !"] }
+  greetings_name:
+    my_name: { say: [je_m_appelle], examples: ["Je m'appelle Sam."] }
+    your_name: { say: [comment_t_appelles_tu], examples: ["Comment t'appelles-tu ?", "Comment vous appelez-vous ?"] }
+    pleased: { say: [enchante, ravi_de_vous_rencontrer], examples: ["Enchanté !", "Ravie de vous rencontrer."] }
+  greetings_fine:
+    i_am_fine: { say: [je_vais_bien, ca_va, comme_ci_comme_ca, pas_mal], examples: ["Je vais bien.", "Pas mal."] }
+    thanks: { say: [merci, merci_beaucoup], examples: ["Merci !"] }
+    and_you: { say: [et_toi], examples: ["Et toi ?", "Et vous ?"] }
+  origins_from:
+    i_am_from: { say: [je_suis_de, je_viens_de], examples: ["Je suis de Londres.", "Je viens de Londres."] }
+    where_from: { say: [tu_viens_d_ou], examples: ["Tu viens d'où ?", "D'où venez-vous ?"] }
+    react: { say: [c_est_genial, interessant], examples: ["C'est génial !", "Intéressant !"] }
+  origins_live:
+    i_live: { say: [j_habite, je_vis], examples: ["J'habite à Londres.", "Je vis en Angleterre."] }
+    where_live: { say: [tu_habites_ou], examples: ["Tu habites où ?", "Où habitez-vous ?"] }
+    near_far: { say: [pres, loin], examples: ["C'est loin d'ici.", "C'est tout près."] }
+  origins_language:
+    i_speak: { say: [je_parle], examples: ["Je parle un peu français."] }
+    i_learn: { say: [j_apprends], examples: ["J'apprends le français."] }
+    do_you_speak: { say: [tu_parles_anglais], examples: ["Tu parles anglais ?", "Parlez-vous anglais ?"] }
+  courtesy_please:
+    please: { say: [s_il_vous_plait], examples: ["Un verre d'eau, s'il vous plaît.", "S'il te plaît !"] }
+    thank_you: { say: [merci_beaucoup], examples: ["Merci beaucoup !"] }
+    welcome: { say: [je_vous_en_prie, de_rien], examples: ["Je vous en prie.", "De rien."] }
+  courtesy_sorry:
+    excuse_me: { say: [excusez_moi], examples: ["Excusez-moi !", "Pardon !"] }
+    sorry: { say: [je_suis_desole], examples: ["Je suis désolé !"] }
+    no_problem: { say: [pas_de_probleme], examples: ["Pas de problème.", "Ce n'est pas grave."] }
+  courtesy_repeat:
+    not_understand: { say: [je_ne_comprends_pas], examples: ["Je ne comprends pas.", "Pardon, je n'ai pas compris."] }
+    repeat: { say: [vous_pouvez_repeter], examples: ["Vous pouvez répéter, s'il vous plaît ?", "Tu peux répéter ?"] }
+    slowly: { say: [plus_lentement], examples: ["Plus lentement, s'il vous plaît.", "Vous pouvez parler plus lentement ?"] }
+  numbers_count:
+    one_two_three: { say: [[un], [deux], [trois]], examples: ["Un, deux, trois."] }
+    a_number: { say: [quatre, cinq, six, sept, huit, neuf, dix], examples: ["Sept.", "Dix !"] }
+    how_many: { say: [combien], examples: ["Combien ?", "Il y en a combien ?"] }
+  numbers_age:
+    my_age: { say: [ans], examples: ["J'ai trente ans.", "J'ai vingt-cinq ans."] }
+    your_age: { say: [quel_age_as_tu], examples: ["Quel âge as-tu ?", "Quel âge avez-vous ?"] }
+    round_number: { say: [vingt, trente, quarante, cinquante], examples: ["Quarante ?", "Cinquante !"] }
+  numbers_price:
+    how_much: { say: [combien_ca_coute], examples: ["Combien ça coûte ?", "C'est combien ?"] }
+    too_much: { say: [trop_cher], examples: ["C'est trop cher !", "Ça coûte trop."] }
+    deal: { say: [d_accord, ca_marche], examples: ["D'accord.", "Ça marche !"] }
+  cafe_order:
+    i_would_like: { say: [je_voudrais, je_prends, pour_moi], examples: ["Je voudrais commander.", "Pour moi, un café."] }
+    a_drink: { say: [cafe, un_the, eau, biere, vin, jus], examples: ["Un café, s'il vous plaît.", "Je voudrais une bière."] }
+    thanks: { say: [merci, merci_beaucoup], examples: ["Merci !"] }
+  cafe_food:
+    what_is_there: { say: [qu_est_ce_qu_il_y_a], examples: ["Qu'est-ce qu'il y a à manger ?", "Qu'est-ce que vous avez ?"] }
+    some_food: { say: [sandwich, croque_monsieur, croissant, glace, omelette, salade], examples: ["Un sandwich, s'il vous plaît.", "Je voudrais un croque-monsieur."] }
+    also: { say: [aussi], examples: ["Et aussi une glace.", "Une salade aussi, s'il vous plaît."] }
+  cafe_bill:
+    it_was_good: { say: [bon, excellent, delicieux], examples: ["C'était très bon !", "Très bon, merci."] }
+    the_bill: { say: [l_addition], examples: ["L'addition, s'il vous plaît."] }
+    pay: { say: [par_carte, je_peux_payer], examples: ["Je peux payer par carte ?"] }
+  likes_like:
+    i_like: { say: [j_aime], examples: ["J'aime le café.", "J'aime les chats."] }
+    i_dont_like: { say: [je_n_aime_pas], examples: ["Je n'aime pas la bière."] }
+    do_you_like: { say: [tu_aimes], examples: ["Tu aimes le vin ?", "Ça vous plaît ?"] }
+  likes_love:
+    i_love: { say: [j_adore, je_suis_fan], examples: ["J'adore la glace !", "Je suis fan de pizza."] }
+    i_hate: { say: [je_deteste, j_ai_horreur, je_ne_supporte_pas], examples: ["Je déteste la pluie.", "Je ne supporte pas le bruit."] }
+    how_much: { say: [beaucoup, pas_du_tout], examples: ["Énormément !", "Pas du tout."] }
+  likes_prefer:
+    i_prefer: { say: [je_prefere], examples: ["Je préfère le thé."] }
+    because: { say: [parce_que], examples: ["Parce que c'est sucré."] }
+    me_too: { say: [moi_aussi, moi_non_plus], examples: ["Moi aussi !", "Moi non plus."] }
+vocabulary:
+  # greetings
+  bonjour: { t: "bonjour", pos: interjection, en: ["hello", "good morning", "good day"], ex: ["Bonjour, madame.", "Hello, madam."], n: "The safe greeting with anyone, all day; it is rude to skip it in a shop." }
+  bonsoir: { t: "bonsoir", pos: interjection, en: ["good evening"], ex: ["Bonsoir à tous.", "Good evening, everyone."] }
+  salut: { t: "salut", pos: interjection, en: ["hi", "hello", "bye"], ex: ["Salut, Marie !", "Hi, Marie!"], n: "Informal, for both hello and goodbye." }
+  coucou: { t: "coucou", pos: interjection, en: ["hi there", "hiya"], ex: ["Coucou, ça va ?", "Hi there, how are you?"], n: "Very familiar: friends and family." }
+  comment_vas_tu: { t: "comment vas-tu", pos: phrase, en: ["how are you"], forms: ["comment vas-tu", "comment vas tu", "comment allez-vous", "comment allez vous", "tu vas bien", "vous allez bien"], ex: ["Bonjour, comment vas-tu ?", "Hello, how are you?"], n: "'Comment allez-vous ?' is the vous form, formal or to several people." }
+  ca_va: { t: "ça va", pos: phrase, en: ["how is it going", "how are things", "I'm fine"], forms: ["ça va", "comment ça va"], ex: ["Alors, ça va ?", "So, how is it going?"], n: "As a question, 'how are things?'; as an answer, 'fine'." }
+  au_revoir: { t: "au revoir", pos: phrase, en: ["goodbye"], ex: ["Au revoir et merci.", "Goodbye and thank you."] }
+  a_bientot: { t: "à bientôt", pos: phrase, en: ["see you soon"], ex: ["Salut, à bientôt !", "Bye, see you soon!"] }
+  a_plus_tard: { t: "à plus tard", pos: phrase, en: ["see you later"], forms: ["à plus tard", "à tout à l'heure", "à tout de suite"], ex: ["J'y vais, à plus tard !", "I'm off, see you later!"] }
+  je_m_appelle: { t: "je m'appelle", pos: phrase, en: ["my name is", "I am called"], ex: ["Je m'appelle Luc.", "My name is Luc."] }
+  comment_t_appelles_tu: { t: "comment t'appelles-tu", pos: phrase, en: ["what is your name", "what are you called"], forms: ["comment t'appelles-tu", "comment t'appelles tu", "tu t'appelles comment", "comment tu t'appelles", "comment vous appelez-vous", "comment vous appelez vous", "vous vous appelez comment", "comment vous vous appelez"], ex: ["Et toi, comment t'appelles-tu ?", "And you, what is your name?"], n: "'Comment vous appelez-vous ?' is the vous form." }
+  enchante: { t: "enchanté", pos: adjective, en: ["pleased to meet you", "nice to meet you"], forms: ["enchanté", "enchantée"], ex: ["Enchantée, je suis Anne.", "Pleased to meet you, I'm Anne."], n: "A woman writes enchantée; it sounds the same." }
+  ravi_de_vous_rencontrer: { t: "ravi de vous rencontrer", pos: phrase, en: ["delighted to meet you", "very pleased to meet you"], forms: ["ravi de vous rencontrer", "ravie de vous rencontrer", "ravi de te rencontrer", "ravie de te rencontrer", "ravi de faire votre connaissance", "ravie de faire votre connaissance"], ex: ["Ravie de faire votre connaissance.", "Very pleased to meet you."] }
+  je_vais_bien: { t: "je vais bien", pos: phrase, en: ["I am fine", "I am well"], forms: ["je vais bien", "je vais très bien", "ça va bien", "ça va très bien"], ex: ["Je vais bien, et toi ?", "I'm fine, and you?"] }
+  comme_ci_comme_ca: { t: "comme ci comme ça", pos: phrase, en: ["so-so"], forms: ["comme ci comme ça", "comme ci, comme ça"], ex: ["Aujourd'hui, comme ci, comme ça.", "Today, so-so."] }
+  pas_mal: { t: "pas mal", pos: phrase, en: ["not bad"], forms: ["pas mal", "pas trop mal"], ex: ["Pas mal, merci.", "Not bad, thanks."] }
+  merci: { t: "merci", pos: interjection, en: ["thank you", "thanks"], ex: ["Bien, merci.", "Fine, thanks."] }
+  et_toi: { t: "et toi", pos: phrase, en: ["and you"], forms: ["et toi", "et vous"], ex: ["Je vais bien. Et toi ?", "I'm fine. And you?"], n: "'Et vous ?' is the vous form." }
+  # origins
+  je_suis_de: { t: "je suis de", pos: phrase, en: ["I am from"], ex: ["Je suis de Lyon.", "I am from Lyon."], n: "With a town: je suis de Paris." }
+  je_viens_de: { t: "je viens de", pos: phrase, en: ["I come from"], forms: ["je viens de", "je viens du", "je viens des", "je viens d"], ex: ["Je viens d'Écosse.", "I come from Scotland."], n: "With a country, de joins the article: du Canada, des États-Unis, de France; before a vowel, d'Italie." }
+  tu_viens_d_ou: { t: "tu viens d'où", pos: phrase, en: ["where are you from"], forms: ["tu viens d'où", "d'où viens-tu", "d'où viens tu", "tu es d'où", "vous venez d'où", "d'où venez-vous", "d'où venez vous", "vous êtes d'où"], ex: ["Tu viens d'où, Paul ?", "Where are you from, Paul?"] }
+  c_est_genial: { t: "c'est génial", pos: phrase, en: ["how great", "how lovely", "that's great"], forms: ["c'est génial", "c'est super", "c'est chouette", "c'est beau", "comme c'est beau"], ex: ["Tu es de Marseille ? C'est génial !", "You're from Marseille? How great!"] }
+  interessant: { t: "intéressant", pos: adjective, en: ["interesting"], forms: ["intéressant", "intéressante", "intéressants", "intéressantes"], ex: ["C'est très intéressant.", "It is very interesting."] }
+  j_habite: { t: "j'habite", pos: verb, en: ["I live"], ex: ["J'habite à Toulouse.", "I live in Toulouse."], n: "habiter: à with a town, en with most countries, au with a masculine one (au Canada)." }
+  je_vis: { t: "je vis", pos: verb, en: ["I live"], ex: ["Je vis en France.", "I live in France."] }
+  tu_habites_ou: { t: "tu habites où", pos: phrase, en: ["where do you live"], forms: ["tu habites où", "où habites-tu", "où habites tu", "vous habitez où", "où habitez-vous", "où habitez vous", "tu vis où", "où vis-tu", "vous vivez où", "où vivez-vous"], ex: ["Et toi, tu habites où ?", "And you, where do you live?"] }
+  pres: { t: "près", pos: adverb, en: ["near", "close"], forms: ["près", "tout près", "proche"], ex: ["La gare est tout près.", "The station is very near."] }
+  loin: { t: "loin", pos: adverb, en: ["far"], ex: ["C'est loin d'ici ?", "Is it far from here?"] }
+  je_parle: { t: "je parle", pos: verb, en: ["I speak"], ex: ["Je parle un peu français.", "I speak a little French."] }
+  j_apprends: { t: "j'apprends", pos: verb, en: ["I learn", "I am learning"], ex: ["J'apprends le français.", "I am learning French."], n: "French has one present for 'I learn' and 'I am learning'." }
+  tu_parles_anglais: { t: "tu parles anglais", pos: phrase, en: ["do you speak English"], forms: ["tu parles anglais", "parles-tu anglais", "parles tu anglais", "vous parlez anglais", "parlez-vous anglais", "parlez vous anglais"], ex: ["Excusez-moi, vous parlez anglais ?", "Excuse me, do you speak English?"] }
+  # courtesy
+  s_il_vous_plait: { t: "s'il vous plaît", pos: phrase, en: ["please"], forms: ["s'il vous plaît", "s'il te plaît", "svp", "stp"], ex: ["Un café, s'il vous plaît.", "A coffee, please."], n: "'S'il te plaît' to a friend." }
+  merci_beaucoup: { t: "merci beaucoup", pos: phrase, en: ["thank you very much", "many thanks"], forms: ["merci beaucoup", "merci mille fois", "mille mercis", "merci bien"], ex: ["Merci beaucoup pour votre aide.", "Thank you very much for your help."] }
+  je_vous_en_prie: { t: "je vous en prie", pos: phrase, en: ["you're welcome"], forms: ["je vous en prie", "je t'en prie"], ex: ["Merci ! Je vous en prie.", "Thanks! You're welcome."], n: "'Je t'en prie' to a friend." }
+  de_rien: { t: "de rien", pos: phrase, en: ["it's nothing", "don't mention it"], forms: ["de rien", "il n'y a pas de quoi", "pas de quoi"], ex: ["De rien, vraiment.", "It's nothing, really."] }
+  excusez_moi: { t: "excusez-moi", pos: phrase, en: ["excuse me", "sorry"], forms: ["excusez-moi", "excusez moi", "excuse-moi", "excuse moi", "pardon"], ex: ["Excusez-moi, où sont les toilettes ?", "Excuse me, where is the toilet?"], n: "'Excuse-moi' to a friend, 'excusez-moi' to a stranger." }
+  je_suis_desole: { t: "je suis désolé", pos: phrase, en: ["I am sorry"], forms: ["je suis désolé", "je suis désolée", "désolé", "désolée"], ex: ["Je suis désolé pour le retard.", "I am sorry for the delay."], n: "A woman writes désolée." }
+  pas_de_probleme: { t: "pas de problème", pos: phrase, en: ["no problem"], forms: ["pas de problème", "il n'y a pas de problème", "ce n'est pas grave", "c'est pas grave", "ça ne fait rien", "ça fait rien"], ex: ["Pas de problème, ça arrive.", "No problem, it happens."] }
+  je_ne_comprends_pas: { t: "je ne comprends pas", pos: phrase, en: ["I don't understand"], forms: ["je ne comprends pas", "je comprends pas", "je n'ai pas compris", "j'ai pas compris"], ex: ["Désolé, je ne comprends pas.", "I'm sorry, I don't understand."], n: "Spoken French often drops ne: je comprends pas." }
+  vous_pouvez_repeter: { t: "vous pouvez répéter", pos: phrase, en: ["can you repeat"], forms: ["vous pouvez répéter", "pouvez-vous répéter", "pouvez vous répéter", "tu peux répéter", "peux-tu répéter", "peux tu répéter", "répétez", "répète"], ex: ["Vous pouvez répéter, s'il vous plaît ?", "Can you repeat that, please?"] }
+  plus_lentement: { t: "plus lentement", pos: phrase, en: ["more slowly", "slower"], forms: ["plus lentement", "lentement", "moins vite"], ex: ["Vous pouvez parler plus lentement ?", "Can you speak more slowly?"] }
+  # numbers
+  un: { t: "un", pos: number, en: ["one"], forms: ["un", "une"], ex: ["Un, s'il vous plaît.", "One, please."], n: "Also 'a': un café, une bière." }
+  deux: { t: "deux", pos: number, en: ["two"], ex: ["Deux cafés.", "Two coffees."] }
+  trois: { t: "trois", pos: number, en: ["three"], ex: ["Trois sandwichs.", "Three sandwiches."] }
+  quatre: { t: "quatre", pos: number, en: ["four"], ex: ["Quatre personnes.", "Four people."] }
+  cinq: { t: "cinq", pos: number, en: ["five"], ex: ["Cinq minutes.", "Five minutes."] }
+  six: { t: "six", pos: number, en: ["six"], ex: ["Six euros.", "Six euros."] }
+  sept: { t: "sept", pos: number, en: ["seven"], ex: ["Sept jours.", "Seven days."] }
+  huit: { t: "huit", pos: number, en: ["eight"], ex: ["À huit heures.", "At eight o'clock."] }
+  neuf: { t: "neuf", pos: number, en: ["nine"], ex: ["Neuf euros.", "Nine euros."], n: "Also 'new' (un livre neuf): the sentence tells you which." }
+  dix: { t: "dix", pos: number, en: ["ten"], ex: ["Dix minutes.", "Ten minutes."] }
+  combien: { t: "combien", pos: adverb, en: ["how many", "how much"], ex: ["Vous êtes combien ?", "How many of you are there?"], n: "With a noun: combien de personnes ?" }
+  ans: { t: "ans", pos: noun, en: ["years", "years old"], ex: ["J'ai vingt ans.", "I am twenty years old."], n: "Age takes avoir: j'ai trente ans, 'I have thirty years'." }
+  quel_age_as_tu: { t: "quel âge as-tu", pos: phrase, en: ["how old are you"], forms: ["quel âge as-tu", "quel âge as tu", "tu as quel âge", "quel âge tu as", "quel âge avez-vous", "quel âge avez vous", "vous avez quel âge"], ex: ["Quel âge as-tu, Sarah ?", "How old are you, Sarah?"] }
+  vingt: { t: "vingt", pos: number, en: ["twenty"], ex: ["Vingt euros.", "Twenty euros."] }
+  trente: { t: "trente", pos: number, en: ["thirty"], ex: ["Trente minutes.", "Thirty minutes."] }
+  quarante: { t: "quarante", pos: number, en: ["forty"], ex: ["Quarante personnes.", "Forty people."] }
+  cinquante: { t: "cinquante", pos: number, en: ["fifty"], ex: ["Cinquante euros.", "Fifty euros."] }
+  combien_ca_coute: { t: "combien ça coûte", pos: phrase, en: ["how much does it cost", "how much is it"], forms: ["combien ça coûte", "ça coûte combien", "c'est combien", "combien c'est", "ça fait combien", "combien ça fait", "combien coûte", "combien coûtent"], ex: ["Combien coûte ce livre ?", "How much does this book cost?"] }
+  trop_cher: { t: "trop cher", pos: phrase, en: ["too expensive"], forms: ["trop cher", "trop chère", "trop chers", "trop chères", "ça coûte trop", "c'est trop"], ex: ["Non, c'est trop cher.", "No, it is too expensive."] }
+  d_accord: { t: "d'accord", pos: phrase, en: ["agreed", "okay", "all right"], forms: ["d'accord", "entendu"], ex: ["D'accord, dix euros.", "Agreed, ten euros."] }
+  ca_marche: { t: "ça marche", pos: phrase, en: ["it's a deal", "okay", "that works"], ex: ["Ça marche, je le prends.", "All right, I'll take it."] }
+  # cafe
+  je_voudrais: { t: "je voudrais", pos: verb, en: ["I would like"], ex: ["Je voudrais un café.", "I would like a coffee."], n: "The polite way to ask for anything." }
+  je_prends: { t: "je prends", pos: verb, en: ["I'll have", "I take"], forms: ["je prends", "je vais prendre"], ex: ["Je prends un thé.", "I'll have a tea."] }
+  pour_moi: { t: "pour moi", pos: phrase, en: ["for me"], ex: ["Pour moi, une bière.", "A beer for me."] }
+  cafe: { t: "café", pos: noun, en: ["coffee"], forms: ["café", "cafés", "express", "café crème"], ex: ["Un café, merci.", "A coffee, thanks."], n: "Un café is a small black coffee; un crème has milk. Also the place: au café." }
+  un_the: { t: "un thé", pos: noun, en: ["a tea", "tea"], forms: ["un thé", "du thé", "le thé", "thés"], ex: ["Un thé bien chaud.", "A nice hot tea."] }
+  eau: { t: "eau", pos: noun, en: ["water"], ex: ["Une carafe d'eau, s'il vous plaît.", "A jug of tap water, please."], n: "Une carafe d'eau is free tap water." }
+  biere: { t: "bière", pos: noun, en: ["beer"], forms: ["bière", "bières"], ex: ["Une petite bière.", "A small beer."] }
+  vin: { t: "vin", pos: noun, en: ["wine"], forms: ["vin", "vins"], ex: ["Un verre de vin rouge.", "A glass of red wine."] }
+  jus: { t: "jus", pos: noun, en: ["juice"], ex: ["Un jus d'orange.", "An orange juice."] }
+  qu_est_ce_qu_il_y_a: { t: "qu'est-ce qu'il y a", pos: phrase, en: ["what is there"], forms: ["qu'est-ce qu'il y a", "qu'est ce qu'il y a", "qu'est-ce que vous avez", "qu'est ce que vous avez", "vous avez quoi", "qu'est-ce que vous conseillez", "qu'est ce que vous conseillez"], ex: ["Qu'est-ce qu'il y a à manger ?", "What is there to eat?"] }
+  sandwich: { t: "sandwich", pos: noun, en: ["sandwich"], forms: ["sandwich", "sandwichs", "sandwiches"], ex: ["Un sandwich au jambon.", "A ham sandwich."], n: "Often a baguette: un jambon-beurre is ham and butter." }
+  croque_monsieur: { t: "croque-monsieur", pos: noun, en: ["toasted ham and cheese sandwich"], forms: ["croque-monsieur", "croque monsieur"], ex: ["Un croque-monsieur et une salade.", "A croque-monsieur and a salad."] }
+  croissant: { t: "croissant", pos: noun, en: ["croissant"], forms: ["croissant", "croissants"], ex: ["Un croissant et un café.", "A croissant and a coffee."] }
+  glace: { t: "glace", pos: noun, en: ["ice cream"], forms: ["glace", "glaces"], ex: ["Une glace au citron.", "A lemon ice cream."] }
+  omelette: { t: "omelette", pos: noun, en: ["omelette"], forms: ["omelette", "omelettes"], ex: ["Une omelette au fromage.", "A cheese omelette."] }
+  salade: { t: "salade", pos: noun, en: ["salad"], forms: ["salade", "salades"], ex: ["Une salade verte.", "A green salad."] }
+  aussi: { t: "aussi", pos: adverb, en: ["also", "too"], forms: ["aussi", "et aussi"], ex: ["Un dessert aussi, s'il vous plaît.", "A dessert too, please."] }
+  bon: { t: "bon", pos: adjective, en: ["good", "tasty"], forms: ["bon", "bonne", "très bon", "très bonne"], ex: ["La glace est bonne.", "The ice cream is good."] }
+  excellent: { t: "excellent", pos: adjective, en: ["excellent"], forms: ["excellent", "excellente"], ex: ["Excellent, merci !", "Excellent, thank you!"] }
+  delicieux: { t: "délicieux", pos: adjective, en: ["delicious"], forms: ["délicieux", "délicieuse", "délicieuses"], ex: ["La tarte est délicieuse.", "The tart is delicious."] }
+  l_addition: { t: "l'addition", pos: noun, en: ["the bill", "the check"], forms: ["l'addition", "addition"], ex: ["L'addition, s'il vous plaît.", "The bill, please."] }
+  par_carte: { t: "par carte", pos: phrase, en: ["by card", "with a card"], forms: ["par carte", "par carte bancaire", "avec la carte", "avec ma carte", "carte bancaire", "carte de crédit", "par CB"], ex: ["Je paie par carte.", "I'm paying by card."] }
+  je_peux_payer: { t: "je peux payer", pos: phrase, en: ["can I pay"], forms: ["je peux payer", "puis-je payer", "puis je payer", "on peut payer"], ex: ["Je peux payer ici ?", "Can I pay here?"] }
+  # likes
+  j_aime: { t: "j'aime", pos: verb, en: ["I like", "I love"], forms: ["j'aime", "j'aime bien", "ça me plaît"], ex: ["J'aime la musique.", "I like music."], n: "With the definite article: j'aime le café, j'aime les chats. 'J'aime bien' is 'I quite like'." }
+  je_n_aime_pas: { t: "je n'aime pas", pos: phrase, en: ["I don't like"], forms: ["je n'aime pas", "j'aime pas", "ça ne me plaît pas", "ça me plaît pas"], ex: ["Je n'aime pas le froid.", "I don't like the cold."], n: "Spoken French drops ne: j'aime pas." }
+  tu_aimes: { t: "tu aimes", pos: phrase, en: ["do you like"], forms: ["tu aimes", "aimes-tu", "aimes tu", "vous aimez", "aimez-vous", "aimez vous", "ça te plaît", "ça vous plaît"], ex: ["Tu aimes la mer ?", "Do you like the sea?"] }
+  j_adore: { t: "j'adore", pos: verb, en: ["I love", "I adore"], ex: ["J'adore le chocolat.", "I love chocolate."] }
+  je_suis_fan: { t: "je suis fan", pos: phrase, en: ["I'm a fan", "I love"], forms: ["je suis fan", "je suis fou de", "je suis folle de"], ex: ["Je suis fan de la montagne.", "I love the mountains."] }
+  je_deteste: { t: "je déteste", pos: verb, en: ["I hate", "I detest"], ex: ["Je déteste le lundi.", "I hate Mondays."] }
+  j_ai_horreur: { t: "j'ai horreur", pos: phrase, en: ["I hate", "I loathe"], ex: ["J'ai horreur d'attendre.", "I hate waiting."], n: "With de: j'ai horreur du bruit." }
+  je_ne_supporte_pas: { t: "je ne supporte pas", pos: phrase, en: ["I can't stand"], forms: ["je ne supporte pas", "je supporte pas"], ex: ["Je ne supporte pas les bouchons.", "I can't stand traffic jams."] }
+  beaucoup: { t: "beaucoup", pos: adverb, en: ["very much", "a lot"], forms: ["beaucoup", "énormément", "vraiment beaucoup"], ex: ["J'aime beaucoup ça.", "I like it very much."] }
+  pas_du_tout: { t: "pas du tout", pos: phrase, en: ["not at all"], ex: ["Je n'aime pas du tout ça.", "I don't like it at all."] }
+  je_prefere: { t: "je préfère", pos: verb, en: ["I prefer"], ex: ["Je préfère le vin rouge.", "I prefer red wine."] }
+  parce_que: { t: "parce que", pos: conjunction, en: ["because"], forms: ["parce que", "parce qu"], ex: ["Parce que c'est bon.", "Because it is good."], n: "Before a vowel: parce qu'il fait beau. To ask 'why?', French says pourquoi." }
+  pourquoi: { t: "pourquoi", pos: adverb, en: ["why"], ex: ["Pourquoi tu préfères le thé ?", "Why do you prefer tea?"], n: "Asks 'why?'; the answer starts with parce que." }
+  moi_aussi: { t: "moi aussi", pos: phrase, en: ["me too", "so do I"], ex: ["J'adore la mer. Moi aussi !", "I love the sea. Me too!"] }
+  moi_non_plus: { t: "moi non plus", pos: phrase, en: ["me neither", "nor do I"], ex: ["Je n'aime pas ça. Moi non plus.", "I don't like it. Me neither."], n: "The answer to a negative: je n'aime pas, moi non plus." }

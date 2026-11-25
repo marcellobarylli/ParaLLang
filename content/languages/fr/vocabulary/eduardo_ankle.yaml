@@ -1,0 +1,45 @@
+# Micromort Mountain, Eduardo's ankle. Reference URLs follow the existing patterns and were not opened from the build
+# container; listed for the owner's content review.
+# Round 180: French version authored by Claude; awaits a native speaker's review.
+version: eduardo-ankle-fr-v1
+references:
+  - id: larousse-aide
+    title: "Larousse, Dictionnaire de français: aide"
+    url: "https://www.larousse.fr/dictionnaires/francais/aide"
+  - id: larousse-sommet
+    title: "Larousse, Dictionnaire de français: sommet"
+    url: "https://www.larousse.fr/dictionnaires/francais/sommet"
+  - id: larousse-fete
+    title: "Larousse, Dictionnaire de français: fête"
+    url: "https://www.larousse.fr/dictionnaires/francais/f%C3%AAte"
+entries:
+  - id: aide
+    kind: word
+    target: "aide"
+    part_of_speech: noun
+    accepted_translations: ["help", "I help", "aid"]
+    surface_variants: ["aide", "aider", "aides"]
+    accent_insensitive: false
+    example: { target: "Je t'aide.", english: "I'll help you." }
+    note: "'Aide' is both the noun (help: de l'aide) and the present of 'aider' (to help): 'Je t'aide' is 'I'll help you'."
+    reference_ids: [larousse-aide]
+  - id: sommet
+    kind: word
+    target: "sommet"
+    part_of_speech: noun
+    accepted_translations: ["summit", "peak", "top"]
+    surface_variants: ["sommet", "sommets"]
+    accent_insensitive: false
+    example: { target: "Le sommet est couvert de neige.", english: "The summit is covered in snow." }
+    note: "'Sommet' is masculine: le sommet, plural les sommets."
+    reference_ids: [larousse-sommet]
+  - id: fete
+    kind: word
+    target: "fête"
+    part_of_speech: noun
+    accepted_translations: ["party", "festival"]
+    surface_variants: ["fête", "fêtes"]
+    accent_insensitive: true
+    example: { target: "Quelle belle fête !", english: "What a lovely party!" }
+    note: "'Fête' is feminine: la fête, plural les fêtes. It means a party or a festival."
+    reference_ids: [larousse-fete]

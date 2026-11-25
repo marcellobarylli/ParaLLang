@@ -6,10 +6,14 @@ import { GEMINI_KEY_HEADER, TOKEN_HEADER, announceAccessProblem, loadGeminiKey, 
 // on tells an older page to reload.
 export const CLIENT_CONTRACT = 121;
 
-export function createLearningApi({ getSettings = () => loadSettings(), getGeminiKey = () => loadGeminiKey(), fetchImpl } = {}) {
+// Round 180: the language of this game, sent as X-ParaLLang-Language (server/src/app.js). None: the server's default.
+export const LANGUAGE_HEADER = 'X-ParaLLang-Language';
+
+export function createLearningApi({ getSettings = () => loadSettings(), getGeminiKey = () => loadGeminiKey(), getLanguage = () => null, fetchImpl } = {}) {
   async function request(path, { learnerId, method = 'GET', body, signal } = {}) {
     const { serverUrl, token } = getSettings();
     const geminiKey = getGeminiKey();
+    const language = getLanguage();
     const doFetch = fetchImpl ?? globalThis.fetch;
     let response;
     try {
@@ -20,6 +24,7 @@ export function createLearningApi({ getSettings = () => loadSettings(), getGemin
           ...(learnerId ? { 'X-Learner-Id': learnerId } : {}),
           ...(token ? { [TOKEN_HEADER]: token } : {}),
           ...(geminiKey ? { [GEMINI_KEY_HEADER]: geminiKey } : {}),
+          ...(language ? { [LANGUAGE_HEADER]: language } : {}),
         },
         body: body ? JSON.stringify(body) : undefined,
         signal,

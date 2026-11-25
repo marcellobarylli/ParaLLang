@@ -481,7 +481,7 @@ function deepFreeze(value) {
 
 // Round 030: a fragment is found once its `found_after` location encounter is complete. Each glossary word must
 // occur in the text (apostrophes split words, so "albero" is found in "all'albero").
-export const foldWords = (text) => ` ${String(text).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+export const foldWords = (text) => ` ${String(text).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/œ/gu, 'oe').replace(/æ/gu, 'ae')
   .replace(/[^\p{L}\s]/gu, ' ').replace(/\s+/g, ' ').trim()} `;
 function loadFragments(contentDir, pack, encounters) {
   const relativePath = `${pack}/lore/fragments.yaml`;

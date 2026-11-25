@@ -1,0 +1,69 @@
+# Round 180: French version authored by Claude; it awaits a native speaker's review.
+id: mortimer_oath
+character: characters/enemies/charcutier_mortimer.yaml
+party_of: butchers_stall_charcutier
+# Round 048 (backlog G6): offered instead of the tasting once Mortimer has finished three conversations, after he has
+# recited the forbidden herd passage.
+after_conversations: 3
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player calms Mortimer down and promises him something, in French"
+max_turns: 20
+resolved_message: "Mortimer puts the knife away, asks the ham's permission out loud, and is granted it. He is almost sure."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: calm_him
+    prompt: "Mortimer's knife is shaking over the hamper. Tell him to calm down, using French."
+    intent: "Mortimer has travelled with the player for several tastings, so in his greeting he does not introduce himself or describe the place: he greets the player as an old companion. Tonight his knife shakes over the hamper: in his greeting, in a line or two, he admits that he has never once asked a ham for its permission before slicing it, and that he fears he is no better than some hungry sailors in an old story who roasted beasts they had sworn not to touch. The player may not know the story. He never says \"calme-toi\", \"du calme\" or \"je promets\" (in dialogue or narration) before the player has, and he does not tell the player what to say."
+    target_vocabulary_ids: [calme_toi]
+    required_target_groups:
+      - [calme_toi]
+    grammar_constraints:
+      - "The player tells Mortimer, in their own words, with the French verb se calmer, to calm down or not to worry (calme-toi, as the player says tu to an old companion; calmez-vous and du calme are also fine)."
+      - "Reject English-only lines, quotations, definitions of the phrase, and lines that say Mortimer is calm as a fact rather than calming him."
+    accepted_examples:
+      - "Calme-toi, Mortimer."
+      - "Du calme !"
+      - "Calme-toi, it's only a ham."
+    negative_examples:
+      - text: "Calm down, Mortimer."
+        reason: "English-only; it does not use the French phrase."
+      - text: "Calme-toi means calm down."
+        reason: "It discusses the phrase rather than calming him."
+      - text: "Mortimer says calme-toi."
+        reason: "It reports someone else's words."
+    reference_meaning: "The player tells Mortimer to calm down."
+    hint_limit: 2
+    next_objective: promise
+    assessment_reference_ids: [larousse-calmer]
+  - id: promise
+    prompt: "Mortimer asks you to swear that you will never touch the sacred herds. Promise him, using French."
+    intent: "Calmer now, Mortimer asks the player, very solemnly, to swear that they will never touch the sacred herds, only the ordinary, consenting hams. He waits for the player's promise. He never says \"je promets\" (in dialogue or narration) before the player has."
+    target_vocabulary_ids: [je_promets]
+    required_target_groups:
+      - [je_promets]
+    grammar_constraints:
+      - "The player promises Mortimer, in their own words, in the first person, with the French verb (je promets, je le promets, je te le promets)."
+      - "A bare \"Je promets.\" answers his request and passes, and so does a promise not to touch them (Je promets de ne pas les toucher.). Reject English-only promises, promises to touch the herds, refusals (je ne promets rien, also without ne), questions back to Mortimer, quotations, and talk about the word."
+    accepted_examples:
+      - "Je promets."
+      - "Je te le promets, Mortimer."
+      - "Je le promets : only the ordinary hams."
+      - "Je promets de ne pas les toucher."
+    negative_examples:
+      - text: "I promise."
+        reason: "English-only; it does not use the French verb."
+      - text: "Je ne promets rien."
+        reason: "It refuses to promise."
+      - text: "Tu promets ?"
+        reason: "It asks Mortimer instead of promising."
+      - text: "Je promets de les toucher tous."
+        reason: "It promises the opposite of what Mortimer asks."
+    reference_meaning: "The player promises Mortimer never to touch the sacred herds."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [larousse-promettre]

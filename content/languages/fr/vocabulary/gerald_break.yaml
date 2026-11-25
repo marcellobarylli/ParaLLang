@@ -1,0 +1,49 @@
+# Round 180: French version authored by Claude; awaits a native speaker's review. Reference URLs follow the existing
+# patterns and were not opened from the build container.
+version: gerald-break-fr-v1
+references:
+  - id: larousse-bon
+    title: "Larousse, Dictionnaire de français: bon"
+    url: "https://www.larousse.fr/dictionnaires/francais/bon"
+  - id: larousse-excellent
+    title: "Larousse, Dictionnaire de français: excellent"
+    url: "https://www.larousse.fr/dictionnaires/francais/excellent"
+  - id: larousse-merci
+    title: "Larousse, Dictionnaire de français: merci"
+    url: "https://www.larousse.fr/dictionnaires/francais/merci"
+  - id: wiktionary-bon
+    title: "Wiktionary: bon (French)"
+    url: "https://en.wiktionary.org/wiki/bon"
+  - id: wiktionary-merci
+    title: "Wiktionary: merci (French)"
+    url: "https://en.wiktionary.org/wiki/merci"
+entries:
+  - id: bon
+    kind: word
+    target: "bon"
+    part_of_speech: adjective
+    accepted_translations: ["good", "tasty", "nice"]
+    surface_variants: ["bon", "bonne", "très bon", "très bonne"]
+    accent_insensitive: false
+    example: { target: "Le café est bon.", english: "The coffee is good." }
+    note: "Bon agrees with its noun: le café est bon, la tasse est bonne. Très bon means 'very good'. After c'est it stays bon: c'est bon. C'est bon can also mean 'that's fine' or 'that's enough'."
+    reference_ids: [larousse-bon, wiktionary-bon]
+  - id: excellent
+    kind: word
+    target: "excellent"
+    part_of_speech: adjective
+    accepted_translations: ["excellent", "very good"]
+    surface_variants: ["excellent", "excellente"]
+    accent_insensitive: false
+    example: { target: "C'est un excellent café.", english: "It is an excellent coffee." }
+    reference_ids: [larousse-excellent]
+  - id: merci
+    kind: word
+    target: "merci"
+    part_of_speech: interjection
+    accepted_translations: ["thank you", "thanks"]
+    surface_variants: ["merci", "merci beaucoup", "merci bien", "mille mercis"]
+    accent_insensitive: false
+    example: { target: "Merci beaucoup, Gerald.", english: "Thanks a lot, Gerald." }
+    note: "Merci beaucoup: thanks a lot. Mille mercis, 'a thousand thanks', is warmer still."
+    reference_ids: [larousse-merci, wiktionary-merci]

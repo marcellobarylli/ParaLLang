@@ -1,0 +1,46 @@
+# Round 180: French version authored by Claude; awaits a native speaker's review. Reference URLs follow the existing
+# patterns and were not opened from the build container.
+version: marginalia-party-fr-v1
+references:
+  - id: larousse-merveilleux
+    title: 'Larousse, Dictionnaire de français: merveilleux'
+    url: https://www.larousse.fr/dictionnaires/francais/merveilleux
+  - id: larousse-encore-une-fois
+    title: 'Larousse, Dictionnaire de français: encore (encore une fois)'
+    url: https://www.larousse.fr/dictionnaires/francais/encore
+entries:
+  - id: merveilleux
+    kind: word
+    target: merveilleux
+    part_of_speech: adjective
+    accepted_translations:
+      - wonderful
+      - marvellous
+    surface_variants:
+      - merveilleux
+      - merveilleuse
+      - merveilleuses
+    accent_insensitive: false
+    example:
+      target: L'histoire est merveilleuse.
+      english: The story is wonderful.
+    note: "Agrees with its noun: l'histoire est merveilleuse, le livre est merveilleux. After c'est it stays masculine: c'est merveilleux !"
+    reference_ids:
+      - larousse-merveilleux
+  - id: encore_une_fois
+    kind: phrase
+    target: encore une fois
+    part_of_speech: adverbial_phrase
+    accepted_translations:
+      - again
+      - once more
+    surface_variants:
+      - encore une fois
+      - de nouveau
+    accent_insensitive: false
+    example:
+      target: Lis-la encore une fois, s'il te plaît.
+      english: Read it again, please.
+    note: "Encore alone means more or still as well as again; encore une fois says again plainly. De nouveau says it too, a little more formally."
+    reference_ids:
+      - larousse-encore-une-fois

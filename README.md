@@ -1,6 +1,6 @@
 # ParaLLang
 
-ParaLLang is a conversational language-learning game. It teaches Italian by default, and Spanish is also available. The prototype is The Crumbling Market: six places on a map, an encounter at each (Portia's tutorial at the entrance, Gerald, Mortimer, Flick, Marginalia, and Errata in the sealed Rift), tracked companion help, a Spellbook of canonical vocabulary with spaced-repetition reviews, a party of saved NPCs with their own conversations, and fragments of the in-world book *The Journey*. For running a session with testers, see [`docs/playtest/guide.md`](docs/playtest/guide.md).
+ParaLLang is a conversational language-learning game. It teaches Italian by default, and French and Spanish are also available. The prototype is The Crumbling Market: six places on a map, an encounter at each (Portia's tutorial at the entrance, Gerald, Mortimer, Flick, Marginalia, and Errata in the sealed Rift), tracked companion help, a Spellbook of canonical vocabulary with spaced-repetition reviews, a party of saved NPCs with their own conversations, and fragments of the in-world book *The Journey*. For running a session with testers, see [`docs/playtest/guide.md`](docs/playtest/guide.md).
 
 ## Design notes and project records
 
@@ -26,7 +26,7 @@ For the iPhone app, see [Run the iPhone app](#run-the-iphone-app). The browser c
 
 ### Target language
 
-`TARGET_LANGUAGE` in the root `.env` selects the language the market's characters speak: `it` (Italian, the default) or `es` (Spanish). Each value names a language pack under `content/languages/<code>/`, which holds its `language.yaml` (name and BCP 47 tag), vocabulary, encounters and lore fragments; the character and narration style in `content/characters/` and `content/narration/` are shared. An unknown value stops the server at startup and lists the available packs. To switch, change the value, restart the server, then reload the browser page. The server prints the active language at startup.
+`TARGET_LANGUAGE` in the root `.env` selects the language the market's characters speak: `it` (Italian, the default), `fr` (French) or `es` (Spanish). Round 180: `TARGET_LANGUAGES` (a comma list, `it,fr,es`) makes one server play several languages at once, `TARGET_LANGUAGE` first as the default; the web client sends each game's language as `X-ParaLLang-Language`, and a new game's language is chosen on the title or in Save slots. The hosted server plays all three. Each value names a language pack under `content/languages/<code>/`, which holds its `language.yaml` (name and BCP 47 tag), vocabulary, encounters and lore fragments; the character and narration style in `content/characters/` and `content/narration/` are shared. An unknown value stops the server at startup and lists the available packs. To switch, change the value, restart the server, then reload the browser page. The server prints the active language at startup.
 
 Choose one narration/grading provider in the root `.env`:
 

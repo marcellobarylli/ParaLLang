@@ -117,7 +117,7 @@ test('a finished conversation is written to a branch of its own as a file that s
   assert.ok(file.summary.spellbookCards >= 3 && file.summary.xp > 0);
   assert.equal(file.save.road.step, 1);
   assert.deepEqual(file.save.spellbook.processedAssessments, {}, 'no receipts');
-  assert.deepEqual((await api(runtime, '/api/health', {})).data, { status: 'ok' }, 'a test server is given no store to report');
+  assert.deepEqual((await api(runtime, '/api/health', {})).data, { status: 'ok', languages: [{ code: 'it', name: 'Italian', tag: 'it-IT' }], defaultLanguage: 'it' }, 'a test server is given no store to report');
   assert.deepEqual({ ok: storage.status.lastWriteOk, kind: storage.status.kind }, { ok: true, kind: 'github' });
 
   // The next conversation updates the same file.

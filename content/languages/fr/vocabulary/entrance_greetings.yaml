@@ -1,0 +1,172 @@
+# Round 009: Market Entrance tutorial (greetings, pronouns). Reference URLs follow the Gerald file's patterns and were
+# not opened from the build container; listed for the owner's content review.
+# Round 180: French version authored by Claude; awaits a native speaker's review.
+version: entrance-greetings-fr-v1
+references:
+  - id: larousse-salut
+    title: "Larousse, Dictionnaire de français: salut"
+    url: "https://www.larousse.fr/dictionnaires/francais/salut"
+  - id: larousse-bonjour
+    title: "Larousse, Dictionnaire de français: bonjour"
+    url: "https://www.larousse.fr/dictionnaires/francais/bonjour"
+  - id: larousse-moi
+    title: "Larousse, Dictionnaire de français: moi"
+    url: "https://www.larousse.fr/dictionnaires/francais/moi"
+  - id: larousse-etre
+    title: "Larousse, Dictionnaire de français: être"
+    url: "https://www.larousse.fr/dictionnaires/francais/%C3%AAtre"
+  - id: larousse-appeler
+    title: "Larousse, Dictionnaire de français: appeler"
+    url: "https://www.larousse.fr/dictionnaires/francais/appeler"
+  - id: larousse-toi
+    title: "Larousse, Dictionnaire de français: toi"
+    url: "https://www.larousse.fr/dictionnaires/francais/toi"
+  - id: wiktionary-salut
+    title: "Wiktionary: salut (French)"
+    url: "https://en.wiktionary.org/wiki/salut"
+  - id: wiktionary-bonjour
+    title: "Wiktionary: bonjour (French)"
+    url: "https://en.wiktionary.org/wiki/bonjour"
+  - id: wiktionary-moi
+    title: "Wiktionary: moi (French)"
+    url: "https://en.wiktionary.org/wiki/moi"
+  - id: wiktionary-suis
+    title: "Wiktionary: suis (French)"
+    url: "https://en.wiktionary.org/wiki/suis"
+  - id: wiktionary-s-appeler
+    title: "Wiktionary: s'appeler (French)"
+    url: "https://en.wiktionary.org/wiki/s%27appeler"
+  - id: wiktionary-toi
+    title: "Wiktionary: toi (French)"
+    url: "https://en.wiktionary.org/wiki/toi"
+  - id: larousse-bienvenue
+    title: "Larousse, Dictionnaire de français: bienvenue"
+    url: "https://www.larousse.fr/dictionnaires/francais/bienvenue"
+  - id: larousse-enchante
+    title: "Larousse, Dictionnaire de français: enchanté"
+    url: "https://www.larousse.fr/dictionnaires/francais/enchant%C3%A9"
+  - id: larousse-marche
+    title: "Larousse, Dictionnaire de français: marché"
+    url: "https://www.larousse.fr/dictionnaires/francais/march%C3%A9"
+entries:
+  - id: salut
+    kind: word
+    target: "salut"
+    part_of_speech: interjection
+    accepted_translations: ["hello", "hi", "bye", "goodbye"]
+    surface_variants: ["salut"]
+    accent_insensitive: false
+    example:
+      target: "Salut, Portia !"
+      english: "Hi, Portia!"
+    note: "Informal; used both on meeting and on leaving, with friends and people you say tu to."
+    reference_ids: [larousse-salut, wiktionary-salut]
+  - id: bonjour
+    kind: word
+    target: "bonjour"
+    part_of_speech: interjection
+    accepted_translations: ["good morning", "good day", "hello"]
+    surface_variants: ["bonjour"]
+    accent_insensitive: false
+    example:
+      target: "Bonjour, madame."
+      english: "Good morning, madam."
+    note: "The polite greeting for the whole day, until the evening, when it becomes bonsoir. In France you say it before anything else, even to a shopkeeper (or a door)."
+    reference_ids: [larousse-bonjour, wiktionary-bonjour]
+  - id: moi
+    kind: word
+    target: "moi"
+    part_of_speech: pronoun
+    accepted_translations: ["I", "me"]
+    surface_variants: ["moi"]
+    accent_insensitive: false
+    example:
+      target: "Moi, je suis Sam."
+      english: "Me, I'm Sam."
+    note: "The stressed form of je (I). Je never stands alone, so French puts moi in front for emphasis: moi, je suis Sam."
+    reference_ids: [larousse-moi, wiktionary-moi]
+  - id: je_suis
+    kind: phrase
+    target: "je suis"
+    part_of_speech: verb_phrase
+    accepted_translations: ["I am", "I'm"]
+    surface_variants: ["je suis"]
+    accent_insensitive: false
+    example:
+      target: "Je suis Sam."
+      english: "I'm Sam."
+    note: "First person singular of être. French does not drop the subject: suis needs its je."
+    reference_ids: [larousse-etre, wiktionary-suis]
+  - id: je_m_appelle
+    kind: phrase
+    target: "je m'appelle"
+    part_of_speech: verb_phrase
+    accepted_translations: ["my name is", "I am called", "I'm called"]
+    surface_variants: ["je m'appelle"]
+    accent_insensitive: false
+    example:
+      target: "Je m'appelle Sam."
+      english: "My name is Sam."
+    note: "Literally I call myself, from s'appeler; me loses its e before the vowel: m'appelle."
+    reference_ids: [larousse-appeler, wiktionary-s-appeler]
+  - id: et_toi
+    kind: phrase
+    target: "et toi"
+    part_of_speech: question
+    accepted_translations: ["and you", "what about you"]
+    surface_variants: ["et toi"]
+    accent_insensitive: false
+    example:
+      target: "Je m'appelle Sam. Et toi ?"
+      english: "My name is Sam. And you?"
+    note: "Toi is the stressed form of tu, the informal you for one person; after et it must be toi, never tu. The polite form is et vous."
+    reference_ids: [larousse-toi, wiktionary-toi]
+  - id: comment_tu_t_appelles
+    kind: phrase
+    target: "comment tu t'appelles"
+    part_of_speech: question
+    accepted_translations: ["what is your name", "what's your name", "what are you called"]
+    surface_variants: ["comment tu t'appelles", "tu t'appelles comment", "comment t'appelles-tu", "comment t'appelles tu"]
+    accent_insensitive: false
+    example:
+      target: "Comment tu t'appelles ?"
+      english: "What's your name?"
+    note: "Informal; te (t') is the you of s'appeler. Spoken French also says tu t'appelles comment ?, and writing comment t'appelles-tu ?"
+    reference_ids: [larousse-appeler, wiktionary-s-appeler]
+  # Round 019: ambient vocabulary, words Portia may use freely; not targets of any objective.
+  - id: bienvenue
+    kind: word
+    target: "bienvenue"
+    part_of_speech: interjection
+    accepted_translations: ["welcome"]
+    surface_variants: ["bienvenue", "bienvenu", "bienvenus", "bienvenues"]
+    accent_insensitive: false
+    example:
+      target: "Bienvenue au marché !"
+      english: "Welcome to the market!"
+    note: "As a greeting bienvenue does not change; as an adjective it agrees with the person welcomed: sois le bienvenu to a man, sois la bienvenue to a woman."
+    reference_ids: [larousse-bienvenue]
+  - id: enchante
+    kind: word
+    target: "enchanté"
+    part_of_speech: interjection
+    accepted_translations: ["nice to meet you", "pleased to meet you", "delighted"]
+    surface_variants: ["enchanté", "enchantée"]
+    accent_insensitive: true
+    example:
+      target: "Enchantée, Portia."
+      english: "Nice to meet you, Portia."
+    note: "Said on being introduced; a woman writes enchantée (the two sound the same)."
+    reference_ids: [larousse-enchante]
+  - id: marche
+    kind: word
+    target: "marché"
+    part_of_speech: noun
+    accepted_translations: ["market"]
+    surface_variants: ["marché", "marchés"]
+    accent_insensitive: true
+    example:
+      target: "Le marché est ouvert."
+      english: "The market is open."
+    note: "Masculine: le marché, les marchés. Without its accent, marche is another word (walk, or it works)."
+    reference_ids: [larousse-marche]

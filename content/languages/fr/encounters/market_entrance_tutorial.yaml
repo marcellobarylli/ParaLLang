@@ -1,0 +1,96 @@
+# Round 009: the Market Entrance tutorial (backlog A3). Portia the Archway asks for a greeting, the player's name
+# and her own name back (greetings, pronouns); the companion briefing introduces the mechanics.
+# Round 180: French version authored by Claude; awaits a native speaker's review.
+id: market_entrance_tutorial
+character: characters/enemies/archway_portia.yaml
+location: market_entrance
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player greets Portia, says who they are and asks her name back, in French"
+max_turns: 20
+resolved_message: "Portia sighs with relief, unlocks herself and lets you into the market."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+companion_briefing:
+  - "Portia only lets in people who greet her properly. Answer in French; mixing in English is fine while you learn."
+  - "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance."
+  - "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+# Round 019: words Portia may use freely (not objective answers); they get chips and Spellbook cards.
+ambient_vocabulary_ids: [bienvenue, enchante, marche]
+objectives:
+  - id: greet
+    prompt: "Greet Portia in French."
+    intent: "The player greets Portia."
+    target_vocabulary_ids: ["salut", "bonjour"]
+    required_target_groups:
+      - ["salut", "bonjour"]
+    grammar_constraints:
+      - "Use an authored French greeting addressed to Portia as the player's own greeting."
+      - "An English-only greeting does not pass; reject quoted greetings and discussion of the word."
+    accepted_examples:
+      - "Salut !"
+      - "Bonjour, Portia."
+      - "Salut, nice to meet you."
+    negative_examples:
+      - text: "Hello!"
+        reason: "English-only; it does not greet in French."
+      - text: "Portia said 'salut'."
+        reason: "A quotation is not the player's own greeting."
+      - text: "Bonjour means hello."
+        reason: "It discusses the word rather than greeting Portia."
+    reference_meaning: "The player says hello to Portia."
+    hint_limit: 2
+    next_objective: introduce
+    assessment_reference_ids: ["larousse-salut", "larousse-bonjour"]
+  - id: introduce
+    prompt: "Tell Portia who you are, in French."
+    intent: "The player tells Portia their own name or who they are."
+    target_vocabulary_ids: ["moi", "je_suis", "je_m_appelle"]
+    required_target_groups:
+      - ["je_suis", "je_m_appelle"]
+    grammar_constraints:
+      - "Use a first-person statement of who the player is or what they are called (je suis; moi, je suis; je m'appelle); the name itself may be in any language."
+      - "Reject third-person, second-person, quoted or metalinguistic statements."
+    accepted_examples:
+      - "Moi, je suis Sam."
+      - "Je suis Alex."
+      - "Je m'appelle Robin."
+      - "Hi, je m'appelle Sam."
+    negative_examples:
+      - text: "I am Sam."
+        reason: "English-only; it does not use the French first person."
+      - text: "Elle s'appelle Sam."
+        reason: "It says what someone else is called (she is called), not the player."
+      - text: "The words je suis mean I am."
+        reason: "It discusses the words rather than saying who the player is."
+    reference_meaning: "The player introduces themself."
+    hint_limit: 2
+    next_objective: ask_back
+    assessment_reference_ids: ["larousse-moi", "larousse-etre", "larousse-appeler"]
+  - id: ask_back
+    prompt: "Ask Portia who she is in return, in French."
+    intent: "The player asks Portia her name or who she is."
+    target_vocabulary_ids: ["et_toi", "comment_tu_t_appelles"]
+    required_target_groups:
+      - ["et_toi", "comment_tu_t_appelles"]
+    grammar_constraints:
+      - "Ask Portia, addressed with the informal tu, who she is or what her name is (a short 'and you?' question with toi, or comment tu t'appelles)."
+      - "Reject questions about someone or something else, quotations and discussion of the words."
+    accepted_examples:
+      - "Et toi ?"
+      - "Comment tu t'appelles ?"
+      - "And toi? Comment t'appelles-tu ?"
+    negative_examples:
+      - text: "And you?"
+        reason: "English-only; it does not use the French you."
+      - text: "Toi is French for you."
+        reason: "It discusses the word rather than asking Portia."
+      - text: "Comment s'appelle le café ?"
+        reason: "It asks the name of something else, not Portia's."
+    reference_meaning: "The player asks Portia's name in return."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["larousse-toi", "larousse-appeler"]

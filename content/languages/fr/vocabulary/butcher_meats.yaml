@@ -1,0 +1,153 @@
+# Round 010: The Butcher's Stall (meats, quantities, numbers). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+# Round 180: French version authored by Claude; it awaits a native speaker's review.
+version: butcher-meats-fr-v1
+references:
+  - id: larousse-jambon
+    title: "Larousse, Dictionnaire de français: jambon"
+    url: "https://www.larousse.fr/dictionnaires/francais/jambon"
+  - id: larousse-saucisson
+    title: "Larousse, Dictionnaire de français: saucisson"
+    url: "https://www.larousse.fr/dictionnaires/francais/saucisson"
+  - id: larousse-saucisse
+    title: "Larousse, Dictionnaire de français: saucisse"
+    url: "https://www.larousse.fr/dictionnaires/francais/saucisse"
+  - id: larousse-poulet
+    title: "Larousse, Dictionnaire de français: poulet"
+    url: "https://www.larousse.fr/dictionnaires/francais/poulet"
+  - id: larousse-livre
+    title: "Larousse, Dictionnaire de français: livre"
+    url: "https://www.larousse.fr/dictionnaires/francais/livre"
+  - id: larousse-kilo
+    title: "Larousse, Dictionnaire de français: kilo"
+    url: "https://www.larousse.fr/dictionnaires/francais/kilo"
+  - id: larousse-gramme
+    title: "Larousse, Dictionnaire de français: gramme"
+    url: "https://www.larousse.fr/dictionnaires/francais/gramme"
+  - id: larousse-demi
+    title: "Larousse, Dictionnaire de français: demi"
+    url: "https://www.larousse.fr/dictionnaires/francais/demi"
+  - id: wiktionary-trois
+    title: "Wiktionary: trois (French)"
+    url: "https://en.wiktionary.org/wiki/trois"
+  - id: wiktionary-cent
+    title: "Wiktionary: cent (French)"
+    url: "https://en.wiktionary.org/wiki/cent"
+entries:
+  - id: jambon
+    kind: word
+    target: "jambon"
+    part_of_speech: noun
+    accepted_translations: ["ham"]
+    surface_variants: ["jambon", "jambons"]
+    accent_insensitive: false
+    example:
+      target: "Quatre tranches de jambon, s'il vous plaît."
+      english: "Four slices of ham, please."
+    note: "Jambon blanc (or jambon de Paris) is cooked ham, jambon cru cured ham."
+    reference_ids: [larousse-jambon]
+  - id: saucisson
+    kind: word
+    target: "saucisson"
+    part_of_speech: noun
+    accepted_translations: ["dry sausage", "salami", "saucisson"]
+    surface_variants: ["saucisson", "saucissons"]
+    accent_insensitive: false
+    example:
+      target: "Je voudrais du saucisson."
+      english: "I would like some dry sausage."
+    note: "Saucisson is the cured sausage sliced and eaten cold; saucisse is the fresh one you cook."
+    reference_ids: [larousse-saucisson]
+  - id: saucisse
+    kind: word
+    target: "saucisse"
+    part_of_speech: noun
+    accepted_translations: ["sausage"]
+    surface_variants: ["saucisse", "saucisses"]
+    accent_insensitive: false
+    example:
+      target: "Deux saucisses, s'il vous plaît."
+      english: "Two sausages, please."
+    reference_ids: [larousse-saucisse]
+  - id: poulet
+    kind: word
+    target: "poulet"
+    part_of_speech: noun
+    accepted_translations: ["chicken"]
+    surface_variants: ["poulet", "poulets"]
+    accent_insensitive: false
+    example:
+      target: "Je voudrais un poulet."
+      english: "I would like a chicken."
+    reference_ids: [larousse-poulet]
+  - id: livre
+    kind: word
+    target: "livre"
+    part_of_speech: noun
+    accepted_translations: ["pound", "half a kilo", "500 grams"]
+    surface_variants: ["livre", "livres"]
+    accent_insensitive: false
+    example:
+      target: "Une livre de saucisses."
+      english: "A pound (half a kilo) of sausages."
+    note: "Une livre is 500 grams, still heard at French markets and butcher's counters. Feminine (une livre); un livre is a book."
+    reference_ids: [larousse-livre]
+  - id: kilo
+    kind: word
+    target: "kilo"
+    part_of_speech: noun
+    accepted_translations: ["kilo", "kilogram"]
+    surface_variants: ["kilo", "kilos"]
+    accent_insensitive: false
+    example:
+      target: "Un kilo de saucisses."
+      english: "A kilo of sausages."
+    note: "Short for kilogramme."
+    reference_ids: [larousse-kilo]
+  - id: grammes
+    kind: word
+    target: "grammes"
+    part_of_speech: noun
+    accepted_translations: ["grams"]
+    surface_variants: ["grammes", "gramme"]
+    accent_insensitive: false
+    example:
+      target: "Trois cents grammes de poulet."
+      english: "Three hundred grams of chicken."
+    note: "Singular gramme; the usual way to order at a French deli counter (deux cents grammes de jambon)."
+    reference_ids: [larousse-gramme]
+  - id: trois
+    kind: word
+    target: "trois"
+    part_of_speech: numeral
+    accepted_translations: ["three"]
+    surface_variants: ["trois"]
+    accent_insensitive: false
+    example:
+      target: "Trois saucisses."
+      english: "Three sausages."
+    reference_ids: [wiktionary-trois]
+  - id: cent
+    kind: word
+    target: "cent"
+    part_of_speech: numeral
+    accepted_translations: ["a hundred", "one hundred"]
+    surface_variants: ["cent", "cents"]
+    accent_insensitive: false
+    example:
+      target: "Cent grammes de jambon."
+      english: "A hundred grams of ham."
+    note: "Cent takes an s when multiplied and nothing follows it: deux cents grammes, but deux cent cinquante grammes."
+    reference_ids: [wiktionary-cent]
+  - id: demi
+    kind: word
+    target: "demi"
+    part_of_speech: adjective
+    accepted_translations: ["half", "half a"]
+    surface_variants: ["demi", "demie"]
+    accent_insensitive: false
+    example:
+      target: "Un demi-kilo de poulet."
+      english: "Half a kilo of chicken."
+    note: "Invariable before a hyphen (une demi-livre); after the noun it agrees: un kilo et demi, une livre et demie."
+    reference_ids: [larousse-demi]

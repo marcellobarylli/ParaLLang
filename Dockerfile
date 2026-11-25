@@ -31,6 +31,7 @@ ENV NODE_ENV=production \
     LLM_PROVIDER=claude-cli \
     CLAUDE_CLI_PATH=/usr/local/bin/claude \
     TARGET_LANGUAGE=it \
+    TARGET_LANGUAGES=it,fr,es \
     PARALLANG_SAVE_DIR=/data/saves \
     HOME=/home/node \
     PORT=10000

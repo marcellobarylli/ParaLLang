@@ -110,6 +110,16 @@ export function resolveTargetLanguage(env = process.env) {
   return nonBlank(env.TARGET_LANGUAGE) ?? 'it';
 }
 
+// Round 180: the languages one server plays, default first. TARGET_LANGUAGES is a comma list (`it,fr,es`); without it
+// the server plays TARGET_LANGUAGE alone, as before. TARGET_LANGUAGE, when it is in the list, is the default: the
+// language of a request that names none.
+export function resolveTargetLanguages(env = process.env) {
+  const single = resolveTargetLanguage(env);
+  const listed = [...new Set(String(env.TARGET_LANGUAGES ?? '').split(',').map((code) => code.trim().toLowerCase()).filter(Boolean))];
+  if (!listed.length) return [single];
+  return listed.includes(single) ? [single, ...listed.filter((code) => code !== single)] : listed;
+}
+
 // Spanish saves predate language packs and stay at the top of the save directory.
 export function saveDirForLanguage(saveDir, code) {
   return code === 'es' ? saveDir : resolve(saveDir, code);

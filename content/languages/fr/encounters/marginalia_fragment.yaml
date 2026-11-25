@@ -1,0 +1,71 @@
+# Round 180: French version authored by Claude; awaits a native speaker's review.
+id: marginalia_fragment
+character: characters/enemies/bookworm_marginalia.yaml
+party_of: old_bookshop_bookworm
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player praises Marginalia's fragment of The Journey and asks her to read it again, in French
+max_turns: 20
+resolved_message: Marginalia reads it again, slower, and annotates your face.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_story
+    prompt: Marginalia, now in your party, reads you a fragment of The Journey. Tell her the story is wonderful, using French.
+    intent: 'Marginalia, now travelling in the player''s party, reads aloud this fragment of The Journey in her greeting, exactly: "Journathan parle à la mer en deux langues. La mer répond en une seule langue : la sienne." Then she asks what the player thought of l''histoire. She does not say "merveilleuse", "merveilleux", "encore une fois" or "de nouveau" herself before the player has.'
+    target_vocabulary_ids:
+      - merveilleux
+    required_target_groups:
+      - - merveilleux
+    grammar_constraints:
+      - The player gives their own verdict in French that the story is wonderful.
+      - "The adjective agrees with l'histoire (feminine): merveilleuse; merveilleux only with an explicit masculine referent such as le récit or le livre, or after c'est on its own (C'est merveilleux !), where ce is neuter and takes the masculine."
+      - Reject English-only answers, negated verdicts, and quotations.
+    accepted_examples:
+      - L'histoire est merveilleuse !
+      - Merveilleuse !
+      - C'est une histoire merveilleuse, Marginalia.
+      - C'est merveilleux !
+    negative_examples:
+      - text: It was wonderful.
+        reason: English-only; it does not use the French word.
+      - text: L'histoire est merveilleux.
+        reason: L'histoire is feminine; the adjective must be merveilleuse.
+      - text: Elle n'est pas merveilleuse.
+        reason: A negated verdict is not praise.
+      - text: Journathan says it is merveilleuse.
+        reason: It reports someone else's words.
+    reference_meaning: The player says the story is wonderful.
+    hint_limit: 2
+    next_objective: read_again
+    assessment_reference_ids:
+      - larousse-merveilleux
+  - id: read_again
+    prompt: Ask Marginalia to read it again, using French.
+    intent: The player asks Marginalia to read the fragment again.
+    target_vocabulary_ids:
+      - encore_une_fois
+    required_target_groups:
+      - - encore_une_fois
+    grammar_constraints:
+      - The player asks Marginalia in French to read it again (encore une fois, or de nouveau).
+      - Reject English-only requests, the player saying they will read it themself, and talk about the phrase.
+    accepted_examples:
+      - Encore une fois, s'il te plaît !
+      - Tu peux la lire encore une fois ?
+      - Lis-la de nouveau, Marginalia.
+    negative_examples:
+      - text: Again, please.
+        reason: English-only; it does not use the French phrase.
+      - text: Je la lis encore une fois.
+        reason: The player would read it again; the objective is to ask Marginalia to read.
+      - text: Encore une fois means again.
+        reason: It discusses the phrase rather than asking her.
+    reference_meaning: The player asks her to read it again.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - larousse-encore-une-fois

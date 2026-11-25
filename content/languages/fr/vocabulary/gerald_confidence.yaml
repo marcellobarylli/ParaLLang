@@ -1,0 +1,34 @@
+# Round 180: French version authored by Claude; awaits a native speaker's review. Reference URLs follow the existing
+# patterns and were not opened from the build container.
+version: gerald-confidence-fr-v1
+references:
+  - id: larousse-ami
+    title: "Larousse, Dictionnaire de français: ami"
+    url: "https://www.larousse.fr/dictionnaires/francais/ami"
+  - id: larousse-tchin-tchin
+    title: "Larousse, Dictionnaire de français: tchin-tchin"
+    url: "https://www.larousse.fr/dictionnaires/francais/tchin-tchin"
+  - id: wiktionary-tchin-tchin
+    title: "Wiktionary: tchin-tchin (French)"
+    url: "https://en.wiktionary.org/wiki/tchin-tchin"
+entries:
+  - id: ami
+    kind: word
+    target: "ami"
+    part_of_speech: noun
+    accepted_translations: ["friend"]
+    surface_variants: ["ami", "amie", "amis", "amies"]
+    accent_insensitive: false
+    example: { target: "Tu es mon ami, Gerald.", english: "You are my friend, Gerald." }
+    note: "Ami for a man, amie for a woman, amis for several. Ami and amie sound the same, and both take mon: mon ami, mon amie. 'Tu es mon ami' is the usual way to say 'you are my friend'."
+    reference_ids: [larousse-ami]
+  - id: tchin_tchin
+    kind: phrase
+    target: "tchin-tchin"
+    part_of_speech: interjection
+    accepted_translations: ["cheers"]
+    surface_variants: ["tchin-tchin", "tchin tchin", "tchintchin", "santé", "à la tienne", "à la vôtre", "à ta santé", "à votre santé"]
+    accent_insensitive: true
+    example: { target: "Tchin-tchin, Gerald !", english: "Cheers, Gerald!" }
+    note: "A toast, said as the glasses (or cups) touch. Santé ('health'), à la tienne (to a friend, tu) and à la vôtre (vous) are said the same way."
+    reference_ids: [larousse-tchin-tchin, wiktionary-tchin-tchin]
