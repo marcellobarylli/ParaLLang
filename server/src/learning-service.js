@@ -8,6 +8,7 @@ import {
 import { foldWords, worldFor } from './content-loader.js';
 import { LINE_LIMIT, LINE_TEXT_LIMIT, assertLearnerId, createLearnerEnvelope } from './learning-storage.js';
 import { AppError, conflictError, retryableError, validationError } from './errors.js';
+import { characterExcuse } from './llm/excuse.js';
 import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
@@ -853,7 +854,8 @@ export class LearningService {
     }
     catch (error) {
       if (error instanceof ProviderError) throw error;
-      throw retryableError(`${label} is temporarily unavailable. Your progress was not changed. Please retry in a moment.`, 'PROVIDER_FAILURE');
+      // Round 182: the player is told what actually went wrong, after a joke (llm/excuse.js).
+      throw retryableError(characterExcuse(label, error, this.provider.providerName), 'PROVIDER_FAILURE');
     }
     finally { this.providerCallsInFlight -= 1; }
   }

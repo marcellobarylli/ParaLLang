@@ -14,6 +14,28 @@ export const GEMINI_DEFAULT_MODEL = 'gemini-3.8-flash';
 // than the OpenAI adapter's. A cap is a ceiling, not a charge.
 const MIN_MAX_TOKENS = 8192;
 
+// Round 182: Google sends an error as a list ([{ error: {...} }]), which the OpenAI library cannot read, so its reason
+// was lost ("503 status code (no body)"). The list is unwrapped here, before the library reads it, so the error keeps
+// Google's own message and status (error.error), for the player to see in the character's excuse.
+export async function unwrapGoogleErrors(url, init, fetchImpl = fetch) {
+  const response = await fetchImpl(url, init);
+  if (response.ok) return response;
+  const text = await response.text();
+  let body = text;
+  try {
+    const parsed = JSON.parse(text);
+    if (Array.isArray(parsed) && parsed.length && parsed[0]?.error) body = JSON.stringify(parsed[0]);
+  } catch { /* not JSON: passed on as it came */ }
+  return new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers });
+}
+
+function tagged(error) {
+  if (error && typeof error === 'object' && !error.provider) {
+    try { error.provider = 'gemini'; } catch { /* a frozen error keeps its own fields */ }
+  }
+  return error;
+}
+
 export function geminiFailure(error) {
   const status = error?.status;
   if (status === 429) return new ProviderError('model-quota', { provider: 'gemini' });
@@ -36,6 +58,7 @@ export class GeminiAdapter extends OpenAIAdapter {
         baseURL: config.baseUrl || GEMINI_BASE_URL,
         timeout: config.timeoutMs ?? 60_000,
         maxRetries: config.maxRetries ?? 1,
+        fetch: (url, init) => unwrapGoogleErrors(url, init),
       }),
     });
     this.providerName = 'gemini';
@@ -43,7 +66,7 @@ export class GeminiAdapter extends OpenAIAdapter {
 
   async chat(messages, options = {}) {
     try { return await super.chat(messages, { ...options, maxTokens: Math.max(options.maxTokens ?? 0, MIN_MAX_TOKENS) }); }
-    catch (error) { throw geminiFailure(error) ?? error; }
+    catch (error) { throw geminiFailure(error) ?? tagged(error); }
   }
 
   async structuredChat(messages, schema, options = {}) {
@@ -53,7 +76,7 @@ export class GeminiAdapter extends OpenAIAdapter {
     } catch (error) {
       const failure = geminiFailure(error);
       if (failure) throw failure;
-      if (options.signal?.aborted || !(error?.status === 400 || /malformed JSON|no structured/.test(error?.message))) throw error;
+      if (options.signal?.aborted || !(error?.status === 400 || /malformed JSON|no structured/.test(error?.message))) throw tagged(error);
     }
     const { $schema: _ignored, ...jsonSchema } = zodToJsonSchema(schema, { target: 'jsonSchema7', $refStrategy: 'none' });
     let response;
@@ -68,13 +91,14 @@ export class GeminiAdapter extends OpenAIAdapter {
     } catch (error) {
       // Google sends its errors as a list the OpenAI library cannot read ("400 status code (no body)"), so a refused
       // key is often a bare 400. A 400 here, on a request with no schema, is not the schema's.
-      throw geminiFailure(error) ?? (error?.status === 400 ? new ProviderError('model-key-invalid', { provider: 'gemini' }) : error);
+      throw geminiFailure(error) ?? (error?.status === 400 && !error?.error?.message ? new ProviderError('model-key-invalid', { provider: 'gemini' }) : tagged(error));
     }
     const content = response.choices?.[0]?.message?.content;
-    if (typeof content !== 'string') throw new Error('Gemini returned no structured response content.');
+    if (typeof content !== 'string') throw tagged(new Error('Gemini returned no structured response content.'));
     let parsed;
     try { parsed = JSON.parse(content.replace(/^```(?:json)?\s*|\s*```$/g, '')); }
-    catch { throw new Error('Gemini returned malformed JSON.'); }
-    return schema.parse(parsed);
+    catch { throw tagged(new Error('Gemini returned malformed JSON.')); }
+    try { return schema.parse(parsed); }
+    catch (error) { throw tagged(error); }
   }
 }
