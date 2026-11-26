@@ -56,3 +56,14 @@ test('music off: no gate and no title music', async () => {
   expect(screen.getByRole('button', { name: JOURNEY })).toBeTruthy();
   expect(titleMusic.play).not.toHaveBeenCalled();
 });
+
+// Round 187: setting out while the road is still being found (the server waking up) keeps the title music; it fades
+// once the road is here.
+test('the title music fades only once the game has begun, not while the road is being found', async () => {
+  const titleMusic = fakeTitleMusic(true);
+  await showTitle(titleMusic);
+  act(() => { useGameStore.setState({ mode: 'road', road: null, roadLoading: true }); });
+  expect(titleMusic.fadeOut).not.toHaveBeenCalled();
+  act(() => { useGameStore.setState({ mode: 'dungeon', phase: 'world', roadLoading: false }); }); // the game begun
+  expect(titleMusic.fadeOut).toHaveBeenCalledOnce();
+});

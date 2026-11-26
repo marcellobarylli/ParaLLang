@@ -34,6 +34,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-26: round 187, the title music waits for the road
+
+The title music no longer fades when the Journey button is pressed: it plays on while the road is being found (the
+hosted server waking up) and fades once the road is here. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/187/architecture.md), [findings](docs/rounds/187/findings.md).
+
 ## Addendum 2026-11-25: round 186, the conversation panel opens full
 
 The conversation panel now opens covering the screen under the top bar (the height of a drag to the top), instead of

@@ -529,7 +529,9 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   const audioWanted = volume.master > 0 && (musicWanted || volume.effects > 0);
   // The title music (titleMusic.js) loops on the title. Setting out fades it away over 30 seconds; the generated
   // chords stay silent until it has gone, then come in. Switching the music off on the title stops it quickly.
-  const onTitle = state.mode !== 'road' && state.phase === 'attract';
+  // Round 187: the title music goes on while the road is being found (a server waking up can take a while); it fades
+  // once the road is here and the game has begun.
+  const onTitle = (state.mode !== 'road' && state.phase === 'attract') || (state.mode === 'road' && !state.road);
   const titleWanted = onTitle && musicWanted && volume.master > 0 && volume.music > 0 && titleMusic.supported;
   const [titleHold, setTitleHold] = useState(titleWanted);
   // The title's gate: 'checking' while the first play() is tried, 'blocked' when the browser wants a tap first (the
