@@ -434,9 +434,9 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
     element.scrollTop = pin.current.top;
     pin.current.top = element.scrollTop; // as far as the text allows
   }, [encounter?.id]);
-  // Round 190: with "Follow the reply" on in Settings, a new line of the character in an open conversation is brought to
+  // Round 190: with "Follow the reply" on in Settings (the default), a new line of the character in an open conversation is brought to
   // the top of the panel when it arrives (not on opening, and not when its translation is revealed).
-  const follow = state.display?.follow === true;
+  const follow = state.display?.follow !== false;
   const seenRef = useRef({ id: encounter?.id, line: lineKey });
   useLayoutEffect(() => {
     const seen = seenRef.current;
@@ -752,7 +752,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}
-        follow={state.display?.follow === true} onFollow={state.setFollow}
+        follow={state.display?.follow !== false} onFollow={state.setFollow}
         treeModels={state.display?.treeModels !== false} onTreeModels={state.setTreeModels}
         streamlined={state.display?.streamlined !== false} onStreamlined={state.setStreamlined}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}

@@ -13,8 +13,8 @@
 //   thunder and the other sounds of the place; voice is the characters reading aloud. All at 1 unless moved.
 // streamlined (round 173): on The Journey 2, each unit is one conversation and finishing it completes the unit; the
 //   server keeps it on the road (POST /api/road/mode). On unless switched off.
-// follow (round 190): whether a character's new reply is brought to the top of the conversation panel. Off unless
-//   switched on (the panel stays where the player left it, round 140).
+// follow (round 190): whether a character's new reply is brought to the top of the conversation panel. On unless
+//   switched off (off, the panel stays where the player left it, round 140).
 // immersion (round 148): the share of a character's lines in the language being learned, 0.1 to 1. 1 unless moved.
 import { browserStorage } from './api/settings.js';
 
@@ -61,11 +61,11 @@ export const volumesOf = (volume) => Object.fromEntries(VOLUME_CHANNELS.map((cha
 export function loadDisplay(storage = browserStorage()) {
   let stored = null;
   try { stored = JSON.parse(storage?.getItem?.(DISPLAY_KEY) ?? 'null'); } catch { stored = null; }
-  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), immersionAuto: stored?.immersionAuto !== false, light: stored?.light === true, treeModels: stored?.treeModels !== false, streamlined: stored?.streamlined !== false, follow: stored?.follow === true, volume: volumesOf(stored?.volume) };
+  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), immersionAuto: stored?.immersionAuto !== false, light: stored?.light === true, treeModels: stored?.treeModels !== false, streamlined: stored?.streamlined !== false, follow: stored?.follow !== false, volume: volumesOf(stored?.volume) };
 }
 
 export function saveDisplay(display, storage = browserStorage()) {
-  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), immersionAuto: display?.immersionAuto !== false, light: display?.light === true, treeModels: display?.treeModels !== false, streamlined: display?.streamlined !== false, follow: display?.follow === true, volume: volumesOf(display?.volume) };
+  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), immersionAuto: display?.immersionAuto !== false, light: display?.light === true, treeModels: display?.treeModels !== false, streamlined: display?.streamlined !== false, follow: display?.follow !== false, volume: volumesOf(display?.volume) };
   try { storage?.setItem?.(DISPLAY_KEY, JSON.stringify(value)); } catch { /* private mode: kept for this page only */ }
   return value;
 }

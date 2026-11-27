@@ -10,3 +10,5 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 20:25 approx. | 20:02:29 | run | Claude | Client 333 pass (1 new, 3 changed for the new key), build passes; box measured in Chromium with the page's CSS | `../findings.md` |
 | 5 | 20:02:29 | 20:02:29 | closed | Claude | Records, status addendum; merged to `main` and pushed on the owner's word ("then deploy") | `../architecture.md` |
 | 6 | 20:02:53 | 20:02:53 | note | Claude | Renumbered from 189: another session had merged its own round 189 to `main` first | `../architecture.md` |
+| 7 | 2026-11-27 20:10 approx. | 20:05:55 | owner-correction | Owner | "the snap to text you should be the default state of the toggle" | `../architecture.md` |
+| 8 | 20:05:55 | 20:05:55 | run | Claude | Follow the reply on by default; client 333 pass (1 changed), build passes; merged to `main` and pushed | `../findings.md` |
