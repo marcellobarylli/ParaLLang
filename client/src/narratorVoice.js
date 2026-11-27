@@ -8,6 +8,9 @@
 //                the language. Read before the reply, in the same queue.
 //
 // Both follow "Character voices" and "Narrator reads aloud" in Settings.
+// Round 202: every part of a narration is marked `told`. Where the server has a hosted voice the speaker reads the
+// told parts of a narration as one clip in that voice, the words of the language included; without one it reads
+// them part by part with the device's voices, as before.
 import { useEffect } from 'react';
 import { narrativePieces } from './components/NarrativeText.jsx';
 import { browserSpeech } from './speech.js';
@@ -25,13 +28,13 @@ const joined = (parts) => {
 
 /** The parts of a written passage ({ segments }), in the narrator's voice and the language's (`tag`). */
 export const passageParts = (narration, tag) => joined((narration?.segments ?? []).map((segment) => (segment.kind === 'truth'
-  ? { text: segment.text, narrator: false, tag: segment.lang ?? tag }
-  : { text: segment.text, narrator: true, tag: null })));
+  ? { text: segment.text, narrator: false, tag: segment.lang ?? tag, told: true }
+  : { text: segment.text, narrator: true, tag: null, told: true })));
 
 /** The parts of a line's narrative, its listed words in the language (`tag`). */
 export const narrativeParts = (narrative, words, tag) => joined(narrativePieces(narrative, words).map((piece) => (typeof piece === 'string'
-  ? { text: piece, narrator: true, tag: null }
-  : { text: piece.word, narrator: false, tag })));
+  ? { text: piece, narrator: true, tag: null, told: true }
+  : { text: piece.word, narrator: false, tag, told: true })));
 
 /** Whether the narrator reads: "Character voices" on, and "Narrator reads aloud" not switched off. */
 export const narratorOn = (display) => display?.voices !== false && display?.narrator !== false;

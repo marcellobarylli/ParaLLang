@@ -19,6 +19,8 @@ import { audioSessionType, setAudioSession } from './audioSession.js';
 // Pitch and rate on SpeechSynthesisUtterance's scales (pitch 0 to 2, rate 1 is normal). `names` are voices to prefer,
 // best first: Apple's and Google's Italian, Spanish and French (round 181) voices by gender, and Apple's novelty voices
 // for `funny`.
+import { createNarratorClips } from './api/narrate.js';
+
 export const VOICE_KINDS = Object.freeze({
   female: { pitch: 1.1, rate: 0.95, names: ['Alice', 'Federica', 'Emma', 'Paola', 'Mónica', 'Monica', 'Paulina', 'Marisol', 'Flo', 'Sandy', 'Shelley', 'Elsa', 'Isabella', 'Elvira', 'Helena', 'Laura', 'Sabina', 'Amélie', 'Amelie', 'Audrey', 'Aurélie', 'Aurelie', 'Marie', 'Chantal', 'female', 'donna', 'mujer', 'femme'] },
   male: { pitch: 0.8, rate: 0.95, names: ['Luca', 'Cosimo', 'Diego', 'Jorge', 'Juan', 'Carlos', 'Eddy', 'Reed', 'Rocko', 'Diego', 'Pablo', 'Alvaro', 'Álvaro', 'Raul', 'Raúl', 'Thomas', 'Nicolas', 'Jacques', 'male', 'uomo', 'hombre', 'homme'] },
@@ -87,7 +89,13 @@ export const spokenText = (text) => String(text ?? '').replace(/[*_~`#]+/g, '').
  *   narrate(parts)                  round 196: says a narrator's passage (stops what is being read)
  *   stop()
  *   prime()                         call inside a tap: iOS Safari lets a page speak on its own only after that
+ *   hosted                          round 202: set to `async (text) => Blob | null` to have the narration (parts marked
+ *                                   `told`) read as a sound clip from the server; null from it, a clip that does not
+ *                                   come in time or cannot be played, and the device's voice reads that narration
  */
+export const CLIP_WAIT_MS = 12000; // how long a narration waits for its clip before the device's voice reads it
+// The shortest WAV there is (one silent sample): played inside a tap, it lets the page play clips on its own later (iOS).
+const SILENCE = 'data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQIAAAAAAA==';
 export function createSpeaker(scope = typeof window !== 'undefined' ? window : {}) {
   const synthesis = scope.speechSynthesis ?? null;
   const Utterance = scope.SpeechSynthesisUtterance;
@@ -95,8 +103,15 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
   let primed = false;
   const voices = () => (supported ? synthesis.getVoices?.() ?? [] : []);
   let volume = 1;
-  let passage = null; // round 196: the last utterance of the passage being narrated
-  const cancel = () => { passage = null; synthesis.cancel?.(); };
+  let passage = null; // round 196: the last utterance of the passage being narrated (round 202: or its run of clips)
+  // Round 202: the hosted narrator. `run` numbers what is being read, so a clip that arrives after a stop is dropped.
+  let hosted = null;
+  let run = 0;
+  let tail = Promise.resolve();
+  let player = null;
+  let clipPlaying = false;
+  const playerOf = () => { if (!player && typeof scope.Audio === 'function') { try { player = new scope.Audio(); } catch { player = null; } } return player; };
+  const cancel = () => { passage = null; run += 1; tail = Promise.resolve(); clipPlaying = false; try { player?.pause?.(); } catch { /* not playing */ } synthesis.cancel?.(); };
   // One utterance: a character's line in its voice, or (narrator) a run of the narration in the narrator's.
   const utter = ({ text, tag, voice, narrator = false } = {}) => {
     const line = spokenText(text);
@@ -113,18 +128,81 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
     utterance.volume = volume;
     return utterance;
   };
+  // Device utterances, one after another; resolves when the last has ended (or at once when there is none).
+  const speakAll = (utterances) => new Promise((resolve) => {
+    if (!utterances.length) { resolve(); return; }
+    const last = utterances.at(-1);
+    last.onend = resolve;
+    last.onerror = resolve;
+    for (const utterance of utterances) synthesis.speak(utterance);
+  });
+  // One narration as a clip. False when there is none to play, and the device's voice then reads it.
+  const playClip = async (text, mine) => {
+    let timer = null;
+    const waited = new Promise((resolve) => { timer = setTimeout(() => resolve(null), CLIP_WAIT_MS); });
+    let blob = null;
+    try { blob = await Promise.race([Promise.resolve(hosted(text)).catch(() => null), waited]); } finally { clearTimeout(timer); }
+    if (run !== mine) return true; // stopped meanwhile: nothing more to read
+    const audio = blob ? playerOf() : null;
+    const makeUrl = scope.URL?.createObjectURL;
+    if (!audio || typeof makeUrl !== 'function') return false;
+    const url = makeUrl.call(scope.URL, blob);
+    try {
+      const ended = new Promise((resolve) => { audio.onended = () => resolve(true); audio.onerror = () => resolve(false); audio.onpause = () => { if (run !== mine) resolve(true); }; });
+      audio.src = url;
+      audio.volume = volume;
+      clipPlaying = true;
+      await audio.play();
+      return await ended;
+    } catch { return false; } finally {
+      if (run === mine) clipPlaying = false;
+      try { scope.URL?.revokeObjectURL?.(url); } catch { /* nothing to free */ }
+    }
+  };
+  // Round 202: a reading with told parts: each run of them is one clip, the rest are the device's utterances, in order.
+  const sayHosted = (parts, after, isPassage) => {
+    const steps = [];
+    const all = [];
+    for (const part of parts ?? []) {
+      const utterance = utter(part);
+      if (!utterance) continue;
+      all.push(utterance);
+      const last = steps.at(-1);
+      if (part.told && last?.told) { last.text += part.text; last.utterances.push(utterance); }
+      else steps.push({ told: part.told === true, text: part.text, utterances: [utterance] });
+    }
+    if (!steps.length) return [];
+    if (!(after && passage)) cancel();
+    const mine = run;
+    const token = isPassage ? {} : null;
+    if (token) passage = token;
+    primed = true;
+    tail = tail.then(async () => {
+      for (const step of steps) {
+        if (run !== mine) return;
+        const played = step.told && spokenText(step.text).length > 0 ? await playClip(spokenText(step.text), mine) : false;
+        if (run !== mine) return;
+        if (!played) await speakAll(step.utterances);
+      }
+    }).catch(() => {}).then(() => { if (token && passage === token) passage = null; });
+    return all;
+  };
   const api = {
     supported,
     /** Round 172: the loudness of each new line, 0 to 1 (the Voice volume times the Master volume). */
     get volume() { return volume; },
     set volume(value) { volume = typeof value === 'number' && Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 1; },
     /** True while the browser is reading a line aloud (round 127: the music drops under it). */
-    get speaking() { return supported && synthesis.speaking === true; },
+    get speaking() { return supported && (synthesis.speaking === true || clipPlaying); },
+    get hosted() { return hosted; },
+    set hosted(value) { hosted = typeof value === 'function' ? value : null; },
     available: (tag) => ofLanguage(voices(), tag).length > 0,
     speak({ text, tag, voice } = {}) {
       return api.say([{ text, tag, voice }])[0] ?? null;
     },
     say(parts, { after = false } = {}) {
+      // A line that waits for a passage read as a clip joins the same queue, or it would talk over the clip.
+      if (supported && hosted && ((parts ?? []).some((part) => part?.told) || (after && passage && !('text' in passage)))) return sayHosted(parts, after, false);
       const utterances = supported ? (parts ?? []).map(utter).filter(Boolean) : [];
       if (!utterances.length) return [];
       if (!(after && passage)) cancel();
@@ -133,6 +211,7 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
       return utterances;
     },
     narrate(parts) {
+      if (supported && hosted && (parts ?? []).some((part) => part?.told)) return sayHosted(parts, false, true);
       const utterances = api.say(parts);
       const last = utterances.at(-1);
       if (last) {
@@ -152,6 +231,7 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
       const utterance = new Utterance(' ');
       utterance.volume = 0;
       synthesis.speak(utterance);
+      if (hosted && playerOf()) { try { player.src = SILENCE; player.play?.()?.catch?.(() => {}); } catch { /* clips fall back to the device's voice */ } }
     },
   };
   return api;
@@ -229,6 +309,9 @@ export function createListener(scope = typeof window !== 'undefined' ? window : 
 /** The speaker and the listener of this browser, made once. */
 let shared = null;
 export function browserSpeech() {
-  shared ??= { speaker: createSpeaker(), listener: createListener() };
+  if (!shared) {
+    shared = { speaker: createSpeaker(), listener: createListener() };
+    shared.speaker.hosted = createNarratorClips(); // round 202
+  }
   return shared;
 }
