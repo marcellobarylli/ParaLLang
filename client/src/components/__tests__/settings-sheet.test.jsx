@@ -66,8 +66,8 @@ test('moving the slider on the dungeon screen sets the panels at once, hides the
   const requests = fetchMock.mock.calls.length;
   fireEvent.change(screen.getByLabelText('Text panel opacity'), { target: { value: '30' } });
   expect(shell.style.getPropertyValue('--panel-alpha')).toBe('0.3');
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
   expect(fetchMock.mock.calls.length).toBe(requests);
   await user.click(screen.getByRole('button', { name: 'Close' }));
@@ -140,8 +140,8 @@ test('the box on the dungeon screen switches the preference and stores it', asyn
   render(<App />);
   await openMenu(user, 'Settings');
   await user.click(screen.getByLabelText('Tilt to look'));
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(screen.getByLabelText('Tilt to look').checked).toBe(true);
   await user.click(screen.getByLabelText('Tilt to look'));
   expect(useGameStore.getState().display.tiltLook).toBe(false);
@@ -177,7 +177,7 @@ test('the voices box on the dungeon screen switches the preference and stores it
   await openMenu(user, 'Settings');
   expect(speech.speaker.prime).toHaveBeenCalledOnce(); // the first tap on the page
   await user.click(screen.getByLabelText('Character voices'));
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(JSON.parse(localStorage.getItem('parallang.display')).voices).toBe(false);
   await user.click(screen.getByLabelText('Character voices'));
   expect(useGameStore.getState().display.voices).toBe(true);
