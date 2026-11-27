@@ -9,6 +9,7 @@ import { Group, PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
 import { ENDLESS, atmosphereFor, createCairn, createEndlessWorld, createLandmark, createPS1Pipeline, createStandIn, createTrack, createWeatherEffects, loadModels } from '@parallang/aesthetic';
 import { createTerrain } from '../../../server/src/road/terrain.js';
 import { createGraph } from '../../../server/src/road/graph.js';
+import { clearOfWays } from './wayClearance.js';
 import { currentWeather, onWeatherPin, pinWeather } from './weatherClock.js';
 import { createRoadDirector, titleDistance } from './roadDirector.js';
 import { freeRect } from './insets.js';
@@ -42,7 +43,8 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
   const graph = createGraph(terrain);
   const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 2));
-  const world = createEndlessWorld({ terrain, seed: 7 });
+  // Round 192: the level's trees and undergrowth keep off the ways (wayClearance.js); the graph and the camera keep the terrain as it is.
+  const world = createEndlessWorld({ terrain: clearOfWays(terrain, graph, ENDLESS.chunk), seed: 7 });
   // Round 162 (issue #11): the trees' models (client/public/models/, see ASSETS.md there). One small file, asked for
   // the first time models are wanted (the road is open by then); until it is here, and if it never comes, the
   // level's own simple trees stand. `setModels(false)` goes back to those.

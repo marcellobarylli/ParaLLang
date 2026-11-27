@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 192, the road kept clear; ferns, flowers and bushes
+
+No tree or plant now grows within 1.6 m of a way's centreline (the 1.6 m track and half its width again on each
+side). The ground near the camera has ferns, little bushes and clumps of flowers in seven colours, by cover and biome.
+Tested, and seen in a screenshot in Chromium; not seen on a phone. **Pushed to the session branch; not merged.**
+[Architecture](docs/rounds/192/architecture.md), [findings](docs/rounds/192/findings.md).
+
 ## Addendum 2026-11-27: round 191, legacy dungeons on rails again; the road's glide keeps low
 
 On the road a legacy dungeon is entered on foot from outside its gate, and its gate encounters are walked to from one

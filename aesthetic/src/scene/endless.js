@@ -25,6 +25,10 @@ export const ENDLESS = Object.freeze({
   // so a camera on a chunk's edge does not build the same chunks over and over.
   models: 1,
   modelsKept: 2,
+  // Round 192: a chunk within `undergrowth` (squared distance) has its ferns, flowers and bushes; one that had them
+  // keeps them until it is beyond `undergrowthKept`. Further out they would be lost in the fog.
+  undergrowth: 1,
+  undergrowthKept: 2,
   fog: Object.freeze({ near: 46, far: 186 }), // the far edge of the kept chunks is hidden in the fog
 });
 
@@ -120,8 +124,40 @@ function broad(leaves, x, y, z, height, color, turn) {
   ball(leaves, x, y + height * 0.78, z, height * 0.5, height * 0.36, color, turn);
 }
 
+// Round 192: the undergrowth. A flower clump's colours, picked by its `hue`: red, yellow, white, violet, blue, pink
+// and orange, a little brighter than life, as the PS1 look has them.
+const FLOWER_COLOURS = Object.freeze([[1.2, 0.26, 0.24], [1.25, 1.05, 0.3], [1.2, 1.18, 1.1], [0.72, 0.4, 1.05], [0.4, 0.6, 1.25], [1.25, 0.6, 0.85], [1.25, 0.62, 0.2]]);
+
+// A fern: four or five fronds, each a long leaf of two triangles arching out and down from the middle.
+function fern(leaves, x, y, z, radius, color, turn) {
+  const fronds = 4 + Math.floor((turn * 7) % 2);
+  for (let k = 0; k < fronds; k += 1) {
+    const a = turn + (k / fronds) * Math.PI * 2;
+    const [ax, az] = [Math.cos(a), Math.sin(a)];
+    const [sx, sz] = [-az * radius * 0.16, ax * radius * 0.16];
+    const base = [x, y + 0.02, z];
+    const mid = [x + ax * radius * 0.5, y + radius * 0.55, z + az * radius * 0.5];
+    const tip = [x + ax * radius, y + radius * 0.2, z + az * radius];
+    const shade = color.map((v) => v * (0.82 + 0.18 * (k % 3) / 2));
+    tri(leaves, base, [mid[0] + sx, mid[1], mid[2] + sz], [mid[0] - sx, mid[1], mid[2] - sz], shade);
+    tri(leaves, [mid[0] - sx, mid[1], mid[2] - sz], [mid[0] + sx, mid[1], mid[2] + sz], tip, shade.map((v) => v * 0.9));
+  }
+}
+
+// A clump of flowers: a low green tuft and three blooms over it, each a small bright pyramid of four faces, so it
+// shows from the side as well as from above.
+function flowers(leaves, petals, x, y, z, radius, color, turn) {
+  cone(leaves, x, y, z, radius * 0.7, radius * 0.9, 3, [0.5, 0.9, 0.4], turn);
+  for (let k = 0; k < 3; k += 1) {
+    const a = turn * 3 + (k / 3) * Math.PI * 2;
+    const [bx, bz] = [x + Math.cos(a) * radius * 0.55, z + Math.sin(a) * radius * 0.55];
+    const r = 0.08 + radius * 0.32;
+    cone(petals, bx, y + radius * (0.85 + 0.3 * k), bz, r, r * 0.9, 4, color.map((v) => v * (0.9 + 0.1 * k)), a);
+  }
+}
+
 /** The meshes of one chunk: ground by material, water where the ground dips under it, and the chunk's trees. */
-export function buildChunk(terrain, materials, cx, cz, { detail = true, models = null } = {}) {
+export function buildChunk(terrain, materials, cx, cz, { detail = true, models = null, undergrowth = false } = {}) {
   const { chunk, cells } = ENDLESS;
   const size = chunk / cells;
   const [x0, z0] = [cx * chunk, cz * chunk];
@@ -206,6 +242,17 @@ export function buildChunk(terrain, materials, cx, cz, { detail = true, models =
       ball(leaves, x, y + height * 0.62, z, height * 0.34, height * 0.62, green, tree.tint * 6);
     }
   }
+  // Round 192: ferns, flowers and little bushes, on the near chunks only (further out they are lost in the fog).
+  const petals = solid; // vertex colour alone, as the models are
+  if (undergrowth && terrain.undergrowthIn) {
+    for (const plant of terrain.undergrowthIn(cx, cz)) {
+      const { x, y, z, size, tint } = plant;
+      const turn = tint * Math.PI * 2;
+      if (plant.kind === 'fern') fern(leaves, x, y, z, size * 1.5, [0.34 + 0.14 * tint, 0.72 + 0.14 * tint, 0.36 + 0.1 * tint], turn);
+      else if (plant.kind === 'bush') ball(leaves, x, y + size * 0.3, z, size, size * 1.1, [0.5 + 0.2 * tint, 0.66 + 0.1 * tint, 0.36 + 0.12 * tint], turn);
+      else flowers(leaves, petals, x, y, z, size, FLOWER_COLOURS[Math.floor(plant.hue * FLOWER_COLOURS.length) % FLOWER_COLOURS.length], turn);
+    }
+  }
   const group = new Group();
   group.name = `chunk:${cx},${cz}`;
   const add = (data, material, order) => {
@@ -254,9 +301,9 @@ export function createEndlessWorld({ terrain, seed = 7, preset = 'day', radius =
   // How much a chunk carries, by its squared distance from the camera's chunk: 2 its trees as models, 1 trunks and
   // second cones, 0 the least (it is in the fog).
   const levelAt = (distance) => (models && distance <= ENDLESS.models ? 2 : distance <= ENDLESS.detail ? 1 : 0);
-  const build = (cx, cz, level) => {
-    const group = buildChunk(terrain, world.materials, cx, cz, { detail: level >= 1, models: level >= 2 ? models : null });
-    chunks.set(`${cx},${cz}`, { group, level });
+  const build = (cx, cz, level, plants) => {
+    const group = buildChunk(terrain, world.materials, cx, cz, { detail: level >= 1, models: level >= 2 ? models : null, undergrowth: plants });
+    chunks.set(`${cx},${cz}`, { group, level, plants });
     ground.add(group);
   };
 
@@ -276,7 +323,8 @@ export function createEndlessWorld({ terrain, seed = 7, preset = 'day', radius =
         const distance = i * i + j * j;
         if (!have) missing.push([distance, ccx + i, ccz + j]);
         // A chunk too poor for where it now is, or still carrying models the camera has left behind.
-        else if (have.level < levelAt(distance) || (have.level === 2 && (!models || distance > ENDLESS.modelsKept))) poorer.push([distance, ccx + i, ccz + j]);
+        else if (have.level < levelAt(distance) || (have.level === 2 && (!models || distance > ENDLESS.modelsKept))
+          || (!have.plants && distance <= ENDLESS.undergrowth) || (have.plants && distance > ENDLESS.undergrowthKept)) poorer.push([distance, ccx + i, ccz + j]);
       }
     }
     missing.sort((a, b) => a[0] - b[0]);
@@ -284,7 +332,7 @@ export function createEndlessWorld({ terrain, seed = 7, preset = 'day', radius =
     const work = [...missing, ...poorer].slice(0, budget);
     for (const [distance, cx, cz] of work) {
       if (chunks.has(`${cx},${cz}`)) drop(`${cx},${cz}`);
-      build(cx, cz, levelAt(distance));
+      build(cx, cz, levelAt(distance), distance <= ENDLESS.undergrowth);
     }
     return Math.max(0, missing.length + poorer.length - work.length);
   }

@@ -65,6 +65,23 @@ export const BIOME = Object.freeze({
   scale: 2400, // metres: the size of the noise that chooses a biome
   cuts: Object.freeze([0.56, 0.44]), // the noise above the first is the first biome, above the second the second
 });
+// Round 192: the undergrowth: ferns, flowers and little bushes, for the look of the land alone (the server does not
+// read it). One candidate a `grid` metres square; the chance that one grows is by cover and kind, times the biome's
+// own share of that kind. A flower clump's `hue` picks its colour from the client's palette.
+export const UNDERGROWTH = Object.freeze({
+  grid: 3.2,
+  chance: Object.freeze({
+    fern: Object.freeze({ shore: 0, meadow: 0.03, forest: 0.16, highland: 0.04 }),
+    flower: Object.freeze({ shore: 0.05, meadow: 0.3, forest: 0.12, highland: 0.14 }),
+    bush: Object.freeze({ shore: 0.03, meadow: 0.06, forest: 0.1, highland: 0.07 }),
+  }),
+  biome: Object.freeze({
+    jungle: Object.freeze({ fern: 1.5, flower: 0.8, bush: 1.1 }),
+    woodland: Object.freeze({ fern: 1, flower: 1, bush: 1 }),
+    steppe: Object.freeze({ fern: 0.2, flower: 1.2, bush: 1.3 }),
+  }),
+  size: Object.freeze({ fern: [0.55, 0.5], flower: [0.32, 0.22], bush: [0.6, 0.6] }), // [least, spread] radius, metres
+});
 const TREE_HEIGHT = Object.freeze({ fir: [5, 6], round: [5, 6], palm: [7, 6], broad: [6, 7], shrub: [1.4, 1.6] });
 
 const imul = Math.imul;
@@ -209,5 +226,32 @@ export function createTerrain(seed = 1) {
     return trees;
   }
 
-  return Object.freeze({ seed: s, waterY: TERRAIN.waterY, heightAt, slopeAt, coverAt, biomeAt, biomes: BIOMES, moistureAt, treesIn });
+  /** Round 192: the undergrowth of chunk (cx, cz): [{ x, z, y, kind: 'fern' | 'flower' | 'bush', size, hue, tint }]. */
+  function undergrowthIn(cx, cz) {
+    const plants = [];
+    const { grid, chance, biome: share, size: sizes } = UNDERGROWTH;
+    const per = Math.round(TERRAIN.chunk / grid);
+    const step = TERRAIN.chunk / per;
+    for (let i = 0; i < per; i += 1) {
+      for (let j = 0; j < per; j += 1) {
+        const gx = cx * per + i;
+        const gz = cz * per + j;
+        const x = (gx + 0.1 + 0.8 * hash2(gx, gz, s + 501)) * step;
+        const z = (gz + 0.1 + 0.8 * hash2(gx, gz, s + 502)) * step;
+        const y = heightAt(x, z);
+        const cover = coverAt(x, z, y);
+        if (cover === 'water' || cover === 'snow' || slopeAt(x, z) > 0.8) continue;
+        const scale = share[biomeAt(x, z)] ?? share.woodland;
+        // One draw against the kinds' chances end to end, so a candidate is one kind or none.
+        let draw = hash2(gx, gz, s + 503);
+        const kind = ['fern', 'flower', 'bush'].find((name) => { draw -= chance[name][cover] * scale[name]; return draw < 0; });
+        if (!kind) continue;
+        const [least, spread] = sizes[kind];
+        plants.push({ x, z, y, kind, size: least + spread * hash2(gx, gz, s + 504), hue: hash2(gx, gz, s + 505), tint: hash2(gx, gz, s + 506) });
+      }
+    }
+    return plants;
+  }
+
+  return Object.freeze({ seed: s, waterY: TERRAIN.waterY, heightAt, slopeAt, coverAt, biomeAt, biomes: BIOMES, moistureAt, treesIn, undergrowthIn });
 }
