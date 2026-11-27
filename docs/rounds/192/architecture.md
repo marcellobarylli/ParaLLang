@@ -31,4 +31,4 @@ build.
 
 ## Status
 
-Built, tested and seen in screenshots in Chromium; not seen on a phone. Pushed to the session branch; not merged.
+Built, tested and seen in screenshots in Chromium; not seen on a phone. Merged to `main` and pushed on the owner's word ("Then deploy"); GitHub Pages deploys `main`.

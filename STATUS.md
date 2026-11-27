@@ -38,7 +38,7 @@ The entry point for agents: the current state, how the project is logged, and th
 
 No tree or plant now grows within 1.6 m of a way's centreline (the 1.6 m track and half its width again on each
 side). The ground near the camera has ferns, little bushes and clumps of flowers in seven colours, by cover and biome.
-Tested, and seen in a screenshot in Chromium; not seen on a phone. **Pushed to the session branch; not merged.**
+Tested, and seen in a screenshot in Chromium; not seen on a phone. **Merged to `main` and deployed** on the owner's word.
 [Architecture](docs/rounds/192/architecture.md), [findings](docs/rounds/192/findings.md).
 
 ## Addendum 2026-11-27: round 191, legacy dungeons on rails again; the road's glide keeps low
