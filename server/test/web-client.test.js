@@ -41,7 +41,8 @@ const indexOf = (siteId) => dungeon.sites.findIndex((site) => site.id === siteId
 // Round 148: the web client asks for the language only unless its slider is moved, and the line then comes with its
 // translation. This file is about the helps (a protected line's translation and meanings cost a hint), which hold
 // below that, so its stores have the slider at one half. `fullStore` is the page as it is first opened.
-const HALF = { 'parallang.display': JSON.stringify({ immersion: 0.5 }) };
+// Round 198: light checking is the client's default; this file plays the strict flow (verdicts, hearts, helps).
+const HALF = { 'parallang.display': JSON.stringify({ immersion: 0.5, strict: true }) };
 function newStore(storage = memoryStorage(HALF)) {
   const store = createGameStore({ storage, dungeon });
   return { store, storage, s: () => store.getState() };
