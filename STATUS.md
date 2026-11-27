@@ -40,8 +40,8 @@ The road always uses the tree models: the "Tree models" switch in Settings and i
 the road's view loads the model file when it is made. The simple trees stay as the trees beyond the nearest five
 chunks and until the file has loaded (owner's choice: models everywhere would be 6.5 times the triangle budget).
 Same scene as before at a pinned seed. `models-check.mjs` runs again (stale since round 175) and shows the first site
-of seed 4242 over the 64 000 budget, before this change as after. Not seen on a phone. **On the session branch, not
-merged.**
+of seed 4242 over the 64 000 budget, before this change as after. Not seen on a phone. **Merged to `main` and
+deployed** on the owner's word.
 [Architecture](docs/rounds/195/architecture.md), [findings](docs/rounds/195/findings.md).
 
 ## Addendum 2026-11-27: round 194, tilt to look on the road

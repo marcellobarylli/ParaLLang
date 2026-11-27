@@ -10,3 +10,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 21:25 approx. | 21:40:00 | run | Claude | Client 337 pass, aesthetic 95 pass; client build passes | `../findings.md` |
 | 5 | 21:38 approx. | 21:40:00 | run | Claude | `models-check.mjs` brought up to the round-175 title flow, seed pinned: same scene as before the change (70 732 triangles at seed 4242 in both builds), over the 64 000 budget in both | `../findings.md` |
 | 6 | 21:40:00 | 21:40:00 | closed | Claude | Records, status addendum; on the session branch, not merged | `../architecture.md` |
+| 7 | 21:40:53 | 21:40:53 | deployed | Claude | Merged to `main` (fast-forward) and pushed on the owner's word ("Then deploy") | `../architecture.md` |

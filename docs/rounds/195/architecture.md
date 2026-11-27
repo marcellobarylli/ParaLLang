@@ -31,5 +31,5 @@ switch and an old stored choice is dropped), `npm test -w aesthetic` (95), clien
 
 ## Status
 
-Built and tested in Node and in headless Chromium; not tried on a phone. On the session branch
-`claude/sweet-noether-xz8nyd`, not merged.
+Built and tested in Node and in headless Chromium; not tried on a phone. Merged to `main` and pushed on the
+owner's word ("Then deploy"); GitHub Pages deploys `main`.
