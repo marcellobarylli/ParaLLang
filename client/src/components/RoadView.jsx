@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { createTilt, requestTiltPermission, screenAngle, tiltNeedsAsking } from '../scene/tilt.js';
+import { createFreeLook, requestTiltPermission, screenAngle, tiltNeedsAsking } from '../scene/tilt.js';
 
 // Round 144: the endless level behind The Journey 2. The three.js host (src/scene/roadView.js) loads as its own
 // chunk, as the dungeon's does. Without WebGL (an old browser, the jsdom tests) a still backdrop stands in and the
@@ -65,7 +65,7 @@ export default function RoadView({ road, seed: titleSeed = null, title = null, s
   // the first click anywhere asks.
   useEffect(() => {
     if (status !== 'ready' || !tilt || typeof window === 'undefined') return undefined;
-    const source = createTilt();
+    const source = createFreeLook(); // round 197: the road's free look, nearly all the way round
     const onOrientation = (event) => source.orient(event, screenAngle(window), event.timeStamp / 1000);
     const listen = () => { window.removeEventListener('deviceorientation', onOrientation); window.addEventListener('deviceorientation', onOrientation); };
     const ask = () => { requestTiltPermission(window).then((answer) => { if (answer === 'granted') listen(); }); };
