@@ -643,7 +643,16 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       sites: Object.fromEntries(bundle.sites.map((entry, index) => [entry.id, { state: index === startIndex ? 'current' : 'visited', cleared: false, reachable: false }])),
     };
   }, [legacyId, legacySite, state.legacy]);
-  const legacyPhase = { hub: 'site', travel: 'approach', encounter: 'encounter' }[state.roadPhase] ?? 'site';
+  // Round 191: the legacy dungeon's camera on rails, as the dungeon mode had it. It enters on foot, from outside the
+  // gate, and from one of the gate's encounters to the next it walks the path between their sites at eye height
+  // (director.walk), through the gate passages, in place of a drop from the sky to each. `legacyTrail` remembers the
+  // site the camera stood at before this one in the same dungeon.
+  const legacyTrail = useRef({ id: null, index: null, from: null });
+  if (!legacy) legacyTrail.current = { id: null, index: null, from: null };
+  else if (legacyTrail.current.id !== legacyId) legacyTrail.current = { id: legacyId, index: legacy.startIndex, from: null };
+  else if (legacyTrail.current.index !== legacy.startIndex) legacyTrail.current = { id: legacyId, index: legacy.startIndex, from: legacyTrail.current.index };
+  const legacyFrom = legacyTrail.current.from;
+  const legacyPhase = { hub: 'enter', travel: legacyFrom !== null ? 'walk' : 'enter', encounter: 'encounter' }[state.roadPhase] ?? 'enter';
   const shellPhase = onRoad ? ({ hub: 'site', travel: 'walk', encounter: 'encounter' }[state.roadPhase] ?? 'site') : phase;
   const returnLabel = onRoad ? (roadTalking ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the road')
     : inEncounter || inParty_ ? `Back to ${state.encounter?.character?.name ?? 'the conversation'}` : 'Back to the temple';
@@ -677,7 +686,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   return (
     <div className={`app-shell phase-${atTitle ? 'title' : shellPhase}${titleShown ? ' at-title' : ''}${onRoad ? ' on-road' : ''}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
       {onRoad && legacy
-        ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={null} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
+        ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={legacyFrom} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
         : onRoad || atTitle
         ? <RoadView models={state.display?.treeModels !== false} road={state.road} seed={state.titleSeed} title={titleSite} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}

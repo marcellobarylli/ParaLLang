@@ -34,6 +34,7 @@ const ENGAGE_TAU = 0.7; // seconds, the ease of a step in
 export const LOOK_MAX = Object.freeze({ yaw: 0.25, pitch: 0.18 }); // radians
 const LOOK_TAU = 0.12; // seconds, the ease to a new look
 const LOOK_IN = 0.5; // seconds, the look fades in over the start of a hold
+const ENTER_WALK = 16; // round 191: metres of the way in that an entry from the road walks
 const FAR = 25; // a walk that starts further than this from its path (from the overview) comes down as an approach does
 const ON_PATH = 1.5; // a camera this near to the path it is about to walk (the way it came) starts from where it stands
 const LEAD_SPEED = 3; // metres per second, the camera's pace to the start of a path
@@ -364,6 +365,18 @@ export function createDirector({ dungeon, heightAt = () => 0, fov = 60, aspect =
       }
       // The ramps cost one ramp's time in all, so the steady stretch runs at WALK_SPEED.
       return begin('walk', { site: to, path, s0, s1, lead, far, travel: Math.max(2, (s1 - s0) / WALK_SPEED + DURATIONS.ramp) });
+    },
+    /**
+     * Round 191: into the dungeon from the road, on foot. The camera stands on the way in (the entrance for the
+     * start site, else the path the site is reached by), ENTER_WALK metres before its stand, at eye height, and walks
+     * the rest. No drop from the sky: the road comes in on the ground and so does the dungeon.
+     */
+    enter(index) {
+      const path = measurePath(arrivalPoints(dungeon, index));
+      const s1 = standoff(path);
+      const s0 = Math.max(0, s1 - ENTER_WALK);
+      pose = { stage: 'travel', ...pathPose(path, s0) };
+      return begin('walk', { site: index, path, s0, s1, lead: 0, far: false, travel: Math.max(2, (s1 - s0) / WALK_SPEED + DURATIONS.ramp) });
     },
     victory() { return orbit('victory'); },
     /** Advances the clock and returns the pose. */

@@ -634,3 +634,22 @@ test('a route joins non-neighbouring sites along their paths, and the camera wal
   expect(d.mode).toBe('walk');
   expect(d.arrival).toBeGreaterThan(5);
 });
+
+// Round 191: a legacy dungeon on the road is entered on foot and walked from one gate encounter to the next.
+test('an entry from the road walks in at eye height outside the gate, then walks through it to the next sites', () => {
+  const d = director();
+  d.attract(); run(d, 2);
+  d.enter(0);
+  expect(d.mode).toBe('walk');
+  const first = d.pose;
+  expect(first.position[1] - taProhmHeightAt(first.position[0], first.position[2])).toBeCloseTo(EYE, 1); // on the ground at once, no drop
+  expect(first.position[2]).toBeGreaterThan(DUNGEON.sites[0].at[1]); // outside, on the avenue
+  const check = (pose, previous) => {
+    expect(distance(pose.position, previous.position)).toBeLessThan(0.3); // a walk, never a crane shot
+    expect(pose.position[1] - taProhmHeightAt(pose.position[0], pose.position[2])).toBeLessThan(EYE + 0.5);
+    expect(blocked(pose.position[0], pose.position[2])).toBeFalsy();
+  };
+  run(d, d.arrival + 2, check);
+  expect(d.arrived).toBe(true);
+  for (const [from, to] of [[0, 1], [1, 2]]) { d.walk(from, to); run(d, d.arrival + 2, check); expect([d.site, d.arrived]).toEqual([to, true]); }
+});

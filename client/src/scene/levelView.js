@@ -293,13 +293,14 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
       const key = `${phase}:${siteIndex}:${walkFrom}`;
       const atSite = (director.mode === 'approach' || director.mode === 'walk') && director.site === siteIndex;
       // A conversation and the site card (round 119) keep the hold the camera arrived at.
-      if (key === phaseKey || ((phase === 'encounter' || phase === 'site') && atSite)) { phaseKey = key; return; }
+      if (key === phaseKey || ((phase === 'encounter' || phase === 'site' || phase === 'enter') && atSite)) { phaseKey = key; return; }
       phaseKey = key;
       // Round 119: the world map lies over the same orbit as the title.
       if (phase === 'attract' || phase === 'world') { if (director.mode !== 'attract') director.attract(); }
       else if (phase === 'overview') director.overview();
       else if (phase === 'victory') director.victory();
       else if (phase === 'walk' && walkFrom !== null && walkFrom !== siteIndex) director.walk(walkFrom, siteIndex);
+      else if (phase === 'enter') director.enter(siteIndex); // round 191: into a legacy dungeon from the road, on foot
       else director.approach(siteIndex);
       if (reducedMotion) director.skip();
       notified = false;

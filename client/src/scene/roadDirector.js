@@ -3,8 +3,8 @@
 // its camera.
 //
 //   arrive(site)          down from the sky to the site, the first time the road is shown
-//   travel(points, site)  along a way to a site: a glide a few metres up, faster than a walk, because the road is
-//                         "on rails": the player jumps from one conversation to the next
+//   travel(points, site)  along a way to a site: a glide at eye height over the ground (round 191: it no longer
+//                         rises), faster than a walk, because the road is "on rails", with a slow low swell
 //   hold                  at a site: a few steps back from whoever stands there, with a slow sway; each objective
 //                         closed steps the camera in (engage), a verdict is a small push or pull (beat)
 //   wander                at a site where nobody waits: a slow turn around it, to look at the country
@@ -25,7 +25,10 @@ export const ROAD_CAMERA = Object.freeze({
   // Round 176: the height the camera keeps on a glide: the highest ground within `reach` metres before and after,
   // smoothed over `smooth` metres, so it rises and sinks with the land in long curves and not with every bump.
   clearance: Object.freeze({ step: 2, reach: 8, smooth: 14 }),
-  lift: Object.freeze({ share: 0.07, max: 18 }), // how high a glide rises: a share of its length
+  // Round 191: a glide no longer rises over the country (round 144's lift, up to 18 m): it keeps the height of the
+  // conversation it left, eye height over the ground, as a walker would. It bobs a little as it goes: a long, low
+  // swell of `height` metres every `length` metres, faded in and out over `fade` of the glide at each end.
+  bob: Object.freeze({ height: 0.14, length: 22, fade: 0.18 }),
   arrive: 2.8, // seconds from the sky
   sky: 46, // metres above the site
   blend: 0.9, // seconds to leave a hold
@@ -105,7 +108,7 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
   let site = null; // { x, z }
   let from = [0, 1]; // the direction the camera stands in, seen from the site (unit)
   let start = null; // the pose a transition began at
-  let way = null; // { total, at, duration, lift }
+  let way = null; // { total, at, floor, duration }
   let engage = 0;
   let engageTarget = 0;
   let beat = { kind: null, t: 1 };
@@ -135,14 +138,17 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
     const s = ease(u) * way.total;
     const [x, z] = way.at(s);
     const [ax, az] = way.at(s + ROAD_CAMERA.lookAhead);
-    const rise = Math.sin(Math.PI * u) * way.lift;
+    // Round 191: the swell, by distance, so it keeps its length whatever the pace. It only lifts (never under eye
+    // height), and it is zero at both ends of the glide.
+    const { height, length, fade } = ROAD_CAMERA.bob;
+    const swell = ease(clamp(u / fade, 0, 1)) * ease(clamp((1 - u) / fade, 0, 1)) * height * 0.5 * (1 - Math.cos((2 * Math.PI * s) / length));
     // Round 176: on the smoothed profile of the ground along the way, and never under the ground here.
     // Over the last fifth it settles onto the ground here, where the hold takes it up.
     const here = ground(x, z);
     const settle = ease(clamp((u - 0.8) / 0.2, 0, 1));
-    const y = here + (Math.max(way.floor(s), here) - here) * (1 - settle) + ROAD_CAMERA.eye + rise;
+    const y = here + (Math.max(way.floor(s), here) - here) * (1 - settle) + ROAD_CAMERA.eye + swell;
     const near = clamp((way.total - s) / ROAD_CAMERA.lookAhead, 0, 1); // towards the end the look settles on the site
-    const ahead = [ax, ground(ax, az) + ROAD_CAMERA.eye * 0.8 + rise * 0.4, az];
+    const ahead = [ax, ground(ax, az) + ROAD_CAMERA.eye * 0.8 + swell * 0.5, az];
     return { position: [x, y, z], target: lerp3(siteTarget(), ahead, near) };
   }
 
@@ -234,7 +240,6 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
       way = {
         total: stop, at: line.at, floor: profile(line, stop + ROAD_CAMERA.lookAhead, smooth),
         duration,
-        lift: Math.min(ROAD_CAMERA.lift.max, stop * ROAD_CAMERA.lift.share),
       };
       begin('travel');
     },

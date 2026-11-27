@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 191, legacy dungeons on rails again; the road's glide keeps low
+
+On the road a legacy dungeon is entered on foot from outside its gate, and its gate encounters are walked to from one
+another along its paths at eye height, through the gate passages, as the dungeon mode did (no drop from the sky). The
+road's glide no longer rises over the country: it keeps eye height over the ground along the same path, with a low,
+long swell (0.14 m every 22 m). Tested in Node; not seen in a browser. **Pushed to the session branch; not merged.**
+[Architecture](docs/rounds/191/architecture.md), [findings](docs/rounds/191/findings.md).
+
 ## Addendum 2026-11-27: round 190, the practice box shows five lines, and a reply can be followed
 
 The practice box under a correction now grows to five lines in view (a layout rule had kept it at one line), then

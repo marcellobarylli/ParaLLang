@@ -6,7 +6,7 @@ import { createTilt, requestTiltPermission, screenAngle, tiltNeedsAsking } from 
 // "arrives" at once, so the game stays playable.
 // Round 125: with `tilt` on, the phone's orientation turns the camera's look at a site (scene/tilt.js).
 // Round 119: the labels are the numbers of the sites out of the fog; the current site also shows its name.
-const MOVING = new Set(['approach', 'walk']);
+const MOVING = new Set(['approach', 'walk', 'enter']);
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 

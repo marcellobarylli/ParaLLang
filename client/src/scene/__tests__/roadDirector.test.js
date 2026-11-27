@@ -59,7 +59,8 @@ test('a glide follows the way, stays above the ground, takes a few seconds and e
   }
   expect(seconds).toBeGreaterThanOrEqual(ROAD_CAMERA.travel.min - 0.1);
   expect(seconds).toBeLessThanOrEqual(ROAD_CAMERA.travel.max + 0.1);
-  expect(highest).toBeGreaterThan(ROAD_CAMERA.eye + 1); // it rises over the country on the way
+  // Round 191: it keeps near the conversation's height, eye height over the ground, and does not fly up.
+  expect(highest).toBeLessThan(ROAD_CAMERA.eye + ROAD_CAMERA.bob.height + 4);
   run(director, 2.5, (pose, previous) => expect(distance(pose.position, previous.position)).toBeLessThan(1));
   const pose = director.update(1 / 30);
   expect(Math.hypot(pose.position[0] - next.x, pose.position[2] - next.z)).toBeLessThan(ROAD_CAMERA.standoff + 0.8);
@@ -135,4 +136,20 @@ test('a glide along the shortest walk is smooth in height as well as in plan, an
   for (let n = 2; n < heights.length; n += 1) worst = Math.max(worst, Math.abs(heights[n] - 2 * heights[n - 1] + heights[n - 2]));
   expect(worst).toBeLessThan(0.08);
   expect(director.mode).toBe('hold');
+});
+
+// Round 191: on flat ground a glide is eye height plus the swell: a low, long undulation, zero at both ends.
+test('a glide on flat ground stays at eye height and bobs in a long, low swell', () => {
+  const director = createRoadDirector({ heightAt: () => 0, waterY: -1 });
+  const a = { x: 0, z: 0 };
+  const b = { x: 300, z: 0 };
+  director.stand(a, [-10, 0]);
+  director.travel([[0, 0], [300, 0]], b);
+  const heights = [];
+  while (director.mode === 'travel') heights.push(director.update(1 / 30).position[1]);
+  const middle = heights.slice(Math.floor(heights.length * 0.3), Math.floor(heights.length * 0.7));
+  expect(Math.min(...middle)).toBeGreaterThan(ROAD_CAMERA.eye - 0.01);
+  expect(Math.max(...middle)).toBeLessThan(ROAD_CAMERA.eye + ROAD_CAMERA.bob.height + 0.01);
+  expect(Math.max(...middle) - Math.min(...middle)).toBeGreaterThan(ROAD_CAMERA.bob.height * 0.8); // it does bob
+  expect(Math.abs(heights.at(-1) - ROAD_CAMERA.eye)).toBeLessThan(0.02);
 });
