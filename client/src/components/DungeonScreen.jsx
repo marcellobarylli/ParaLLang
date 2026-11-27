@@ -434,6 +434,21 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
     element.scrollTop = pin.current.top;
     pin.current.top = element.scrollTop; // as far as the text allows
   }, [encounter?.id]);
+  // Round 189: with "Follow the reply" on in Settings, a new line of the character in an open conversation is brought to
+  // the top of the panel when it arrives (not on opening, and not when its translation is revealed).
+  const follow = state.display?.follow === true;
+  const seenRef = useRef({ id: encounter?.id, line: lineKey });
+  useLayoutEffect(() => {
+    const seen = seenRef.current;
+    seenRef.current = { id: encounter?.id, line: lineKey };
+    const element = scrollRef.current;
+    if (!follow || !element || !lineKey || seen.id !== encounter?.id || seen.line === lineKey) return;
+    const target = [...element.querySelectorAll('.npc-message')].at(-1);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top - element.getBoundingClientRect().top + element.scrollTop - 8;
+    element.scrollTop = Math.max(0, top);
+    pin.current = { top: element.scrollTop, until: 0 }; // as far as the text allows
+  }, [lineKey, encounter?.id, follow]);
   return (
     <section className="sheet" aria-label={party ? `${name}, your party` : road ? road.title : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
       {/* Round 132: the panel drags from the top bar's edge down to this strip alone. */}
@@ -737,6 +752,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}
+        follow={state.display?.follow === true} onFollow={state.setFollow}
         treeModels={state.display?.treeModels !== false} onTreeModels={state.setTreeModels}
         streamlined={state.display?.streamlined !== false} onStreamlined={state.setStreamlined}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}

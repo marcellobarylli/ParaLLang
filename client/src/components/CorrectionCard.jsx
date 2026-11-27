@@ -16,13 +16,17 @@ export default function CorrectionCard({ correction, language, speaker = null, l
   listenerRef.current = listener;
   useEffect(() => () => { if (listenerRef.current?.listening) listenerRef.current.stop(); }, []);
   // Round 137: the box grows with its text (it wraps), and the sheet keeps the box and the verdict in view.
+  // Round 189: up to five lines show at once, then it scrolls inside.
   useEffect(() => {
     const box = boxRef.current;
     if (!box) return;
     box.style.height = 'auto';
-    // The whole text shows (up to twelve lines, then it scrolls inside): scrollHeight leaves out the border.
+    // scrollHeight leaves out the border; the padding is in it, so five lines are five line heights and the padding.
     const edge = box.offsetHeight - box.clientHeight;
-    box.style.height = box.scrollHeight ? `${Math.min(box.scrollHeight + edge, 12 * 22 + edge)}px` : '';
+    const style = typeof getComputedStyle === 'function' ? getComputedStyle(box) : null;
+    const line = parseFloat(style?.lineHeight) || 22;
+    const padding = (parseFloat(style?.paddingTop) || 0) + (parseFloat(style?.paddingBottom) || 0);
+    box.style.height = box.scrollHeight ? `${Math.ceil(Math.min(box.scrollHeight, 5 * line + padding) + edge)}px` : '';
     box.scrollIntoView?.({ block: 'nearest' });
   }, [attempt]);
   useEffect(() => { if (verdict) verdictRef.current?.scrollIntoView?.({ block: 'nearest' }); }, [verdict]);

@@ -404,6 +404,34 @@ test('the microphone stays on until tapped off, is switched off by sending, and 
   expect(screen.getByText(/Listening could not start/)).toBeTruthy();
 });
 
+// Round 189: "Follow the reply" in Settings brings a character's new line to the top of the panel; by default the panel
+// stays where the player left it (round 140). jsdom has no layout, so the panel's scroll and the line's place are set.
+test('with Follow the reply on, a new line of the character comes to the top of the panel; off, the panel stays', async () => {
+  const speech = fakeSpeech();
+  const { store } = await openConversation(speech);
+  const panel = document.querySelector('.sheet-scroll');
+  let top = 0;
+  Object.defineProperty(panel, 'scrollTop', { configurable: true, get: () => top, set: (value) => { top = value; } });
+  panel.getBoundingClientRect = () => ({ top: 100 });
+  const reply = (n) => {
+    const before = store.getState().encounter;
+    act(() => store.setState({ encounter: { ...before, transcript: [...before.transcript, { id: `player-${n}`, role: 'player', text: 'Ciao!' }, { id: `npc-${n}`, role: 'npc', narrative: 'A stamp falls.', protected: true, dialogue: { speaker: 'Portia', native: 'Bene.', words: [] } }] } }));
+  };
+  expect(store.getState().display.follow).toBe(false);
+  reply(2);
+  expect(top).toBe(0);
+  act(() => store.getState().setFollow(true));
+  expect(store.getState().display.follow).toBe(true);
+  const original = Element.prototype.getBoundingClientRect;
+  Element.prototype.getBoundingClientRect = function place() { return this.classList?.contains('npc-message') ? { top: 100 + 400 - top } : original.call(this); };
+  try {
+    reply(3);
+    expect(top).toBe(392); // the line's top, 8 px down from the panel's edge
+  } finally {
+    Element.prototype.getBoundingClientRect = original;
+  }
+});
+
 // Round 129: beginner mode on the screen. The server's verdict is put into the store as the server sends it.
 const CORRECTION = { text: 'Buongiorno! Mi chiamo Luigione. Come ti chiami?', translation: 'Good morning! My name is Luigione. What is your name?', heartLost: true };
 const corrected = (store, { correction = CORRECTION, used = 1 } = {}) => act(() => store.setState({

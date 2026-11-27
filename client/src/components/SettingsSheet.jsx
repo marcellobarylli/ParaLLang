@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, treeModels = true, onTreeModels, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, follow = false, onFollow = null, treeModels = true, onTreeModels, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -184,8 +184,20 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             )}
           </Group>
         )}
-        {(onPanelOpacity || onTreeModels || onTiltLook) && (
+        {(onPanelOpacity || onTreeModels || onTiltLook || onFollow) && (
           <Group title="Display and controls">
+            {onFollow && (
+              <>
+                <fieldset className="setting-choice">
+                  <legend>When a character replies</legend>
+                  <label><input type="radio" name="settings-follow" checked={!follow} onChange={() => onFollow(false)} /><span>Stay where I am</span></label>
+                  <label><input type="radio" name="settings-follow" checked={follow} onChange={() => onFollow(true)} /><span>Follow the reply</span></label>
+                </fieldset>
+                <small>{follow
+                  ? 'Follow the reply: the conversation moves to the character\'s new line as soon as it appears.'
+                  : 'Stay where I am: the conversation stays where you left it; scroll down to the new line yourself.'}</small>
+              </>
+            )}
             {onPanelOpacity && (
               <>
                 <div className="setting-row"><label htmlFor="settings-opacity">Text panel opacity</label><output htmlFor="settings-opacity">{percent}%</output></div>

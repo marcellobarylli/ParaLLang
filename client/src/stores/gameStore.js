@@ -729,6 +729,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       setTreeModels: (on) => set({ display: saveDisplay({ ...get().display, treeModels: on !== false }, storage) }),
       // Round 153: strict or light checking of answers, sent with each answer.
       setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }),
+      setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on === true }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       // The server no longer knows this learner (see `api` above): everything of the old run is dropped, the learner

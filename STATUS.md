@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 189, the practice box shows five lines, and a reply can be followed
+
+The practice box under a correction now grows to five lines in view (a layout rule had kept it at one line), then
+scrolls. Settings has "When a character replies": "Stay where I am" (as before) or "Follow the reply", which brings
+the character's new line to the top of the panel as it appears. Tested with fakes and the box measured in Chromium;
+not played on a phone. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/189/architecture.md), [findings](docs/rounds/189/findings.md).
+
 ## Addendum 2026-11-27: round 188, the microphone stays on
 
 The microphone is now a toggle: it no longer switches itself off after a silence, but listens until it is tapped
