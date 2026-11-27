@@ -2,7 +2,8 @@
 // Round 126: the dungeon speaks and listens. A character sheet's voice becomes a system voice, a pitch and a rate;
 // the speaker reads a line with them; the listener writes what the browser's recognition hears.
 import { describe, expect, test, vi } from 'vitest';
-import { LISTEN_PROBLEMS, VOICE_KINDS, createListener, createSpeaker, pickVoice, spokenText, voiceProfile } from '../speech.js';
+import { LISTEN_PROBLEMS, NARRATOR, VOICE_KINDS, createListener, createSpeaker, pickVoice, spokenText, voiceProfile } from '../speech.js';
+import { narrativeParts, narratorOn, passageParts } from '../narratorVoice.js';
 
 const voice = (name, lang) => ({ name, lang, localService: true });
 // Like an iPhone with the Italian and Spanish voices installed, and an Android with Google's one voice a language.
@@ -201,5 +202,61 @@ describe('the listener and the audio session', () => {
     expect(scope.navigator.audioSession.type).toBe('play-and-record');
     scope.made[0].onend();
     expect(scope.navigator.audioSession.type).toBe('playback');
+  });
+});
+
+// Round 196: a point in the space of voices, the narrator's own voice, and the narration read before a reply.
+describe('the voice space and the narrator', () => {
+  const ENGLISH = [voice('Samantha', 'en-US'), voice('Daniel', 'en-GB'), voice('Karen', 'en-AU')];
+  test('`pick` takes every voice of the language in name order, the same whatever order the device lists them in', () => {
+    const italian = IPHONE.filter((v) => v.lang === 'it-IT').sort((a, b) => `${a.name}|${a.lang}`.localeCompare(`${b.name}|${b.lang}`)).map((v) => v.name);
+    const names = [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.999].map((pick) => pickVoice(IPHONE, 'it-IT', voiceProfile({ kind: 'male', pick })).name);
+    expect(names).toEqual([italian[0], italian[1], italian[2], italian[3], italian[4], italian[5], italian[6]]);
+    expect(pickVoice([...IPHONE].reverse(), 'it-IT', voiceProfile({ kind: 'male', pick: 0.3 })).name).toBe(names[2]);
+    // Without `pick` the kind still chooses, as before.
+    expect(pickVoice(IPHONE, 'it-IT', voiceProfile({ kind: 'male' })).name).toBe('Luca');
+    expect(voiceProfile({ kind: 'male', pick: 7 }).pick).toBeLessThan(1);
+  });
+
+  test('the narrator reads in a British storyteller\'s voice, slower and lower, or any English one', () => {
+    expect(pickVoice([...IPHONE, ...ENGLISH], NARRATOR.tag, NARRATOR).name).toBe('Daniel');
+    expect(pickVoice(IPHONE, NARRATOR.tag, NARRATOR).name).toBe('Samantha');
+    expect(NARRATOR.rate).toBeLessThan(1);
+    expect(NARRATOR.pitch).toBeLessThan(1);
+  });
+
+  test('a narrative is the narrator\'s English with its listed words in the language', () => {
+    const parts = narrativeParts('She pours a caffè and waits, as a ladle might.', [{ word: 'caffè', meaning: 'coffee' }], 'it-IT');
+    expect(parts).toEqual([
+      { text: 'She pours a ', narrator: true, tag: null },
+      { text: 'caffè', narrator: false, tag: 'it-IT' },
+      { text: ' and waits, as a ladle might.', narrator: true, tag: null },
+    ]);
+    expect(passageParts({ segments: [{ text: 'On a stone: ' }, { text: 'Chi va piano', kind: 'truth', lang: 'it' }, { text: '. Then the road.' }] }, 'it-IT'))
+      .toEqual([{ text: 'On a stone: ', narrator: true, tag: null }, { text: 'Chi va piano', narrator: false, tag: 'it' }, { text: '. Then the road.', narrator: true, tag: null }]);
+    expect(narratorOn({ voices: true })).toBe(true);
+    expect(narratorOn({ voices: true, narrator: false })).toBe(false);
+    expect(narratorOn({ voices: false, narrator: true })).toBe(false);
+  });
+
+  test('a reply waits for the passage being narrated; otherwise it stops what was being read', () => {
+    const scope = fakeSynthesis([...IPHONE, ...ENGLISH]);
+    const speaker = createSpeaker(scope);
+    speaker.narrate(passageParts({ segments: [{ text: 'You walk in under the trees.' }] }));
+    expect(scope.cancels).toBe(1);
+    expect(scope.spoken[0]).toMatchObject({ text: 'You walk in under the trees.', lang: 'en-GB', pitch: NARRATOR.pitch, rate: NARRATOR.rate });
+    expect(speaker.narrating).toBe(true);
+    // The reply comes while the passage is read: queued after it, nothing stopped.
+    speaker.say([...narrativeParts('He looks up.', [], 'it-IT'), { text: 'Buongiorno!', tag: 'it-IT', voice: { kind: 'male', pick: 0.5, pitch: 1.6, rate: 0.85 } }], { after: true });
+    expect(scope.cancels).toBe(1);
+    expect(scope.spoken.map((u) => u.text)).toEqual(['You walk in under the trees.', 'He looks up.', 'Buongiorno!']);
+    expect(scope.spoken[2]).toMatchObject({ lang: 'it-IT', pitch: 1.6, rate: 0.85 });
+    // The passage ends; the next reply stops what is being read, as a line always did.
+    scope.spoken[0].onend();
+    expect(speaker.narrating).toBe(false);
+    speaker.say([{ text: 'Allora?', tag: 'it-IT' }], { after: true });
+    expect(scope.cancels).toBe(2);
+    // Punctuation alone is not read.
+    expect(speaker.say([{ text: ' — ', narrator: true }])).toEqual([]);
   });
 });

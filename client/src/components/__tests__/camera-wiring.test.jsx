@@ -269,8 +269,13 @@ test('where the browser wants to be asked, a visit with the setting on asks at t
 // speech.js's; the conversation is the fake server's, with later lines put into the store.
 function fakeSpeech() {
   const speech = {
-    spoken: [], stops: 0, heard: null,
-    speaker: { supported: true, available: () => true, prime: () => {}, speak: (line) => { speech.spoken.push(line); }, stop: () => { speech.stops += 1; } },
+    spoken: [], told: [], stops: 0, heard: null,
+    // Round 196: `say` and `narrate` read parts; the narrator's go to `told`, a character's lines to `spoken`.
+    speaker: {
+      supported: true, available: () => true, prime: () => {}, speak: (line) => { speech.spoken.push(line); }, stop: () => { speech.stops += 1; },
+      say: (parts) => { for (const part of parts) { if (part.narrator) speech.told.push(part.text); else speech.spoken.push(part); } },
+      narrate: (parts) => { for (const part of parts) speech.told.push(part.text); },
+    },
     listener: { supported: true, start: (options) => { speech.heard = options; return true; }, stop: () => { speech.heard?.onEnd(null); } },
   };
   return speech;
@@ -299,6 +304,7 @@ test('a character\'s line is read aloud once in its sheet\'s voice, a new line t
   const speech = fakeSpeech();
   const { user, store } = await openConversation(speech);
   expect(speech.spoken).toEqual([{ text: 'Allora?', tag: 'it-IT', voice: PORTIA }]);
+  expect(speech.told).toEqual(['A pause.']); // round 196: the narrator reads the line's narrative first
   // A translation revealed on the same line is not a new line.
   act(() => store.setState({ encounter: { ...store.getState().encounter, version: 2 } }));
   expect(speech.spoken).toHaveLength(1);
@@ -307,6 +313,7 @@ test('a character\'s line is read aloud once in its sheet\'s voice, a new line t
   act(() => store.setState({ encounter: { ...before, transcript: [...before.transcript, { id: 'player-1', role: 'player', text: 'Ciao!' }, { id: 'npc-2', role: 'npc', narrative: 'A stamp falls.', protected: true, dialogue: { speaker: 'Portia', native: 'Bene. *Piacere!*', words: [] } }] } }));
   expect(speech.spoken).toHaveLength(2);
   expect(speech.spoken[1]).toEqual({ text: 'Bene. *Piacere!*', tag: 'it-IT', voice: PORTIA });
+  expect(speech.told).toEqual(['A pause.', 'A stamp falls.']);
   // Each line has its own button.
   const buttons = screen.getAllByRole('button', { name: 'Hear Portia say this line' });
   expect(buttons).toHaveLength(2);

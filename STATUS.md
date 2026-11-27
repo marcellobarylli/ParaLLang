@@ -34,6 +34,16 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 196, the narrator reads aloud; every road character its own voice
+
+A storyteller reads the narration aloud: the browser's own speech (free, on the device), in an English voice
+(British first, such as Daniel; slower and lower), with the narration's words in the language said in the
+language's voice. It reads the italic line before each reply, then the reply, and the travel passage on the way,
+which the next reply waits for. "Narrator reads aloud" in Settings, on by default. Each road character's voice is
+now a point in (which device voice, pitch 0.55 to 1.65, rate 0.82 to 1.22). Tested in Chromium with a fake speech
+engine; not heard on a phone. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/196/architecture.md), [findings](docs/rounds/196/findings.md).
+
 ## Addendum 2026-11-27: round 195, the tree models always; no setting
 
 The road always uses the tree models: the "Tree models" switch in Settings and its stored preference are gone, and

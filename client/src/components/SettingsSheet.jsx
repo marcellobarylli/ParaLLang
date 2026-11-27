@@ -40,7 +40,7 @@ const VOLUME_ROWS = Object.freeze([
   ['master', 'Master volume', 'Everything the game plays.'],
   ['music', 'Music volume', 'The quiet chords in the background.'],
   ['effects', 'Effects volume', 'Rain, thunder and the other sounds of the place.'],
-  ['voice', 'Voice volume', 'The characters reading their lines aloud.'],
+  ['voice', 'Voice volume', 'The characters and the narrator reading aloud.'],
 ]);
 
 /** A volume slider, 0 to 100 %. */
@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, follow = true, onFollow = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, follow = true, onFollow = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -125,6 +125,15 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                   <span>Character voices</span>
                 </label>
                 <small>{speechSupport.speak ? 'Each character reads its lines aloud in its own voice. A line\'s 🔊 repeats it.' : 'This browser cannot read aloud.'}</small>
+                {onNarrator && (
+                  <>
+                    <label className="setting-check" htmlFor="settings-narrator">
+                      <input id="settings-narrator" type="checkbox" checked={narrator} onChange={(event) => onNarrator(event.target.checked)} disabled={!speechSupport.speak || !voices} />
+                      <span>Narrator reads aloud</span>
+                    </label>
+                    <small>A storyteller reads the narration in English before each line and on the way; its words in the language are said as they sound.</small>
+                  </>
+                )}
                 <small>{speechSupport.listen ? 'The 🎤 beside the reply box writes what you say. You send it.' : 'This browser cannot listen. The keyboard\'s own microphone key still writes what you say.'}</small>
               </>
             )}

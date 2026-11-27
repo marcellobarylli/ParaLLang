@@ -94,6 +94,8 @@ const PLACE_QUALIFIERS = ['by the Old Stone', 'under the Hill', 'of the Two Opin
 
 // A stream of hashed numbers for one subject: draw(k) is in [0, 1) and differs for every k.
 function drawer(seed, a, b) { return (k) => hash(a * 131 + k * 17, b * 137 - k * 29, seed + 500 + k); }
+// Round 196: the ranges of a road character's voice, on the browser's speech scales (pitch 0 to 2, rate 1 is normal).
+export const VOICE_SPACE = Object.freeze({ pitch: Object.freeze([0.55, 1.65]), rate: Object.freeze([0.82, 1.22]) });
 const pickFrom = (list, value) => list[Math.min(list.length - 1, Math.floor(value * list.length))];
 
 /** The name of a site: "The Patient Meadow". Fixed by the seed and the site. */
@@ -132,7 +134,10 @@ export function characterFor({ seed, node, step, role, ratio, focus }) {
     language_profile: { base_target_ratio: ratio, vocabulary_focus: [focus.vocabulary], grammar_focus: [focus.grammar] },
     defeat_condition: { type: 'comprehension_and_response', description: focus.vocabulary },
     saveable: false,
-    voice: { kind: pickFrom(kinds, draw(9)), pitch: Math.round((0.8 + 0.5 * draw(10)) * 100) / 100, rate: Math.round((0.9 + 0.2 * draw(11)) * 100) / 100 },
+    // Round 196: a point in the space of voices, each axis drawn on its own: `pick` is which of the device's voices of
+    // the language (speech.js takes them in name order), with the pitch and the rate wide enough to be heard apart
+    // and now and then to be funny. `kind` is what a client without `pick` falls back on.
+    voice: { kind: pickFrom(kinds, draw(9)), pick: Math.round(draw(14) * 1000) / 1000, pitch: Math.round((VOICE_SPACE.pitch[0] + (VOICE_SPACE.pitch[1] - VOICE_SPACE.pitch[0]) * draw(10)) * 100) / 100, rate: Math.round((VOICE_SPACE.rate[0] + (VOICE_SPACE.rate[1] - VOICE_SPACE.rate[0]) * draw(11)) * 100) / 100 },
     farewell: `${name.split(' ')[0]} ${pickFrom(FAREWELLS, draw(12))}`,
     // A colour for the placeholder figure, as a hue in [0, 1).
     hue: Math.round(draw(13) * 100) / 100,

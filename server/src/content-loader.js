@@ -149,6 +149,8 @@ const characterSchema = z.object({
     kind: z.enum(['female', 'male', 'creature', 'funny']),
     pitch: z.number().min(0).max(2).optional(),
     rate: z.number().min(0.5).max(2).optional(),
+    // Round 196: a point among the device's voices of the language (0 to 1, in name order), in place of the kind's.
+    pick: z.number().min(0).max(1).optional(),
   }).strict().optional(),
 }).strict();
 

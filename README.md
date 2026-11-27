@@ -279,6 +279,14 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   the reply box writes what the player says, in the target language, and the player sends it. Both run in the
   browser: no key, no cost and no extra call to the model. `node client/scripts/voice-check.mjs` checks the wiring in
   headless Chromium with recorders in place of the browser's speech.
+  From round 196 each road character's voice is a point of its own in (`pick`, `pitch`, `rate`): `pick` (0 to 1)
+  chooses among all the device's voices of the language in name order, pitch is drawn from 0.55 to 1.65 and rate
+  from 0.82 to 1.22, each on its own (`VOICE_SPACE` in `server/src/road/characters.js`). "Narrator reads aloud"
+  (round 196, on by default, with Character voices) has an English storyteller voice (`NARRATOR` in
+  `client/src/speech.js`: a British voice such as Daniel where there is one, slower and lower) read the narration:
+  the italic line before each reply, then the reply, and the travel passage on the way, which the next reply waits
+  for. Its words in the language are said in the language's voice (`client/src/narratorVoice.js`).
+  `node client/scripts/narrator-voice-check.mjs` checks it in headless Chromium with a fake speech engine.
   "Ambient music" (round 127, on by default) plays quiet generated chords with the Web Audio API
   (`client/src/ambience.js`): no audio file, never the same twice, lowered while a line is read aloud and silent
   while the microphone listens. It starts at the first tap. `node client/scripts/music-check.mjs` checks it in

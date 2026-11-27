@@ -5,6 +5,7 @@
 // beginner (round 129): whether answers are graded in beginner mode (a mistake is corrected for a heart). On unless switched off.
 // music (round 127): whether the ambient music plays. On unless switched off.
 // voices (round 126): whether the characters read their new lines aloud. On unless switched off.
+// narrator (round 196): whether the narrator reads the narration aloud too (with voices on). On unless switched off.
 // tiltLook (round 125): whether the phone's orientation turns the camera's look at a site. Off unless switched on.
 // rails (round 144): on The Journey 2, whether the way on is chosen for the player. On unless switched off.
 // light (round 153): whether answers go unchecked: the character works out what was meant and replies. Off unless switched on.
@@ -60,11 +61,11 @@ export const volumesOf = (volume) => Object.fromEntries(VOLUME_CHANNELS.map((cha
 export function loadDisplay(storage = browserStorage()) {
   let stored = null;
   try { stored = JSON.parse(storage?.getItem?.(DISPLAY_KEY) ?? 'null'); } catch { stored = null; }
-  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), immersionAuto: stored?.immersionAuto !== false, light: stored?.light === true, streamlined: stored?.streamlined !== false, follow: stored?.follow !== false, volume: volumesOf(stored?.volume) };
+  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, narrator: stored?.narrator !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), immersionAuto: stored?.immersionAuto !== false, light: stored?.light === true, streamlined: stored?.streamlined !== false, follow: stored?.follow !== false, volume: volumesOf(stored?.volume) };
 }
 
 export function saveDisplay(display, storage = browserStorage()) {
-  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), immersionAuto: display?.immersionAuto !== false, light: display?.light === true, streamlined: display?.streamlined !== false, follow: display?.follow !== false, volume: volumesOf(display?.volume) };
+  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, narrator: display?.narrator !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), immersionAuto: display?.immersionAuto !== false, light: display?.light === true, streamlined: display?.streamlined !== false, follow: display?.follow !== false, volume: volumesOf(display?.volume) };
   try { storage?.setItem?.(DISPLAY_KEY, JSON.stringify(value)); } catch { /* private mode: kept for this page only */ }
   return value;
 }

@@ -6,6 +6,11 @@
 // go over the kind's. A device with one voice of the language gives every character that voice, told apart by
 // pitch and rate.
 //
+// Round 196: a sheet's voice may instead carry `pick` (0 to 1): a point in the space of every system voice of the
+// language, taken in name order, so the road's drawn characters each land somewhere of their own in (voice, pitch,
+// rate). And the narrator has a voice of its own: an English storyteller (NARRATOR), slower and lower, which reads the
+// narration while the target-language words in it are said in the language's plain voice.
+//
 // Listening. `SpeechRecognition` (`webkitSpeechRecognition` in Safari) in the target language writes what it hears
 // into the reply box. The player sends it.
 
@@ -21,13 +26,17 @@ export const VOICE_KINDS = Object.freeze({
   funny: { pitch: 0.5, rate: 0.8, names: ['Grandpa', 'Grandma', 'Rocko', 'Reed'] },
 });
 const PLAIN = Object.freeze({ kind: null, pitch: 1, rate: 1, names: [] });
+// Round 196: the narrator. British voices first (Apple's Daniel and Arthur, Google's and Microsoft's UK men), then
+// any English voice; a little slower and lower than a character, as someone reading a story aloud.
+export const NARRATOR = Object.freeze({ tag: 'en-GB', kind: null, pitch: 0.9, rate: 0.88, names: Object.freeze(['Daniel', 'Arthur', 'Oliver', 'Malcolm', 'Google UK English Male', 'Ryan', 'George', 'Gordon', 'Lee', 'Aaron', 'Fred']) });
 const clamp = (value, lo, hi, fallback) => (typeof value === 'number' && Number.isFinite(value) ? Math.min(hi, Math.max(lo, value)) : fallback);
 
 /** The kind, pitch, rate and preferred voice names for a character sheet's `voice` (or for none). */
 export function voiceProfile(voice) {
   const kind = Object.hasOwn(VOICE_KINDS, voice?.kind) ? voice.kind : null;
   const base = kind ? VOICE_KINDS[kind] : PLAIN;
-  return { kind, pitch: clamp(voice?.pitch, 0, 2, base.pitch), rate: clamp(voice?.rate, 0.5, 2, base.rate), names: base.names };
+  const pick = typeof voice?.pick === 'number' && Number.isFinite(voice.pick) ? Math.min(0.999999, Math.max(0, voice.pick)) : null;
+  return { kind, pitch: clamp(voice?.pitch, 0, 2, base.pitch), rate: clamp(voice?.rate, 0.5, 2, base.rate), names: base.names, ...(pick === null ? {} : { pick }) };
 }
 
 const primary = (tag) => String(tag ?? '').split(/[-_]/)[0].toLowerCase();
@@ -46,6 +55,11 @@ const better = (voice) => /enhanced|premium|natural|neural/i.test(voice.name ?? 
 export function pickVoice(voices, tag, profile = PLAIN) {
   const candidates = ofLanguage(voices, tag);
   if (!candidates.length) return null;
+  // Round 196: a point in the voice space: every voice of the language in name order, the same on every visit.
+  if (typeof profile.pick === 'number') {
+    const ordered = [...candidates].sort((a, b) => `${a.name}|${a.lang}`.localeCompare(`${b.name}|${b.lang}`));
+    return ordered[Math.min(ordered.length - 1, Math.floor(profile.pick * ordered.length))];
+  }
   for (const name of profile.names ?? []) {
     const matches = candidates.filter((voice) => named(voice, name));
     if (matches.length) return matches.find(better) ?? matches[0];
@@ -67,6 +81,10 @@ export const spokenText = (text) => String(text ?? '').replace(/[*_~`#]+/g, '').
  *   supported                       the browser can speak
  *   available(tag)                  it has a voice of that language
  *   speak({ text, tag, voice })     stops the line before and reads this one; `voice` is the character sheet's
+ *   say(parts, { after })           round 196: reads parts one after another ({ text, tag, voice } or
+ *                                   { text, narrator: true }); stops what is being read first, unless `after` and a
+ *                                   passage is being narrated, which is then finished first
+ *   narrate(parts)                  round 196: says a narrator's passage (stops what is being read)
  *   stop()
  *   prime()                         call inside a tap: iOS Safari lets a page speak on its own only after that
  */
@@ -77,7 +95,25 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
   let primed = false;
   const voices = () => (supported ? synthesis.getVoices?.() ?? [] : []);
   let volume = 1;
-  return {
+  let passage = null; // round 196: the last utterance of the passage being narrated
+  const cancel = () => { passage = null; synthesis.cancel?.(); };
+  // One utterance: a character's line in its voice, or (narrator) a run of the narration in the narrator's.
+  const utter = ({ text, tag, voice, narrator = false } = {}) => {
+    const line = spokenText(text);
+    if (!line || !/[\p{L}\p{N}]/u.test(line)) return null;
+    const profile = narrator ? NARRATOR : voiceProfile(voice);
+    const lang = narrator ? NARRATOR.tag : tag;
+    const chosen = pickVoice(voices(), lang, profile);
+    const utterance = new Utterance(line);
+    // With no voice of the language the browser still gets the tag and may find one itself.
+    utterance.lang = chosen?.lang ?? lang ?? '';
+    if (chosen) utterance.voice = chosen;
+    utterance.pitch = profile.pitch;
+    utterance.rate = profile.rate;
+    utterance.volume = volume;
+    return utterance;
+  };
+  const api = {
     supported,
     /** Round 172: the loudness of each new line, 0 to 1 (the Voice volume times the Master volume). */
     get volume() { return volume; },
@@ -86,23 +122,30 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
     get speaking() { return supported && synthesis.speaking === true; },
     available: (tag) => ofLanguage(voices(), tag).length > 0,
     speak({ text, tag, voice } = {}) {
-      const line = spokenText(text);
-      if (!supported || !line) return null;
-      const profile = voiceProfile(voice);
-      const chosen = pickVoice(voices(), tag, profile);
-      const utterance = new Utterance(line);
-      // With no voice of the language the browser still gets the tag and may find one itself.
-      utterance.lang = chosen?.lang ?? tag ?? '';
-      if (chosen) utterance.voice = chosen;
-      utterance.pitch = profile.pitch;
-      utterance.rate = profile.rate;
-      utterance.volume = volume;
-      synthesis.cancel?.();
-      synthesis.speak(utterance);
-      primed = true;
-      return utterance;
+      return api.say([{ text, tag, voice }])[0] ?? null;
     },
-    stop() { if (supported) synthesis.cancel?.(); },
+    say(parts, { after = false } = {}) {
+      const utterances = supported ? (parts ?? []).map(utter).filter(Boolean) : [];
+      if (!utterances.length) return [];
+      if (!(after && passage)) cancel();
+      for (const utterance of utterances) synthesis.speak(utterance);
+      primed = true;
+      return utterances;
+    },
+    narrate(parts) {
+      const utterances = api.say(parts);
+      const last = utterances.at(-1);
+      if (last) {
+        passage = last;
+        const done = () => { if (passage === last) passage = null; };
+        last.onend = done;
+        last.onerror = done;
+      }
+      return utterances;
+    },
+    /** Round 196: true while a narrator's passage is still being read. */
+    get narrating() { return passage !== null; },
+    stop() { if (supported) cancel(); },
     prime() {
       if (!supported || primed) return;
       primed = true;
@@ -111,6 +154,7 @@ export function createSpeaker(scope = typeof window !== 'undefined' ? window : {
       synthesis.speak(utterance);
     },
   };
+  return api;
 }
 
 // What to tell the player when recognition ends without words, by SpeechRecognition's error codes.

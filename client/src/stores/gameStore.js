@@ -715,6 +715,8 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       // Round 125: tilt to look, another display preference.
       // Round 126: whether the characters read their lines aloud.
       setVoices: (on) => set({ display: saveDisplay({ ...get().display, voices: on !== false }, storage) }),
+      // Round 196: whether the narrator reads aloud too.
+      setNarrator: (on) => set({ display: saveDisplay({ ...get().display, narrator: on !== false }, storage) }),
       // Round 127: whether the ambient music plays.
       setMusic: (on) => set({ display: saveDisplay({ ...get().display, music: on !== false }, storage) }),
       // Round 172: one of the Audio volumes ('master', 'music', 'effects' or 'voice'), 0 to 1.

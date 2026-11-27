@@ -5,6 +5,7 @@ import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 import { ROAD_NAME } from '../atlas.js';
 import Narration, { hasNarration } from './Narration.jsx';
+import { narratorOn, useReadPassage } from '../narratorVoice.js';
 import { GuideNote } from './Guidebook.jsx';
 import OdysseyChart from './OdysseyChart.jsx';
 
@@ -185,6 +186,7 @@ export function HubCard({ state }) {
 export function RoadCaption({ state }) {
   const { road, roadArrived, encounterLoading, roadError } = state;
   const waiting = road?.current;
+  useReadPassage(road?.narration, road?.at, { on: narratorOn(state.display), tag: state.language?.tag }); // round 196
   if (roadError) return <section className="caption caption-problem" role="alert"><span>{roadError}</span></section>;
   const text = roadArrived && encounterLoading ? `${firstName(waiting?.character)} is getting ready to talk…` : road?.here?.dungeon ? `Entering ${road.here.dungeon.name}…` : `On the way to ${road?.here?.name ?? 'the next site'}…`;
   // Round 156: while the camera walks, the narrator tells the way taken. Round 166: the passage stays until the

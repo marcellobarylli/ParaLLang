@@ -11,7 +11,7 @@ import { JsonLearningStorage } from '../src/learning-storage.js';
 import { TERRAIN, createTerrain } from '../src/road/terrain.js';
 import { GRAPH, createGraph, parseNodeId } from '../src/road/graph.js';
 import { PACING, composeCheckpoint, composeReview, emptyProgress, plan, position, record, scoreOf, successRate } from '../src/road/pacing.js';
-import { characterFor, placeName } from '../src/road/characters.js';
+import { VOICE_SPACE, characterFor, placeName } from '../src/road/characters.js';
 import { buildRoadDefinition } from '../src/road/encounters.js';
 import { frontierOf, freshRoad, offersFor } from '../src/road/service.js';
 import { api, createRuntime } from './helpers.js';
@@ -475,4 +475,30 @@ test('route is the shortest walk along the ways between two sites, and every ste
   assert.deepEqual(graph.route(start, graph.neighbours(start)[0]).length, 2, 'a neighbour is one way off, unless a shorter walk goes round');
   assert.equal(graph.route(start, '999999,999999', { limit: 50 }), null, 'a walk not found within the limit');
   assert.equal(graph.route('nonsense', start), null);
+});
+
+// Round 196: every road character is a point of its own in the space of voices (which voice, pitch, rate).
+test('the road\'s characters are spread over the space of voices, each axis on its own', () => {
+  const unit = loadGameContent({ language: 'it' }).curriculum.units[0];
+  const voices = [];
+  for (let i = 0; i < 20; i += 1) {
+    for (let j = 0; j < 10; j += 1) voices.push(characterFor({ seed: 4242, node: { i, j }, step: 0, role: unit.roles[0], ratio: 0.2, focus: { vocabulary: 'x', grammar: 'y' } }).voice);
+  }
+  for (const voice of voices) {
+    assert.ok(voice.pick >= 0 && voice.pick <= 1, `pick ${voice.pick}`);
+    assert.ok(voice.pitch >= VOICE_SPACE.pitch[0] && voice.pitch <= VOICE_SPACE.pitch[1], `pitch ${voice.pitch}`);
+    assert.ok(voice.rate >= VOICE_SPACE.rate[0] && voice.rate <= VOICE_SPACE.rate[1], `rate ${voice.rate}`);
+  }
+  // Spread: each axis reaches both ends of its range, and the points are nearly all different.
+  const spread = (values, [lo, hi]) => (Math.max(...values) - Math.min(...values)) / (hi - lo);
+  assert.ok(spread(voices.map((v) => v.pick), [0, 1]) > 0.9);
+  assert.ok(spread(voices.map((v) => v.pitch), VOICE_SPACE.pitch) > 0.9);
+  assert.ok(spread(voices.map((v) => v.rate), VOICE_SPACE.rate) > 0.9);
+  assert.ok(new Set(voices.map((v) => `${v.pick}|${v.pitch}|${v.rate}`)).size >= voices.length * 0.98);
+  // The axes are drawn apart: a high pitch does not bring a fast rate with it.
+  const mean = (values) => values.reduce((a, b) => a + b, 0) / values.length;
+  const [mp, mr] = [mean(voices.map((v) => v.pitch)), mean(voices.map((v) => v.rate))];
+  const cov = mean(voices.map((v) => (v.pitch - mp) * (v.rate - mr)));
+  const sd = (values, m) => Math.sqrt(mean(values.map((v) => (v - m) ** 2)));
+  assert.ok(Math.abs(cov / (sd(voices.map((v) => v.pitch), mp) * sd(voices.map((v) => v.rate), mr))) < 0.25);
 });

@@ -7,6 +7,7 @@ import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
 import SheetHandle from './SheetHandle.jsx';
 import { browserSpeech } from '../speech.js';
+import { narrativeParts, narratorOn, useReadPassage } from '../narratorVoice.js';
 import { browserAmbience } from '../ambience.js';
 import { TITLE_MUSIC, browserTitleMusic } from '../titleMusic.js';
 import { volumesOf } from '../display.js';
@@ -336,6 +337,7 @@ function SiteCard({ state, sites, site }) {
 
 function TravelCaption({ state, site }) {
   const { phase, cameraArrived, siteError, arrival } = state;
+  useReadPassage(state.narration, `${state.dungeon?.id}:${site?.id ?? site?.name}`, { on: narratorOn(state.display), tag: state.language?.tag }); // round 196
   if (siteError) {
     return (
       <section className="caption caption-problem" role="alert">
@@ -386,9 +388,14 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   // Round 184: a target-language word of the narration is said in the language's plain voice when tapped.
   const sayWord = (word) => speaker.speak({ text: word, tag: language?.tag });
   const speakLine = (message) => speaker.speak({ text: message.dialogue.native, tag: language?.tag, voice: encounter?.character?.voice });
+  // Round 196: a new line comes with its narrative read first, by the narrator (unless switched off), and waits for a
+  // travel passage still being read.
+  const narrating = narratorOn(state.display);
   useEffect(() => {
-    if (voicesOn && lastLine && speaker.supported) speakLine(lastLine);
-    else if (!voicesOn) speaker.stop();
+    if (voicesOn && lastLine && speaker.supported) {
+      const told = narrating ? narrativeParts(lastLine.narrative, lastLine.narrativeWords, language?.tag) : [];
+      speaker.say([...told, { text: lastLine.dialogue.native, tag: language?.tag, voice: encounter?.character?.voice }], { after: true });
+    } else if (!voicesOn) speaker.stop();
   }, [voicesOn, lineKey, language?.tag]);
   useEffect(() => () => speaker.stop(), [speaker]);
   const resolved = encounter?.state === 'resolved';
@@ -766,7 +773,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}
         volume={volume} onVolume={(channel, value) => { state.setVolume(channel, value); if (value > 0) ambience.start(); }}
-        voices={state.display?.voices !== false} onVoices={state.setVoices} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }}
+        voices={state.display?.voices !== false} onVoices={state.setVoices} narrator={state.display?.narrator !== false} onNarrator={state.setNarrator} speechSupport={{ speak: speech.speaker.supported, listen: speech.listener.supported }}
         savedAt={state.savedAt} onExportCopy={state.exportCopy} onImportCopy={state.importCopy} saveStore={state.saveStore} />}
     </div>
   );
