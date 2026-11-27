@@ -2,30 +2,24 @@
 
 ## Question
 
-What is the lightest change that puts the world into a conversation's second line, made of that conversation's
-exercise, and nowhere else?
+Can the microphone stay on through pauses until it is tapped off, and switch language without switching off?
 
 ## Finding
 
-One sentence of turn data on the reply to the player's first answer, and two lines of the world block changed. In
-tests the road conversation's narrator calls carry `world_moment` on the second call only: greeting no, first answer
-yes, second answer no.
+Yes, with a fake listener: a stretch that ends on a silence is followed by a new one, the language button starts the
+next stretch in the other language with the microphone still on, and a tap, a send or a refusal switches it off.
+Not tried on a phone.
 
 ## Results
 
 | Check | Result |
 |---|---|
-| Server tests | 614 of 614 (612 before; 2 new, 1 changed) |
-| Gerald's pinned prompts | unchanged |
-| A live model's second line | not checked |
+| Client tests | 332 of 332 (1 new, 1 changed) |
+| Client build | passes |
+| Tried on a phone | not checked |
 
 ## Claim boundary
 
-- Scripted provider only. Whether the model's remark really comes out of the exercise's subject, and stays clear of the
-  noticed line's wording, needs a live conversation on the hosted server.
-- The A1 conversation rules ask for short lines on the conversation's words; the remark is one short statement, but
-  how it sits with those rules at A1 was not seen live.
-
-## Open items
-
-- The owner plays two or three road conversations and reads the second line of each.
+- Whether iOS Safari lets a page start a new recognition from the end of the last one, without a tap, was not
+  checked. If it refuses, the refusal is said under the box and the microphone switches off, as before.
+- Words spoken in the moment between two stretches may be lost.

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { LISTEN_PROBLEMS } from '../speech.js';
 
 // Round 126: with a `listener` (speech.js) the bar has a microphone. A tap starts it, what it hears is written into
-// the box after what was already there, and a second tap or a pause ends it. The player sends the text: a misheard
+// the box after what was already there, and a second tap ends it (round 188: a pause no longer does). The player sends the text: a misheard
 // word would otherwise be graded. `onListen` runs when listening starts (the screen stops the character's voice).
 // Round 129 (amendment): the browser listens in one language at a time, so a small button beside the microphone
 // switches between the target language and the player's own. Each stretch of speech is added to the box.
@@ -10,11 +10,20 @@ const OWN_LANGUAGE = Object.freeze({ code: 'en', name: 'English', tag: 'en-US' }
 
 export default function InputBar({ value, onChange, onSend, disabled, loading, name = 'them', listener = null, language = null, ownLanguage = OWN_LANGUAGE, onListen = () => {} }) {
   const [own, setOwn] = useState(false); // listening in the player's own language
-  const [listening, setListening] = useState(false);
+  const [listening, setListening] = useState(false); // the microphone is switched on
   const [problem, setProblem] = useState(null);
   const listenerRef = useRef(listener);
   listenerRef.current = listener;
-  useEffect(() => () => listenerRef.current?.stop(), []);
+  // Round 188: the microphone stays on until it is tapped off. The browser ends each stretch of listening after a
+  // silence, so a new one starts at once while it is on; the language switch ends the stretch and the next one is in
+  // the other language. These refs are read when a stretch ends, after the render that set them.
+  const onRef = useRef(false);
+  const ownRef = useRef(own);
+  ownRef.current = own;
+  const valueRef = useRef(value);
+  valueRef.current = value;
+  const quickRef = useRef(0); // stretches in a row that ended at once with nothing heard
+  useEffect(() => () => { onRef.current = false; listenerRef.current?.stop(); }, []);
   // The box is as tall as its text, up to twelve lines.
   const boxRef = useRef(null);
   useEffect(() => {
@@ -26,27 +35,64 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, n
     box.style.height = box.scrollHeight ? `${Math.min(box.scrollHeight + edge, 12 * 22 + edge)}px` : '';
   }, [value]);
   const canListen = Boolean(listener?.supported);
+  const switchOff = () => {
+    onRef.current = false;
+    setListening(false);
+    listener?.stop();
+  };
   const submit = (event) => {
     event.preventDefault();
     if (disabled || !value.trim()) return;
-    listener?.stop();
+    // Sending switches the microphone off: it would otherwise write the character's spoken answer into the box.
+    switchOff();
     onSend(value);
   };
-  const heard = own ? ownLanguage : (language ?? { name: 'the target language', code: '··' });
+  const languageOf = (isOwn) => (isOwn ? ownLanguage : (language ?? { name: 'the target language', code: '··' }));
+  const heard = languageOf(own);
   const other = own ? (language ?? { name: 'the target language' }) : ownLanguage;
   const languageName = heard.name;
   const code = String(heard.code ?? heard.tag ?? '').slice(0, 2).toUpperCase();
+  // One stretch of listening; what it hears goes after what the box held when it began.
+  const listen = () => {
+    const current = listenerRef.current;
+    if (!current || !onRef.current) return;
+    const before = valueRef.current.trim();
+    const began = Date.now();
+    let said = false;
+    const started = current.start({
+      tag: languageOf(ownRef.current).tag,
+      onText: (text) => { said = true; onChange(before ? `${before} ${text}` : text); },
+      onEnd: (reason) => {
+        if (!onRef.current) return;
+        quickRef.current = !said && Date.now() - began < 1000 ? quickRef.current + 1 : 0;
+        // A refusal, or a browser that ends every stretch at once, switches it off.
+        if (reason || quickRef.current >= 3) {
+          onRef.current = false;
+          setListening(false);
+          setProblem(reason ?? 'failed');
+          return;
+        }
+        listen();
+      },
+    });
+    if (!started) { onRef.current = false; setListening(false); }
+  };
   const toggle = () => {
-    if (listening) { listener.stop(); return; }
-    const before = value.trim();
+    if (onRef.current) { switchOff(); return; }
     setProblem(null);
     onListen();
-    const started = listener.start({
-      tag: heard.tag,
-      onText: (text) => onChange(before ? `${before} ${text}` : text),
-      onEnd: (reason) => { setListening(false); setProblem(reason); },
-    });
-    if (started) setListening(true);
+    onRef.current = true;
+    quickRef.current = 0;
+    setListening(true);
+    listen();
+  };
+  // A bar that is switched off (the answer is on its way) switches the microphone off too.
+  useEffect(() => { if (disabled && onRef.current) switchOff(); }, [disabled]); // eslint-disable-line react-hooks/exhaustive-deps
+  const switchLanguage = () => {
+    ownRef.current = !own;
+    setOwn(!own);
+    // While it is on, the stretch in the old language ends and the next one starts in the new.
+    if (onRef.current) listenerRef.current?.stop();
   };
   return (
     <>
@@ -68,7 +114,7 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, n
           enterKeyHint="send"
         />
         {canListen && (
-          <button type="button" className="icon-button listen-language" onClick={() => setOwn(!own)} disabled={disabled || listening}
+          <button type="button" className="icon-button listen-language" onClick={switchLanguage} disabled={disabled}
             aria-label={`Listening in ${heard.name}. Switch to ${other.name}`} title={`Listening in ${heard.name}. Switch to ${other.name}`}>{code}</button>
         )}
         {canListen && (

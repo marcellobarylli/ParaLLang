@@ -146,7 +146,7 @@ test('a generated character of the road: an ordinary observation at the A levels
   assert.ok(pools.plain.some((line) => prompt.includes(line)));
 });
 
-// Round 188: the world shows once, in the reply to the player's first answer, made of what the conversation practises,
+// Round 189: the world shows once, in the reply to the player's first answer, made of what the conversation practises,
 // so that the same few noticed lines do not come back as the same remark in every conversation.
 test('only the reply to the first answer carries the world moment, and only when the character has a world', () => {
   const world = worldFor(it.knowledge, 'it', it.character.world.region, it.character.world.noticed);
