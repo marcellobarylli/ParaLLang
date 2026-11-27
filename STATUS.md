@@ -39,7 +39,7 @@ The entry point for agents: the current state, how the project is logged, and th
 On the road a legacy dungeon is entered on foot from outside its gate, and its gate encounters are walked to from one
 another along its paths at eye height, through the gate passages, as the dungeon mode did (no drop from the sky). The
 road's glide no longer rises over the country: it keeps eye height over the ground along the same path, with a low,
-long swell (0.14 m every 22 m). Tested in Node; not seen in a browser. **Pushed to the session branch; not merged.**
+long swell (0.14 m every 22 m). Tested in Node; not seen in a browser. **Merged to `main` and deployed** on the owner's word.
 [Architecture](docs/rounds/191/architecture.md), [findings](docs/rounds/191/findings.md).
 
 ## Addendum 2026-11-27: round 190, the practice box shows five lines, and a reply can be followed

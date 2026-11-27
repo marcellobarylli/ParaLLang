@@ -9,3 +9,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 3 | 20:45 approx. | 20:48:25 | decision | Claude | Entry on foot from the avenue; walks between gate sites; the road's glide loses its lift and gains a low swell | `../architecture.md` |
 | 4 | 20:48 approx. | 20:48:25 | run | Claude | Client 335 pass (2 new, 1 changed), build passes | `../findings.md` |
 | 5 | 20:48:25 | 20:48:25 | closed | Claude | Records, status addendum; pushed to the session branch, not merged | `../architecture.md` |
+| 6 | 20:49:16 | 20:49:16 | run | Claude | Merged to `main` and pushed on the owner's word ("Merge and deploy") | `../architecture.md` |

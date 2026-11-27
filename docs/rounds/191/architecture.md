@@ -35,4 +35,4 @@ commit; nothing here is frozen.
 
 ## Status
 
-Built and tested in Node; not seen in a browser or on a phone. Pushed to the session branch; not merged.
+Built and tested in Node; not seen in a browser or on a phone. Merged to `main` and pushed on the owner's word ("Merge and deploy"); GitHub Pages deploys `main`.
