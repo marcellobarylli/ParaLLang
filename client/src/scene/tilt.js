@@ -102,6 +102,59 @@ export function createTilt(options = {}) {
   };
 }
 
+// Round 199: the road's free look. The phone is a window on the world: the way its back points is the way the camera
+// looks, turned from where it pointed on arrival. Sideways it turns up to FREE_LOOK.maxYaw either way (270 degrees in
+// all, nearly the whole way round); up and down it goes as far as the phone does, to straight up and straight down.
+// It does not drift back to the middle while held (the dungeons' gentle tilt does), and it reads the direction, not
+// the small-angle tilt, so large turns compose properly whichever way the phone is held. Signs as the tilt's: turning
+// the phone left looks left, its top towards the player (its back up) looks up.
+export const FREE_LOOK = Object.freeze({
+  maxYaw: 135 * RAD, // to either side
+  maxPitch: 90 * RAD, // up or down, from the way the phone pointed on arrival (the road's camera makes 90 straight up or down)
+  steep: 80 * RAD, // past this the phone's heading means little (it points at the sky or the ground): the yaw is kept
+});
+
+// The direction out of the phone's back in the Earth frame (x east, y north, z up), for a W3C orientation quaternion.
+export function backDirection(q) {
+  const [, x, y, z] = multiply(multiply(q, [0, 0, 0, -1]), conjugate(q));
+  return [x, y, z];
+}
+
+const wrap = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
+
+/** The road's free look: the same interface as createTilt (orient, look, active, recentre). */
+export function createFreeLook(options = {}) {
+  const config = { ...FREE_LOOK, ...options };
+  let baseline = null; // { heading, elevation } of the phone's back on arrival
+  let look = { yaw: 0, pitch: 0 };
+  return {
+    get look() { return { ...look }; },
+    get active() { return baseline !== null; },
+    recentre() { baseline = null; look = { yaw: 0, pitch: 0 }; },
+    orient(angles) {
+      const { beta, gamma } = angles ?? {};
+      if (!Number.isFinite(beta) || !Number.isFinite(gamma)) return look;
+      const [x, y, z] = backDirection(orientationQuaternion({ alpha: Number.isFinite(angles.alpha) ? angles.alpha : 0, beta, gamma }));
+      const elevation = Math.asin(clamp(z, -1, 1));
+      const heading = Math.atan2(x, y); // clockwise from north
+      if (!baseline) baseline = { heading, elevation };
+      const pitch = clamp(elevation - baseline.elevation, -config.maxPitch, config.maxPitch);
+      let yaw = look.yaw;
+      if (Math.abs(elevation) < config.steep) {
+        yaw = wrap(baseline.heading - heading); // turning left lowers the heading and looks left
+        // Past the range the baseline is dragged along, so turning back answers at once.
+        if (Math.abs(yaw) > config.maxYaw) {
+          const over = yaw - Math.sign(yaw) * config.maxYaw;
+          baseline = { ...baseline, heading: wrap(baseline.heading - over) };
+          yaw = Math.sign(yaw) * config.maxYaw;
+        }
+      }
+      look = { yaw, pitch };
+      return look;
+    },
+  };
+}
+
 // The browser. iOS Safari hands out orientation events only after the page has asked from inside a tap.
 
 /** True where the browser wants to be asked (iOS Safari 13 and later). */

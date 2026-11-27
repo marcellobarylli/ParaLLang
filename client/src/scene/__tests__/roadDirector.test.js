@@ -161,13 +161,23 @@ test('at a hold a tilt turns the look, not the place; on a glide it does nothing
   const director = make();
   director.stand(start);
   const still = run(director, 2);
-  director.look({ yaw: 1, pitch: 1 }); // more than the range: clamped
-  const looked = run(director, 2, (pose, previous) => expect(distance(pose.target, previous.target)).toBeLessThan(0.5)); // eased, no jump
+  director.look({ yaw: 4, pitch: 0.3 }); // more than the range sideways: clamped (round 199: 135 degrees)
+  run(director, 1 / 60);
+  expect(director.looked.yaw).toBeLessThan(LOOK_MAX.yaw * 0.5); // eased: not there in one frame
+  run(director, 0.3);
+  expect(director.looked.yaw).toBeGreaterThan(LOOK_MAX.yaw * 0.98); // but within a fraction of a second, as a window
+  const looked = run(director, 2);
   expect(director.looked.yaw).toBeCloseTo(LOOK_MAX.yaw, 2);
   expect(distance(looked.position, still.position)).toBeLessThan(0.5); // only the hold's own sway
   const sight = (pose) => Math.atan2(pose.target[0] - pose.position[0], pose.target[2] - pose.position[2]);
   const turn = Math.atan2(Math.sin(sight(looked) - sight(still)), Math.cos(sight(looked) - sight(still)));
   expect(Math.abs(turn - LOOK_MAX.yaw)).toBeLessThan(0.12);
+  // Round 199: up as far as it goes, the line of sight stops just short of straight up.
+  director.look({ yaw: 0, pitch: 3 });
+  const up = run(director, 1);
+  const rise = (up.target[1] - up.position[1]) / distance(up.target, up.position);
+  expect(rise).toBeGreaterThan(0.99);
+  expect(rise).toBeLessThan(1);
   expect(looked.target[1] - looked.position[1]).toBeGreaterThan(still.target[1] - still.position[1]); // and up
   director.travel(graph.pathPoints(start.id, nextId), next);
   run(director, ROAD_CAMERA.blend + 0.5);
