@@ -17,7 +17,7 @@ test('a clip is asked of the text-to-speech model with the voice, wrapped as a W
   assert.equal(calls[0].url, `https://generativelanguage.googleapis.com/v1beta/models/${NARRATOR_MODEL}:generateContent`);
   assert.equal(calls[0].key, 'server-key');
   assert.deepEqual(calls[0].body.generationConfig, { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: NARRATOR_VOICE } } } });
-  assert.match(calls[0].body.contents[0].parts[0].text, /storyteller[^:]*: You stop at the cart\.$/);
+  assert.match(calls[0].body.contents[0].parts[0].text, /#### TRANSCRIPT\nYou stop at the cart\.$/);
   assert.equal(clip.type, 'audio/wav');
   assert.deepEqual(clip.audio, wavOf(pcm));
   assert.equal(clip.audio.subarray(0, 4).toString(), 'RIFF');

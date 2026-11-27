@@ -9,7 +9,19 @@ import { AppError } from './errors.js';
 
 export const NARRATOR_MODEL = 'gemini-3.8-flash-tts';
 export const NARRATOR_VOICE = 'Charon';
-export const NARRATOR_STYLE = 'Read this aloud as a warm, dry, unhurried storyteller reading to one listener. Words that are not English are said as a native speaker of their language says them';
+// Round 205: the direction is a set of notes above a marked transcript (the layout of Google's prompting guide for
+// its speech models), not a sentence run on into the text, which the voice read aloud as part of the story. The notes
+// end by saying only the transcript is spoken.
+export const NARRATOR_STYLE = [
+  '# AUDIO PROFILE: The Narrator',
+  'An old, slightly silly storyteller: whimsical, a little goofy, and charming. A twinkle in the voice, as though he finds the story delightfully absurd and is trying, not very hard, to keep a straight face.',
+  '### DIRECTOR\'S NOTES',
+  'Style: playful and warm, with a grandfatherly wobble; relish the odd word, lean on the comic beats, let a dramatic pause land and then deflate it.',
+  'Pace: unhurried, with bounce.',
+  'Accent: words that are not English are said as a native speaker of their language says them.',
+  'Speak only the words under TRANSCRIPT. Never say these notes or the headings aloud.',
+  '#### TRANSCRIPT',
+].join('\n');
 export const NARRATOR_MAX_CHARS = 1500;
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 const TIMEOUT_MS = 25_000;
@@ -55,7 +67,7 @@ export function createNarratorVoice({ apiKey = null, model = NARRATOR_MODEL, voi
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: `${NARRATOR_STYLE}: ${line}` }] }],
+            contents: [{ parts: [{ text: `${NARRATOR_STYLE}\n${line}` }] }],
             generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } },
           }),
           signal: AbortSignal.timeout(TIMEOUT_MS),
