@@ -154,7 +154,11 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     for (const site of road.frontier) lay(site.from, site.id);
   }
 
+  // Round 194: where the phone's tilt comes from (setLook), or null, as the dungeon's host has it.
+  let lookSource = null;
+
   function show({ at: siteId, from = null, mode = 'stand' }) {
+    lookSource?.recentre?.(); // the way the phone is held on arriving is "straight ahead"
     const node = graph.node(siteId);
     if (!node) return;
     const previous = from ? graph.node(from) : null;
@@ -179,6 +183,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     applyView(dt);
     if (!talking && director.arrived && director.mode === 'hold' && !reducedMotion) director.wander();
     if (talking && director.mode === 'wander') director.face();
+    director.look(lookSource?.look); // round 194: tilt to look, at a hold
     const pose = director.update(dt);
     camera.position.set(...pose.position);
     camera.lookAt(...pose.target);
@@ -252,6 +257,8 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     setRoad,
     show,
     setTalking(on) { talking = Boolean(on); },
+    /** Round 194: the source of the tilt (tilt.js's createTilt), or null. */
+    setLook(source) { lookSource = source ?? null; },
     /** Round 175: the title screen, far over the site `siteId` (or the landscape's start). */
     setTitle(siteId) {
       const node = graph.node(siteId) ?? graph.node(graph.start);

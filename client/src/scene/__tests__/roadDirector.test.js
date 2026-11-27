@@ -153,3 +153,28 @@ test('a glide on flat ground stays at eye height and bobs in a long, low swell',
   expect(Math.max(...middle) - Math.min(...middle)).toBeGreaterThan(ROAD_CAMERA.bob.height * 0.8); // it does bob
   expect(Math.abs(heights.at(-1) - ROAD_CAMERA.eye)).toBeLessThan(0.02);
 });
+
+// Round 194: tilt to look on the road. At a hold the tilt turns the line of sight and leaves the position; it eases
+// in, and a glide is not turned.
+test('at a hold a tilt turns the look, not the place; on a glide it does nothing', async () => {
+  const { LOOK_MAX } = await import('../roadDirector.js');
+  const director = make();
+  director.stand(start);
+  const still = run(director, 2);
+  director.look({ yaw: 1, pitch: 1 }); // more than the range: clamped
+  const looked = run(director, 2, (pose, previous) => expect(distance(pose.target, previous.target)).toBeLessThan(0.5)); // eased, no jump
+  expect(director.looked.yaw).toBeCloseTo(LOOK_MAX.yaw, 2);
+  expect(distance(looked.position, still.position)).toBeLessThan(0.5); // only the hold's own sway
+  const sight = (pose) => Math.atan2(pose.target[0] - pose.position[0], pose.target[2] - pose.position[2]);
+  const turn = Math.atan2(Math.sin(sight(looked) - sight(still)), Math.cos(sight(looked) - sight(still)));
+  expect(Math.abs(turn - LOOK_MAX.yaw)).toBeLessThan(0.12);
+  expect(looked.target[1] - looked.position[1]).toBeGreaterThan(still.target[1] - still.position[1]); // and up
+  director.travel(graph.pathPoints(start.id, nextId), next);
+  run(director, ROAD_CAMERA.blend + 0.5);
+  expect(director.mode).toBe('travel');
+  const plain = make();
+  plain.stand(start);
+  plain.travel(graph.pathPoints(start.id, nextId), next);
+  run(plain, ROAD_CAMERA.blend + 0.5);
+  expect(distance(director.pose.target, plain.pose.target)).toBeLessThan(0.01);
+});

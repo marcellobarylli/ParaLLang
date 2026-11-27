@@ -690,7 +690,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
         : onRoad || atTitle
         ? <RoadView models={state.display?.treeModels !== false} road={state.road} seed={state.titleSeed} title={titleSite} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
-          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} />
+          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
 

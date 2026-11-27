@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 194, tilt to look on the road
+
+"Tilt to look" now works in conversations on the road, as it does in the dungeons: tilting the phone turns the view
+a little while a character is talked to. Tested in Node and in Chromium with a fake tilt; not tried on a phone.
+**Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/194/architecture.md), [findings](docs/rounds/194/findings.md).
+
 ## Addendum 2026-11-27: round 193, no warp under the player
 
 The ground just under the camera no longer smears and swims as it moves: textures are mapped perspective-correctly

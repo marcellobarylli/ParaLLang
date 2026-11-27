@@ -53,6 +53,21 @@ const lerp3 = (a, b, u) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2],
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 export const ease = (u) => (u <= 0 ? 0 : u >= 1 ? 1 : u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2);
 const BEAT = Object.freeze({ pass: 0.05, resolved: 0.05, fail: -0.05 });
+// Round 194: tilt to look, as in the dungeons (round 125): at a hold the phone's tilt turns the line of sight, the
+// position stays. `LOOK_MAX` bounds the turn (radians; tilt.js keeps inside it), and it eases in and out.
+export const LOOK_MAX = Object.freeze({ yaw: 0.25, pitch: 0.18 });
+const LOOK_TAU = 0.12; // seconds, the ease to a new look
+const LOOK_IN = 0.5; // seconds, the look fades in over the start of a hold
+
+// The pose with its line of sight turned by `yaw` (to the left) and `pitch` (up), as director.js turns it.
+function turned({ position, target }, yaw, pitch) {
+  if (!yaw && !pitch) return { position, target };
+  const d = [target[0] - position[0], target[1] - position[1], target[2] - position[2]];
+  const distance = Math.hypot(...d) || 1e-6;
+  const [y, p] = [Math.atan2(d[0], d[2]) + yaw, clamp(Math.asin(clamp(d[1] / distance, -1, 1)) + pitch, -1.4, 1.4)];
+  const c = Math.cos(p);
+  return { position, target: [position[0] + Math.sin(y) * c * distance, position[1] + Math.sin(p) * distance, position[2] + Math.cos(y) * c * distance] };
+}
 
 // A polyline with its running lengths: at(s) is the point s metres along it.
 function measured(points) {
@@ -112,6 +127,7 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
   let engage = 0;
   let engageTarget = 0;
   let beat = { kind: null, t: 1 };
+  const tilt = { look: { yaw: 0, pitch: 0 }, looked: { yaw: 0, pitch: 0 } }; // round 194
   let arrived = true;
   let pose = { position: [0, 30, 30], target: [0, 0, 0] };
   let titleAt = { distance: ROAD_CAMERA.title.distance[0], angle: 0 }; // round 175
@@ -254,11 +270,19 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
     skip() { if (mode === 'arrive' || mode === 'travel' || mode === 'descend' || mode === 'title') { mode = 'hold'; t = 0; start = null; } arrived = true; pose = site ? (mode === 'wander' ? wanderPose(0) : holdPose(0)) : pose; },
 
     engage(level) { engageTarget = clamp(level, 0, 1) * ROAD_CAMERA.engageMax; },
+    /** Round 194: the turn of the line of sight a tilt asks for, in radians: `yaw` to the left, `pitch` up. It shapes a hold. */
+    look({ yaw = 0, pitch = 0 } = {}) {
+      tilt.look = { yaw: clamp(Number(yaw) || 0, -LOOK_MAX.yaw, LOOK_MAX.yaw), pitch: clamp(Number(pitch) || 0, -LOOK_MAX.pitch, LOOK_MAX.pitch) };
+    },
+    get looked() { return { ...tilt.looked }; },
     beat(kind) { beat = { kind, t: 0 }; },
 
     update(dt) {
       if (!site) return pose;
       t += dt;
+      const lookEase = 1 - Math.exp(-dt / LOOK_TAU);
+      tilt.looked.yaw += (tilt.look.yaw - tilt.looked.yaw) * lookEase;
+      tilt.looked.pitch += (tilt.look.pitch - tilt.looked.pitch) * lookEase;
       engage += (engageTarget - engage) * (1 - Math.exp(-dt / 0.7));
       if (beat.t < 1) beat.t = Math.min(1, beat.t + dt / 0.9);
       if (mode === 'title') {
@@ -286,6 +310,11 @@ export function createRoadDirector({ heightAt, waterY = 0 }) {
         pose = start && join < 1 ? { position: lerp3(start.position, steady.position, join), target: lerp3(start.target, steady.target, join) } : steady;
         if (join >= 1) start = null;
         arrived = true;
+      }
+      // Round 194: at a hold the tilt turns the look, fading in from the hold's start so it joins without a jump.
+      if (mode === 'hold') {
+        const weight = 1 - Math.exp(-t / LOOK_IN);
+        pose = turned(pose, tilt.looked.yaw * weight, tilt.looked.pitch * weight);
       }
       return pose;
     },
