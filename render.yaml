@@ -32,7 +32,7 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       # Round 202: with GEMINI_API_KEY the narrator reads in a hosted voice (Gemini text-to-speech); NARRATOR_TTS_MODEL
-      # (default gemini-3.8-flash-tts) and NARRATOR_VOICE (default Puck) may be set in the dashboard. GET /api/health
+      # (default gemini-3.8-flash-tts) and NARRATOR_VOICE (default Charon; the player can pick Gacrux or Algenib in Settings) may be set in the dashboard. GET /api/health
       # says under `narrator` whether it has a key and how its last call went.
       # Round 183: friends without a Gemini key of their own play on the Claude API with this key (a Console organization
       # that receives the owner's monthly Max API credit); Gemini is tried when a Claude call fails. FRIENDS_CLAUDE_MODEL

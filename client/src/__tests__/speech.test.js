@@ -349,3 +349,15 @@ describe('the hosted narrator', () => {
     expect(await clips('x'.repeat(1501))).toBeNull();
   });
 });
+
+// Round 208: the narrator's voice picked in Settings goes with the text, and a clip is kept by voice and text.
+test('the narrator\'s picked voice is sent, and each voice has its own clips', async () => {
+  const calls = [];
+  let picked = 'Algenib';
+  const clips = createNarratorClips({ getSettings: () => ({ serverUrl: 'https://s', token: 't' }), getGeminiKey: () => null, getVoice: () => picked, fetchImpl: async (url, init) => { calls.push(JSON.parse(init.body)); return { ok: true, status: 200, blob: async () => ({ size: 9 }) }; } });
+  await clips('One.');
+  await clips('One.');
+  picked = 'Gacrux';
+  await clips('One.');
+  expect(calls).toEqual([{ text: 'One.', voice: 'Algenib' }, { text: 'One.', voice: 'Gacrux' }]);
+});

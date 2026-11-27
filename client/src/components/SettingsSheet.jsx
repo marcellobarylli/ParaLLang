@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IMMERSION, PANEL_OPACITY, VOLUME, clampImmersion, clampPanelOpacity, volumesOf } from '../display.js';
+import { IMMERSION, NARRATOR_VOICES, PANEL_OPACITY, VOLUME, clampImmersion, clampPanelOpacity, volumesOf } from '../display.js';
 import { BUILD_ID } from '../build.js';
 import { requestTiltPermission } from '../scene/tilt.js';
 import { describeViewport, latestBuild, measureViewport, reloadPage } from '../viewport.js';
@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, waitGame = false, onWaitGame = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, waitGame = false, onWaitGame = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, narratorVoice = NARRATOR_VOICES[0].id, onNarratorVoice = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -132,6 +132,15 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                       <span>Narrator reads aloud</span>
                     </label>
                     <small>A storyteller reads the narration in English before each line and on the way; its words in the language are said as they sound.</small>
+                    {onNarratorVoice && (
+                      <>
+                        <label htmlFor="settings-narrator-voice">Narrator's voice</label>
+                        <select id="settings-narrator-voice" value={narratorVoice} onChange={(event) => onNarratorVoice(event.target.value)} disabled={!speechSupport.speak || !voices || !narrator}>
+                          {NARRATOR_VOICES.map((each) => <option key={each.id} value={each.id}>{each.label}</option>)}
+                        </select>
+                        <small>The hosted voice that reads the narration, where the server has one.</small>
+                      </>
+                    )}
                   </>
                 )}
                 <small>{speechSupport.listen ? 'The 🎤 beside the reply box writes what you say. You send it.' : 'This browser cannot listen. The keyboard\'s own microphone key still writes what you say.'}</small>

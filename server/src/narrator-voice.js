@@ -8,18 +8,20 @@ import { createHash } from 'node:crypto';
 import { AppError } from './errors.js';
 
 export const NARRATOR_MODEL = 'gemini-3.8-flash-tts';
-// Round 207: Puck (Google's "upbeat" voice) for the owner's narrator with no restraint; Charon was the "informative" one.
-export const NARRATOR_VOICE = 'Puck';
+// Round 208: the player picks the narrator's voice in Settings from these (Google's labels: Charon "informative",
+// Gacrux "mature", Algenib "gravelly"); any other name is read as the default. Round 207's Puck is gone.
+export const NARRATOR_VOICES = Object.freeze(['Charon', 'Gacrux', 'Algenib']);
+export const NARRATOR_VOICE = 'Charon';
 // Round 206: the direction is a set of notes above a marked transcript (the layout of Google's prompting guide for
 // its speech models), not a sentence run on into the text, which the voice read aloud as part of the story. The notes
-// end by saying only the transcript is spoken. Round 207: as silly as possible, no restraint.
+// end by saying only the transcript is spoken. Round 208: round 206's character again (round 207's was too much).
 export const NARRATOR_STYLE = [
   '# AUDIO PROFILE: The Narrator',
-  'The silliest narrator who ever lived: a giddy, doddering, wildly theatrical old buffoon who finds every single word of this story hilarious, astonishing or both. Utterly ridiculous, completely unrestrained, never calm, never serious.',
+  'An old, slightly silly storyteller: whimsical, a little goofy, and charming. A twinkle in the voice, as though he finds the story delightfully absurd and is trying, not very hard, to keep a straight face.',
   '### DIRECTOR\'S NOTES',
-  'Style: maximum silliness. Squeaky highs and booming lows, a wobbly old-man voice that cracks with excitement, gasps of wonder at ordinary things, barely suppressed giggles and snorts of laughter, comically overblown drama on the smallest detail, mock-sinister whispers that burst into delighted shouting. Stretch funny words out. Ham it up shamelessly.',
-  'Pace: lurching and bouncy: race ahead in a tumble, then slam on the brakes for an absurdly long dramatic pause.',
-  'Accent: words that are not English are said as a native speaker of their language says them, with gusto.',
+  'Style: playful and warm, with a grandfatherly wobble; relish the odd word, lean on the comic beats, let a dramatic pause land and then deflate it.',
+  'Pace: unhurried, with bounce.',
+  'Accent: words that are not English are said as a native speaker of their language says them.',
   'Speak only the words under TRANSCRIPT. Never say these notes or the headings aloud.',
   '#### TRANSCRIPT',
 ].join('\n');
@@ -53,13 +55,14 @@ export function createNarratorVoice({ apiKey = null, model = NARRATOR_MODEL, voi
     model, voice,
     status: () => ({ hosted: Boolean(apiKey), model, voice, last }),
     available: (key = null) => Boolean(key || apiKey),
-    async speak(text, { apiKey: given = null } = {}) {
+    async speak(text, { apiKey: given = null, voice: asked = null } = {}) {
+      const speaker = NARRATOR_VOICES.includes(asked) ? asked : voice;
       const line = String(text ?? '').replace(/\s+/g, ' ').trim();
       if (!line || !/[\p{L}\p{N}]/u.test(line)) throw new AppError('Nothing to read.', { status: 400, code: 'VALIDATION_ERROR' });
       if (line.length > NARRATOR_MAX_CHARS) throw new AppError('That is too long to read in one go.', { status: 400, code: 'VALIDATION_ERROR' });
       const key = given || apiKey;
       if (!key) throw unavailable('The narrator has no hosted voice on this server.', { pause: false });
-      const id = createHash('sha256').update(`${model}|${voice}|${line}`).digest('hex');
+      const id = createHash('sha256').update(`${model}|${speaker}|${line}`).digest('hex');
       const kept = clips.get(id);
       if (kept) { clips.delete(id); clips.set(id, kept); return kept; }
       let response;
@@ -69,7 +72,7 @@ export function createNarratorVoice({ apiKey = null, model = NARRATOR_MODEL, voi
           headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
           body: JSON.stringify({
             contents: [{ parts: [{ text: `${NARRATOR_STYLE}\n${line}` }] }],
-            generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } },
+            generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: speaker } } } },
           }),
           signal: AbortSignal.timeout(TIMEOUT_MS),
         });

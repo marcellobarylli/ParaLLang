@@ -54,7 +54,7 @@ export function createApp({ service, services: given = null, defaultLanguage = n
   app.post('/api/narrate', express.json({ limit: '16kb' }), async (req, res, next) => {
     try {
       if (!narratorVoice) throw new AppError('The narrator has no hosted voice on this server.', { status: 503, code: 'NARRATOR_UNAVAILABLE', details: { pause: false } });
-      const clip = await narratorVoice.speak(req.body?.text, { apiKey: currentRequest()?.geminiKey ?? null });
+      const clip = await narratorVoice.speak(req.body?.text, { apiKey: currentRequest()?.geminiKey ?? null, voice: req.body?.voice ?? null });
       res.set({ 'Content-Type': clip.type, 'Cache-Control': 'private, max-age=86400' }).send(clip.audio);
     } catch (error) { next(error); }
   });

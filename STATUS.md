@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 208, the narrator's voice chosen in Settings
+
+Round 207's unrestrained narrator was worse, so round 206's charming, slightly silly storyteller is back, and
+Settings (Audio) has "Narrator's voice": Charon (default), Gacrux ("mature") or Algenib ("gravelly"). Tested with
+Google faked; **not heard**. **Merged to `main` and deployed.**
+[Architecture](docs/rounds/208/architecture.md), [findings](docs/rounds/208/findings.md).
+
 ## Addendum 2026-11-27: round 207, the narrator with no restraint
 
 The owner asked for the narrator as silly as possible. The notes now ask for a giddy, wildly theatrical old buffoon

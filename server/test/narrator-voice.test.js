@@ -68,3 +68,14 @@ test('POST /api/narrate answers with the sound, needs the token, and says so whe
   assert.equal(without.status, 503);
   assert.deepEqual((await without.json()).error.details, { pause: false });
 });
+
+// Round 208: the voice picked in Settings comes with the text; only the listed voices are taken.
+test('a listed voice is used and kept apart; any other name is the default voice', async () => {
+  const calls = [];
+  const voice = createNarratorVoice({ apiKey: 'server-key', fetchImpl: google(calls), logger: quiet });
+  await voice.speak('You stop at the cart.', { voice: 'Algenib' });
+  await voice.speak('You stop at the cart.', { voice: 'Gacrux' });
+  await voice.speak('You stop at the cart.', { voice: 'Nobody' });
+  await voice.speak('You stop at the cart.');
+  assert.deepEqual(calls.map((each) => each.body.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName), ['Algenib', 'Gacrux', 'Charon']);
+});
