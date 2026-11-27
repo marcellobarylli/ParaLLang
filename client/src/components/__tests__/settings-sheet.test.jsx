@@ -66,8 +66,8 @@ test('moving the slider on the dungeon screen sets the panels at once, hides the
   const requests = fetchMock.mock.calls.length;
   fireEvent.change(screen.getByLabelText('Text panel opacity'), { target: { value: '30' } });
   expect(shell.style.getPropertyValue('--panel-alpha')).toBe('0.3');
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
   expect(fetchMock.mock.calls.length).toBe(requests);
   await user.click(screen.getByRole('button', { name: 'Close' }));
@@ -140,8 +140,8 @@ test('the box on the dungeon screen switches the preference and stores it', asyn
   render(<App />);
   await openMenu(user, 'Settings');
   await user.click(screen.getByLabelText('Tilt to look'));
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).toEqual({ panelOpacity: 0.7, tiltLook: true, voices: true, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(screen.getByLabelText('Tilt to look').checked).toBe(true);
   await user.click(screen.getByLabelText('Tilt to look'));
   expect(useGameStore.getState().display.tiltLook).toBe(false);
@@ -177,7 +177,7 @@ test('the voices box on the dungeon screen switches the preference and stores it
   await openMenu(user, 'Settings');
   expect(speech.speaker.prime).toHaveBeenCalledOnce(); // the first tap on the page
   await user.click(screen.getByLabelText('Character voices'));
-  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(useGameStore.getState().display).toEqual({ panelOpacity: 0.7, tiltLook: false, voices: false, music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, streamlined: true, follow: true, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(JSON.parse(localStorage.getItem('parallang.display')).voices).toBe(false);
   await user.click(screen.getByLabelText('Character voices'));
   expect(useGameStore.getState().display.voices).toBe(true);
@@ -262,7 +262,7 @@ test('Settings says when the browser cannot play the music', () => {
 test('"Beginner mode" is ticked by default, says what it does, and the box on the screen stores the choice', async () => {
   const user = userEvent.setup();
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
-  useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: false, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true } });
+  useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: false, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false } });
   render(<App />);
   await openMenu(user, 'Settings');
   const box = screen.getByLabelText('Beginner mode');
@@ -279,7 +279,7 @@ test('"Beginner mode" is ticked by default, says what it does, and the box on th
 test('"How answers are checked" is Strict unless Light is picked; the choice is stored and Beginner mode steps back', async () => {
   const user = userEvent.setup();
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
-  useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: false, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false, treeModels: true }, language: { code: 'it', name: 'Italian', tag: 'it-IT' } });
+  useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7, tiltLook: false, voices: true, music: false, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: false }, language: { code: 'it', name: 'Italian', tag: 'it-IT' } });
   render(<App />);
   await openMenu(user, 'Settings');
   expect(screen.getByRole('group', { name: 'How answers are checked' })).toBeTruthy();
@@ -295,19 +295,17 @@ test('"How answers are checked" is Strict unless Light is picked; the choice is 
   expect(screen.getByLabelText('Beginner mode').disabled).toBe(false);
 });
 
-// Round 162 (issue #11): the pulled tree models can be switched off.
-test('"Tree models" is ticked unless switched off, and the choice is stored', async () => {
+// Round 195: the tree models are always on; Settings has no switch for them, and an old stored choice is dropped.
+test('Settings has no "Tree models" switch, and a stored treeModels is not kept', async () => {
   const user = userEvent.setup();
   vi.stubGlobal('fetch', vi.fn(async () => new Promise(() => {})));
+  localStorage.setItem('parallang.display', JSON.stringify({ panelOpacity: 0.7, treeModels: false }));
   useGameStore.setState({ settingsOpen: false, error: null, display: { panelOpacity: 0.7 } });
   render(<App />);
   await openMenu(user, 'Settings');
-  const box = screen.getByLabelText('Tree models');
-  expect(box.checked).toBe(true);
-  await user.click(box);
-  expect(useGameStore.getState().display.treeModels).toBe(false);
-  expect(JSON.parse(localStorage.getItem('parallang.display')).treeModels).toBe(false);
-  expect(screen.getByLabelText('Tree models').checked).toBe(false);
+  expect(screen.queryByLabelText('Tree models')).toBeNull();
+  await user.click(screen.getByLabelText('Tilt to look'));
+  expect(JSON.parse(localStorage.getItem('parallang.display'))).not.toHaveProperty('treeModels');
 });
 
 // Round 148: the slider for how much of the language the characters speak.

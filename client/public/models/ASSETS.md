@@ -8,7 +8,7 @@ not assets.
 ## `nature.glb`
 
 One file, 34 332 bytes, 1 672 triangles in 15 models: the trees of the road's three biomes, bushes and stones. It is
-loaded when the road is open and "Tree models" is on in Settings, never before (`client/src/scene/roadView.js`), and
+loaded when the road is open, never before (always: round 195 removed the "Tree models" setting) (`client/src/scene/roadView.js`), and
 its models are stamped into the five chunks of ground nearest the camera (`aesthetic/src/scene/models.js`).
 
 - **Source:** "low poly nature pack" by flo-bit, from the repository

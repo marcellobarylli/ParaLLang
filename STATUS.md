@@ -34,6 +34,16 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 195, the tree models always; no setting
+
+The road always uses the tree models: the "Tree models" switch in Settings and its stored preference are gone, and
+the road's view loads the model file when it is made. The simple trees stay as the trees beyond the nearest five
+chunks and until the file has loaded (owner's choice: models everywhere would be 6.5 times the triangle budget).
+Same scene as before at a pinned seed. `models-check.mjs` runs again (stale since round 175) and shows the first site
+of seed 4242 over the 64 000 budget, before this change as after. Not seen on a phone. **On the session branch, not
+merged.**
+[Architecture](docs/rounds/195/architecture.md), [findings](docs/rounds/195/findings.md).
+
 ## Addendum 2026-11-27: round 194, tilt to look on the road
 
 "Tilt to look" now works in conversations on the road, as it does in the dungeons: tilting the phone turns the view

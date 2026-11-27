@@ -38,27 +38,19 @@ const easeTo = (current, target, dt, tau) => current + (target - current) * (1 -
  *                        landscape (farLand.js) fills the view beyond the built ground; once the camera is down
  *                        that sheet is thrown away.
  */
-export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, now = () => Date.now(), models = true } = {}) {
+export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, now = () => Date.now() } = {}) {
   const terrain = createTerrain(seed);
   const graph = createGraph(terrain);
   const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 2));
   // Round 192: the level's trees and undergrowth keep off the ways (wayClearance.js); the graph and the camera keep the terrain as it is.
   const world = createEndlessWorld({ terrain: clearOfWays(terrain, graph, ENDLESS.chunk), seed: 7 });
-  // Round 162 (issue #11): the trees' models (client/public/models/, see ASSETS.md there). One small file, asked for
-  // the first time models are wanted (the road is open by then); until it is here, and if it never comes, the
-  // level's own simple trees stand. `setModels(false)` goes back to those.
-  let templates = null; // null: not asked for; a promise while loading; the templates once here
-  let modelsWanted = false;
-  const setModels = (on) => {
-    modelsWanted = on !== false && on !== null;
-    if (!modelsWanted) { world.setModels(null); return; }
-    if (templates && typeof templates.then !== 'function') { world.setModels(templates); return; }
-    templates ??= loadModels(typeof on === 'string' ? on : `${import.meta.env?.BASE_URL ?? '/'}models/nature.glb`)
-      .then((loaded) => { templates = loaded; if (!disposed && modelsWanted) world.setModels(loaded); return loaded; })
-      .catch((error) => { templates = null; console.warn('The trees\' models could not be loaded; the simple trees stay:', error?.message ?? error); return null; });
-  };
-  if (models !== false) setModels(models);
+  // Round 162 (issue #11): the trees' models (client/public/models/, see ASSETS.md there), one small file asked for
+  // when the view is made. Round 195: always; there is no setting. Until the file is here, and if it never comes,
+  // and on the chunks beyond the nearest five (the triangle budget), the level's own simple trees stand.
+  loadModels(`${import.meta.env?.BASE_URL ?? '/'}models/nature.glb`)
+    .then((loaded) => { if (!disposed) world.setModels(loaded); })
+    .catch((error) => { console.warn('The trees\' models could not be loaded; the simple trees stay:', error?.message ?? error); });
   const camera = new PerspectiveCamera(FOV, 1, 0.3, 900);
   const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
   const director = createRoadDirector({ heightAt: terrain.heightAt, waterY: terrain.waterY });
@@ -293,7 +285,6 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     /** Round 146: the weather showing now, and a way to hold one still ({ phase, rain, cloud, wind }, or null for the clock's). */
     get weather() { return weather; },
     pinWeather,
-    setModels, // round 162
     get effects() { return { ...effects.state }; },
     /** What the scene holds now, for the playthrough script. */
     get stats() { return { chunks: world.chunkCount, triangles: world.triangleCount, figures: figures.size, tracks: tracks.length, mode: director.mode, high, farTiles: farLand?.built ?? 0, highClouds: effects.state.highClouds }; },

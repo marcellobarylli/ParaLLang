@@ -350,7 +350,7 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   From round 162 the client ships one file of pulled 3D models, `client/public/models/nature.glb` (34 kB: palms,
   broad-leaved trees, pines, bushes and stones, CC0, by flo-bit); `client/public/models/ASSETS.md` records each
   asset's source and licence, and `client/scripts/make-models.mjs` makes the file from the sources. It is loaded
-  when the road is open and "Tree models" is on in Settings, and the five chunks of ground nearest the camera take
+  when the road is open (always: round 195 removed the "Tree models" setting), and the five chunks of ground nearest the camera take
   their trees from it (`aesthetic/src/scene/models.js`). `node client/scripts/models-check.mjs` plays it.
   From round 163, when the journey shown is a hundred walks or more, the narrator remarks on it (the passage
   `journey_random_walk`, which also enters the guidebook's "The long way round") and the map shows a chart of the

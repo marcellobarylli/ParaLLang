@@ -10,7 +10,7 @@ const prefersReducedMotion = () => typeof window !== 'undefined' && window.match
 // Round 175: `title` (a site id) is the title screen: the camera far over that site, above the clouds, turning. The
 // landscape is `road.seed`, or `seed` before the server has sent the road. The next camera move the store asks for
 // once `title` is null is the zoom down from there.
-export default function RoadView({ road, seed: titleSeed = null, title = null, shown, arrival, from, talking, insets, onArrive, onThunder = null, closed = 0, resolved = false, beat = null, models = true, tilt = false }) {
+export default function RoadView({ road, seed: titleSeed = null, title = null, shown, arrival, from, talking, insets, onArrive, onThunder = null, closed = 0, resolved = false, beat = null, tilt = false }) {
   const canvasRef = useRef(null);
   const viewRef = useRef(null);
   const arriveRef = useRef(onArrive);
@@ -30,7 +30,7 @@ export default function RoadView({ road, seed: titleSeed = null, title = null, s
     setStatus('loading');
     import('../scene/roadView.js').then(({ createRoadView }) => {
       if (cancelled) return;
-      view = createRoadView(canvasRef.current, { seed, models: false, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
+      view = createRoadView(canvasRef.current, { seed, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
       viewRef.current = view;
       if (typeof window !== 'undefined') window.__parallangRoad = view; // for the screenshot script and the console
       setStatus('ready');
@@ -78,8 +78,6 @@ export default function RoadView({ road, seed: titleSeed = null, title = null, s
       viewRef.current?.setLook(null);
     };
   }, [status, tilt, seed]);
-  // Round 162: the trees' models, as Settings has them. The file is fetched the first time they are wanted.
-  useEffect(() => { if (status === 'ready') viewRef.current?.setModels(models); }, [status, models]);
 
   return (
     <div className={`level level-${status}`} aria-hidden="true">

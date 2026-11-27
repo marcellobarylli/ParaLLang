@@ -689,7 +689,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={legacyFrom} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
         : onRoad || atTitle
-        ? <RoadView models={state.display?.treeModels !== false} road={state.road} seed={state.titleSeed} title={titleSite} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
+        ? <RoadView road={state.road} seed={state.titleSeed} title={titleSite} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
@@ -762,7 +762,6 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}
         follow={state.display?.follow !== false} onFollow={state.setFollow}
-        treeModels={state.display?.treeModels !== false} onTreeModels={state.setTreeModels}
         streamlined={state.display?.streamlined !== false} onStreamlined={state.setStreamlined}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}

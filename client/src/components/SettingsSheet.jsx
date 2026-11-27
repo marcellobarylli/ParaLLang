@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, follow = true, onFollow = null, treeModels = true, onTreeModels, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, follow = true, onFollow = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -184,7 +184,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             )}
           </Group>
         )}
-        {(onPanelOpacity || onTreeModels || onTiltLook || onFollow) && (
+        {(onPanelOpacity || onTiltLook || onFollow) && (
           <Group title="Display and controls">
             {onFollow && (
               <>
@@ -204,15 +204,6 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                 <input id="settings-opacity" type="range" min={PANEL_OPACITY.min * 100} max={PANEL_OPACITY.max * 100} step={PANEL_OPACITY.step * 100}
                   value={percent} aria-valuetext={`${percent}%`} onChange={(event) => onPanelOpacity(Number(event.target.value) / 100)} />
                 <small>Lower it to see more of the temple behind the text. It applies at once.</small>
-              </>
-            )}
-            {onTreeModels && (
-              <>
-                <label className="setting-check" htmlFor="settings-tree-models">
-                  <input id="settings-tree-models" type="checkbox" checked={treeModels} onChange={(event) => onTreeModels(event.target.checked)} />
-                  <span>Tree models</span>
-                </label>
-                <small>On the road, the trees nearest you are drawn from models (a small file, loaded when the road opens). Off: every tree is the simple kind.</small>
               </>
             )}
             {onTiltLook && (
