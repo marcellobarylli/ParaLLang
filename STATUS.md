@@ -38,8 +38,8 @@ The entry point for agents: the current state, how the project is logged, and th
 
 "Tilt to look" in the legacy dungeons is now the road's (round 199): 135 degrees to either side and straight up or
 down, at a site the camera holds at. Both levels share one look in `tilt.js`; round 125's small tilt is removed.
-Tested in Node and in Chromium with synthetic orientation events; not tried on a phone. **Merged to `main`; live
-once round 198's three failing tests are fixed** (its session is on it), as is round 199.
+Tested in Node and in Chromium with synthetic orientation events; not tried on a phone. **Merged to `main` and
+deployed** on the owner's word, with round 199 (round 198's tests, which had held both back, were fixed by its session).
 [Architecture](docs/rounds/200/architecture.md), [findings](docs/rounds/200/findings.md).
 
 ## Addendum 2026-11-27: round 199, look round on the road: 270 degrees, and up and down to the vertical
@@ -47,8 +47,8 @@ once round 198's three failing tests are fixed** (its session is on it), as is r
 "Tilt to look" on the road is now a window on the world: the way the back of the phone points is the way the view
 looks, 135 degrees to either side (270 in all) and straight up or down, with no drift back while held, at any site
 the camera stops at. The dungeons keep their gentle tilt. Tested in Node and in Chromium with synthetic orientation
-events; not tried on a phone. **Merged to `main`** on the owner's word; **not yet live**: the Pages deploy runs
-the tests first, and three web-client tests on `main` fail since round 198 (light checking by default).
+events; not tried on a phone. **Merged to `main` and deployed** on the owner's word, with round 200 (round 198's
+failing tests held it back until its session fixed them).
 [Architecture](docs/rounds/199/architecture.md), [findings](docs/rounds/199/findings.md).
 
 ## Addendum 2026-11-27: round 198, light checking by default; the reply last, above the box

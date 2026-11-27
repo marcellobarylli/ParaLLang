@@ -9,3 +9,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 3 | 22:06 approx. | 22:16:18 | decision | Claude | One free look for both levels: the range, ease and turn of the sight in tilt.js, used by both directors; round 125's small tilt and its browser check removed | `../architecture.md` |
 | 4 | 22:15 approx. | 22:16:18 | run | Claude | Client 338 pass; `free-look-check.mjs` 8 of 8 in Ta Prohm and 8 of 8 on the road | `../findings.md` |
 | 5 | 22:16:18 | 22:16:18 | closed | Claude | Records; merged to `main` and pushed on the owner's word. Live once round 198's three failing tests are fixed (the other session is fixing them) | `../architecture.md` |
+| 6 | 22:18:14 | 22:18:14 | deployed | Claude | Round 198's failing tests fixed on `main` by its session; merged, every test passes (server 615, client 338, aesthetic 95); pushed to `main`, which deploys | `../architecture.md` |

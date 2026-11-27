@@ -32,5 +32,5 @@ client build, `node client/scripts/free-look-check.mjs <outDir> dungeon` and `â€
 ## Status
 
 Built, tested in Node and in headless Chromium with synthetic orientation events; not tried on a phone. Merged to
-`main` and pushed on the owner's word. Not yet live: the Pages deploy runs the tests first, and three tests on `main`
-fail from round 198; the session that made round 198 is fixing them, and its push deploys `main` with this round.
+`main` and pushed on the owner's word. Round 198's session fixed its three failing tests first; the merged tree passes
+every test (server 615, client 338, aesthetic 95), and this push deploys rounds 199 and 200.
