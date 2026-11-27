@@ -18,7 +18,7 @@ afterAll(cleanUp);
 
 // Round 173: these tests play the full pacing, so streamlined mode is off in this browser.
 function memoryStorage() {
-  const values = new Map([['parallang.display', JSON.stringify({ streamlined: false })]]);
+  const values = new Map([['parallang.display', JSON.stringify({ streamlined: false, strict: true })]]);
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
 }
 const silent = { speaker: { supported: false, speaking: false, speak() {}, stop() {}, prime() {} }, listener: { supported: false, listening: false, start() { return false; }, stop() {} } };

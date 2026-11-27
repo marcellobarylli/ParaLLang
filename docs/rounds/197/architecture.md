@@ -49,5 +49,5 @@ commit; nothing here is frozen.
 
 ## Status
 
-Built, tested, played against the live model. `main` (rounds 195 and 196) is merged in. Pushed to the branch
-`claude/hopeful-babbage-aq05na`; not merged to `main` and not deployed: the owner said "push".
+Built, tested, played against the live model. Merged to `main` with round 198 and pushed on the owner's word
+("then deploy"); GitHub Pages deploys `main` and Render redeploys the server from it.

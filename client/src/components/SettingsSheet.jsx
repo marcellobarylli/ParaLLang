@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = false, onLight, follow = true, onFollow = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -163,8 +163,8 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
               <>
                 <fieldset className="setting-choice">
                   <legend>How answers are checked</legend>
-                  <label><input type="radio" name="settings-checking" checked={!light} onChange={() => onLight(false)} /><span>Strict</span></label>
                   <label><input type="radio" name="settings-checking" checked={light} onChange={() => onLight(true)} /><span>Light</span></label>
+                  <label><input type="radio" name="settings-checking" checked={!light} onChange={() => onLight(false)} /><span>Strict</span></label>
                 </fieldset>
                 <small>{light
                   ? `Light: nothing is marked. The character works out what you meant, you are shown it in ${languageName ?? 'the language you are learning'}, and the conversation goes on. Each turn is quicker.`

@@ -30,7 +30,8 @@ vi.mock('../../scene/levelView.js', () => ({
 }));
 
 const response = (data) => ({ ok: true, status: 200, json: async () => data });
-const memoryStorage = () => { const values = new Map(); return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } }; };
+const memoryStorage = () => { const values = new Map([['parallang.display', '{"strict":true}']]); // round 198: these are strict checking's tests
+  return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } }; };
 const index = (siteId) => DUNGEON.sites.findIndex((site) => site.id === siteId);
 const encounterOf = (siteId) => DUNGEON.sites[index(siteId)].encounterId;
 
@@ -250,7 +251,7 @@ test('where the browser wants to be asked, a visit with the setting on asks at t
   const requestPermission = vi.fn(async () => 'granted');
   vi.stubGlobal('DeviceOrientationEvent', { requestPermission });
   const storage = memoryStorage();
-  storage.setItem('parallang.display', '{"tiltLook":true}');
+  storage.setItem('parallang.display', '{"tiltLook":true,"strict":true}');
   const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage });
   render(<DungeonScreen useStore={store} />);
   await titleReady();
@@ -339,7 +340,7 @@ test('sending stops the voice, and so does leaving the conversation', async () =
 test('with voices off nothing is read on its own, the 🔊 still reads, and switching off stops the voice', async () => {
   const speech = fakeSpeech();
   const storage = memoryStorage();
-  storage.setItem('parallang.display', '{"voices":false}');
+  storage.setItem('parallang.display', '{"voices":false,"strict":true}');
   const { user, store } = await openConversation(speech, storage);
   expect(speech.spoken).toEqual([]);
   await user.click(screen.getByRole('button', { name: 'Hear Portia say this line' }));

@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 198, light checking by default; the reply last, above the box
+
+Light checking (nothing marked; the character works out what was meant) is now the default, also for games already
+played; Strict is still in Settings. In a turn, what was understood and its correction stand directly under the
+player's answer, and the character's reply is the last thing above the reply box. Tested, and one turn seen in
+Chromium; not on a phone. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/198/architecture.md), [findings](docs/rounds/198/findings.md).
+
 ## Addendum 2026-11-27: round 197, replies that follow up; the world behind "keep chatting"
 
 A conversation now has an order. The greeting is the exercise: it asks for everything the objectives need in one
@@ -43,8 +51,8 @@ objective comes only by a bridge from the player's answer. The last reply brings
 says goodbye. The world no longer shows in the conversation (round 189's second line): it is the postscript, a
 secret told in the keep-chatting replies, led into from what the player said; the button reads "Keep chatting with
 … and you might learn a secret". The rules follow lookups on what makes conversation engaging (follow-up questions).
-Four conversations played against the live model; not played by the owner. **On the session branch, not merged or
-deployed.** [Architecture](docs/rounds/197/architecture.md), [findings](docs/rounds/197/findings.md),
+Four conversations played against the live model; not played by the owner. **Merged to `main` and deployed** with
+round 198. [Architecture](docs/rounds/197/architecture.md), [findings](docs/rounds/197/findings.md),
 [playtest](docs/playtests/2026-11-27-follow-ups/README.md).
 
 ## Addendum 2026-11-27: round 196, the narrator reads aloud; every road character its own voice

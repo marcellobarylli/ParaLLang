@@ -11,3 +11,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 5 | 21:42 to 21:52 | 22:00:00 | run | Claude | Four conversations against the live model (A1 origins, A1 likes, A2 past_went, B1 opinions), 20 character lines: every reply's question follows up the player's answer; one wording change to the postscript after the first chat turn | `../findings.md` |
 | 6 | 21:55 approx. | 22:00:00 | run | Claude | Server 614 pass (Gerald's pinned prompts regenerated), client 337 pass, client build passes | `../findings.md` |
 | 7 | 22:00:00 | 22:00:00 | closed | Claude | Records, status addendum; `main` (rounds 195, 196) merged in; pushed to the session branch, not to `main` | `../architecture.md` |
+| 8 | 22:07 approx. | 22:07:00 | deployed | Claude | Merged to `main` with round 198 and pushed on the owner's word ("then deploy") | `../architecture.md` |
