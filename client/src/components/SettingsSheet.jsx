@@ -232,7 +232,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                   <input id="settings-wait-game" type="checkbox" checked={waitGame} onChange={(event) => onWaitGame(event.target.checked)} />
                   <span>A game while you wait (experimental)</span>
                 </label>
-                <small>When you send an answer, the conversation gives way to a small game until the reply is ready: drag left and right to move, and shoot what comes down. Each one that gets past you costs one of three lives. When the reply is ready no more come, and the conversation returns once the last are dealt with.</small>
+                <small>When you send an answer, the conversation gives way to a small game until the reply is ready: drag left and right to move, and shoot what comes down. Each one that gets past you costs one of three lives. When the reply is ready no more come, and the conversation returns once the last are dealt with. For the TikTok kids, who cannot be left alone with a still screen for eight whole seconds. You know who you are.</small>
               </>
             )}
           </Group>

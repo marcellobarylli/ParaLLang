@@ -9,3 +9,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 3 | 22:57 approx. | 23:11:17 | decision | Claude | The game covers the whole conversation panel, opaque; the reply that arrives under it is read aloud and followed only when the game has gone; the figure stands 76 px above the bottom, for the thumb | `../architecture.md` |
 | 4 | 23:10 approx. | 23:11:17 | run | Claude | Root `npm test` passes; client build passes; `wait-game-check.mjs` in Chromium: 17 checks, 0 problems | `../findings.md` |
 | 5 | 23:11:17 | 23:11:17 | closed | Claude | Records, status addendum; merged to `main` and pushed on the owner's word ("please implement and deploy") | `../architecture.md` |
+| 6 | 23:15:08 | 23:15:08 | change | Owner | After the close: the setting's note gets a tongue-in-cheek line for the TikTok kids | `../architecture.md` |

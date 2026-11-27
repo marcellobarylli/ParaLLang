@@ -16,6 +16,7 @@ commit; nothing here is frozen.
 1. **Experimental, and off unless switched on.** Settings, "Display and controls": "A game while you wait
    (experimental)". It is the display preference `waitGame`, kept in this browser; a display saved before this round
    reads as off. With it off nothing changes.
+   Its note ends, tongue in cheek, with a line for the TikTok kids (the owner's follow-up).
 2. **When an answer is sent, the game covers the conversation panel.** The whole panel (the grip, the header, the
    text and the reply box) goes opaque over 0.42 s, whatever the panel's opacity setting, in the dungeons, on the
    road and with the party (one `EncounterSheet`).
