@@ -497,7 +497,8 @@ describe('the look follows the phone', () => {
       both(plain, tilted, DURATIONS.approach + 5, (a, b) => expect(b.position).toEqual(a.position));
       const [a, b] = [sight(plain.pose), sight(tilted.pose)];
       expect(wrap(b.yaw - a.yaw)).toBeCloseTo(0.2, 3);
-      expect(b.pitch - a.pitch).toBeCloseTo(0.1, 3);
+      // Round 200: up is spread over the rest of the way to the vertical (tilt.js turnSight).
+      expect(b.pitch - a.pitch).toBeCloseTo(0.1 * (Math.PI / 2 - a.pitch) / (Math.PI / 2), 3);
       expect(b.distance).toBeCloseTo(a.distance, 6);
     }
   });
@@ -513,16 +514,17 @@ describe('the look follows the phone', () => {
   });
 
   test('the look is nothing on the way to a site and at the start of the hold, then fades in without a jump', () => {
-    const [plain, tilted] = pair(3, { yaw: LOOK_MAX.yaw, pitch: -LOOK_MAX.pitch });
+    // Round 200: a look of a radian to the left and a little down (the range is 135 degrees now).
+    const [plain, tilted] = pair(3, { yaw: 1, pitch: -0.3 });
     both(plain, tilted, DURATIONS.approach - FRAME, (a, b) => expect(b).toEqual(a));
     let previous = sight(tilted.pose);
     both(plain, tilted, 4, (a, b) => {
       const now = sight(b);
-      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.03); // under a degree a second per degree of range
-      expect(Math.abs(now.pitch - previous.pitch)).toBeLessThan(0.03);
+      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.08); // the fade over half a second, at 30 frames a second: no jump
+      expect(Math.abs(now.pitch - previous.pitch)).toBeLessThan(0.08);
       previous = now;
     });
-    expect(wrap(sight(tilted.pose).yaw - sight(plain.pose).yaw)).toBeCloseTo(LOOK_MAX.yaw, 2);
+    expect(wrap(sight(tilted.pose).yaw - sight(plain.pose).yaw)).toBeCloseTo(1, 2);
   });
 
   test('the orbits, the map and a walk ignore the look', () => {
@@ -562,18 +564,18 @@ describe('the look follows the phone', () => {
     d.approach(2);
     d.skip();
     run(d, 3);
-    let previous = sight(d.pose);
-    const smooth = (pose) => {
-      const now = sight(pose);
-      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.07);
-      previous = now;
-    };
+    // Round 200: eased quickly, as a window follows the hand: not there in one frame, there within a fraction of a second.
     d.look({ yaw: LOOK_MAX.yaw });
-    run(d, 1, smooth);
-    expect(d.looked.yaw).toBeCloseTo(LOOK_MAX.yaw, 3);
+    run(d, FRAME);
+    expect(d.looked.yaw).toBeGreaterThan(0);
+    expect(d.looked.yaw).toBeLessThan(LOOK_MAX.yaw * 0.5);
+    run(d, 0.3);
+    expect(d.looked.yaw).toBeCloseTo(LOOK_MAX.yaw, 2);
     d.look();
-    run(d, 1, smooth);
-    expect(d.looked.yaw).toBeCloseTo(0, 3);
+    run(d, FRAME);
+    expect(d.looked.yaw).toBeGreaterThan(LOOK_MAX.yaw * 0.5);
+    run(d, 0.3);
+    expect(d.looked.yaw).toBeCloseTo(0, 2);
   });
 
   test('a new state keeps the look, and a walk that starts from a turned camera has no jump', () => {

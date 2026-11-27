@@ -221,7 +221,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                   <input id="settings-tilt" type="checkbox" checked={tiltLook} onChange={changeTilt} />
                   <span>Tilt to look</span>
                 </label>
-                <small>On the road, turning and tilting the phone looks round, as through a window: nearly all the way round, and straight up or down. In a dungeon's conversation it turns the view a little. The phone may ask for access to motion.</small>
+                <small>Where the camera stops, on the road and in the dungeons, turning and tilting the phone looks round, as through a window: nearly all the way round, and straight up or down. The phone may ask for access to motion.</small>
                 {tiltLook && TILT_ANSWERS[tiltAnswer] && <small role="status" className="setting-warning">{TILT_ANSWERS[tiltAnswer]}</small>}
               </>
             )}

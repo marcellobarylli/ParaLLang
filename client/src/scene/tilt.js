@@ -1,27 +1,12 @@
-// Round 125: tilt to look. The phone's orientation turns the camera's look at a site, as if the phone were a window
-// on the temple. Pure apart from the three browser helpers at the end, so it is unit-tested in Node.
+// Round 125: tilt to look. The phone's orientation turns the camera's look at a site, as if the phone were a window.
+// Pure apart from the three browser helpers at the end, so it is unit-tested in Node.
 //
 // A `deviceorientation` event carries three angles in degrees (alpha about the phone's z axis, beta about x, gamma
-// about y, applied in that order). The tilt is the rotation from a baseline orientation to the present one, read in
-// the phone's own frame: its part about the screen's horizontal axis is the pitch, its part about the screen's
-// vertical axis is the yaw. Read this way it has no jump however the phone is held (the raw gamma angle jumps when
-// the phone is upright).
-//
-// Signs: a positive yaw turns the look to the left (the director's sight yaw grows to the left), a positive pitch
-// turns it up. Turning the phone to the left looks left; tilting its top towards the player looks up. (The vertical
-// was a window's at first, top away looks up; the owner found it inverted on the iPhone, 2026-11-19.) For the
-// opposite, flip TILT.yawSign or TILT.pitchSign.
+// about y, applied in that order); the W3C quaternion of those angles turns the phone's frame into the Earth's.
+// Round 199 replaced round 125's small tilt (12 degrees to the side, 8 up or down, drifting back to the middle) with
+// the free look below, on the road; round 200 gave the legacy dungeons the same, and the small tilt was removed.
 
 const RAD = Math.PI / 180;
-export const TILT = Object.freeze({
-  gain: 0.6, // degrees of look per degree of tilt
-  maxYaw: 12 * RAD, // the look's range to either side
-  maxPitch: 8 * RAD, // and up or down
-  recentre: 30, // seconds: the baseline follows the phone this slowly (12 at first: a held look crept back by a tenth a second)
-  yawSign: 1,
-  pitchSign: -1,
-});
-
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
 // The W3C Device Orientation specification's quaternion for the angles (Z-X'-Y'' intrinsic), as [w, x, y, z].
@@ -39,70 +24,7 @@ const multiply = ([aw, ax, ay, az], [bw, bx, by, bz]) => [
 ];
 const conjugate = ([w, x, y, z]) => [w, -x, -y, -z];
 
-// A unit quaternion as a rotation vector (axis times angle, radians), the short way round.
-function rotationVector(q) {
-  const [w, x, y, z] = q[0] < 0 ? q.map((v) => -v) : q;
-  const sine = Math.hypot(x, y, z);
-  if (sine < 1e-9) return [0, 0, 0];
-  const scale = (2 * Math.atan2(sine, w)) / sine;
-  return [x * scale, y * scale, z * scale];
-}
-
-function fromRotationVector([x, y, z]) {
-  const angle = Math.hypot(x, y, z);
-  if (angle < 1e-9) return [1, 0, 0, 0];
-  const scale = Math.sin(angle / 2) / angle;
-  return [Math.cos(angle / 2), x * scale, y * scale, z * scale];
-}
-
-/**
- * The look a phone's tilt asks for.
- *
- *   orient({ alpha, beta, gamma }, screenAngle, now)  one orientation event; `now` in seconds
- *   look                                              { yaw, pitch } in radians, within the range
- *   recentre()                                        the next event is "straight ahead"
- */
-export function createTilt(options = {}) {
-  const config = { ...TILT, ...options };
-  // How far the phone may tilt before the baseline is dragged along: the tilt at which the look reaches its range.
-  const leash = { yaw: config.maxYaw / config.gain, pitch: config.maxPitch / config.gain };
-  let baseline = null;
-  let last = null;
-  let look = { yaw: 0, pitch: 0 };
-
-  return {
-    get look() { return { ...look }; },
-    get active() { return baseline !== null; },
-    recentre() { baseline = null; last = null; look = { yaw: 0, pitch: 0 }; },
-    orient(angles, screenAngle = 0, now = null) {
-      const { beta, gamma } = angles ?? {};
-      // A device without a sensor fires one event with null angles.
-      if (!Number.isFinite(beta) || !Number.isFinite(gamma)) return look;
-      const present = orientationQuaternion({ alpha: Number.isFinite(angles.alpha) ? angles.alpha : 0, beta, gamma });
-      const dt = now !== null && last !== null ? clamp(now - last, 0, 0.1) : 1 / 60;
-      last = now;
-      if (!baseline) baseline = present;
-      let tilt = rotationVector(multiply(conjugate(baseline), present));
-      // The baseline moves a fraction of the way to the present orientation: slowly always, and at once by as much
-      // as the tilt is past the leash.
-      const past = Math.hypot(tilt[0] / leash.pitch, tilt[1] / leash.yaw, tilt[2] / leash.yaw);
-      const keep = Math.exp(-dt / config.recentre) * (past > 1 ? 1 / past : 1);
-      baseline = multiply(baseline, fromRotationVector(tilt.map((v) => v * (1 - keep))));
-      tilt = tilt.map((v) => v * keep);
-      // The screen's axes in the phone's frame (landscape turns them).
-      const [c, s] = [Math.cos(screenAngle * RAD), Math.sin(screenAngle * RAD)];
-      const aboutHorizontal = tilt[0] * c - tilt[1] * s;
-      const aboutVertical = tilt[0] * s + tilt[1] * c;
-      look = {
-        yaw: clamp(config.yawSign * config.gain * aboutVertical, -config.maxYaw, config.maxYaw),
-        pitch: clamp(-config.pitchSign * config.gain * aboutHorizontal, -config.maxPitch, config.maxPitch),
-      };
-      return look;
-    },
-  };
-}
-
-// Round 199: the road's free look. The phone is a window on the world: the way its back points is the way the camera
+// Round 199: the free look (the road's; round 200, the legacy dungeons' too). The phone is a window on the world: the way its back points is the way the camera
 // looks, turned from where it pointed on arrival. Sideways it turns up to FREE_LOOK.maxYaw either way (270 degrees in
 // all, nearly the whole way round); up and down it goes as far as the phone does, to straight up and straight down.
 // It does not drift back to the middle while held (the dungeons' gentle tilt does), and it reads the direction, not
@@ -112,7 +34,26 @@ export const FREE_LOOK = Object.freeze({
   maxYaw: 135 * RAD, // to either side
   maxPitch: 90 * RAD, // up or down, from the way the phone pointed on arrival (the road's camera makes 90 straight up or down)
   steep: 80 * RAD, // past this the phone's heading means little (it points at the sky or the ground): the yaw is kept
+  ease: 0.05, // seconds: the camera's ease to a new look, short, so the window follows the hand
+  fadeIn: 0.5, // seconds: the look fades in over the start of a hold, so an arrival joins without a jump
+  sightMax: 1.55, // radians: the line of sight stops just short of straight up or down, so the view never flips
 });
+
+/**
+ * A camera pose ({ position, target }) with its line of sight turned by `yaw` (to the left) and `pitch` (up); the
+ * position stays. A pitch of a quarter turn up (or down) is straight up (or down), wherever the sight was: the rest of
+ * the way from the sight's own angle is spread over the quarter turn, so a phone pointed at the sky shows the sky.
+ */
+export function turnSight({ position, target }, yaw, pitch) {
+  if (!yaw && !pitch) return { position, target };
+  const d = [target[0] - position[0], target[1] - position[1], target[2] - position[2]];
+  const distance = Math.hypot(...d) || 1e-6;
+  const p0 = Math.asin(clamp(d[1] / distance, -1, 1));
+  const lift = pitch >= 0 ? pitch * (Math.PI / 2 - p0) / (Math.PI / 2) : pitch * (Math.PI / 2 + p0) / (Math.PI / 2);
+  const [y, p] = [Math.atan2(d[0], d[2]) + yaw, clamp(p0 + lift, -FREE_LOOK.sightMax, FREE_LOOK.sightMax)];
+  const c = Math.cos(p);
+  return { position, target: [position[0] + Math.sin(y) * c * distance, position[1] + Math.sin(p) * distance, position[2] + Math.cos(y) * c * distance] };
+}
 
 // The direction out of the phone's back in the Earth frame (x east, y north, z up), for a W3C orientation quaternion.
 export function backDirection(q) {
@@ -122,7 +63,10 @@ export function backDirection(q) {
 
 const wrap = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
 
-/** The road's free look: the same interface as createTilt (orient, look, active, recentre). */
+/**
+ * The free look: orient(angles) with each `deviceorientation` event; `look` is { yaw, pitch } in radians; `recentre()`
+ * makes the next event "ahead" (a host calls it on arriving at a site).
+ */
 export function createFreeLook(options = {}) {
   const config = { ...FREE_LOOK, ...options };
   let baseline = null; // { heading, elevation } of the phone's back on arrival

@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 200, the same free look in the legacy dungeons
+
+"Tilt to look" in the legacy dungeons is now the road's (round 199): 135 degrees to either side and straight up or
+down, at a site the camera holds at. Both levels share one look in `tilt.js`; round 125's small tilt is removed.
+Tested in Node and in Chromium with synthetic orientation events; not tried on a phone. **Merged to `main`; live
+once round 198's three failing tests are fixed** (its session is on it), as is round 199.
+[Architecture](docs/rounds/200/architecture.md), [findings](docs/rounds/200/findings.md).
+
 ## Addendum 2026-11-27: round 199, look round on the road: 270 degrees, and up and down to the vertical
 
 "Tilt to look" on the road is now a window on the world: the way the back of the phone points is the way the view

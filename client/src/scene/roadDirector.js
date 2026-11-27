@@ -48,6 +48,8 @@ export function titleDistance(aspect, fov = 60) {
   return clamp(across / wide, near, far);
 }
 
+import { FREE_LOOK, turnSight } from './tilt.js';
+
 const lerp = (a, b, u) => a + (b - a) * u;
 const lerp3 = (a, b, u) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u)];
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -55,26 +57,12 @@ export const ease = (u) => (u <= 0 ? 0 : u >= 1 ? 1 : u < 0.5 ? 4 * u * u * u : 
 const BEAT = Object.freeze({ pass: 0.05, resolved: 0.05, fail: -0.05 });
 // Round 194: tilt to look, as in the dungeons (round 125): at a hold the phone's tilt turns the line of sight, the
 // position stays. `LOOK_MAX` bounds the turn (radians; tilt.js keeps inside it), and it eases in and out.
-// Round 199: the free look's range (tilt.js FREE_LOOK): 135 degrees to either side, and up or down as far as it goes
-// (the line of sight itself stops just short of straight up and straight down). Eased quickly, as a window should.
-export const LOOK_MAX = Object.freeze({ yaw: 135 * Math.PI / 180, pitch: Math.PI / 2 });
-const LOOK_TAU = 0.05; // seconds, the ease to a new look
-const LOOK_IN = 0.5; // seconds, the look fades in over the start of a hold
-
-// The pose with its line of sight turned by `yaw` (to the left) and `pitch` (up), as director.js turns it.
-const SIGHT_MAX = 1.55; // radians: the line of sight stops just short of straight up or down (round 199; 1.4 before)
-function turned({ position, target }, yaw, pitch) {
-  if (!yaw && !pitch) return { position, target };
-  const d = [target[0] - position[0], target[1] - position[1], target[2] - position[2]];
-  const distance = Math.hypot(...d) || 1e-6;
-  // Round 199: a look of a quarter turn up (or down) is straight up (or down), wherever the sight was: the rest of the
-  // way from the sight's own angle is spread over the quarter turn, so a phone pointed at the sky shows the sky.
-  const p0 = Math.asin(clamp(d[1] / distance, -1, 1));
-  const lift = pitch >= 0 ? pitch * (Math.PI / 2 - p0) / (Math.PI / 2) : pitch * (Math.PI / 2 + p0) / (Math.PI / 2);
-  const [y, p] = [Math.atan2(d[0], d[2]) + yaw, clamp(p0 + lift, -SIGHT_MAX, SIGHT_MAX)];
-  const c = Math.cos(p);
-  return { position, target: [position[0] + Math.sin(y) * c * distance, position[1] + Math.sin(p) * distance, position[2] + Math.cos(y) * c * distance] };
-}
+// Round 199: the free look's range and ease are tilt.js's (FREE_LOOK): 135 degrees to either side, and up or down to
+// just short of the vertical (turnSight).
+export const LOOK_MAX = Object.freeze({ yaw: FREE_LOOK.maxYaw, pitch: FREE_LOOK.maxPitch });
+const LOOK_TAU = FREE_LOOK.ease;
+const LOOK_IN = FREE_LOOK.fadeIn;
+const turned = turnSight;
 
 // A polyline with its running lengths: at(s) is the point s metres along it.
 function measured(points) {

@@ -4,27 +4,42 @@
 // the look by as much, to 135 degrees either side; tilting the phone's top towards the player looks up, to nearly
 // straight up. Pictures go to the round's shots/.
 //
+// Round 200: with `dungeon` it plays the same in a legacy dungeon (Ta Prohm, Portia's site), which has the same look.
+//
 //   npm run build -w client
-//   node client/scripts/free-look-check.mjs [outDir]
+//   node client/scripts/free-look-check.mjs [outDir] [road|dungeon]
 import { RoadProvider } from '../../server/test/road-helpers.js';
 import { openGame } from './lib/play.mjs';
 
-const game = await openGame({ out: process.argv[2] ?? 'docs/rounds/199/shots', provider: (content) => new RoadProvider(content), serviceOptions: { seedSource: () => 4242 } });
+const dungeon = process.argv[3] === 'dungeon';
+const game = await openGame({ out: process.argv[2] ?? (dungeon ? 'docs/rounds/200/shots' : 'docs/rounds/199/shots'), provider: (content) => new RoadProvider(content), serviceOptions: { seedSource: () => 4242 } });
 const DEG = 180 / Math.PI;
 
 await game.run(async ({ page, check, shot }) => {
   await page.addInitScript(() => { if (!localStorage.getItem('parallang.title')) localStorage.setItem('parallang.title', JSON.stringify({ seed: 4242, at: '0,0' })); });
-  await game.toRoad();
-  await page.waitForFunction(() => window.__parallangRoad?.stats?.mode === 'hold', null, { timeout: 60000 });
-  await page.evaluate(() => { document.querySelector('.dock').style.visibility = 'hidden'; window.__parallangRoad.pinWeather({ phase: 0.3, rain: 0, cloud: 0.15, wind: 0.1 }); });
+  if (dungeon) {
+    await game.toPortia();
+    await page.waitForFunction(() => Boolean(window.__parallangLevel?.director?.pose), null, { timeout: 60000 });
+    await page.waitForTimeout(2500); // the camera arrives at the site and holds
+  } else {
+    await game.toRoad();
+    await page.waitForFunction(() => window.__parallangRoad?.stats?.mode === 'hold', null, { timeout: 60000 });
+    await page.evaluate(() => { document.querySelector('.dock').style.visibility = 'hidden'; window.__parallangRoad.pinWeather({ phase: 0.3, rain: 0, cloud: 0.15, wind: 0.1 }); });
+  }
   await page.evaluate(() => window.__parallang.store.getState().setTiltLook(true));
   await page.waitForTimeout(600);
   // The camera's line of sight: its heading (radians, as the director's sight: atan2(x, z)) and how far up it points.
-  const sight = () => page.evaluate(() => {
-    const m = window.__parallangRoad.camera.matrixWorld.elements;
-    const [x, y, z] = [-m[8], -m[9], -m[10]];
+  const sight = () => page.evaluate((inDungeon) => {
+    let [x, y, z] = [0, 0, 0];
+    if (!inDungeon) {
+      const m = window.__parallangRoad.camera.matrixWorld.elements;
+      [x, y, z] = [-m[8], -m[9], -m[10]];
+    } else {
+      const { position, target } = window.__parallangLevel.director.pose; // the pose the dungeon's camera is set to
+      [x, y, z] = [target[0] - position[0], target[1] - position[1], target[2] - position[2]];
+    }
     return { heading: Math.atan2(x, z), rise: Math.asin(Math.max(-1, Math.min(1, y / Math.hypot(x, y, z)))) };
-  });
+  }, dungeon);
   // Holds the phone at `angles` for `ms`, at 60 events a second.
   const hold = async (angles, ms = 900) => {
     await page.evaluate(async ([a, duration]) => {

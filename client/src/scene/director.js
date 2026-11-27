@@ -14,6 +14,8 @@
 // Round 119: the dungeon is a map. A walk follows the path between two neighbouring sites in either direction. After
 // a resolve the camera keeps looking at the site: the player picks the way on (round 116's turn to it is gone).
 
+import { FREE_LOOK, turnSight } from './tilt.js';
+
 export const EYE = 1.6; // eye height above the ground, metres
 export const WALK_SPEED = 2.8; // metres per second along a path, between the ramps
 export const STANDOFF = 4; // a walk stops this far before its site, along the path, and looks at it
@@ -31,9 +33,11 @@ const TARGET_LIFT = EYE - 0.25; // where on a site (and on the path ahead) the c
 export const ENGAGE_MAX = 0.35; // at a resolved site the camera stands this fraction of the way in to it
 const ENGAGE_TAU = 0.7; // seconds, the ease of a step in
 // Round 125: the look a tilt may ask for (the host's tilt.js keeps inside it), and how it is applied.
-export const LOOK_MAX = Object.freeze({ yaw: 0.25, pitch: 0.18 }); // radians
-const LOOK_TAU = 0.12; // seconds, the ease to a new look
-const LOOK_IN = 0.5; // seconds, the look fades in over the start of a hold
+// Round 200: the road's free look (tilt.js FREE_LOOK, round 199): 135 degrees to either side and up or down to just
+// short of the vertical, eased quickly (0.25 and 0.18 rad, eased over 0.12 s, before).
+export const LOOK_MAX = Object.freeze({ yaw: FREE_LOOK.maxYaw, pitch: FREE_LOOK.maxPitch }); // radians
+const LOOK_TAU = FREE_LOOK.ease;
+const LOOK_IN = FREE_LOOK.fadeIn;
 const ENTER_WALK = 16; // round 191: metres of the way in that an entry from the road walks
 const FAR = 25; // a walk that starts further than this from its path (from the overview) comes down as an approach does
 const ON_PATH = 1.5; // a camera this near to the path it is about to walk (the way it came) starts from where it stands
@@ -128,14 +132,8 @@ export function dropPoses(a, b, u) {
 }
 
 // Round 125: the pose with its line of sight turned by `yaw` (to the left) and `pitch` (up); the position stays.
-function turned({ position, target }, yaw, pitch) {
-  if (!yaw && !pitch) return { position, target };
-  const d = [target[0] - position[0], target[1] - position[1], target[2] - position[2]];
-  const distance = Math.hypot(...d) || 1e-6;
-  const [y, p] = [Math.atan2(d[0], d[2]) + yaw, clamp(Math.asin(clamp(d[1] / distance, -1, 1)) + pitch, -1.4, 1.4)];
-  const c = Math.cos(p);
-  return { position, target: [position[0] + Math.sin(y) * c * distance, position[1] + Math.sin(p) * distance, position[2] + Math.cos(y) * c * distance] };
-}
+// Round 200: tilt.js's turnSight, as the road's.
+const turned = turnSight;
 
 // A slow sway that starts at zero, so a hold joins its transition without a jump.
 function drift(t) {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { createTilt, requestTiltPermission, screenAngle, tiltNeedsAsking } from '../scene/tilt.js';
+import { createFreeLook, requestTiltPermission, screenAngle, tiltNeedsAsking } from '../scene/tilt.js';
 
 // Round 115: the level behind the dungeon screen. The three.js host (src/scene/levelView.js) loads as its own chunk
 // after the first paint. Without WebGL (an old browser, the jsdom tests) a still backdrop stands in, and the camera
@@ -59,7 +59,7 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
   // Settings asks when the box is ticked, and on a later visit the first click anywhere asks.
   useEffect(() => {
     if (status !== 'ready' || !tilt || typeof window === 'undefined') return undefined;
-    const source = createTilt();
+    const source = createFreeLook(); // round 200: the road's free look, nearly all the way round (round 199)
     const onOrientation = (event) => source.orient(event, screenAngle(window), event.timeStamp / 1000);
     const listen = () => { window.removeEventListener('deviceorientation', onOrientation); window.addEventListener('deviceorientation', onOrientation); };
     const ask = () => { requestTiltPermission(window).then((answer) => { if (answer === 'granted') listen(); }); };

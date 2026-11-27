@@ -272,10 +272,12 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   applies at once and is stored under its own key (`parallang.display`), so it does not reconnect (round 117).
   A checkbox, "Tilt to look", lets the phone's orientation turn the camera's look at a site by up to 12° sideways and
   8° up or down (round 125; tilting the phone's top towards the player looks up). It is off by default; ticking it is the tap from which iOS Safari is asked for access to
-  motion. `node client/scripts/tilt-check.mjs` checks it in headless Chromium with synthetic orientation events.
-  From round 199 the road has its own free look (`createFreeLook` in `client/src/scene/tilt.js`): the direction out of
-  the phone's back is the line of sight, 135 degrees to either side and up or down to the vertical, with no drift
-  back; the dungeons keep the gentle tilt. `node client/scripts/free-look-check.mjs` checks it on the road.
+  motion.
+  From round 199 the road has a free look (`createFreeLook` in `client/src/scene/tilt.js`): the direction out of the
+  phone's back is the line of sight, 135 degrees to either side and up or down to the vertical, with no drift back.
+  From round 200 the legacy dungeons have the same (both directors use tilt.js's `turnSight` and `FREE_LOOK`), and
+  round 125's small tilt is gone. `node client/scripts/free-look-check.mjs <outDir> [road|dungeon]` checks it in
+  headless Chromium with synthetic orientation events.
   "Character voices" (round 126, on by default) has each character read its new lines aloud with the browser's speech
   synthesis, in the voice its sheet names (`voice: { kind, pitch, rate }` in `content/characters/enemies/`, kinds
   `female`, `male`, `creature`, `funny`); a line's 🔊 repeats it. Where the browser has speech recognition, a 🎤 beside
