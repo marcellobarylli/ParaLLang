@@ -161,7 +161,7 @@ test('at a hold a tilt turns the look, not the place; on a glide it does nothing
   const director = make();
   director.stand(start);
   const still = run(director, 2);
-  director.look({ yaw: 4, pitch: 0.3 }); // more than the range sideways: clamped (round 197: 135 degrees)
+  director.look({ yaw: 4, pitch: 0.3 }); // more than the range sideways: clamped (round 199: 135 degrees)
   run(director, 1 / 60);
   expect(director.looked.yaw).toBeLessThan(LOOK_MAX.yaw * 0.5); // eased: not there in one frame
   run(director, 0.3);
@@ -172,7 +172,7 @@ test('at a hold a tilt turns the look, not the place; on a glide it does nothing
   const sight = (pose) => Math.atan2(pose.target[0] - pose.position[0], pose.target[2] - pose.position[2]);
   const turn = Math.atan2(Math.sin(sight(looked) - sight(still)), Math.cos(sight(looked) - sight(still)));
   expect(Math.abs(turn - LOOK_MAX.yaw)).toBeLessThan(0.12);
-  // Round 197: up as far as it goes, the line of sight stops just short of straight up.
+  // Round 199: up as far as it goes, the line of sight stops just short of straight up.
   director.look({ yaw: 0, pitch: 3 });
   const up = run(director, 1);
   const rise = (up.target[1] - up.position[1]) / distance(up.target, up.position);

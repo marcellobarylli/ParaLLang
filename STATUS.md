@@ -34,13 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-27: round 197, look round on the road: 270 degrees, and up and down to the vertical
+## Addendum 2026-11-27: round 199, look round on the road: 270 degrees, and up and down to the vertical
 
 "Tilt to look" on the road is now a window on the world: the way the back of the phone points is the way the view
 looks, 135 degrees to either side (270 in all) and straight up or down, with no drift back while held, at any site
 the camera stops at. The dungeons keep their gentle tilt. Tested in Node and in Chromium with synthetic orientation
-events; not tried on a phone. **On the session branch, not merged.**
-[Architecture](docs/rounds/197/architecture.md), [findings](docs/rounds/197/findings.md).
+events; not tried on a phone. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/199/architecture.md), [findings](docs/rounds/199/findings.md).
 
 ## Addendum 2026-11-27: round 196, the narrator reads aloud; every road character its own voice
 

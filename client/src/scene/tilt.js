@@ -102,7 +102,7 @@ export function createTilt(options = {}) {
   };
 }
 
-// Round 197: the road's free look. The phone is a window on the world: the way its back points is the way the camera
+// Round 199: the road's free look. The phone is a window on the world: the way its back points is the way the camera
 // looks, turned from where it pointed on arrival. Sideways it turns up to FREE_LOOK.maxYaw either way (270 degrees in
 // all, nearly the whole way round); up and down it goes as far as the phone does, to straight up and straight down.
 // It does not drift back to the middle while held (the dungeons' gentle tilt does), and it reads the direction, not

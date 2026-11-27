@@ -1,4 +1,4 @@
-# Round 197 architecture
+# Round 199 architecture
 
 **Conversational round, recorded after the build.** Opened on 2026-11-27 on the owner's message in
 [`trail/interview.md`](trail/interview.md); the events are in [`trail/journal.md`](trail/journal.md). No pre-run
@@ -34,5 +34,6 @@ commit; nothing here is frozen.
 
 ## Status
 
-Built, tested in Node and in headless Chromium with synthetic orientation events; not tried on a phone. On the session
-branch `claude/sweet-noether-xz8nyd`, not merged.
+Built, tested in Node and in headless Chromium with synthetic orientation events; not tried on a phone. Opened as
+round 197 and renumbered: another session's rounds 197 and 198 reached `main` first. Merged to `main` and pushed on
+the owner's word; GitHub Pages deploys `main`.
