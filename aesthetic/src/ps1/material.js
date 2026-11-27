@@ -9,6 +9,7 @@ export function createPS1Uniforms() {
     uResolution: { value: new Vector2(320, 240) },
     uJitter: { value: 1 },
     uAffine: { value: 1 },
+    uAffineNear: { value: new Vector2(5, 16) }, // round 193: metres over which the mapping turns affine
     uSunDir: { value: new Vector3(0.5, 0.4, 0.7).normalize() },
     uSunColor: { value: new Vector3(0.8, 0.7, 0.55) },
     uAmbientSky: { value: new Vector3(0.45, 0.48, 0.58) },

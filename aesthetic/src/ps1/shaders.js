@@ -90,6 +90,7 @@ export const ps1FragmentShader = /* glsl */ `
 uniform sampler2D uMap;
 uniform float uHasMap;
 uniform float uAffine;
+uniform vec2 uAffineNear;
 uniform vec3 uTint;
 uniform float uOpacity;
 uniform float uAlphaTest;
@@ -113,7 +114,12 @@ varying float vHeight;
 
 void main() {
   // Interpolating (uv * w) and w perspective-correctly, then dividing, gives screen-linear UVs.
-  vec2 uv = mix(vUvPerspective, vUvAffine.xy / vUvAffine.z, uAffine);
+  // Round 193: close to the camera the mapping is perspective-correct, fading to affine between uAffineNear.x and
+  // .y metres. A large triangle right under the camera (a 6 m ground quad seen from eye height) otherwise smears and
+  // swims as the camera moves; further off the PS1 wobble stays. vUvAffine.z, interpolated perspective-correctly, is
+  // the fragment's own depth.
+  float affine = uAffine * smoothstep(uAffineNear.x, uAffineNear.y, vUvAffine.z);
+  vec2 uv = mix(vUvPerspective, vUvAffine.xy / vUvAffine.z, affine);
   vec4 tex = vec4(1.0);
   if (uHasMap > 0.5) tex = texture2D(uMap, uv);
   if (tex.a < uAlphaTest) discard;

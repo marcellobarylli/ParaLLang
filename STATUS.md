@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 193, no warp under the player
+
+The ground just under the camera no longer smears and swims as it moves: textures are mapped perspective-correctly
+within 5 m of the camera, turning to the PS1's affine mapping by 16 m. Seen in Chromium frames of a glide before and
+after; not seen on a phone. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/193/architecture.md), [findings](docs/rounds/193/findings.md).
+
 ## Addendum 2026-11-27: round 192, the road kept clear; ferns, flowers and bushes
 
 No tree or plant now grows within 1.6 m of a way's centreline (the 1.6 m track and half its width again on each
