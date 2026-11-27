@@ -12,3 +12,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 6 | 21:59 approx. | 21:59:01 | correction | Claude | Rows 1 to 5 give times from 22:00 to 22:16 that were guessed wrong: the round ran from about 21:54 to 21:58:49, when it was closed | `journal.md` |
 | 7 | 22:09:24 | 22:09:24 | renumbered | Claude | Opened as round 197; another session put its rounds 197 and 198 on `main` first, so this round is 199 | `../architecture.md` |
 | 8 | 22:09:24 | 22:09:24 | deployed | Claude | Merged with `main` and pushed on the owner's word ("Yes!") | `../architecture.md` |
+| 9 | 22:12:06 | 22:12:06 | blocked | Claude | Row 8's deploy did not happen: Pages runs the tests first, and three web-client tests fail on `main` from round 198 (another session's, still at work) | `../architecture.md` |

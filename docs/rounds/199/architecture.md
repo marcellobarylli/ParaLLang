@@ -36,4 +36,6 @@ commit; nothing here is frozen.
 
 Built, tested in Node and in headless Chromium with synthetic orientation events; not tried on a phone. Opened as
 round 197 and renumbered: another session's rounds 197 and 198 reached `main` first. Merged to `main` and pushed on
-the owner's word; GitHub Pages deploys `main`.
+the owner's word. Not yet live: GitHub Pages runs the tests before it deploys, and three tests of
+`server/test/web-client.test.js` fail on `main` since round 198 ("player: Required": light checking is the default
+and the scripted model gives no `player`); this round's changes do not touch them.
