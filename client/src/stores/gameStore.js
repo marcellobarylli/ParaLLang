@@ -731,6 +731,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }), // round 198: light is the default
       setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on !== false }, storage) }),
       // Round 203 (experimental): the game played while a reply is on its way.
+      setGlitch: (on) => set({ display: saveDisplay({ ...get().display, glitch: on === true }, storage) }), // round 205
       setWaitGame: (on) => set({ display: saveDisplay({ ...get().display, waitGame: on === true }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.

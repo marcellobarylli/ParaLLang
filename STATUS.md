@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 205, the trees' glitch behind a switch
+
+Round 204 had a fault: in the legacy dungeons the wind tore the trees' leaves into shards (the road's sway does not
+fit their canopy). The leaves now hold still, and **"Glitch"** in Settings (Display and controls, off by default)
+lets it happen again, capped at the strength of the owner's recording. Seen in Chromium, not on a phone. **Merged to
+`main` and deployed** on the owner's word.
+[Architecture](docs/rounds/205/architecture.md), [findings](docs/rounds/205/findings.md).
+
 ## Addendum 2026-11-27: round 204, the legacy dungeons under the road's sky
 
 Ta Prohm, The Kiln and Micromort Mountain now have the road's time of day and weather: the same clock and seed, the

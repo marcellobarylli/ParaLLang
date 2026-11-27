@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, waitGame = false, onWaitGame = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, waitGame = false, onWaitGame = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -193,7 +193,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             )}
           </Group>
         )}
-        {(onPanelOpacity || onTiltLook || onFollow || onWaitGame) && (
+        {(onPanelOpacity || onTiltLook || onFollow || onWaitGame || onGlitch) && (
           <Group title="Display and controls">
             {onFollow && (
               <>
@@ -223,6 +223,16 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                 </label>
                 <small>Where the camera stops, on the road and in the dungeons, turning and tilting the phone looks round, as through a window: nearly all the way round, and straight up or down. The phone may ask for access to motion.</small>
                 {tiltLook && TILT_ANSWERS[tiltAnswer] && <small role="status" className="setting-warning">{TILT_ANSWERS[tiltAnswer]}</small>}
+              </>
+            )}
+            {/* Round 205: a fault the owner liked, kept behind a switch. */}
+            {onGlitch && (
+              <>
+                <label className="setting-check" htmlFor="settings-glitch">
+                  <input id="settings-glitch" type="checkbox" checked={glitch} onChange={(event) => onGlitch(event.target.checked)} />
+                  <span>Glitch</span>
+                </label>
+                <small>In Ta Prohm, The Kiln and on Micromort Mountain the wind is allowed to pull the trees' leaves into long shards, more the harder it blows. It began as a fault. It applies at once.</small>
               </>
             )}
             {/* Round 203: experimental, off unless switched on. */}

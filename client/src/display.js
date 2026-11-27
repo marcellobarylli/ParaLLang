@@ -17,6 +17,7 @@
 //   server keeps it on the road (POST /api/road/mode). On unless switched off.
 // follow (round 190): whether a character's new reply is brought to the top of the conversation panel. On unless
 //   switched off (off, the panel stays where the player left it, round 140).
+// glitch (round 205): whether the wind may tear the legacy dungeons' leaves into shards (levelView.js). Off unless switched on.
 // waitGame (round 203, experimental): whether a game is played over the conversation panel while a reply is on its
 //   way (waitGame.js). Off unless switched on.
 // immersion (round 148): the share of a character's lines in the language being learned, 0.1 to 1. 1 unless moved.
@@ -65,11 +66,11 @@ export const volumesOf = (volume) => Object.fromEntries(VOLUME_CHANNELS.map((cha
 export function loadDisplay(storage = browserStorage()) {
   let stored = null;
   try { stored = JSON.parse(storage?.getItem?.(DISPLAY_KEY) ?? 'null'); } catch { stored = null; }
-  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, narrator: stored?.narrator !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), immersionAuto: stored?.immersionAuto !== false, light: stored?.strict !== true, strict: stored?.strict === true, streamlined: stored?.streamlined !== false, follow: stored?.follow !== false, waitGame: stored?.waitGame === true, volume: volumesOf(stored?.volume) };
+  return { panelOpacity: clampPanelOpacity(stored?.panelOpacity), tiltLook: stored?.tiltLook === true, voices: stored?.voices !== false, narrator: stored?.narrator !== false, music: stored?.music !== false, beginner: stored?.beginner !== false, rails: stored?.rails !== false, immersion: clampImmersion(stored?.immersion), immersionAuto: stored?.immersionAuto !== false, light: stored?.strict !== true, strict: stored?.strict === true, streamlined: stored?.streamlined !== false, follow: stored?.follow !== false, waitGame: stored?.waitGame === true, glitch: stored?.glitch === true, volume: volumesOf(stored?.volume) };
 }
 
 export function saveDisplay(display, storage = browserStorage()) {
-  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, narrator: display?.narrator !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), immersionAuto: display?.immersionAuto !== false, light: display?.light !== false, strict: display?.light === false, streamlined: display?.streamlined !== false, follow: display?.follow !== false, waitGame: display?.waitGame === true, volume: volumesOf(display?.volume) };
+  const value = { panelOpacity: clampPanelOpacity(display?.panelOpacity), tiltLook: display?.tiltLook === true, voices: display?.voices !== false, narrator: display?.narrator !== false, music: display?.music !== false, beginner: display?.beginner !== false, rails: display?.rails !== false, immersion: clampImmersion(display?.immersion), immersionAuto: display?.immersionAuto !== false, light: display?.light !== false, strict: display?.light === false, streamlined: display?.streamlined !== false, follow: display?.follow !== false, waitGame: display?.waitGame === true, glitch: display?.glitch === true, volume: volumesOf(display?.volume) };
   try { storage?.setItem?.(DISPLAY_KEY, JSON.stringify(value)); } catch { /* private mode: kept for this page only */ }
   return value;
 }
