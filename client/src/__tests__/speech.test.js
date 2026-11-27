@@ -4,6 +4,7 @@
 import { describe, expect, test, vi } from 'vitest';
 import { LISTEN_PROBLEMS, NARRATOR, VOICE_KINDS, createListener, createSpeaker, pickVoice, spokenText, voiceProfile } from '../speech.js';
 import { narrativeParts, narratorOn, passageParts } from '../narratorVoice.js';
+import { createNarratorClips } from '../api/narrate.js';
 
 const voice = (name, lang) => ({ name, lang, localService: true });
 // Like an iPhone with the Italian and Spanish voices installed, and an Android with Google's one voice a language.
@@ -228,12 +229,12 @@ describe('the voice space and the narrator', () => {
   test('a narrative is the narrator\'s English with its listed words in the language', () => {
     const parts = narrativeParts('She pours a caffè and waits, as a ladle might.', [{ word: 'caffè', meaning: 'coffee' }], 'it-IT');
     expect(parts).toEqual([
-      { text: 'She pours a ', narrator: true, tag: null },
-      { text: 'caffè', narrator: false, tag: 'it-IT' },
-      { text: ' and waits, as a ladle might.', narrator: true, tag: null },
+      { text: 'She pours a ', narrator: true, tag: null, told: true },
+      { text: 'caffè', narrator: false, tag: 'it-IT', told: true },
+      { text: ' and waits, as a ladle might.', narrator: true, tag: null, told: true },
     ]);
     expect(passageParts({ segments: [{ text: 'On a stone: ' }, { text: 'Chi va piano', kind: 'truth', lang: 'it' }, { text: '. Then the road.' }] }, 'it-IT'))
-      .toEqual([{ text: 'On a stone: ', narrator: true, tag: null }, { text: 'Chi va piano', narrator: false, tag: 'it' }, { text: '. Then the road.', narrator: true, tag: null }]);
+      .toEqual([{ text: 'On a stone: ', narrator: true, tag: null, told: true }, { text: 'Chi va piano', narrator: false, tag: 'it', told: true }, { text: '. Then the road.', narrator: true, tag: null, told: true }]);
     expect(narratorOn({ voices: true })).toBe(true);
     expect(narratorOn({ voices: true, narrator: false })).toBe(false);
     expect(narratorOn({ voices: false, narrator: true })).toBe(false);
@@ -258,5 +259,93 @@ describe('the voice space and the narrator', () => {
     expect(scope.cancels).toBe(2);
     // Punctuation alone is not read.
     expect(speaker.say([{ text: ' — ', narrator: true }])).toEqual([]);
+  });
+});
+
+// Round 202: the narrator's hosted voice. A narration's told parts are one clip from the server; the character's line
+// follows in the device's voice; without a clip the device's voice reads the narration as before.
+describe('the hosted narrator', () => {
+  const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+  function hostedScope() {
+    const scope = fakeSynthesis();
+    scope.players = [];
+    scope.Audio = function Audio() { this.plays = []; this.play = () => { this.plays.push(this.src); return Promise.resolve(); }; this.pause = () => { this.paused = true; this.onpause?.(); }; scope.players.push(this); };
+    scope.URL = { createObjectURL: (blob) => `blob:${blob.text}`, revokeObjectURL: () => {} };
+    return scope;
+  }
+  const LINE = { text: 'Buongiorno!', tag: 'it-IT', voice: { kind: 'male' } };
+
+  test('the narration is one clip, words of the language included, and the line waits for it', async () => {
+    const scope = hostedScope();
+    const speaker = createSpeaker(scope);
+    const asked = [];
+    speaker.hosted = async (text) => { asked.push(text); return { text }; };
+    speaker.say([...narrativeParts('She pours a caffè and waits.', [{ word: 'caffè', meaning: 'coffee' }], 'it-IT'), LINE]);
+    await tick(); await tick();
+    expect(asked).toEqual(['She pours a caffè and waits.']);
+    const [player] = scope.players;
+    expect(player.plays).toEqual(['blob:She pours a caffè and waits.']);
+    expect(speaker.speaking).toBe(true);
+    expect(scope.spoken).toEqual([]); // the line has not begun
+    player.onended();
+    await tick(); await tick();
+    expect(scope.spoken.map((utterance) => utterance.text)).toEqual(['Buongiorno!']);
+    expect(speaker.speaking).toBe(false);
+  });
+
+  test('no clip: the device reads the narration part by part, then the line', async () => {
+    const scope = hostedScope();
+    const speaker = createSpeaker(scope);
+    speaker.hosted = async () => null;
+    speaker.say([...narrativeParts('She pours a caffè.', [{ word: 'caffè', meaning: 'coffee' }], 'it-IT'), LINE]);
+    await tick(); await tick();
+    expect(scope.spoken.map((utterance) => utterance.text)).toEqual(['She pours a', 'caffè', '.'].filter((text) => /\p{L}/u.test(text)));
+    scope.spoken.at(-1).onend();
+    await tick(); await tick();
+    expect(scope.spoken.at(-1).text).toBe('Buongiorno!');
+  });
+
+  test('a stop while the clip is on its way drops it; a passage is being narrated until its clip ends', async () => {
+    const scope = hostedScope();
+    const speaker = createSpeaker(scope);
+    let deliver;
+    speaker.hosted = () => new Promise((resolve) => { deliver = resolve; });
+    speaker.say(narrativeParts('He looks up.', [], 'it-IT'));
+    await tick();
+    speaker.stop();
+    deliver({ text: 'late' });
+    await tick(); await tick();
+    expect(scope.players.flatMap((player) => player.plays)).toEqual([]);
+    expect(scope.spoken).toEqual([]);
+
+    speaker.hosted = async (text) => ({ text });
+    speaker.narrate(passageParts({ segments: [{ text: 'You walk in under the trees.' }] }));
+    expect(speaker.narrating).toBe(true);
+    speaker.say([LINE], { after: true }); // a plain line after a passage waits in the device's queue as before
+    await tick(); await tick();
+    scope.players.at(-1).onended();
+    await tick(); await tick();
+    expect(speaker.narrating).toBe(false);
+  });
+
+  test('the clips: asked of the server once a text, not again when it has no voice, later when it is busy', async () => {
+    let clock = 0;
+    const calls = [];
+    let answer = () => ({ ok: true, status: 200, blob: async () => ({ size: 9 }) });
+    const clips = createNarratorClips({ getSettings: () => ({ serverUrl: 'https://s', token: 't' }), getGeminiKey: () => null, now: () => clock, fetchImpl: async (url, init) => { calls.push([url, JSON.parse(init.body).text, init.headers['X-ParaLLang-Token']]); return answer(); } });
+    expect(await clips('One.')).toEqual({ size: 9 });
+    expect(await clips('One.')).toEqual({ size: 9 });
+    expect(calls).toEqual([['https://s/api/narrate', 'One.', 't']]);
+    answer = () => ({ ok: false, status: 503, json: async () => ({ error: { code: 'NARRATOR_UNAVAILABLE', details: { pause: true } } }) });
+    expect(await clips('Two.')).toBeNull();
+    expect(await clips('Three.')).toBeNull();
+    expect(calls).toHaveLength(2); // paused
+    clock += 6 * 60 * 1000;
+    answer = () => ({ ok: false, status: 503, json: async () => ({ error: { code: 'NARRATOR_UNAVAILABLE', details: { pause: false } } }) });
+    expect(await clips('Three.')).toBeNull();
+    clock += 60 * 60 * 1000;
+    expect(await clips('Four.')).toBeNull();
+    expect(calls).toHaveLength(3); // off for the visit
+    expect(await clips('x'.repeat(1501))).toBeNull();
   });
 });

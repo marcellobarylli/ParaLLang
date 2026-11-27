@@ -8,6 +8,7 @@ import { GitHubSaves, MirroredLearningStorage, githubSavesConfig } from './src/g
 import { saveSummary } from './src/road/service.js';
 import { LearningService } from './src/learning-service.js';
 import { createApp } from './src/app.js';
+import { createNarratorVoice } from './src/narrator-voice.js';
 
 loadRootEnv();
 
@@ -62,7 +63,10 @@ const storages = Object.values(services).map((each) => each.storage);
 // Round 181: the saves' status is the default language's store's (they share the GitHub settings and repository).
 const savesStatus = () => (github ? { ...service.storage.status } : { kind: 'disk', ...(githubSettings?.problem ? { problem: githubSettings.problem } : {}) });
 // Round 040 (critique 1.2): the ends are trimmed, as fetch trims header values.
-const app = createApp({ services, defaultLanguage, token: (process.env.PARALLANG_TOKEN || '').trim() || null, friendCode, saves: savesStatus });
+// Round 202: the narrator reads in a hosted voice (Gemini text-to-speech) when the server has GEMINI_API_KEY or a
+// friend sends their own; NARRATOR_TTS_MODEL and NARRATOR_VOICE change the model and the voice.
+const narratorVoice = createNarratorVoice({ apiKey: (process.env.GEMINI_API_KEY || '').trim() || null, model: (process.env.NARRATOR_TTS_MODEL || '').trim() || undefined, voice: (process.env.NARRATOR_VOICE || '').trim() || undefined });
+const app = createApp({ services, narratorVoice, defaultLanguage, token: (process.env.PARALLANG_TOKEN || '').trim() || null, friendCode, saves: savesStatus });
 
 if (process.env.NODE_ENV !== 'test') {
   const server = app.listen(port, host, () => {

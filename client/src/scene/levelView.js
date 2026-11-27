@@ -11,7 +11,8 @@ import {
   AdditiveBlending, BufferGeometry, CircleGeometry, CylinderGeometry, DoubleSide, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial,
   OctahedronGeometry, PerspectiveCamera, RingGeometry, Vector3, WebGLRenderer,
 } from 'three';
-import { PRESETS, TA_PROHM, createFigure, createPS1Pipeline, createWorld, micromortHeightAt, taProhmHeightAt } from '@parallang/aesthetic';
+import { ATMOSPHERE, PRESETS, TA_PROHM, atmosphereFor, createFigure, createPS1Pipeline, createWeatherEffects, createWorld, micromortHeightAt, taProhmHeightAt } from '@parallang/aesthetic';
+import { currentWeather, onWeatherPin } from './weatherClock.js';
 import { createDirector, pathPoints } from './director.js';
 import { freeRect } from './insets.js';
 
@@ -111,7 +112,12 @@ function beacon([x, z], heightAt) {
  *   setInsets({ top, right, bottom, left })   what the interface covers, in CSS pixels; the camera frames the rest
  *   setLabels([element, ...])                 one element per site, placed over its site every frame
  */
-export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedMotion = false } = {}) {
+// Round 204: with a `seed` (the road's), the level has the road's sky: the same clock and seed give the same time of
+// day and weather (weatherClock.js), lit and coloured by the same atmosphere, with the same rain, snow, stars,
+// fireflies, clouds and lightning. The level keeps what is its own: its glow, its corruption, and its fog's reach
+// (shortened by mist in the proportion the road's is). Without a seed the level keeps its fixed preset, as before.
+const CLOUDS_BELOW = 45; // metres of camera over its target above which the low clouds are hidden: the map is seen from above
+export function createLevelView(canvas, { dungeon, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, seed = null, now = () => Date.now() } = {}) {
   const level = LEVELS[dungeon.level];
   if (!level) throw new Error(`No level view for "${dungeon.level}"`);
   const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
@@ -121,7 +127,17 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
   const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
   const director = createDirector({ dungeon, heightAt: level.heightAt, fov: FOV, levelBox: level.box });
   director.attract();
-  const fog = { near: PRESETS[world.preset].fogNear, far: PRESETS[world.preset].fogFar };
+  const preset = PRESETS[world.preset];
+  const fog = { near: preset.fogNear, far: preset.fogFar };
+  const skyed = seed !== null && seed !== undefined;
+  const effects = skyed ? createWeatherEffects(
+    { scene: world.scene, uniforms: world.uniforms, materials: { leaves: world.materials.leaves ?? { uniforms: { uSway: { value: 0 } } } }, terrain: { heightAt: level.heightAt, waterY: 0 } },
+    { reducedMotion },
+  ) : null;
+  const lowClouds = effects?.group.getObjectByName('clouds') ?? null;
+  let weather = skyed ? currentWeather(seed, now()) : null;
+  let sinceLight = Infinity;
+  const unpin = skyed ? onWeatherPin(() => { sinceLight = Infinity; }) : () => {};
 
   const indexOf = (siteId) => dungeon.sites.findIndex((site) => site.id === siteId);
   const ribbons = dungeon.paths.map(({ between }) => {
@@ -207,6 +223,20 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     camera.lookAt(...pose.target);
     // The level's fog is set for the ground. From the air it backs off, and it stays short of the ground's edge.
     const distance = Math.hypot(pose.position[0] - pose.target[0], pose.position[1] - pose.target[1], pose.position[2] - pose.target[2]);
+    if (effects) {
+      sinceLight += dt;
+      if (sinceLight > 0.25) {
+        sinceLight = 0;
+        weather = currentWeather(seed, now());
+        const light = atmosphereFor(weather);
+        world.setAtmosphere({ ...light, corruption: preset.corruption, ...(preset.glow ? { glow: preset.glow } : {}), ...(preset.glowHot ? { glowHot: preset.glowHot } : {}) });
+        effects.setAtmosphere(light);
+        fog.near = preset.fogNear * (light.fogNear / ATMOSPHERE.fog.near);
+        fog.far = preset.fogFar * (light.fogFar / ATMOSPHERE.fog.far);
+      }
+      if (effects.update(weather, dt, camera).flash) onThunder();
+      if (lowClouds) lowClouds.visible = pose.position[1] - pose.target[1] < CLOUDS_BELOW;
+    }
     const far = Math.min(440, fog.far + Math.max(0, distance - 30) * 1.7);
     world.uniforms.uFogFar.value = far;
     world.uniforms.uFogNear.value = Math.min(far - 80, fog.near + Math.max(0, distance - 30) * 0.85);
@@ -356,8 +386,12 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, reducedM
     resize,
     /** One frame of `dt` seconds, outside the animation loop (screenshots). */
     step,
+    /** Round 204: the weather showing (null without a seed) and what its effects show, for tests and the console. */
+    get weather() { return weather; },
+    get effects() { return effects ? { ...effects.state } : null; },
     dispose() {
       disposed = true;
+      unpin();
       cancelAnimationFrame(raf);
       canvas.removeEventListener('webglcontextlost', onContextLost);
       world.scene.traverse((object) => {

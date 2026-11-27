@@ -629,7 +629,9 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
     return () => window.removeEventListener('click', prime, { capture: true });
   }, [voicesWanted, speech]);
   // Round 146: on the road the rain is heard under the music, as heavy as it falls; elsewhere it is dry.
-  const roadWeather = useWeather(state.mode === 'road' ? state.road?.seed ?? null : null);
+  // Round 204: the legacy dungeons have the road's sky and its rain, by the same seed, wherever they are entered from.
+  const skySeed = state.road?.seed ?? state.titleSeed ?? null;
+  const roadWeather = useWeather(skySeed);
   const rainNow = roadWeather?.rain ?? 0;
   useEffect(() => { ambience.setRain?.(audioWanted ? rainNow : 0); }, [ambience, audioWanted, rainNow]);
   const { initialize, dungeon, phase, siteIndex, progress } = state;
@@ -708,12 +710,12 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
     <div className={`app-shell phase-${atTitle ? 'title' : shellPhase}${titleShown ? ' at-title' : ''}${onRoad ? ' on-road' : ''}${state.settingsOpen ? ' settings-open' : ''}`} style={{ '--panel-alpha': state.display?.panelOpacity ?? 0.7 }}>
       {onRoad && legacy
         ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={legacyFrom} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
-          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
+          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} seed={skySeed} onThunder={() => { if (audioWanted) ambience.thunder?.(); }} />
         : onRoad || atTitle
         ? <RoadView road={state.road} seed={state.titleSeed} title={titleSite} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
-          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />}
+          closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} seed={skySeed} onThunder={() => { if (audioWanted) ambience.thunder?.(); }} />}
 
       <header className="hud" ref={hudRef}>
         {!atTitle && <div className="hud-title"><strong>ParaLLang</strong><span>{onRoad ? ROAD_NAME : dungeon.name}</span></div>}

@@ -3,7 +3,7 @@ import cors from 'cors';
 import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { createEncounterRouter } from './routes/encounter.js';
 import { AppError, OUTDATED_CLIENT, requireClient } from './errors.js';
-import { requestContext } from './request-context.js';
+import { currentRequest, requestContext } from './request-context.js';
 
 const digest = (value) => createHash('sha256').update(String(value)).digest();
 
@@ -34,7 +34,7 @@ export const GEMINI_KEY_HEADER = 'X-Gemini-Key';
 // every client before round 181 did. A language the server does not play is refused, not swapped for another.
 export const LANGUAGE_HEADER = 'X-ParaLLang-Language';
 
-export function createApp({ service, services: given = null, defaultLanguage = null, logger = console, token = null, friendCode = null, saves = null }) {
+export function createApp({ service, services: given = null, defaultLanguage = null, logger = console, token = null, friendCode = null, saves = null, narratorVoice = null }) {
   // A service without content (a test's stub) plays under its own key and lists no language.
   const services = new Map(given ? Object.entries(given) : [[service.content?.language?.code ?? 'default', service]]);
   const fallback = defaultLanguage && services.has(defaultLanguage) ? defaultLanguage : services.keys().next().value;
@@ -45,9 +45,19 @@ export function createApp({ service, services: given = null, defaultLanguage = n
   // Round 145: with `saves` (where the saves are kept, and whether the last copy to GitHub went through) the health
   // check says so, so the owner can see from outside that the store is the one they set up.
   // Round 181: the languages are public, as the health check is, so a page can offer them before it has a token.
-  app.get('/api/health', (req, res) => res.json({ status: 'ok', languages, defaultLanguage: fallback, ...(saves ? { saves: saves() } : {}) }));
+  app.get('/api/health', (req, res) => res.json({ status: 'ok', languages, defaultLanguage: fallback, ...(saves ? { saves: saves() } : {}), ...(narratorVoice?.status ? { narrator: narratorVoice.status() } : {}) })); // round 202: whether the narrator has a hosted voice, and how its last call went
   if (token) app.use(requireToken(token, friendCode));
   else app.use((req, res, next) => requestContext.run({ access: 'owner' }, next));
+  // Round 202: the narrator's hosted voice. The text to read comes in, a sound file goes out; a friend's own Gemini
+  // key is used when they sent one. Without a voice (no key on the server) the answer is NARRATOR_UNAVAILABLE and the
+  // page reads with the device's voice.
+  app.post('/api/narrate', express.json({ limit: '16kb' }), async (req, res, next) => {
+    try {
+      if (!narratorVoice) throw new AppError('The narrator has no hosted voice on this server.', { status: 503, code: 'NARRATOR_UNAVAILABLE', details: { pause: false } });
+      const clip = await narratorVoice.speak(req.body?.text, { apiKey: currentRequest()?.geminiKey ?? null });
+      res.set({ 'Content-Type': clip.type, 'Cache-Control': 'private, max-age=86400' }).send(clip.audio);
+    } catch (error) { next(error); }
+  });
   const routers = new Map([...services].map(([code, each]) => [code, gameRoutes(each, languages)]));
   app.use((req, res, next) => {
     const asked = req.get(LANGUAGE_HEADER)?.trim().toLowerCase() || fallback;
