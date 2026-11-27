@@ -9,3 +9,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 3 | 22:04 approx. | 22:16:00 | decision | Claude | A free look for the road, as a window (the phone's back is the line of sight): 135 degrees each way, up and down to the vertical, no drift back; the dungeons keep their tilt; also at a site where nobody waits | `../architecture.md` |
 | 4 | 22:14 approx. | 22:16:00 | run | Claude | Client 347 pass (6 new); `free-look-check.mjs` 8 of 8 in Chromium with synthetic orientation events | `../findings.md` |
 | 5 | 22:16:00 | 22:16:00 | closed | Claude | Records, status addendum; on the session branch, not merged (deploying asked of the owner) | `../architecture.md` |
+| 6 | 21:59 approx. | 21:59:01 | correction | Claude | Rows 1 to 5 give times from 22:00 to 22:16 that were guessed wrong: the round ran from about 21:54 to 21:58:49, when it was closed | `journal.md` |
