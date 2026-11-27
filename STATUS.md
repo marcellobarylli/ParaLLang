@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 201, the practice box never says no
+
+Under a correction, a try that matches the sentence still gets "✓ That's it."; any other try now gets "✓ Yeah, pretty
+good. You probably said it right.", in the same green ("Not quite. Look again at: …" is gone). The microphone
+mishears, and the try is the point. Tested; not seen in a browser. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/201/architecture.md), [findings](docs/rounds/201/findings.md).
+
 ## Addendum 2026-11-27: round 200, the same free look in the legacy dungeons
 
 "Tilt to look" in the legacy dungeons is now the road's (round 199): 135 degrees to either side and straight up or

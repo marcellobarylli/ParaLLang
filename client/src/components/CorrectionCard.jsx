@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { differingWords, sameSentence } from '../practice.js';
+import { sameSentence } from '../practice.js';
 import { pairSentences } from '../sentences.js';
 import SentenceText from './SentenceText.jsx';
 
@@ -8,7 +8,7 @@ import SentenceText from './SentenceText.jsx';
 // the corrected sentence): the practice is checked here in the app, sends nothing and costs nothing.
 export default function CorrectionCard({ correction, language, speaker = null, listener = null, onUse = null }) {
   const [attempt, setAttempt] = useState('');
-  const [verdict, setVerdict] = useState(null); // null, 'right', or the words to look at
+  const [verdict, setVerdict] = useState(null); // null, 'right' or 'near'
   const [listening, setListening] = useState(false);
   const boxRef = useRef(null);
   const verdictRef = useRef(null);
@@ -34,7 +34,9 @@ export default function CorrectionCard({ correction, language, speaker = null, l
   const languageName = language?.name ?? 'the target language';
   const check = (text = attempt) => {
     if (!text.trim()) return;
-    setVerdict(sameSentence(text, correction.text) ? 'right' : differingWords(text, correction.text));
+    // Round 201: the practice is for trying, not for marking, and a microphone mishears: a try that is not the
+    // sentence word for word is green too, and the app says so with a straight face.
+    setVerdict(sameSentence(text, correction.text) ? 'right' : 'near');
   };
   const listen = () => {
     if (listening) { listener.stop(); return; }
@@ -79,7 +81,7 @@ export default function CorrectionCard({ correction, language, speaker = null, l
         </div>
       </form>
       {verdict === 'right' && <p ref={verdictRef} className="practice-verdict right" role="status">✓ That's it.</p>}
-      {Array.isArray(verdict) && <p ref={verdictRef} className="practice-verdict" role="status">Not quite. Look again at: <span lang={language?.tag}>{verdict.join(' ') || correction.text}</span>. It costs nothing{correction.light ? '' : ', and you have moved on either way'}.</p>}
+      {verdict === 'near' && <p ref={verdictRef} className="practice-verdict right" role="status">✓ Yeah, pretty good. You probably said it right.</p>}
     </section>
   );
 }

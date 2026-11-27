@@ -94,7 +94,7 @@ try {
   // The practice: wrong, then right, and nothing more is sent.
   await page.getByRole('textbox', { name: 'Say it yourself' }).fill('Buongiorno! Me chiamo Luigione. Come ti chiami?');
   await page.getByRole('button', { name: 'Check' }).tap();
-  check(await page.getByText(/Not quite\. Look again at:/).isVisible(), 'a wrong try is answered at once, with the word to look at');
+  check(await page.getByText('✓ Yeah, pretty good. You probably said it right.').isVisible(), 'a try that is not the sentence is green too (round 201)');
   await page.getByRole('textbox', { name: 'Say it yourself' }).fill('buongiorno mi chiamo luigione come ti chiami');
   await page.getByRole('button', { name: 'Check' }).tap();
   check(await page.getByText('✓ That\'s it.').isVisible(), 'the right sentence is accepted without its capitals and punctuation');

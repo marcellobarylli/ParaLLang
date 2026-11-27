@@ -472,8 +472,9 @@ test('beginner mode: the hearts, the corrected sentence with its heart, and a pr
   expect(screen.getByRole('button', { name: 'Check' }).disabled).toBe(true);
   await user.type(box, 'Buongiorno! Me chiamo Luigione. Come ti chiami?');
   await user.click(screen.getByRole('button', { name: 'Check' }));
-  expect(screen.getByText(/Not quite\. Look again at:/).textContent).toContain('Mi');
-  expect(screen.getByText(/you have moved on either way/)).toBeTruthy();
+  // Round 201: a try that is not the sentence is green too.
+  expect(screen.getByText('✓ Yeah, pretty good. You probably said it right.').className).toContain('right');
+  expect(screen.queryByText(/Not quite/)).toBeNull();
   await user.clear(box);
   await user.type(box, 'buongiorno mi chiamo luigione come ti chiami');
   await user.click(screen.getByRole('button', { name: 'Check' }));
