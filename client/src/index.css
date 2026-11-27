@@ -124,7 +124,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .caption-problem { color: #ffd6dc; border-color: #a2485a #2a0d14 #2a0d14 #a2485a; }
 
 /* Round 186: before the player drags it, the panel fills the screen under the top bar (--sheet-full, SheetHandle.jsx). */
-.sheet { width: 100%; height: var(--sheet-h, var(--sheet-full, calc(62vh + var(--bottom-gap, 0px)))); height: var(--sheet-h, var(--sheet-full, calc(62dvh + var(--bottom-gap, 0px)))); overflow: hidden; padding-bottom: var(--bottom-gap, 0px); display: flex; flex-direction: column; background: var(--panel); border-top: 2px solid var(--hi); box-shadow: 0 -1px 0 #000; }
+.sheet { position: relative; width: 100%; height: var(--sheet-h, var(--sheet-full, calc(62vh + var(--bottom-gap, 0px)))); height: var(--sheet-h, var(--sheet-full, calc(62dvh + var(--bottom-gap, 0px)))); overflow: hidden; padding-bottom: var(--bottom-gap, 0px); display: flex; flex-direction: column; background: var(--panel); border-top: 2px solid var(--hi); box-shadow: 0 -1px 0 #000; }
 /* Round 132: the grip the panel is dragged by. Only this strip refuses the browser's own touch gestures. */
 .sheet-handle { flex: none; display: flex; align-items: center; justify-content: center; width: 100%; height: 30px; min-height: 30px; padding: 0; margin: 0; border: 0; border-bottom: 1px solid rgb(0 0 0 / .45); background: rgb(0 0 0 / .18); cursor: ns-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
 .sheet-grip { display: block; width: 54px; height: 6px; background: var(--hi); box-shadow: 0 0 0 1px #000; }
@@ -132,6 +132,18 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .sheet-header { flex: none; padding: .55rem 1rem; border-bottom: 2px solid rgb(0 0 0 / .55); box-shadow: 0 1px 0 rgb(255 255 255 / .14); }
 .sheet-header .text-button { margin-left: auto; }
 .sheet-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: .25rem 0 .5rem; scrollbar-width: thin; scrollbar-color: #8a8c86 transparent; }
+/* Round 203 (experimental): the waiting game covers the conversation panel. It comes in opaque over the panel's own
+   opacity and goes the same way, so the panel is back at the player's setting when it has gone. */
+.wait-game { position: absolute; inset: 0; z-index: 6; overflow: hidden; background: #1a1c1b; opacity: 0; transition: opacity .42s ease; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; cursor: ew-resize; }
+.wait-game.shown { opacity: 1; }
+.wait-game-field { position: absolute; inset: 0; display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.wait-game-hud, .wait-game-status { position: absolute; left: 0; right: 0; margin: 0; padding: 0 .9rem; pointer-events: none; text-shadow: 1px 1px 0 #000; }
+.wait-game-hud { top: .55rem; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+.wait-game-lives { color: #e0736a; letter-spacing: .2em; }
+.wait-game-lives i { font-style: normal; color: rgb(255 255 255 / .16); }
+.wait-game-score { color: var(--gold); }
+.wait-game-status { top: 2.1rem; color: var(--dim); font-size: .82rem; text-align: center; }
+.wait-game.lost .wait-game-status { top: 42%; color: var(--ink); font-size: .95rem; }
 .overlay { position: absolute; inset: 0; z-index: 8; overflow-y: auto; overscroll-behavior: contain; background: rgb(22 23 22 / .96); padding-top: max(.5rem, env(safe-area-inset-top)); padding-bottom: calc(env(safe-area-inset-bottom) + var(--bottom-gap, 0px)); font-size: .92rem; text-shadow: 1px 1px 0 #000; }
 
 @media (min-width: 1100px) {

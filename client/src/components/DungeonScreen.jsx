@@ -6,6 +6,7 @@ import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
 import SheetHandle from './SheetHandle.jsx';
+import WaitGame from './WaitGame.jsx';
 import { browserSpeech } from '../speech.js';
 import { narrativeParts, narratorOn, useReadPassage } from '../narratorVoice.js';
 import { browserAmbience } from '../ambience.js';
@@ -391,12 +392,19 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   // Round 196: a new line comes with its narrative read first, by the narrator (unless switched off), and waits for a
   // travel passage still being read.
   const narrating = narratorOn(state.display);
+  // Round 203 (experimental, a setting): a game covers the panel from the moment an answer is sent. The reply that
+  // arrives under it waits: it is read aloud and followed only once the game has run out and gone.
+  const [gaming, setGaming] = useState(false);
+  useEffect(() => { setGaming(false); }, [encounter?.id]);
+  const shownKeyRef = useRef(lineKey);
+  if (!gaming) shownKeyRef.current = lineKey;
+  const shownKey = shownKeyRef.current;
   useEffect(() => {
     if (voicesOn && lastLine && speaker.supported) {
       const told = narrating ? narrativeParts(lastLine.narrative, lastLine.narrativeWords, language?.tag) : [];
       speaker.say([...told, { text: lastLine.dialogue.native, tag: language?.tag, voice: encounter?.character?.voice }], { after: true });
     } else if (!voicesOn) speaker.stop();
-  }, [voicesOn, lineKey, language?.tag]);
+  }, [voicesOn, shownKey, language?.tag]);
   useEffect(() => () => speaker.stop(), [speaker]);
   const resolved = encounter?.state === 'resolved';
   const chatting = resolved && state.chatKey !== null && state.chatKey === chatKeyOf(encounter); // round 174
@@ -444,12 +452,12 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   // Round 190: with "Follow the reply" on in Settings (the default), a new line of the character in an open conversation is brought to
   // the top of the panel when it arrives (not on opening, and not when its translation is revealed).
   const follow = state.display?.follow !== false;
-  const seenRef = useRef({ id: encounter?.id, line: lineKey });
+  const seenRef = useRef({ id: encounter?.id, line: shownKey });
   useLayoutEffect(() => {
     const seen = seenRef.current;
-    seenRef.current = { id: encounter?.id, line: lineKey };
+    seenRef.current = { id: encounter?.id, line: shownKey };
     const element = scrollRef.current;
-    if (!follow || !element || !lineKey || seen.id !== encounter?.id || seen.line === lineKey) return;
+    if (!follow || !element || !shownKey || seen.id !== encounter?.id || seen.line === shownKey) return;
     const reply = [...element.querySelectorAll('.npc-message')].at(-1);
     if (!reply) return;
     // Round 198: the player's answer and its correction stay in view above the reply when all of it fits; a longer
@@ -460,7 +468,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
     const top = place(whole ? answer : reply);
     element.scrollTop = Math.max(0, top);
     pin.current = { top: element.scrollTop, until: 0 }; // as far as the text allows
-  }, [lineKey, encounter?.id, follow]);
+  }, [shownKey, encounter?.id, follow]);
   return (
     <section className="sheet" aria-label={party ? `${name}, your party` : road ? road.title : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
       {/* Round 132: the panel drags from the top bar's edge down to this strip alone. */}
@@ -518,9 +526,10 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
       </div>
       {/* Round 174: a complete conversation can go on as a chat that changes nothing. */}
       {(!resolved || chatting) && (
-        <InputBar value={state.draft} onChange={state.setDraft} onSend={(text) => { speaker.stop(); state.sendMessage(text); }} name={name} loading={isLoading} disabled={isLoading || encounterLoading || !encounter}
+        <InputBar value={state.draft} onChange={state.setDraft} onSend={(text) => { speaker.stop(); if (state.display?.waitGame === true) setGaming(true); state.sendMessage(text); }} name={name} loading={isLoading} disabled={isLoading || encounterLoading || !encounter}
           listener={listener} language={language} onListen={() => speaker.stop()} />
       )}
+      {gaming && <WaitGame ready={!isLoading} name={name} onDone={() => setGaming(false)} />}
     </section>
   );
 }
@@ -773,7 +782,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}
-        follow={state.display?.follow !== false} onFollow={state.setFollow}
+        follow={state.display?.follow !== false} onFollow={state.setFollow} waitGame={state.display?.waitGame === true} onWaitGame={state.setWaitGame}
         streamlined={state.display?.streamlined !== false} onStreamlined={state.setStreamlined}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}

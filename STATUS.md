@@ -34,6 +34,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 203, a game while a reply is awaited (experimental, off by default)
+
+Settings, "Display and controls", has "A game while you wait (experimental)". With it on, sending an answer covers the
+conversation panel with a small game: drag left and right to move a figure that fires without pause at invaders coming
+down in a stream. One that gets past costs one of three lives. When the reply is ready no more set out; when the last
+are dealt with the panel returns at its own opacity and the reply is read. With no lives left, the player waits for the
+reply. Tested, and played in Chromium with synthetic touches; not tried on a phone. **Merged to `main` and deployed**
+on the owner's word. [Architecture](docs/rounds/203/architecture.md), [findings](docs/rounds/203/findings.md).
+
 ## Addendum 2026-11-27: round 201, the practice box never says no
 
 Under a correction, a try that matches the sentence still gets "✓ That's it."; any other try now gets "✓ Yeah, pretty

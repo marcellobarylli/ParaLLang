@@ -730,6 +730,8 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       // Round 153: strict or light checking of answers, sent with each answer.
       setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }), // round 198: light is the default
       setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on !== false }, storage) }),
+      // Round 203 (experimental): the game played while a reply is on its way.
+      setWaitGame: (on) => set({ display: saveDisplay({ ...get().display, waitGame: on === true }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       // The server no longer knows this learner (see `api` above): everything of the old run is dropped, the learner

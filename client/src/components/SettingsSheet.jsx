@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, waitGame = false, onWaitGame = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -193,7 +193,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             )}
           </Group>
         )}
-        {(onPanelOpacity || onTiltLook || onFollow) && (
+        {(onPanelOpacity || onTiltLook || onFollow || onWaitGame) && (
           <Group title="Display and controls">
             {onFollow && (
               <>
@@ -223,6 +223,16 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                 </label>
                 <small>Where the camera stops, on the road and in the dungeons, turning and tilting the phone looks round, as through a window: nearly all the way round, and straight up or down. The phone may ask for access to motion.</small>
                 {tiltLook && TILT_ANSWERS[tiltAnswer] && <small role="status" className="setting-warning">{TILT_ANSWERS[tiltAnswer]}</small>}
+              </>
+            )}
+            {/* Round 203: experimental, off unless switched on. */}
+            {onWaitGame && (
+              <>
+                <label className="setting-check" htmlFor="settings-wait-game">
+                  <input id="settings-wait-game" type="checkbox" checked={waitGame} onChange={(event) => onWaitGame(event.target.checked)} />
+                  <span>A game while you wait (experimental)</span>
+                </label>
+                <small>When you send an answer, the conversation gives way to a small game until the reply is ready: drag left and right to move, and shoot what comes down. Each one that gets past you costs one of three lives. When the reply is ready no more come, and the conversation returns once the last are dealt with.</small>
               </>
             )}
           </Group>
