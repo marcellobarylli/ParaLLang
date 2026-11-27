@@ -125,6 +125,10 @@ export function buildNarrationMessages({
     : light
       ? { task: 'light_turn', exchange: light, player_answer: playerInput, open_objectives: objectives.map(({ id, intent, reference_meaning }) => ({ id, intent, reference_meaning })), ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) }
       : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision, ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) };
+  // Round 188: the world shows once, in the reply to the player's first answer, and is made of what this conversation
+  // practises (encounter/world_moment.txt). The player's turns so far are the history's user messages.
+  const firstAnswer = playerInput !== null && !conversationHistory.some((message) => message.role === 'user');
+  if (world && firstAnswer) turnData.world_moment = fillTemplate(loadTemplate('encounter/world_moment.txt'), { enemy: { name: character.name } }).trim();
   const turnTemplate = playerInput === null ? 'encounter/greeting.txt' : light ? 'encounter/light_turn.txt' : 'encounter/dialogue_turn.txt';
 
   return [

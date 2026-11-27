@@ -11,7 +11,7 @@ import { buildRoadDefinition, roadWorld } from '../src/road/encounters.js';
 import { createTerrain } from '../src/road/terrain.js';
 import { graphFor } from '../src/road/graph.js';
 import { LightProvider, createRuntime } from './helpers.js';
-import { roadRuntime, startHere } from './road-helpers.js';
+import { answer, roadRuntime, startHere } from './road-helpers.js';
 
 const it = loadGameContent({ language: 'it' });
 const es = loadGameContent({ language: 'es' });
@@ -88,7 +88,9 @@ test('with the layers the narrator\'s prompt has the world block after the chara
   assert.match(told, /- What everybody knows: Everyone here speaks the one language/);
   assert.match(told, /- Gerald's own region: The market stands among the roots of an old temple/);
   assert.match(told, /- Something Gerald has noticed: The beans come up a road on which nobody has ever seen a cart\./);
-  assert.match(told, /in about one reply in three and never more than once in a reply, let one small detail of this world show in passing/);
+  assert.match(told, /the greeting is that alone: no detail of this world in it\./);
+  assert.match(told, /The world shows once, in the reply to the player's first answer, which carries `world_moment`/);
+  assert.doesNotMatch(told, /in about one reply in three and never more than once in a reply/);
   assert.match(told, /If the player asks what Gerald means by such a remark, Gerald answers, in character, with what Gerald has seen or been told/);
   assert.match(told, /Never a refusal, never "I do not know what you mean", and never the nature of the world\./);
   assert.match(told, /These details are never the answer to an objective/);
@@ -142,4 +144,31 @@ test('a generated character of the road: an ordinary observation at the A levels
   assert.match(prompt, /THE WORLD [\w ]+ LIVES IN/);
   assert.match(prompt, /this world's Tuscany/);
   assert.ok(pools.plain.some((line) => prompt.includes(line)));
+});
+
+// Round 188: the world shows once, in the reply to the player's first answer, made of what the conversation practises,
+// so that the same few noticed lines do not come back as the same remark in every conversation.
+test('only the reply to the first answer carries the world moment, and only when the character has a world', () => {
+  const world = worldFor(it.knowledge, 'it', it.character.world.region, it.character.world.noticed);
+  const base = { language: it.language, character: it.character, styleGuide: it.styleGuide, locationName: 'The Coffee Cart', vocabularyById: it.vocabularyById, objectives: it.encounter.objectives, targetRatio: 0.25, world };
+  const turnOf = (messages) => JSON.parse(messages.at(-1).content.match(/TURN DATA: (.*)$/s)[1]);
+  const greeting = [{ role: 'assistant', content: 'Ciao!' }];
+  const first = turnOf(buildNarrationMessages({ ...base, conversationHistory: greeting, playerInput: 'Ciao' }));
+  assert.match(first.world_moment, /^After answering the player, let this world show once, in passing: one thing Gerald has seen of it in the very thing this conversation practises/);
+  assert.match(first.world_moment, /do not repeat one of those lines or anything said earlier: make it out of this conversation's own subject/);
+  const light = turnOf(buildNarrationMessages({ ...base, conversationHistory: greeting, playerInput: 'Ciao', light: { turn: 1, min: 3, max: 3, ending: 'go_on' } }));
+  assert.equal(light.world_moment, first.world_moment);
+  assert.equal(turnOf(buildNarrationMessages(base)).world_moment, undefined, 'not in the greeting');
+  const later = [...greeting, { role: 'user', content: 'Ciao' }, { role: 'assistant', content: 'Un caffè?' }];
+  assert.equal(turnOf(buildNarrationMessages({ ...base, conversationHistory: later, playerInput: 'Sì' })).world_moment, undefined, 'not in a later reply');
+  assert.equal(turnOf(buildNarrationMessages({ ...base, world: null, conversationHistory: greeting, playerInput: 'Ciao' })).world_moment, undefined, 'not without a world');
+});
+
+test('a road conversation gets the world moment in its second line and in no other', async (t) => {
+  const { runtime, learnerId } = await roadRuntime(t);
+  let { encounter } = (await startHere(runtime, learnerId)).data;
+  for (const message of ['boh', 'boh']) encounter = (await answer(runtime, learnerId, encounter, message)).encounter;
+  assert.equal(encounter.state, 'ongoing');
+  const moments = narrations(runtime).map((call) => /"world_moment":/.test(call.messages.at(-1).content));
+  assert.deepEqual(moments, [false, true, false]);
 });

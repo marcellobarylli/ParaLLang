@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 188, the world in the second line
+
+A conversation's greeting is now its exercise alone. The reply to the player's first answer, and only that one, lets
+the world show once: one thing the character has seen of it in what the conversation practises, so the remark is
+made of the exercise and does not repeat the same few noticed lines. Replaces round 155's "about one reply in three".
+Tested with the scripted provider; not read from a live model. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/188/architecture.md), [findings](docs/rounds/188/findings.md).
+
 ## Addendum 2026-11-26: round 187, the title music waits for the road
 
 The title music no longer fades when the Journey button is pressed: it plays on while the road is being found (the
