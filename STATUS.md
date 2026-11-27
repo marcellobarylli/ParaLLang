@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 207, the narrator with no restraint
+
+The owner asked for the narrator as silly as possible. The notes now ask for a giddy, wildly theatrical old buffoon
+(giggles, gasps, squeaks and booms, overblown drama, absurd pauses), and the voice is Puck ("upbeat") in place of
+Charon. Tested with Google faked; **not heard**. **Merged to `main` and deployed.**
+[Architecture](docs/rounds/207/architecture.md), [findings](docs/rounds/207/findings.md).
+
 ## Addendum 2026-11-27: round 206, the narrator stops reading his notes, and turns silly
 
 The hosted narrator read his direction aloud ("Read this aloud as a warm ... storyteller") because round 202 ran it

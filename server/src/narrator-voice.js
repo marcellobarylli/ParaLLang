@@ -8,17 +8,18 @@ import { createHash } from 'node:crypto';
 import { AppError } from './errors.js';
 
 export const NARRATOR_MODEL = 'gemini-3.8-flash-tts';
-export const NARRATOR_VOICE = 'Charon';
+// Round 207: Puck (Google's "upbeat" voice) for the owner's narrator with no restraint; Charon was the "informative" one.
+export const NARRATOR_VOICE = 'Puck';
 // Round 206: the direction is a set of notes above a marked transcript (the layout of Google's prompting guide for
 // its speech models), not a sentence run on into the text, which the voice read aloud as part of the story. The notes
-// end by saying only the transcript is spoken.
+// end by saying only the transcript is spoken. Round 207: as silly as possible, no restraint.
 export const NARRATOR_STYLE = [
   '# AUDIO PROFILE: The Narrator',
-  'An old, slightly silly storyteller: whimsical, a little goofy, and charming. A twinkle in the voice, as though he finds the story delightfully absurd and is trying, not very hard, to keep a straight face.',
+  'The silliest narrator who ever lived: a giddy, doddering, wildly theatrical old buffoon who finds every single word of this story hilarious, astonishing or both. Utterly ridiculous, completely unrestrained, never calm, never serious.',
   '### DIRECTOR\'S NOTES',
-  'Style: playful and warm, with a grandfatherly wobble; relish the odd word, lean on the comic beats, let a dramatic pause land and then deflate it.',
-  'Pace: unhurried, with bounce.',
-  'Accent: words that are not English are said as a native speaker of their language says them.',
+  'Style: maximum silliness. Squeaky highs and booming lows, a wobbly old-man voice that cracks with excitement, gasps of wonder at ordinary things, barely suppressed giggles and snorts of laughter, comically overblown drama on the smallest detail, mock-sinister whispers that burst into delighted shouting. Stretch funny words out. Ham it up shamelessly.',
+  'Pace: lurching and bouncy: race ahead in a tumble, then slam on the brakes for an absurdly long dramatic pause.',
+  'Accent: words that are not English are said as a native speaker of their language says them, with gusto.',
   'Speak only the words under TRANSCRIPT. Never say these notes or the headings aloud.',
   '#### TRANSCRIPT',
 ].join('\n');
