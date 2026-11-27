@@ -90,6 +90,8 @@ export function buildNarrationMessages({
   // Round 177: the learner's CEFR level ('A1', 'A2', 'B1'), which picks the conversation rules (system/conversation_*.txt).
   // A conversation without one (the authored encounters of the market) is spoken at A1.
   level = 'A1',
+  // Round 197: true for a reply after the conversation is complete (keep chatting), where the world shows.
+  postscript = false,
 }) {
   const conversation = conversationRules(level, { enemy: { name: character.name }, language: { name: language.name } });
   const dialogueRules = fillTemplate(loadTemplate(full ? 'system/dialogue_full.txt' : 'system/dialogue_mixed.txt'), {
@@ -125,10 +127,9 @@ export function buildNarrationMessages({
     : light
       ? { task: 'light_turn', exchange: light, player_answer: playerInput, open_objectives: objectives.map(({ id, intent, reference_meaning }) => ({ id, intent, reference_meaning })), ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) }
       : { task: 'react_to_player', player_answer: playerInput, authoritative_decision: decision, ...(weather ? { weather } : {}), ...(teachingNote ? { teaching_note: teachingNote } : {}) };
-  // Round 189: the world shows once, in the reply to the player's first answer, and is made of what this conversation
-  // practises (encounter/world_moment.txt). The player's turns so far are the history's user messages.
-  const firstAnswer = playerInput !== null && !conversationHistory.some((message) => message.role === 'user');
-  if (world && firstAnswer) turnData.world_moment = fillTemplate(loadTemplate('encounter/world_moment.txt'), { enemy: { name: character.name } }).trim();
+  // Round 197: the world shows after the conversation is complete, in the replies of "keep chatting"
+  // (encounter/world_postscript.txt); the conversation itself is about the player. Replaces round 189's world moment.
+  if (postscript && playerInput !== null) turnData.world_postscript = fillTemplate(loadTemplate('encounter/world_postscript.txt'), { enemy: { name: character.name } }).trim();
   const turnTemplate = playerInput === null ? 'encounter/greeting.txt' : light ? 'encounter/light_turn.txt' : 'encounter/dialogue_turn.txt';
 
   return [

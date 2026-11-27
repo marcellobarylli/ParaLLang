@@ -34,6 +34,19 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 197, replies that follow up; the world behind "keep chatting"
+
+A conversation now has an order. The greeting is the exercise: it asks for everything the objectives need in one
+invitation. Each reply after it reacts to one thing the player said and ends on a follow-up question about that
+thing (from Copenhagen: "how do you like it there?"), never a general one ("How is your Italian tonight?"); an open
+objective comes only by a bridge from the player's answer. The last reply brings back something the player said and
+says goodbye. The world no longer shows in the conversation (round 189's second line): it is the postscript, a
+secret told in the keep-chatting replies, led into from what the player said; the button reads "Keep chatting with
+… and you might learn a secret". The rules follow lookups on what makes conversation engaging (follow-up questions).
+Four conversations played against the live model; not played by the owner. **On the session branch, not merged or
+deployed.** [Architecture](docs/rounds/197/architecture.md), [findings](docs/rounds/197/findings.md),
+[playtest](docs/playtests/2026-11-27-follow-ups/README.md).
+
 ## Addendum 2026-11-27: round 196, the narrator reads aloud; every road character its own voice
 
 A storyteller reads the narration aloud: the browser's own speech (free, on the device), in an English voice

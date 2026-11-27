@@ -509,7 +509,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
               <button type="button" className="text-button" onClick={state.stopChatting} disabled={isLoading}>Done chatting</button>
             </p>
           )
-          : <button type="button" className="secondary-button chat-on" onClick={state.keepChatting} disabled={isLoading}>Keep chatting with {name}</button>)}
+          : <button type="button" className="secondary-button chat-on" onClick={state.keepChatting} disabled={isLoading}>Keep chatting with {name} and you might learn a secret</button>)}
       </div>
       {/* Round 174: a complete conversation can go on as a chat that changes nothing. */}
       {(!resolved || chatting) && (

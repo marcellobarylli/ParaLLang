@@ -12,7 +12,7 @@ import { buildNarrationMessages } from '../src/llm/prompt-builder.js';
 import { FixtureProvider, fixedNow } from './helpers.js';
 
 const contentRoot = resolve(import.meta.dirname, '..', '..', 'content');
-const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r177.json'), 'utf8'));
+const golden = JSON.parse(await readFile(resolve(import.meta.dirname, 'fixtures', 'gerald-prompts-r197.json'), 'utf8'));
 
 const character = {
   id: 'charcutier_fixture', name: 'Bernard', species: 'Charcutier',
@@ -122,7 +122,8 @@ async function runtime(t, contentDir) {
 // Round 130: regenerated again, for the target-language words in the narration. Round 131: for the conversation rules.
 // Round 156 (issue #6): for the narrator: a storybook told to "you" that knows more than it says.
 // Round 177: for the conversation rules by level (an authored encounter speaks at A1), after the playtest of 2026-11-24.
-test("Gerald's narration prompts match the round 177 fixture and carry the style guide", () => {
+// Round 197: for the conversation after the greeting (follow-up questions, the bridge to an open objective, the closing).
+test("Gerald's narration prompts match the round 197 fixture and carry the style guide", () => {
   for (const code of ['it', 'es']) {
     const c = loadGameContent({ language: code });
     const base = { language: c.language, character: c.character, styleGuide: c.styleGuide, locationName: 'The Coffee Cart', vocabularyById: c.vocabularyById };
@@ -149,8 +150,13 @@ test("Gerald's narration prompts match the round 177 fixture and carry the style
     assert.match(greeting[0].content, /- A dialogue line asks the player at most one question, at its end\./);
     assert.match(greeting[0].content, /never what the player thinks of Gerald's work, trade, things or place/);
     assert.match(greeting[0].content, /When the player says goodbye, Gerald says goodbye back/);
+    assert.match(greeting[0].content, /- THE GREETING IS THE EXERCISE\. It asks for what the open objectives of the learning data need, as many of them as one answer can give, in a single invitation/);
+    assert.match(greeting[0].content, /- EVERY REPLY AFTER THE GREETING IS A CONVERSATION[^\n]+the closing question is a follow-up: it asks for more about that same thing/);
+    assert.match(greeting[0].content, /- Never an opening or general question in a reply \("How are you\?", "How is your (Italian|Spanish)\?"/);
+    assert.match(greeting[0].content, /An objective still open after the greeting is brought in only through that follow-up, one at a time: find the bridge/);
+    assert.match(greeting[0].content, /end it as people end a good chat: react to what the player just said, bring back one thing they told Gerald earlier/);
     assert.doesNotMatch(greeting[0].content, /Ask in one go for everything|what they make of Gerald's trade|Never a question that yes or no would answer/);
-    assert.match(greeting.at(-1).content, /end it with the one question the conversation rules ask for/);
+    assert.match(greeting.at(-1).content, /end it with the one invitation the conversation rules ask for: the exercise/);
     assert.doesNotMatch(greeting.at(-1).content, /concise/);
     assert.deepEqual(buildNarrationMessages({
       ...base, objectives: c.encounter.objectives.slice(1), targetRatio: 0.3,

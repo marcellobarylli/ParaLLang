@@ -1707,6 +1707,7 @@ export class LearningService {
       ambientEntries: definition.ambientEntries,
       ...this.sceneExtras(definition, current.known),
       light: { turn, ...this.lightExchange(), ending: LIGHT_ENDING.go_on },
+      postscript: true, // round 197: the world shows here
     }), lightTurnSchema, 'light_turn', definition.character.name);
     return this.commitTurn({
       learnerId, request, fingerprint, envelope, current, definition, message, generated, closing: [], remaining: [], resolved: false,

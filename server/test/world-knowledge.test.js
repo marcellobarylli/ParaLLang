@@ -88,8 +88,8 @@ test('with the layers the narrator\'s prompt has the world block after the chara
   assert.match(told, /- What everybody knows: Everyone here speaks the one language/);
   assert.match(told, /- Gerald's own region: The market stands among the roots of an old temple/);
   assert.match(told, /- Something Gerald has noticed: The beans come up a road on which nobody has ever seen a cart\./);
-  assert.match(told, /the greeting is that alone: no detail of this world in it\./);
-  assert.match(told, /The world shows once, in the reply to the player's first answer, which carries `world_moment`/);
+  assert.match(told, /from the greeting to its last reply, is two people talking about the player: no detail of this world in it unless the player brings one up\./);
+  assert.match(told, /The world shows after the conversation is complete, when the player stays to chat: those replies carry `world_postscript`/);
   assert.doesNotMatch(told, /in about one reply in three and never more than once in a reply/);
   assert.match(told, /If the player asks what Gerald means by such a remark, Gerald answers, in character, with what Gerald has seen or been told/);
   assert.match(told, /Never a refusal, never "I do not know what you mean", and never the nature of the world\./);
@@ -146,29 +146,33 @@ test('a generated character of the road: an ordinary observation at the A levels
   assert.ok(pools.plain.some((line) => prompt.includes(line)));
 });
 
-// Round 189: the world shows once, in the reply to the player's first answer, made of what the conversation practises,
-// so that the same few noticed lines do not come back as the same remark in every conversation.
-test('only the reply to the first answer carries the world moment, and only when the character has a world', () => {
+// Round 197: the world shows after the conversation is complete, in the replies of "keep chatting"; the conversation
+// itself is about the player. Replaces round 189's world moment in the reply to the first answer.
+test('only a reply after the conversation is complete carries the world postscript', () => {
   const world = worldFor(it.knowledge, 'it', it.character.world.region, it.character.world.noticed);
   const base = { language: it.language, character: it.character, styleGuide: it.styleGuide, locationName: 'The Coffee Cart', vocabularyById: it.vocabularyById, objectives: it.encounter.objectives, targetRatio: 0.25, world };
   const turnOf = (messages) => JSON.parse(messages.at(-1).content.match(/TURN DATA: (.*)$/s)[1]);
   const greeting = [{ role: 'assistant', content: 'Ciao!' }];
-  const first = turnOf(buildNarrationMessages({ ...base, conversationHistory: greeting, playerInput: 'Ciao' }));
-  assert.match(first.world_moment, /^After answering the player, let this world show once, in passing: one thing Gerald has seen of it in the very thing this conversation practises/);
-  assert.match(first.world_moment, /do not repeat one of those lines or anything said earlier: make it out of this conversation's own subject/);
-  const light = turnOf(buildNarrationMessages({ ...base, conversationHistory: greeting, playerInput: 'Ciao', light: { turn: 1, min: 3, max: 3, ending: 'go_on' } }));
-  assert.equal(light.world_moment, first.world_moment);
-  assert.equal(turnOf(buildNarrationMessages(base)).world_moment, undefined, 'not in the greeting');
-  const later = [...greeting, { role: 'user', content: 'Ciao' }, { role: 'assistant', content: 'Un caffè?' }];
-  assert.equal(turnOf(buildNarrationMessages({ ...base, conversationHistory: later, playerInput: 'Sì' })).world_moment, undefined, 'not in a later reply');
-  assert.equal(turnOf(buildNarrationMessages({ ...base, world: null, conversationHistory: greeting, playerInput: 'Ciao' })).world_moment, undefined, 'not without a world');
+  const light = { turn: 4, min: 3, max: 3, ending: 'go_on' };
+  const chat = turnOf(buildNarrationMessages({ ...base, objectives: [], conversationHistory: greeting, playerInput: 'Ciao', light, postscript: true }));
+  assert.match(chat.world_postscript, /^The conversation is complete and the player has chosen to stay and talk\./);
+  assert.match(chat.world_postscript, /Gerald is at ease and lets a secret slip/);
+  assert.match(chat.world_postscript, /Tell it because of something the player said in this conversation/);
+  for (const turn of [turnOf(buildNarrationMessages(base)), turnOf(buildNarrationMessages({ ...base, postscript: true })),
+    turnOf(buildNarrationMessages({ ...base, conversationHistory: greeting, playerInput: 'Ciao' })),
+    turnOf(buildNarrationMessages({ ...base, conversationHistory: greeting, playerInput: 'Ciao', light }))]) {
+    assert.equal(turn.world_postscript, undefined);
+    assert.equal(turn.world_moment, undefined);
+  }
 });
 
-test('a road conversation gets the world moment in its second line and in no other', async (t) => {
-  const { runtime, learnerId } = await roadRuntime(t);
+test('a road conversation is about the player; the postscript comes with keep chatting', async (t) => {
+  const { runtime, learnerId } = await roadRuntime(t, { serviceOptions: { exchangeLimit: 3 } });
   let { encounter } = (await startHere(runtime, learnerId)).data;
-  for (const message of ['boh', 'boh']) encounter = (await answer(runtime, learnerId, encounter, message)).encounter;
-  assert.equal(encounter.state, 'ongoing');
-  const moments = narrations(runtime).map((call) => /"world_moment":/.test(call.messages.at(-1).content));
-  assert.deepEqual(moments, [false, true, false]);
+  for (const message of ['boh', 'boh', 'boh']) encounter = (await answer(runtime, learnerId, encounter, message)).encounter;
+  assert.equal(encounter.state, 'resolved');
+  encounter = (await answer(runtime, learnerId, encounter, 'ancora', { chat: true })).encounter;
+  const told = narrations(runtime).map((call) => /"world_postscript":/.test(call.messages.at(-1).content));
+  assert.deepEqual(told, [false, false, false, false, true]);
+  assert.ok(narrations(runtime).every((call) => !/"world_moment":/.test(call.messages.at(-1).content)));
 });
