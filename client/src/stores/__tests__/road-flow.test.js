@@ -13,12 +13,12 @@ vi.setConfig({ testTimeout: 30_000 }); // the first test loads the whole content
 afterAll(cleanUp);
 
 function memoryStorage(entries = {}) {
-  const values = new Map(Object.entries(entries));
+  const values = new Map(Object.entries({ 'parallang.display': '{"strict":true}', ...entries })); // round 198: strict checking's tests
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
 }
 
 // Round 173: the full pacing, so streamlined mode is off unless a test's storage says otherwise.
-const fullPacing = () => memoryStorage({ 'parallang.display': JSON.stringify({ streamlined: false }) });
+const fullPacing = () => memoryStorage({ 'parallang.display': JSON.stringify({ streamlined: false, strict: true }) });
 
 async function onTheRoad({ storage = fullPacing(), server = createRoadServer() } = {}) {
   const store = createGameStore({ api: server.api, storage, dungeon: DUNGEON, atlas: ATLAS });

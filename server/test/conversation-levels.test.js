@@ -39,13 +39,14 @@ test('A1 keeps to the conversation\'s words; A2 and B1 talk about the player', (
   assert.match(a1, /one or two short sentences of plain words/);
   assert.match(a1, /it is still funny: most lines carry one short absurd touch/);
   assert.match(a1, /Do not open new topics that need new words/);
-  assert.match(a1, /a question answered by yes or no, or by one word, is good here/);
+  assert.match(a1, /Put the follow-up question so that yes or no, one word, or the words of the learning data and of the conversation so far answer it/);
   for (const level of ['A2', 'B1']) {
     const system = systemAt(level);
     assert.match(system, /First respond to what the player actually said/);
     assert.match(system, /at most one remark of Gerald's own, as a statement: the weather/);
     assert.doesNotMatch(system, /knows only a handful/);
   }
+  for (const level of ['A2', 'B1']) assert.match(systemAt(level), /It is a follow-up on what they just told you, as the rules below say, never a fresh subject\./);
   assert.match(systemAt('A2'), /End with one question about the player that an elementary learner can answer/);
   assert.match(systemAt('B1'), /End with one open question about the player: their experience, their opinion and why/);
 });

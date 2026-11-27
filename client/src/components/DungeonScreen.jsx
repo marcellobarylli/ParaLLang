@@ -450,9 +450,14 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
     seenRef.current = { id: encounter?.id, line: lineKey };
     const element = scrollRef.current;
     if (!follow || !element || !lineKey || seen.id !== encounter?.id || seen.line === lineKey) return;
-    const target = [...element.querySelectorAll('.npc-message')].at(-1);
-    if (!target) return;
-    const top = target.getBoundingClientRect().top - element.getBoundingClientRect().top + element.scrollTop - 8;
+    const reply = [...element.querySelectorAll('.npc-message')].at(-1);
+    if (!reply) return;
+    // Round 198: the player's answer and its correction stay in view above the reply when all of it fits; a longer
+    // turn shows the reply from its top.
+    const place = (node) => node.getBoundingClientRect().top - element.getBoundingClientRect().top + element.scrollTop - 8;
+    const answer = [...element.querySelectorAll('.player-message')].at(-1);
+    const whole = answer && place(answer) < place(reply) && reply.getBoundingClientRect().bottom - answer.getBoundingClientRect().top + 16 <= element.clientHeight;
+    const top = place(whole ? answer : reply);
     element.scrollTop = Math.max(0, top);
     pin.current = { top: element.scrollTop, until: 0 }; // as far as the text allows
   }, [lineKey, encounter?.id, follow]);
@@ -471,16 +476,16 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
         )}
       </header>
       <div className="sheet-scroll" ref={scrollRef}>
-        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} onSayWord={voicesOn && speaker.supported ? sayWord : null} beginner={state.display?.beginner !== false} light={state.display?.light === true} />
-        {assessment && (
-          <section className="assessment-banner" aria-live="polite">
-            {/* Round 153: a light turn is not an assessment: what was understood, and what of the objectives it covered. */}
-            <strong>{assessment.light ? 'Understood' : 'Assessment'}</strong><p>{assessment.overallFeedback}</p>
-            {assessment.correction && <CorrectionCard key={encounter?.version} correction={assessment.correction} language={language} speaker={speaker} listener={listener} onUse={resolved || assessment.light ? null : state.setDraft} />}
-            {assessment.objectiveResults.filter((result) => !assessment.light || result.passed).map((result) => <p key={result.objectiveId}>{result.corrected ? '✎' : result.passed ? '✓' : '→'} {result.feedback}</p>)}
-            {state.xpGained > 0 && <p className="xp-line">+{state.xpGained} XP{state.levelUp ? ` · Level ${state.levelUp}` : ''}</p>}
-          </section>
-        )}
+        <DialoguePanel encounter={encounter} language={language} isLoading={isLoading} onHelp={state.revealHelp} onSpeak={speaker.supported ? speakLine : null} onSayWord={voicesOn && speaker.supported ? sayWord : null} beginner={state.display?.beginner !== false} light={state.display?.light === true}
+          afterAnswer={assessment && (
+            <section className="assessment-banner" aria-live="polite">
+              {/* Round 153: a light turn is not an assessment: what was understood, and what of the objectives it covered. */}
+              <strong>{assessment.light ? 'Understood' : 'Assessment'}</strong><p>{assessment.overallFeedback}</p>
+              {assessment.correction && <CorrectionCard key={encounter?.version} correction={assessment.correction} language={language} speaker={speaker} listener={listener} onUse={resolved || assessment.light ? null : state.setDraft} />}
+              {assessment.objectiveResults.filter((result) => !assessment.light || result.passed).map((result) => <p key={result.objectiveId}>{result.corrected ? '✎' : result.passed ? '✓' : '→'} {result.feedback}</p>)}
+              {state.xpGained > 0 && <p className="xp-line">+{state.xpGained} XP{state.levelUp ? ` · Level ${state.levelUp}` : ''}</p>}
+            </section>
+          )} />
         {/* Round 159 (issue #7): what the character utters once the conversation is over, told by the narrator. */}
         {resolved && !chatting && encounter.revelation && (
           <section className="revelation" aria-label={`What ${name} utters`}>
@@ -509,7 +514,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
               <button type="button" className="text-button" onClick={state.stopChatting} disabled={isLoading}>Done chatting</button>
             </p>
           )
-          : <button type="button" className="secondary-button chat-on" onClick={state.keepChatting} disabled={isLoading}>Keep chatting with {name}</button>)}
+          : <button type="button" className="secondary-button chat-on" onClick={state.keepChatting} disabled={isLoading}>Keep chatting with {name} and you might learn a secret</button>)}
       </div>
       {/* Round 174: a complete conversation can go on as a chat that changes nothing. */}
       {(!resolved || chatting) && (

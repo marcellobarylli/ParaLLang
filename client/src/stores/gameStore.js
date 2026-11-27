@@ -728,7 +728,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       // Round 129: beginner mode, sent with each answer.
       setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
       // Round 153: strict or light checking of answers, sent with each answer.
-      setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }),
+      setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }), // round 198: light is the default
       setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on !== false }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.

@@ -82,7 +82,9 @@ function useScrolledPast(element, changes) {
   return past;
 }
 
-export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null, onSayWord = null, beginner = false, light = false }) {
+// Round 198: `afterAnswer` (what was understood of the player's last answer, and its correction) stands directly under
+// that answer, so the character's reply to it is the last thing before the box the player writes in.
+export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null, onSayWord = null, beginner = false, light = false, afterAnswer = null }) {
   const [box, setBox] = useState(null);
   const past = useScrolledPast(box, `${encounter?.id}:${encounter?.version}:${encounter?.transcript?.length}:${isLoading}`);
   const [unfolded, setUnfolded] = useState(false);
@@ -104,6 +106,7 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
     <p className="player-message" key={message.id}>{message.text}</p>
   ));
   const [opening, ...rest] = encounter.transcript;
+  const lastAnswer = rest.findLast((message) => message.role !== 'npc')?.id ?? null;
   return (
     <main className="dialogue-panel" aria-label={`Conversation with ${name}`}>
       {/* A holder with no height, pinned to the top of the text: the bar shows and hides without moving the text. */}
@@ -129,7 +132,8 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
           {briefing.map((text) => <p key={text}>{text}</p>)}
         </aside>
       )}
-      {rest.map(line)}
+      {rest.map((message) => (message.id === lastAnswer && afterAnswer ? [line(message), <div className="after-answer" key="after-answer">{afterAnswer}</div>] : line(message)))}
+      {lastAnswer === null && afterAnswer}
       {isLoading && <p className="thinking" role="status">{name} is considering the linguistic implications…</p>}
     </main>
   );
