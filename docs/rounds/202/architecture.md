@@ -40,5 +40,5 @@ Root `npm test`; `npm run build -w client`. Google and the browser's audio playe
 ## Status
 
 Built and tested with fakes. **No call to Google was made and nothing was heard**: the session has no Gemini key
-and cannot reach Google's API or its documentation. On the session branch `claude/hopeful-babbage-aq05na`; not merged to `main` or deployed: the owner asked for the
-voice, not yet for its deploy. The first real call will be the owner's first narration after it.
+and cannot reach Google's API or its documentation. Merged to `main` and pushed with round 204, on the owner's word ("Then deploy"). The first real call is the
+owner's first narration after it.

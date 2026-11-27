@@ -10,3 +10,4 @@ Append only. Times are UTC. Occurred is when the event happened; Recorded is whe
 | 4 | 22:38 approx. | 22:45:00 | decision | Claude | The server reads a narration with `gemini-3.8-flash-tts` (voice Charon) and sends a WAV; the page plays it and reads with the device's voice when there is none | `../architecture.md` |
 | 5 | 22:44 approx. | 22:45:00 | run | Claude | Root `npm test` and the client build pass, with Google and the audio player faked; no call to Google was made (no key and no route to it from the session) | `../findings.md` |
 | 6 | 22:45:00 | 22:45:00 | closed | Claude | Records, status addendum; pushed to the session branch, not to `main`: this round's message did not ask for a deploy | `../architecture.md` |
+| 7 | 23:10 approx. | 23:10:00 | deployed | Claude | Merged to `main` with round 204 and pushed on the owner's word ("Then deploy") | `../architecture.md` |

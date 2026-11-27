@@ -34,14 +34,22 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 204, the legacy dungeons under the road's sky
+
+Ta Prohm, The Kiln and Micromort Mountain now have the road's time of day and weather: the same clock and seed, the
+same light and sky, rain (snow on the mountain), stars, clouds and lightning, and the rain and thunder are heard
+there too. Each keeps its own glow and its fog's reach. Seen in Chromium, not on a phone. **Merged to `main` and
+deployed** on the owner's word, with round 202.
+[Architecture](docs/rounds/204/architecture.md), [findings](docs/rounds/204/findings.md).
+
 ## Addendum 2026-11-27: round 202, a hosted voice for the narrator
 
 An iPhone gives a web page only Apple's basic voices, so the narrator now reads in a hosted one: the server asks
 Gemini's text-to-speech (`gemini-3.8-flash-tts`, voice Charon, on `GEMINI_API_KEY`) and the page plays the clip, the
 whole narration in one voice; the characters keep the phone's voices. With no clip (no key, the allowance spent, 12
 seconds without an answer) the phone's voice reads as before. `GET /api/health` shows under `narrator` how the last
-call went. **Tested with fakes only: no call to Google was made and nothing was heard.** On the session branch
-`claude/hopeful-babbage-aq05na`; not merged or deployed (the owner has not said so for this round). [Architecture](docs/rounds/202/architecture.md), [findings](docs/rounds/202/findings.md).
+call went. **Tested with fakes only: no call to Google was made and nothing was heard.** **Merged to `main` and deployed** with round 204,
+on the owner's word. [Architecture](docs/rounds/202/architecture.md), [findings](docs/rounds/202/findings.md).
 
 ## Addendum 2026-11-27: round 201, the practice box never says no
 

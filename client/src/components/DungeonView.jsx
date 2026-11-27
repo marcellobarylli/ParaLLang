@@ -10,12 +10,15 @@ const MOVING = new Set(['approach', 'walk', 'enter']);
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
-export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites = {}, insets, onArrive, closed = 0, resolved = false, beat = null, tilt = false }) {
+// Round 204: `seed` is the road's: the level then has the road's time of day and weather (levelView.js).
+export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites = {}, insets, onArrive, closed = 0, resolved = false, beat = null, tilt = false, seed = null, onThunder = null }) {
   const canvasRef = useRef(null);
   const viewRef = useRef(null);
   const labelRefs = useRef([]);
   const arriveRef = useRef(onArrive);
   arriveRef.current = onArrive;
+  const thunderRef = useRef(onThunder);
+  thunderRef.current = onThunder;
   const [status, setStatus] = useState(() => (hasWebGL() ? 'loading' : 'unavailable'));
 
   useEffect(() => {
@@ -27,7 +30,7 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
     setStatus('loading');
     import('../scene/levelView.js').then(({ createLevelView }) => {
       if (cancelled) return;
-      view = createLevelView(canvasRef.current, { dungeon, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode) });
+      view = createLevelView(canvasRef.current, { dungeon, seed, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
       view.setLabels(labelRefs.current);
       viewRef.current = view;
       if (typeof window !== 'undefined') window.__parallangLevel = view; // for the screenshot script and the console
@@ -43,7 +46,7 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
       if (typeof window !== 'undefined' && window.__parallangLevel === view) window.__parallangLevel = undefined;
       view?.dispose();
     };
-  }, [dungeon.id, dungeon.level]);
+  }, [dungeon.id, dungeon.level, seed]);
 
   useEffect(() => {
     if (status === 'ready') viewRef.current?.setPhase({ phase, siteIndex, walkFrom });
