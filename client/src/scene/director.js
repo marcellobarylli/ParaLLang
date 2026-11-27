@@ -31,7 +31,7 @@ const TARGET_LIFT = EYE - 0.25; // where on a site (and on the path ahead) the c
 export const ENGAGE_MAX = 0.35; // at a resolved site the camera stands this fraction of the way in to it
 const ENGAGE_TAU = 0.7; // seconds, the ease of a step in
 // Round 125: the look a tilt may ask for (the host's tilt.js keeps inside it), and how it is applied.
-export const LOOK_MAX = Object.freeze({ yaw: 0.25, pitch: 0.18 }); // radians
+export const LOOK_MAX = Object.freeze({ yaw: 0.75 * Math.PI, pitch: 0.18 }); // radians; round 191: 135 degrees to either side
 const LOOK_TAU = 0.12; // seconds, the ease to a new look
 const LOOK_IN = 0.5; // seconds, the look fades in over the start of a hold
 const FAR = 25; // a walk that starts further than this from its path (from the overview) comes down as an approach does

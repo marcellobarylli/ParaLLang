@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 191, tilt to look over 270 degrees
+
+Tilt to look now turns the view up to 135 degrees to either side (12 until now), following the phone one to one, so
+turning round with the phone looks round the place. Up and down is unchanged. Tested in the client's tests; not tried
+on a phone. On the session branch, not yet on `main`.
+[Architecture](docs/rounds/191/architecture.md), [findings](docs/rounds/191/findings.md).
+
 ## Addendum 2026-11-27: round 190, the practice box shows five lines, and a reply can be followed
 
 The practice box under a correction now grows to five lines in view (a layout rule had kept it at one line), then

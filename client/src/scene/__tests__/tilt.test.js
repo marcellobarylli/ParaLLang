@@ -6,6 +6,7 @@ import { TILT, createTilt, orientationQuaternion, requestTiltPermission, screenA
 
 const DEG = Math.PI / 180;
 const HELD = { alpha: 30, beta: 50, gamma: 0 }; // a phone held in the hand
+const UPRIGHT = { alpha: 0, beta: 90, gamma: 0 }; // held up like a window: alpha turns it about the screen's vertical
 // Feeds `tilt` the orientation `angles` for `seconds` at 60 events a second, from time `from`.
 function hold(tilt, angles, seconds, from = 0, screen = 0) {
   let look = tilt.look;
@@ -28,11 +29,11 @@ describe('the tilt', () => {
     const tilt = createTilt();
     tilt.orient(HELD, 0, 0);
     const left = tilt.orient({ ...HELD, gamma: 10 }, 0, 1 / 60);
-    expect(left.yaw / DEG).toBeCloseTo(TILT.gain * 10, 1);
+    expect(left.yaw / DEG).toBeCloseTo(TILT.yawGain * 10, 1);
     expect(left.pitch).toBeCloseTo(0, 6);
     const right = createTilt();
     right.orient(HELD, 0, 0);
-    expect(right.orient({ ...HELD, gamma: -10 }, 0, 1 / 60).yaw / DEG).toBeCloseTo(-TILT.gain * 10, 1);
+    expect(right.orient({ ...HELD, gamma: -10 }, 0, 1 / 60).yaw / DEG).toBeCloseTo(-TILT.yawGain * 10, 1);
   });
 
   test('tilting the top of the phone towards the player looks up, away looks down (the owner\'s phone, 2026-11-19)', () => {
@@ -54,18 +55,23 @@ describe('the tilt', () => {
       expect(Math.abs(look.yaw)).toBeLessThanOrEqual(TILT.maxYaw + 1e-9);
       expect(Math.abs(look.pitch)).toBeLessThanOrEqual(TILT.maxPitch + 1e-9);
     }
+    // Round 191: 135 degrees to either side. Turning round with the phone held upright reaches it.
+    expect(TILT.maxYaw / DEG).toBeCloseTo(135, 9);
     const far = createTilt();
-    far.orient(HELD, 0, 0);
-    expect(far.orient({ ...HELD, gamma: 60 }, 0, 1 / 60).yaw).toBeCloseTo(TILT.maxYaw, 3); // less one frame of the recentre
+    far.orient(UPRIGHT, 0, 0);
+    expect(far.orient({ ...UPRIGHT, alpha: 160 }, 0, 1 / 60).yaw).toBeCloseTo(TILT.maxYaw, 2); // less one frame of the recentre
+    const round = createTilt();
+    round.orient(UPRIGHT, 0, 0);
+    expect(round.orient({ ...UPRIGHT, alpha: -120 }, 0, 1 / 60).yaw / DEG).toBeCloseTo(-120, 0);
   });
 
   test('past the range the baseline is dragged along, so tilting back answers at once', () => {
     const tilt = createTilt();
-    tilt.orient(HELD, 0, 0);
-    tilt.orient({ ...HELD, gamma: 60 }, 0, 1 / 60); // 40 degrees past the leash of 20
-    const back = tilt.orient({ ...HELD, gamma: 55 }, 0, 2 / 60);
-    expect(back.yaw / DEG).toBeCloseTo(TILT.maxYaw / DEG - TILT.gain * 5, 1);
-    // Without the leash 55 degrees would still be far past the range.
+    tilt.orient(UPRIGHT, 0, 0);
+    tilt.orient({ ...UPRIGHT, alpha: 170 }, 0, 1 / 60); // 35 degrees past the leash of 135
+    const back = tilt.orient({ ...UPRIGHT, alpha: 165 }, 0, 2 / 60);
+    expect(back.yaw / DEG).toBeCloseTo(TILT.maxYaw / DEG - TILT.yawGain * 5, 0);
+    // Without the leash 165 degrees would still be far past the range.
     expect(back.yaw).toBeLessThan(TILT.maxYaw - 2 * DEG);
   });
 
@@ -98,8 +104,8 @@ describe('the tilt', () => {
     const other = createTilt();
     other.orient({ alpha: 0, beta: 90, gamma: 0 }, 0, 0);
     const byAlpha = other.orient({ alpha: 4, beta: 90, gamma: 0 }, 0, 1 / 60).yaw;
-    expect(byGamma / DEG).toBeCloseTo(TILT.gain * 4, 1);
-    expect(byAlpha / DEG).toBeCloseTo(TILT.gain * 4, 1);
+    expect(byGamma / DEG).toBeCloseTo(TILT.yawGain * 4, 1);
+    expect(byAlpha / DEG).toBeCloseTo(TILT.yawGain * 4, 1);
     // Past upright the angles flip (beta 95 is reported as alpha + 180, beta 85, gamma - 180 on some devices).
     const over = createTilt();
     over.orient({ alpha: 0, beta: 88, gamma: 0 }, 0, 0);
@@ -117,7 +123,7 @@ describe('the tilt', () => {
     let previous = tilt.orient({ alpha: 0, beta: 70, gamma: -30 }, 0, 0);
     for (let i = 1; i <= 600; i++) {
       const look = tilt.orient({ alpha: 20 * Math.sin(i / 90), beta: 70 + 25 * Math.sin(i / 50), gamma: -30 + 60 * (i / 600) }, 0, i / 60);
-      expect(Math.abs(look.yaw - previous.yaw)).toBeLessThan(0.6 * DEG);
+      expect(Math.abs(look.yaw - previous.yaw)).toBeLessThan(0.6 * DEG * TILT.yawGain / TILT.gain);
       expect(Math.abs(look.pitch - previous.pitch)).toBeLessThan(0.6 * DEG);
       previous = look;
     }
@@ -129,7 +135,7 @@ describe('the tilt', () => {
     expect(tilt.orient(undefined)).toEqual({ yaw: 0, pitch: 0 });
     expect(tilt.active).toBe(false);
     tilt.orient({ alpha: null, beta: 50, gamma: 0 }, 0, 0);
-    expect(tilt.orient({ alpha: null, beta: 50, gamma: 10 }, 0, 1 / 60).yaw / DEG).toBeCloseTo(TILT.gain * 10, 1);
+    expect(tilt.orient({ alpha: null, beta: 50, gamma: 10 }, 0, 1 / 60).yaw / DEG).toBeCloseTo(TILT.yawGain * 10, 1);
   });
 
   test('in landscape the screen\'s axes are the phone\'s, turned', () => {
@@ -139,7 +145,7 @@ describe('the tilt', () => {
     const yaw = createTilt();
     yaw.orient(flat, 90, 0);
     const a = yaw.orient({ ...flat, beta: 10 }, 90, 1 / 60);
-    expect(a.yaw / DEG).toBeCloseTo(TILT.gain * 10, 1);
+    expect(a.yaw / DEG).toBeCloseTo(TILT.yawGain * 10, 1);
     expect(a.pitch).toBeCloseTo(0, 6);
     const pitch = createTilt();
     pitch.orient(flat, 90, 0);

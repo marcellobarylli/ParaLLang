@@ -518,7 +518,7 @@ describe('the look follows the phone', () => {
     let previous = sight(tilted.pose);
     both(plain, tilted, 4, (a, b) => {
       const now = sight(b);
-      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.03); // under a degree a second per degree of range
+      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.03 * LOOK_MAX.yaw / 0.25); // as smooth for its range as at round 125's
       expect(Math.abs(now.pitch - previous.pitch)).toBeLessThan(0.03);
       previous = now;
     });
@@ -565,7 +565,7 @@ describe('the look follows the phone', () => {
     let previous = sight(d.pose);
     const smooth = (pose) => {
       const now = sight(pose);
-      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.07);
+      expect(Math.abs(wrap(now.yaw - previous.yaw))).toBeLessThan(0.07 * LOOK_MAX.yaw / 0.25); // round 191: in proportion to the range
       previous = now;
     };
     d.look({ yaw: LOOK_MAX.yaw });

@@ -14,8 +14,11 @@
 
 const RAD = Math.PI / 180;
 export const TILT = Object.freeze({
-  gain: 0.6, // degrees of look per degree of tilt
-  maxYaw: 12 * RAD, // the look's range to either side
+  gain: 0.6, // degrees of look up or down per degree of tilt
+  // Round 191: the look to the side follows the phone one to one, over 270 degrees in all (12 to either side at a
+  // gain of 0.6 until then), so turning round with the phone looks round the place.
+  yawGain: 1,
+  maxYaw: 135 * RAD, // the look's range to either side
   maxPitch: 8 * RAD, // and up or down
   recentre: 30, // seconds: the baseline follows the phone this slowly (12 at first: a held look crept back by a tenth a second)
   yawSign: 1,
@@ -65,7 +68,7 @@ function fromRotationVector([x, y, z]) {
 export function createTilt(options = {}) {
   const config = { ...TILT, ...options };
   // How far the phone may tilt before the baseline is dragged along: the tilt at which the look reaches its range.
-  const leash = { yaw: config.maxYaw / config.gain, pitch: config.maxPitch / config.gain };
+  const leash = { yaw: config.maxYaw / config.yawGain, pitch: config.maxPitch / config.gain };
   let baseline = null;
   let last = null;
   let look = { yaw: 0, pitch: 0 };
@@ -94,7 +97,7 @@ export function createTilt(options = {}) {
       const aboutHorizontal = tilt[0] * c - tilt[1] * s;
       const aboutVertical = tilt[0] * s + tilt[1] * c;
       look = {
-        yaw: clamp(config.yawSign * config.gain * aboutVertical, -config.maxYaw, config.maxYaw),
+        yaw: clamp(config.yawSign * config.yawGain * aboutVertical, -config.maxYaw, config.maxYaw),
         pitch: clamp(-config.pitchSign * config.gain * aboutHorizontal, -config.maxPitch, config.maxPitch),
       };
       return look;
