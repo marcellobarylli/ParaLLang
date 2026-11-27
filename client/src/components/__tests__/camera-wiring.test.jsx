@@ -381,6 +381,29 @@ test('a refusal to listen is said under the box with the way round it; without r
   expect(screen.queryByRole('button', { name: /Speak your response/ })).toBeNull();
 });
 
+// Round 188: the microphone stays on through silences; sending switches it off, and so does a browser that ends
+// every stretch at once with nothing heard (it would otherwise start and end without pause).
+test('the microphone stays on until tapped off, is switched off by sending, and gives up on a browser that never listens', async () => {
+  const speech = fakeSpeech();
+  const { user } = await openConversation(speech);
+  const box = screen.getByLabelText('Your response', { selector: 'textarea' });
+  await user.click(screen.getByRole('button', { name: 'Speak your response in Italian' }));
+  act(() => speech.heard.onText('Buongiorno', true));
+  act(() => speech.heard.onEnd(null));
+  act(() => speech.heard.onText('sono Sam', true));
+  expect(box.value).toBe('Buongiorno sono Sam');
+  await user.click(screen.getByRole('button', { name: 'Send' }));
+  expect(screen.getByRole('button', { name: 'Speak your response in Italian' })).toBeTruthy();
+  cleanup();
+  level.views.length = 0;
+  const brief = fakeSpeech();
+  await openConversation(brief);
+  await act(async () => { screen.getByRole('button', { name: 'Speak your response in Italian' }).click(); });
+  for (let i = 0; i < 3; i += 1) act(() => brief.heard.onEnd(null));
+  expect(screen.getByRole('button', { name: 'Speak your response in Italian' })).toBeTruthy();
+  expect(screen.getByText(/Listening could not start/)).toBeTruthy();
+});
+
 // Round 129: beginner mode on the screen. The server's verdict is put into the store as the server sends it.
 const CORRECTION = { text: 'Buongiorno! Mi chiamo Luigione. Come ti chiami?', translation: 'Good morning! My name is Luigione. What is your name?', heartLost: true };
 const corrected = (store, { correction = CORRECTION, used = 1 } = {}) => act(() => store.setState({
@@ -534,16 +557,23 @@ test('the microphone listens in Italian or in English by a switch, and adds each
   expect(toggle.textContent).toBe('IT');
   await user.click(screen.getByRole('button', { name: 'Speak your response in Italian' }));
   expect(speech.heard.tag).toBe('it-IT');
-  expect(toggle.disabled).toBe(true); // not while it listens
+  expect(toggle.disabled).toBe(false); // round 188: the language switches while it listens
   act(() => speech.heard.onText('Buongiorno', true));
-  act(() => speech.heard.onEnd(null));
+  // Round 188: a silence ends the browser's stretch, and the microphone starts the next one itself.
+  const first = speech.heard;
+  act(() => first.onEnd(null));
+  expect(speech.heard).not.toBe(first);
+  expect(speech.heard.tag).toBe('it-IT');
+  expect(screen.getByRole('button', { name: 'Stop listening' })).toBeTruthy();
+  // The switch ends the stretch in Italian and the next one is in English, with the microphone still on.
   await user.click(toggle);
   expect(screen.getByRole('button', { name: 'Listening in English. Switch to Italian' }).textContent).toBe('EN');
-  await user.click(screen.getByRole('button', { name: 'Speak your response in English' }));
   expect(speech.heard.tag).toBe('en-US');
+  expect(screen.getByRole('button', { name: 'Stop listening' })).toBeTruthy();
   expect(box.placeholder).toBe('Listening for English…');
   act(() => speech.heard.onText('my name is Luigione', true));
-  act(() => speech.heard.onEnd(null));
+  await user.click(screen.getByRole('button', { name: 'Stop listening' }));
+  expect(screen.getByRole('button', { name: 'Speak your response in English' })).toBeTruthy();
   expect(box.value).toBe('Buongiorno my name is Luigione');
 });
 

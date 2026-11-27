@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-27: round 188, the microphone stays on
+
+The microphone is now a toggle: it no longer switches itself off after a silence, but listens until it is tapped
+off (or the answer is sent), and the language button switches between the target language and English while it
+listens. Tested with fakes; not tried on a phone. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/188/architecture.md), [findings](docs/rounds/188/findings.md).
+
 ## Addendum 2026-11-26: round 187, the title music waits for the road
 
 The title music no longer fades when the Journey button is pressed: it plays on while the road is being found (the
