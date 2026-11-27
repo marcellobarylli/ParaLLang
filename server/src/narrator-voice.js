@@ -9,7 +9,7 @@ import { AppError } from './errors.js';
 
 export const NARRATOR_MODEL = 'gemini-3.8-flash-tts';
 export const NARRATOR_VOICE = 'Charon';
-// Round 205: the direction is a set of notes above a marked transcript (the layout of Google's prompting guide for
+// Round 206: the direction is a set of notes above a marked transcript (the layout of Google's prompting guide for
 // its speech models), not a sentence run on into the text, which the voice read aloud as part of the story. The notes
 // end by saying only the transcript is spoken.
 export const NARRATOR_STYLE = [

@@ -1,4 +1,4 @@
-# Round 205 architecture
+# Round 206 architecture
 
 **Conversational round, recorded after the build.** Opened on 2026-11-27 on the owner's message in
 [`trail/interview.md`](trail/interview.md); the events are in [`trail/journal.md`](trail/journal.md). No pre-run

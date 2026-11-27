@@ -34,13 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-27: round 205, the narrator stops reading his notes, and turns silly
+## Addendum 2026-11-27: round 206, the narrator stops reading his notes, and turns silly
 
 The hosted narrator read his direction aloud ("Read this aloud as a warm ... storyteller") because round 202 ran it
 into the text as one sentence. The direction is now headed notes above a marked transcript, ending "speak only the
 transcript", and the character is an old, slightly silly, whimsical, goofy but charming storyteller. Tested with
 Google faked; **not heard**. **Merged to `main` and deployed** on the owner's word.
-[Architecture](docs/rounds/205/architecture.md), [findings](docs/rounds/205/findings.md).
+[Architecture](docs/rounds/206/architecture.md), [findings](docs/rounds/206/findings.md).
 
 ## Addendum 2026-11-27: round 204, the legacy dungeons under the road's sky
 
