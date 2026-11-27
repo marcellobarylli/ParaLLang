@@ -11,7 +11,7 @@ const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2Ren
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
 // Round 204: `seed` is the road's: the level then has the road's time of day and weather (levelView.js).
-export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites = {}, insets, onArrive, closed = 0, resolved = false, beat = null, tilt = false, seed = null, onThunder = null }) {
+export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites = {}, insets, onArrive, closed = 0, resolved = false, beat = null, tilt = false, seed = null, onThunder = null, glitch = false }) {
   const canvasRef = useRef(null);
   const viewRef = useRef(null);
   const labelRefs = useRef([]);
@@ -30,7 +30,7 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
     setStatus('loading');
     import('../scene/levelView.js').then(({ createLevelView }) => {
       if (cancelled) return;
-      view = createLevelView(canvasRef.current, { dungeon, seed, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
+      view = createLevelView(canvasRef.current, { dungeon, seed, glitch, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
       view.setLabels(labelRefs.current);
       viewRef.current = view;
       if (typeof window !== 'undefined') window.__parallangLevel = view; // for the screenshot script and the console
@@ -47,6 +47,9 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
       view?.dispose();
     };
   }, [dungeon.id, dungeon.level, seed]);
+
+  // Round 205: "Glitch" in Settings, applied at once.
+  useEffect(() => { if (status === 'ready') viewRef.current?.setGlitch?.(glitch); }, [status, glitch]);
 
   useEffect(() => {
     if (status === 'ready') viewRef.current?.setPhase({ phase, siteIndex, walkFrom });

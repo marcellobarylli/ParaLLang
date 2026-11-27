@@ -39,7 +39,10 @@ try {
         view.setPhase({ phase: 'site', siteIndex });
         for (let n = 0; n < 120; n += 1) view.step(0.1);
         const u = view.world.uniforms;
-        return { part: view.weather.part, effects: view.effects, sun: u.uSunColor.value.toArray().map((v) => +v.toFixed(2)), fog: [u.uFogNear.value, u.uFogFar.value].map(Math.round), glow: u.uGlowColor.value.toArray().map((v) => +v.toFixed(2)), corruption: u.uCorruption.value, preset: view.world.preset };
+        const still = view.leafSway;
+        view.setGlitch(true); view.step(0.1); const torn = view.leafSway;
+        view.setGlitch(false); view.step(0.1);
+        return { still, torn, back: view.leafSway, part: view.weather.part, effects: view.effects, sun: u.uSunColor.value.toArray().map((v) => +v.toFixed(2)), fog: [u.uFogNear.value, u.uFogFar.value].map(Math.round), glow: u.uGlowColor.value.toArray().map((v) => +v.toFixed(2)), corruption: u.uCorruption.value, preset: view.world.preset };
       }, { key, siteIndex, weather });
       await page.waitForTimeout(150);
       await page.screenshot({ path: join(OUT, `${key.toLowerCase()}-${name}.jpg`), type: 'jpeg', quality: 80, timeout: 120000 });
@@ -50,7 +53,25 @@ try {
     check(seen.night.effects.stars > 0.5 && seen.day.effects.stars < 0.1, `${key}: stars at night, none by day`);
     check(seen.storm.effects.rain + seen.storm.effects.snow > 0.9 && seen.day.effects.rain + seen.day.effects.snow === 0, `${key}: rain (or snow, high up) in a storm, none in clear weather`);
     check(seen.storm.fog[1] < seen.night.fog[1], `${key}: the rain's mist shortens the level's own fog`);
+    check(Object.values(seen).every((each) => each.still === 0 && each.back === 0), `${key}: the leaves hold still in every weather (round 205)`);
+    check(seen.storm.torn > seen.day.torn && seen.day.torn > 0, `${key}: with Glitch on the wind moves them, more in a storm`);
     check(JSON.stringify(seen.day.glow) === JSON.stringify(seen.night.glow), `${key}: the level keeps its own glow`);
+  }
+  // Round 205: Ta Prohm's buttress tree in a windy rain, with the leaves held still and with Glitch on.
+  for (const on of [false, true]) {
+    await page.evaluate(async (glitch) => {
+      const [{ createLevelView }, dungeons, { pinWeather }] = await Promise.all([import('/src/scene/levelView.js'), import('/src/dungeon.js'), import('/src/scene/weatherClock.js')]);
+      window.__view?.dispose();
+      const old = document.getElementById('c');
+      const canvas = old.cloneNode(); old.replaceWith(canvas);
+      pinWeather({ phase: 0.25, rain: 0, wind: 0.15 });
+      const view = createLevelView(canvas, { dungeon: dungeons.DUNGEON, seed: 3, glitch });
+      window.__view = view;
+      view.setPhase({ phase: 'site', siteIndex: 1 });
+      for (let n = 0; n < 120; n += 1) view.step(0.1);
+    }, on);
+    await page.waitForTimeout(150);
+    await page.screenshot({ path: join(OUT, `glitch-${on ? 'on' : 'off'}.jpg`), type: 'jpeg', quality: 80, timeout: 120000 });
   }
   // Without a seed the level is as it was: its fixed preset and no weather.
   const plain = await page.evaluate(async () => {

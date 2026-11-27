@@ -116,8 +116,9 @@ function beacon([x, z], heightAt) {
 // day and weather (weatherClock.js), lit and coloured by the same atmosphere, with the same rain, snow, stars,
 // fireflies, clouds and lightning. The level keeps what is its own: its glow, its corruption, and its fog's reach
 // (shortened by mist in the proportion the road's is). Without a seed the level keeps its fixed preset, as before.
+const GLITCH_SWAY = 0.12; // round 205: the most the wind may tear at a level's leaves; in a gale they would fill the whole view
 const CLOUDS_BELOW = 45; // metres of camera over its target above which the low clouds are hidden: the map is seen from above
-export function createLevelView(canvas, { dungeon, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, seed = null, now = () => Date.now() } = {}) {
+export function createLevelView(canvas, { dungeon, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, seed = null, now = () => Date.now(), glitch = false } = {}) {
   const level = LEVELS[dungeon.level];
   if (!level) throw new Error(`No level view for "${dungeon.level}"`);
   const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
@@ -130,8 +131,14 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, onThunde
   const preset = PRESETS[world.preset];
   const fog = { near: preset.fogNear, far: preset.fogFar };
   const skyed = seed !== null && seed !== undefined;
+  // Round 205: the wind's sway is weighted by a leaf's texture coordinate, which on the road runs 0 to 1 up a crown.
+  // A level's canopy is textured in metres, so the same sway throws its corners many metres about: round 204 let it,
+  // and the trees came apart into shards. The sway is kept from a level's leaves unless "Glitch" is on in Settings.
+  let glitching = glitch === true;
+  const realSway = world.materials.leaves?.uniforms?.uSway ?? { value: 0 };
+  const leafSway = { get value() { return realSway.value; }, set value(amount) { realSway.value = glitching ? Math.min(GLITCH_SWAY, amount) : 0; } };
   const effects = skyed ? createWeatherEffects(
-    { scene: world.scene, uniforms: world.uniforms, materials: { leaves: world.materials.leaves ?? { uniforms: { uSway: { value: 0 } } } }, terrain: { heightAt: level.heightAt, waterY: 0 } },
+    { scene: world.scene, uniforms: world.uniforms, materials: { leaves: { uniforms: { uSway: leafSway } } }, terrain: { heightAt: level.heightAt, waterY: 0 } },
     { reducedMotion },
   ) : null;
   const lowClouds = effects?.group.getObjectByName('clouds') ?? null;
@@ -386,6 +393,10 @@ export function createLevelView(canvas, { dungeon, onArrive = () => {}, onThunde
     resize,
     /** One frame of `dt` seconds, outside the animation loop (screenshots). */
     step,
+    /** Round 205: lets the wind tear at the level's leaves (true), or keeps them still (false). */
+    setGlitch(on) { glitching = on === true; if (!glitching) realSway.value = 0; },
+    get glitch() { return glitching; },
+    get leafSway() { return realSway.value; },
     /** Round 204: the weather showing (null without a seed) and what its effects show, for tests and the console. */
     get weather() { return weather; },
     get effects() { return effects ? { ...effects.state } : null; },
