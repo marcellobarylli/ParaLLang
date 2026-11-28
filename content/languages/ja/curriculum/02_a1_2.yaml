@@ -1,0 +1,213 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 144: the words of curriculum stage A1.2 (the skeleton is content/curriculum/02_a1_2.yaml). The Italian
+# original was authored by Claude from the functions of the A1 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
+# defined in 01_a1_1.yaml is reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 223: from 01_a1_1.yaml this stage reuses sunde_imasu, omoshiroi, chikai, toi, benkyo_shimasu, zenzen,
+# ni_shimasu and kudasai. Long vowels are listed as typed without macrons too (kyō: kyou, kyoo).
+stage: a1_2
+version: curriculum-a1-2-ja-v1
+grammar:
+  family: "imasu for people (ani ga imasu; kodomo wa imasen); two sets of family words, your own (haha, chichi, ani, ane) and someone else's (okāsan, otōsan, onīsan, onēsan); no for 'my' and 'your' (watashi no tomodachi); i-adjectives and na-adjectives (se ga takai, shinsetsu na hito)."
+  places: "arimasu for things and places (ginkō ga arimasu; eki wa arimasen); X wa doko desu ka; place words after no (eki no mae, ginkō no tonari, X to Y no aida), with ni for where a thing is (eki no mae ni arimasu)."
+  directions: "A verb in -te with kudasai for directions (magatte kudasai, itte kudasai); ikimasu with e or ni (eki e ikimasu); de for the means (densha de, basu de) and aruite, 'on foot'; -me for the order (hitotsu-me, futatsu-me)."
+  time: "Nan-ji desu ka? ... -ji desu (ichi-ji, but yo-ji, shichi-ji, ku-ji); han for half past and -fun or -pun for minutes; ni after a clock time or a day (hachi-ji ni, getsuyōbi ni) but not after kyō or ashita; the days of the week end in -yōbi."
+  routine: "The -masu form for habits as well as the present (roku-ji ni okimasu); -masen for the negative; itsumo, yoku, tokidoki; zenzen with a negative for 'never' (zenzen nomimasen); the place of an action with de (kaisha de hatarakimasu)."
+  shopping: "kore, sore, are (this one, that one by you, that one over there) and kono, sono, ano before a noun; colours as nouns and as adjectives (aka, akai; midori no); -te mo ii desu ka to ask leave (kite mite mo ii desu ka); -sugimasu for 'too' (ōkisugimasu); kore ni shimasu, 'I'll take this one'."
+lessons:
+  family_who:
+    siblings: { say: [ani, ane, ototo, imoto, kyodai, kodomo, musuko, musume], examples: ["Ani ga imasu.", "Imōto ga futari imasu.", "Kodomo wa imasen."] }
+    parents: { say: [okasan, otosan], examples: ["Haha no namae wa Anna desu.", "Chichi no namae wa Pōru desu."] }
+    ask_family: { say: [imasu_ka], examples: ["Kyōdai wa imasu ka?", "O-ko-san wa imasu ka?"] }
+  family_describe:
+    ask_like: { say: [donna_hito], examples: ["Onēsan wa donna hito desu ka?", "Go-kyōdai wa donna hito desu ka?"] }
+    looks: { say: [se_ga_takai, se_ga_hikui, wakai, nenpai], examples: ["Ani wa se ga takai desu.", "Haha wa se ga hikui desu.", "Chichi wa nenpai desu."] }
+    character: { say: [yasashii, shinsetsu, omoshiroi, ii_hito], examples: ["Totemo yasashii desu.", "Shinsetsu de omoshiroi hito desu."] }
+  family_friend:
+    my_friend: { say: [tomodachi], examples: ["Ken to iu tomodachi ga imasu.", "Tomodachi no namae wa Sara desu."] }
+    friend_lives: { say: [sunde_imasu], examples: ["Kyōto ni sunde imasu.", "Tomodachi wa Rondon ni sunde imasu."] }
+    together: { say: [issho_ni], examples: ["Issho ni benkyō shimasu.", "Yoku issho ni tabemasu."] }
+  places_where:
+    looking_for: { say: [[sagashite_imasu], [eki, ginko, yakkyoku, hiroba, supa, konbini, koban]], examples: ["Eki o sagashite imasu.", "Yakkyoku o sagashite imasu."] }
+    where_is: { say: [[doko], [eki, ginko, yakkyoku, hiroba, supa, konbini, koban]], examples: ["Ginkō wa doko desu ka?", "Sumimasen, eki wa doko desu ka?"] }
+    near: { say: [kono_chikaku, chikai, toi], examples: ["Kono chikaku desu ka?", "Tōi desu ka?"] }
+  places_there:
+    is_there: { say: [[arimasu_ka], [eki, ginko, yakkyoku, hiroba, supa, konbini, koban]], examples: ["Kono chikaku ni ginkō wa arimasu ka?", "Sūpā wa arimasu ka?"] }
+    in_my_town: { say: [arimasu], examples: ["Watashi no machi ni wa ōkii hiroba ga arimasu.", "Yakkyoku ga futatsu arimasu."] }
+    none: { say: [arimasen], examples: ["Eki wa arimasen.", "Sūpā wa arimasen."] }
+  places_next_to:
+    next_to: { say: [tonari], examples: ["Ginkō wa yakkyoku no tonari desu.", "Kissaten wa sūpā no tonari ni arimasu."] }
+    front_behind: { say: [mae, ushiro], examples: ["Yakkyoku wa eki no mae desu.", "Ginkō no ushiro desu."] }
+    between: { say: [aida], examples: ["Ginkō to yakkyoku no aida desu."] }
+  directions_ask:
+    lost: { say: [michi_ni_mayoimashita], examples: ["Michi ni mayoimashita.", "Sumimasen, mayotte shimaimashita."] }
+    how_to_get: { say: [do_ikimasu_ka], examples: ["Eki made dō ikeba ii desu ka?", "Sumimasen, Shibuya e wa dō ikimasu ka?"] }
+    right_road: { say: [michi], examples: ["Kono michi de ii desu ka?", "Eki wa kono michi desu ka?"] }
+  directions_turn:
+    turn: { say: [[magatte_kudasai], [hidari, migi]], examples: ["Hidari ni magatte kudasai.", "Migi e magatte kudasai."] }
+    straight: { say: [massugu], examples: ["Massugu itte kudasai.", "Zutto massugu desu."] }
+    which_street: { say: [hitotsume], examples: ["Hitotsu-me no kado o migi ni magatte kudasai.", "Futatsu-me no michi o hidari desu."] }
+  directions_transport:
+    ticket: { say: [kippu], examples: ["Kyōto made no kippu o ichi-mai kudasai.", "Ōsaka made kippu o ni-mai onegaishimasu."] }
+    by_what: { say: [densha_de, basu_de, aruite], examples: ["Densha de ikimasu.", "Aruite ikimasu.", "Basu ni norimasu."] }
+    how_long: { say: [dono_kurai, nanjikan, kakarimasu], examples: ["Densha de dono kurai kakarimasu ka?", "Eki made dono kurai desu ka?"] }
+  time_clock:
+    what_time: { say: [nanji], examples: ["Ima nan-ji desu ka?", "Sumimasen, nan-ji desu ka?"] }
+    tell_time: { say: [hachiji], examples: ["San-ji desu.", "Jū-ji desu.", "Ichi-ji desu."] }
+    half_quarter: { say: [han, jugofun], examples: ["Ni-ji han desu.", "Roku-ji jūgo-fun desu."] }
+  time_days:
+    what_day: { say: [nanyobi], examples: ["Kyō wa nan-yōbi desu ka?", "Nan-yōbi desu ka?"] }
+    today_is: { say: [[kyo], [getsuyobi, kayobi, suiyobi, mokuyobi, kinyobi, doyobi, nichiyobi]], examples: ["Kyō wa getsuyōbi desu.", "Kyō wa doyōbi desu."] }
+    tomorrow: { say: [[ashita], [getsuyobi, kayobi, suiyobi, mokuyobi, kinyobi, doyobi, nichiyobi]], examples: ["Ashita wa kayōbi desu.", "Ashita wa nichiyōbi desu."] }
+  time_when:
+    at_what_time: { say: [nanji_ni], examples: ["Nan-ji ni akimasu ka?", "Densha wa nan-ji ni demasu ka?"] }
+    at_hour: { say: [hachiji_ni], examples: ["Hachi-ji ni kaerimasu.", "Ku-ji ni."] }
+    part_of_day: { say: [asa, gogo, yoru], examples: ["Asa desu.", "Yoru no hachi-ji desu.", "Gogo desu."] }
+  routine_day:
+    wake: { say: [me_ga_samemasu, okimasu], examples: ["Shichi-ji ni me ga samemasu.", "Hachi-ji ni okimasu."] }
+    work: { say: [hatarakimasu, shigoto, benkyo_shimasu], examples: ["Kaisha de hatarakimasu.", "Daigaku de benkyō shite imasu."] }
+    evening: { say: [bangohan, tabemasu, nemasu], examples: ["Shichi-ji ni bangohan o tabemasu.", "Jū-ji ni nemasu.", "Hachi-jikan nemasu."] }
+  routine_often:
+    always: { say: [itsumo, yoku], examples: ["Itsumo kōhī o nomimasu.", "Yoku eigakan ni ikimasu."] }
+    never: { say: [zenzen, ichido_mo], examples: ["Bīru wa zenzen nomimasen.", "Terebi wa zenzen mimasen."] }
+    sometimes: { say: [tokidoki, mainichi], examples: ["Tokidoki ryōri o shimasu.", "Mainichi hatarakimasu."] }
+  routine_free:
+    ask_free: { say: [hima_na_toki, shumi, nani_o_shimasu_ka], examples: ["Hima na toki, nani o shimasu ka?", "Shumi wa nan desu ka?"] }
+    free_time: { say: [yomimasu, mimasu, kikimasu, asobimasu, gemu, dekakemasu], examples: ["Hon o takusan yomimasu.", "Eiga o mimasu. Ongaku mo kikimasu.", "Tomodachi to gēmu o shimasu."] }
+    weekend: { say: [shumatsu], examples: ["Shūmatsu wa tomodachi to dekakemasu.", "Shūmatsu wa yoku nemasu."] }
+  shopping_ask:
+    looking_for: { say: [shatsu, kutsu, jaketto, boshi], examples: ["Shatsu o sagashite imasu.", "Kutsu ga hoshii desu."] }
+    colour: { say: [akai, aoi, midori, kuroi, shiroi, kiiroi], examples: ["Shiroi shatsu ga hoshii desu.", "Kuro de onegaishimasu."] }
+    other_colour: { say: [hoka_no_iro, arimasu_ka], examples: ["Hoka no iro wa arimasu ka?", "Midori wa arimasu ka?"] }
+  shopping_try:
+    try_on: { say: [shichaku], examples: ["Shichaku shite mo ii desu ka?", "Kono jaketto o kite mite mo ii desu ka?"] }
+    wrong_size: { say: [okisugimasu, chiisasugimasu, okii, chiisai], examples: ["Ōkisugimasu.", "Chotto chiisai desu."] }
+    take_it: { say: [ni_shimasu, kaimasu, kudasai], examples: ["Ii desu ne. Kore ni shimasu.", "Jā, kore o kudasai."] }
+  shopping_this:
+    this_that: { say: [kore, sono, ano], examples: ["Kore o kudasai.", "Sore ga ii desu."] }
+    size: { say: [saizu], examples: ["Saizu wa nan desu ka?", "M saizu desu."] }
+    bigger: { say: [motto_okii, motto_chiisai], examples: ["Motto ōkii saizu wa arimasu ka?", "Motto chiisai no wa arimasu ka?"] }
+vocabulary:
+  # family
+  ani: { t: "ani", pos: noun, en: ["older brother", "brother"], forms: ["ani", "onīsan", "oniisan", "onii-san"], ex: ["Ani wa Ōsaka ni imasu.", "My older brother is in Osaka."], n: "Your own older brother is ani; someone else's, or yours when you call him, onīsan." }
+  ane: { t: "ane", pos: noun, en: ["older sister", "sister"], forms: ["ane", "onēsan", "oneesan", "onē-san", "onee-san"], ex: ["Ane wa Yumi to iimasu.", "My older sister is called Yumi."], n: "Your own older sister is ane; someone else's, or yours when you call her, onēsan." }
+  ototo: { t: "otōto", pos: noun, en: ["younger brother", "brother"], forms: ["otōto", "otouto", "otooto", "otōto-san", "otouto-san", "otooto-san", "otōtosan", "otoutosan", "otootosan"], ex: ["Otōto wa daigakusei desu.", "My younger brother is a student."], n: "Japanese has a word for each: older and younger, brother and sister. Someone else's younger brother is otōto-san." }
+  imoto: { t: "imōto", pos: noun, en: ["younger sister", "sister"], forms: ["imōto", "imouto", "imooto", "imōto-san", "imouto-san", "imooto-san", "imōtosan", "imoutosan", "imootosan"], ex: ["Imōto ga futari imasu.", "I have two younger sisters."] }
+  kyodai: { t: "kyōdai", pos: noun, en: ["brothers and sisters", "siblings"], forms: ["kyōdai", "kyoudai", "kyoodai", "go-kyōdai", "go-kyoudai", "go-kyoodai", "gokyōdai", "gokyoudai", "gokyoodai"], ex: ["Kyōdai wa imasen.", "I have no brothers or sisters."], n: "Someone else's are go-kyōdai." }
+  kodomo: { t: "kodomo", pos: noun, en: ["child", "children"], forms: ["kodomo", "kodomo-san", "o-ko-san", "okosan"], ex: ["Kodomo ga futari imasu.", "I have two children."], n: "Someone else's children are o-ko-san. People are counted hitori, futari, then -nin: san-nin." }
+  musuko: { t: "musuko", pos: noun, en: ["son"], forms: ["musuko", "musuko-san"], ex: ["Musuko wa jussai desu.", "My son is ten."] }
+  musume: { t: "musume", pos: noun, en: ["daughter"], forms: ["musume", "musume-san"], ex: ["Musume wa Kyōto ni sunde imasu.", "My daughter lives in Kyoto."] }
+  okasan: { t: "okāsan", pos: noun, en: ["mother", "my mother"], forms: ["okāsan", "okaasan", "o-kāsan", "o-kaasan", "kāsan", "kaasan", "haha wa", "haha ga", "haha no", "haha mo", "haha to"], ex: ["Haha wa Kōbe kara kimashita.", "My mother is from Kobe."], n: "Your own mother is haha; someone else's, or yours when you speak to her, okāsan. Haha alone is not listed: it reads as English laughter." }
+  otosan: { t: "otōsan", pos: noun, en: ["father", "my father"], forms: ["otōsan", "otousan", "otoosan", "o-tōsan", "o-tousan", "o-toosan", "tōsan", "tousan", "toosan", "chichi"], ex: ["Chichi wa rokujussai desu.", "My father is sixty."], n: "Your own father is chichi; someone else's, or yours when you speak to him, otōsan." }
+  imasu_ka: { t: "imasu ka", pos: phrase, en: ["do you have (brothers, children)", "is there (someone)"], forms: ["imasu ka", "irasshaimasu ka"], ex: ["Kodomo wa imasu ka?", "Do you have children?"], n: "Imasu, 'there is', for people and animals; arimasu for things." }
+  donna_hito: { t: "donna hito", pos: phrase, en: ["what kind of person", "what is he like", "what is she like"], forms: ["donna hito", "donna kata", "donna kanji", "dō iu hito", "dou iu hito", "doo iu hito", "dō iu kata", "dou iu kata", "doo iu kata"], ex: ["Onīsan wa donna hito desu ka?", "What is your brother like?"] }
+  se_ga_takai: { t: "se ga takai", pos: phrase, en: ["tall"], forms: ["se ga takai", "sei ga takai"], ex: ["Ani wa se ga takai desu.", "My brother is tall."], n: "Literally 'the height is high'." }
+  se_ga_hikui: { t: "se ga hikui", pos: phrase, en: ["short"], forms: ["se ga hikui", "sei ga hikui", "hikui"], ex: ["Haha wa se ga hikui desu.", "My mother is short."], n: "Hikui alone is 'low'." }
+  wakai: { t: "wakai", pos: adjective, en: ["young"], ex: ["Haha wa mada wakai desu.", "My mother is still young."] }
+  nenpai: { t: "nenpai", pos: adjective, en: ["elderly", "old"], forms: ["nenpai", "go-nenpai", "toshiyori"], ex: ["Sofu wa nenpai desu.", "My grandfather is old."], n: "Of a person, nenpai is kinder than toshiyori; furui, 'old', is for things." }
+  yasashii: { t: "yasashii", pos: adjective, en: ["kind", "gentle", "easy"], ex: ["Ane wa totemo yasashii desu.", "My sister is very kind."], n: "Also 'easy', of a task." }
+  shinsetsu: { t: "shinsetsu", pos: adjective, en: ["kind", "helpful"], ex: ["Shinsetsu na hito desu.", "He is a kind person."], n: "A na-adjective: shinsetsu na hito, 'a kind person'." }
+  ii_hito: { t: "ii hito", pos: phrase, en: ["a nice person", "nice"], forms: ["ii hito", "ii kata"], ex: ["Tanaka-san wa ii hito desu.", "Mr Tanaka is a nice person."] }
+  tomodachi: { t: "tomodachi", pos: noun, en: ["friend"], forms: ["tomodachi", "yūjin", "yuujin"], ex: ["Ken wa watashi no tomodachi desu.", "Ken is a friend of mine."] }
+  issho_ni: { t: "issho ni", pos: adverb, en: ["together"], forms: ["issho ni", "isshoni", "issho"], ex: ["Issho ni tabemashō.", "Let's eat together."] }
+  # places
+  sagashite_imasu: { t: "sagashite imasu", pos: verb, en: ["I am looking for"], forms: ["sagashite imasu", "sagashiteimasu", "sagashite masu", "sagashite iru", "sagashiteru", "sagashite"], ex: ["Ginkō o sagashite imasu.", "I am looking for a bank."] }
+  eki: { t: "eki", pos: noun, en: ["station"], ex: ["Eki wa tōi desu.", "The station is far."], n: "Eki-mae, 'in front of the station', is the centre of most Japanese towns." }
+  ginko: { t: "ginkō", pos: noun, en: ["bank"], forms: ["ginkō", "ginkou", "ginkoo"], ex: ["Ginkō wa ku-ji ni akimasu.", "The bank opens at nine."] }
+  yakkyoku: { t: "yakkyoku", pos: noun, en: ["pharmacy", "chemist's"], forms: ["yakkyoku", "kusuriya", "doraggusutoa"], ex: ["Yakkyoku o sagashite imasu.", "I am looking for a pharmacy."], n: "A drugstore (doraggusutoa) sells medicine, cosmetics and snacks." }
+  hiroba: { t: "hiroba", pos: noun, en: ["square", "plaza"], ex: ["Eki-mae no hiroba wa ōkii desu.", "The square in front of the station is big."] }
+  supa: { t: "sūpā", pos: noun, en: ["supermarket"], forms: ["sūpā", "suupaa", "sūpā māketto", "suupaa maaketto"], ex: ["Sūpā wa aite imasu.", "The supermarket is open."] }
+  konbini: { t: "konbini", pos: noun, en: ["convenience store"], forms: ["konbini", "kombini"], ex: ["Konbini wa nijūyo-jikan aite imasu.", "The convenience store is open twenty-four hours."] }
+  koban: { t: "kōban", pos: noun, en: ["police box"], forms: ["kōban", "kouban", "kooban"], ex: ["Kōban de michi o kikimashō.", "Let's ask the way at the police box."], n: "The small police post on a corner, whose officers give directions all day." }
+  doko: { t: "doko", pos: adverb, en: ["where", "where is"], forms: ["doko", "doko desu ka", "doko ni arimasu ka", "dochira"], ex: ["Toire wa doko desu ka?", "Where is the toilet?"], n: "X wa doko desu ka? 'Where is X?'; dochira is the politer 'where'." }
+  kono_chikaku: { t: "kono chikaku", pos: phrase, en: ["near here", "around here"], forms: ["kono chikaku", "kono hen", "kono atari", "koko kara chikai"], ex: ["Kono chikaku ni konbini wa arimasu ka?", "Is there a convenience store near here?"] }
+  arimasu_ka: { t: "arimasu ka", pos: phrase, en: ["is there", "do you have"], ex: ["Kono chikaku ni ginkō wa arimasu ka?", "Is there a bank near here?"], n: "Arimasu for things and places, imasu for people and animals." }
+  arimasu: { t: "arimasu", pos: verb, en: ["there is", "there are", "we have"], ex: ["Eki no mae ni kōban ga arimasu.", "There is a police box in front of the station."] }
+  arimasen: { t: "arimasen", pos: verb, en: ["there is no", "there isn't", "we don't have"], forms: ["arimasen", "nai desu"], ex: ["Koko ni wa ginkō wa arimasen.", "There is no bank here."] }
+  tonari: { t: "tonari", pos: noun, en: ["next to", "beside"], forms: ["tonari", "yoko"], ex: ["Ginkō wa eki no tonari desu.", "The bank is next to the station."], n: "X no tonari: 'next to X'. The place word comes after the thing, with no." }
+  mae: { t: "mae", pos: noun, en: ["in front of", "opposite", "before"], forms: ["mae", "mukai", "mukaigawa"], ex: ["Eki no mae de aimashō.", "Let's meet in front of the station."], n: "Mukai is 'opposite, across the road'." }
+  ushiro: { t: "ushiro", pos: noun, en: ["behind"], forms: ["ushiro", "ura"], ex: ["Sūpā wa hiroba no ushiro desu.", "The supermarket is behind the square."], n: "Ura is 'the back of' a building." }
+  aida: { t: "aida", pos: noun, en: ["between"], ex: ["Kissaten wa ginkō to eki no aida desu.", "The café is between the bank and the station."], n: "X to Y no aida: 'between X and Y'." }
+  # directions
+  michi_ni_mayoimashita: { t: "michi ni mayoimashita", pos: phrase, en: ["I am lost", "I got lost"], forms: ["michi ni mayoimashita", "mayoimashita", "mayotte shimaimashita", "mayotchatta", "mayotte imasu"], ex: ["Sumimasen, michi ni mayoimashita.", "Excuse me, I am lost."], n: "The same for a man and a woman." }
+  do_ikimasu_ka: { t: "dō ikimasu ka", pos: phrase, en: ["how do I get to", "how do I get there"], forms: ["dō ikimasu ka", "dou ikimasu ka", "doo ikimasu ka", "dō ikeba ii desu ka", "dou ikeba ii desu ka", "doo ikeba ii desu ka", "dō ikeba ii", "dou ikeba ii", "doo ikeba ii", "dō ittara ii", "dou ittara ii", "doo ittara ii", "dō yatte ikimasu ka", "dou yatte ikimasu ka", "doo yatte ikimasu ka", "dō yatte iku", "dou yatte iku", "doo yatte iku", "ikikata"], ex: ["Kōen made dō ikimasu ka?", "How do I get to the park?"], n: "X made dō ikeba ii desu ka? 'How should I go to X?'" }
+  michi: { t: "michi", pos: noun, en: ["road", "street", "way"], forms: ["michi", "kono michi"], ex: ["Eki e no michi desu.", "It is the road to the station."] }
+  magatte_kudasai: { t: "magatte kudasai", pos: verb, en: ["please turn", "turn"], forms: ["magatte kudasai", "magatte", "magarimasu", "magaru"], ex: ["Ginkō no kado o migi ni magatte kudasai.", "Turn right at the corner by the bank."], n: "A verb in -te with kudasai asks a stranger to do something; to a friend, magatte alone." }
+  hidari: { t: "hidari", pos: noun, en: ["left", "on the left"], forms: ["hidari", "hidarigawa"], ex: ["Yakkyoku wa hidari desu.", "The pharmacy is on the left."] }
+  migi: { t: "migi", pos: noun, en: ["right", "on the right"], forms: ["migi", "migigawa"], ex: ["Kōban wa migigawa ni arimasu.", "The police box is on the right."] }
+  massugu: { t: "massugu", pos: adverb, en: ["straight on", "straight ahead"], forms: ["massugu", "zutto massugu"], ex: ["Hiroba made massugu itte kudasai.", "Go straight on as far as the square."] }
+  hitotsume: { t: "hitotsu-me", pos: phrase, en: ["the first", "the first one"], forms: ["hitotsu-me", "hitotsume", "futatsu-me", "futatsume", "mittsu-me", "mittsume", "tsugi no"], ex: ["Hitotsu-me no kado o hidari desu.", "It's left at the first corner."], n: "-me gives the order: hitotsu-me, futatsu-me, mittsu-me, the first, second and third. Directions count corners (kado) and traffic lights (shingō) more than streets; tsugi no kado is 'the next corner'." }
+  kippu: { t: "kippu", pos: noun, en: ["ticket"], forms: ["kippu", "jōshaken", "joushaken", "jooshaken"], ex: ["Kōbe made no kippu desu.", "A ticket to Kobe."], n: "Tickets are counted with -mai: ichi-mai, ni-mai." }
+  densha_de: { t: "densha de", pos: phrase, en: ["by train"], forms: ["densha de", "densha", "shinkansen", "chikatetsu"], ex: ["Ōsaka made densha de ikimasu.", "I am going to Osaka by train."], n: "The means takes de; the shinkansen is the bullet train, the chikatetsu the underground." }
+  basu_de: { t: "basu de", pos: phrase, en: ["by bus"], forms: ["basu de", "basu"], ex: ["Kaisha made basu de ikimasu.", "I go to work by bus."] }
+  aruite: { t: "aruite", pos: adverb, en: ["on foot", "walking"], forms: ["aruite", "toho", "toho de"], ex: ["Eki made aruite ikimasu.", "I walk to the station."] }
+  dono_kurai: { t: "dono kurai", pos: phrase, en: ["how long", "how far", "about how much"], forms: ["dono kurai", "dono gurai", "donokurai", "donogurai"], ex: ["Aruite dono kurai kakarimasu ka?", "How long does it take on foot?"] }
+  nanjikan: { t: "nan-jikan", pos: phrase, en: ["how many hours", "how many minutes", "how long"], forms: ["nan-jikan", "nanjikan", "nan-pun", "nanpun", "nan-fun"], ex: ["Densha de nan-jikan kakarimasu ka?", "How many hours does it take by train?"] }
+  kakarimasu: { t: "kakarimasu", pos: verb, en: ["it takes (time)"], forms: ["kakarimasu", "kakaru"], ex: ["Sanjuppun kakarimasu.", "It takes thirty minutes."] }
+  # time
+  nanji: { t: "nan-ji", pos: phrase, en: ["what time"], forms: ["nan-ji", "nanji", "nan ji"], ex: ["Ima nan-ji desu ka?", "What time is it now?"] }
+  hachiji: { t: "hachi-ji", pos: phrase, en: ["eight o'clock", "... o'clock"], forms: ["ichi-ji", "ni-ji", "san-ji", "yo-ji", "go-ji", "roku-ji", "shichi-ji", "hachi-ji", "ku-ji", "jū-ji", "juu-ji", "jūichi-ji", "juuichi-ji", "jūni-ji", "juuni-ji", "ichiji", "niji", "sanji", "yoji", "goji", "rokuji", "shichiji", "hachiji", "kuji", "jūji", "juuji", "jūichiji", "juuichiji", "jūniji", "juuniji", "ichi ji", "ni ji", "san ji", "yo ji", "go ji", "roku ji", "shichi ji", "hachi ji", "ku ji", "jū ji", "juu ji", "jūichi ji", "juuichi ji", "jūni ji", "juuni ji", "shōgo", "shougo", "shoogo"], ex: ["Ima hachi-ji desu.", "It is eight o'clock."], n: "-ji after the number: ichi-ji, ni-ji, san-ji; but yo-ji (4), shichi-ji (7), ku-ji (9). Noon is shōgo." }
+  han: { t: "han", pos: noun, en: ["half past", "half"], ex: ["Shichi-ji han desu.", "It is half past seven."], n: "After the hour: ni-ji han, 2:30." }
+  jugofun: { t: "jūgo-fun", pos: phrase, en: ["fifteen minutes", "a quarter past"], forms: ["jūgo-fun", "juugo-fun", "jūgofun", "juugofun", "jūgo fun", "juugo fun", "yonjūgo-fun", "yonjuugo-fun", "yonjūgofun", "yonjuugofun", "yonjūgo fun", "yonjuugo fun"], ex: ["Ku-ji jūgo-fun desu.", "It is a quarter past nine."], n: "Japanese has no 'quarter': 6:15 is roku-ji jūgo-fun, 6:45 roku-ji yonjūgo-fun. Minutes are -fun or -pun: ippun, sanpun, juppun." }
+  nanyobi: { t: "nan-yōbi", pos: phrase, en: ["what day of the week"], forms: ["nan-yōbi", "nan-youbi", "nan-yoobi", "nanyōbi", "nanyoubi", "nanyoobi", "nan yōbi", "nan youbi", "nan yoobi"], ex: ["Kyō wa nan-yōbi desu ka?", "What day is it today?"] }
+  getsuyobi: { t: "getsuyōbi", pos: noun, en: ["Monday"], forms: ["getsuyōbi", "getsuyoubi", "getsuyoobi", "getsuyō", "getsuyou", "getsuyoo"], ex: ["Kyō wa getsuyōbi desu.", "Today is Monday."], n: "The days are named after the moon, fire, water, wood, gold, earth and sun: getsu, ka, sui, moku, kin, do, nichi." }
+  kayobi: { t: "kayōbi", pos: noun, en: ["Tuesday"], forms: ["kayōbi", "kayoubi", "kayoobi", "kayō", "kayou", "kayoo"], ex: ["Kayōbi wa shigoto desu.", "On Tuesday I work."] }
+  suiyobi: { t: "suiyōbi", pos: noun, en: ["Wednesday"], forms: ["suiyōbi", "suiyoubi", "suiyoobi", "suiyō", "suiyou", "suiyoo"], ex: ["Ashita wa suiyōbi desu.", "Tomorrow is Wednesday."] }
+  mokuyobi: { t: "mokuyōbi", pos: noun, en: ["Thursday"], forms: ["mokuyōbi", "mokuyoubi", "mokuyoobi", "mokuyō", "mokuyou", "mokuyoo"], ex: ["Mokuyōbi wa itsumo benkyō shimasu.", "On Thursdays I always study."] }
+  kinyobi: { t: "kin'yōbi", pos: noun, en: ["Friday"], forms: ["kin'yōbi", "kin'youbi", "kin'yoobi", "kinyōbi", "kinyoubi", "kinyoobi", "kin'yō", "kin'you", "kin'yoo", "kinyō", "kinyou", "kinyoo"], ex: ["Kin'yōbi wa dekakemasu.", "On Friday I go out."] }
+  doyobi: { t: "doyōbi", pos: noun, en: ["Saturday"], forms: ["doyōbi", "doyoubi", "doyoobi", "doyō", "doyou", "doyoo"], ex: ["Doyōbi wa yukkuri nemasu.", "On Saturday I sleep in."] }
+  nichiyobi: { t: "nichiyōbi", pos: noun, en: ["Sunday"], forms: ["nichiyōbi", "nichiyoubi", "nichiyoobi", "nichiyō", "nichiyou", "nichiyoo"], ex: ["Nichiyōbi wa shigoto ga arimasen.", "On Sundays I don't work."] }
+  kyo: { t: "kyō", pos: noun, en: ["today"], forms: ["kyō", "kyou", "kyoo"], ex: ["Kyō wa kin'yōbi desu.", "Today is Friday."], n: "No ni after kyō or ashita: kyō ikimasu, 'I'm going today'." }
+  ashita: { t: "ashita", pos: noun, en: ["tomorrow"], forms: ["ashita", "asu", "myōnichi", "myounichi", "myoonichi"], ex: ["Ashita wa doyōbi desu.", "Tomorrow is Saturday."], n: "Asu and myōnichi are more formal." }
+  nanji_ni: { t: "nan-ji ni", pos: phrase, en: ["at what time", "what time"], forms: ["nan-ji ni", "nanji ni", "nan ji ni", "nan-ji kara", "nanji kara"], ex: ["Ginkō wa nan-ji ni shimarimasu ka?", "What time does the bank close?"] }
+  hachiji_ni: { t: "hachi-ji ni", pos: phrase, en: ["at eight", "at ... o'clock"], forms: ["ichi-ji ni", "ni-ji ni", "san-ji ni", "yo-ji ni", "go-ji ni", "roku-ji ni", "shichi-ji ni", "hachi-ji ni", "ku-ji ni", "jū-ji ni", "juu-ji ni", "jūichi-ji ni", "juuichi-ji ni", "jūni-ji ni", "juuni-ji ni", "ichiji ni", "niji ni", "sanji ni", "yoji ni", "goji ni", "rokuji ni", "shichiji ni", "hachiji ni", "kuji ni", "jūji ni", "juuji ni", "jūichiji ni", "juuichiji ni", "jūniji ni", "juuniji ni", "ichi ji ni", "ni ji ni", "san ji ni", "yo ji ni", "go ji ni", "roku ji ni", "shichi ji ni", "hachi ji ni", "ku ji ni", "jū ji ni", "juu ji ni", "jūichi ji ni", "juuichi ji ni", "jūni ji ni", "juuni ji ni", "shōgo ni", "shougo ni", "shoogo ni"], ex: ["Densha wa roku-ji ni demasu.", "The train leaves at six."], n: "Ni after a clock time is 'at'; ni alone is not listed, being a particle of many uses." }
+  asa: { t: "asa", pos: noun, en: ["morning", "in the morning", "a.m."], forms: ["asa", "gozen", "kesa"], ex: ["Asa wa hatarakimasu.", "I work in the morning."], n: "Gozen is a.m. (gozen ku-ji); kesa, 'this morning'." }
+  gogo: { t: "gogo", pos: noun, en: ["afternoon", "in the afternoon", "p.m."], forms: ["gogo", "hiru"], ex: ["Gogo wa benkyō shimasu.", "I study in the afternoon."], n: "Gogo is also p.m.: gogo san-ji, 3 p.m. Hiru is midday." }
+  yoru: { t: "yoru", pos: noun, en: ["evening", "night", "in the evening"], forms: ["yoru", "yūgata", "yuugata", "konban"], ex: ["Yoru wa dekakemasu.", "I go out in the evening."], n: "Yūgata is early evening; konban, 'this evening'." }
+  # routine
+  me_ga_samemasu: { t: "me ga samemasu", pos: phrase, en: ["I wake up"], forms: ["me ga samemasu", "mezamemasu"], ex: ["Itsumo go-ji ni me ga samemasu.", "I always wake up at five."], n: "Literally 'the eyes wake'." }
+  okimasu: { t: "okimasu", pos: verb, en: ["I get up", "I wake up"], forms: ["okimasu", "okiru"], ex: ["Roku-ji ni okimasu.", "I get up at six."] }
+  hatarakimasu: { t: "hatarakimasu", pos: verb, en: ["I work"], forms: ["hatarakimasu", "hataraite imasu", "hataraiteimasu", "hataraku"], ex: ["Ginkō de hataraite imasu.", "I work in a bank."], n: "The place of work takes de: kaisha de hatarakimasu." }
+  shigoto: { t: "shigoto", pos: noun, en: ["work", "job"], ex: ["Shigoto wa nan desu ka?", "What is your job?"], n: "Shigoto o shite imasu: 'I work'." }
+  bangohan: { t: "bangohan", pos: noun, en: ["dinner", "supper"], forms: ["bangohan", "ban gohan", "yūshoku", "yuushoku", "yūhan", "yuuhan"], ex: ["Hachi-ji ni bangohan o tabemasu.", "I have dinner at eight."], n: "Gohan is cooked rice and a meal: asagohan, hirugohan, bangohan." }
+  tabemasu: { t: "tabemasu", pos: verb, en: ["I eat"], forms: ["tabemasu", "taberu"], ex: ["Mainichi gohan o tabemasu.", "I eat rice every day."] }
+  nemasu: { t: "nemasu", pos: verb, en: ["I go to bed", "I sleep"], forms: ["nemasu", "neru"], ex: ["Jū-ji ni nemasu.", "I go to bed at ten."], n: "One verb for 'go to bed' and 'sleep'." }
+  itsumo: { t: "itsumo", pos: adverb, en: ["always", "usually"], ex: ["Itsumo uchi de tabemasu.", "I always eat at home."] }
+  yoku: { t: "yoku", pos: adverb, en: ["often", "well"], forms: ["yoku", "shibashiba"], ex: ["Yoku hon o yomimasu.", "I often read."], n: "Also 'well': yoku wakarimasen, 'I don't understand well'." }
+  ichido_mo: { t: "ichido mo", pos: phrase, en: ["never", "not once"], ex: ["Ichido mo itta koto ga arimasen.", "I have never been."], n: "With a negative: ichido mo ... masen." }
+  tokidoki: { t: "tokidoki", pos: adverb, en: ["sometimes"], forms: ["tokidoki", "tama ni", "tamani"], ex: ["Tokidoki aruite ikimasu.", "Sometimes I walk."], n: "Tama ni is 'now and then'." }
+  mainichi: { t: "mainichi", pos: adverb, en: ["every day"], forms: ["mainichi", "maiasa", "maiban"], ex: ["Mainichi benkyō shimasu.", "I study every day."], n: "Maiasa, every morning; maiban, every evening." }
+  hima_na_toki: { t: "hima na toki", pos: phrase, en: ["free time", "spare time", "when you are free"], forms: ["hima na toki", "hima no toki", "hima", "yoka"], ex: ["Hima na toki wa hon o yomimasu.", "In my free time I read."] }
+  shumi: { t: "shumi", pos: noun, en: ["hobby", "hobbies"], forms: ["shumi", "go-shumi"], ex: ["Shumi wa ryōri desu.", "My hobby is cooking."] }
+  nani_o_shimasu_ka: { t: "nani o shimasu ka", pos: phrase, en: ["what do you do", "what are you doing"], forms: ["nani o shimasu ka", "nani o shimasu", "nani shimasu ka", "nani o shite imasu ka", "nani o shite iru", "nani shiteru", "nani o suru", "nani suru"], ex: ["Ashita wa nani o shimasu ka?", "What are you doing tomorrow?"] }
+  yomimasu: { t: "yomimasu", pos: verb, en: ["I read"], forms: ["yomimasu", "yomu"], ex: ["Mainichi shinbun o yomimasu.", "I read the paper every day."] }
+  mimasu: { t: "mimasu", pos: verb, en: ["I watch", "I see", "I look at"], forms: ["mimasu", "miru"], ex: ["Terebi o mimasu.", "I watch television."] }
+  kikimasu: { t: "kikimasu", pos: verb, en: ["I listen to", "I hear", "I ask"], forms: ["kikimasu", "kiku"], ex: ["Rajio o kikimasu.", "I listen to the radio."], n: "Also 'to ask': michi o kikimasu, 'I ask the way'." }
+  asobimasu: { t: "asobimasu", pos: verb, en: ["I play", "I hang out"], forms: ["asobimasu", "asobu", "asobi ni ikimasu"], ex: ["Kodomo to kōen de asobimasu.", "I play in the park with the children."], n: "For games and fun; a sport takes shimasu: sakkā o shimasu, 'I play football'." }
+  gemu: { t: "gēmu", pos: noun, en: ["game", "video game"], forms: ["gēmu", "geemu", "terebi gēmu", "terebi geemu"], ex: ["Yoru wa gēmu o shimasu.", "In the evening I play video games."] }
+  dekakemasu: { t: "dekakemasu", pos: verb, en: ["I go out"], forms: ["dekakemasu", "dekakeru"], ex: ["Tomodachi to dekakemasu.", "I go out with friends."] }
+  shumatsu: { t: "shūmatsu", pos: noun, en: ["the weekend", "at the weekend"], forms: ["shūmatsu", "shuumatsu", "uīkuendo", "uiikuendo", "do-nichi", "donichi"], ex: ["Shūmatsu wa shigoto ga arimasen.", "At the weekend I don't work."], n: "Do-nichi is 'Saturday and Sunday'." }
+  # shopping
+  shatsu: { t: "shatsu", pos: noun, en: ["shirt", "T-shirt"], forms: ["shatsu", "waishatsu", "tīshatsu", "tiishatsu"], ex: ["Shiroi shatsu desu.", "A white shirt."], n: "A waishatsu (from 'white shirt') is a dress shirt of any colour." }
+  kutsu: { t: "kutsu", pos: noun, en: ["shoes"], ex: ["Kono kutsu wa kuroi desu.", "These shoes are black."], n: "Taken off at the door of a Japanese home." }
+  jaketto: { t: "jaketto", pos: noun, en: ["jacket"], forms: ["jaketto", "uwagi"], ex: ["Kono jaketto wa suteki desu.", "This jacket is lovely."] }
+  boshi: { t: "bōshi", pos: noun, en: ["hat", "cap"], forms: ["bōshi", "boushi", "booshi"], ex: ["Midori no bōshi.", "A green hat."] }
+  akai: { t: "akai", pos: adjective, en: ["red"], forms: ["akai", "aka no", "aka de", "aka wa", "aka ga", "akairo", "aka iro"], ex: ["Akai jaketto.", "A red jacket."], n: "Colours are nouns (aka) and adjectives in -i (akai). Aka alone is not listed: it reads as English 'aka'." }
+  aoi: { t: "aoi", pos: adjective, en: ["blue"], forms: ["aoi", "ao", "aoiro"], ex: ["Aoi shatsu.", "A blue shirt."], n: "Ao also covers green in a few old uses: a green traffic light is ao." }
+  midori: { t: "midori", pos: noun, en: ["green"], forms: ["midori", "midoriiro", "gurīn", "guriin"], ex: ["Midori no bōshi.", "A green hat."], n: "A noun only: midori no bōshi, with no." }
+  kuroi: { t: "kuroi", pos: adjective, en: ["black"], forms: ["kuroi", "kuro"], ex: ["Kuroi kutsu.", "Black shoes."] }
+  shiroi: { t: "shiroi", pos: adjective, en: ["white"], forms: ["shiroi", "shiro"], ex: ["Shiroi shatsu.", "A white shirt."] }
+  kiiroi: { t: "kiiroi", pos: adjective, en: ["yellow"], forms: ["kiiroi", "kiiro"], ex: ["Kiiroi bōshi.", "A yellow hat."] }
+  hoka_no_iro: { t: "hoka no iro", pos: phrase, en: ["another colour", "a different colour"], forms: ["hoka no iro", "betsu no iro", "chigau iro", "hoka no"], ex: ["Hoka no iro mo arimasu yo.", "There are other colours too."] }
+  shichaku: { t: "shichaku", pos: noun, en: ["trying on", "try on"], forms: ["shichaku", "kite mite mo ii", "kite mite mo ii desu ka", "haite mite mo ii", "haite mite mo ii desu ka", "kabutte mite mo ii"], ex: ["Shichakushitsu wa doko desu ka?", "Where is the fitting room?"], n: "Shichaku shite mo ii desu ka? 'May I try it on?' Shoes and trousers are haite mite, a hat kabutte mite." }
+  okii: { t: "ōkii", pos: adjective, en: ["big", "large"], forms: ["ōkii", "oukii", "ookii", "ōki na", "ouki na", "ooki na"], ex: ["Kono kutsu wa chotto ōkii desu.", "These shoes are a bit big."], n: "Chotto ōkii, 'a bit big', is the polite way to say 'too big'." }
+  chiisai: { t: "chiisai", pos: adjective, en: ["small"], forms: ["chiisai", "chiisa na"], ex: ["Kono bōshi wa chiisai desu.", "This hat is small."] }
+  okisugimasu: { t: "ōkisugimasu", pos: phrase, en: ["it's too big"], forms: ["ōkisugimasu", "oukisugimasu", "ookisugimasu", "ōkisugiru", "oukisugiru", "ookisugiru", "ōkisugi", "oukisugi", "ookisugi"], ex: ["Kono jaketto wa ōkisugimasu.", "This jacket is too big."] }
+  chiisasugimasu: { t: "chiisasugimasu", pos: phrase, en: ["it's too small"], forms: ["chiisasugimasu", "chiisasugiru", "chiisasugi"], ex: ["Kutsu ga chiisasugimasu.", "The shoes are too small."] }
+  kaimasu: { t: "kaimasu", pos: verb, en: ["I buy", "I'll buy"], forms: ["kaimasu", "kau"], ex: ["Jā, kore o kaimasu.", "Right, I'll buy this one."] }
+  kore: { t: "kore", pos: pronoun, en: ["this", "this one"], forms: ["kore", "kono", "kochira", "kocchi"], ex: ["Kore wa ikura desu ka?", "How much is this?"], n: "Kore stands alone (kore o kudasai); kono comes before a noun (kono shatsu)." }
+  sono: { t: "sono", pos: adjective, en: ["that", "that one (near you)"], forms: ["sono", "sore o", "sore ga", "sore wa", "sore de", "socchi"], ex: ["Sono shatsu o misete kudasai.", "Please show me that shirt."], n: "Sore (that one, by you) stands alone, sono before a noun. Sore alone is not listed: it reads as English 'sore'." }
+  ano: { t: "ano", pos: adjective, en: ["that", "that one over there"], forms: ["ano", "are o", "are ga", "are wa", "acchi", "achira"], ex: ["Ano bōshi wa ikura desu ka?", "How much is that hat over there?"], n: "Are (that one over there) stands alone, ano before a noun. Are alone is not listed: it reads as English 'are'. Anō, with a long o, is also 'um'." }
+  saizu: { t: "saizu", pos: noun, en: ["size"], ex: ["Kore wa nan no saizu desu ka?", "What size is this?"], n: "Clothes come in S, M and L, said esu, emu, eru." }
+  motto_okii: { t: "motto ōkii", pos: phrase, en: ["bigger", "larger"], forms: ["motto ōkii", "motto oukii", "motto ookii", "hitotsu ue no saizu"], ex: ["Motto ōkii no wa arimasu ka?", "Do you have a bigger one?"] }
+  motto_chiisai: { t: "motto chiisai", pos: phrase, en: ["smaller"], forms: ["motto chiisai", "hitotsu shita no saizu"], ex: ["Motto chiisai saizu wa arimasu ka?", "Do you have a smaller size?"] }
