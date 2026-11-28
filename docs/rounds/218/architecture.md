@@ -65,3 +65,11 @@ opened with (the cause of the green gate too). While the title is up (not once t
 reads the site's `version.json` when it opens and whenever it comes back to the screen; if the build there is newer,
 it reloads past the cache (`viewport.js` `updateIfNewer`), once per build, so a cache still serving the old files
 cannot make it loop. A conversation is never interrupted.
+
+## Amendment (2026-11-28): the breathing's entry tells the tap from the breath
+
+The owner's two lines replace "Let go where the ring glows" and "Press again where the ring glows next" in "A breath
+while you wait" (the card before the first breathing and the guidebook entry, `content/narration/guidebook.yaml`):
+"…Where the ring glows, let go of the tap as you let go of the breath, and breathe out as the light sinks. Let it go.
+Hold the tap once more with the following in-breath, where the ring glows next." `server/test/guidebook.test.js` holds
+it word for word. A game that has already been told the entry finds the new text in its guidebook.
