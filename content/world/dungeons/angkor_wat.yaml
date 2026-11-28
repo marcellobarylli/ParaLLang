@@ -1,0 +1,26 @@
+# Round 218: Angkor Wat (the 3D level `angkor` in aesthetic/src/scene/temple.js), where the gate that ends a level of
+# the curriculum stands (A1 to A2, A2 to B1: server/src/road/encounters.js, LEVEL_GATE). It is not a place of the
+# world map yet (content/world/atlas.yaml keeps its causeway "under review"), so a run of it is never played: the
+# encounters below only satisfy the dungeon schema. The road plays its own conversations at these sites.
+#
+# Coordinates are Angkor world units (about 2 m each; aesthetic/src/scene/layout.js): x across, z along the axis. The
+# temple faces +z, the way Angkor Wat faces west; the visitor comes up the avenue from +z, over the landing terrace,
+# along the naga causeway across the moat, through the west gopura's central passage (|x| < 1.6), and down the inner
+# causeway between the reflecting pools to the terrace of honour before the first gallery. The gate's three
+# conversations are held at the start, then at the next two sites in this order: the causeway, the pool, the terrace.
+id: angkor_wat
+name: Angkor Wat
+level: angkor
+start: naga_causeway
+goal: terrace_of_honour
+entrance: [[0, 100], [0, 87]]
+sites:
+  - { id: naga_causeway, encounter: market_entrance_tutorial, name: The Naga Causeway, at: [0, 63] }
+  - { id: reflecting_pool, encounter: cracked_fountain_letharger, name: The Reflecting Pool, at: [-9, 37] }
+  - { id: terrace_of_honour, encounter: imp_coffee_greeting, name: The Terrace of Honour, at: [0, 30.5] }
+  - { id: north_library, encounter: old_bookshop_bookworm, name: The North Library, at: [-15.5, 45] }
+paths:
+  - { between: [naga_causeway, reflecting_pool], via: [[0, 54], [0, 46], [-4.5, 41]] }
+  - { between: [reflecting_pool, terrace_of_honour], via: [[-5, 34]] }
+  - { between: [naga_causeway, terrace_of_honour], via: [[0, 54], [0, 38]] }
+  - { between: [reflecting_pool, north_library], via: [] }

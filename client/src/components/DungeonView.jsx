@@ -8,6 +8,19 @@ import { createFreeLook, requestTiltPermission, screenAngle, tiltNeedsAsking } f
 // Round 125: with `tilt` on, the phone's orientation turns the camera's look at a site (scene/tilt.js).
 // Round 119: the labels are the numbers of the sites out of the fog; the current site also shows its name.
 const MOVING = new Set(['approach', 'walk', 'enter']);
+
+// Round 218: on the owner's phone the road's gate in Ta Prohm showed only the green backdrop: the level's code is a
+// chunk of its own, first asked for when a place is entered, and a page left open over a deploy asks for a chunk the
+// site no longer has (its name carries the old build's hash). The chunk is now asked for once the game has started
+// (`preloadLevel`), a failed import is tried again, and the level's start (a WebGL context the phone may not give at
+// once, the road's own being let go in the same moment) is tried three times.
+let levelModule = null;
+const importLevel = () => import('../scene/levelView.js');
+export function preloadLevel() {
+  if (!levelModule) levelModule = importLevel().catch(() => importLevel()).catch((error) => { levelModule = null; throw error; });
+  return levelModule;
+}
+const START_TRIES = [0, 400, 1500]; // ms before each try
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 
 // Round 204: `seed` is the road's: the level then has the road's time of day and weather (levelView.js).
@@ -28,19 +41,30 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
     // Round 133: another place is another level. The effects below wait for the new view, and the canvas is a new
     // element (its key), because the view that is disposed gives up the old one's WebGL context.
     setStatus('loading');
-    import('../scene/levelView.js').then(({ createLevelView }) => {
+    let retry = null;
+    const start = (createLevelView, attempt) => {
       if (cancelled) return;
-      view = createLevelView(canvasRef.current, { dungeon, seed, glitch, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
+      try {
+        view = createLevelView(canvasRef.current, { dungeon, seed, glitch, reducedMotion: prefersReducedMotion(), onArrive: (mode) => arriveRef.current?.(mode), onThunder: () => thunderRef.current?.() });
+      } catch (error) {
+        view = null;
+        if (attempt + 1 < START_TRIES.length) { retry = setTimeout(() => start(createLevelView, attempt + 1), START_TRIES[attempt + 1]); return; }
+        console.warn('The 3D level could not start:', error);
+        setStatus('unavailable');
+        return;
+      }
       view.setLabels(labelRefs.current);
       viewRef.current = view;
       if (typeof window !== 'undefined') window.__parallangLevel = view; // for the screenshot script and the console
       setStatus('ready');
-    }).catch((error) => {
-      console.warn('The 3D level could not start:', error);
-      if (!cancelled) setStatus('unavailable');
+    };
+    preloadLevel().then(({ createLevelView }) => start(createLevelView, 0)).catch((error) => {
+      console.warn('The 3D level could not be loaded:', error);
+      if (!cancelled) setStatus('stale');
     });
     return () => {
       cancelled = true;
+      clearTimeout(retry);
       viewRef.current = null;
       // Round 160: a level that is left is gone: on the road no dungeon exists until one is entered.
       if (typeof window !== 'undefined' && window.__parallangLevel === view) window.__parallangLevel = undefined;
@@ -53,7 +77,7 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
 
   useEffect(() => {
     if (status === 'ready') viewRef.current?.setPhase({ phase, siteIndex, walkFrom });
-    else if (status === 'unavailable' && MOVING.has(phase)) arriveRef.current?.(phase);
+    else if ((status === 'unavailable' || status === 'stale') && MOVING.has(phase)) arriveRef.current?.(phase);
   }, [status, phase, siteIndex, walkFrom]);
 
   // Round 116: the conversation moves the camera at its site. After the phase effect, so a new site starts unshaped.
@@ -84,9 +108,10 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
   useEffect(() => { if (status === 'ready') viewRef.current?.setProgress(sites); }, [status, sites]);
 
   return (
+    <>
     <div className={`level level-${status}`} aria-hidden="true">
       <canvas key={dungeon.id} ref={canvasRef} className="level-canvas" />
-      {status === 'unavailable' && <div className="level-backdrop" />}
+      {(status === 'unavailable' || status === 'stale') && <div className="level-backdrop" />}
       {status === 'ready' && (
         <div className={`site-labels${phase === 'overview' ? ' shown' : ''}`}>
           {dungeon.sites.map((site, index) => {
@@ -101,5 +126,12 @@ export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites
         </div>
       )}
     </div>
+    {status === 'stale' && (
+      <div className="level-stale" role="status">
+        <span>The game was updated while this page was open, so this place cannot be drawn.</span>
+        <button type="button" className="secondary-button" onClick={() => window.location.reload()}>Reload</button>
+      </div>
+    )}
+    </>
   );
 }

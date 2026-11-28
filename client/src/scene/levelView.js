@@ -22,10 +22,28 @@ const LEVELS = {
   taprohm: { heightAt: taProhmHeightAt, box: { minX: -TA_PROHM.outer, maxX: TA_PROHM.outer, minZ: -TA_PROHM.outer, maxZ: TA_PROHM.outer } },
   // Round 133: The Kiln is Ta Prohm's plan under another theme: the same heights and the same box.
   kiln: { heightAt: taProhmHeightAt, box: { minX: -TA_PROHM.outer, maxX: TA_PROHM.outer, minZ: -TA_PROHM.outer, maxZ: TA_PROHM.outer } },
-  angkor: { heightAt: () => 0, box: { minX: -70, maxX: 70, minZ: -70, maxZ: 70 } },
+  angkor: { heightAt: angkorHeightAt, box: { minX: -70, maxX: 70, minZ: -70, maxZ: 70 } },
   // Round 133: the mountain climbs from the valley at +z to the summit plateau at -z; the orbit looks at its middle.
   micromort: { heightAt: micromortHeightAt, box: { minX: -100, maxX: 100, minZ: -200, maxZ: 100, centreY: 50 } },
 };
+// Round 218: the walking surfaces of Angkor Wat (aesthetic/src/scene/temple.js, buildCauseways), so the camera walks
+// on the causeways and the terrace of honour, not through them. Elsewhere the temple grounds are flat at 0. Each
+// surface is a rectangle of its height, eased to the ground over a unit at its edges.
+const ANGKOR_SURFACES = [
+  { x: 3.8, z0: 50, z1: 82, y: 0.82 }, // the naga causeway over the moat
+  { x: 7.8, z0: 82, z1: 88, y: 0.82 }, // the landing terrace
+  { x: 3.3, z0: 33, z1: 50, y: 0.7 }, // the inner causeway
+  { x: 7.8, z0: 28, z1: 33, y: 1 }, // the terrace of honour
+];
+const rampIn = (d) => Math.min(1, Math.max(0, d)); // 0 a unit outside the edge, 1 at it
+export function angkorHeightAt(x, z) {
+  let y = 0;
+  for (const s of ANGKOR_SURFACES) {
+    const inside = Math.min(rampIn(s.x - Math.abs(x) + 1), rampIn(z - s.z0 + 1), rampIn(s.z1 - z + 1));
+    y = Math.max(y, s.y * inside);
+  }
+  return y;
+}
 const GOLD = [1, 0.8, 0.36]; // written as is: the PS1 materials and the post pass do no colour conversion
 const RIBBON = { width: 1.5, lift: 0.4 };
 // The fog over a hidden site, seen from above: three stacked discs, so the patch is darkest in the middle.

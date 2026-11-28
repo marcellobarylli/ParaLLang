@@ -12,11 +12,13 @@ import { api } from '../../server/test/helpers.js';
 import { DESKTOP, PHONE, openGame } from './lib/play.mjs';
 
 const desktop = process.argv.includes('--desktop');
+// Round 218: `--breathe` plays with the breathing on (the default on a phone): it is played over the walk to the gate.
+const breathe = process.argv.includes('--breathe');
 const out = (process.argv[2]?.startsWith('--') ? null : process.argv[2]) ?? 'docs/rounds/215/shots';
 const WALKS = 14;
 
 const game = await openGame({
-  device: desktop ? DESKTOP : PHONE, out, provider: (content) => new RoadProvider(content), serviceOptions: { seedSource: () => 4242, exchangeLimit: 3 },
+  device: desktop ? DESKTOP : PHONE, out, display: breathe ? { breathing: true } : {}, provider: (content) => new RoadProvider(content), serviceOptions: { seedSource: () => 4242, exchangeLimit: 3 },
   // A journey first: a conversation and a walk on, some times over.
   before: async (runtime) => {
     const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
@@ -63,7 +65,14 @@ await game.run(async ({ page, check, shot, tap, say, runtime }) => {
   await enter.waitFor({ timeout: 30000 });
   await shot('01-before-the-gate');
   await tap(enter);
-  await page.locator('.dialogue-panel article.npc-message').first().waitFor({ timeout: 90000 });
+  if (breathe) {
+    const begin = page.getByRole('button', { name: 'Begin' });
+    await begin.waitFor({ timeout: 30000 }).then(() => tap(begin)).catch(() => {});
+    await page.waitForTimeout(4000);
+    await shot('01b-breathing-into-the-gate');
+  }
+  await page.locator('.dialogue-panel article.npc-message').first().waitFor({ timeout: 120000 });
+  await shot('01c-the-gate-conversation');
   await say('Non lo so.');
   await say('Boh.');
   await say('Niente.');

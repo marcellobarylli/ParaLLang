@@ -371,7 +371,7 @@ test('production refuses to start without a usable token, and only then may a CL
 test('The Kiln loads in both packs as Ta Prohm\'s plan on the kiln level, and its run is kept apart from Ta Prohm\'s', async (t) => {
   for (const language of ['it', 'es']) {
     const { dungeons } = loadGameContent({ language });
-    assert.deepEqual([...dungeons.keys()].sort(), ['micromort_mountain', 'ta_prohm', 'the_kiln']);
+    assert.deepEqual([...dungeons.keys()].sort(), ['angkor_wat', 'micromort_mountain', 'ta_prohm', 'the_kiln']); // round 218: Angkor Wat, for the gates that end a level
     const [temple, kiln] = [dungeons.get('ta_prohm'), dungeons.get('the_kiln')];
     assert.equal(kiln.level, 'kiln');
     const plan = (dungeon) => ({ start: dungeon.start, goal: dungeon.goal, entrance: dungeon.entrance, paths: dungeon.paths, sites: dungeon.sites.map(({ name: _name, ...site }) => site) });

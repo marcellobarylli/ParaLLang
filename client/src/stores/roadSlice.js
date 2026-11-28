@@ -24,6 +24,7 @@
 // (a display preference, on by default) the way on is the server's `road.rails`: the pacing's own choice.
 
 import { immersionOf } from '../display.js';
+import { NEW_GAME_KEY } from '../slots.js';
 
 // Round 175: the landscape the title screen shows, kept in this browser: { seed, at }.
 export const TITLE_KEY = 'parallang.title';
@@ -141,6 +142,11 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       if (!['attract', 'world'].includes(s.phase) || s.mode === 'road' || s.journeyStarting) return;
       set({ phase: 'world', journeyStarting: true });
       try { await get().enterRoad(); } finally { set({ journeyStarting: false }); }
+      // Round 218: the game has set out: its level and language are no longer asked, here or after a reload.
+      if (get().mode === 'road' && get().road) {
+        try { storage?.removeItem?.(NEW_GAME_KEY); } catch { /* private mode */ }
+        set({ freshGame: false });
+      }
     },
 
     // Round 175: back to the title screen, from the road or from a place of the world map. A conversation under way

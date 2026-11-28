@@ -34,6 +34,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 218, the gate that ends a level is in Angkor Wat; a silent world event
+
+The gate that takes the learner from A1 to A2 (and A2 to B1) now stands in **Angkor Wat** (the `angkor` level, with
+four sites on the causeway, by the pool, on the terrace of honour and at the library; no place of the world map opens
+it). The owner's blank gate was the level failing to start (the green backdrop): its code is now fetched early and
+retried, and a page left open over a deploy says so and offers Reload. The narrator and the microphone are stopped
+when the world event opens, and nothing from before is read after it. The title's level radios are small squares in
+the game's style. A review of rounds 214 to 217 fixed five faults: the slider's share is the save slot's own and kept
+over a reload, a new game is asked its level after a reload too, the language choice keeps the level, and switching
+the breathing off ends it at once. Played in headless Chromium at phone size, **not on a phone**. **Merged to `main`
+and deployed** on the owner's word. [Architecture](docs/rounds/218/architecture.md), [findings](docs/rounds/218/findings.md).
+
 ## Addendum 2026-11-28: round 217, the walk carries no text and is breathed through
 
 Between two conversations the camera's walk now has no caption and no narrator's passage; the breathing of round 214

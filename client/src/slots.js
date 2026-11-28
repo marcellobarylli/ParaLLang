@@ -11,7 +11,11 @@ export const SLOT_COUNT = 3;
 // Round 216: the learner's own account of their level (display.js's LEVELS), each game's own.
 export const LEVEL_KEY = 'parallang.level';
 export const LANGUAGE_KEY = 'parallang.language';
-export const SLOTTED_KEYS = Object.freeze(['parallang.learnerId', 'parallang.save', 'parallang.placeId', 'parallang.title', 'parallang.welcomed', LEVEL_KEY, LANGUAGE_KEY]);
+// Round 218: the slot's share of the language once a level is said (the slider and "Follow my level" move it in this
+// slot only), and the mark of a game made on this slot's title and not yet set out on (a reload still asks the level).
+export const SHARE_KEY = 'parallang.share';
+export const NEW_GAME_KEY = 'parallang.newGame';
+export const SLOTTED_KEYS = Object.freeze(['parallang.learnerId', 'parallang.save', 'parallang.placeId', 'parallang.title', 'parallang.welcomed', LEVEL_KEY, LANGUAGE_KEY, SHARE_KEY, NEW_GAME_KEY]);
 
 const read = (storage, key) => { try { return storage?.getItem?.(key) ?? null; } catch { return null; } };
 

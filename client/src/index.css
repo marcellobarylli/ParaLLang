@@ -21,6 +21,9 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .level-loading .level-canvas { opacity: 0; }
 .level-ready .level-canvas { opacity: 1; transition: opacity .8s ease; }
 .level-backdrop { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 0%, #a3ad8a 0, #56644a 38%, #1f2a1c 72%, #0e0f0e 100%); }
+.level-stale { position: absolute; z-index: 6; left: max(.75rem, env(safe-area-inset-left)); right: max(.75rem, env(safe-area-inset-right)); top: calc(max(.5rem, env(safe-area-inset-top)) + 3.6rem); display: flex; gap: .6rem; align-items: center; padding: .5rem .7rem; background: rgb(12 13 12 / .85); border: 1px solid #fff4; color: #f0f1ec; font-size: .85rem; text-shadow: 1px 1px 0 #000; } /* round 218 */
+.level-stale span { flex: 1; min-width: 0; }
+.level-stale button { flex: none; padding: .35rem .7rem; }
 .site-labels { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .35s ease; }
 .site-labels.shown { opacity: 1; transition: opacity .6s ease 1.6s; }
 .site-label { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: .45rem; margin: -15px 0 0 -15px; white-space: nowrap; }
@@ -562,3 +565,10 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .title-level label { display: flex; gap: .6rem; align-items: flex-start; padding: .45rem .7rem; border: 1px solid #fff4; background: #0008; cursor: pointer; }
 .title-level label.chosen { border-color: var(--gold); color: var(--gold); }
 .title-level small { display: block; opacity: .8; }
+/* Round 218: the global `input` rule (flex: 1, 44 px tall, padded) made the radio a stretched native circle, larger
+   when chosen. The radio is drawn as a small square in the game's style, and the text reads from the left. */
+.title-level label { align-items: center; text-align: left; }
+.title-level input[type=radio] { -webkit-appearance: none; appearance: none; flex: none; width: 18px; height: 18px; min-height: 0; margin: 0; padding: 0; background: #151615; border: 2px solid; border-color: #060606 #7c7e78 #7c7e78 #060606; border-radius: 0; display: grid; place-content: center; }
+.title-level input[type=radio]::before { content: ''; width: 8px; height: 8px; background: var(--gold); transform: scale(0); }
+.title-level input[type=radio]:checked::before { transform: scale(1); }
+.title-level input[type=radio]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }

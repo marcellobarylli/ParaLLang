@@ -18,14 +18,27 @@ const fill = (text, name) => String(text).replaceAll('{name}', name);
 // walking to it enters the dungeon. Which dungeon follows from the curriculum alone: the unit's place in it, taken
 // round LEGACY_ORDER (the first unit's gate is Ta Prohm, in the jungle the road starts in). Nothing is drawn at random.
 export const LEGACY_ORDER = Object.freeze(['ta_prohm', 'the_kiln', 'micromort_mountain']);
+// Round 218: the gate that ends a level of the curriculum (A1 to A2, A2 to B1: the change that pulls the land, round
+// 213) stands in Angkor Wat, whatever the turn of LEGACY_ORDER would give. The other gates go round LEGACY_ORDER as
+// before, so none of them moves; Angkor Wat is in no turn.
+export const LEVEL_GATE = 'angkor_wat';
+const stageCefr = (curriculum, unit) => curriculum.stages?.find((stage) => stage.id === unit?.stageId)?.cefr ?? null;
+/** Round 218: whether the unit at `index` is the last of its level (the next unit's level is another). */
+export function endsLevel(curriculum, index) {
+  const unit = curriculum.units[index];
+  const next = curriculum.units[index + 1];
+  return Boolean(unit && next) && stageCefr(curriculum, unit) !== stageCefr(curriculum, next);
+}
+const turnOf = (dungeons) => [...LEGACY_ORDER.filter((id) => dungeons?.has(id)), ...[...(dungeons?.keys() ?? [])].filter((id) => !LEGACY_ORDER.includes(id) && id !== LEVEL_GATE)];
+const placed = (dungeon, site) => Object.freeze({ id: dungeon.id, name: dungeon.name, level: dungeon.level, site: Object.freeze({ id: site.id, name: site.name }) });
 /** The dungeon a unit's gate stands in ({ id, name, level, site: { id, name } }, the site being its start), or null. */
 export function legacyDungeonFor(dungeons, curriculum, unitId) {
-  const known = [...LEGACY_ORDER.filter((id) => dungeons?.has(id)), ...[...(dungeons?.keys() ?? [])].filter((id) => !LEGACY_ORDER.includes(id))];
+  const known = turnOf(dungeons);
   const index = curriculum.units.findIndex((unit) => unit.id === unitId);
   if (!known.length || index < 0) return null;
-  const dungeon = dungeons.get(known[index % known.length]);
+  const dungeon = endsLevel(curriculum, index) && dungeons.has(LEVEL_GATE) ? dungeons.get(LEVEL_GATE) : dungeons.get(known[index % known.length]);
   const site = dungeon.sites.find((candidate) => candidate.id === dungeon.start) ?? dungeon.sites[0];
-  return Object.freeze({ id: dungeon.id, name: dungeon.name, level: dungeon.level, site: Object.freeze({ id: site.id, name: site.name }) });
+  return placed(dungeon, site);
 }
 
 /**
@@ -34,14 +47,14 @@ export function legacyDungeonFor(dungeons, curriculum, unitId) {
  * LEGACY_ORDER as the units' gates do: the first gate (after units 1 to 3) is Ta Prohm's.
  */
 export function legacyGateFor(dungeons, curriculum, gateId, part = 0) {
-  const known = [...LEGACY_ORDER.filter((id) => dungeons?.has(id)), ...[...(dungeons?.keys() ?? [])].filter((id) => !LEGACY_ORDER.includes(id))];
+  const known = turnOf(dungeons);
   const index = curriculum.units.findIndex((unit) => unit.id === gateId);
   if (!known.length || index < 0) return null;
-  const dungeon = dungeons.get(known[Math.floor(index / PACING.gateEvery) % known.length]);
+  const dungeon = endsLevel(curriculum, index) && dungeons.has(LEVEL_GATE) ? dungeons.get(LEVEL_GATE) : dungeons.get(known[Math.floor(index / PACING.gateEvery) % known.length]);
   const start = dungeon.sites.find((candidate) => candidate.id === dungeon.start) ?? dungeon.sites[0];
   const order = [start, ...dungeon.sites.filter((candidate) => candidate !== start)];
   const site = order[part % order.length];
-  return Object.freeze({ id: dungeon.id, name: dungeon.name, level: dungeon.level, site: Object.freeze({ id: site.id, name: site.name }) });
+  return placed(dungeon, site);
 }
 
 /**

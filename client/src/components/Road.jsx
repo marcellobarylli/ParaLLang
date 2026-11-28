@@ -3,7 +3,7 @@ import { landOf } from '../land.js';
 import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 import { ROAD_NAME } from '../atlas.js';
-import Narration, { hasNarration } from './Narration.jsx';
+import Narration from './Narration.jsx';
 import { GuideNote } from './Guidebook.jsx';
 import OdysseyChart from './OdysseyChart.jsx';
 

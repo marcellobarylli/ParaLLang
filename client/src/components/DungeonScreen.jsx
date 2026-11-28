@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import DungeonView from './DungeonView.jsx';
+import DungeonView, { preloadLevel } from './DungeonView.jsx';
 import RoadView from './RoadView.jsx';
 import { CurriculumChip, CurriculumPanel, HubCard, WelcomeCard, RoadCaption, RoadMap, RoadResolved, positionLine, useWeather } from './Road.jsx';
 import DialoguePanel from './DialoguePanel.jsx';
@@ -419,6 +419,9 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   // it is told first ('telling'), and entered.
   const [breath, setBreath] = useState(null); // null | 'telling' | 'breathing'
   useEffect(() => { setBreath(null); }, [encounter?.id]);
+  // Round 218: switched off in Settings while it runs, it ends at once and the reply is shown.
+  const breathingWanted = state.display?.breathing !== false;
+  useEffect(() => { if (!breathingWanted) setBreath(null); }, [breathingWanted]);
   const breathEntry = state.guideNote?.ahead?.find((entry) => entry.event === 'breath_wait') ?? null;
   const toldRef = useRef(null); // the entry while it is being told (the store stops offering it once it is entered)
   const startBreath = () => {
@@ -662,6 +665,15 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
     ambience.setVolumes?.({ master: volume.master, music: musicWanted && !titleHold ? volume.music : 0, effects: volume.effects }, { ease: titleHold ? 0.05 : 2 });
   }, [ambience, musicWanted, titleHold, volume.master, volume.music, volume.effects]);
   useEffect(() => { if (speech.speaker) speech.speaker.volume = volume.voice * volume.master; }, [speech, volume.voice, volume.master]);
+  // Round 218: the world event is heard without words. Whatever is being read when it opens (the last line of the
+  // conversation before it, its narration, a clip still coming) is stopped and dropped, not resumed afterwards, and the
+  // microphone is closed.
+  const eventOpen = state.mode === 'road' && state.roadEventOpen;
+  useEffect(() => {
+    if (!eventOpen) return;
+    speech.speaker?.stop?.();
+    if (speech.listener?.listening) speech.listener.stop?.();
+  }, [eventOpen, speech]);
   useEffect(() => {
     if (!audioWanted || !ambience.supported || typeof window === 'undefined') return undefined;
     // Round 184: any touch or key starts it (not only a click), and later ones wake a context iOS suspended or
@@ -691,6 +703,14 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   useEffect(() => { ambience.setRain?.(audioWanted ? rainNow : 0); }, [ambience, audioWanted, rainNow]);
   const { initialize, dungeon, phase, siteIndex, progress } = state;
   useEffect(() => { initialize(); }, [initialize]);
+  // Round 218: the old places' level is fetched a while after the road is up, so a gate entered later never asks for
+  // a chunk a deploy has since replaced (DungeonView.jsx).
+  const roadUp = state.mode === 'road' && Boolean(state.road);
+  useEffect(() => {
+    if (!roadUp || typeof window === 'undefined' || !(window.WebGL2RenderingContext || window.WebGLRenderingContext)) return undefined;
+    const timer = setTimeout(() => { preloadLevel().catch(() => {}); }, 5000);
+    return () => clearTimeout(timer);
+  }, [roadUp]);
   const hudRef = useRef(null);
   const dockRef = useRef(null);
   const insets = useInsets(hudRef, dockRef);

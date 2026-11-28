@@ -3,8 +3,10 @@
 // on clear ground, and nothing crosses a gallery or the outer wall except through an east gate passage.
 // Round 119: the dungeon is a map: every path is checked, and the world file with its fog.
 import { describe, expect, test } from 'vitest';
-import { FIGURES, TA_PROHM, WORLDS, createFigure, createWorldKit, taProhmHeightAt, taProhmIsClear } from '@parallang/aesthetic';
-import { DUNGEON, DUNGEONS, KILN } from '../dungeon.js';
+import { FIGURES, LAYOUT, TA_PROHM, WORLDS, createFigure, createWorldKit, taProhmHeightAt, taProhmIsClear } from '@parallang/aesthetic';
+import { ANGKOR_WAT, DUNGEON, DUNGEONS, GATE_DUNGEONS, KILN } from '../dungeon.js';
+import { angkorHeightAt } from '../scene/levelView.js';
+import { isWater } from '../../../aesthetic/src/scene/layout.js';
 import { ATLAS, ATLAS_FILE, ROAD_NAME } from '../atlas.js';
 import { ROAD_PLACE } from '../../../server/src/road/encounters.js';
 import { atlasView, neighbourIds, unexploredSites } from '../dungeonModel.js';
@@ -158,4 +160,36 @@ test('the world file: places joined by paths, one of them this dungeon, and a fo
   expect(ATLAS.places.find((place) => place.id === 'the_long_way').road).toBe(true);
   expect(ATLAS.paths).toEqual([['ta_prohm', 'the_long_way'], ['ta_prohm', 'the_kiln'], ['ta_prohm', 'angkor_wat'], ['ta_prohm', 'micromort_mountain']]); // The Bone Dome is under the fog
   expect(atlasView({ ...ATLAS_FILE, start: 'angkor_wat' }).places.map((place) => place.id)).toEqual(['ta_prohm', 'angkor_wat', 'the_bone_dome']);
+});
+
+// Round 218: Angkor Wat, where the gate that ends a level stands (the level `angkor`, aesthetic/src/scene/temple.js).
+// Only the road's gates open it. Every site and every point of every path and of the entrance is on dry ground, off
+// the temple's tiers and the libraries, and crosses the enclosure's west gopura only through its central passage.
+test('Angkor Wat is bundled for the gates only, and walks on its plan', () => {
+  expect(GATE_DUNGEONS).toEqual([ANGKOR_WAT]);
+  expect(DUNGEONS.map((entry) => entry.id)).not.toContain('angkor_wat');
+  expect(ANGKOR_WAT).toMatchObject({ id: 'angkor_wat', name: 'Angkor Wat', level: 'angkor', start: 'naga_causeway' });
+  expect(WORLDS[ANGKOR_WAT.level]).toBeTruthy();
+  expect(ANGKOR_WAT.sites.length).toBeGreaterThanOrEqual(3); // a gate holds three conversations at three sites
+  const along = (points) => points.slice(1).flatMap((to, i) => {
+    const from = points[i];
+    const steps = Math.ceil(Math.hypot(to[0] - from[0], to[1] - from[1]) / 0.2);
+    return Array.from({ length: steps + 1 }, (_, k) => [from[0] + ((to[0] - from[0]) * k) / steps, from[1] + ((to[1] - from[1]) * k) / steps]);
+  });
+  const wall = LAYOUT.wall;
+  const problem = ([x, z]) => {
+    if (isWater(x, z)) return 'in the water';
+    if (Math.abs(x) < 29 && z < 27 && z > -27) return 'in the temple';
+    if (Math.abs(Math.abs(x) - 24) < 4.5 && Math.abs(z - 45) < 3.5) return 'in a library';
+    if (Math.abs(z - wall) < 3.4 && Math.abs(x) < 23 && Math.abs(x) >= 1.6) return 'through the gopura';
+    if (Math.abs(z - wall) < 1 && Math.abs(x) >= 23) return 'through the wall';
+    return null;
+  };
+  const index = (id) => ANGKOR_WAT.sites.findIndex((site) => site.id === id);
+  const lines = [['the entrance', [...ANGKOR_WAT.entrance, ANGKOR_WAT.sites[index(ANGKOR_WAT.start)].at]],
+    ...ANGKOR_WAT.paths.map(({ between: [a, b] }) => [`${a} to ${b}`, pathPoints(ANGKOR_WAT, index(a), index(b))])];
+  for (const site of ANGKOR_WAT.sites) expect(problem(site.at), site.name).toBeNull();
+  for (const [name, points] of lines) for (const point of along(points)) expect(problem(point), `${name} at ${point.map((v) => v.toFixed(1))}`).toBeNull();
+  // The camera walks on the causeways and the terrace of honour.
+  expect([angkorHeightAt(0, 63), angkorHeightAt(0, 40), angkorHeightAt(0, 30.5), angkorHeightAt(-9, 37), angkorHeightAt(0, 100)]).toEqual([0.82, 0.7, 1, 0, 0]);
 });

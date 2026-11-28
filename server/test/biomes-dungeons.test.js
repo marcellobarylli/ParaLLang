@@ -7,7 +7,7 @@ import test from 'node:test';
 import { loadGameContent } from '../src/content-loader.js';
 import { BIOME, BIOMES, TERRAIN, createTerrain } from '../src/road/terrain.js';
 import { createGraph, graphFor } from '../src/road/graph.js';
-import { LEGACY_ORDER, legacyDungeonFor } from '../src/road/encounters.js';
+import { LEGACY_ORDER, LEVEL_GATE, endsLevel, legacyDungeonFor, legacyGateFor } from '../src/road/encounters.js';
 import { answer, fullAnswer, moveTo, road, roadRuntime, startHere, talkHere } from './road-helpers.js';
 
 const content = loadGameContent({ language: 'it' });
@@ -95,6 +95,26 @@ test('which dungeon a unit\'s gate stands in follows from the curriculum alone: 
   assert.equal(legacyDungeonFor(dungeons, curriculum, 'no_such_unit'), null);
   assert.equal(legacyDungeonFor(new Map(), curriculum, curriculum.units[0].id), null);
   assert.equal(legacyDungeonFor(null, curriculum, curriculum.units[0].id), null);
+});
+
+// Round 218: the gate that ends a level (A1 to A2 after unit 12, A2 to B1 after unit 24) stands in Angkor Wat; every
+// other gate keeps its place in the turn of LEGACY_ORDER.
+test('the gates that end a level stand in Angkor Wat; the others are where they were', () => {
+  const { curriculum, dungeons } = content;
+  assert.equal(LEVEL_GATE, 'angkor_wat');
+  assert.deepEqual(curriculum.units.map((_, index) => index).filter((index) => endsLevel(curriculum, index)), [11, 23]);
+  const full = (index) => legacyDungeonFor(dungeons, curriculum, curriculum.units[index].id).id;
+  assert.deepEqual([0, 1, 2, 10, 11, 12, 22, 23, 24, 35].map(full), ['ta_prohm', 'the_kiln', 'micromort_mountain', 'the_kiln', 'angkor_wat', 'ta_prohm', 'the_kiln', 'angkor_wat', 'ta_prohm', 'micromort_mountain']);
+  const gate = (index, part) => legacyGateFor(dungeons, curriculum, curriculum.units[index].id, part);
+  // Streamlined: the gate after every third unit, three conversations at three sites.
+  assert.deepEqual([2, 5, 8, 14, 17, 20, 26].map((index) => gate(index, 0).id), ['ta_prohm', 'the_kiln', 'micromort_mountain', 'the_kiln', 'micromort_mountain', 'ta_prohm', 'micromort_mountain']);
+  assert.deepEqual([0, 1, 2].map((part) => gate(11, part)), [0, 1, 2].map((part) => ({ id: 'angkor_wat', name: 'Angkor Wat', level: 'angkor', site: [
+    { id: 'naga_causeway', name: 'The Naga Causeway' }, { id: 'reflecting_pool', name: 'The Reflecting Pool' }, { id: 'terrace_of_honour', name: 'The Terrace of Honour' }][part] })));
+  assert.equal(gate(23, 0).id, 'angkor_wat');
+  assert.equal(endsLevel(curriculum, curriculum.units.length - 1), false); // the last unit ends the curriculum, not a level
+  // Without Angkor Wat's file the gates go round as before.
+  const without = new Map([...dungeons].filter(([id]) => id !== 'angkor_wat'));
+  assert.equal(legacyGateFor(without, curriculum, curriculum.units[11].id).id, 'ta_prohm');
 });
 
 test('the first unit: the gate is counted down, offered at a site that is Ta Prohm\'s node, entered, passed and left', async (t) => {

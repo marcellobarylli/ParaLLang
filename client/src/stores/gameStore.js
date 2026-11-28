@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
 import { LEVELS, clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf } from '../display.js';
-import { LANGUAGE_KEY, LEVEL_KEY, chooseSlot, clearSlot, currentSlot, learnerOf, setSlotLanguage, slotSummaries, slottedStorage } from '../slots.js';
+import { LANGUAGE_KEY, LEVEL_KEY, NEW_GAME_KEY, SHARE_KEY, chooseSlot, clearSlot, currentSlot, learnerOf, setSlotLanguage, slotSummaries, slottedStorage } from '../slots.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
 
@@ -72,21 +72,39 @@ function mergeDungeon(bundled, served) {
 // requests read them from this store, so a saved change applies to the next request (round 114).
 // Round 133: `dungeons` is every dungeon a place on the world map may open (`dungeon`, the first one, is always among
 // them). The store plays one at a time: `enterPlace` switches, and a reload opens the place last entered.
-export function createGameStore({ api: givenApi, storage: baseStorage = browserStorage(), dungeon: firstDungeon, dungeons = null, atlas = null, sameOrigin = SAME_ORIGIN_API, reload = () => globalThis.location?.reload?.() } = {}) {
+export function createGameStore({ api: givenApi, storage: baseStorage = browserStorage(), dungeon: firstDungeon, dungeons = null, gates = [], atlas = null, sameOrigin = SAME_ORIGIN_API, reload = () => globalThis.location?.reload?.() } = {}) {
   // Round 178: the save slot this page plays; every per-learner key the store reads or writes is the slot's own.
   const slot = currentSlot(baseStorage);
   const storage = slottedStorage(baseStorage, slot);
   // Round 181: the slot's game language (none: the server's default), and whether this page opened on a new game,
   // whose language can still be chosen on the title.
   const readSlot = (key) => { try { return storage?.getItem?.(key) || null; } catch { return null; } };
-  const freshGame = !readSlot(LEARNER_KEY);
+  // Round 218: a game made on this slot's title stays new (its level and language still asked) until it sets out,
+  // through a reload too: the page makes the learner as soon as the title is up.
+  const freshGame = !readSlot(LEARNER_KEY) || readSlot(NEW_GAME_KEY) === '1';
+  if (freshGame) { try { storage?.setItem?.(NEW_GAME_KEY, '1'); } catch { /* private mode: asked again next time */ } }
   // Round 216: the level belongs to the slot's game. A new game has none until it is said on the title (and does not
   // inherit another game's share); a game begun before levels keeps the display as it was.
+  // Round 218: once a level is said, the share (the slider and "Follow my level") is the slot's own (SHARE_KEY): it
+  // starts at the level's share, Settings moves it, and a reload keeps what Settings set. The display all slots share
+  // keeps its own share, so another slot's game is not moved.
+  const readShare = () => { try { const value = JSON.parse(readSlot(SHARE_KEY)); return value && typeof value === 'object' ? value : null; } catch { return null; } };
   const displayOf = () => {
     const display = loadDisplay(storage);
     const level = LEVELS.find((entry) => entry.id === readSlot(LEVEL_KEY));
-    if (level) return { ...display, level: level.id, immersion: level.share, immersionAuto: false };
+    if (level) {
+      const share = readShare();
+      return { ...display, level: level.id, immersion: share ? clampImmersion(share.immersion) : level.share, immersionAuto: share ? share.immersionAuto === true : false };
+    }
     return freshGame ? { ...display, level: null, immersionAuto: true } : { ...display, level: null };
+  };
+  const persist = (display) => {
+    if (!readSlot(LEVEL_KEY)) return saveDisplay(display, storage);
+    const own = { immersion: clampImmersion(display.immersion), immersionAuto: display.immersionAuto !== false };
+    try { storage?.setItem?.(SHARE_KEY, JSON.stringify(own)); } catch { /* private mode: kept for this page only */ }
+    const shared = loadDisplay(storage);
+    const saved = saveDisplay({ ...display, immersion: shared.immersion, immersionAuto: shared.immersionAuto, level: shared.level }, storage);
+    return { ...saved, ...own, level: display.level };
   };
   if (!firstDungeon) throw new Error('createGameStore needs the dungeon (src/dungeon.js)');
   const bundled = new Map([firstDungeon, ...(dungeons ?? [])].map((entry) => [entry.id, entry]));
@@ -328,7 +346,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       freshGame,
       dungeon,
       atlas,
-      legacy: Object.fromEntries(bundled), // round 160: the bundled dungeons by id: the road's gates are played in them
+      legacy: Object.fromEntries([...bundled, ...gates.map((entry) => [entry.id, entry])]), // round 160: the bundled dungeons by id: the road's gates are played in them (round 218: and Angkor Wat, which only a gate opens)
       enterable: [...bundled.keys()], // round 133: the dungeons this client holds; a place opens only one of these
       runs: {}, // round 133: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
       progress: null,
@@ -410,11 +428,13 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       // Round 181: on the title of a new game, the language it is played in. The empty learner the page made on load
       // is removed from the server (in its own language), and the page reloads into a new game in the language chosen.
       chooseLanguage: async (code) => {
-        if (!freshGame || !code || code === (get().language?.code ?? readSlot(LANGUAGE_KEY))) return false;
+        if (!get().freshGame || !code || code === (get().language?.code ?? readSlot(LANGUAGE_KEY))) return false;
         const id = readSlot(LEARNER_KEY);
         if (id && rawApi.deleteLearner) { try { await rawApi.deleteLearner(id); } catch { /* an empty save left on the server */ } }
+        const said = [LEVEL_KEY, SHARE_KEY].map((key) => [key, readSlot(key)]); // round 218: the level said stays
         clearSlot(baseStorage, slot, { current: true });
         setSlotLanguage(baseStorage, slot, code);
+        for (const [key, value] of said) if (value) { try { storage?.setItem?.(key, value); } catch { /* private mode */ } }
         reload();
         return true;
       },
@@ -720,39 +740,42 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       },
       closeSettings: () => set({ settingsOpen: false }),
       // Round 117: a display preference. It makes no request and leaves the run and the conversation alone.
-      setPanelOpacity: (value) => set({ display: saveDisplay({ ...get().display, panelOpacity: value }, storage) }),
+      setPanelOpacity: (value) => set({ display: persist({ ...get().display, panelOpacity: value }) }),
       // Round 125: tilt to look, another display preference.
       // Round 126: whether the characters read their lines aloud.
-      setVoices: (on) => set({ display: saveDisplay({ ...get().display, voices: on !== false }, storage) }),
+      setVoices: (on) => set({ display: persist({ ...get().display, voices: on !== false }) }),
       // Round 196: whether the narrator reads aloud too.
-      setNarrator: (on) => set({ display: saveDisplay({ ...get().display, narrator: on !== false }, storage) }),
+      setNarrator: (on) => set({ display: persist({ ...get().display, narrator: on !== false }) }),
       // Round 208: the hosted narrator's voice.
-      setNarratorVoice: (voice) => set({ display: saveDisplay({ ...get().display, narratorVoice: voice }, storage) }),
+      setNarratorVoice: (voice) => set({ display: persist({ ...get().display, narratorVoice: voice }) }),
       // Round 127: whether the ambient music plays.
-      setMusic: (on) => set({ display: saveDisplay({ ...get().display, music: on !== false }, storage) }),
+      setMusic: (on) => set({ display: persist({ ...get().display, music: on !== false }) }),
       // Round 172: one of the Audio volumes ('master', 'music', 'effects' or 'voice'), 0 to 1.
-      setVolume: (channel, value) => set({ display: saveDisplay({ ...get().display, volume: { ...volumesOf(get().display?.volume), [channel]: clampVolume(value) } }, storage) }),
+      setVolume: (channel, value) => set({ display: persist({ ...get().display, volume: { ...volumesOf(get().display?.volume), [channel]: clampVolume(value) } }) }),
       // Round 148: how much of a character's lines is in the language being learned; sent with each start and answer.
-      setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value), immersionAuto: false }, storage) }),
+      setImmersion: (value) => set({ display: persist({ ...get().display, immersion: clampImmersion(value), immersionAuto: false }) }),
       // Round 216: the level said on the title; it sets the share of the language and takes the slider's place.
       setLevel: (id) => {
         const level = LEVELS.find((entry) => entry.id === id);
         if (!level) return;
         try { storage?.setItem?.(LEVEL_KEY, level.id); } catch { /* private mode: kept for this page only */ }
-        set({ display: saveDisplay({ ...get().display, level: level.id, immersion: level.share, immersionAuto: false }, storage) });
+        set({ display: persist({ ...get().display, level: level.id, immersion: level.share, immersionAuto: false }) });
       },
       // Round 177: whether the share follows the learner's level (the stage's share) instead of the slider.
-      setImmersionAuto: (on) => set({ display: saveDisplay({ ...get().display, immersionAuto: on !== false }, storage) }),
+      setImmersionAuto: (on) => set({ display: persist({ ...get().display, immersionAuto: on !== false }) }),
       // Round 129: beginner mode, sent with each answer.
-      setBeginner: (on) => set({ display: saveDisplay({ ...get().display, beginner: on !== false }, storage) }),
+      setBeginner: (on) => set({ display: persist({ ...get().display, beginner: on !== false }) }),
       // Round 153: strict or light checking of answers, sent with each answer.
-      setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }), // round 198: light is the default
-      setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on !== false }, storage) }),
-      setGlitch: (on) => set({ display: saveDisplay({ ...get().display, glitch: on === true }, storage) }), // round 205
-      setDev: (on) => set({ display: saveDisplay({ ...get().display, dev: on === true }, storage) }), // round 213: developer mode
+      setLight: (on) => set({ display: persist({ ...get().display, light: on === true }) }), // round 198: light is the default
+      setFollow: (on) => set({ display: persist({ ...get().display, follow: on !== false }) }),
+      setGlitch: (on) => set({ display: persist({ ...get().display, glitch: on === true }) }), // round 205
+      setDev: (on) => set({ display: persist({ ...get().display, dev: on === true }) }), // round 213: developer mode
       // Round 214: the breathing while a reply is on its way.
       setBreathingNow: (on) => { if (get().breathingNow !== (on === true)) set({ breathingNow: on === true }); }, // while it is drawn: nothing is written over it
-      setBreathing: (on) => set({ display: saveDisplay({ ...get().display, breathing: on !== false }, storage) }),
+      setBreathing: (on) => {
+        set({ display: persist({ ...get().display, breathing: on !== false }) });
+        if (on === false && get().roadBreathing) get().roadBreathed(); // round 218: switched off mid-walk, it ends now
+      },
       // Round 214: something the page itself tells the player for the first time (the breathing) is entered in the
       // guidebook. Nothing waits for it: the note is taken when the server answers.
       enterGuide: (event) => {
@@ -763,7 +786,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
         const epoch = requestEpoch;
         api.enterGuide(learnerId, event).then((data) => { if (epoch === requestEpoch) takeGuide(data?.guidebook); }).catch(() => {});
       },
-      setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
+      setTiltLook: (on) => set({ display: persist({ ...get().display, tiltLook: on === true }) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       // The server no longer knows this learner (see `api` above): everything of the old run is dropped, the learner
       // is created again and the player stands at a new run's start, with a line saying why.
@@ -797,9 +820,9 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       },
 
       // Round 173: streamlined mode: kept in this browser and told to the server's road.
-      setStreamlined: (on) => { set({ display: saveDisplay({ ...get().display, streamlined: on !== false }, storage) }); return get().syncRoadMode(); },
+      setStreamlined: (on) => { set({ display: persist({ ...get().display, streamlined: on !== false }) }); return get().syncRoadMode(); },
       // Round 144: on The Journey 2, whether the way on is chosen for the player.
-      setRails: (on) => set({ display: saveDisplay({ ...get().display, rails: on !== false }, storage) }),
+      setRails: (on) => set({ display: persist({ ...get().display, rails: on !== false }) }),
       // Round 144: this browser's copy of the save as a file's text (a fresh copy when the server answers), and a
       // copy from a file put on the server in place of whatever it holds for that learner.
       exportCopy: async () => {
