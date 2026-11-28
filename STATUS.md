@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 221, narration only at a conversation's start and end; the follow lands on the correction
+
+A character's line carries the narrator's paragraph (shown and read) only when it opens the conversation or ends it;
+the lines between are the character's words alone. When the reply arrives (after the breathing), the correction box
+is brought to the top of the text, under the objective's bar, with the reply below it. Played in headless Chromium at
+phone size, **not on a phone**. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/221/architecture.md), [findings](docs/rounds/221/findings.md).
+
 ## Addendum 2026-11-28: round 220, a longer lead-in to the breath
 
 The breathing's dial now starts 70 degrees before the breath in (about 1.94 s to prepare), not 45 (1.25 s). Client
@@ -2177,6 +2185,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 221 | 11-28 | Narration only on a conversation's first and last lines; the follow brings the correction box to the top; deployed | [221](docs/rounds/221/architecture.md) | [findings](docs/rounds/221/findings.md) | round 221 build, merged to `main` |
 | 220 | 11-28 | The breathing's dial starts 70 degrees before the breath in (was 45); deployed | [220](docs/rounds/220/architecture.md) | [findings](docs/rounds/220/findings.md) | round 220 build, merged to `main` |
 | 219 | 11-28 | A softer road (a soft grade in the post pass, a warm day palette, sage greens); the sun lingers at the horizon, so sunrises and sunsets last twice as long; deployed | [219](docs/rounds/219/architecture.md) | [findings](docs/rounds/219/findings.md) | round 219 build, merged to `main` |
 | 215 | 11-28 | The road's frontier is read from the finished conversations, not from the walk; a pull takes those sites only; pulled ground under the sea's level floods (the sea stays level); the check library switches round 214's breathing off; deployed | [215](docs/rounds/215/architecture.md) | [findings](docs/rounds/215/findings.md) | round 215 build, merged to `main` |

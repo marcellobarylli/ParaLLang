@@ -82,6 +82,13 @@ function useScrolledPast(element, changes) {
   return past;
 }
 
+/** Round 221: whether `message` (a line of the character) carries its narration: the first line, and the last once the conversation is over. */
+export function narratedLine(encounter, message) {
+  const lines = (encounter?.transcript ?? []).filter((entry) => entry.role === 'npc');
+  if (!lines.length || !message) return false;
+  return message.id === lines[0].id || (encounter.state !== 'ongoing' && message.id === lines.at(-1).id);
+}
+
 // Round 198: `afterAnswer` (what was understood of the player's last answer, and its correction) stands directly under
 // that answer, so the character's reply to it is the last thing before the box the player writes in.
 export default function DialoguePanel({ encounter, language, isLoading, onHelp, onSpeak = null, onSayWord = null, beginner = false, light = false, afterAnswer = null }) {
@@ -95,7 +102,7 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
   const todo = encounter.currentObjective ? Math.max(1, encounter.openObjectives?.length ?? 1) : 0;
   const line = (message) => (message.role === 'npc' ? (
     <article className="npc-message" key={message.id}>
-      <NarrativeText narrative={message.narrative} words={message.narrativeWords} language={language} onSay={onSayWord} />
+      {told(message) && <NarrativeText narrative={message.narrative} words={message.narrativeWords} language={language} onSay={onSayWord} />}
       <div className="speaker-row">
         <strong className="speaker">{message.dialogue.speaker}</strong>
         {onSpeak && <button type="button" className="icon-button speak-button" onClick={() => onSpeak(message)} aria-label={`Hear ${message.dialogue.speaker} say this line`} title="Hear this line">🔊</button>}
@@ -105,6 +112,9 @@ export default function DialoguePanel({ encounter, language, isLoading, onHelp, 
   ) : (
     <p className="player-message" key={message.id}>{message.text}</p>
   ));
+  // Round 221 (the owner): the narration frames a conversation. Only the character's first line and the line that
+  // ends it carry the narrator's paragraph; the lines between are the character's alone.
+  const told = (message) => narratedLine(encounter, message);
   const [opening, ...rest] = encounter.transcript;
   const lastAnswer = rest.findLast((message) => message.role !== 'npc')?.id ?? null;
   return (

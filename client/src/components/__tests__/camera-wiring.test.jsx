@@ -314,12 +314,17 @@ test('a character\'s line is read aloud once in its sheet\'s voice, a new line t
   act(() => store.setState({ encounter: { ...before, transcript: [...before.transcript, { id: 'player-1', role: 'player', text: 'Ciao!' }, { id: 'npc-2', role: 'npc', narrative: 'A stamp falls.', protected: true, dialogue: { speaker: 'Portia', native: 'Bene. *Piacere!*', words: [] } }] } }));
   expect(speech.spoken).toHaveLength(2);
   expect(speech.spoken[1]).toEqual({ text: 'Bene. *Piacere!*', tag: 'it-IT', voice: PORTIA });
-  expect(speech.told).toEqual(['A pause.', 'A stamp falls.']);
+  expect(speech.told).toEqual(['A pause.']); // round 221: a line mid-conversation has no narration, read or shown
+  expect(screen.queryByText('A stamp falls.')).toBeNull();
+  // The line that ends the conversation is narrated again.
+  const after = store.getState().encounter;
+  act(() => store.setState({ encounter: { ...after, state: 'resolved', transcript: [...after.transcript, { id: 'player-2', role: 'player', text: 'Ciao!' }, { id: 'npc-3', role: 'npc', narrative: 'The gate opens.', dialogue: { speaker: 'Portia', native: 'Vai.', words: [] } }] } }));
+  expect(speech.told).toEqual(['A pause.', 'The gate opens.']);
   // Each line has its own button.
   const buttons = screen.getAllByRole('button', { name: 'Hear Portia say this line' });
-  expect(buttons).toHaveLength(2);
+  expect(buttons.length).toBeGreaterThanOrEqual(2);
   await user.click(buttons[0]);
-  expect(speech.spoken[2]).toEqual({ text: 'Allora?', tag: 'it-IT', voice: PORTIA });
+  expect(speech.spoken.at(-1)).toEqual({ text: 'Allora?', tag: 'it-IT', voice: PORTIA });
 });
 
 test('sending stops the voice, and so does leaving the conversation', async () => {

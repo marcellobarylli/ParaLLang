@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import DungeonView, { preloadLevel } from './DungeonView.jsx';
 import RoadView from './RoadView.jsx';
 import { CurriculumChip, CurriculumPanel, HubCard, WelcomeCard, RoadCaption, RoadMap, RoadResolved, positionLine, useWeather } from './Road.jsx';
-import DialoguePanel from './DialoguePanel.jsx';
+import DialoguePanel, { BAR_ROOM, narratedLine } from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
 import SheetHandle from './SheetHandle.jsx';
@@ -441,7 +441,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   const shownKey = shownKeyRef.current;
   useEffect(() => {
     if (voicesOn && lastLine && speaker.supported) {
-      const told = narrating ? narrativeParts(lastLine.narrative, lastLine.narrativeWords, language?.tag) : [];
+      const told = narrating && narratedLine(encounter, lastLine) ? narrativeParts(lastLine.narrative, lastLine.narrativeWords, language?.tag) : [];
       speaker.say([...told, { text: lastLine.dialogue.native, tag: language?.tag, voice: encounter?.character?.voice }], { after: true });
     } else if (!voicesOn) speaker.stop();
   }, [voicesOn, shownKey, language?.tag]);
@@ -500,12 +500,13 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
     if (!follow || !element || !shownKey || seen.id !== encounter?.id || seen.line === shownKey) return;
     const reply = [...element.querySelectorAll('.npc-message')].at(-1);
     if (!reply) return;
-    // Round 198: the player's answer and its correction stay in view above the reply when all of it fits; a longer
-    // turn shows the reply from its top.
+    // Round 221 (the owner): the correction of the player's answer is the first thing to read after the breathing, so
+    // it is brought to the top of the panel, with the reply under it. Without one (a turn not assessed), the reply's
+    // top. (Round 198 put the player's answer at the top when the whole turn fit.)
     const place = (node) => node.getBoundingClientRect().top - element.getBoundingClientRect().top + element.scrollTop - 8;
-    const answer = [...element.querySelectorAll('.player-message')].at(-1);
-    const whole = answer && place(answer) < place(reply) && reply.getBoundingClientRect().bottom - answer.getBoundingClientRect().top + 16 <= element.clientHeight;
-    const top = place(whole ? answer : reply);
+    // The objective's bar is pinned over the top of the text once its card is scrolled past, so the box stops under it.
+    const correction = element.querySelector('.after-answer');
+    const top = correction && place(correction) < place(reply) ? place(correction) - BAR_ROOM : place(reply);
     element.scrollTop = Math.max(0, top);
     pin.current = { top: element.scrollTop, until: 0 }; // as far as the text allows
   }, [shownKey, encounter?.id, follow]);
