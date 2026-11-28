@@ -11,7 +11,7 @@ inscriptions:
   - id: keystone
     location: market_entrance
     where: "Carved on the keystone of the archway, half worn away by people looking up."
-    text: "Hairu mono wa, sono eda no koe o mi ni matou. Deru mono wa, moshi derareru nara, sono kakera o tsume no shita ni irete mochisaru."
+    text: "Hairu mono wa, sono eda no koe o mi ni matou. Deru mono wa, derareru no nara, sono kakera o tsume no aida ni hasande mochisaru."
     translation: "Whoever enters takes on the voice of the branch they stand in. Whoever leaves, if they leave, takes some of it away under their fingernails."
     glossary:
       - { word: "hairu mono", meaning: "whoever enters" }
@@ -23,27 +23,27 @@ inscriptions:
   - id: menu_board
     location: coffee_cart
     where: "Chalked in a corner of the menu board, the one line nobody ever wipes off."
-    text: "Kinō no gochūmon wa, sengetsu teikyō itashimasu. Jikanteki na gomeiwaku o okake shite, makoto ni mōshiwake arimasen."
+    text: "Kinō no gochūmon wa, sengetsu teikyō itashimasu. Jikanteki na gomeiwaku o okake shi, fukaku owabi itashimasu."
     translation: "Yesterday's orders will be served last month. We apologise for the temporal inconvenience."
     glossary:
       - { word: "gochūmon", meaning: "orders (in a café; honorific go-)" }
       - { word: "kinō", meaning: "yesterday" }
       - { word: "teikyō itashimasu", meaning: "will be served (humble keigo)" }
       - { word: "sengetsu", meaning: "last month" }
-      - { word: "mōshiwake arimasen", meaning: "we apologise (formal)" }
+      - { word: "owabi itashimasu", meaning: "we apologise (humble keigo)" }
       - { word: "gomeiwaku", meaning: "inconvenience, trouble caused" }
   - id: chopping_block
     location: butchers_stall
     where: "Burned into the chopping block, under a century of knife marks."
-    text: "Kono dai de wa, subete ga hakarareru. Iiwake sae mo. Jishō shita dake no omosa ga atta iiwake wa, kore made ni nakatta."
+    text: "Kono dai de wa, subete ga hakarareru. Iiwake sae mo. Nanotta dake no omosa ga atta iiwake nado, imada kono yo ni arazu."
     translation: "Everything is weighed at this stall, even excuses. There is no excuse that ever weighed what it claimed."
     glossary:
       - { word: "hakarareru", meaning: "is weighed" }
-      - { word: "kore made ni nakatta", meaning: "there has never been" }
+      - { word: "imada kono yo ni arazu", meaning: "there has never been (in this world)" }
       - { word: "sae mo", meaning: "even" }
       - { word: "iiwake", meaning: "excuses" }
       - { word: "dai", meaning: "stall, counter; a stand" }
-      - { word: "jishō shita", meaning: "it claimed" }
+      - { word: "nanotta", meaning: "it claimed, gave itself out as" }
   - id: plaque_back
     location: cracked_fountain
     where: "On the back of the brass plaque, in letters someone has tried to file away."
@@ -58,7 +58,7 @@ inscriptions:
   - id: flyleaf
     location: old_bookshop
     where: "Pencilled on the flyleaf of a book that will not let itself be opened."
-    text: "Kono mise no hon wa dore mo, saigo ni yonda mono ga kaita no da. Taisetsu ni kaeshinasai: sono naka ni jibun ga kakarete aru kamo shirenai."
+    text: "Kono mise no hon wa dore mo, saigo ni yonda mono ga kaita no da. Taisetsu ni kaeshinasai: sore ni wa jibun ga kakarete aru kamo shirenai."
     translation: "Every book in this shop was written by whoever read it last. Return it with care: you may be inside it."
     glossary:
       - { word: "mise", meaning: "shop" }

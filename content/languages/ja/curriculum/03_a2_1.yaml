@@ -1,0 +1,184 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 144: the words of curriculum stage A2.1 (the skeleton is content/curriculum/03_a2_1.yaml). The Italian
+# original was authored by Claude from the functions of the A2 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
+# defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 223: the A1 stages were written at the same time by another agent, so this file defines every word it uses
+# (natural ids, so that a word the A1 stages define too has the same id and the merge keeps the earlier one).
+stage: a2_1
+version: curriculum-a2-1-ja-v1
+grammar:
+  past_did: "The polite past: -masu becomes -mashita (tabemashita, nomimashita, mimashita, kaimashita, shimashita) and -masen deshita in the negative; the object takes o (sushi o tabemashita); kinō, senshū."
+  past_went: "The past of verbs of movement (ikimashita, demashita, tsukimashita, kaerimashita), with ni or e for the place and ni for the time (hachiji ni demashita); ... to issho ni, hitori de; tanoshikatta desu, the past of an i-adjective."
+  weather: "Weather with desu and with ga (atsui desu, samui desu, hare desu, ame ga futte imasu, kaze ga tsuyoi desu); haru, natsu, aki, fuyu with wa; the past (samukatta desu, ame ga furimashita); ame no hi wa, ... toki wa for 'when'."
+  restaurant: "Requests with ... o onegaishimasu and ... ni shimasu, 'I'll have' (mein wa sakana ni shimasu); yoyaku shitai n desu ga; people counted with hitori, futari, then -nin (sannin, yonin); ... ga arimasen for what is missing; mō hitotsu."
+  health: "... ga itai desu with a part of the body (atama ga itai desu); kaze o hikimashita, netsu ga arimasu, seki ga demasu; ... kara for 'since'; must: the -nakereba form and narimasen (yasumanakereba narimasen)."
+  plans: "Want to: the -masu stem + tai desu (ikitai desu); must: -nakereba narimasen; can: ikemasu, ikemasen, dekimasu; the plain form + tsumori desu for an intention and + tokoro desu for 'just about to'; the non-past with a time word for a plan (raishū Kyōto ni ikimasu)."
+lessons:
+  past_did_yesterday:
+    ate: { say: [[kino], [tabemashita, nomimashita]], examples: ["Kinō piza o tabemashita.", "Kinō no yoru, ocha o nomimashita."] }
+    worked: { say: [hatarakimashita, benkyo_shimashita], examples: ["Takusan hatarakimashita.", "Hatarakimasen deshita. Benkyō shimashita."] }
+    ask_did: { say: [nani_o_shimashita], examples: ["Kinō nani o shimashita ka?", "Kinō no yoru wa nani o shimashita ka?"] }
+  past_did_bought:
+    bought: { say: [kaimashita], examples: ["Jaketto o kaimashita.", "Pan o kaimashita."] }
+    paid: { say: [haraimashita], examples: ["Nisen en haraimashita.", "Sen en tsukaimashita."] }
+    saw: { say: [mimashita, aimashita], examples: ["Eiga o mimashita.", "Imōto ni aimashita.", "Fujisan o mimashita."] }
+  past_did_week:
+    last_week: { say: [senshu], examples: ["Senshū wa takusan hatarakimashita.", "Senshū tomodachi ni aimashita."] }
+    made: { say: [shimashita, tsukurimashita], examples: ["Kēki o tsukurimashita.", "Sanpo o shimashita."] }
+    met: { say: [aimashita, hanashimashita], examples: ["Tomodachi ni aimashita.", "Haha to hanashimashita."] }
+  past_went_where:
+    went: { say: [ikimashita], examples: ["Kinō umi ni ikimashita.", "Kyōto e ikimashita."] }
+    stayed: { say: [itta_koto_ga_arimasu, imashita], examples: ["Ōsaka ni itta koto ga arimasu.", "Zutto uchi ni imashita."] }
+    ask_where: { say: [doko_ni_ikimashita], examples: ["Doko ni ikimashita ka?", "Kinō wa doko e ikimashita ka?"] }
+  past_went_when:
+    left: { say: [demashita], examples: ["Hachiji ni demashita.", "Getsuyōbi ni shuppatsu shimashita."] }
+    arrived: { say: [tsukimashita], examples: ["Kinō no yoru tsukimashita.", "Jūji ni tsukimashita."] }
+    came_back: { say: [kaerimashita], examples: ["Nichiyōbi ni kaerimashita.", "Kinō modorimashita."] }
+  past_went_with:
+    with_whom: { say: [issho_ni, hitori_de], examples: ["Tomodachi to issho ni ikimashita.", "Hitori de ikimashita."] }
+    ask_with: { say: [dare_to_ikimashita], examples: ["Dare to ikimashita ka?", "Dare to issho ni ikimashita ka?"] }
+    how_was: { say: [tanoshikatta, yokatta], examples: ["Totemo tanoshikatta desu.", "Subarashikatta desu."] }
+  weather_today:
+    ask_weather: { say: [tenki_wa_do_desu_ka], examples: ["Tenki wa dō desu ka?", "Kyō no tenki wa dō desu ka?"] }
+    hot_cold: { say: [atsui, samui], examples: ["Kyō wa atsui desu.", "Totemo samui desu."] }
+    sun_rain: { say: [harete_imasu, ame_ga_futte_imasu, kaze_ga_tsuyoi, yuki_ga_futte_imasu], examples: ["Kyō wa hare desu.", "Ame ga futte imasu.", "Kaze ga tsuyoi desu."] }
+  weather_seasons:
+    ask_season: { say: [dono_kisetsu], examples: ["Dono kisetsu ga suki desu ka?", "Ichiban suki na kisetsu wa nan desu ka?"] }
+    favourite: { say: [natsu, fuyu, haru, aki], examples: ["Natsu ga ichiban suki desu.", "Haru ga suki desu."] }
+    in_season: { say: [[natsu, fuyu, haru, aki], [atsui, samui, ame_ga_futte_imasu, yuki_ga_futte_imasu, harete_imasu, kaze_ga_tsuyoi]], examples: ["Fuyu wa samui desu.", "Natsu wa totemo atsui desu.", "Aki wa yoku ame ga furimasu."] }
+  weather_rain:
+    was: { say: [samukatta, ame_ga_furimashita], examples: ["Kinō wa samukatta desu.", "Kinō wa ame ga furimashita."] }
+    when_rains: { say: [ame_no_hi], examples: ["Ame no hi wa uchi ni imasu.", "Ame ga furu to, hon o yomimasu."] }
+    fine_weather: { say: [ii_tenki], examples: ["Tenki ga ii toki wa umi ni ikimasu.", "Ii tenki no hi wa sanpo shimasu."] }
+  restaurant_book:
+    book: { say: [yoyaku], examples: ["Tēburu o yoyaku shitai n desu ga.", "Yoyaku dekimasu ka?"] }
+    how_many: { say: [futari], examples: ["Futari desu.", "Yonin de onegaishimasu."] }
+    for_when: { say: [konban], examples: ["Konban, hachiji ni onegaishimasu.", "Ashita no ban desu."] }
+  restaurant_order:
+    starter: { say: [mazu, zensai], examples: ["Mazu, edamame o onegaishimasu.", "Zensai wa sarada ni shimasu."] }
+    main: { say: [[mein], [niku, sakana, toriniku]], examples: ["Mein wa sakana ni shimasu.", "Mein wa toriniku o onegaishimasu."] }
+    dessert: { say: [dezato], examples: ["Dezāto wa matcha aisu ni shimasu.", "Dezāto o onegaishimasu."] }
+  restaurant_wrong:
+    cold: { say: [tsumetai, shoppai], examples: ["Misoshiru ga tsumetai desu.", "Chotto shoppai desu."] }
+    missing: { say: [[arimasen], [foku, naifu, koppu, ohashi, pan]], examples: ["Fōku ga arimasen.", "Ohashi ga arimasen.", "Pan ga arimasen."] }
+    another: { say: [mo_hitotsu], examples: ["Fōku o mō ippon onegaishimasu.", "Koppu o mō hitotsu onegaishimasu."] }
+  health_hurts:
+    not_well: { say: [guai_ga_warui], examples: ["Guai ga warui desu.", "Kibun ga warui desu."] }
+    hurts: { say: [[itai], [atama, onaka, nodo, ha, senaka]], examples: ["Atama ga itai desu.", "Nodo ga itai desu.", "Ha ga itai desu."] }
+    since: { say: [kino_kara], examples: ["Kinō kara itai desu.", "Futsuka mae kara guai ga warui desu."] }
+  health_cold:
+    cold_fever: { say: [kaze_o_hikimashita, netsu_ga_arimasu, seki_ga_demasu], examples: ["Kaze o hikimashita.", "Netsu ga arimasu.", "Seki ga demasu."] }
+    tired: { say: [tsukarete_imasu], examples: ["Totemo tsukarete imasu.", "Tsukaremashita."] }
+    must_rest: { say: [yasumanakereba_narimasen], examples: ["Yasumanakereba narimasen.", "Nete inakereba narimasen."] }
+  health_help:
+    need: { say: [[hitsuyo], [isha, yakkyoku]], examples: ["Isha ga hitsuyō desu.", "Isha ka yakkyoku ga hitsuyō desu.", "Sumimasen, isha ga hitsuyō nan desu."] }
+    something_for: { say: [kusuri], examples: ["Zutsū no kusuri wa arimasu ka?", "Seki no kusuri o kudasai."] }
+    how_often: { say: [nankai], examples: ["Ichinichi ni nankai desu ka?", "Ichinichi nankai nomimasu ka?"] }
+  plans_want:
+    want: { say: [shitai], examples: ["Umi ni ikitai desu.", "Kondo no shūmatsu wa nemuritai desu."] }
+    ask_want: { say: [nani_o_shitai], examples: ["Nani o shitai desu ka?", "Ashita wa nani ga shitai desu ka?"] }
+    can: { say: [ikemasu, ikemasen], examples: ["Doyōbi wa ikemasu.", "Nichiyōbi wa ikemasen."] }
+  plans_must:
+    must: { say: [shinakereba_narimasen], examples: ["Doyōbi wa hatarakanakereba narimasen.", "Benkyō shinakereba narimasen."] }
+    cannot_because: { say: [[ikemasen], [shinakereba_narimasen]], examples: ["Ikemasen. Hatarakanakereba narimasen.", "Sumimasen, ikemasen. Benkyō shinakereba narimasen kara."] }
+    ask_must: { say: [shinakereba_narimasen_ka], examples: ["Ashita hatarakanakereba narimasen ka?", "Doyōbi mo shigoto o shinakereba narimasen ka?"] }
+  plans_going:
+    going_to: { say: [tsumori], examples: ["Ashita umi ni iku tsumori desu.", "Uchi ni iru tsumori desu."] }
+    next_week: { say: [raishu], examples: ["Raishū Kyōto ni ikimasu.", "Raishū wa shigoto desu."] }
+    about_to: { say: [tokoro_desu], examples: ["Ima deru tokoro desu.", "Ima dekakeru tokoro desu."] }
+vocabulary:
+  # past_did
+  kino: { t: "kinō", pos: adverb, en: ["yesterday"], forms: ["kinō", "kinoo", "kinou", "kinō no yoru", "kinoo no yoru", "kinou no yoru", "kinō no asa", "kinoo no asa", "kinou no asa", "sakuya"], ex: ["Kinō wa hatarakimashita.", "Yesterday I worked."], n: "'Kinō no yoru' and 'sakuya' are 'last night'." }
+  tabemashita: { t: "tabemashita", pos: verb, en: ["I ate", "I have eaten"], forms: ["tabemashita", "tabeta"], ex: ["Sandoitchi o tabemashita.", "I ate a sandwich."], n: "The polite past: the -masu ending becomes -mashita (tabemasu, tabemashita). The thing eaten takes o." }
+  nomimashita: { t: "nomimashita", pos: verb, en: ["I drank", "I have drunk"], forms: ["nomimashita", "nonda"], ex: ["Kōhī o nomimashita.", "I drank a coffee."] }
+  hatarakimashita: { t: "hatarakimashita", pos: verb, en: ["I worked", "I have worked"], forms: ["hatarakimashita", "hatarakimasen deshita", "shigoto o shimashita", "hataraita"], ex: ["Kinō wa hachiji made hatarakimashita.", "Yesterday I worked until eight."], n: "The negative past is -masen deshita: hatarakimasen deshita, I did not work." }
+  benkyo_shimashita: { t: "benkyō shimashita", pos: phrase, en: ["I studied", "I have studied"], forms: ["benkyō shimashita", "benkyoo shimashita", "benkyou shimashita", "benkyō shita", "benkyoo shita", "benkyou shita"], ex: ["Ichinichijū benkyō shimashita.", "I studied all day."] }
+  nani_o_shimashita: { t: "nani o shimashita", pos: phrase, en: ["what did you do"], forms: ["nani o shimashita", "nani o shita", "nani shita", "nani o shimashita ka"], ex: ["Doyōbi wa nani o shimashita ka?", "What did you do on Saturday?"], n: "A question ends in ka: nani o shimashita ka?" }
+  kaimashita: { t: "kaimashita", pos: verb, en: ["I bought", "I have bought"], forms: ["kaimashita"], ex: ["Bōshi o kaimashita.", "I bought a hat."] }
+  haraimashita: { t: "haraimashita", pos: verb, en: ["I paid"], forms: ["haraimashita", "haratta", "tsukaimashita"], ex: ["Sen en haraimashita.", "I paid a thousand yen."], n: "'Tsukaimashita' is 'I spent' (literally 'I used')." }
+  mimashita: { t: "mimashita", pos: verb, en: ["I saw", "I have seen", "I watched"], forms: ["mimashita"], ex: ["Ii eiga o mimashita.", "I saw a good film."], n: "For seeing a person, Japanese says 'I met': imōto ni aimashita." }
+  senshu: { t: "senshū", pos: adverb, en: ["last week"], forms: ["senshū", "senshuu"], ex: ["Senshū wa takusan benkyō shimashita.", "Last week I studied a lot."] }
+  shimashita: { t: "shimashita", pos: verb, en: ["I did"], forms: ["shimashita"], ex: ["Kaimono o shimashita.", "I did the shopping."], n: "The past of suru, 'to do', which makes verbs of many nouns: sanpo o shimashita, I went for a walk." }
+  tsukurimashita: { t: "tsukurimashita", pos: verb, en: ["I made"], forms: ["tsukurimashita"], ex: ["Bangohan o tsukurimashita.", "I made dinner."] }
+  aimashita: { t: "aimashita", pos: verb, en: ["I met", "I saw"], forms: ["aimashita"], ex: ["Eki de Tanaka-san ni aimashita.", "I met Tanaka-san at the station."], n: "The person met takes ni: tomodachi ni aimashita." }
+  hanashimashita: { t: "hanashimashita", pos: verb, en: ["I spoke", "I talked"], forms: ["hanashimashita", "hanashita"], ex: ["Isha to hanashimashita.", "I spoke to the doctor."] }
+  # past_went
+  ikimashita: { t: "ikimashita", pos: verb, en: ["I went"], forms: ["ikimashita", "itte kimashita"], ex: ["Sūpā ni ikimashita.", "I went to the supermarket."], n: "The place takes ni or e: umi ni ikimashita. The verb does not change for a man or a woman." }
+  itta_koto_ga_arimasu: { t: "itta koto ga arimasu", pos: phrase, en: ["I have been to", "I have been"], forms: ["itta koto ga arimasu", "itta koto ga aru"], ex: ["Nara ni itta koto ga arimasu.", "I have been to Nara."], n: "The plain past + koto ga arimasu says that you have done something once." }
+  imashita: { t: "imashita", pos: verb, en: ["I was", "I stayed"], forms: ["imashita"], ex: ["Ichinichijū uchi ni imashita.", "I stayed at home all day."], n: "The past of imasu, 'to be' (of people and animals): uchi ni imashita, I was at home." }
+  doko_ni_ikimashita: { t: "doko ni ikimashita", pos: phrase, en: ["where did you go"], forms: ["doko ni ikimashita", "doko e ikimashita", "doko ni itta", "doko e itta"], ex: ["Kinō doko ni ikimashita ka?", "Where did you go yesterday?"] }
+  demashita: { t: "demashita", pos: verb, en: ["I left", "I set off"], forms: ["demashita", "shuppatsu shimashita", "dekakemashita"], ex: ["Shichiji ni uchi o demashita.", "I left home at seven."], n: "The place left takes o: uchi o demashita." }
+  tsukimashita: { t: "tsukimashita", pos: verb, en: ["I arrived"], forms: ["tsukimashita", "tōchaku shimashita", "toochaku shimashita", "touchaku shimashita"], ex: ["Kuji ni tsukimashita.", "I arrived at nine."] }
+  kaerimashita: { t: "kaerimashita", pos: verb, en: ["I came back", "I went home", "I returned"], forms: ["kaerimashita", "modorimashita", "kaette kimashita"], ex: ["Doyōbi ni kaerimashita.", "I came back on Saturday."], n: "Kaeru is to go back home; modoru is to return to where you were." }
+  issho_ni: { t: "issho ni", pos: phrase, en: ["with", "together"], forms: ["issho ni", "isshoni"], ex: ["Ani to issho ni ikimashita.", "I went with my brother."], n: "The person comes first, with to: tomodachi to issho ni." }
+  hitori_de: { t: "hitori de", pos: phrase, en: ["alone", "on my own"], forms: ["hitori de", "hitoride"], ex: ["Hitori de ikimashita.", "I went on my own."] }
+  dare_to_ikimashita: { t: "dare to ikimashita", pos: phrase, en: ["who did you go with", "who with"], forms: ["dare to ikimashita", "dare to issho ni", "dare to itta"], ex: ["Dare to ikimashita ka?", "Who did you go with?"] }
+  tanoshikatta: { t: "tanoshikatta", pos: adjective, en: ["it was fun", "I enjoyed myself"], forms: ["tanoshikatta", "tanoshimimashita"], ex: ["Totemo tanoshikatta desu.", "It was great fun."], n: "The past of tanoshii, 'fun': an i-adjective drops its last i and takes -katta." }
+  yokatta: { t: "yokatta", pos: adjective, en: ["it was good", "it was lovely"], forms: ["yokatta", "subarashikatta", "suteki deshita", "kirei deshita"], ex: ["Yokatta desu, arigatō.", "It was lovely, thank you."], n: "The past of ii, 'good', is yokatta." }
+  # weather
+  tenki_wa_do_desu_ka: { t: "tenki wa dō desu ka", pos: phrase, en: ["what is the weather like"], forms: ["tenki wa dō desu ka", "tenki wa doo desu ka", "tenki wa dou desu ka", "tenki wa dō", "tenki wa doo", "tenki wa dou", "otenki wa dō", "otenki wa doo", "otenki wa dou", "donna tenki"], ex: ["Tōkyō no tenki wa dō desu ka?", "What is the weather like in Tokyo?"] }
+  atsui: { t: "atsui", pos: adjective, en: ["hot", "it is hot"], forms: ["atsui", "atatakai"], ex: ["Kyō wa atsui desu.", "It is hot today."], n: "'Atatakai' is 'warm'." }
+  samui: { t: "samui", pos: adjective, en: ["cold", "it is cold"], forms: ["samui"], ex: ["Kon'ya wa samui desu ne.", "It is cold tonight, isn't it."], n: "Samui is for the weather; food or a drink that is cold is tsumetai." }
+  harete_imasu: { t: "harete imasu", pos: phrase, en: ["it is sunny", "it is fine"], forms: ["harete imasu", "hareteimasu", "hare desu", "hare da", "hare deshita"], ex: ["Kyō wa harete imasu.", "It is sunny today."], n: "'Hare desu' says the same: hare is fine weather." }
+  ame_ga_futte_imasu: { t: "ame ga futte imasu", pos: phrase, en: ["it is raining", "it rains"], forms: ["ame ga futte imasu", "ame ga futteimasu", "ame ga furimasu", "ame ga furu", "ame desu", "ame da"], ex: ["Kinō kara ame ga futte imasu.", "It has been raining since yesterday."], n: "Rain falls: ame ga furu. Japanese has no word for 'it'." }
+  kaze_ga_tsuyoi: { t: "kaze ga tsuyoi", pos: phrase, en: ["it is windy", "the wind is strong"], forms: ["kaze ga tsuyoi", "kaze ga fuite imasu", "kaze ga fuiteimasu"], ex: ["Kyō wa kaze ga tsuyoi desu.", "It is windy today."], n: "Kaze is the wind, and also a cold (kaze o hikimashita): say it with ga tsuyoi." }
+  yuki_ga_futte_imasu: { t: "yuki ga futte imasu", pos: phrase, en: ["it is snowing", "it snows"], forms: ["yuki ga futte imasu", "yuki ga futteimasu", "yuki ga furimasu", "yuki ga furu", "yuki desu"], ex: ["Yama de wa yuki ga futte imasu.", "It is snowing in the mountains."] }
+  dono_kisetsu: { t: "dono kisetsu", pos: phrase, en: ["which season"], forms: ["dono kisetsu", "kisetsu"], ex: ["Dono kisetsu ga suki desu ka?", "Which season do you like?"], n: "'Kisetsu' is 'season'." }
+  natsu: { t: "natsu", pos: noun, en: ["summer"], forms: ["natsu"], ex: ["Natsu wa umi ni ikimasu.", "In summer I go to the sea."] }
+  fuyu: { t: "fuyu", pos: noun, en: ["winter"], forms: ["fuyu"], ex: ["Fuyu wa yuki ga furimasu.", "In winter it snows."] }
+  haru: { t: "haru", pos: noun, en: ["spring"], forms: ["haru"], ex: ["Haru wa kirei desu.", "Spring is lovely."], n: "The cherry blossom (sakura) comes in spring." }
+  aki: { t: "aki", pos: noun, en: ["autumn", "fall"], forms: ["aki"], ex: ["Aki wa suzushii desu.", "Autumn is cool."] }
+  samukatta: { t: "samukatta", pos: adjective, en: ["it was cold"], forms: ["samukatta", "atsukatta", "ii tenki deshita"], ex: ["Kinō wa samukatta desu.", "It was cold yesterday."], n: "'Atsukatta' is 'it was hot'." }
+  ame_ga_furimashita: { t: "ame ga furimashita", pos: phrase, en: ["it rained"], forms: ["ame ga furimashita", "ame deshita", "yuki ga furimashita", "yuki deshita"], ex: ["Ichinichijū ame ga furimashita.", "It rained all day."], n: "'Yuki ga furimashita' is 'it snowed'." }
+  ame_no_hi: { t: "ame no hi", pos: phrase, en: ["on rainy days", "when it rains"], forms: ["ame no hi", "ame ga furu to", "ame ga furu toki", "ame no toki", "ame ga futtara"], ex: ["Ame no hi wa basu ni norimasu.", "When it rains I take the bus."] }
+  ii_tenki: { t: "ii tenki", pos: phrase, en: ["fine weather", "good weather"], forms: ["ii tenki", "ii otenki", "tenki ga ii", "otenki ga ii", "tenki ga yoi"], ex: ["Kyō wa ii tenki desu ne.", "The weather is fine today, isn't it."] }
+  # restaurant
+  yoyaku: { t: "yoyaku", pos: noun, en: ["a booking", "to book", "to reserve"], forms: ["yoyaku"], ex: ["Ashita no yoyaku o shitai n desu ga.", "I would like to book for tomorrow."], n: "With shimasu it is the verb: yoyaku shimasu, I book; yoyaku shitai n desu ga, I'd like to book." }
+  futari: { t: "futari", pos: noun, en: ["two people", "people"], forms: ["futari", "sannin", "yonin", "gonin", "rokunin", "nannin", "nan-nin", "nanmei", "nan-mei"], ex: ["Yonin desu.", "There are four of us."], n: "People are counted hitori, futari, then the number + nin: sannin, yonin, gonin. The waiter asks 'nanmei-sama desu ka?'." }
+  konban: { t: "konban", pos: noun, en: ["this evening", "tonight"], forms: ["konban", "kon'ya", "ashita no ban", "ashita no yoru", "kyō no yoru", "kyoo no yoru", "kyou no yoru"], ex: ["Konban, futari de onegaishimasu.", "For two this evening, please."] }
+  mazu: { t: "mazu", pos: adverb, en: ["first", "to start with"], forms: ["mazu", "saisho ni", "hajime ni"], ex: ["Mazu, bīru o onegaishimasu.", "To start with, a beer please."] }
+  zensai: { t: "zensai", pos: noun, en: ["starter", "appetiser"], forms: ["zensai"], ex: ["Zensai wa tsukemono ni shimasu.", "As a starter I'll have the pickles."], n: "... ni shimasu, 'I'll have ...', is how you order: zensai wa sarada ni shimasu." }
+  mein: { t: "mein", pos: noun, en: ["main course"], forms: ["mein", "mein dishu", "mein ryōri", "mein ryoori", "mein ryouri"], ex: ["Mein wa niku ni shimasu.", "As a main course I'll have the meat."], n: "A Western-style word; a Japanese meal brings rice, soup and the dishes together." }
+  niku: { t: "niku", pos: noun, en: ["meat"], forms: ["niku"], ex: ["Niku wa tabemasen.", "I don't eat meat."] }
+  sakana: { t: "sakana", pos: noun, en: ["fish"], forms: ["sakana"], ex: ["Kono sakana wa oishii desu.", "This fish is good."] }
+  toriniku: { t: "toriniku", pos: noun, en: ["chicken"], forms: ["toriniku", "chikin"], ex: ["Toriniku to gohan.", "Chicken with rice."] }
+  dezato: { t: "dezāto", pos: noun, en: ["dessert"], forms: ["dezāto", "dezaato", "amai mono"], ex: ["Dezāto o onegaishimasu.", "A dessert, please."], n: "'Amai mono' is 'something sweet'." }
+  tsumetai: { t: "tsumetai", pos: adjective, en: ["cold"], forms: ["tsumetai", "samete imasu", "sameteimasu"], ex: ["Rāmen ga tsumetai desu.", "The ramen is cold."], n: "'Samete imasu' is 'it has gone cold'." }
+  shoppai: { t: "shoppai", pos: adjective, en: ["salty", "too salty"], forms: ["shoppai", "shiokarai", "shoppasugimasu"], ex: ["Kono sakana wa shoppai desu.", "This fish is salty."], n: "'Shoppasugimasu' is 'it is too salty'." }
+  arimasen: { t: "arimasen", pos: verb, en: ["there is no", "is missing"], forms: ["arimasen", "tarimasen"], ex: ["Naifu ga arimasen.", "There is no knife."], n: "The negative of arimasu, 'there is' (of things). 'Tarimasen' is 'there are not enough'." }
+  foku: { t: "fōku", pos: noun, en: ["fork"], forms: ["fōku", "fooku"], ex: ["Fōku o onegaishimasu.", "A fork, please."] }
+  naifu: { t: "naifu", pos: noun, en: ["knife"], forms: ["naifu"], ex: ["Naifu wa koko desu.", "The knife is here."] }
+  koppu: { t: "koppu", pos: noun, en: ["glass"], forms: ["koppu", "gurasu"], ex: ["Mizu o koppu ni ippai.", "A glass of water."], n: "'Gurasu' is a wine glass." }
+  ohashi: { t: "ohashi", pos: noun, en: ["chopsticks"], forms: ["ohashi"], ex: ["Ohashi o onegaishimasu.", "Chopsticks, please."] }
+  pan: { t: "pan ga", pos: noun, en: ["bread"], forms: ["pan ga", "pan o", "pan wa", "pan mo"], ex: ["Pan o mō sukoshi ikaga desu ka?", "A little more bread?"], n: "Pan is bread. It is matched with its particle (pan ga, pan o), as 'pan' alone is an English word." }
+  mo_hitotsu: { t: "mō hitotsu", pos: phrase, en: ["another", "another one", "one more"], forms: ["mō hitotsu", "moo hitotsu", "mou hitotsu", "mō ippon", "moo ippon", "mou ippon", "mō ippai", "moo ippai", "mou ippai"], ex: ["Kōhī o mō ippai onegaishimasu.", "I would like another coffee."], n: "The counter changes with the thing: mō ippai for a cup or glass, mō ippon for a fork or a bottle, mō hitotsu for most things." }
+  # health
+  guai_ga_warui: { t: "guai ga warui", pos: phrase, en: ["I don't feel well", "I am not well"], forms: ["guai ga warui", "kibun ga warui", "chōshi ga warui", "chooshi ga warui", "choushi ga warui"], ex: ["Kyō wa guai ga warui desu.", "I don't feel well today."], n: "'Kibun ga warui' is also 'I feel sick'." }
+  itai: { t: "itai", pos: adjective, en: ["it hurts", "painful", "my ... hurts"], forms: ["itai", "itamimasu"], ex: ["Senaka ga itai desu.", "My back hurts."], n: "The part of the body takes ga: atama ga itai desu, I have a headache." }
+  atama: { t: "atama", pos: noun, en: ["head"], forms: ["atama"], ex: ["Atama ga itai desu.", "I have a headache."] }
+  onaka: { t: "onaka", pos: noun, en: ["stomach", "tummy"], forms: ["onaka"], ex: ["Onaka ga itai desu.", "My stomach hurts."] }
+  nodo: { t: "nodo", pos: noun, en: ["throat"], forms: ["nodo"], ex: ["Nodo ga itai desu.", "I have a sore throat."] }
+  ha: { t: "ha ga", pos: noun, en: ["tooth", "teeth"], forms: ["ha ga", "ha wa", "mushiba"], ex: ["Ha ga itai desu.", "I have toothache."], n: "Ha is a tooth; it is matched with its particle (ha ga), being so short. 'Mushiba' is a bad tooth." }
+  senaka: { t: "senaka", pos: noun, en: ["back"], forms: ["senaka", "koshi"], ex: ["Senaka ga itai desu.", "I have backache."], n: "'Koshi' is the lower back." }
+  kino_kara: { t: "kinō kara", pos: phrase, en: ["since yesterday"], forms: ["kinō kara", "kinoo kara", "kinou kara", "kesa kara", "futsuka mae kara", "mikka mae kara", "sūjitsu mae kara", "suujitsu mae kara", "isshūkan mae kara", "isshuukan mae kara"], ex: ["Kinō kara netsu ga arimasu.", "I have had a fever since yesterday."], n: "Kara after a time is 'since': futsuka mae kara, for two days (since two days ago)." }
+  kaze_o_hikimashita: { t: "kaze o hikimashita", pos: phrase, en: ["I have a cold", "I caught a cold"], forms: ["kaze o hikimashita", "kaze o hiite imasu", "kaze o hiiteimasu", "kaze o hiita", "kaze gimi"], ex: ["Getsuyōbi kara kaze o hiite imasu.", "I have had a cold since Monday."], n: "Kaze is a cold here, and the wind in the weather: say it whole." }
+  netsu_ga_arimasu: { t: "netsu ga arimasu", pos: phrase, en: ["I have a fever", "I have a temperature"], forms: ["netsu ga arimasu", "netsu ga aru", "netsu"], ex: ["Netsu ga takai desu.", "I have a high fever."] }
+  seki_ga_demasu: { t: "seki ga demasu", pos: phrase, en: ["I have a cough"], forms: ["seki ga demasu", "seki ga deru", "seki"], ex: ["Isshūkan mae kara seki ga demasu.", "I have had a cough for a week."] }
+  tsukarete_imasu: { t: "tsukarete imasu", pos: phrase, en: ["I am tired"], forms: ["tsukarete imasu", "tsukareteimasu", "tsukaremashita", "tsukareta"], ex: ["Kyō wa totemo tsukarete imasu.", "I am very tired today."], n: "'Tsukaremashita', 'I have got tired', is said the same way." }
+  yasumanakereba_narimasen: { t: "yasumanakereba narimasen", pos: phrase, en: ["I must rest", "I have to rest"], forms: ["yasumanakereba narimasen", "yasumanakute wa ikemasen", "yasumanai to ikemasen", "nete inakereba narimasen", "nenakereba narimasen"], ex: ["Kyō wa yasumanakereba narimasen.", "Today I must rest."], n: "Must: the negative stem + nakereba narimasen (yasumu, to rest: yasumanakereba narimasen)." }
+  hitsuyo: { t: "hitsuyō", pos: noun, en: ["I need", "necessary"], forms: ["hitsuyō", "hitsuyoo", "hitsuyou"], ex: ["Tasuke ga hitsuyō desu.", "I need help."], n: "What is needed takes ga: isha ga hitsuyō desu." }
+  isha: { t: "isha", pos: noun, en: ["doctor"], forms: ["isha", "oishasan", "o-isha-san"], ex: ["Isha ni ikanakereba narimasen.", "I have to go to the doctor."], n: "Of someone else's doctor, or speaking to one, o-isha-san." }
+  yakkyoku: { t: "yakkyoku", pos: noun, en: ["pharmacy", "chemist's"], forms: ["yakkyoku", "kusuriya"], ex: ["Yakkyoku wa doko desu ka?", "Where is the pharmacy?"] }
+  kusuri: { t: "kusuri", pos: noun, en: ["medicine", "something for"], forms: ["kusuri"], ex: ["Netsu no kusuri wa arimasu ka?", "Do you have something for a fever?"], n: "... no kusuri is 'something for ...': zutsū no kusuri, something for a headache." }
+  nankai: { t: "nankai", pos: phrase, en: ["how many times", "how often"], forms: ["nankai", "nan-kai", "nan kai"], ex: ["Ichinichi ni nankai desu ka?", "How many times a day?"] }
+  # plans
+  shitai: { t: "shitai", pos: verb, en: ["I want to do", "I want to"], forms: ["shitai", "ikitai", "mitai", "tabetai", "nomitai", "nemuritai", "yasumitai", "asobitai", "kaeritai", "aitai", "yomitai", "kaitai", "dekaketai", "oyogitai"], ex: ["Umi o mitai desu.", "I want to see the sea."], n: "Want to: the -masu stem + tai (ikimasu, ikitai desu: I want to go). For plans, not for ordering." }
+  nani_o_shitai: { t: "nani o shitai", pos: phrase, en: ["what do you want to do"], forms: ["nani o shitai", "nani ga shitai", "nani shitai"], ex: ["Konban wa nani o shitai desu ka?", "What do you want to do this evening?"] }
+  ikemasu: { t: "ikemasu", pos: verb, en: ["I can go", "I can come", "I can"], forms: ["ikemasu", "koraremasu", "dekimasu"], ex: ["Ashita wa ikemasu.", "I can come tomorrow."], n: "To the one who invites you, Japanese says 'I can go' (ikemasu). 'Dekimasu' is 'I can (do it)'." }
+  ikemasen: { t: "ikemasen", pos: verb, en: ["I can't go", "I can't come", "I can't"], forms: ["ikemasen", "ikenai", "koraremasen", "dekimasen", "muri desu"], ex: ["Sumimasen, ikemasen.", "I'm sorry, I can't."], n: "'Muri desu' is 'it's impossible'." }
+  shinakereba_narimasen: { t: "shinakereba narimasen", pos: phrase, en: ["I must", "I have to"], forms: ["shinakereba narimasen", "narimasen"], ex: ["Pan o kawanakereba narimasen.", "I have to buy bread."], n: "Must: the verb's negative stem + nakereba narimasen (suru: shinakereba narimasen; iku: ikanakereba narimasen; kau: kawanakereba narimasen)." }
+  shinakereba_narimasen_ka: { t: "shinakereba narimasen ka", pos: phrase, en: ["do you have to", "must you"], forms: ["shinakereba narimasen ka", "narimasen ka"], ex: ["Nichiyōbi mo hatarakanakereba narimasen ka?", "Do you have to work on Sunday too?"] }
+  tsumori: { t: "tsumori", pos: noun, en: ["I intend to", "I plan to", "I am going to"], forms: ["tsumori", "yotei desu"], ex: ["Doyōbi ni shuppatsu suru tsumori desu.", "I plan to leave on Saturday."], n: "After the plain form of the verb: iku tsumori desu, I'm going to go. 'Yotei desu' is 'it is planned'." }
+  raishu: { t: "raishū", pos: adverb, en: ["next week"], forms: ["raishū", "raishuu"], ex: ["Raishū wa hatarakimasu.", "Next week I am working."], n: "The non-past with a time is enough for a plan." }
+  tokoro_desu: { t: "tokoro desu", pos: phrase, en: ["I am about to", "I am just about to"], forms: ["tokoro desu", "tokoro da", "sorosoro"], ex: ["Ima neru tokoro desu.", "I am about to go to bed."], n: "After the plain non-past: deru tokoro desu, I'm about to leave. 'Sorosoro' is 'soon now'." }

@@ -38,8 +38,8 @@ fragments:
     found: "Folded inside the battered copy of The Journey that Marginalia sold you, in a hand that changes language halfway through a word."
     text: >-
       Journathan ga aru eda kara betsu no eda e utsuru goto ni, ito ga ippon, kare no ushiro ni nokotta. Nijū no
-      fuyu no tokō: nijū no fuyu no ito. Mottomo furui ito wa, imanao sekai no orimono o sasaeru to iu. Saisho no
-      nuime wa, kare no mono datta no ka mo shirenai.
+      fuyu no tokō: nijū no fuyu no ito. Hajime no koro no ito wa, imanao sekai no orimono o sasaeru to iu. Saisho
+      no nuime wa, kare no mono datta no ka mo shirenai.
     translation: >-
       Each time Journathan passed from one branch to another, a thread stayed behind him. Twenty winters of crossings:
       twenty winters of threads. They say the oldest still hold up the weave of the world. Perhaps the first stitch
@@ -59,9 +59,9 @@ fragments:
     found: "Scratched into the rim of the fountain, under the plaque, at exactly the height of the corner of your eye."
     text: >-
       Seirēn-tachi wa shikai no hashi de utatte ita. Me ga kesshite todokanu tokoro de. Journathan wa jibun o fune
-      no hashira ni shibaraseta: uta wa kikitai ga, kanojo-tachi no hō e kaji o kiru tsumori wa nakatta.
-      Suifu-tachi wa mimi ni rō o tsume, fune o kogi, nani mo kikoenakatta. Sono uta wa, itsumo onaji kurikaeshi
-      de, eien ni kurikaesareta to iu.
+      no hashira ni shibaraseta: uta wa kikitai ga, kanojo-tachi no hō e kaji o kiru koto wa kobanda. Suifu-tachi
+      wa mimi ni rō o tsume, fune o kogi, nani mo kikoenakatta. Sono uta wa, itsumo onaji kurikaeshi de, eien ni
+      kurikaesareta to iu.
     translation: >-
       The Sirens sang at the edges of sight, where the eye never quite reaches. Journathan had himself tied to the
       ship's mast: he wanted to listen without steering towards them. The sailors, wax in their ears, rowed and
@@ -71,6 +71,7 @@ fragments:
       - { word: "shibaraseta", meaning: "had himself tied" }
       - { word: "hashira", meaning: "mast; also pillar" }
       - { word: "kaji o kiru", meaning: "to steer" }
+      - { word: "kobanda", meaning: "he refused" }
       - { word: "rō", meaning: "wax" }
       - { word: "kogi", meaning: "rowing" }
       - { word: "kurikaeshi", meaning: "refrain; a repetition" }
@@ -101,7 +102,7 @@ fragments:
     found: "On your third coffee break, Gerald recites a passage he swears he learned as a barista in the Dead Branch."
     text: >-
       Kareeda de, Journathan wa goku chiisa na chawan de dasareta, kuroku nigai mono o nonda. Sore o ajiwatta mono
-      wa naita. Sore o yobu na wa, mō sonzai shinai: eda ga shinda toki, sore mo shinda. Kyō de wa, jisho sae sore
+      wa naita. Sore no yobina wa, mō sonzai shinai: eda ga shinda toki, sore mo shinda. Kyō de wa, jisho sae sore
       o oboete inai.
     translation: >-
       In the Dead Branch, Journathan drank something dark and bitter, served in very small cups. Whoever tasted it
@@ -113,7 +114,7 @@ fragments:
       - { word: "chawan", meaning: "cups; tea bowls" }
       - { word: "ajiwatta", meaning: "tasted" }
       - { word: "naita", meaning: "wept" }
-      - { word: "yobu na", meaning: "the name to call it by" }
+      - { word: "yobina", meaning: "the name for it, what it is called" }
       - { word: "jisho sae", meaning: "not even a dictionary" }
   - id: journey_spores
     title: Spores
@@ -121,9 +122,9 @@ fragments:
     found: "Folded around a jar of dried mushrooms at the back of Mortimer's stall, labelled NOT FOR SALE in several different hands."
     text: >-
       Kareeda no ne ni wa aojiroi kinoko ga haete ite, owatta sekai o kuraitsukushi, tsuchi ni kaete ita.
-      Journathan wa sono hōshi o suikomi, ikeru mono ga katsute kuchi ni shita koto no nakatta gengo de yume o
-      mita. Me o samasu to, umareta bakari no sekai ga kare o torimaite ori, sono sekai wa sude ni sono gengo o
-      hanashite ita. Kono shomotsu mo sō shite umareta no da, to iu mono mo aru.
+      Journathan wa sono hōshi o suikomi, ikeru mono ni katsute hanasareta koto naki gengo de yume o mita. Me o
+      samasu to, kare no mawari ni wa umareta bakari no sekai ga ari, sono sekai wa sude ni sono gengo o katatte
+      ita. Kono shomotsu mo onaji yō ni umareta no da, to iu mono mo aru.
     translation: >-
       On the roots of the Dead Branch grew pale mushrooms, which devoured the finished world to make soil of it.
       Journathan breathed in their spores and dreamed in a tongue no living soul had ever spoken. When he woke, around him
@@ -136,18 +137,18 @@ fragments:
       - { word: "hōshi", meaning: "spores" }
       - { word: "suikomi", meaning: "breathed in" }
       - { word: "yume o mita", meaning: "dreamed" }
-      - { word: "ikeru mono", meaning: "a living soul" }
+      - { word: "ikeru mono ni", meaning: "by a living soul" }
       - { word: "me o samasu to", meaning: "on waking" }
-      - { word: "sō shite umareta", meaning: "was born the same way" }
+      - { word: "onaji yō ni umareta", meaning: "was born the same way" }
   - id: journey_forbidden_herd
     title: The forbidden herd
     found_after: butchers_stall_charcutier
     after_conversations: 3
     found: "On your third tasting, Mortimer lowers his voice and recites the one passage of The Journey he refuses to slice."
     text: >-
-      Taiyō no shima de wa, shinsei na ushi no mure ga kusa o hande ita. Journathan wa nakama ni, sore ni fureru
-      na to itta. Shikashi, kūfuku wa chikai ni katta: karera wa kemono o aburi, kushi no ue de sono mi ga mō to
-      naita. Sore irai, mi o kiru mono wa yurushi o kou.
+      Taiyō no shima de wa, shinsei na ushi no mure ga kusa o hande ita. Journathan wa suifu-tachi ni, sore ni
+      fureru na to itta. Shikashi, kūfuku wa chikai ni katta: karera wa kemono o aburi, kushi no ue de sono mi ga
+      mō to naita. Sore irai, mi o kiru mono wa yurushi o kou.
     translation: >-
       On the island of the Sun grazed sacred herds. Journathan told his companions not to touch them. But hunger was
       stronger than the oath: they roasted the beasts, and the meat lowed on the spit. Since then, whoever cuts meat
@@ -166,20 +167,21 @@ fragments:
     after_conversations: 3
     found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
     text: >-
-      Namanurui hamabe de, Journathan no suifu no ikunin ka ga rōtosu no hana o tabeta. Karera wa kōro mo, kikyō
-      mo, shuppatsu shitai to iu kimochi sae mo wasureta. 'Mō sukoshi dake,' to suna no ue ni nekorobi nagara
-      itta. Soshite, sara ni mō sukoshi. Journathan wa karera o fune made hikizutte ikaneba naranakatta. Karera wa
+      Nurui hamabe de, Journathan no suifu no ikunin ka ga rōtosu no hana o kuchi ni ireta. Karera wa kōro mo,
+      kikyō mo, tabidachitai to iu kimochi sae mo wasureta. 'Ato chotto dake,' to suna no ue ni nekorobi nagara
+      itta. Soshite, sara ni ato chotto. Journathan wa karera o fune made hikizutte ikaneba naranakatta. Karera wa
       naite ita.
     translation: >-
       On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
       the wish to leave. "Just a moment," they said, lying on the sand, and then another moment. Journathan had to drag
       them to the ships, and they wept.
     glossary:
-      - { word: "namanurui", meaning: "lukewarm" }
+      - { word: "nurui", meaning: "lukewarm" }
       - { word: "rōtosu", meaning: "lotus" }
       - { word: "kōro", meaning: "course, heading" }
       - { word: "sae mo", meaning: "even" }
-      - { word: "mō sukoshi dake", meaning: "just a little longer" }
+      - { word: "ato chotto dake", meaning: "just a little longer" }
+      - { word: "kuchi ni ireta", meaning: "put in their mouths, ate" }
       - { word: "nekorobi", meaning: "lying down" }
       - { word: "suna", meaning: "sand" }
       - { word: "hikizutte", meaning: "dragging" }
@@ -191,7 +193,7 @@ fragments:
     text: >-
       Journathan wa kojiki no sugata de shima ni kaette kita ga, kazoku wa kare da to kizukanakatta. Tada, mon no
       mae no koedame ni nesobette ita oita inu dake ga, mimi o tate, shippo o futta. Inu wa sono aida zutto, kare
-      o machitsuzukete ita no da. Soshite, manzoku shite me o tojita.
+      o machitsuzukete ita no da. Soshite, manzokuge ni me o tojita.
     translation: >-
       Journathan came back to his island dressed as a beggar, and his own people did not know him. Only an old dog,
       lying on the dung heap before the door, raised its ears and moved its tail. It had waited for him all that time.
@@ -203,7 +205,7 @@ fragments:
       - { word: "koedame", meaning: "dung heap" }
       - { word: "mimi o tate", meaning: "raised its ears" }
       - { word: "shippo", meaning: "tail" }
-      - { word: "manzoku shite", meaning: "content, happy" }
+      - { word: "manzokuge ni", meaning: "content, contentedly" }
   - id: journey_still_on_his_way
     title: Still on his way
     found_after: imp_coffee_greeting
