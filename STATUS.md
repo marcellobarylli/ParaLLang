@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 216, a new game asks the learner's level
+
+A new game's title now asks "How much Italian do you speak?" with three tiers after the CEFR's beginner bands: never
+spoken it (30 % of each line in the language, low but not zero), a couple of things (50 %) and comfortable with basic
+sentences (100 %, with the coloured translation under each line as before). The journey button waits for the answer;
+the answer is the existing share setting (round 148), so Settings can still move it. Client tests pass; **not seen in
+a browser or on a phone**. [Architecture](docs/rounds/216/architecture.md), [findings](docs/rounds/216/findings.md).
+
 ## Addendum 2026-11-28: round 215, only a finished conversation opens the way on; pulled land floods
 
 On the road, the ways on are now the sites next to those whose conversation the player **finished**. A site walked to
