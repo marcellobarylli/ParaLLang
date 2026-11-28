@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 212, Reduce motion ignored
+
+The game no longer follows the system's "Reduce motion": the camera walks, the characters bob, hop and sink, the
+lightning and the clouds move whatever it says. A standing rule in `CLAUDE.md` keeps it so, except for what could
+truly harm. (The dungeons' still leaves are round 205's "Glitch" switch, not this.) Seen in Chromium with the setting
+on. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/212/architecture.md), [findings](docs/rounds/212/findings.md).
+
 ## Addendum 2026-11-28: round 211, a completed character sinks into the ground
 
 On the road, a character whose conversation is complete now stays standing (it was swapped for a cairn at once), and

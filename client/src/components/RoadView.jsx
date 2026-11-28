@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
+import { prefersReducedMotion } from '../motion.js'; // round 212: always false
 import { createFreeLook, requestTiltPermission, screenAngle, tiltNeedsAsking } from '../scene/tilt.js';
 
 // Round 144: the endless level behind The Journey 2. The three.js host (src/scene/roadView.js) loads as its own
 // chunk, as the dungeon's does. Without WebGL (an old browser, the jsdom tests) a still backdrop stands in and the
 // camera "arrives" at once, so the road stays playable.
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
-const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
 // Round 175: `title` (a site id) is the title screen: the camera far over that site, above the clouds, turning. The
 // landscape is `road.seed`, or `seed` before the server has sent the road. The next camera move the store asks for

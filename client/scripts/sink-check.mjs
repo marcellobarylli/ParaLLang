@@ -3,14 +3,18 @@
 // camera's mode are read every tenth of a second. Pictures along the way.
 //
 //   npm run build -w client
-//   node client/scripts/sink-check.mjs [outDir]
+//   node client/scripts/sink-check.mjs [outDir] [--reduced]
 import { RoadProvider } from '../../server/test/road-helpers.js';
-import { openGame } from './lib/play.mjs';
+import { PHONE, openGame } from './lib/play.mjs';
 
-const game = await openGame({ out: process.argv[2] ?? 'docs/rounds/211/shots', provider: (content) => new RoadProvider(content), serviceOptions: { seedSource: () => 4242, exchangeLimit: 3 } });
+// Round 212: with the system's Reduce motion on as well (`--reduced`), which the game ignores.
+const reduced = process.argv.includes('--reduced');
+
+const game = await openGame({ device: reduced ? { ...PHONE, reducedMotion: 'reduce' } : PHONE, out: (process.argv[2]?.startsWith('--') ? null : process.argv[2]) ?? 'docs/rounds/211/shots', provider: (content) => new RoadProvider(content), serviceOptions: { seedSource: () => 4242, exchangeLimit: 3 } });
 
 await game.run(async ({ page, check, shot, tap, say }) => {
   await game.toRoad();
+  if (reduced) check(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches), 'the browser asks for reduced motion');
   await tap(page.getByRole('button', { name: /^Talk to / }));
   await page.locator('.dialogue-panel article.npc-message').first().waitFor({ timeout: 60000 });
   await say('Non lo so.');

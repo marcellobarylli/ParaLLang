@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { prefersReducedMotion } from '../motion.js'; // round 212: always false
 import { createFreeLook, requestTiltPermission, screenAngle, tiltNeedsAsking } from '../scene/tilt.js';
 
 // Round 115: the level behind the dungeon screen. The three.js host (src/scene/levelView.js) loads as its own chunk
@@ -8,7 +9,6 @@ import { createFreeLook, requestTiltPermission, screenAngle, tiltNeedsAsking } f
 // Round 119: the labels are the numbers of the sites out of the fog; the current site also shows its name.
 const MOVING = new Set(['approach', 'walk', 'enter']);
 const hasWebGL = () => typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
-const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
 // Round 204: `seed` is the road's: the level then has the road's time of day and weather (levelView.js).
 export default function DungeonView({ dungeon, phase, siteIndex, walkFrom, sites = {}, insets, onArrive, closed = 0, resolved = false, beat = null, tilt = false, seed = null, onThunder = null, glitch = false }) {

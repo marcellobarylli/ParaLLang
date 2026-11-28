@@ -12,6 +12,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Log with the `round-log` skill** from round 003 on, as each event happens. A round ends with its close step and
   `python3 tools/round_log_check.py NNN`.
 
+## Reduce motion
+
+The owner's standing rule (round 212): **ignore the system's "Reduce motion" setting.** The game is in personal
+development, not public, and its animations are part of the game (camera walks, characters sinking, weather, a map
+that buckles). Do not gate an animation on `prefers-reduced-motion`, `matchMedia`, `AccessibilityInfo` or a
+`reducedMotion` option; the web client's `client/src/motion.js` answers "no" for every view. Honour the setting only
+for something that could truly harm a player, such as rapid flashing, and say so to the owner when you do.
+
 ## Project Overview
 
 ParaLLang is an immersive narrative language learning game where players learn a language (Italian by default, Spanish also available) through conversational encounters with absurd characters. The game is currently in the **design/planning phase** — `parallang.md` contains the full vision and lore, and `prototype.md` is the technical blueprint for implementation.
