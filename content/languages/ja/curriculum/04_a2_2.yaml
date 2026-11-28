@@ -5,6 +5,9 @@
 # defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
 # Round 223: the A1 stages were written at the same time by another agent, so this file defines the A1 words it uses
 # (natural ids: omoshiroi, kara_desu) and reuses those of 03_a2_1.yaml (ikemasen, yoyaku, isha, issho_ni).
+# Round 223 merge: omoshiroi, benkyo_shimasu, hatarakimasu, shigoto and nani_o_shimasu_ka are the A1 entries (this
+# file's copies removed) and kara_desu is A1's kara; no_ho_ga_ii takes the B1 forms (hō ga ii n desu ga); maitoshi leaves
+# maiasa and maiban to mainichi (A1).
 stage: a2_2
 version: curriculum-a2-2-ja-v1
 grammar:
@@ -107,7 +110,7 @@ vocabulary:
   yori_chiisai: { t: "yori chiisai", pos: phrase, en: ["smaller than"], forms: ["yori chiisai", "no hō ga chiisai", "no hoo ga chiisai", "no hou ga chiisai"], ex: ["Shinshitsu wa daidokoro yori chiisai desu.", "The bedroom is smaller than the kitchen."] }
   yori_yasui: { t: "yori yasui", pos: phrase, en: ["cheaper than", "cheaper"], forms: ["yori yasui", "no hō ga yasui", "no hoo ga yasui", "no hou ga yasui"], ex: ["Basu wa densha yori yasui desu.", "The bus is cheaper than the train."] }
   yori_takai: { t: "yori takai", pos: phrase, en: ["more expensive than", "dearer"], forms: ["yori takai", "no hō ga takai", "no hoo ga takai", "no hou ga takai"], ex: ["Nihonshu wa bīru yori takai desu.", "Sake is more expensive than beer."] }
-  no_ho_ga_ii: { t: "no hō ga ii", pos: phrase, en: ["better", "I would rather"], forms: ["no hō ga ii", "no hoo ga ii", "no hou ga ii", "yori ii", "yori ii desu", "hō ga ii n desu ga", "hoo ga ii n desu ga", "hou ga ii n desu ga", "hō ga ii n desu kedo", "hoo ga ii n desu kedo", "hou ga ii n desu kedo"], ex: ["Kyō no hō ga ii desu.", "Today is better."], n: "A no hō ga ii: A is better. 'Hō ga ii' after a verb is 'you had better'." }
+  no_ho_ga_ii: { t: "no hō ga ii", pos: phrase, en: ["better", "I would rather"], forms: ["no hō ga ii", "no hoo ga ii", "no hou ga ii", "no hō ga ii desu", "no hoo ga ii desu", "no hou ga ii desu", "yori ii", "yori ii desu", "hō ga ii n desu ga", "hoo ga ii n desu ga", "hou ga ii n desu ga", "hō ga ii n desu kedo", "hoo ga ii n desu kedo", "hou ga ii n desu kedo"], ex: ["Kyō no hō ga ii desu.", "Today is better."], n: "A no hō ga ii: A is better. 'Hō ga ii' after a verb is 'you had better'." }
   yori_warui: { t: "yori warui", pos: phrase, en: ["worse", "worse than"], forms: ["yori warui", "no hō ga warui", "no hoo ga warui", "no hou ga warui", "motto warui"], ex: ["Kyō wa kinō yori guai ga warui desu.", "Today I feel worse than yesterday."] }
   ichiban: { t: "ichiban", pos: adverb, en: ["the best", "the most", "number one"], forms: ["ichiban", "saikō", "saikoo", "saikou"], ex: ["Kono aisu ga ichiban oishii desu.", "This ice cream is the best."], n: "Ichiban before an adjective makes the most: ichiban ōkii, the biggest. 'Saikō' is 'the best ever'." }
   onaji_gurai: { t: "onaji gurai", pos: phrase, en: ["as ... as", "about the same"], forms: ["onaji gurai", "onaji kurai"], ex: ["Watashi wa haha to onaji gurai se ga takai desu.", "I am as tall as my mother."], n: "B to onaji gurai: as much as B." }

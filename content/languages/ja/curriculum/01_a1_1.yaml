@@ -7,6 +7,8 @@
 # Round 223: modified Hepburn with macrons; each form with a long vowel is also listed as typed without them (kōhī:
 # kouhii, koohii; the bare kohi is the fold). A word that would read as English or as a particle on its own (go, mama,
 # haha, sore, are, aka, ni, san) is listed only inside a phrase; its note says so.
+# Round 223 merge: omoshiroi takes omoshirokatta and sorekara sono ato (the B1 stages reuse them); no_ho_ga leaves hō ga
+# ii to the B1 'you should' (ho_ga_ii); mata_ato_de is also plain 'later'.
 stage: a1_1
 version: curriculum-a1-1-ja-v1
 grammar:

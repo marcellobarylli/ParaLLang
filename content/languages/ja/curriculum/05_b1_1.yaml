@@ -5,6 +5,10 @@
 # defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
 # Round 223: the earlier Japanese stages were written at the same time as this one, so every word this stage uses is
 # defined here under its natural id; a merge pass keeps the earlier stage's entry where both define one.
+# Round 223 merge: the copies of earlier words are removed and their lessons use the earlier entries (omoshiroi,
+# imashita, tsukarete_imasu, no_ho_ga_ii; kara for kara_desu, mata_ato_de for ato_de, sorekara for sore_kara, zannen for
+# zannen_nagara). Forms an earlier entry holds went from baai_ni_yorimasu, chotto_muzukashii, ii_adobaisu, aru_hi,
+# aru_teido and aida_ni, whose lessons now also name wakarimasen, ikemasen, ii_kangae, mukashi, tabun and aida.
 stage: b1_1
 version: curriculum-b1-1-ja-v1
 grammar:
@@ -103,7 +107,7 @@ vocabulary:
   do_shitara_ii_ka_wakarimasen: { t: "dō shitara ii ka wakarimasen", pos: phrase, en: ["I don't know what to do"], forms: ["dō shitara ii ka wakarimasen", "dou shitara ii ka wakarimasen", "dō sureba ii ka wakarimasen", "dou sureba ii ka wakarimasen", "dō shitara ii ka wakaranai", "dou shitara ii ka wakaranai", "mondai ga arimasu", "komatte imasu", "komatte iru"], ex: ["Kagi o nakushite, dō shitara ii ka wakarimasen.", "I have lost my keys and I don't know what to do."], n: "'Komatte imasu' is 'I am in a fix'; 'mondai ga arimasu' is 'I have a problem'." }
   do_shitara_ii_desu_ka: { t: "dō shitara ii desu ka", pos: phrase, en: ["what should I do"], forms: ["dō shitara ii desu ka", "dou shitara ii desu ka", "dō shitara ii", "dou shitara ii", "dō shitara ii deshō ka", "dou shitara ii deshou ka", "adobaisu o kudasai"], ex: ["Dō shitara ii deshō ka?", "What do you think I should do?"], n: "Literally 'if I do how, is it good?'." }
   anata_nara: { t: "anata nara", pos: phrase, en: ["in my place", "if you were me", "what would you do"], forms: ["anata nara", "anata dattara", "nara dō shimasu ka", "nara dou shimasu ka", "dattara dō shimasu ka", "dattara dou shimasu ka"], ex: ["Anata nara dō shimasu ka?", "What would you do in my place?"], n: "Nara after a person: 'if it were you'. With a name it is politer: Tanaka-san nara dō shimasu ka?" }
-  ho_ga_ii: { t: "hō ga ii", pos: phrase, en: ["you should", "you had better"], forms: ["hō ga ii", "hou ga ii", "beki desu", "beki da"], ex: ["Motto neta hō ga ii desu yo.", "You should sleep more."], n: "After the plain past: yasunda hō ga ii, itta hō ga ii. 'Beki desu' is a stronger 'ought to'." }
+  ho_ga_ii: { t: "hō ga ii", pos: phrase, en: ["you should", "you had better"], forms: ["hō ga ii", "hou ga ii", "hoo ga ii", "hō ga ii desu", "hou ga ii desu", "hoo ga ii desu", "beki desu", "beki da"], ex: ["Motto neta hō ga ii desu yo.", "You should sleep more."], n: "After the plain past: yasunda hō ga ii, itta hō ga ii. 'Beki desu' is a stronger 'ought to'." }
   koto_mo_dekimasu: { t: "koto mo dekimasu", pos: phrase, en: ["you could also", "you could"], forms: ["koto mo dekimasu", "koto mo dekiru", "to ii desu yo", "mo ii desu yo"], ex: ["Basu de iku koto mo dekimasu.", "You could also go by bus."], n: "After the plain present: iku koto mo dekimasu. '~ to ii desu yo' is 'it would be good to ~': kiku to ii desu yo." }
   watashi_nara: { t: "watashi nara", pos: phrase, en: ["if I were you", "in your place"], forms: ["watashi nara", "watashi dattara", "boku nara", "boku dattara"], ex: ["Watashi nara, uchi ni imasu.", "If I were you, I would stay at home."], n: "The plain present after it says what you would do: watashi nara ikimasen." }
   osusume_shimasu: { t: "osusume shimasu", pos: phrase, en: ["I advise", "I recommend"], forms: ["osusume shimasu", "osusume suru", "o-susume shimasu"], ex: ["Hayaku deru koto o osusume shimasu.", "I advise you to leave early."], n: "After a plain verb and koto o: matsu koto o osusume shimasu." }

@@ -11,8 +11,8 @@ The entry point for agents: the current state, how the project is logged, and th
   blueprint) and [`parallang_obsidian/`](parallang_obsidian/Parallang.md), the owner's Obsidian notes on design,
   lore, characters, locations and quests. The notes are a copy of the vault in `~/Documents/Parallang`, taken
   2026-10-31.
-- **Language.** Italian is the default target language; French ([round 181](docs/rounds/181/architecture.md)) and
-  Spanish are also available, and the hosted server plays all three, each game picking its own. `TARGET_LANGUAGE` (`it` or
+- **Language.** Italian is the default target language; French ([round 181](docs/rounds/181/architecture.md)),
+  Spanish, and Japanese and Chinese in rōmaji and pinyin ([round 223](docs/rounds/223/architecture.md)) are also available, and the hosted server plays all five, each game picking its own. `TARGET_LANGUAGE` (`it` or
   `es`) selects a pack under `content/languages/`, and each language has its own Spellbook
   ([round 003](docs/rounds/003/architecture.md)).
 - **App first.** Development is iPhone-first: the Expo / React Native app in `mobile/` plays the same loop and is
@@ -33,6 +33,16 @@ The entry point for agents: the current state, how the project is logged, and th
 - **Next.** The owner plays the app in the Simulator and reviews the Italian content
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
+
+## Addendum 2026-11-28: round 223, Japanese and Chinese, in rōmaji and pinyin
+
+Japanese (`ja`) and Chinese (`zh`, Mandarin) are playable languages, written in Latin letters only (the owner: no
+symbols for now): Hepburn rōmaji with macrons and Hanyu Pinyin with tone marks; answers typed without them match. A
+pack's new `writing` field puts a WRITING rule in the narration and grading prompts; the microphone listens in English
+only for these two. The packs mirror the Italian (16 encounters, the curriculum's 36 units), written by subagents and
+**not read by a native speaker**; no conversation was played with a model. The hosted server plays
+`it,fr,es,ja,zh`. Tests pass; the title seen in headless Chromium, **not on a phone**. **Merged to `main` and
+deployed** on the owner's word. [Architecture](docs/rounds/223/architecture.md), [findings](docs/rounds/223/findings.md).
 
 ## Addendum 2026-11-28: round 222, no fast talking
 
