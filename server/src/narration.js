@@ -47,6 +47,12 @@ export function entriesFor(entries, event, have = {}) {
   return entries.filter((entry) => matches(entry, event) && !Object.hasOwn(have, entry.id));
 }
 
+// Round 213: the events that the page tells of itself, because they happen there and the server never sees them. An
+// entry entered by one is told by the page at that moment (and so is entered as read); until then every view carries
+// it, so that the page has its words when the moment comes.
+//   breath_wait   the first answer sent with the breathing on: the breath that takes the place of the wait
+export const CLIENT_EVENTS = Object.freeze(['breath_wait']);
+
 // Round 158 (issue #4): `{truth:<id>}` in a text is one of the pack's untranslatable texts.
 export const TRUTH = /\{truth:([a-z][a-z0-9_]*)\}/g;
 /** The ids of the untranslatable texts a passage's text holds. */

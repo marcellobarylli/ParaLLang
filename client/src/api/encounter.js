@@ -89,6 +89,8 @@ export function createLearningApi({ getSettings = () => loadSettings(), getGemin
     // Round 157: the guidebook's entries, and their being read when it is opened.
     getGuidebook: (learnerId) => request('/api/guidebook', { learnerId }),
     readGuidebook: (learnerId) => request('/api/guidebook/read', { learnerId, method: 'POST', body: {} }),
+    // Round 213: an entry the page tells the player itself (the breathing) is entered when it is told.
+    enterGuide: (learnerId, event) => request('/api/guidebook/enter', { learnerId, method: 'POST', body: { event } }),
     getSpellbook: (learnerId) => request('/api/spellbook', { learnerId }),
     createReview: (learnerId, vocabularyId) => request('/api/spellbook/review', { learnerId, method: 'POST', body: vocabularyId ? { vocabularyId } : {} }),
     submitReview: (learnerId, payload) => request('/api/spellbook/review/submit', { learnerId, method: 'POST', body: payload }),

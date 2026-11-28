@@ -6,7 +6,7 @@ import DialoguePanel from './DialoguePanel.jsx';
 import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
 import SheetHandle from './SheetHandle.jsx';
-import WaitGame from './WaitGame.jsx';
+import BreathGame, { BreathIntro } from './BreathGame.jsx';
 import { browserSpeech } from '../speech.js';
 import { narrativeParts, narratorOn, useReadPassage } from '../narratorVoice.js';
 import { browserAmbience } from '../ambience.js';
@@ -392,12 +392,27 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   // Round 196: a new line comes with its narrative read first, by the narrator (unless switched off), and waits for a
   // travel passage still being read.
   const narrating = narratorOn(state.display);
-  // Round 203 (experimental, a setting): a game covers the panel from the moment an answer is sent. The reply that
-  // arrives under it waits: it is read aloud and followed only once the game has run out and gone.
-  const [gaming, setGaming] = useState(false);
-  useEffect(() => { setGaming(false); }, [encounter?.id]);
+  // Round 213 (a setting, on unless switched off; it replaces round 203's game): the wait for a reply is breathed
+  // through. From the moment an answer is sent the panel's text fades, the panel turns more see-through and a slow
+  // breath is drawn over it (BreathGame.jsx). The reply that arrives under it waits: it is shown, read aloud and
+  // followed only once the breathing has ended, on a breath out. The first time in a game, the guidebook's entry on
+  // it is told first ('telling'), and entered.
+  const [breath, setBreath] = useState(null); // null | 'telling' | 'breathing'
+  useEffect(() => { setBreath(null); }, [encounter?.id]);
+  const breathEntry = state.guideNote?.ahead?.find((entry) => entry.event === 'breath_wait') ?? null;
+  const toldRef = useRef(null); // the entry while it is being told (the store stops offering it once it is entered)
+  const startBreath = () => {
+    if (state.display?.breathing === false) return;
+    toldRef.current = breathEntry;
+    setBreath(breathEntry ? 'telling' : 'breathing');
+    if (breathEntry) state.enterGuide?.('breath_wait');
+  };
+  // A request that fails ends the breathing as a reply does; its message waits with it (the screen shows none while
+  // `breathingNow` is set).
+  const breathingNow = breath === 'breathing';
+  useEffect(() => { state.setBreathingNow?.(breathingNow); return () => state.setBreathingNow?.(false); }, [breathingNow]);
   const shownKeyRef = useRef(lineKey);
-  if (!gaming) shownKeyRef.current = lineKey;
+  if (!breath) shownKeyRef.current = lineKey;
   const shownKey = shownKeyRef.current;
   useEffect(() => {
     if (voicesOn && lastLine && speaker.supported) {
@@ -470,7 +485,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
     pin.current = { top: element.scrollTop, until: 0 }; // as far as the text allows
   }, [shownKey, encounter?.id, follow]);
   return (
-    <section className="sheet" aria-label={party ? `${name}, your party` : road ? road.title : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
+    <section className={`sheet${breath === 'breathing' ? ' breathing' : ''}`} aria-label={party ? `${name}, your party` : road ? road.title : site?.name ?? 'Conversation'} style={height === null ? undefined : { '--sheet-h': `${height}px` }}>
       {/* Round 132: the panel drags from the top bar's edge down to this strip alone. */}
       <SheetHandle height={height} onHeight={onHeight} />
       <header className="sheet-header">
@@ -526,10 +541,11 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
       </div>
       {/* Round 174: a complete conversation can go on as a chat that changes nothing. */}
       {(!resolved || chatting) && (
-        <InputBar value={state.draft} onChange={state.setDraft} onSend={(text) => { speaker.stop(); if (state.display?.waitGame === true) setGaming(true); state.sendMessage(text); }} name={name} loading={isLoading} disabled={isLoading || encounterLoading || !encounter}
+        <InputBar value={state.draft} onChange={state.setDraft} onSend={(text) => { speaker.stop(); if (String(text ?? '').trim()) startBreath(); state.sendMessage(text); }} name={name} loading={isLoading} disabled={isLoading || encounterLoading || !encounter}
           listener={listener} language={language} onListen={() => speaker.stop()} />
       )}
-      {gaming && <WaitGame ready={!isLoading} name={name} onDone={() => setGaming(false)} />}
+      {breath === 'telling' && toldRef.current && <BreathIntro entry={toldRef.current} onBegin={() => setBreath('breathing')} />}
+      {breath === 'breathing' && <BreathGame ready={!isLoading} onDone={() => setBreath(null)} />}
     </section>
   );
 }
@@ -737,7 +753,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         </nav>
       </header>
 
-      {state.error && <div className="error-banner" role="alert"><span>{state.error}</span><button type="button" onClick={state.clearError} aria-label="Dismiss error">×</button></div>}
+      {state.error && !state.breathingNow && <div className="error-banner" role="alert"><span>{state.error}</span><button type="button" onClick={state.clearError} aria-label="Dismiss error">×</button></div>}
 
       <div className="dock" ref={dockRef}>
         {/* Round 175: while the camera comes down from the sky into the road, a line says where to; the site's card
@@ -784,7 +800,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}
-        follow={state.display?.follow !== false} onFollow={state.setFollow} waitGame={state.display?.waitGame === true} onWaitGame={state.setWaitGame} glitch={state.display?.glitch === true} onGlitch={state.setGlitch}
+        follow={state.display?.follow !== false} onFollow={state.setFollow} breathing={state.display?.breathing !== false} onBreathing={state.setBreathing} glitch={state.display?.glitch === true} onGlitch={state.setGlitch}
         streamlined={state.display?.streamlined !== false} onStreamlined={state.setStreamlined}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}

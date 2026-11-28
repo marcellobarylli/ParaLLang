@@ -324,6 +324,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       enterable: [...bundled.keys()], // round 133: the dungeons this client holds; a place opens only one of these
       runs: {}, // round 133: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
       progress: null,
+      breathingNow: false, // round 213: the breathing is being drawn over the conversation panel
       guideNote: null, // round 157: { count, unread }: the guidebook's size and the entries not yet read
       guidebook: null, // the guidebook as last read ({ entries, total }), while its panel is open
       narration: null, // round 156: the narrator's passage for the dungeon site the player stands at
@@ -732,9 +733,20 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       // Round 153: strict or light checking of answers, sent with each answer.
       setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }), // round 198: light is the default
       setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on !== false }, storage) }),
-      // Round 203 (experimental): the game played while a reply is on its way.
       setGlitch: (on) => set({ display: saveDisplay({ ...get().display, glitch: on === true }, storage) }), // round 205
-      setWaitGame: (on) => set({ display: saveDisplay({ ...get().display, waitGame: on === true }, storage) }),
+      // Round 213: the breathing while a reply is on its way.
+      setBreathingNow: (on) => { if (get().breathingNow !== (on === true)) set({ breathingNow: on === true }); }, // while it is drawn: nothing is written over it
+      setBreathing: (on) => set({ display: saveDisplay({ ...get().display, breathing: on !== false }, storage) }),
+      // Round 213: something the page itself tells the player for the first time (the breathing) is entered in the
+      // guidebook. Nothing waits for it: the note is taken when the server answers.
+      enterGuide: (event) => {
+        const { learnerId } = get();
+        const note = get().guideNote;
+        if (note?.ahead?.length) set({ guideNote: { ...note, ahead: note.ahead.filter((entry) => entry.event !== event) } }); // told: not offered again
+        if (!learnerId || !api.enterGuide) return;
+        const epoch = requestEpoch;
+        api.enterGuide(learnerId, event).then((data) => { if (epoch === requestEpoch) takeGuide(data?.guidebook); }).catch(() => {});
+      },
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
       // The server no longer knows this learner (see `api` above): everything of the old run is dropped, the learner
@@ -878,7 +890,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
           set({ guidebook: data.guidebook });
           if (!data.guidebook.entries.some((entry) => entry.unread)) return;
           // The panel keeps its "New" marks for this visit; the notes elsewhere are done with.
-          return api.readGuidebook(learnerId).then(() => { if (current()) set({ guideNote: { count: data.guidebook.entries.length, unread: [] } }); });
+          return api.readGuidebook(learnerId).then(() => { if (current()) set({ guideNote: { ...get().guideNote, count: data.guidebook.entries.length, unread: [] } }); });
         }).catch(() => {});
       },
       returnToDialogue: () => set({ view: 'dialogue', reviewChallenge: null, reviewResult: null, error: null }),

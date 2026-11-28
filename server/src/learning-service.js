@@ -13,7 +13,7 @@ import { ProviderError } from './llm/provider-error.js';
 import { applyMove, currentLocationId, gateFor, sealedMessage, visitedSet, worldSnapshot } from './world.js';
 import { cleared as clearedSite, freshRun, gateFor as gateOfSite, isComplete, moveProblem, moved, readRun, siteOf, siteStates } from './dungeon.js';
 import { roadMethods } from './road/service.js';
-import { entriesFor, passageView, selectPassage, toSegments, truthIds } from './narration.js';
+import { CLIENT_EVENTS, entriesFor, passageView, selectPassage, toSegments, truthIds } from './narration.js';
 import { weatherAt } from './road/weather.js';
 
 // Round 051 (critique 1.3): told to the narrator when a pass is held (see submitDialogue).
@@ -319,9 +319,29 @@ export class LearningService {
       .sort((a, b) => a.entry.at.localeCompare(b.entry.at) || a.index - b.index).map(({ entry }) => entry);
   }
   // What every view of a place carries: how many entries the learner has, and those not yet read, to be told there.
+  // Round 213: and, as `ahead`, the entries that the page itself will tell and enter (CLIENT_EVENTS), until it has.
   guidebookNote(envelope) {
     const entries = this.guideEntries(envelope);
-    return { count: entries.length, unread: entries.filter((entry) => entry.unread) };
+    const have = envelope.guidebook ?? {};
+    const ahead = (this.content.guide ?? []).filter((entry) => CLIENT_EVENTS.includes(entry.when.event) && !Object.hasOwn(have, entry.id))
+      .map((entry) => ({ id: entry.id, title: entry.title, segments: toSegments(entry.text, this.narrationPack), event: entry.when.event }));
+    return { count: entries.length, unread: entries.filter((entry) => entry.unread), ...(ahead.length ? { ahead } : {}) };
+  }
+  // Round 213: the page has told the player an entry of its own (the breathing, before the first one): it is entered,
+  // as read. Entering it again changes nothing.
+  async enterGuidebook(learnerId, request) {
+    assertLearnerId(learnerId);
+    const event = request?.event;
+    if (!CLIENT_EVENTS.includes(event)) throw new AppError('The guidebook has no entry for that.', { status: 400, code: 'UNKNOWN_GUIDE_EVENT' });
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const staged = clone(envelope);
+      if (this.enterGuide(staged, { event })) {
+        for (const entry of entriesFor(this.content.guide ?? [], { event }, envelope.guidebook ?? {})) staged.guidebook[entry.id].read = true;
+        await this.storage.save(staged);
+      }
+      return { guidebook: this.guidebookNote(staged) };
+    });
   }
   async getGuidebook(learnerId) {
     return this.guidebookView(await this.loadEnvelope(learnerId));

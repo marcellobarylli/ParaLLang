@@ -57,7 +57,7 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, waitGame = false, onWaitGame = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, narratorVoice = NARRATOR_VOICES[0].id, onNarratorVoice = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, breathing = true, onBreathing = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, narratorVoice = NARRATOR_VOICES[0].id, onNarratorVoice = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -202,7 +202,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             )}
           </Group>
         )}
-        {(onPanelOpacity || onTiltLook || onFollow || onWaitGame || onGlitch) && (
+        {(onPanelOpacity || onTiltLook || onFollow || onBreathing || onGlitch) && (
           <Group title="Display and controls">
             {onFollow && (
               <>
@@ -244,14 +244,14 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                 <small>In Ta Prohm, The Kiln and on Micromort Mountain the wind is allowed to pull the trees' leaves into long shards, more the harder it blows. It began as a fault. It applies at once.</small>
               </>
             )}
-            {/* Round 203: experimental, off unless switched on. */}
-            {onWaitGame && (
+            {/* Round 213: on unless switched off. */}
+            {onBreathing && (
               <>
-                <label className="setting-check" htmlFor="settings-wait-game">
-                  <input id="settings-wait-game" type="checkbox" checked={waitGame} onChange={(event) => onWaitGame(event.target.checked)} />
-                  <span>A game while you wait (experimental)</span>
+                <label className="setting-check" htmlFor="settings-breathing">
+                  <input id="settings-breathing" type="checkbox" checked={breathing} onChange={(event) => onBreathing(event.target.checked)} />
+                  <span>Breathe while you wait</span>
                 </label>
-                <small>When you send an answer, the conversation gives way to a small game until the reply is ready: drag left and right to move, and shoot what comes down. Each one that gets past you costs one of three lives. When the reply is ready no more come, and the conversation returns once the last are dealt with. For the TikTok kids, who cannot be left alone with a still screen for eight whole seconds. You know who you are.</small>
+                <small>When you send an answer, the conversation fades and a slow breath takes its place: four seconds in, six out. Hold the panel while the light swells, let go where the ring glows, and press again where it glows next. There are at least three breaths, the reply waits for the last one to be out, and nothing is counted. Off, the reply shows as soon as it is ready.</small>
               </>
             )}
           </Group>

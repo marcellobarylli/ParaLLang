@@ -80,7 +80,7 @@ test('the store: the first step on the road brings an unread entry; opening the 
   const s = () => store.getState();
   await s().initialize();
   // Reading the dungeon's map on the way in enters nothing.
-  expect(s().guideNote).toEqual({ count: 0, unread: [] });
+  expect(s().guideNote).toMatchObject({ count: 0, unread: [] }); // round 213: and, ahead, the entry the page tells itself
   s().enter();
   await s().enterRoad();
   expect(s().guideNote.unread.map((item) => item.id)).toEqual(['the_road']);
@@ -90,11 +90,12 @@ test('the store: the first step on the road brings an unread entry; opening the 
   await vi.waitFor(() => expect(s().guideNote.unread).toEqual([]));
   // The panel keeps its "New" marks for this visit.
   expect(s().guidebook.entries.map((item) => [item.id, item.unread])).toEqual([['the_road', true]]);
-  expect(s().guidebook.total).toBe(6);
+  expect(s().guidebook.total).toBe(7);
   expect(s().guidebook.fragments).toEqual([]);
   s().returnToDialogue();
   expect(s().view).toBe('dialogue');
   // The server has them as read: the next view of the road brings none.
   await s().refreshRoad();
-  expect(s().guideNote).toEqual({ count: 1, unread: [] });
+  expect(s().guideNote).toMatchObject({ count: 1, unread: [] });
+  expect(s().guideNote.ahead.map((entry) => entry.id)).toEqual(['the_breath']); // round 213: what the page will tell itself is still ahead
 });

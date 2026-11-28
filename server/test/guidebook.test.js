@@ -12,7 +12,7 @@ const guidebook = (runtime, learnerId) => api(runtime, '/api/guidebook', { learn
 const read = (runtime, learnerId) => api(runtime, '/api/guidebook/read', { learnerId, method: 'POST', body: {} });
 
 test('the entries are content: a title, a text and what enters each', () => {
-  assert.deepEqual(content.guide.map((entry) => entry.id), ['the_road', 'turmeric_text', 'the_long_way_round', 'talked_past', 'second_tellings', 'the_gate']);
+  assert.deepEqual(content.guide.map((entry) => entry.id), ['the_road', 'turmeric_text', 'the_long_way_round', 'talked_past', 'second_tellings', 'the_gate', 'the_breath']);
   for (const entry of content.guide) {
     assert.ok(entry.title.length > 2 && entry.text.length > 40);
     assert.equal(typeof entry.when.event, 'string');
@@ -32,7 +32,7 @@ test('which entries an event enters: those that fit and are not had yet', () => 
 
 test('a new learner has an empty guidebook; the first step on the road enters "The road", unread, and the road\'s view tells it', async (t) => {
   const { runtime, learnerId } = await roadRuntime(t, { streamlined: true }) // no mode call: it would make the road;
-  assert.deepEqual((await guidebook(runtime, learnerId)).data, { guidebook: { entries: [], total: 6, fragments: [] } });
+  assert.deepEqual((await guidebook(runtime, learnerId)).data, { guidebook: { entries: [], total: 7, fragments: [] } });
   const view = (await road(runtime, learnerId)).data;
   assert.equal(view.guidebook.count, 1);
   assert.deepEqual(view.guidebook.unread.map(({ id, title, unread }) => [id, title, unread]), [['the_road', 'The road', true]]);
@@ -47,7 +47,7 @@ test('a new learner has an empty guidebook; the first step on the road enters "T
   const after = (await read(runtime, learnerId)).data.guidebook;
   assert.deepEqual(after.entries.map(({ id, unread }) => [id, unread]), [['the_road', false]]);
   const again = (await road(runtime, learnerId)).data.guidebook;
-  assert.deepEqual(again, { count: 1, unread: [] });
+  assert.deepEqual({ count: again.count, unread: again.unread }, { count: 1, unread: [] });
   assert.equal((await runtime.storage.load(learnerId)).guidebook.the_road.read, true);
   // Reading twice writes nothing more and answers the same.
   assert.deepEqual((await read(runtime, learnerId)).data.guidebook, after);
@@ -75,7 +75,7 @@ test('a dungeon: the first conversation at a site enters "Being let past"; readi
   t.after(runtime.close);
   const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
   const read = (await api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId })).data;
-  assert.deepEqual(read.guidebook, { count: 0, unread: [] });
+  assert.deepEqual({ count: read.guidebook.count, unread: read.guidebook.unread }, { count: 0, unread: [] });
   assert.equal((await runtime.storage.load(learnerId)).guidebook, undefined);
   const started = (await api(runtime, '/api/encounter/start', { learnerId, method: 'POST', body: { dungeonId: 'ta_prohm', client: 121 } })).data;
   assert.deepEqual(started.guidebook.unread.map((entry) => entry.id), ['talked_past']);
@@ -98,4 +98,33 @@ test('the guidebook needs a learner, and a save keeps only what a guidebook hold
   // An entry the content no longer has stays in the save and is not listed.
   await runtime.storage.save({ ...envelope, guidebook: { gone: { at: '2026-01-15T12:00:00.000Z', read: false } } });
   assert.deepEqual((await guidebook(runtime, learnerId)).data.guidebook.entries, []);
+});
+
+// Round 213: the breathing while a reply is awaited. The page tells its entry itself, before the first breathing, so
+// every view carries it ahead of time; the page then asks for it to be entered, as read.
+test('"A breath while you wait" is carried ahead by every view until the page enters it; entered, it is read and no longer ahead', async (t) => {
+  const runtime = await createRuntime({ language: 'it' });
+  t.after(runtime.close);
+  const { data: { learnerId } } = await api(runtime, '/api/learner', { method: 'POST', body: {} });
+  const enter = (body) => api(runtime, '/api/guidebook/enter', { learnerId, method: 'POST', body });
+  const before = (await api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId })).data.guidebook;
+  assert.deepEqual(before.ahead.map(({ id, title, event }) => [id, title, event]), [['the_breath', 'A breath while you wait', 'breath_wait']]);
+  assert.match(before.ahead[0].segments[0].text, /^Nobody here answers at once/);
+  assert.deepEqual((await guidebook(runtime, learnerId)).data.guidebook.entries, []); // not in the guidebook yet
+  const entered = await enter({ event: 'breath_wait' });
+  assert.equal(entered.status, 200);
+  assert.deepEqual(entered.data.guidebook, { count: 1, unread: [] }); // told by the page: read, and nothing ahead
+  const save = await runtime.storage.load(learnerId);
+  assert.equal(save.guidebook.the_breath.read, true);
+  assert.deepEqual((await guidebook(runtime, learnerId)).data.guidebook.entries.map(({ id, unread }) => [id, unread]), [['the_breath', false]]);
+  assert.equal((await api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId })).data.guidebook.ahead, undefined);
+  // Again changes nothing; only the page's own events may be entered this way.
+  assert.deepEqual((await enter({ event: 'breath_wait' })).data.guidebook, { count: 1, unread: [] });
+  assert.equal((await runtime.storage.load(learnerId)).guidebook.the_breath.at, save.guidebook.the_breath.at);
+  for (const body of [{ event: 'road_enter' }, { event: 'site_arrive' }, {}]) {
+    const refused = await enter(body);
+    assert.equal(refused.status, 400);
+    assert.equal(refused.data.error.code, 'UNKNOWN_GUIDE_EVENT');
+  }
+  assert.deepEqual(Object.keys((await runtime.storage.load(learnerId)).guidebook), ['the_breath']);
 });
