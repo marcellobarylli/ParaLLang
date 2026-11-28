@@ -39,7 +39,7 @@ lessons:
     near_far: { say: [hen_jin, hen_yuan], examples: ["Lí zhèr hěn yuǎn.", "Hěn jìn."] }
   origins_language:
     i_speak: { say: [wo_hui_shuo], examples: ["Wǒ huì shuō yìdiǎnr Zhōngwén."] }
-    i_learn: { say: [wo_zai_xue], examples: ["Wǒ zài xué Zhōngwén.", "Wǒ xué Hànyǔ."] }
+    i_learn: { say: [wo_zai_xue, xue_zhongwen], examples: ["Wǒ zài xué Zhōngwén.", "Wǒ xué Hànyǔ."] }
     do_you_speak: { say: [ni_hui_shuo_yingyu_ma], examples: ["Nǐ huì shuō Yīngyǔ ma?", "Nín huì shuō Yīngyǔ ma?"] }
   courtesy_please:
     please: { say: [qing], examples: ["Qǐng gěi wǒ yì bēi shuǐ.", "Qǐng gěi wǒ yí ge bāozi."] }
@@ -96,7 +96,7 @@ vocabulary:
   zaoshang_hao: { t: "zǎoshang hǎo", pos: phrase, en: ["good morning"], forms: ["zǎoshang hǎo", "zǎo shang hǎo", "zǎo", "zǎo'ān"], ex: ["Zǎoshang hǎo, māma.", "Good morning, Mum."], n: "Among friends a plain 'zǎo!' will do." }
   wanshang_hao: { t: "wǎnshang hǎo", pos: phrase, en: ["good evening"], forms: ["wǎnshang hǎo", "wǎn shang hǎo"], ex: ["Wǎnshang hǎo, dàjiā.", "Good evening, everyone."] }
   ni_hao_ma: { t: "nǐ hǎo ma", pos: phrase, en: ["how are you"], forms: ["nǐ hǎo ma", "nín hǎo ma"], ex: ["Lǎo Zhāng, nǐ hǎo ma?", "Old Zhang, how are you?"], n: "The textbook question; people who see each other often ask 'zuìjìn zěnmeyàng?'." }
-  zenmeyang: { t: "zěnmeyàng", pos: phrase, en: ["how are things", "how is it going", "how about"], forms: ["zěnmeyàng", "zěnme yàng", "zuìjìn zěnmeyàng", "zuìjìn hǎo ma"], ex: ["Nǐ zuìjìn zěnmeyàng?", "How have you been lately?"] }
+  zenmeyang: { t: "zěnmeyàng", pos: phrase, en: ["how are things", "how is it going", "how about"], forms: ["zěnmeyàng", "zěnme yàng", "zuìjìn zěnmeyàng", "zuìjìn hǎo ma", "hǎo bu hǎo"], ex: ["Nǐ zuìjìn zěnmeyàng?", "How have you been lately?"] }
   zaijian: { t: "zàijiàn", pos: interjection, en: ["goodbye"], forms: ["zàijiàn", "zài jiàn", "bàibai", "bài bài"], ex: ["Xièxie, zàijiàn!", "Thank you, goodbye!"], n: "Literally 'see again'. 'Bàibai' is the English 'bye-bye', said by everyone." }
   mingtian_jian: { t: "míngtiān jiàn", pos: phrase, en: ["see you tomorrow"], forms: ["míngtiān jiàn", "xià cì jiàn"], ex: ["Hǎo, míngtiān jiàn!", "Right, see you tomorrow!"], n: "'Xià cì jiàn' is 'see you next time'." }
   huitou_jian: { t: "huítóu jiàn", pos: phrase, en: ["see you later", "see you soon"], forms: ["huítóu jiàn", "yìhuǐr jiàn", "yíhuìr jiàn", "dāihuìr jiàn"], ex: ["Wǒ zǒu le, huítóu jiàn!", "I'm off, see you later!"] }

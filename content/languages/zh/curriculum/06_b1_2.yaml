@@ -4,8 +4,9 @@
 # for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
 # defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
 # Round 223: the Chinese stages were written at the same time, so this file defines the words it takes from A1 and A2
-# itself (geng_xihuan, duo_jiu, conglai_bu, yiyang, chabuduo, bu_yiyang, wo_hui_qu, nian, ge_yue, under their natural ids; yinwei, chijing and wo_juede come from B1.1); a
-# merge pass keeps the earlier stage's entry where both define one.
+# itself (geng_xihuan, duo_jiu, conglai_bu, yiyang, chabuduo, bu_yiyang, wo_hui_qu, nian, ge_yue, under their natural
+# ids; yinwei, chijing and wo_juede come from B1.1); the merge pass removed the ones an earlier stage defines and kept
+# the earlier entry, with the forms this stage needed.
 stage: b1_2
 version: curriculum-b1-2-zh-v1
 grammar:
@@ -27,7 +28,7 @@ lessons:
   hopes_want:
     hope_you_like: { say: [xiwang_ni_xihuan], examples: ["Xīwàng nǐ xǐhuan.", "Xīwàng nín xǐhuan zhège lǐwù."] }
     want_you_to: { say: [xiang_rang_ni], examples: ["Wǒ xiǎng ràng nǐ gēn wǒmen yìqǐ qù.", "Wǒ bù xiǎng ràng nǐ zǒu."] }
-    important_that: { say: [hen_zhongyao, bixu], examples: ["Dàjiā dōu tóngyì, zhè hěn zhòngyào.", "Nǐ bìxū xiànzài jiù zǒu."] }
+    important_that: { say: [hen_zhongyao, bixu, ni_dei], examples: ["Dàjiā dōu tóngyì, zhè hěn zhòngyào.", "Nǐ bìxū xiànzài jiù zǒu."] }
   hypotheses_real:
     if_weather: { say: [ruguo_xia_yu], examples: ["Rúguǒ xià yǔ, wǒ jiù dāi zài jiā lǐ.", "Rúguǒ tiānqì hǎo, wǒ jiù qù hǎibiān."] }
     if_time: { say: [ruguo_you_shijian], examples: ["Rúguǒ yǒu shíjiān, wǒ gěi nǐ dǎ diànhuà.", "Kěyǐ de huà, wǒ míngtiān lái."] }
@@ -66,7 +67,7 @@ lessons:
     find_it: { say: [wo_juede, kan_qilai], examples: ["Wǒ juéde zhè shì ge hǎo xíguàn.", "Tīng qǐlai yǒudiǎnr qíguài."] }
   persuading_propose:
     propose: { say: [wo_tiyi], examples: ["Wǒ tíyì zǎo diǎnr chūfā.", "Wèishénme bù zǒu lù qù ne?"] }
-    advantage: { say: [haochu, huasuan], examples: ["Hǎochù shì bǐjiào piányi.", "Zuò huǒchē qù gèng fāngbiàn."] }
+    advantage: { say: [haochu, huasuan, geng], examples: ["Hǎochù shì bǐjiào piányi.", "Zuò huǒchē qù gèng fāngbiàn."] }
     come_on: { say: [zou_ba], examples: ["Zǒu ba, gēn wǒmen yìqǐ qù!", "Xiāngxìn wǒ, nǐ huì xǐhuan de."] }
   persuading_argue:
     two_sides: { say: [yi_fangmian], examples: ["Yì fāngmiàn tài guì le, lìng yì fāngmiàn hěn fāngbiàn.", "Yì fāngmiàn nǐ shuō de duì."] }
@@ -108,7 +109,6 @@ vocabulary:
   ruguo_wo_you: { t: "rúguǒ wǒ yǒu", pos: phrase, en: ["if I had"], forms: ["rúguǒ wǒ yǒu", "rúguǒ wǒ yǒu gèng duō shíjiān", "rúguǒ wǒ yǒu qián"], ex: ["Rúguǒ wǒ yǒu qián, wǒ huì duō kàn shū.", "If I had money, I would read more."] }
   zhong_le_caipiao: { t: "zhòng le cǎipiào", pos: phrase, en: ["won the lottery", "if I won the lottery"], forms: ["zhòng le cǎipiào", "zhòng cǎipiào", "rúguǒ zhòng le cǎipiào", "rúguǒ wǒ zhòng le cǎipiào", "rúguǒ wǒ hěn yǒu qián", "rúguǒ wǒ yǒu hěn duō qián"], ex: ["Rúguǒ wǒ zhòng le cǎipiào, wǒ jiù kāi ge wǎnhuì.", "If I won, I would throw a party."], n: "'Rúguǒ wǒ hěn yǒu qián' is 'if I were rich'." }
   wo_hui_mai: { t: "wǒ huì mǎi", pos: phrase, en: ["I would buy"], forms: ["wǒ huì mǎi", "huì mǎi", "wǒ jiù mǎi", "jiù huì mǎi"], ex: ["Wǒ huì mǎi yì tiáo chuán.", "I would buy a boat."], n: "Huì before the verb is 'would' as well as 'will'." }
-  wo_hui_qu: { t: "wǒ huì qù", pos: phrase, en: ["I would go"], forms: ["wǒ huì qù", "wǒmen huì qù", "huì qù", "wǒ jiù qù", "jiù huì qù"], ex: ["Wǒ huì qù hǎibiān zhù.", "I would go and live by the sea."] }
   wo_hui_zuo: { t: "wǒ huì zuò", pos: phrase, en: ["I would do", "I would make"], forms: ["wǒ huì zuò", "huì zuò", "jiù huì zuò"], ex: ["Wǒ huì zuò yí cì cháng tú lǚxíng.", "I would take a long trip."] }
   wanyi: { t: "wànyī", pos: conjunction, en: ["what if", "in case", "if by any chance"], forms: ["wànyī", "wàn yī", "nà zěnme bàn", "zěnme bàn ne", "huì zěnmeyàng"], ex: ["Wànyī wǒ chídào le zěnme bàn?", "What happens if I arrive late?"], n: "For something going wrong: wànyī ..., zěnme bàn? (what if ...?)." }
   ruguo: { t: "rúguǒ", pos: conjunction, en: ["if"], forms: ["rúguǒ", "rú guǒ", "jiǎrú"], ex: ["Rúguǒ nǐ bù lái ne?", "And what if you don't come?"], n: "A question on its own: rúguǒ ... ne? (and if ...?)." }
@@ -130,18 +130,14 @@ vocabulary:
   chunjie: { t: "Chūnjié", pos: noun, en: ["the Spring Festival", "Chinese New Year"], forms: ["Chūnjié", "Chūn jié", "guònián", "guò nián", "Zhōngqiūjié", "Zhōngqiū jié", "Shèngdànjié", "Shèngdàn jié", "Shèngdàn"], ex: ["Chūnjié wǒ huí jiā.", "At the Spring Festival I go home."], n: "Chūnjié is New Year by the old calendar, the year's great family festival; Zhōngqiūjié is the Mid-Autumn Festival, Shèngdànjié is Christmas." }
   dajia: { t: "dàjiā", pos: pronoun, en: ["everybody", "people", "one"], forms: ["dàjiā", "dà jiā", "rénmen", "rén men"], ex: ["Zhèr dàjiā dōu chī de hěn hǎo.", "People eat well here."], n: "Chinese has no impersonal 'one': it says dàjiā or rénmen, or leaves the subject out (Zhōngqiūjié chī yuèbing)." }
   keshi: { t: "kěshì", pos: conjunction, en: ["but", "whereas"], forms: ["kěshì", "kě shì"], ex: ["Wǒ hē chá, kěshì tā hē kāfēi.", "I have tea, whereas he has coffee."] }
-  bu_yiyang: { t: "bù yíyàng", pos: phrase, en: ["different", "not the same"], forms: ["bù yíyàng", "bù yí yàng", "bù yíyàng de", "bú tài yíyàng", "hěn bù yíyàng", "bù tóng", "bù tóng de", "xiāngfǎn"], ex: ["Zhèr de xíguàn gēn wǒmen nàr bù yíyàng.", "The customs here are different from ours."], n: "gēn A bù yíyàng is 'different from A'; 'xiāngfǎn' is 'on the contrary'." }
-  yiyang: { t: "yíyàng", pos: adjective, en: ["the same", "alike"], forms: ["yíyàng", "yí yàng", "yíyàng de"], ex: ["Zhèr de Chūnjié gēn wǒ jiā yíyàng.", "The Spring Festival here is the same as at home."], n: "gēn A yíyàng is 'the same as A'." }
-  chabuduo: { t: "chàbuduō", pos: adjective, en: ["about the same", "much the same", "similar"], forms: ["chàbuduō", "chà bu duō", "chà bù duō"], ex: ["Zhè liǎng ge jiérì chàbuduō.", "The two festivals are much the same."] }
   ye_shi_zheyang: { t: "yě shì zhèyàng", pos: phrase, en: ["it is like that too", "it is the same at home"], forms: ["yě shì zhèyàng", "yě zhèyàng", "yě yíyàng", "hěn xiàng"], ex: ["Wǒmen nàr yě shì zhèyàng.", "It is like that at home too."], n: "'Hěn xiàng' is 'very like it'." }
-  geng_xihuan: { t: "gèng xǐhuan", pos: phrase, en: ["I prefer", "prefer"], forms: ["gèng xǐhuan", "wǒ gèng xǐhuan", "bǐjiào xǐhuan", "wǒ bǐjiào xǐhuan"], ex: ["Wǒ gèng xǐhuan zuò huǒchē.", "I prefer going by train."] }
   yinxiang_hen_shen: { t: "yìnxiàng hěn shēn", pos: phrase, en: ["it struck me", "it made an impression on me"], forms: ["yìnxiàng hěn shēn", "yìnxiàng zuì shēn", "ràng wǒ yìnxiàng hěn shēn", "ràng wǒ yìnxiàng zuì shēn de shì", "ràng wǒ chījīng de shì", "ràng wǒ jīngyà de shì"], ex: ["Zhèr de rén hěn rèqíng, ràng wǒ yìnxiàng hěn shēn.", "The kindness of the people struck me."], n: "Yìnxiàng is an impression: ràng wǒ yìnxiàng hěn shēn, it struck me." }
   bu_xiguan: { t: "bù xíguàn", pos: phrase, en: ["I am not used to it", "not used to"], forms: ["bù xíguàn", "wǒ bù xíguàn", "hái bù xíguàn", "bú tài xíguàn", "mànmàn xíguàn le", "xíguàn le", "yǐjīng xíguàn le", "kāishǐ xíguàn le"], ex: ["Wǒ bù xíguàn zhème rè de tiānqì.", "I am not used to the heat."], n: "'Wǒ mànmàn xíguàn le' is 'I am getting used to it'." }
   kan_qilai: { t: "kàn qǐlai", pos: phrase, en: ["it seems", "it looks"], forms: ["kàn qǐlai", "kànqǐlai", "tīng qǐlai", "tīngqǐlai", "hǎoxiàng", "sìhū"], ex: ["Kàn qǐlai shì ge hǎo xíguàn.", "It seems a good habit."], n: "'Tīng qǐlai' is 'it sounds'." }
   # persuading
   wo_tiyi: { t: "wǒ tíyì", pos: phrase, en: ["I suggest", "I propose"], forms: ["wǒ tíyì", "tíyì", "bùrú", "bùrú wǒmen", "wèishénme bù"], ex: ["Wǒ tíyì zǒu lù qù.", "I suggest going on foot."], n: "'Bùrú wǒmen ...' is 'we might as well ...'; 'wèishénme bù ...?' is 'why not ...?'." }
   haochu: { t: "hǎochù", pos: noun, en: ["the advantage", "the good thing"], forms: ["hǎochù", "hǎo chù", "yǒu hǎochù", "hǎochù shì"], ex: ["Hǎochù shì lí zhèr hěn jìn.", "The advantage is that it is near."] }
-  huasuan: { t: "huásuàn", pos: adjective, en: ["worth it", "it pays", "a better deal"], forms: ["huásuàn", "huá suàn", "gèng piányi", "gèng kuài", "gèng fāngbiàn", "gèng róngyì", "shěng qián", "shěng shíjiān"], ex: ["Zǎo diǎnr chūfā gèng huásuàn.", "It is better to leave early."], n: "'Shěng qián' is 'it saves money'." }
+  huasuan: { t: "huásuàn", pos: adjective, en: ["worth it", "it pays", "a better deal"], forms: ["huásuàn", "huá suàn", "shěng qián", "shěng shíjiān"], ex: ["Zǎo diǎnr chūfā gèng huásuàn.", "It is better to leave early."], n: "'Shěng qián' is 'it saves money'." }
   zou_ba: { t: "zǒu ba", pos: phrase, en: ["come on", "let's go"], forms: ["zǒu ba", "kuài lái ba", "xiāngxìn wǒ", "xìn wǒ", "nǐ jiù xìn wǒ ba", "nǐ huì xǐhuan de", "nǐ kàn zhe ba"], ex: ["Zǒu ba, wǒmen qù chī fàn!", "Come on, let's go and eat!"], n: "Ba at the end urges; 'xiāngxìn wǒ' is 'trust me'; 'nǐ huì xǐhuan de' is 'you'll like it'." }
   yi_fangmian: { t: "yì fāngmiàn", pos: phrase, en: ["on the one hand", "on the other hand"], forms: ["yì fāngmiàn", "yìfāngmiàn", "lìng yì fāngmiàn", "lìng yìfāngmiàn"], ex: ["Yì fāngmiàn wǒ xǐhuan, lìng yì fāngmiàn tài guì le.", "On the one hand I like it, on the other it costs too much."], n: "'Lìng yì fāngmiàn' is 'on the other hand'." }
   danshi: { t: "dànshì", pos: conjunction, en: ["but", "however"], forms: ["dànshì", "dàn shì", "búguò", "bú guò", "rán'ér"], ex: ["Hěn hǎo, dànshì hěn guì.", "It is nice, but it is expensive."], n: "'Búguò' is a softer 'but'; 'rán'ér' is 'however', in writing." }
@@ -158,8 +154,6 @@ vocabulary:
   nian: { t: "nián", pos: noun, en: ["year", "years"], forms: ["nián"], ex: ["Wǒ gōngzuò le sān nián.", "I worked for three years."], n: "Counted with no measure word: yì nián, liǎng nián, shí nián." }
   ge_yue: { t: "ge yuè", pos: noun, en: ["months", "month"], forms: ["ge yuè", "gè yuè"], ex: ["Wǒ lái zhèr sān ge yuè le.", "I have been here for three months."], n: "A month as a length takes the measure word ge: liǎng ge yuè (two months), but èr yuè is February." }
   xue_zhongwen: { t: "xué Zhōngwén", pos: phrase, en: ["to learn Chinese", "to study Chinese"], forms: ["xué Zhōngwén", "xuéxí Zhōngwén", "xué Hànyǔ", "xuéxí Hànyǔ", "xué Pǔtōnghuà", "xuéxí Pǔtōnghuà"], ex: ["Wǒ zài wǎng shang xué Zhōngwén.", "I learn Chinese online."], n: "The length of time after the verb: wǒ xué Zhōngwén xué le yì nián le (the verb is said twice when it has an object)." }
-  duo_jiu: { t: "duō jiǔ", pos: phrase, en: ["how long", "for how long"], forms: ["duō jiǔ", "duōjiǔ", "duō jiǔ le", "duō cháng shíjiān", "duōcháng shíjiān", "jǐ nián le", "jǐ ge xiǎoshí", "jǐ fēnzhōng"], ex: ["Nǐ xué Zhōngwén xué le duō jiǔ le?", "How long have you been studying Chinese?"] }
-  conglai_bu: { t: "cónglái bù", pos: phrase, en: ["never", "have never"], forms: ["cónglái bù", "cóng lái bù", "cónglái méi", "cóng lái méi", "cónglái méiyǒu", "cóngbù", "cóng bù", "yí cì yě méi"], ex: ["Wǒ cónglái méi chī guo shòusī.", "I have never eaten sushi."], n: "Cónglái méi + verb + guo for what you have never done; cónglái bù for what you never do." }
   mei_qu_guo: { t: "méi qù guo", pos: phrase, en: ["have never been", "have never done"], forms: ["méi qù guo", "méi qùguo", "méiyǒu qù guo", "méi kàn guo", "méi kànguo", "méi chī guo", "méi chīguo", "méi zuò guo", "méi zuòguo", "méi jiàn guo", "méi jiànguo"], ex: ["Wǒ méi qù guo Zhōngguó.", "I have never been to China."], n: "Méi + verb + guo says you have never had the experience: wǒ méi kàn guo (I have never seen it)." }
   hai_mei: { t: "hái méi", pos: phrase, en: ["not yet"], forms: ["hái méi", "hái méiyǒu", "hái méi ne", "hái méiyǒu ne"], ex: ["Wǒ hái méi chī wǔfàn.", "I have not had lunch yet."], n: "Often with ne at the end: hái méi ne (not yet)." }
   zaowan: { t: "zǎowǎn", pos: adverb, en: ["sooner or later", "one day"], forms: ["zǎowǎn", "zǎo wǎn", "chízǎo", "zǒng yǒu yì tiān", "wǒ de mèngxiǎng shì", "mèngxiǎng shì"], ex: ["Zǎowǎn wǒ huì xuéhuì yóuyǒng.", "Sooner or later I will learn to swim."], n: "'Wǒ de mèngxiǎng shì' is 'my dream is'." }

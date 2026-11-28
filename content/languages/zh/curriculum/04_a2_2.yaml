@@ -4,8 +4,8 @@
 # for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
 # defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
 # Round 223: the A1 stages were written at the same time by another agent, so this stage defines every word it uses
-# that A2.1 (03_a2_1.yaml) does not, under the word's natural id; a merge pass keeps the earlier stage's entry where
-# both define one.
+# that A2.1 (03_a2_1.yaml) does not, under the word's natural id; the merge pass kept the earlier stage's entry where
+# both defined one (zenmeyang, yinwei, you_yisi), and ti_zuqiu became 02's da_qiu (which holds tī zúqiú).
 stage: a2_2
 version: curriculum-a2-2-zh-v1
 grammar:
@@ -30,7 +30,7 @@ lessons:
     another_time: { say: [gaitian], examples: ["Wǒmen gǎitiān ba?", "Xià cì zài qù ba."] }
   comparisons_more:
     ask_which: { say: [haishi, na_ge_geng], examples: ["Běijīng dà háishi Shànghǎi dà?", "Nǎ ge gèng guì?"] }
-    bigger_than: { say: [bi, geng], examples: ["Běijīng bǐ Shànghǎi dà.", "Wǒ de fángzi bǐ nǐ de xiǎo.", "Zhè jiān gèng dà."] }
+    bigger_than: { say: [bi, geng, da_yi_hao], examples: ["Běijīng bǐ Shànghǎi dà.", "Wǒ de fángzi bǐ nǐ de xiǎo.", "Zhè jiān gèng dà."] }
     cheaper: { say: [[bi, geng], [pianyi, gui]], examples: ["Huǒchē bǐ fēijī piányi.", "Zhè ge gèng piányi.", "Yú bǐ ròu guì."] }
   comparisons_better:
     better: { say: [geng_hao, bi], examples: ["Zhè ge gèng hǎo.", "Zhè jiā fàndiàn bǐ nà jiā hǎo."] }
@@ -57,7 +57,7 @@ lessons:
     lived: { say: [yiqian, xiao_shihou], examples: ["Wǒ yǐqián zhù zài yí ge xiǎo zhèn.", "Xiǎo shíhou wǒ gēn fùmǔ zhù zài Lúndūn."] }
     had: { say: [gou, mao, zixingche, yiqian, xiao_shihou], examples: ["Wǒ xiǎo shíhou yǒu yì zhī gǒu.", "Wǒ yǐqián yǒu yí liàng hóngsè de zìxíngchē."] }
   used_to_habits:
-    used_to: { say: [ti_zuqiu, wanr, xiao_shihou, yiqian], examples: ["Wǒ xiǎo shíhou chángcháng gēn gēge tī zúqiú.", "Wǒ yǐqián chángcháng qù nǎinai jiā wánr."] }
+    used_to: { say: [da_qiu, wanr, xiao_shihou, yiqian], examples: ["Wǒ xiǎo shíhou chángcháng gēn gēge tī zúqiú.", "Wǒ yǐqián chángcháng qù nǎinai jiā wánr."] }
     how_often: { say: [mei_ge_xiatian], examples: ["Měi ge xiàtiān wǒmen qù hǎibiān.", "Měi ge xīngqītiān wǒmen zài nǎinai jiā chī fàn."] }
     liked: { say: [xiao_shihou, yiqian, na_shihou], examples: ["Wǒ xiǎo shíhou hěn xǐhuan kàn shū.", "Yǐqián wǒ bù xǐhuan shàngxué."] }
   used_to_place:
@@ -92,14 +92,13 @@ vocabulary:
   # invitations
   xiang_bu_xiang: { t: "xiǎng bu xiǎng", pos: phrase, en: ["would you like to", "do you want to"], forms: ["xiǎng bu xiǎng", "xiǎng bù xiǎng", "yào bu yào", "yào bù yào"], ex: ["Nǐ xiǎng bu xiǎng yìqǐ qù?", "Would you like to come along?"], n: "A verb, then bù, then the verb again asks a yes-or-no question." }
   wo_qing_ni: { t: "wǒ qǐng nǐ", pos: phrase, en: ["I invite you", "it's my treat"], forms: ["wǒ qǐng nǐ", "wǒ qǐng nín", "wǒ qǐngkè", "wǒ qǐng kè"], ex: ["Jīntiān wǒ qǐng nǐ chī fàn.", "Today dinner is on me."], n: "Who invites pays: wǒ qǐng nǐ hē kāfēi is 'let me buy you a coffee'." }
-  zenmeyang: { t: "zěnmeyàng", pos: phrase, en: ["what about", "how about", "how is it"], forms: ["zěnmeyàng", "zěnme yàng", "hǎo bu hǎo"], ex: ["Míngtiān wǎnshang zěnmeyàng?", "What about tomorrow evening?"], n: "Put it after the suggestion: wǒmen qù gōngyuán, zěnmeyàng?" }
   zanmen: { t: "zánmen", pos: pronoun, en: ["let's", "we (you and I)"], forms: ["zánmen", "wǒmen qù", "wǒmen yìqǐ qù"], ex: ["Zánmen zǒu ba!", "Let's go!"], n: "Zánmen is 'we' with the listener included; ba at the end makes it a suggestion." }
   zai_nar_jianmian: { t: "zài nǎr jiànmiàn", pos: phrase, en: ["where shall we meet"], forms: ["zài nǎr jiànmiàn", "zài nǎlǐ jiànmiàn", "jǐ diǎn jiànmiàn", "shénme shíhou jiànmiàn", "jiànmiàn", "jiàn miàn"], ex: ["Míngtiān wǒmen zài nǎr jiànmiàn?", "Where shall we meet tomorrow?"] }
   leyi: { t: "lèyì", pos: adjective, en: ["gladly", "I'd love to"], forms: ["lèyì", "hěn lèyì", "wǒ hěn lèyì", "hěn xiǎng qù", "wǒ hěn xiǎng qù"], ex: ["Wǒ hěn lèyì bāng nǐ.", "I'd be glad to help you."], n: "'Wǒ hěn xiǎng qù' is 'I'd really like to go'." }
   dangran: { t: "dāngrán", pos: adverb, en: ["of course", "certainly"], forms: ["dāngrán", "dāng rán", "dāngrán kěyǐ"], ex: ["Dāngrán, wǒ yídìng lái.", "Of course, I'll definitely come."] }
-  hao_zhuyi: { t: "hǎo zhǔyi", pos: phrase, en: ["good idea"], forms: ["hǎo zhǔyi", "zhǔyi bú cuò", "bú cuò de zhǔyi"], ex: ["Zhè shì ge hǎo zhǔyi.", "That's a good idea."] }
+  hao_zhuyi: { t: "hǎo zhǔyi", pos: phrase, en: ["good idea", "good advice"], forms: ["hǎo zhǔyi", "zhǔyi bú cuò", "bú cuò de zhǔyi", "zhǔyi hěn hǎo", "hǎo jiànyì", "hěn hǎo de jiànyì"], ex: ["Zhè shì ge hǎo zhǔyi.", "That's a good idea."] }
   dai_shenme: { t: "dài shénme", pos: phrase, en: ["bring something", "shall I bring something"], forms: ["dài shénme", "dài diǎnr shénme", "dài diǎn shénme", "dài shénme dōngxi", "dài dōngxi"], ex: ["Wǒ yào dài shénme ma?", "Should I bring anything?"], n: "A guest brings fruit or a small gift (lǐwù), and the host says it was not needed." }
-  zhen_bu_qiao: { t: "zhēn bù qiǎo", pos: phrase, en: ["unfortunately", "what bad luck", "bad timing"], forms: ["zhēn bù qiǎo", "bù qiǎo", "bú tài qiǎo", "kěxī", "zhēn kěxī", "tài kěxī le"], ex: ["Zhēn bù qiǎo, wǒ míngtiān yǒu shì.", "Unfortunately, I have something on tomorrow."], n: "'Kěxī!' is 'what a pity!'." }
+  zhen_bu_qiao: { t: "zhēn bù qiǎo", pos: phrase, en: ["unfortunately", "what bad luck", "bad timing", "what a pity"], forms: ["zhēn bù qiǎo", "bù qiǎo", "bú tài qiǎo", "kěxī", "zhēn kěxī", "tài kěxī le", "kě xī", "bùxìng de shì", "yíhàn de shì"], ex: ["Zhēn bù qiǎo, wǒ míngtiān yǒu shì.", "Unfortunately, I have something on tomorrow."], n: "'Kěxī!' is 'what a pity!'." }
   wo_you_shi: { t: "wǒ yǒu shì", pos: phrase, en: ["I have something on", "I am busy"], forms: ["wǒ yǒu shì", "yǒu shì", "yǒu ānpái", "yǐjīng yǒu ānpái le", "yǒu yuē le", "wǒ yǒu yuē le"], ex: ["Xīngqīliù wǒ yǒu shì.", "I have something on on Saturday."], n: "'Yǒu ānpái' is 'I have plans'; a vague reason is the polite one." }
   hen_mang: { t: "hěn máng", pos: phrase, en: ["busy", "I am busy"], forms: ["hěn máng", "wǒ hěn máng", "tài máng le", "fēicháng máng"], ex: ["Zhè ge xīngqī wǒ hěn máng.", "This week I am busy."] }
   gaitian: { t: "gǎitiān", pos: adverb, en: ["another day", "another time"], forms: ["gǎitiān", "gǎi tiān", "xià cì", "xià yí cì", "huàn yì tiān"], ex: ["Wǒmen gǎitiān zài liáo ba.", "Let's talk another day."], n: "'Xià cì' is 'next time'." }
@@ -116,7 +115,7 @@ vocabulary:
   zui: { t: "zuì", pos: adverb, en: ["most", "the most"], forms: ["zuì"], ex: ["Zhè ge zuì piányi.", "This one is the cheapest."], n: "Zuì before any adjective makes the superlative: zuì dà, zuì guì." }
   yiyang: { t: "yíyàng", pos: adjective, en: ["the same", "as ... as"], forms: ["yíyàng", "yí yàng", "yíyàng de"], ex: ["Wǒ gēn wǒ māma yíyàng gāo.", "I am as tall as my mother."], n: "A gēn B yíyàng + adjective: 'A is as ... as B'." }
   chabuduo: { t: "chàbuduō", pos: adjective, en: ["about the same", "almost"], forms: ["chàbuduō", "chà bu duō", "chà bù duō"], ex: ["Jiàgé chàbuduō.", "The prices are about the same."] }
-  bu_yiyang: { t: "bù yíyàng", pos: phrase, en: ["different", "not the same"], forms: ["bù yíyàng", "bù yí yàng", "bù yíyàng de", "bù tóng", "bù tóng de"], ex: ["Yánsè bù yíyàng.", "The colour is different."] }
+  bu_yiyang: { t: "bù yíyàng", pos: phrase, en: ["different", "not the same"], forms: ["bù yíyàng", "bù yí yàng", "bù yíyàng de", "bú tài yíyàng", "bù tóng", "bù tóng de"], ex: ["Yánsè bù yíyàng.", "The colour is different."] }
   # travel
   fangjian: { t: "fángjiān", pos: noun, en: ["room", "hotel room"], forms: ["fángjiān", "fáng jiān", "yí ge fángjiān", "dānrénjiān", "dānrén jiān", "shuāngrénjiān", "shuāngrén jiān", "biāozhǔnjiān", "biāojiān"], ex: ["Fángjiān zài sān lóu.", "The room is on the third floor."], n: "'Dānrénjiān' is a single, 'shuāngrénjiān' a double; floors are counted from the ground floor, yī lóu." }
   ge_wanshang: { t: "ge wǎnshang", pos: phrase, en: ["nights (counted)", "night"], forms: ["ge wǎnshang", "yì wǎn", "liǎng wǎn", "sān wǎn", "sì wǎn", "jǐ wǎn"], ex: ["Wǒ yào zhù liǎng wǎn.", "I'd like to stay two nights."], n: "Wǎn counts nights directly: zhù sān wǎn, or sān ge wǎnshang." }
@@ -134,7 +133,6 @@ vocabulary:
   gou: { t: "gǒu", pos: noun, en: ["dog"], forms: ["gǒu", "xiǎo gǒu", "yì zhī gǒu"], ex: ["Wǒ jiā yǒu yì zhī gǒu.", "We have a dog at home."], n: "Animals are counted with zhī." }
   mao: { t: "māo", pos: noun, en: ["cat"], forms: ["māo", "xiǎo māo", "yì zhī māo"], ex: ["Nà zhī māo hěn pàng.", "That cat is very fat."] }
   zixingche: { t: "zìxíngchē", pos: noun, en: ["bicycle", "bike"], forms: ["zìxíngchē", "zìxíng chē", "dānchē", "jiǎotàchē"], ex: ["Wǒ qí zìxíngchē shàngxué.", "I cycle to school."], n: "Counted with liàng; one rides it: qí." }
-  ti_zuqiu: { t: "tī zúqiú", pos: phrase, en: ["to play football"], forms: ["tī zúqiú", "tī zú qiú", "tī qiú"], ex: ["Wǒmen zài gōngyuán tī zúqiú.", "We play football in the park."], n: "Football is 'kicked': tī." }
   wanr: { t: "wánr", pos: verb, en: ["to play", "to have fun"], forms: ["wánr"], ex: ["Háizimen zài wàimiàn wánr.", "The children are playing outside."], n: "The southern and written form is wán." }
   mei_ge_xiatian: { t: "měi ge xiàtiān", pos: phrase, en: ["every summer"], forms: ["měi ge xiàtiān", "měi nián xiàtiān", "měi ge dōngtiān", "měi nián", "měi ge xīngqītiān", "měi ge xīngqīliù", "měi ge zhōumò", "měi ge yuè"], ex: ["Měi ge xiàtiān wǒmen qù shān shang.", "Every summer we went to the mountains."], n: "Měi + a measure word + noun; nián and tiān take none: měi nián, měi tiān." }
   na_shihou: { t: "nà shíhou", pos: phrase, en: ["back then", "at that time"], forms: ["nà shíhou", "nà ge shíhou", "nàshíhou"], ex: ["Nà shíhou wǒ hěn xiǎo.", "Back then I was very small."] }
@@ -142,7 +140,7 @@ vocabulary:
   xianzai: { t: "xiànzài", pos: noun, en: ["now"], forms: ["xiànzài", "xiàn zài"], ex: ["Xiànzài wǒ zhù zài Shànghǎi.", "Now I live in Shanghai."] }
   meiyou_le: { t: "méiyǒu le", pos: phrase, en: ["no longer there", "there is no longer"], forms: ["méiyǒu le", "méi le", "yǐjīng méiyǒu le", "bú zài le"], ex: ["Nà jiā shūdiàn méiyǒu le.", "That bookshop is no longer there."], n: "le at the end tells that something has changed." }
   # future
-  wo_hui_qu: { t: "wǒ huì qù", pos: phrase, en: ["I will go"], forms: ["wǒ huì qù", "wǒmen huì qù", "huì qù"], ex: ["Míngtiān wǒ huì qù yīyuàn.", "Tomorrow I will go to the hospital."] }
+  wo_hui_qu: { t: "wǒ huì qù", pos: phrase, en: ["I will go", "I would go"], forms: ["wǒ huì qù", "wǒmen huì qù", "huì qù", "wǒ jiù qù"], ex: ["Míngtiān wǒ huì qù yīyuàn.", "Tomorrow I will go to the hospital."] }
   mingnian: { t: "míngnián", pos: noun, en: ["next year"], forms: ["míngnián", "míng nián", "xià yì nián"], ex: ["Míngnián wǒ huàn gōngzuò.", "Next year I am changing jobs."], n: "Qùnián is last year, jīnnián this year." }
   hui: { t: "huì", pos: verb, en: ["will", "is likely to"], forms: ["huì"], ex: ["Tā huì lái de.", "He will come."], n: "Huì is also 'can' for a skill learned: wǒ huì shuō Zhōngwén." }
   luxing: { t: "lǚxíng", pos: verb, en: ["to travel", "a trip"], forms: ["lǚxíng", "lǚ xíng", "lvxing", "lv xing", "qù lǚxíng"], ex: ["Wǒmen zuò huǒchē qù lǚxíng.", "We will travel by train."], n: "Typed without marks, ü is often v: lvxing." }
@@ -170,8 +168,6 @@ vocabulary:
   xiaban: { t: "xiàbān", pos: verb, en: ["to finish work", "to leave work"], forms: ["xiàbān", "xià bān"], ex: ["Wǒ liù diǎn xiàbān.", "I finish work at six."], n: "Shàng (up) to start, xià (down) to finish, as with classes: shàngkè, xiàkè." }
   wo_de_gongzuo: { t: "wǒ de gōngzuò", pos: phrase, en: ["my job", "my work"], forms: ["wǒ de gōngzuò"], ex: ["Wǒ de gōngzuò hěn máng.", "My job is very busy."] }
   xiang_dang: { t: "xiǎng dāng", pos: phrase, en: ["I would like to become", "want to be"], forms: ["xiǎng dāng", "xiǎng chéngwéi", "yào dāng"], ex: ["Wǒ xiǎng dāng chúshī.", "I would like to become a cook."], n: "Dāng + a job is 'to work as', 'to be'." }
-  yinwei: { t: "yīnwèi", pos: conjunction, en: ["because"], forms: ["yīnwèi", "yīn wèi"], ex: ["Wǒ bù qù, yīnwèi wǒ hěn lèi.", "I'm not going, because I'm tired."], n: "Often paired: yīnwèi ..., suǒyǐ ... (because ..., so ...)." }
-  you_yisi: { t: "yǒu yìsi", pos: adjective, en: ["interesting", "fun"], forms: ["yǒu yìsi", "yǒuyìsi", "hěn yǒu yìsi", "méi yìsi"], ex: ["Zhè běn shū hěn yǒu yìsi.", "This book is very interesting."], n: "'Méi yìsi' is 'boring'." }
   youyong: { t: "yǒuyòng", pos: adjective, en: ["useful"], forms: ["yǒuyòng", "yǒu yòng", "hěn yǒuyòng"], ex: ["Zhè ge gōngzuò hěn yǒuyòng.", "This job is useful."] }
   gongzi_gao: { t: "gōngzī gāo", pos: phrase, en: ["well paid", "the pay is high"], forms: ["gōngzī gāo", "gōngzī hěn gāo", "gōngzī bú cuò", "zhuàn qián duō", "zhèng qián duō"], ex: ["Zhè ge gōngzuò gōngzī hěn gāo.", "This job is well paid."] }
   xiang_dang_shenme: { t: "xiǎng dāng shénme", pos: phrase, en: ["what did you want to be", "what do you want to be"], forms: ["xiǎng dāng shénme", "xiǎng chéngwéi shénme", "xiǎng zuò shénme gōngzuò"], ex: ["Nǐ xiǎo shíhou xiǎng dāng shénme?", "What did you want to be when you were little?"], n: "Zhǎngdà yǐhòu is 'when I grow up'." }
