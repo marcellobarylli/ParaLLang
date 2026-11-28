@@ -16,7 +16,7 @@ vi.setConfig({ testTimeout: 40_000 });
 afterEach(cleanup);
 afterAll(cleanUp);
 
-function memoryStorage(display = { strict: true }) {
+function memoryStorage(display = { strict: true, breathing: false }) {
   const values = new Map([['parallang.display', JSON.stringify(display)], ['parallang.welcomed', '1']]);
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
 }

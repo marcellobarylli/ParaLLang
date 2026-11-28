@@ -4,7 +4,6 @@ import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 import { ROAD_NAME } from '../atlas.js';
 import Narration, { hasNarration } from './Narration.jsx';
-import { narratorOn, useReadPassage } from '../narratorVoice.js';
 import { GuideNote } from './Guidebook.jsx';
 import OdysseyChart from './OdysseyChart.jsx';
 
@@ -184,16 +183,12 @@ export function HubCard({ state }) {
   );
 }
 
+// Round 216: nothing is written or read while the camera walks to the next site: the walk is seen, and the breathing
+// (RoadBreath, DungeonScreen.jsx) is played over it until the conversation there is ready.
 export function RoadCaption({ state }) {
-  const { road, roadArrived, encounterLoading, roadError } = state;
-  const waiting = road?.current;
-  useReadPassage(road?.narration, road?.at, { on: narratorOn(state.display), tag: state.language?.tag }); // round 196
+  const { roadError } = state;
   if (roadError) return <section className="caption caption-problem" role="alert"><span>{roadError}</span></section>;
-  const text = roadArrived && encounterLoading ? `${firstName(waiting?.character)} is getting ready to talk…` : road?.here?.dungeon ? `Entering ${road.here.dungeon.name}…` : `On the way to ${road?.here?.name ?? 'the next site'}…`;
-  // Round 156: while the camera walks, the narrator tells the way taken. Round 166: the passage stays until the
-  // character is ready to talk, so there is something to read while the conversation loads, and what the game is
-  // doing ("On the way to…", "… is getting ready to talk…") is the passage's last sentence.
-  return <section className="caption" role="status">{hasNarration(road?.narration) ? <Narration narration={road.narration} after={text} /> : <span>{text}</span>}</section>;
+  return null;
 }
 
 /** Under a finished conversation: what it did to the curriculum, and the way on. */

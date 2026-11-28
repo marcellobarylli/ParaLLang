@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 217, the walk carries no text and is breathed through
+
+Between two conversations the camera's walk now has no caption and no narrator's passage; the breathing of round 214
+is played over the walk from the moment it starts (Continue, or a site picked), with the same rules: at least three
+breaths, more while the next conversation is still loading, always ending on a breath out. The conversation opens when
+the breathing ends. **Not seen in a browser or on a phone.**
+[Architecture](docs/rounds/217/architecture.md), [findings](docs/rounds/217/findings.md).
 ## Addendum 2026-11-28: round 216, a new game asks the learner's level
 
 A new game's title now asks "How much Italian do you speak?" with three tiers after the CEFR's beginner bands: never
@@ -2144,6 +2151,7 @@ Newest first.
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
 | 215 | 11-28 | The road's frontier is read from the finished conversations, not from the walk; a pull takes those sites only; pulled ground under the sea's level floods (the sea stays level); the check library switches round 214's breathing off; deployed | [215](docs/rounds/215/architecture.md) | [findings](docs/rounds/215/findings.md) | round 215 build, merged to `main` |
+| 217 | 11-28 | The walk between conversations carries no text, and the breathing is played over it; deployed | [217](docs/rounds/217/architecture.md) | [findings](docs/rounds/217/findings.md) | round 217 build, merged to `main` |
 | 213 | 11-28 | The pulls (issue #23): at a change of level the land sinks 26 m at the sites of the walk, by a displacement field solved from them; the world event on the map (the web generated in grey, the journey in black, the land sinking); the map and the level on the pulled land; a developer's jump to any unit in Settings; deployed | [213](docs/rounds/213/architecture.md) | [findings](docs/rounds/213/findings.md) | round 213 build, merged to `main` |
 | 020 | 11-05 | Portia's formalities in the target language: a character-sheet quirk (backlog E1, second try) (autonomous) | [020](docs/rounds/020/architecture.md) | [findings](docs/rounds/020/findings.md) | `4492e02` (pre-run record) to round 020 close (quirk reverted) |
 | 021 | 11-05 | Party recruitment: SAVE / LEAVE after a saveable NPC, party in the save, Party screen (backlog A8a); start route keeps `encounterId` (autonomous) | [021](docs/rounds/021/architecture.md) | [findings](docs/rounds/021/findings.md) | `9e51acd` (pre-run record) to round 021 close |
