@@ -15,6 +15,7 @@ import { volumesOf } from '../display.js';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
+import PullEvent from './PullEvent.jsx';
 import SaveSlots from './SaveSlots.jsx';
 import PartyPanel, { inParty } from './PartyPanel.jsx';
 import { dockInsets } from '../scene/insets.js';
@@ -728,7 +729,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         ? <DungeonView dungeon={legacy.dungeon} phase={legacyPhase} siteIndex={legacy.startIndex} walkFrom={legacyFrom} sites={legacy.sites} insets={insets} onArrive={state.onRoadArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} glitch={state.display?.glitch === true} seed={skySeed} onThunder={() => { if (audioWanted) ambience.thunder?.(); }} />
         : onRoad || atTitle
-        ? <RoadView road={state.road} seed={state.titleSeed} title={titleSite} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
+        ? <RoadView road={state.road} seed={state.titleSeed} titlePulled={state.titlePulled} title={titleSite} shown={state.roadShown} arrival={state.roadArrival} from={state.roadFrom} talking={roadTalking || (state.roadPhase === 'hub' && Boolean(state.road?.current))} insets={insets} onArrive={state.onRoadArrived} onThunder={() => { if (audioWanted) ambience.thunder?.(); }}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} />
         : <DungeonView dungeon={dungeon} phase={phase} siteIndex={siteIndex} walkFrom={state.walkFrom} sites={sites} insets={insets} onArrive={state.onCameraArrived}
           closed={state.closedObjectives} resolved={state.encounter?.state === 'resolved'} beat={state.beat} tilt={state.display?.tiltLook === true} glitch={state.display?.glitch === true} seed={skySeed} onThunder={() => { if (audioWanted) ambience.thunder?.(); }} />}
@@ -794,6 +795,9 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         </div>
       )}
 
+      {/* Round 213 (issue #23): the world event of a pull, over everything: the map and nothing else. */}
+      {onRoad && state.roadEventOpen && state.road?.event && <PullEvent road={state.road} walk={state.roadEventWalk} onDone={state.endRoadEvent} />}
+
       {menuOpen && <GameMenu state={state} onClose={() => setMenuOpen(false)} onMap={openMapNow} mapLabel={mapName} leave={leave[0]} onLeave={leave[1]} />}
 
       {state.slotsOpen && <SaveSlots slots={state.saveSlots} languages={state.languages} onSwitch={state.switchSlot} onDelete={state.deleteSlot} onClose={state.closeSlots} />}
@@ -801,6 +805,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}
         follow={state.display?.follow !== false} onFollow={state.setFollow} breathing={state.display?.breathing !== false} onBreathing={state.setBreathing} glitch={state.display?.glitch === true} onGlitch={state.setGlitch}
+        dev={state.display?.dev === true} onDev={state.setDev} curriculum={state.curriculum} onJump={state.devJump} jumping={state.devJumping}
         streamlined={state.display?.streamlined !== false} onStreamlined={state.setStreamlined}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}
         music={musicWanted} onMusic={(on) => { state.setMusic(on); if (on) ambience.start(); }} musicSupported={ambience.supported}

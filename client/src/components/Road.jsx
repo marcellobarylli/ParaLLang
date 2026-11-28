@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createTerrain } from '../../../server/src/road/terrain.js';
-import { createGraph } from '../../../server/src/road/graph.js';
+import { landOf } from '../land.js';
 import { currentWeather, onWeatherPin } from '../scene/weatherClock.js';
 import { ROAD_MAP, createMapView, renderMap } from '../roadMap.js';
 import { ROAD_NAME } from '../atlas.js';
@@ -108,6 +107,8 @@ function WayOn({ state }) {
   const rails = state.display?.rails !== false;
   const next = road.frontier.find((site) => site.id === road.rails) ?? null;
   const busy = state.roadTravelling || state.encounterLoading || state.isLoading;
+  // Round 213 (issue #23): a change of level has pulled the land. The way on leads to the map first, where it is seen.
+  if (road.event) return <button type="button" className="primary-button big-button" onClick={state.playRoadEvent} disabled={busy || state.roadEventLoading}>{state.roadEventLoading ? 'One moment…' : 'Continue'}</button>;
   if (!road.frontier.length) return <p>The road ends here, which it is not supposed to do.</p>;
   if (!rails || !next) return <WaysAhead state={state} />;
   return (
@@ -229,7 +230,8 @@ const MAP_TILE = (half) => `${-half},0 0,${-half * 0.58} ${half},0 0,${half * 0.
  */
 export function RoadMap({ state, onClose, closeLabel = 'Back to the road' }) {
   const { road } = state;
-  const { terrain, graph } = useMemo(() => { const made = createTerrain(road.seed); return { terrain: made, graph: createGraph(made) }; }, [road.seed]);
+  // Round 213 (issue #23): the land with the pulls the player has watched.
+  const { terrain, graph } = useMemo(() => landOf(road.seed, road.pulled ?? []), [road.seed, road.pulled]);
   const canvasRef = useRef(null);
   const [picked, setPicked] = useState(road.rails ?? road.frontier[0]?.id ?? null);
   useEffect(() => { if (!road.frontier.some((site) => site.id === picked)) setPicked(road.rails ?? road.frontier[0]?.id ?? null); }, [road.frontier, road.rails, picked]);
@@ -255,11 +257,11 @@ export function RoadMap({ state, onClose, closeLabel = 'Back to the road' }) {
     image.data.set(picture.data);
     context.putImageData(image, 0, 0);
   }, [terrain, view]);
-  const place = (node) => view.project(node.x, node.z, node.y);
+  const place = (node) => view.place(node.x, node.z, node.y);
   const at = (node) => { const [x, y] = place(node); return `translate(${x.toFixed(2)} ${y.toFixed(2)})`; };
   // A way lies on the ground: every point of it is drawn at its own height.
   const line = (a, b) => (graph.pathPoints(a, b) ?? [[graph.node(a).x, graph.node(a).z], [graph.node(b).x, graph.node(b).z]])
-    .map(([x, z]) => view.project(x, z, terrain.heightAt(x, z)).map((value) => value.toFixed(2)).join(',')).join(' ');
+    .map(([x, z]) => view.place(x, z, terrain.surfaceAt(x, z)).map((value) => value.toFixed(2)).join(',')).join(' ');
   const cleared = new Set(road.cleared);
   const chosen = road.frontier.find((site) => site.id === picked) ?? null;
   const busy = state.roadTravelling || state.encounterLoading || state.isLoading || state.roadPhase === 'travel';
@@ -321,7 +323,7 @@ export function RoadMap({ state, onClose, closeLabel = 'Back to the road' }) {
           <p className="description">{chosen.offer.character.description}</p>
           <small className="way-why">{chosen.offer.dungeon ? `${chosen.offer.dungeon.name}, beyond ${chosen.name}` : chosen.name}, by {WAY[chosen.way] ?? 'a way'}{chosen.offer.why ? ` · ${chosen.offer.why}` : ''}</small>
           {/* Round 175: from a conversation under way too: it is left unfinished, as Leave leaves it. */}
-          <button type="button" className="primary-button big-button" onClick={() => state.roadTravel(chosen.id)} disabled={busy}>{leaving ? 'Leave the conversation and walk here' : chosen.offer.dungeon ? `Enter ${chosen.offer.dungeon.name}` : 'Walk here'}</button>
+          <button type="button" className="primary-button big-button" onClick={() => state.roadTravel(chosen.id)} disabled={busy || state.roadEventLoading}>{leaving ? 'Leave the conversation and walk here' : chosen.offer.dungeon ? `Enter ${chosen.offer.dungeon.name}` : 'Walk here'}</button>
           {leaving && <small className="way-why">{state.encounter.character?.name ?? 'They'} will not have let you pass; the conversation can be had again later.</small>}
         </section>
       )}

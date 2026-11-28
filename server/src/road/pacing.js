@@ -112,6 +112,53 @@ export function nextGate(curriculum, progress) {
   return { gateId: curriculum.units[end - 1].id, hops: end - pos.unit.index };
 }
 
+/**
+ * Round 213 (issue #23): the level the learner is playing at: the `cefr` of the stage of the unit they are in (the
+ * last stage's once the curriculum is finished). In streamlined mode a gate still owed belongs to the units it closes,
+ * so the level is its last unit's until the gate's last conversation is played.
+ */
+export function levelAt(curriculum, progress, { streamlined = false } = {}) {
+  const stageOf = (unit) => curriculum.stages.find((stage) => stage.id === unit?.stageId) ?? curriculum.stages.at(-1);
+  const gate = streamlined ? gateDue(curriculum, progress) : null;
+  if (gate) return stageOf(curriculum.units.find((unit) => unit.id === gate.gateId)).cefr;
+  return stageOf(position(curriculum, progress).unit).cefr;
+}
+
+/** Round 213: whether `after` is a later level of the curriculum than `before` ('A1' to 'A2', and so on). */
+export function levelRose(curriculum, before, after) {
+  const levels = [...new Set(curriculum.stages.map((stage) => stage.cefr))];
+  return levels.indexOf(after) > levels.indexOf(before);
+}
+
+/**
+ * Round 213: the progress of a learner put down at a unit (the developer's jump in Settings). Every unit before
+ * `index` is complete, with the marks it had or full marks, and its gates are played; the unit at `index` and all
+ * after it are untouched. With `gate`, the learner stands before the gate that closes the unit at `index` instead:
+ * streamlined, the last conversation of the gate of its three units; otherwise the unit's own gate, its lessons done.
+ */
+export function jumpProgress(curriculum, progress, { index, gate = false, streamlined = false, step = 0 }) {
+  const lessons = {};
+  const checkpoints = {};
+  const gates = {};
+  const full = (at) => ({ done: 1, best: 1, last: 1, step: at, first: at, seen: at });
+  const complete = gate && streamlined ? index + 1 : index;
+  curriculum.units.slice(0, complete).forEach((unit) => {
+    for (const lesson of unit.lessons) lessons[lesson.id] = isDone(progress, lesson.id) ? progress.lessons[lesson.id] : full(step);
+    checkpoints[unit.id] = passedUnit(progress, unit) ? progress.checkpoints[unit.id] : { tries: 1, best: 1, last: 1, passed: true, step, ...(streamlined ? { streamlined: true } : {}) };
+  });
+  for (let end = PACING.gateEvery; end <= complete; end += PACING.gateEvery) {
+    const id = curriculum.units[end - 1].id;
+    const owed = gate && streamlined && end === complete;
+    gates[id] = { parts: PACING.gateEvery - (owed ? 1 : 0), scores: new Array(PACING.gateEvery - (owed ? 1 : 0)).fill(1), step };
+  }
+  if (gate && !streamlined) {
+    // The unit's lessons were taught long enough ago for its gate to be offered now.
+    const taught = step - PACING.checkpointGap;
+    for (const lesson of curriculum.units[index].lessons) lessons[lesson.id] = full(taught);
+  }
+  return { lessons, checkpoints, gates, recent: [...(progress.recent ?? [])], sinceReview: 0 };
+}
+
 /** Round 185: the objectives of one conversation of a gate: an objective of each of the unit's lessons, the second where there is one. */
 export function composeGatePart(curriculum, unitId) {
   const unit = curriculum.units.find((candidate) => candidate.id === unitId);

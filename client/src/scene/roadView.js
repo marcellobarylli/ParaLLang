@@ -4,11 +4,11 @@
 // road's director says. Loaded lazily, as the dungeon's host is.
 //
 // The landscape and its graph are the server's own functions (server/src/road/terrain.js and graph.js), bundled
-// here: the seed the server sends is all the client needs to stand on the same ground.
+// here: the seed the server sends, and from round 213 the pulls (pulls.js), are all the client needs to stand on the
+// same ground.
 import { Group, PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
 import { ENDLESS, atmosphereFor, createCairn, createEndlessWorld, createLandmark, createPS1Pipeline, createStandIn, createTrack, createWeatherEffects, loadModels } from '@parallang/aesthetic';
-import { createTerrain } from '../../../server/src/road/terrain.js';
-import { createGraph } from '../../../server/src/road/graph.js';
+import { landOf } from '../land.js';
 import { clearOfWays } from './wayClearance.js';
 import { currentWeather, onWeatherPin, pinWeather } from './weatherClock.js';
 import { createRoadDirector, titleDistance } from './roadDirector.js';
@@ -40,9 +40,9 @@ const easeTo = (current, target, dt, tau) => current + (target - current) * (1 -
  *                        landscape (farLand.js) fills the view beyond the built ground; once the camera is down
  *                        that sheet is thrown away.
  */
-export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = () => {}, reducedMotion = false, now = () => Date.now() } = {}) {
-  const terrain = createTerrain(seed);
-  const graph = createGraph(terrain);
+export function createRoadView(canvas, { seed, pulled = [], onArrive = () => {}, onThunder = () => {}, reducedMotion = false, now = () => Date.now() } = {}) {
+  // Round 213 (issue #23): the land with the pulls the learner has watched; a new pull is a new view.
+  const { terrain, graph } = landOf(seed, pulled);
   const renderer = new WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 2));
   // Round 192: the level's trees and undergrowth keep off the ways (wayClearance.js); the graph and the camera keep the terrain as it is.
@@ -55,7 +55,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     .catch((error) => { console.warn('The trees\' models could not be loaded; the simple trees stay:', error?.message ?? error); });
   const camera = new PerspectiveCamera(FOV, 1, 0.3, 900);
   const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
-  const director = createRoadDirector({ heightAt: terrain.heightAt, waterY: terrain.waterY });
+  const director = createRoadDirector({ heightAt: terrain.heightAt, waterY: terrain.waterY, surfaceAt: terrain.surfaceAt });
   const markers = new Group();
   markers.name = 'road-markers';
   world.scene.add(markers);
@@ -159,7 +159,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
       const points = graph.pathPoints(a, b);
       if (laid.has(pair) || !points) return;
       laid.add(pair);
-      const mesh = createTrack(world.materials, points, terrain.heightAt, { waterY: terrain.waterY });
+      const mesh = createTrack(world.materials, points, terrain.heightAt, { waterY: terrain.waterY, surfaceAt: terrain.surfaceAt });
       markers.add(mesh);
       tracks.push(mesh);
     };

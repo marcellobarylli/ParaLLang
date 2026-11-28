@@ -42,7 +42,7 @@ export function createFarLand(terrain, uniforms, centre, { radius = FAR_LAND.rad
       for (let b = 0; b < side; b += 1) {
         const [x, z] = [tx + a * cell, tz + b * cell];
         const h = terrain.heightAt(x, z);
-        heights[a * side + b] = Math.max(h, terrain.waterY) - sink;
+        heights[a * side + b] = (terrain.surfaceAt ? terrain.surfaceAt(x, z) : Math.max(h, terrain.waterY)) - sink; // round 213: pulled land
         colours.set(groundColour(terrain, x, z, h), (a * side + b) * 3);
       }
     }

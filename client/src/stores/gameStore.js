@@ -734,6 +734,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }), // round 198: light is the default
       setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on !== false }, storage) }),
       setGlitch: (on) => set({ display: saveDisplay({ ...get().display, glitch: on === true }, storage) }), // round 205
+      setDev: (on) => set({ display: saveDisplay({ ...get().display, dev: on === true }, storage) }), // round 213: developer mode
       // Round 214: the breathing while a reply is on its way.
       setBreathingNow: (on) => { if (get().breathingNow !== (on === true)) set({ breathingNow: on === true }); }, // while it is drawn: nothing is written over it
       setBreathing: (on) => set({ display: saveDisplay({ ...get().display, breathing: on !== false }, storage) }),
@@ -767,7 +768,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
         const phase = ['attract', 'world'].includes(get().phase) ? get().phase : 'overview';
         set({
           settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, narration: null, guideNote: null, guidebook: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
-          mode: 'dungeon', road: null, curriculum: null, journey: null, journeyShown: false, journeyLoading: false, journeyRemark: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false,
+          mode: 'dungeon', road: null, curriculum: null, journey: null, journeyShown: false, journeyLoading: false, journeyRemark: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false, roadEventOpen: false, roadEventLoading: false, roadEventWalk: null, devJumping: false,
           party: [], partyReturn: null, partyStarting: null, recruiting: false,
           progression: null, xpGained: 0, levelUp: null,
           phase, siteIndex: startIndex(dungeon), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, encounter: null, encounterLoading: false, siteError: null, starting: false,

@@ -45,6 +45,16 @@ entry "A breath while you wait" is told first. Played in the desktop app's brows
 a phone**. **Merged to `main` and deployed** on the owner's word.
 [Architecture](docs/rounds/214/architecture.md), [findings](docs/rounds/214/findings.md).
 
+## Addendum 2026-11-28: round 213, the pulls (issue #23), and a developer's jump
+
+The conversation that takes the learner from A1 to A2 (and A2 to B1) now pulls the land: its Continue opens the map
+on the whole screen with nothing else on it, the whole graph grows outward in faint grey as it is generated, the
+journey is drawn in black a walk at a time, and the land sinks 26 m (two of the tallest trees) at every site of the
+journey, the web and the journey with it. The map and the 3D level are the pulled land from then on. Settings has
+"Developer": developer mode, and a jump to any unit or to a gate's last conversation. Seen in headless Chromium at
+phone and desktop size, not on a phone; no model was run. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/213/architecture.md), [findings](docs/rounds/213/findings.md).
+
 ## Addendum 2026-11-28: round 212, Reduce motion ignored
 
 The game no longer follows the system's "Reduce motion": the camera walks, the characters bob, hop and sink, the
@@ -2112,6 +2122,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 213 | 11-28 | The pulls (issue #23): at a change of level the land sinks 26 m at the sites of the walk, by a displacement field solved from them; the world event on the map (the web generated in grey, the journey in black, the land sinking); the map and the level on the pulled land; a developer's jump to any unit in Settings; deployed | [213](docs/rounds/213/architecture.md) | [findings](docs/rounds/213/findings.md) | round 213 build, merged to `main` |
 | 020 | 11-05 | Portia's formalities in the target language: a character-sheet quirk (backlog E1, second try) (autonomous) | [020](docs/rounds/020/architecture.md) | [findings](docs/rounds/020/findings.md) | `4492e02` (pre-run record) to round 020 close (quirk reverted) |
 | 021 | 11-05 | Party recruitment: SAVE / LEAVE after a saveable NPC, party in the save, Party screen (backlog A8a); start route keeps `encounterId` (autonomous) | [021](docs/rounds/021/architecture.md) | [findings](docs/rounds/021/findings.md) | `9e51acd` (pre-run record) to round 021 close |
 | 022 | 11-05 | Conversations with party members: Gerald's coffee break, anywhere once he has joined (backlog A8b) (autonomous) | [022](docs/rounds/022/architecture.md) | [findings](docs/rounds/022/findings.md) | `53b5cca` (pre-run record) to round 022 close |

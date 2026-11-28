@@ -22,6 +22,11 @@
 //   dungeonSite  (round 185) the site of that dungeon the learner stands at, or null for its start
 //   streamlined  (round 173) false when the learner switched streamlined mode off; absent or true, it is on: each
 //             unit is one conversation, finishing it completes the unit, and every site offers the next unit
+//   pulled    (round 213, issue #23) the pulls, oldest first: [{ step, depth, sites, from, to }]. At each change of
+//             level (`from` 'A1' `to` 'A2', and so on) the sites walked since the pull before sink `depth` metres, and
+//             those of the earlier pulls sink again (pulls.js). The land's heights follow; the graph does not move
+//   pullsSeen how many of the pulls the learner has watched happen (the world event on the map). The land they are
+//             shown is pulled only by those; the next one is the road's `event` until it is seen
 //
 // Rules: the learner may walk to any site next to a site of the recent trail that is not itself on the trail (the
 // frontier; round 143's rule that everything out of the fog is reachable from anywhere). The pacing's recommended
@@ -37,9 +42,25 @@ import { graphFor, parseNodeId } from './graph.js';
 import { placeName } from './characters.js';
 import { ROAD_PLACE, buildRoadDefinition, describeActivity, legacyDungeonFor, legacyGateFor, objectivesOf } from './encounters.js';
 import { entriesFor, selectPassage } from '../narration.js';
-import { PACING, composeCheckpoint, composeGatePart, composeReview, composeUnit, emptyProgress, nextGate, overview, plan, position, record, scoreOf, streamlineProgress } from './pacing.js';
+import { PACING, composeCheckpoint, composeGatePart, composeReview, composeUnit, emptyProgress, jumpProgress, levelAt, levelRose, nextGate, overview, plan, position, record, scoreOf, streamlineProgress } from './pacing.js';
+import { PULL } from './pulls.js';
 
-export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200, walk: 20000 });
+export const ROAD = Object.freeze({ ...ROAD_PLACE, trail: 300, frontierFrom: 40, log: 30, shownTrail: 80, definitions: 200, walk: 20000, pulls: 12 });
+
+// Round 213: the pulls of a road, and how many of them the learner has watched.
+const pulledOf = (road) => (Array.isArray(road?.pulled) ? road.pulled : []);
+const pullsSeenOf = (road) => Math.min(pulledOf(road).length, Math.max(0, Number.isSafeInteger(road?.pullsSeen) ? road.pullsSeen : 0));
+const pullView = ({ step, depth, sites, from = null, to = null }) => ({ step, depth, sites: [...sites], from, to });
+/**
+ * Round 213: the pull that a change of level makes of a road: the sites of the walk that no earlier pull named, each
+ * once, in walking order. (The earlier ones sink again with it: pulls.js counts a site's pulls from its own on.)
+ */
+export function nextPull(road, { step, from, to }) {
+  const taken = new Set(pulledOf(road).flatMap((entry) => entry.sites));
+  const sites = [];
+  for (const id of road.walk ?? road.trail ?? []) if (!taken.has(id)) { taken.add(id); sites.push(id); }
+  return { step, depth: PULL.depth, sites: sites.slice(-PULL.sites), from, to };
+}
 
 const clone = (value) => structuredClone(value);
 const graphOf = (seed) => graphFor(seed, createTerrain);
@@ -264,6 +285,10 @@ export const roadMethods = {
         // And how far the unit's gate is: the conversations it takes at least, and the dungeon it stands in.
         gate: this.gateAhead(curriculum, road),
         streamlined: isStreamlined(road), // round 173
+        // Round 213 (issue #23): the pulls the learner has watched (the land shown is pulled by these), and the one
+        // they have not: the world event the client plays on the map before the way on, then reports seen.
+        pulled: pulledOf(road).slice(0, pullsSeenOf(road)).map(pullView),
+        event: pullsSeenOf(road) < pulledOf(road).length ? { kind: 'pull', number: pullsSeenOf(road) + 1, pull: pullView(pulledOf(road)[pullsSeenOf(road)]) } : null,
         hops: road.hops, // round 161: how many walks the journey is; the walk itself is asked for apart (getRoadWalk)
         current: road.current ? offer(graph.node(road.current.node), road.current.step, road.current.activity) : null,
         trail: road.trail.slice(-ROAD.shownTrail), cleared: road.cleared.slice(-ROAD.shownTrail),
@@ -460,7 +485,12 @@ export const roadMethods = {
     const recorded = record(was, activity, score, step);
     const progress = streamlined ? streamlineProgress(curriculum, recorded, step) : recorded;
     const after = position(curriculum, progress);
+    // Round 213 (issue #23): the conversation that takes the learner from one level to the next (A1 to A2, and so
+    // on) pulls the land down at the sites of the walk: written in this same save, shown by the client on the map.
+    const levels = { from: levelAt(curriculum, was, { streamlined }), to: levelAt(curriculum, progress, { streamlined }) };
+    const pull = levelRose(curriculum, levels.from, levels.to) ? nextPull(stored, { step, ...levels }) : null;
     const result = {
+      ...(pull ? { worldEvent: { kind: 'pull', number: pulledOf(stored).length + 1, from: levels.from, to: levels.to } } : {}),
       kind: activity.kind, title: definition.road.title, score: Math.round(score * 100) / 100,
       ...(activity.kind === 'checkpoint' ? { passed: score >= PACING.checkpointPass, needed: PACING.checkpointPass } : {}),
       ...(activity.kind === 'gate' ? { part: (activity.part ?? 0) + 1, of: activity.unitIds?.length ?? 1 } : {}), // round 185
@@ -468,6 +498,7 @@ export const roadMethods = {
     };
     envelope.road = {
       ...stored, step, progress, current: null,
+      ...(pull ? { pulled: [...pulledOf(stored), pull].slice(-ROAD.pulls), pullsSeen: Math.min(pullsSeenOf(stored), ROAD.pulls - 1) } : {}),
       cleared: [...stored.cleared.filter((id) => id !== session.road.node), session.road.node].slice(-ROAD.trail),
       log: [{
         step, node: session.road.node, place: definition.road.place, kind: activity.kind, title: definition.road.title,
@@ -518,6 +549,52 @@ export const roadMethods = {
       }
       if (!envelope.road) staged.road = this.setOut(staged, staged.road);
       await this.storage.save(staged);
+      return this.roadView(staged);
+    });
+  },
+
+  // Round 213 (issue #23): the client has played the world event numbered `number` (the pull, on the map). From then
+  // on the land the learner is shown is the pulled one.
+  async seeRoadEvent(learnerId, request) {
+    assertLearnerId(learnerId);
+    const number = request?.number;
+    if (!Number.isSafeInteger(number) || number < 1) throw validationError('number must be the event\'s number.');
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const stored = envelope.road;
+      if (!stored || number <= pullsSeenOf(stored) || number > pulledOf(stored).length) return this.roadView(envelope);
+      const staged = clone(envelope);
+      staged.road = { ...stored, pullsSeen: number };
+      await this.storage.save(staged);
+      return this.roadView(staged);
+    });
+  },
+
+  // Round 213: the developer's jump (Settings, "Developer"): the learner is put down at a unit of the curriculum,
+  // every unit before it complete, where they stand on the road. `gate` puts them before the gate that closes the
+  // unit instead (streamlined: its last conversation). `unpull` forgets the pulls, so that one can be watched again.
+  // Nothing is pulled by a jump itself: a pull comes of the conversation that crosses a level.
+  async jumpRoad(learnerId, request) {
+    assertLearnerId(learnerId);
+    const curriculum = this.curriculum();
+    const index = curriculum.units.findIndex((unit) => unit.id === request?.unitId);
+    if (index < 0) throw validationError('Unknown unit.');
+    const gate = request.gate === true;
+    return this.serialized(learnerId, async () => {
+      const envelope = await this.loadEnvelope(learnerId);
+      const staged = clone(envelope);
+      const road = envelope.road ? this.wholeRoad(envelope.road) : freshRoad(this.roadSeed(), curriculum);
+      const streamlined = isStreamlined(road);
+      if (gate && streamlined && (index + 1) % PACING.gateEvery !== 0) throw validationError('No gate closes that unit.');
+      const progress = jumpProgress(curriculum, road.progress, { index, gate, streamlined, step: road.step });
+      const next = { ...road, progress, current: null, dungeon: null, dungeonSite: null, narration: null };
+      if (request.unpull === true) { delete next.pulled; delete next.pullsSeen; }
+      // A unit's conversation waits where the learner stands; a gate is in an old place, a walk away.
+      const [first] = plan(curriculum, progress, next.step, modeOf(next));
+      if (first && !['gate', 'checkpoint'].includes(first.kind)) next.current = { node: next.at, step: next.step, activity: commit(curriculum, progress, next.step, first, this.isDueObjective(envelope)) };
+      staged.road = next;
+      await this.storage.save(staged);
+      if (this.encounters.get(learnerId)?.road) this.encounters.delete(learnerId);
       return this.roadView(staged);
     });
   },

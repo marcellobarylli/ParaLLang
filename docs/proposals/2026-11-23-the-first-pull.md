@@ -1,5 +1,9 @@
 # Proposal: the pulls
 
+**Built in round 213** ([architecture](../rounds/213/architecture.md)), with two changes: the pull moves the water down
+with the ground instead of capping a site's depth at the water, and a site sinks exactly its depth (the bumps' weights
+are solved for) instead of the sum of the bumps over it.
+
 *2026-11-23. Not built. Written because the owner described the event and said "we need to kind of think of how to
 implement that animation and then permanently update the world map". No second opinion was taken (the cloud session
 has no Codex); the questions at the end are for the owner.*

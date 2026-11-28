@@ -25,10 +25,10 @@ came). The first time, the guidebook's entry is told first and entered.
 
 | Check | Result |
 |---|---|
-| Client tests | 358 pass |
+| Client tests | 358 pass; 379 after `main` (round 213) was merged in |
 | Aesthetic tests | 95 pass |
 | Client build | passes |
-| Server tests | 618 of 621. The three that fail are `runner` tests of the CLI runner's timeouts; two of them fail on unchanged `main` on this Mac as well, and none touches this round's code. `narrator-voice.test.js` failed once in a full run and passes alone |
+| Server tests | 618 of 621; 629 of 631 after the merge. Those that fail are `runner` tests of the CLI runner's timeouts (which of them varies from run to run); two of them fail on unchanged `main` on this Mac as well, and none touches this round's code. `narrator-voice.test.js` failed once in a full run and passes alone |
 | Mobile tests | not run (the worktree has no `mobile/node_modules`); the app is unchanged |
 | First answer of a new game | the card "A breath while you wait" over the panel, with Begin; `POST /api/guidebook/enter` answers 200 ([picture](shots/01-first-time-the-entry.jpg)) |
 | Begin | the panel thins, no text is left on it, the breath starts in ([picture](shots/02-breathing-in-held.jpg)) |

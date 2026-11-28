@@ -343,7 +343,7 @@ The world is not finished being said.
 - **A rift is a stitch seen from the side.** The rifts of part VI and the portal of part X are this and nothing else. A gate opens when someone stitches through to this side. It closes into a stitch when they are sent back.
 - **The walk is a seam.** The player has completed a stitch at every place they have talked their way past. The line of the whole journey, as the map can paint it, is a line of stitches, and a seam is where two pieces of cloth are drawn together. That is why the player's own walk is where the worlds begin to meet: Collision (part VI) starts along it.
 
-**The pulls.** *The owner's, of the same day. A world event that comes more than once; it is not built.*
+**The pulls.** *The owner's, of the same day. A world event that comes more than once; built in round 213 ([`docs/rounds/213/architecture.md`](rounds/213/architecture.md)).*
 
 It comes at each change of level in the curriculum and at no other step: from A1 to A2, from A2 to B1, and so on. (The owner first put it at A2 to B1 alone, then at "all the medium to major transitions", and settled it: "really only do A1 to A2 and so on".) Each time:
 

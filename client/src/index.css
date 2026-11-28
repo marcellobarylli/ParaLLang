@@ -545,3 +545,13 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .welcome-backdrop .welcome-card { width: min(440px, 100%); border-bottom: 2px solid var(--lo); padding-bottom: 1.1rem; gap: .7rem; text-align: left; }
 .welcome-card .welcome-teaser { color: var(--gold-hi); font-style: italic; }
 .welcome-card .big-button { margin-top: .3rem; }
+
+/* Round 213 (issue #23): the world event of a pull: the map on the whole screen and nothing else. The picture is the
+   map's own (small, shown large); the lines over it are drawn at the screen's sharpness. */
+.pull-event { position: absolute; inset: 0; z-index: 35; overflow: hidden; background: #000; touch-action: none; -webkit-user-select: none; user-select: none; }
+.pull-event canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.pull-picture { image-rendering: pixelated; opacity: 0; }
+/* Centred by its margins: a pressed button has a transform of its own. */
+.pull-continue { position: absolute; left: 0; right: 0; margin: 0 auto; bottom: calc(max(1.6rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); width: min(320px, calc(100% - 2rem)); animation: pull-continue 1.4s ease both; }
+@keyframes pull-continue { from { opacity: 0; } to { opacity: 1; } }
+.pull-event.leaving canvas, .pull-event.leaving .pull-continue { opacity: 0 !important; transition: opacity .6s ease; animation: none; }

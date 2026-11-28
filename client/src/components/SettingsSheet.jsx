@@ -57,7 +57,25 @@ function VolumeSlider({ channel, label, note, value, onChange, disabled = false 
   );
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, breathing = true, onBreathing = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, narratorVoice = NARRATOR_VOICES[0].id, onNarratorVoice = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+// Round 213: "Developer": with developer mode on, a jump to any unit of the curriculum, or to the last conversation
+// of a gate (after every third unit), for trying what happens there. The gate that ends a level pulls the land.
+const GATE_EVERY = 3; // server/src/road/pacing.js PACING.gateEvery
+/** The places a developer can jump to, in the curriculum's order: [{ value, label }], `value` "unit:<id>" or "gate:<id>". */
+export function jumpTargets(curriculum, streamlined = true) {
+  const units = (curriculum?.stages ?? []).flatMap((stage) => stage.units.map((unit) => ({ ...unit, cefr: stage.cefr })));
+  const targets = [];
+  units.forEach((unit, index) => {
+    targets.push({ value: `unit:${unit.id}`, label: `${unit.cefr} · ${index + 1}. ${unit.title}` });
+    const next = units[index + 1];
+    const rises = Boolean(next) && next.cefr !== unit.cefr;
+    if (streamlined ? (index + 1) % GATE_EVERY === 0 : true) {
+      if (streamlined || rises) targets.push({ value: `gate:${unit.id}`, label: `${unit.cefr} · the gate after ${index + 1}${streamlined ? ', its last conversation' : ''}${rises ? ` (then ${next.cefr}: the land is pulled)` : ''}` });
+    }
+  });
+  return targets;
+}
+
+export default function SettingsSheet({ settings, onSave, onClose, dev = false, onDev = null, curriculum = null, onJump = null, jumping = false, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, breathing = true, onBreathing = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, narratorVoice = NARRATOR_VOICES[0].id, onNarratorVoice = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -98,6 +116,18 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
     return () => { current = false; };
   }, [site]);
   const outdated = Boolean(newest) && newest !== site.build;
+  // Round 213: the developer's jump.
+  const targets = jumpTargets(curriculum, streamlined);
+  const [target, setTarget] = useState('');
+  const [unpull, setUnpull] = useState(false);
+  const [jumpNote, setJumpNote] = useState(null);
+  const jump = async () => {
+    const [kind, unitId] = (target || targets[0]?.value || '').split(':');
+    if (!unitId) return;
+    setJumpNote(null);
+    const done = await onJump({ unitId, gate: kind === 'gate', unpull });
+    setJumpNote(done ? (kind === 'gate' ? 'Done. The gate is the next site: walk on, and finish its conversation.' : 'Done. The unit\'s conversation waits where you stand.') : 'The jump failed. Is the road open, and the server connected?');
+  };
   const volumes = volumesOf(volume);
   return (
     <div className="sheet-backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
@@ -280,6 +310,33 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
             <button type="submit" className="primary-button">Save and connect</button>
           </div>
         </Group>
+        {onDev && (
+          <Group title="Developer" open={dev}>
+            <label className="setting-check" htmlFor="settings-dev">
+              <input id="settings-dev" type="checkbox" checked={dev} onChange={(event) => onDev(event.target.checked)} />
+              <span>Developer mode</span>
+            </label>
+            <small>Tools for trying the game out. They change your save.</small>
+            {dev && onJump && (targets.length > 0 ? (
+              <>
+                <label htmlFor="settings-jump">Jump to</label>
+                <select id="settings-jump" value={target || targets[0].value} onChange={(event) => setTarget(event.target.value)} disabled={jumping}>
+                  {targets.map((each) => <option key={each.value} value={each.value}>{each.label}</option>)}
+                </select>
+                <small>Every unit before it counts as done, with full marks where it had none; you stay where you stand on the road. A gate that ends a level (A1 to A2, A2 to B1) pulls the land down along your journey when its conversation is finished: the map shows it before you walk on.</small>
+                <label className="setting-check" htmlFor="settings-unpull">
+                  <input id="settings-unpull" type="checkbox" checked={unpull} onChange={(event) => setUnpull(event.target.checked)} />
+                  <span>Undo the pulls first</span>
+                </label>
+                <small>The land goes back to how it was before any pull, so one can be watched again.</small>
+                <div className="button-row">
+                  <button type="button" className="secondary-button" onClick={jump} disabled={jumping}>{jumping ? 'Jumping…' : 'Jump'}</button>
+                </div>
+                {jumpNote && <small role="status">{jumpNote}</small>}
+              </>
+            ) : <small>Open the road once (Set out), and the curriculum's units are listed here.</small>)}
+          </Group>
+        )}
         <Group title="This build" open={outdated}>
           <p className="build-line">
             {outdated && <strong role="status">A newer build is on the site ({newest}). </strong>}

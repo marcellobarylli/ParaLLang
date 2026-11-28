@@ -41,14 +41,21 @@ export function createGraph(terrain) {
   const forced = new Map();
   const remember = (cache, key, value) => { if (cache.size >= GRAPH.cache) cache.clear(); cache.set(key, value); return value; };
 
+  // The k-th point tried for the site of cell (i, j).
+  const tried = (i, j, k) => [
+    (i + GRAPH.inset + (1 - 2 * GRAPH.inset) * hash(i * 31 + k, j, seed + 401)) * GRAPH.cell,
+    (j + GRAPH.inset + (1 - 2 * GRAPH.inset) * hash(i, j * 31 + k, seed + 402)) * GRAPH.cell,
+  ];
+  /** Round 213: the points tried for the site of cell (i, j), in order: [[x, z], ...] (the web's wave shows them). */
+  const candidates = (i, j) => Array.from({ length: GRAPH.candidates }, (unused, k) => tried(i, j, k));
+
   /** The site of cell (i, j), or null when the cell has no dry ground. */
   function nodeAt(i, j) {
     const id = nodeId(i, j);
     if (nodes.has(id)) return nodes.get(id);
     let best = null;
     for (let k = 0; k < GRAPH.candidates; k += 1) {
-      const x = (i + GRAPH.inset + (1 - 2 * GRAPH.inset) * hash(i * 31 + k, j, seed + 401)) * GRAPH.cell;
-      const z = (j + GRAPH.inset + (1 - 2 * GRAPH.inset) * hash(i, j * 31 + k, seed + 402)) * GRAPH.cell;
+      const [x, z] = tried(i, j, k);
       const y = heightAt(x, z);
       if (y < GRAPH.dry) continue;
       const score = slopeAt(x, z) * 10 + (y < 3 ? 0.6 : 0) + (y > 60 ? 1.5 : 0) + 0.2 * hash(i + k, j - k, seed + 403);
@@ -232,7 +239,7 @@ export function createGraph(terrain) {
     return null;
   }
 
-  return Object.freeze({ seed, terrain, nodeAt, node, neighbours, edge, pathPoints, nodesNear, route, start: start() });
+  return Object.freeze({ seed, terrain, nodeAt, node, neighbours, edge, pathPoints, nodesNear, route, candidates, start: start() });
 }
 
 // A few graphs are kept by seed: each learner's road has its own, and a request needs only a handful of sites.
