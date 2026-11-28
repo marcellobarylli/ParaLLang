@@ -70,4 +70,8 @@ be built, merged and deployed.
 
 ## Status
 
-Built and tested; played in the desktop app's browser pane at a phone's size with scripted holds, not on a phone.
+Built and tested; played in the desktop app's browser pane at a phone's size with scripted holds, not on a phone. It was
+built as round 213 and renumbered 214 when another session's round 213 (the pulls) reached `main` first; that round
+is merged in. The other local session was asked before the first edit and again before the merge, and held no work.
+Merged to `main` and pushed on the owner's word ("check in with them before merging, then deploy"): the push deploys
+the page (GitHub Pages) and the server (Render).
