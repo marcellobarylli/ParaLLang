@@ -70,6 +70,7 @@ cannot make it loop. A conversation is never interrupted.
 
 The owner's two lines replace "Let go where the ring glows" and "Press again where the ring glows next" in "A breath
 while you wait" (the card before the first breathing and the guidebook entry, `content/narration/guidebook.yaml`):
-"…Where the ring glows, let go of the tap as you let go of the breath, and breathe out as the light sinks. Let it go.
+"…Where the ring glows, let go of the tap as you let go of the breath, and breathe out as the light sinks.
 Hold the tap once more with the following in-breath, where the ring glows next." `server/test/guidebook.test.js` holds
 it word for word. A game that has already been told the entry finds the new text in its guidebook.
+The owner then dropped "Let it go." (round 214's sentence after the breath out): it is not needed.

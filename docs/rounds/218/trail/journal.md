@@ -15,3 +15,4 @@ Append only. Times are UTC.
 | 9 | 2026-11-28 | 14:30 | bug | Owner | After the deploy the phone still showed the old title (native radios, centred text): the home-screen app was running the build it was opened with | `../architecture.md` |
 | 10 | 2026-11-28 | 14:45 | run | Claude | The title now loads a newer build itself (`updateIfNewer`): client 392 pass; in Chromium the same build does not reload, a newer one reloads once past the cache and not again | `../findings.md` |
 | 11 | 2026-11-28 | 14:55 | decision | Owner | The breathing's entry is to tell the tap and the breath apart: "Let go of the tap as you let go of the breath", "Hold the tap once more with the following in-breath" | `../architecture.md` |
+| 12 | 2026-11-28 | 15:05 | decision | Owner | "Let it go." is dropped from the breathing's entry | `../architecture.md` |
