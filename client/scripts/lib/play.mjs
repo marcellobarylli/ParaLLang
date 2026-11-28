@@ -46,14 +46,15 @@ export async function openGame({ provider, out, language = 'it', display = {}, d
     const file = url.pathname.slice(BASE_PATH.length) || 'index.html';
     try { return route.fulfill({ status: 200, contentType: TYPES[extname(file)] ?? 'application/octet-stream', body: await readFile(join(DIST, file)) }); } catch { return route.fulfill({ status: 404, body: '' }); }
   });
-  // The server's address and token; no music and no voices unless the check asks for them.
+  // The server's address and token; no music and no voices unless the check asks for them. Round 215: nor the
+  // breathing while a reply is awaited (round 214), whose first card would cover the conversation.
   // Round 180: the opening message counts as read, unless the check is about it (`welcomed: false`).
   await page.addInitScript(([settings, shown, learner, welcomed]) => {
     localStorage.setItem('parallang.settings', settings);
     if (welcomed && !localStorage.getItem('parallang.welcomed')) localStorage.setItem('parallang.welcomed', '1');
     if (!localStorage.getItem('parallang.display')) localStorage.setItem('parallang.display', shown);
     if (learner && !localStorage.getItem('parallang.learnerId')) localStorage.setItem('parallang.learnerId', learner);
-  }, [JSON.stringify({ serverUrl: ORIGIN, token: runtime.token }), JSON.stringify({ music: false, voices: false, ...display }), learnerId, welcomed]);
+  }, [JSON.stringify({ serverUrl: ORIGIN, token: runtime.token }), JSON.stringify({ music: false, voices: false, breathing: false, ...display }), learnerId, welcomed]);
   const tap = (locator, options) => (device.hasTouch ? locator.tap(options) : locator.click(options));
   const game = {
     page, runtime, content, sent, check, problems, tap,

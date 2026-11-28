@@ -78,7 +78,8 @@ test('the gate that ends A1 pulls the land: the way on leads to the event, and t
   await throughTheGate(ctx);
   const gateSite = s().road.at;
   expect(s().roadResult.worldEvent).toEqual({ kind: 'pull', number: 1, from: 'A1', to: 'A2' });
-  expect(s().road.event).toMatchObject({ kind: 'pull', number: 1, pull: { depth: PULL.depth, sites: [start, gateSite], from: 'A1', to: 'A2' } });
+  // Round 215: the pull takes the sites whose conversation was finished: the gate's. The start was only stood at.
+  expect(s().road.event).toMatchObject({ kind: 'pull', number: 1, pull: { depth: PULL.depth, sites: [gateSite], from: 'A1', to: 'A2' } });
   expect([s().road.pulled, s().titlePulled, s().roadEventOpen]).toEqual([[], [], false]);
   // Continue does not walk: it opens the event, with the journey it draws.
   await s().roadContinue();
@@ -94,7 +95,7 @@ test('the gate that ends A1 pulls the land: the way on leads to the event, and t
   expect([s().roadEventOpen, s().roadEventWalk, s().roadPhase, s().encounter, s().roadError, s().roadArrival]).toEqual([false, null, 'hub', null, null, 'stand']);
   expect(s().roadShown).toBe(shown + 1);
   expect(s().road.event).toBe(null);
-  expect(s().road.pulled.map((pull) => pull.sites)).toEqual([[start, gateSite]]);
+  expect(s().road.pulled.map((pull) => pull.sites)).toEqual([[gateSite]]);
   expect(s().titlePulled).toEqual(s().road.pulled);
   // The title of the next visit shows the pulled land.
   expect(titleOf(storage).pulled).toEqual(s().road.pulled);

@@ -41,7 +41,7 @@ test('every pulled site is exactly its depth lower, the land between is lowered 
   assert.equal(made.pull.points.length, 60);
   for (const id of sites) {
     const [before, after] = [graph.node(id), made.graph.node(id)];
-    assert.ok(Math.abs(after.y - (before.y - PULL.depth)) < 1e-3, `${id} is ${before.y - after.y} m lower`);
+    assert.ok(Math.abs(after.ground - (before.y - PULL.depth)) < 1e-3, `the ground of ${id} is ${before.y - after.ground} m lower`);
     assert.ok(Math.abs(made.terrain.heightAt(before.x, before.z) - (terrain.heightAt(before.x, before.z) - PULL.depth)) < 1e-3);
   }
   // Nowhere is the land raised, and nowhere is it far deeper than a pull.
@@ -78,33 +78,43 @@ test('the pulled land is smooth: no step anywhere along a line through the hollo
   }
 });
 
-test('the pull moves space, not soil: the water sinks with the ground, the kind of ground and the trees stay, the graph does not move', () => {
+test('round 215: the ground sinks and the sea does not: sunk ground under its level is water, its trees are gone, and the graph does not move', () => {
   const terrain = createTerrain(4242);
   const graph = createGraph(terrain);
   const sites = walkOf(graph, 40);
   const { terrain: pulled, graph: pulledGraph } = withPulls(terrain, graph, [{ step: 1, depth: PULL.depth, sites }]);
+  assert.equal(pulled.waterY, terrain.waterY);
+  let drowned = 0;
   for (const id of sites) {
-    const node = pulledGraph.node(id);
-    assert.ok(node.y > pulled.waterAt(node.x, node.z) + 1, `${id} stands over the water`);
+    const [before, node] = [graph.node(id), pulledGraph.node(id)];
+    assert.ok(Math.abs(node.ground - (before.y - PULL.depth)) < 1e-3, 'the site\'s ground is a pull lower');
+    // Where it stands now: on its ground, or on the water when the ground is under it.
+    assert.equal(node.drowned, node.ground <= terrain.waterY);
+    assert.equal(node.y, Math.max(node.ground, terrain.waterY));
     assert.equal(pulled.surfaceAt(node.x, node.z), node.y);
-    assert.equal(node.cover, graph.node(id).cover);
-    assert.equal(pulled.coverAt(node.x, node.z), terrain.coverAt(node.x, node.z));
-    assert.equal(pulled.coverAt(node.x, node.z, pulled.heightAt(node.x, node.z)), terrain.coverAt(node.x, node.z, terrain.heightAt(node.x, node.z)));
-    assert.deepEqual([node.x, node.z, node.id], [graph.node(id).x, graph.node(id).z, id]);
+    assert.equal(pulled.coverAt(node.x, node.z), node.drowned ? 'water' : terrain.coverAt(node.x, node.z, node.ground));
+    if (node.drowned) drowned += 1;
+    assert.deepEqual([node.x, node.z, node.id, node.cover], [before.x, before.z, id, before.cover]);
     assert.deepEqual(pulledGraph.neighbours(id), graph.neighbours(id));
   }
+  // The start of a road is a few metres over the sea: a pull of 26 m drowns it.
+  assert.ok(pulledGraph.node(graph.start).drowned, 'the first site of the walk is under water');
+  assert.ok(drowned >= 5 && drowned <= sites.length, `${drowned} of ${sites.length} sites are drowned`);
   assert.deepEqual(pulledGraph.pathPoints(sites[0], sites[1]), graph.pathPoints(sites[0], sites[1]));
   assert.equal(pulledGraph.start, graph.start);
-  // The same trees stand, each lower by what its ground sank.
+  // The trees: none stands on drowned ground, and those left stand as much lower as their ground sank.
   const start = graph.node(graph.start);
   const [cx, cz] = [Math.floor(start.x / 48), Math.floor(start.z / 48)];
-  const [before, after] = [terrain.treesIn(cx, cz), pulled.treesIn(cx, cz)];
-  assert.equal(after.length, before.length);
-  before.forEach((tree, n) => {
-    assert.deepEqual([after[n].x, after[n].z, after[n].kind, after[n].height], [tree.x, tree.z, tree.kind, tree.height]);
-    assert.ok(Math.abs(after[n].y - (tree.y + pulled.pullAt(tree.x, tree.z))) < 1e-9);
-  });
-  assert.ok(after.some((tree, n) => tree.y < before[n].y - 5), 'the trees round the start have sunk');
+  let gone = 0;
+  for (const [i, j] of [[0, 0], [1, 0], [0, 1], [-1, 0], [0, -1]]) {
+    const [before, after] = [terrain.treesIn(cx + i, cz + j), pulled.treesIn(cx + i, cz + j)];
+    const kept = before.filter((tree) => tree.y + pulled.pullAt(tree.x, tree.z) > terrain.waterY);
+    assert.deepEqual(after.map((tree) => [tree.x, tree.z, tree.kind, tree.height]), kept.map((tree) => [tree.x, tree.z, tree.kind, tree.height]));
+    after.forEach((tree, n) => assert.ok(tree.y > terrain.waterY && Math.abs(tree.y - (kept[n].y + pulled.pullAt(tree.x, tree.z))) < 1e-9));
+    for (const plant of pulled.undergrowthIn(cx + i, cz + j)) assert.ok(plant.y > terrain.waterY);
+    gone += before.length - after.length;
+  }
+  assert.ok(gone > 0, 'trees round the start were drowned');
 });
 
 test('the same seed and the same pulls give the same ground; no pulls give the land as it was', () => {
@@ -182,13 +192,17 @@ test('the developer\'s jump puts the learner down at a unit, and at a gate', asy
 test('the conversation that takes the learner from A1 to A2 pulls the land at the sites of the walk, once; the event is the road\'s until it is seen', async (t) => {
   const { runtime, content, learnerId } = await roadRuntime(t, { streamlined: true });
   const units = content.curriculum.units;
-  // Two units' walk first, so the journey has sites; neither is a change of level.
+  // A conversation finished at the start, one more a walk on, and a third site walked to and left unfinished; none
+  // is a change of level.
   let view = (await road(runtime, learnerId)).data;
   const start = view.road.at;
   let turn = await talkHere(runtime, learnerId);
   assert.equal(turn.roadResult.worldEvent, undefined);
   view = (await moveTo(runtime, learnerId, (await road(runtime, learnerId)).data.road.rails)).data;
   const second = view.road.at;
+  await talkHere(runtime, learnerId);
+  view = (await moveTo(runtime, learnerId, (await road(runtime, learnerId)).data.road.rails)).data;
+  const unfinished = view.road.at;
   // The last unit of A1: the gate of its three units, at its last conversation.
   view = (await jump(runtime, learnerId, { unitId: units[11].id, gate: true })).data;
   view = (await moveTo(runtime, learnerId, view.road.rails)).data;
@@ -201,7 +215,9 @@ test('the conversation that takes the learner from A1 to A2 pulls the land at th
   assert.equal(view.curriculum.position.cefr, 'A2');
   // The pull is in the save, but the land shown is not pulled until the event has been watched.
   assert.deepEqual(view.road.pulled, []);
+  // Round 215: the pull takes the sites whose conversation was finished, in that order, and not the one only walked to.
   assert.deepEqual(view.road.event, { kind: 'pull', number: 1, pull: { step: view.road.step, depth: PULL.depth, sites: [start, second, gateSite], from: 'A1', to: 'A2' } });
+  assert.ok(!view.road.event.pull.sites.includes(unfinished) && (await runtime.service.getRoadWalk(learnerId)).walk.nodes.includes(unfinished));
   // A reload before it is watched: it is still owed.
   assert.equal((await road(runtime, learnerId)).data.road.event.number, 1);
   view = (await seen(runtime, learnerId, 1)).data;
@@ -248,5 +264,6 @@ test('the full pacing pulls at the gate of the last unit of a level', async (t) 
   assert.equal(turn.roadResult.passed, true);
   assert.deepEqual(turn.roadResult.worldEvent, { kind: 'pull', number: 1, from: 'A1', to: 'A2' });
   view = (await road(runtime, learnerId)).data;
-  assert.equal(view.road.event.pull.sites.length, 2);
+  // The start was only stood at (the jump put the gate first): the gate's site alone is pulled.
+  assert.deepEqual(view.road.event.pull.sites, [view.road.at]);
 });

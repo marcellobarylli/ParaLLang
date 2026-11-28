@@ -76,3 +76,10 @@ commit; nothing here is frozen.
 
 Built; seen in headless Chromium at phone and desktop size, not on a phone. Merged to `main` and pushed on the owner's
 word; GitHub Pages deploys the page and Render the server.
+
+## Amendment (2026-11-28, round 215)
+
+On the owner's answer, [round 215](../215/architecture.md) changes decisions 2 and 5: a pull takes the sites whose
+conversation was finished, not every site walked to; and the sea keeps its level, so ground pulled under it floods
+(the water no longer sinks with the ground). "Every site walked to is pulled" and "Space sinks, water with it" under
+"Decided without the owner" no longer hold.

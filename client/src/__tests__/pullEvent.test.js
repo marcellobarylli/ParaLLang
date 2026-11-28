@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest';
 import { GRAPH } from '../../../server/src/road/graph.js';
 import { PULL } from '../../../server/src/road/pulls.js';
 import { landKey, landOf } from '../land.js';
-import { PULL_EVENT, buckleShare, createPullEvent, createWebWave, hopSeconds } from '../pullEvent.js';
+import { PULL_EVENT, buckleShare, createPullEvent, createWebWave, hopSeconds, surfaceAt } from '../pullEvent.js';
 import { ROAD_MAP, createMapView, paintMap, prepareMap, renderMap } from '../roadMap.js';
 
 const SEED = 4242;
@@ -39,8 +39,10 @@ describe('the land of a road', () => {
     expect(land.key).toBe(landKey(SEED, pulled));
     expect(land.key).not.toBe(plain.key);
     const start = plain.graph.node(plain.graph.start);
-    expect(land.graph.node(plain.graph.start).y).toBeCloseTo(start.y - PULL.depth, 3);
+    // Round 215: the start of a road is a few metres over the sea, so a pull drowns it: the site is on the water now.
     expect(land.terrain.heightAt(start.x, start.z)).toBeCloseTo(start.y - PULL.depth, 3);
+    expect(land.graph.node(plain.graph.start)).toMatchObject({ y: plain.terrain.waterY, drowned: true });
+    expect(land.graph.node(plain.graph.start).ground).toBeCloseTo(start.y - PULL.depth, 3);
   });
 });
 
@@ -49,18 +51,26 @@ describe('the map of land that sinks', () => {
   const walk = walkOf(graph, 16);
   const event = createPullEvent({ seed: SEED, pulled: [], pull: { step: 16, depth: PULL.depth, sites: walk }, walk, at: walk.at(-1), aspect: 1.2, columns: 120 });
 
-  test('a place under the water is drawn on it by `project`, and where it is by `place`', () => {
-    const view = createMapView([{ x: 0, z: 0, y: 0 }, { x: 300, z: 300, y: 0 }]);
-    expect(view.project(50, 80, -12)).toEqual(view.project(50, 80, 0));
-    expect(view.place(50, 80, -12)[1]).toBeCloseTo(view.project(50, 80, 0)[1] + 12 * view.lift, 9);
-    expect(view.place(50, 80, 7)).toEqual(view.project(50, 80, 7));
-  });
-
   test('before the pull the picture is the land\'s own map; at its end it is the pulled land\'s own map, to the pixel', () => {
     const { view, prepared } = event;
-    expect(same(paintMap(prepared, 0), renderMap(terrain, view, { columns: 120, sink: event.after.deepest }))).toBe(true);
+    expect(same(paintMap(prepared, 0), renderMap(terrain, view, { columns: 120 }))).toBe(true);
     expect(same(paintMap(prepared, 1), renderMap(event.after, view, { columns: 120 }))).toBe(true);
     expect(same(paintMap(prepared, 0), paintMap(prepared, 1))).toBe(false);
+  });
+
+  test('round 215: the sea closes over ground that sinks under it, a little more of it with every step down', () => {
+    const { prepared } = event;
+    // The pixels painted as water: the two colours of the sea, shallow to deep, have more blue than green and red.
+    const water = (picture) => { let n = 0; for (let k = 0; k < picture.data.length; k += 4) if (picture.data[k + 2] > picture.data[k + 1] && picture.data[k + 1] > picture.data[k]) n += 1; return n; };
+    const counts = [0, 0.25, 0.5, 0.75, 1].map((share) => water(paintMap(prepared, share)));
+    for (let n = 1; n < counts.length; n += 1) expect(counts[n]).toBeGreaterThanOrEqual(counts[n - 1]);
+    expect(counts.at(-1)).toBeGreaterThan(counts[0] + 100);
+    // What is drawn at a point stands on its ground until the ground is under the sea, and on the sea from then on.
+    expect(surfaceAt([0, 0, 6, -26], 0)).toBe(6);
+    expect(surfaceAt([0, 0, 6, -26], 0.1)).toBeCloseTo(3.4, 9);
+    expect(surfaceAt([0, 0, 6, -26], 0.5)).toBe(0);
+    expect(surfaceAt([0, 0, 6, -26], 1)).toBe(0);
+    expect(surfaceAt([0, 0, 40, -26], 1)).toBe(14);
   });
 
   test('half way down every pixel is painted, and a picture can be painted over', () => {
@@ -83,7 +93,7 @@ describe('the map of land that sinks', () => {
     expect(view.height).toBeCloseTo(ROAD_MAP.width * 1.2, 9);
     for (const [x, z, level, dip] of event.sites) {
       for (const h of [level, level + dip]) {
-        const [sx, sy] = view.place(x, z, h);
+        const [sx, sy] = view.project(x, z, h);
         expect(sx).toBeGreaterThan(0);
         expect(sx).toBeLessThan(view.width);
         expect(sy).toBeGreaterThan(0);
@@ -104,7 +114,7 @@ describe('the map of land that sinks', () => {
     });
     expect(event.sites).toHaveLength(walk.length);
     for (const [x, z, level, dip] of event.sites) {
-      expect(level).toBeCloseTo(terrain.surfaceAt(x, z), 9);
+      expect(level).toBeCloseTo(terrain.heightAt(x, z), 9);
       expect(dip).toBeCloseTo(-PULL.depth, 3);
     }
     expect(event.here.slice(0, 2)).toEqual([graph.node(walk.at(-1)).x, graph.node(walk.at(-1)).z]);
@@ -115,10 +125,26 @@ describe('the map of land that sinks', () => {
     const first = [{ step: 16, depth: PULL.depth, sites: walk.slice(0, 10) }];
     const second = createPullEvent({ seed: SEED, pulled: first, pull: { step: 30, depth: PULL.depth, sites: walk.slice(10) }, walk, at: walk.at(-1), aspect: 1, columns: 80 });
     const [x, z, level, dip] = second.sites[0];
-    expect(level).toBeCloseTo(terrain.surfaceAt(x, z) - PULL.depth, 3);
+    expect(level).toBeCloseTo(terrain.heightAt(x, z) - PULL.depth, 3);
     expect(dip).toBeCloseTo(-PULL.depth, 3);
-    expect(same(paintMap(second.prepared, 0), renderMap(landOf(SEED, first).terrain, second.view, { columns: 80, sink: second.after.deepest }))).toBe(true);
+    expect(same(paintMap(second.prepared, 0), renderMap(landOf(SEED, first).terrain, second.view, { columns: 80 }))).toBe(true);
     expect(same(paintMap(second.prepared, 1), renderMap(second.after, second.view, { columns: 80 }))).toBe(true);
+  });
+
+  test('round 215: a walk between two sites that no way joins follows the ways between them', () => {
+    // The player turned round at an unfinished site and went to another site ahead: two sites two ways apart.
+    const far = graph.neighbours(walk[1]).find((id) => id !== walk[0] && !graph.neighbours(walk[0]).includes(id));
+    expect(graph.pathPoints(walk[0], far)).toBe(null);
+    const turned = createPullEvent({ seed: SEED, pulled: [], pull: { step: 2, depth: PULL.depth, sites: [walk[0]] }, walk: [walk[0], far], at: far, aspect: 1, columns: 60 });
+    const [hop] = turned.journey;
+    const route = graph.route(walk[0], far);
+    expect(route.length).toBeGreaterThan(2);
+    const through = graph.node(route[1]);
+    expect(hop.points.some(([x, z]) => Math.hypot(x - through.x, z - through.z) < 1e-6)).toBe(true);
+    expect(hop.points.length).toBeGreaterThan(graph.pathPoints(route[0], route[1]).length);
+    // Only the site whose conversation was finished sinks its full depth; the one walked to sinks with the land round it, or not at all.
+    expect(turned.sites[0][3]).toBeCloseTo(-PULL.depth, 3);
+    expect(turned.sites[1][3]).toBeGreaterThan(-PULL.depth * 0.8);
   });
 
   test('a journey of one site, or of sites the land does not have, still makes an event', () => {

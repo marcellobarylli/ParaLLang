@@ -2,6 +2,8 @@
 // then, in a real browser: Settings, Developer mode, a jump to the gate that ends A1; the walk to the gate; its
 // conversation; Continue. The world event must then play on the whole screen (the map, the web, the journey, the land
 // sinking), and afterwards the land of the map and of the level must be the pulled one. Pictures along the way.
+// Round 215: the last site of the journey is walked to and its conversation left unfinished, so it is not pulled; and
+// the journey begins by the sea, so the pull drowns its first sites.
 //
 //   npm run build -w client
 //   node client/scripts/pull-check.mjs [outDir] [--desktop]
@@ -10,7 +12,7 @@ import { api } from '../../server/test/helpers.js';
 import { DESKTOP, PHONE, openGame } from './lib/play.mjs';
 
 const desktop = process.argv.includes('--desktop');
-const out = (process.argv[2]?.startsWith('--') ? null : process.argv[2]) ?? 'docs/rounds/213/shots';
+const out = (process.argv[2]?.startsWith('--') ? null : process.argv[2]) ?? 'docs/rounds/215/shots';
 const WALKS = 14;
 
 const game = await openGame({
@@ -114,7 +116,10 @@ await game.run(async ({ page, check, shot, tap, say, runtime }) => {
   // Afterwards: the event is seen, the land is the pulled one, and the way on walks.
   const after = (await road(runtime, learnerId)).data;
   check(after.road.event === null && after.road.pulled.length === 1, 'the event is seen; the road\'s land is the pulled one');
-  check(after.road.pulled[0].sites.length === walked + 1, `the pull took the ${after.road.pulled[0].sites.length} sites of the journey (the gate's among them)`);
+  const journey = (await runtime.service.getRoadWalk(learnerId)).walk.nodes;
+  const unfinished = journey[WALKS]; // the last site walked to before the jump: its conversation was never finished
+  check(after.road.pulled[0].sites.length === walked && !after.road.pulled[0].sites.includes(unfinished) && after.road.pulled[0].sites.includes(journey.at(-1)),
+    `the pull took the ${after.road.pulled[0].sites.length} sites whose conversation was finished (the gate's among them), and not the one only walked to`);
   await page.getByRole('button', { name: /^(Continue|Enter )/ }).waitFor({ timeout: 30000 });
   await shot('12-back-on-the-road');
   await tap(page.getByRole('button', { name: 'Map', exact: true }));
@@ -130,9 +135,10 @@ await game.run(async ({ page, check, shot, tap, say, runtime }) => {
   const sunk = await page.evaluate(() => {
     const { graph, terrain } = window.__parallangRoad;
     const node = graph.node(graph.start);
-    return { dip: terrain.pullAt(node.x, node.z), y: node.y, plain: graph.base.node(graph.start).y };
+    return { dip: terrain.pullAt(node.x, node.z), y: node.y, ground: node.ground, drowned: node.drowned, plain: graph.base.node(graph.start).y, waterY: terrain.waterY };
   });
-  check(Math.abs(sunk.dip + 26) < 0.01 && Math.abs(sunk.y - (sunk.plain - 26)) < 0.01, `the level stands on the pulled land: the journey's first site is ${(-sunk.dip).toFixed(2)} m lower`);
+  check(Math.abs(sunk.dip + 26) < 0.01 && Math.abs(sunk.ground - (sunk.plain - 26)) < 0.01, `the level stands on the pulled land: the ground of the journey's first site is ${(-sunk.dip).toFixed(2)} m lower`);
+  check(sunk.drowned && sunk.y === sunk.waterY, `that site was ${sunk.plain.toFixed(1)} m over the sea: it is under ${(-sunk.ground).toFixed(1)} m of water now, and stands on its surface`);
   await page.locator('.dialogue-panel article.npc-message').first().waitFor({ timeout: 90000 });
   await page.waitForTimeout(1500);
   await shot('14-the-level-on-pulled-land');

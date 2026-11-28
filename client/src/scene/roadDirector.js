@@ -80,9 +80,8 @@ function measured(points) {
   return { total, at };
 }
 
-export function createRoadDirector({ heightAt, waterY = 0, surfaceAt = null }) {
-  // Round 213: on pulled land the water is not level; `surfaceAt` is then the ground or the water over it.
-  const ground = surfaceAt ?? ((x, z) => Math.max(heightAt(x, z), waterY));
+export function createRoadDirector({ heightAt, waterY = 0 }) {
+  const ground = (x, z) => Math.max(heightAt(x, z), waterY);
   // Round 176: the smoothed height of the ground along `line` (see ROAD_CAMERA.clearance), as a function of the
   // distance along it.
   function profile(line, length, smooth = ROAD_CAMERA.clearance.smooth) {

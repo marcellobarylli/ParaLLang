@@ -76,3 +76,14 @@ export async function talkHere(runtime, learnerId) {
   if (turn.encounter.state !== 'resolved') throw new Error(`the conversation did not resolve: ${JSON.stringify(turn.assessment.objectiveResults)}`);
   return turn;
 }
+
+// Round 215: a walk on. Only a finished conversation opens ways on, so the conversation waiting where the learner
+// stands is finished first; then the walk goes to `pick(view.road)` (the rails' site, or the first ahead). Returns
+// the road's view after the walk.
+export async function walkOn(runtime, learnerId, pick = (view) => view.rails ?? view.frontier[0].id) {
+  let view = (await road(runtime, learnerId)).data;
+  if (view.road.current) { await talkHere(runtime, learnerId); view = (await road(runtime, learnerId)).data; }
+  const moved = await moveTo(runtime, learnerId, pick(view.road));
+  if (moved.status !== 200) throw new Error(`the walk failed: ${JSON.stringify(moved.data.error)}`);
+  return moved.data;
+}

@@ -257,11 +257,11 @@ export function RoadMap({ state, onClose, closeLabel = 'Back to the road' }) {
     image.data.set(picture.data);
     context.putImageData(image, 0, 0);
   }, [terrain, view]);
-  const place = (node) => view.place(node.x, node.z, node.y);
+  const place = (node) => view.project(node.x, node.z, node.y);
   const at = (node) => { const [x, y] = place(node); return `translate(${x.toFixed(2)} ${y.toFixed(2)})`; };
   // A way lies on the ground: every point of it is drawn at its own height.
   const line = (a, b) => (graph.pathPoints(a, b) ?? [[graph.node(a).x, graph.node(a).z], [graph.node(b).x, graph.node(b).z]])
-    .map(([x, z]) => view.place(x, z, terrain.surfaceAt(x, z)).map((value) => value.toFixed(2)).join(',')).join(' ');
+    .map(([x, z]) => view.project(x, z, terrain.heightAt(x, z)).map((value) => value.toFixed(2)).join(',')).join(' ');
   const cleared = new Set(road.cleared);
   const chosen = road.frontier.find((site) => site.id === picked) ?? null;
   const busy = state.roadTravelling || state.encounterLoading || state.isLoading || state.roadPhase === 'travel';

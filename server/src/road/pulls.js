@@ -17,10 +17,12 @@
 // the linear system "the sum at site j is depth j", solved by conjugate gradients on the sparse matrix of the bumps.
 // The noise is multiplied by a gate that is nothing at every site, so the constraints still hold to the millimetre.
 //
-// What sinks is space, not only soil: the water's surface, the trees and everything else at (x, z) go down by the
-// same D. So a pull floods nothing and dries nothing, a site is never under water, and what kind of ground a point is
-// (its cover, its biome, its trees) is still read from the land as it was. The graph does not move either: sites and
-// ways are read from the unpulled land, so every id, way and saved walk stays valid; only heights change.
+// Round 215: what sinks is the ground, and the sea does not: its surface stays where it was (the owner: "drowning the
+// sites makes sense. It should be realistic"). Ground pulled under the sea's level is under water from then on, so a
+// pull along a low coast floods it, and a walk that began by the water becomes a channel. What kind of ground a point
+// is follows its new height (shore by the new water, water under it); the trees that stood on drowned ground are
+// gone, the others stand lower. The graph does not move: sites and ways are read from the unpulled land, so every id,
+// way and saved walk stays valid. A site whose ground is drowned is still a site, at the water's surface (`drowned`).
 
 import { TALLEST_TREE, fbm } from './terrain.js';
 import { GRAPH } from './graph.js';
@@ -139,15 +141,14 @@ export function createPull(points, seed = 1, { radius = PULL.radius * GRAPH.cell
 
 /**
  * The land and its graph with the save's pulls: { terrain, graph, pull }. With no pulls they are the ones given.
- * The pulled terrain answers as the terrain does (server/src/road/terrain.js), and besides:
+ * The pulled terrain answers as the terrain does (server/src/road/terrain.js), on the lowered ground, and besides:
  *
  *   pullAt(x, z)     how far the ground at (x, z) has sunk, as a height: 0 or less
- *   waterAt(x, z)    the water's surface there (it sinks with the ground)
- *   surfaceAt(x, z)  the ground, or the water where the ground is under it
  *   base             the terrain without the pulls
  *   deepest          metres: no ground has sunk further than this
  *
- * The pulled graph is the same graph (ids, ways, routes); a site's `y` is its height on the pulled land.
+ * The pulled graph is the same graph (ids, ways, routes). A site's `y` is where it stands now: its lowered ground,
+ * or the water's surface when that ground is under it (`drowned`); `ground` is the ground itself.
  */
 export function withPulls(terrain, graph, pulled = [], { extra = null } = {}) {
   const points = extra ?? pullPoints(graph, pulled);
@@ -155,21 +156,20 @@ export function withPulls(terrain, graph, pulled = [], { extra = null } = {}) {
   const pull = createPull(points, terrain.seed);
   const { pullAt } = pull;
   const heightAt = (x, z) => terrain.heightAt(x, z) + pullAt(x, z);
-  const lower = (items) => items.map((item) => ({ ...item, y: item.y + pullAt(item.x, item.z) }));
+  // What stood on ground that is now under water is gone; the rest stands as much lower as its ground.
+  const lower = (items) => items.map((item) => ({ ...item, y: item.y + pullAt(item.x, item.z) })).filter((item) => item.y > terrain.waterY);
   const pulledTerrain = Object.freeze({
     ...terrain,
     base: terrain,
-    deepest: Math.max(...points.map((point) => point.depth)) * 1.4, // no ground has sunk further than this
+    deepest: Math.max(...points.map((point) => point.depth)) * 1.4,
     pullAt,
     heightAt,
-    waterAt: (x, z) => terrain.waterY + pullAt(x, z),
-    surfaceAt: (x, z) => Math.max(terrain.heightAt(x, z), terrain.waterY) + pullAt(x, z),
+    surfaceAt: (x, z) => Math.max(heightAt(x, z), terrain.waterY),
     slopeAt(x, z) {
       const e = 3;
       return Math.hypot(heightAt(x + e, z) - heightAt(x - e, z), heightAt(x, z + e) - heightAt(x, z - e)) / (2 * e);
     },
-    // What kind of ground a point is does not change: it is read from the height the point had.
-    coverAt: (x, z, h) => terrain.coverAt(x, z, h === undefined ? undefined : h - pullAt(x, z)),
+    coverAt: (x, z, h = heightAt(x, z)) => terrain.coverAt(x, z, h),
     treesIn: (cx, cz) => lower(terrain.treesIn(cx, cz)),
     undergrowthIn: (cx, cz) => lower(terrain.undergrowthIn(cx, cz)),
   });
@@ -178,7 +178,8 @@ export function withPulls(terrain, graph, pulled = [], { extra = null } = {}) {
     if (!node) return null;
     if (!lowered.has(node.id)) {
       if (lowered.size >= GRAPH.cache) lowered.clear();
-      lowered.set(node.id, Object.freeze({ ...node, y: node.y + pullAt(node.x, node.z) }));
+      const ground = node.y + pullAt(node.x, node.z);
+      lowered.set(node.id, Object.freeze({ ...node, y: Math.max(ground, terrain.waterY), ground, drowned: ground <= terrain.waterY }));
     }
     return lowered.get(node.id);
   };

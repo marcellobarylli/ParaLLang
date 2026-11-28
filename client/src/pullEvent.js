@@ -6,7 +6,9 @@
 //      (graph.js): outward from where they stand, in every direction at once; in each cell the points tried for its
 //      site show for a moment, the one chosen stays, and its ways grow to the sites already there
 //   3. the journey so far, in black, one walk at a time
-//   4. the pull: the land sinks at the sites of the journey, the web and the journey sinking with it
+//   4. the pull: the land sinks at the sites of the journey where a conversation was finished, the web and the
+//      journey sinking with it; where it goes under the sea's level the water closes over it (round 215), and the web
+//      and the journey lie on the water there
 //
 // Everything of the pull is worked out before anything is shown: the land as it is (`before`), the land as it will
 // be (`after`, the same pure function with one more pull: server/src/road/pulls.js), and for every point of the
@@ -126,15 +128,32 @@ export function createWebWave(graph, centre, { inside, bounds, limit = PULL_EVEN
   };
 }
 
+// The points of the shortest walk over the ways between two sites, or null when there is none.
+function routeLine(graph, from, to) {
+  const ids = graph.route(from, to, { limit: 1500 });
+  if (!ids || ids.length < 2) return null;
+  const line = [];
+  for (let n = 1; n < ids.length; n += 1) {
+    const points = graph.pathPoints(ids[n - 1], ids[n]);
+    if (!points) return null;
+    line.push(...(n === 1 ? points : points.slice(1)));
+  }
+  return line;
+}
+
+/** Where what is drawn at a point ([x, z, ground, dip]) stands, the ground a share of the way down: on the ground, or on the water over it. */
+export const surfaceAt = (point, share, waterY = 0) => Math.max(waterY, point[2] + share * point[3]);
+
 /**
  * Everything the event of `pull` shows, worked out at once (this is the wait before the screen shows anything):
  *
  *   view       the map's frame (roadMap.js), holding the whole journey, `aspect` (height over width) as the screen is
- *   prepared   the landscape read for painting, with each point's dip (roadMap.js `paintMap(prepared, share)`)
- *   lift       (x, z) -> [level, dip]: the surface at a point before the pull, and how far it sinks
- *   journey    the walks, in order: [{ from, to, points: [[x, z, level, dip], ...] }]
- *   sites      the sites of the journey, each once, in order: [[x, z, level, dip], ...] (the start first)
- *   here       where the player stands: [x, z, level, dip]
+ *   prepared   the landscape read for painting, before and after (roadMap.js `paintMap(prepared, share)`)
+ *   lift       (x, z) -> [ground, dip]: the ground's height at a point before the pull, and how far it sinks. What is
+ *              drawn there stands on `surfaceAt(point, share)`: the ground, or the water once the ground is under it
+ *   journey    the walks, in order: [{ from, to, points: [[x, z, ground, dip], ...] }]
+ *   sites      the sites of the journey, each once, in order: [[x, z, ground, dip], ...] (the start first)
+ *   here       where the player stands: [x, z, ground, dip]
  *   wave       the web's wave (createWebWave), not yet begun
  *   pulls      how many sites the pull lowers, and how far (`depth`)
  *
@@ -147,26 +166,28 @@ export function createPullEvent({ seed, pulled = [], pull, walk = [], at, aspect
   const pullBefore = before.terrain.pullAt ?? (() => 0);
   const pullAfter = after.terrain.pullAt ?? (() => 0);
   const dipAt = (x, z) => pullAfter(x, z) - pullBefore(x, z);
-  const lift = (x, z) => [before.terrain.surfaceAt(x, z), dipAt(x, z)];
+  const waterY = plain.terrain.waterY;
+  const lift = (x, z) => [before.terrain.heightAt(x, z), dipAt(x, z)];
   const point = (x, z) => [x, z, ...lift(x, z)];
   const graph = plain.graph;
   const ids = walk.filter((id) => graph.node(id));
   const hereNode = graph.node(at) ?? graph.node(ids.at(-1)) ?? graph.node(graph.start);
   if (!ids.length) ids.push(hereNode.id);
   // The frame holds every site of the journey, as it stands now and as it will once sunk.
-  const framed = ids.map((id) => { const node = graph.node(id); const [level, dip] = lift(node.x, node.z); return [{ x: node.x, z: node.z, y: level }, { x: node.x, z: node.z, y: level + dip }]; }).flat();
+  const framed = ids.map((id) => { const node = graph.node(id); const [ground, dip] = lift(node.x, node.z); return [{ x: node.x, z: node.z, y: ground }, { x: node.x, z: node.z, y: ground + dip }]; }).flat();
   const height = ROAD_MAP.width * aspect;
   const view = createMapView([...framed, { x: hereNode.x, z: hereNode.z, y: lift(hereNode.x, hereNode.z)[0] }], {
     width: ROAD_MAP.width, height, farthest: ROAD_MAP.journey, closest: PULL_EVENT.closest,
     margin: { side: PULL_EVENT.margin.side, top: height * PULL_EVENT.margin.top, bottom: height * PULL_EVENT.margin.bottom },
   });
-  const prepared = prepareMap(before.terrain, view, { columns, dipAt, sink: after.terrain.deepest ?? 0 });
+  const prepared = prepareMap(before.terrain, view, { columns, sunk: after.terrain });
   const journey = [];
   for (let n = 1; n < ids.length; n += 1) {
     const [from, to] = [ids[n - 1], ids[n]];
     const [a, b] = [graph.node(from), graph.node(to)];
-    // A walk follows its way; a walk the graph no longer joins (an old save) is a straight line.
-    const line = graph.pathPoints(from, to) ?? [[a.x, a.z], [b.x, b.z]];
+    // A walk follows its way. One between two sites that no way joins (the player turned round and went to another
+    // site ahead: round 215) follows the shortest walk over the ways, as the camera did; failing that, a straight line.
+    const line = graph.pathPoints(from, to) ?? routeLine(graph, from, to) ?? [[a.x, a.z], [b.x, b.z]];
     journey.push({ from, to, points: line.map(([x, z]) => point(x, z)) });
   }
   const seen = new Set();
@@ -175,7 +196,7 @@ export function createPullEvent({ seed, pulled = [], pull, walk = [], at, aspect
   const edge = GRAPH.cell * view.scale;
   const tall = ROAD_MAP.tallest * view.lift;
   const inside = (x, z) => {
-    const [sx, sy] = view.place(x, z, 0);
+    const [sx, sy] = view.project(x, z, 0);
     return sx > -edge && sx < view.width + edge && sy > -edge && sy < height + edge + tall;
   };
   const corners = [[-edge, -edge], [view.width + edge, -edge], [-edge, height + edge + tall], [view.width + edge, height + edge + tall]].map(([sx, sy]) => view.ground(sx, sy));
@@ -186,7 +207,7 @@ export function createPullEvent({ seed, pulled = [], pull, walk = [], at, aspect
   };
   const wave = createWebWave(graph, hereNode, { inside, bounds, lift });
   return {
-    seed, view, prepared, lift, journey, sites, here: point(hereNode.x, hereNode.z), wave,
+    seed, view, prepared, lift, journey, sites, here: point(hereNode.x, hereNode.z), wave, waterY,
     before: before.terrain, after: after.terrain,
     pulls: { sites: pull.sites.length, depth: pull.depth },
   };

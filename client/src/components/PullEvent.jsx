@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { PULL_EVENT, buckleShare, createPullEvent, hopSeconds } from '../pullEvent.js';
+import { PULL_EVENT, buckleShare, createPullEvent, hopSeconds, surfaceAt } from '../pullEvent.js';
 import { paintMap } from '../roadMap.js';
 
 // Round 213 (issue #23): the world event of a pull, on the whole screen with nothing else on it: the map from far
 // off, the web of every way growing outward in faint grey as it is generated, the journey so far in black, one walk
-// at a time, and then the land sinking at the sites of the journey (pullEvent.js says what is shown; this draws it).
+// at a time, and then the land sinking at the sites of the journey, under the sea where it goes that low (pullEvent.js
+// says what is shown; this draws it).
 // Nothing is shown until the land before and after the pull is worked out. When it is over a single button leads on.
 //
 // Two canvases: the map's picture, small and shown large as the map always is, painted again each frame while the
@@ -48,11 +49,12 @@ export default function PullEvent({ road, walk = null, onDone }) {
       const show = (share) => { paintMap(prepared, share, image); paint.putImageData(image, 0, 0); };
       show(0);
       // Where a point of the world is on the overlay: the view's own projection, as plain numbers.
-      const [origin, east, south, up] = [view.place(0, 0, 0), view.place(1, 0, 0), view.place(0, 1, 0), view.place(0, 0, 1)];
+      const [origin, east, south, up] = [view.project(0, 0, 0), view.project(1, 0, 0), view.project(0, 1, 0), view.project(0, 0, 1)];
       const [kx, ky] = [overlay.width / view.width, overlay.height / view.height];
       let share = 0;
       const px = (p) => (origin[0] + p[0] * (east[0] - origin[0]) + p[1] * (south[0] - origin[0])) * kx;
-      const py = (p) => (origin[1] + p[0] * (east[1] - origin[1]) + p[1] * (south[1] - origin[1]) + (p[2] + share * p[3]) * (up[1] - origin[1])) * ky;
+      // A point stands on its ground, or on the water once the ground has gone under it (round 215).
+      const py = (p) => (origin[1] + p[0] * (east[1] - origin[1]) + p[1] * (south[1] - origin[1]) + surfaceAt(p, share, event.waterY) * (up[1] - origin[1])) * ky;
       // The web's sheet: what is whole and will not move.
       const sheet = Object.assign(document.createElement('canvas'), { width: overlay.width, height: overlay.height });
       const settled = context2d(sheet);
