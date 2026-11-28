@@ -13,12 +13,12 @@ vi.setConfig({ testTimeout: 30_000 }); // the first test loads the whole content
 afterAll(cleanUp);
 
 function memoryStorage(entries = {}) {
-  const values = new Map(Object.entries({ 'parallang.display': '{"strict":true}', ...entries })); // round 198: strict checking's tests
+  const values = new Map(Object.entries({ 'parallang.display': '{"strict":true,"breathing":false}', ...entries })); // round 198: strict checking's tests
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
 }
 
 // Round 173: the full pacing, so streamlined mode is off unless a test's storage says otherwise.
-const fullPacing = () => memoryStorage({ 'parallang.display': JSON.stringify({ streamlined: false, strict: true }) });
+const fullPacing = () => memoryStorage({ 'parallang.display': JSON.stringify({ streamlined: false, strict: true, breathing: false }) });
 
 async function onTheRoad({ storage = fullPacing(), server = createRoadServer() } = {}) {
   const store = createGameStore({ api: server.api, storage, dungeon: DUNGEON, atlas: ATLAS });
@@ -79,6 +79,26 @@ test('a conversation, then on rails: the next site is the pacing\'s, and its con
   await finish(ctx);
   expect(s().road.step).toBe(2);
   expect(server.provider.calls.some((call) => /teaching_note/.test(call.messages.at(-1).content))).toBe(true);
+});
+
+// Round 216: the breathing is played over the walk; the conversation opens once the camera is there, the conversation
+// is loaded and the breathing has ended.
+test('with the breathing on, the walk is breathed: the conversation waits for the camera and for the breathing', async () => {
+  const ctx = await onTheRoad({ storage: memoryStorage({ 'parallang.display': JSON.stringify({ streamlined: false, strict: true }) }) });
+  const { s } = ctx;
+  s().onRoadArrived();
+  await s().roadTalk();
+  await finish(ctx);
+  await s().roadContinue();
+  expect(s().roadBreathing).toBe(true);
+  expect(s().encounter.road.node).toBe(s().road.at); // loaded
+  s().onRoadArrived();
+  expect(s().roadPhase).toBe('travel'); // there and ready, but still breathing
+  s().roadBreathed();
+  expect(s().roadBreathing).toBe(false);
+  expect(s().roadPhase).toBe('encounter');
+  s().roadBreathed(); // a second end is nothing
+  expect(s().roadPhase).toBe('encounter');
 });
 
 test('off the rails: any site ahead may be walked to, and it holds what the map said', async () => {

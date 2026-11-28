@@ -14,7 +14,7 @@ vi.setConfig({ testTimeout: 30_000 });
 afterAll(cleanUp);
 
 function memoryStorage(entries = {}) {
-  const values = new Map(Object.entries({ 'parallang.display': '{"strict":true}', ...entries })); // streamlined, as it is by default
+  const values = new Map(Object.entries({ 'parallang.display': '{"strict":true,"breathing":false}', ...entries })); // streamlined, as it is by default
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
 }
 

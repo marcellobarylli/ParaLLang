@@ -32,7 +32,7 @@ test('it comes in with a breath in, has no text, and with the reply ready at onc
   expect(game.className).toContain('shown');
   expect(game.textContent).toBe(''); // nothing is written during the breathing
   expect(game.dataset.phase).toBe('in');
-  act(() => frames.run(4.1 + 0.5)); // the lead-in (15 degrees, 0.42 s) comes first
+  act(() => frames.run(4.1 + 1.3)); // the lead-in (45 degrees, 1.25 s) comes first
   expect(game.dataset.phase).toBe('out');
   act(() => frames.run(25));
   expect(game.dataset.cycle).toBe('2');
@@ -59,7 +59,7 @@ test('with no reply it keeps breathing past three breaths, and ends with the bre
   act(() => frames.run(7.5));
   expect(frames.waiting).toBe(true); // the breath is finished first
   expect(onDone).not.toHaveBeenCalled();
-  act(() => frames.run(1));
+  act(() => frames.run(2)); // (the 1.25 s lead-in is part of the time)
   expect(frames.waiting).toBe(false);
   await waitFor(() => expect(onDone).toHaveBeenCalledWith({ cycles: 5, kept: 0, perfect: 0 }), { timeout: 2000 });
 });
@@ -68,7 +68,7 @@ test('the panel is held for the breath in and let go at the turn; the space bar 
   const frames = handFrames();
   render(<BreathGame ready={false} onDone={() => {}} frames={frames} />);
   const game = screen.getByRole('group', { name: 'Breathing' });
-  act(() => frames.run(0.5));
+  act(() => frames.run(0.5 + 1.25)); // the lead-in, then half a second of the breath in
   fireEvent.pointerDown(game, { pointerId: 1 });
   act(() => frames.run(0.1));
   expect(game.dataset.held).toBe('yes');
@@ -118,17 +118,14 @@ test('the breathing is on unless switched off in Settings, and the switch is kep
   expect(screen.getByLabelText('Breathe while you wait').checked).toBe(false);
 });
 
-// Round 214, amended 2026-11-28: where the ring's light starts and which way it goes. Canvas angles: 0 is east, growing clockwise.
-test('the breath in begins 45 degrees anticlockwise of north, the upper left, and the light goes clockwise round', () => {
+// Round 214: where the ring's points are and which way the light goes. Canvas angles: 0 is east, growing clockwise.
+// The points follow the breathing guideline (4 s in, 6 s out): "in" at the top, "out" 40 % of the way round.
+test('the breath in is at the top, the breath out 144 degrees on, and the light goes clockwise round', () => {
   const at = (share) => [Math.cos(angleOf(share)), Math.sin(angleOf(share))];
   const degrees = (share) => ((Math.atan2(at(share)[0], -at(share)[1]) * 180) / Math.PI + 360) % 360; // clockwise from north
-  expect(BREATH_START).toBeCloseTo(-3 * Math.PI / 4, 12);
-  const [x, y] = at(0);
-  expect(x).toBeLessThan(0); // left of the middle
-  expect(y).toBeLessThan(0); // above it
-  expect(Math.abs(x)).toBeCloseTo(Math.abs(y), 12); // half way between north and west
-  expect(degrees(0)).toBeCloseTo(315, 9); // 45 degrees short of north, going clockwise
-  expect(degrees(0.25)).toBeCloseTo(45, 9); // a quarter breath on: up and to the right
-  expect(degrees(0.5)).toBeCloseTo(135, 9);
-  expect(degrees(1)).toBeCloseTo(315, 9); // once round
+  expect(BREATH_START).toBeCloseTo(-Math.PI / 2, 12);
+  expect(degrees(0)).toBeCloseTo(0, 9);
+  expect(degrees(0.4)).toBeCloseTo(144, 9);
+  expect(degrees(0.25)).toBeCloseTo(90, 9);
+  expect(degrees(-45 / 360)).toBeCloseTo(315, 9); // where the light is when it sets off: 45 degrees before the "in"
 });

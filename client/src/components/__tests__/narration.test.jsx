@@ -37,29 +37,16 @@ test('the road\'s card tells the arrival, and an empty site is told in the narra
   expect(screen.getByText(/Nobody waits here now\. Somebody has left a cairn/).className).toContain('narrative');
 });
 
-// Round 166 (the owner, 2026-11-23): the passage stays while the conversation loads, and what the game is doing is
-// its last sentence, so there is something to read instead of a bare "… is getting ready to talk…".
-test('the travel caption tells the way taken, and keeps telling it until the character is ready to talk', () => {
+// Round 216 (the owner): nothing is written while the camera walks; the breathing is played over the walk instead.
+test('the travel caption says nothing, whatever the passage and whether or not the character is ready', () => {
   const told = road({ current: { character: { name: 'Erasmus Quill' } }, narration: { id: 'ford_thread', segments: [{ text: 'You wade the ford.' }] } });
-  const { rerender } = render(<RoadCaption state={state({ road: told, roadArrived: false })} />);
-  const caption = screen.getByRole('status');
-  expect(caption.textContent).toBe('You wade the ford. On the way to The Patient Meadow…');
-  expect(screen.getByText(/On the way to The Patient Meadow/).className).toBe('narration-after');
+  const { container, rerender } = render(<RoadCaption state={state({ road: told, roadArrived: false })} />);
+  expect(container.textContent).toBe('');
   rerender(<RoadCaption state={state({ road: told, roadArrived: true, encounterLoading: true })} />);
-  expect(caption.textContent).toBe('You wade the ford. Erasmus is getting ready to talk…');
-  // One paragraph in the narrator's voice: the passage, then the game's sentence in its own span.
-  expect(caption.querySelectorAll('p.narration')).toHaveLength(1);
-  expect(caption.querySelector('p.narration').dataset.passage).toBe('ford_thread');
-  expect(screen.getByText('Erasmus is getting ready to talk…').className).toBe('narration-after');
-});
-
-test('with no passage to tell, the travel caption is the plain line it was', () => {
-  const quiet = road({ current: { character: { name: 'Erasmus Quill' } } });
-  const { rerender } = render(<RoadCaption state={state({ road: quiet, roadArrived: false })} />);
-  expect(screen.getByRole('status').textContent).toBe('On the way to The Patient Meadow…');
-  rerender(<RoadCaption state={state({ road: quiet, roadArrived: true, encounterLoading: true })} />);
-  expect(screen.getByRole('status').textContent).toBe('Erasmus is getting ready to talk…');
-  expect(screen.getByRole('status').querySelector('.narration')).toBeNull();
+  expect(container.textContent).toBe('');
+  expect(screen.queryByRole('status')).toBeNull();
+  rerender(<RoadCaption state={state({ road: told, roadError: 'The way is shut.' })} />);
+  expect(screen.getByRole('alert').textContent).toBe('The way is shut.'); // a problem is still told
 });
 
 test('a conversation\'s last word is the narrator\'s', () => {

@@ -77,7 +77,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
   // The conversation is on the screen once the camera is there and the conversation of this site is loaded.
   const maybeOpen = () => {
     const s = get();
-    if (s.mode !== 'road' || s.roadPhase !== 'travel' || !s.roadArrived) return;
+    if (s.mode !== 'road' || s.roadPhase !== 'travel' || !s.roadArrived || s.roadBreathing) return; // round 216: the breathing ends first
     if (s.encounter?.road && s.encounter.road.node === s.road?.at) set({ roadPhase: 'encounter' });
     else if (!s.encounterLoading) set({ roadPhase: 'hub' }); // the start failed: the hub says why and offers it again
   };
@@ -90,6 +90,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
     roadFrom: null, // the site the camera comes from, while it travels
     roadArrival: 'arrive', // how the 3D view should get to `road.at`: 'arrive' (from the sky), 'travel', 'stand'
     roadArrived: false,
+    roadBreathing: false, // round 216: the breathing is played over the walk; the conversation opens once it has ended
     roadShown: 0, // counts the camera moves asked for, so the view takes each once
     roadLoading: false,
     roadTravelling: false, // a move is with the server
@@ -250,7 +251,7 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
         if (!usable(view)) throw new Error('The server is being updated. Try again in a few minutes.');
         roadRequest += 1;
         takeRoad(view);
-        set({ ...quiet, roadPhase: 'travel', roadFrom: from, roadArrival: 'travel', roadArrived: false, roadShown: get().roadShown + 1, roadTravelling: false, roadResult: null });
+        set({ ...quiet, roadPhase: 'travel', roadFrom: from, roadArrival: 'travel', roadArrived: false, roadBreathing: get().display?.breathing !== false, roadShown: get().roadShown + 1, roadTravelling: false, roadResult: null });
         backup(learnerId);
         await get().roadTalk();
       } catch (error) {
@@ -343,6 +344,9 @@ export function createRoadSlice({ set, get, api, quiet, withSpellbook, takeProgr
       set({ roadArrived: true });
       maybeOpen();
     },
+
+    // Round 216: the breathing over the walk has ended, on a breath out: the conversation opens if it is ready.
+    roadBreathed: () => { if (!get().roadBreathing) return; set({ roadBreathing: false }); maybeOpen(); },
 
     leaveRoadConversation: () => {
       const s = get();

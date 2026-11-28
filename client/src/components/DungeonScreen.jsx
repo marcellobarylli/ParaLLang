@@ -587,6 +587,25 @@ function VictoryCard({ state }) {
   );
 }
 
+// Round 216: the breathing played over the walk to the next site, with the same rules as the wait for a reply (at
+// least three breaths, more while the conversation there is still being written, always ending on a breath out). It
+// starts with the walk; the conversation opens once it has ended (roadSlice.js `roadBreathed`). The first time in a
+// game, the guidebook's entry on it is told first.
+function RoadBreath({ state }) {
+  const entry = state.guideNote?.ahead?.find((item) => item.event === 'breath_wait') ?? null;
+  const toldRef = useRef(entry);
+  const [stage, setStage] = useState(entry ? 'telling' : 'breathing');
+  useEffect(() => { if (entry) state.enterGuide?.('breath_wait'); }, []);
+  useEffect(() => { state.setBreathingNow?.(true); return () => state.setBreathingNow?.(false); }, []);
+  const ready = (state.roadArrived && !state.encounterLoading) || Boolean(state.roadError);
+  return (
+    <div className="road-breath">
+      {stage === 'telling' && toldRef.current && <BreathIntro entry={toldRef.current} onBegin={() => setStage('breathing')} />}
+      {stage === 'breathing' && <BreathGame ready={ready} onDone={() => state.roadBreathed?.()} />}
+    </div>
+  );
+}
+
 export default function DungeonScreen({ useStore, speech = browserSpeech(), ambience = browserAmbience(), titleMusic = browserTitleMusic() }) {
   const state = useStore();
   // Round 127: ambient music. Browsers let a page make sound only after a tap, so it starts at the first one. It
@@ -781,6 +800,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         {onRoad && state.roadPhase === 'hub' && (descending ? <section className="caption" role="status"><span>Coming down to {state.road.here.name}…</span></section>
           : state.road && !state.roadWelcomed ? <WelcomeCard onClose={state.dismissWelcome} /> : <HubCard state={state} />)}
         {onRoad && state.roadPhase === 'travel' && <RoadCaption state={state} />}
+        {onRoad && state.roadPhase === 'travel' && state.roadBreathing && <RoadBreath state={state} />}
         {roadTalking && <EncounterSheet state={state} site={null} sites={{}} speech={speech} height={sheetHeight} onHeight={setSheetHeight}
           road={{ title: roadEncounter?.road.title ?? 'A conversation', subtitle: roadEncounter ? `${roadEncounter.character.name}, ${roadEncounter.character.role} · ${roadEncounter.road.place}` : '' }} />}
         {atTitle && <TitleScreen state={state} gate={titleGate} />}
