@@ -99,7 +99,9 @@ test('the curriculum loads in both packs, and every authored example holds evide
             const found = new Set(matchCanonicalVocabulary(example, curriculum.vocabulary.entries).map((match) => match.id));
             for (const group of objective.required_target_groups) assert.ok(group.some((id) => found.has(id)), `${language} ${objective.id}: "${example}"`);
           }
-          assert.match(objective.prompt, new RegExp(`using ${language === 'it' ? 'Italian' : 'Spanish'}\\.$`));
+          // Round 225: the player sees the bare task: the ask, without the cue or the language.
+          assert.equal(objective.prompt, `${objective.ask}.`);
+          assert.doesNotMatch(objective.prompt, /using (Italian|Spanish)/);
         }
       }
     }

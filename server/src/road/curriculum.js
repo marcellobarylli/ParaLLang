@@ -210,7 +210,10 @@ function compileObjective({ language, lesson, objective, data, byId, entries }) 
     lessonId: lesson.id,
     ask,
     cue: objective.cue ?? null,
-    prompt: `${objective.cue ? `${objective.cue} ` : ''}${ask}, using ${language.name}.`,
+    // Round 225 (the owner): what the player sees is the bare task, one sentence: no cue, no "using <language>" (the
+    // box already names the language). The skeleton's cue is kept on the objective but shown nowhere now; the model
+    // reads `intent` (encounters.js).
+    prompt: `${ask}.`,
     target_vocabulary_ids: targetIds,
     required_target_groups: groups,
     grammar_constraints: [

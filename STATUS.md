@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 225, objectives as the bare task
+
+On the road, each objective in the box reads as the task alone ("Greet Cuthbert.", "Tell Cuthbert your name."): the
+narrative cue and ", using <language>" are gone (the box's target line names the language). Tests pass; **not seen in
+a browser or on a phone**. **Merged to `main` and deployed.**
+[Architecture](docs/rounds/225/architecture.md), [findings](docs/rounds/225/findings.md).
+
 ## Addendum 2026-11-28: round 224, a shorter welcome that says how to answer
 
 The welcome message ("In the beginning was the Word") is condensed to the vision in one sentence and the teaser in
