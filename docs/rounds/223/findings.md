@@ -30,6 +30,9 @@ suites, and the production build in headless Chromium.
 
 ## Claim boundary
 
+- Deployed: the Pages client (run 120, success). Render's auto-deploy of the server from `main` was not seen: this
+  session cannot reach Render (network policy).
+
 - Authored by Claude, not checked by a native speaker; dictionary URLs follow the sites' patterns and were not opened.
   "Daredemonai" and "Wúrén" as the Odyssey's Nobody were not checked against a translation.
 - No conversation was played with a model in either language: whether the model keeps to rōmaji and pinyin is

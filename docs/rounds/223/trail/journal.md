@@ -13,3 +13,4 @@ Append only. Times are UTC.
 | 7 | 2026-11-28 16:40 approx. | 17:00 | run | Claude | Curriculum stages merged per language (earliest definition kept); both packs load whole with no shared form | `../findings.md` |
 | 8 | 2026-11-28 16:55 approx. | 17:00 | run | Claude | All suites pass (server 640, client 394, aesthetic 96, mobile 320); client build; the title in headless Chromium offers five languages | `../findings.md` |
 | 9 | 2026-11-28 17:00 | 17:00 | closed | Claude | Records, status addendum; merged to `main` and pushed on the owner's word ("Then deploy") | `../architecture.md` |
+| 10 | 2026-11-28 15:51 | 15:55 | deploy | Claude | Pages deploy of `a0a9305` succeeded (run 120). Render not reachable from this session (network policy, 403 on CONNECT); its auto-deploy from `main` is not confirmed | `../findings.md` |
