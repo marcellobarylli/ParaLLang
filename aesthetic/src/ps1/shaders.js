@@ -164,6 +164,7 @@ uniform vec2 uOutput;
 uniform float uDither;
 uniform float uColorBits;
 uniform float uScanlines;
+uniform vec3 uGrade; // round 219: softness, how much the greens are tamed, warmth (0 to 1 each; 0 0 0 leaves the image)
 varying vec2 vUv;
 
 // The PlayStation GPU's dither table, added to 8-bit colour before truncating to 5 bits.
@@ -177,6 +178,19 @@ const float PS1_DITHER[16] = float[16](
 void main() {
   vec2 px = floor(vUv * uRes);
   vec3 c = texture2D(tScene, (px + 0.5) / uRes).rgb;
+
+  // Round 219: a soft grade. A colour whose green leads its red and blue is drawn toward its grey and a little toward
+  // red (a sage, not a neon); every colour loses a little saturation and contrast (the blacks lifted, the whites
+  // eased); the warmth tints the whole image toward a warm cream.
+  float luma = dot(c, vec3(0.299, 0.587, 0.114));
+  float lead = max(0.0, c.g - max(c.r, c.b));
+  float greenness = clamp(lead / max(c.g, 0.05), 0.0, 1.0);
+  c = mix(c, vec3(luma), uGrade.y * greenness);
+  c.r += uGrade.y * greenness * lead * 0.35;
+  c = mix(vec3(luma), c, 1.0 - 0.14 * uGrade.x);
+  c = 0.035 * uGrade.x + c * (1.0 - 0.09 * uGrade.x);
+  c *= mix(vec3(1.0), vec3(1.05, 1.0, 0.9), uGrade.z);
+
   vec3 c8 = clamp(c, 0.0, 1.0) * 255.0;
 
   if (uDither > 0.5) {

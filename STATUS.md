@@ -34,6 +34,21 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 220, a longer lead-in to the breath
+
+The breathing's dial now starts 70 degrees before the breath in (about 1.94 s to prepare), not 45 (1.25 s). Client
+tests pass; **not seen in a browser or on a phone**. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/220/architecture.md), [findings](docs/rounds/220/findings.md).
+
+## Addendum 2026-11-28: round 219, a softer road; longer sunrises and sunsets
+
+The road (The Journey 2) is graded soft in the PS1 post pass: greens drawn toward sage, a little less saturation and
+contrast, and a warmth that follows the daylight. Its day sky keeps its blue, paler, over a warm cream haze. The sun
+lingers near the horizon (its height is its sine to the power 1.7), so a sunrise or a sunset lasts about 6 minutes of
+the 45-minute day instead of about 3. The dungeons and the app are unchanged. Seen in headless Chromium at phone size,
+**not on a phone**. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/219/architecture.md), [findings](docs/rounds/219/findings.md).
+
 ## Addendum 2026-11-28: round 218, the gate that ends a level is in Angkor Wat; a silent world event
 
 The gate that takes the learner from A1 to A2 (and A2 to B1) now stands in **Angkor Wat** (the `angkor` level, with
@@ -2162,6 +2177,8 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 220 | 11-28 | The breathing's dial starts 70 degrees before the breath in (was 45); deployed | [220](docs/rounds/220/architecture.md) | [findings](docs/rounds/220/findings.md) | round 220 build, merged to `main` |
+| 219 | 11-28 | A softer road (a soft grade in the post pass, a warm day palette, sage greens); the sun lingers at the horizon, so sunrises and sunsets last twice as long; deployed | [219](docs/rounds/219/architecture.md) | [findings](docs/rounds/219/findings.md) | round 219 build, merged to `main` |
 | 215 | 11-28 | The road's frontier is read from the finished conversations, not from the walk; a pull takes those sites only; pulled ground under the sea's level floods (the sea stays level); the check library switches round 214's breathing off; deployed | [215](docs/rounds/215/architecture.md) | [findings](docs/rounds/215/findings.md) | round 215 build, merged to `main` |
 | 217 | 11-28 | The walk between conversations carries no text, and the breathing is played over it; deployed | [217](docs/rounds/217/architecture.md) | [findings](docs/rounds/217/findings.md) | round 217 build, merged to `main` |
 | 213 | 11-28 | The pulls (issue #23): at a change of level the land sinks 26 m at the sites of the walk, by a displacement field solved from them; the world event on the map (the web generated in grey, the journey in black, the land sinking); the map and the level on the pulled land; a developer's jump to any unit in Settings; deployed | [213](docs/rounds/213/architecture.md) | [findings](docs/rounds/213/findings.md) | round 213 build, merged to `main` |

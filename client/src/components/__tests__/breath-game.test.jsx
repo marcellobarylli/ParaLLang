@@ -32,7 +32,7 @@ test('it comes in with a breath in, has no text, and with the reply ready at onc
   expect(game.className).toContain('shown');
   expect(game.textContent).toBe(''); // nothing is written during the breathing
   expect(game.dataset.phase).toBe('in');
-  act(() => frames.run(4.1 + 1.3)); // the lead-in (45 degrees, 1.25 s) comes first
+  act(() => frames.run(4.1 + 2)); // the lead-in (70 degrees, about 1.94 s) comes first
   expect(game.dataset.phase).toBe('out');
   act(() => frames.run(25));
   expect(game.dataset.cycle).toBe('2');
@@ -59,7 +59,7 @@ test('with no reply it keeps breathing past three breaths, and ends with the bre
   act(() => frames.run(7.5));
   expect(frames.waiting).toBe(true); // the breath is finished first
   expect(onDone).not.toHaveBeenCalled();
-  act(() => frames.run(2)); // (the 1.25 s lead-in is part of the time)
+  act(() => frames.run(2.7)); // (the 1.94 s lead-in is part of the time)
   expect(frames.waiting).toBe(false);
   await waitFor(() => expect(onDone).toHaveBeenCalledWith({ cycles: 5, kept: 0, perfect: 0 }), { timeout: 2000 });
 });
@@ -68,7 +68,7 @@ test('the panel is held for the breath in and let go at the turn; the space bar 
   const frames = handFrames();
   render(<BreathGame ready={false} onDone={() => {}} frames={frames} />);
   const game = screen.getByRole('group', { name: 'Breathing' });
-  act(() => frames.run(0.5 + 1.25)); // the lead-in, then half a second of the breath in
+  act(() => frames.run(0.5 + 70 / 36)); // the lead-in, then half a second of the breath in
   fireEvent.pointerDown(game, { pointerId: 1 });
   act(() => frames.run(0.1));
   expect(game.dataset.held).toBe('yes');
@@ -127,5 +127,5 @@ test('the breath in is at the top, the breath out 144 degrees on, and the light 
   expect(degrees(0)).toBeCloseTo(0, 9);
   expect(degrees(0.4)).toBeCloseTo(144, 9);
   expect(degrees(0.25)).toBeCloseTo(90, 9);
-  expect(degrees(-45 / 360)).toBeCloseTo(315, 9); // where the light is when it sets off: 45 degrees before the "in"
+  expect(degrees(-70 / 360)).toBeCloseTo(290, 9); // where the light is when it sets off: 70 degrees before the "in"
 });

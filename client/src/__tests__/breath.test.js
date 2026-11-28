@@ -82,9 +82,9 @@ test('a reply that comes during a breath out, after the third, ends with that br
   expect(game.cycle).toBe(4);
 });
 
-test('the light starts 45 degrees of the ring before the breath in, and the lead-in is not a turn', () => {
+test('the light starts 70 degrees of the ring before the breath in, and the lead-in is not a turn', () => {
   const game = newBreath();
-  expect(breathProgress(game)).toBeCloseTo(-45 / 360, 5);
+  expect(breathProgress(game)).toBeCloseTo(-70 / 360, 5);
   expect(breathLevel(game)).toBe(0);
   const begun = run(game, BREATH.lead + 0.01, { held: () => true });
   expect(begun.t).toBeGreaterThan(0);
