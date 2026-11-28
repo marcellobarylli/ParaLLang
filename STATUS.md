@@ -34,6 +34,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 210, the narrator tells a fantasy story, straight
+
+The hosted narrator is no longer asked to be silly: every voice is a storyteller narrating a fantasy tale, warm and
+measured, the humour left to the text. Tested with Google faked; **not heard**. **Merged to `main` and deployed.**
+[Architecture](docs/rounds/210/architecture.md), [findings](docs/rounds/210/findings.md).
+
 ## Addendum 2026-11-28: round 209, Algenib by default, and three female narrators
 
 The narrator reads in Algenib unless another is picked, and Settings' "Narrator's voice" adds Sulafat, Vindemiatrix

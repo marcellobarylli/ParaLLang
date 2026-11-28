@@ -80,15 +80,16 @@ test('a listed voice is used and kept apart; any other name is the default voice
   assert.deepEqual(calls.map((each) => each.body.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName), ['Charon', 'Gacrux', 'Algenib']);
 });
 
-// Round 209: Algenib by default; a female voice reads as a grandmotherly storyteller.
-test('a female voice is given a grandmotherly storyteller, the others a grandfatherly one', async () => {
+// Round 209: Algenib by default. Round 210: every voice is given the same straight fantasy storyteller.
+test('every voice is given the same storyteller, played straight', async () => {
   const calls = [];
   const voice = createNarratorVoice({ apiKey: 'server-key', fetchImpl: google(calls), logger: quiet });
   await voice.speak('Hello.', { voice: 'Sulafat' });
   await voice.speak('Hello.', { voice: 'Charon' });
   const [her, his] = calls.map((each) => each.body.contents[0].parts[0].text);
   assert.equal(calls[0].body.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName, 'Sulafat');
-  assert.match(her, /she finds/); assert.match(her, /grandmotherly/); assert.doesNotMatch(her, /\bhe finds|grandfatherly/);
-  assert.match(his, /he finds/); assert.match(his, /grandfatherly/);
+  assert.equal(her, his);
+  assert.match(her, /fantasy tale/);
+  assert.doesNotMatch(her, /silly|goofy|whimsical/);
   assert.equal(NARRATOR_VOICE, 'Algenib');
 });

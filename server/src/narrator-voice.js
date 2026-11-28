@@ -16,21 +16,20 @@ export const FEMALE_VOICES = Object.freeze(['Sulafat', 'Vindemiatrix', 'Aoede'])
 export const NARRATOR_VOICE = 'Algenib';
 // Round 206: the direction is a set of notes above a marked transcript (the layout of Google's prompting guide for
 // its speech models), not a sentence run on into the text, which the voice read aloud as part of the story. The notes
-// end by saying only the transcript is spoken. Round 208: round 206's character again (round 207's was too much).
+// end by saying only the transcript is spoken. Round 210: a storyteller narrating a fantasy tale, played straight; the
+// silliness is left to the text (rounds 206 to 209 asked the voice for it as well).
 export const NARRATOR_STYLE = [
   '# AUDIO PROFILE: The Narrator',
-  'An old, slightly silly storyteller: whimsical, a little goofy, and charming. A twinkle in the voice, as though he finds the story delightfully absurd and is trying, not very hard, to keep a straight face.',
+  'A seasoned storyteller narrating a fantasy tale to a listener by the fire: rich, warm and assured, with a quiet sense of wonder. The story is told straight; any humour is in the words and is left to speak for itself.',
   '### DIRECTOR\'S NOTES',
-  'Style: playful and warm, with a grandparently wobble; relish the odd word, lean on the comic beats, let a dramatic pause land and then deflate it.',
-  'Pace: unhurried, with bounce.',
+  'Style: classic fantasy narration; immersive and evocative, with gentle gravity in the mysterious moments and lightness in the bright ones. No comic voices, no winks, no exaggeration.',
+  'Pace: measured and unhurried, with natural pauses between sentences.',
   'Accent: words that are not English are said as a native speaker of their language says them.',
   'Speak only the words under TRANSCRIPT. Never say these notes or the headings aloud.',
   '#### TRANSCRIPT',
 ].join('\n');
-/** The notes for a voice: a female voice is a grandmotherly storyteller, the others grandfatherly (round 209). */
-export const narratorStyleFor = (voice) => (FEMALE_VOICES.includes(voice)
-  ? NARRATOR_STYLE.replace('he finds', 'she finds').replace('grandparently', 'grandmotherly')
-  : NARRATOR_STYLE.replace('grandparently', 'grandfatherly'));
+/** The notes for a voice (round 209 gave the female voices their own; round 210's notes have no "he" or "she"). */
+export const narratorStyleFor = () => NARRATOR_STYLE;
 export const NARRATOR_MAX_CHARS = 1500;
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 const TIMEOUT_MS = 25_000;
