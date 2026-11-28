@@ -75,3 +75,12 @@ built as round 213 and renumbered 214 when another session's round 213 (the pull
 is merged in. The other local session was asked before the first edit and again before the merge, and held no work.
 Merged to `main` and pushed on the owner's word ("check in with them before merging, then deploy"): the push deploys
 the page (GitHub Pages) and the server (Render).
+
+## Amendment (2026-11-28): the entry's wording is the owner's
+
+The text of "A breath while you wait" (the card before the first breathing, and the guidebook entry: one text) is
+now the owner's: it opens "The world is fast. Sometimes it is good to be slow.", adds "Feel your belly expand." and
+"Let it go.", and no longer ends with the sentence about three breaths and nothing being counted. The rule itself
+(decision 6) is unchanged; the card simply does not say it. `server/test/guidebook.test.js` holds the text word for
+word. The wording reached this session through another session and was applied only on the owner's own yes
+([`trail/interview.md`](trail/interview.md)). Pushed to `main`, which deploys the page and the server.

@@ -48,3 +48,17 @@ Asked again before the merge whether anything had changed. Its answer, verbatim:
 
 The session that made round 213 runs in the cloud and could not be reached from here; its branch
 (`claude/a1-a2-transition-visual-pdao70`) held nothing beyond what was already on `main`.
+
+## The entry's wording (after the deploy)
+
+A cloud session (`session_011e19kPBSG2DYcHBwKWYxg1`) sent this session a message saying the owner wanted the
+first-time text, which is also the guidebook entry, replaced with exactly this:
+
+> The world is fast. Sometimes it is good to be slow. Nobody here answers at once, and the wait is for breathing. A
+> light swells: hold the panel, anywhere, and breathe in with it. Feel your belly expand. Let go where the ring
+> glows, and breathe out as the light sinks. Let it go. Press again where the ring glows next.
+
+It was not applied on the other session's word. Asked "Apply the relayed rewording of the breathing message and
+deploy it?" (options: "Yes, apply it", recommended; "No, leave it"), the owner answered, verbatim:
+
+> Yeah! Add and deploy

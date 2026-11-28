@@ -109,7 +109,8 @@ test('"A breath while you wait" is carried ahead by every view until the page en
   const enter = (body) => api(runtime, '/api/guidebook/enter', { learnerId, method: 'POST', body });
   const before = (await api(runtime, '/api/dungeons/ta_prohm/map?client=121', { learnerId })).data.guidebook;
   assert.deepEqual(before.ahead.map(({ id, title, event }) => [id, title, event]), [['the_breath', 'A breath while you wait', 'breath_wait']]);
-  assert.match(before.ahead[0].segments[0].text, /^Nobody here answers at once/);
+  // The owner's wording (2026-11-28), the same on the card before the first breathing and in the guidebook.
+  assert.equal(before.ahead[0].segments[0].text, 'The world is fast. Sometimes it is good to be slow. Nobody here answers at once, and the wait is for breathing. A light swells: hold the panel, anywhere, and breathe in with it. Feel your belly expand. Let go where the ring glows, and breathe out as the light sinks. Let it go. Press again where the ring glows next.');
   assert.deepEqual((await guidebook(runtime, learnerId)).data.guidebook.entries, []); // not in the guidebook yet
   const entered = await enter({ event: 'breath_wait' });
   assert.equal(entered.status, 200);
