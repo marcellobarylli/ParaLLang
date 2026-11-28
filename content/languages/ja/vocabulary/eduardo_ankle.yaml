@@ -1,0 +1,45 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Micromort Mountain, Eduardo's ankle. Reference URLs follow the existing patterns and were not opened from the build
+# container; listed for the owner's content review.
+version: eduardo-ankle-ja-v1
+references:
+  - id: jisho-tetsudau
+    title: "Jisho: tetsudau"
+    url: "https://jisho.org/search/tetsudau"
+  - id: jisho-chojo
+    title: "Jisho: chōjō"
+    url: "https://jisho.org/search/choujou"
+  - id: jisho-matsuri
+    title: "Jisho: matsuri"
+    url: "https://jisho.org/search/matsuri"
+entries:
+  - id: tetsudau
+    kind: word
+    target: "tetsudau"
+    part_of_speech: verb
+    accepted_translations: ["help", "to help", "I'll help", "lend a hand"]
+    surface_variants: ["tetsudau", "tetsudaimasu", "tetsudaimashō", "tetsudaimashou", "tetsudaimashoo", "tetsudaō", "tetsudaou", "tetsudaoo", "tetsudatte", "tetsudaitai", "tetsudai", "otetsudai"]
+    accent_insensitive: true
+    example: { target: "Tetsudaimashō ka?", english: "Shall I help you?" }
+    note: "'Tetsudau' is to help, lend a hand; 'tetsudaimashō ka?' (shall I help?) is the polite offer to a stranger, 'tetsudaimasu' is I'll help, and among friends 'tetsudaō ka?'. The noun is '(o)tetsudai'. 'Tasukete!' is the cry for help, which is not an offer."
+    reference_ids: [jisho-tetsudau]
+  - id: chojo
+    kind: word
+    target: "chōjō"
+    part_of_speech: noun
+    accepted_translations: ["summit", "peak", "top"]
+    surface_variants: ["chōjō", "choujou", "choojoo", "choujyou"]
+    accent_insensitive: true
+    example: { target: "Chōjō wa yuki de shiroi desu.", english: "The summit is white with snow." }
+    note: "The top, the summit; the summit of a mountain is also 'sanchō', and 'chōjō made' is as far as the top."
+    reference_ids: [jisho-chojo]
+  - id: matsuri
+    kind: word
+    target: "matsuri"
+    part_of_speech: noun
+    accepted_translations: ["festival", "party"]
+    surface_variants: ["matsuri", "omatsuri"]
+    accent_insensitive: false
+    example: { target: "Tanoshii omatsuri desu ne!", english: "What a lovely festival!" }
+    note: "A festival, often 'omatsuri' with the polite o; a party in someone's home is a 'pātī'."
+    reference_ids: [jisho-matsuri]

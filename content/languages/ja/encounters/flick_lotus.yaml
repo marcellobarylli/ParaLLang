@@ -1,0 +1,62 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+id: flick_lotus
+character: characters/enemies/letharger_flick.yaml
+party_of: cracked_fountain_letharger
+# Round 048 (backlog G6): offered instead of the slow walk once Flick has finished three conversations, after it has
+# recited the lotus passage.
+after_conversations: 3
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player wakes Flick up and gives it courage, in Japanese"
+max_turns: 20
+resolved_message: "Flick gets up. Not in five minutes: now. It looks as surprised as you are."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: wake_up
+    prompt: "Flick is lying in the dry sand of the fountain's basin, eyes closing. Tell it to wake up, using Japanese."
+    intent: "Flick has travelled with the player for several slow walks, so in its greeting it does not introduce itself or describe the place: it greets the player as an old companion. Tonight it has lain down in the dry sand of the fountain's basin, eyes half closed: in its greeting, in a line or two, it murmurs five more minutes, like the sailors in an old story who ate a flower on a warm beach and forgot the way home, and admits it is afraid it will forget the way too. The player may not know the story. Flick never says \"okite\" or \"ganbatte\" (in dialogue or narration) before the player has, and it does not tell the player what to say."
+    target_vocabulary_ids: [okite]
+    required_target_groups:
+      - [okite]
+    grammar_constraints:
+      - "The player tells Flick, in their own words, to wake up, with the Japanese request or command to wake up (okite, or okinasai, okiro)."
+      - "Reject English-only lines, quotations, definitions of the word, and lines that only describe Flick sleeping."
+    accepted_examples:
+      - "Okite!"
+      - "Okite, Flick!"
+      - "Okite, not five more minutes."
+    negative_examples:
+      - text: "Wake up, Flick!"
+        reason: "English-only; it does not use the Japanese word."
+      - text: "Okite means wake up."
+        reason: "It discusses the word rather than waking Flick."
+    reference_meaning: "The player tells Flick to wake up."
+    hint_limit: 2
+    next_objective: courage
+    assessment_reference_ids: [jisho-okiru]
+  - id: courage
+    prompt: "Flick is up, but it says it cannot do it, not today. Give it courage, using Japanese."
+    intent: "Flick is awake now, sitting up, but it says it cannot do it, not today, maybe tomorrow, and the jingle is calling. It waits, without asking, for the player to give it courage. It never says \"ganbatte\" or \"ganbare\" (in dialogue or narration) before the player has."
+    target_vocabulary_ids: [ganbatte]
+    required_target_groups:
+      - [ganbatte]
+    grammar_constraints:
+      - "The player encourages Flick, in their own words, with the Japanese encouragement (ganbatte, or ganbare, ganbarō), as an encouragement to Flick."
+      - "Reject English-only lines, quotations, talk about the word, and lines that say Flick has no courage."
+    accepted_examples:
+      - "Ganbatte!"
+      - "Ganbatte, Flick, ikō."
+      - "Ganbatte, you can do it."
+    negative_examples:
+      - text: "Come on, you can do it!"
+        reason: "English-only; it does not use the Japanese word."
+      - text: "Yūki ga nai ne."
+        reason: "It says Flick has no courage instead of giving it some."
+    reference_meaning: "The player encourages Flick."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [jisho-ganbaru]

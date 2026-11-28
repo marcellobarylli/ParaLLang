@@ -1,0 +1,381 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+# Round 050 (backlog G5): telling the time (the hour and ji, shōgo, mayonaka) and Flick's question (nanji desu ka).
+version: fountain-riddles-ja-v1
+references:
+  - id: jisho-tomaru
+    title: 'Jisho: tomaru'
+    url: https://jisho.org/search/tomaru
+  - id: jisho-ugoku
+    title: 'Jisho: ugoku'
+    url: https://jisho.org/search/ugoku
+  - id: jisho-yameru
+    title: 'Jisho: yameru'
+    url: https://jisho.org/search/yameru
+  - id: jisho-kiku
+    title: 'Jisho: kiku'
+    url: https://jisho.org/search/kiku
+  - id: jisho-migi
+    title: 'Jisho: migi'
+    url: https://jisho.org/search/migi
+  - id: jisho-hidari
+    title: 'Jisho: hidari'
+    url: https://jisho.org/search/hidari
+  - id: jisho-massugu
+    title: 'Jisho: massugu'
+    url: https://jisho.org/search/massugu
+  - id: jisho-ima
+    title: 'Jisho: ima'
+    url: https://jisho.org/search/ima
+  - id: jisho-sugu
+    title: 'Jisho: sugu'
+    url: https://jisho.org/search/sugu
+  - id: jisho-ato
+    title: 'Jisho: ato'
+    url: https://jisho.org/search/ato
+  - id: jisho-ashita
+    title: 'Jisho: ashita'
+    url: https://jisho.org/search/ashita
+  - id: jisho-ji
+    title: 'Jisho: ji (o''clock)'
+    url: https://jisho.org/search/ji
+  - id: jisho-shogo
+    title: 'Jisho: shōgo'
+    url: https://jisho.org/search/shougo
+  - id: jisho-mayonaka
+    title: 'Jisho: mayonaka'
+    url: https://jisho.org/search/mayonaka
+  - id: jisho-nanji
+    title: 'Jisho: nanji'
+    url: https://jisho.org/search/nanji
+entries:
+  - id: tomatte
+    kind: word
+    target: tomatte
+    part_of_speech: verb
+    accepted_translations:
+      - stop
+      - stop it
+      - hold still
+    surface_variants:
+      - tomatte
+      - tomare
+      - tomarinasai
+    accent_insensitive: false
+    example:
+      target: Tomatte, Flick!
+      english: Stop, Flick!
+    note: The te form of tomaru (to come to a stop), said to a friend as a request; tomatte kudasai is politer. Tomare is the blunt command written on stop signs; tomarinasai is a parent's or a teacher's.
+    reference_ids:
+      - jisho-tomaru
+  - id: ugokanaide
+    kind: word
+    target: ugokanaide
+    part_of_speech: verb
+    accepted_translations:
+      - keep still
+      - hold still
+      - don't move
+      - stop
+    surface_variants:
+      - ugokanaide
+      - ugoku na
+      - jitto shite
+    accent_insensitive: false
+    example:
+      target: Ugokanaide!
+      english: Don't move!
+    note: The negative te form of ugoku (to move), don't move; ugokanaide kudasai is politer, ugoku na is blunt. Jitto shite! (keep still) says the same.
+    reference_ids:
+      - jisho-ugoku
+  - id: yamete
+    kind: word
+    target: yamete
+    part_of_speech: verb
+    accepted_translations:
+      - stop it
+      - stop
+      - quit it
+      - that is enough
+    surface_variants:
+      - yamete
+      - yamero
+      - yamenasai
+    accent_insensitive: false
+    example:
+      target: Mō yamete!
+      english: Stop it already!
+    note: The te form of yameru (to stop doing something, to quit). Tomatte stops a movement; yamete stops what someone is doing. Yamero is rough; mō yamete is that's enough now.
+    reference_ids:
+      - jisho-yameru
+  - id: kiite
+    kind: word
+    target: kiite
+    part_of_speech: verb
+    accepted_translations:
+      - listen
+    surface_variants:
+      - kiite
+    accent_insensitive: false
+    example:
+      target: Kiite, Flick!
+      english: Listen, Flick!
+    note: The te form of kiku (to listen, to hear, to ask), said to a friend as a request.
+    reference_ids:
+      - jisho-kiku
+  - id: migi
+    kind: word
+    target: migi
+    part_of_speech: noun
+    accepted_translations:
+      - right
+      - the right
+    surface_variants:
+      - migi
+    accent_insensitive: false
+    example:
+      target: Migi ni magatte.
+      english: Turn right.
+    note: 'Migi e or migi ni: to the right.'
+    reference_ids:
+      - jisho-migi
+  - id: hidari
+    kind: word
+    target: hidari
+    part_of_speech: noun
+    accepted_translations:
+      - left
+      - the left
+    surface_variants:
+      - hidari
+    accent_insensitive: false
+    example:
+      target: Hidari e itte.
+      english: Go left.
+    note: 'Hidari e or hidari ni: to the left.'
+    reference_ids:
+      - jisho-hidari
+  - id: massugu
+    kind: word
+    target: massugu
+    part_of_speech: adverb
+    accepted_translations:
+      - straight
+      - straight on
+      - straight ahead
+    surface_variants:
+      - massugu
+    accent_insensitive: false
+    example:
+      target: Massugu itte.
+      english: Go straight on.
+    note: Massugu itte kudasai is the politer way to ask.
+    reference_ids:
+      - jisho-massugu
+  - id: ima
+    kind: word
+    target: ima
+    part_of_speech: adverb
+    accepted_translations:
+      - now
+    surface_variants:
+      - ima
+    accent_insensitive: false
+    example:
+      target: Ima, ashita ja nakute.
+      english: Now, not tomorrow.
+    note: Ima also comes in the question ima nanji desu ka? (what time is it now?).
+    reference_ids:
+      - jisho-ima
+  - id: ima_sugu
+    kind: phrase
+    target: ima sugu
+    part_of_speech: adverb
+    accepted_translations:
+      - right now
+      - right away
+      - now
+      - immediately
+    surface_variants:
+      - ima sugu
+      - imasugu
+      - sugu
+    accent_insensitive: false
+    example:
+      target: Ima sugu yamete.
+      english: Stop it right now.
+    note: Sugu is at once, soon; ima sugu, right now, is more insistent than ima.
+    reference_ids:
+      - jisho-sugu
+  - id: ato_de
+    kind: phrase
+    target: ato de
+    part_of_speech: adverb
+    accepted_translations:
+      - later
+      - afterwards
+    surface_variants:
+      - ato de
+      - atode
+    accent_insensitive: false
+    example:
+      target: Ato de yarimasu.
+      english: I'll do it later.
+    reference_ids:
+      - jisho-ato
+  - id: ashita
+    kind: word
+    target: ashita
+    part_of_speech: noun
+    accepted_translations:
+      - tomorrow
+    surface_variants:
+      - ashita
+    accent_insensitive: false
+    example:
+      target: Mata ashita!
+      english: See you tomorrow!
+    reference_ids:
+      - jisho-ashita
+  - id: ji
+    kind: word
+    target: ji
+    part_of_speech: counter
+    accepted_translations:
+      - o'clock
+      - it is o'clock
+    surface_variants:
+      - ji
+      - reiji
+      - ichiji
+      - niji
+      - sanji
+      - yoji
+      - yonji
+      - goji desu
+      - goji da
+      - goji han
+      - go-ji
+      - rokuji
+      - shichiji
+      - nanaji
+      - hachiji
+      - kuji
+      - kyūji
+      - kyuuji
+      - jūji
+      - juuji
+      - jyuuji
+      - jūichiji
+      - juuichiji
+      - jyuuichiji
+      - jūniji
+      - juuniji
+      - jyuuniji
+      - jūsanji
+      - juusanji
+      - jūyoji
+      - juuyoji
+      - jūgoji
+      - juugoji
+      - jūrokuji
+      - juurokuji
+      - jūshichiji
+      - juushichiji
+      - jūhachiji
+      - juuhachiji
+      - jūkuji
+      - juukuji
+      - nijūji
+      - nijuuji
+      - nijūichiji
+      - nijuuichiji
+      - nijūniji
+      - nijuuniji
+      - nijūsanji
+      - nijuusanji
+      - 0ji
+      - 1ji
+      - 2ji
+      - 3ji
+      - 4ji
+      - 5ji
+      - 6ji
+      - 7ji
+      - 8ji
+      - 9ji
+      - 10ji
+      - 11ji
+      - 12ji
+      - 13ji
+      - 14ji
+      - 15ji
+      - 16ji
+      - 17ji
+      - 18ji
+      - 19ji
+      - 20ji
+      - 21ji
+      - 22ji
+      - 23ji
+      - 24ji
+    accent_insensitive: true
+    example:
+      target: Sanji desu.
+      english: It is three o'clock.
+    note: "The hour and ji, then desu: ichiji, niji, sanji desu. Three hours have their own reading: yoji (4, not yonji), shichiji (7, also nanaji) and kuji (9, not kyūji). Half past is han (sanji han), minutes are fun or pun (sanji juppun); gozen and gogo are a.m. and p.m. (gogo sanji)."
+    reference_ids:
+      - jisho-ji
+  - id: shogo
+    kind: word
+    target: shōgo
+    part_of_speech: noun
+    accepted_translations:
+      - midday
+      - noon
+    surface_variants:
+      - shōgo
+      - shougo
+      - shoogo
+    accent_insensitive: true
+    example:
+      target: Shōgo desu.
+      english: It is midday.
+    note: Noon exactly, twelve o'clock in the day; in speech also hiru no jūniji. Ohiru is midday and lunch.
+    reference_ids:
+      - jisho-shogo
+  - id: mayonaka
+    kind: word
+    target: mayonaka
+    part_of_speech: noun
+    accepted_translations:
+      - midnight
+      - the middle of the night
+    surface_variants:
+      - mayonaka
+    accent_insensitive: false
+    example:
+      target: Mō mayonaka desu.
+      english: It is already midnight.
+    note: The middle of the night; midnight on the dot is yoru no jūniji or reiji (zero o'clock).
+    reference_ids:
+      - jisho-mayonaka
+  - id: nanji
+    kind: phrase
+    target: nanji desu ka
+    part_of_speech: question
+    accepted_translations:
+      - what time is it
+    surface_variants:
+      - nanji desu ka
+      - nanji
+      - nan-ji
+      - nan ji
+    accent_insensitive: false
+    example:
+      target: Ima nanji desu ka, Flick?
+      english: What time is it now, Flick?
+    note: Nan (what) and ji (o'clock); among friends, ima nanji? is enough.
+    reference_ids:
+      - jisho-nanji

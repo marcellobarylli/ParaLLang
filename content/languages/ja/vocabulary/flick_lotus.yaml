@@ -1,0 +1,30 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+version: flick-lotus-ja-v1
+references:
+  - id: jisho-okiru
+    title: "Jisho: okiru"
+    url: "https://jisho.org/search/okiru"
+  - id: jisho-ganbaru
+    title: "Jisho: ganbaru"
+    url: "https://jisho.org/search/ganbaru"
+entries:
+  - id: okite
+    kind: word
+    target: "okite"
+    part_of_speech: verb
+    accepted_translations: ["wake up", "get up"]
+    surface_variants: ["okite", "okinasai", "okiro"]
+    accent_insensitive: false
+    example: { target: "Okite, Flick!", english: "Wake up, Flick!" }
+    note: "The te form of 'okiru' (to wake up, to get up), said to a friend as a request; 'okite kudasai' is politer, 'okinasai' is what a parent says in the morning and 'okiro' is blunt."
+    reference_ids: [jisho-okiru]
+  - id: ganbatte
+    kind: word
+    target: "ganbatte"
+    part_of_speech: verb
+    accepted_translations: ["come on", "you can do it", "chin up", "hang in there", "go for it"]
+    surface_variants: ["ganbatte", "gambatte", "ganbare", "gambare", "ganbarō", "ganbarou", "ganbaroo", "gambarō", "gambarou"]
+    accent_insensitive: true
+    example: { target: "Ganbatte, Flick!", english: "Come on, Flick, you can do it!" }
+    note: "The te form of 'ganbaru' (to hold on, to do one's best): what Japanese says where other languages say courage. 'Ganbare' is the blunter command, cheered at races; 'ganbarō' is let's do our best, together. Courage the noun is 'yūki'."
+    reference_ids: [jisho-ganbaru]
