@@ -1,0 +1,278 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Japanese counts minutes with the counter fun, which becomes pun after some numbers (sanpun, roppun, juppun); a bare
+# number (go, ni, san) is never a form here, because it is an English word, a particle or the honorific -san. The
+# minute counts are the entries.
+version: flick-party-ja-v1
+references:
+  - id: jisho-iku
+    title: 'Jisho: iku'
+    url: https://jisho.org/search/iku
+  - id: wiktionary-ikimasho
+    title: 'Wiktionary: ikimashō (Japanese)'
+    url: https://en.wiktionary.org/wiki/ikimash%C5%8D
+  - id: jisho-issho
+    title: 'Jisho: issho'
+    url: https://jisho.org/search/issho
+  - id: jisho-fun
+    title: 'Jisho: fun'
+    url: https://jisho.org/search/fun
+  - id: jisho-nifun
+    title: 'Jisho: nifun'
+    url: https://jisho.org/search/nifun
+  - id: jisho-sanpun
+    title: 'Jisho: sanpun'
+    url: https://jisho.org/search/sanpun
+  - id: jisho-yonpun
+    title: 'Jisho: yonpun'
+    url: https://jisho.org/search/yonpun
+  - id: jisho-gofun
+    title: 'Jisho: gofun'
+    url: https://jisho.org/search/gofun
+  - id: jisho-roppun
+    title: 'Jisho: roppun'
+    url: https://jisho.org/search/roppun
+  - id: jisho-nanafun
+    title: 'Jisho: nanafun'
+    url: https://jisho.org/search/nanafun
+  - id: jisho-happun
+    title: 'Jisho: happun'
+    url: https://jisho.org/search/happun
+  - id: jisho-kyufun
+    title: 'Jisho: kyūfun'
+    url: https://jisho.org/search/kyuufun
+  - id: jisho-juppun
+    title: 'Jisho: juppun'
+    url: https://jisho.org/search/juppun
+  - id: jisho-juippun
+    title: 'Jisho: jūippun'
+    url: https://jisho.org/search/juuippun
+  - id: jisho-junifun
+    title: 'Jisho: jūnifun'
+    url: https://jisho.org/search/juunifun
+entries:
+  - id: ikimasho
+    kind: phrase
+    target: ikimashō
+    part_of_speech: phrase
+    accepted_translations:
+      - let's go
+      - shall we go
+    surface_variants:
+      - ikimashō
+      - ikimashou
+      - ikimashoo
+      - ikō
+      - ikou
+      - ikoo
+    accent_insensitive: true
+    example:
+      target: Ichiba e ikimashō!
+      english: Let's go to the market!
+    note: 'From iku, to go: ikimashō is the polite let''s go, ikō the plain one among friends (Ikō yo!). Ikimashō ka? asks "shall we go?".'
+    reference_ids:
+      - jisho-iku
+      - wiktionary-ikimasho
+  - id: issho_ni
+    kind: phrase
+    target: issho ni
+    part_of_speech: adverb
+    accepted_translations:
+      - together
+    surface_variants:
+      - issho ni
+      - isshoni
+      - issho
+    accent_insensitive: true
+    example:
+      target: Issho ni ikimashō.
+      english: Let's go together.
+    note: 'Issho (the same place, together) with ni. Issho ni ikō among friends.'
+    reference_ids:
+      - jisho-issho
+  - id: nifun
+    kind: word
+    target: nifun
+    part_of_speech: numeral
+    accepted_translations:
+      - two minutes
+    surface_variants:
+      - nifun
+    accent_insensitive: true
+    example:
+      target: Nifun dake desu.
+      english: Only two minutes.
+    note: 'Ni (two) with fun.'
+    reference_ids:
+      - jisho-nifun
+  - id: sanpun
+    kind: word
+    target: sanpun
+    part_of_speech: numeral
+    accepted_translations:
+      - three minutes
+    surface_variants:
+      - sanpun
+    accent_insensitive: true
+    example:
+      target: Sanpun matte kudasai.
+      english: Please wait three minutes.
+    note: 'San (three): fun becomes pun after n.'
+    reference_ids:
+      - jisho-sanpun
+  - id: yonpun
+    kind: word
+    target: yonpun
+    part_of_speech: numeral
+    accepted_translations:
+      - four minutes
+    surface_variants:
+      - yonpun
+      - yonfun
+    accent_insensitive: true
+    example:
+      target: Yonpun kakarimasu.
+      english: It takes four minutes.
+    note: 'Yon (four), never shi, before fun; yonpun is the standard reading, yonfun is also heard.'
+    reference_ids:
+      - jisho-yonpun
+  - id: gofun
+    kind: word
+    target: gofun
+    part_of_speech: numeral
+    accepted_translations:
+      - five minutes
+    surface_variants:
+      - gofun
+    accent_insensitive: true
+    example:
+      target: Ato gofun.
+      english: Five more minutes.
+    note: 'Go (five) with fun. Ato gofun: five more minutes.'
+    reference_ids:
+      - jisho-gofun
+  - id: roppun
+    kind: word
+    target: roppun
+    part_of_speech: numeral
+    accepted_translations:
+      - six minutes
+    surface_variants:
+      - roppun
+    accent_insensitive: true
+    example:
+      target: Roppun desu.
+      english: It is six minutes.
+    note: 'Roku (six) shortens before fun: roppun.'
+    reference_ids:
+      - jisho-roppun
+  - id: nanafun
+    kind: word
+    target: nanafun
+    part_of_speech: numeral
+    accepted_translations:
+      - seven minutes
+    surface_variants:
+      - nanafun
+      - shichifun
+    accent_insensitive: true
+    example:
+      target: Nanafun matte kudasai.
+      english: Please wait seven minutes.
+    note: 'Nana (seven) with fun; shichifun is also said.'
+    reference_ids:
+      - jisho-nanafun
+  - id: happun
+    kind: word
+    target: happun
+    part_of_speech: numeral
+    accepted_translations:
+      - eight minutes
+    surface_variants:
+      - happun
+      - hachifun
+    accent_insensitive: true
+    example:
+      target: Happun kakarimasu.
+      english: It takes eight minutes.
+    note: 'Hachi (eight) shortens before fun: happun; hachifun is also heard.'
+    reference_ids:
+      - jisho-happun
+  - id: kyufun
+    kind: word
+    target: kyūfun
+    part_of_speech: numeral
+    accepted_translations:
+      - nine minutes
+    surface_variants:
+      - kyūfun
+      - kyuufun
+    accent_insensitive: true
+    example:
+      target: Kyūfun desu.
+      english: It is nine minutes.
+    note: 'Kyū (nine), never ku, before fun.'
+    reference_ids:
+      - jisho-kyufun
+  - id: juppun
+    kind: word
+    target: juppun
+    part_of_speech: numeral
+    accepted_translations:
+      - ten minutes
+    surface_variants:
+      - juppun
+      - jippun
+    accent_insensitive: true
+    example:
+      target: Juppun dake desu yo.
+      english: Only ten minutes, mind.
+    note: 'Jū (ten) shortens before fun: juppun, also jippun.'
+    reference_ids:
+      - jisho-juppun
+  - id: juippun
+    kind: word
+    target: jūippun
+    part_of_speech: numeral
+    accepted_translations:
+      - eleven minutes
+    surface_variants:
+      - jūippun
+      - juuippun
+    accent_insensitive: true
+    example:
+      target: Jūippun kakarimasu.
+      english: It takes eleven minutes.
+    note: 'Jūichi (eleven) shortens before fun: jūippun.'
+    reference_ids:
+      - jisho-juippun
+  - id: junifun
+    kind: word
+    target: jūnifun
+    part_of_speech: numeral
+    accepted_translations:
+      - twelve minutes
+    surface_variants:
+      - jūnifun
+      - juunifun
+    accent_insensitive: true
+    example:
+      target: Jūnifun matte kudasai.
+      english: Please wait twelve minutes.
+    note: 'Jūni (twelve) with fun.'
+    reference_ids:
+      - jisho-junifun
+  - id: nanpun
+    kind: word
+    target: nanpun
+    part_of_speech: noun
+    accepted_translations:
+      - how many minutes
+    surface_variants:
+      - nanpun
+    accent_insensitive: true
+    example:
+      target: Ato nanpun?
+      english: How many more minutes?
+    note: 'Nan (what, how many) with the counter fun, minutes, which becomes pun after n and after the shortened ip-, rop-, hap-, jup-: ippun (one minute), sanpun, roppun, juppun.'
+    reference_ids:
+      - jisho-fun

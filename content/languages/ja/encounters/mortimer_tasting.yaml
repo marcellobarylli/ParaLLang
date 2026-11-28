@@ -1,0 +1,75 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+id: mortimer_tasting
+character: characters/enemies/charcutier_mortimer.yaml
+party_of: butchers_stall_charcutier
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player says they like Mortimer's slice and asks for more, in Japanese
+max_turns: 20
+resolved_message: Mortimer weighs your appetite and declares it Certified Ham, First Class.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+# Round 045 (backlog G3): saying you like it and asking for more may come in either order.
+objectives_unordered: true
+objectives:
+  - id: like_it
+    prompt: Mortimer, now in your party, offers you a slice from his travelling hamper. Tell him you like it, using Japanese.
+    intent: Mortimer, now travelling in the player's party, has cut the player one slice from his travelling hamper and waits for the player's own verdict. He does not say "suki", "mō sukoshi", "motto" or "okawari" himself before the player has.
+    target_vocabulary_ids:
+      - suki
+    required_target_groups:
+      - - suki
+    grammar_constraints:
+      - The player says in Japanese that they like the slice, in their own words, with suki (suki desu, kore ga suki desu, daisuki desu); oishii (tasty) may go with it.
+      - 'The slice is understood: Suki desu! alone is a whole verdict, and the polite or the plain form (suki da, suki!) both pass.'
+      - Reject English-only answers, negated verdicts (suki ja nai, suki ja arimasen), questions back to Mortimer, and quotations.
+    accepted_examples:
+      - Suki desu!
+      - Daisuki desu, Mortimer.
+      - Oishii! Kore ga suki desu.
+    negative_examples:
+      - text: I like it.
+        reason: English-only; it does not use the Japanese phrase.
+      - text: Suki ja nai.
+        reason: A negated verdict is not liking it.
+      - text: Suki desu ka?
+        reason: It asks Mortimer instead of giving the player's own verdict.
+      - text: Mortimer says suki desu.
+        reason: It reports someone else's words.
+    reference_meaning: The player says they like the slice.
+    hint_limit: 2
+    next_objective: ask_more
+    assessment_reference_ids:
+      - jisho-suki
+  - id: ask_more
+    prompt: Ask Mortimer for more, using Japanese.
+    intent: The player asks Mortimer for more of the meat.
+    target_vocabulary_ids:
+      - mo_sukoshi
+      - okawari
+    required_target_groups:
+      - - mo_sukoshi
+        - okawari
+    grammar_constraints:
+      - The player asks for more in Japanese (mō sukoshi, mō hitotsu or mō hitokire, motto with kudasai, or okawari).
+      - Reject English-only requests, refusals, and talk about the word.
+    accepted_examples:
+      - Mō sukoshi kudasai!
+      - Mō hitokire ii desu ka?
+      - Okawari onegaishimasu.
+    negative_examples:
+      - text: More, please.
+        reason: English-only; it does not use the Japanese words.
+      - text: Mō kekkō desu.
+        reason: '"No more, thank you" refuses rather than asks for more.'
+      - text: Mō sukoshi is Japanese for a little more.
+        reason: It discusses the phrase rather than asking for more.
+    reference_meaning: The player asks for more.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - jisho-mo-sukoshi
+      - jisho-okawari

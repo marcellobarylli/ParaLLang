@@ -1,0 +1,120 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+id: flick_slow_walk
+character: characters/enemies/letharger_flick.yaml
+party_of: cracked_fountain_letharger
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player gets Flick moving and keeps it beside them, in Japanese
+max_turns: 20
+resolved_message: Flick moves. Now. Together with you. Historians will doubt it.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: minutes
+    prompt: 'Flick, now in your party, has sat down and wants five more minutes. Bargain: tell it how many minutes it gets, using a Japanese number of minutes.'
+    intent: Flick, now travelling in the player's party, has sat down and asks, in one English sentence, for "five more minutes". In its greeting it does not introduce itself. The player answers with how many minutes Flick gets, as a Japanese number with the counter for minutes (nifun, juppun). Before the player names a number, Flick says no Japanese number itself, neither gofun nor any other; once the player has named one, Flick may haggle back with a different Japanese number of minutes. Flick does not say "ikimashō", "ikō" or "issho ni" itself before the player has.
+    target_vocabulary_ids:
+      - nifun
+      - sanpun
+      - yonpun
+      - gofun
+      - roppun
+      - nanafun
+      - happun
+      - kyufun
+      - juppun
+      - juippun
+      - junifun
+    required_target_groups:
+      - - nifun
+        - sanpun
+        - yonpun
+        - gofun
+        - roppun
+        - nanafun
+        - happun
+        - kyufun
+        - juppun
+        - juippun
+        - junifun
+    grammar_constraints:
+      - The player's own offer of a number of minutes from two to twelve, as a Japanese number with the counter fun or pun (nifun, sanpun, juppun), alone or in a sentence (ato nifun, nifun dake); a tentative question or a correction (not five, two) is an offer too.
+      - Agreeing to five (gofun) passes; the counter's common other readings (yonfun, hachifun, jippun, shichifun) pass as well, and feedback may note the standard one in English.
+      - Reject English-only numbers, digits, numbers outside two to twelve, a number of minutes that is not an offer, refusals, quotations and talk about the word.
+    accepted_examples:
+      - Nifun!
+      - Juppun dake, sore ijō wa nai yo.
+      - Sanpun.
+      - Sanpun?
+      - Gofun ja nakute, nifun!
+    negative_examples:
+      - text: Two minutes.
+        reason: English-only; it does not use a Japanese number.
+      - text: 2 fun.
+        reason: A digit, not the Japanese word.
+      - text: Flick wa gofun to itte imasu.
+        reason: It reports what Flick says rather than making an offer.
+      - text: Gofun mae ni tsukimashita.
+        reason: It says the player arrived five minutes ago; it is not an offer of minutes.
+      - text: Hyappun.
+        reason: A hundred minutes is outside two to twelve.
+    reference_meaning: The player tells Flick how many minutes it gets.
+    hint_limit: 2
+    next_objective: lets_go
+    assessment_reference_ids:
+      - jisho-fun
+  - id: lets_go
+    prompt: 'Flick, now in your party, has had its minutes. Get it moving: say let''s go, using Japanese.'
+    intent: Flick, now travelling in the player's party, has had its minutes, and they are up. The player must get it moving. Flick does not say "ikimashō", "ikō" or "issho ni" itself before the player has.
+    target_vocabulary_ids:
+      - ikimasho
+    required_target_groups:
+      - - ikimasho
+    grammar_constraints:
+      - The player tells Flick in Japanese that they are going now (ikimashō, or the plain ikō among friends).
+      - Reject English-only answers, refusals, and quotations.
+    accepted_examples:
+      - Ikimashō!
+      - Ikō, Flick!
+      - Sā, ima ikimashō.
+    negative_examples:
+      - text: Let's go.
+        reason: English-only; it does not use the Japanese phrase.
+      - text: Ikimasen.
+        reason: It refuses to go.
+      - text: Flick says ikimashō.
+        reason: It reports someone else's words.
+    reference_meaning: The player says let's go.
+    hint_limit: 2
+    next_objective: together
+    assessment_reference_ids:
+      - jisho-iku
+  - id: together
+    prompt: Flick wanders off again. Tell it you go together, using Japanese.
+    intent: Flick keeps drifting away; the player says they go together.
+    target_vocabulary_ids:
+      - issho_ni
+    required_target_groups:
+      - - issho_ni
+    grammar_constraints:
+      - The player says in Japanese that they go together.
+      - Reject English-only answers, refusals, and talk about the word.
+    accepted_examples:
+      - Issho ni.
+      - Issho ni ikimashō!
+      - Issho ni ikō, Flick.
+    negative_examples:
+      - text: Together.
+        reason: English-only; it does not use the Japanese word.
+      - text: Issho ni ikanai.
+        reason: It refuses to go together.
+      - text: Issho ni means together.
+        reason: It discusses the word rather than saying it to Flick.
+    reference_meaning: The player says they go together.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - jisho-issho

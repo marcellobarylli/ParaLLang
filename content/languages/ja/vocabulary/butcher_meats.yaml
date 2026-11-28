@@ -1,0 +1,158 @@
+# Round 010: The Butcher's Stall (meats, quantities, numbers). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# A Japanese meat counter sells by the gram, its prices are per hyaku guramu (100 grams), and it names its meats by
+# the animal and niku (meat): toriniku, butaniku, gyūniku. Hamu is the word Mortimer gives everything.
+version: butcher-meats-ja-v1
+references:
+  - id: jisho-hamu
+    title: "Jisho: hamu"
+    url: "https://jisho.org/search/hamu"
+  - id: jisho-soseji
+    title: "Jisho: sōsēji"
+    url: "https://jisho.org/search/sooseeji"
+  - id: jisho-toriniku
+    title: "Jisho: toriniku"
+    url: "https://jisho.org/search/toriniku"
+  - id: jisho-butaniku
+    title: "Jisho: butaniku"
+    url: "https://jisho.org/search/butaniku"
+  - id: jisho-gyuniku
+    title: "Jisho: gyūniku"
+    url: "https://jisho.org/search/gyuuniku"
+  - id: jisho-guramu
+    title: "Jisho: guramu"
+    url: "https://jisho.org/search/guramu"
+  - id: jisho-kiro
+    title: "Jisho: kiro"
+    url: "https://jisho.org/search/kiro"
+  - id: jisho-han
+    title: "Jisho: han"
+    url: "https://jisho.org/search/han"
+  - id: wiktionary-sanbyaku
+    title: "Wiktionary: sanbyaku (Japanese)"
+    url: "https://en.wiktionary.org/wiki/sanbyaku"
+  - id: wiktionary-hyaku
+    title: "Wiktionary: hyaku (Japanese)"
+    url: "https://en.wiktionary.org/wiki/hyaku"
+entries:
+  - id: hamu
+    kind: word
+    target: "hamu"
+    part_of_speech: noun
+    accepted_translations: ["ham"]
+    surface_variants: ["hamu"]
+    accent_insensitive: true
+    example:
+      target: "Hamu o hyaku guramu kudasai."
+      english: "A hundred grams of ham, please."
+    note: "From English ham: the cooked, sliced ham of a Japanese deli counter. Cured raw ham is nama hamu."
+    reference_ids: [jisho-hamu]
+  - id: soseji
+    kind: word
+    target: "sōsēji"
+    part_of_speech: noun
+    accepted_translations: ["sausage", "sausages"]
+    surface_variants: ["sōsēji", "sooseeji", "soseeji", "souseeji"]
+    accent_insensitive: true
+    example:
+      target: "Sōsēji o sanbon kudasai."
+      english: "Three sausages, please."
+    note: "Japanese nouns have no plural: sōsēji is one sausage or several. Long, thin things are counted with -hon: ippon, nihon, sanbon."
+    reference_ids: [jisho-soseji]
+  - id: toriniku
+    kind: word
+    target: "toriniku"
+    part_of_speech: noun
+    accepted_translations: ["chicken", "chicken meat"]
+    surface_variants: ["toriniku", "tori niku"]
+    accent_insensitive: true
+    example:
+      target: "Toriniku o sanbyaku guramu kudasai."
+      english: "Three hundred grams of chicken, please."
+    note: "Tori (bird) and niku (meat). At the counter the cut is often named instead: torimomo (thigh), torimune (breast)."
+    reference_ids: [jisho-toriniku]
+  - id: butaniku
+    kind: word
+    target: "butaniku"
+    part_of_speech: noun
+    accepted_translations: ["pork"]
+    surface_variants: ["butaniku", "buta niku"]
+    accent_insensitive: true
+    example:
+      target: "Butaniku o han kiro kudasai."
+      english: "Half a kilo of pork, please."
+    note: "Buta (pig) and niku (meat)."
+    reference_ids: [jisho-butaniku]
+  - id: gyuniku
+    kind: word
+    target: "gyūniku"
+    part_of_speech: noun
+    accepted_translations: ["beef"]
+    surface_variants: ["gyūniku", "gyuuniku", "gyū niku", "gyuu niku"]
+    accent_insensitive: true
+    example:
+      target: "Gyūniku o nihyaku guramu kudasai."
+      english: "Two hundred grams of beef, please."
+    note: "Gyū (cattle) and niku (meat)."
+    reference_ids: [jisho-gyuniku]
+  - id: guramu
+    kind: word
+    target: "guramu"
+    part_of_speech: noun
+    accepted_translations: ["grams", "gram"]
+    surface_variants: ["guramu"]
+    accent_insensitive: true
+    example:
+      target: "Sanbyaku guramu kudasai."
+      english: "Three hundred grams, please."
+    note: "The usual way to order at a Japanese meat counter: the meat, o, the weight, kudasai (Toriniku o sanbyaku guramu kudasai)."
+    reference_ids: [jisho-guramu]
+  - id: kiro
+    kind: word
+    target: "kiro"
+    part_of_speech: noun
+    accepted_translations: ["kilo", "kilogram"]
+    surface_variants: ["kiro", "kiroguramu"]
+    accent_insensitive: true
+    example:
+      target: "Sōsēji o ichi kiro kudasai."
+      english: "A kilo of sausages, please."
+    note: "Short for kiroguramu (kilo also shortens kiromētoru, a kilometre). One kilo is ichi kiro, often said ikkiro."
+    reference_ids: [jisho-kiro]
+  - id: sanbyaku
+    kind: word
+    target: "sanbyaku"
+    part_of_speech: numeral
+    accepted_translations: ["three hundred"]
+    surface_variants: ["sanbyaku"]
+    accent_insensitive: true
+    example:
+      target: "Sanbyaku guramu onegaishimasu."
+      english: "Three hundred grams, please."
+    note: "San (three) and hyaku (hundred): after san the h becomes b. Likewise roppyaku (600) and happyaku (800); the others are regular (nihyaku, gohyaku)."
+    reference_ids: [wiktionary-sanbyaku]
+  - id: hyaku
+    kind: word
+    target: "hyaku"
+    part_of_speech: numeral
+    accepted_translations: ["a hundred", "one hundred"]
+    surface_variants: ["hyaku"]
+    accent_insensitive: true
+    example:
+      target: "Hamu o hyaku guramu kudasai."
+      english: "A hundred grams of ham, please."
+    note: "A hundred is hyaku alone, never ichi hyaku. Two hundred is nihyaku."
+    reference_ids: [wiktionary-hyaku]
+  - id: han
+    kind: word
+    target: "han"
+    part_of_speech: noun
+    accepted_translations: ["half", "half a"]
+    surface_variants: ["han", "hanbun"]
+    accent_insensitive: true
+    example:
+      target: "Han kiro kudasai."
+      english: "Half a kilo, please."
+    note: "Han goes before a unit (han kiro, half a kilo) or after an hour (niji han, half past two); hanbun is half of something (hanbun kudasai, half of it, please). Half a kilo is also gohyaku guramu."
+    reference_ids: [jisho-han]

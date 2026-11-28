@@ -1,0 +1,82 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+version: mortimer-party-ja-v1
+references:
+  - id: jisho-suki
+    title: 'Jisho: suki'
+    url: https://jisho.org/search/suki
+  - id: wiktionary-suki
+    title: 'Wiktionary: suki (Japanese)'
+    url: https://en.wiktionary.org/wiki/suki
+  - id: jisho-mo-sukoshi
+    title: 'Jisho: mō sukoshi'
+    url: https://jisho.org/search/mou%20sukoshi
+  - id: jisho-okawari
+    title: 'Jisho: okawari'
+    url: https://jisho.org/search/okawari
+entries:
+  - id: suki
+    kind: word
+    target: suki
+    part_of_speech: adjective
+    accepted_translations:
+      - I like it
+      - I like
+      - like
+    surface_variants:
+      - suki
+      - daisuki
+    accent_insensitive: true
+    example:
+      target: Hamu ga suki desu.
+      english: I like ham.
+    note: 'A na-adjective, "liked": the thing liked takes ga (Hamu ga suki desu, I like ham), and with the thing understood Suki desu! alone says I like it. Daisuki is to love it; suki ja nai, not to like it.'
+    reference_ids:
+      - jisho-suki
+      - wiktionary-suki
+  - id: mo_sukoshi
+    kind: phrase
+    target: mō sukoshi
+    part_of_speech: phrase
+    accepted_translations:
+      - more
+      - a little more
+      - some more
+    surface_variants:
+      - mō sukoshi
+      - mou sukoshi
+      - moo sukoshi
+      - mō hitotsu
+      - mou hitotsu
+      - moo hitotsu
+      - mō hitokire
+      - mou hitokire
+      - moo hitokire
+      - motto kudasai
+      - motto onegaishimasu
+      - motto hoshii
+      - motto tabetai
+    accent_insensitive: true
+    example:
+      target: Mō sukoshi kudasai.
+      english: A little more, please.
+    note: 'Mō sukoshi: a little more; mō hitotsu, one more; mō hitokire, one more slice (-kire counts slices). Motto is more (motto kudasai, more please). Mō alone also means already, and mō kekkō desu is no more, thank you.'
+    reference_ids:
+      - jisho-mo-sukoshi
+  - id: okawari
+    kind: word
+    target: okawari
+    part_of_speech: noun
+    accepted_translations:
+      - seconds
+      - another helping
+      - a refill
+      - more
+    surface_variants:
+      - okawari
+    accent_insensitive: true
+    example:
+      target: Okawari onegaishimasu.
+      english: Seconds, please.
+    note: 'A second helping of food or a refill of a drink: Okawari! or Okawari kudasai at a table.'
+    reference_ids:
+      - jisho-okawari

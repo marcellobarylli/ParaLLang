@@ -1,0 +1,66 @@
+# Round 010: The Butcher's Stall (backlog A4). Mortimer the Charcutier calls everything ham (hamu); the player names
+# the real cut and says how much they want.
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+id: butchers_stall_charcutier
+character: characters/enemies/charcutier_mortimer.yaml
+location: butchers_stall
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player asks for a meat that is not ham by its Japanese name and says how much they want"
+max_turns: 20
+resolved_message: "Mortimer weighs your order twice, wraps it in paper labelled with the wrong word, and lets you go."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: name_meat
+    prompt: "Mortimer says everything is ham. Ask him for a different meat, by its Japanese name."
+    intent: "The player asks Mortimer for a meat other than ham, naming it in Japanese."
+    target_vocabulary_ids: ["soseji", "toriniku", "butaniku", "gyuniku"]
+    required_target_groups:
+      - ["soseji", "toriniku", "butaniku", "gyuniku"]
+    grammar_constraints:
+      - "The player's own request for a meat that is not ham, with the meat named in Japanese (Sōsēji o kudasai; the object particle o may be left out, as it often is in speech)."
+      - "Asking for ham does not pass; reject quotations, remarks about what Mortimer says, and English-only requests."
+    accepted_examples:
+      - "Sōsēji o kudasai."
+      - "Toriniku o onegaishimasu."
+      - "I'd like some butaniku, please."
+    negative_examples:
+      - text: "Hamu o kudasai."
+        reason: "It asks for ham, which Mortimer insists everything is; the objective is to name a different cut."
+      - text: "I want sausage, please."
+        reason: "English-only; the meat must be named in Japanese."
+      - text: "Mortimer says it is all sōsēji."
+        reason: "A remark about what he says is not the player's own request."
+    reference_meaning: "The player asks for a specific meat other than ham."
+    hint_limit: 2
+    next_objective: quantity
+    assessment_reference_ids: ["jisho-soseji", "jisho-toriniku", "jisho-butaniku", "jisho-gyuniku"]
+  - id: quantity
+    prompt: "Tell Mortimer how much you want, in Japanese."
+    intent: "The player says how much of the meat they want: a number or a half, with a unit of weight."
+    target_vocabulary_ids: ["guramu", "kiro", "sanbyaku", "hyaku", "han"]
+    required_target_groups:
+      - ["guramu", "kiro"]
+    grammar_constraints:
+      - "A quantity in Japanese: a number (hyaku, nihyaku, sanbyaku; ichi kiro or ikkiro) or han (half), together with a unit of weight (guramu, kiro); a bare unit does not pass."
+      - "The player's own order; reject price questions, quotations and English-only quantities."
+    accepted_examples:
+      - "Nihyaku guramu kudasai."
+      - "Ichi kiro."
+      - "Sōsēji o han kiro onegaishimasu."
+      - "Sanbyaku guramu, please."
+    negative_examples:
+      - text: "Guramu."
+        reason: "A bare unit is not a quantity."
+      - text: "Two hundred grams."
+        reason: "English-only; the quantity must be in Japanese."
+      - text: "How much is ichi kiro?"
+        reason: "It asks about a price rather than saying how much the player wants."
+    reference_meaning: "The player states the amount they want to buy."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["jisho-guramu", "jisho-kiro", "jisho-han"]

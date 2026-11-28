@@ -1,0 +1,30 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+version: mortimer-oath-ja-v1
+references:
+  - id: jisho-ochitsuku
+    title: "Jisho: ochitsuku"
+    url: "https://jisho.org/search/ochitsuku"
+  - id: jisho-yakusoku
+    title: "Jisho: yakusoku"
+    url: "https://jisho.org/search/yakusoku"
+entries:
+  - id: ochitsuite
+    kind: word
+    target: "ochitsuite"
+    part_of_speech: verb
+    accepted_translations: ["calm down", "calm yourself", "settle down"]
+    surface_variants: ["ochitsuite", "ochitsuke", "ochitsukinasai"]
+    accent_insensitive: true
+    example: { target: "Ochitsuite, Mortimer.", english: "Calm down, Mortimer." }
+    note: "The te form of 'ochitsuku', to calm down, said as a request: 'ochitsuite' to a friend, 'ochitsuite kudasai' more politely; 'ochitsuke' is a blunt order. 'Daijōbu' (it's all right) often goes with it."
+    reference_ids: [jisho-ochitsuku]
+  - id: yakusoku_shimasu
+    kind: phrase
+    target: "yakusoku shimasu"
+    part_of_speech: phrase
+    accepted_translations: ["I promise"]
+    surface_variants: ["yakusoku shimasu", "yakusoku suru", "yakusoku shimashita", "yakusoku shita", "yakusoku"]
+    accent_insensitive: true
+    example: { target: "Yakusoku shimasu.", english: "I promise." }
+    note: "'Yakusoku' (a promise) with 'suru' (to do); the I is left out, as usual. 'Yakusoku suru yo' among friends, and 'Yakusoku!' alone, casually. What is promised comes before 'to': 'Sawaranai to yakusoku shimasu', I promise not to touch them."
+    reference_ids: [jisho-yakusoku]
