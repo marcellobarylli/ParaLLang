@@ -6,7 +6,7 @@
 // music (round 127): whether the ambient music plays. On unless switched off.
 // voices (round 126): whether the characters read their new lines aloud. On unless switched off.
 // narrator (round 196): whether the narrator reads the narration aloud too (with voices on). On unless switched off.
-// narratorVoice (round 208): the hosted narrator's voice, one of NARRATOR_VOICES. Charon unless picked.
+// narratorVoice (round 208): the hosted narrator's voice, one of NARRATOR_VOICES. Algenib unless picked (round 209; Charon before).
 // tiltLook (round 125): whether the phone's orientation turns the camera's look at a site. Off unless switched on.
 // rails (round 144): on The Journey 2, whether the way on is chosen for the player. On unless switched off.
 // light (round 153): whether answers go unchecked: the character works out what was meant and replies.
@@ -25,9 +25,12 @@
 import { browserStorage } from './api/settings.js';
 
 export const NARRATOR_VOICES = Object.freeze([
+  { id: 'Algenib', label: 'Algenib (gravelly)' },
   { id: 'Charon', label: 'Charon (the storyteller)' },
   { id: 'Gacrux', label: 'Gacrux (mature)' },
-  { id: 'Algenib', label: 'Algenib (gravelly)' },
+  { id: 'Sulafat', label: 'Sulafat (warm, female)' },
+  { id: 'Vindemiatrix', label: 'Vindemiatrix (gentle, female)' },
+  { id: 'Aoede', label: 'Aoede (breezy, female)' },
 ]);
 export const narratorVoiceOf = (value) => (NARRATOR_VOICES.some((each) => each.id === value) ? value : NARRATOR_VOICES[0].id);
 

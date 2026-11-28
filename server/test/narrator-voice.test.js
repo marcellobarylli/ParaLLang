@@ -73,9 +73,22 @@ test('POST /api/narrate answers with the sound, needs the token, and says so whe
 test('a listed voice is used and kept apart; any other name is the default voice', async () => {
   const calls = [];
   const voice = createNarratorVoice({ apiKey: 'server-key', fetchImpl: google(calls), logger: quiet });
-  await voice.speak('You stop at the cart.', { voice: 'Algenib' });
+  await voice.speak('You stop at the cart.', { voice: 'Charon' });
   await voice.speak('You stop at the cart.', { voice: 'Gacrux' });
   await voice.speak('You stop at the cart.', { voice: 'Nobody' });
-  await voice.speak('You stop at the cart.');
-  assert.deepEqual(calls.map((each) => each.body.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName), ['Algenib', 'Gacrux', 'Charon']);
+  await voice.speak('You stop at the cart.'); // the default's clip, kept
+  assert.deepEqual(calls.map((each) => each.body.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName), ['Charon', 'Gacrux', 'Algenib']);
+});
+
+// Round 209: Algenib by default; a female voice reads as a grandmotherly storyteller.
+test('a female voice is given a grandmotherly storyteller, the others a grandfatherly one', async () => {
+  const calls = [];
+  const voice = createNarratorVoice({ apiKey: 'server-key', fetchImpl: google(calls), logger: quiet });
+  await voice.speak('Hello.', { voice: 'Sulafat' });
+  await voice.speak('Hello.', { voice: 'Charon' });
+  const [her, his] = calls.map((each) => each.body.contents[0].parts[0].text);
+  assert.equal(calls[0].body.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName, 'Sulafat');
+  assert.match(her, /she finds/); assert.match(her, /grandmotherly/); assert.doesNotMatch(her, /\bhe finds|grandfatherly/);
+  assert.match(his, /he finds/); assert.match(his, /grandfatherly/);
+  assert.equal(NARRATOR_VOICE, 'Algenib');
 });
