@@ -15,9 +15,10 @@ describe('a voice for a character', () => {
   test('each kind has a pitch and a rate, and the sheet\'s own go over them', () => {
     expect(voiceProfile({ kind: 'female' })).toMatchObject({ kind: 'female', pitch: 1.1, rate: 0.95 });
     expect(voiceProfile({ kind: 'male' })).toMatchObject({ kind: 'male', pitch: 0.8, rate: 0.95 });
-    expect(voiceProfile({ kind: 'creature' })).toMatchObject({ kind: 'creature', pitch: 1.6, rate: 1.05 });
+    expect(voiceProfile({ kind: 'creature' })).toMatchObject({ kind: 'creature', pitch: 1.6, rate: 1 }); // round 222: never faster than normal
     expect(voiceProfile({ kind: 'funny' })).toMatchObject({ kind: 'funny', pitch: 0.5, rate: 0.8 });
-    expect(voiceProfile({ kind: 'creature', pitch: 1.7, rate: 1.15 })).toMatchObject({ pitch: 1.7, rate: 1.15 });
+    expect(voiceProfile({ kind: 'creature', pitch: 1.7, rate: 0.9 })).toMatchObject({ pitch: 1.7, rate: 0.9 });
+    expect(voiceProfile({ kind: 'creature', pitch: 1.7, rate: 1.15 })).toMatchObject({ pitch: 1.7, rate: 1 }); // round 222: capped at normal
     expect(voiceProfile({ kind: 'male', pitch: 9, rate: 0.1 })).toMatchObject({ pitch: 2, rate: 0.5 }); // the browser's scales
     for (const none of [undefined, null, {}, { kind: 'robot' }, { kind: 'toString' }]) expect(voiceProfile(none)).toMatchObject({ kind: null, pitch: 1, rate: 1 });
     expect(Object.keys(VOICE_KINDS)).toEqual(['female', 'male', 'creature', 'funny']);
@@ -84,7 +85,7 @@ describe('the speaker', () => {
     speaker.speak({ text: 'Vuoi un *caffè*?', tag: 'it-IT', voice: { kind: 'creature', pitch: 1.7, rate: 1.15 } });
     expect(scope.cancels).toBe(1);
     expect(scope.spoken).toHaveLength(1);
-    expect(scope.spoken[0]).toMatchObject({ text: 'Vuoi un caffè?', lang: 'it-IT', pitch: 1.7, rate: 1.15 });
+    expect(scope.spoken[0]).toMatchObject({ text: 'Vuoi un caffè?', lang: 'it-IT', pitch: 1.7, rate: 1 }); // round 222: capped at normal
     expect(scope.spoken[0].voice.name).toBe('Shelley');
     speaker.speak({ text: 'Prosciutto.', tag: 'it-IT', voice: { kind: 'male' } });
     expect(scope.cancels).toBe(2);

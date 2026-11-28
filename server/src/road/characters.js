@@ -95,7 +95,9 @@ const PLACE_QUALIFIERS = ['by the Old Stone', 'under the Hill', 'of the Two Opin
 // A stream of hashed numbers for one subject: draw(k) is in [0, 1) and differs for every k.
 function drawer(seed, a, b) { return (k) => hash(a * 131 + k * 17, b * 137 - k * 29, seed + 500 + k); }
 // Round 196: the ranges of a road character's voice, on the browser's speech scales (pitch 0 to 2, rate 1 is normal).
-export const VOICE_SPACE = Object.freeze({ pitch: Object.freeze([0.55, 1.65]), rate: Object.freeze([0.82, 1.22]) });
+// Round 222 (the owner): no character speaks faster than normal, to keep the game's calm; the rate is 0.8 to 1 (it
+// was 0.82 to 1.22).
+export const VOICE_SPACE = Object.freeze({ pitch: Object.freeze([0.55, 1.65]), rate: Object.freeze([0.8, 1]) });
 const pickFrom = (list, value) => list[Math.min(list.length - 1, Math.floor(value * list.length))];
 
 /** The name of a site: "The Patient Meadow". Fixed by the seed and the site. */

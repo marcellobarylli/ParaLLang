@@ -33,12 +33,16 @@ const PLAIN = Object.freeze({ kind: null, pitch: 1, rate: 1, names: [] });
 export const NARRATOR = Object.freeze({ tag: 'en-GB', kind: null, pitch: 0.9, rate: 0.88, names: Object.freeze(['Daniel', 'Arthur', 'Oliver', 'Malcolm', 'Google UK English Male', 'Ryan', 'George', 'Gordon', 'Lee', 'Aaron', 'Fred']) });
 const clamp = (value, lo, hi, fallback) => (typeof value === 'number' && Number.isFinite(value) ? Math.min(hi, Math.max(lo, value)) : fallback);
 
+// Round 222 (the owner): the fast talking did not suit the game's calm. A character speaks at the normal rate or
+// slower, whatever its sheet, its kind or a saved road character says.
+export const MAX_RATE = 1;
+
 /** The kind, pitch, rate and preferred voice names for a character sheet's `voice` (or for none). */
 export function voiceProfile(voice) {
   const kind = Object.hasOwn(VOICE_KINDS, voice?.kind) ? voice.kind : null;
   const base = kind ? VOICE_KINDS[kind] : PLAIN;
   const pick = typeof voice?.pick === 'number' && Number.isFinite(voice.pick) ? Math.min(0.999999, Math.max(0, voice.pick)) : null;
-  return { kind, pitch: clamp(voice?.pitch, 0, 2, base.pitch), rate: clamp(voice?.rate, 0.5, 2, base.rate), names: base.names, ...(pick === null ? {} : { pick }) };
+  return { kind, pitch: clamp(voice?.pitch, 0, 2, base.pitch), rate: Math.min(MAX_RATE, clamp(voice?.rate, 0.5, 2, base.rate)), names: base.names, ...(pick === null ? {} : { pick }) };
 }
 
 const primary = (tag) => String(tag ?? '').split(/[-_]/)[0].toLowerCase();

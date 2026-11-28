@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 222, no fast talking
+
+No character speaks faster than normal: the road's voices are drawn at rate 0.8 to 1 (was up to 1.22), and every
+character's rate is capped at 1 in the client (saved road characters, Gerald and Errata included). Unit tests pass;
+**not heard**. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/222/architecture.md), [findings](docs/rounds/222/findings.md).
+
 ## Addendum 2026-11-28: round 221, narration only at a conversation's start and end; the follow lands on the correction
 
 A character's line carries the narrator's paragraph (shown and read) only when it opens the conversation or ends it;
@@ -2185,6 +2192,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 222 | 11-28 | No character speaks faster than normal (the road's voices 0.8 to 1; a cap of 1 in the client); deployed | [222](docs/rounds/222/architecture.md) | [findings](docs/rounds/222/findings.md) | round 222 build, merged to `main` |
 | 221 | 11-28 | Narration only on a conversation's first and last lines; the follow brings the correction box to the top; deployed | [221](docs/rounds/221/architecture.md) | [findings](docs/rounds/221/findings.md) | round 221 build, merged to `main` |
 | 220 | 11-28 | The breathing's dial starts 70 degrees before the breath in (was 45); deployed | [220](docs/rounds/220/architecture.md) | [findings](docs/rounds/220/findings.md) | round 220 build, merged to `main` |
 | 219 | 11-28 | A softer road (a soft grade in the post pass, a warm day palette, sage greens); the sun lingers at the horizon, so sunrises and sunsets last twice as long; deployed | [219](docs/rounds/219/architecture.md) | [findings](docs/rounds/219/findings.md) | round 219 build, merged to `main` |
