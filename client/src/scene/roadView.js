@@ -55,7 +55,7 @@ export function createRoadView(canvas, { seed, pulled = [], onArrive = () => {},
     .catch((error) => { console.warn('The trees\' models could not be loaded; the simple trees stay:', error?.message ?? error); });
   const camera = new PerspectiveCamera(FOV, 1, 0.3, 900);
   // Round 219: the road is graded soft: tamer greens, gentler contrast, and warmth that follows the daylight.
-  const GRADE = { soft: 1, green: 0.55, warm: 0.7 };
+  const GRADE = { soft: 1, green: 0.45, warm: 0.7 };
   const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms, grade: { ...GRADE, warm: 0 } });
   const director = createRoadDirector({ heightAt: terrain.heightAt, waterY: terrain.waterY });
   const markers = new Group();

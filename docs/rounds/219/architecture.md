@@ -14,7 +14,7 @@ in [`trail/journal.md`](trail/journal.md). No Codex critique. Findings: [`findin
    green leads, and nudged toward red: a sage rather than a neon. Every colour then loses 14 % of its saturation, the
    blacks are lifted by 0.035 and the whites eased by 9 %. Warmth multiplies the image by (1.05, 1, 0.9). One place
    grades all of it: the grass texture, the biome tints, the simple trees and the model trees.
-2. **On the road only.** The Journey 2 is graded `{ soft: 1, green: 0.55, warm: 0.7 }`; the warmth follows the
+2. **On the road only.** The Journey 2 is graded `{ soft: 1, green: 0.45, warm: 0.7 }`; the warmth follows the
    daylight (none at night) and thins under heavy cloud. The dungeon levels, the iPhone app and every other user of
    `createPS1Pipeline` keep the default 0 0 0 and look as before.
 3. **A warm, soft day.** The day palette of the road keeps the blue's hue but paler and less saturated (zenith
