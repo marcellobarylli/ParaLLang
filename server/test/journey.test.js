@@ -6,7 +6,7 @@ import { createTerrain } from '../src/road/terrain.js';
 import { graphFor } from '../src/road/graph.js';
 import { ROAD } from '../src/road/service.js';
 import { api } from './helpers.js';
-import { moveTo, road, roadRuntime, talkHere } from './road-helpers.js';
+import { moveTo, road, roadRuntime, talkHere, walkOn } from './road-helpers.js';
 
 const walkOf = (runtime, learnerId) => api(runtime, '/api/road/walk', { learnerId });
 
@@ -18,7 +18,9 @@ test('a new road\'s journey is its start; each walk adds the site walked to, and
   const visited = [first.at];
   let view = first;
   for (let n = 0; n < 6; n += 1) {
-    if (n % 2 === 0) await talkHere(runtime, learnerId); // a walk needs no finished conversation
+    // Round 215: every other conversation is left unfinished. Such a site opens no way on, so the walk away from it
+    // is to another site next to one that was finished; it is a walk of the journey all the same.
+    if (n % 2 === 0) await talkHere(runtime, learnerId);
     view = (await road(runtime, learnerId)).data.road;
     const next = view.frontier[n % view.frontier.length].id;
     view = (await moveTo(runtime, learnerId, next, { leave: true })).data.road;
@@ -48,7 +50,7 @@ test('a walk to the site the learner stands at adds nothing', async (t) => {
 test('a road saved before the walk was kept takes its trail for one', async (t) => {
   const { runtime, learnerId } = await roadRuntime(t);
   let view = (await road(runtime, learnerId)).data.road;
-  for (let n = 0; n < 3; n += 1) view = (await moveTo(runtime, learnerId, view.frontier[0].id)).data.road;
+  for (let n = 0; n < 3; n += 1) view = (await walkOn(runtime, learnerId)).road;
   const envelope = await runtime.storage.load(learnerId);
   const { walk: _walk, hops: _hops, ...before } = envelope.road;
   await runtime.storage.save({ ...envelope, road: before });
@@ -56,15 +58,14 @@ test('a road saved before the walk was kept takes its trail for one', async (t) 
   assert.deepEqual(walk.nodes, envelope.road.trail);
   assert.equal(walk.hops, 3);
   // And the next walk goes on from it.
-  view = (await road(runtime, learnerId)).data.road;
-  await moveTo(runtime, learnerId, view.frontier[0].id);
+  await walkOn(runtime, learnerId);
   assert.equal((await walkOf(runtime, learnerId)).data.walk.hops, 4);
 });
 
 test('a new landscape starts a new journey, and a very long one keeps its last sites and its count', async (t) => {
   const { runtime, learnerId } = await roadRuntime(t);
   let view = (await road(runtime, learnerId)).data.road;
-  view = (await moveTo(runtime, learnerId, view.frontier[0].id)).data.road;
+  view = (await walkOn(runtime, learnerId)).road;
   const fresh = (await api(runtime, '/api/road/reset', { learnerId, method: 'POST', body: {} })).data.road;
   assert.equal(fresh.hops, 0);
   assert.deepEqual((await walkOf(runtime, learnerId)).data.walk.nodes, [fresh.at]);
@@ -73,12 +74,11 @@ test('a new landscape starts a new journey, and a very long one keeps its last s
   const envelope = await runtime.storage.load(learnerId);
   const long = Array.from({ length: ROAD.walk }, (_, n) => `${n % 50},${Math.floor(n / 50)}`);
   await runtime.storage.save({ ...envelope, road: { ...envelope.road, walk: [...long.slice(0, -1), envelope.road.at], hops: 31000 } });
-  view = (await road(runtime, learnerId)).data.road;
-  await moveTo(runtime, learnerId, view.frontier[0].id);
+  view = (await walkOn(runtime, learnerId)).road;
   const { walk } = (await walkOf(runtime, learnerId)).data;
   assert.equal(walk.kept, ROAD.walk);
   assert.equal(walk.hops, 31001);
-  assert.equal(walk.nodes.at(-1), view.frontier[0].id);
+  assert.equal(walk.nodes.at(-1), view.at);
   // A save whose walk is not a list of sites loses its road, as with any other part of a road that cannot be read.
   await assert.doesNotReject(runtime.storage.save({ ...envelope, road: { ...envelope.road, walk: ['not a site'] } }));
   assert.equal((await runtime.storage.load(learnerId)).road, undefined);
@@ -94,13 +94,13 @@ test('a journey under a hundred walks is shown without a word; from a hundred th
   const { runtime, learnerId } = await roadRuntime(t);
   let view = (await road(runtime, learnerId)).data.road;
   await api(runtime, '/api/guidebook/read', { learnerId, method: 'POST', body: {} }); // "The road" is read
-  for (let n = 0; n < 99; n += 1) view = (await moveTo(runtime, learnerId, view.rails ?? view.frontier[0].id)).data.road;
+  for (let n = 0; n < 99; n += 1) view = (await walkOn(runtime, learnerId)).road;
   assert.equal(view.hops, 99);
   const quiet = (await walkOf(runtime, learnerId)).data;
   assert.equal(quiet.narration, null);
   assert.ok(!quiet.guidebook.unread.some((entry) => entry.id === 'the_long_way_round'));
   assert.equal(Object.hasOwn((await runtime.storage.load(learnerId)).told ?? {}, 'journey_random_walk'), false);
-  view = (await moveTo(runtime, learnerId, view.rails ?? view.frontier[0].id)).data.road;
+  view = (await walkOn(runtime, learnerId)).road;
   assert.equal(view.hops, 100);
   const remarked = (await walkOf(runtime, learnerId)).data;
   assert.equal(remarked.walk.hops, 100);

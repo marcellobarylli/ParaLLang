@@ -34,6 +34,18 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 215, only a finished conversation opens the way on; pulled land floods
+
+On the road, the ways on are now the sites next to those whose conversation the player **finished**. A site walked to
+and left is as it was: still ahead, opening nothing, and not pulled. At the start nothing is ahead until the first
+conversation is finished. A pull takes the finished sites only, and the ground it lowers under the sea's level is
+water from then on (the water stays level; round 213 had it sink with the ground), so a journey that began by the
+coast becomes a channel, on the event's map as it happens and in the level afterwards. **For other sessions:** the
+check library (`client/scripts/lib/play.mjs`) now switches round 214's breathing off unless a check asks for it; with
+it on, its first card covers the conversation in every scripted check. Seen in headless Chromium at phone size, not on
+a phone. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/215/architecture.md), [findings](docs/rounds/215/findings.md).
+
 ## Addendum 2026-11-28: round 214, a breath while a reply is awaited
 
 The shooting game of round 203 is gone. Sending an answer now starts a slow breath over the conversation panel, which
@@ -2123,6 +2135,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 215 | 11-28 | The road's frontier is read from the finished conversations, not from the walk; a pull takes those sites only; pulled ground under the sea's level floods (the sea stays level); the check library switches round 214's breathing off; deployed | [215](docs/rounds/215/architecture.md) | [findings](docs/rounds/215/findings.md) | round 215 build, merged to `main` |
 | 213 | 11-28 | The pulls (issue #23): at a change of level the land sinks 26 m at the sites of the walk, by a displacement field solved from them; the world event on the map (the web generated in grey, the journey in black, the land sinking); the map and the level on the pulled land; a developer's jump to any unit in Settings; deployed | [213](docs/rounds/213/architecture.md) | [findings](docs/rounds/213/findings.md) | round 213 build, merged to `main` |
 | 020 | 11-05 | Portia's formalities in the target language: a character-sheet quirk (backlog E1, second try) (autonomous) | [020](docs/rounds/020/architecture.md) | [findings](docs/rounds/020/findings.md) | `4492e02` (pre-run record) to round 020 close (quirk reverted) |
 | 021 | 11-05 | Party recruitment: SAVE / LEAVE after a saveable NPC, party in the save, Party screen (backlog A8a); start route keeps `encounterId` (autonomous) | [021](docs/rounds/021/architecture.md) | [findings](docs/rounds/021/findings.md) | `9e51acd` (pre-run record) to round 021 close |

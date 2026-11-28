@@ -45,6 +45,8 @@ export function iconWalk(seed = ICON.seed, hops = ICON.hops) {
   let road = freshRoad(seed, curriculum);
   const walk = [road.at];
   for (let n = 0; n < hops; n += 1) {
+    // Round 215: only a finished conversation opens ways on, so the walk finishes one at every site.
+    road = { ...road, current: null, cleared: [...road.cleared.filter((id) => id !== road.at), road.at] };
     const { frontier, rails } = offersFor(graph, road, curriculum);
     const next = rails ?? frontier[0]?.id;
     if (!next) break;

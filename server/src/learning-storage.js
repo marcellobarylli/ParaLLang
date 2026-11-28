@@ -132,7 +132,7 @@ function validRoad(road) {
   const record = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
   return record(road)
     && Number.isSafeInteger(road.seed) && Number.isSafeInteger(road.step) && road.step >= 0
-    && ids([road.at], 1) && ids(road.trail, 300) && ids(road.cleared, 300)
+    && ids([road.at], 1) && ids(road.trail, 300) && ids(road.cleared, 20000)
     && (road.current === null || (record(road.current) && ids([road.current.node], 1) && Number.isSafeInteger(road.current.step) && record(road.current.activity) && typeof road.current.activity.kind === 'string'))
     && record(road.progress) && record(road.progress.lessons) && record(road.progress.checkpoints)
     && Array.isArray(road.progress.recent) && road.progress.recent.length <= 50 && road.progress.recent.every((score) => Number.isFinite(score))

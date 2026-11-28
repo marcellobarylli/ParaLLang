@@ -361,9 +361,11 @@ it calls Claude through the owner's subscription (the `claude-cli` adapter).
   20 000), and `road.hops`. `GET /api/road/walk` serves it, and the map's "Show Journey so far" paints it over the
   landscape, from as far off as it takes to hold it. `node client/scripts/journey-check.mjs` plays it.
   From round 213 (issue #23) the land is pulled at each change of level (A1 to A2, A2 to B1): the conversation that
-  crosses it adds to `road.pulled` (`{ step, depth, sites, from, to }`), and every site of the walk sinks 26 m, two of
-  the tallest trees, by a displacement field solved from the sites (`server/src/road/pulls.js`: the ground, the
-  water and the trees sink together, and the graph is still read from the unpulled land). The road's view carries the
+  crosses it adds to `road.pulled` (`{ step, depth, sites, from, to }`), and each of those sites sinks 26 m, two of
+  the tallest trees, by a displacement field solved from the sites (`server/src/road/pulls.js`; the graph is still
+  read from the unpulled land). From round 215 the sites are those whose conversation was finished, the sea keeps its
+  level, and ground pulled under it is water. Round 215 also reads the frontier from the finished conversations
+  (`road.cleared`), not from the trail: a site walked to and left opens no way on and stays ahead. The road's view carries the
   pull as `event` until the page has played it (the map on the whole screen: the web generated in grey, the journey
   in black, the land sinking; `client/src/pullEvent.js`) and reported it with `POST /api/road/event`; from then on
   the map and the level are the pulled land. Settings has "Developer": developer mode, and a jump to any unit or to a

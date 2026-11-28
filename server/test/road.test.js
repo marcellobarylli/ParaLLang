@@ -222,7 +222,8 @@ test('the road opens with the first lesson at the start, and a walk on rails goe
   assert.equal(first.road.seed, 4242);
   assert.deepEqual([first.road.step, first.road.current.kind, first.road.current.title], [0, 'lesson', content.curriculum.units[0].lessons[0].title]);
   assert.ok(first.road.current.character.description.length > 40, 'the character is a description');
-  assert.ok(first.road.frontier.length >= 1 && first.road.frontier.filter((site) => site.recommended).length === 1);
+  // Round 215: nothing is ahead until the first conversation is finished.
+  assert.deepEqual([first.road.frontier, first.road.rails], [[], null]);
   assert.equal(first.curriculum.position.unitId, content.curriculum.units[0].id);
   assert.deepEqual(first.curriculum.totals, { lessonsDone: 0, lessonsTotal: content.curriculum.lessonsById.size, unitsDone: 0, unitsTotal: content.curriculum.units.length });
   // The same road on a second read: the seed was saved by the first.
@@ -239,6 +240,7 @@ test('the road opens with the first lesson at the start, and a walk on rails goe
     assert.equal(view.road.current, null, 'nobody waits where a conversation was finished');
     assert.equal(view.road.step, n + 1);
     assert.equal(view.road.log[0].kind, turn.roadResult.kind);
+    assert.equal(view.road.frontier.filter((site) => site.recommended).length, 1);
     const next = view.road.frontier.find((site) => site.recommended);
     assert.ok(!seen.has(next.id), 'the rails never go back');
     seen.add(next.id);
@@ -265,8 +267,9 @@ test('a move obeys the frontier, the map offers a choice of kinds, and a convers
   assert.equal((await moveTo(runtime, learnerId, '500,500')).data.error.code, 'NOT_ADJACENT');
   assert.equal((await moveTo(runtime, learnerId, 'elsewhere')).status, 400);
   assert.deepEqual((await moveTo(runtime, learnerId, first.road.at)).data.road.at, first.road.at, 'a move to where you stand changes nothing');
-  assert.deepEqual(first.road.frontier.map((site) => site.id).sort(), graph.neighbours(first.road.at).sort());
-  for (const site of first.road.frontier) assert.deepEqual(site.at, [Math.round(graph.node(site.id).x * 10) / 10, Math.round(graph.node(site.id).z * 10) / 10]);
+  // Round 215: until the conversation here is finished, nothing is ahead: not even the sites next to the start.
+  assert.deepEqual(first.road.frontier, []);
+  assert.equal((await moveTo(runtime, learnerId, graph.neighbours(first.road.at)[0], { leave: true })).data.error.code, 'NOT_ADJACENT');
 
   const started = await startHere(runtime, learnerId);
   assert.equal(started.status, 200, JSON.stringify(started.data.error));
@@ -275,15 +278,35 @@ test('a move obeys the frontier, the map offers a choice of kinds, and a convers
   assert.ok(started.data.encounter.character.description && started.data.encounter.character.role);
   assert.match(runtime.provider.calls[0].messages.at(-1).content, /in The Journey 2: Journathan Returns \(again\)\./);
   assert.match(runtime.provider.calls[0].messages.at(-1).content, /teaching_note/);
-  // A reload resumes the same conversation; a walk away needs `leave`.
+  // A reload resumes the same conversation.
   assert.equal((await startHere(runtime, learnerId)).data.encounter.id, started.data.encounter.id);
-  const target = first.road.frontier[0].id;
-  assert.equal((await moveTo(runtime, learnerId, target)).data.error.code, 'CONVERSATION_UNDER_WAY');
-  const left = await moveTo(runtime, learnerId, target, { leave: true });
-  assert.equal(left.data.road.at, target);
-  assert.equal(left.data.road.step, 0, 'an unfinished conversation is not a step');
+  // Finished, it opens the ways on from here: every site joined to this one.
+  assert.equal((await answer(runtime, learnerId, started.data.encounter, fullAnswer(runtime, learnerId))).encounter.state, 'resolved');
+  const open = (await road(runtime, learnerId)).data;
+  assert.deepEqual(open.road.frontier.map((site) => site.id).sort(), graph.neighbours(first.road.at).sort());
+  for (const site of open.road.frontier) assert.deepEqual(site.at, [Math.round(graph.node(site.id).x * 10) / 10, Math.round(graph.node(site.id).z * 10) / 10]);
+  // A walk to a new site, its conversation begun: a walk away needs `leave`.
+  const [target, other] = open.road.frontier.map((site) => site.id);
+  assert.ok(other, 'the start has two ways on');
+  assert.equal((await moveTo(runtime, learnerId, target)).data.road.at, target);
+  assert.equal((await startHere(runtime, learnerId)).status, 200);
+  assert.equal((await moveTo(runtime, learnerId, other)).data.error.code, 'CONVERSATION_UNDER_WAY');
+  const left = await moveTo(runtime, learnerId, other, { leave: true });
+  assert.equal(left.data.road.at, other);
+  assert.equal(left.data.road.step, 1, 'an unfinished conversation is not a step');
   assert.ok(left.data.road.current, 'someone waits at the new site');
-  assert.ok(!left.data.road.frontier.some((site) => site.id === first.road.at), 'the trail is not the frontier');
+  // Round 215: the site left unfinished opened no way on and is still ahead, as it was; what is ahead is still
+  // exactly what the one finished conversation opened.
+  assert.ok(left.data.road.frontier.some((site) => site.id === target), 'the site left is still a site ahead');
+  assert.deepEqual(left.data.road.frontier.map((site) => site.id).sort(), graph.neighbours(first.road.at).filter((id) => id !== other).sort());
+  assert.ok(!left.data.road.frontier.some((site) => site.id === first.road.at), 'the learner\'s own country is not the frontier');
+  // Nor does this one open anything until it is finished; then it does.
+  assert.ok(graph.neighbours(other).some((id) => id !== first.road.at && !graph.neighbours(first.road.at).includes(id)), 'the second site has ways of its own');
+  await talkHere(runtime, learnerId);
+  const further = (await road(runtime, learnerId)).data.road.frontier.map((site) => site.id);
+  for (const id of graph.neighbours(other)) assert.ok(id === first.road.at || further.includes(id), `${id} is ahead once the conversation at ${other} is finished`);
+  assert.ok(further.includes(target), 'and the site left is still there to come back to');
+  await moveTo(runtime, learnerId, further.find((id) => id !== target));
 
   // Once there is something to review, the frontier offers more than one kind of conversation.
   for (let n = 0; n < 2; n += 1) {
@@ -309,11 +332,18 @@ test('a walk that boxes itself in still has a site ahead', () => {
     for (let i = -6; i <= 6; i += 1) for (let j = -6; j <= 6; j += 1) if (graph.nodeAt(i, j)) block.push(graph.nodeAt(i, j).id);
     const at = graph.node('0,0') ? '0,0' : graph.start;
     const trail = [...block.filter((id) => id !== at), at];
-    const stored = { ...freshRoad(seed, curriculum), at, trail };
+    // Round 215: the block is the learner's own country: the conversation of each of its sites was finished.
+    const stored = { ...freshRoad(seed, curriculum), at, trail, cleared: trail, current: null };
     assert.ok(graph.neighbours(at).every((id) => trail.includes(id)), 'boxed in');
     const frontier = frontierOf(graph, stored);
     assert.ok(frontier.length >= 1, `seed ${seed}: a site ahead`);
     assert.ok(frontier.every((entry) => !trail.includes(entry.id) && trail.includes(entry.from)));
+    // Sites only walked to open nothing: with the same trail and one finished conversation, what is ahead is that site's.
+    const walked = frontierOf(graph, { ...stored, cleared: [at] });
+    assert.deepEqual(walked.map((entry) => entry.id).sort(), graph.neighbours(at).sort());
+    // And where somebody still waits, with nothing finished, nothing is ahead.
+    assert.deepEqual(frontierOf(graph, { ...stored, cleared: [], current: { node: at, step: 0, activity: { kind: 'lesson' } } }), []);
+    assert.equal(offersFor(graph, { ...stored, cleared: [], current: { node: at, step: 0, activity: { kind: 'lesson' } } }, curriculum).rails, null);
     assert.ok(offersFor(graph, stored, curriculum).rails, 'and the rails have somewhere to go');
   }
 });

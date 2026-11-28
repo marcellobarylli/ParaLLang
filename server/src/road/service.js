@@ -10,7 +10,8 @@
 //   at        the site the learner stands at ("i,j")
 //   trail     the sites visited, oldest first, the last ROAD.trail of them; an older site falls out of the trail
 //             and is wilderness again
-//   cleared   the sites whose conversation was finished, the last ROAD.trail of them
+//   cleared   the sites whose conversation was finished, in the order they were finished: the learner's own
+//             country, which the frontier borders and a pull lowers (round 215: the last ROAD.walk of them; 300 before)
 //   current   the conversation waiting at `at`: { node, step, activity }, or null once it is finished
 //   progress  the curriculum's marks (pacing.js)
 //   log       the last ROAD.log conversations, newest first, for the journal
@@ -28,10 +29,11 @@
 //   pullsSeen how many of the pulls the learner has watched happen (the world event on the map). The land they are
 //             shown is pulled only by those; the next one is the road's `event` until it is seen
 //
-// Rules: the learner may walk to any site next to a site of the recent trail that is not itself on the trail (the
-// frontier; round 143's rule that everything out of the fog is reachable from anywhere). The pacing's recommended
-// conversation waits at the "rails" site, the others at the rest of the frontier, so the map is a choice between
-// kinds of conversation and "on rails" is the pacing's own order.
+// Rules: the learner may walk to any site next to a site whose conversation they finished that is not itself one
+// of those (the frontier; round 143's rule that everything out of the fog is reachable from anywhere, and round
+// 215's that only a finished conversation opens ways on: frontierOf). The pacing's recommended conversation waits at
+// the "rails" site, the others at the rest of the frontier, so the map is a choice between kinds of conversation and
+// "on rails" is the pacing's own order.
 
 import { randomInt } from 'node:crypto';
 import { AppError, conflictError, validationError } from '../errors.js';
@@ -52,13 +54,14 @@ const pulledOf = (road) => (Array.isArray(road?.pulled) ? road.pulled : []);
 const pullsSeenOf = (road) => Math.min(pulledOf(road).length, Math.max(0, Number.isSafeInteger(road?.pullsSeen) ? road.pullsSeen : 0));
 const pullView = ({ step, depth, sites, from = null, to = null }) => ({ step, depth, sites: [...sites], from, to });
 /**
- * Round 213: the pull that a change of level makes of a road: the sites of the walk that no earlier pull named, each
- * once, in walking order. (The earlier ones sink again with it: pulls.js counts a site's pulls from its own on.)
+ * Round 213: the pull that a change of level makes of a road. Round 215: of the sites whose conversation was
+ * finished (`cleared`) that no earlier pull named, in the order they were finished; a site only walked to is not
+ * pulled. (The earlier ones sink again with it: pulls.js counts a site's pulls from its own on.)
  */
 export function nextPull(road, { step, from, to }) {
   const taken = new Set(pulledOf(road).flatMap((entry) => entry.sites));
   const sites = [];
-  for (const id of road.walk ?? road.trail ?? []) if (!taken.has(id)) { taken.add(id); sites.push(id); }
+  for (const id of road.cleared ?? []) if (!taken.has(id)) { taken.add(id); sites.push(id); }
   return { step, depth: PULL.depth, sites: sites.slice(-PULL.sites), from, to };
 }
 
@@ -114,24 +117,35 @@ function commit(curriculum, progress, step, activity, isDueObjective) {
   return kept;
 }
 
-/** The sites the learner may walk to, nearest first: [{ id, from }], `from` being the trail site each is joined to. */
+/**
+ * The sites the learner may walk to, nearest first: [{ id, from }], `from` being the site of their own country each
+ * is joined to.
+ *
+ * Round 215: the learner's country is the sites whose conversation they finished (`cleared`). Only those open ways
+ * on: a site walked to and left with its conversation unfinished opens nothing, and stays a site of the frontier,
+ * to come back to. So a walk to a new site and away again changes nothing but where the learner stands. The site
+ * they stand at counts too when nobody waits there (a road just made whose first conversation is a gate's, a
+ * developer's jump), or they could never set out.
+ */
 export function frontierOf(graph, road) {
-  const onTrail = new Set(road.trail);
+  const own = new Set(road.cleared);
+  if (!road.current) own.add(road.at);
   const seen = new Set();
   const out = [];
   const collect = (sites) => {
     for (const from of sites) {
       for (const id of graph.neighbours(from)) {
-        if (onTrail.has(id) || seen.has(id)) continue;
+        if (own.has(id) || id === road.at || seen.has(id)) continue;
         seen.add(id);
         out.push({ id, from });
       }
     }
   };
-  collect([road.at, ...road.trail.slice(-ROAD.frontierFrom).reverse().filter((id) => id !== road.at)]);
-  // A walk can box itself in: every site near the learner already visited. Then the whole trail is searched. It
-  // always has a site ahead: the trail's site furthest north-east keeps a forced way further north or east.
-  if (!out.length) collect([...road.trail].reverse());
+  const recent = road.cleared.slice(-ROAD.frontierFrom).reverse().filter((id) => id !== road.at);
+  collect([...(own.has(road.at) ? [road.at] : []), ...recent]);
+  // A walk can box itself in: every site near the learner already theirs. Then all of their country is searched. It
+  // always has a site ahead: its site furthest north-east keeps a forced way further north or east.
+  if (!out.length) collect([...road.cleared].reverse());
   return out;
 }
 
@@ -488,7 +502,8 @@ export const roadMethods = {
     // Round 213 (issue #23): the conversation that takes the learner from one level to the next (A1 to A2, and so
     // on) pulls the land down at the sites of the walk: written in this same save, shown by the client on the map.
     const levels = { from: levelAt(curriculum, was, { streamlined }), to: levelAt(curriculum, progress, { streamlined }) };
-    const pull = levelRose(curriculum, levels.from, levels.to) ? nextPull(stored, { step, ...levels }) : null;
+    const cleared = [...stored.cleared.filter((id) => id !== session.road.node), session.road.node].slice(-ROAD.walk);
+    const pull = levelRose(curriculum, levels.from, levels.to) ? nextPull({ ...stored, cleared }, { step, ...levels }) : null;
     const result = {
       ...(pull ? { worldEvent: { kind: 'pull', number: pulledOf(stored).length + 1, from: levels.from, to: levels.to } } : {}),
       kind: activity.kind, title: definition.road.title, score: Math.round(score * 100) / 100,
@@ -499,7 +514,7 @@ export const roadMethods = {
     envelope.road = {
       ...stored, step, progress, current: null,
       ...(pull ? { pulled: [...pulledOf(stored), pull].slice(-ROAD.pulls), pullsSeen: Math.min(pullsSeenOf(stored), ROAD.pulls - 1) } : {}),
-      cleared: [...stored.cleared.filter((id) => id !== session.road.node), session.road.node].slice(-ROAD.trail),
+      cleared,
       log: [{
         step, node: session.road.node, place: definition.road.place, kind: activity.kind, title: definition.road.title,
         unitTitle: definition.road.unitTitle, character: definition.character.name, role: definition.character.species,

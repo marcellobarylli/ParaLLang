@@ -55,7 +55,7 @@ export function createRoadView(canvas, { seed, pulled = [], onArrive = () => {},
     .catch((error) => { console.warn('The trees\' models could not be loaded; the simple trees stay:', error?.message ?? error); });
   const camera = new PerspectiveCamera(FOV, 1, 0.3, 900);
   const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
-  const director = createRoadDirector({ heightAt: terrain.heightAt, waterY: terrain.waterY, surfaceAt: terrain.surfaceAt });
+  const director = createRoadDirector({ heightAt: terrain.heightAt, waterY: terrain.waterY });
   const markers = new Group();
   markers.name = 'road-markers';
   world.scene.add(markers);
@@ -159,7 +159,7 @@ export function createRoadView(canvas, { seed, pulled = [], onArrive = () => {},
       const points = graph.pathPoints(a, b);
       if (laid.has(pair) || !points) return;
       laid.add(pair);
-      const mesh = createTrack(world.materials, points, terrain.heightAt, { waterY: terrain.waterY, surfaceAt: terrain.surfaceAt });
+      const mesh = createTrack(world.materials, points, terrain.heightAt, { waterY: terrain.waterY });
       markers.add(mesh);
       tracks.push(mesh);
     };

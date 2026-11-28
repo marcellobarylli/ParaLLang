@@ -176,33 +176,19 @@ export function buildChunk(terrain, materials, cx, cz, { detail = true, models =
   };
   const grounds = { ground: bucket(), rock: bucket(), snow: bucket() };
   const water = bucket();
-  // Round 213 (issue #23): pulled land takes its water down with it, so the water's surface is asked for at each
-  // corner (`terrain.waterAt`); a terrain without pulls has it at `waterY` everywhere.
-  const levels = [];
-  let sunk = false;
-  for (let i = 0; i <= cells; i += 1) {
-    const row = [];
-    for (let j = 0; j <= cells; j += 1) {
-      const level = terrain.waterAt ? terrain.waterAt(x0 + i * size, z0 + j * size) : terrain.waterY;
-      if (level !== terrain.waterY) sunk = true;
-      row.push(level);
-    }
-    levels.push(row);
-  }
-  let lowest = Infinity; // the lowest ground, measured from the water over or under it
+  let lowest = Infinity;
   for (let i = 0; i < cells; i += 1) {
     for (let j = 0; j < cells; j += 1) {
       const corners = [[i, j], [i, j + 1], [i + 1, j + 1], [i + 1, j]];
       const middle = (h(i, j) + h(i + 1, j) + h(i, j + 1) + h(i + 1, j + 1)) / 4;
-      const waterHere = (levels[i][j] + levels[i + 1][j] + levels[i][j + 1] + levels[i + 1][j + 1]) / 4;
-      for (const [vi, vj] of corners) lowest = Math.min(lowest, h(vi, vj) - levels[vi][vj]);
+      lowest = Math.min(lowest, h(i, j), h(i + 1, j), h(i, j + 1), h(i + 1, j + 1));
       const [mx, mz] = [x0 + (i + 0.5) * size, z0 + (j + 0.5) * size];
       const cover = terrain.coverAt(mx, mz, middle);
       const out = grounds[COVER_KEY[cover]];
       // Round 160: the grass takes the tint of the biome it grows in (a terrain without biomes keeps the first look).
       const tint = terrain.biomes?.[terrain.biomeAt(mx, mz)]?.tint?.[cover] ?? COVER_TINT[cover];
       // A chequer of two shades, the faceted look of a PS1 field.
-      const shade = (((cx * cells + i) + (cz * cells + j)) & 1 ? 0.94 : 1.03) * (middle < waterHere ? 0.7 : 1);
+      const shade = (((cx * cells + i) + (cz * cells + j)) & 1 ? 0.94 : 1.03) * (middle < terrain.waterY ? 0.7 : 1);
       for (const k of [0, 1, 2, 0, 2, 3]) {
         const [vi, vj] = corners[k];
         out.positions.push(x0 + vi * size, h(vi, vj), z0 + vj * size);
@@ -212,20 +198,14 @@ export function buildChunk(terrain, materials, cx, cz, { detail = true, models =
       }
     }
   }
-  if (lowest < 0.2) {
-    // One flat quad for the chunk, or, where a pull has bent the water, a quad for each cell.
-    const quads = sunk
-      ? Array.from({ length: cells * cells }, (unused, n) => [Math.floor(n / cells), n % cells, 1])
-      : [[0, 0, cells]];
-    for (const [i, j, span] of quads) {
-      const corner = (vi, vj) => [x0 + vi * size, sunk ? levels[vi][vj] : terrain.waterY, z0 + vj * size];
-      const corners = [corner(i, j), corner(i, j + span), corner(i + span, j + span), corner(i + span, j)];
-      for (const k of [0, 1, 2, 0, 2, 3]) {
-        water.positions.push(...corners[k]);
-        water.normals.push(0, 1, 0);
-        water.uvs.push(corners[k][0] / 8, corners[k][2] / 8);
-        water.colors.push(1, 1, 1);
-      }
+  if (lowest < terrain.waterY + 0.2) {
+    const y = terrain.waterY;
+    const corners = [[x0, y, z0], [x0, y, z0 + chunk], [x0 + chunk, y, z0 + chunk], [x0 + chunk, y, z0]];
+    for (const k of [0, 1, 2, 0, 2, 3]) {
+      water.positions.push(...corners[k]);
+      water.normals.push(0, 1, 0);
+      water.uvs.push(corners[k][0] / 8, corners[k][2] / 8);
+      water.colors.push(1, 1, 1);
     }
   }
   const bark = bucket();
@@ -433,7 +413,7 @@ export function createCairn(materials) {
 }
 
 /** A worn track along a way: a ribbon of quads laid on the ground through `points` ([[x, z], ...]). */
-export function createTrack(materials, points, heightAt, { width = 1.6, lift = 0.12, color = [0.62, 0.5, 0.36], waterY = 0, surfaceAt = null } = {}) {
+export function createTrack(materials, points, heightAt, { width = 1.6, lift = 0.12, color = [0.62, 0.5, 0.36], waterY = 0 } = {}) {
   const data = bucket();
   const half = width / 2;
   for (let n = 1; n < points.length; n += 1) {
@@ -441,8 +421,7 @@ export function createTrack(materials, points, heightAt, { width = 1.6, lift = 0
     const [x1, z1] = points[n];
     const length = Math.hypot(x1 - x0, z1 - z0) || 1;
     const [px, pz] = [(-(z1 - z0) / length) * half, ((x1 - x0) / length) * half];
-    // Round 213: `surfaceAt` is the ground or the water over it where the water is not level (pulled land).
-    const y = (x, z) => (surfaceAt ? surfaceAt(x, z) : Math.max(heightAt(x, z), waterY)) + lift;
+    const y = (x, z) => Math.max(heightAt(x, z), waterY) + lift;
     const [a, b, c, d] = [[x0 + px, y(x0 + px, z0 + pz), z0 + pz], [x0 - px, y(x0 - px, z0 - pz), z0 - pz], [x1 - px, y(x1 - px, z1 - pz), z1 - pz], [x1 + px, y(x1 + px, z1 + pz), z1 + pz]];
     const shade = n % 2 ? 1 : 0.9;
     const tone = color.map((v) => v * shade);
@@ -738,7 +717,7 @@ export function createWeatherEffects(world, { terrain = world.terrain, reducedMo
       flies.forEach((fly, n) => {
         const x = cx + wrap(fly.x + Math.sin(clock * fly.rate + fly.phase) * 1.4 - cx, size) - size / 2;
         const z = cz + wrap(fly.z + Math.cos(clock * fly.rate * 0.8 + fly.phase) * 1.4 - cz, size) - size / 2;
-        positions.set([x, (terrain.surfaceAt ? terrain.surfaceAt(x, z) : Math.max(terrain.heightAt(x, z), world.terrain.waterY)) + fly.y + 0.3 * Math.sin(clock * 1.3 + fly.phase), z], n * 3);
+        positions.set([x, Math.max(terrain.heightAt(x, z), world.terrain.waterY) + fly.y + 0.3 * Math.sin(clock * 1.3 + fly.phase), z], n * 3);
       });
       flyGeometry.attributes.position.needsUpdate = true;
       fireflies.material.opacity = state.fireflies * (0.55 + 0.35 * Math.sin(clock * 2.1));

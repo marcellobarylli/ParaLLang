@@ -170,7 +170,8 @@ test('the title offers the journey alone; the map and the menu are at hand in a 
   // The map over the conversation, and back to it.
   await user.click(screen.getByRole('button', { name: 'Map' }));
   let map = await screen.findByRole('main', { name: 'The map of the road' });
-  expect(within(map).getByRole('button', { name: 'Leave the conversation and walk here' }).disabled).toBe(false);
+  // Round 215: nothing is ahead until this conversation is finished, so the map offers no walk yet.
+  expect(within(map).queryByRole('button', { name: 'Leave the conversation and walk here' })).toBeNull();
   await user.click(within(map).getByRole('button', { name: `Back to ${name}` }));
   expect(screen.queryByRole('main', { name: 'The map of the road' })).toBeNull();
   expect(screen.getByRole('region', { name: 'Saying hello' })).toBe(sheet);
@@ -186,9 +187,14 @@ test('the title offers the journey alone; the map and the menu are at hand in a 
 
   // Back in, and off again by the map: the conversation is left, and the walk goes.
   await user.click(screen.getByRole('button', { name: 'Back to the conversation' }));
+  // Round 215: this conversation is finished and the way on taken; the next site's is the one left.
+  await s().sendMessage(server.fullAnswer(s().learnerId));
+  await user.click(await screen.findByRole('button', { name: 'Continue' }));
+  await vi.waitFor(() => expect([s().roadPhase, s().encounter?.state, s().road.step]).toEqual(['encounter', 'ongoing', 1]), { timeout: 20_000 });
   const here = s().road.at;
   await user.click(screen.getByRole('button', { name: 'Map' }));
   map = await screen.findByRole('main', { name: 'The map of the road' });
+  expect(within(map).getByRole('button', { name: 'Leave the conversation and walk here' }).disabled).toBe(false);
   await user.click(within(map).getByRole('button', { name: 'Leave the conversation and walk here' }));
   await vi.waitFor(() => expect(s().road.at).not.toBe(here));
   expect(s().road.cleared).not.toContain(here);

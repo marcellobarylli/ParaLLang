@@ -43,7 +43,7 @@ test('from the world map onto the road: the first lesson waits at the start with
   expect(s().road.at).toBe('0,0');
   expect(s().road.current.kind).toBe('lesson');
   expect(s().road.current.character.description.length).toBeGreaterThan(40);
-  expect(s().road.frontier.filter((site) => site.recommended)).toHaveLength(1);
+  expect([s().road.frontier, s().road.rails]).toEqual([[], null]); // round 215: nothing is ahead until the first conversation is finished
   expect(s().curriculum.position.unitId).toBe('greetings');
   expect(s().roadArrival).toBe('arrive');
   // The camera's arrival opens nothing by itself: the player talks when they like.
@@ -101,7 +101,8 @@ test('off the rails: any site ahead may be walked to, and it holds what the map 
 });
 
 test('a conversation left for the hub is taken up again; walking on leaves it; the world map is a way out', async () => {
-  const { s } = await onTheRoad();
+  const ctx = await onTheRoad();
+  const { s } = ctx;
   s().onRoadArrived();
   await s().roadTalk();
   const held = s().encounter.id;
@@ -109,13 +110,22 @@ test('a conversation left for the hub is taken up again; walking on leaves it; t
   expect(s().roadPhase).toBe('hub');
   await s().roadTalk();
   expect([s().roadPhase, s().encounter.id]).toEqual(['encounter', held]);
+  // Round 215: only a finished conversation opens ways on. This one is finished; the next site's is left.
+  await finish(ctx);
+  await s().roadContinue(); s().onRoadArrived();
+  const second = s().road.at;
+  const begun = s().encounter.id;
   s().leaveRoadConversation();
   const target = s().road.frontier[0].id;
   await s().roadTravel(target);
   s().onRoadArrived();
   expect(s().road.at).toBe(target);
-  expect(s().road.step).toBe(0);
-  expect(s().encounter.id).not.toBe(held);
+  expect(s().road.step).toBe(1);
+  expect(s().encounter.id).not.toBe(begun);
+  // The site left unfinished is not the player's, opened nothing, and is still ahead to come back to.
+  expect(s().road.cleared).not.toContain(second);
+  expect(s().road.frontier.map((site) => site.id)).toContain(second);
+  expect(s().road.frontier.every((site) => site.from !== second)).toBe(true);
   s().leaveRoadConversation();
   s().leaveRoad();
   expect([s().mode, s().phase, s().encounter]).toEqual(['dungeon', 'world', null]);
@@ -230,10 +240,12 @@ test('the journey shown: no remark for a short one; the server\'s remark is kept
   await s().toggleJourney();
   expect(s().journeyRemark).toBe(null);
   await s().toggleJourney();
-  // A hundred walks on, made on the server (a walk needs no finished conversation).
+  // A hundred walks on, made on the server: each after the conversation where the player stands is finished (round 215).
   for (let n = 0; n < 100; n += 1) {
+    const { encounter } = await server.api.startEncounter(s().learnerId, { road: true });
+    await server.api.sendDialogue(s().learnerId, { encounterId: encounter.id, version: encounter.version, attemptId: `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`, message: server.fullAnswer(s().learnerId) });
     const view = await server.api.getRoad(s().learnerId);
-    await server.api.moveRoad(s().learnerId, { nodeId: view.road.rails ?? view.road.frontier[0].id, leave: true });
+    await server.api.moveRoad(s().learnerId, { nodeId: view.road.rails ?? view.road.frontier[0].id });
   }
   await s().refreshRoad();
   expect(s().road.hops).toBe(100);
@@ -293,6 +305,9 @@ test('from the map, a conversation under way is left unfinished to walk on', asy
   const { s } = ctx;
   s().onRoadArrived();
   await s().roadTalk();
+  // Round 215: the first conversation is finished and the way on taken; the next one is the one left.
+  await finish(ctx);
+  await s().roadContinue(); s().onRoadArrived();
   expect([s().roadPhase, s().encounter.state]).toEqual(['encounter', 'ongoing']);
   const here = s().road.at;
   s().openRoadPanel('map');
