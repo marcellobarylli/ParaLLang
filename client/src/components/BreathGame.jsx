@@ -48,6 +48,20 @@ function zone(context, cx, cy, ring, share, alpha, bloom) {
   glow(context, cx + Math.cos(middle) * ring, cy + Math.sin(middle) * ring, 10 + bloom * 24, GOLD_HI, alpha * (0.9 - bloom * 0.3));
 }
 
+/** A faint word just outside the ring at a stretch's best moment, in the stretch's own colour. */
+function label(context, cx, cy, ring, share, text, alpha) {
+  if (alpha <= 0.003) return;
+  const at = angleOf(share);
+  const out = ring + 22;
+  context.save();
+  context.font = "13px 'Courier New', Courier, monospace";
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  context.fillStyle = `rgb(${GOLD_HI} / ${alpha * 0.55})`;
+  context.fillText(text, cx + Math.cos(at) * out, cy + Math.sin(at) * out);
+  context.restore();
+}
+
 function draw(context, game, view) {
   const { width, height, held, veil } = view;
   context.clearRect(0, 0, width, height);
@@ -90,6 +104,8 @@ function draw(context, game, view) {
   context.restore();
   zone(context, cx, cy, ring, BREATH_TURN, Math.max(veil, bloom.release), bloom.release);
   zone(context, cx, cy, ring, 0, veil, bloom.press);
+  label(context, cx, cy, ring, 0, 'in', veil);
+  label(context, cx, cy, ring, BREATH_TURN, 'out', veil);
   const share = breathProgress(game);
   for (let i = 12; i >= 1; i -= 1) { // the way it came, fading
     const at = angleOf(share - i * 0.0035);

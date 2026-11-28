@@ -16,12 +16,13 @@ export const BREATH = Object.freeze({
   tolerance: 0.6, // seconds either side of a turn within which a press or a release is in time,
   perfect: 0.2, // and within which it is at the best moment
   markFor: 1.8, // seconds a kept turn's ripple lasts
+  lead: 15 / 360 * 10, // the light starts 15 degrees of the ring before the breath in, a moment to prepare
   maxStep: 0.1,
 });
 export const BREATH_CYCLE = BREATH.inhale + BREATH.exhale;
 
 export function newBreath() {
-  return { time: 0, cycle: 0, phase: 'in', t: 0, held: false, closing: false, done: false, kept: 0, perfect: 0, warmth: 0, marks: [], judged: [] };
+  return { time: -BREATH.lead, cycle: 0, phase: 'in', t: -BREATH.lead, held: false, closing: false, done: false, kept: 0, perfect: 0, warmth: 0, marks: [], judged: [] };
 }
 
 const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
@@ -35,7 +36,7 @@ export function breathLevel(game) {
 /** How far round the breath is, 0 to 1: 0 is the start of the breath in, `BREATH_TURN` where it turns. */
 export const BREATH_TURN = BREATH.inhale / BREATH_CYCLE;
 export function breathProgress(game) {
-  return clamp((game.phase === 'in' ? game.t : BREATH.inhale + game.t) / BREATH_CYCLE, 0, 1);
+  return clamp((game.phase === 'in' ? game.t : BREATH.inhale + game.t) / BREATH_CYCLE, -BREATH.lead / BREATH_CYCLE, 1);
 }
 
 /** 'perfect', 'good' or null for a press or a release `delta` seconds from its turn. */

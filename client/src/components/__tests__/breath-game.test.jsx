@@ -32,7 +32,7 @@ test('it comes in with a breath in, has no text, and with the reply ready at onc
   expect(game.className).toContain('shown');
   expect(game.textContent).toBe(''); // nothing is written during the breathing
   expect(game.dataset.phase).toBe('in');
-  act(() => frames.run(4.1));
+  act(() => frames.run(4.1 + 0.5)); // the lead-in (15 degrees, 0.42 s) comes first
   expect(game.dataset.phase).toBe('out');
   act(() => frames.run(25));
   expect(game.dataset.cycle).toBe('2');
