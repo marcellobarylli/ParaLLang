@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
-import { clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf } from '../display.js';
+import { LEVELS, clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf } from '../display.js';
 import { LANGUAGE_KEY, chooseSlot, clearSlot, currentSlot, learnerOf, setSlotLanguage, slotSummaries, slottedStorage } from '../slots.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
@@ -726,6 +726,11 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       setVolume: (channel, value) => set({ display: saveDisplay({ ...get().display, volume: { ...volumesOf(get().display?.volume), [channel]: clampVolume(value) } }, storage) }),
       // Round 148: how much of a character's lines is in the language being learned; sent with each start and answer.
       setImmersion: (value) => set({ display: saveDisplay({ ...get().display, immersion: clampImmersion(value), immersionAuto: false }, storage) }),
+      // Round 216: the level said on the title; it sets the share of the language and takes the slider's place.
+      setLevel: (id) => {
+        const level = LEVELS.find((entry) => entry.id === id);
+        if (level) set({ display: saveDisplay({ ...get().display, level: level.id, immersion: level.share, immersionAuto: false }, storage) });
+      },
       // Round 177: whether the share follows the learner's level (the stage's share) instead of the slider.
       setImmersionAuto: (on) => set({ display: saveDisplay({ ...get().display, immersionAuto: on !== false }, storage) }),
       // Round 129: beginner mode, sent with each answer.

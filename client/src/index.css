@@ -555,3 +555,9 @@ textarea { font: inherit; font-size: 16px; resize: none; line-height: 1.35; over
 .pull-continue { position: absolute; left: 0; right: 0; margin: 0 auto; bottom: calc(max(1.6rem, env(safe-area-inset-bottom)) + var(--bottom-gap, 0px)); width: min(320px, calc(100% - 2rem)); animation: pull-continue 1.4s ease both; }
 @keyframes pull-continue { from { opacity: 0; } to { opacity: 1; } }
 .pull-event.leaving canvas, .pull-event.leaving .pull-continue { opacity: 0 !important; transition: opacity .6s ease; animation: none; }
+/* round 216: the level asked on a new game's title */
+.title-level { margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: .4rem; max-width: 22rem; color: #f0f1ec; text-shadow: 1px 1px 0 #000; }
+.title-level legend { padding: 0; margin: 0 auto .4rem; text-align: center; }
+.title-level label { display: flex; gap: .6rem; align-items: flex-start; padding: .45rem .7rem; border: 1px solid #fff4; background: #0008; cursor: pointer; }
+.title-level label.chosen { border-color: var(--gold); color: var(--gold); }
+.title-level small { display: block; opacity: .8; }

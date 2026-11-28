@@ -36,6 +36,7 @@ async function mount({ storage = memoryStorage() } = {}) {
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
   // Round 175: the title screen's one button sets out on the road.
+  if (storage.getItem('parallang.welcomed') !== '1') await user.click(await screen.findByLabelText(/comfortable with basic/, {}, { timeout: 20_000 })); // a new game says its level
   await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
   if (storage.getItem('parallang.welcomed') !== '1') await welcome(user);
   // The first road of a process loads the curriculum (about a second, more on a busy machine).
@@ -69,6 +70,7 @@ test('the journey opens on a message about learning by conversation; closed, it 
   const useStore = createGameStore({ api: server.api, storage, dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
+  await user.click(await screen.findByLabelText(/comfortable with basic/, {}, { timeout: 20_000 }));
   await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
   const dialog = await screen.findByRole('dialog', { name: 'In the beginning was the Word' }, { timeout: 20_000 });
   expect(dialog.textContent).toContain('by living in it');
@@ -162,6 +164,7 @@ test('the title offers the journey alone; the map and the menu are at hand in a 
   expect(within(menu).getAllByRole('button').map((button) => button.textContent.replace(/\s+/g, ' ').trim())).toEqual(['Close', 'Spellbook', 'Guidebook 1 new', 'Settings', 'Save slots Slot 1', 'Other places Ta Prohm, The Kiln']); // the guidebook's first entry came with the road
   await user.click(within(menu).getByRole('button', { name: 'Close' }));
 
+  await user.click(await screen.findByLabelText(/comfortable with basic/, {}, { timeout: 20_000 }));
   await user.click(screen.getByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }));
   await welcome(user);
   await user.click(await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 }));

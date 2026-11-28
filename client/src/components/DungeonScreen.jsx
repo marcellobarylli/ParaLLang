@@ -11,7 +11,7 @@ import { browserSpeech } from '../speech.js';
 import { narrativeParts, narratorOn, useReadPassage } from '../narratorVoice.js';
 import { browserAmbience } from '../ambience.js';
 import { TITLE_MUSIC, browserTitleMusic } from '../titleMusic.js';
-import { volumesOf } from '../display.js';
+import { LEVELS, volumesOf } from '../display.js';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
@@ -81,6 +81,23 @@ function TitleLanguage({ state, disabled }) {
   );
 }
 
+// Round 216: a new game asks the learner's level before the journey: it sets the share of the language the
+// characters speak (Settings can still move it).
+function TitleLevel({ state, disabled }) {
+  const picked = state.display?.level ?? null;
+  return (
+    <fieldset className="title-level" aria-label="Your level" disabled={disabled}>
+      <legend>How much {state.language?.name ?? 'of the language'} do you speak?</legend>
+      {LEVELS.map((entry) => (
+        <label key={entry.id} className={entry.id === picked ? 'chosen' : undefined}>
+          <input type="radio" name="title-level" checked={entry.id === picked} onChange={() => state.setLevel(entry.id)} />
+          <span>{entry.label}<small>{entry.note}</small></span>
+        </label>
+      ))}
+    </fieldset>
+  );
+}
+
 // The events that count as the player's tap for a browser's autoplay rule (a touch that ends as a scroll still
 // ends with touchend). Each one tries the title music again until it is heard.
 const GESTURES = ['pointerup', 'touchend', 'click', 'keydown'];
@@ -94,6 +111,7 @@ const AMBIENCE_HANDOVER = 1.5; // seconds: the title music's fade when the music
 // and the tap (anywhere) starts the music and brings in the rest. 'checking' shows only the name, for a moment.
 function TitleScreen({ state, gate = 'open' }) {
   const { connection, serverProblem, journeyStarting } = state;
+  const needsLevel = state.freshGame && !state.display?.level;
   const label = journeyStarting ? (connection === 'ready' ? 'Setting out…' : 'Waking the server…') : ROAD_NAME;
   if (gate !== 'open') {
     return (
@@ -106,7 +124,8 @@ function TitleScreen({ state, gate = 'open' }) {
   return (
     <section className="title-screen title-open" aria-label="ParaLLang" data-connection={connection}>
       <h1>ParaLLang</h1>
-      <button type="button" className="primary-button big-button title-start" onClick={state.startJourney} disabled={journeyStarting}>{label}</button>
+      {state.freshGame && <TitleLevel state={state} disabled={journeyStarting} />}
+      <button type="button" className="primary-button big-button title-start" onClick={state.startJourney} disabled={journeyStarting || needsLevel}>{label}</button>
       <TitleLanguage state={state} disabled={journeyStarting} />
       {!journeyStarting && connection === 'connecting' && <p className="connection-note" role="status">Waking the server…</p>}
       {connection === 'offline' && serverProblem && (

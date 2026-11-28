@@ -28,6 +28,7 @@ async function mount({ storage = memoryStorage() } = {}) {
   const useStore = createGameStore({ api: server.api, storage, dungeon: DUNGEON, dungeons: DUNGEONS, atlas: ATLAS });
   const user = userEvent.setup();
   render(<DungeonScreen useStore={useStore} speech={silent} ambience={noMusic} />);
+  await user.click(await screen.findByLabelText(/comfortable with basic/, {}, { timeout: 20_000 }));
   await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
   await screen.findByRole('button', { name: /^Talk to / }, { timeout: 20_000 });
   return { server, user, storage, s: () => useStore.getState() };
