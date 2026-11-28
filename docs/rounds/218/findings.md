@@ -31,6 +31,7 @@ to the world event, and is the event silent? What else did rounds 214 to 217 bre
 | `pull-check.mjs` (the developer's jump, now into Angkor Wat) | 0 problems |
 | Title radios at phone size | 18 × 18 each, the chosen one gold |
 | Level chunk blocked | "The game was updated…" with Reload |
+| A newer build on the site, title up (Chromium) | one reload past the cache, not repeated |
 
 ## Not done
 

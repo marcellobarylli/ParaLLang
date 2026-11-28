@@ -57,3 +57,11 @@ GitHub Pages deploys the page and Render the server.
 
 Angkor Wat is the place of **every** change of level: A1 to A2, A2 to B1, and any level added to the curriculum later
 (decision 2's rule is by the level of the next unit, so a new level's gate goes there with no change).
+
+## Amendment (2026-11-28): the title loads a newer build
+
+After the deploy the owner's phone still showed the old title: the home-screen app keeps running the build it was
+opened with (the cause of the green gate too). While the title is up (not once the journey is setting out), the page
+reads the site's `version.json` when it opens and whenever it comes back to the screen; if the build there is newer,
+it reloads past the cache (`viewport.js` `updateIfNewer`), once per build, so a cache still serving the old files
+cannot make it loop. A conversation is never interrupted.

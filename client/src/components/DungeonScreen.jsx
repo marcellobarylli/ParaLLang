@@ -8,6 +8,8 @@ import CorrectionCard from './CorrectionCard.jsx';
 import SheetHandle from './SheetHandle.jsx';
 import BreathGame, { BreathIntro } from './BreathGame.jsx';
 import { browserSpeech } from '../speech.js';
+import { updateIfNewer } from '../viewport.js';
+import { BUILD_ID } from '../build.js';
 import { narrativeParts, narratorOn, useReadPassage } from '../narratorVoice.js';
 import { browserAmbience } from '../ambience.js';
 import { TITLE_MUSIC, browserTitleMusic } from '../titleMusic.js';
@@ -764,6 +766,15 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
   // Round 175: the title screen shows the road's landscape from above the clouds, and stays up after its button is
   // pressed until the road is here; the camera then zooms down into it.
   const atTitle = !onRoad && phase === 'attract';
+  // Round 218: on the title, a newer build on the site is loaded (viewport.js updateIfNewer).
+  const titleIdle = atTitle && !state.journeyStarting;
+  useEffect(() => {
+    if (!titleIdle || typeof document === 'undefined') return undefined;
+    const check = () => { if (document.visibilityState !== 'hidden') updateIfNewer({ build: BUILD_ID }).catch(() => {}); };
+    check();
+    document.addEventListener('visibilitychange', check);
+    return () => document.removeEventListener('visibilitychange', check);
+  }, [titleIdle]);
   const titleShown = atTitle || (onRoad && !state.road);
   const titleSite = titleShown ? (state.road?.at ?? state.titleAt ?? '') : null;
   // Round 175: the map is always at hand. On the road it opens over whatever is on the screen, a conversation too;

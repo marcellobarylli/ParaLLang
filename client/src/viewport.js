@@ -68,3 +68,20 @@ export function reloadPage(win = globalThis.window) {
   url.searchParams.set('reload', Date.now().toString(36));
   win.location.replace(url.toString());
 }
+
+// Round 218: a page left open (above all the phone's home-screen app, which iOS keeps in memory) goes on running the
+// build it was opened with, and asks for files a later deploy has renamed. While the title is up the page asks the
+// site for its build when it opens and whenever it comes back to the screen; if the site has a newer one, it reloads
+// past the cache, once per build (a site still serving the old files cannot loop it).
+const UPDATED_KEY = 'parallang.updatedTo';
+export async function updateIfNewer({ build, win = globalThis.window, latest = latestBuild, reload = reloadPage } = {}) {
+  const newest = await latest(win);
+  if (!newest || newest === build) return false;
+  try {
+    const store = win.sessionStorage;
+    if (!store || store.getItem(UPDATED_KEY) === newest) return false; // no storage: no way to keep it from looping
+    store.setItem(UPDATED_KEY, newest);
+  } catch { return false; }
+  reload(win);
+  return true;
+}
