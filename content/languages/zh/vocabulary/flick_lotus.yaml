@@ -1,0 +1,30 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+version: flick-lotus-zh-v1
+references:
+  - id: mdbg-xing
+    title: "MDBG Chinese Dictionary: xǐng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=xing"
+  - id: mdbg-jiayou
+    title: "MDBG Chinese Dictionary: jiāyóu"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jiayou"
+entries:
+  - id: xingxing
+    kind: word
+    target: "xǐngxing"
+    part_of_speech: verb
+    accepted_translations: ["wake up"]
+    surface_variants: ["xǐngxing", "xǐng xǐng", "xǐng yi xǐng", "kuài xǐng", "kuài xǐngxing", "xǐnglai", "xǐng lai", "kuài xǐnglai"]
+    accent_insensitive: true
+    example: { target: "Xǐngxing, Flick!", english: "Wake up, Flick!" }
+    note: "'Xǐng' is to wake up; doubled, 'xǐngxing' is the command, said to someone dozing off. 'Kuài xǐng' is wake up, quick; 'xǐnglai' is come round, wake up. Mind the tones: 'xīngxing' (first tone) is the stars."
+    reference_ids: [mdbg-xing]
+  - id: jiayou
+    kind: word
+    target: "jiāyóu"
+    part_of_speech: interjection
+    accepted_translations: ["courage", "come on", "chin up", "you can do it"]
+    surface_variants: ["jiāyóu", "jiā yóu"]
+    accent_insensitive: true
+    example: { target: "Jiāyóu, Flick!", english: "Come on, Flick, you can do it!" }
+    note: "Literally 'add oil', as to a lamp or an engine; the cheer for anyone facing something hard: 'come on, you can do it'. Courage itself is 'yǒngqì'."
+    reference_ids: [mdbg-jiayou]

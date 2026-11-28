@@ -1,0 +1,128 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Reference URLs follow the existing patterns and were not opened from the build container.
+version: gerald-coffee-ja-v1
+references:
+  - id: jisho-kohi
+    title: "Jisho: kōhī"
+    url: "https://jisho.org/search/koohii"
+  - id: jisho-kudasai
+    title: "Jisho: kudasai"
+    url: "https://jisho.org/search/kudasai"
+  - id: jisho-onegaishimasu
+    title: "Jisho: onegaishimasu"
+    url: "https://jisho.org/search/onegaishimasu"
+  - id: jisho-nashi
+    title: "Jisho: nashi"
+    url: "https://jisho.org/search/nashi"
+  - id: jisho-miruku
+    title: "Jisho: miruku"
+    url: "https://jisho.org/search/miruku"
+  - id: jisho-esupuresso
+    title: "Jisho: esupuresso"
+    url: "https://jisho.org/search/esupuresso"
+  - id: jisho-burakku
+    title: "Jisho: burakku"
+    url: "https://jisho.org/search/burakku"
+  - id: wiktionary-kohi
+    title: "Wiktionary: kōhī (Japanese)"
+    url: "https://en.wiktionary.org/wiki/k%C5%8Dh%C4%AB"
+  - id: wiktionary-kudasai
+    title: "Wiktionary: kudasai (Japanese)"
+    url: "https://en.wiktionary.org/wiki/kudasai"
+  - id: wiktionary-onegaishimasu
+    title: "Wiktionary: onegaishimasu (Japanese)"
+    url: "https://en.wiktionary.org/wiki/onegaishimasu"
+  - id: wiktionary-nashi
+    title: "Wiktionary: nashi (Japanese)"
+    url: "https://en.wiktionary.org/wiki/nashi"
+  - id: wiktionary-miruku
+    title: "Wiktionary: miruku (Japanese)"
+    url: "https://en.wiktionary.org/wiki/miruku"
+  - id: wiktionary-esupuresso
+    title: "Wiktionary: esupuresso (Japanese)"
+    url: "https://en.wiktionary.org/wiki/esupuresso"
+entries:
+  - id: kohi
+    kind: word
+    target: "kōhī"
+    part_of_speech: noun
+    accepted_translations: ["coffee", "a coffee", "a cup of coffee"]
+    surface_variants: ["kōhī", "koohii", "kouhii", "kohii"]
+    accent_insensitive: true
+    example:
+      target: "Kōhī o kudasai."
+      english: "A coffee, please."
+    note: "The loanword for coffee. In a Japanese kissaten (coffee house) kōhī on its own is a cup of hot drip coffee, often the house blend (burendo). The long vowels may be typed oo and ii: koohii."
+    reference_ids: [jisho-kohi, wiktionary-kohi]
+  - id: kudasai
+    kind: word
+    target: "kudasai"
+    part_of_speech: verb
+    accepted_translations: ["please give me", "I'd like", "please"]
+    surface_variants: ["kudasai"]
+    accent_insensitive: true
+    example:
+      target: "Kōhī o hitotsu kudasai."
+      english: "One coffee, please."
+    note: "Please give me: the thing comes first, with the particle o: kōhī o kudasai. The counter hitotsu (one thing) often goes before it."
+    reference_ids: [jisho-kudasai, wiktionary-kudasai]
+  - id: onegaishimasu
+    kind: word
+    target: "onegaishimasu"
+    part_of_speech: verb
+    accepted_translations: ["please", "I'd like", "I would like"]
+    surface_variants: ["onegaishimasu", "onegai shimasu"]
+    accent_insensitive: true
+    example:
+      target: "Kōhī o onegaishimasu."
+      english: "I'd like a coffee, please."
+    note: "Literally I make a request; the politest everyday way to order: kōhī o onegaishimasu, or kōhī, onegaishimasu. Among friends, onegai."
+    reference_ids: [jisho-onegaishimasu, wiktionary-onegaishimasu]
+  - id: miruku_nashi
+    kind: phrase
+    target: "miruku nashi"
+    part_of_speech: noun_phrase
+    accepted_translations: ["without milk", "no milk"]
+    surface_variants: ["miruku nashi", "miruku wa irimasen", "miruku irimasen"]
+    accent_insensitive: true
+    example:
+      target: "Kōhī o miruku nashi de onegaishimasu."
+      english: "A coffee without milk, please."
+    note: "Nashi is without: miruku nashi de, with no milk. Miruku wa irimasen (I don't need milk) says the same as a refusal, when the milk is offered."
+    reference_ids: [jisho-miruku, jisho-nashi, wiktionary-miruku, wiktionary-nashi]
+  - id: esupuresso
+    kind: word
+    target: "esupuresso"
+    part_of_speech: noun
+    accepted_translations: ["espresso", "an espresso"]
+    surface_variants: ["esupuresso"]
+    accent_insensitive: true
+    example:
+      target: "Esupuresso o onegaishimasu."
+      english: "An espresso, please."
+    note: "The loanword for an espresso made to order with a machine. In Japan it has to be asked for by name: plain kōhī is drip coffee."
+    reference_ids: [jisho-esupuresso, wiktionary-esupuresso]
+  - id: burakku_kohi
+    kind: phrase
+    target: "burakku kōhī"
+    part_of_speech: noun_phrase
+    accepted_translations: ["black coffee", "coffee without milk"]
+    surface_variants: ["burakku kōhī", "burakku koohii", "burakku kouhii", "burakku kohii", "burakku"]
+    accent_insensitive: true
+    example:
+      target: "Kōhī wa itsumo burakku desu."
+      english: "I always take my coffee black."
+    note: "Burakku (black) is coffee with neither milk nor sugar; it is usually ordered as burakku de (black, please)."
+    reference_ids: [jisho-burakku, jisho-kohi]
+  - id: miruku_iri
+    kind: phrase
+    target: "miruku iri"
+    part_of_speech: noun_phrase
+    accepted_translations: ["with milk"]
+    surface_variants: ["miruku iri"]
+    accent_insensitive: true
+    example:
+      target: "Miruku iri no kōhī wa irimasen."
+      english: "I do not want coffee with milk."
+    note: "Iri means containing: miruku iri, with milk in it. Miruku is milk; the coffee drink called a latte is kafe rate, and a café au lait kafe ore."
+    reference_ids: [jisho-miruku, wiktionary-miruku]

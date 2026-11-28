@@ -1,0 +1,50 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Reference URLs follow the existing patterns and were not opened from the build container.
+version: gerald-break-ja-v1
+references:
+  - id: jisho-oishii
+    title: "Jisho: oishii"
+    url: "https://jisho.org/search/oishii"
+  - id: jisho-saiko
+    title: "Jisho: saikō"
+    url: "https://jisho.org/search/saikou"
+  - id: jisho-arigato
+    title: "Jisho: arigatō"
+    url: "https://jisho.org/search/arigatou"
+  - id: wiktionary-oishii
+    title: "Wiktionary: oishii (Japanese)"
+    url: "https://en.wiktionary.org/wiki/oishii"
+  - id: wiktionary-arigato
+    title: "Wiktionary: arigatō (Japanese)"
+    url: "https://en.wiktionary.org/wiki/arigat%C5%8D"
+entries:
+  - id: oishii
+    kind: word
+    target: "oishii"
+    part_of_speech: adjective
+    accepted_translations: ["good", "tasty", "delicious"]
+    surface_variants: ["oishii", "oishī", "oishikatta", "umai", "umakatta"]
+    accent_insensitive: true
+    example: { target: "Kono kōhī wa oishii desu.", english: "This coffee is good." }
+    note: "Delicious, good to eat or drink; it does not agree with anything. Oishikatta is the past (it was delicious), oishikunai the negative (not tasty). Umai says the same more casually, mostly among friends."
+    reference_ids: [jisho-oishii, wiktionary-oishii]
+  - id: saiko
+    kind: word
+    target: "saikō"
+    part_of_speech: adjective
+    accepted_translations: ["excellent", "the best", "superb"]
+    surface_variants: ["saikō", "saikou", "saikoo"]
+    accent_insensitive: true
+    example: { target: "Kono kōhī wa saikō desu.", english: "This coffee is excellent." }
+    note: "Literally the highest: the best, superb. Saikō! on its own is an exclamation of delight."
+    reference_ids: [jisho-saiko]
+  - id: arigato
+    kind: word
+    target: "arigatō"
+    part_of_speech: interjection
+    accepted_translations: ["thank you", "thanks"]
+    surface_variants: ["arigatō", "arigatou", "arigatoo", "arigatō gozaimasu", "arigatou gozaimasu", "dōmo arigatō", "doumo arigatou"]
+    accent_insensitive: true
+    example: { target: "Dōmo arigatō, Gerald.", english: "Thanks a lot, Gerald." }
+    note: "Arigatō among friends; arigatō gozaimasu is the polite form, for strangers. Dōmo arigatō: thank you very much. The long ō may be typed ou or oo."
+    reference_ids: [jisho-arigato, wiktionary-arigato]

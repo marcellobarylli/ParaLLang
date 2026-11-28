@@ -1,0 +1,19 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 113: The High Gate (a place; thanks reuses Gerald's word). Reference URLs follow the existing patterns and were not opened from the
+# build container; listed for the owner's content review.
+version: bambieshart-gate-ja-v1
+references:
+  - id: jisho-yama
+    title: "Jisho: yama"
+    url: "https://jisho.org/search/yama"
+entries:
+  - id: yama
+    kind: word
+    target: "yama"
+    part_of_speech: noun
+    accepted_translations: ["mountain", "mountains"]
+    surface_variants: ["yama"]
+    accent_insensitive: true
+    example: { target: "Yama wa tōi desu.", english: "The mountain is far away." }
+    note: "One mountain or several: yama has no plural. In a mountain's name it is often read san: Fuji-san, Mount Fuji."
+    reference_ids: [jisho-yama]

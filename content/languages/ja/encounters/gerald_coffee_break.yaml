@@ -1,0 +1,66 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+id: gerald_coffee_break
+character: characters/enemies/imp_coffee.yaml
+party_of: imp_coffee_greeting
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player praises Gerald's coffee and thanks him, in Japanese"
+max_turns: 20
+resolved_message: "Gerald pretends not to be pleased. He is extremely pleased."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_coffee
+    prompt: "Gerald has made you a coffee on the road. Tell him it is good, using Japanese."
+    intent: "Gerald, now travelling in the player's party, has brewed the player a coffee and waits for the player's own verdict on it."
+    target_vocabulary_ids: [oishii, saiko]
+    required_target_groups:
+      - [oishii, saiko]
+    grammar_constraints:
+      - "The player gives their own positive verdict on the coffee Gerald made, with a Japanese word for good or tasty (oishii, umai, saikō)."
+      - "Japanese adjectives do not agree with the noun; the verdict may be plain (oishii!, umai!) or polite (oishii desu), present or past (oishikatta, it was delicious), with or without totemo (very) or kōhī ga / kōhī wa. A negative form (oishikunai, umakunai, oishiku nai desu) is not praise."
+      - "Reject English-only praise, negated verdicts, quotations, and praise of anything other than the coffee."
+    accepted_examples:
+      - "Oishii!"
+      - "Kōhī wa totemo oishii desu."
+      - "Saikō desu, Gerald."
+      - "This is oishii."
+      - "Oishikatta!"
+    negative_examples:
+      - text: "It's good."
+        reason: "English-only; it does not use a Japanese word for good."
+      - text: "Oishikunai desu."
+        reason: "Oishikunai is the negative (not tasty); a negated verdict is not praise."
+      - text: "Gerald says it is oishii."
+        reason: "It reports someone else's words rather than giving the player's verdict."
+      - text: "Your cart is saikō."
+        reason: "It praises the cart, not the coffee."
+    reference_meaning: "The player's own verdict that the coffee is good."
+    hint_limit: 2
+    next_objective: thank_gerald
+    assessment_reference_ids: [jisho-oishii, jisho-saiko]
+  - id: thank_gerald
+    prompt: "Thank Gerald for the coffee, using Japanese."
+    intent: "The player thanks Gerald for the coffee he made."
+    target_vocabulary_ids: [arigato]
+    required_target_groups:
+      - [arigato]
+    grammar_constraints:
+      - "The player thanks Gerald in Japanese, in their own words."
+      - "Reject English-only thanks, quotations, and thanks addressed to someone else."
+    accepted_examples:
+      - "Arigatō!"
+      - "Dōmo arigatō, Gerald."
+      - "Arigatō for the coffee."
+    negative_examples:
+      - text: "Thank you."
+        reason: "English-only; it does not use the Japanese thanks."
+      - text: "Arigatō is how you say thanks."
+        reason: "It discusses the word rather than thanking Gerald."
+    reference_meaning: "The player thanks Gerald."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [jisho-arigato]

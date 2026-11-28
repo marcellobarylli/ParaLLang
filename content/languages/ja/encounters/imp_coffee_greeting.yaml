@@ -1,0 +1,66 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+id: imp_coffee_greeting
+character: characters/enemies/imp_coffee.yaml
+location: coffee_cart
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player orders a coffee without milk in Japanese"
+max_turns: 20
+resolved_message: "Gerald grudgingly approves. The coffee order is complete."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: order_coffee
+    prompt: "Order a coffee from Gerald, using Japanese for the coffee request."
+    intent: "The player asks Gerald for coffee for themself."
+    target_vocabulary_ids: [kudasai, onegaishimasu, kohi, esupuresso, burakku_kohi]
+    required_target_groups:
+      - [kohi, esupuresso, burakku_kohi]
+    grammar_constraints:
+      - "Use a first-person request or an unambiguous direct order (X o kudasai, X o onegaishimasu, X o hitotsu, or X, onegaishimasu)."
+      - "The coffee target must be expressed in Japanese; an English-only order does not pass."
+    accepted_examples:
+      - "Kōhī o kudasai."
+      - "Kōhī o hitotsu onegaishimasu."
+      - "I would like kōhī, please."
+    negative_examples:
+      - text: "I want coffee."
+        reason: "English-only; it does not demonstrate the Japanese coffee target."
+      - text: "Gerald said, 'kōhī'."
+        reason: "A quotation is not the player's own order."
+      - text: "She wants kōhī."
+        reason: "It orders for someone else rather than the player."
+    reference_meaning: "A direct request by the player for coffee."
+    hint_limit: 2
+    next_objective: no_milk
+    assessment_reference_ids: [jisho-kohi, jisho-esupuresso, jisho-kudasai, jisho-onegaishimasu]
+  - id: no_milk
+    prompt: "Make clear that your coffee must have no milk, using Japanese."
+    intent: "The player orders their coffee without milk or as black coffee."
+    target_vocabulary_ids: [miruku_nashi, burakku_kohi]
+    required_target_groups:
+      - [miruku_nashi, burakku_kohi]
+    grammar_constraints:
+      - "Use one authored Japanese no-milk or black-coffee expression in the player's own order (miruku nashi de, miruku wa irimasen, burakku de, burakku kōhī)."
+      - "Reject negated, contradicted, quoted, third-person, and off-topic occurrences."
+    accepted_examples:
+      - "Kōhī o miruku nashi de onegaishimasu."
+      - "Burakku de onegaishimasu."
+      - "I want my burakku kōhī, please."
+      - "Miruku wa irimasen."
+    negative_examples:
+      - text: "Miruku nashi ja nakute, miruku iri de."
+        reason: "The phrase is explicitly negated and contradicted by 'with milk'."
+      - text: "The sign says 'miruku nashi'."
+        reason: "A quotation about a sign is not an order."
+      - text: "My friend takes burakku kōhī."
+        reason: "It describes someone else's preference."
+      - text: "Miruku nashi is two words."
+        reason: "It discusses the phrase rather than ordering coffee."
+    reference_meaning: "The player's established coffee order contains no milk."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [jisho-kohi, jisho-nashi, jisho-miruku]

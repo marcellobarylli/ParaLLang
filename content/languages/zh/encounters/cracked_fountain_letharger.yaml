@@ -1,0 +1,165 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 011: The Cracked Fountain (backlog A5). Flick the Letharger distracts the player with riddles; the player
+# takes control: tells it to stop, tells it which way to go, and insists on now rather than later.
+# Round 050 (backlog G5): a fourth objective between direction and now, telling Flick the time.
+id: cracked_fountain_letharger
+character: characters/enemies/letharger_flick.yaml
+location: cracked_fountain
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player tells Flick to stop, tells it which way to go, tells it the time and insists on now, all in Chinese"
+max_turns: 20
+resolved_message: "Flick holds still for almost a whole second, points the way you told it, and is gone before you can look straight at it. The fountain is quieter, and the jingle has almost left your head."
+# Round 025 (backlog B3): a containment notice for the Fountain's infohazard, Flick's jingle.
+companion_briefing:
+  - "Containment notice, the Cracked Fountain: one brainrot strain. Harm: low. Virulence: very high."
+  - "Vector: a jingle. It only works on people who understand it. If you understood it, congratulations."
+  - "Containment procedure: do not hum along."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+# Round 028 (backlog B4): the Spellbook's containment file for the Fountain's infohazard (LORE.md: properties
+# Virulence, Harm, Incubation, Vector, Containment, in the deadpan SCP voice). Shown once the Fountain is visited.
+containment_file:
+  designation: "CM-001"
+  name: "Děng huìr, děng huìr, míngtiān!"
+  class: "Brainrot (mild)"
+  virulence: "Very high. It spreads from host to host faster than it can be filed."
+  harm: "Low. Hosts put things off, beginning with reading this file."
+  incubation: "Immediate on understanding. Listeners who do not understand it are unaffected, and slightly smug about it."
+  vector: "Song: a three-word jingle, hummed at the end of every sentence by Flick the Letharger."
+  containment: "Do not hum along. Do not translate it for anyone who has not asked. If humming begins, do the thing you were putting off."
+  notes:
+    - "Recovered at the Cracked Fountain, whose plaque reads PLEASE DO NOT HUM."
+    - "Native speakers of the realm's language are immune. The author of this file is not."
+  # Round 111 (backlog B8): the companion's redaction (LORE.md, Infohazards, "Gameplay hooks"). Read anyway, it costs
+  # a hint per objective in the next conversation finished. The text holds no answer (server test). Authored, not
+  # generated; pending a native speaker's review.
+  annex:
+    id: "cm001_second_verse"
+    title: "Annex A: the second verse"
+    redaction: "Your companion has blacked out every line of it. \"Trust me on this. If you read it, I will need a while to get over it: a hint fewer for each objective of the next conversation you finish.\""
+    text: "Dì-èr duàn gēcí, bù kě chàng. Shéi dú tā, shéi jiù hēng tā; shéi hēng tā, shéi jiù jiāo tā; shéi jiāo tā, shéi jiù wàngjì tā, dàn dàngtiān yèli yòu zài yí ge mòshēngrén de zuǐchún shang zhǎohuí tā. Zhè duàn gēcí méi yǒu jiéwěi, zhǐ yǒu huíguī."
+    translation: "Second verse, not to be sung. Whoever reads it hums it; whoever hums it teaches it; whoever teaches it forgets it, and finds it again that same night on the lips of a stranger. This verse has no end: it only has a return."
+    glossary:
+      - { word: "gēcí", meaning: "verse (of a song's words)" }
+      - { word: "shéi dú tā", meaning: "whoever reads it" }
+      - { word: "hēng tā", meaning: "hums it" }
+      - { word: "jiāo tā", meaning: "teaches it" }
+      - { word: "wàngjì tā", meaning: "forgets it" }
+      - { word: "zhǎohuí tā", meaning: "finds it again" }
+      - { word: "dàngtiān yèli", meaning: "that same night" }
+      - { word: "zuǐchún", meaning: "lips" }
+      - { word: "mòshēngrén", meaning: "a stranger" }
+      - { word: "huíguī", meaning: "return" }
+    exposure_note: "Exposure log: read in full by the bearer of this Spellbook, who has been added to the list of hosts. Containment of the reader is pending."
+objectives:
+  - id: stop
+    prompt: "Flick will not hold still. Tell it to stop, in Chinese."
+    intent: "The player tells Flick to stop or keep still, as a command in Chinese."
+    target_vocabulary_ids: ["tingxia", "bie_dong", "gou_le"]
+    required_target_groups:
+      - ["tingxia", "bie_dong", "gou_le"]
+    grammar_constraints:
+      - "The player's own command to stop, keep still or that's enough, in Chinese."
+      - "Other commands (look, listen) do not pass; reject quotations, remarks about Flick and English-only commands."
+    accepted_examples:
+      - "Tíngxià!"
+      - "Gòu le, Flick!"
+      - "Qǐng bié dòng."
+    negative_examples:
+      - text: "Nǐ kàn!"
+        reason: "A command, but it tells Flick to look, not to stop."
+      - text: "Stop moving!"
+        reason: "English-only; the command must be in Chinese."
+      - text: "Flick cónglái bù shuō gòu le."
+        reason: "A remark about Flick is not the player's own command."
+    reference_meaning: "The player commands Flick to stop moving."
+    hint_limit: 2
+    next_objective: direction
+    assessment_reference_ids: ["mdbg-tingxia", "mdbg-biedong", "mdbg-goule"]
+  - id: direction
+    prompt: "Flick has lost its way again. Tell it which way to go, in Chinese."
+    intent: "The player tells Flick a direction to go: left, right or straight on, in Chinese."
+    target_vocabulary_ids: ["youbian", "zuobian", "yizhi_zou"]
+    required_target_groups:
+      - ["youbian", "zuobian", "yizhi_zou"]
+    grammar_constraints:
+      - "The player's own direction for Flick, in Chinese; any of left, right or straight on passes (wǎng zuǒ, yòu zhuǎn, yìzhí zǒu and the like)."
+      - "Reject a question back, quotations and English-only directions."
+    accepted_examples:
+      - "Wǎng zuǒ!"
+      - "Yòu zhuǎn."
+      - "Yìzhí zǒu, Flick."
+    negative_examples:
+      - text: "Left."
+        reason: "English-only; the direction must be in Chinese."
+      - text: "Zuǒbian háishi yòubian?"
+        reason: "A question back is not a direction for Flick."
+    reference_meaning: "The player gives Flick a direction."
+    hint_limit: 2
+    next_objective: time
+    assessment_reference_ids: ["mdbg-youbian", "mdbg-zuobian", "mdbg-yizhi"]
+  - id: time
+    prompt: "Flick swears it is far too early to do anything. Tell it what time it is, in Chinese."
+    intent: "The fountain's clock stopped long ago, and Flick insists it is always far too early to do anything. The player tells Flick what time it is now, in Chinese: an hour, or midday, or midnight. Flick may ask what time it is, but never says a time itself."
+    target_vocabulary_ids: ["dian", "liang_dian", "zhongwu", "banye"]
+    required_target_groups:
+      - ["dian", "liang_dian", "zhongwu", "banye"]
+    grammar_constraints:
+      - "The player's own statement of the current time, in Chinese, with one of: an hour and diǎn (xiànzài, shì and a closing le optional; minutes or bàn optional), liǎng diǎn for two o'clock, zhōngwǔ (or zhèngwǔ) or bànyè (or wǔyè). The hour is a Chinese number word or digits; a clear hour with a slip (èr diǎn for liǎng diǎn) passes, and the feedback may name the slip in English."
+      - "Fails: now without a time (that is the next objective), a question back, scheduling something for a time instead of saying what time it is, diǎn alone without an hour, an impossible hour, an English number, quotations and English-only times."
+    accepted_examples:
+      - "Xiànzài sān diǎn."
+      - "Liǎng diǎn le, Flick."
+      - "Xiànzài shì zhōngwǔ!"
+      - "Shí diǎn bàn."
+    negative_examples:
+      - text: "Xiànzài!"
+        reason: "It says now, not what time it is."
+      - text: "Xiànzài jǐ diǎn?"
+        reason: "A question back is not the time."
+      - text: "Xiànzài sān diǎn?"
+        reason: "A question back, even with a time in it, is not telling Flick the time."
+      - text: "Wǒ zhōngwǔ zuò."
+        reason: "It schedules something for midday; it does not say what time it is now."
+      - text: "Three diǎn."
+        reason: "The hour is an English number."
+      - text: "Diǎn."
+        reason: "The word for o'clock alone gives no hour."
+      - text: "It is three o'clock."
+        reason: "English-only; the time must be in Chinese."
+    reference_meaning: "The player tells Flick what time it is."
+    hint_limit: 2
+    next_objective: now
+    assessment_reference_ids: ["mdbg-dian", "mdbg-zhongwu", "mdbg-banye"]
+  - id: now
+    prompt: "Flick says you can do it later. Insist on now, in Chinese."
+    intent: "The player refuses to put it off and says now, in Chinese. Flick keeps humming its jingle, \"Děng huìr, děng huìr, míngtiān!\" (in a bit, in a bit, tomorrow), a mild brainrot infohazard that makes listeners put things off. Repeating the jingle or agreeing to later does not pass; a refusal that names later or tomorrow and insists on now passes."
+    target_vocabulary_ids: ["xianzai", "mashang"]
+    required_target_groups:
+      - ["xianzai", "mashang"]
+    grammar_constraints:
+      - "The player's own insistence on now, in Chinese (xiànzài, jiù xiànzài, mǎshàng)."
+      - "Agreeing to later or tomorrow does not pass; reject quotations and English-only answers."
+    accepted_examples:
+      - "Bù, xiànzài!"
+      - "Mǎshàng, Flick."
+      - "Xiànzài, bú shì míngtiān."
+    negative_examples:
+      - text: "Míngtiān."
+        reason: "It agrees to put it off until tomorrow, which is what Flick wants."
+      - text: "Hǎo ba, děng huìr."
+        reason: "It agrees to later."
+      - text: "Now!"
+        reason: "English-only; the answer must be in Chinese."
+      - text: "Děng huìr, děng huìr, míngtiān!"
+        reason: "Humming Flick's jingle back puts it off; it does not insist on now."
+      - text: "Xiànzài jǐ diǎn le?"
+        reason: "It asks the time; here xiànzài does not insist on doing it now."
+    reference_meaning: "The player insists on doing it now."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["mdbg-xianzai", "mdbg-mashang"]

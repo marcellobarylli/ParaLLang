@@ -1,0 +1,45 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Micromort Mountain, Eduardo's ankle. Reference URLs follow the existing patterns and were not opened from the build
+# container; listed for the owner's content review.
+version: eduardo-ankle-zh-v1
+references:
+  - id: mdbg-bangzhu
+    title: "MDBG Chinese Dictionary: bāngzhù"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=bangzhu"
+  - id: mdbg-shanding
+    title: "MDBG Chinese Dictionary: shāndǐng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=shanding"
+  - id: mdbg-paidui
+    title: "MDBG Chinese Dictionary: pàiduì"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=paidui"
+entries:
+  - id: bangzhu
+    kind: word
+    target: "bāngzhù"
+    part_of_speech: verb
+    accepted_translations: ["help", "to help", "I help", "aid"]
+    surface_variants: ["bāngzhù", "bāng zhù", "bāngmáng", "bāng máng", "bāng ge máng", "bāng nǐ", "bāng nín", "bāngbang nǐ"]
+    accent_insensitive: true
+    example: { target: "Wǒ bāng nǐ.", english: "I'll help you." }
+    note: "'Bāng' is to help, always with whom: 'wǒ bāng nǐ' is 'I'll help you'. 'Bāngzhù' is help as a noun and a more formal verb; 'bāngmáng' (bāng ge máng) is to lend a hand."
+    reference_ids: [mdbg-bangzhu]
+  - id: shanding
+    kind: word
+    target: "shāndǐng"
+    part_of_speech: noun
+    accepted_translations: ["summit", "peak", "top", "mountaintop"]
+    surface_variants: ["shāndǐng", "shān dǐng"]
+    accent_insensitive: true
+    example: { target: "Shāndǐng shang dōu shì xuě.", english: "The summit is covered in snow." }
+    note: "'Shān' (mountain) and 'dǐng' (top): the top of the mountain. On it is 'shāndǐng shang'."
+    reference_ids: [mdbg-shanding]
+  - id: paidui
+    kind: word
+    target: "pàiduì"
+    part_of_speech: noun
+    accepted_translations: ["party", "festival"]
+    surface_variants: ["pàiduì", "pài duì", "jiérì", "jié rì"]
+    accent_insensitive: true
+    example: { target: "Zhè ge pàiduì zhēn bàng!", english: "What a great party!" }
+    note: "'Pàiduì' is a party (from the English); 'jiérì' is a festival or a holiday. A wine festival is a 'pútaojiǔ jié'."
+    reference_ids: [mdbg-paidui]

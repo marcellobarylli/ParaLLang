@@ -1,0 +1,34 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Reference URLs follow the existing patterns and were not opened from the build container.
+version: gerald-confidence-ja-v1
+references:
+  - id: jisho-tomodachi
+    title: "Jisho: tomodachi"
+    url: "https://jisho.org/search/tomodachi"
+  - id: jisho-kanpai
+    title: "Jisho: kanpai"
+    url: "https://jisho.org/search/kanpai"
+  - id: wiktionary-kanpai
+    title: "Wiktionary: kanpai (Japanese)"
+    url: "https://en.wiktionary.org/wiki/kanpai"
+entries:
+  - id: tomodachi
+    kind: word
+    target: "tomodachi"
+    part_of_speech: noun
+    accepted_translations: ["friend", "friends"]
+    surface_variants: ["tomodachi", "nakama"]
+    accent_insensitive: true
+    example: { target: "Gerald wa watashi no tomodachi desu.", english: "Gerald is my friend." }
+    note: "One friend or several, man or woman: tomodachi does not change. Watashi no tomodachi is my friend. Nakama is a companion, a fellow traveller: the friends of a party on the road."
+    reference_ids: [jisho-tomodachi]
+  - id: kanpai
+    kind: word
+    target: "kanpai"
+    part_of_speech: interjection
+    accepted_translations: ["cheers"]
+    surface_variants: ["kanpai", "kampai"]
+    accent_insensitive: true
+    example: { target: "Kanpai, Gerald!", english: "Cheers, Gerald!" }
+    note: "A toast, literally dry cup, said as the glasses (or cups) touch. Often written kampai, as it is said."
+    reference_ids: [jisho-kanpai, wiktionary-kanpai]

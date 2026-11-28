@@ -1,0 +1,68 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+id: gerald_confidence
+character: characters/enemies/imp_coffee.yaml
+party_of: imp_coffee_greeting
+# Round 047 (backlog G4): offered instead of the coffee break once Gerald has finished three conversations, after
+# he has recited the Dead Branch passage.
+after_conversations: 3
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player tells Gerald he is a friend and raises a toast with him, in Japanese"
+max_turns: 20
+resolved_message: "Gerald says the coffee is too bitter today. His eyes are a little wet. It is the steam, he says."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: call_friend
+    prompt: "Gerald is brooding over the word that died with the Dead Branch. Tell him he is your friend, using Japanese."
+    intent: "Gerald has travelled with the player for several coffee breaks, so in his greeting he does not introduce himself or describe the place: he greets the player as an old companion. Tonight he is quietly morose: in his greeting, in a line or two, he mentions a dark, bitter drink from the Dead Branch, his old home, whose name died with it, so nobody remembers the word. The player may not know the story. He would never admit he wants to hear that the player considers him a friend, and he does not suggest the word for friend."
+    target_vocabulary_ids: [tomodachi]
+    required_target_groups:
+      - [tomodachi]
+    grammar_constraints:
+      - "The player says, in their own words, with a Japanese word for friend (tomodachi, or nakama, companion), one of: Gerald is their friend; the player is Gerald's friend; the two of them are friends. Japanese nouns have no gender or plural, so tomodachi serves for all three; with an old companion plain speech (tomodachi da, tomodachi da yo) is as natural as polite tomodachi desu."
+      - "Reject English-only lines, negations (tomodachi ja nai, tomodachi ja arimasen, tomodachi de wa nai), quotations, definitions of the word, and lines about someone other than Gerald and the player. A rhetorical question that affirms (tomodachi ja nai ka, aren't we friends?) is not a negation."
+    accepted_examples:
+      - "Gerald wa watashi no tomodachi desu."
+      - "Gerald, tomodachi da yo."
+      - "Watashitachi wa tomodachi desu, Gerald."
+      - "Watashi wa Gerald no tomodachi da yo."
+      - "You are my tomodachi."
+    negative_examples:
+      - text: "You are my friend."
+        reason: "English-only; it does not use a Japanese word for friend."
+      - text: "Gerald wa tomodachi ja nai."
+        reason: "A negation (is not a friend) is not what the player is asked to say."
+      - text: "Gerald wa Flick no tomodachi desu."
+        reason: "It is about Gerald and someone else, not about Gerald and the player."
+      - text: "Tomodachi means friend."
+        reason: "It discusses the word rather than telling Gerald."
+    reference_meaning: "The player tells Gerald that he is their friend."
+    hint_limit: 2
+    next_objective: raise_toast
+    assessment_reference_ids: [jisho-tomodachi]
+  - id: raise_toast
+    prompt: "Raise your cups together. Make the toast, using Japanese."
+    intent: "Gerald lifts his surgically attached espresso cup towards the player's cup, to the friendship and to the dead word, and waits for the player to make the toast. He does not say the toast first."
+    target_vocabulary_ids: [kanpai]
+    required_target_groups:
+      - [kanpai]
+    grammar_constraints:
+      - "The player makes a Japanese toast as the cups touch, in their own words."
+      - "Reject English-only toasts, quotations, and lines that only describe toasting."
+    accepted_examples:
+      - "Kanpai!"
+      - "Kanpai, Gerald."
+      - "Kampai, to the dead word."
+    negative_examples:
+      - text: "Cheers!"
+        reason: "English-only; it does not use the Japanese toast."
+      - text: "In Japan they say kanpai."
+        reason: "It describes the toast rather than making it."
+    reference_meaning: "The player makes a toast with Gerald."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [wiktionary-kanpai]

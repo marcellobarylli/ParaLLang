@@ -1,0 +1,376 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 011: The Cracked Fountain (commands, directions, time). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+# Round 050 (backlog G5): telling the time (... diǎn, liǎng diǎn, zhōngwǔ, bànyè) and Flick's question.
+# Round 223: bare forms that are English words or common homographs are not forms here: tíng (stop) and tīng
+# (listen), zuǒ (left) and zuò (sit, do), bāng; directions are taught as phrases (wǎng zuǒ, yòu zhuǎn).
+version: fountain-riddles-zh-v1
+references:
+  - id: mdbg-tingxia
+    title: 'MDBG Chinese Dictionary: tíngxià'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=tingxia
+  - id: mdbg-biedong
+    title: 'MDBG Chinese Dictionary: bié dòng'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=biedong
+  - id: mdbg-goule
+    title: 'MDBG Chinese Dictionary: gòu le'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=goule
+  - id: mdbg-nikan
+    title: 'MDBG Chinese Dictionary: nǐ kàn'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=nikan
+  - id: mdbg-youbian
+    title: 'MDBG Chinese Dictionary: yòubian'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=youbian
+  - id: mdbg-zuobian
+    title: 'MDBG Chinese Dictionary: zuǒbian'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zuobian
+  - id: mdbg-yizhi
+    title: 'MDBG Chinese Dictionary: yìzhí'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=yizhi
+  - id: mdbg-xianzai
+    title: 'MDBG Chinese Dictionary: xiànzài'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=xianzai
+  - id: mdbg-mashang
+    title: 'MDBG Chinese Dictionary: mǎshàng'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=mashang
+  - id: mdbg-denghuir
+    title: 'MDBG Chinese Dictionary: děng huìr'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=denghuir
+  - id: mdbg-mingtian
+    title: 'MDBG Chinese Dictionary: míngtiān'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=mingtian
+  - id: mdbg-dian
+    title: 'MDBG Chinese Dictionary: diǎn'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=dian
+  - id: mdbg-liangdian
+    title: 'MDBG Chinese Dictionary: liǎng diǎn'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=liangdian
+  - id: mdbg-zhongwu
+    title: 'MDBG Chinese Dictionary: zhōngwǔ'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zhongwu
+  - id: mdbg-banye
+    title: 'MDBG Chinese Dictionary: bànyè'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=banye
+  - id: mdbg-jidian
+    title: 'MDBG Chinese Dictionary: jǐ diǎn'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jidian
+entries:
+  - id: tingxia
+    kind: word
+    target: tíngxià
+    part_of_speech: verb
+    accepted_translations:
+      - stop
+      - stop it
+      - halt
+    surface_variants:
+      - tíngxià
+      - tíng xià
+      - tíngxiàlai
+      - tíng xià lai
+      - tíngzhù
+      - tíng zhù
+    accent_insensitive: true
+    example:
+      target: Tíngxià, Flick!
+      english: Stop, Flick!
+    note: Tíng is to stop; tíngxià and tíngxiàlai (come to a stop) and tíngzhù (stop dead) are the commands. Mind the tone, tīng (first tone) is listen.
+    reference_ids:
+      - mdbg-tingxia
+  - id: bie_dong
+    kind: phrase
+    target: bié dòng
+    part_of_speech: verb_phrase
+    accepted_translations:
+      - keep still
+      - hold still
+      - don't move
+      - stop
+    surface_variants:
+      - bié dòng
+      - biédòng
+      - bú yào dòng
+      - búyào dòng
+      - bié luàn dòng
+      - zhànzhù
+      - zhàn zhù
+    accent_insensitive: true
+    example:
+      target: Bié dòng!
+      english: Keep still!
+    note: 'Bié (don''t) and dòng (move): hold still. Bú yào dòng is the same, a little more deliberate; zhànzhù! is halt!, stand where you are.'
+    reference_ids:
+      - mdbg-biedong
+  - id: gou_le
+    kind: phrase
+    target: gòu le
+    part_of_speech: interjection
+    accepted_translations:
+      - enough
+      - stop
+      - that is enough
+    surface_variants:
+      - gòu le
+      - gòule
+    accent_insensitive: true
+    example:
+      target: Gòu le, qǐng nǐ!
+      english: Enough, please!
+    note: Gòu is enough; the le marks that the point has been reached. Hǎo le, hǎo le is a softer that will do.
+    reference_ids:
+      - mdbg-goule
+  - id: ni_kan
+    kind: phrase
+    target: nǐ kàn
+    part_of_speech: verb
+    accepted_translations:
+      - look
+    surface_variants:
+      - nǐ kàn
+      - kànkan
+      - kàn yi kàn
+      - kuài kàn
+    accent_insensitive: true
+    example:
+      target: Nǐ kàn, pēnquán!
+      english: Look, the fountain!
+    note: Kàn is to look; nǐ kàn (you look) and kuài kàn (quick, look) draw someone's eye, kànkan is have a look.
+    reference_ids:
+      - mdbg-nikan
+  - id: youbian
+    kind: word
+    target: yòubian
+    part_of_speech: noun
+    accepted_translations:
+      - right
+      - the right
+      - turn right
+    surface_variants:
+      - yòubian
+      - yòu biān
+      - wǎng yòu
+      - xiàng yòu
+      - yòu zhuǎn
+      - yòuzhuǎn
+      - yòu guǎi
+      - yòuguǎi
+    accent_insensitive: true
+    example:
+      target: Wǎng yòu zhuǎn.
+      english: Turn right.
+    note: 'Yòubian (also yòubiān): the right-hand side. Wǎng yòu (towards the right), yòu zhuǎn or wǎng yòu guǎi: turn right.'
+    reference_ids:
+      - mdbg-youbian
+  - id: zuobian
+    kind: word
+    target: zuǒbian
+    part_of_speech: noun
+    accepted_translations:
+      - left
+      - the left
+      - turn left
+    surface_variants:
+      - zuǒbian
+      - zuǒ biān
+      - wǎng zuǒ
+      - xiàng zuǒ
+      - zuǒ zhuǎn
+      - zuǒzhuǎn
+      - zuǒ guǎi
+      - zuǒguǎi
+    accent_insensitive: true
+    example:
+      target: Wǎng zuǒ zǒu.
+      english: Go left.
+    note: 'Zuǒbian (also zuǒbiān): the left-hand side. Wǎng zuǒ (towards the left), zuǒ zhuǎn or wǎng zuǒ guǎi: turn left. Mind the tone: zuò (fourth tone) is to sit or to do.'
+    reference_ids:
+      - mdbg-zuobian
+  - id: yizhi_zou
+    kind: phrase
+    target: yìzhí zǒu
+    part_of_speech: verb_phrase
+    accepted_translations:
+      - straight
+      - straight on
+      - straight ahead
+      - go straight
+    surface_variants:
+      - yìzhí zǒu
+      - yì zhí zǒu
+      - yìzhí wǎng qián
+      - wǎng qián zǒu
+      - wǎngqián zǒu
+      - xiàng qián zǒu
+      - zhí zǒu
+    accent_insensitive: true
+    example:
+      target: Yìzhí wǎng qián zǒu.
+      english: Go straight ahead.
+    note: Yìzhí (straight, all the way; yī changes to yì before a second tone) and zǒu (walk, go). Wǎng qián zǒu is go forward.
+    reference_ids:
+      - mdbg-yizhi
+  - id: xianzai
+    kind: word
+    target: xiànzài
+    part_of_speech: adverb
+    accepted_translations:
+      - now
+      - right now
+    surface_variants:
+      - xiànzài
+      - xiàn zài
+    accent_insensitive: true
+    example:
+      target: Xiànzài, bú shì míngtiān.
+      english: Now, not tomorrow.
+    note: Jiù xiànzài is right now, this minute.
+    reference_ids:
+      - mdbg-xianzai
+  - id: mashang
+    kind: word
+    target: mǎshàng
+    part_of_speech: adverb
+    accepted_translations:
+      - right away
+      - at once
+      - immediately
+      - now
+    surface_variants:
+      - mǎshàng
+      - mǎ shàng
+    accent_insensitive: true
+    example:
+      target: Mǎshàng zuò!
+      english: Do it right away!
+    note: Literally on horseback; at once, straight away. More insistent than xiànzài.
+    reference_ids:
+      - mdbg-mashang
+  - id: deng_huir
+    kind: phrase
+    target: děng huìr
+    part_of_speech: adverb
+    accepted_translations:
+      - later
+      - in a bit
+      - in a moment
+    surface_variants:
+      - děng huìr
+      - děnghuìr
+      - děng yíhuìr
+      - dāi huìr
+      - dāihuìr
+    accent_insensitive: true
+    example:
+      target: Wǒ děng huìr zuò.
+      english: I'll do it in a bit.
+    note: Literally wait a while; the everyday northern later (also dāi huìr, děng yíhuìr). Yǐhòu is later in the wider sense, some day.
+    reference_ids:
+      - mdbg-denghuir
+  - id: mingtian
+    kind: word
+    target: míngtiān
+    part_of_speech: noun
+    accepted_translations:
+      - tomorrow
+    surface_variants:
+      - míngtiān
+      - míng tiān
+    accent_insensitive: true
+    example:
+      target: Míngtiān jiàn!
+      english: See you tomorrow!
+    note: Míngtiān zài shuō, we'll talk about it tomorrow, is how things get put off.
+    reference_ids:
+      - mdbg-mingtian
+  - id: dian
+    kind: word
+    target: diǎn
+    part_of_speech: measure_word
+    accepted_translations:
+      - o'clock
+      - it is o'clock
+    surface_variants:
+      - diǎn
+      - diǎnzhōng
+      - diǎn zhōng
+    accent_insensitive: true
+    example:
+      target: Xiànzài sān diǎn.
+      english: It is three o'clock now.
+    note: "The hour and diǎn: sān diǎn, shí diǎn; no verb is needed (xiànzài sān diǎn, or sān diǎn le). Half past is bàn: sān diǎn bàn. Two o'clock is liǎng diǎn."
+    reference_ids:
+      - mdbg-dian
+  - id: liang_dian
+    kind: phrase
+    target: liǎng diǎn
+    part_of_speech: noun_phrase
+    accepted_translations:
+      - two o'clock
+      - it is two o'clock
+    surface_variants:
+      - liǎng diǎn
+      - liǎngdiǎn
+    accent_insensitive: true
+    example:
+      target: Liǎng diǎn le, Flick.
+      english: It is two o'clock, Flick.
+    note: "Two before a measure word is liǎng, not èr: liǎng diǎn, but shí'èr diǎn (twelve o'clock)."
+    reference_ids:
+      - mdbg-liangdian
+  - id: zhongwu
+    kind: word
+    target: zhōngwǔ
+    part_of_speech: noun
+    accepted_translations:
+      - midday
+      - noon
+    surface_variants:
+      - zhōngwǔ
+      - zhōng wǔ
+      - zhèngwǔ
+      - zhèng wǔ
+    accent_insensitive: true
+    example:
+      target: Xiànzài shì zhōngwǔ.
+      english: It is midday.
+    note: Zhōngwǔ is midday, the middle of the day; zhèngwǔ is noon on the dot, zhōngwǔ shí'èr diǎn.
+    reference_ids:
+      - mdbg-zhongwu
+  - id: banye
+    kind: word
+    target: bànyè
+    part_of_speech: noun
+    accepted_translations:
+      - midnight
+      - the middle of the night
+    surface_variants:
+      - bànyè
+      - bàn yè
+      - wǔyè
+      - wǔ yè
+    accent_insensitive: true
+    example:
+      target: Xiànzài shì bànyè.
+      english: It is midnight.
+    note: Bànyè is the middle of the night; wǔyè is midnight on the dot, yèli shí'èr diǎn.
+    reference_ids:
+      - mdbg-banye
+  - id: ji_dian
+    kind: phrase
+    target: jǐ diǎn
+    part_of_speech: question
+    accepted_translations:
+      - what time is it
+      - what time
+    surface_variants:
+      - jǐ diǎn
+      - jǐ diǎn le
+      - xiànzài jǐ diǎn
+      - jǐ diǎn zhōng
+    accent_insensitive: true
+    example:
+      target: Xiànzài jǐ diǎn le, Flick?
+      english: What time is it, Flick?
+    note: Jǐ is how many; jǐ diǎn is what time. Xiànzài jǐ diǎn? is the everyday question.
+    reference_ids:
+      - mdbg-jidian

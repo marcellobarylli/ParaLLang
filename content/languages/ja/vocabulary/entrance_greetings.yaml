@@ -1,0 +1,178 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 009: Market Entrance tutorial (greetings, pronouns). Reference URLs follow the Gerald file's patterns and were
+# not opened from the build container; listed for the owner's content review.
+version: entrance-greetings-ja-v1
+references:
+  - id: jisho-konnichiwa
+    title: "Jisho: konnichiwa"
+    url: "https://jisho.org/search/konnichiwa"
+  - id: jisho-ohayo
+    title: "Jisho: ohayō"
+    url: "https://jisho.org/search/ohayou"
+  - id: jisho-watashi
+    title: "Jisho: watashi"
+    url: "https://jisho.org/search/watashi"
+  - id: jisho-desu
+    title: "Jisho: desu"
+    url: "https://jisho.org/search/desu"
+  - id: jisho-moshimasu
+    title: "Jisho: mōshimasu"
+    url: "https://jisho.org/search/moushimasu"
+  - id: jisho-anata
+    title: "Jisho: anata"
+    url: "https://jisho.org/search/anata"
+  - id: jisho-namae
+    title: "Jisho: namae"
+    url: "https://jisho.org/search/namae"
+  - id: wiktionary-konnichiwa
+    title: "Wiktionary: konnichiwa (Japanese)"
+    url: "https://en.wiktionary.org/wiki/konnichiwa"
+  - id: wiktionary-ohayo
+    title: "Wiktionary: ohayō (Japanese)"
+    url: "https://en.wiktionary.org/wiki/ohay%C5%8D"
+  - id: wiktionary-watashi
+    title: "Wiktionary: watashi (Japanese)"
+    url: "https://en.wiktionary.org/wiki/watashi"
+  - id: wiktionary-desu
+    title: "Wiktionary: desu (Japanese)"
+    url: "https://en.wiktionary.org/wiki/desu"
+  - id: wiktionary-moshimasu
+    title: "Wiktionary: mōsu (Japanese)"
+    url: "https://en.wiktionary.org/wiki/m%C5%8Dsu"
+  - id: wiktionary-anata
+    title: "Wiktionary: anata (Japanese)"
+    url: "https://en.wiktionary.org/wiki/anata"
+  - id: wiktionary-namae
+    title: "Wiktionary: namae (Japanese)"
+    url: "https://en.wiktionary.org/wiki/namae"
+  - id: jisho-yokoso
+    title: "Jisho: yōkoso"
+    url: "https://jisho.org/search/youkoso"
+  - id: jisho-hajimemashite
+    title: "Jisho: hajimemashite"
+    url: "https://jisho.org/search/hajimemashite"
+  - id: jisho-ichiba
+    title: "Jisho: ichiba"
+    url: "https://jisho.org/search/ichiba"
+entries:
+  - id: konnichiwa
+    kind: word
+    target: "konnichiwa"
+    part_of_speech: interjection
+    accepted_translations: ["hello", "hi", "good afternoon", "good day"]
+    surface_variants: ["konnichiwa", "konnichi wa", "konichiwa"]
+    accent_insensitive: true
+    example:
+      target: "Konnichiwa, Portia-san!"
+      english: "Hello, Portia!"
+    note: "The everyday daytime greeting, from late morning to dusk; in the evening it becomes konbanwa. It only greets: goodbye is a different word (sayōnara, or among friends jā ne). Its last syllable is the particle wa, so some write konnichi wa."
+    reference_ids: [jisho-konnichiwa, wiktionary-konnichiwa]
+  - id: ohayo_gozaimasu
+    kind: phrase
+    target: "ohayō gozaimasu"
+    part_of_speech: interjection
+    accepted_translations: ["good morning"]
+    surface_variants: ["ohayō gozaimasu", "ohayou gozaimasu", "ohayoo gozaimasu", "ohayō", "ohayou", "ohayoo"]
+    accent_insensitive: true
+    example:
+      target: "Ohayō gozaimasu, Portia-san."
+      english: "Good morning, Portia."
+    note: "The polite morning greeting; ohayō alone is the casual one, for friends and family. The long ō may be typed ou or oo."
+    reference_ids: [jisho-ohayo, wiktionary-ohayo]
+  - id: watashi
+    kind: word
+    target: "watashi"
+    part_of_speech: pronoun
+    accepted_translations: ["I", "me"]
+    surface_variants: ["watashi", "watakushi"]
+    accent_insensitive: true
+    example:
+      target: "Watashi wa Sam desu."
+      english: "I am Sam."
+    note: "Usually left out when it is clear who is speaking: Sam desu alone means I'm Sam. Watakushi is more formal; men among friends often say boku or ore."
+    reference_ids: [jisho-watashi, wiktionary-watashi]
+  - id: desu
+    kind: word
+    target: "desu"
+    part_of_speech: verb
+    accepted_translations: ["I am", "I'm", "am", "is", "it is"]
+    surface_variants: ["desu"]
+    accent_insensitive: true
+    example:
+      target: "Sam desu."
+      english: "I'm Sam."
+    note: "The polite copula: X desu, (it) is X, (I) am X. It does not change for the person, so the same desu says I am, you are and she is; the u is barely heard (dess)."
+    reference_ids: [jisho-desu, wiktionary-desu]
+  - id: to_moshimasu
+    kind: phrase
+    target: "to mōshimasu"
+    part_of_speech: verb_phrase
+    accepted_translations: ["my name is", "I am called", "I'm called"]
+    surface_variants: ["to mōshimasu", "to moushimasu", "to mooshimasu", "mōshimasu", "moushimasu", "mooshimasu"]
+    accent_insensitive: true
+    example:
+      target: "Sam to mōshimasu."
+      english: "My name is Sam."
+    note: "Humble, said to strangers: Sam to mōshimasu, literally I say Sam (to marks the name). The name comes first. Plainer ways are Sam desu and watashi no namae wa Sam desu (my name is Sam)."
+    reference_ids: [jisho-moshimasu, wiktionary-moshimasu]
+  - id: anata
+    kind: word
+    target: "anata"
+    part_of_speech: pronoun
+    accepted_translations: ["you"]
+    surface_variants: ["anata"]
+    accent_insensitive: true
+    example:
+      target: "Anata wa?"
+      english: "And you?"
+    note: "You, for one person. Japanese avoids it with someone whose name it knows and uses the name with -san instead: Portia-san wa? (and you, Portia?)."
+    reference_ids: [jisho-anata, wiktionary-anata]
+  - id: onamae_wa_nan_desu_ka
+    kind: phrase
+    target: "onamae wa nan desu ka"
+    part_of_speech: question
+    accepted_translations: ["what is your name", "what's your name", "and your name"]
+    surface_variants: ["onamae wa nan desu ka", "o-namae wa nan desu ka", "onamae wa", "o-namae wa"]
+    accent_insensitive: true
+    example:
+      target: "Onamae wa nan desu ka?"
+      english: "What's your name?"
+    note: "Namae is name; the o in front is a polite prefix, used for someone else's name but never your own. Onamae wa? alone (and your name?) is just as common."
+    reference_ids: [jisho-namae, wiktionary-namae]
+  # Round 019: ambient vocabulary, words Portia may use freely; not targets of any objective.
+  - id: yokoso
+    kind: word
+    target: "yōkoso"
+    part_of_speech: interjection
+    accepted_translations: ["welcome"]
+    surface_variants: ["yōkoso", "youkoso", "yookoso"]
+    accent_insensitive: true
+    example:
+      target: "Ichiba e yōkoso!"
+      english: "Welcome to the market!"
+    note: "Welcome to a place: X e yōkoso, welcome to X. A shopkeeper greets customers with irasshaimase instead."
+    reference_ids: [jisho-yokoso]
+  - id: hajimemashite
+    kind: word
+    target: "hajimemashite"
+    part_of_speech: interjection
+    accepted_translations: ["nice to meet you", "pleased to meet you", "how do you do"]
+    surface_variants: ["hajimemashite"]
+    accent_insensitive: true
+    example:
+      target: "Hajimemashite, Portia-san."
+      english: "Nice to meet you, Portia."
+    note: "Said only on first meeting, before giving your name; the introduction usually ends with yoroshiku onegaishimasu (please treat me kindly)."
+    reference_ids: [jisho-hajimemashite]
+  - id: ichiba
+    kind: word
+    target: "ichiba"
+    part_of_speech: noun
+    accepted_translations: ["market", "marketplace"]
+    surface_variants: ["ichiba"]
+    accent_insensitive: true
+    example:
+      target: "Ichiba wa aite imasu."
+      english: "The market is open."
+    note: "A marketplace with stalls. Japanese nouns have no plural: ichiba is one market or several. The same word read shijō is the market of economics."
+    reference_ids: [jisho-ichiba]
