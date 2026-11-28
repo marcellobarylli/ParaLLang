@@ -68,7 +68,7 @@ async function submit(runtime, learnerId, encounter, message) {
 }
 
 test('both packs load, Italian is the default, and an unknown code lists the packs', () => {
-  assert.deepEqual(availableLanguages(), ['es', 'fr', 'it']);
+  assert.deepEqual(availableLanguages(), ['es', 'fr', 'it', 'ja', 'zh']); // round 223: Japanese and Chinese
   assert.equal(resolveTargetLanguage({}), 'it');
   assert.equal(resolveTargetLanguage({ TARGET_LANGUAGE: ' es ' }), 'es');
   assert.equal(loadGameContent().language.code, 'it');
@@ -87,7 +87,7 @@ test('Italian matching prefers the longest phrase and ignores accents and elisio
 });
 
 test('prompts name the selected language and leave no placeholder unfilled', () => {
-  for (const [code, name] of [['it', 'Italian'], ['es', 'Spanish'], ['fr', 'French']]) {
+  for (const [code, name] of [['it', 'Italian'], ['es', 'Spanish'], ['fr', 'French'], ['ja', 'Japanese'], ['zh', 'Chinese']]) {
     const content = loadGameContent({ language: code });
     const shared = { language: content.language, objectives: content.encounter.objectives, vocabularyById: content.vocabularyById };
     const prompts = [
@@ -98,7 +98,7 @@ test('prompts name the selected language and leave no placeholder unfilled', () 
     assert.match(prompts, new RegExp(`about 30% of the words in each dialogue line are ${name}`));
     assert.match(prompts, new RegExp(`strict contextual ${name}-learning assessor`));
     assert.doesNotMatch(prompts, /\{\{/);
-    for (const other of ['Italian', 'Spanish', 'French'].filter((each) => each !== name)) assert.doesNotMatch(prompts, new RegExp(other));
+    for (const other of ['Italian', 'Spanish', 'French', 'Japanese', 'Chinese'].filter((each) => each !== name)) assert.doesNotMatch(prompts, new RegExp(other));
   }
 });
 

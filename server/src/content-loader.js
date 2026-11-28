@@ -13,6 +13,9 @@ const languageSchema = z.object({
   code: z.string().regex(/^[a-z]{2,3}$/),
   name: z.string().min(1),
   tag: z.string().regex(/^[a-z]{2,3}(?:-[A-Za-z0-9]+)*$/),
+  // Round 223: how the language is written in the game when that is not its own script (Japanese in rōmaji, Chinese
+  // in pinyin). Every prompt that writes or grades the language carries it as a rule.
+  writing: z.string().min(1).optional(),
   default_encounter: z.string().min(1),
 }).strict();
 const exampleSchema = z.object({ target: z.string().min(1), english: z.string().min(1) }).strict();

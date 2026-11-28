@@ -1,0 +1,6 @@
+# Round 223: Japanese, written in rōmaji only (the owner: no symbols for now).
+code: ja
+name: Japanese
+tag: ja-JP
+writing: "Write every Japanese word in Hepburn rōmaji (Latin letters) and never in kana or kanji: long vowels with macrons (ō, ū: arigatō, kōhī), particles as separate words and spelled as said (watashi wa, kōhī o, Tōkyō e), the syllabic n as n (san, hon; n' before a vowel or y: kin'en), loanwords in their Japanese form (kōhī, not coffee)."
+default_encounter: imp_coffee_greeting

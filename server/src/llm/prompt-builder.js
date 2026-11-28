@@ -9,6 +9,12 @@ export function loadTemplate(relativePath) {
   return templateCache.get(relativePath);
 }
 
+// Round 223: a pack written in Latin letters only (Japanese in rōmaji, Chinese in pinyin) says so in its `writing`;
+// the rule goes after LANGUAGE RULES and into the grader's prompt. A pack without one leaves the prompts unchanged.
+export function writingRule(language) {
+  return language?.writing ? `\n- WRITING: ${language.writing}` : '';
+}
+
 export function fillTemplate(template, variables) {
   return template.replace(/\{\{([\w.]+)\}\}/g, (placeholder, path) => {
     const value = path.split('.').reduce((current, key) => current?.[key], variables);
@@ -111,6 +117,7 @@ export function buildNarrationMessages({
     },
     language: {
       name: language.name,
+      writingRule: writingRule(language),
       targetRatio: Math.round(targetRatio * 100),
       // Round 026 (backlog E1): a worked example beside the percentage, from the same ratio, so the two agree.
       wordsPer20: Math.round(targetRatio * 20),
@@ -164,8 +171,8 @@ export function narrativeRatio(targetRatio) {
 export function buildGradingMessages({ language, objectives, vocabularyById, conversationContext, playerInput, ordered = false, beginner = false }) {
   const rubric = targetData(objectives, vocabularyById, { forms: true });
   const system = beginner
-    ? fillTemplate(loadTemplate('language/grading_beginner.txt'), { language, rubric: JSON.stringify(rubric), order: beginnerOrderLine(objectives, ordered) })
-    : fillTemplate(loadTemplate('language/grading.txt'), { language, rubric: JSON.stringify(rubric), order: orderLine(language, objectives, ordered) });
+    ? fillTemplate(loadTemplate('language/grading_beginner.txt'), { language: { ...language, writingRule: writingRule(language) }, rubric: JSON.stringify(rubric), order: beginnerOrderLine(objectives, ordered) })
+    : fillTemplate(loadTemplate('language/grading.txt'), { language: { ...language, writingRule: writingRule(language) }, rubric: JSON.stringify(rubric), order: orderLine(language, objectives, ordered) });
   return [
     { role: 'system', content: system },
     { role: 'user', content: JSON.stringify({ conversation_context: conversationContext, player_answer: playerInput }) },

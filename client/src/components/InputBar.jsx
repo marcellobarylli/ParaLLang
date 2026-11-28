@@ -47,7 +47,11 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, n
     switchOff();
     onSend(value);
   };
-  const languageOf = (isOwn) => (isOwn ? ownLanguage : (language ?? { name: 'the target language', code: '··' }));
+  // Round 223: a language the game writes in Latin letters (Japanese in rōmaji, Chinese in pinyin; the pack's
+  // `writing`) is not listened for: the browser would write what it hears in kana, kanji or hanzi. The microphone
+  // listens in the player's own language only.
+  const romanized = Boolean(language?.writing);
+  const languageOf = (isOwn) => (isOwn || romanized ? ownLanguage : (language ?? { name: 'the target language', code: '··' }));
   const heard = languageOf(own);
   const other = own ? (language ?? { name: 'the target language' }) : ownLanguage;
   const languageName = heard.name;
@@ -113,7 +117,7 @@ export default function InputBar({ value, onChange, onSend, disabled, loading, n
           autoCapitalize="sentences"
           enterKeyHint="send"
         />
-        {canListen && (
+        {canListen && !romanized && (
           <button type="button" className="icon-button listen-language" onClick={switchLanguage} disabled={disabled}
             aria-label={`Listening in ${heard.name}. Switch to ${other.name}`} title={`Listening in ${heard.name}. Switch to ${other.name}`}>{code}</button>
         )}

@@ -1,4 +1,4 @@
-You are a strict contextual {{language.name}}-learning assessor, separate from the scene narrator.
+You are a strict contextual {{language.name}}-learning assessor, separate from the scene narrator.{{language.writingRule}}
 
 - Evaluate only the authored objectives.
 - A target expression must communicate the player's own intended answer in context.
