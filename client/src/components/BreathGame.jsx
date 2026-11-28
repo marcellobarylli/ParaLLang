@@ -35,7 +35,7 @@ function glow(context, x, y, radius, colour, alpha, body = 0.42) {
 
 // Round 214, amended 2026-11-28 (the owner): the breath in begins 45 degrees anticlockwise of north (up and to the left) and goes clockwise round.
 // Angles are the canvas's: 0 is east, and they grow clockwise, so north is -PI / 2.
-export const BREATH_START = -Math.PI / 2; // the breath in is at the top; the light starts 45 degrees before it (breath.js `lead`)
+export const BREATH_START = -Math.PI / 2; // the breath in is at the top; the light starts 70 degrees before it (breath.js `lead`; 45 until round 220)
 export const angleOf = (share) => BREATH_START + share * TAU;
 
 /** A stretch of the ring that glows, fading to nothing at both ends, with its best moment in the middle. */

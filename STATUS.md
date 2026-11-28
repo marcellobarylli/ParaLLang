@@ -34,6 +34,12 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 220, a longer lead-in to the breath
+
+The breathing's dial now starts 70 degrees before the breath in (about 1.94 s to prepare), not 45 (1.25 s). Client
+tests pass; **not seen in a browser or on a phone**. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/220/architecture.md), [findings](docs/rounds/220/findings.md).
+
 ## Addendum 2026-11-28: round 219, a softer road; longer sunrises and sunsets
 
 The road (The Journey 2) is graded soft in the PS1 post pass: greens drawn toward sage, a little less saturation and
@@ -2171,6 +2177,7 @@ Newest first.
 
 | Round | Date | Topic | Design record | Findings | Commits |
 |---|---|---|---|---|---|
+| 220 | 11-28 | The breathing's dial starts 70 degrees before the breath in (was 45); deployed | [220](docs/rounds/220/architecture.md) | [findings](docs/rounds/220/findings.md) | round 220 build, merged to `main` |
 | 219 | 11-28 | A softer road (a soft grade in the post pass, a warm day palette, sage greens); the sun lingers at the horizon, so sunrises and sunsets last twice as long; deployed | [219](docs/rounds/219/architecture.md) | [findings](docs/rounds/219/findings.md) | round 219 build, merged to `main` |
 | 215 | 11-28 | The road's frontier is read from the finished conversations, not from the walk; a pull takes those sites only; pulled ground under the sea's level floods (the sea stays level); the check library switches round 214's breathing off; deployed | [215](docs/rounds/215/architecture.md) | [findings](docs/rounds/215/findings.md) | round 215 build, merged to `main` |
 | 217 | 11-28 | The walk between conversations carries no text, and the breathing is played over it; deployed | [217](docs/rounds/217/architecture.md) | [findings](docs/rounds/217/findings.md) | round 217 build, merged to `main` |
