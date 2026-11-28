@@ -14,7 +14,13 @@ import { PRESETS } from './presets.js';
 const COLOURS = ['zenith', 'mid', 'horizon', 'fog', 'sun', 'cloud', 'cloudUnder', 'hills'];
 const VECTORS = ['sunColor', 'ambientSky', 'ambientGround', 'water'];
 
-const DAY = { ...PRESETS.day, cloudUnder: '#c9d3dc' };
+// Round 219: the day is warm and soft. The blue keeps its hue but is paler and less saturated; the haze at the
+// horizon is a warm cream rather than a cool grey; the sunlight and the light from the ground are warmer.
+const DAY = {
+  ...PRESETS.day,
+  zenith: '#5582bd', mid: '#a9c2d6', horizon: '#ece2cf', fog: '#ddd5c2', sun: '#fffbe8', cloud: '#fffdf8', cloudUnder: '#d8d2c8',
+  sunColor: [0.78, 0.69, 0.54], ambientSky: [0.56, 0.57, 0.58], ambientGround: [0.41, 0.36, 0.27],
+};
 const NIGHT = {
   zenith: '#04060e', mid: '#0b1124', horizon: '#1b2740', fog: '#141c2e', sun: '#dde6ff', cloud: '#262d44', cloudUnder: '#12172a', hills: '#090d18',
   sunColor: [0.2, 0.25, 0.4], ambientSky: [0.2, 0.24, 0.38], ambientGround: [0.1, 0.11, 0.17], water: [0.45, 0.55, 0.9],

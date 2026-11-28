@@ -7,6 +7,7 @@ import {
   Scene,
   ShaderMaterial,
   Vector2,
+  Vector3,
   WebGLRenderTarget,
 } from 'three';
 import { postFragmentShader, postVertexShader } from './shaders.js';
@@ -32,7 +33,7 @@ export function internalResolution(width, height, lines = 240) {
  * expo-gl context on iOS.
  */
 export function createPS1Pipeline(renderer, options = {}) {
-  const { uniforms = null, lines = 240, dither = true, colorBits = 5, scanlines = 0 } = options;
+  const { uniforms = null, lines = 240, dither = true, colorBits = 5, scanlines = 0, grade = null } = options;
 
   const target = new WebGLRenderTarget(1, 1, {
     minFilter: NearestFilter,
@@ -50,6 +51,7 @@ export function createPS1Pipeline(renderer, options = {}) {
       uDither: { value: dither ? 1 : 0 },
       uColorBits: { value: colorBits },
       uScanlines: { value: scanlines },
+      uGrade: { value: new Vector3(grade?.soft ?? 0, grade?.green ?? 0, grade?.warm ?? 0) },
     },
     vertexShader: postVertexShader,
     fragmentShader: postFragmentShader,
@@ -103,6 +105,11 @@ export function createPS1Pipeline(renderer, options = {}) {
     },
     setScanlines(amount) {
       post.uniforms.uScanlines.value = amount;
+    },
+    /** Round 219: the soft grade ({ soft, green, warm }, 0 to 1 each); a key left out keeps its value. */
+    setGrade({ soft, green, warm } = {}) {
+      const g = post.uniforms.uGrade.value;
+      g.set(soft ?? g.x, green ?? g.y, warm ?? g.z);
     },
     get internalSize() {
       return { width: post.uniforms.uRes.value.x, height: post.uniforms.uRes.value.y };

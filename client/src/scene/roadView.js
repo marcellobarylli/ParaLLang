@@ -54,7 +54,9 @@ export function createRoadView(canvas, { seed, pulled = [], onArrive = () => {},
     .then((loaded) => { if (!disposed) world.setModels(loaded); })
     .catch((error) => { console.warn('The trees\' models could not be loaded; the simple trees stay:', error?.message ?? error); });
   const camera = new PerspectiveCamera(FOV, 1, 0.3, 900);
-  const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms });
+  // Round 219: the road is graded soft: tamer greens, gentler contrast, and warmth that follows the daylight.
+  const GRADE = { soft: 1, green: 0.55, warm: 0.7 };
+  const pipeline = createPS1Pipeline(renderer, { uniforms: world.uniforms, grade: { ...GRADE, warm: 0 } });
   const director = createRoadDirector({ heightAt: terrain.heightAt, waterY: terrain.waterY });
   const markers = new Group();
   markers.name = 'road-markers';
@@ -239,6 +241,7 @@ export function createRoadView(canvas, { seed, pulled = [], onArrive = () => {},
       weather = currentWeather(seed, now());
       const light = atmosphereFor(weather);
       world.setAtmosphere(light);
+      pipeline.setGrade({ warm: GRADE.warm * weather.daylight * (1 - 0.6 * Math.max(0, weather.cloud - 0.35)) });
       effects.setAtmosphere(light); // the clouds take their colours from the same sky
       fog = { near: light.fogNear, far: light.fogFar };
     }

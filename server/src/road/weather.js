@@ -13,6 +13,9 @@ import { hash, smoothstep } from './terrain.js';
 export const WEATHER = Object.freeze({
   cycleMs: 45 * 60_000,
   dayShare: 0.56, // the share of the cycle with the sun up
+  // Round 219: the sun's height is its sine raised to this power, so it lingers near the horizon: sunrise and sunset
+  // (the sun between 0.24 and -0.17) last about 6 minutes of the 45 rather than 3.
+  linger: 1.7,
   slotMs: 3 * 60_000, // 15 slots a cycle
   rainShare: 0.15,
   rampMs: 25_000, // rain fades in and out over this, inside its slot
@@ -58,7 +61,8 @@ const PART_NAMES = { dawn: 'dawn', morning: 'morning', midday: 'the middle of th
 export function weatherOf({ phase = 0.25, rain = 0, cloud = null, wind = null } = {}) {
   const p = ((phase % 1) + 1) % 1;
   const up = p < WEATHER.dayShare;
-  const height = up ? Math.sin((Math.PI * p) / WEATHER.dayShare) : -Math.sin((Math.PI * (p - WEATHER.dayShare)) / (1 - WEATHER.dayShare));
+  const arc = up ? Math.sin((Math.PI * p) / WEATHER.dayShare) : -Math.sin((Math.PI * (p - WEATHER.dayShare)) / (1 - WEATHER.dayShare));
+  const height = Math.sign(arc) * Math.abs(arc) ** WEATHER.linger;
   const daylight = smoothstep(-0.14, 0.22, height);
   const twilight = clamp(1 - Math.abs(height) / 0.42);
   const rising = p < WEATHER.dayShare / 2 || p > WEATHER.dayShare + (1 - WEATHER.dayShare) / 2;
