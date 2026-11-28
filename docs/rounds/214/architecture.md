@@ -31,8 +31,9 @@ be built, merged and deployed.
    the end of the last breath out.
 4. **What is drawn.** A light in the middle swells with the breath in and sinks with the breath out, eased so that it
    slows into each turn, and is brighter while the panel is held. Round it is a thin ring; a small light goes once
-   round it for each breath, clockwise from the top. Two stretches of the ring glow: one 40 % of the way round, where
-   the breath turns (let go), and one at the top, where the next begins (press). Each stretch is the window of
+   round it for each breath, clockwise from the upper left (45 degrees anticlockwise of north; amended 2026-11-28). Two
+   stretches of the ring glow: one 40 % of the way round, where the breath turns (let go), and one at the start, where
+   the next begins (press). Each stretch is the window of
    tolerance, fading at both ends, with a brighter point in its middle for the best moment. Gold and the ink colour
    of the game; every light is a gradient to nothing, so nothing has an edge. **No text.**
 5. **The panel is not covered: it thins.** `.sheet.breathing` fades the panel's own text and controls to nothing and
@@ -84,3 +85,11 @@ now the owner's: it opens "The world is fast. Sometimes it is good to be slow.",
 (decision 6) is unchanged; the card simply does not say it. `server/test/guidebook.test.js` holds the text word for
 word. The wording reached this session through another session and was applied only on the owner's own yes
 ([`trail/interview.md`](trail/interview.md)). Pushed to `main`, which deploys the page and the server.
+
+## Amendment (2026-11-28): where the light starts
+
+The owner asked for the breathing's start point to be 45 degrees anticlockwise of north. The ring's light, its "in"
+label and the press stretch are now at the upper left, and the light goes clockwise from there; the breath out begins
+144 degrees on, at the right. Only the angle moved: `BREATH_START` in `client/src/components/BreathGame.jsx`, with a test
+of where the light starts and which way it goes (`breath-game.test.jsx`). Seen in headless Chromium at phone size
+(the light just set off from the "in" at the upper left, then going round to the "out" at the right); not on a phone.

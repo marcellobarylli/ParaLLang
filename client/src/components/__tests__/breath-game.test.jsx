@@ -2,7 +2,7 @@
 import React from 'react';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import BreathGame, { BreathIntro } from '../BreathGame.jsx';
+import BreathGame, { BREATH_START, BreathIntro, angleOf } from '../BreathGame.jsx';
 import SettingsSheet from '../SettingsSheet.jsx';
 import { createGameStore } from '../../stores/gameStore.js';
 import { loadDisplay } from '../../display.js';
@@ -116,4 +116,19 @@ test('the breathing is on unless switched off in Settings, and the switch is kep
   first.unmount();
   view();
   expect(screen.getByLabelText('Breathe while you wait').checked).toBe(false);
+});
+
+// Round 214, amended 2026-11-28: where the ring's light starts and which way it goes. Canvas angles: 0 is east, growing clockwise.
+test('the breath in begins 45 degrees anticlockwise of north, the upper left, and the light goes clockwise round', () => {
+  const at = (share) => [Math.cos(angleOf(share)), Math.sin(angleOf(share))];
+  const degrees = (share) => ((Math.atan2(at(share)[0], -at(share)[1]) * 180) / Math.PI + 360) % 360; // clockwise from north
+  expect(BREATH_START).toBeCloseTo(-3 * Math.PI / 4, 12);
+  const [x, y] = at(0);
+  expect(x).toBeLessThan(0); // left of the middle
+  expect(y).toBeLessThan(0); // above it
+  expect(Math.abs(x)).toBeCloseTo(Math.abs(y), 12); // half way between north and west
+  expect(degrees(0)).toBeCloseTo(315, 9); // 45 degrees short of north, going clockwise
+  expect(degrees(0.25)).toBeCloseTo(45, 9); // a quarter breath on: up and to the right
+  expect(degrees(0.5)).toBeCloseTo(135, 9);
+  expect(degrees(1)).toBeCloseTo(315, 9); // once round
 });

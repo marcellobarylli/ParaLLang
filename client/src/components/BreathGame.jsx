@@ -5,7 +5,7 @@ import Narration from './Narration.jsx';
 // Round 214: the breathing, drawn over the conversation panel while a reply is on its way. The panel does not go
 // away: its text fades and the panel itself turns more see-through (index.css, `.sheet.breathing`), and this is
 // drawn over it. Nothing is written on it: a light swells with the breath in and sinks with the breath out, and a
-// small light goes once round a ring for each breath, through two glowing stretches, one where the breath turns
+// small light goes once round a ring for each breath (from the upper left, clockwise), through two glowing stretches, one where the breath turns
 // (let go) and one where the next begins (press), each with its best moment in the middle. `ready` says the reply
 // has come; the breathing then ends with a breath out (breath.js) and calls `onDone` once it has faded.
 const FADE_MS = 700;
@@ -32,7 +32,10 @@ function glow(context, x, y, radius, colour, alpha, body = 0.42) {
   context.fill();
 }
 
-const angleOf = (share) => -Math.PI / 2 + share * TAU; // the breath in begins at the top and goes clockwise
+// Round 214, amended 2026-11-28 (the owner): the breath in begins 45 degrees anticlockwise of north (up and to the left) and goes clockwise round.
+// Angles are the canvas's: 0 is east, and they grow clockwise, so north is -PI / 2.
+export const BREATH_START = -Math.PI / 2 - Math.PI / 4;
+export const angleOf = (share) => BREATH_START + share * TAU;
 
 /** A stretch of the ring that glows, fading to nothing at both ends, with its best moment in the middle. */
 function zone(context, cx, cy, ring, share, alpha, bloom) {
