@@ -20,27 +20,27 @@ test('the opacity is clamped to the slider and rounded to its step', () => {
 
 test('the preference loads with a default, saves under its own key, and survives a broken stored value', () => {
   const storage = memoryStorage();
-  expect(loadDisplay(storage)).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(saveDisplay({ panelOpacity: 0.32 }, storage)).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(JSON.parse(storage.values.get(DISPLAY_KEY))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(loadDisplay(storage)).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(loadDisplay(storage)).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(saveDisplay({ panelOpacity: 0.32 }, storage)).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(JSON.parse(storage.values.get(DISPLAY_KEY))).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(loadDisplay(storage)).toEqual({ panelOpacity: 0.3, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(storage.values.has('parallang.settings')).toBe(false);
-  expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: '{broken' }))).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: '{"panelOpacity":"dark"}' }))).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(loadDisplay(null)).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: '{broken' }))).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: '{"panelOpacity":"dark"}' }))).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(loadDisplay(null)).toEqual({ panelOpacity: PANEL_OPACITY.default, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
 });
 
 test('a storage that refuses the write keeps the value for this page', () => {
   const storage = { getItem: () => null, setItem: () => { throw new Error('QuotaExceededError'); } };
-  expect(saveDisplay({ panelOpacity: 0.5 }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(saveDisplay({ panelOpacity: 0.5 }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
 });
 
 // Round 125: tilt to look is off unless it was switched on, and is stored beside the opacity.
 test('tilt to look loads off, saves as a boolean, and anything but true is off', () => {
   const storage = memoryStorage();
   expect(loadDisplay(storage).tiltLook).toBe(false);
-  expect(saveDisplay({ panelOpacity: 0.5, tiltLook: true }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: true, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
-  expect(loadDisplay(storage)).toEqual({ panelOpacity: 0.5, tiltLook: true, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(saveDisplay({ panelOpacity: 0.5, tiltLook: true }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: true, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(loadDisplay(storage)).toEqual({ panelOpacity: 0.5, tiltLook: true, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   for (const junk of ['true', 1, 'yes', null, {}]) expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: JSON.stringify({ tiltLook: junk }) })).tiltLook, String(junk)).toBe(false);
   expect(saveDisplay({ tiltLook: 'on' }, storage).tiltLook).toBe(false);
 });
@@ -49,7 +49,7 @@ test('tilt to look loads off, saves as a boolean, and anything but true is off',
 test('voices load on, save as a boolean, and only false is off', () => {
   const storage = memoryStorage();
   expect(loadDisplay(storage).voices).toBe(true);
-  expect(saveDisplay({ panelOpacity: 0.5, voices: false }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false, voices: false, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(saveDisplay({ panelOpacity: 0.5, voices: false }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false, voices: false, narrator: true, narratorVoice: 'Algenib', music: true, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(loadDisplay(storage).voices).toBe(false);
   for (const junk of ['false', 0, null, {}]) expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: JSON.stringify({ voices: junk }) })).voices, String(junk)).toBe(true);
 });
@@ -58,7 +58,7 @@ test('voices load on, save as a boolean, and only false is off', () => {
 test('music loads on, saves as a boolean, and only false is off', () => {
   const storage = memoryStorage();
   expect(loadDisplay(storage).music).toBe(true);
-  expect(saveDisplay({ panelOpacity: 0.5, music: false }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: false, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(saveDisplay({ panelOpacity: 0.5, music: false }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: false, beginner: true, rails: true, immersion: 1, immersionAuto: true, light: true, strict: false, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(loadDisplay(storage).music).toBe(false);
   for (const junk of ['false', 0, null]) expect(loadDisplay(memoryStorage({ [DISPLAY_KEY]: JSON.stringify({ music: junk }) })).music, String(junk)).toBe(true);
 });
@@ -67,7 +67,7 @@ test('music loads on, saves as a boolean, and only false is off', () => {
 test('beginner mode loads on, saves as a boolean, and only false is off', () => {
   const storage = memoryStorage();
   expect(loadDisplay(storage).beginner).toBe(true);
-  expect(saveDisplay({ panelOpacity: 0.5, beginner: false, rails: true, immersion: 1, immersionAuto: true, light: false }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: false, rails: true, immersion: 1, immersionAuto: true, light: false, strict: true, streamlined: true, follow: true, waitGame: false, glitch: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
+  expect(saveDisplay({ panelOpacity: 0.5, beginner: false, rails: true, immersion: 1, immersionAuto: true, light: false }, storage)).toEqual({ panelOpacity: 0.5, tiltLook: false, voices: true, narrator: true, narratorVoice: 'Algenib', music: true, beginner: false, rails: true, immersion: 1, immersionAuto: true, light: false, strict: true, streamlined: true, follow: true, waitGame: false, glitch: false, dev: false, volume: { master: 1, music: 1, effects: 1, voice: 1 } });
   expect(loadDisplay(storage).beginner).toBe(false);
 });
 

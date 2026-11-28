@@ -734,6 +734,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on !== false }, storage) }),
       // Round 203 (experimental): the game played while a reply is on its way.
       setGlitch: (on) => set({ display: saveDisplay({ ...get().display, glitch: on === true }, storage) }), // round 205
+      setDev: (on) => set({ display: saveDisplay({ ...get().display, dev: on === true }, storage) }), // round 213: developer mode
       setWaitGame: (on) => set({ display: saveDisplay({ ...get().display, waitGame: on === true }, storage) }),
       setTiltLook: (on) => set({ display: saveDisplay({ ...get().display, tiltLook: on === true }, storage) }),
       // New settings reconnect: the learner and the run are fetched again from that server.
@@ -755,7 +756,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
         const phase = ['attract', 'world'].includes(get().phase) ? get().phase : 'overview';
         set({
           settings, settingsOpen: notice ? get().settingsOpen : false, learnerId: null, language: null, progress: null, narration: null, guideNote: null, guidebook: null, runs: {}, connection: 'idle', serverProblem: null, dungeon,
-          mode: 'dungeon', road: null, curriculum: null, journey: null, journeyShown: false, journeyLoading: false, journeyRemark: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false,
+          mode: 'dungeon', road: null, curriculum: null, journey: null, journeyShown: false, journeyLoading: false, journeyRemark: null, roadPhase: 'hub', roadPanel: null, roadError: null, roadResult: null, roadLoading: false, roadTravelling: false, roadEventOpen: false, roadEventLoading: false, roadEventWalk: null, devJumping: false,
           party: [], partyReturn: null, partyStarting: null, recruiting: false,
           progression: null, xpGained: 0, levelUp: null,
           phase, siteIndex: startIndex(dungeon), walkFrom: null, cameraArrived: false, arrival: 'encounter', travelling: false, encounter: null, encounterLoading: false, siteError: null, starting: false,

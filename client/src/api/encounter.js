@@ -67,6 +67,10 @@ export function createLearningApi({ getSettings = () => loadSettings(), getGemin
     resetRoad: (learnerId, body = {}) => request('/api/road/reset', { learnerId, method: 'POST', body }),
     // Round 173: streamlined mode on or off; answers with the road's view.
     setRoadMode: (learnerId, streamlined) => request('/api/road/mode', { learnerId, method: 'POST', body: { streamlined } }),
+    // Round 213 (issue #23): a world event (the pull) was watched to the end; answers with the road's view.
+    seeRoadEvent: (learnerId, number) => request('/api/road/event', { learnerId, method: 'POST', body: { number } }),
+    // Round 213: the developer's jump to a unit ({ unitId, gate?, unpull? }); answers with the road's view.
+    jumpRoad: (learnerId, body) => request('/api/road/jump', { learnerId, method: 'POST', body }),
     // Round 144: the whole save, for the copy this browser keeps, and the copy put back on a server that lost it.
     exportSave: (learnerId) => request('/api/save', { learnerId }),
     // Round 179: a save slot deleted or started over removes its learner's save on the server (round 039's route).

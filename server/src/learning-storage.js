@@ -140,7 +140,11 @@ function validRoad(road) {
     && Array.isArray(road.log) && road.log.length <= 30 && road.log.every(record)
     // Round 161: the whole walk (a road from before it has none).
     && (road.walk === undefined || ids(road.walk, 20000))
-    && (road.hops === undefined || (Number.isSafeInteger(road.hops) && road.hops >= 0));
+    && (road.hops === undefined || (Number.isSafeInteger(road.hops) && road.hops >= 0))
+    // Round 213 (issue #23): the pulls, and how many of them were watched.
+    && (road.pulled === undefined || (Array.isArray(road.pulled) && road.pulled.length <= 12
+      && road.pulled.every((pull) => record(pull) && Number.isSafeInteger(pull.step) && Number.isFinite(pull.depth) && pull.depth > 0 && pull.depth <= 200 && ids(pull.sites, 20000))))
+    && (road.pullsSeen === undefined || (Number.isSafeInteger(road.pullsSeen) && road.pullsSeen >= 0));
 }
 
 function validWorld(world) {

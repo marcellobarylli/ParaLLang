@@ -160,6 +160,16 @@ function gameRoutes(service, languages) {
     try { res.json(await service.setRoadMode(req.get('X-Learner-Id'), req.body ?? {})); }
     catch (error) { next(error); }
   });
+  // Round 213 (issue #23): a world event (the pull) was played to the end: { number }.
+  app.post('/api/road/event', async (req, res, next) => {
+    try { res.json(await service.seeRoadEvent(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
+  // Round 213: the developer's jump to a unit of the curriculum: { unitId, gate?, unpull? }.
+  app.post('/api/road/jump', async (req, res, next) => {
+    try { res.json(await service.jumpRoad(req.get('X-Learner-Id'), req.body ?? {})); }
+    catch (error) { next(error); }
+  });
   app.post('/api/road/reset', async (req, res, next) => {
     try { res.json(await service.resetRoad(req.get('X-Learner-Id'), req.body ?? {})); }
     catch (error) { next(error); }

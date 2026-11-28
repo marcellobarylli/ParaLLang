@@ -5,6 +5,8 @@ import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import { ENDLESS, PS1_STYLE, buildChunk, createCairn, createEndlessWorld, createStandIn, createTrack } from '../src/index.js';
 import { TERRAIN, createTerrain } from '../../server/src/road/terrain.js';
+import { createGraph } from '../../server/src/road/graph.js';
+import { PULL, withPulls } from '../../server/src/road/pulls.js';
 
 const terrain = createTerrain(4242);
 const meshes = (object) => { const out = []; object.traverse((o) => o.isMesh && out.push(o)); return out; };
@@ -63,6 +65,54 @@ describe('the endless level', () => {
     const [left, right] = [edge(a, 48), edge(b, 48)];
     assert.equal(left.size, ENDLESS.cells + 1);
     assert.deepEqual([...left].sort(), [...right].sort(), 'the same heights and normals on both sides of the seam');
+  });
+
+  test('round 213: on pulled land the ground, the trees and the water sink together, and the water bends with the pull', () => {
+    // A lake, and a pull at its shore: the nearest dry point to a point of water near the start.
+    const graph = createGraph(terrain);
+    let shore = null;
+    for (let r = 100; r < 3000 && !shore; r += 48) {
+      for (let a = 0; a < 24 && !shore; a += 1) {
+        const [x, z] = [Math.cos(a) * r, Math.sin(a) * r];
+        if (terrain.heightAt(x, z) < -1 && terrain.heightAt(x + 30, z) > 0.5) shore = { x: x + 30, z, depth: PULL.depth };
+      }
+    }
+    assert.ok(shore, 'the landscape has a shore to pull at');
+    const { terrain: pulled } = withPulls(terrain, graph, [], { extra: [shore] });
+    const materials = createEndlessWorld({ terrain: pulled }).materials;
+    const [cx, cz] = [Math.floor(shore.x / 48), Math.floor(shore.z / 48)];
+    const [before, after] = [buildChunk(terrain, materials, cx, cz), buildChunk(pulled, materials, cx, cz)];
+    const of = (group, names) => meshes(group).filter((mesh) => names.includes(mesh.material.name));
+    // The ground is on the pulled terrain, and lower than it was.
+    let sank = 0;
+    for (const mesh of of(after, ['ground', 'rock', 'snow'])) {
+      const position = mesh.geometry.attributes.position;
+      for (let k = 0; k < position.count; k += 1) {
+        const [x, y, z] = [position.getX(k), position.getY(k), position.getZ(k)];
+        assert.ok(Math.abs(y - pulled.heightAt(x, z)) < 1e-4, 'a ground vertex is on the pulled terrain');
+        sank = Math.max(sank, terrain.heightAt(x, z) - y);
+      }
+    }
+    assert.ok(sank > PULL.depth * 0.5, `the ground of the chunk sank ${sank} m`);
+    // The water was one flat quad; now it is a quad a cell, each corner as far down as the pull is there.
+    const [flat] = of(before, ['water']);
+    const [bent] = of(after, ['water']);
+    assert.equal(flat.geometry.attributes.position.count, 6);
+    assert.equal(bent.geometry.attributes.position.count, 6 * ENDLESS.cells * ENDLESS.cells);
+    const position = bent.geometry.attributes.position;
+    let lowest = 0;
+    for (let k = 0; k < position.count; k += 1) {
+      assert.ok(Math.abs(position.getY(k) - pulled.waterAt(position.getX(k), position.getZ(k))) < 1e-4, 'a water vertex is on the pulled water');
+      lowest = Math.min(lowest, position.getY(k));
+    }
+    assert.ok(lowest < -PULL.depth * 0.3, `the water sank with the ground: ${lowest} m`);
+    // Away from any pull a chunk of the pulled land is the chunk it always was.
+    const far = (group) => meshes(group).map((mesh) => [mesh.material.name, mesh.geometry.attributes.position.count]);
+    assert.deepEqual(far(buildChunk(pulled, materials, cx + 40, cz + 40)), far(buildChunk(terrain, materials, cx + 40, cz + 40)));
+    // A track over the pulled land lies on its surface, water and all.
+    const track = createTrack(materials, [[shore.x - 40, shore.z], [shore.x, shore.z]], pulled.heightAt, { waterY: pulled.waterY, surfaceAt: pulled.surfaceAt });
+    const laid = track.geometry.attributes.position;
+    for (let k = 0; k < laid.count; k += 1) assert.ok(Math.abs(laid.getY(k) - (pulled.surfaceAt(laid.getX(k), laid.getZ(k)) + 0.12)) < 1e-4);
   });
 
   test('stays inside the triangle budget in the densest forest it can find', () => {

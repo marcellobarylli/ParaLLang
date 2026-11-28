@@ -273,7 +273,7 @@ test('the title shows a landscape at once, the road is read behind it on that se
 
 test('a road made elsewhere wins over the title\'s seed, and an unreadable kept title draws a new one', async () => {
   const { TITLE_KEY, titleOf } = await import('../roadSlice.js');
-  expect(titleOf(memoryStorage({ [TITLE_KEY]: '{"seed":77,"at":"1,2"}' }))).toEqual({ seed: 77, at: '1,2' });
+  expect(titleOf(memoryStorage({ [TITLE_KEY]: '{"seed":77,"at":"1,2"}' }))).toEqual({ seed: 77, at: '1,2', pulled: [] }); // round 213: with the pulls kept, none here
   for (const bad of ['nonsense', '{"seed":0}', '{"seed":1.5}', `{"seed":${2 ** 31}}`]) {
     expect(titleOf(memoryStorage({ [TITLE_KEY]: bad }), () => 0.5).seed).toBe(1 + Math.floor(0.5 * (2 ** 31 - 2)));
   }

@@ -83,6 +83,8 @@ export const UNDERGROWTH = Object.freeze({
   size: Object.freeze({ fern: [0.55, 0.5], flower: [0.32, 0.22], bush: [0.6, 0.6] }), // [least, spread] radius, metres
 });
 const TREE_HEIGHT = Object.freeze({ fir: [5, 6], round: [5, 6], palm: [7, 6], broad: [6, 7], shrub: [1.4, 1.6] });
+/** Round 213: the height of the tallest tree that can grow, metres (a pull is measured in them: pulls.js). */
+export const TALLEST_TREE = Math.max(...Object.values(TREE_HEIGHT).map(([least, spread]) => least + spread));
 
 const imul = Math.imul;
 function hash2(x, y, seed) {
@@ -153,6 +155,9 @@ export function ridged(x, y, seed, octaves = 4) {
  *   coverAt(x, z)    'water' | 'shore' | 'meadow' | 'forest' | 'highland' | 'snow'
  *   biomeAt(x, z)    the biome the point lies in: a key of BIOMES (round 160)
  *   treesIn(cx, cz)  the trees of chunk (cx, cz): [{ x, z, y, height, kind: 'fir' | 'round' | 'palm' | 'broad' | 'shrub', tint }]
+ *   surfaceAt(x, z)  round 213: the ground, or the water where the ground is under it
+ *
+ * Round 213: a learner's pulls lower this land (pulls.js `withPulls`, which wraps what this returns).
  */
 export function createTerrain(seed = 1) {
   const s = (Number(seed) | 0) || 1;
@@ -253,5 +258,7 @@ export function createTerrain(seed = 1) {
     return plants;
   }
 
-  return Object.freeze({ seed: s, waterY: TERRAIN.waterY, heightAt, slopeAt, coverAt, biomeAt, biomes: BIOMES, moistureAt, treesIn, undergrowthIn });
+  const surfaceAt = (x, z) => Math.max(heightAt(x, z), TERRAIN.waterY);
+
+  return Object.freeze({ seed: s, waterY: TERRAIN.waterY, heightAt, slopeAt, coverAt, biomeAt, biomes: BIOMES, moistureAt, treesIn, undergrowthIn, surfaceAt });
 }
