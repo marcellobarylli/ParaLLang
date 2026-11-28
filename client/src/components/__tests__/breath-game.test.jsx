@@ -129,3 +129,16 @@ test('the breath in is at the top, the breath out 144 degrees on, and the light 
   expect(degrees(0.25)).toBeCloseTo(90, 9);
   expect(degrees(-70 / 360)).toBeCloseTo(290, 9); // where the light is when it sets off: 70 degrees before the "in"
 });
+
+// Round 226: the breath's light is pale blue while breathing in and gold while breathing out, turning over a second
+// or so at each turn.
+test('the breath\'s light is blue for the breath in and turns gold for the breath out, with no jump', async () => {
+  const { inShare } = await import('../BreathGame.jsx');
+  const { BREATH } = await import('../../breath.js');
+  expect(inShare({ phase: 'in', t: -1 })).toBe(1);
+  expect(inShare({ phase: 'in', t: 3 })).toBe(1);
+  expect(inShare({ phase: 'out', t: 0 })).toBe(1);
+  expect(inShare({ phase: 'out', t: 0.6 })).toBeCloseTo(0.5);
+  expect(inShare({ phase: 'out', t: BREATH.exhale / 2 })).toBe(0);
+  expect(inShare({ phase: 'out', t: BREATH.exhale })).toBeCloseTo(1);
+});

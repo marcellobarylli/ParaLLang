@@ -34,6 +34,13 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 226, the breath in is pale blue
+
+In the breathing, "in" and "out" are larger (22 px), the breath in is pale blue (its stretch, its word, its ripple and
+the middle light while breathing in), the breath out stays gold, and a turn at its best moment leaves a navy circle
+(was turmeric). Seen in headless Chromium at phone size, **not on a phone**. **Merged to `main` and deployed** on the
+owner's word. [Architecture](docs/rounds/226/architecture.md), [findings](docs/rounds/226/findings.md).
+
 ## Addendum 2026-11-28: round 225, objectives as the bare task
 
 On the road, each objective in the box reads as the task alone ("Greet Cuthbert.", "Tell Cuthbert your name."): the

@@ -11,7 +11,20 @@ import Narration from './Narration.jsx';
 const FADE_MS = 700;
 const GOLD = '228 184 71';
 const GOLD_HI = '246 220 140';
-const TURMERIC = '226 150 16';
+// Round 226 (the owner): the breath in is a pale blue (its stretch, its word and what a press in time leaves); the
+// breath out stays gold. The best moment goes out as a navy circle (it was turmeric).
+const PALE_BLUE = '190 222 255';
+const NAVY = '58 92 196';
+const BLUE = '150 196 245'; // the breath's own light while breathing in (GOLD's counterpart)
+const mix = (a, b, share) => { const x = a.split(' ').map(Number); const y = b.split(' ').map(Number); return x.map((value, i) => Math.round(value + (y[i] - value) * share)).join(' '); };
+// How blue the breath's light is: wholly while breathing in, turning gold over the first second of the breath out and
+// back over its last second, so there is no jump at either turn.
+const SHIFT = 1.2;
+export function inShare(game) {
+  if (game.phase === 'in') return 1;
+  if (game.t < SHIFT) return 1 - game.t / SHIFT;
+  return Math.max(0, (game.t - (BREATH.exhale - SHIFT)) / SHIFT);
+}
 const INK ='236 236 228';
 const TAU = Math.PI * 2;
 
@@ -39,7 +52,7 @@ export const BREATH_START = -Math.PI / 2; // the breath in is at the top; the li
 export const angleOf = (share) => BREATH_START + share * TAU;
 
 /** A stretch of the ring that glows, fading to nothing at both ends, with its best moment in the middle. */
-function zone(context, cx, cy, ring, share, alpha, bloom) {
+function zone(context, cx, cy, ring, share, alpha, bloom, colour = GOLD_HI) {
   if (alpha <= 0.003) return;
   const half = (BREATH.tolerance / BREATH_CYCLE) * TAU;
   const middle = angleOf(share);
@@ -47,21 +60,24 @@ function zone(context, cx, cy, ring, share, alpha, bloom) {
   for (let i = 0; i <= lights; i += 1) {
     const along = -1 + (2 * i) / lights;
     const at = middle + along * half;
-    glow(context, cx + Math.cos(at) * ring, cy + Math.sin(at) * ring, 10, GOLD_HI, alpha * 0.13 * (1 - along ** 4), 0.5);
+    glow(context, cx + Math.cos(at) * ring, cy + Math.sin(at) * ring, 10, colour, alpha * 0.13 * (1 - along ** 4), 0.5);
   }
-  glow(context, cx + Math.cos(middle) * ring, cy + Math.sin(middle) * ring, 10 + bloom * 24, GOLD_HI, alpha * (0.9 - bloom * 0.3));
+  glow(context, cx + Math.cos(middle) * ring, cy + Math.sin(middle) * ring, 10 + bloom * 24, colour, alpha * (0.9 - bloom * 0.3));
 }
 
-/** A faint word just outside the ring at a stretch's best moment, in the stretch's own colour. */
-function label(context, cx, cy, ring, share, text, alpha) {
+/** A word just outside the ring at a stretch's best moment, in the stretch's own colour (round 226: larger, 22 px). */
+export const LABEL_PX = 22;
+function label(context, cx, cy, ring, share, text, alpha, colour = GOLD_HI) {
   if (alpha <= 0.003) return;
   const at = angleOf(share);
-  const out = ring + 22;
+  const out = ring + 30;
   context.save();
-  context.font = "13px 'Courier New', Courier, monospace";
+  context.font = `bold ${LABEL_PX}px 'Courier New', Courier, monospace`;
   context.textAlign = 'center';
   context.textBaseline = 'middle';
-  context.fillStyle = `rgb(${GOLD_HI} / ${alpha * 0.55})`;
+  context.shadowColor = `rgb(${colour} / ${alpha * 0.6})`;
+  context.shadowBlur = 10;
+  context.fillStyle = `rgb(${colour} / ${alpha * 0.8})`;
   context.fillText(text, cx + Math.cos(at) * out, cy + Math.sin(at) * out);
   context.restore();
 }
@@ -75,15 +91,16 @@ function draw(context, game, view) {
   const level = breathLevel(game);
   // The breath itself: a light that swells and sinks, brighter while the panel is held.
   const body = ring * (0.3 + 0.48 * level);
-  glow(context, cx, cy, body * 1.5, GOLD, 0.2 + 0.1 * level + held * 0.2 + game.warmth * 0.1, 0.62);
-  glow(context, cx, cy, body * 0.85, GOLD_HI, 0.1 + held * (0.26 + 0.1 * level) + game.warmth * 0.08, 0.55);
+  const blue = inShare(game); // round 226: pale blue while breathing in, gold while breathing out
+  glow(context, cx, cy, body * 1.5, mix(GOLD, BLUE, blue), 0.2 + 0.1 * level + held * 0.2 + game.warmth * 0.1, 0.62);
+  glow(context, cx, cy, body * 0.85, mix(GOLD_HI, PALE_BLUE, blue), 0.1 + held * (0.26 + 0.1 * level) + game.warmth * 0.08, 0.55);
   // What a turn kept in time leaves: a slow ring going out from the breath.
   const bloom = { press: 0, release: 0 };
   for (const mark of game.marks) {
     const life = mark.age / BREATH.markFor;
     const strength = (mark.grade === 'perfect' ? 0.42 : 0.2) * (1 - life) ** 2;
     const radius = body + life * ring * 0.9;
-    const tint = mark.grade === 'perfect' ? TURMERIC : GOLD_HI; // the best moment goes out as a turmeric circle
+    const tint = mark.grade === 'perfect' ? NAVY : mark.turn === 'press' ? PALE_BLUE : GOLD_HI; // round 226: the best moment goes out navy
     context.save();
     context.shadowColor = `rgb(${tint} / ${strength})`;
     context.shadowBlur = 18;
@@ -108,8 +125,8 @@ function draw(context, game, view) {
   context.stroke();
   context.restore();
   zone(context, cx, cy, ring, BREATH_TURN, Math.max(veil, bloom.release), bloom.release);
-  zone(context, cx, cy, ring, 0, veil, bloom.press);
-  label(context, cx, cy, ring, 0, 'in', veil);
+  zone(context, cx, cy, ring, 0, veil, bloom.press, PALE_BLUE);
+  label(context, cx, cy, ring, 0, 'in', veil, PALE_BLUE);
   label(context, cx, cy, ring, BREATH_TURN, 'out', veil);
   const share = breathProgress(game);
   for (let i = 12; i >= 1; i -= 1) { // the way it came, fading
