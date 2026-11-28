@@ -1,0 +1,50 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review. Reference URLs follow the existing
+# patterns and were not opened from the build container.
+version: gerald-break-zh-v1
+references:
+  - id: mdbg-haohe
+    title: "MDBG Chinese Dictionary: hǎohē"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=haohe"
+  - id: mdbg-bang
+    title: "MDBG Chinese Dictionary: bàng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=bang"
+  - id: mdbg-xiexie
+    title: "MDBG Chinese Dictionary: xièxie"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=xiexie"
+  - id: wiktionary-haohe
+    title: "Wiktionary: hǎohē (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/h%C7%8Eoh%C4%93"
+  - id: wiktionary-xiexie
+    title: "Wiktionary: xièxie (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/xi%C3%A8xie"
+entries:
+  - id: haohe
+    kind: word
+    target: "hǎohē"
+    part_of_speech: adjective
+    accepted_translations: ["good", "tasty", "delicious", "nice to drink"]
+    surface_variants: ["hǎohē", "hǎo hē"]
+    accent_insensitive: true
+    example: { target: "Kāfēi hěn hǎohē.", english: "The coffee is good." }
+    note: "Literally 'good to drink', said of drinks; food is hǎochī, 'good to eat'. Like every Chinese adjective it needs no shì (to be): kāfēi hěn hǎohē, where hěn (very) is there for the rhythm. Zhēn hǎohē: really good; tài hǎohē le: so good."
+    reference_ids: [mdbg-haohe, wiktionary-haohe]
+  - id: tai_bang_le
+    kind: phrase
+    target: "tài bàng le"
+    part_of_speech: interjection
+    accepted_translations: ["excellent", "great", "wonderful", "very good"]
+    surface_variants: ["tài bàng le", "tài bàng", "zhēn bàng", "hěn bàng", "bàng jí le", "fēicháng bàng"]
+    accent_insensitive: true
+    example: { target: "Nǐ de kāfēi tài bàng le!", english: "Your coffee is excellent!" }
+    note: "Bàng (great, first-rate) praises anything: a coffee, a cook, an idea. Tài ... le means 'so ...!'; zhēn bàng, really great."
+    reference_ids: [mdbg-bang]
+  - id: xiexie
+    kind: word
+    target: "xièxie"
+    part_of_speech: interjection
+    accepted_translations: ["thank you", "thanks"]
+    surface_variants: ["xièxie", "xiè xie", "duōxiè", "duō xiè"]
+    accent_insensitive: true
+    example: { target: "Xièxie nǐ, Gerald.", english: "Thank you, Gerald." }
+    note: "The second xie is said in the neutral tone. Xièxie nǐ: thank you; duōxiè: many thanks. Between close friends and family Chinese thanks less often than English does, so a thanks can sound a little formal; to Gerald that is a compliment."
+    reference_ids: [mdbg-xiexie, wiktionary-xiexie]

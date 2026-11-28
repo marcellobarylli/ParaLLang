@@ -1,0 +1,199 @@
+# Round 009: Market Entrance tutorial (greetings, pronouns). Reference URLs follow the Gerald file's patterns and were
+# not opened from the build container; listed for the owner's content review.
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+version: entrance-greetings-zh-v1
+references:
+  - id: mdbg-ni-hao
+    title: "MDBG Chinese Dictionary: nǐ hǎo"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=nihao"
+  - id: mdbg-nin-hao
+    title: "MDBG Chinese Dictionary: nín hǎo"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=ninhao"
+  - id: mdbg-zaoshang-hao
+    title: "MDBG Chinese Dictionary: zǎoshang hǎo"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zaoshanghao"
+  - id: mdbg-wo
+    title: "MDBG Chinese Dictionary: wǒ"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=wo"
+  - id: mdbg-shi-be
+    title: "MDBG Chinese Dictionary: shì"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=shi"
+  - id: mdbg-jiao
+    title: "MDBG Chinese Dictionary: jiào"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jiao"
+  - id: mdbg-mingzi
+    title: "MDBG Chinese Dictionary: míngzi"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=mingzi"
+  - id: mdbg-ni
+    title: "MDBG Chinese Dictionary: nǐ"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=ni"
+  - id: mdbg-ne
+    title: "MDBG Chinese Dictionary: ne"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=ne"
+  - id: wiktionary-ni-hao
+    title: "Wiktionary: nǐ hǎo (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/n%C7%90_h%C7%8Eo"
+  - id: wiktionary-nin-hao
+    title: "Wiktionary: nín hǎo (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/n%C3%ADn_h%C7%8Eo"
+  - id: wiktionary-zaoshang-hao
+    title: "Wiktionary: zǎoshang hǎo (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/z%C7%8Eoshang_h%C7%8Eo"
+  - id: wiktionary-wo
+    title: "Wiktionary: wǒ (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/w%C7%92"
+  - id: wiktionary-shi-be
+    title: "Wiktionary: shì (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/sh%C3%AC"
+  - id: wiktionary-jiao
+    title: "Wiktionary: jiào (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/ji%C3%A0o"
+  - id: wiktionary-ni
+    title: "Wiktionary: nǐ (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/n%C7%90"
+  - id: mdbg-huanying
+    title: "MDBG Chinese Dictionary: huānyíng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=huanying"
+  - id: mdbg-renshi
+    title: "MDBG Chinese Dictionary: rènshi"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=renshi"
+  - id: mdbg-gaoxing
+    title: "MDBG Chinese Dictionary: gāoxìng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=gaoxing"
+  - id: mdbg-shichang
+    title: "MDBG Chinese Dictionary: shìchǎng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=shichang"
+entries:
+  - id: ni_hao
+    kind: phrase
+    target: "nǐ hǎo"
+    part_of_speech: interjection
+    accepted_translations: ["hello", "hi"]
+    surface_variants: ["nǐ hǎo", "nǐhǎo"]
+    accent_insensitive: true
+    example:
+      target: "Nǐ hǎo, Portia!"
+      english: "Hi, Portia!"
+    note: "Literally 'you good'. The everyday hello, to anyone of your own age or younger; it is not said on leaving (that is zàijiàn). Two third tones in a row: the first is said rising, ní hǎo, but written nǐ hǎo."
+    reference_ids: [mdbg-ni-hao, wiktionary-ni-hao]
+  - id: nin_hao
+    kind: phrase
+    target: "nín hǎo"
+    part_of_speech: interjection
+    accepted_translations: ["hello", "good day", "how do you do"]
+    surface_variants: ["nín hǎo", "nínhǎo"]
+    accent_insensitive: true
+    example:
+      target: "Nín hǎo, lǎoshī."
+      english: "Hello, teacher."
+    note: "The polite hello, with nín, the respectful you: to an elder, a teacher, a customer or a stranger you wish to honour (or a door)."
+    reference_ids: [mdbg-nin-hao, wiktionary-nin-hao]
+  - id: zaoshang_hao
+    kind: phrase
+    target: "zǎoshang hǎo"
+    part_of_speech: interjection
+    accepted_translations: ["good morning"]
+    surface_variants: ["zǎoshang hǎo", "zǎo shang hǎo", "zǎo"]
+    accent_insensitive: true
+    example:
+      target: "Zǎoshang hǎo, Portia."
+      english: "Good morning, Portia."
+    note: "Said in the morning only, until about ten; among friends just zǎo! (early!). There is no greeting for the rest of the day: nǐ hǎo or nín hǎo serves."
+    reference_ids: [mdbg-zaoshang-hao, wiktionary-zaoshang-hao]
+  - id: wo
+    kind: word
+    target: "wǒ"
+    part_of_speech: pronoun
+    accepted_translations: ["I", "me"]
+    surface_variants: ["wǒ"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ shì Sam."
+      english: "I am Sam."
+    note: "I and me alike: Chinese pronouns do not change with their place in the sentence (wǒ ài nǐ, I love you; nǐ ài wǒ, you love me). Wǒmen is we."
+    reference_ids: [mdbg-wo, wiktionary-wo]
+  - id: wo_shi
+    kind: phrase
+    target: "wǒ shì"
+    part_of_speech: verb_phrase
+    accepted_translations: ["I am", "I'm"]
+    surface_variants: ["wǒ shì"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ shì Sam."
+      english: "I'm Sam."
+    note: "Shì (to be) links two nouns: wǒ shì Sam, wǒ shì xuésheng (I am a student). It never changes with the person (nǐ shì, tā shì) and is not used before an adjective: wǒ hěn lèi, I am tired."
+    reference_ids: [mdbg-wo, mdbg-shi-be, wiktionary-shi-be]
+  - id: wo_jiao
+    kind: phrase
+    target: "wǒ jiào"
+    part_of_speech: verb_phrase
+    accepted_translations: ["my name is", "I am called", "I'm called"]
+    surface_variants: ["wǒ jiào", "wǒ de míngzi shì", "wǒ de míngzi jiào"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ jiào Sam."
+      english: "My name is Sam."
+    note: "Literally I am called, from jiào (to be called, also to call). Wǒ de míngzi shì Sam (my name is Sam) says the same a little more formally; with a surname alone it is wǒ xìng Lǐ (my surname is Li)."
+    reference_ids: [mdbg-jiao, mdbg-mingzi, wiktionary-jiao]
+  - id: ni_ne
+    kind: phrase
+    target: "nǐ ne"
+    part_of_speech: question
+    accepted_translations: ["and you", "what about you"]
+    surface_variants: ["nǐ ne"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ jiào Sam. Nǐ ne?"
+      english: "My name is Sam. And you?"
+    note: "Ne after a word asks the same question again about it: and you? Nǐ is the informal you, for one person; the polite form is nín (nín ne?)."
+    reference_ids: [mdbg-ni, mdbg-ne, wiktionary-ni]
+  - id: ni_jiao_shenme_mingzi
+    kind: phrase
+    target: "nǐ jiào shénme míngzi"
+    part_of_speech: question
+    accepted_translations: ["what is your name", "what's your name", "what are you called"]
+    surface_variants: ["nǐ jiào shénme míngzi", "nǐ jiào shénme", "nǐ de míngzi shì shénme"]
+    accent_insensitive: true
+    example:
+      target: "Nǐ jiào shénme míngzi?"
+      english: "What's your name?"
+    note: "Literally 'you are called what name?': Chinese puts the question word (shénme, what) where the answer will go, wǒ jiào Sam. Informal; a stranger or an elder is asked nín guìxìng? (your honourable surname?)."
+    reference_ids: [mdbg-jiao, mdbg-mingzi, wiktionary-jiao]
+  # Round 019: ambient vocabulary, words Portia may use freely; not targets of any objective.
+  - id: huanying
+    kind: word
+    target: "huānyíng"
+    part_of_speech: interjection
+    accepted_translations: ["welcome"]
+    surface_variants: ["huānyíng", "huān yíng"]
+    accent_insensitive: true
+    example:
+      target: "Huānyíng láidào shìchǎng!"
+      english: "Welcome to the market!"
+    note: "Welcome, the same to anyone and to any number of people. A shop greets its customers with huānyíng guānglín (welcome, you honour us with your visit)."
+    reference_ids: [mdbg-huanying]
+  - id: renshi_ni_hen_gaoxing
+    kind: phrase
+    target: "rènshi nǐ hěn gāoxìng"
+    part_of_speech: interjection
+    accepted_translations: ["nice to meet you", "pleased to meet you"]
+    surface_variants: ["rènshi nǐ hěn gāoxìng", "hěn gāoxìng rènshi nǐ", "xìnghuì"]
+    accent_insensitive: true
+    example:
+      target: "Rènshi nǐ hěn gāoxìng, Portia."
+      english: "Nice to meet you, Portia."
+    note: "Literally 'knowing you, (I am) very glad'; also hěn gāoxìng rènshi nǐ. Xìnghuì is the formal, written-sounding version (fortunate to meet)."
+    reference_ids: [mdbg-renshi, mdbg-gaoxing]
+  - id: shichang
+    kind: word
+    target: "shìchǎng"
+    part_of_speech: noun
+    accepted_translations: ["market", "marketplace"]
+    surface_variants: ["shìchǎng"]
+    accent_insensitive: true
+    example:
+      target: "Shìchǎng kāi le."
+      english: "The market is open."
+    note: "A market, the place and the economic idea alike; a food market is a cài shìchǎng (vegetable market). Chinese nouns have no plural: one market or many, shìchǎng."
+    reference_ids: [mdbg-shichang]

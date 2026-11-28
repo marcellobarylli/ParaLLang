@@ -1,0 +1,65 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+id: imp_coffee_greeting
+character: characters/enemies/imp_coffee.yaml
+location: coffee_cart
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player orders a coffee without milk in Chinese"
+max_turns: 20
+resolved_message: "Gerald grudgingly approves. The coffee order is complete."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: order_coffee
+    prompt: "Order a coffee from Gerald, using Chinese for the coffee request."
+    intent: "The player asks Gerald for coffee for themself."
+    target_vocabulary_ids: [wo_yao, kafei, nongsuo_kafei, hei_kafei]
+    required_target_groups:
+      - [kafei, nongsuo_kafei, hei_kafei]
+    grammar_constraints:
+      - "Use a first-person request or an unambiguous direct order (wǒ yào, wǒ xiǎng yào, qǐng gěi wǒ, or the drink alone with a measure word: yì bēi kāfēi)."
+      - "The coffee target must be expressed in Chinese; an English-only order does not pass."
+    accepted_examples:
+      - "Wǒ yào yì bēi kāfēi."
+      - "Qǐng gěi wǒ yì bēi kāfēi."
+      - "I would like yì bēi kāfēi, please."
+    negative_examples:
+      - text: "I want coffee."
+        reason: "English-only; it does not demonstrate the Chinese coffee target."
+      - text: "Gerald said, 'yì bēi kāfēi'."
+        reason: "A quotation is not the player's own order."
+      - text: "She wants yì bēi kāfēi."
+        reason: "It orders for someone else rather than the player."
+    reference_meaning: "A direct request by the player for coffee."
+    hint_limit: 2
+    next_objective: no_milk
+    assessment_reference_ids: [mdbg-kafei, mdbg-nongsuo, mdbg-yao]
+  - id: no_milk
+    prompt: "Make clear that your coffee must have no milk, using Chinese."
+    intent: "The player orders their coffee without milk or as black coffee."
+    target_vocabulary_ids: [bu_jia_niunai, hei_kafei]
+    required_target_groups:
+      - [bu_jia_niunai, hei_kafei]
+    grammar_constraints:
+      - "Use one authored Chinese no-milk (bù jiā niúnǎi, bú yào nǎi) or black-coffee (hēi kāfēi) expression in the player's own order."
+      - "Reject negated, contradicted, quoted, third-person, and off-topic occurrences."
+    accepted_examples:
+      - "Wǒ yào yì bēi kāfēi, bù jiā niúnǎi."
+      - "I want my hēi kāfēi, please."
+      - "Bú yào nǎi, xièxie."
+    negative_examples:
+      - text: "Bú shì bù jiā niúnǎi, yào jiā niúnǎi."
+        reason: "The phrase is explicitly negated and contradicted by 'add milk'."
+      - text: "The sign says 'bù jiā niúnǎi'."
+        reason: "A quotation about a sign is not an order."
+      - text: "My friend takes hēi kāfēi."
+        reason: "It describes someone else's preference."
+      - text: "Bù jiā niúnǎi is three words."
+        reason: "It discusses the phrase rather than ordering coffee."
+    reference_meaning: "The player's established coffee order contains no milk."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [mdbg-kafei, mdbg-jia, mdbg-niunai]

@@ -1,0 +1,34 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review. Reference URLs follow the existing
+# patterns and were not opened from the build container.
+version: gerald-confidence-zh-v1
+references:
+  - id: mdbg-pengyou
+    title: "MDBG Chinese Dictionary: péngyou"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=pengyou"
+  - id: mdbg-ganbei
+    title: "MDBG Chinese Dictionary: gānbēi"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=ganbei"
+  - id: wiktionary-ganbei
+    title: "Wiktionary: gānbēi (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/g%C4%81nb%C4%93i"
+entries:
+  - id: pengyou
+    kind: word
+    target: "péngyou"
+    part_of_speech: noun
+    accepted_translations: ["friend", "friends"]
+    surface_variants: ["péngyou", "péng you", "péngyoumen"]
+    accent_insensitive: true
+    example: { target: "Nǐ shì wǒ de péngyou, Gerald.", english: "You are my friend, Gerald." }
+    note: "The same word for a man, a woman, one friend or several (péngyoumen, friends, when the group is stressed). 'Nǐ shì wǒ de péngyou' is the usual way to say 'you are my friend'; hǎo péngyou is a good friend, lǎo péngyou an old one."
+    reference_ids: [mdbg-pengyou]
+  - id: ganbei
+    kind: word
+    target: "gānbēi"
+    part_of_speech: interjection
+    accepted_translations: ["cheers", "bottoms up"]
+    surface_variants: ["gānbēi", "gān bēi"]
+    accent_insensitive: true
+    example: { target: "Gānbēi, Gerald!", english: "Cheers, Gerald!" }
+    note: "A toast, said as the glasses (or cups) touch; literally 'dry the cup', and at a banquet it means drink it all. Wèi ... gānbēi toasts to something: wèi yǒuyì gānbēi, to friendship."
+    reference_ids: [mdbg-ganbei, wiktionary-ganbei]

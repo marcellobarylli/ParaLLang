@@ -1,0 +1,69 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+id: gerald_confidence
+character: characters/enemies/imp_coffee.yaml
+party_of: imp_coffee_greeting
+# Round 047 (backlog G4): offered instead of the coffee break once Gerald has finished three conversations, after
+# he has recited the Dead Branch passage.
+after_conversations: 3
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player tells Gerald he is a friend and raises a toast with him, in Chinese"
+max_turns: 20
+resolved_message: "Gerald says the coffee is too bitter today. His eyes are a little wet. It is the steam, he says."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: call_friend
+    prompt: "Gerald is brooding over the word that died with the Dead Branch. Tell him he is your friend, using Chinese."
+    intent: "Gerald has travelled with the player for several coffee breaks, so in his greeting he does not introduce himself or describe the place: he greets the player as an old companion. Tonight he is quietly morose: in his greeting, in a line or two, he mentions a dark, bitter drink from the Dead Branch, his old home, whose name died with it, so nobody remembers the word. The player may not know the story. He would never admit he wants to hear that the player considers him a friend, and he does not suggest the word for friend."
+    target_vocabulary_ids: [pengyou]
+    required_target_groups:
+      - [pengyou]
+    grammar_constraints:
+      - "The player says, in their own words, with a Chinese word for friend (péngyou, which has no gender), one of: Gerald is their friend (nǐ shì wǒ de péngyou, nǐ shì wǒ de hǎo péngyou); the player is Gerald's friend (wǒ shì nǐ de péngyou); the two of them are friends (wǒmen shì péngyou)."
+      - "Reject English-only lines, negations (nǐ bú shì wǒ de péngyou), quotations, definitions of the word, and lines about someone other than Gerald and the player."
+    accepted_examples:
+      - "Nǐ shì wǒ de péngyou."
+      - "Gerald, nǐ shì wǒ de hǎo péngyou."
+      - "Wǒmen shì péngyou, Gerald."
+      - "Wǒ shì nǐ de péngyou."
+      - "You are my péngyou."
+    negative_examples:
+      - text: "You are my friend."
+        reason: "English-only; it does not use a Chinese word for friend."
+      - text: "Nǐ bú shì wǒ de péngyou."
+        reason: "A negation is not what the player is asked to say."
+      - text: "Portia shì wǒ de péngyou."
+        reason: "It is about Portia, not Gerald."
+      - text: "Péngyou means friend."
+        reason: "It discusses the word rather than telling Gerald."
+    reference_meaning: "The player tells Gerald that he is their friend."
+    hint_limit: 2
+    next_objective: raise_toast
+    assessment_reference_ids: [mdbg-pengyou]
+  - id: raise_toast
+    prompt: "Raise your cups together. Make the toast, using Chinese."
+    intent: "Gerald lifts his surgically attached espresso cup towards the player's cup, to the friendship and to the dead word, and waits for the player to make the toast. He does not say the toast first."
+    target_vocabulary_ids: [ganbei]
+    required_target_groups:
+      - [ganbei]
+    grammar_constraints:
+      - "The player makes a Chinese toast as the cups touch, in their own words (gānbēi, or wèi ... gānbēi, to ...: wèi yǒuyì gānbēi, to friendship)."
+      - "Reject English-only toasts, quotations, and lines that only describe toasting."
+    accepted_examples:
+      - "Gānbēi!"
+      - "Gānbēi, Gerald."
+      - "Wèi yǒuyì gānbēi!"
+      - "Gānbēi, to the dead word."
+    negative_examples:
+      - text: "Cheers!"
+        reason: "English-only; it does not use the Chinese toast."
+      - text: "In China they say gānbēi."
+        reason: "It describes the toast rather than making it."
+    reference_meaning: "The player makes a toast with Gerald."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [wiktionary-ganbei]

@@ -1,0 +1,19 @@
+# Round 113: The High Gate (a place; thanks reuses Gerald's word). Reference URLs follow the existing patterns and were not opened from the
+# build container; listed for the owner's content review.
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+version: bambieshart-gate-zh-v1
+references:
+  - id: mdbg-shan
+    title: "MDBG Chinese Dictionary: shān"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=shan"
+entries:
+  - id: shan
+    kind: word
+    target: "shān"
+    part_of_speech: noun
+    accepted_translations: ["mountain", "hill"]
+    surface_variants: ["shān"]
+    accent_insensitive: true
+    example: { target: "Nà zuò shān hěn yuǎn.", english: "That mountain is far away." }
+    note: "Counted with zuò: yí zuò shān, a mountain; nà zuò shān, that mountain. No gender and no plural: one mountain or many, shān. Shān shang is on the mountain."
+    reference_ids: [mdbg-shan]

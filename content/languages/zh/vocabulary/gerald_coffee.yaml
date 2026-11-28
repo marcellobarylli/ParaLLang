@@ -1,0 +1,110 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review. Reference URLs follow the existing
+# patterns and were not opened from the build container.
+version: gerald-coffee-zh-v1
+references:
+  - id: mdbg-kafei
+    title: "MDBG Chinese Dictionary: kāfēi"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=kafei"
+  - id: mdbg-yao
+    title: "MDBG Chinese Dictionary: yào"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=yao"
+  - id: mdbg-jia
+    title: "MDBG Chinese Dictionary: jiā"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jia"
+  - id: mdbg-niunai
+    title: "MDBG Chinese Dictionary: niúnǎi"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=niunai"
+  - id: mdbg-nongsuo
+    title: "MDBG Chinese Dictionary: nóngsuō"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=nongsuo"
+  - id: mdbg-hei
+    title: "MDBG Chinese Dictionary: hēi"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=hei"
+  - id: mdbg-bei
+    title: "MDBG Chinese Dictionary: bēi"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=bei"
+  - id: wiktionary-kafei
+    title: "Wiktionary: kāfēi (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/k%C4%81f%C4%93i"
+  - id: wiktionary-yao
+    title: "Wiktionary: yào (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/y%C3%A0o"
+  - id: wiktionary-niunai
+    title: "Wiktionary: niúnǎi (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/ni%C3%BAn%C7%8Ei"
+  - id: wiktionary-nongsuo
+    title: "Wiktionary: nóngsuō (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/n%C3%B3ngsu%C5%8D"
+entries:
+  - id: kafei
+    kind: word
+    target: "kāfēi"
+    part_of_speech: noun
+    accepted_translations: ["coffee", "a coffee"]
+    surface_variants: ["kāfēi", "kā fēi"]
+    accent_insensitive: true
+    example:
+      target: "Qǐng gěi wǒ yì bēi kāfēi."
+      english: "A coffee, please."
+    note: "A loanword, from the sound of coffee. It is counted in cups, with the measure word bēi: yì bēi kāfēi, a cup of coffee (yī is said yì before it). A Chinese café menu names the kinds: nóngsuō (espresso), měishì (an Americano), ná tiě (a latte)."
+    reference_ids: [mdbg-kafei, mdbg-bei, wiktionary-kafei]
+  - id: wo_yao
+    kind: phrase
+    target: "wǒ yào"
+    part_of_speech: verb_phrase
+    accepted_translations: ["I want", "I would like", "I'd like", "I'll have"]
+    surface_variants: ["wǒ yào", "wǒ xiǎng yào"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ yào yì bēi kāfēi."
+      english: "I would like a coffee."
+    note: "Yào is to want; ordering with wǒ yào is normal and not rude in Chinese. Wǒ xiǎng yào (I would like) is softer, and qǐng gěi wǒ ... (please give me ...) also works. Reviewed as wǒ yào."
+    reference_ids: [mdbg-yao, wiktionary-yao]
+  - id: bu_jia_niunai
+    kind: phrase
+    target: "bù jiā niúnǎi"
+    part_of_speech: verb_phrase
+    accepted_translations: ["without milk", "no milk"]
+    surface_variants: ["bù jiā niúnǎi", "bù jiā niú nǎi", "bù jiā nǎi", "bú yào niúnǎi", "bú yào niú nǎi", "bú yào nǎi"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ yào yì bēi kāfēi, bù jiā niúnǎi."
+      english: "I would like a coffee without milk."
+    note: "Literally 'do not add milk': Chinese orders it as an instruction rather than with a word for without. Bú yào niúnǎi, 'do not want milk', is as common, and nǎi is milk for short. Bù keeps its tone before jiā but is said bú before a fourth tone: bú yào."
+    reference_ids: [mdbg-jia, mdbg-niunai, wiktionary-niunai]
+  - id: nongsuo_kafei
+    kind: phrase
+    target: "nóngsuō kāfēi"
+    part_of_speech: noun_phrase
+    accepted_translations: ["espresso", "an espresso"]
+    surface_variants: ["nóngsuō kāfēi", "nóngsuō", "yìshì nóngsuō"]
+    accent_insensitive: true
+    example:
+      target: "Kěyǐ gěi wǒ zuò yì bēi nóngsuō ma?"
+      english: "Could you make me an espresso?"
+    note: "Nóngsuō means concentrated: nóngsuō kāfēi, on café menus nóngsuō or yìshì nóngsuō, is espresso, made to order with an espresso machine."
+    reference_ids: [mdbg-nongsuo, wiktionary-nongsuo]
+  - id: hei_kafei
+    kind: phrase
+    target: "hēi kāfēi"
+    part_of_speech: noun_phrase
+    accepted_translations: ["black coffee", "coffee without milk"]
+    surface_variants: ["hēi kāfēi", "hēikāfēi", "hēi kā fēi"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ zhǐ hē hēi kāfēi."
+      english: "I only drink black coffee."
+    note: "Hēi is black: hēi kāfēi is coffee without milk (and usually without sugar)."
+    reference_ids: [mdbg-hei, mdbg-kafei]
+  - id: jia_niunai
+    kind: phrase
+    target: "jiā niúnǎi"
+    part_of_speech: verb_phrase
+    accepted_translations: ["with milk", "add milk"]
+    surface_variants: ["jiā niúnǎi", "jiā niú nǎi", "jiā nǎi"]
+    accent_insensitive: true
+    example:
+      target: "Nǐ yào jiā niúnǎi ma?"
+      english: "Do you want milk in it?"
+    note: "Literally 'add milk'; niúnǎi is cow's milk. The English latte is ná tiě, a loan of its sound."
+    reference_ids: [mdbg-jia, mdbg-niunai, wiktionary-niunai]

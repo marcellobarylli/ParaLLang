@@ -1,0 +1,69 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+id: gerald_coffee_break
+character: characters/enemies/imp_coffee.yaml
+party_of: imp_coffee_greeting
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player praises Gerald's coffee and thanks him, in Chinese"
+max_turns: 20
+resolved_message: "Gerald pretends not to be pleased. He is extremely pleased."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_coffee
+    prompt: "Gerald has made you a coffee on the road. Tell him it is good, using Chinese."
+    intent: "Gerald, now travelling in the player's party, has brewed the player a coffee and waits for the player's own verdict on it."
+    target_vocabulary_ids: [haohe, tai_bang_le]
+    required_target_groups:
+      - [haohe, tai_bang_le]
+    grammar_constraints:
+      - "The player gives their own positive verdict on the coffee Gerald made, with a Chinese word for good."
+      - "A drink is praised with hǎohē (good to drink): hǎohē!, kāfēi hěn hǎohē, zhēn hǎohē, tài hǎohē le, or before the noun with de (hěn hǎohē de kāfēi); hǎochī (good to eat) is for food and does not pass for the coffee. Tài bàng le (great, excellent) praises anything. A Chinese adjective needs no shì: kāfēi hěn hǎohē, where hěn is there for the rhythm rather than for 'very'."
+      - "Reject English-only praise, negated verdicts (bù hǎohē, bú tài hǎohē), quotations, and praise of anything other than the coffee."
+    accepted_examples:
+      - "Hǎohē!"
+      - "Kāfēi hěn hǎohē."
+      - "Tài bàng le, Gerald."
+      - "This is hǎohē."
+      - "Zhēn hǎohē de kāfēi!"
+    negative_examples:
+      - text: "It's good."
+        reason: "English-only; it does not use a Chinese word for good."
+      - text: "Kāfēi hěn hǎochī."
+        reason: "Hǎochī is good to eat, said of food; a drink is hǎohē."
+      - text: "Bù hǎohē."
+        reason: "A negated verdict is not praise."
+      - text: "Gerald says it is hǎohē."
+        reason: "It reports someone else's words rather than giving the player's verdict."
+      - text: "Your cart is tài bàng le."
+        reason: "It praises the cart, not the coffee."
+    reference_meaning: "The player's own verdict that the coffee is good."
+    hint_limit: 2
+    next_objective: thank_gerald
+    assessment_reference_ids: [mdbg-haohe, mdbg-bang]
+  - id: thank_gerald
+    prompt: "Thank Gerald for the coffee, using Chinese."
+    intent: "The player thanks Gerald for the coffee he made."
+    target_vocabulary_ids: [xiexie]
+    required_target_groups:
+      - [xiexie]
+    grammar_constraints:
+      - "The player thanks Gerald in Chinese, in their own words."
+      - "Reject English-only thanks, quotations, and thanks addressed to someone else."
+    accepted_examples:
+      - "Xièxie!"
+      - "Xièxie nǐ, Gerald."
+      - "Duōxiè, Gerald."
+      - "Xièxie for the coffee."
+    negative_examples:
+      - text: "Thank you."
+        reason: "English-only; it does not use the Chinese thanks."
+      - text: "Xièxie is how you say thanks."
+        reason: "It discusses the word rather than thanking Gerald."
+    reference_meaning: "The player thanks Gerald."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [mdbg-xiexie]

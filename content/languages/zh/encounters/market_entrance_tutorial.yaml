@@ -1,0 +1,97 @@
+# Round 009: the Market Entrance tutorial (backlog A3). Portia the Archway asks for a greeting, the player's name
+# and her own name back (greetings, pronouns); the companion briefing introduces the mechanics.
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+id: market_entrance_tutorial
+character: characters/enemies/archway_portia.yaml
+location: market_entrance
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player greets Portia, says who they are and asks her name back, in Chinese"
+max_turns: 20
+resolved_message: "Portia sighs with relief, unlocks herself and lets you into the market."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+companion_briefing:
+  - "Portia only lets in people who greet her properly. Answer in Chinese; mixing in English is fine while you learn."
+  - "Tap a word under her line to see what it means, or Translate sentence for the whole line. On her newest line each one uses a hint from my allowance."
+  - "The words and phrases shown beneath her lines go into your Spellbook, where you can review them later."
+# Round 019: words Portia may use freely (not objective answers); they get chips and Spellbook cards.
+ambient_vocabulary_ids: [huanying, renshi_ni_hen_gaoxing, shichang]
+objectives:
+  - id: greet
+    prompt: "Greet Portia in Chinese."
+    intent: "The player greets Portia."
+    target_vocabulary_ids: ["ni_hao", "nin_hao", "zaoshang_hao"]
+    required_target_groups:
+      - ["ni_hao", "nin_hao", "zaoshang_hao"]
+    grammar_constraints:
+      - "Use an authored Chinese greeting addressed to Portia as the player's own greeting (nǐ hǎo, the polite nín hǎo, or zǎoshang hǎo in the morning)."
+      - "An English-only greeting does not pass; reject quoted greetings and discussion of the word."
+    accepted_examples:
+      - "Nǐ hǎo!"
+      - "Nín hǎo, Portia."
+      - "Nǐ hǎo, nice to meet you."
+      - "Zǎoshang hǎo, Portia."
+    negative_examples:
+      - text: "Hello!"
+        reason: "English-only; it does not greet in Chinese."
+      - text: "Portia said 'nǐ hǎo'."
+        reason: "A quotation is not the player's own greeting."
+      - text: "Nǐ hǎo means hello."
+        reason: "It discusses the word rather than greeting Portia."
+    reference_meaning: "The player says hello to Portia."
+    hint_limit: 2
+    next_objective: introduce
+    assessment_reference_ids: ["mdbg-ni-hao", "mdbg-nin-hao", "mdbg-zaoshang-hao"]
+  - id: introduce
+    prompt: "Tell Portia who you are, in Chinese."
+    intent: "The player tells Portia their own name or who they are."
+    target_vocabulary_ids: ["wo", "wo_shi", "wo_jiao"]
+    required_target_groups:
+      - ["wo_shi", "wo_jiao"]
+    grammar_constraints:
+      - "Use a first-person statement of who the player is or what they are called (wǒ shì, wǒ jiào, wǒ de míngzi shì); the name itself may be in any language."
+      - "Reject third-person, second-person, quoted or metalinguistic statements."
+    accepted_examples:
+      - "Wǒ shì Sam."
+      - "Wǒ jiào Alex."
+      - "Wǒ de míngzi shì Robin."
+      - "Hi, wǒ jiào Sam."
+    negative_examples:
+      - text: "I am Sam."
+        reason: "English-only; it does not use the Chinese first person."
+      - text: "Tā jiào Sam."
+        reason: "It says what someone else is called (she is called), not the player."
+      - text: "The words wǒ shì mean I am."
+        reason: "It discusses the words rather than saying who the player is."
+    reference_meaning: "The player introduces themself."
+    hint_limit: 2
+    next_objective: ask_back
+    assessment_reference_ids: ["mdbg-wo", "mdbg-shi-be", "mdbg-jiao"]
+  - id: ask_back
+    prompt: "Ask Portia who she is in return, in Chinese."
+    intent: "The player asks Portia her name or who she is."
+    target_vocabulary_ids: ["ni_ne", "ni_jiao_shenme_mingzi"]
+    required_target_groups:
+      - ["ni_ne", "ni_jiao_shenme_mingzi"]
+    grammar_constraints:
+      - "Ask Portia, addressed with the informal nǐ, who she is or what her name is (a short 'and you?' question, nǐ ne, or nǐ jiào shénme míngzi)."
+      - "Reject questions about someone or something else, quotations and discussion of the words."
+    accepted_examples:
+      - "Nǐ ne?"
+      - "Nǐ jiào shénme míngzi?"
+      - "And nǐ ne? Nǐ jiào shénme?"
+    negative_examples:
+      - text: "And you?"
+        reason: "English-only; it does not use the Chinese you."
+      - text: "Nǐ ne is Chinese for and you."
+        reason: "It discusses the words rather than asking Portia."
+      - text: "Zhè ge jiào shénme míngzi?"
+        reason: "It asks the name of something else (this), not Portia's."
+    reference_meaning: "The player asks Portia's name in return."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["mdbg-ni", "mdbg-jiao", "mdbg-mingzi"]
