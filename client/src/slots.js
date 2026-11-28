@@ -8,8 +8,10 @@
 
 export const SLOT_KEY = 'parallang.slot';
 export const SLOT_COUNT = 3;
+// Round 216: the learner's own account of their level (display.js's LEVELS), each game's own.
+export const LEVEL_KEY = 'parallang.level';
 export const LANGUAGE_KEY = 'parallang.language';
-export const SLOTTED_KEYS = Object.freeze(['parallang.learnerId', 'parallang.save', 'parallang.placeId', 'parallang.title', 'parallang.welcomed', LANGUAGE_KEY]);
+export const SLOTTED_KEYS = Object.freeze(['parallang.learnerId', 'parallang.save', 'parallang.placeId', 'parallang.title', 'parallang.welcomed', LEVEL_KEY, LANGUAGE_KEY]);
 
 const read = (storage, key) => { try { return storage?.getItem?.(key) ?? null; } catch { return null; } };
 

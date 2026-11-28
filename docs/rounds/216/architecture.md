@@ -19,3 +19,5 @@
    off, so the server needs no change. Settings' slider and "Follow my level" still move it afterwards.
 3. **Asked on a new game's title** (`freshGame`), above the journey button, which stays disabled until a tier is
    picked. A game already begun is not asked again.
+4. **The level is the slot's own** (`parallang.level`, a slotted key): a new, deleted or started-over slot is asked
+   again and does not inherit another game's share; Delete and Start over clear it with the slot.

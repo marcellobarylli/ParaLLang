@@ -16,3 +16,18 @@ test('a level is stored with its share and is sent in place of the stage\'s', ()
   expect(levelOf('expert')).toBeNull();
   expect(loadDisplay(memory()).level).toBeNull();
 });
+
+import { createGameStore } from '../stores/gameStore.js';
+import { LEVEL_KEY, SLOT_KEY } from '../slots.js';
+
+test('a level belongs to its slot: a new slot is asked again and does not inherit the share', () => {
+  const storage = memory();
+  const first = createGameStore({ api: {}, storage, dungeon: { id: 'd', sites: [], start: null } });
+  first.getState().setLevel('some');
+  expect(storage.values.get(LEVEL_KEY)).toBe('some');
+  expect(first.getState().display.level).toBe('some');
+  storage.setItem(SLOT_KEY, '2');
+  const second = createGameStore({ api: {}, storage, dungeon: { id: 'd', sites: [], start: null } });
+  expect(second.getState().display.level).toBeNull();
+  expect(immersionOf(second.getState())).toBeNull();
+});

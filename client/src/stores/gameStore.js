@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
 import { LEVELS, clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf } from '../display.js';
-import { LANGUAGE_KEY, chooseSlot, clearSlot, currentSlot, learnerOf, setSlotLanguage, slotSummaries, slottedStorage } from '../slots.js';
+import { LANGUAGE_KEY, LEVEL_KEY, chooseSlot, clearSlot, currentSlot, learnerOf, setSlotLanguage, slotSummaries, slottedStorage } from '../slots.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
 
@@ -80,6 +80,14 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
   // whose language can still be chosen on the title.
   const readSlot = (key) => { try { return storage?.getItem?.(key) || null; } catch { return null; } };
   const freshGame = !readSlot(LEARNER_KEY);
+  // Round 216: the level belongs to the slot's game. A new game has none until it is said on the title (and does not
+  // inherit another game's share); a game begun before levels keeps the display as it was.
+  const displayOf = () => {
+    const display = loadDisplay(storage);
+    const level = LEVELS.find((entry) => entry.id === readSlot(LEVEL_KEY));
+    if (level) return { ...display, level: level.id, immersion: level.share, immersionAuto: false };
+    return freshGame ? { ...display, level: null, immersionAuto: true } : { ...display, level: null };
+  };
   if (!firstDungeon) throw new Error('createGameStore needs the dungeon (src/dungeon.js)');
   const bundled = new Map([firstDungeon, ...(dungeons ?? [])].map((entry) => [entry.id, entry]));
   let dungeon = firstDungeon; // the bundled file of the dungeon the player is in
@@ -311,7 +319,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       savedAt: null, // when this browser's copy of the save was last written (the server's clock)
       saveStore: null, // round 146: where the server keeps its saves (its health check's `saves`), read when Settings opens
       settings: loadSettings(storage),
-      display: loadDisplay(storage),
+      display: displayOf(),
       settingsOpen: false,
       learnerId: null,
       language: null,
@@ -729,7 +737,9 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       // Round 216: the level said on the title; it sets the share of the language and takes the slider's place.
       setLevel: (id) => {
         const level = LEVELS.find((entry) => entry.id === id);
-        if (level) set({ display: saveDisplay({ ...get().display, level: level.id, immersion: level.share, immersionAuto: false }, storage) });
+        if (!level) return;
+        try { storage?.setItem?.(LEVEL_KEY, level.id); } catch { /* private mode: kept for this page only */ }
+        set({ display: saveDisplay({ ...get().display, level: level.id, immersion: level.share, immersionAuto: false }, storage) });
       },
       // Round 177: whether the share follows the learner's level (the stage's share) instead of the slider.
       setImmersionAuto: (on) => set({ display: saveDisplay({ ...get().display, immersionAuto: on !== false }, storage) }),
