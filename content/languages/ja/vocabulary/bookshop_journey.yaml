@@ -2,8 +2,8 @@
 # existing patterns and were not opened from the build container; listed for the owner's content review.
 # Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
 # The singular nen (year) is a counter, joined to its number (nijūnen); the form nen is kept for a learner who writes
-# the number apart. The reference for namae has its own id (jisho-namae-bookshop), as the entrance's file defines
-# jisho-namae. The Cyclops' Nobody is Daredemonai: see encounters/old_bookshop_bookworm.yaml.
+# the number apart. Namae cites the entrance's references (jisho-namae, wiktionary-namae in entrance_greetings.yaml).
+# The Cyclops' Nobody is Daredemonai: see encounters/old_bookshop_bookworm.yaml.
 version: bookshop-journey-ja-v1
 references:
   - id: jisho-monogatari
@@ -21,9 +21,6 @@ references:
   - id: jisho-nen
     title: 'Jisho: nen'
     url: https://jisho.org/search/nen
-  - id: jisho-namae-bookshop
-    title: 'Jisho: namae'
-    url: https://jisho.org/search/namae
   - id: jisho-dare-demo-nai
     title: 'Jisho: dare demo nai'
     url: https://jisho.org/search/dare%20demo%20nai
@@ -128,7 +125,8 @@ entries:
       english: My name is Nobody.
     note: "With the polite prefix, onamae is someone else's name (Onamae wa?); of your own you say namae."
     reference_ids:
-      - jisho-namae-bookshop
+      - jisho-namae
+      - wiktionary-namae
   - id: daredemonai
     kind: phrase
     target: Daredemonai

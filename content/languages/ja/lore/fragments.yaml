@@ -80,7 +80,7 @@ fragments:
     found_after: the_rift_errata
     found: "Left behind when the Rift narrowed to a hairline: a loose thread, and the words that were stitched along it."
     text: >-
-      Shima de wa, Journathan no tsuma ga, hiru wa kyōkatabira o ori, yoru ni wa sore o hodoite ita.
+      Kokyō de wa, Journathan no tsuma ga, hiru wa kyōkatabira o ori, yoru ni wa sore o hodoite ita.
       Kyūkonsha-tachi wa, kanojo ga jikan o kasegu tsumori na no da to omotte ita. Jitsu wa, kare ga kaeru made,
       sekai no eda-eda o nuime goto ni hedatete ita no de aru.
     translation: >-
@@ -122,7 +122,7 @@ fragments:
     found: "Folded around a jar of dried mushrooms at the back of Mortimer's stall, labelled NOT FOR SALE in several different hands."
     text: >-
       Kareeda no ne ni wa aojiroi kinoko ga haete ite, owatta sekai o kuraitsukushi, tsuchi ni kaete ita.
-      Journathan wa sono hōshi o suikomi, ikeru mono ni katsute hanasareta koto naki gengo de yume o mita. Me o
+      Journathan wa sono kona o suikomi, ikeru mono ni katsute hanasareta koto naki gengo de yume o mita. Me o
       samasu to, kare no mawari ni wa umareta bakari no sekai ga ari, sono sekai wa sude ni sono gengo o katatte
       ita. Kono shomotsu mo onaji yō ni umareta no da, to iu mono mo aru.
     translation: >-
@@ -134,7 +134,7 @@ fragments:
       - { word: "aojiroi kinoko", meaning: "pale mushrooms" }
       - { word: "haete ite", meaning: "grew" }
       - { word: "kuraitsukushi", meaning: "devoured" }
-      - { word: "hōshi", meaning: "spores" }
+      - { word: "kona", meaning: "spores (a fine powder)" }
       - { word: "suikomi", meaning: "breathed in" }
       - { word: "yume o mita", meaning: "dreamed" }
       - { word: "ikeru mono ni", meaning: "by a living soul" }
@@ -146,7 +146,7 @@ fragments:
     after_conversations: 3
     found: "On your third tasting, Mortimer lowers his voice and recites the one passage of The Journey he refuses to slice."
     text: >-
-      Taiyō no shima de wa, shinsei na ushi no mure ga kusa o hande ita. Journathan wa suifu-tachi ni, sore ni
+      Taiyō no kojima de wa, shinsei na ushi no mure ga kusa o hande ita. Journathan wa suifu-tachi ni, sore ni
       fureru na to itta. Shikashi, kūfuku wa chikai ni katta: karera wa kemono o aburi, kushi no ue de sono mi ga
       mō to naita. Sore irai, mi o kiru mono wa yurushi o kou.
     translation: >-
@@ -191,7 +191,7 @@ fragments:
     after_conversations: 3
     found: "On your third reading, Marginalia turns to a page she keeps folded down and reads it without looking."
     text: >-
-      Journathan wa kojiki no sugata de shima ni kaette kita ga, kazoku wa kare da to kizukanakatta. Tada, mon no
+      Journathan wa kojiki no sugata de kokyō ni kaette kita ga, kazoku wa kare da to kizukanakatta. Tada, mon no
       mae no koedame ni nesobette ita oita inu dake ga, mimi o tate, shippo o futta. Inu wa sono aida zutto, kare
       o machitsuzukete ita no da. Soshite, manzokuge ni me o tojita.
     translation: >-
@@ -211,7 +211,7 @@ fragments:
     found_after: imp_coffee_greeting
     found: "Pinned under Gerald's tip jar, on the back of an unpaid bill signed with a flourish."
     text: >-
-      Shomotsu de wa, kare wa shima ni kaette kuru. Shikashi kare jishin wa, kesshite tadoritsuite nado inakatta
+      Shomotsu de wa, kare wa kokyō ni kaette kuru. Shikashi kare jishin wa, kesshite tadoritsuite nado inakatta
       to chikau. Kyō no kare wa hiza no kishimu rō-eiyū de, rikutsu no ue de wa imanao tochū de aru. Doko e iku no
       ka to kikeba, taisetsu na no wa mokutekichi de wa naku, michinori na no da to kotaeru. Soshite tameiki o
       morasu: kare jishin mo, sono serifu wa kiki akita no da.

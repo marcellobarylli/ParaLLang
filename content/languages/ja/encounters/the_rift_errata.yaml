@@ -47,12 +47,12 @@ containment_file:
   # Round 112: an annex in Errata's own voice (LORE.md, Infohazards: the root language; the branches' collision), as
   # round 111's on CM-001. The text holds no answer (server test). Authored, not generated; pending a native review.
   # Round 223: in plain (dictionary) forms, a written record's style; it avoids every target form and stem of the pack
-  # (no kotoba, shite or desu), so the words are gengo, motsu and the like.
+  # (no kotoba, shite, iru or desu), so the words are gengo, motsu, machitsuzukeru and the like.
   annex:
     id: "cm002_seam_minutes"
     title: "Annex A: minutes of the seam"
     redaction: "Your companion has blacked out every line of it. \"Not this one. This is the thing itself talking, not a file about it. If you read it, I will need a while to get over it: a hint fewer for each objective of the next conversation you finish.\""
-    text: "Sakeme no gijiroku. Eda to eda ga chikazuku to, fureau tokoro de gengo wa imi o ushinau. Ayamari ka? Chigau. Minna ni gokai sareta gengo no nokori wa, kono katachi o motsu. Soko fukaku, ki no ne no chikaku ni, furui koe ga nemuru. Ano koe wa kesshite machigaenai. Matte iru."
+    text: "Sakeme no gijiroku. Eda to eda ga chikazuku to, fureau tokoro de gengo wa imi o ushinau. Ayamari ka? Chigau. Minna ni gokai sareta gengo no nokori wa, kono katachi o motsu. Soko fukaku, ki no ne no chikaku ni, furui koe ga nemuru. Ano koe wa kesshite machigaenai. Machitsuzukeru."
     translation: "Minutes of the seam. When the branches draw near, words lose their meaning where they touch. A mistake? No. What remains of a tongue, when everyone understands it badly, has this shape. Beneath lies an ancient voice, near the root of the tree. That one never makes mistakes. It waits."
     glossary:
       - { word: "gijiroku", meaning: "minutes" }
@@ -64,7 +64,7 @@ containment_file:
       - { word: "gengo", meaning: "tongue, speech" }
       - { word: "gokai sareta", meaning: "understood badly (misunderstood)" }
       - { word: "ki no ne", meaning: "the root of the tree" }
-      - { word: "matte iru", meaning: "waits" }
+      - { word: "machitsuzukeru", meaning: "waits (keeps on waiting)" }
     exposure_note: "Exposure log: read in full by the bearer of this Spellbook. The seam has noted the reader's address. Containment of the reader is pending."
 objectives:
   - id: order
