@@ -1,0 +1,160 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 144: the words of curriculum stage B1.2 (the skeleton is content/curriculum/06_b1_2.yaml). The Italian
+# original was authored by Claude from the functions of the B1 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
+# defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 223: the A1 and A2 Japanese stages were written at the same time as this one, so every word this stage uses
+# from them is defined here or in 05_b1_1.yaml under its natural id; a merge pass keeps the earlier stage's entry.
+stage: b1_2
+version: curriculum-b1-2-ja-v1
+grammar:
+  hopes: "Japanese has no subjunctive: a plain form + to ii desu ne hopes for something (ashita hareru to ii desu ne); tanoshimi ni shite imasu for what you look forward to; te-form + hoshii for wanting someone else to do something (kite hoshii); ~ koto ga taisetsu desu; ganbatte, odaiji ni."
+  hypotheses: "-tara for 'if' and 'when' (ame ga futtara, jikan ga attara, yokattara); nara after a noun (ame nara); moshi to announce it. Japanese has no conditional mood: the result is a plain present, a -tai wish or deshō (ie o kau deshō), whether the if is likely or not."
+  retelling: "Quoting with to: kuru to iimashita, to itte imashita; the passive for being asked or told (kikaremashita, iwaremashita); to kikimashita and rashii desu for what you heard; hontō desu ka; shinjimasu, shinjiraremasen."
+  customs: "No word for 'one' is needed: the plain sentence says what people do (oshōgatsu ni wa osechi o tabemasu); ~ shūkan ga arimasu, ~ no ga futsū desu; ippō and ~ no ni taishite for contrast; ~ ni odorokimashita; ~ ni narete imasen."
+  persuading: "-mashō and ~ no wa dō desu ka to propose; ~ hō ga benri desu; ~ ga, sono kawari ~ for 'on the other hand'; shikashi, kedo; tonikaku; tashika ni to concede; sore de ii desu."
+  life_story: "umaremashita, sodachimashita, hikkoshimashita; the te imasu form with a span of time for what still goes on (jūnen mae kara sunde imasu, sankagetsu naratte imasu); plain past + koto ga arimasen for 'never' (mita koto ga arimasen); mada + a negative te imasu for 'not yet' (mada itte imasen)."
+lessons:
+  hopes_hope:
+    hope_that: { say: [to_ii_desu_ne], examples: ["Ashita hareru to ii desu ne.", "Densha ga hayaku kuru to ii desu ne."] }
+    hope_to: { say: [tanoshimi_ni_shite_imasu], examples: ["Mata aeru no o tanoshimi ni shite imasu.", "Mata kuru no ga tanoshimi desu."] }
+    hope_so: { say: [so_da_to_ii], examples: ["Sō da to ii desu ne.", "Sō ja nai to ii desu ne!"] }
+  hopes_wish:
+    good_luck: { say: [ganbatte], examples: ["Ganbatte kudasai!", "Ashita no shiken, ganbatte ne!"] }
+    good_journey: { say: [yoi_tabi_o], examples: ["Yoi tabi o!", "Yoi ichinichi o!", "Tanoshinde kite kudasai!"] }
+    get_well: { say: [odaiji_ni], examples: ["Odaiji ni!", "Hayaku yoku natte kudasai."] }
+  hopes_want:
+    hope_you_like: { say: [ki_ni_iru], examples: ["Ki ni itte moraeru to ii desu ne.", "Purezento, ki ni itte itadakeru to ureshii desu."] }
+    want_you_to: { say: [hoshii], examples: ["Issho ni kite hoshii desu.", "Mada itte hoshiku nai desu."] }
+    important_that: { say: [koto_ga_taisetsu], examples: ["Minna ga sansei suru koto ga taisetsu desu.", "Ima iku hitsuyō ga arimasu."] }
+  hypotheses_real:
+    if_weather: { say: [ame_ga_futtara], examples: ["Ame ga futtara, uchi ni imasu.", "Tenki ga yokattara, umi ni ikimasu."] }
+    if_time: { say: [jikan_ga_attara], examples: ["Jikan ga attara, denwa shimasu.", "Dekitara, ashita ikimasu."] }
+    if_you_want: { say: [yokattara], examples: ["Yokattara, issho ni ikimashō.", "Yoroshikereba, otetsudai shimasu."] }
+  hypotheses_unreal:
+    if_could: { say: [moshi], examples: ["Moshi dekitara, koko ni nokoritai desu.", "Moshi motto jikan ga attara, motto ryokō shitai desu."] }
+    if_won: { say: [takarakuji_ni_atattara], examples: ["Takarakuji ni atattara, ie o kaimasu.", "Kanemochi dattara, hatarakimasen."] }
+    would_do: { say: [kaimasu, ikimasu, desho], examples: ["Umi no chikaku ni ie o kaimasu.", "Hawai ni iku deshō.", "Sekai isshū ryokō o suru deshō."] }
+  hypotheses_then:
+    what_if: { say: [do_narimasu_ka], examples: ["Densha ni noriokuretara dō narimasu ka?", "Seki ga nakattara dō naru?"] }
+    in_that_case: { say: [sono_baai], examples: ["Sono baai wa, takushī ni norimasu.", "Sore nara, koko ni imasu."] }
+    otherwise: { say: [so_shinai_to], examples: ["Isoide. Sō shinai to, densha ni noriokuremasu yo.", "Ima shuppatsu shinai to, maniaimasen."] }
+  retelling_said:
+    said_that: { say: [to_iimashita], examples: ["Imōto wa ashita kuru to iimashita.", "Bijutsukan wa shimatte iru to itte imashita."] }
+    asked: { say: [kikaremashita], examples: ["Nihongo o hanasu ka to kikaremashita.", "Matsu yō ni iwaremashita."] }
+    answered: { say: [kotaemashita], examples: ["Hai to kotaemashita.", "Wakaranai to kotaemashita."] }
+  retelling_heard:
+    heard: { say: [to_kikimashita], examples: ["Ashita wa taifū ga kuru to kikimashita.", "Densha ga tomatte iru rashii desu."] }
+    is_it_true: { say: [honto], examples: ["Bijutsukan ga shimatte iru tte, hontō desu ka?", "Hontō ni?"] }
+    who_told: { say: [dare_ga_itta], examples: ["Dare ga sō itta n desu ka?", "Dare kara kikimashita ka?"] }
+  retelling_believe:
+    believe: { say: [shinjimasu], examples: ["Shinjimasu.", "Arieru ne."] }
+    doubt: { say: [shinjiraremasen], examples: ["Shinjiraremasen.", "Sore wa chotto utagawashii desu ne."] }
+    who_knows: { say: [do_kana], examples: ["Sā, dō deshō ne.", "Yōsu o mimashō."] }
+  customs_home:
+    in_my_country: { say: [watashi_no_kuni_de_wa], examples: ["Watashi no kuni de wa, bangohan ga hayai desu.", "Watashi no kuni de wa, kōcha o takusan nomimasu."] }
+    festival: { say: [matsuri, oshogatsu], examples: ["Ichiban taisetsu na oyasumi wa oshōgatsu desu.", "Natsu ni omatsuri ga arimasu."] }
+    one_does: { say: [shukan], examples: ["Oshōgatsu ni wa osechi ryōri o taberu shūkan ga arimasu.", "Kurisumasu ni wa kēki o taberu no ga futsū desu."] }
+  customs_compare:
+    whereas: { say: [ippo], examples: ["Koko de wa bangohan ga osoi desu. Ippō, watashi no kuni de wa hayai desu.", "Watashi no kuni de wa kōcha o nomu no ni taishite, koko de wa ryokucha o nomimasu."] }
+    similar: { say: [nite_imasu], examples: ["Watashi no kuni mo sō desu.", "Totemo nite imasu ne."] }
+    prefer: { say: [[ho_ga_suki], [kara_desu]], examples: ["Hayaku bangohan o taberu hō ga suki desu. Yoku nemureru kara desu.", "Ryokucha no hō ga suki desu. Karada ni ii kara desu."] }
+  customs_surprise:
+    struck_me: { say: [insho_ni_nokorimashita, bikkuri_shimashita], examples: ["Machi no shizukasa ni odorokimashita.", "Inshō ni nokotta no wa mise no jikan desu."] }
+    not_used: { say: [narete_imasen], examples: ["Ie no naka de kutsu o nugu no ni mada narete imasen.", "Dandan narete kimashita."] }
+    find_it: { say: [to_omoimasu, ki_ga_shimasu], examples: ["Ii shūkan da to omoimasu.", "Chotto fushigi na ki ga shimasu."] }
+  persuading_propose:
+    propose: { say: [teian], examples: ["Teian ga arimasu. Hayaku shuppatsu shimashō.", "Aruite iku no wa dō desu ka?"] }
+    advantage: { say: [riten, ho_ga_benri], examples: ["Riten wa yasui koto desu.", "Densha de iku hō ga benri desu."] }
+    come_on: { say: [hora], examples: ["Hora, issho ni ikō yo!", "Shinjite. Zettai tanoshii yo."] }
+  persuading_argue:
+    two_sides: { say: [sono_kawari], examples: ["Takai desu ga, sono kawari benri desu.", "Ii ten mo warui ten mo arimasu."] }
+    however: { say: [shikashi], examples: ["Sō desu kedo, tōi desu yo.", "Kirei desu. Shikashi, takasugimasu."] }
+    anyway: { say: [tonikaku, kachi_ga_aru], examples: ["Tonikaku, watashi wa ikimasu.", "Yatte miru kachi wa arimasu."] }
+  persuading_settle:
+    concede: { say: [tashika_ni], examples: ["Sono ten wa sō desu ne. Demo mō osoi desu.", "Tashika ni, chotto takai desu ne."] }
+    compromise: { say: [ko_shimasho], examples: ["Kō shimashō: kyō wa bijutsukan, ashita wa umi.", "Dakyōan o sagashimashō."] }
+    settled: { say: [sore_de_ii], examples: ["Watashi wa sore de ii desu.", "Kimari desu ne!"] }
+  life_story_born:
+    born: { say: [umaremashita], examples: ["Rondon de umaremashita.", "1990-nen ni umaremashita."] }
+    grew_up: { say: [sodachimashita], examples: ["Inaka de sodachimashita.", "Manchesutā de sodachimashita."] }
+    moved: { say: [hikkoshimashita], examples: ["Jūnen mae ni Rondon ni hikkoshimashita.", "Hatachi no toki, Pari ni sumu yō ni narimashita."] }
+  life_story_since:
+    how_long: { say: [[mae_kara, sunde_imasu], [nen, kagetsu]], examples: ["Jūnen mae kara Rondon ni sunde imasu.", "Koko ni sankagetsu sunde imasu."] }
+    learning: { say: [[nen, kagetsu, mae_kara], [benkyo, naraimasu]], examples: ["Ichinen mae kara nihongo o benkyō shite imasu.", "Sankagetsu nihongo o naratte imasu."] }
+    ask_how_long: { say: [dono_kurai], examples: ["Dono kurai koko ni sunde imasu ka?", "Itsu kara kono shigoto o shite imasu ka?"] }
+  life_story_never:
+    never: { say: [koto_ga_arimasen, ichido_mo], examples: ["Umi o mita koto ga arimasen.", "Hokkaidō ni wa ichido mo itta koto ga arimasen."] }
+    not_yet: { say: [mada], examples: ["Mada Kyōto ni itte imasen.", "Mada desu."] }
+    one_day: { say: [itsuka], examples: ["Itsuka Fujisan ni noboritai desu.", "Watashi no yume wa hon o kaku koto desu."] }
+vocabulary:
+  # hopes
+  to_ii_desu_ne: { t: "to ii desu ne", pos: phrase, en: ["I hope that", "I hope"], forms: ["to ii desu ne", "to ii ne", "to ii na", "to ii to omoimasu", "to ii n desu ga", "koto o negatte imasu"], ex: ["Genki da to ii desu ne.", "I hope that you are well."], n: "After the plain present: kuru to ii desu ne, hareru to ii desu ne, 'it would be good if ...'. 'Koto o negatte imasu' is the formal 'I hope (and pray) that'." }
+  tanoshimi_ni_shite_imasu: { t: "tanoshimi ni shite imasu", pos: phrase, en: ["I look forward to it", "I hope to"], forms: ["tanoshimi ni shite imasu", "tanoshimi ni shite iru", "tanoshimi desu", "tanoshimi"], ex: ["Mata aeru no o tanoshimi ni shite imasu.", "I hope to see you again (I look forward to it)."], n: "What Japanese says where English hopes to do something itself: ~ no o tanoshimi ni shite imasu." }
+  so_da_to_ii: { t: "sō da to ii", pos: phrase, en: ["I hope so", "I hope not"], forms: ["sō da to ii desu ne", "sou da to ii desu ne", "sō da to ii", "sou da to ii", "sō ja nai to ii", "sou ja nai to ii"], ex: ["Tanaka-san mo kimasu ka? Sō da to ii desu ne.", "Is Tanaka-san coming too? I hope so."], n: "'Sō ja nai to ii desu ne' is 'I hope not'." }
+  ganbatte: { t: "ganbatte", pos: phrase, en: ["good luck", "do your best"], forms: ["ganbatte", "ganbatte kudasai", "ganbatte ne"], ex: ["Ashita, ganbatte kudasai!", "Good luck for tomorrow!"], n: "Literally 'hold on, do your best': what is said before a test or a match. The answer is ganbarimasu." }
+  yoi_tabi_o: { t: "yoi tabi o", pos: phrase, en: ["have a good journey", "have a good trip"], forms: ["yoi tabi o", "yoi ryokō o", "yoi ryokou o", "yoi ichinichi o", "yoi kyūka o", "yoi kyuuka o", "yoi shūmatsu o", "yoi shuumatsu o", "tanoshinde kite kudasai", "tanoshinde kite ne"], ex: ["Yoi tabi o. Mata ne!", "Have a good journey, and see you soon!"], n: "The same pattern wishes other things: yoi ichinichi o, yoi shūmatsu o. 'Tanoshinde kite kudasai' is 'go and enjoy yourself'." }
+  odaiji_ni: { t: "odaiji ni", pos: phrase, en: ["get well soon", "take care of yourself"], forms: ["odaiji ni", "o-daiji ni", "hayaku yoku natte kudasai", "hayaku yoku natte ne", "hayaku genki ni natte kudasai", "hayaku genki ni natte ne"], ex: ["Kaze desu ka? Odaiji ni.", "A cold? Get well soon."], n: "Said to anyone who is ill, and by the doctor as you leave." }
+  ki_ni_iru: { t: "ki ni iru", pos: phrase, en: ["you like it", "that you like it"], forms: ["ki ni iru", "ki ni irimasu", "ki ni irimashita", "ki ni itte moraeru", "ki ni itte itadakeru", "ki ni itte kureru"], ex: ["Kono machi o ki ni itte moraeru to ii desu ne.", "I hope that you like the town."], n: "Ki ni iru is 'to take to something'; ki ni itte moraeru is 'that you (will) like it', for a gift or a place." }
+  hoshii: { t: "hoshii", pos: adjective, en: ["I want ... to", "I want"], forms: ["hoshii", "hoshii desu", "hoshiku nai", "hoshiku arimasen"], ex: ["Shiawase ni natte hoshii desu.", "I want you to be happy."], n: "After a te-form it is 'I want you to': kite hoshii, itte hoshiku nai. After a noun with ga it is 'I want (a thing)'." }
+  koto_ga_taisetsu: { t: "koto ga taisetsu", pos: phrase, en: ["it is important that", "it is important to"], forms: ["koto ga taisetsu", "koto ga daiji", "koto ga jūyō", "koto ga juuyou", "hitsuyō ga arimasu", "hitsuyou ga arimasu", "hitsuyō ga aru", "hitsuyou ga aru"], ex: ["Yoku yasumu koto ga taisetsu desu.", "It is important that you rest."], n: "After the plain present: yasumu koto ga taisetsu desu. '~ hitsuyō ga arimasu' is 'it is necessary to ~'." }
+  # hypotheses
+  ame_ga_futtara: { t: "ame ga futtara", pos: phrase, en: ["if it rains"], forms: ["ame ga futtara", "ame nara", "ame dattara", "haretara", "tenki ga yokattara", "tenki ga yokereba", "samukattara", "atsukattara", "yuki ga futtara"], ex: ["Ame ga futtara, basu de ikimasu.", "If it rains, I take the bus."], n: "-tara is the past plain form + ra: futta, futtara. 'Tenki ga yokattara' is 'if the weather is good'." }
+  jikan_ga_attara: { t: "jikan ga attara", pos: phrase, en: ["if I have time"], forms: ["jikan ga attara", "jikan ga areba", "dekitara", "dekireba"], ex: ["Jikan ga attara, yorimasu.", "If I have time, I'll drop by."], n: "'Dekitara' and 'dekireba' are 'if I can', 'if possible'." }
+  yokattara: { t: "yokattara", pos: phrase, en: ["if you want", "if you like"], forms: ["yokattara", "yokereba", "yoroshikereba", "moshi yokattara"], ex: ["Yokattara, eki made issho ni ikimasu.", "If you like, I'll come with you to the station."], n: "Literally 'if it is good (for you)'; yoroshikereba is the politest." }
+  moshi: { t: "moshi", pos: adverb, en: ["if", "if I could", "supposing"], forms: ["moshi", "moshi mo"], ex: ["Moshi dekitara, ashita shuppatsu shitai desu.", "If I could, I would leave tomorrow."], n: "Moshi announces an if that -tara or nara then makes. Japanese says 'if I can' and 'if I could' alike: moshi dekitara." }
+  takarakuji_ni_atattara: { t: "takarakuji ni atattara", pos: phrase, en: ["if I won the lottery", "if I won"], forms: ["takarakuji ni atattara", "takarakuji ga atattara", "takarakuji", "kanemochi dattara", "kanemochi nara", "okanemochi dattara", "okane ga attara"], ex: ["Takarakuji ni atattara, pātī o shimasu.", "If I won the lottery, I would throw a party."], n: "'Kanemochi dattara' is 'if I were rich'." }
+  kaimasu: { t: "kaimasu", pos: verb, en: ["I buy", "I would buy"], forms: ["kaimasu", "kau", "kaitai"], ex: ["Bōto o kaimasu.", "I would buy a boat."], n: "After an if, the plain present says what you would do: takarakuji ni atattara, ie o kaimasu." }
+  ikimasu: { t: "ikimasu", pos: verb, en: ["I go", "I would go"], forms: ["ikimasu", "iku", "ikitai"], ex: ["Umi no chikaku ni sumi ni ikimasu.", "I would go and live by the sea."] }
+  desho: { t: "deshō", pos: phrase, en: ["would", "probably", "I suppose"], forms: ["deshō", "deshou", "darō", "darou"], ex: ["Nagai ryokō o suru deshō.", "I would take a long trip."], n: "After a plain form it makes a guess or a would: iku deshō. Darō is the plain form." }
+  do_narimasu_ka: { t: "dō narimasu ka", pos: phrase, en: ["what happens if", "what if"], forms: ["dō narimasu ka", "dou narimasu ka", "dō narimasu", "dou narimasu", "dō naru", "dou naru"], ex: ["Osoku tsuitara dō narimasu ka?", "What happens if I arrive late?"], n: "After a -tara: okuretara dō narimasu ka?" }
+  sono_baai: { t: "sono baai", pos: phrase, en: ["in that case"], forms: ["sono baai", "sono baai wa", "sore nara", "sore dattara"], ex: ["Sono baai wa denwa shimasu.", "In that case I'll call you."], n: "'Sore nara' is the everyday 'in that case', 'then'." }
+  so_shinai_to: { t: "sō shinai to", pos: phrase, en: ["otherwise", "or else"], forms: ["sō shinai to", "sou shinai to", "shinai to", "samo nai to", "sa mo nai to"], ex: ["Hashitte. Sō shinai to, densha ni noriokuremasu yo.", "Run, otherwise you'll miss the train."], n: "Literally 'if you don't do so'. After another verb: ikanai to, shuppatsu shinai to." }
+  # retelling
+  to_iimashita: { t: "to iimashita", pos: phrase, en: ["he said that", "she said that"], forms: ["to iimashita", "to itte imashita", "to itta", "to itte ita", "tte iimashita", "tte itte imashita"], ex: ["Tanaka-san wa kuru to iimashita.", "Tanaka-san said that he is coming."], n: "What was said comes first, in the plain form, then to: kuru to iimashita. 'To itte imashita' is 'was saying that'." }
+  kikaremashita: { t: "kikaremashita", pos: verb, en: ["he asked me", "she asked me", "I was asked"], forms: ["kikaremashita", "kikareta", "tanomaremashita", "tanomareta", "iwaremashita", "yō ni iwaremashita", "you ni iwaremashita"], ex: ["Kyōdai ga iru ka to kikaremashita.", "She asked me whether I have brothers."], n: "The passive: 'I was asked'. A question with ka to; a request with yō ni: matsu yō ni iwaremashita, 'I was told to wait'." }
+  kotaemashita: { t: "kotaemashita", pos: verb, en: ["I answered", "I replied"], forms: ["kotaemashita", "kotaeta", "henji o shimashita", "hai to iimashita", "iie to iimashita"], ex: ["Dekinai to kotaemashita.", "I answered that I couldn't."] }
+  to_kikimashita: { t: "to kikimashita", pos: phrase, en: ["I heard that"], forms: ["to kikimashita", "to kiita", "tte kikimashita", "rashii", "rashii desu", "da sō desu", "da sou desu"], ex: ["Ano kissaten wa shimaru to kikimashita.", "I heard that the café is closing."], n: "'Rashii desu' and '(da) sō desu' after a plain form are 'they say', 'it seems'." }
+  honto: { t: "hontō", pos: adjective, en: ["is it true that", "really"], forms: ["hontō", "hontou", "hontō desu ka", "hontou desu ka", "hontō ni", "hontou ni", "maji de"], ex: ["Ashita shuppatsu suru tte, hontō desu ka?", "Is it true that you are leaving tomorrow?"], n: "'Hontō ni?' on its own is 'really?'; 'maji de?' is the slang." }
+  dare_ga_itta: { t: "dare ga itta", pos: phrase, en: ["who told you", "who said so"], forms: ["dare ga itta", "dare ga sō itta", "dare ga sou itta", "dare ga iimashita ka", "dare kara kikimashita ka", "dare kara kiita"], ex: ["Dare ga sō itta n desu ka?", "And who told you?"], n: "'Dare kara kikimashita ka?' is 'who did you hear it from?'." }
+  shinjimasu: { t: "shinjimasu", pos: verb, en: ["I believe it", "I believe"], forms: ["shinjimasu", "shinjiru", "arieru", "ariemasu"], ex: ["Hai, shinjimasu.", "Yes, I believe it."], n: "'Arieru' is 'it is possible', 'it could happen'." }
+  shinjiraremasen: { t: "shinjiraremasen", pos: verb, en: ["I don't believe it", "I can't believe it"], forms: ["shinjiraremasen", "shinjirarenai", "uso", "uso deshō", "uso deshou", "ariemasen", "arienai", "utagawashii"], ex: ["Sumimasen ga, shinjiraremasen.", "I'm sorry, I don't believe it."], n: "'Uso!' is 'no way!'; 'utagawashii' is 'doubtful'." }
+  do_kana: { t: "dō kana", pos: phrase, en: ["who knows", "we shall see"], forms: ["dō kana", "dou kana", "dō deshō ne", "dou deshou ne", "dō deshō", "dou deshou", "dare ni mo wakarimasen", "dare ni mo wakaranai", "yōsu o mimashō", "yousu o mimashou"], ex: ["Hontō ka dō ka, dō deshō ne.", "Who knows whether it is true."], n: "'Yōsu o mimashō' is 'let's wait and see'." }
+  # customs
+  watashi_no_kuni_de_wa: { t: "watashi no kuni de wa", pos: phrase, en: ["in my country", "where I come from"], forms: ["watashi no kuni de wa", "watashi no kuni ja", "watashi no kuni", "uchi no kuni de wa", "watashitachi no kuni de wa"], ex: ["Watashi no kuni de wa yoku ame ga furimasu.", "In my country it rains often."] }
+  matsuri: { t: "matsuri", pos: noun, en: ["festival", "fair"], forms: ["matsuri", "omatsuri", "o-matsuri", "natsumatsuri", "shukujitsu"], ex: ["Ashita wa omatsuri desu.", "Tomorrow there is a festival."], n: "Every town has its summer matsuri, with stalls and fireworks. A 'shukujitsu' is a public holiday." }
+  oshogatsu: { t: "oshōgatsu", pos: noun, en: ["New Year", "the New Year holiday"], forms: ["oshōgatsu", "oshougatsu", "o-shōgatsu", "shōgatsu", "shougatsu", "obon", "o-bon", "kurisumasu"], ex: ["Oshōgatsu ni wa jikka ni kaerimasu.", "At New Year I go back to my parents' home."], n: "The chief holiday of the year, spent with the family. 'Obon' in August welcomes back the ancestors; 'kurisumasu' is Christmas, a day for couples and cake." }
+  shukan: { t: "shūkan", pos: noun, en: ["custom", "people usually", "one does"], forms: ["shūkan", "shuukan", "shūkan ga arimasu", "shuukan ga arimasu", "no ga futsū desu", "no ga futsuu desu", "futsū wa", "futsuu wa"], ex: ["Nihon de wa ie de kutsu o nugu shūkan ga arimasu.", "In Japan people take off their shoes at home."], n: "Japanese needs no 'one' or 'people': ~ shūkan ga arimasu, 'there is a custom of ~', or ~ no ga futsū desu, 'it is usual to ~'." }
+  ippo: { t: "ippō", pos: conjunction, en: ["whereas", "on the other hand", "while"], forms: ["ippō", "ippou", "sono ippō", "sono ippou", "ni taishite", "no ni taishite"], ex: ["Watashi wa kōcha desu. Ippō, kare wa kōhī desu.", "I have tea, whereas he has coffee."], n: "After a plain verb: nomu no ni taishite, 'whereas (they) drink'." }
+  nite_imasu: { t: "nite imasu", pos: phrase, en: ["similar", "it is alike", "it is the same at home"], forms: ["nite imasu", "nite iru", "niteru", "sokkuri", "watashi no kuni mo sō desu", "watashi no kuni mo sou desu"], ex: ["Futatsu no matsuri wa nite imasu.", "The two festivals are similar."], n: "'Watashi no kuni mo sō desu' is 'it is the same where I come from'." }
+  ho_ga_suki: { t: "hō ga suki", pos: phrase, en: ["I prefer", "I like ... better"], forms: ["hō ga suki", "hou ga suki", "no hō ga suki", "no hou ga suki"], ex: ["Kōhī yori ocha no hō ga suki desu.", "I prefer tea to coffee."], n: "After a noun with no, after a verb directly: ocha no hō ga suki, taberu hō ga suki. Yori is 'than'." }
+  insho_ni_nokorimashita: { t: "inshō ni nokorimashita", pos: phrase, en: ["it struck me", "it made an impression on me"], forms: ["inshō ni nokorimashita", "inshou ni nokorimashita", "inshō ni nokotta", "inshou ni nokotta", "inshōteki", "inshouteki"], ex: ["Hito no shinsetsusa ga inshō ni nokorimashita.", "The kindness of the people struck me."], n: "Literally 'it stayed in my impression'. Inshō ni nokotta no wa ... is 'what struck me is ...'." }
+  narete_imasen: { t: "narete imasen", pos: phrase, en: ["I am not used to it", "I am not used to"], forms: ["narete imasen", "narete inai", "narete nai", "narete kimashita", "naremashita", "nareta"], ex: ["Mada atsusa ni narete imasen.", "I am not used to the heat yet."], n: "With ni: atsusa ni narete imasen. 'Narete kimashita' is 'I am getting used to it'." }
+  ki_ga_shimasu: { t: "ki ga shimasu", pos: phrase, en: ["it seems to me", "I have a feeling", "I find it"], forms: ["ki ga shimasu", "ki ga suru"], ex: ["Ii shūkan no yō na ki ga shimasu.", "It seems a good habit to me."], n: "After a plain form or na: fushigi na ki ga shimasu, 'it feels strange to me'." }
+  # persuading
+  teian: { t: "teian", pos: noun, en: ["I suggest", "I propose", "a suggestion"], forms: ["teian", "teian ga arimasu", "teian shimasu", "no wa dō desu ka", "no wa dou desu ka", "shimashō", "shimashou"], ex: ["Teian ga arimasu. Aruite ikimashō.", "I have a suggestion: let's go on foot."], n: "The -mashō form is 'let's': ikimashō, shimashō. '~ no wa dō desu ka?' is 'how about ~?'." }
+  riten: { t: "riten", pos: noun, en: ["the advantage", "an advantage"], forms: ["riten", "riten wa", "meritto"], ex: ["Riten wa chikai koto desu.", "The advantage is that it is near."], n: "Riten wa ~ koto desu: 'the advantage is that ~'." }
+  ho_ga_benri: { t: "hō ga benri", pos: phrase, en: ["it is better to", "it is handier to", "it pays to"], forms: ["hō ga benri", "hou ga benri", "hō ga hayai", "hou ga hayai", "hō ga yasui", "hou ga yasui", "hō ga raku", "hou ga raku"], ex: ["Hayaku deru hō ga benri desu.", "It is better to leave early."], n: "After a verb: iku hō ga benri, 'going is handier'; hō ga hayai, 'is quicker'; hō ga yasui, 'is cheaper'." }
+  hora: { t: "hora", pos: interjection, en: ["come on", "trust me"], forms: ["hora", "ikō yo", "ikou yo", "shinjite", "shinjite kudasai", "zettai"], ex: ["Hora, ikō yo!", "Come on, let's go!"], n: "'Shinjite' is 'trust me'; 'zettai' is 'absolutely', 'I promise you'." }
+  sono_kawari: { t: "sono kawari", pos: phrase, en: ["on the one hand ... on the other", "on the other hand", "but then"], forms: ["sono kawari", "tahō de", "tahou de", "ii ten mo warui ten mo", "ii ten mo"], ex: ["Chotto takai desu ga, sono kawari benri desu.", "On the one hand it is a little dear, on the other it is handy."], n: "Japanese weighs the two sides as ~ ga, sono kawari ~, 'but in exchange', or ii ten mo warui ten mo arimasu, 'it has good points and bad'." }
+  shikashi: { t: "shikashi", pos: conjunction, en: ["however", "but"], forms: ["shikashi", "keredomo", "kedo", "dakedo", "desu kedo", "desu ga", "tadashi"], ex: ["Kirei desu. Shikashi, takai desu.", "It is nice. However, it is expensive."], n: "Shikashi begins a sentence; ga and kedo end the first half: kirei desu ga, takai desu. The everyday 'demo' says the same." }
+  tonikaku: { t: "tonikaku", pos: adverb, en: ["in any case", "anyway"], forms: ["tonikaku", "tomokaku", "dochira ni shite mo", "izure ni shite mo"], ex: ["Tonikaku, ashita aimashō.", "In any case, see you tomorrow."] }
+  kachi_ga_aru: { t: "kachi ga aru", pos: phrase, en: ["it is worth it", "it is worth"], forms: ["kachi ga aru", "kachi ga arimasu", "kachi wa aru", "kachi wa arimasu"], ex: ["Tōi desu ga, iku kachi ga arimasu.", "It is far, but it is worth it."], n: "After a plain verb: iku kachi ga arimasu, 'it is worth going'." }
+  tashika_ni: { t: "tashika ni", pos: phrase, en: ["you are right about that", "admittedly", "indeed"], forms: ["tashika ni", "sore wa sō desu ne", "sore wa sou desu ne", "sono ten wa sō desu ne", "sono ten wa sou desu ne", "sono ten wa", "mitomemasu"], ex: ["Tashika ni, sono ten wa sō desu ne.", "Admittedly, you are right about that."], n: "'Sono ten wa' is 'on that point'; 'mitomemasu' is 'I admit it'." }
+  ko_shimasho: { t: "kō shimashō", pos: phrase, en: ["let's do this", "let's do it this way", "a compromise"], forms: ["kō shimashō", "kou shimashou", "kō shiyō", "kou shiyou", "dakyō", "dakyou", "dakyōan", "dakyouan", "warikan"], ex: ["Kō shimashō: kyō wa watashi ga haratte, ashita wa anata ga haratte kudasai.", "Let's do this: I pay today and you pay tomorrow."], n: "'Dakyōan' is a compromise; 'warikan' is splitting the bill, the usual way among friends." }
+  sore_de_ii: { t: "sore de ii", pos: phrase, en: ["that suits me", "that is fine by me", "it's a deal"], forms: ["sore de ii", "sore de ii desu", "sore de kekkō desu", "sore de kekkou desu", "kimari", "kettei"], ex: ["Hachiji nara, sore de ii desu.", "Eight o'clock suits me."], n: "'Kimari!' is 'settled!', 'it's a deal'." }
+  # life_story
+  umaremashita: { t: "umaremashita", pos: verb, en: ["I was born"], forms: ["umaremashita", "umareta", "umare"], ex: ["Burisutoru de umaremashita.", "I was born in Bristol."], n: "Of a place with de; of a year with ni: 1990-nen ni umaremashita. '~ umare desu' is 'I was born in ~'." }
+  sodachimashita: { t: "sodachimashita", pos: verb, en: ["I grew up"], forms: ["sodachimashita", "sodatta", "sodachi"], ex: ["Chiisa na machi de sodachimashita.", "I grew up in a small town."] }
+  hikkoshimashita: { t: "hikkoshimashita", pos: verb, en: ["I moved", "I moved house"], forms: ["hikkoshimashita", "hikkoshita", "hikkoshi", "sumu yō ni narimashita", "sumu you ni narimashita"], ex: ["2015-nen ni Ōsaka ni hikkoshimashita.", "I moved to Osaka in 2015."], n: "With ni for where to. 'Sumu yō ni narimashita' is 'I came to live (there)'." }
+  mae_kara: { t: "mae kara", pos: phrase, en: ["for", "since", "for ... now"], forms: ["mae kara", "kara zutto"], ex: ["Ninen mae kara koko de hataraite imasu.", "I have worked here for two years."], n: "For what still goes on, Japanese uses the te imasu form with a time: ninen mae kara (since two years ago), or the span alone: ninen hataraite imasu." }
+  sunde_imasu: { t: "sunde imasu", pos: phrase, en: ["I live", "I have been living"], forms: ["sunde imasu", "sunde iru", "sunde imashita"], ex: ["Rondon ni sunde imasu.", "I live in London."], n: "Japanese says 'I am living': the te imasu form of sumu, with ni for the place." }
+  nen: { t: "nen", pos: noun, en: ["years", "year"], forms: ["nen", "nenkan", "ichinen", "ninen", "sannen", "yonen", "gonen", "jūnen", "juunen"], ex: ["Koko ni gonen sunde imasu.", "I have lived here for five years."], n: "A counter, joined to its number: ichinen, ninen, jūnen; -kan stresses the span: sannenkan." }
+  kagetsu: { t: "kagetsu", pos: noun, en: ["months", "month"], forms: ["kagetsu", "kagetsukan", "ikkagetsu", "nikagetsu", "sankagetsu", "rokkagetsu"], ex: ["Koko ni sankagetsu imasu.", "I have been here for three months."], n: "A counter, joined to its number; one and six change their sound: ikkagetsu, rokkagetsu." }
+  benkyo: { t: "benkyō", pos: noun, en: ["study", "I study", "I am studying"], forms: ["benkyō", "benkyou", "benkyō shite imasu", "benkyou shite imasu"], ex: ["Mainichi nihongo o benkyō shite imasu.", "I study Japanese every day."], n: "Benkyō shimasu is 'to study'; the te imasu form is 'have been studying'." }
+  naraimasu: { t: "naraimasu", pos: verb, en: ["I learn", "I am learning"], forms: ["naraimasu", "naratte imasu", "naratte iru", "narau"], ex: ["Ichinen nihongo o naratte imasu.", "I have been learning Japanese for a year."], n: "Narau is learning from a teacher; benkyō is studying." }
+  dono_kurai: { t: "dono kurai", pos: phrase, en: ["how long", "for how long", "since when"], forms: ["dono kurai", "dono gurai", "dore kurai", "dore gurai", "itsu kara"], ex: ["Dono kurai nihongo o benkyō shite imasu ka?", "How long have you been studying Japanese?"], n: "'Itsu kara' is 'since when'." }
+  koto_ga_arimasen: { t: "koto ga arimasen", pos: phrase, en: ["I have never"], forms: ["koto ga arimasen", "koto ga nai", "koto wa arimasen", "koto wa nai"], ex: ["Sushi o tabeta koto ga arimasen.", "I have never eaten sushi."], n: "After the plain past: tabeta koto ga arimasen, itta koto ga arimasen ('I have never been')." }
+  ichido_mo: { t: "ichido mo", pos: phrase, en: ["never", "not once"], ex: ["Ichido mo osoku natta koto ga arimasen.", "I have never once been late."], n: "With a negative verb: ichido mo ... arimasen." }
+  mada: { t: "mada", pos: adverb, en: ["not yet", "still"], forms: ["mada", "mada desu", "mada mada"], ex: ["Mada owatte imasen.", "I have not finished yet."], n: "With the negative te imasu form it is 'not yet': mada tabete imasen. 'Mada desu' alone is 'not yet'." }
+  itsuka: { t: "itsuka", pos: adverb, en: ["one day", "some day", "sooner or later"], forms: ["itsuka", "itsuka wa", "yume wa", "watashi no yume wa"], ex: ["Itsuka oyogeru yō ni naritai desu.", "One day I want to learn to swim."], n: "'Watashi no yume wa ~ koto desu' is 'my dream is to ~'." }

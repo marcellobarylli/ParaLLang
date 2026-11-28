@@ -101,7 +101,7 @@ vocabulary:
   ni_you_xiongdi_jiemei_ma: { t: "nǐ yǒu xiōngdì jiěmèi ma", pos: phrase, en: ["do you have brothers or sisters", "do you have any brothers or sisters"], forms: ["nǐ yǒu xiōngdì jiěmèi ma", "nǐ yǒu xiōngdì jiěmèi", "nín yǒu xiōngdì jiěmèi", "nǐ yǒu méiyǒu xiōngdì jiěmèi", "nǐ yǒu háizi ma", "nín yǒu háizi ma", "nǐ yǒu méiyǒu háizi", "nín yǒu méiyǒu háizi"], ex: ["Nǐ yǒu xiōngdì jiěmèi ma?", "Do you have brothers or sisters?"] }
   shenme_yang_de_ren: { t: "shénme yàng de rén", pos: phrase, en: ["what kind of person", "what is he like", "what is she like"], forms: ["shénme yàng de rén", "shénmeyàng de rén"], ex: ["Nǐ dìdi shì shénme yàng de rén?", "What is your younger brother like?"] }
   gao: { t: "gāo", pos: adjective, en: ["tall"], forms: ["gāo", "gèzi gāo"], ex: ["Wǒ jiějie hěn gāo.", "My older sister is tall."] }
-  hen_ai: { t: "hěn ǎi", pos: adjective, en: ["short"], forms: ["hěn ǎi", "tǐng ǎi", "bǐjiào ǎi", "yǒudiǎnr ǎi", "gèzi ǎi", "bù gāo"], ex: ["Wǒ bàba hěn ǎi.", "My father is short."], n: "Of a person's height. ǎi is not said alone here because it would read as the English AI; 'bù gāo', 'not tall', is kinder." }
+  hen_ai: { t: "hěn ǎi", pos: adjective, en: ["short"], forms: ["hěn ǎi", "tǐng ǎi", "bǐjiào ǎi", "yǒudiǎnr ǎi", "gèzi ǎi", "bù gāo"], ex: ["Wǒ bàba hěn ǎi.", "My father is short."], n: "Of a person's height; 'bù gāo', 'not tall', is kinder." }
   nianqing: { t: "niánqīng", pos: adjective, en: ["young"], forms: ["niánqīng", "nián qīng"], ex: ["Wǒ māma hái hěn niánqīng.", "My mother is still young."] }
   lao: { t: "lǎo", pos: adjective, en: ["old", "elderly"], forms: ["lǎo", "niánjì dà", "niánjì hěn dà", "shàng le niánjì"], ex: ["Wǒ yéye niánjì dà le.", "My grandfather is old."], n: "Of a person, 'niánjì dà' is kinder than 'lǎo'." }
   ren_hen_hao: { t: "rén hěn hǎo", pos: phrase, en: ["nice", "a nice person"], forms: ["rén hěn hǎo", "rén tǐng hǎo", "rén bú cuò", "rén hǎo"], ex: ["Nǐ gēge rén hěn hǎo.", "Your older brother is nice."], n: "Literally 'as a person, very good'." }
@@ -161,7 +161,7 @@ vocabulary:
   shenme_shihou: { t: "shénme shíhou", pos: phrase, en: ["when", "at what time"], forms: ["shénme shíhou", "shénme shíhòu"], ex: ["Nǐ shénme shíhou huílai?", "When are you coming back?"] }
   zaoshang: { t: "zǎoshang", pos: noun, en: ["in the morning", "morning"], forms: ["zǎoshang", "zǎo shang", "shàngwǔ", "shàng wǔ"], ex: ["Wǒ zǎoshang gōngzuò.", "I work in the morning."], n: "shàngwǔ is the later morning, before noon." }
   xiawu: { t: "xiàwǔ", pos: noun, en: ["in the afternoon", "afternoon"], forms: ["xiàwǔ", "xià wǔ"], ex: ["Wǒ xiàwǔ xuéxí.", "I study in the afternoon."] }
-  wanshang: { t: "wǎnshang", pos: noun, en: ["in the evening", "evening"], forms: ["wǎnshang", "wǎn shang", "jīnwǎn", "jīn wǎn"], ex: ["Wǒ wǎnshang chūqu.", "I go out in the evening."], n: "jīnwǎn is 'this evening'." }
+  wanshang: { t: "wǎnshang", pos: noun, en: ["in the evening", "evening"], forms: ["wǎnshang", "wǎn shang"], ex: ["Wǒ wǎnshang chūqu.", "I go out in the evening."] }
   # routine
   qichuang: { t: "qǐchuáng", pos: verb, en: ["get up", "I get up"], forms: ["qǐchuáng", "qǐ chuáng"], ex: ["Wǒ qī diǎn qǐchuáng.", "I get up at seven."] }
   xinglai: { t: "xǐnglái", pos: verb, en: ["wake up", "I wake up"], forms: ["xǐnglái", "xǐng lái"], ex: ["Wǒ liù diǎn jiù xǐnglái le.", "I wake up as early as six."] }
@@ -172,7 +172,7 @@ vocabulary:
   shuijiao: { t: "shuìjiào", pos: verb, en: ["sleep", "go to sleep"], forms: ["shuìjiào", "shuì jiào"], ex: ["Wǒ shíyī diǎn shuìjiào.", "I go to sleep at eleven."] }
   zongshi: { t: "zǒngshì", pos: adverb, en: ["always"], forms: ["zǒngshì", "zǒng shì"], ex: ["Wǒ zǒngshì zài jiā chīfàn.", "I always eat at home."] }
   changchang: { t: "chángcháng", pos: adverb, en: ["often"], forms: ["chángcháng", "cháng cháng", "jīngcháng", "jīng cháng"], ex: ["Wǒ chángcháng kàn shū.", "I often read."] }
-  conglai_bu: { t: "cónglái bù", pos: phrase, en: ["never"], forms: ["cónglái bù", "cóng lái bù", "cónglái méi", "cóngbù", "cóng bù"], ex: ["Wǒ cónglái bù xiàwǔ shuìjiào.", "I never sleep in the afternoon."], n: "Before the verb; with méi it is 'never have': wǒ cónglái méi qù guo." }
+  conglai_bu: { t: "cónglái bù", pos: phrase, en: ["never"], forms: ["cónglái bù", "cóng lái bù", "cóngbù", "cóng bù"], ex: ["Wǒ cónglái bù xiàwǔ shuìjiào.", "I never sleep in the afternoon."], n: "Before the verb; with méi it is 'never have': wǒ cónglái méi qù guo." }
   youshihou: { t: "yǒushíhou", pos: adverb, en: ["sometimes"], forms: ["yǒushíhou", "yǒu shíhou", "yǒu de shíhou", "ǒu'ěr"], ex: ["Yǒushíhou wǒ zǒulù qù.", "Sometimes I walk there."] }
   mei_tian: { t: "měi tiān", pos: phrase, en: ["every day"], forms: ["měi tiān", "měitiān", "tiāntiān"], ex: ["Wǒ měi tiān dōu xuéxí.", "I study every day."], n: "dōu, 'all', usually follows it: měi tiān dōu." }
   yeyu_shijian: { t: "yèyú shíjiān", pos: phrase, en: ["free time", "spare time"], forms: ["yèyú shíjiān", "kòngxián shíjiān", "kòngyú shíjiān", "yǒu kòng de shíhou", "yǒukòng de shíhou"], ex: ["Wǒ yèyú shíjiān kàn shū.", "In my free time I read."] }
@@ -195,7 +195,7 @@ vocabulary:
   huangse: { t: "huángsè", pos: adjective, en: ["yellow"], forms: ["huángsè", "huáng sè", "huáng de"], ex: ["Yì dǐng huángsè de màozi.", "A yellow hat."] }
   bie_de_yanse: { t: "bié de yánsè", pos: phrase, en: ["another colour", "other colours"], forms: ["bié de yánsè", "biéde yánsè", "qítā yánsè", "qítā de yánsè", "qí tā yánsè"], ex: ["Zhè jiàn yǒu bié de yánsè ma?", "Does this come in another colour?"] }
   nimen_you: { t: "nǐmen yǒu", pos: phrase, en: ["do you have", "you have"], forms: ["nǐmen yǒu", "nín zhèr yǒu", "nǐ zhèr yǒu"], ex: ["Nǐmen yǒu lǜsè de chènshān ma?", "Do you have a green shirt?"], n: "A shop is 'you all': nǐmen." }
-  shi_yi_xia: { t: "shì yí xià", pos: phrase, en: ["try it on", "can I try"], forms: ["shì yí xià", "shì yíxià", "shì yi shì", "shìchuān", "shì chuān"], ex: ["Wǒ kěyǐ shì yí xià zhè jiàn jiākè ma?", "Can I try on this jacket?"], n: "yí xià after a verb: 'a quick go'. shìchuān is 'try on (clothes)'." }
+  shi_yi_xia: { t: "shì yí xià", pos: phrase, en: ["try it on", "can I try"], forms: ["shì yí xià", "shì yíxià", "shìchuān", "shì chuān"], ex: ["Wǒ kěyǐ shì yí xià zhè jiàn jiākè ma?", "Can I try on this jacket?"], n: "yí xià after a verb: 'a quick go'. shìchuān is 'try on (clothes)'." }
   tai_da_le: { t: "tài dà le", pos: phrase, en: ["too big"], forms: ["tài dà le", "tài dà", "yǒudiǎnr dà", "yǒudiǎn dà", "dà le", "tài féi le"], ex: ["Zhè jiàn jiākè tài dà le.", "This jacket is too big."] }
   tai_xiao_le: { t: "tài xiǎo le", pos: phrase, en: ["too small"], forms: ["tài xiǎo le", "tài xiǎo", "yǒudiǎnr xiǎo", "yǒudiǎn xiǎo", "xiǎo le", "tài jǐn le", "tài jǐn"], ex: ["Zhè shuāng xié tài xiǎo le.", "These shoes are too small."], n: "tài jǐn le is 'too tight'." }
   wo_mai_le: { t: "wǒ mǎi le", pos: phrase, en: ["I'll take it", "I'll buy it"], forms: ["wǒ mǎi le", "mǎi le", "wǒ yào le"], ex: ["Hěn piàoliang, wǒ mǎi le.", "It's lovely, I'll take it."], n: "le marks the decision as made." }

@@ -42,7 +42,7 @@ lessons:
     i_learn: { say: [wo_zai_xue], examples: ["Wǒ zài xué Zhōngwén.", "Wǒ xué Hànyǔ."] }
     do_you_speak: { say: [ni_hui_shuo_yingyu_ma], examples: ["Nǐ huì shuō Yīngyǔ ma?", "Nín huì shuō Yīngyǔ ma?"] }
   courtesy_please:
-    please: { say: [qing], examples: ["Qǐng gěi wǒ yì bēi shuǐ.", "Máfan nǐ, yì bēi chá."] }
+    please: { say: [qing], examples: ["Qǐng gěi wǒ yì bēi shuǐ.", "Qǐng gěi wǒ yí ge bāozi."] }
     thank_you: { say: [feichang_ganxie], examples: ["Fēicháng gǎnxiè!", "Tài xièxie nǐ le!"] }
     welcome: { say: [bu_keqi, bu_yong_xie], examples: ["Bú kèqi!", "Bú yòng xiè."] }
   courtesy_sorry:
@@ -72,7 +72,7 @@ lessons:
   cafe_food:
     what_is_there: { say: [you_shenme], examples: ["Yǒu shénme chī de?", "Nǐmen yǒu shénme?"] }
     some_food: { say: [baozi, jiaozi, miantiao, chaofan, youtiao, mifan], examples: ["Yì lóng bāozi, xièxie.", "Wǒ yào yì wǎn miàntiáo."] }
-    also: { say: [hai_yao], examples: ["Hái yào yí ge bāozi.", "Zài lái yì wǎn miàntiáo."] }
+    also: { say: [hai_yao], examples: ["Hái yào yí ge bāozi.", "Wǒ hái yào yì wǎn mǐfàn."] }
   cafe_bill:
     it_was_good: { say: [haochi, haohe], examples: ["Hěn hǎochī!", "Fēicháng hǎochī, xièxie."] }
     the_bill: { say: [maidan], examples: ["Fúwùyuán, mǎidān!", "Qǐng jiézhàng."] }
@@ -125,7 +125,7 @@ vocabulary:
   wo_zai_xue: { t: "wǒ zài xué", pos: phrase, en: ["I am learning", "I learn"], forms: ["wǒ zài xué", "wǒ xué", "wǒ zhèngzài xué"], ex: ["Wǒ zài xué Zhōngwén.", "I am learning Chinese."], n: "zài before a verb: it is going on now." }
   ni_hui_shuo_yingyu_ma: { t: "nǐ huì shuō Yīngyǔ ma", pos: phrase, en: ["do you speak English"], forms: ["nǐ huì shuō Yīngyǔ ma", "nǐ huì shuō Yīngyǔ", "nín huì shuō Yīngyǔ", "nǐ huì bu huì shuō Yīngyǔ", "nǐ huì Yīngyǔ ma", "nǐ shuō Yīngyǔ ma", "nín shuō Yīngyǔ ma", "nǐ huì shuō Yīngwén", "nín huì shuō Yīngwén"], ex: ["Duìbuqǐ, nín huì shuō Yīngyǔ ma?", "Excuse me, do you speak English?"] }
   # courtesy
-  qing: { t: "qǐng", pos: verb, en: ["please"], forms: ["qǐng", "máfan nǐ", "máfan nín"], ex: ["Qǐng gěi wǒ yì bēi chá.", "A cup of tea, please."], n: "qǐng comes before the verb: qǐng zuò, 'please sit'. 'Máfan nǐ', 'may I trouble you', asks a favour." }
+  qing: { t: "qǐng", pos: verb, en: ["please"], forms: ["qǐng"], ex: ["Qǐng gěi wǒ yì bēi chá.", "A cup of tea, please."], n: "qǐng comes before the verb: qǐng zuò, 'please sit'. Ordering, Chinese often leaves 'please' out." }
   feichang_ganxie: { t: "fēicháng gǎnxiè", pos: phrase, en: ["thank you very much", "many thanks"], forms: ["fēicháng gǎnxiè", "gǎnxiè", "fēicháng xièxie", "tài xièxie le", "tài xièxie nǐ le", "tài gǎnxiè le", "duōxiè", "duō xiè"], ex: ["Fēicháng gǎnxiè nǐ de bāngzhù.", "Thank you very much for your help."] }
   bu_keqi: { t: "bú kèqi", pos: phrase, en: ["you're welcome"], forms: ["bú kèqi", "bù kèqi", "búkèqi", "bié kèqi"], ex: ["Xièxie! Bú kèqi.", "Thanks! You're welcome."], n: "Literally 'don't be polite'." }
   bu_yong_xie: { t: "bú yòng xiè", pos: phrase, en: ["don't mention it", "no need to thank me"], forms: ["bú yòng xiè", "bù yòng xiè", "búyòng xiè", "bú xiè", "bù xiè"], ex: ["Bú yòng xiè, zhēn de.", "Don't mention it, really."] }
@@ -174,7 +174,7 @@ vocabulary:
   chaofan: { t: "chǎofàn", pos: noun, en: ["fried rice"], forms: ["chǎofàn", "chǎo fàn", "dàn chǎofàn", "dànchǎofàn"], ex: ["Yí fèn dàn chǎofàn.", "A portion of egg fried rice."] }
   youtiao: { t: "yóutiáo", pos: noun, en: ["fried dough stick"], forms: ["yóutiáo", "yóu tiáo"], ex: ["Liǎng gēn yóutiáo.", "Two fried dough sticks."], n: "A breakfast food, dipped in soy milk." }
   mifan: { t: "mǐfàn", pos: noun, en: ["rice", "cooked rice"], forms: ["mǐfàn", "mǐ fàn", "báifàn", "bái fàn"], ex: ["Zài lái yì wǎn mǐfàn.", "Another bowl of rice."] }
-  hai_yao: { t: "hái yào", pos: phrase, en: ["also", "I'd also like", "as well"], forms: ["hái yào", "wǒ hái yào", "zài lái", "zài yào", "hái yǒu", "yě yào"], ex: ["Wǒ hái yào yì bēi chá.", "I'd also like a cup of tea."], n: "'Zài lái yí ge', 'bring another one'." }
+  hai_yao: { t: "hái yào", pos: phrase, en: ["also", "I'd also like", "as well"], forms: ["hái yào", "wǒ hái yào", "zài yào", "hái yǒu", "yě yào"], ex: ["Wǒ hái yào yì bēi chá.", "I'd also like a cup of tea."], n: "hái, 'still, also', before yào: 'I also want'." }
   haochi: { t: "hǎochī", pos: adjective, en: ["delicious", "tasty", "good"], forms: ["hǎochī", "hǎo chī"], ex: ["Zhè jiǎozi zhēn hǎochī!", "These dumplings are really good!"] }
   haohe: { t: "hǎohē", pos: adjective, en: ["tasty", "good to drink"], forms: ["hǎohē", "hǎo hē"], ex: ["Zhè chá hěn hǎohē.", "This tea is very good."], n: "hǎochī for food, hǎohē for drink." }
   maidan: { t: "mǎidān", pos: phrase, en: ["the bill, please", "the check"], forms: ["mǎidān", "mǎi dān", "jiézhàng", "jié zhàng"], ex: ["Fúwùyuán, mǎidān!", "Waiter, the bill!"], n: "Calling it out across the room is normal." }
