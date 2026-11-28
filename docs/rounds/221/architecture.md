@@ -23,3 +23,9 @@ events in [`trail/journal.md`](trail/journal.md). No Codex critique. Findings: [
 
 `npm exec --workspace client -- vitest run`; `npm run build -w client`, then
 `node client/scripts/follow-check.mjs docs/rounds/221/shots off` and `... on`.
+
+## Amendment 2026-11-28: the default
+
+The owner asked that the follow to the box be the default. It already is: `follow` is on unless the player chose
+"Stay where I am" in Settings (`client/src/display.js`), so a new game and a fresh install follow. Settings'
+description of "Follow the reply" now says it moves to the box under the answer, with the reply below it.

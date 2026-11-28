@@ -242,7 +242,7 @@ export default function SettingsSheet({ settings, onSave, onClose, dev = false, 
                   <label><input type="radio" name="settings-follow" checked={follow} onChange={() => onFollow(true)} /><span>Follow the reply</span></label>
                 </fieldset>
                 <small>{follow
-                  ? 'Follow the reply: the conversation moves to the character\'s new line as soon as it appears.'
+                  ? 'Follow the reply: when the reply comes, the conversation moves to the box under your answer (what was understood, or its correction), with the character\'s new line below it.'
                   : 'Stay where I am: the conversation stays where you left it; scroll down to the new line yourself.'}</small>
               </>
             )}
