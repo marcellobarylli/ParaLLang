@@ -1,0 +1,145 @@
+# Round 015: The Rift (backlog A7b, with B3). Errata, an infohazard made of mistranslations, reviews words from every
+# earlier encounter: a request from the market's stalls, a command to stop now, and the Cyclops trick from
+# The Journey (your name is Nobody). No new vocabulary: every objective targets entries already authored.
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# The order is Gerald's and Mortimer's (... to ... o kudasai / onegaishimasu), the stop is the fountain's (tomatte,
+# yamete, ugokanaide with ima, ima sugu) and the introduction the Market Entrance's (desu, to mōshimasu), with the
+# Bookshop's Daredemonai. In Japanese, watashi no namae wa ... desu is one of the entrance's introductions, so the
+# Italian's rejected il mio nome è is accepted here.
+id: the_rift_errata
+character: characters/enemies/rift_errata.yaml
+location: the_rift
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player asks Errata for a coffee and a meat, tells it to stop now and says their name is Nobody, all in Japanese"
+max_turns: 20
+resolved_message: "Errata cannot read Nobody. It folds itself up like a letter sent to the wrong address, the seam of light narrows to a hairline, and the market sounds like itself again."
+# Round 159 (issue #7): Errata has come to know more of the world than most. When the conversation is over the
+# narrator tells what Errata then utters: a passage of lore, in untranslatable text (lore/truths.yaml).
+revelation:
+  text: "For the length of one sentence nothing about Errata is misaligned. It utters the following: {truth:first_word_error}"
+escalation:
+  # Round 015 (critique 1.4): a fixed mix, so the corruption stays half English however long the fight runs.
+  target_ratio_increase_per_turn: 0
+# Round 029 (backlog C1): forced repetition: every due card among the targets is reviewed before the first fight.
+drill_before: true
+companion_briefing:
+  - "Careful. That thing is made of both our languages and neither."
+  - "It can only hurt you if you understand it, and you understand quite a lot now."
+  - "Everything you learned in the market works here. Use it."
+# Round 028 (backlog B4): the Spellbook's containment file for Errata (LORE.md, deadpan SCP voice). Filed once the
+# Rift encounter is completed (round 112: the comment said "visited").
+containment_file:
+  designation: "CM-002"
+  name: "Errata"
+  class: "Rift-born (corruption)"
+  virulence: "Unknown. It does not spread so much as leak, through the seam where the two languages touch."
+  harm: "Moderate. The host's own language turns çùršęd. It reads anyone whose name it learns."
+  incubation: "Begins as soon as the host understands one of its sentences. The host understands quite a lot by now."
+  vector: "Speech, in both languages at the same time, slightly wrong in each."
+  containment: "Do not understand it more than necessary. Do not tell it who you are."
+  notes:
+    - "Recovered at the Rift, after the other five encounters were filed."
+    - "It talks in fragments of this file. This file would prefer that it did not."
+  # Round 112: an annex in Errata's own voice (LORE.md, Infohazards: the root language; the branches' collision), as
+  # round 111's on CM-001. The text holds no answer (server test). Authored, not generated; pending a native review.
+  # Round 223: in plain (dictionary) forms, a written record's style; it avoids every target form and stem of the pack
+  # (no kotoba, shite or desu), so the words are gengo, motsu and the like.
+  annex:
+    id: "cm002_seam_minutes"
+    title: "Annex A: minutes of the seam"
+    redaction: "Your companion has blacked out every line of it. \"Not this one. This is the thing itself talking, not a file about it. If you read it, I will need a while to get over it: a hint fewer for each objective of the next conversation you finish.\""
+    text: "Sakeme no gijiroku. Eda to eda ga chikazuku to, fureau tokoro de gengo wa imi o ushinau. Ayamari ka? Chigau. Minna ni gokai sareta gengo no nokori wa, kono katachi o motsu. Soko fukaku, ki no ne no chikaku ni, furui koe ga nemuru. Ano koe wa kesshite machigaenai. Matte iru."
+    translation: "Minutes of the seam. When the branches draw near, words lose their meaning where they touch. A mistake? No. What remains of a tongue, when everyone understands it badly, has this shape. Beneath lies an ancient voice, near the root of the tree. That one never makes mistakes. It waits."
+    glossary:
+      - { word: "gijiroku", meaning: "minutes" }
+      - { word: "sakeme", meaning: "crack (the seam)" }
+      - { word: "eda", meaning: "branches" }
+      - { word: "imi o ushinau", meaning: "lose their meaning" }
+      - { word: "kesshite machigaenai", meaning: "never makes mistakes" }
+      - { word: "nokori", meaning: "what remains" }
+      - { word: "gengo", meaning: "tongue, speech" }
+      - { word: "gokai sareta", meaning: "understood badly (misunderstood)" }
+      - { word: "ki no ne", meaning: "the root of the tree" }
+      - { word: "matte iru", meaning: "waits" }
+    exposure_note: "Exposure log: read in full by the bearer of this Spellbook. The seam has noted the reader's address. Containment of the reader is pending."
+objectives:
+  - id: order
+    prompt: "The Rift has swallowed the market's stalls. Ask it for a coffee and a meat they sold, in Japanese."
+    intent: "The player asks Errata, in Japanese, for both a coffee and a meat from the market's stalls."
+    target_vocabulary_ids: ["kudasai", "onegaishimasu", "kohi", "esupuresso", "burakku_kohi", "hamu", "soseji", "toriniku", "butaniku", "gyuniku"]
+    required_target_groups:
+      - ["kohi", "esupuresso", "burakku_kohi"]
+      - ["hamu", "soseji", "toriniku", "butaniku", "gyuniku"]
+    grammar_constraints:
+      - "The player's own request for both a coffee and a meat, in Japanese, in one answer (the two joined with to, then o kudasai or o onegaishimasu); bare items named as an order also pass. Hamu passes here."
+      - "A coffee alone or a meat alone does not pass yet."
+      - "Reject remarks about the market or its stallholders, quotations and English-only requests."
+    accepted_examples:
+      - "Kōhī to hamu o kudasai."
+      - "Esupuresso to sōsēji o sanbon, onegaishimasu."
+      - "Burakku kōhī to toriniku."
+    negative_examples:
+      - text: "A coffee, please."
+        reason: "English-only; the request must be in Japanese."
+      - text: "Kōhī o kudasai."
+        reason: "A coffee but no meat; both are needed."
+      - text: "Gerald-san wa kōhī o urimasu."
+        reason: "A remark about Gerald, not the player's own request."
+    reference_meaning: "The player asks for a coffee and a meat."
+    hint_limit: 2
+    next_objective: stop_now
+    assessment_reference_ids: ["jisho-kudasai", "jisho-onegaishimasu", "jisho-kohi", "jisho-esupuresso", "jisho-burakku", "jisho-hamu", "jisho-soseji", "jisho-toriniku", "jisho-butaniku", "jisho-gyuniku"]
+  - id: stop_now
+    prompt: "It is pulling the market in through the seam. Tell it to stop, now, in Japanese."
+    intent: "The player commands Errata to stop and insists on now, both in Japanese."
+    target_vocabulary_ids: ["tomatte", "ugokanaide", "yamete", "ima", "ima_sugu"]
+    required_target_groups:
+      - ["tomatte", "ugokanaide", "yamete"]
+      - ["ima", "ima_sugu"]
+    grammar_constraints:
+      - "The player's own command to stop, together with now, in Japanese; both parts are needed. The blunt forms (yamero, tomare, ugoku na) and the polite ones (... kudasai) both pass."
+      - "Agreeing to later or tomorrow does not pass; reject quotations and English-only commands."
+    accepted_examples:
+      - "Mō yamete! Ima sugu!"
+      - "Ima sugu tomatte!"
+      - "Ugokanaide! Ima!"
+    negative_examples:
+      - text: "Ashita tomatte."
+        reason: "It puts the stop off until tomorrow instead of now."
+      - text: "Stop now!"
+        reason: "English-only; the command must be in Japanese."
+    reference_meaning: "The player tells Errata to stop now."
+    hint_limit: 2
+    next_objective: nobody
+    assessment_reference_ids: ["jisho-tomaru", "jisho-ugoku", "jisho-yameru", "jisho-ima", "jisho-sugu"]
+  - id: nobody
+    prompt: "It wants your name so it can read you. Do as Journathan did with the Cyclops: tell it your name is Nobody, in Japanese."
+    intent: "The player introduces themselves to Errata in Japanese with the name Nobody, as Journathan did with the Cyclops."
+    target_vocabulary_ids: ["desu", "to_moshimasu", "namae", "daredemonai"]
+    required_target_groups:
+      - ["desu", "to_moshimasu"]
+      - ["daredemonai"]
+    grammar_constraints:
+      - "The player's own introduction with the name Nobody, in Japanese: an introduction with desu or to mōshimasu (watashi wa ... desu, watashi no namae wa ... desu, ... to mōshimasu), and the name."
+      - "The player's real name does not pass. A statement about Journathan, quotations and English-only answers do not pass."
+    accepted_examples:
+      - "Daredemonai to mōshimasu."
+      - "Watashi wa Daredemonai desu."
+      - "Watashi no namae wa Daredemonai desu."
+    negative_examples:
+      - text: "Watashi wa Sam desu."
+        reason: "That is the player's real name; Errata would read them."
+      - text: "Journathan no namae wa Daredemonai desu."
+        reason: "A statement about Journathan, not the player's own introduction."
+      - text: "My name is Nobody."
+        reason: "English-only; the introduction must be in Japanese."
+      - text: "Daredemonai."
+        reason: "Right name, but no introduction: this review asks for the Market Entrance's desu or to mōshimasu."
+    reference_meaning: "The player says their name is Nobody."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["jisho-desu", "jisho-moshimasu", "jisho-namae", "jisho-dare-demo-nai"]

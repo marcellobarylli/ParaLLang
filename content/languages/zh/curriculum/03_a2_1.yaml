@@ -1,0 +1,181 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 144: the words of curriculum stage A2.1 (the skeleton is content/curriculum/03_a2_1.yaml). The Italian
+# original was authored by Claude from the functions of the A2 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
+# defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 223: the A1 stages were written at the same time by another agent, so this stage defines every word it uses
+# itself, under the word's natural id; a merge pass keeps the earlier stage's entry where both define one.
+stage: a2_1
+version: curriculum-a2-1-zh-v1
+grammar:
+  past_did: "No tenses: a finished action takes le straight after the verb (chīle, hēle, mǎile, kànle) and the verb never changes for person or time; le wants a number or a description on its object (wǒ mǎile yí jiàn wàitào); méi + verb, without le, for what did not happen (wǒ méi shàngbān); time words such as zuótiān and shàng ge xīngqī go before the verb."
+  past_went: "qù, dào and huí with le (wǒ qùle Shànghǎi, wǒ qù hǎibiān le); guo for having been somewhere (wǒ qùguo Běijīng); shì ... de to tell when, how or with whom a past trip was made (wǒ shì bā diǎn chūfā de; nǐ gēn shéi qù de?); gēn ... yìqǐ for 'with', yí ge rén for 'alone'."
+  weather: "Adjectives work as verbs and take hěn (jīntiān hěn rè, hěn lěng); rain and snow 'fall' (xià yǔ, xià xuě) and wind 'blows' (guā fēng); the seasons need no preposition (dōngtiān hěn lěng); ... de shíhou at the head of the sentence for 'when' (xià yǔ de shíhou ...). With zuótiān the same words tell the past: zuótiān hěn lěng."
+  restaurant: "wǒ xiǎng + verb for a polite wish (wǒ xiǎng dìng yì zhāng zhuōzi); jǐ wèi? and liǎng wèi count the guests; the dishes are shared: liángcài to start, then rè cài with rice (mǐfàn), and fruit more often than a dessert; xiān lái for 'first bring', zài lái for 'another'; measure words: yì shuāng kuàizi, yí ge bēizi, yì tiáo yú."
+  health: "Body part + téng, with no 'my' (wǒ tóu téng, wǒ sǎngzi téng); ailments are verbs (wǒ gǎnmào le, wǒ fāshāo le, wǒ késou); cóng zuótiān kāishǐ for 'since yesterday', liǎng tiān le for 'for two days'; děi with a verb for 'must' (wǒ děi xiūxi)."
+  plans: "xiǎng, děi and kěyǐ (or néng) with a verb (wǒ xiǎng qù, wǒ děi gōngzuò, wǒ kěyǐ lái); bù néng or lái bu liǎo for 'cannot'; a time word with the plain verb for a plan (xià ge xīngqī wǒ qù Běijīng), dǎsuan for 'plan to'; mǎshàng and kuài yào ... le for 'about to'."
+lessons:
+  past_did_yesterday:
+    ate: { say: [[zuotian], [wo_chile, wo_hele]], examples: ["Zuótiān wǒ chīle yì wǎn miàntiáo.", "Zuótiān wǎnshang wǒ hēle yì bēi chá."] }
+    worked: { say: [wo_gongzuole, wo_xuexile], examples: ["Zuótiān wǒ gōngzuòle shí ge xiǎoshí.", "Wǒ méi shàngbān, wǒ zài jiā xuéxí le."] }
+    ask_did: { say: [ni_zuole_shenme], examples: ["Nǐ zuótiān zuò shénme le?", "Nín zuótiān wǎnshang zuòle shénme?"] }
+  past_did_bought:
+    bought: { say: [wo_maile], examples: ["Wǒ mǎile yí jiàn wàitào.", "Wǒ mǎile yì shuāng xiézi."] }
+    paid: { say: [wo_fule], examples: ["Wǒ fùle èrshí kuài qián.", "Wǒ huāle yìbǎi kuài."] }
+    saw: { say: [wo_kanle], examples: ["Wǒ kànle yí bù diànyǐng.", "Wǒ kànjiànle wǒ jiějie."] }
+  past_did_week:
+    last_week: { say: [shang_ge_xingqi], examples: ["Shàng ge xīngqī wǒ hěn máng.", "Shàng ge xīngqī wǒ jiànle yí ge péngyou."] }
+    made: { say: [wo_zuole], examples: ["Wǒ zuòle yí ge dàngāo.", "Wǒmen zuòle hěn duō jiǎozi."] }
+    met: { say: [wo_jianle, liaotian], examples: ["Wǒ jiànle yí ge lǎo péngyou.", "Wǒ gēn wǒ māma liáotiān le."] }
+  past_went_where:
+    went: { say: [wo_qule], examples: ["Zuótiān wǒ qù hǎibiān le.", "Shàng ge xīngqī wǒ qùle Shànghǎi."] }
+    stayed: { say: [wo_quguo, dai_zai_jia], examples: ["Wǒ qùguo Běijīng.", "Zuótiān wǒ yìzhí dāi zài jiā."] }
+    ask_where: { say: [ni_qu_nar_le], examples: ["Nǐ zuótiān qù nǎr le?", "Nín qù nǎlǐ le?"] }
+  past_went_when:
+    left: { say: [chufa], examples: ["Wǒ shì bā diǎn chūfā de.", "Wǒ xīngqīyī chūfā de."] }
+    arrived: { say: [dao_le], examples: ["Wǒ shì zuótiān wǎnshang dào de.", "Wǒ shí diǎn dào le."] }
+    came_back: { say: [huilai], examples: ["Wǒ xīngqītiān huílái de.", "Wǒ zuótiān huí jiā le."] }
+  past_went_with:
+    with_whom: { say: [yiqi, yi_ge_ren], examples: ["Wǒ gēn yí ge péngyou yìqǐ qù de.", "Wǒ shì yí ge rén qù de."] }
+    ask_with: { say: [gen_shei], examples: ["Nǐ gēn shéi qù de?", "Nín shì gēn shéi yìqǐ qù de?"] }
+    how_was: { say: [wanr_de_hen_kaixin, hen_haowanr], examples: ["Wǒ wánr de hěn kāixīn.", "Hěn hǎowánr, xièxie."] }
+  weather_today:
+    ask_weather: { say: [tianqi_zenmeyang], examples: ["Tiānqì zěnmeyàng?", "Jīntiān tiānqì zěnmeyàng?"] }
+    hot_cold: { say: [hen_re, hen_leng], examples: ["Jīntiān hěn rè.", "Jīntiān fēicháng lěng."] }
+    sun_rain: { say: [qingtian, xia_yu, gua_feng, xia_xue], examples: ["Jīntiān shì qíngtiān.", "Xià yǔ le.", "Jīntiān guā fēng."] }
+  weather_seasons:
+    ask_season: { say: [na_ge_jijie], examples: ["Nǐ zuì xǐhuan nǎ ge jìjié?", "Nín zuì xǐhuan shénme jìjié?"] }
+    favourite: { say: [xiatian, dongtian, chuntian, qiutian], examples: ["Wǒ zuì xǐhuan xiàtiān.", "Wǒ xǐhuan chūntiān."] }
+    in_season: { say: [[xiatian, dongtian, chuntian, qiutian], [hen_re, hen_leng, xia_yu, xia_xue, qingtian, gua_feng]], examples: ["Dōngtiān hěn lěng.", "Xiàtiān fēicháng rè.", "Qiūtiān chángcháng xià yǔ."] }
+  weather_rain:
+    was: { say: [[zuotian], [hen_leng, hen_re, xia_yu, xia_xue, gua_feng, qingtian]], examples: ["Zuótiān hěn lěng.", "Zuótiān xià yǔ le."] }
+    when_rains: { say: [xia_yu_de_shihou], examples: ["Xià yǔ de shíhou wǒ dāi zài jiā.", "Xià yǔ de shíhou wǒ kàn shū."] }
+    fine_weather: { say: [tianqi_hao], examples: ["Tiānqì hǎo de shíhou wǒ qù gōngyuán.", "Tiānqì hǎo de shíhou wǒ chūqu wánr."] }
+  restaurant_book:
+    book: { say: [yuding], examples: ["Wǒ xiǎng dìng yì zhāng zhuōzi.", "Wǒ kěyǐ yùdìng yì zhāng zhuōzi ma?"] }
+    how_many: { say: [wei, ge_ren], examples: ["Liǎng wèi.", "Wǒmen sì ge rén."] }
+    for_when: { say: [jintian_wanshang], examples: ["Jīntiān wǎnshang qī diǎn.", "Míngtiān wǎnshang, liǎng wèi."] }
+  restaurant_order:
+    starter: { say: [xian_lai, liangcai], examples: ["Xiān lái yí ge liángcài.", "Wǒmen xiān lái yí ge tāng."] }
+    main: { say: [[recai], [rou, yu, jirou]], examples: ["Rè cài wǒ yào yì tiáo yú.", "Zhǔcài lái yí ge gōngbǎo jīdīng."] }
+    dessert: { say: [tianpin], examples: ["Tiánpǐn wǒ yào bīngqílín.", "Lái yí ge shuǐguǒ pán ba."] }
+  restaurant_wrong:
+    cold: { say: [liang_le, tai_xian_le], examples: ["Tāng liáng le.", "Zhè ge cài tài xián le."] }
+    missing: { say: [kuaizi, chazi, daozi, beizi, mifan], examples: ["Méiyǒu kuàizi.", "Hái shǎo yí ge bēizi.", "Mǐfàn hái méi lái."] }
+    another: { say: [zai_lai], examples: ["Zài lái yì shuāng kuàizi, xièxie.", "Néng zài gěi wǒ yí ge bēizi ma?"] }
+  health_hurts:
+    not_well: { say: [bu_shufu], examples: ["Wǒ jīntiān bù shūfu.", "Wǒ yǒudiǎn bù shūfu."] }
+    hurts: { say: [[teng], [tou, duzi, sangzi, yachi, houbei]], examples: ["Wǒ tóu téng.", "Wǒ sǎngzi téng.", "Wǒ yáchǐ hěn téng."] }
+    since: { say: [cong_zuotian], examples: ["Cóng zuótiān kāishǐ.", "Yǐjīng liǎng tiān le."] }
+  health_cold:
+    cold_fever: { say: [ganmao, fashao, kesou], examples: ["Wǒ gǎnmào le.", "Wǒ fāshāo le.", "Wǒ yǒudiǎn késou."] }
+    tired: { say: [hen_lei], examples: ["Wǒ fēicháng lèi.", "Wǒ lèi sǐ le."] }
+    must_rest: { say: [xiuxi], examples: ["Wǒ děi xiūxi.", "Yīshēng shuō wǒ yào duō xiūxi."] }
+  health_help:
+    need: { say: [[xuyao], [yisheng, yaodian]], examples: ["Wǒ xūyào kàn yīshēng.", "Wǒ xūyào qù yàodiàn.", "Wǒ děi kàn yīshēng."] }
+    something_for: { say: [de_yao], examples: ["Yǒu méiyǒu zhì tóu téng de yào?", "Wǒ xiǎng mǎi zhì késou de yào."] }
+    how_often: { say: [ji_ci], examples: ["Yì tiān chī jǐ cì?", "Yì tiān yào chī jǐ cì?"] }
+  plans_want:
+    want: { say: [wo_xiang], examples: ["Wǒ xiǎng qù hǎibiān.", "Zhè ge zhōumò wǒ xiǎng zài jiā shuìjiào."] }
+    ask_want: { say: [ni_xiang_zuo_shenme], examples: ["Nǐ xiǎng zuò shénme?", "Nín míngtiān xiǎng zuò shénme?"] }
+    can: { say: [wo_keyi, wo_bu_neng], examples: ["Xīngqīliù wǒ kěyǐ lái.", "Xīngqītiān wǒ bù néng lái."] }
+  plans_must:
+    must: { say: [wo_dei], examples: ["Xīngqīliù wǒ děi gōngzuò.", "Wǒ děi xuéxí."] }
+    cannot_because: { say: [[wo_bu_neng], [wo_dei]], examples: ["Wǒ bù néng lái, wǒ děi gōngzuò.", "Duìbuqǐ, wǒ lái bu liǎo, yīnwèi wǒ děi xuéxí."] }
+    ask_must: { say: [ni_dei], examples: ["Nǐ míngtiān děi shàngbān ma?", "Nín xīngqīliù yào shàngbān ma?"] }
+  plans_going:
+    going_to: { say: [wo_dasuan], examples: ["Míngtiān wǒ dǎsuan qù hǎibiān.", "Wǒ dǎsuan dāi zài jiā."] }
+    next_week: { say: [xia_ge_xingqi], examples: ["Xià ge xīngqī wǒ qù Běijīng.", "Xià xīngqī wǒ hěn máng."] }
+    about_to: { say: [mashang], examples: ["Wǒ mǎshàng jiù zǒu.", "Wǒ kuài yào chūfā le."] }
+vocabulary:
+  # past_did
+  zuotian: { t: "zuótiān", pos: noun, en: ["yesterday"], forms: ["zuótiān", "zuó tiān", "zuótiān wǎnshang", "zuótiān zǎoshang", "zuótiān xiàwǔ", "zuówǎn"], ex: ["Zuótiān wǒ gōngzuòle yì tiān.", "Yesterday I worked all day."], n: "A time word goes before the verb, often at the head of the sentence." }
+  wo_chile: { t: "wǒ chīle", pos: phrase, en: ["I ate", "I have eaten"], forms: ["wǒ chīle", "wǒ chī le", "chīle", "chī le", "wǒmen chīle"], ex: ["Wǒ chīle yí ge bāozi.", "I ate a steamed bun."], n: "le after the verb marks a finished action; the verb itself never changes." }
+  wo_hele: { t: "wǒ hēle", pos: phrase, en: ["I drank", "I have drunk"], forms: ["wǒ hēle", "wǒ hē le", "hēle", "hē le", "wǒmen hēle"], ex: ["Wǒ hēle yì bēi kāfēi.", "I drank a coffee."] }
+  wo_gongzuole: { t: "wǒ gōngzuòle", pos: phrase, en: ["I worked", "I have worked"], forms: ["wǒ gōngzuòle", "wǒ gōngzuò le", "gōngzuòle", "gōngzuò le", "shàngbān le", "wǒ shàngbān le"], ex: ["Zuótiān wǒ gōngzuòle bā ge xiǎoshí.", "Yesterday I worked for eight hours."], n: "'Shàngbān le' is 'I went to work'." }
+  wo_xuexile: { t: "wǒ xuéxíle", pos: phrase, en: ["I studied", "I have studied"], forms: ["wǒ xuéxíle", "wǒ xuéxí le", "xuéxíle", "xuéxí le", "wǒmen xuéxíle"], ex: ["Wǒ xuéxíle yì zhěng tiān.", "I studied all day."] }
+  ni_zuole_shenme: { t: "nǐ zuòle shénme", pos: phrase, en: ["what did you do"], forms: ["nǐ zuòle shénme", "nín zuòle shénme", "nǐmen zuòle shénme", "zuòle shénme", "zuò le shénme", "zuò shénme le", "gàn shénme le", "gànle shénme"], ex: ["Nǐ xīngqīliù zuò shénme le?", "What did you do on Saturday?"], n: "The question word stays where the answer goes: wǒ zuòle jiǎozi, nǐ zuòle shénme?" }
+  wo_maile: { t: "wǒ mǎile", pos: phrase, en: ["I bought", "I have bought"], forms: ["wǒ mǎile", "wǒ mǎi le", "mǎile", "mǎi le", "wǒmen mǎile"], ex: ["Wǒ mǎile yì dǐng màozi.", "I bought a hat."], n: "Mǎi (buy) has a falling-rising tone; mài, falling, is 'sell'." }
+  wo_fule: { t: "wǒ fùle", pos: phrase, en: ["I paid"], forms: ["wǒ fùle", "wǒ fù le", "fùle", "fù le", "wǒ huāle", "wǒ huā le", "huāle", "huā le"], ex: ["Wǒ fùle wǔshí kuài.", "I paid fifty yuan."], n: "'Wǒ huāle' is 'I spent'; kuài is the spoken word for yuán." }
+  wo_kanle: { t: "wǒ kànle", pos: phrase, en: ["I saw", "I watched", "I have seen"], forms: ["wǒ kànle", "wǒ kàn le", "kànle", "kàn le", "wǒ kànjiànle", "kànjiànle", "kànjiàn le", "wǒ kàndàole", "kàndàole"], ex: ["Wǒ kànle yí bù hǎo diànyǐng.", "I saw a good film."], n: "Kàn is to look at or watch; kànjiàn, to catch sight of someone." }
+  shang_ge_xingqi: { t: "shàng ge xīngqī", pos: phrase, en: ["last week"], forms: ["shàng ge xīngqī", "shàng xīngqī", "shàng ge lǐbài", "shàng zhōu"], ex: ["Shàng ge xīngqī wǒ xuéxíle hěn duō.", "Last week I studied a lot."], n: "Shàng (up) is the one before, xià (down) the one after: xià ge xīngqī is next week." }
+  wo_zuole: { t: "wǒ zuòle", pos: phrase, en: ["I did", "I made"], forms: ["wǒ zuòle", "wǒ zuò le", "zuòle", "wǒmen zuòle"], ex: ["Wǒ zuòle yì zhuō cài.", "I cooked a whole table of dishes."] }
+  wo_jianle: { t: "wǒ jiànle", pos: phrase, en: ["I met", "I saw (someone)"], forms: ["wǒ jiànle", "wǒ jiàn le", "jiànle", "wǒ yùdàole", "yùdàole", "yùdào le"], ex: ["Wǒ zài gōngyuán jiànle Lǐ Míng.", "I met Li Ming in the park."], n: "'Yùdàole' is 'I ran into'." }
+  liaotian: { t: "liáotiān", pos: verb, en: ["to chat", "to talk"], forms: ["liáotiān", "liáo tiān", "liáole tiān", "liáole yíhuìr", "shuōle huà"], ex: ["Wǒ gēn yīshēng liáole yíhuìr.", "I talked with the doctor for a while."], n: "With whom goes first: gēn ... liáotiān." }
+  # past_went
+  wo_qule: { t: "wǒ qùle", pos: phrase, en: ["I went"], forms: ["wǒ qùle", "wǒ qù le", "qùle", "qù le", "wǒmen qùle", "wǒ qù"], ex: ["Zuótiān wǒ qù chāoshì le.", "Yesterday I went to the supermarket."], n: "With a bare place the le often comes at the end: wǒ qù hǎibiān le." }
+  wo_quguo: { t: "wǒ qùguo", pos: phrase, en: ["I have been (to)"], forms: ["wǒ qùguo", "wǒ qù guo", "qùguo", "qù guo", "wǒmen qùguo"], ex: ["Wǒ qùguo Xī'ān.", "I have been to Xi'an."], n: "guo after a verb: it has happened at least once." }
+  dai_zai_jia: { t: "dāi zài jiā", pos: phrase, en: ["to stay at home", "I stayed at home"], forms: ["dāi zài jiā", "wǒ dāi zài jiā", "dāi zài jiāli", "zài jiā dāizhe", "méi chūmén"], ex: ["Xīngqītiān wǒ dāi zài jiā.", "On Sunday I stayed at home."], n: "'Méi chūmén' is 'I didn't go out'." }
+  ni_qu_nar_le: { t: "nǐ qù nǎr le", pos: phrase, en: ["where did you go"], forms: ["nǐ qù nǎr le", "nín qù nǎr le", "nǐmen qù nǎr le", "qù nǎr le", "qù nǎlǐ le", "qùle nǎr", "qùle nǎlǐ"], ex: ["Nǐ shàng ge xīngqī qù nǎr le?", "Where did you go last week?"], n: "Nǎr is northern, nǎlǐ southern and written; both are fine." }
+  chufa: { t: "chūfā", pos: verb, en: ["to set off", "to leave"], forms: ["chūfā", "chū fā", "líkāi", "lí kāi"], ex: ["Wǒmen qī diǎn chūfā de.", "We set off at seven."], n: "Shì ... de tells when a past action happened: wǒ shì zuótiān chūfā de." }
+  dao_le: { t: "dào le", pos: phrase, en: ["arrived", "I arrived"], forms: ["dào le", "dàole", "dào de", "dàodá", "dàodá le"], ex: ["Wǒ jiǔ diǎn dào de.", "I arrived at nine."] }
+  huilai: { t: "huílái", pos: verb, en: ["to come back", "to return"], forms: ["huílái", "huí lái", "huíláile", "huí jiā", "huíjiā"], ex: ["Wǒ xīngqīliù huílái de.", "I came back on Saturday."], n: "'Huí jiā' is 'to go home'." }
+  yiqi: { t: "yìqǐ", pos: adverb, en: ["together", "with"], forms: ["yìqǐ", "yì qǐ", "yìqǐ qù"], ex: ["Wǒ gēn wǒ gēge yìqǐ qù de.", "I went with my brother."], n: "'With' is gēn ... yìqǐ, before the verb." }
+  yi_ge_ren: { t: "yí ge rén", pos: phrase, en: ["alone", "on my own"], forms: ["yí ge rén", "yí gè rén", "wǒ zìjǐ", "zìjǐ"], ex: ["Wǒ shì yí ge rén qù de.", "I went on my own."] }
+  gen_shei: { t: "gēn shéi", pos: phrase, en: ["who with", "with whom"], forms: ["gēn shéi", "gēn shuí", "hé shéi", "hé shuí", "gēn shéi yìqǐ"], ex: ["Nǐ gēn shéi qù de?", "Who did you go with?"] }
+  wanr_de_hen_kaixin: { t: "wánr de hěn kāixīn", pos: phrase, en: ["I had a great time", "I enjoyed myself"], forms: ["wánr de hěn kāixīn", "wán de hěn kāixīn", "wánr de hěn hǎo", "wán de hěn hǎo", "wánr de tài kāixīn le"], ex: ["Wǒmen wánr de hěn kāixīn.", "We had a great time."], n: "Verb + de + hěn ... says how something was done." }
+  hen_haowanr: { t: "hěn hǎowánr", pos: phrase, en: ["it was fun", "it was lovely"], forms: ["hěn hǎowánr", "hěn hǎo wánr", "hǎowánr", "hǎo wánr", "tài hǎowánr le", "fēicháng hǎowánr"], ex: ["Běijīng hěn hǎowánr.", "Beijing was great fun."] }
+  # weather
+  tianqi_zenmeyang: { t: "tiānqì zěnmeyàng", pos: phrase, en: ["what is the weather like"], forms: ["tiānqì zěnmeyàng", "tiānqì zěnme yàng", "tiānqì rúhé", "tiānqì hǎo ma"], ex: ["Shànghǎi de tiānqì zěnmeyàng?", "What is the weather like in Shanghai?"] }
+  hen_re: { t: "hěn rè", pos: phrase, en: ["it is hot", "it is warm"], forms: ["hěn rè", "tài rè le", "fēicháng rè", "hǎo rè", "rè sǐ le", "tǐng rè de"], ex: ["Jīntiān hěn rè.", "It is hot today."], n: "Adjectives take hěn without any 'is'; hěn here is hardly 'very'." }
+  hen_leng: { t: "hěn lěng", pos: phrase, en: ["it is cold"], forms: ["hěn lěng", "tài lěng le", "fēicháng lěng", "hǎo lěng", "lěng sǐ le", "tǐng lěng de"], ex: ["Jīntiān wǎnshang hěn lěng.", "It is cold this evening."] }
+  qingtian: { t: "qíngtiān", pos: noun, en: ["a sunny day", "it is sunny"], forms: ["qíngtiān", "qíng tiān", "chū tàiyáng le", "yǒu tàiyáng"], ex: ["Jīntiān shì qíngtiān.", "It is sunny today."] }
+  xia_yu: { t: "xià yǔ", pos: phrase, en: ["it is raining", "to rain"], forms: ["xià yǔ", "xiàyǔ", "zài xià yǔ", "xià yǔ le"], ex: ["Wàimiàn zài xià yǔ.", "It is raining outside."], n: "'Xià yǔ le' is 'it has started to rain', or with zuótiān 'it rained'." }
+  gua_feng: { t: "guā fēng", pos: phrase, en: ["it is windy", "the wind blows"], forms: ["guā fēng", "guāfēng", "fēng hěn dà", "yǒu fēng"], ex: ["Jīntiān guā fēng.", "It is windy today."] }
+  xia_xue: { t: "xià xuě", pos: phrase, en: ["it is snowing", "to snow"], forms: ["xià xuě", "xiàxuě", "zài xià xuě", "xià xuě le"], ex: ["Shān shang zài xià xuě.", "It is snowing in the mountains."] }
+  na_ge_jijie: { t: "nǎ ge jìjié", pos: phrase, en: ["which season"], forms: ["nǎ ge jìjié", "něi ge jìjié", "shénme jìjié", "jìjié"], ex: ["Nǐ xǐhuan nǎ ge jìjié?", "Which season do you like?"] }
+  xiatian: { t: "xiàtiān", pos: noun, en: ["summer"], forms: ["xiàtiān", "xià tiān"], ex: ["Xiàtiān wǒ qù hǎibiān.", "In summer I go to the seaside."] }
+  dongtian: { t: "dōngtiān", pos: noun, en: ["winter"], forms: ["dōngtiān", "dōng tiān"], ex: ["Dōngtiān xià xuě.", "In winter it snows."] }
+  chuntian: { t: "chūntiān", pos: noun, en: ["spring"], forms: ["chūntiān", "chūn tiān"], ex: ["Chūntiān hěn měi.", "Spring is lovely."] }
+  qiutian: { t: "qiūtiān", pos: noun, en: ["autumn", "fall"], forms: ["qiūtiān", "qiū tiān"], ex: ["Běijīng de qiūtiān zuì hǎo.", "Autumn is the best season in Beijing."] }
+  xia_yu_de_shihou: { t: "xià yǔ de shíhou", pos: phrase, en: ["when it rains"], forms: ["xià yǔ de shíhou", "xiàyǔ de shíhou"], ex: ["Xià yǔ de shíhou wǒ zuò gōngjiāochē.", "When it rains I take the bus."], n: "... de shíhou ('at the time of ...') goes first: xià xuě de shíhou, tiānqì hǎo de shíhou." }
+  tianqi_hao: { t: "tiānqì hǎo", pos: phrase, en: ["fine weather", "the weather is good"], forms: ["tiānqì hǎo", "tiānqì hěn hǎo", "tiānqì bú cuò", "hǎo tiānqì", "tiānqì hǎo de shíhou"], ex: ["Jīntiān tiānqì hěn hǎo.", "The weather is fine today."] }
+  # restaurant
+  yuding: { t: "yùdìng", pos: verb, en: ["to book", "to reserve"], forms: ["yùdìng", "yù dìng", "yùdìngle", "yùdìng le", "dìngle", "wǒ dìngle", "dìng zhuō", "dìng yì zhāng zhuōzi", "dìng ge zhuōzi", "dìng ge wèizi", "dìng wèizi"], ex: ["Wǒ xiǎng yùdìng míngtiān de zhuōzi.", "I would like to book a table for tomorrow."], n: "Spoken Chinese often says dìng alone: dìng yì zhāng zhuōzi, a table (zhāng counts flat things)." }
+  wei: { t: "wèi", pos: measure word, en: ["(polite count for people)", "people", "guests"], forms: ["wèi", "jǐ wèi", "yí wèi", "liǎng wèi", "sān wèi", "sì wèi", "wǔ wèi", "liù wèi"], ex: ["Nín jǐ wèi?", "How many of you are there?"], n: "The waiter asks jǐ wèi?; the guest answers liǎng wèi or wǒmen liǎng ge rén." }
+  ge_ren: { t: "ge rén", pos: phrase, en: ["people (counted)", "persons"], forms: ["ge rén", "gè rén"], ex: ["Wǒmen wǔ ge rén.", "There are five of us."], n: "Two is liǎng before a measure word: liǎng ge rén." }
+  jintian_wanshang: { t: "jīntiān wǎnshang", pos: phrase, en: ["this evening", "tonight"], forms: ["jīntiān wǎnshang", "jīnwǎn", "jīn wǎn", "míngtiān wǎnshang", "míngwǎn", "míngtiān zhōngwǔ", "jīntiān zhōngwǔ"], ex: ["Jīntiān wǎnshang bā diǎn, sì wèi.", "This evening at eight, for four."], n: "'Míngtiān wǎnshang' is 'tomorrow evening'." }
+  xian_lai: { t: "xiān lái", pos: phrase, en: ["to start with", "first bring"], forms: ["xiān lái", "xiān yào", "xiān diǎn"], ex: ["Xiān lái liǎng píng píjiǔ.", "To start with, two bottles of beer."], n: "Lái ('come') is how a diner orders: lái yí ge ..., bring me a ..." }
+  liangcai: { t: "liángcài", pos: noun, en: ["cold dish", "starter"], forms: ["liángcài", "liáng cài"], ex: ["Wǒmen yào liǎng ge liángcài.", "We'll have two cold dishes."], n: "A meal starts with cold dishes and goes on to hot ones, all shared from the middle of the table." }
+  recai: { t: "rè cài", pos: noun, en: ["hot dish", "main course"], forms: ["rè cài", "rècài", "zhǔcài", "zhǔ cài"], ex: ["Rè cài yào sān ge.", "We'll have three hot dishes."], n: "'Zhǔcài' is 'main dish'." }
+  rou: { t: "ròu", pos: noun, en: ["meat", "pork"], forms: ["ròu", "zhūròu", "niúròu", "yángròu", "hóngshāo ròu"], ex: ["Wǒ bù chī ròu.", "I don't eat meat."], n: "Ròu alone is usually pork; niúròu is beef, yángròu lamb." }
+  yu: { t: "yú", pos: noun, en: ["fish"], forms: ["yú", "yì tiáo yú", "qīngzhēng yú", "tángcù yú"], ex: ["Zhè tiáo yú hěn xīnxiān.", "This fish is very fresh."], n: "Counted with tiáo; a whole fish is served at a celebration." }
+  jirou: { t: "jīròu", pos: noun, en: ["chicken"], forms: ["jīròu", "jī ròu", "jīdīng", "gōngbǎo jīdīng"], ex: ["Gōngbǎo jīdīng hěn là.", "Kung pao chicken is spicy."] }
+  tianpin: { t: "tiánpǐn", pos: noun, en: ["dessert", "sweet"], forms: ["tiánpǐn", "tián pǐn", "tiándiǎn", "shuǐguǒ pán"], ex: ["Nǐmen yǒu tiánpǐn ma?", "Do you have desserts?"], n: "A Chinese meal more often ends with a plate of fruit (shuǐguǒ pán) than a dessert." }
+  liang_le: { t: "liáng le", pos: phrase, en: ["it has gone cold", "it is cold"], forms: ["liáng le", "dōu liáng le", "tài liáng le", "shì liáng de"], ex: ["Cài dōu liáng le.", "The food has all gone cold."], n: "Food is liáng; weather is lěng." }
+  tai_xian_le: { t: "tài xián le", pos: phrase, en: ["too salty"], forms: ["tài xián le", "tài xián", "hěn xián", "yǒudiǎn xián"], ex: ["Zhè ge tāng tài xián le.", "This soup is too salty."] }
+  kuaizi: { t: "kuàizi", pos: noun, en: ["chopsticks"], forms: ["kuàizi", "kuài zi", "yì shuāng kuàizi"], ex: ["Qǐng gěi wǒ yì shuāng kuàizi.", "A pair of chopsticks, please."], n: "Counted in pairs: yì shuāng kuàizi." }
+  chazi: { t: "chāzi", pos: noun, en: ["fork"], forms: ["chāzi", "chā zi"], ex: ["Yǒu chāzi ma?", "Is there a fork?"] }
+  daozi: { t: "dāozi", pos: noun, en: ["knife"], forms: ["dāozi", "dāo zi"], ex: ["Zhè bǎ dāozi bú kuài.", "This knife is not sharp."] }
+  beizi: { t: "bēizi", pos: noun, en: ["glass", "cup"], forms: ["bēizi", "bēi zi"], ex: ["Bēizi zài zhèr.", "The glass is here."] }
+  mifan: { t: "mǐfàn", pos: noun, en: ["rice", "cooked rice"], forms: ["mǐfàn", "mǐ fàn", "bái mǐfàn"], ex: ["Zài lái yì wǎn mǐfàn.", "Another bowl of rice."], n: "Rice comes in bowls: yì wǎn mǐfàn." }
+  zai_lai: { t: "zài lái", pos: phrase, en: ["another", "one more"], forms: ["zài lái", "zài lái yí ge", "zài lái yì bēi", "zài gěi wǒ", "zài yào yí ge"], ex: ["Zài lái yì bēi chá.", "Another cup of tea."], n: "Zài ('again') before the verb: zài lái yí ge, bring another." }
+  # health
+  bu_shufu: { t: "bù shūfu", pos: phrase, en: ["I don't feel well", "unwell"], forms: ["bù shūfu", "wǒ bù shūfu", "bú tài shūfu", "yǒudiǎn bù shūfu", "shēntǐ bù shūfu"], ex: ["Wǒ jīntiān bú tài shūfu.", "I don't feel very well today."] }
+  teng: { t: "téng", pos: verb, en: ["to hurt", "it hurts"], forms: ["téng", "hěn téng", "yǒudiǎn téng"], ex: ["Wǒ dùzi téng.", "My stomach hurts."], n: "The body part comes first and needs no 'my': wǒ tóu téng." }
+  tou: { t: "tóu", pos: noun, en: ["head"], forms: ["tóu"], ex: ["Wǒ tóu hěn téng.", "I have a bad headache."] }
+  duzi: { t: "dùzi", pos: noun, en: ["stomach", "belly"], forms: ["dùzi", "dù zi"], ex: ["Wǒ dùzi bù shūfu.", "My stomach is upset."] }
+  sangzi: { t: "sǎngzi", pos: noun, en: ["throat"], forms: ["sǎngzi", "sǎng zi", "hóulóng"], ex: ["Wǒ sǎngzi téng.", "I have a sore throat."] }
+  yachi: { t: "yáchǐ", pos: noun, en: ["tooth", "teeth"], forms: ["yáchǐ", "yá chǐ", "wǒ yá", "yì kē yá"], ex: ["Wǒ yáchǐ téng.", "I have toothache."] }
+  houbei: { t: "hòubèi", pos: noun, en: ["back"], forms: ["hòubèi", "hòu bèi"], ex: ["Wǒ hòubèi téng.", "My back hurts."], n: "For the lower back Chinese says yāo." }
+  cong_zuotian: { t: "cóng zuótiān", pos: phrase, en: ["since yesterday"], forms: ["cóng zuótiān", "cóng zuótiān kāishǐ", "cóng zuótiān wǎnshang", "cóng zǎoshang", "cóng jīntiān zǎoshang", "liǎng tiān le", "sān tiān le", "jǐ tiān le", "hǎo jǐ tiān le", "yǐjīng liǎng tiān le", "yí ge xīngqī le"], ex: ["Wǒ cóng zuótiān kāishǐ fāshāo.", "I have had a fever since yesterday."], n: "A length of time with le says how long so far: wǒ késou yí ge xīngqī le." }
+  ganmao: { t: "gǎnmào", pos: verb, en: ["to have a cold", "a cold"], forms: ["gǎnmào", "gǎn mào", "gǎnmào le", "wǒ gǎnmào le", "zháoliáng le"], ex: ["Wǒ cóng xīngqīyī kāishǐ gǎnmào.", "I have had a cold since Monday."] }
+  fashao: { t: "fāshāo", pos: verb, en: ["to have a fever", "a temperature"], forms: ["fāshāo", "fā shāo", "fāshāo le", "wǒ fāshāo"], ex: ["Háizi fāshāo le.", "The child has a temperature."] }
+  kesou: { t: "késou", pos: verb, en: ["to cough", "a cough"], forms: ["késou", "ké sou", "wǒ késou"], ex: ["Wǒ késou yí ge xīngqī le.", "I have had a cough for a week."] }
+  hen_lei: { t: "hěn lèi", pos: phrase, en: ["I am tired", "very tired"], forms: ["hěn lèi", "tài lèi le", "lèi sǐ le", "fēicháng lèi", "hǎo lèi", "wǒ lèi le", "tǐng lèi de"], ex: ["Jīntiān wǎnshang wǒ hěn lèi.", "I am tired this evening."], n: "'Lèi sǐ le' ('tired to death') is everyday speech." }
+  xiuxi: { t: "xiūxi", pos: verb, en: ["to rest"], forms: ["xiūxi", "xiū xi", "hǎohǎo xiūxi", "duō xiūxi", "tǎng zài chuáng shang"], ex: ["Yīshēng shuō wǒ děi xiūxi.", "The doctor says I must rest."] }
+  xuyao: { t: "xūyào", pos: verb, en: ["to need", "I need"], forms: ["xūyào", "xū yào", "wǒ xūyào", "yào kàn", "děi kàn"], ex: ["Wǒ xūyào bāngzhù.", "I need help."], n: "'Kàn yīshēng' ('see a doctor') is how Chinese says going to the doctor." }
+  yisheng: { t: "yīshēng", pos: noun, en: ["doctor"], forms: ["yīshēng", "yī shēng", "dàifu"], ex: ["Wǒ děi qù kàn yīshēng.", "I have to go to the doctor."], n: "'Dàifu' is the older, northern word." }
+  yaodian: { t: "yàodiàn", pos: noun, en: ["pharmacy", "chemist's"], forms: ["yàodiàn", "yàofáng"], ex: ["Fùjìn yǒu yàodiàn ma?", "Is there a pharmacy nearby?"] }
+  de_yao: { t: "de yào", pos: phrase, en: ["medicine for", "something for"], forms: ["de yào", "mǎi diǎn yào", "yǒu yào ma"], ex: ["Yǒu zhì gǎnmào de yào ma?", "Do you have something for a cold?"], n: "Zhì ('treat') + the ailment + de yào: zhì tóu téng de yào, medicine for a headache." }
+  ji_ci: { t: "jǐ cì", pos: phrase, en: ["how many times", "how often"], forms: ["jǐ cì", "chī jǐ cì", "yì tiān jǐ cì", "duōshao cì"], ex: ["Yì tiān chī jǐ cì?", "How many times a day?"], n: "Medicine is 'eaten': chī yào." }
+  # plans
+  wo_xiang: { t: "wǒ xiǎng", pos: phrase, en: ["I want to", "I would like to"], forms: ["wǒ xiǎng", "wǒmen xiǎng"], ex: ["Wǒ xiǎng kàn Chángchéng.", "I want to see the Great Wall."], n: "Xiǎng + verb is a wish or a plan; on its own xiǎng is 'to think' or 'to miss'." }
+  ni_xiang_zuo_shenme: { t: "nǐ xiǎng zuò shénme", pos: phrase, en: ["what do you want to do"], forms: ["nǐ xiǎng zuò shénme", "nín xiǎng zuò shénme", "nǐmen xiǎng zuò shénme", "xiǎng zuò shénme", "nǐ xiǎng gàn shénme", "xiǎng gàn shénme"], ex: ["Jīntiān wǎnshang nǐ xiǎng zuò shénme?", "What do you want to do this evening?"] }
+  wo_keyi: { t: "wǒ kěyǐ", pos: phrase, en: ["I can"], forms: ["wǒ kěyǐ", "wǒmen kěyǐ", "wǒ néng", "kěyǐ lái", "néng lái"], ex: ["Míngtiān wǒ kěyǐ lái.", "I can come tomorrow."], n: "Kěyǐ is 'may, it is possible'; néng 'am able to'; in plans both say 'can'." }
+  wo_bu_neng: { t: "wǒ bù néng", pos: phrase, en: ["I can't", "I cannot"], forms: ["wǒ bù néng", "wǒmen bù néng", "bù néng lái", "lái bu liǎo", "wǒ lái bu liǎo"], ex: ["Duìbuqǐ, wǒ bù néng lái.", "I'm sorry, I can't come."], n: "'Lái bu liǎo' is 'can't make it'." }
+  wo_dei: { t: "wǒ děi", pos: phrase, en: ["I must", "I have to"], forms: ["wǒ děi", "wǒmen děi", "wǒ bìxū", "wǒmen bìxū"], ex: ["Wǒ děi mǎi miànbāo.", "I have to buy bread."], n: "Děi is spoken; bìxū is firmer and more written." }
+  ni_dei: { t: "nǐ děi", pos: phrase, en: ["you must", "do you have to"], forms: ["nǐ děi", "nín děi", "nǐmen děi", "nǐ bìxū", "děi shàngbān ma", "yào shàngbān ma"], ex: ["Nǐ xīngqītiān děi gōngzuò ma?", "Do you have to work on Sunday?"], n: "Shàngbān is to go to work." }
+  wo_dasuan: { t: "wǒ dǎsuan", pos: phrase, en: ["I plan to", "I am going to"], forms: ["wǒ dǎsuan", "wǒmen dǎsuan", "wǒ zhǔnbèi"], ex: ["Wǒ dǎsuan xīngqīliù chūfā.", "I plan to set off on Saturday."] }
+  xia_ge_xingqi: { t: "xià ge xīngqī", pos: phrase, en: ["next week"], forms: ["xià ge xīngqī", "xià xīngqī", "xià ge lǐbài", "xià zhōu"], ex: ["Xià ge xīngqī wǒ shàngbān.", "Next week I am working."], n: "A time word with the plain verb is enough for a plan." }
+  mashang: { t: "mǎshàng", pos: adverb, en: ["right away", "I am about to"], forms: ["mǎshàng", "mǎ shàng", "mǎshàng jiù", "kuài yào"], ex: ["Wǒ mǎshàng jiù yào shuìjiào le.", "I am about to go to bed."], n: "'Kuài yào ... le' is 'about to': wǒ kuài yào zǒu le." }

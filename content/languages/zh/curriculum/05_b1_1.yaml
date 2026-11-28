@@ -1,0 +1,170 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 144: the words of curriculum stage B1.1 (the skeleton is content/curriculum/05_b1_1.yaml). The Italian
+# original was authored by Claude from the functions of the B1 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
+# defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
+# Round 223: the Chinese stages were written at the same time, so this file defines the words it takes from A1 and A2
+# itself (yinwei, kexi, you_yisi, lei, wo_xiang, wo_bu_neng, under their natural ids); a merge pass keeps the earlier
+# stage's entry where both define one.
+stage: b1_1
+version: curriculum-b1-1-zh-v1
+grammar:
+  opinions: "wǒ juéde and wǒ rènwéi take a whole clause, and the verb after them does not change (wǒ juéde zhèr de cài hěn hǎochī); wǒ tóngyì, wǒ bù tóngyì, nǐ shuō de duì; yīnwèi ..., suǒyǐ ... (often as a pair); bǐrú."
+  advice: "yīnggāi (should) and kěyǐ (could) stand before the verb (nǐ yīnggāi xiūxi yíxià; nǐ yě kěyǐ zuò huǒchē); zuìhǎo for 'you had better'; rúguǒ wǒ shì nǐ, wǒ huì ... ; wǒ jiànyì nǐ + verb."
+  stories: "Chinese has no past tense: a time word sets the scene (yǒu yì tiān, jǐ nián qián), zhèngzài says what was going on (wǒ zhèngzài kàn shū), ... de shíhou is 'while', and le after the verb marks each event (wǒ kànjiàn le yì zhī gǒu); tūrán, ránhòu, zuìhòu."
+  problems: "le for what went wrong (wǒ de qiánbāo diū le); the bǎ construction puts the thing before the verb (wǒ bǎ bāo wàng zài huǒchē shang le); méi, with no le, for what did not happen (wǒ méi gǎnshàng huǒchē; wǒ méi diǎn zhège cài)."
+  feelings: "Adjectives are predicates without shì, usually with hěn (wǒ hěn gāoxìng, tā hěn dānxīn); yǒudiǎnr for 'a little' (wǒ yǒudiǎnr lèi); bié or búyào + verb for 'don't' (bié dānxīn); zěnme le? for 'what is wrong?'."
+  polite_requests: "Chinese is polite with words, not with a verb form: nín, qǐng, máfan nín (may I trouble you), questions with néng bu néng and kě bu kěyǐ, yíxià to soften a verb (děng yíxià); wǒ xiǎng and wǒ hěn xiǎng (I would like), wǒ gèng xiǎng (I would rather); ... jiù tài hǎo le (it would be great)."
+lessons:
+  opinions_give:
+    i_think: { say: [wo_juede, wo_renwei], examples: ["Wǒ juéde zhèr de cài hěn hǎochī.", "Wǒ rènwéi zhè shì yí ge hěn piàoliang de chéngshì."] }
+    ask_opinion: { say: [ni_juede_zenmeyang], examples: ["Nǐ juéde zěnmeyàng?", "Nín zěnme kàn?"] }
+    not_sure: { say: [kan_qingkuang], examples: ["Kàn qíngkuàng.", "Wǒ bù quèdìng."] }
+  opinions_agree:
+    agree: { say: [wo_tongyi], examples: ["Wǒ tóngyì.", "Nǐ shuō de duì."] }
+    disagree: { say: [wo_bu_tongyi], examples: ["Wǒ bù tóngyì.", "Bù hǎo yìsi, wǒ bú zhème xiǎng."] }
+    partly: { say: [you_yiding_daoli], examples: ["Nǐ shuō de yǒu yídìng dàolǐ.", "Yěxǔ ba."] }
+  opinions_reason:
+    reason: { say: [yinwei, suoyi], examples: ["Wǒ xǐhuan zhèr, yīnwèi hěn ānjìng.", "Tài guì le, suǒyǐ wǒ bú qù."] }
+    example: { say: [biru], examples: ["Bǐrú, huǒchē zǒngshì wǎndiǎn.", "Bǐfang shuō, zhèr de jiǎozi tèbié hǎochī."] }
+    important: { say: [zui_zhongyao_de_shi], examples: ["Zuì zhòngyào de shì rén.", "Zuì zhòngyào de shì shēntǐ hǎo."] }
+  advice_ask:
+    problem: { say: [bu_zhidao_zenme_ban], examples: ["Wǒ yǒu yí ge wèntí, bù zhīdào zěnme bàn.", "Wǒ bù zhīdào gāi zěnme bàn."] }
+    ask_advice: { say: [wo_gai_zenme_ban], examples: ["Wǒ gāi zěnme bàn?", "Nín yǒu shénme jiànyì?"] }
+    in_my_place: { say: [ruguo_ni_shi_wo], examples: ["Rúguǒ nǐ shì wǒ, nǐ huì zěnme zuò?", "Nín huì zěnme bàn?"] }
+  advice_give:
+    should: { say: [yinggai], examples: ["Nǐ yīnggāi xiūxi yíxià.", "Nín yīnggāi qù kàn yīshēng."] }
+    could: { say: [ni_keyi], examples: ["Nǐ kěyǐ zuò huǒchē qù.", "Nín yě kěyǐ qù chēzhàn wèn yíxià."] }
+    if_i_were_you: { say: [ruguo_wo_shi_ni, wo_jianyi_ni], examples: ["Rúguǒ wǒ shì nǐ, wǒ huì gēn tā tán tan.", "Wǒ jiànyì nín děng yíxià."] }
+  advice_react:
+    good_advice: { say: [hao_zhuyi], examples: ["Zhè shì ge hǎo zhǔyi, xièxie.", "Hǎo zhǔyi!"] }
+    will_try: { say: [wo_shishi], examples: ["Bù róngyì, dànshì wǒ shìshi.", "Hǎo, wǒ jìnlì."] }
+    not_easy: { say: [bu_rongyi], examples: ["Méi nàme róngyì.", "Wǒ yǐjīng shìguo le."] }
+  stories_scene:
+    once: { say: [you_yi_tian], examples: ["Yǒu yì tiān wǒ zài Běijīng.", "Yǒu yí cì wǒ de yàoshi diū le.", "Jǐ nián qián, wǒ qù le Xī'ān."] }
+    where_i_was: { say: [zhengzai, dangshi], examples: ["Wǒ dāngshí zài huǒchē shang, zhèngzài kàn shū.", "Wǒ zhèngzài huí jiā."] }
+    while: { say: [de_shihou, yibian], examples: ["Wǒ zǒu lù de shíhou, xià yǔ le.", "Děng huǒchē de shíhou, wǒ zài kàn shū.", "Wǒ yìbiān chī fàn, yìbiān kàn diànshì."] }
+  stories_events:
+    suddenly: { say: [turan], examples: ["Tūrán, wǒ kànjiàn le yì zhī gǒu.", "Jiù zài zhè shíhou, lái le yí ge rén."] }
+    lost_found: { say: [diu_le, zhaodao_le, wang_le], examples: ["Wǒ de yàoshi diū le.", "Wǒ jiǎndào le yí ge qiánbāo.", "Wǒ wàng le dài yǔsǎn."] }
+    then: { say: [ranhou], examples: ["Ránhòu wǒ huí jiā le.", "Hòulái wǒ gěi wǒ jiějie dǎ le diànhuà."] }
+  stories_end:
+    in_the_end: { say: [zuihou], examples: ["Zuìhòu wǒ zhǎodào le lù.", "Zuìhòu yíqiè dōu hěn shùnlì."] }
+    luckily: { say: [xinghao, kexi], examples: ["Xìnghǎo bù yuǎn.", "Kěxī tài wǎn le."] }
+    what_kind: { say: [qiguai, zaogao, you_yisi], examples: ["Jīntiān zhēn shì qíguài de yì tiān.", "Tài zāogāo le.", "Hěn yǒu yìsi."] }
+  problems_lost:
+    lost_bag: { say: [[diu_le], [xiangzi, bao, qianbao, huzhao]], examples: ["Wǒ de xiāngzi diū le.", "Wǒ bǎ qiánbāo nòngdiū le."] }
+    inside: { say: [limian_you], examples: ["Lǐmiàn yǒu wǒ de zhèngjiàn.", "Lǐbian yǒu hùzhào."] }
+    where_left: { say: [wang_zai], examples: ["Wǒ bǎ tā là zài huǒchē shang le.", "Wǒ bǎ tā wàng zài kāfēiguǎn le."] }
+  problems_missed:
+    missed: { say: [mei_ganshang], examples: ["Wǒ méi gǎnshàng huǒchē.", "Wǒ cuòguò le jiǔ diǎn de gōngjiāochē."] }
+    why: { say: [wandian], examples: ["Dì yī bān huǒchē wǎndiǎn le.", "Wǒ dào chēzhàn chídào le."] }
+    next_one: { say: [xia_yi_ban], examples: ["Xià yì bān huǒchē jǐ diǎn kāi?", "Xià yí tàng shénme shíhou kāi?"] }
+  problems_bill:
+    mistake: { say: [suan_cuo_le], examples: ["Bù hǎo yìsi, zhàngdān suàn cuò le.", "Zhèr yǒu ge cuòwù."] }
+    not_ordered: { say: [wo_mei_dian], examples: ["Wǒ méi diǎn pútaojiǔ.", "Wǒmen méi yào tiándiǎn."] }
+    what_can: { say: [you_shenme_banfa], examples: ["Yǒu shénme bànfǎ ma?", "Nín néng bāng wǒ ma?"] }
+  feelings_how:
+    happy: { say: [gaoxing], examples: ["Wǒ jīntiān hěn gāoxìng.", "Wǒ hěn kāixīn."] }
+    low: { say: [danxin, nanguo, wuliao, lei], examples: ["Wǒ yǒudiǎnr dānxīn.", "Wǒ hěn nánguò.", "Wǒ juéde hěn wúliáo.", "Wǒ tài lèi le."] }
+    surprised: { say: [chijing], examples: ["Wǒ hěn chījīng!", "Zhēn méi xiǎngdào."] }
+  feelings_ask:
+    whats_wrong: { say: [zenme_le], examples: ["Zěnme le? Nǐ hái hǎo ma?", "Chū shénme shì le?"] }
+    why_sad: { say: [weishenme_nanguo], examples: ["Nǐ wèishénme nánguò?", "Nín wèishénme dānxīn?"] }
+    can_i_help: { say: [wo_bang_ni], examples: ["Yào wǒ bāngmáng ma?", "Wǒ bāng nǐ ná xiāngzi ba?"] }
+  feelings_comfort:
+    understand: { say: [wo_lijie], examples: ["Wǒ lǐjiě, zhè hěn nán.", "Zhēn nánwéi nǐ le."] }
+    dont_worry: { say: [bie_danxin], examples: ["Bié dānxīn, wǒ lái bàn.", "Nín fàngxīn ba."] }
+    all_right: { say: [yiqie_dou_hui_hao_de], examples: ["Yíqiè dōu huì hǎo de.", "Nǐ kàn ba, huì guòqu de."] }
+  polite_requests_favour:
+    could_you: { say: [nin_neng_bu_neng, bang_ge_mang], examples: ["Nín néng bu néng bāng wǒ yíxià?", "Nǐ néng bāng wǒ ge máng ma?"] }
+    would_you_mind: { say: [mafan_nin], examples: ["Máfan nín kāi yíxià chuānghu.", "Máfan nǐ děng yíxià, hǎo ma?"] }
+    lend: { say: [jie_wo], examples: ["Nǐ néng jiè wǒ yì zhī bǐ ma?", "Kěyǐ jiè wǒ yì bǎ sǎn ma?"] }
+  polite_requests_wish:
+    would_like: { say: [wo_hen_xiang, wo_xiang], examples: ["Wǒ hěn xiǎng qù kàn hǎi.", "Wǒ xiǎng zài dāi yì tiān."] }
+    would_prefer: { say: [wo_geng_xiang], examples: ["Wǒ gèng xiǎng zuò kào chuānghu de wèizi.", "Wǒ háishi míngtiān zǒu ba."] }
+    would_be: { say: [jiu_tai_hao_le], examples: ["Néng zài zhèr duō dāi yì tiān jiù tài hǎo le.", "Rúguǒ néng huàn ge fángjiān jiù hǎo le."] }
+  polite_requests_refuse:
+    afraid_not: { say: [kongpa_bu_xing, wo_bu_neng], examples: ["Kǒngpà bù xíng, bù hǎo yìsi.", "Wǒ hěn xiǎng qù, kěshì wǒ qù bù liǎo."] }
+    no_time: { say: [mei_shijian], examples: ["Bù hǎo yìsi, wǒ jīntiān méi shíjiān.", "Wǒ hěn gǎn shíjiān."] }
+    later: { say: [yihuir], examples: ["Wǒ yíhuìr zài zuò ba.", "Gǎitiān ba."] }
+vocabulary:
+  # opinions
+  wo_juede: { t: "wǒ juéde", pos: phrase, en: ["I think", "I feel", "in my opinion"], forms: ["wǒ juéde", "juéde", "wǒ jué de", "zài wǒ kànlái", "duì wǒ lái shuō"], ex: ["Wǒ juéde tài guì le.", "I think it is too expensive."], n: "The everyday way to give a view; the clause after it is said as usual. 'Duì wǒ lái shuō' is 'for me'." }
+  wo_renwei: { t: "wǒ rènwéi", pos: phrase, en: ["I think that", "I believe that", "I consider that"], forms: ["wǒ rènwéi", "rènwéi", "wǒ rèn wéi"], ex: ["Wǒ rènwéi zhè shì zhēn de.", "I think that it is true."], n: "A little more considered than wǒ juéde; the clause after it does not change." }
+  ni_juede_zenmeyang: { t: "nǐ juéde zěnmeyàng", pos: phrase, en: ["what do you think", "what do you think of it"], forms: ["nǐ juéde zěnmeyàng", "nín juéde zěnmeyàng", "nǐ juéde ne", "nín juéde ne", "nǐ juéde", "nín juéde", "nǐ zěnme kàn", "nín zěnme kàn", "nǐ de kànfǎ ne", "nín de kànfǎ ne"], ex: ["Nǐ ne, nǐ juéde zěnmeyàng?", "And you, what do you think?"], n: "'Nín zěnme kàn?' is 'how do you see it?', to a stranger." }
+  kan_qingkuang: { t: "kàn qíngkuàng", pos: phrase, en: ["it depends", "it depends on the situation"], forms: ["kàn qíngkuàng", "nà yào kàn qíngkuàng", "bù yídìng", "wǒ bù quèdìng", "bù quèdìng"], ex: ["Kàn tiānqì de qíngkuàng.", "It depends on the weather."], n: "'Wǒ bù quèdìng' is 'I am not sure'; 'bù yídìng' is 'not necessarily'." }
+  wo_tongyi: { t: "wǒ tóngyì", pos: phrase, en: ["I agree"], forms: ["wǒ tóngyì", "tóngyì", "nǐ shuō de duì", "nín shuō de duì", "shuō de duì", "nǐ shuō de yǒu dàolǐ", "yǒu dàolǐ"], ex: ["Wǒ tóngyì nǐ de kànfǎ.", "I agree with your view."], n: "'Nǐ shuō de duì' is 'you are right' (what you say is right)." }
+  wo_bu_tongyi: { t: "wǒ bù tóngyì", pos: phrase, en: ["I don't agree", "I disagree"], forms: ["wǒ bù tóngyì", "bù tóngyì", "wǒ bú tài tóngyì", "bú tài tóngyì", "wǒ bú zhème xiǎng", "wǒ bú zhème juéde", "bú duì"], ex: ["Bù hǎo yìsi, wǒ bù tóngyì.", "I'm sorry, I don't agree."], n: "'Wǒ bú tài tóngyì' (I don't quite agree) is the gentler way." }
+  you_yiding_daoli: { t: "yǒu yídìng dàolǐ", pos: phrase, en: ["there is something in it", "partly right"], forms: ["yǒu yídìng dàolǐ", "yǒu yìdiǎn dàolǐ", "yǒu yìdiǎnr dàolǐ", "yí bùfen", "yěxǔ ba", "yěxǔ nǐ shuō de duì"], ex: ["Zhè zhǐ yǒu yídìng dàolǐ.", "It is only partly right."], n: "'Yěxǔ ba' is 'perhaps', 'it may be so'." }
+  yinwei: { t: "yīnwèi", pos: conjunction, en: ["because"], forms: ["yīnwèi", "yīn wèi"], ex: ["Wǒ bú qù, yīnwèi wǒ hěn lèi.", "I'm not going, because I am tired."], n: "Often paired with suǒyǐ: yīnwèi xià yǔ, suǒyǐ wǒ bú qù." }
+  suoyi: { t: "suǒyǐ", pos: conjunction, en: ["so", "that is why", "therefore"], forms: ["suǒyǐ", "suǒ yǐ", "yīncǐ"], ex: ["Xià yǔ le, suǒyǐ wǒ dāi zài jiā lǐ.", "It is raining, so I am staying at home."] }
+  biru: { t: "bǐrú", pos: phrase, en: ["for example"], forms: ["bǐrú", "bǐ rú", "bǐrú shuō", "bǐfang shuō", "lìrú", "jǔ ge lìzi"], ex: ["Bǐrú, xīngqītiān shāngdiàn dōu guān mén.", "For example, on Sundays the shops are all shut."], n: "'Jǔ ge lìzi' is 'to give an example'." }
+  zui_zhongyao_de_shi: { t: "zuì zhòngyào de shì", pos: phrase, en: ["the most important thing is"], forms: ["zuì zhòngyào de shì", "zuì zhòngyào de", "zuì zhòngyào", "zhòngyào de shì", "zhòngyào"], ex: ["Zuì zhòngyào de shì jiànkāng.", "The most important thing is health."] }
+  # advice
+  bu_zhidao_zenme_ban: { t: "bù zhīdào zěnme bàn", pos: phrase, en: ["I don't know what to do"], forms: ["bù zhīdào zěnme bàn", "wǒ bù zhīdào zěnme bàn", "bù zhīdào gāi zěnme bàn", "wǒ bù zhīdào gāi zěnme bàn", "wǒ yǒu yí ge wèntí", "yǒu yí ge wèntí", "wǒ yǒu ge wèntí"], ex: ["Wǒ de yàoshi diū le, wǒ bù zhīdào zěnme bàn.", "I have lost my keys and I don't know what to do."], n: "'Zěnme bàn' is 'what is to be done'." }
+  wo_gai_zenme_ban: { t: "wǒ gāi zěnme bàn", pos: phrase, en: ["what should I do"], forms: ["wǒ gāi zěnme bàn", "gāi zěnme bàn", "wǒ yīnggāi zěnme bàn", "wǒ yīnggāi zuò shénme", "zěnme bàn", "nǐ yǒu shénme jiànyì", "nín yǒu shénme jiànyì", "nǐ jiànyì wǒ zěnme zuò", "nín jiànyì wǒ zěnme zuò"], ex: ["Nǐ shuō, wǒ gāi zěnme bàn?", "Tell me, what should I do?"], n: "'Nín yǒu shénme jiànyì?' is 'what do you advise?'." }
+  ruguo_ni_shi_wo: { t: "rúguǒ nǐ shì wǒ", pos: phrase, en: ["if you were me", "in my place"], forms: ["rúguǒ nǐ shì wǒ", "rúguǒ nín shì wǒ", "huànchéng nǐ", "nǐ huì zěnme zuò", "nín huì zěnme zuò", "nǐ huì zěnme bàn", "nín huì zěnme bàn"], ex: ["Rúguǒ nǐ shì wǒ, nǐ huì zěnme bàn?", "What would you do in my place?"], n: "Chinese has no conditional form: huì (would, will) before the verb does the work." }
+  yinggai: { t: "yīnggāi", pos: verb, en: ["should", "ought to"], forms: ["yīnggāi", "yīng gāi", "zuìhǎo", "nǐ zuìhǎo", "nín zuìhǎo"], ex: ["Nǐ yīnggāi duō shuì yìdiǎnr.", "You should sleep more."], n: "Before the verb; 'nǐ zuìhǎo ...' is 'you had better ...'." }
+  ni_keyi: { t: "nǐ kěyǐ", pos: phrase, en: ["you could", "you can"], forms: ["nǐ kěyǐ", "nín kěyǐ", "nǐ yě kěyǐ", "nín yě kěyǐ", "bùfáng", "nǐ bùfáng", "nín bùfáng"], ex: ["Nǐ kěyǐ zuò huǒchē qù.", "You could go by train."], n: "'Bùfáng' is 'you might as well', a light suggestion." }
+  ruguo_wo_shi_ni: { t: "rúguǒ wǒ shì nǐ", pos: phrase, en: ["if I were you"], forms: ["rúguǒ wǒ shì nǐ", "rúguǒ wǒ shì nín", "huànchéng wǒ"], ex: ["Rúguǒ wǒ shì nǐ, wǒ jiù dāi zài jiā lǐ.", "If I were you, I would stay at home."], n: "Followed by wǒ huì ... or wǒ jiù ... ." }
+  wo_jianyi_ni: { t: "wǒ jiànyì nǐ", pos: phrase, en: ["I advise you to", "I suggest you"], forms: ["wǒ jiànyì nǐ", "wǒ jiànyì nín", "wǒ jiànyì", "jiànyì nǐ", "jiànyì nín"], ex: ["Wǒ jiànyì nǐ zǎo diǎnr chūfā.", "I advise you to leave early."] }
+  hao_zhuyi: { t: "hǎo zhǔyi", pos: phrase, en: ["good idea", "good advice"], forms: ["hǎo zhǔyi", "zhǔyi bú cuò", "zhège zhǔyi bú cuò", "zhǔyi hěn hǎo", "hǎo jiànyì", "hěn hǎo de jiànyì"], ex: ["Xièxie, zhè shì ge hǎo zhǔyi.", "Thank you, that is good advice."] }
+  wo_shishi: { t: "wǒ shìshi", pos: phrase, en: ["I will try", "I'll give it a try"], forms: ["wǒ shìshi", "shìshi", "shì shi", "shì yi shì", "shìshi kàn", "wǒ jìnlì", "jìnlì"], ex: ["Bù róngyì, búguò wǒ shìshi kàn.", "It is not easy, but I will try."], n: "A doubled verb makes it a quick try; 'wǒ jìnlì' is 'I'll do my best'." }
+  bu_rongyi: { t: "bù róngyì", pos: phrase, en: ["it is not easy"], forms: ["bù róngyì", "méi nàme róngyì", "méi zhème róngyì", "bú nàme róngyì", "bù jiǎndān", "méi nàme jiǎndān", "wǒ yǐjīng shìguo le", "yǐjīng shìguo le", "wǒ shìguo"], ex: ["Duì wǒ lái shuō bù róngyì.", "For me it is not easy."], n: "'Wǒ yǐjīng shìguo le' is 'I have already tried'." }
+  # stories
+  you_yi_tian: { t: "yǒu yì tiān", pos: phrase, en: ["one day"], forms: ["yǒu yì tiān", "yǒu yí cì", "yǒu yì tiān wǎnshang", "yǒu yì tiān zǎoshang", "jǐ nián qián", "hěn duō nián qián", "nà tiān"], ex: ["Yǒu yì tiān wǒ yùdào le yí ge lǎo péngyou.", "One day I met an old friend."], n: "'Yǒu yí cì' is 'once'; 'jǐ nián qián' is 'a few years ago'." }
+  zhengzai: { t: "zhèngzài", pos: adverb, en: ["was doing", "in the middle of"], forms: ["zhèngzài", "zhèng zài"], ex: ["Wǒ zhèngzài děng gōngjiāochē.", "I was waiting for the bus."], n: "Before the verb, for what was going on; the time comes from the story, not the verb." }
+  dangshi: { t: "dāngshí", pos: adverb, en: ["at the time", "back then"], forms: ["dāngshí", "dāng shí", "nà shíhou"], ex: ["Dāngshí wǒ zài fàndiàn lǐ.", "At the time I was in the restaurant."] }
+  de_shihou: { t: "de shíhou", pos: phrase, en: ["while", "when"], forms: ["de shíhou", "de shí hou"], ex: ["Wǒ chī fàn de shíhou, Xiǎo Wáng lái le.", "While I was eating, Xiao Wang arrived."], n: "It follows what was going on: děng chē de shíhou, while waiting for the bus." }
+  yibian: { t: "yìbiān", pos: adverb, en: ["while", "at the same time"], forms: ["yìbiān", "yì biān", "yìbiānr"], ex: ["Tā yìbiān zǒu, yìbiān chàng gē.", "He sang as he walked."], n: "Doubled for two things done at once: yìbiān ..., yìbiān ... ." }
+  turan: { t: "tūrán", pos: adverb, en: ["suddenly", "all of a sudden"], forms: ["tūrán", "tū rán", "hūrán", "jiù zài zhè shíhou", "zhè shíhou"], ex: ["Tūrán xià qǐ yǔ lái le.", "Suddenly it began to rain."], n: "'Jiù zài zhè shíhou' is 'just at that moment'." }
+  diu_le: { t: "diū le", pos: phrase, en: ["I lost", "it is lost", "I have lost"], forms: ["diū le", "diūle", "nòngdiū le", "nòng diū le", "bú jiàn le"], ex: ["Wǒ de piào diū le.", "I have lost my ticket."], n: "With bǎ the thing comes first: wǒ bǎ qiánbāo nòngdiū le. 'Bú jiàn le' is 'it has gone'." }
+  zhaodao_le: { t: "zhǎodào le", pos: phrase, en: ["I found", "I have found"], forms: ["zhǎodào le", "zhǎo dào le", "zhǎodào", "jiǎndào le", "jiǎn dào le", "jiǎndào"], ex: ["Wǒ zài guǎngchǎng shang jiǎndào le yì dǐng màozi.", "I found a hat in the square."], n: "'Jiǎndào' is to find a thing lying about, to pick it up." }
+  wang_le: { t: "wàng le", pos: phrase, en: ["I forgot", "I have forgotten"], forms: ["wàng le", "wàngle", "wàngjì le", "wàngjì"], ex: ["Wǒ wàng le dài piào.", "I forgot to bring my ticket."] }
+  ranhou: { t: "ránhòu", pos: adverb, en: ["then", "afterwards"], forms: ["ránhòu", "rán hòu", "hòulái", "hòu lái", "jiēzhe", "zhīhòu"], ex: ["Ránhòu wǒmen qù chī wǎnfàn le.", "Then we went to dinner."], n: "'Hòulái' is 'later on', for the past only." }
+  zuihou: { t: "zuìhòu", pos: adverb, en: ["in the end", "finally"], forms: ["zuìhòu", "zuì hòu", "zuìzhōng", "zhōngyú", "jiéguǒ"], ex: ["Zuìhòu wǒmen dào le.", "In the end we arrived."], n: "'Zhōngyú' is 'at last'." }
+  xinghao: { t: "xìnghǎo", pos: adverb, en: ["luckily", "fortunately"], forms: ["xìnghǎo", "xìng hǎo", "xìngkuī", "yùnqi hǎo", "yùnqi zhēn hǎo"], ex: ["Xìnghǎo wǒ dài le yǔsǎn.", "Luckily I had an umbrella."] }
+  kexi: { t: "kěxī", pos: adverb, en: ["unfortunately", "what a pity"], forms: ["kěxī", "kě xī", "zhēn kěxī", "bùxìng de shì", "yíhàn de shì"], ex: ["Kěxī tā bú zài jiā.", "Unfortunately he was not at home."], n: "'Bùxìng de shì' is 'the unlucky thing is'." }
+  qiguai: { t: "qíguài", pos: adjective, en: ["strange", "odd"], forms: ["qíguài", "qí guài", "hěn qíguài", "zhēn qíguài", "tèbié qíguài"], ex: ["Zhè shì ge hěn qíguài de gùshi.", "It is a strange story."] }
+  zaogao: { t: "zāogāo", pos: adjective, en: ["terrible", "awful", "a disaster"], forms: ["zāogāo", "zāo gāo", "tài zāogāo le", "kěpà", "hěn kěpà", "zāotòu le"], ex: ["Zhè cì lǚxíng zhēn zāogāo.", "The journey was terrible."], n: "'Kěpà' is 'frightening, dreadful'." }
+  you_yisi: { t: "yǒu yìsi", pos: phrase, en: ["fun", "interesting", "amusing"], forms: ["yǒu yìsi", "hěn yǒu yìsi", "tài yǒu yìsi le", "tǐng yǒu yìsi"], ex: ["Zhè ge diànyǐng hěn yǒu yìsi.", "This film is a lot of fun."] }
+  # problems
+  xiangzi: { t: "xiāngzi", pos: noun, en: ["suitcase"], forms: ["xiāngzi", "xiāng zi", "xínglixiāng", "xíngli"], ex: ["Wǒ de xiāngzi shì hóngsè de.", "My suitcase is red."], n: "'Xíngli' is luggage in general." }
+  bao: { t: "bāo", pos: noun, en: ["bag"], forms: ["bāo", "bēibāo", "shūbāo", "shǒutíbāo"], ex: ["Wǒ de bāo zài nǎr?", "Where is my bag?"], n: "A 'bēibāo' is a rucksack; measure word gè." }
+  qianbao: { t: "qiánbāo", pos: noun, en: ["wallet", "purse"], forms: ["qiánbāo", "qián bāo"], ex: ["Qiánbāo zài bāo lǐ.", "The wallet was in the bag."] }
+  huzhao: { t: "hùzhào", pos: noun, en: ["passport"], forms: ["hùzhào", "hù zhào", "zhèngjiàn", "shēnfènzhèng"], ex: ["Wǒ zhǎo bú dào hùzhào.", "I can't find my passport."], n: "'Zhèngjiàn' are your papers, 'shēnfènzhèng' an identity card." }
+  limian_you: { t: "lǐmiàn yǒu", pos: phrase, en: ["inside there was", "inside it there was"], forms: ["lǐmiàn yǒu", "lǐbian yǒu", "lǐtou yǒu", "lǐmiàn hái yǒu"], ex: ["Lǐmiàn yǒu wǒ de shǒujī.", "Inside it was my telephone."], n: "No past form: lǐmiàn yǒu serves for 'there is' and 'there was'." }
+  wang_zai: { t: "wàng zài", pos: phrase, en: ["I left it", "left it behind at"], forms: ["wàng zài", "là zài", "liú zài", "diū zài"], ex: ["Wǒ bǎ tā wàng zài fángjiān lǐ le.", "I left it in the room."], n: "With bǎ and le: wǒ bǎ bāo là zài chē shang le. 'Là' is the everyday word for leaving a thing behind." }
+  mei_ganshang: { t: "méi gǎnshàng", pos: phrase, en: ["I missed", "I didn't make it in time for"], forms: ["méi gǎnshàng", "méi gǎn shàng", "gǎn bú shàng", "cuòguò le", "cuòguò"], ex: ["Wǒ méi gǎnshàng bā diǎn de huǒchē.", "I missed the eight o'clock train."], n: "Losing a thing is diū; missing a train is méi gǎnshàng (not catching up with it) or cuòguò." }
+  wandian: { t: "wǎndiǎn", pos: verb, en: ["it was late", "it was delayed"], forms: ["wǎndiǎn", "wǎndiǎn le", "chídào", "chídào le", "lái wǎn le", "dào wǎn le"], ex: ["Gōngjiāochē wǎndiǎn le.", "The bus was late."], n: "Wǎndiǎn is said of trains, buses and flights; chídào of people." }
+  xia_yi_ban: { t: "xià yì bān", pos: phrase, en: ["the next one", "the next train", "the next bus"], forms: ["xià yì bān", "xià yì bān huǒchē", "xià yì bān chē", "xià yí tàng", "xià yí tàng huǒchē"], ex: ["Xià yì bān huǒchē shí diǎn kāi.", "The next train leaves at ten."], n: "Bān and tàng are the measure words for a scheduled run." }
+  suan_cuo_le: { t: "suàn cuò le", pos: phrase, en: ["it has been added up wrong", "there is a mistake"], forms: ["suàn cuò le", "suàncuò le", "yǒu cuòwù", "yǒu ge cuòwù", "yǒu yí ge cuòwù", "cuòwù", "zhàngdān bú duì"], ex: ["Bù hǎo yìsi, zhèr yǒu ge cuòwù.", "Excuse me, there is a mistake here."] }
+  wo_mei_dian: { t: "wǒ méi diǎn", pos: phrase, en: ["I didn't order"], forms: ["wǒ méi diǎn", "wǒmen méi diǎn", "méi diǎn", "wǒ méiyǒu diǎn", "wǒmen méiyǒu diǎn", "wǒ méi yào", "wǒmen méi yào"], ex: ["Wǒ méi diǎn yú.", "I didn't order the fish."], n: "Diǎn (cài) is to order a dish; méi denies a past event, with no le." }
+  you_shenme_banfa: { t: "yǒu shénme bànfǎ", pos: phrase, en: ["what can be done", "what can I do"], forms: ["yǒu shénme bànfǎ", "yǒu méiyǒu bànfǎ", "yǒu bànfǎ ma", "nǐ néng bāng wǒ ma", "nín néng bāng wǒ ma", "néng bāng wǒ ma"], ex: ["Xiànzài yǒu shénme bànfǎ?", "And now what can be done?"], n: "'Nín néng bāng wǒ ma?' is 'can you help me?'." }
+  # feelings
+  gaoxing: { t: "gāoxìng", pos: adjective, en: ["happy", "glad"], forms: ["gāoxìng", "hěn gāoxìng", "wǒ hěn gāoxìng", "kāixīn", "hěn kāixīn", "wǒ hěn kāixīn"], ex: ["Jiàndào nǐ wǒ hěn gāoxìng.", "I am happy to see you."], n: "An adjective is a predicate without shì: wǒ hěn gāoxìng." }
+  danxin: { t: "dānxīn", pos: verb, en: ["worried", "to worry"], forms: ["dānxīn", "hěn dānxīn", "yǒudiǎn dānxīn", "zháojí", "hěn zháojí"], ex: ["Wǒ hěn dānxīn wǒ dìdi.", "I am worried about my brother."], n: "'Zháojí' is anxious, in a flap." }
+  nanguo: { t: "nánguò", pos: adjective, en: ["sad", "upset"], forms: ["nánguò", "hěn nánguò", "shāngxīn", "hěn shāngxīn", "bù kāixīn"], ex: ["Wǒ jīntiān hěn nánguò.", "I am sad today."] }
+  wuliao: { t: "wúliáo", pos: adjective, en: ["bored", "boring"], forms: ["wúliáo", "hěn wúliáo", "méi yìsi", "méiyìsi"], ex: ["Xià yǔ de shíhou wǒ juéde hěn wúliáo.", "When it rains I am bored."], n: "'Méi yìsi' is 'dull, no fun'." }
+  lei: { t: "lèi", pos: adjective, en: ["tired"], forms: ["lèi", "hěn lèi", "lèi le", "tài lèi le", "lèi sǐ le"], ex: ["Wǒ jīntiān hěn lèi.", "I am tired today."], n: "'Lèi sǐ le' is 'dead tired'." }
+  chijing: { t: "chījīng", pos: verb, en: ["surprised", "astonished"], forms: ["chījīng", "chī jīng", "hěn chījīng", "chī le yì jīng", "jīngyà", "hěn jīngyà", "méi xiǎngdào", "zhēn méi xiǎngdào"], ex: ["Zài zhèr jiàndào nǐ, wǒ hěn chījīng.", "I am surprised to see you here."], n: "'Méi xiǎngdào' is 'I didn't expect it'." }
+  zenme_le: { t: "zěnme le", pos: phrase, en: ["what is wrong", "what is the matter", "what happened"], forms: ["zěnme le", "nǐ zěnme le", "nín zěnme le", "chū shénme shì le", "fāshēng le shénme shì", "zěnme huí shì", "yǒu shénme wèntí"], ex: ["Nǐ zěnme le? Méi shì ba?", "What is wrong? Are you all right?"] }
+  weishenme_nanguo: { t: "wèishénme nánguò", pos: phrase, en: ["why are you sad"], forms: ["wèishénme nánguò", "wèishénme zhème nánguò", "wèishénme bù gāoxìng", "wèishénme bù kāixīn", "wèishénme dānxīn", "zěnme bù gāoxìng", "nǐ nánguò ma", "nǐ dānxīn ma"], ex: ["Nǐ jīntiān wèishénme nánguò?", "Why are you sad today?"], n: "Wèishénme (why) stands after the subject: nǐ wèishénme ...?" }
+  wo_bang_ni: { t: "wǒ bāng nǐ", pos: phrase, en: ["I'll help you", "can I help you"], forms: ["wǒ bāng nǐ", "wǒ bāng nín", "yào wǒ bāngmáng ma", "yào wǒ bāng máng ma", "wǒ kěyǐ bāng nǐ", "wǒ kěyǐ bāng nín", "wǒ néng bāng nǐ", "wǒ néng bāng nín", "xūyào bāngzhù ma", "wǒ néng zuò diǎnr shénme"], ex: ["Wǒ bāng nǐ ná xiāngzi ba.", "Let me help you with the suitcase."], n: "'Yào wǒ bāngmáng ma?' is 'do you want me to help?'." }
+  wo_lijie: { t: "wǒ lǐjiě", pos: phrase, en: ["I understand", "I understand you"], forms: ["wǒ lǐjiě", "lǐjiě", "wǒ lǐjiě nǐ", "wǒ néng lǐjiě", "zhēn nánwéi nǐ le", "zhēn yíhàn"], ex: ["Wǒ lǐjiě, zhè hěn nán.", "I understand, it is hard."], n: "'Zhēn nánwéi nǐ le' is 'that must be hard for you'." }
+  bie_danxin: { t: "bié dānxīn", pos: phrase, en: ["don't worry"], forms: ["bié dānxīn", "búyào dānxīn", "bú yào dānxīn", "búyòng dānxīn", "bú yòng dānxīn", "bié zháojí", "fàngxīn ba", "fàngxīn", "qǐng fàngxīn"], ex: ["Bié dānxīn, wǒ lái bàn.", "Don't worry, I'll see to it."], n: "To a stranger: nín fàngxīn (rest easy)." }
+  yiqie_dou_hui_hao_de: { t: "yíqiè dōu huì hǎo de", pos: phrase, en: ["everything will be all right"], forms: ["yíqiè dōu huì hǎo de", "yíqiè dōu huì hǎo qǐlai de", "huì hǎo de", "huì hǎo qǐlai de", "méi wèntí de", "huì guòqu de", "dōu huì guòqu de"], ex: ["Nǐ kàn ba, yíqiè dōu huì hǎo de.", "You'll see, everything will be all right."], n: "'Huì guòqu de' is 'it will pass'." }
+  # polite_requests
+  nin_neng_bu_neng: { t: "nín néng bu néng", pos: phrase, en: ["could you", "would you be able to"], forms: ["nín néng bu néng", "nǐ néng bu néng", "néng bu néng", "kě bu kěyǐ", "nín kě bu kěyǐ", "nǐ kě bu kěyǐ", "néng bu néng qǐng nín"], ex: ["Bù hǎo yìsi, nín néng bu néng bāng wǒ yíxià?", "Excuse me, could you help me?"], n: "The yes-or-no question makes the request; yíxià after the verb softens it." }
+  bang_ge_mang: { t: "bāng ge máng", pos: phrase, en: ["do a favour", "give a hand"], forms: ["bāng ge máng", "bāng wǒ ge máng", "bāng wǒ yí ge máng", "bāngmáng", "bāng máng"], ex: ["Nǐ néng bāng wǒ ge máng ma? Guān yíxià mén.", "Will you do me a favour? Shut the door."] }
+  mafan_nin: { t: "máfan nín", pos: phrase, en: ["would you mind", "may I trouble you"], forms: ["máfan nín", "máfan nǐ", "jièyì", "nín jièyì ma", "nǐ jièyì ma"], ex: ["Máfan nín shuō màn yìdiǎnr.", "Would you mind speaking more slowly?"], n: "Máfan nín + verb asks a favour; 'nín jièyì ... ma?' is 'do you mind if ...?'." }
+  jie_wo: { t: "jiè wǒ", pos: phrase, en: ["lend me", "would you lend me"], forms: ["jiè wǒ", "jiè gěi wǒ", "jiègěi wǒ", "jiè wǒ yíxià", "gēn nǐ jiè", "gēn nín jiè", "xiàng nín jiè", "xiàng nǐ jiè"], ex: ["Nǐ néng jiè wǒ shí kuài qián ma?", "Would you lend me ten yuan?"], n: "Jiè is both to lend and to borrow: jiè wǒ (lend me), gēn nǐ jiè (borrow from you)." }
+  wo_hen_xiang: { t: "wǒ hěn xiǎng", pos: phrase, en: ["I would love to", "I would really like to"], forms: ["wǒ hěn xiǎng", "wǒ zhēn xiǎng", "wǒ hǎo xiǎng", "wǒ tèbié xiǎng"], ex: ["Míngnián wǒ hěn xiǎng zài lái.", "I would love to come back next year."] }
+  wo_xiang: { t: "wǒ xiǎng", pos: phrase, en: ["I would like", "I'd like to"], forms: ["wǒ xiǎng", "wǒmen xiǎng"], ex: ["Wǒ xiǎng zài zhèr duō zhù yì tiān.", "I would like to stay here one more day."], n: "Softer than wǒ yào (I want)." }
+  wo_geng_xiang: { t: "wǒ gèng xiǎng", pos: phrase, en: ["I would prefer", "I would rather"], forms: ["wǒ gèng xiǎng", "gèng xiǎng", "wǒ bǐjiào xiǎng", "wǒ níngyuàn", "níngyuàn", "wǒ háishi"], ex: ["Wǒ gèng xiǎng dāi zài jiā lǐ.", "I would rather stay at home."], n: "'Wǒ háishi ... ba' is 'I think I'd rather ...'." }
+  jiu_tai_hao_le: { t: "jiù tài hǎo le", pos: phrase, en: ["it would be great", "it would be nice"], forms: ["jiù tài hǎo le", "nà jiù tài hǎo le", "jiù hǎo le", "huì hěn hǎo", "huì gèng hǎo"], ex: ["Nǐ néng lái jiù tài hǎo le.", "It would be great if you could come."], n: "After a wish or a condition: (rúguǒ) ... jiù tài hǎo le." }
+  kongpa_bu_xing: { t: "kǒngpà bù xíng", pos: phrase, en: ["I am afraid not"], forms: ["kǒngpà bù xíng", "kǒngpà bù néng", "kǒngpà bú tài xíng", "kǒngpà", "bú tài fāngbiàn", "bù fāngbiàn"], ex: ["Míngtiān? Kǒngpà bù xíng.", "Tomorrow? I am afraid not."], n: "'Bú tài fāngbiàn' (it is not very convenient) is the polite way to say no." }
+  wo_bu_neng: { t: "wǒ bù néng", pos: phrase, en: ["I can't", "I cannot"], forms: ["wǒ bù néng", "wǒ bù xíng", "bù xíng", "qù bù liǎo", "wǒ qù bù liǎo", "lái bù liǎo", "wǒ lái bù liǎo"], ex: ["Duìbuqǐ, wǒ bù néng lái.", "Sorry, I can't come."], n: "'Wǒ qù bù liǎo' is 'I won't be able to go'." }
+  mei_shijian: { t: "méi shíjiān", pos: phrase, en: ["I have no time", "I don't have time"], forms: ["méi shíjiān", "wǒ méi shíjiān", "méiyǒu shíjiān", "méi yǒu shíjiān", "gǎn shíjiān", "wǒ gǎn shíjiān", "yǒu jíshì", "wǒ yǒu jíshì"], ex: ["Bù hǎo yìsi, wǒ méi shíjiān.", "I'm sorry, I have no time."], n: "'Wǒ gǎn shíjiān' is 'I am in a hurry'; 'yǒu jíshì' is 'something urgent has come up'." }
+  yihuir: { t: "yíhuìr", pos: adverb, en: ["later", "in a while"], forms: ["yíhuìr", "yíhuì", "děng yíhuìr", "guò yíhuìr", "wǎn yìdiǎnr", "wǎn yìdiǎn", "gǎitiān"], ex: ["Wǒ yíhuìr gěi nǐ dǎ diànhuà.", "I'll call you later."], n: "'Gǎitiān' is 'another day'." }

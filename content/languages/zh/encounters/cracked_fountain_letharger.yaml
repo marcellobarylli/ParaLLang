@@ -41,7 +41,7 @@ containment_file:
     id: "cm001_second_verse"
     title: "Annex A: the second verse"
     redaction: "Your companion has blacked out every line of it. \"Trust me on this. If you read it, I will need a while to get over it: a hint fewer for each objective of the next conversation you finish.\""
-    text: "Dì-èr duàn gēcí, bù kě chàng. Shéi dú tā, shéi jiù hēng tā; shéi hēng tā, shéi jiù jiāo tā; shéi jiāo tā, shéi jiù wàngjì tā, dàn dàngtiān yèli yòu zài yí ge mòshēngrén de zuǐchún shang zhǎohuí tā. Zhè duàn gēcí méi yǒu jiéwěi, zhǐ yǒu huíguī."
+    text: "Dì-èr duàn gēcí, bùkě chàng. Shéi dú tā, shéi biàn hēng tā; shéi hēng tā, shéi biàn jiāo tā; shéi jiāo tā, shéi biàn wàngjì tā, dàn dàngtiān yèli yòu zài yí ge mòshēngrén de zuǐchún shang zhǎohuí tā. Zhè duàn gēcí méi yǒu jiéwěi, zhǐ yǒu huíguī."
     translation: "Second verse, not to be sung. Whoever reads it hums it; whoever hums it teaches it; whoever teaches it forgets it, and finds it again that same night on the lips of a stranger. This verse has no end: it only has a return."
     glossary:
       - { word: "gēcí", meaning: "verse (of a song's words)" }
