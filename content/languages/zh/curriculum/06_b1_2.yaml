@@ -4,7 +4,7 @@
 # for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
 # defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
 # Round 223: the Chinese stages were written at the same time, so this file defines the words it takes from A1 and A2
-# itself (geng_xihuan, nian, ge_yue, yiyang, conglai_bu, under their natural ids; yinwei, chijing and wo_juede come from B1.1); a
+# itself (geng_xihuan, duo_jiu, conglai_bu, yiyang, chabuduo, bu_yiyang, wo_hui_qu, nian, ge_yue, under their natural ids; yinwei, chijing and wo_juede come from B1.1); a
 # merge pass keeps the earlier stage's entry where both define one.
 stage: b1_2
 version: curriculum-b1-2-zh-v1
@@ -58,7 +58,7 @@ lessons:
     one_does: { say: [dajia], examples: ["Chūnjié de shíhou, dàjiā chī jiǎozi.", "Dàjiā gēn jiārén yìqǐ guò jié."] }
   customs_compare:
     whereas: { say: [keshi, bu_yiyang], examples: ["Zhèr wǎnfàn chī de hěn wǎn, kěshì wǒmen nàr chī de hěn zǎo.", "Wǒmen nàr hē chá, gēn zhèr bù yíyàng."] }
-    similar: { say: [chabuduo, yiyang], examples: ["Wǒmen nàr yě shì zhèyàng.", "Gēn wǒmen nàr chàbuduō.", "Gēn wǒmen nàr yíyàng."] }
+    similar: { say: [chabuduo, yiyang, ye_shi_zheyang], examples: ["Wǒmen nàr yě shì zhèyàng.", "Gēn wǒmen nàr chàbuduō.", "Gēn wǒmen nàr yíyàng."] }
     prefer: { say: [[geng_xihuan], [yinwei]], examples: ["Wǒ gèng xǐhuan zǎo diǎnr chī wǎnfàn, yīnwèi zhèyàng shuì de hǎo.", "Wǒ gèng xǐhuan hē chá, yīnwèi kāfēi tài kǔ le."] }
   customs_surprise:
     struck_me: { say: [yinxiang_hen_shen, chijing], examples: ["Zhèr de ānjìng ràng wǒ yìnxiàng hěn shēn.", "Ràng wǒ chījīng de shì, shāngdiàn wǎnshang shí diǎn hái kāi zhe."] }
@@ -108,7 +108,7 @@ vocabulary:
   ruguo_wo_you: { t: "rúguǒ wǒ yǒu", pos: phrase, en: ["if I had"], forms: ["rúguǒ wǒ yǒu", "rúguǒ wǒ yǒu gèng duō shíjiān", "rúguǒ wǒ yǒu qián"], ex: ["Rúguǒ wǒ yǒu qián, wǒ huì duō kàn shū.", "If I had money, I would read more."] }
   zhong_le_caipiao: { t: "zhòng le cǎipiào", pos: phrase, en: ["won the lottery", "if I won the lottery"], forms: ["zhòng le cǎipiào", "zhòng cǎipiào", "rúguǒ zhòng le cǎipiào", "rúguǒ wǒ zhòng le cǎipiào", "rúguǒ wǒ hěn yǒu qián", "rúguǒ wǒ yǒu hěn duō qián"], ex: ["Rúguǒ wǒ zhòng le cǎipiào, wǒ jiù kāi ge wǎnhuì.", "If I won, I would throw a party."], n: "'Rúguǒ wǒ hěn yǒu qián' is 'if I were rich'." }
   wo_hui_mai: { t: "wǒ huì mǎi", pos: phrase, en: ["I would buy"], forms: ["wǒ huì mǎi", "huì mǎi", "wǒ jiù mǎi", "jiù huì mǎi"], ex: ["Wǒ huì mǎi yì tiáo chuán.", "I would buy a boat."], n: "Huì before the verb is 'would' as well as 'will'." }
-  wo_hui_qu: { t: "wǒ huì qù", pos: phrase, en: ["I would go"], forms: ["wǒ huì qù", "huì qù", "wǒ jiù qù", "jiù huì qù"], ex: ["Wǒ huì qù hǎibiān zhù.", "I would go and live by the sea."] }
+  wo_hui_qu: { t: "wǒ huì qù", pos: phrase, en: ["I would go"], forms: ["wǒ huì qù", "wǒmen huì qù", "huì qù", "wǒ jiù qù", "jiù huì qù"], ex: ["Wǒ huì qù hǎibiān zhù.", "I would go and live by the sea."] }
   wo_hui_zuo: { t: "wǒ huì zuò", pos: phrase, en: ["I would do", "I would make"], forms: ["wǒ huì zuò", "huì zuò", "jiù huì zuò"], ex: ["Wǒ huì zuò yí cì cháng tú lǚxíng.", "I would take a long trip."] }
   wanyi: { t: "wànyī", pos: conjunction, en: ["what if", "in case", "if by any chance"], forms: ["wànyī", "wàn yī", "nà zěnme bàn", "zěnme bàn ne", "huì zěnmeyàng"], ex: ["Wànyī wǒ chídào le zěnme bàn?", "What happens if I arrive late?"], n: "For something going wrong: wànyī ..., zěnme bàn? (what if ...?)." }
   ruguo: { t: "rúguǒ", pos: conjunction, en: ["if"], forms: ["rúguǒ", "rú guǒ", "jiǎrú"], ex: ["Rúguǒ nǐ bù lái ne?", "And what if you don't come?"], n: "A question on its own: rúguǒ ... ne? (and if ...?)." }
@@ -130,9 +130,10 @@ vocabulary:
   chunjie: { t: "Chūnjié", pos: noun, en: ["the Spring Festival", "Chinese New Year"], forms: ["Chūnjié", "Chūn jié", "guònián", "guò nián", "Zhōngqiūjié", "Zhōngqiū jié", "Shèngdànjié", "Shèngdàn jié", "Shèngdàn"], ex: ["Chūnjié wǒ huí jiā.", "At the Spring Festival I go home."], n: "Chūnjié is New Year by the old calendar, the year's great family festival; Zhōngqiūjié is the Mid-Autumn Festival, Shèngdànjié is Christmas." }
   dajia: { t: "dàjiā", pos: pronoun, en: ["everybody", "people", "one"], forms: ["dàjiā", "dà jiā", "rénmen", "rén men"], ex: ["Zhèr dàjiā dōu chī de hěn hǎo.", "People eat well here."], n: "Chinese has no impersonal 'one': it says dàjiā or rénmen, or leaves the subject out (Zhōngqiūjié chī yuèbing)." }
   keshi: { t: "kěshì", pos: conjunction, en: ["but", "whereas"], forms: ["kěshì", "kě shì"], ex: ["Wǒ hē chá, kěshì tā hē kāfēi.", "I have tea, whereas he has coffee."] }
-  bu_yiyang: { t: "bù yíyàng", pos: phrase, en: ["different", "not the same"], forms: ["bù yíyàng", "bú tài yíyàng", "hěn bù yíyàng", "bù tóng", "xiāngfǎn"], ex: ["Zhèr de xíguàn gēn wǒmen nàr bù yíyàng.", "The customs here are different from ours."], n: "gēn A bù yíyàng is 'different from A'; 'xiāngfǎn' is 'on the contrary'." }
+  bu_yiyang: { t: "bù yíyàng", pos: phrase, en: ["different", "not the same"], forms: ["bù yíyàng", "bù yí yàng", "bù yíyàng de", "bú tài yíyàng", "hěn bù yíyàng", "bù tóng", "bù tóng de", "xiāngfǎn"], ex: ["Zhèr de xíguàn gēn wǒmen nàr bù yíyàng.", "The customs here are different from ours."], n: "gēn A bù yíyàng is 'different from A'; 'xiāngfǎn' is 'on the contrary'." }
   yiyang: { t: "yíyàng", pos: adjective, en: ["the same", "alike"], forms: ["yíyàng", "yí yàng", "yíyàng de"], ex: ["Zhèr de Chūnjié gēn wǒ jiā yíyàng.", "The Spring Festival here is the same as at home."], n: "gēn A yíyàng is 'the same as A'." }
-  chabuduo: { t: "chàbuduō", pos: adjective, en: ["similar", "much the same", "about the same"], forms: ["chàbuduō", "chà bu duō", "hěn xiàng", "yě yíyàng", "yě shì zhèyàng"], ex: ["Zhè liǎng ge jiérì chàbuduō.", "The two festivals are similar."], n: "'Wǒmen nàr yě shì zhèyàng' is 'it is like that at home too'." }
+  chabuduo: { t: "chàbuduō", pos: adjective, en: ["about the same", "much the same", "similar"], forms: ["chàbuduō", "chà bu duō", "chà bù duō"], ex: ["Zhè liǎng ge jiérì chàbuduō.", "The two festivals are much the same."] }
+  ye_shi_zheyang: { t: "yě shì zhèyàng", pos: phrase, en: ["it is like that too", "it is the same at home"], forms: ["yě shì zhèyàng", "yě zhèyàng", "yě yíyàng", "hěn xiàng"], ex: ["Wǒmen nàr yě shì zhèyàng.", "It is like that at home too."], n: "'Hěn xiàng' is 'very like it'." }
   geng_xihuan: { t: "gèng xǐhuan", pos: phrase, en: ["I prefer", "prefer"], forms: ["gèng xǐhuan", "wǒ gèng xǐhuan", "bǐjiào xǐhuan", "wǒ bǐjiào xǐhuan"], ex: ["Wǒ gèng xǐhuan zuò huǒchē.", "I prefer going by train."] }
   yinxiang_hen_shen: { t: "yìnxiàng hěn shēn", pos: phrase, en: ["it struck me", "it made an impression on me"], forms: ["yìnxiàng hěn shēn", "yìnxiàng zuì shēn", "ràng wǒ yìnxiàng hěn shēn", "ràng wǒ yìnxiàng zuì shēn de shì", "ràng wǒ chījīng de shì", "ràng wǒ jīngyà de shì"], ex: ["Zhèr de rén hěn rèqíng, ràng wǒ yìnxiàng hěn shēn.", "The kindness of the people struck me."], n: "Yìnxiàng is an impression: ràng wǒ yìnxiàng hěn shēn, it struck me." }
   bu_xiguan: { t: "bù xíguàn", pos: phrase, en: ["I am not used to it", "not used to"], forms: ["bù xíguàn", "wǒ bù xíguàn", "hái bù xíguàn", "bú tài xíguàn", "mànmàn xíguàn le", "xíguàn le", "yǐjīng xíguàn le", "kāishǐ xíguàn le"], ex: ["Wǒ bù xíguàn zhème rè de tiānqì.", "I am not used to the heat."], n: "'Wǒ mànmàn xíguàn le' is 'I am getting used to it'." }

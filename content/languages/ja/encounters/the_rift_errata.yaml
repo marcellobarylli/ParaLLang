@@ -5,7 +5,8 @@
 # The order is Gerald's and Mortimer's (... to ... o kudasai / onegaishimasu), the stop is the fountain's (tomatte,
 # yamete, ugokanaide with ima, ima sugu) and the introduction the Market Entrance's (desu, to mōshimasu), with the
 # Bookshop's Daredemonai. In Japanese, watashi no namae wa ... desu is one of the entrance's introductions, so the
-# Italian's rejected il mio nome è is accepted here.
+# Italian file's last negative example (my name is Nobody, said with the noun name) is an accepted example here; the
+# bare name with no desu or to mōshimasu takes its place.
 id: the_rift_errata
 character: characters/enemies/rift_errata.yaml
 location: the_rift
