@@ -4,7 +4,7 @@
 # for a single entry. For the owner's review. The vocabulary shares one namespace with the earlier stages: an id
 # defined in an earlier file is reused here, never redefined, and no new entry repeats an earlier entry's form.
 # Round 223: the Chinese stages were written at the same time, so this file defines the words it takes from A1 and A2
-# itself (yinwei, you_yisi, qing, hen_lei, wo_xiang, wo_bu_neng, hao_zhuyi, zhen_bu_qiao, gaitian, wandian, under their natural ids); a merge pass keeps the earlier
+# itself (yinwei, you_yisi, hen_lei, wo_xiang, wo_bu_neng, hao_zhuyi, zhen_bu_qiao, gaitian, wandian, under their natural ids); a merge pass keeps the earlier
 # stage's entry where both define one.
 stage: b1_1
 version: curriculum-b1-1-zh-v1
@@ -78,7 +78,7 @@ lessons:
     all_right: { say: [yiqie_dou_hui_hao_de], examples: ["Yíqiè dōu huì hǎo de.", "Nǐ kàn ba, huì guòqu de."] }
   polite_requests_favour:
     could_you: { say: [nin_neng_bu_neng, bang_ge_mang], examples: ["Nín néng bu néng bāng wǒ yíxià?", "Nǐ néng bāng wǒ ge máng ma?"] }
-    would_you_mind: { say: [qing, jieyi], examples: ["Máfan nín kāi yíxià chuānghu.", "Máfan nǐ děng yíxià, hǎo ma?", "Nín jièyì wǒ kāi yíxià chuānghu ma?"] }
+    would_you_mind: { say: [mafan_nin, jieyi], examples: ["Máfan nín kāi yíxià chuānghu.", "Máfan nǐ děng yíxià, hǎo ma?", "Nín jièyì wǒ kāi yíxià chuānghu ma?"] }
     lend: { say: [jie_wo], examples: ["Nǐ néng jiè wǒ yì zhī bǐ ma?", "Kěyǐ jiè wǒ yì bǎ sǎn ma?"] }
   polite_requests_wish:
     would_like: { say: [wo_hen_xiang, wo_xiang], examples: ["Wǒ hěn xiǎng qù kàn hǎi.", "Wǒ xiǎng zài dāi yì tiān."] }
@@ -159,7 +159,7 @@ vocabulary:
   # polite_requests
   nin_neng_bu_neng: { t: "nín néng bu néng", pos: phrase, en: ["could you", "would you be able to"], forms: ["nín néng bu néng", "nǐ néng bu néng", "néng bu néng", "kě bu kěyǐ", "nín kě bu kěyǐ", "nǐ kě bu kěyǐ", "néng bu néng qǐng nín"], ex: ["Bù hǎo yìsi, nín néng bu néng bāng wǒ yíxià?", "Excuse me, could you help me?"], n: "The yes-or-no question makes the request; yíxià after the verb softens it." }
   bang_ge_mang: { t: "bāng ge máng", pos: phrase, en: ["do a favour", "give a hand"], forms: ["bāng ge máng", "bāng wǒ ge máng", "bāng wǒ yí ge máng", "bāngmáng", "bāng máng"], ex: ["Nǐ néng bāng wǒ ge máng ma? Guān yíxià mén.", "Will you do me a favour? Shut the door."] }
-  qing: { t: "qǐng", pos: verb, en: ["please", "would you mind"], forms: ["qǐng", "máfan nǐ", "máfan nín"], ex: ["Máfan nín shuō màn yìdiǎnr.", "Would you mind speaking more slowly?"], n: "Máfan nín (may I trouble you) + verb is the usual way to ask a stranger for something; qǐng comes before the verb." }
+  mafan_nin: { t: "máfan nín", pos: phrase, en: ["would you mind", "may I trouble you"], forms: ["máfan nín", "máfan nǐ", "máfan nín le", "máfan nǐ le"], ex: ["Máfan nín shuō màn yìdiǎnr.", "Would you mind speaking more slowly?"], n: "Máfan nín (may I trouble you) + verb is the usual way to ask a stranger for something." }
   jieyi: { t: "jièyì", pos: verb, en: ["to mind", "do you mind"], forms: ["jièyì", "nín jièyì ma", "nǐ jièyì ma", "bú jièyì"], ex: ["Nín jièyì wǒ zuò zhèr ma?", "Do you mind if I sit here?"], n: "Jièyì asks whether the other minds what you do: nín jièyì wǒ ... ma?" }
   jie_wo: { t: "jiè wǒ", pos: phrase, en: ["lend me", "would you lend me"], forms: ["jiè wǒ", "jiè gěi wǒ", "jiègěi wǒ", "jiè wǒ yíxià", "gēn nǐ jiè", "gēn nín jiè", "xiàng nín jiè", "xiàng nǐ jiè"], ex: ["Nǐ néng jiè wǒ shí kuài qián ma?", "Would you lend me ten yuan?"], n: "Jiè is both to lend and to borrow: jiè wǒ (lend me), gēn nǐ jiè (borrow from you)." }
   wo_hen_xiang: { t: "wǒ hěn xiǎng", pos: phrase, en: ["I would love to", "I would really like to"], forms: ["wǒ hěn xiǎng", "wǒ zhēn xiǎng", "wǒ hǎo xiǎng", "wǒ tèbié xiǎng"], ex: ["Míngnián wǒ hěn xiǎng zài lái.", "I would love to come back next year."] }
