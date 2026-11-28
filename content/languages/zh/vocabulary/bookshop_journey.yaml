@@ -9,8 +9,8 @@ references:
   - id: mdbg-lutu
     title: 'MDBG Chinese Dictionary: lǚtú'
     url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=lvtu
-  - id: mdbg-jia
-    title: 'MDBG Chinese Dictionary: jiā'
+  - id: mdbg-jia-home
+    title: 'MDBG Chinese Dictionary: jiā (home)'
     url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jia
   - id: mdbg-yuyan
     title: 'MDBG Chinese Dictionary: yǔyán'
@@ -18,9 +18,6 @@ references:
   - id: mdbg-nian
     title: 'MDBG Chinese Dictionary: nián'
     url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=nian
-  - id: mdbg-mingzi
-    title: 'MDBG Chinese Dictionary: míngzi'
-    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=mingzi
   - id: mdbg-wuren
     title: 'MDBG Chinese Dictionary: wúrén'
     url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=wuren
@@ -81,7 +78,7 @@ entries:
       english: Journathan is going home.
     note: 'Huí jiā: to go (back) home. Jiā is home and the family who live there: wǒ jiā, my home, my family.'
     reference_ids:
-      - mdbg-jia
+      - mdbg-jia-home
   - id: yuyan
     kind: word
     target: yǔyán

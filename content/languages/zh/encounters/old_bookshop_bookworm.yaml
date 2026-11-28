@@ -49,7 +49,7 @@ objectives:
     reference_meaning: "Journathan is going home."
     hint_limit: 2
     next_objective: name
-    assessment_reference_ids: ["mdbg-jia"]
+    assessment_reference_ids: ["mdbg-jia-home"]
   - id: name
     prompt: "Marginalia reads the Cyclops episode. What name did Journathan give the Cyclops? Answer in Chinese."
     intent: >

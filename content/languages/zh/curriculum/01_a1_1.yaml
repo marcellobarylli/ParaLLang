@@ -1,0 +1,197 @@
+# Round 223: Chinese (Mandarin) version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 144: the words of curriculum stage A1.1 (the skeleton is content/curriculum/01_a1_1.yaml). The Italian
+# original was authored by Claude from the functions of the A1 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. A vocabulary entry is { t: target, pos, en: [meanings], forms: [...], ex: [example, English] };
+# `forms` defaults to the target, and matching ignores case and accents. `say` is the words that meet an objective:
+# one list means any of them, a list of lists means one from each.
+# Round 223: matching also ignores tone marks, so pinyin typed without them is read the same. A word written joined
+# and apart (kāfēi, kā fēi) and ü typed as v (lǜ chá, lv cha) are listed as forms. Syllables that are English words or
+# particles on their own (hěn, yǒu, màn, hē, ma, ne) appear only inside phrases.
+stage: a1_1
+version: curriculum-a1-1-zh-v1
+grammar:
+  greetings: "shì (wǒ shì, nǐ shì) and jiào (wǒ jiào, nǐ jiào shénme míngzi); nǐ and the polite nín; ma turns a sentence into a question (nǐ hǎo ma?), ne asks it back (nǐ ne?)."
+  origins: "Country plus rén for where you are from (wǒ shì Yīngguó rén); láizì; zhù zài with a place (wǒ zhù zài Lúndūn); questions with nǎr and nǎ guó, in the place the answer takes."
+  courtesy: "Polite formulas; bù before a verb (wǒ bù dǒng), méi for what did not happen (wǒ méi tīng dǒng); qǐng and kěyǐ with a verb (qǐng zài shuō yí biàn)."
+  numbers: "Numbers to a hundred (shí, èrshí, wǔshíwǔ); suì for age, with no verb (wǒ sānshí suì); duōshao, and jǐ for small numbers with a measure word (jǐ ge)."
+  cafe: "wǒ yào and wǒ xiǎng yào with a noun; a number needs a measure word before the noun (yì bēi chá, yí ge bāozi, yì wǎn miàntiáo); hái yào and zài lái for 'also' and 'another'."
+  likes: "xǐhuan with a noun or a verb (wǒ xǐhuan chá, wǒ xǐhuan hē chá); bù xǐhuan; fēicháng, and yìdiǎnr yě bù for 'not at all'; yīnwèi, and wèishénme to ask."
+lessons:
+  greetings_hello:
+    greet: { say: [ni_hao, nin_hao, zaoshang_hao, wanshang_hao], examples: ["Nǐ hǎo!", "Nín hǎo!"] }
+    how_are_you: { say: [ni_hao_ma, zenmeyang], examples: ["Nǐ hǎo ma?", "Nǐ zuìjìn zěnmeyàng?"] }
+    goodbye: { say: [zaijian, mingtian_jian, huitou_jian], examples: ["Zàijiàn!", "Míngtiān jiàn!"] }
+  greetings_name:
+    my_name: { say: [wo_jiao], examples: ["Wǒ jiào Sam."] }
+    your_name: { say: [ni_jiao_shenme_mingzi], examples: ["Nǐ jiào shénme míngzi?", "Nín guìxìng?"] }
+    pleased: { say: [renshi_ni_hen_gaoxing, xinghui], examples: ["Rènshi nǐ hěn gāoxìng!", "Xìnghuì."] }
+  greetings_fine:
+    i_am_fine: { say: [wo_hen_hao, mamahuhu, hai_keyi, bu_cuo], examples: ["Wǒ hěn hǎo.", "Hái bú cuò."] }
+    thanks: { say: [xiexie, feichang_ganxie], examples: ["Xièxie!"] }
+    and_you: { say: [ni_ne], examples: ["Nǐ ne?", "Nín ne?"] }
+  origins_from:
+    i_am_from: { say: [yingguo_ren, wo_laizi], examples: ["Wǒ shì Yīngguó rén.", "Wǒ láizì Lúndūn."] }
+    where_from: { say: [ni_shi_na_guo_ren], examples: ["Nǐ shì nǎ guó rén?", "Nǐ cóng nǎr lái?"] }
+    react: { say: [tai_hao_le, you_yisi], examples: ["Tài hǎo le!", "Hěn yǒu yìsi!"] }
+  origins_live:
+    i_live: { say: [wo_zhu_zai, wo_jia_zai], examples: ["Wǒ zhù zài Lúndūn.", "Wǒ jiā zài Yīngguó."] }
+    where_live: { say: [ni_zhu_zai_nar], examples: ["Nǐ zhù zài nǎr?", "Nín zhù zài nǎlǐ?"] }
+    near_far: { say: [hen_jin, hen_yuan], examples: ["Lí zhèr hěn yuǎn.", "Hěn jìn."] }
+  origins_language:
+    i_speak: { say: [wo_hui_shuo], examples: ["Wǒ huì shuō yìdiǎnr Zhōngwén."] }
+    i_learn: { say: [wo_zai_xue], examples: ["Wǒ zài xué Zhōngwén.", "Wǒ xué Hànyǔ."] }
+    do_you_speak: { say: [ni_hui_shuo_yingyu_ma], examples: ["Nǐ huì shuō Yīngyǔ ma?", "Nín huì shuō Yīngyǔ ma?"] }
+  courtesy_please:
+    please: { say: [qing], examples: ["Qǐng gěi wǒ yì bēi shuǐ.", "Máfan nǐ, yì bēi chá."] }
+    thank_you: { say: [feichang_ganxie], examples: ["Fēicháng gǎnxiè!", "Tài xièxie nǐ le!"] }
+    welcome: { say: [bu_keqi, bu_yong_xie], examples: ["Bú kèqi!", "Bú yòng xiè."] }
+  courtesy_sorry:
+    excuse_me: { say: [qingwen], examples: ["Qǐngwèn!", "Láojià!"] }
+    sorry: { say: [duibuqi], examples: ["Duìbuqǐ!", "Bù hǎoyìsi!"] }
+    no_problem: { say: [mei_guanxi], examples: ["Méi guānxi.", "Méi wèntí."] }
+  courtesy_repeat:
+    not_understand: { say: [wo_bu_dong], examples: ["Wǒ bù dǒng.", "Duìbuqǐ, wǒ méi tīng dǒng."] }
+    repeat: { say: [zai_shuo_yi_bian], examples: ["Qǐng zài shuō yí biàn.", "Nǐ kěyǐ zài shuō yí biàn ma?"] }
+    slowly: { say: [man_yidianr], examples: ["Qǐng màn yìdiǎnr.", "Nǐ kěyǐ shuō màn yìdiǎnr ma?"] }
+  numbers_count:
+    one_two_three: { say: [yi_er_san], examples: ["Yī, èr, sān."] }
+    a_number: { say: [si, wu, liu, qi, ba, jiu, shi], examples: ["Qī.", "Shí!"] }
+    how_many: { say: [duoshao, ji_ge], examples: ["Yǒu duōshao?", "Yǒu jǐ ge?"] }
+  numbers_age:
+    my_age: { say: [sui], examples: ["Wǒ sānshí suì.", "Wǒ èrshíwǔ suì."] }
+    your_age: { say: [ni_duo_da], examples: ["Nǐ duō dà?", "Nín duō dà niánjì?"] }
+    round_number: { say: [ershi, sanshi, sishi, wushi], examples: ["Sìshí?", "Wǔshí!"] }
+  numbers_price:
+    how_much: { say: [duoshao_qian], examples: ["Duōshao qián?", "Zhège duōshao qián?"] }
+    too_much: { say: [tai_gui_le], examples: ["Tài guì le!", "Yǒudiǎnr guì."] }
+    deal: { say: [hao_de, xing, keyi], examples: ["Hǎo de.", "Xíng!", "Kěyǐ."] }
+  cafe_order:
+    i_would_like: { say: [wo_yao, wo_xiang_yao, gei_wo], examples: ["Wǒ xiǎng diǎn cài.", "Wǒ yào yì bēi kāfēi."] }
+    a_drink: { say: [cha, kafei, shui, pijiu, guozhi, doujiang], examples: ["Yì bēi chá, xièxie.", "Wǒ yào yì píng píjiǔ."] }
+    thanks: { say: [xiexie, feichang_ganxie], examples: ["Xièxie!"] }
+  cafe_food:
+    what_is_there: { say: [you_shenme], examples: ["Yǒu shénme chī de?", "Nǐmen yǒu shénme?"] }
+    some_food: { say: [baozi, jiaozi, miantiao, chaofan, youtiao, mifan], examples: ["Yì lóng bāozi, xièxie.", "Wǒ yào yì wǎn miàntiáo."] }
+    also: { say: [hai_yao], examples: ["Hái yào yí ge bāozi.", "Zài lái yì wǎn miàntiáo."] }
+  cafe_bill:
+    it_was_good: { say: [haochi, haohe], examples: ["Hěn hǎochī!", "Fēicháng hǎochī, xièxie."] }
+    the_bill: { say: [maidan], examples: ["Fúwùyuán, mǎidān!", "Qǐng jiézhàng."] }
+    pay: { say: [shua_ka, sao_ma], examples: ["Kěyǐ shuā kǎ ma?", "Kěyǐ yòng Wēixìn ma?"] }
+  likes_like:
+    i_like: { say: [xihuan], examples: ["Wǒ xǐhuan hē chá.", "Wǒ hěn xǐhuan māo."] }
+    i_dont_like: { say: [bu_xihuan], examples: ["Wǒ bù xǐhuan píjiǔ."] }
+    do_you_like: { say: [ni_xihuan], examples: ["Nǐ xǐhuan chá ma?", "Nǐ xǐ bu xǐhuan kāfēi?"] }
+  likes_love:
+    i_love: { say: [wo_ai, zui_xihuan], examples: ["Wǒ ài chī jiǎozi!", "Wǒ zuì xǐhuan bāozi."] }
+    i_hate: { say: [taoyan, shou_bu_liao], examples: ["Wǒ tǎoyàn xià yǔ.", "Wǒ shòu bu liǎo zàoyīn."] }
+    how_much: { say: [feichang, yidianr_ye_bu], examples: ["Fēicháng xǐhuan!", "Yìdiǎnr yě bù xǐhuan."] }
+  likes_prefer:
+    i_prefer: { say: [geng_xihuan], examples: ["Wǒ gèng xǐhuan chá."] }
+    because: { say: [yinwei], examples: ["Yīnwèi hěn tián."] }
+    me_too: { say: [wo_ye_shi, wo_ye_bu], examples: ["Wǒ yě shì!", "Wǒ yě bù xǐhuan."] }
+vocabulary:
+  # greetings
+  ni_hao: { t: "nǐ hǎo", pos: phrase, en: ["hello", "hi"], forms: ["nǐ hǎo", "nǐhǎo", "nǐmen hǎo", "dàjiā hǎo"], ex: ["Nǐ hǎo, Xiǎo Lín!", "Hi, Xiao Lin!"], n: "The everyday hello. 'Nǐmen hǎo' greets several people, 'dàjiā hǎo' everyone." }
+  nin_hao: { t: "nín hǎo", pos: phrase, en: ["hello", "good day"], forms: ["nín hǎo", "nínhǎo"], ex: ["Nín hǎo, Wáng lǎoshī.", "Hello, Teacher Wang."], n: "The polite hello, to an older person or a stranger you serve." }
+  zaoshang_hao: { t: "zǎoshang hǎo", pos: phrase, en: ["good morning"], forms: ["zǎoshang hǎo", "zǎo shang hǎo", "zǎo", "zǎo'ān"], ex: ["Zǎoshang hǎo, māma.", "Good morning, Mum."], n: "Among friends a plain 'zǎo!' will do." }
+  wanshang_hao: { t: "wǎnshang hǎo", pos: phrase, en: ["good evening"], forms: ["wǎnshang hǎo", "wǎn shang hǎo"], ex: ["Wǎnshang hǎo, dàjiā.", "Good evening, everyone."] }
+  ni_hao_ma: { t: "nǐ hǎo ma", pos: phrase, en: ["how are you"], forms: ["nǐ hǎo ma", "nín hǎo ma"], ex: ["Lǎo Zhāng, nǐ hǎo ma?", "Old Zhang, how are you?"], n: "The textbook question; people who see each other often ask 'zuìjìn zěnmeyàng?'." }
+  zenmeyang: { t: "zěnmeyàng", pos: phrase, en: ["how are things", "how is it going", "how about"], forms: ["zěnmeyàng", "zěnme yàng", "zuìjìn zěnmeyàng", "zuìjìn hǎo ma"], ex: ["Nǐ zuìjìn zěnmeyàng?", "How have you been lately?"] }
+  zaijian: { t: "zàijiàn", pos: interjection, en: ["goodbye"], forms: ["zàijiàn", "zài jiàn", "bàibai", "bài bài"], ex: ["Xièxie, zàijiàn!", "Thank you, goodbye!"], n: "Literally 'see again'. 'Bàibai' is the English 'bye-bye', said by everyone." }
+  mingtian_jian: { t: "míngtiān jiàn", pos: phrase, en: ["see you tomorrow"], forms: ["míngtiān jiàn", "xià cì jiàn"], ex: ["Hǎo, míngtiān jiàn!", "Right, see you tomorrow!"], n: "'Xià cì jiàn' is 'see you next time'." }
+  huitou_jian: { t: "huítóu jiàn", pos: phrase, en: ["see you later", "see you soon"], forms: ["huítóu jiàn", "yìhuǐr jiàn", "yíhuìr jiàn", "dāihuìr jiàn"], ex: ["Wǒ zǒu le, huítóu jiàn!", "I'm off, see you later!"] }
+  wo_jiao: { t: "wǒ jiào", pos: phrase, en: ["my name is", "I am called"], forms: ["wǒ jiào", "wǒ de míngzi shì", "wǒ xìng"], ex: ["Wǒ jiào Lǐ Míng.", "My name is Li Ming."], n: "'Wǒ xìng Lǐ' gives only the surname, which comes first in a Chinese name." }
+  ni_jiao_shenme_mingzi: { t: "nǐ jiào shénme míngzi", pos: phrase, en: ["what is your name", "what are you called"], forms: ["nǐ jiào shénme míngzi", "nǐ jiào shénme", "nín jiào shénme míngzi", "nín guìxìng", "nín guì xìng"], ex: ["Nǐ ne, nǐ jiào shénme míngzi?", "And you, what is your name?"], n: "'Nín guìxìng?' politely asks a stranger's surname." }
+  renshi_ni_hen_gaoxing: { t: "rènshi nǐ hěn gāoxìng", pos: phrase, en: ["pleased to meet you", "nice to meet you"], forms: ["rènshi nǐ hěn gāoxìng", "rènshi nín hěn gāoxìng", "hěn gāoxìng rènshi nǐ", "hěn gāoxìng rènshi nín", "hěn gāoxìng jiàndào nǐ"], ex: ["Wǒ jiào Ānnà, rènshi nǐ hěn gāoxìng.", "I'm Anna, pleased to meet you."] }
+  xinghui: { t: "xìnghuì", pos: phrase, en: ["delighted", "very pleased to meet you"], forms: ["xìnghuì", "xìng huì"], ex: ["Wáng xiānsheng, xìnghuì.", "Mr Wang, delighted to meet you."], n: "Formal: for a handshake at work, not among friends." }
+  wo_hen_hao: { t: "wǒ hěn hǎo", pos: phrase, en: ["I am fine", "I am well"], forms: ["wǒ hěn hǎo", "hěn hǎo", "wǒ tǐng hǎo de", "tǐng hǎo de", "tǐng hǎo"], ex: ["Wǒ hěn hǎo, nǐ ne?", "I'm fine, and you?"], n: "An adjective takes hěn where English has 'am': wǒ hěn hǎo, 'I (very) good'." }
+  mamahuhu: { t: "mǎmǎhūhū", pos: phrase, en: ["so-so"], forms: ["mǎmǎhūhū", "mǎma hūhū", "mǎ mǎ hū hū", "yìbān"], ex: ["Jīntiān mǎmǎhūhū.", "Today I'm so-so."], n: "Literally 'horse horse tiger tiger'." }
+  hai_keyi: { t: "hái kěyǐ", pos: phrase, en: ["not bad", "okay"], forms: ["hái kěyǐ", "hái xíng", "hái hǎo"], ex: ["Hái kěyǐ, xièxie.", "Not bad, thanks."] }
+  bu_cuo: { t: "bú cuò", pos: phrase, en: ["not bad", "pretty good"], forms: ["bú cuò", "bù cuò", "búcuò", "hái bú cuò", "hái bù cuò"], ex: ["Bú cuò, xièxie.", "Pretty good, thanks."], n: "bù is said bú before a fourth tone: bú cuò, bú shì." }
+  xiexie: { t: "xièxie", pos: interjection, en: ["thank you", "thanks"], forms: ["xièxie", "xiè xie", "xièxie nǐ", "xièxie nín"], ex: ["Hǎo de, xièxie.", "Okay, thanks."] }
+  ni_ne: { t: "nǐ ne", pos: phrase, en: ["and you", "what about you"], forms: ["nǐ ne", "nín ne", "nǐmen ne"], ex: ["Wǒ hěn hǎo. Nǐ ne?", "I'm fine. And you?"], n: "ne sends the question back without repeating it." }
+  # origins
+  yingguo_ren: { t: "Yīngguó rén", pos: phrase, en: ["British", "English", "a British person"], forms: ["Yīngguó rén", "Yīngguórén", "Měiguó rén", "Měiguórén", "Jiānádà rén", "Jiānádàrén", "Àodàlìyà rén", "Àodàlìyàrén", "Ài'ěrlán rén", "Ài'ěrlánrén", "Sūgélán rén", "Sūgélánrén", "Xīnxīlán rén", "Xīnxīlánrén"], ex: ["Wǒ shì Yīngguó rén.", "I am British."], n: "A country plus rén, 'person': Měiguó rén is American, Jiānádà rén Canadian, Àodàlìyà rén Australian." }
+  wo_laizi: { t: "wǒ láizì", pos: phrase, en: ["I come from", "I am from"], forms: ["wǒ láizì", "wǒ lái zì", "wǒ cóng", "wǒ shì cóng"], ex: ["Wǒ cóng Lúndūn lái.", "I come from London."], n: "Also 'wǒ cóng Lúndūn lái', with the place in the middle." }
+  ni_shi_na_guo_ren: { t: "nǐ shì nǎ guó rén", pos: phrase, en: ["where are you from", "what nationality are you"], forms: ["nǐ shì nǎ guó rén", "nǐ shì nǎguó rén", "nín shì nǎ guó rén", "nín shì nǎguó rén", "nǐ shì nǎlǐ rén", "nǐ cóng nǎr lái", "nǐ cóng nǎlǐ lái", "nín cóng nǎr lái", "nín cóng nǎlǐ lái", "nǐ láizì nǎlǐ"], ex: ["Xiǎo Wáng, nǐ shì nǎ guó rén?", "Xiao Wang, what country are you from?"], n: "The question word stands where the answer will: nǐ shì nǎ guó rén? wǒ shì Yīngguó rén." }
+  tai_hao_le: { t: "tài hǎo le", pos: phrase, en: ["how nice", "great", "how lovely"], forms: ["tài hǎo le", "zhēn hǎo", "tài bàng le", "zhēn bàng"], ex: ["Nǐ shì Hángzhōu rén? Tài hǎo le!", "You're from Hangzhou? How lovely!"] }
+  you_yisi: { t: "yǒu yìsi", pos: phrase, en: ["interesting", "fun"], forms: ["yǒu yìsi", "yǒuyìsi", "hěn yǒu yìsi", "zhēn yǒu yìsi"], ex: ["Zhè hěn yǒu yìsi.", "That is very interesting."], n: "Literally 'has meaning'." }
+  wo_zhu_zai: { t: "wǒ zhù zài", pos: phrase, en: ["I live in", "I live"], forms: ["wǒ zhù zài", "wǒ zhùzài"], ex: ["Wǒ zhù zài Shànghǎi.", "I live in Shanghai."], n: "The place follows zài: wǒ zhù zài Běijīng." }
+  wo_jia_zai: { t: "wǒ jiā zài", pos: phrase, en: ["my home is in", "I live in"], forms: ["wǒ jiā zài", "wǒ de jiā zài"], ex: ["Wǒ jiā zài Yīngguó.", "My home is in England."] }
+  ni_zhu_zai_nar: { t: "nǐ zhù zài nǎr", pos: phrase, en: ["where do you live"], forms: ["nǐ zhù zài nǎr", "nǐ zhù zài nǎlǐ", "nǐ zhùzài nǎr", "nǐ zhùzài nǎlǐ", "nín zhù zài nǎr", "nín zhù zài nǎlǐ", "nǐ jiā zài nǎr", "nǐ jiā zài nǎlǐ", "nín jiā zài nǎr", "nín jiā zài nǎlǐ"], ex: ["Nǐ ne, nǐ zhù zài nǎr?", "And you, where do you live?"], n: "nǎr in the north, nǎlǐ everywhere: both are 'where'." }
+  hen_jin: { t: "hěn jìn", pos: phrase, en: ["near", "close", "very near"], forms: ["hěn jìn", "tǐng jìn", "bù yuǎn", "bú yuǎn", "jìn ma", "lí zhèr jìn"], ex: ["Chēzhàn lí zhèr hěn jìn.", "The station is very near here."] }
+  hen_yuan: { t: "hěn yuǎn", pos: phrase, en: ["far", "a long way"], forms: ["hěn yuǎn", "tǐng yuǎn", "tài yuǎn le", "yuǎn ma", "yuǎn bu yuǎn", "yuǎn bù yuǎn", "lí zhèr yuǎn"], ex: ["Lí zhèr yuǎn ma?", "Is it far from here?"], n: "lí is 'from' in distances: lí zhèr hěn yuǎn, 'far from here'." }
+  wo_hui_shuo: { t: "wǒ huì shuō", pos: phrase, en: ["I speak", "I can speak"], forms: ["wǒ huì shuō", "wǒ huì jiǎng"], ex: ["Wǒ huì shuō yìdiǎnr Zhōngwén.", "I speak a little Chinese."], n: "huì is 'can', of a skill learned: wǒ huì shuō Zhōngwén." }
+  wo_zai_xue: { t: "wǒ zài xué", pos: phrase, en: ["I am learning", "I learn"], forms: ["wǒ zài xué", "wǒ xué", "wǒ zhèngzài xué"], ex: ["Wǒ zài xué Zhōngwén.", "I am learning Chinese."], n: "zài before a verb: it is going on now." }
+  ni_hui_shuo_yingyu_ma: { t: "nǐ huì shuō Yīngyǔ ma", pos: phrase, en: ["do you speak English"], forms: ["nǐ huì shuō Yīngyǔ ma", "nǐ huì shuō Yīngyǔ", "nín huì shuō Yīngyǔ", "nǐ huì bu huì shuō Yīngyǔ", "nǐ huì Yīngyǔ ma", "nǐ shuō Yīngyǔ ma", "nín shuō Yīngyǔ ma", "nǐ huì shuō Yīngwén", "nín huì shuō Yīngwén"], ex: ["Duìbuqǐ, nín huì shuō Yīngyǔ ma?", "Excuse me, do you speak English?"] }
+  # courtesy
+  qing: { t: "qǐng", pos: verb, en: ["please"], forms: ["qǐng", "máfan nǐ", "máfan nín"], ex: ["Qǐng gěi wǒ yì bēi chá.", "A cup of tea, please."], n: "qǐng comes before the verb: qǐng zuò, 'please sit'. 'Máfan nǐ', 'may I trouble you', asks a favour." }
+  feichang_ganxie: { t: "fēicháng gǎnxiè", pos: phrase, en: ["thank you very much", "many thanks"], forms: ["fēicháng gǎnxiè", "gǎnxiè", "fēicháng xièxie", "tài xièxie le", "tài xièxie nǐ le", "tài gǎnxiè le", "duōxiè", "duō xiè"], ex: ["Fēicháng gǎnxiè nǐ de bāngzhù.", "Thank you very much for your help."] }
+  bu_keqi: { t: "bú kèqi", pos: phrase, en: ["you're welcome"], forms: ["bú kèqi", "bù kèqi", "búkèqi", "bié kèqi"], ex: ["Xièxie! Bú kèqi.", "Thanks! You're welcome."], n: "Literally 'don't be polite'." }
+  bu_yong_xie: { t: "bú yòng xiè", pos: phrase, en: ["don't mention it", "no need to thank me"], forms: ["bú yòng xiè", "bù yòng xiè", "búyòng xiè", "bú xiè", "bù xiè"], ex: ["Bú yòng xiè, zhēn de.", "Don't mention it, really."] }
+  qingwen: { t: "qǐngwèn", pos: phrase, en: ["excuse me", "may I ask"], forms: ["qǐngwèn", "qǐng wèn", "láojià", "dǎrǎo yíxià", "dǎrǎo yí xià"], ex: ["Qǐngwèn, xǐshǒujiān zài nǎr?", "Excuse me, where is the toilet?"], n: "qǐngwèn opens a question to a stranger; láojià, in the north, asks to get by." }
+  duibuqi: { t: "duìbuqǐ", pos: phrase, en: ["I am sorry", "sorry"], forms: ["duìbuqǐ", "duì bu qǐ", "duìbùqǐ", "duì bù qǐ", "bù hǎoyìsi", "bù hǎo yìsi", "bàoqiàn", "hěn bàoqiàn"], ex: ["Duìbuqǐ, wǒ lái wǎn le.", "I'm sorry I'm late."], n: "duìbuqǐ for a real fault; bù hǎoyìsi, 'I'm embarrassed', for a small one." }
+  mei_guanxi: { t: "méi guānxi", pos: phrase, en: ["no problem", "never mind", "it doesn't matter"], forms: ["méi guānxi", "méiguānxi", "méi shì", "méishì", "méi shìr", "méi wèntí"], ex: ["Méi guānxi, méi shì.", "Never mind, it's nothing."] }
+  wo_bu_dong: { t: "wǒ bù dǒng", pos: phrase, en: ["I don't understand"], forms: ["wǒ bù dǒng", "bù dǒng", "wǒ bù míngbai", "wǒ méi tīng dǒng", "wǒ méi tīngdǒng", "wǒ méi dǒng", "wǒ tīng bu dǒng", "wǒ tīng bù dǒng", "tīng bu dǒng"], ex: ["Duìbuqǐ, wǒ bù dǒng.", "I'm sorry, I don't understand."], n: "'Wǒ tīng bu dǒng': I hear it but cannot understand it." }
+  zai_shuo_yi_bian: { t: "zài shuō yí biàn", pos: phrase, en: ["say it again", "repeat"], forms: ["zài shuō yí biàn", "zài shuō yíbiàn", "zài shuō yí cì", "zài shuō yícì"], ex: ["Qǐng nín zài shuō yí biàn.", "Please say it again."], n: "zài before a verb: 'again'. yí biàn, 'one time through'." }
+  man_yidianr: { t: "màn yìdiǎnr", pos: phrase, en: ["more slowly", "slower"], forms: ["màn yìdiǎnr", "màn yìdiǎn", "màn yì diǎnr", "màn yì diǎn", "màn diǎnr", "màn diǎn", "shuō màn yìdiǎnr", "shuō màn yìdiǎn", "mànmàn shuō", "màn man shuō"], ex: ["Nǐ kěyǐ shuō màn yìdiǎnr ma?", "Can you speak more slowly?"], n: "yìdiǎnr, 'a little', after an adjective: màn yìdiǎnr, 'a little slower'." }
+  # numbers
+  yi_er_san: { t: "yī, èr, sān", pos: phrase, en: ["one, two, three"], forms: ["yī, èr, sān", "yī èr sān", "yī, èr sān", "yī èr, sān", "yī,èr,sān"], ex: ["Yī, èr, sān, kāishǐ!", "One, two, three, go!"], n: "yī is said yì or yí before a measure word (yì bēi, yí ge); counting keeps yī." }
+  si: { t: "sì", pos: number, en: ["four"], ex: ["Sì ge rén.", "Four people."] }
+  wu: { t: "wǔ", pos: number, en: ["five"], ex: ["Wǔ fēnzhōng.", "Five minutes."] }
+  liu: { t: "liù", pos: number, en: ["six"], ex: ["Liù kuài qián.", "Six yuan."] }
+  qi: { t: "qī", pos: number, en: ["seven"], ex: ["Qī tiān.", "Seven days."] }
+  ba: { t: "bā", pos: number, en: ["eight"], ex: ["Bā diǎn.", "Eight o'clock."] }
+  jiu: { t: "jiǔ", pos: number, en: ["nine"], ex: ["Jiǔ kuài.", "Nine yuan."] }
+  shi: { t: "shí", pos: number, en: ["ten"], ex: ["Shí fēnzhōng.", "Ten minutes."], n: "Tens and units are built from it: shíyī is 11, èrshí 20, èrshíyī 21." }
+  duoshao: { t: "duōshao", pos: adverb, en: ["how many", "how much"], forms: ["duōshao", "duō shao"], ex: ["Nǐmen bān yǒu duōshao rén?", "How many people are in your class?"] }
+  ji_ge: { t: "jǐ ge", pos: phrase, en: ["how many"], forms: ["jǐ ge", "jǐge"], ex: ["Nǐ yǒu jǐ ge háizi?", "How many children do you have?"], n: "jǐ asks about a small number and takes a measure word; duōshao about any number." }
+  sui: { t: "suì", pos: noun, en: ["years old"], ex: ["Wǒ èrshí suì.", "I am twenty years old."], n: "Age needs no verb: wǒ sānshí suì, 'I thirty years'." }
+  ni_duo_da: { t: "nǐ duō dà", pos: phrase, en: ["how old are you"], forms: ["nǐ duō dà", "nǐ duō dà le", "nǐ jīnnián duō dà", "nín duō dà niánjì", "nín duō dà suìshu", "nǐ jǐ suì", "nǐ jǐ suì le"], ex: ["Xiǎo Mǎ, nǐ duō dà?", "Xiao Ma, how old are you?"], n: "'Nǐ jǐ suì?' asks a child; 'nín duō dà niánjì?' an older person." }
+  ershi: { t: "èrshí", pos: number, en: ["twenty"], forms: ["èrshí", "èr shí"], ex: ["Èrshí kuài.", "Twenty yuan."] }
+  sanshi: { t: "sānshí", pos: number, en: ["thirty"], forms: ["sānshí", "sān shí"], ex: ["Sānshí fēnzhōng.", "Thirty minutes."] }
+  sishi: { t: "sìshí", pos: number, en: ["forty"], forms: ["sìshí", "sì shí"], ex: ["Sìshí ge rén.", "Forty people."] }
+  wushi: { t: "wǔshí", pos: number, en: ["fifty"], forms: ["wǔshí", "wǔ shí"], ex: ["Wǔshí kuài.", "Fifty yuan."] }
+  duoshao_qian: { t: "duōshao qián", pos: phrase, en: ["how much does it cost", "how much is it"], forms: ["duōshao qián", "duō shao qián", "jǐ kuài qián", "jǐ kuài", "zěnme mài"], ex: ["Zhège duōshao qián?", "How much does this cost?"], n: "Prices are said in kuài, the spoken word for yuán: wǔ kuài qián." }
+  tai_gui_le: { t: "tài guì le", pos: phrase, en: ["too expensive"], forms: ["tài guì le", "tài guì", "hěn guì", "zhēn guì", "yǒudiǎnr guì", "yǒudiǎn guì", "yǒu diǎnr guì"], ex: ["Bù, tài guì le!", "No, it is too expensive!"], n: "tài ... le: 'too'. 'Yǒudiǎnr guì', 'a bit dear', is the gentler way to start haggling." }
+  hao_de: { t: "hǎo de", pos: phrase, en: ["all right", "okay"], forms: ["hǎo de", "hǎo ba"], ex: ["Hǎo de, wǒ mǎi le.", "All right, I'll buy it."] }
+  xing: { t: "xíng", pos: verb, en: ["okay", "that works", "fine"], ex: ["Shí kuài? Xíng!", "Ten yuan? Okay!"] }
+  keyi: { t: "kěyǐ", pos: verb, en: ["okay", "can", "may"], forms: ["kěyǐ", "kě yǐ"], ex: ["Kěyǐ, jiù zhèyàng.", "Fine, let's do that."], n: "Also 'may', asking leave: kěyǐ shuā kǎ ma?" }
+  # cafe
+  wo_yao: { t: "wǒ yào", pos: phrase, en: ["I want", "I'll have"], ex: ["Wǒ yào yì bēi chá.", "I'll have a cup of tea."], n: "Plain and normal when ordering; it is not rude." }
+  wo_xiang_yao: { t: "wǒ xiǎng yào", pos: phrase, en: ["I would like"], forms: ["wǒ xiǎng yào", "wǒ xiǎng diǎn", "wǒ xiǎng diǎn cài", "wǒ xiǎng diǎncài", "wǒ yào diǎn cài"], ex: ["Wǒ xiǎng yào yì bēi kāfēi.", "I would like a coffee."], n: "diǎn cài is 'to order food'." }
+  gei_wo: { t: "gěi wǒ", pos: phrase, en: ["give me", "can I have"], forms: ["gěi wǒ", "gěi wǒ lái"], ex: ["Gěi wǒ lái yì wǎn miàntiáo.", "Bring me a bowl of noodles."] }
+  cha: { t: "chá", pos: noun, en: ["tea"], forms: ["chá", "lǜchá", "lǜ chá", "lvcha", "lv cha", "hóngchá", "hóng chá", "huāchá", "huā chá"], ex: ["Yì hú lǜchá.", "A pot of green tea."], n: "lǜchá is green tea, hóngchá ('red tea') black tea, huāchá jasmine and other flower teas." }
+  kafei: { t: "kāfēi", pos: noun, en: ["coffee"], forms: ["kāfēi", "kā fēi", "nátiě", "měishì kāfēi"], ex: ["Yì bēi kāfēi, bù jiā táng.", "A coffee, no sugar."], n: "nátiě is a latte, měishì kāfēi an Americano." }
+  shui: { t: "shuǐ", pos: noun, en: ["water"], forms: ["shuǐ", "kāishuǐ", "kuàngquánshuǐ", "kuàngquán shuǐ"], ex: ["Yì bēi rè shuǐ.", "A glass of hot water."], n: "Water is often served hot; kāishuǐ is boiled water, kuàngquánshuǐ bottled." }
+  pijiu: { t: "píjiǔ", pos: noun, en: ["beer"], forms: ["píjiǔ", "pí jiǔ"], ex: ["Yì píng bīng píjiǔ.", "A bottle of cold beer."] }
+  guozhi: { t: "guǒzhī", pos: noun, en: ["juice", "fruit juice"], forms: ["guǒzhī", "guǒ zhī", "chéngzhī", "chéng zhī"], ex: ["Yì bēi chéngzhī.", "An orange juice."] }
+  doujiang: { t: "dòujiāng", pos: noun, en: ["soy milk"], forms: ["dòujiāng", "dòu jiāng"], ex: ["Yì bēi dòujiāng, liǎng gēn yóutiáo.", "A soy milk and two fried dough sticks."], n: "The breakfast drink, hot or cold, sweet or salty." }
+  you_shenme: { t: "yǒu shénme", pos: phrase, en: ["what is there", "what do you have"], forms: ["yǒu shénme", "yǒu shénme chī de", "nǐmen yǒu shénme", "yǒu shénme tuījiàn", "nǐ tuījiàn shénme"], ex: ["Jīntiān yǒu shénme chī de?", "What is there to eat today?"] }
+  baozi: { t: "bāozi", pos: noun, en: ["steamed bun"], forms: ["bāozi", "bāo zi"], ex: ["Yì lóng ròu bāozi.", "A steamer of meat buns."], n: "Ordered by the lóng, the bamboo steamer." }
+  jiaozi: { t: "jiǎozi", pos: noun, en: ["dumplings"], forms: ["jiǎozi", "jiǎo zi"], ex: ["Wǒ yào yí fèn jiǎozi.", "I'll have a portion of dumplings."] }
+  miantiao: { t: "miàntiáo", pos: noun, en: ["noodles"], forms: ["miàntiáo", "miàn tiáo", "miàn", "lāmiàn", "niúròumiàn", "niúròu miàn"], ex: ["Yì wǎn niúròu miàn.", "A bowl of beef noodles."] }
+  chaofan: { t: "chǎofàn", pos: noun, en: ["fried rice"], forms: ["chǎofàn", "chǎo fàn", "dàn chǎofàn", "dànchǎofàn"], ex: ["Yí fèn dàn chǎofàn.", "A portion of egg fried rice."] }
+  youtiao: { t: "yóutiáo", pos: noun, en: ["fried dough stick"], forms: ["yóutiáo", "yóu tiáo"], ex: ["Liǎng gēn yóutiáo.", "Two fried dough sticks."], n: "A breakfast food, dipped in soy milk." }
+  mifan: { t: "mǐfàn", pos: noun, en: ["rice", "cooked rice"], forms: ["mǐfàn", "mǐ fàn", "báifàn", "bái fàn"], ex: ["Zài lái yì wǎn mǐfàn.", "Another bowl of rice."] }
+  hai_yao: { t: "hái yào", pos: phrase, en: ["also", "I'd also like", "as well"], forms: ["hái yào", "wǒ hái yào", "zài lái", "zài yào", "hái yǒu", "yě yào"], ex: ["Wǒ hái yào yì bēi chá.", "I'd also like a cup of tea."], n: "'Zài lái yí ge', 'bring another one'." }
+  haochi: { t: "hǎochī", pos: adjective, en: ["delicious", "tasty", "good"], forms: ["hǎochī", "hǎo chī"], ex: ["Zhè jiǎozi zhēn hǎochī!", "These dumplings are really good!"] }
+  haohe: { t: "hǎohē", pos: adjective, en: ["tasty", "good to drink"], forms: ["hǎohē", "hǎo hē"], ex: ["Zhè chá hěn hǎohē.", "This tea is very good."], n: "hǎochī for food, hǎohē for drink." }
+  maidan: { t: "mǎidān", pos: phrase, en: ["the bill, please", "the check"], forms: ["mǎidān", "mǎi dān", "jiézhàng", "jié zhàng"], ex: ["Fúwùyuán, mǎidān!", "Waiter, the bill!"], n: "Calling it out across the room is normal." }
+  shua_ka: { t: "shuā kǎ", pos: phrase, en: ["pay by card", "by card"], forms: ["shuā kǎ", "shuākǎ", "yòng kǎ", "xìnyòngkǎ", "xìnyòng kǎ"], ex: ["Kěyǐ shuā kǎ ma?", "Can I pay by card?"] }
+  sao_ma: { t: "sǎo mǎ", pos: phrase, en: ["pay by scanning the code", "pay by phone"], forms: ["sǎo mǎ", "sǎomǎ", "Wēixìn", "Zhīfùbǎo", "shǒujī zhīfù"], ex: ["Wǒ sǎo mǎ fù qián.", "I'll pay by scanning the code."], n: "Most people in China pay with their phone, scanning a QR code with Wēixìn or Zhīfùbǎo." }
+  # likes
+  xihuan: { t: "xǐhuan", pos: verb, en: ["like", "I like"], forms: ["xǐhuan", "xǐ huan"], ex: ["Wǒ xǐhuan yīnyuè.", "I like music."], n: "With a noun or a verb: wǒ xǐhuan chá, wǒ xǐhuan hē chá." }
+  bu_xihuan: { t: "bù xǐhuan", pos: phrase, en: ["don't like", "I don't like"], forms: ["bù xǐhuan", "bù xǐ huan", "bú tài xǐhuan", "bù tài xǐhuan", "bù zěnme xǐhuan"], ex: ["Wǒ bù xǐhuan lěng tiān.", "I don't like cold weather."], n: "'Bú tài xǐhuan', 'not much', is the polite dislike." }
+  ni_xihuan: { t: "nǐ xǐhuan", pos: phrase, en: ["do you like", "you like"], forms: ["nǐ xǐhuan", "nǐ xǐ bu xǐhuan", "nǐ xǐ bù xǐhuan", "nín xǐhuan", "nín xǐ bu xǐhuan"], ex: ["Nǐ xǐhuan hǎibiān ma?", "Do you like the seaside?"], n: "Ask with ma at the end, or with 'xǐ bu xǐhuan', 'like not like'." }
+  wo_ai: { t: "wǒ ài", pos: phrase, en: ["I love"], forms: ["wǒ ài", "wǒ hěn ài", "wǒ fēicháng ài", "wǒ zuì ài"], ex: ["Wǒ ài chī qiǎokèlì.", "I love chocolate."] }
+  zui_xihuan: { t: "zuì xǐhuan", pos: phrase, en: ["like best", "favourite"], forms: ["zuì xǐhuan", "zuì xǐ huan"], ex: ["Wǒ zuì xǐhuan dōngtiān.", "Winter is my favourite."] }
+  taoyan: { t: "tǎoyàn", pos: verb, en: ["hate", "can't stand", "I hate"], forms: ["tǎoyàn", "tǎo yàn"], ex: ["Wǒ tǎoyàn xīngqīyī.", "I hate Mondays."] }
+  shou_bu_liao: { t: "shòu bu liǎo", pos: phrase, en: ["can't stand", "can't bear"], forms: ["shòu bu liǎo", "shòu bù liǎo", "shòubuliǎo", "rěn bu liǎo", "rěn bù liǎo"], ex: ["Wǒ shòu bu liǎo dǔchē.", "I can't stand traffic jams."] }
+  feichang: { t: "fēicháng", pos: adverb, en: ["very much", "very", "extremely"], forms: ["fēicháng", "tèbié"], ex: ["Wǒ fēicháng xǐhuan.", "I like it very much."] }
+  yidianr_ye_bu: { t: "yìdiǎnr yě bù", pos: phrase, en: ["not at all"], forms: ["yìdiǎnr yě bù", "yìdiǎn yě bù", "yì diǎnr yě bù", "yìdiǎnr dōu bù", "yìdiǎn dōu bù"], ex: ["Wǒ yìdiǎnr yě bù xǐhuan.", "I don't like it at all."], n: "'Not even a little': it goes before the verb." }
+  geng_xihuan: { t: "gèng xǐhuan", pos: phrase, en: ["prefer", "like better"], forms: ["gèng xǐhuan", "gèng xǐ huan", "bǐjiào xǐhuan"], ex: ["Wǒ gèng xǐhuan lǜchá.", "I prefer green tea."] }
+  yinwei: { t: "yīnwèi", pos: conjunction, en: ["because"], forms: ["yīnwèi", "yīn wèi"], ex: ["Yīnwèi tā hěn hǎochī.", "Because it is tasty."], n: "To ask 'why?', wèishénme." }
+  weishenme: { t: "wèishénme", pos: adverb, en: ["why"], forms: ["wèishénme", "wèi shénme"], ex: ["Nǐ wèishénme xǐhuan chá?", "Why do you like tea?"], n: "Asks 'why?'; the answer starts with yīnwèi." }
+  wo_ye_shi: { t: "wǒ yě shì", pos: phrase, en: ["me too", "so do I"], forms: ["wǒ yě shì", "wǒ yě xǐhuan", "wǒ yě ài"], ex: ["Wǒ xǐhuan hǎibiān. Wǒ yě shì!", "I love the seaside. Me too!"] }
+  wo_ye_bu: { t: "wǒ yě bù", pos: phrase, en: ["me neither", "nor do I"], forms: ["wǒ yě bù", "wǒ yě bù xǐhuan", "wǒ yě bú shì"], ex: ["Wǒ bù xǐhuan. Wǒ yě bù xǐhuan.", "I don't like it. Me neither."], n: "yě, 'also', before the negative: wǒ yě bù xǐhuan." }

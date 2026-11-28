@@ -5,9 +5,6 @@ references:
   - id: mdbg-jingcai
     title: 'MDBG Chinese Dictionary: jīngcǎi'
     url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jingcai
-  - id: mdbg-zai
-    title: 'MDBG Chinese Dictionary: zài (again)'
-    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zai
 entries:
   - id: jingcai
     kind: word
