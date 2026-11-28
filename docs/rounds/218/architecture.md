@@ -52,3 +52,8 @@ events in [`trail/journal.md`](trail/journal.md). No Codex critique. Findings: [
 
 Built and played in headless Chromium at phone size, not on a phone. Merged to `main` and pushed on the owner's word;
 GitHub Pages deploys the page and Render the server.
+
+## Amendment (2026-11-28, the owner)
+
+Angkor Wat is the place of **every** change of level: A1 to A2, A2 to B1, and any level added to the curriculum later
+(decision 2's rule is by the level of the next unit, so a new level's gate goes there with no change).

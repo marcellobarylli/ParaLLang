@@ -35,5 +35,5 @@ to the world event, and is the event silent? What else did rounds 214 to 217 bre
 ## Not done
 
 Not played on a phone: whether the phone's failure was the stale chunk or a WebGL context it would not give is not
-known; both are handled. Angkor Wat is not opened on the world map. The A2 to B1 gate is also in Angkor Wat (the
-owner asked about A1 to A2; both are "the transition"); say if only the first should be.
+known; both are handled. Angkor Wat is not opened on the world map. The A2 to B1 gate is also in Angkor Wat, as is
+every later change of level (the owner's decision, after the round).

@@ -11,3 +11,4 @@ Append only. Times are UTC.
 | 5 | 2026-11-28 | 13:05 | review | Claude | A subagent reviewed rounds 214 to 217: five faults (the share reset on a reload, a level moving another slot's share, the level question lost on a reload before setting out, the breathing not ending when switched off, the language choice dropping the level); all fixed | `../findings.md` |
 | 6 | 2026-11-28 | 13:30 | run | Claude | Server 632, client 391, aesthetic 96, mobile 320 pass; gate-check and pull-check 0 problems; the title, and a missing level chunk, seen in Chromium | `../findings.md` |
 | 7 | 2026-11-28 | 13:40 | closed | Claude | Merged to `main` and pushed on the owner's word ("then deploy") | `../architecture.md` |
+| 8 | 2026-11-28 | 13:50 | decision | Owner | Angkor Wat is reused for every change of level: A2 to B1 and any later one. The rule already does so (`endsLevel`: the next unit's level is another); no code changed | `../architecture.md` |
