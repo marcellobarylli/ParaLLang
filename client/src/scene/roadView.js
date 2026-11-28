@@ -21,6 +21,8 @@ const FOV = 60;
 const HIGH = Object.freeze({ fogNear: 0.75, fogFar: 2.4, clipFar: 3.5, clipNear: 1 / 400, from: 150, full: 700 });
 const smooth01 = (value) => { const u = Math.min(1, Math.max(0, value)); return u * u * (3 - 2 * u); };
 const FIGURE = { near: 1.4, far: 2.3, bob: 0.02, hop: 0.16 };
+// Round 211: a character whose conversation is complete sinks into the ground before the camera walks on.
+const SINK = { seconds: 3.2, depth: 2.4 };
 const easeTo = (current, target, dt, tau) => current + (target - current) * (1 - Math.exp(-dt / tau));
 
 /**
@@ -83,6 +85,12 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
   let high = 0; // round 175: 0 on the ground to 1 far up
   const groundGroup = world.scene.getObjectByName('endless-ground') ?? { visible: true };
   const talk = { beatId: null };
+  // Round 211: the character of the site the player is at ({ site, hue }), still shown once its conversation is
+  // complete (the server has put a cairn there); the figure sinking as the player walks on ({ group, site, ground, t,
+  // cairn }); and the walk that waits for it ({ points, node }).
+  let kept = null;
+  let sinking = null;
+  let waiting = null;
   const anchor = new Vector3();
 
   function resize() {
@@ -104,6 +112,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
 
   const dropMarkers = () => {
     for (const child of [...markers.children]) {
+      if (child === sinking?.group) continue;
       markers.remove(child);
       child.traverse((object) => object.geometry?.dispose?.());
     }
@@ -117,9 +126,18 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
   function setRoad(road) {
     if (!road) return;
     const key = JSON.stringify([road.at, road.step, Boolean(road.current), road.frontier.map((site) => site.id), road.trail.length]);
+    const previousAt = at;
     at = road.at;
     if (key === roadKey) return;
     roadKey = key;
+    // Round 211: moving on from a site whose conversation was completed keeps its figure, to sink before the walk.
+    if (kept && kept.site !== road.at) {
+      const left = figures.get(kept.site);
+      if (left?.kind === 'figure' && kept.site === previousAt && road.cleared.includes(kept.site) && !reducedMotion && !sinking) sinking = { group: left.group, site: kept.site, ground: left.ground, t: 0, cairn: null };
+      kept = null;
+    }
+    if (road.current) kept = { site: road.at, hue: road.current.character.hue };
+    else if (kept && !road.cleared.includes(kept.site)) kept = null;
     dropMarkers();
     const place = (id, made, kind) => {
       const node = graph.node(id);
@@ -129,9 +147,12 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
       figures.set(id, { ...made, x: node.x, z: node.z, ground: node.y, hop: 0, kind });
     };
     if (road.current) place(road.at, createStandIn(world.materials, { hue: road.current.character.hue }), 'figure');
+    else if (kept) place(kept.site, createStandIn(world.materials, { hue: kept.hue }), 'figure'); // round 211: complete, still there
     // Round 160: a site ahead that is a legacy dungeon's node shows the dungeon's gate, not a figure.
     for (const site of road.frontier) place(site.id, site.offer.dungeon ? createLandmark(world.materials) : createStandIn(world.materials, { hue: site.offer.character.hue }), site.offer.dungeon ? 'landmark' : 'figure');
     for (const id of road.cleared) place(id, createCairn(world.materials), 'cairn');
+    // The cairn where the figure sinks comes up once it is gone.
+    if (sinking) { const cairn = figures.get(sinking.site); if (cairn?.kind === 'cairn') { cairn.group.visible = false; sinking.cairn = cairn; } }
     const laid = new Set();
     const lay = (a, b) => {
       const pair = a < b ? `${a}|${b}` : `${b}|${a}`;
@@ -149,15 +170,28 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
   // Round 194: where the phone's tilt comes from (setLook), or null, as the dungeon's host has it.
   let lookSource = null;
 
+  // Round 211: the sunk figure is thrown away, its cairn shown, and a walk that waited for it set off.
+  function endSink() {
+    if (!sinking) return;
+    markers.remove(sinking.group);
+    sinking.group.traverse((object) => object.geometry?.dispose?.());
+    if (sinking.cairn) sinking.cairn.group.visible = true;
+    sinking = null;
+    if (waiting) { director.travel(waiting.points, waiting.node); notified = false; waiting = null; }
+  }
+
   function show({ at: siteId, from = null, mode = 'stand' }) {
     lookSource?.recentre?.(); // the way the phone is held on arriving is "straight ahead"
     const node = graph.node(siteId);
     if (!node) return;
+    if (sinking && !(mode === 'travel' && sinking.site === from)) { waiting = null; endSink(); }
     const previous = from ? graph.node(from) : null;
     if (mode === 'travel' && previous && !reducedMotion) {
       // Round 176: along the shortest walk over the ways, smoothed (roadPath.js); straight over the country only when
       // no walk is found.
       const points = travelLine(graph, from, siteId)?.points ?? [[previous.x, previous.z], [node.x, node.z]];
+      // Round 211: the camera stays on a completed site's character while it sinks, and walks on after.
+      if (sinking?.site === from) { waiting = { points, node }; notified = true; return; }
       director.travel(points, node);
       notified = false;
     } else if (mode === 'arrive' && !reducedMotion) {
@@ -173,8 +207,9 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     clock += dt;
     resize();
     applyView(dt);
-    if (!talking && director.arrived && director.mode === 'hold' && !reducedMotion) director.wander();
-    if (talking && director.mode === 'wander') director.face();
+    const engaged = talking || Boolean(sinking); // round 211: the camera stays on a sinking figure
+    if (!engaged && director.arrived && director.mode === 'hold' && !reducedMotion) director.wander();
+    if (engaged && director.mode === 'wander') director.face();
     director.look(lookSource?.look); // round 194: tilt to look, at a hold
     const pose = director.update(dt);
     camera.position.set(...pose.position);
@@ -212,7 +247,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     if (effects.update(weather, dt, camera).flash) onThunder();
     for (const [id, figure] of figures) {
       const away = Math.hypot(pose.position[0] - figure.x, pose.position[2] - figure.z);
-      figure.group.visible = away < ENDLESS.fog.far + 20;
+      figure.group.visible = away < ENDLESS.fog.far + 20 && figure !== sinking?.cairn; // round 211: its cairn waits
       if (!figure.group.visible || figure.kind !== 'figure') continue;
       // A figure shrinks away as the camera passes through the place where it stands (a glide onwards starts there).
       const whole = Math.min(1, Math.max(0, (away - FIGURE.near) / (FIGURE.far - FIGURE.near)));
@@ -220,6 +255,13 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
       figure.group.rotation.y = Math.atan2(pose.position[0] - figure.x, pose.position[2] - figure.z) - Math.PI / 2;
       figure.hop = easeTo(figure.hop, 0, dt, 0.3);
       figure.group.position.y = figure.ground + (reducedMotion ? 0 : FIGURE.bob * Math.sin(clock * 1.3 + figure.x) + (id === at ? FIGURE.hop * Math.sin(Math.PI * figure.hop) : 0));
+    }
+    if (sinking) {
+      // Round 211: down through the ground, slowly at first; it turns no more and does not bob.
+      sinking.t += dt / SINK.seconds;
+      const u = Math.min(1, sinking.t);
+      sinking.group.position.y = sinking.ground - SINK.depth * u * u * (3 - 2 * u);
+      if (u >= 1) endSink();
     }
     world.update(dt, camera);
     pipeline.render(world.scene, camera);
@@ -287,7 +329,7 @@ export function createRoadView(canvas, { seed, onArrive = () => {}, onThunder = 
     pinWeather,
     get effects() { return { ...effects.state }; },
     /** What the scene holds now, for the playthrough script. */
-    get stats() { return { chunks: world.chunkCount, triangles: world.triangleCount, figures: figures.size, tracks: tracks.length, mode: director.mode, high, farTiles: farLand?.built ?? 0, highClouds: effects.state.highClouds }; },
+    get stats() { return { sinking: sinking ? Math.min(1, sinking.t) : null, chunks: world.chunkCount, triangles: world.triangleCount, figures: figures.size, tracks: tracks.length, mode: director.mode, high, farTiles: farLand?.built ?? 0, highClouds: effects.state.highClouds }; },
     resize,
     step,
     dispose() {
