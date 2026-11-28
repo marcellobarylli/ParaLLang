@@ -21,7 +21,7 @@ lessons:
     ask_family: { say: [ni_you_xiongdi_jiemei_ma], examples: ["Nǐ yǒu xiōngdì jiěmèi ma?", "Nín yǒu háizi ma?"] }
   family_describe:
     ask_like: { say: [shenme_yang_de_ren, zenmeyang], examples: ["Nǐ jiějie shì shénme yàng de rén?", "Nǐ gēge zěnmeyàng?"] }
-    looks: { say: [gao, ai, nianqing, lao], examples: ["Wǒ gēge hěn gāo.", "Wǒ māma hěn ǎi.", "Wǒ bàba niánjì dà le."] }
+    looks: { say: [gao, hen_ai, nianqing, lao], examples: ["Wǒ gēge hěn gāo.", "Wǒ māma hěn ǎi.", "Wǒ bàba niánjì dà le."] }
     character: { say: [ren_hen_hao, shanliang, youmo], examples: ["Tā rén hěn hǎo.", "Tā hěn shànliáng, yě hěn yōumò."] }
   family_friend:
     my_friend: { say: [pengyou], examples: ["Wǒ yǒu yí ge péngyou jiào Lǐ Míng.", "Wǒ de hǎo péngyou jiào Xiǎo Yún."] }
@@ -101,7 +101,7 @@ vocabulary:
   ni_you_xiongdi_jiemei_ma: { t: "nǐ yǒu xiōngdì jiěmèi ma", pos: phrase, en: ["do you have brothers or sisters", "do you have any brothers or sisters"], forms: ["nǐ yǒu xiōngdì jiěmèi ma", "nǐ yǒu xiōngdì jiěmèi", "nín yǒu xiōngdì jiěmèi", "nǐ yǒu méiyǒu xiōngdì jiěmèi", "nǐ yǒu háizi ma", "nín yǒu háizi ma", "nǐ yǒu méiyǒu háizi", "nín yǒu méiyǒu háizi"], ex: ["Nǐ yǒu xiōngdì jiěmèi ma?", "Do you have brothers or sisters?"] }
   shenme_yang_de_ren: { t: "shénme yàng de rén", pos: phrase, en: ["what kind of person", "what is he like", "what is she like"], forms: ["shénme yàng de rén", "shénmeyàng de rén"], ex: ["Nǐ dìdi shì shénme yàng de rén?", "What is your younger brother like?"] }
   gao: { t: "gāo", pos: adjective, en: ["tall"], forms: ["gāo", "gèzi gāo"], ex: ["Wǒ jiějie hěn gāo.", "My older sister is tall."] }
-  ai: { t: "ǎi", pos: adjective, en: ["short"], forms: ["hěn ǎi", "tǐng ǎi", "bǐjiào ǎi", "yǒudiǎnr ǎi", "gèzi ǎi", "bù gāo"], ex: ["Wǒ bàba hěn ǎi.", "My father is short."], n: "Of a person's height; 'bù gāo', 'not tall', is kinder." }
+  hen_ai: { t: "hěn ǎi", pos: adjective, en: ["short"], forms: ["hěn ǎi", "tǐng ǎi", "bǐjiào ǎi", "yǒudiǎnr ǎi", "gèzi ǎi", "bù gāo"], ex: ["Wǒ bàba hěn ǎi.", "My father is short."], n: "Of a person's height. ǎi is not said alone here because it would read as the English AI; 'bù gāo', 'not tall', is kinder." }
   nianqing: { t: "niánqīng", pos: adjective, en: ["young"], forms: ["niánqīng", "nián qīng"], ex: ["Wǒ māma hái hěn niánqīng.", "My mother is still young."] }
   lao: { t: "lǎo", pos: adjective, en: ["old", "elderly"], forms: ["lǎo", "niánjì dà", "niánjì hěn dà", "shàng le niánjì"], ex: ["Wǒ yéye niánjì dà le.", "My grandfather is old."], n: "Of a person, 'niánjì dà' is kinder than 'lǎo'." }
   ren_hen_hao: { t: "rén hěn hǎo", pos: phrase, en: ["nice", "a nice person"], forms: ["rén hěn hǎo", "rén tǐng hǎo", "rén bú cuò", "rén hǎo"], ex: ["Nǐ gēge rén hěn hǎo.", "Your older brother is nice."], n: "Literally 'as a person, very good'." }
