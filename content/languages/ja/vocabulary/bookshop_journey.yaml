@@ -2,7 +2,8 @@
 # existing patterns and were not opened from the build container; listed for the owner's content review.
 # Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
 # The singular nen (year) is a counter, joined to its number (nijūnen); the form nen is kept for a learner who writes
-# the number apart. The Cyclops' Nobody is Daredemonai: see encounters/old_bookshop_bookworm.yaml.
+# the number apart. The reference for namae has its own id (jisho-namae-bookshop), as the entrance's file defines
+# jisho-namae. The Cyclops' Nobody is Daredemonai: see encounters/old_bookshop_bookworm.yaml.
 version: bookshop-journey-ja-v1
 references:
   - id: jisho-monogatari
@@ -20,7 +21,7 @@ references:
   - id: jisho-nen
     title: 'Jisho: nen'
     url: https://jisho.org/search/nen
-  - id: jisho-namae
+  - id: jisho-namae-bookshop
     title: 'Jisho: namae'
     url: https://jisho.org/search/namae
   - id: jisho-dare-demo-nai
@@ -40,7 +41,7 @@ entries:
     example:
       target: Kore wa Journathan no monogatari desu.
       english: This is the story of Journathan.
-    note: Monogatari is a told story, a tale; history, which Italian storia also means, is rekishi.
+    note: Monogatari is a told story, a tale; history is rekishi.
     reference_ids:
       - jisho-monogatari
   - id: tabi
@@ -121,14 +122,13 @@ entries:
       - name
     surface_variants:
       - namae
-      - onamae
     accent_insensitive: true
     example:
       target: Watashi no namae wa Daredemonai desu.
       english: My name is Nobody.
-    note: Onamae is the polite form, for someone else's name (Onamae wa?); of your own you say namae.
+    note: "With the polite prefix, onamae is someone else's name (Onamae wa?); of your own you say namae."
     reference_ids:
-      - jisho-namae
+      - jisho-namae-bookshop
   - id: daredemonai
     kind: phrase
     target: Daredemonai

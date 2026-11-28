@@ -1,0 +1,55 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 158 (issue #4): the untranslatable texts of the Chinese pack. Deep truths about the world exist only in the
+# language being learned: these sentences are set into the narrator's written passages (content/narration/
+# passages.yaml, as {truth:<id>}) in a colour of their own, and nothing in the game translates them. There is no
+# English here on purpose: the server cannot send what it does not hold. What each one says, for the owner, is in
+# parallang_obsidian/Understood Later.md.
+#
+#   id      the name a passage uses
+#   level   how hard the language is (the stage of the curriculum at which a learner can read it)
+#   text    the sentence, in Chinese (pinyin) only
+#
+# The texts follow docs/lore-book.md, "What the book does not say". The deeper the truth, the harder the language.
+# Round 223: first_word_error opens as the Chinese Bible opens the Gospel of John, where the Word is the Dào.
+truths:
+  - id: wake_of_a_stitch
+    level: A2
+    text: "Kuài huíqu! Zài wǎng qián, zhǐ yǒu yì zhēn liúxià de hénjì."
+  - id: not_a_road
+    level: A1
+    text: "Lù bú shì lù."
+  - id: a_thread_passes
+    level: A1
+    text: "Zhèlǐ yǒu yì gēn xiàn chuānguo."
+  - id: every_place_a_knot
+    level: A1
+    text: "Měi ge dìfang dōu shì yí ge jié."
+  - id: walked_on_a_web
+    level: A2
+    text: "Nǐ zǒu de bú shì yì tiáo lù. Nǐ zǒu de shì yì zhāng wǎng."
+  - id: a_word_a_stitch
+    level: A2
+    text: "Xuéhuì yí ge cí, jiù shì fèng le yì zhēn."
+  - id: sewn_not_built
+    level: B1
+    text: "Zhèxiē lù bú shì xiū chūlai de, ér shì fèng chūlai de."
+  - id: sewn_to_another
+    level: B1
+    text: "Zhè zhāng wǎng bìng bú zài shìjiè de jìntóu jiéshù: tā bèi fèng zài lìng yì zhāng wǎng shang."
+  - id: roots_and_roads
+    level: B1
+    text: "Nǐ kànjiàn gēn de dìfang, céngjīng yǒu guo yì tiáo lù; nǐ kànjiàn lù de dìfang, zǒng yǒu yì tiān huì zhǎngchū gēn lái."
+  - id: all_the_threads
+    level: B1
+    text: "Rúguǒ suǒyǒu de xiàn tóngshí bēngjǐn, liǎng ge shìjiè jiù huì pèng dào yìqǐ, nà shí zài yě méi yǒu yí ge cí hái yǒu yìyi."
+  # Round 159 (issue #7): what three characters of the dead branch utter once the conversation is over (the
+  # `revelation` of their encounters). They know more than the road's signs say.
+  - id: journey_threads
+    level: B1
+    text: "Měi yí cì héngdù dōu huì liúxià yì gēn xiàn. Èrshí nián de héngdù jiù shì èrshí nián de xiàn: tāmen shì zhè zhāng wǎng shang zuì gǔlǎo de xiàn, zhìjīn hái chēngzhe tā."
+  - id: inflection
+    level: B2
+    text: "Děngdào shìjiè de dà bùfen dōu yòng lìng yì zhǒng yǔyán jiǎngshù de shíhou, zài xiǎng bǎ tā bān huílai, jiù hǎobǐ ná yì zhī bēizi qù yǎo yì sōu zhèngzài chénmò de chuán lǐ de shuǐ."
+  - id: first_word_error
+    level: B2
+    text: "Tài chū yǒu Dào, ér Dào zhōng yǒu yí ge cuòwù. Shéi gǎizhèng le tā, shéi jiù shì duì de, ér nà jiù shì zhōngjié."

@@ -1,0 +1,229 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 030 (backlog A9): fragments of The Journey, found after an encounter and kept in the Spellbook. Optional to
+# translate (parallang_obsidian/CHARACTERS.md, Journathan). Authored, not generated. No fragment contains an
+# objective target of the pack (server test), so the Spellbook may show them at any time. `title`, `found` and
+# `translation` are the same English text in every pack (tested). Pending a native speaker's review.
+# Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
+# Round 083: every fragment also passes the inscriptions' answer check (server/test/answer-check.js: no word or 4-letter
+# stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
+# Round 109: the proem (after the Entrance tutorial, first in story order) and Journathan today, an ageing hero still
+# on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
+# Round 110: spores on the Dead Branch's roots (LORE.md: the consumer dreams of another language, creating a new
+# world from it), after the Butcher's Stall's first completion, after the Dead Branch in story order.
+fragments:
+  - id: journey_proem
+    title: The archway's telling
+    found_after: market_entrance_tutorial
+    found: "Painted on the inside of the archway, where you only see it after you have walked through."
+    text: >-
+      Utae, Myūzu yo, kazoekirenu gengo o ayatsuru otoko no koto o. Nijū no fuyu no aida, sekai no eda kara eda e
+      to samayotta otoko no koto o. Saki ni atta no wa eiyū ka, soretomo kare o kataru shomotsu ka? Shomotsu sae,
+      sore o oboete inai.
+    translation: >-
+      Sing to me, Muse, of the man of countless tongues, who wandered twenty winters from branch to branch of the
+      world. Which came first, the hero or the book that tells of him? Not even the book remembers.
+    glossary:
+      - { word: "Utae, Myūzu yo", meaning: "sing, Muse" }
+      - { word: "kazoekirenu gengo", meaning: "countless tongues" }
+      - { word: "ayatsuru", meaning: "who commands, has mastery of" }
+      - { word: "samayotta", meaning: "wandered" }
+      - { word: "fuyu", meaning: "winters" }
+      - { word: "eda kara eda e", meaning: "from branch to branch" }
+      - { word: "eiyū", meaning: "hero" }
+      - { word: "kare o kataru", meaning: "tells of him" }
+      - { word: "shomotsu sae", meaning: "not even the book" }
+  - id: journey_first_stitch
+    title: The first stitch
+    found_after: old_bookshop_bookworm
+    found: "Folded inside the battered copy of The Journey that Marginalia sold you, in a hand that changes language halfway through a word."
+    text: >-
+      Journathan ga aru eda kara betsu no eda e utsuru goto ni, ito ga ippon, kare no ushiro ni nokotta. Nijū no
+      fuyu no tokō: nijū no fuyu no ito. Mottomo furui ito wa, imanao sekai no orimono o sasaeru to iu. Saisho no
+      nuime wa, kare no mono datta no ka mo shirenai.
+    translation: >-
+      Each time Journathan passed from one branch to another, a thread stayed behind him. Twenty winters of crossings:
+      twenty winters of threads. They say the oldest still hold up the weave of the world. Perhaps the first stitch
+      was his.
+    glossary:
+      - { word: "eda", meaning: "branch" }
+      - { word: "ito", meaning: "thread" }
+      - { word: "tokō", meaning: "crossings (of water)" }
+      - { word: "imanao", meaning: "to this day" }
+      - { word: "orimono", meaning: "weave, woven cloth" }
+      - { word: "sasaeru", meaning: "hold up" }
+      - { word: "nuime", meaning: "stitch; also seam" }
+      - { word: "datta no ka mo shirenai", meaning: "perhaps it was" }
+  - id: journey_sirens
+    title: The Sirens
+    found_after: cracked_fountain_letharger
+    found: "Scratched into the rim of the fountain, under the plaque, at exactly the height of the corner of your eye."
+    text: >-
+      Seirēn-tachi wa shikai no hashi de utatte ita. Me ga kesshite todokanu tokoro de. Journathan wa jibun o fune
+      no hashira ni shibaraseta: uta wa kikitai ga, kanojo-tachi no hō e kaji o kiru tsumori wa nakatta.
+      Suifu-tachi wa mimi ni rō o tsume, fune o kogi, nani mo kikoenakatta. Sono uta wa, itsumo onaji kurikaeshi
+      de, eien ni kurikaesareta to iu.
+    translation: >-
+      The Sirens sang at the edges of sight, where the eye never quite reaches. Journathan had himself tied to the
+      ship's mast: he wanted to listen without steering towards them. The sailors, wax in their ears, rowed and
+      heard nothing. The song, they say, was always the same refrain, repeated forever.
+    glossary:
+      - { word: "shikai no hashi", meaning: "edges of sight" }
+      - { word: "shibaraseta", meaning: "had himself tied" }
+      - { word: "hashira", meaning: "mast; also pillar" }
+      - { word: "kaji o kiru", meaning: "to steer" }
+      - { word: "rō", meaning: "wax" }
+      - { word: "kogi", meaning: "rowing" }
+      - { word: "kurikaeshi", meaning: "refrain; a repetition" }
+  - id: journey_shroud
+    title: The shroud
+    found_after: the_rift_errata
+    found: "Left behind when the Rift narrowed to a hairline: a loose thread, and the words that were stitched along it."
+    text: >-
+      Shima de wa, Journathan no tsuma ga, hiru wa kyōkatabira o ori, yoru ni wa sore o hodoite ita.
+      Kyūkonsha-tachi wa, kanojo ga jikan o kasegu tsumori na no da to omotte ita. Jitsu wa, kare ga kaeru made,
+      sekai no eda-eda o nuime goto ni hedatete ita no de aru.
+    translation: >-
+      On her island, Journathan's wife wove a shroud by day and unpicked it by night. The suitors believed she was
+      buying time. In truth she was holding the branches of the world apart, stitch by stitch, until he came
+      back.
+    glossary:
+      - { word: "ori", meaning: "she wove (from oru)" }
+      - { word: "kyōkatabira", meaning: "shroud" }
+      - { word: "hodoite ita", meaning: "she unpicked, undid" }
+      - { word: "kyūkonsha", meaning: "suitors" }
+      - { word: "jikan o kasegu", meaning: "buying time" }
+      - { word: "hedatete ita", meaning: "she was holding apart" }
+      - { word: "kaeru made", meaning: "until he came back" }
+  - id: journey_dead_branch
+    title: The word for it
+    found_after: imp_coffee_greeting
+    after_conversations: 3
+    found: "On your third coffee break, Gerald recites a passage he swears he learned as a barista in the Dead Branch."
+    text: >-
+      Kareeda de, Journathan wa goku chiisa na chawan de dasareta, kuroku nigai mono o nonda. Sore o ajiwatta mono
+      wa naita. Sore o yobu na wa, mō sonzai shinai: eda ga shinda toki, sore mo shinda. Kyō de wa, jisho sae sore
+      o oboete inai.
+    translation: >-
+      In the Dead Branch, Journathan drank something dark and bitter, served in very small cups. Whoever tasted it
+      wept. The word for it no longer exists: it died with the branch, and today not even a dictionary remembers it.
+    glossary:
+      - { word: "Kareeda", meaning: "Dead Branch (a withered branch)" }
+      - { word: "nonda", meaning: "he drank" }
+      - { word: "nigai", meaning: "bitter" }
+      - { word: "chawan", meaning: "cups; tea bowls" }
+      - { word: "ajiwatta", meaning: "tasted" }
+      - { word: "naita", meaning: "wept" }
+      - { word: "yobu na", meaning: "the name to call it by" }
+      - { word: "jisho sae", meaning: "not even a dictionary" }
+  - id: journey_spores
+    title: Spores
+    found_after: butchers_stall_charcutier
+    found: "Folded around a jar of dried mushrooms at the back of Mortimer's stall, labelled NOT FOR SALE in several different hands."
+    text: >-
+      Kareeda no ne ni wa aojiroi kinoko ga haete ite, owatta sekai o kuraitsukushi, tsuchi ni kaete ita.
+      Journathan wa sono hōshi o suikomi, ikeru mono ga katsute kuchi ni shita koto no nakatta gengo de yume o
+      mita. Me o samasu to, umareta bakari no sekai ga kare o torimaite ori, sono sekai wa sude ni sono gengo o
+      hanashite ita. Kono shomotsu mo sō shite umareta no da, to iu mono mo aru.
+    translation: >-
+      On the roots of the Dead Branch grew pale mushrooms, which devoured the finished world to make soil of it.
+      Journathan breathed in their spores and dreamed in a tongue no living soul had ever spoken. When he woke, around him
+      stood a world just born, and it already spoke it. Some say this book was born the same way.
+    glossary:
+      - { word: "Kareeda no ne", meaning: "the roots of the Dead Branch" }
+      - { word: "aojiroi kinoko", meaning: "pale mushrooms" }
+      - { word: "haete ite", meaning: "grew" }
+      - { word: "kuraitsukushi", meaning: "devoured" }
+      - { word: "hōshi", meaning: "spores" }
+      - { word: "suikomi", meaning: "breathed in" }
+      - { word: "yume o mita", meaning: "dreamed" }
+      - { word: "ikeru mono", meaning: "a living soul" }
+      - { word: "me o samasu to", meaning: "on waking" }
+      - { word: "sō shite umareta", meaning: "was born the same way" }
+  - id: journey_forbidden_herd
+    title: The forbidden herd
+    found_after: butchers_stall_charcutier
+    after_conversations: 3
+    found: "On your third tasting, Mortimer lowers his voice and recites the one passage of The Journey he refuses to slice."
+    text: >-
+      Taiyō no shima de wa, shinsei na ushi no mure ga kusa o hande ita. Journathan wa nakama ni, sore ni fureru
+      na to itta. Shikashi, kūfuku wa chikai ni katta: karera wa kemono o aburi, kushi no ue de sono mi ga mō to
+      naita. Sore irai, mi o kiru mono wa yurushi o kou.
+    translation: >-
+      On the island of the Sun grazed sacred herds. Journathan told his companions not to touch them. But hunger was
+      stronger than the oath: they roasted the beasts, and the meat lowed on the spit. Since then, whoever cuts meat
+      asks permission.
+    glossary:
+      - { word: "kusa o hande ita", meaning: "grazed" }
+      - { word: "mure", meaning: "herds" }
+      - { word: "chikai", meaning: "oath" }
+      - { word: "aburi", meaning: "they roasted" }
+      - { word: "mō to naita", meaning: "lowed, mooed" }
+      - { word: "kushi", meaning: "spit (for roasting)" }
+      - { word: "yurushi o kou", meaning: "asks permission" }
+  - id: journey_lotus
+    title: The lotus
+    found_after: cracked_fountain_letharger
+    after_conversations: 3
+    found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
+    text: >-
+      Namanurui hamabe de, Journathan no suifu no ikunin ka ga rōtosu no hana o tabeta. Karera wa kōro mo, kikyō
+      mo, shuppatsu shitai to iu kimochi sae mo wasureta. 'Mō sukoshi dake,' to suna no ue ni nekorobi nagara
+      itta. Soshite, sara ni mō sukoshi. Journathan wa karera o fune made hikizutte ikaneba naranakatta. Karera wa
+      naite ita.
+    translation: >-
+      On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
+      the wish to leave. "Just a moment," they said, lying on the sand, and then another moment. Journathan had to drag
+      them to the ships, and they wept.
+    glossary:
+      - { word: "namanurui", meaning: "lukewarm" }
+      - { word: "rōtosu", meaning: "lotus" }
+      - { word: "kōro", meaning: "course, heading" }
+      - { word: "sae mo", meaning: "even" }
+      - { word: "mō sukoshi dake", meaning: "just a little longer" }
+      - { word: "nekorobi", meaning: "lying down" }
+      - { word: "suna", meaning: "sand" }
+      - { word: "hikizutte", meaning: "dragging" }
+  - id: journey_old_dog
+    title: The old dog
+    found_after: old_bookshop_bookworm
+    after_conversations: 3
+    found: "On your third reading, Marginalia turns to a page she keeps folded down and reads it without looking."
+    text: >-
+      Journathan wa kojiki no sugata de shima ni kaette kita ga, kazoku wa kare da to kizukanakatta. Tada, mon no
+      mae no koedame ni nesobette ita oita inu dake ga, mimi o tate, shippo o futta. Inu wa sono aida zutto, kare
+      o machitsuzukete ita no da. Soshite, manzoku shite me o tojita.
+    translation: >-
+      Journathan came back to his island dressed as a beggar, and his own people did not know him. Only an old dog,
+      lying on the dung heap before the door, raised its ears and moved its tail. It had waited for him all that time.
+      Then it closed its eyes, content.
+    glossary:
+      - { word: "kojiki", meaning: "beggar" }
+      - { word: "kizukanakatta", meaning: "they did not recognise" }
+      - { word: "inu", meaning: "dog" }
+      - { word: "koedame", meaning: "dung heap" }
+      - { word: "mimi o tate", meaning: "raised its ears" }
+      - { word: "shippo", meaning: "tail" }
+      - { word: "manzoku shite", meaning: "content, happy" }
+  - id: journey_still_on_his_way
+    title: Still on his way
+    found_after: imp_coffee_greeting
+    found: "Pinned under Gerald's tip jar, on the back of an unpaid bill signed with a flourish."
+    text: >-
+      Shomotsu de wa, kare wa shima ni kaette kuru. Shikashi kare jishin wa, kesshite tadoritsuite nado inakatta
+      to chikau. Kyō no kare wa hiza no kishimu rō-eiyū de, rikutsu no ue de wa imanao tochū de aru. Doko e iku no
+      ka to kikeba, taisetsu na no wa mokutekichi de wa naku, michinori na no da to kotaeru. Soshite tameiki o
+      morasu: kare jishin mo, sono serifu wa kiki akita no da.
+    translation: >-
+      The book has him come back to his island; he swears he never arrived. Today he is an old hero with creaking
+      knees, technically still on his way. Ask him where he is going and he says it is about the journey, not the
+      destination. Then he sighs: he is tired of hearing it too.
+    glossary:
+      - { word: "chikau", meaning: "he swears" }
+      - { word: "tadoritsuite nado inakatta", meaning: "never arrived" }
+      - { word: "hiza", meaning: "knees" }
+      - { word: "kishimu", meaning: "creak" }
+      - { word: "imanao tochū", meaning: "still on his way" }
+      - { word: "michinori", meaning: "path, route; here the journey" }
+      - { word: "mokutekichi", meaning: "destination" }
+      - { word: "tameiki o morasu", meaning: "he sighs" }
+      - { word: "kiki akita", meaning: "tired of hearing" }

@@ -1,0 +1,81 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 082: inscriptions, lore hidden in plain sight (parallang_obsidian/GAME MECHANICS.md, "Dark souls-like
+# storytelling"; prototype.md Phase 3, "discoverable items"). One per location, found by visiting it. Optional to
+# translate: the map card shows only `where` and `text`; the Spellbook holds the translation and glossary, withheld
+# during encounters. No inscription holds a vocabulary form of the pack or a party conversation's stem (server
+# test), so the text may show at any time. `where` and `translation` are the same English in every pack (tested).
+# Authored, not generated. Pending a native speaker's review.
+# Round 223: the menu board apologises in the set phrase of Chinese public notices (gěi nín dàilái de bùbiàn, jìngqǐng
+# liàngjiě); the chopping block puns on chēng, to weigh, and shēngchēng, to claim.
+inscriptions:
+  - id: keystone
+    location: market_entrance
+    where: "Carved on the keystone of the archway, half worn away by people looking up."
+    text: "Jìnlai de rén, huì dàishang tā suǒ zài nà gēn zhī de shēngyīn. Chūqu de rén, rúguǒ chūdeqù, zhǐjia fèng lǐ huì dàizǒu xiē shénme."
+    translation: "Whoever enters takes on the voice of the branch they stand in. Whoever leaves, if they leave, takes some of it away under their fingernails."
+    glossary:
+      - { word: "jìnlai de rén", meaning: "whoever enters" }
+      - { word: "dàishang", meaning: "takes on" }
+      - { word: "zhī", meaning: "branch" }
+      - { word: "shēngyīn", meaning: "voice" }
+      - { word: "rúguǒ chūdeqù", meaning: "if they can get out" }
+      - { word: "dàizǒu xiē shénme", meaning: "takes something away" }
+      - { word: "zhǐjia fèng", meaning: "under the fingernails" }
+  - id: menu_board
+    location: coffee_cart
+    where: "Chalked in a corner of the menu board, the one line nobody ever wipes off."
+    text: "Zuótiān de dìngdān jiāng yú shàng ge yuè sòngdá. Gěi nín dàilái de shíkōng bùbiàn, jìngqǐng liàngjiě."
+    translation: "Yesterday's orders will be served last month. We apologise for the temporal inconvenience."
+    glossary:
+      - { word: "dìngdān", meaning: "orders" }
+      - { word: "zuótiān", meaning: "yesterday" }
+      - { word: "jiāng yú", meaning: "will (be), on (a date)" }
+      - { word: "sòngdá", meaning: "delivered, served" }
+      - { word: "shàng ge yuè", meaning: "last month" }
+      - { word: "shíkōng bùbiàn", meaning: "inconvenience in time and space" }
+      - { word: "jìngqǐng liàngjiě", meaning: "we respectfully ask your understanding (we apologise)" }
+  - id: chopping_block
+    location: butchers_stall
+    where: "Burned into the chopping block, under a century of knife marks."
+    text: "Zài zhège tānwèi shang, shénme dōu yào chēng, lián jièkǒu yě bú lìwài. Cónglái méi yí ge jièkǒu zhēn yǒu tā shēngchēng de nàme zhòng."
+    translation: "Everything is weighed at this stall, even excuses. There is no excuse that ever weighed what it claimed."
+    glossary:
+      - { word: "tānwèi", meaning: "stall" }
+      - { word: "chēng", meaning: "to weigh" }
+      - { word: "lián jièkǒu yě bú lìwài", meaning: "excuses are no exception" }
+      - { word: "jièkǒu", meaning: "excuses" }
+      - { word: "cónglái méi yí ge", meaning: "there has never been one" }
+      - { word: "shēngchēng", meaning: "claimed" }
+  - id: plaque_back
+    location: cracked_fountain
+    where: "On the back of the brass plaque, in letters someone has tried to file away."
+    text: "Bù jiànyì dú dào zuìhòu. Fùgē zài jùzi jiéshù de dìfang kāishǐ, ér jùzi yǒngyuǎn bú huì jiéshù."
+    translation: "Reading to the end is not advised. The refrain begins where the sentence ends, and the sentence never ends."
+    glossary:
+      - { word: "bù jiànyì", meaning: "it is not advised" }
+      - { word: "dú dào zuìhòu", meaning: "to read to the end" }
+      - { word: "fùgē", meaning: "refrain" }
+      - { word: "jùzi", meaning: "sentence" }
+      - { word: "yǒngyuǎn bú huì jiéshù", meaning: "never ends" }
+  - id: flyleaf
+    location: old_bookshop
+    where: "Pencilled on the flyleaf of a book that will not let itself be opened."
+    text: "Zhè shūdiàn lǐ de měi yì běn shū, dōu shì zuìhòu dú tā de rén xiě de. Guīhuán shí wùbì xiǎoxīn: nǐ kěnéng zhèng zài lǐmian."
+    translation: "Every book in this shop was written by whoever read it last. Return it with care: you may be inside it."
+    glossary:
+      - { word: "shūdiàn", meaning: "bookshop" }
+      - { word: "zuìhòu dú tā de rén", meaning: "whoever read it last" }
+      - { word: "guīhuán", meaning: "give it back" }
+      - { word: "wùbì xiǎoxīn", meaning: "be sure to take care" }
+      - { word: "nǐ kěnéng zhèng zài lǐmian", meaning: "you may be inside it" }
+  - id: seam
+    location: the_rift
+    where: "Stitched along the seam of light, in thread that hums when you lean close."
+    text: "Zhè gēn zhī yǐjīng kūsǐ le, kěshì tā de gēnxū hái zài shuōhuà. Tīng tāmen shuō, zhídào nǐ tīngdǒng, ránhòu wǔzhù ěrduo."
+    translation: "Here the branch is dead, yet its roots keep talking. Listen until you understand, then cover your ears."
+    glossary:
+      - { word: "kěshì", meaning: "and yet" }
+      - { word: "gēnxū", meaning: "roots" }
+      - { word: "tīng tāmen shuō", meaning: "listen to them" }
+      - { word: "zhídào", meaning: "until" }
+      - { word: "wǔzhù ěrduo", meaning: "cover your ears" }

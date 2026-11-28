@@ -1,0 +1,232 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 030 (backlog A9): fragments of The Journey, found after an encounter and kept in the Spellbook. Optional to
+# translate (parallang_obsidian/CHARACTERS.md, Journathan). Authored, not generated. No fragment contains an
+# objective target of the pack (server test), so the Spellbook may show them at any time. `title`, `found` and
+# `translation` are the same English text in every pack (tested). Pending a native speaker's review.
+# Round 032: `after_conversations` unlocks a fragment by party conversations with the found_after character.
+# Round 083: every fragment also passes the inscriptions' answer check (server/test/answer-check.js: no word or 4-letter
+# stem of any objective target's forms, bar a named allowlist); six target-language rewrites, English unchanged.
+# Round 109: the proem (after the Entrance tutorial, first in story order) and Journathan today, an ageing hero still
+# on his way (after Gerald's encounter, last), from the owner's Journathan notes (CHARACTERS.md).
+# Round 110: spores on the Dead Branch's roots (LORE.md: the consumer dreams of another language, creating a new
+# world from it), after the Butcher's Stall's first completion, after the Dead Branch in story order.
+# Round 223: the Dead Branch is the Kūzhī (the withered branch); the branches of the world are zhī. The fragments hold
+# none of the pack's market forms (wǒ, kè, sān, jiā, xǐnglai and the rest) as whole words.
+fragments:
+  - id: journey_proem
+    title: The archway's telling
+    found_after: market_entrance_tutorial
+    found: "Painted on the inside of the archway, where you only see it after you have walked through."
+    text: >-
+      Gēchàng ba, Miùsī, gēchàng nà wèi tōngxiǎo wúshù zhǒng huàyǔ de rén: tā zài shìjiè de zhīgàn jiān liúlàng le
+      èrshí ge dōngtiān, cóng yì gēn zhī dào lìng yì gēn zhī. Xiān yǒu yīngxióng, háishi xiān yǒu jiǎngshù tā de shū?
+      Lián shū zìjǐ yě bú jìde le.
+    translation: >-
+      Sing to me, Muse, of the man of countless tongues, who wandered twenty winters from branch to branch of the
+      world. Which came first, the hero or the book that tells of him? Not even the book remembers.
+    glossary:
+      - { word: "gēchàng ba, Miùsī", meaning: "sing, Muse" }
+      - { word: "wúshù zhǒng huàyǔ", meaning: "countless tongues" }
+      - { word: "liúlàng", meaning: "wandered" }
+      - { word: "dōngtiān", meaning: "winters" }
+      - { word: "cóng yì gēn zhī dào lìng yì gēn zhī", meaning: "from branch to branch" }
+      - { word: "yīngxióng", meaning: "hero" }
+      - { word: "jiǎngshù tā", meaning: "tells of him" }
+      - { word: "lián shū zìjǐ yě", meaning: "not even the book itself" }
+      - { word: "bú jìde le", meaning: "no longer remembers" }
+  - id: journey_first_stitch
+    title: The first stitch
+    found_after: old_bookshop_bookworm
+    found: "Folded inside the battered copy of The Journey that Marginalia sold you, in a hand that changes language halfway through a word."
+    text: >-
+      Journathan měi cì cóng yì gēn zhī kuà dào lìng yì gēn zhī, shēnhòu dōu huì liúxià yì gēn xiàn. Èrshí ge dōngtiān
+      de héngdù: èrshí ge dōngtiān de xiàn. Tīngshuō zuì gǔlǎo de nàxiē zhìjīn hái chēngzhe shìjiè de jīngwěi. Yěxǔ
+      dì-yī zhēn jiùshì tā fèng de.
+    translation: >-
+      Each time Journathan passed from one branch to another, a thread stayed behind him. Twenty winters of crossings:
+      twenty winters of threads. They say the oldest still hold up the weave of the world. Perhaps the first stitch
+      was his.
+    glossary:
+      - { word: "zhī", meaning: "branch" }
+      - { word: "xiàn", meaning: "thread" }
+      - { word: "héngdù", meaning: "crossings" }
+      - { word: "zhìjīn", meaning: "to this day" }
+      - { word: "chēngzhe", meaning: "hold up" }
+      - { word: "jīngwěi", meaning: "warp and weft; the weave" }
+      - { word: "zhēn", meaning: "stitch; also needle" }
+      - { word: "tā fèng de", meaning: "sewn by him" }
+  - id: journey_sirens
+    title: The Sirens
+    found_after: cracked_fountain_letharger
+    found: "Scratched into the rim of the fountain, under the plaque, at exactly the height of the corner of your eye."
+    text: >-
+      Sāirén zài shìyě de biānyuán gēchàng, nàlǐ yǎnjing zǒng yě kàn bù qīng. Journathan ràng rén bǎ zìjǐ bǎng zài
+      chuán de wéigān shang: tā xiǎng tīng, què bù xiǎng cháo tāmen zhuǎnduò. Shuǐshǒumen ěrduo lǐ sāizhe là, zhǐ gù
+      huájiǎng, shénme yě tīng bú jiàn. Jùshuō nà gē shǐzhōng shì tóng yí duàn fùgē, chóngfù le yòu chóngfù.
+    translation: >-
+      The Sirens sang at the edges of sight, where the eye never quite reaches. Journathan had himself tied to the
+      ship's mast: he wanted to listen without steering towards them. The sailors, wax in their ears, rowed and
+      heard nothing. The song, they say, was always the same refrain, repeated forever.
+    glossary:
+      - { word: "Sāirén", meaning: "the Sirens" }
+      - { word: "biānyuán", meaning: "edges" }
+      - { word: "ràng rén bǎ zìjǐ bǎng", meaning: "had himself tied" }
+      - { word: "wéigān", meaning: "mast" }
+      - { word: "zhuǎnduò", meaning: "to steer, turn the rudder" }
+      - { word: "sāizhe là", meaning: "stopped with wax" }
+      - { word: "huájiǎng", meaning: "rowed" }
+      - { word: "fùgē", meaning: "refrain" }
+  - id: journey_shroud
+    title: The shroud
+    found_after: the_rift_errata
+    found: "Left behind when the Rift narrowed to a hairline: a loose thread, and the words that were stitched along it."
+    text: >-
+      Zài tā de dǎo shang, Journathan de qīzi báitiān zhī yí kuài shòuyī, yèlǐ yòu bǎ tā chāikāi. Qiúhūnzhěmen
+      yǐwéi tā zài tuōyán shíjiān. Qíshí tā shì zài ràng shìjiè de gè gēn zhī bǐcǐ fēnkāi, yì zhēn yì zhēn, zhídào tā
+      huílai.
+    translation: >-
+      On her island, Journathan's wife wove a shroud by day and unpicked it by night. The suitors believed she was
+      buying time. In truth she was holding the branches of the world apart, stitch by stitch, until he came
+      back.
+    glossary:
+      - { word: "zhī yí kuài shòuyī", meaning: "she wove a shroud" }
+      - { word: "chāikāi", meaning: "she unpicked, undid" }
+      - { word: "qiúhūnzhěmen", meaning: "suitors" }
+      - { word: "tuōyán shíjiān", meaning: "she was buying time" }
+      - { word: "bǐcǐ fēnkāi", meaning: "apart from each other" }
+      - { word: "yì zhēn yì zhēn", meaning: "stitch by stitch" }
+      - { word: "zhídào tā huílai", meaning: "until he came back" }
+  - id: journey_dead_branch
+    title: The word for it
+    found_after: imp_coffee_greeting
+    after_conversations: 3
+    found: "On your third coffee break, Gerald recites a passage he swears he learned as a barista in the Dead Branch."
+    text: >-
+      Zài Kūzhī, Journathan hēguo yì zhǒng yòu hēi yòu kǔ de yǐnliào, chéng zài xiǎo de bùdéliǎo de bēizi lǐ.
+      Chángguo de rén dōu kū le. Jiào tā de nàge cí yǐjīng bù cúnzài le: tā suízhe nà gēn zhī sǐqù, rújīn lián
+      cídiǎn yě bú jìde tā.
+    translation: >-
+      In the Dead Branch, Journathan drank something dark and bitter, served in very small cups. Whoever tasted it
+      wept. The word for it no longer exists: it died with the branch, and today not even a dictionary remembers it.
+    glossary:
+      - { word: "Kūzhī", meaning: "Dead Branch (the withered branch)" }
+      - { word: "hēguo", meaning: "he drank (once)" }
+      - { word: "yòu hēi yòu kǔ", meaning: "both dark and bitter" }
+      - { word: "xiǎo de bùdéliǎo", meaning: "ever so small" }
+      - { word: "bēizi", meaning: "cups" }
+      - { word: "chángguo", meaning: "tasted" }
+      - { word: "kū le", meaning: "wept (kū, to weep, sounds like the kū of Kūzhī)" }
+      - { word: "sǐqù", meaning: "died" }
+      - { word: "lián cídiǎn yě", meaning: "not even a dictionary" }
+  - id: journey_spores
+    title: Spores
+    found_after: butchers_stall_charcutier
+    found: "Folded around a jar of dried mushrooms at the back of Mortimer's stall, labelled NOT FOR SALE in several different hands."
+    text: >-
+      Kūzhī de gēnxū shang zhǎngzhe cāngbái de mógu, tāmen tūnshí yǐjīng zhōngjié de shìjiè, bǎ tā huàwéi níntǔ.
+      Journathan xīrù le mógu sànfā de fěnchén, mèngjiàn zìjǐ shuōzhe yì zhǒng cóng wèi yǒu huórén shuōguo de huà.
+      Děng tā zhēngkāi yǎnjing, zhōuwéi yǐjīng yǒu yí ge gānggāng dànshēng de shìjiè, ér nàge shìjiè yǐjīng zài shuō
+      zhè zhǒng huà le. Yǒu rén shuō, zhè běn shū yě shì zhèyàng dànshēng de.
+    translation: >-
+      On the roots of the Dead Branch grew pale mushrooms, which devoured the finished world to make soil of it.
+      Journathan breathed in their spores and dreamed in a tongue no living soul had ever spoken. When he woke, around him
+      stood a world just born, and it already spoke it. Some say this book was born the same way.
+    glossary:
+      - { word: "gēnxū", meaning: "roots" }
+      - { word: "zhǎngzhe", meaning: "grew" }
+      - { word: "cāngbái de mógu", meaning: "pale mushrooms" }
+      - { word: "tūnshí", meaning: "devoured" }
+      - { word: "xīrù", meaning: "breathed in" }
+      - { word: "fěnchén", meaning: "fine dust; here the spores" }
+      - { word: "mèngjiàn", meaning: "dreamed" }
+      - { word: "huórén", meaning: "a living soul" }
+      - { word: "zhēngkāi yǎnjing", meaning: "opened his eyes, woke" }
+      - { word: "zhèyàng dànshēng de", meaning: "was born the same way" }
+  - id: journey_forbidden_herd
+    title: The forbidden herd
+    found_after: butchers_stall_charcutier
+    after_conversations: 3
+    found: "On your third tasting, Mortimer lowers his voice and recites the one passage of The Journey he refuses to slice."
+    text: >-
+      Tàiyáng Dǎo shang fàngmùzhe shénshèng de niúqún. Journathan gàosu tóngbànmen bùxǔ pèng tāmen. Kěshì jī'è
+      shèngguo le shìyán: tāmen kǎo le nàxiē shēngkou, ròu zài kǎochā shang hái zài mōu mōu de jiào. Cóng nà yǐhòu,
+      qiē ròu de rén dōu yào xiān zhēngqiú xǔkě.
+    translation: >-
+      On the island of the Sun grazed sacred herds. Journathan told his companions not to touch them. But hunger was
+      stronger than the oath: they roasted the beasts, and the meat lowed on the spit. Since then, whoever cuts meat
+      asks permission.
+    glossary:
+      - { word: "fàngmùzhe", meaning: "grazed (were put out to graze)" }
+      - { word: "niúqún", meaning: "herds" }
+      - { word: "shèngguo le shìyán", meaning: "was stronger than the oath" }
+      - { word: "shìyán", meaning: "oath" }
+      - { word: "kǎo le", meaning: "they roasted" }
+      - { word: "mōu mōu de jiào", meaning: "lowed, mooed" }
+      - { word: "kǎochā", meaning: "spit (for roasting)" }
+      - { word: "zhēngqiú xǔkě", meaning: "asks permission" }
+  - id: journey_lotus
+    title: The lotus
+    found_after: cracked_fountain_letharger
+    after_conversations: 3
+    found: "On your third slow walk, Flick stops (of course) and recites a passage of The Journey it insists is about someone else."
+    text: >-
+      Zài yí piàn wēntūn de hǎitān shang, Journathan de jǐ míng shuǐshǒu chī le liánhuā. Tāmen wàng le hángxiàn, wàng
+      le guīchéng, shènzhì lián chūfā de niàntou yě wàng le. "Zhǐ yào yíhuìr," tāmen tǎng zài shāzi shang shuō, ránhòu
+      yòu shì yíhuìr. Journathan bùdébù bǎ tāmen tuō huí chuán shang, tāmen yìbiān bèi tuō yìbiān kū.
+    translation: >-
+      On a lukewarm beach, some of Journathan's sailors ate the lotus flower. They forgot the course, the return, even
+      the wish to leave. "Just a moment," they said, lying on the sand, and then another moment. Journathan had to drag
+      them to the ships, and they wept.
+    glossary:
+      - { word: "wēntūn", meaning: "lukewarm" }
+      - { word: "liánhuā", meaning: "lotus flower" }
+      - { word: "hángxiàn", meaning: "course, heading" }
+      - { word: "shènzhì", meaning: "even" }
+      - { word: "yíhuìr", meaning: "a moment, a little while" }
+      - { word: "tǎng", meaning: "lying" }
+      - { word: "shāzi", meaning: "sand" }
+      - { word: "tuō huí", meaning: "to drag back" }
+  - id: journey_old_dog
+    title: The old dog
+    found_after: old_bookshop_bookworm
+    after_conversations: 3
+    found: "On your third reading, Marginalia turns to a page she keeps folded down and reads it without looking."
+    text: >-
+      Journathan dǎban chéng qǐgài huídào le zìjǐ de dǎo shang, qīnrén dōu méi rèn chū tā lái. Zhǐ yǒu yì tiáo lǎo
+      gǒu, tǎng zài mén qián de fènduī shang, shùqǐ ěrduo, yáo le yáo wěiba. Tā yìzhí děngzhe tā, děng le zhème cháng shíjiān.
+      Ránhòu tā bìshang yǎnjing, mǎnzú le.
+    translation: >-
+      Journathan came back to his island dressed as a beggar, and his own people did not know him. Only an old dog,
+      lying on the dung heap before the door, raised its ears and moved its tail. It had waited for him all that time.
+      Then it closed its eyes, content.
+    glossary:
+      - { word: "qǐgài", meaning: "beggar" }
+      - { word: "rèn chū", meaning: "recognised" }
+      - { word: "lǎo gǒu", meaning: "old dog" }
+      - { word: "fènduī", meaning: "dung heap" }
+      - { word: "shùqǐ", meaning: "raised, pricked up" }
+      - { word: "wěiba", meaning: "tail" }
+      - { word: "mǎnzú", meaning: "content, satisfied" }
+  - id: journey_still_on_his_way
+    title: Still on his way
+    found_after: imp_coffee_greeting
+    found: "Pinned under Gerald's tip jar, on the back of an unpaid bill signed with a flourish."
+    text: >-
+      Shū lǐ xiě tā huídào le zìjǐ de dǎo shang; tā què fāshì zìjǐ cónglái méi dàoguo. Rújīn tā shì ge xīgài gēzhī
+      zuòxiǎng de lǎo yīngxióng, yángé de shuō, réngrán zài lù shang. Wèn tā qù nǎr, tā zǒng shuō: zhòngyào de bú shì
+      mùdìdì, ér shì yántú de fēngjǐng. Ránhòu tā tànxī: zhè huà tā zìjǐ yě tīng nì le.
+    translation: >-
+      The book has him come back to his island; he swears he never arrived. Today he is an old hero with creaking
+      knees, technically still on his way. Ask him where he is going and he says it is about the journey, not the
+      destination. Then he sighs: he is tired of hearing it too.
+    glossary:
+      - { word: "fāshì", meaning: "he swears" }
+      - { word: "cónglái méi dàoguo", meaning: "never arrived" }
+      - { word: "xīgài", meaning: "knees" }
+      - { word: "gēzhī zuòxiǎng", meaning: "creak" }
+      - { word: "zài lù shang", meaning: "on his way" }
+      - { word: "zhòngyào", meaning: "matters, counts" }
+      - { word: "yántú de fēngjǐng", meaning: "the scenery along the way; here the journey" }
+      - { word: "mùdìdì", meaning: "destination" }
+      - { word: "tànxī", meaning: "he sighs" }
+      - { word: "tīng nì le", meaning: "tired of hearing it" }

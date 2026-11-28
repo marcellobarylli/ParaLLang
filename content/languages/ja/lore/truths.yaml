@@ -11,7 +11,7 @@
 #
 # The texts follow docs/lore-book.md, "What the book does not say". The deeper the truth, the harder the language:
 # the A1 texts are polite desu / masu sentences, the A2 ones add the plain form and a relative clause, B1 the passive
-# and the conditional, B2 the long literary sentence. The cloth of the world (the Italian tela) is nuno, a stitch nuime.
+# and the conditional, B2 the long literary sentence. The cloth of the world is nuno, a stitch nuime.
 truths:
   - id: wake_of_a_stitch
     level: A2
