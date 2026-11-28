@@ -1,0 +1,31 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Reference URLs follow the existing patterns and were not opened from the build container.
+version: marginalia-folded-page-ja-v1
+references:
+  - id: jisho-koko
+    title: "Jisho: koko"
+    url: "https://jisho.org/search/koko"
+  - id: jisho-hitori
+    title: "Jisho: hitori"
+    url: "https://jisho.org/search/hitori"
+entries:
+  - id: koko_ni_imasu
+    kind: phrase
+    target: "koko ni imasu"
+    part_of_speech: phrase
+    accepted_translations: ["here I am", "I am here"]
+    surface_variants: ["koko ni imasu", "koko ni iru", "koko da", "koko desu"]
+    accent_insensitive: true
+    example: { target: "Koko ni imasu, Marginalia!", english: "Here I am, Marginalia!" }
+    note: "Koko (here) ni imasu (I am, of a living being): 'I am here'. Among friends koko ni iru yo, or simply koko da yo (here!)."
+    reference_ids: [jisho-koko]
+  - id: hitori
+    kind: word
+    target: "hitori"
+    part_of_speech: noun
+    accepted_translations: ["alone", "one person"]
+    surface_variants: ["hitori"]
+    accent_insensitive: true
+    example: { target: "Hitori ja nai yo.", english: "You are not alone." }
+    note: "Hitori is one person, and so alone (hitori de, on one's own). Hitori ja nai (polite: hitori de wa arimasen) says 'not alone'; the 'you' is left out, as Japanese leaves out who is clear."
+    reference_ids: [jisho-hitori]

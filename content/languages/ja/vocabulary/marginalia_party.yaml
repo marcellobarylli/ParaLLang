@@ -1,0 +1,51 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Reference URLs follow the existing patterns and were not opened from the build container.
+version: marginalia-party-ja-v1
+references:
+  - id: jisho-subarashii
+    title: 'Jisho: subarashii'
+    url: https://jisho.org/search/subarashii
+  - id: jisho-mo-ichido
+    title: 'Jisho: mō ichido'
+    url: https://jisho.org/search/mou%20ichido
+entries:
+  - id: subarashii
+    kind: word
+    target: subarashii
+    part_of_speech: adjective
+    accepted_translations:
+      - wonderful
+      - marvellous
+      - splendid
+    surface_variants:
+      - subarashii
+      - subarashikatta
+    accent_insensitive: true
+    example:
+      target: Subarashii monogatari desu.
+      english: It is a wonderful story.
+    note: "An i-adjective: it does not agree with its noun, but it takes the tense itself. Subarashii (it is wonderful), subarashikatta (it was wonderful); desu after either makes it polite."
+    reference_ids:
+      - jisho-subarashii
+  - id: mo_ichido
+    kind: phrase
+    target: mō ichido
+    part_of_speech: adverbial_phrase
+    accepted_translations:
+      - again
+      - once more
+      - one more time
+    surface_variants:
+      - mō ichido
+      - mou ichido
+      - moo ichido
+      - mō ikkai
+      - mou ikkai
+      - moo ikkai
+    accent_insensitive: true
+    example:
+      target: Mō ichido yonde kudasai.
+      english: Please read it again.
+    note: "Mō (more) with ichido (one time): once more. Mō ikkai says the same, more casually."
+    reference_ids:
+      - jisho-mo-ichido

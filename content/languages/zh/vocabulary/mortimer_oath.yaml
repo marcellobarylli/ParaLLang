@@ -1,0 +1,33 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+version: mortimer-oath-zh-v1
+references:
+  - id: mdbg-jinzhang
+    title: "MDBG Chinese Dictionary: jǐnzhāng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jinzhang"
+  - id: mdbg-fangxin
+    title: "MDBG Chinese Dictionary: fàngxīn"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=fangxin"
+  - id: mdbg-baozheng
+    title: "MDBG Chinese Dictionary: bǎozhèng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=baozheng"
+entries:
+  - id: bie_jinzhang
+    kind: phrase
+    target: "bié jǐnzhāng"
+    part_of_speech: phrase
+    accepted_translations: ["calm down", "don't be nervous", "don't worry"]
+    surface_variants: ["bié jǐnzhāng", "bié jǐn zhāng", "bú yào jǐnzhāng", "bú yào jǐn zhāng", "fàngxīn", "fàng xīn"]
+    accent_insensitive: true
+    example: { target: "Bié jǐnzhāng, Mortimer.", english: "Calm down, Mortimer." }
+    note: "Bié (don't) with jǐnzhāng (nervous, tense): don't be nervous, calm down. Bú yào jǐnzhāng says the same. Fàngxīn (literally put the heart down), often fàngxīn ba, is don't worry."
+    reference_ids: [mdbg-jinzhang, mdbg-fangxin]
+  - id: baozheng
+    kind: word
+    target: "bǎozhèng"
+    part_of_speech: verb
+    accepted_translations: ["I promise", "promise", "I guarantee"]
+    surface_variants: ["bǎozhèng", "bǎo zhèng", "wǒ dāying nǐ", "wǒ fāshì", "wǒ fā shì"]
+    accent_insensitive: true
+    example: { target: "Wǒ xiàng nǐ bǎozhèng.", english: "I promise you." }
+    note: "Bǎozhèng is to promise or guarantee; to someone, xiàng nǐ bǎozhèng. Wǒ dāying nǐ (I give you my word) and wǒ fāshì (I swear) are the everyday and the solemn ways to say it. Verbs do not change for the person: wǒ bǎozhèng, nǐ bǎozhèng."
+    reference_ids: [mdbg-baozheng]

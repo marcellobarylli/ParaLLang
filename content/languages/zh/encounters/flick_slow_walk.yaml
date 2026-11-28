@@ -1,0 +1,120 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+id: flick_slow_walk
+character: characters/enemies/letharger_flick.yaml
+party_of: cracked_fountain_letharger
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player gets Flick moving and keeps it beside them, in Chinese
+max_turns: 20
+resolved_message: Flick moves. Now. Together with you. Historians will doubt it.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: minutes
+    prompt: 'Flick, now in your party, has sat down and wants five more minutes. Bargain: tell it how many minutes it gets, using a Chinese number.'
+    intent: Flick, now travelling in the player's party, has sat down and asks, in one English sentence, for "five more minutes". In its greeting it does not introduce itself. The player answers with how many minutes Flick gets, as a Chinese number. Before the player names a number, Flick says no Chinese number itself, neither five nor any other; once the player has named one, Flick may haggle back with a different Chinese number of minutes. Flick does not say "zǒu ba" or "yìqǐ" itself before the player has.
+    target_vocabulary_ids:
+      - liang
+      - san
+      - si
+      - wu
+      - liu
+      - qi
+      - ba_fenzhong
+      - jiu
+      - shi_fenzhong
+      - shiyi
+      - shier
+    required_target_groups:
+      - - liang
+        - san
+        - si
+        - wu
+        - liu
+        - qi
+        - ba_fenzhong
+        - jiu
+        - shi_fenzhong
+        - shiyi
+        - shier
+    grammar_constraints:
+      - The player's own offer of a number of minutes from two to twelve, with the number as a Chinese word in pinyin, alone or with fēnzhōng (minutes); a tentative question or a correction (not five, two) is an offer too.
+      - Agreeing to five passes; èr fēnzhōng for liǎng fēnzhōng passes, and feedback may correct it in English.
+      - Reject English-only numbers, digits, numbers outside two to twelve, a number that is not an offer of minutes, refusals, quotations and talk about the word.
+    accepted_examples:
+      - Liǎng fēnzhōng!
+      - Shí fēnzhōng, bù néng zài duō le.
+      - Sān.
+      - Sān fēnzhōng?
+      - Bú shì wǔ, liǎng fēnzhōng!
+    negative_examples:
+      - text: Two minutes.
+        reason: English-only; it does not use a Chinese number.
+      - text: 2 fēnzhōng.
+        reason: A digit, not the Chinese word.
+      - text: Flick shuō wǔ.
+        reason: It reports what Flick says rather than making an offer.
+      - text: Wǒ xiǎng hē jiǔ.
+        reason: Jiǔ here means wine (the same spelling as nine); it is not an offer of minutes.
+      - text: Yìbǎi fēnzhōng.
+        reason: A hundred is outside two to twelve.
+    reference_meaning: The player tells Flick how many minutes it gets.
+    hint_limit: 2
+    next_objective: lets_go
+    assessment_reference_ids:
+      - wiktionary-jiu
+  - id: lets_go
+    prompt: 'Flick, now in your party, has had its minutes. Get it moving: say let''s go, using Chinese.'
+    intent: Flick, now travelling in the player's party, has had its minutes, and they are up. The player must get it moving. Flick does not say "zǒu ba" or "yìqǐ" itself before the player has.
+    target_vocabulary_ids:
+      - zou_ba
+    required_target_groups:
+      - - zou_ba
+    grammar_constraints:
+      - The player tells Flick in Chinese that they are going now.
+      - Reject English-only answers, refusals, and quotations.
+    accepted_examples:
+      - Zǒu ba!
+      - Zǒu ba, Flick!
+      - Hǎo le, wǒmen xiànzài zǒu ba.
+    negative_examples:
+      - text: Let's go.
+        reason: English-only; it does not use the Chinese phrase.
+      - text: Wǒmen bù zǒu.
+        reason: It refuses to go.
+      - text: Flick says zǒu ba.
+        reason: It reports someone else's words.
+    reference_meaning: The player says let's go.
+    hint_limit: 2
+    next_objective: together
+    assessment_reference_ids:
+      - mdbg-zou
+  - id: together
+    prompt: Flick wanders off again. Tell it you go together, using Chinese.
+    intent: Flick keeps drifting away; the player says they go together.
+    target_vocabulary_ids:
+      - yiqi
+    required_target_groups:
+      - - yiqi
+    grammar_constraints:
+      - The player says in Chinese that they go together.
+      - Reject English-only answers, refusals, and talk about the word.
+    accepted_examples:
+      - Yìqǐ.
+      - Wǒmen yìqǐ zǒu ba!
+      - Yìqǐ zǒu, Flick.
+    negative_examples:
+      - text: Together.
+        reason: English-only; it does not use the Chinese word.
+      - text: Wǒ bù gēn nǐ yìqǐ zǒu.
+        reason: It refuses to go together.
+      - text: Yìqǐ means together.
+        reason: It discusses the word rather than saying it to Flick.
+    reference_meaning: The player says they go together.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - mdbg-yiqi

@@ -1,0 +1,71 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+id: marginalia_fragment
+character: characters/enemies/bookworm_marginalia.yaml
+party_of: old_bookshop_bookworm
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player praises Marginalia's fragment of The Journey and asks her to read it again, in Chinese
+max_turns: 20
+resolved_message: Marginalia reads it again, slower, and annotates your face.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_story
+    prompt: Marginalia, now in your party, reads you a fragment of The Journey. Tell her the story is wonderful, using Chinese.
+    intent: 'Marginalia, now travelling in the player''s party, reads aloud this fragment of The Journey in her greeting, exactly: "Journathan yòng liǎng zhǒng yǔyán gēn dàhǎi shuōhuà. Dàhǎi zhǐ yòng yì zhǒng yǔyán huídá: tā zìjǐ de." Then she asks what the player thought of the gùshi. She does not say "jīngcǎi", "zài niàn yí biàn" or "zài dú yí biàn" herself before the player has.'
+    target_vocabulary_ids:
+      - jingcai
+    required_target_groups:
+      - - jingcai
+    grammar_constraints:
+      - The player gives their own verdict in Chinese that the story is wonderful.
+      - 'An adjective is the predicate by itself, with no shì: Gùshi hěn jīngcǎi, or Tài jīngcǎi le (so wonderful); shì comes in only when jīngcǎi describes a noun, as in Zhè shì yí ge hěn jīngcǎi de gùshi.'
+      - Reject English-only answers, negated verdicts, and quotations.
+    accepted_examples:
+      - Gùshi tài jīngcǎi le!
+      - Tài jīngcǎi le!
+      - Zhè shì yí ge hěn jīngcǎi de gùshi, Marginalia.
+      - Zhēn jīngcǎi!
+    negative_examples:
+      - text: It was wonderful.
+        reason: English-only; it does not use the Chinese word.
+      - text: Gùshi shì jīngcǎi.
+        reason: An adjective takes no shì; it is Gùshi hěn jīngcǎi.
+      - text: Gùshi bù jīngcǎi.
+        reason: A negated verdict is not praise.
+      - text: Journathan says it is jīngcǎi.
+        reason: It reports someone else's words.
+    reference_meaning: The player says the story is wonderful.
+    hint_limit: 2
+    next_objective: read_again
+    assessment_reference_ids:
+      - mdbg-jingcai
+  - id: read_again
+    prompt: Ask Marginalia to read it again, using Chinese.
+    intent: The player asks Marginalia to read the fragment again.
+    target_vocabulary_ids:
+      - zai_nian_yi_bian
+    required_target_groups:
+      - - zai_nian_yi_bian
+    grammar_constraints:
+      - The player asks Marginalia in Chinese to read it again (zài niàn yí biàn, or zài dú yí biàn).
+      - Reject English-only requests, the player saying they will read it themself, and talk about the phrase.
+    accepted_examples:
+      - Zài niàn yí biàn ba!
+      - Nǐ néng zài niàn yí biàn ma?
+      - Marginalia, zài gěi wǒ dú yí biàn.
+    negative_examples:
+      - text: Again, please.
+        reason: English-only; it does not use the Chinese phrase.
+      - text: Wǒ zài dú yí biàn.
+        reason: The player would read it again; the objective is to ask Marginalia to read.
+      - text: Zài niàn yí biàn means again.
+        reason: It discusses the phrase rather than asking her.
+    reference_meaning: The player asks her to read it again.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - mdbg-zai

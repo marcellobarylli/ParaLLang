@@ -1,0 +1,75 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+id: mortimer_tasting
+character: characters/enemies/charcutier_mortimer.yaml
+party_of: butchers_stall_charcutier
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player says they like Mortimer's slice and asks for more, in Chinese
+max_turns: 20
+resolved_message: Mortimer weighs your appetite and declares it Certified Ham, First Class.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+# Round 045 (backlog G3): saying you like it and asking for more may come in either order.
+objectives_unordered: true
+objectives:
+  - id: like_it
+    prompt: Mortimer, now in your party, offers you a slice from his travelling hamper. Tell him you like it, using Chinese.
+    intent: Mortimer, now travelling in the player's party, has cut the player one slice from his travelling hamper and waits for the player's own verdict. He does not say "xǐhuan", "hǎochī" or "zài lái" himself before the player has.
+    target_vocabulary_ids:
+      - xihuan
+      - haochi
+    required_target_groups:
+      - - xihuan
+        - haochi
+    grammar_constraints:
+      - The player says in Chinese that they like the slice, in their own words, with xǐhuan (wǒ xǐhuan, wǒ hěn xǐhuan) or hǎochī (hěn hǎochī, tài hǎochī le).
+      - 'One slice: Chinese marks no number here, so any of these forms is right.'
+      - Reject English-only answers, negated verdicts (bù xǐhuan, bù hǎochī), questions back to Mortimer, and quotations.
+    accepted_examples:
+      - Hǎochī!
+      - Wǒ hěn xǐhuan, Mortimer.
+      - Wǒ xǐhuan, tài hǎochī le.
+    negative_examples:
+      - text: I like it.
+        reason: English-only; it does not use the Chinese words.
+      - text: Wǒ bù xǐhuan.
+        reason: A negated verdict is not liking it.
+      - text: Nǐ xǐhuan ma?
+        reason: It asks Mortimer instead of giving the player's own verdict.
+      - text: Mortimer says hǎochī.
+        reason: It reports someone else's words.
+    reference_meaning: The player says they like the slice.
+    hint_limit: 2
+    next_objective: ask_more
+    assessment_reference_ids:
+      - mdbg-xihuan
+      - mdbg-haochi
+  - id: ask_more
+    prompt: Ask Mortimer for more, using Chinese.
+    intent: The player asks Mortimer for more of the meat.
+    target_vocabulary_ids:
+      - zai_lai
+    required_target_groups:
+      - - zai_lai
+    grammar_constraints:
+      - The player asks for more in Chinese (zài lái yìdiǎn, zài gěi wǒ yí piàn, wǒ hái yào).
+      - Reject English-only requests, refusals, and talk about the words.
+    accepted_examples:
+      - Zài lái yìdiǎn, xièxie!
+      - Zài lái yí piàn?
+      - Néng zài gěi wǒ yìdiǎn ma?
+    negative_examples:
+      - text: More, please.
+        reason: English-only; it does not use the Chinese words.
+      - text: Bú yào zài lái le.
+        reason: '"No more" refuses rather than asks for more.'
+      - text: Zài lái is Chinese for more.
+        reason: It discusses the words rather than asking for more.
+    reference_meaning: The player asks for more.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - mdbg-zai

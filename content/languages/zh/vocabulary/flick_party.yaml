@@ -1,0 +1,248 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+version: flick-party-zh-v1
+references:
+  - id: mdbg-zou
+    title: 'MDBG Chinese Dictionary: zǒu'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zou
+  - id: mdbg-yiqi
+    title: 'MDBG Chinese Dictionary: yìqǐ'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=yiqi
+  - id: mdbg-ba-particle
+    title: 'MDBG Chinese Dictionary: ba'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=ba
+  - id: wiktionary-liang
+    title: "Wiktionary: liǎng (Mandarin)"
+    url: https://en.wiktionary.org/wiki/li%C7%8Eng
+  - id: wiktionary-si
+    title: "Wiktionary: sì (Mandarin)"
+    url: https://en.wiktionary.org/wiki/s%C3%AC
+  - id: wiktionary-wu
+    title: "Wiktionary: wǔ (Mandarin)"
+    url: https://en.wiktionary.org/wiki/w%C7%94
+  - id: wiktionary-liu
+    title: "Wiktionary: liù (Mandarin)"
+    url: https://en.wiktionary.org/wiki/li%C3%B9
+  - id: wiktionary-qi
+    title: "Wiktionary: qī (Mandarin)"
+    url: https://en.wiktionary.org/wiki/q%C4%AB
+  - id: wiktionary-ba
+    title: "Wiktionary: bā (Mandarin)"
+    url: https://en.wiktionary.org/wiki/b%C4%81
+  - id: wiktionary-jiu
+    title: "Wiktionary: jiǔ (Mandarin)"
+    url: https://en.wiktionary.org/wiki/ji%C7%94
+  - id: wiktionary-shi
+    title: "Wiktionary: shí (Mandarin)"
+    url: https://en.wiktionary.org/wiki/sh%C3%AD
+  - id: wiktionary-shiyi
+    title: "Wiktionary: shíyī (Mandarin)"
+    url: https://en.wiktionary.org/wiki/sh%C3%ADy%C4%AB
+  - id: wiktionary-shier
+    title: "Wiktionary: shí'èr (Mandarin)"
+    url: https://en.wiktionary.org/wiki/sh%C3%AD%27%C3%A8r
+  - id: mdbg-fenzhong
+    title: 'MDBG Chinese Dictionary: fēnzhōng'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=fenzhong
+entries:
+  - id: zou_ba
+    kind: phrase
+    target: zǒu ba
+    part_of_speech: phrase
+    accepted_translations:
+      - let's go
+      - let's get going
+      - we're going
+    surface_variants:
+      - zǒu ba
+      - wǒmen zǒu
+      - zánmen zǒu
+    accent_insensitive: true
+    example:
+      target: Wǒmen qù shìchǎng ba! Zǒu ba!
+      english: Let's go to the market! Let's go!
+    note: 'Zǒu is to go, to leave (and to walk); the particle ba makes it a suggestion: zǒu ba, let''s go. Wǒmen zǒu ba says the same; zánmen, the inclusive we, is warmer and northern.'
+    reference_ids:
+      - mdbg-zou
+      - mdbg-ba-particle
+  - id: yiqi
+    kind: word
+    target: yìqǐ
+    part_of_speech: adverb
+    accepted_translations:
+      - together
+    surface_variants:
+      - yìqǐ
+      - yì qǐ
+    accent_insensitive: true
+    example:
+      target: Wǒmen yìqǐ zǒu ba.
+      english: Let's go together.
+    note: 'Yìqǐ comes before the verb: wǒmen yìqǐ zǒu, we go together. With someone: gēn nǐ yìqǐ, together with you.'
+    reference_ids:
+      - mdbg-yiqi
+  - id: liang
+    kind: word
+    target: "liǎng"
+    part_of_speech: numeral
+    accepted_translations:
+      - two
+    surface_variants:
+      - "liǎng"
+    accent_insensitive: true
+    example:
+      target: "Xiànzài liǎng diǎn."
+      english: "It is two o'clock."
+    note: "Two before a measure word or a counted thing is liǎng: liǎng fēnzhōng, liǎng diǎn, liǎng jīn. Èr is two when counting aloud and inside longer numbers (yī, èr, sān; shí'èr)."
+    reference_ids:
+      - wiktionary-liang
+  - id: si
+    kind: word
+    target: "sì"
+    part_of_speech: numeral
+    accepted_translations:
+      - four
+    surface_variants:
+      - "sì"
+    accent_insensitive: true
+    example:
+      target: "Xiànzài sì diǎn."
+      english: "It is four o'clock."
+    reference_ids:
+      - wiktionary-si
+  - id: wu
+    kind: word
+    target: "wǔ"
+    part_of_speech: numeral
+    accepted_translations:
+      - five
+    surface_variants:
+      - "wǔ"
+    accent_insensitive: true
+    example:
+      target: "Xiànzài wǔ diǎn."
+      english: "It is five o'clock."
+    reference_ids:
+      - wiktionary-wu
+  - id: liu
+    kind: word
+    target: "liù"
+    part_of_speech: numeral
+    accepted_translations:
+      - six
+    surface_variants:
+      - "liù"
+    accent_insensitive: true
+    example:
+      target: "Xiànzài liù diǎn."
+      english: "It is six o'clock."
+    reference_ids:
+      - wiktionary-liu
+  - id: qi
+    kind: word
+    target: "qī"
+    part_of_speech: numeral
+    accepted_translations:
+      - seven
+    surface_variants:
+      - "qī"
+    accent_insensitive: true
+    example:
+      target: "Xiànzài qī diǎn."
+      english: "It is seven o'clock."
+    reference_ids:
+      - wiktionary-qi
+  - id: ba_fenzhong
+    kind: phrase
+    target: "bā fēnzhōng"
+    part_of_speech: phrase
+    accepted_translations:
+      - eight minutes
+    surface_variants:
+      - "bā fēnzhōng"
+      - "bā fēn zhōng"
+    accent_insensitive: true
+    example:
+      target: "Zài gěi nǐ bā fēnzhōng."
+      english: "I give you eight more minutes."
+    note: "Matched only with fēnzhōng (bā fēnzhōng, eight minutes): bā alone is written like the particle ba of zǒu ba."
+    reference_ids:
+      - wiktionary-ba
+  - id: jiu
+    kind: word
+    target: "jiǔ"
+    part_of_speech: numeral
+    accepted_translations:
+      - nine
+    surface_variants:
+      - "jiǔ"
+    accent_insensitive: true
+    example:
+      target: "Xiànzài jiǔ diǎn."
+      english: "It is nine o'clock."
+    note: "Jiǔ, wine or alcohol, is spelled the same with a different character."
+    reference_ids:
+      - wiktionary-jiu
+  - id: shi_fenzhong
+    kind: phrase
+    target: "shí fēnzhōng"
+    part_of_speech: phrase
+    accepted_translations:
+      - ten minutes
+    surface_variants:
+      - "shí fēnzhōng"
+      - "shí fēn zhōng"
+    accent_insensitive: true
+    example:
+      target: "Zuì duō shí fēnzhōng."
+      english: "Ten minutes at most."
+    note: "Matched only with fēnzhōng (shí fēnzhōng, ten minutes): shí alone is written like shì, to be. Eleven to nineteen are ten and the unit: shíyī, shí'èr."
+    reference_ids:
+      - wiktionary-shi
+  - id: shiyi
+    kind: word
+    target: "shíyī"
+    part_of_speech: numeral
+    accepted_translations:
+      - eleven
+    surface_variants:
+      - "shíyī"
+      - "shí yī"
+    accent_insensitive: true
+    example:
+      target: "Xiànzài shíyī diǎn."
+      english: "It is eleven o'clock."
+    reference_ids:
+      - wiktionary-shiyi
+  - id: shier
+    kind: word
+    target: "shí'èr"
+    part_of_speech: numeral
+    accepted_translations:
+      - twelve
+    surface_variants:
+      - "shí'èr"
+      - "shí èr"
+    accent_insensitive: true
+    example:
+      target: "Xiànzài shí'èr diǎn."
+      english: "It is twelve o'clock."
+    note: "Ten and two, with èr, as two is inside a number: shí'èr fēnzhōng. The apostrophe marks the break before a syllable that starts with a vowel."
+    reference_ids:
+      - wiktionary-shier
+  - id: fenzhong
+    kind: word
+    target: fēnzhōng
+    part_of_speech: noun
+    accepted_translations:
+      - minutes
+      - minute
+    surface_variants:
+      - fēnzhōng
+      - fēn zhōng
+    accent_insensitive: true
+    example:
+      target: Zài gěi wǒ wǔ fēnzhōng.
+      english: Give me five more minutes.
+    note: 'Fēnzhōng counts minutes of time passing and never changes for the plural: yì fēnzhōng, wǔ fēnzhōng. On the clock the minute is fēn: liǎng diǎn shí fēn, ten past two.'
+    reference_ids:
+      - mdbg-fenzhong

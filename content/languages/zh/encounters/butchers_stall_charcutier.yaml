@@ -1,0 +1,66 @@
+# Round 010: The Butcher's Stall (backlog A4). Mortimer the Charcutier calls everything ham (huǒtuǐ); the player names
+# the real cut and says how much they want.
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+id: butchers_stall_charcutier
+character: characters/enemies/charcutier_mortimer.yaml
+location: butchers_stall
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player asks for a meat that is not ham by its Chinese name and says how much they want"
+max_turns: 20
+resolved_message: "Mortimer weighs your order twice, wraps it in paper labelled with the wrong word, and lets you go."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: name_meat
+    prompt: "Mortimer says everything is ham. Ask him for a different meat, by its Chinese name."
+    intent: "The player asks Mortimer for a meat other than ham, naming it in Chinese."
+    target_vocabulary_ids: ["lachang", "xiangchang", "jirou", "zhurou"]
+    required_target_groups:
+      - ["lachang", "xiangchang", "jirou", "zhurou"]
+    grammar_constraints:
+      - "The player's own request for a meat that is not ham, with the meat named in Chinese (wǒ yào..., lái..., or the meat alone as an order)."
+      - "Asking for ham (huǒtuǐ) does not pass; reject quotations, remarks about what Mortimer says, and English-only requests."
+    accepted_examples:
+      - "Wǒ yào làcháng, xièxie."
+      - "Lái liǎng gēn xiāngcháng."
+      - "I'd like some jīròu, please."
+    negative_examples:
+      - text: "Wǒ yào huǒtuǐ."
+        reason: "It asks for ham, which Mortimer insists everything is; the objective is to name a different cut."
+      - text: "I want sausage, please."
+        reason: "English-only; the meat must be named in Chinese."
+      - text: "Mortimer says it is all làcháng."
+        reason: "A remark about what he says is not the player's own request."
+    reference_meaning: "The player asks for a specific meat other than ham."
+    hint_limit: 2
+    next_objective: quantity
+    assessment_reference_ids: ["mdbg-lachang", "mdbg-xiangchang", "mdbg-jirou", "mdbg-zhurou"]
+  - id: quantity
+    prompt: "Tell Mortimer how much you want, in Chinese."
+    intent: "The player says how much of the meat they want: a number or a half, with a unit of weight."
+    target_vocabulary_ids: ["jin", "gongjin", "ke", "san", "yibai", "yiban"]
+    required_target_groups:
+      - ["jin", "gongjin", "ke"]
+    grammar_constraints:
+      - "A quantity in Chinese: a number (yì, liǎng, sān...) or bàn (half), together with a unit of weight (jīn, gōngjīn, kè); a bare unit does not pass. Èr jīn for liǎng jīn passes, and feedback may correct it in English."
+      - "The player's own order; reject price questions, quotations and English-only quantities."
+    accepted_examples:
+      - "Liǎng jīn, xièxie."
+      - "Yì gōngjīn."
+      - "Bàn jīn xiāngcháng, xièxie."
+      - "Sānbǎi kè, please."
+    negative_examples:
+      - text: "Jīn."
+        reason: "A bare unit is not a quantity."
+      - text: "Two jin."
+        reason: "English-only; the quantity must be in Chinese."
+      - text: "Yì jīn duōshao qián?"
+        reason: "It asks about a price rather than saying how much the player wants."
+    reference_meaning: "The player states the amount they want to buy."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: ["mdbg-jin", "mdbg-gongjin", "mdbg-ke"]

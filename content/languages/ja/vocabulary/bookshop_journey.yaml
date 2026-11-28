@@ -1,0 +1,150 @@
+# Round 013: The Old Bookshop (abstract nouns, reading comprehension; The Journey). Reference URLs follow the
+# existing patterns and were not opened from the build container; listed for the owner's content review.
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# The singular nen (year) is a counter, joined to its number (nijūnen); the form nen is kept for a learner who writes
+# the number apart. The Cyclops' Nobody is Daredemonai: see encounters/old_bookshop_bookworm.yaml.
+version: bookshop-journey-ja-v1
+references:
+  - id: jisho-monogatari
+    title: 'Jisho: monogatari'
+    url: https://jisho.org/search/monogatari
+  - id: jisho-tabi
+    title: 'Jisho: tabi'
+    url: https://jisho.org/search/tabi
+  - id: jisho-ie
+    title: 'Jisho: ie'
+    url: https://jisho.org/search/ie
+  - id: jisho-kotoba
+    title: 'Jisho: kotoba'
+    url: https://jisho.org/search/kotoba
+  - id: jisho-nen
+    title: 'Jisho: nen'
+    url: https://jisho.org/search/nen
+  - id: jisho-namae
+    title: 'Jisho: namae'
+    url: https://jisho.org/search/namae
+  - id: jisho-dare-demo-nai
+    title: 'Jisho: dare demo nai'
+    url: https://jisho.org/search/dare%20demo%20nai
+entries:
+  - id: monogatari
+    kind: word
+    target: monogatari
+    part_of_speech: noun
+    accepted_translations:
+      - story
+      - tale
+    surface_variants:
+      - monogatari
+    accent_insensitive: true
+    example:
+      target: Kore wa Journathan no monogatari desu.
+      english: This is the story of Journathan.
+    note: Monogatari is a told story, a tale; history, which Italian storia also means, is rekishi.
+    reference_ids:
+      - jisho-monogatari
+  - id: tabi
+    kind: word
+    target: tabi
+    part_of_speech: noun
+    accepted_translations:
+      - journey
+      - trip
+      - voyage
+    surface_variants:
+      - tabi
+    accent_insensitive: true
+    example:
+      target: Kare no tabi wa nijūnen kakarimasu.
+      english: His journey takes twenty years.
+    note: Tabi is a long journey, a voyage of wandering; a planned trip or holiday is ryokō.
+    reference_ids:
+      - jisho-tabi
+  - id: ie
+    kind: word
+    target: ie
+    part_of_speech: noun
+    accepted_translations:
+      - home
+      - house
+    surface_variants:
+      - ie
+      - uchi
+    accent_insensitive: true
+    example:
+      target: Journathan wa ie ni kaerimasu.
+      english: Journathan is going home.
+    note: "Ie ni kaeru (or ie e): to go back home. Uchi says home more warmly, of the place where one belongs: uchi ni kaeru."
+    reference_ids:
+      - jisho-ie
+  - id: kotoba
+    kind: word
+    target: kotoba
+    part_of_speech: noun
+    accepted_translations:
+      - language
+      - word
+      - words
+    surface_variants:
+      - kotoba
+    accent_insensitive: true
+    example:
+      target: Ōku no kotoba o hanasu otoko.
+      english: The man who speaks many tongues.
+    note: Kotoba means a word, words and speech as well as a language; a language as a subject of study is gengo.
+    reference_ids:
+      - jisho-kotoba
+  - id: nen
+    kind: word
+    target: nen
+    part_of_speech: counter
+    accepted_translations:
+      - years
+      - year
+    surface_variants:
+      - nijūnen
+      - nijuunen
+      - nen
+      - nenkan
+    accent_insensitive: true
+    example:
+      target: Nijūnen.
+      english: Twenty years.
+    note: Nen counts years after a number, joined to it (nijūnen, twenty years); nenkan says for how long (nijūnenkan, for twenty years). The year as a noun is toshi.
+    reference_ids:
+      - jisho-nen
+  - id: namae
+    kind: word
+    target: namae
+    part_of_speech: noun
+    accepted_translations:
+      - name
+    surface_variants:
+      - namae
+      - onamae
+    accent_insensitive: true
+    example:
+      target: Watashi no namae wa Daredemonai desu.
+      english: My name is Nobody.
+    note: Onamae is the polite form, for someone else's name (Onamae wa?); of your own you say namae.
+    reference_ids:
+      - jisho-namae
+  - id: daredemonai
+    kind: phrase
+    target: Daredemonai
+    part_of_speech: pronoun
+    accepted_translations:
+      - nobody
+      - no one
+      - Nobody
+    surface_variants:
+      - daredemonai
+      - dare demo nai
+      - daredemo nai
+    accent_insensitive: true
+    example:
+      target: Watashi wa dare demo nai.
+      english: I am nobody.
+    note: "Dare demo nai: is not anyone at all (dare, who, with demo nai). In Japanese retellings of the Odyssey the hero tells the Cyclops his name is Daredemonai, so that when the Cyclops cries out that Daredemonai is hurting him, his neighbours hear that nobody is."
+    reference_ids:
+      - jisho-dare-demo-nai

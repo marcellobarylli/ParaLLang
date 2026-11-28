@@ -1,0 +1,154 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Round 013: The Old Bookshop (abstract nouns, reading comprehension; The Journey). Reference URLs follow the
+# existing patterns and were not opened from the build container; listed for the owner's content review.
+version: bookshop-journey-zh-v1
+references:
+  - id: mdbg-gushi
+    title: 'MDBG Chinese Dictionary: gùshi'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=gushi
+  - id: mdbg-lutu
+    title: 'MDBG Chinese Dictionary: lǚtú'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=lvtu
+  - id: mdbg-jia
+    title: 'MDBG Chinese Dictionary: jiā'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jia
+  - id: mdbg-yuyan
+    title: 'MDBG Chinese Dictionary: yǔyán'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=yuyan
+  - id: mdbg-nian
+    title: 'MDBG Chinese Dictionary: nián'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=nian
+  - id: mdbg-mingzi
+    title: 'MDBG Chinese Dictionary: míngzi'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=mingzi
+  - id: mdbg-wuren
+    title: 'MDBG Chinese Dictionary: wúrén'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=wuren
+  - id: wiktionary-wuren
+    title: 'Wiktionary: wúrén (Mandarin)'
+    url: https://en.wiktionary.org/wiki/w%C3%BAr%C3%A9n
+entries:
+  - id: gushi
+    kind: word
+    target: gùshi
+    part_of_speech: noun
+    accepted_translations:
+      - story
+      - tale
+    surface_variants:
+      - gùshi
+      - gù shi
+    accent_insensitive: true
+    example:
+      target: Zhè shì Journathan de gùshi.
+      english: This is the story of Journathan.
+    note: Gùshi is a story you tell; history is another word, lìshǐ. Many speakers say the second syllable with its full tone, gùshì.
+    reference_ids:
+      - mdbg-gushi
+  - id: lutu
+    kind: word
+    target: lǚtú
+    part_of_speech: noun
+    accepted_translations:
+      - journey
+      - trip
+      - voyage
+    surface_variants:
+      - lǚtú
+      - lǚ tú
+      - lvtu
+      - lv tu
+    accent_insensitive: true
+    example:
+      target: Tā huí jiā de lǚtú zǒu le èrshí nián.
+      english: His journey home took twenty years.
+    note: The journey as a road travelled, with its stretches and stops; a trip you go on for pleasure is lǚxíng. Type ü as v (lvtu) if your keyboard has no ü.
+    reference_ids:
+      - mdbg-lutu
+  - id: jia
+    kind: word
+    target: jiā
+    part_of_speech: noun
+    accepted_translations:
+      - home
+      - house
+    surface_variants:
+      - jiā
+      - huíjiā
+    accent_insensitive: true
+    example:
+      target: Journathan huí jiā.
+      english: Journathan is going home.
+    note: 'Huí jiā: to go (back) home. Jiā is home and the family who live there: wǒ jiā, my home, my family.'
+    reference_ids:
+      - mdbg-jia
+  - id: yuyan
+    kind: word
+    target: yǔyán
+    part_of_speech: noun
+    accepted_translations:
+      - language
+      - tongue
+    surface_variants:
+      - yǔyán
+      - yǔ yán
+    accent_insensitive: true
+    example:
+      target: Tā tōngxiǎo xǔduō zhǒng yǔyán.
+      english: He knows many tongues.
+    note: Languages are counted in kinds, with the measure word zhǒng (liǎng zhǒng yǔyán, two languages). The tongue in your mouth is another word, shétou.
+    reference_ids:
+      - mdbg-yuyan
+  - id: nian
+    kind: word
+    target: nián
+    part_of_speech: noun
+    accepted_translations:
+      - years
+      - year
+    surface_variants:
+      - nián
+    accent_insensitive: true
+    example:
+      target: Èrshí nián.
+      english: Twenty years.
+    note: Nián takes a number directly, with no measure word (yì nián, one year; èrshí nián, twenty years), and has no plural.
+    reference_ids:
+      - mdbg-nian
+  - id: mingzi
+    kind: word
+    target: míngzi
+    part_of_speech: noun
+    accepted_translations:
+      - name
+    surface_variants:
+      - míngzi
+      - míng zi
+    accent_insensitive: true
+    example:
+      target: Wǒ de míngzi jiào Wúrén.
+      english: My name is Nobody.
+    note: 'Míngzi is said with jiào (to be called): wǒ de míngzi jiào, my name is; nǐ jiào shénme míngzi?, what is your name?'
+    reference_ids:
+      - mdbg-mingzi
+  # Round 223: the Cyclops trick in Chinese. Wúrén (no one) is how Chinese translations of the Odyssey give the
+  # hero's false name, so "Wúrén is killing me" is heard, as in Homer, as "nobody is killing me".
+  - id: wuren
+    kind: word
+    target: Wúrén
+    part_of_speech: pronoun
+    accepted_translations:
+      - nobody
+      - no one
+      - Nobody
+    surface_variants:
+      - wúrén
+      - wú rén
+    accent_insensitive: true
+    example:
+      target: Wúrén zhīdào tā de míngzi.
+      english: Nobody knows his name.
+    note: Written, somewhat literary Chinese for no one (wú, without; rén, person); everyday speech says méi rén. In Chinese translations of the Odyssey the hero tells the Cyclops his name is Wúrén.
+    reference_ids:
+      - mdbg-wuren
+      - wiktionary-wuren

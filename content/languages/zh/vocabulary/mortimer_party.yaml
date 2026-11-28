@@ -1,0 +1,73 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+version: mortimer-party-zh-v1
+references:
+  - id: mdbg-xihuan
+    title: 'MDBG Chinese Dictionary: xǐhuan'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=xihuan
+  - id: wiktionary-xihuan
+    title: 'Wiktionary: xǐhuan (Mandarin)'
+    url: https://en.wiktionary.org/wiki/x%C7%90huan
+  - id: mdbg-haochi
+    title: 'MDBG Chinese Dictionary: hǎochī'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=haochi
+  - id: mdbg-zai
+    title: 'MDBG Chinese Dictionary: zài'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zai
+entries:
+  - id: xihuan
+    kind: word
+    target: xǐhuan
+    part_of_speech: verb
+    accepted_translations:
+      - like
+      - I like it
+      - I like
+    surface_variants:
+      - xǐhuan
+      - xǐ huan
+    accent_insensitive: true
+    example:
+      target: Wǒ hěn xǐhuan làcháng.
+      english: I really like Chinese sausage.
+    note: 'The thing liked comes after the verb: wǒ xǐhuan làcháng. Said of what is in front of you, the object is left out: wǒ hěn xǐhuan, I really like it.'
+    reference_ids:
+      - mdbg-xihuan
+      - wiktionary-xihuan
+  - id: haochi
+    kind: word
+    target: hǎochī
+    part_of_speech: adjective
+    accepted_translations:
+      - tasty
+      - delicious
+      - it's good
+    surface_variants:
+      - hǎochī
+      - hǎo chī
+    accent_insensitive: true
+    example:
+      target: Zhège huǒtuǐ hěn hǎochī.
+      english: This ham is delicious.
+    note: 'Literally "good to eat": the everyday verdict on food in front of you. An adjective takes hěn where English has is: hěn hǎochī, it is tasty; tài hǎochī le!, it is so good! For drinks it is hǎohē.'
+    reference_ids:
+      - mdbg-haochi
+  - id: zai_lai
+    kind: phrase
+    target: zài lái
+    part_of_speech: phrase
+    accepted_translations:
+      - more
+      - some more
+      - another
+      - one more
+    surface_variants:
+      - zài lái
+      - zài gěi wǒ
+      - hái yào
+    accent_insensitive: true
+    example:
+      target: Zài lái yìdiǎn, xièxie.
+      english: A little more, thanks.
+    note: 'Zài is again, lái (come) here means bring: zài lái yìdiǎn, a little more; zài lái yí piàn, another slice. Wǒ hái yào is "I want more". Bú yào le is "no more".'
+    reference_ids:
+      - mdbg-zai

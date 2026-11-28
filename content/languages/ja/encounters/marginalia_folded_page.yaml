@@ -1,0 +1,70 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Marginalia is an old companion by now, so the casual forms are as right as the polite ones (koko ni iru yo, hitori
+# ja nai yo). Japanese marks no gender on hitori (alone) and leaves out the "you": the Italian's feminine sola gives
+# way to whom the sentence is about.
+id: marginalia_folded_page
+character: characters/enemies/bookworm_marginalia.yaml
+party_of: old_bookshop_bookworm
+# Round 048 (backlog G6): offered instead of the fragment reading once Marginalia has finished three conversations,
+# after she has read the old dog passage.
+after_conversations: 3
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: "Player answers Marginalia's who-is-there and tells her she is not alone, in Japanese"
+max_turns: 20
+resolved_message: "Marginalia opens the book again, at the page she keeps folded down, and reads it to you. Both of you, this time."
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: here_i_am
+    prompt: "Marginalia has closed the book and her eyes, and asks who is there. Answer: here I am, using Japanese."
+    intent: "Marginalia has travelled with the player for several readings, so in her greeting she does not introduce herself or describe the place: she greets the player as an old companion would, but tonight she has closed the book on her finger and closed her eyes, like the old dog at the door in a story she loves, and asks in the target language who is there. The player may not know the story. She never says \"koko\", \"imasu\", \"iru\" or \"hitori\" (in dialogue or narration) before the player has, and she does not tell the player what to say."
+    target_vocabulary_ids: [koko_ni_imasu]
+    required_target_groups:
+      - [koko_ni_imasu]
+    grammar_constraints:
+      - "The player answers, in their own words, with the Japanese for here I am (koko ni imasu, or as friends say it, koko ni iru yo, koko da yo), that they are there."
+      - "Reject English-only answers, quotations, definitions of the phrase, and answers about someone else."
+    accepted_examples:
+      - "Koko ni imasu!"
+      - "Koko ni iru yo, Marginalia."
+      - "Koko da yo, it's me."
+    negative_examples:
+      - text: "Here I am!"
+        reason: "English-only; it does not use the Japanese phrase."
+      - text: "koko ni imasu means here I am."
+        reason: "It discusses the phrase rather than answering her."
+    reference_meaning: "The player tells Marginalia that they are here."
+    hint_limit: 2
+    next_objective: not_alone
+    assessment_reference_ids: [jisho-koko]
+  - id: not_alone
+    prompt: "Marginalia says she has waited a very long time for someone to read with. Tell her she is not alone, using Japanese."
+    intent: "Marginalia opens her eyes and says, in one English sentence, that she has waited a very long time, among the pages, for someone to read with; the rest of her line mixes the languages as usual. She does not ask for comfort. She never says \"hitori\", \"hitoribotchi\" or any other word for alone (in dialogue or narration) before the player has."
+    target_vocabulary_ids: [hitori]
+    required_target_groups:
+      - [hitori]
+    grammar_constraints:
+      - "The player tells Marginalia, in their own words, that she is not alone (Hitori ja nai yo., or politely Hitori de wa arimasen.). Japanese leaves out the subject: a line said to her with none is about her, and one with Marginalia wa or anata wa is too. The sentence must deny that Marginalia is alone."
+      - "Reject English-only lines, quotations, talk about the word, lines that say she is alone (even inside a negated sentence), and lines about the player being alone (watashi wa, boku wa)."
+    accepted_examples:
+      - "Hitori ja nai yo."
+      - "Marginalia, hitori ja nai yo: watashi ga iru."
+      - "Mō hitori ja nai yo."
+      - "Hitori de wa arimasen."
+    negative_examples:
+      - text: "You are not alone."
+        reason: "English-only; it does not use the Japanese word."
+      - text: "Hitori desu ne."
+        reason: "It says she is alone."
+      - text: "Naze hitori na no ka wakaranai."
+        reason: "A negation, but it still says she is alone."
+      - text: "Watashi wa hitori ja nai."
+        reason: "It is about the player, not Marginalia."
+    reference_meaning: "The player tells Marginalia that she is not alone."
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids: [jisho-hitori]

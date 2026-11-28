@@ -1,0 +1,52 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Reference URLs follow the existing patterns and were not opened from the build container.
+version: marginalia-party-zh-v1
+references:
+  - id: mdbg-jingcai
+    title: 'MDBG Chinese Dictionary: jīngcǎi'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jingcai
+  - id: mdbg-zai
+    title: 'MDBG Chinese Dictionary: zài (again)'
+    url: https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zai
+entries:
+  - id: jingcai
+    kind: word
+    target: jīngcǎi
+    part_of_speech: adjective
+    accepted_translations:
+      - wonderful
+      - marvellous
+      - brilliant
+    surface_variants:
+      - jīngcǎi
+      - jīng cǎi
+    accent_insensitive: true
+    example:
+      target: Gùshi tài jīngcǎi le.
+      english: The story is wonderful.
+    note: "Said of a story, a show or a match that holds you. Like every adjective it is the predicate by itself, with no shì: gùshi hěn jīngcǎi; tài jīngcǎi le!, it is so wonderful."
+    reference_ids:
+      - mdbg-jingcai
+  - id: zai_nian_yi_bian
+    kind: phrase
+    target: zài niàn yí biàn
+    part_of_speech: phrase
+    accepted_translations:
+      - read it again
+      - again
+    surface_variants:
+      - zài niàn yí biàn
+      - zài niàn yíbiàn
+      - zài niàn yí cì
+      - zài dú yí biàn
+      - zài dú yíbiàn
+      - zài dú yí cì
+      - zài gěi wǒ niàn yí biàn
+      - zài gěi wǒ dú yí biàn
+    accent_insensitive: true
+    example:
+      target: Zài niàn yí biàn ba.
+      english: Read it again, please.
+    note: "Zài (again) goes before the verb and yí biàn (once through, from start to end) after it: zài niàn yí biàn, read it once more. Niàn is to read aloud; dú says it too. Yòu is again for what has already happened."
+    reference_ids:
+      - mdbg-zai

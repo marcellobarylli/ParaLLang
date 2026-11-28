@@ -1,0 +1,31 @@
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+# Reference URLs follow the existing patterns and were not opened from the build container.
+version: marginalia-folded-page-zh-v1
+references:
+  - id: mdbg-zher
+    title: "MDBG Chinese Dictionary: zhèr"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zher"
+  - id: mdbg-yigeren
+    title: "MDBG Chinese Dictionary: yí ge rén"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=yigeren"
+entries:
+  - id: wo_zai_zher
+    kind: phrase
+    target: "wǒ zài zhèr"
+    part_of_speech: phrase
+    accepted_translations: ["here I am", "I am here"]
+    surface_variants: ["wǒ zài zhèr", "wǒ zài zhèli", "wǒ zài zhè lǐ"]
+    accent_insensitive: true
+    example: { target: "Wǒ zài zhèr, Marginalia!", english: "Here I am, Marginalia!" }
+    note: "'Zài' (to be at) with 'zhèr' (here): 'I am here'. 'Zhèr' is the northern, spoken form; 'zhèli' says the same and is heard everywhere."
+    reference_ids: [mdbg-zher]
+  - id: yi_ge_ren
+    kind: phrase
+    target: "yí ge rén"
+    part_of_speech: phrase
+    accepted_translations: ["alone", "on one's own"]
+    surface_variants: ["yí ge rén"]
+    accent_insensitive: true
+    example: { target: "Nǐ bú shì yí ge rén.", english: "You are not alone." }
+    note: "Literally 'one person': alone, on one's own. 'Nǐ bú shì yí ge rén' is 'you are not alone'. The same words go to a man or a woman."
+    reference_ids: [mdbg-yigeren]

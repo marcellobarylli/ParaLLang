@@ -1,0 +1,70 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Japanese adjectives do not agree with their noun, so the Italian's feminine agreement gives way to the tense: the
+# player may praise the story as it is (subarashii) or as it was, now it is over (subarashikatta).
+id: marginalia_fragment
+character: characters/enemies/bookworm_marginalia.yaml
+party_of: old_bookshop_bookworm
+type: dialogue
+initial_prompt_template: encounter/greeting.txt
+turn_prompt_template: encounter/dialogue_turn.txt
+defeat_condition:
+  type: comprehension_and_response
+  description: Player praises Marginalia's fragment of The Journey and asks her to read it again, in Japanese
+max_turns: 20
+resolved_message: Marginalia reads it again, slower, and annotates your face.
+escalation:
+  target_ratio_increase_per_turn: 0.05
+objectives:
+  - id: praise_story
+    prompt: Marginalia, now in your party, reads you a fragment of The Journey. Tell her the story is wonderful, using Japanese.
+    intent: 'Marginalia, now travelling in the player''s party, reads aloud this fragment of The Journey in her greeting, exactly: "Journathan wa futatsu no kotoba de umi to hanashimasu. Umi wa hitotsu no kotoba de shika kotaemasen: jibun no kotoba de." Then she asks what the player thought of the monogatari. She does not say "subarashii", "subarashikatta", "mō ichido" or "mō ikkai" herself before the player has.'
+    target_vocabulary_ids:
+      - subarashii
+    required_target_groups:
+      - - subarashii
+    grammar_constraints:
+      - The player gives their own verdict in Japanese that the story is wonderful.
+      - 'The adjective as it is (subarashii) or in the past, as the reading is over (subarashikatta), with or without desu; the negative forms (subarashiku nai, subarashiku arimasen) are not praise.'
+      - Reject English-only answers, negated verdicts, and quotations.
+    accepted_examples:
+      - Subarashii monogatari desu!
+      - Subarashikatta!
+      - Totemo subarashikatta desu, Marginalia.
+    negative_examples:
+      - text: It was wonderful.
+        reason: English-only; it does not use the Japanese word.
+      - text: Subarashiku nai desu.
+        reason: A negated verdict is not praise.
+      - text: Journathan says it is subarashii.
+        reason: It reports someone else's words.
+    reference_meaning: The player says the story is wonderful.
+    hint_limit: 2
+    next_objective: read_again
+    assessment_reference_ids:
+      - jisho-subarashii
+  - id: read_again
+    prompt: Ask Marginalia to read it again, using Japanese.
+    intent: The player asks Marginalia to read the fragment again.
+    target_vocabulary_ids:
+      - mo_ichido
+    required_target_groups:
+      - - mo_ichido
+    grammar_constraints:
+      - The player asks Marginalia in Japanese to read it again (mō ichido, or the casual mō ikkai), as a request (yonde, yonde kudasai, yonde kureru?).
+      - Reject English-only requests, the player saying they will read it themself, and talk about the phrase.
+    accepted_examples:
+      - Mō ichido yonde kudasai!
+      - Mō ichido yonde kureru?
+      - Mō ikkai yonde, Marginalia.
+    negative_examples:
+      - text: Again, please.
+        reason: English-only; it does not use the Japanese phrase.
+      - text: Mō ichido yomimasu.
+        reason: The player would read it again; the objective is to ask Marginalia to read.
+      - text: Mō ichido means again.
+        reason: It discusses the phrase rather than asking her.
+    reference_meaning: The player asks her to read it again.
+    hint_limit: 2
+    next_objective: null
+    assessment_reference_ids:
+      - jisho-mo-ichido

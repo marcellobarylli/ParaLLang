@@ -1,0 +1,56 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 158 (issue #4): the untranslatable texts of the Japanese pack. Deep truths about the world exist only in the
+# language being learned: these sentences are set into the narrator's written passages (content/narration/
+# passages.yaml, as {truth:<id>}) in a colour of their own, and nothing in the game translates them. There is no
+# English here on purpose: the server cannot send what it does not hold. What each one says, for the owner, is in
+# parallang_obsidian/Understood Later.md.
+#
+#   id      the name a passage uses
+#   level   how hard the language is (the stage of the curriculum at which a learner can read it)
+#   text    the sentence, in Japanese (rōmaji) only
+#
+# The texts follow docs/lore-book.md, "What the book does not say". The deeper the truth, the harder the language:
+# the A1 texts are polite desu / masu sentences, the A2 ones add the plain form and a relative clause, B1 the passive
+# and the conditional, B2 the long literary sentence. The cloth of the world (the Italian tela) is nuno, a stitch nuime.
+truths:
+  - id: wake_of_a_stitch
+    level: A2
+    text: "Modore! Kono saki ni wa nuime no ato ga aru."
+  - id: not_a_road
+    level: A1
+    text: "Kono michi wa michi de wa arimasen."
+  - id: a_thread_passes
+    level: A1
+    text: "Koko o ito ga tōrimasu."
+  - id: every_place_a_knot
+    level: A1
+    text: "Dono basho mo musubime desu."
+  - id: walked_on_a_web
+    level: A2
+    text: "Anata wa michi o arukimasen deshita. Nuno no ue o arukimashita."
+  - id: a_word_a_stitch
+    level: A2
+    text: "Kotoba o hitotsu oboeru hito wa, nuime o hitotsu nuu."
+  - id: sewn_not_built
+    level: B1
+    text: "Michi wa tsukurareta no de wa nai. Nuwareta no da."
+  - id: sewn_to_another
+    level: B1
+    text: "Nuno wa sekai ga owaru tokoro de owaranai. Betsu no nuno ni nuitsukerarete iru."
+  - id: roots_and_roads
+    level: B1
+    text: "Ne ga mieru tokoro ni wa, katsute michi ga atta. Michi ga mieru tokoro ni wa, itsuka ne ga haru darō."
+  - id: all_the_threads
+    level: B1
+    text: "Moshi subete no ito ga issei ni hippararetara, futatsu no sekai wa fureai, mō dono kotoba mo imi o motanaku naru darō."
+  # Round 159 (issue #7): what three characters of the dead branch utter once the conversation is over (the
+  # `revelation` of their encounters). They know more than the road's signs say.
+  - id: journey_threads
+    level: B1
+    text: "Umi o wataru tabi ni, ito ga ippon nokoru. Nijūnen no tokai wa nijūnen no ito da. Sore wa nuno no naka de mottomo furui ito de, ima mo nuno o sasaete iru."
+  - id: inflection
+    level: B2
+    text: "Sekai no ōku ga mō hitotsu no kotoba de katarareru yō ni natta toki, sore o torimodosu no wa, shizumiyuku fune kara chawan de mizu o kakidasu yō na mono de arō."
+  - id: first_word_error
+    level: B2
+    text: "Hajime ni Kotoba ga atta. Soshite sono Kotoba no naka ni wa, hitotsu no ayamari ga atta. Sore o tadasu mono wa tadashii ni chigai nai ga, sore ga owari to naru de arō."

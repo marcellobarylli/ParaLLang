@@ -1,0 +1,171 @@
+# Round 010: The Butcher's Stall (meats, quantities, numbers). Reference URLs follow the existing patterns and
+# were not opened from the build container; listed for the owner's content review.
+# Round 223: Chinese version authored by Claude (from the Italian, as the French pack adapted it), in pinyin only; awaits a native speaker's review.
+version: butcher-meats-zh-v1
+references:
+  - id: mdbg-huotui
+    title: "MDBG Chinese Dictionary: huǒtuǐ"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=huotui"
+  - id: mdbg-lachang
+    title: "MDBG Chinese Dictionary: làcháng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=lachang"
+  - id: mdbg-xiangchang
+    title: "MDBG Chinese Dictionary: xiāngcháng"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=xiangchang"
+  - id: mdbg-jirou
+    title: "MDBG Chinese Dictionary: jīròu"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jirou"
+  - id: mdbg-zhurou
+    title: "MDBG Chinese Dictionary: zhūròu"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=zhurou"
+  - id: mdbg-jin
+    title: "MDBG Chinese Dictionary: jīn"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=jin"
+  - id: mdbg-gongjin
+    title: "MDBG Chinese Dictionary: gōngjīn"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=gongjin"
+  - id: mdbg-ke
+    title: "MDBG Chinese Dictionary: kè"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=ke"
+  - id: mdbg-ban
+    title: "MDBG Chinese Dictionary: bàn"
+    url: "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=ban"
+  - id: wiktionary-san
+    title: "Wiktionary: sān (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/s%C4%81n"
+  - id: wiktionary-yibai
+    title: "Wiktionary: yìbǎi (Mandarin)"
+    url: "https://en.wiktionary.org/wiki/y%C3%ACb%C7%8Ei"
+entries:
+  - id: huotui
+    kind: word
+    target: "huǒtuǐ"
+    part_of_speech: noun
+    accepted_translations: ["ham"]
+    surface_variants: ["huǒtuǐ", "huǒ tuǐ"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ yào yìbǎi kè huǒtuǐ."
+      english: "I want a hundred grams of ham."
+    note: "Literally \"fire leg\". Jīnhuá huǒtuǐ is China's famous cured ham; the pink sliced ham of a sandwich is huǒtuǐ too."
+    reference_ids: [mdbg-huotui]
+  - id: lachang
+    kind: word
+    target: "làcháng"
+    part_of_speech: noun
+    accepted_translations: ["Chinese sausage", "cured sausage", "dried sausage"]
+    surface_variants: ["làcháng", "là cháng"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ yào yì jīn làcháng."
+      english: "I want a jin (half a kilo) of Chinese sausage."
+    note: "The sweet cured sausage hung to dry before the New Year and steamed or fried, never eaten raw; a Chinese market's nearest thing to salami. Counted with gēn: yì gēn làcháng."
+    reference_ids: [mdbg-lachang]
+  - id: xiangchang
+    kind: word
+    target: "xiāngcháng"
+    part_of_speech: noun
+    accepted_translations: ["sausage"]
+    surface_variants: ["xiāngcháng", "xiāng cháng"]
+    accent_insensitive: true
+    example:
+      target: "Liǎng gēn xiāngcháng, xièxie."
+      english: "Two sausages, thanks."
+    note: "Sausage in general, fresh or smoked. Counted with the measure word gēn (for long thin things): liǎng gēn xiāngcháng."
+    reference_ids: [mdbg-xiangchang]
+  - id: jirou
+    kind: word
+    target: "jīròu"
+    part_of_speech: noun
+    accepted_translations: ["chicken", "chicken meat"]
+    surface_variants: ["jīròu", "jī ròu", "yì zhī jī"]
+    accent_insensitive: true
+    example:
+      target: "Wǒ yào bàn jīn jīròu."
+      english: "I want half a jin (250 grams) of chicken."
+    note: "Jī is the bird, ròu meat: jīròu is chicken as meat. A whole chicken is yì zhī jī, with the measure word zhī."
+    reference_ids: [mdbg-jirou]
+  - id: zhurou
+    kind: word
+    target: "zhūròu"
+    part_of_speech: noun
+    accepted_translations: ["pork"]
+    surface_variants: ["zhūròu", "zhū ròu"]
+    accent_insensitive: true
+    example:
+      target: "Lái liǎng jīn zhūròu."
+      english: "Two jin (a kilo) of pork, please."
+    note: "Pork, China's everyday meat: ròu on its own usually means pork. Lái (literally come) is how you order at a stall: lái liǎng jīn, give me two jin."
+    reference_ids: [mdbg-zhurou]
+  - id: jin
+    kind: word
+    target: "jīn"
+    part_of_speech: noun
+    accepted_translations: ["jin", "catty", "half a kilo", "500 grams"]
+    surface_variants: ["jīn"]
+    accent_insensitive: true
+    example:
+      target: "Yì jīn xiāngcháng."
+      english: "A jin (half a kilo) of sausages."
+    note: "The market's unit: one jīn is 500 grams. It is itself a measure word, so a number goes straight before it: yì jīn, liǎng jīn (not èr jīn), bàn jīn (250 grams), yì jīn bàn (750 grams). For small amounts you hear liǎng, a tenth of a jīn."
+    reference_ids: [mdbg-jin]
+  - id: gongjin
+    kind: word
+    target: "gōngjīn"
+    part_of_speech: noun
+    accepted_translations: ["kilo", "kilogram"]
+    surface_variants: ["gōngjīn", "gōng jīn"]
+    accent_insensitive: true
+    example:
+      target: "Yì gōngjīn zhūròu."
+      english: "A kilo of pork."
+    note: "The metric jīn: a kilo, two jīn. Labels and shops use it; at the market people count in jīn."
+    reference_ids: [mdbg-gongjin]
+  - id: ke
+    kind: word
+    target: "kè"
+    part_of_speech: noun
+    accepted_translations: ["grams", "gram"]
+    surface_variants: ["kè"]
+    accent_insensitive: true
+    example:
+      target: "Sānbǎi kè jīròu."
+      english: "Three hundred grams of chicken."
+    note: "Grams, a measure word like jīn: yìbǎi kè, a hundred grams. Heard in supermarkets more than at a market stall, where jīn rules."
+    reference_ids: [mdbg-ke]
+  - id: san
+    kind: word
+    target: "sān"
+    part_of_speech: numeral
+    accepted_translations: ["three"]
+    surface_variants: ["sān"]
+    accent_insensitive: true
+    example:
+      target: "Sān gēn xiāngcháng."
+      english: "Three sausages."
+    note: "A number goes before a measure word, then the noun: sān gēn xiāngcháng, sān jīn zhūròu. Three hundred is sānbǎi."
+    reference_ids: [wiktionary-san]
+  - id: yibai
+    kind: word
+    target: "yìbǎi"
+    part_of_speech: numeral
+    accepted_translations: ["a hundred", "one hundred"]
+    surface_variants: ["yìbǎi", "yì bǎi"]
+    accent_insensitive: true
+    example:
+      target: "Yìbǎi kè huǒtuǐ."
+      english: "A hundred grams of ham."
+    note: "Yī becomes yì before bǎi. Two hundred is liǎngbǎi, three hundred sānbǎi."
+    reference_ids: [wiktionary-yibai]
+  - id: yiban
+    kind: word
+    target: "yíbàn"
+    part_of_speech: numeral
+    accepted_translations: ["half", "half a"]
+    surface_variants: ["yíbàn", "yí bàn"]
+    accent_insensitive: true
+    example:
+      target: "Zhè gēn làcháng, wǒ yào yíbàn."
+      english: "This sausage: I want half of it."
+    note: "Before a measure word bàn stands alone: bàn jīn (half a jin, 250 grams), bàn gōngjīn (half a kilo). After a number it comes last: yì jīn bàn, a jin and a half. Yíbàn is a half of something: wǒ yào yíbàn, I want half. Only yíbàn is matched as this word, because ban is also an English word."
+    reference_ids: [mdbg-ban]
