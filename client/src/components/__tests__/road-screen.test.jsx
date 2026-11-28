@@ -74,7 +74,12 @@ test('the journey opens on a message about learning by conversation; closed, it 
   await user.click(await screen.findByRole('button', { name: 'The Journey 2: Journathan Returns (again)' }, { timeout: 20_000 }));
   const dialog = await screen.findByRole('dialog', { name: 'In the beginning was the Word' }, { timeout: 20_000 });
   expect(dialog.textContent).toContain('by living in it');
-  expect(dialog.textContent).toContain('talking to the people who live in it');
+  expect(dialog.textContent).toContain('talking to the people of this world');
+  // Round 224: how a conversation goes, in the game's language.
+  const language = useStore.getState().language?.name;
+  expect(language).toBeTruthy();
+  expect(dialog.textContent).toContain(`Answer in as much ${language} as you can; where a word escapes you, use English.`);
+  expect(dialog.textContent).toContain(`You will be shown your answer in ${language}`);
   expect(screen.queryByRole('button', { name: /^Talk to / })).toBeNull(); // the arrival's card waits behind it
   await user.click(within(dialog).getByRole('button', { name: 'Set out' }));
   expect(await screen.findByRole('button', { name: /^Talk to / })).toBeTruthy();

@@ -830,7 +830,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
         {/* Round 175: while the camera comes down from the sky into the road, a line says where to; the site's card
             comes when it is there (on a phone the card would hide the whole descent). */}
         {onRoad && state.roadPhase === 'hub' && (descending ? <section className="caption" role="status"><span>Coming down to {state.road.here.name}…</span></section>
-          : state.road && !state.roadWelcomed ? <WelcomeCard onClose={state.dismissWelcome} /> : <HubCard state={state} />)}
+          : state.road && !state.roadWelcomed ? <WelcomeCard onClose={state.dismissWelcome} language={state.language} /> : <HubCard state={state} />)}
         {onRoad && state.roadPhase === 'travel' && <RoadCaption state={state} />}
         {onRoad && state.roadPhase === 'travel' && state.roadBreathing && <RoadBreath state={state} />}
         {roadTalking && <EncounterSheet state={state} site={null} sites={{}} speech={speech} height={sheetHeight} onHeight={setSheetHeight}

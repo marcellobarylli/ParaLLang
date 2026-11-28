@@ -34,6 +34,14 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 224, a shorter welcome that says how to answer
+
+The welcome message ("In the beginning was the Word") is condensed to the vision in one sentence and the teaser in
+another, with a line on how a conversation goes: answer in as much of the game's language as you can, use English
+where a word escapes you, and your answer is shown in the language. Seen in headless Chromium at phone size, **not on
+a phone**. **Merged to `main` and deployed** on the owner's word.
+[Architecture](docs/rounds/224/architecture.md), [findings](docs/rounds/224/findings.md).
+
 ## Addendum 2026-11-28: round 223, Japanese and Chinese, in rōmaji and pinyin
 
 Japanese (`ja`) and Chinese (`zh`, Mandarin) are playable languages, written in Latin letters only (the owner: no

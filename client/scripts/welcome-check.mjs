@@ -16,6 +16,7 @@ await game.run(async ({ page, check, shot, tap }) => {
   await game.open();
   await page.getByRole('heading', { name: 'ParaLLang' }).waitFor({ timeout: 20000 });
   await page.waitForFunction(() => window.__parallangRoad?.stats?.mode === 'title', null, { timeout: 120000 });
+  await tap(page.getByLabel(/comfortable with basic/)); // round 216: a new game says its level first
   await tap(page.getByRole('button', { name: JOURNEY }));
   check(await page.getByRole('dialog').count() === 0, 'no message during the zoom down');
   const dialog = page.getByRole('dialog', { name: 'In the beginning was the Word' });
