@@ -1,0 +1,200 @@
+# Round 223: Japanese version authored by Claude (from the Italian, as the French pack adapted it), in rōmaji only; awaits a native speaker's review.
+# Round 144: the words of curriculum stage A1.1 (the skeleton is content/curriculum/01_a1_1.yaml). The Italian
+# original was authored by Claude from the functions of the A1 syllabi read for the round; no source page was opened
+# for a single entry. For the owner's review. A vocabulary entry is { t: target, pos, en: [meanings], forms: [...], ex: [example, English] };
+# `forms` defaults to the target, and matching ignores case and accents. `say` is the words that meet an objective:
+# one list means any of them, a list of lists means one from each.
+# Round 223: modified Hepburn with macrons; each form with a long vowel is also listed as typed without them (kōhī:
+# kouhii, koohii; the bare kohi is the fold). A word that would read as English or as a particle on its own (go, mama,
+# haha, sore, are, aka, ni, san) is listed only inside a phrase; its note says so.
+stage: a1_1
+version: curriculum-a1-1-ja-v1
+grammar:
+  greetings: "desu after a noun (Sam desu; watashi wa Sam desu) and to mōshimasu, the humble way to give your name; polite desu and masu forms with strangers, plain forms with friends; -san after another person's name, never your own, and the name in place of anata ('you')."
+  origins: "X kara kimashita (I come from X), X shusshin desu; X ni sunde imasu (I live in X); doko (where), doko kara, doko ni; a country with -go is its language (eigo, nihongo) and with -jin its people (igirisujin)."
+  courtesy: "Polite formulas; the negative in -masen (wakarimasen); a thing with o and onegaishimasu or kudasai (mizu o kudasai); a verb in -te with kudasai to ask for it to be done (mō ichido itte kudasai)."
+  numbers: "Numbers to a hundred: ichi, ni, san, yon, go, roku, nana, hachi, kyū, jū, then nijū, sanjū, nijūgo; -sai for age (nijūgo-sai desu, with hatachi for twenty); ikutsu, ikura, and nan- with a counter (nan-sai, nan-nin)."
+  cafe: "X o kudasai and X o onegaishimasu; X ni shimasu (I'll have X); no articles and no plural (kōhī is 'a coffee' and 'coffees'); mo in place of o for 'also' (kēki mo kudasai), sore kara for 'and then'."
+  likes: "X ga suki desu and X wa suki ja nai desu; daisuki, kirai, daikirai, and the politer nigate; totemo, and zenzen with a negative; kara after the reason (amai kara desu), and dōshite to ask why; watashi mo for 'me too' and 'me neither'."
+lessons:
+  greetings_hello:
+    greet: { say: [konnichiwa, ohayo_gozaimasu, konbanwa], examples: ["Konnichiwa!", "Ohayō gozaimasu!"] }
+    how_are_you: { say: [ogenki_desu_ka, saikin_do], examples: ["O-genki desu ka?", "Ken, saikin dō?"] }
+    goodbye: { say: [sayonara, mata_ne, mata_ato_de, shitsurei_shimasu], examples: ["Sayōnara!", "Jā, mata ne!"] }
+  greetings_name:
+    my_name: { say: [watashi_wa, to_moshimasu], examples: ["Watashi wa Sam desu.", "Sam to mōshimasu."] }
+    your_name: { say: [o_namae_wa], examples: ["O-namae wa?", "O-namae wa nan desu ka?"] }
+    pleased: { say: [hajimemashite, yoroshiku_onegaishimasu], examples: ["Hajimemashite!", "Yoroshiku onegaishimasu."] }
+  greetings_fine:
+    i_am_fine: { say: [genki_desu, okagesama_de, maamaa_desu], examples: ["Genki desu.", "Okagesama de.", "Māmā desu."] }
+    thanks: { say: [arigato, arigato_gozaimasu], examples: ["Arigatō!"] }
+    and_you: { say: [anata_wa], examples: ["Tanaka-san wa?", "Sochira wa?"] }
+  origins_from:
+    i_am_from: { say: [kara_kimashita, shusshin, kara], examples: ["Rondon kara kimashita.", "Rondon shusshin desu."] }
+    where_from: { say: [doko_kara], examples: ["Doko kara kimashita ka?", "O-kuni wa dochira desu ka?"] }
+    react: { say: [ii_desu_ne, sugoi, omoshiroi], examples: ["Ii desu ne!", "Omoshiroi desu ne!"] }
+  origins_live:
+    i_live: { say: [sunde_imasu], examples: ["Rondon ni sunde imasu.", "Igirisu ni sunde imasu."] }
+    where_live: { say: [doko_ni_sunde_imasu], examples: ["Doko ni sunde imasu ka?", "O-sumai wa dochira desu ka?"] }
+    near_far: { say: [chikai, toi], examples: ["Koko kara tōi desu.", "Sugu chikaku desu."] }
+  origins_language:
+    i_speak: { say: [hanashimasu], examples: ["Nihongo o sukoshi hanashimasu."] }
+    i_learn: { say: [benkyo_shimasu, naratte_imasu], examples: ["Nihongo o benkyō shite imasu.", "Nihongo o naratte imasu."] }
+    do_you_speak: { say: [eigo_o_hanashimasu_ka], examples: ["Eigo o hanashimasu ka?", "Eigo ga hanasemasu ka?"] }
+  courtesy_please:
+    please: { say: [onegaishimasu, kudasai], examples: ["Mizu o ippai onegaishimasu.", "Kore o kudasai!"] }
+    thank_you: { say: [arigato_gozaimasu], examples: ["Dōmo arigatō gozaimasu!"] }
+    welcome: { say: [do_itashimashite, iie], examples: ["Dō itashimashite.", "Iie, iie."] }
+  courtesy_sorry:
+    excuse_me: { say: [sumimasen], examples: ["Sumimasen!", "Anō, sumimasen."] }
+    sorry: { say: [gomen_nasai, moshiwake_arimasen, sumimasen], examples: ["Gomen nasai!", "Mōshiwake arimasen."] }
+    no_problem: { say: [daijobu], examples: ["Daijōbu desu.", "Ki ni shinaide kudasai."] }
+  courtesy_repeat:
+    not_understand: { say: [wakarimasen], examples: ["Wakarimasen.", "Sumimasen, yoku wakarimasen deshita."] }
+    repeat: { say: [mo_ichido], examples: ["Mō ichido onegaishimasu.", "Mō ichido itte kudasai."] }
+    slowly: { say: [yukkuri], examples: ["Yukkuri onegaishimasu.", "Motto yukkuri hanashite kudasai."] }
+  numbers_count:
+    one_two_three: { say: [ichi_ni_san], examples: ["Ichi, ni, san."] }
+    a_number: { say: [yon, itsutsu, roku, nana, hachi, kyu, ju], examples: ["Nana.", "Jū!"] }
+    how_many: { say: [ikutsu], examples: ["Ikutsu desu ka?", "Nan-nin desu ka?"] }
+  numbers_age:
+    my_age: { say: [sai], examples: ["Nijūgo-sai desu.", "Watashi wa sanjussai desu."] }
+    your_age: { say: [nansai_desu_ka], examples: ["Nan-sai desu ka?", "O-ikutsu desu ka?"] }
+    round_number: { say: [niju, sanju, yonju, goju], examples: ["Yonjū?", "Gojū!"] }
+  numbers_price:
+    how_much: { say: [ikura], examples: ["Ikura desu ka?", "Kore wa ikura desu ka?"] }
+    too_much: { say: [takasugimasu, takai], examples: ["Takasugimasu!", "Chotto takai desu ne."] }
+    deal: { say: [ii_desu, wakarimashita], examples: ["Ii desu yo.", "Wakarimashita!"] }
+  cafe_order:
+    i_would_like: { say: [chumon, ni_shimasu, kudasai], examples: ["Sumimasen, chūmon onegaishimasu.", "Watashi wa kōhī ni shimasu."] }
+    a_drink: { say: [kohi, ocha, mizu, biru, nihonshu, jusu], examples: ["Kōhī o kudasai.", "Bīru o onegaishimasu."] }
+    thanks: { say: [arigato, arigato_gozaimasu, itadakimasu], examples: ["Arigatō gozaimasu!", "Itadakimasu!"] }
+  cafe_food:
+    what_is_there: { say: [nani_ga_arimasu_ka], examples: ["Nani ga arimasu ka?", "O-susume wa nan desu ka?"] }
+    some_food: { say: [onigiri, ramen, sushi, udon, kare_raisu, keki], examples: ["Onigiri o kudasai.", "Rāmen o onegaishimasu."] }
+    also: { say: [mo_onegaishimasu, sorekara], examples: ["Sore kara, kēki mo onegaishimasu.", "Aisu mo kudasai."] }
+  cafe_bill:
+    it_was_good: { say: [oishikatta, oishii, gochisosama_deshita], examples: ["Oishikatta desu!", "Totemo oishikatta. Gochisōsama deshita."] }
+    the_bill: { say: [okaikei], examples: ["O-kaikei onegaishimasu."] }
+    pay: { say: [kado_de, haraemasu_ka], examples: ["Kādo de haraemasu ka?", "Kādo wa tsukaemasu ka?"] }
+  likes_like:
+    i_like: { say: [suki], examples: ["Kōhī ga suki desu.", "Neko ga suki desu."] }
+    i_dont_like: { say: [suki_ja_nai], examples: ["Bīru wa suki ja nai desu."] }
+    do_you_like: { say: [suki_desu_ka], examples: ["Nihonshu wa suki desu ka?", "Kore, suki desu ka?"] }
+  likes_love:
+    i_love: { say: [daisuki], examples: ["Aisu ga daisuki desu!", "Rāmen ga daisuki!"] }
+    i_hate: { say: [kirai, daikirai, nigate], examples: ["Ame ga kirai desu.", "Urusai no wa daikirai desu.", "Nattō wa nigate desu."] }
+    how_much: { say: [totemo, zenzen], examples: ["Totemo!", "Zenzen."] }
+  likes_prefer:
+    i_prefer: { say: [no_ho_ga], examples: ["O-cha no hō ga suki desu."] }
+    because: { say: [kara], examples: ["Amai kara desu."] }
+    me_too: { say: [watashi_mo], examples: ["Watashi mo!", "Boku mo suki ja nai desu."] }
+vocabulary:
+  # greetings
+  konnichiwa: { t: "konnichiwa", pos: interjection, en: ["hello", "good afternoon", "good day"], forms: ["konnichiwa", "konnichi wa", "konichiwa"], ex: ["Konnichiwa, Tanaka-san.", "Hello, Mr Tanaka."], n: "The daytime greeting to anyone; it is written with wa because it began as 'as for today...'." }
+  ohayo_gozaimasu: { t: "ohayō gozaimasu", pos: phrase, en: ["good morning"], forms: ["ohayō gozaimasu", "ohayou gozaimasu", "ohayoo gozaimasu", "ohayō", "ohayou", "ohayoo"], ex: ["Ohayō gozaimasu, sensei.", "Good morning, teacher."], n: "Ohayō alone to friends and family." }
+  konbanwa: { t: "konbanwa", pos: interjection, en: ["good evening"], forms: ["konbanwa", "konban wa", "kombanwa"], ex: ["Konbanwa, minasan.", "Good evening, everyone."] }
+  ogenki_desu_ka: { t: "o-genki desu ka", pos: phrase, en: ["how are you", "are you well"], forms: ["o-genki desu ka", "ogenki desu ka", "o genki desu ka", "genki desu ka", "o-genki", "ogenki"], ex: ["Tanaka-san, o-genki desu ka?", "Mr Tanaka, how are you?"], n: "Asked of someone you have not seen for a while, not every day; to a friend, just 'Genki?'." }
+  saikin_do: { t: "saikin dō", pos: phrase, en: ["how are things", "how have you been", "how is it going"], forms: ["saikin dō", "saikin dou", "saikin doo", "saikin dō desu ka", "saikin dou desu ka", "saikin doo desu ka", "saikin wa dō", "saikin wa dou", "saikin wa doo", "saikin wa dō desu ka", "saikin wa dou desu ka", "saikin wa doo desu ka", "chōshi wa dō", "choushi wa dou", "chooshi wa doo", "chōshi wa dō desu ka", "choushi wa dou desu ka", "chooshi wa doo desu ka", "chōshi dō", "choushi dou", "chooshi doo"], ex: ["Ken, saikin dō?", "Ken, how are things?"], n: "Casual, to a friend; chōshi wa dō desu ka? asks after someone's health or work." }
+  sayonara: { t: "sayōnara", pos: interjection, en: ["goodbye"], forms: ["sayōnara", "sayounara", "sayoonara", "sayonara"], ex: ["Sayōnara, mata ashita.", "Goodbye, see you tomorrow."], n: "For a real parting; day to day Japanese says mata ne or, formally, shitsurei shimasu." }
+  mata_ne: { t: "mata ne", pos: phrase, en: ["see you", "bye", "see you soon"], forms: ["mata ne", "jā ne", "jaa ne", "jā mata", "jaa mata", "ja ne", "ja mata", "mata ashita", "dewa mata", "bai bai", "baibai"], ex: ["Jā, mata ne!", "Well, see you!"], n: "Casual, to friends; mata ashita is 'see you tomorrow'." }
+  mata_ato_de: { t: "mata ato de", pos: phrase, en: ["see you later"], forms: ["mata ato de", "ato de", "ato de ne", "mata nochihodo", "nochihodo"], ex: ["Jā, mata ato de!", "Right, see you later!"], n: "Nochihodo is the polite 'later', at work." }
+  shitsurei_shimasu: { t: "shitsurei shimasu", pos: phrase, en: ["goodbye (formal)", "excuse me (as I leave or enter)"], forms: ["shitsurei shimasu", "shitsurei shimashita", "shitsurei"], ex: ["Kyō wa arigatō gozaimashita. Shitsurei shimasu.", "Thank you for today. Goodbye."], n: "Literally 'I commit a rudeness': the polite leave-taking at work, also said on entering a room." }
+  watashi_wa: { t: "watashi wa", pos: phrase, en: ["I am", "as for me"], forms: ["watashi wa", "boku wa", "atashi wa", "watashi no namae wa"], ex: ["Watashi wa Sam desu.", "I am Sam."], n: "Watashi wa ... desu: 'I am ...'. Boku is a man's or a boy's casual 'I'. Once it is clear, Japanese drops watashi wa: Sam desu." }
+  to_moshimasu: { t: "to mōshimasu", pos: phrase, en: ["my name is", "I am called"], forms: ["to mōshimasu", "to moushimasu", "to mooshimasu", "to iimasu"], ex: ["Sumisu to mōshimasu.", "My name is Smith."], n: "The humble, formal way to give your name; to iimasu is plainer." }
+  o_namae_wa: { t: "o-namae wa", pos: phrase, en: ["what is your name", "your name?"], forms: ["o-namae wa", "onamae wa", "o namae wa", "namae wa nan", "namae wa nani"], ex: ["Sumimasen, o-namae wa?", "Excuse me, what is your name?"], n: "The o- is polite and is never used of your own name; o-namae wa nan desu ka? is the full question." }
+  hajimemashite: { t: "hajimemashite", pos: interjection, en: ["pleased to meet you", "how do you do"], ex: ["Hajimemashite, Sam desu.", "How do you do, I'm Sam."], n: "Literally 'for the first time': said once, at the start of a first meeting." }
+  yoroshiku_onegaishimasu: { t: "yoroshiku onegaishimasu", pos: phrase, en: ["nice to meet you", "very pleased to meet you"], forms: ["yoroshiku onegaishimasu", "yoroshiku onegai shimasu", "dōzo yoroshiku onegaishimasu", "douzo yoroshiku onegaishimasu", "doozo yoroshiku onegaishimasu", "dōzo yoroshiku", "douzo yoroshiku", "doozo yoroshiku", "yoroshiku"], ex: ["Sam desu. Dōzo yoroshiku onegaishimasu.", "I'm Sam. Very pleased to meet you."], n: "Closes an introduction, roughly 'please be kind to me'; yoroshiku alone among friends." }
+  genki_desu: { t: "genki desu", pos: phrase, en: ["I am fine", "I am well"], forms: ["genki desu", "genki desu yo", "genki da yo", "genki yo"], ex: ["Hai, genki desu.", "Yes, I'm fine."] }
+  okagesama_de: { t: "okagesama de", pos: phrase, en: ["I'm well, thank you", "thanks to you"], forms: ["okagesama de", "o-kage-sama de", "okagesama"], ex: ["Okagesama de, genki desu.", "I'm well, thank you."], n: "Literally 'thanks to you': the polite answer to o-genki desu ka?" }
+  maamaa_desu: { t: "māmā desu", pos: phrase, en: ["so-so", "not bad"], forms: ["māmā desu", "maamaa desu", "maamaa", "maa maa", "mā mā", "mā mā desu", "maa maa desu", "bochibochi", "bochi bochi"], ex: ["Kyō wa māmā desu.", "Today, so-so."], n: "Māmā alone is not listed: without its long vowels it would read as English 'mama'. Bochibochi is 'getting by'." }
+  arigato: { t: "arigatō", pos: interjection, en: ["thank you", "thanks"], forms: ["arigatō", "arigatou", "arigatoo", "dōmo", "doumo", "doomo"], ex: ["Genki desu, arigatō.", "Fine, thanks."], n: "Plain, to friends; dōmo alone is a quick, casual thanks." }
+  anata_wa: { t: "anata wa", pos: phrase, en: ["and you", "what about you"], forms: ["anata wa", "sochira wa", "san wa"], ex: ["Genki desu. Anata wa?", "I'm fine. And you?"], n: "Japanese avoids anata with someone it knows: say the name with -san (Tanaka-san wa?), or sochira wa to a stranger." }
+  # origins
+  kara_kimashita: { t: "kara kimashita", pos: phrase, en: ["I come from", "I am from"], forms: ["kara kimashita", "kara kita", "kara kimasu"], ex: ["Sukottorando kara kimashita.", "I come from Scotland."], n: "Literally 'I came from': the past is the usual way to say where you are from." }
+  shusshin: { t: "shusshin", pos: noun, en: ["from", "native of", "born in"], ex: ["Rondon shusshin desu.", "I am from London."], n: "Where you were born or grew up: X shusshin desu." }
+  kara: { t: "kara", pos: particle, en: ["from", "because"], ex: ["Rondon kara desu.", "I'm from London."], n: "After a place, 'from' (Rondon kara); after a reason, 'because' (oishii kara). The reason comes first and kara after it." }
+  doko_kara: { t: "doko kara", pos: phrase, en: ["where are you from", "from where"], forms: ["doko kara", "doko kara kimashita", "doko kara kita", "o-kuni wa", "okuni wa", "go-shusshin wa", "goshusshin wa", "shusshin wa doko"], ex: ["Doko kara kimashita ka?", "Where are you from?"], n: "O-kuni wa? ('your country?') and go-shusshin wa? are the polite questions." }
+  ii_desu_ne: { t: "ii desu ne", pos: phrase, en: ["how nice", "that's nice", "lovely"], forms: ["ii desu ne", "ii ne", "ii tokoro desu ne", "suteki desu ne", "suteki"], ex: ["Kyōto desu ka. Ii desu ne!", "Kyoto? How nice!"], n: "Ne asks for agreement: 'nice, isn't it?'" }
+  sugoi: { t: "sugoi", pos: adjective, en: ["great", "amazing", "wow"], ex: ["Hokkaidō shusshin desu ka? Sugoi!", "You're from Hokkaido? Great!"] }
+  omoshiroi: { t: "omoshiroi", pos: adjective, en: ["interesting", "funny", "fun"], ex: ["Sore wa omoshiroi desu ne.", "That is interesting."], n: "Both 'interesting' and 'funny'." }
+  sunde_imasu: { t: "sunde imasu", pos: verb, en: ["I live", "he lives", "she lives"], forms: ["sunde imasu", "sundeimasu", "sunde masu", "sunde iru", "sunderu"], ex: ["Tōkyō ni sunde imasu.", "I live in Tokyo."], n: "The place takes ni: Rondon ni sunde imasu. The verb is the same for I, you, he and she." }
+  doko_ni_sunde_imasu: { t: "doko ni sunde imasu ka", pos: phrase, en: ["where do you live"], forms: ["doko ni sunde imasu ka", "doko ni sunde imasu", "doko ni sundeimasu", "doko ni sunde iru", "doko ni sunderu", "o-sumai wa", "osumai wa"], ex: ["Ima doko ni sunde imasu ka?", "Where do you live now?"], n: "O-sumai wa dochira desu ka? is the polite form." }
+  chikai: { t: "chikai", pos: adjective, en: ["near", "close"], forms: ["chikai", "chikaku", "sugu chikaku", "sugu soko"], ex: ["Eki wa sugu chikaku desu.", "The station is very near."] }
+  toi: { t: "tōi", pos: adjective, en: ["far"], forms: ["tōi", "toui", "tooi", "tōku", "touku", "tooku"], ex: ["Koko kara tōi desu ka?", "Is it far from here?"] }
+  hanashimasu: { t: "hanashimasu", pos: verb, en: ["I speak", "speak", "I can speak"], forms: ["hanashimasu", "hanasemasu", "hanasu", "hanaseru", "sukoshi dekimasu", "sukoshi wakarimasu"], ex: ["Nihongo o sukoshi hanashimasu.", "I speak a little Japanese."], n: "Hanasemasu is 'I can speak'. A language is the country's name with -go: nihongo, eigo, furansugo." }
+  benkyo_shimasu: { t: "benkyō shimasu", pos: verb, en: ["I study", "I am studying", "I am learning"], forms: ["benkyō shimasu", "benkyou shimasu", "benkyoo shimasu", "benkyō shite imasu", "benkyou shite imasu", "benkyoo shite imasu", "benkyō shiteimasu", "benkyou shiteimasu", "benkyoo shiteimasu", "benkyō shite masu", "benkyou shite masu", "benkyoo shite masu", "benkyō shiteru", "benkyou shiteru", "benkyoo shiteru", "benkyō suru", "benkyou suru", "benkyoo suru", "benkyō", "benkyou", "benkyoo"], ex: ["Nihongo o benkyō shite imasu.", "I am learning Japanese."], n: "Benkyō shite imasu is 'I am studying', in progress; benkyō shimasu, 'I study'." }
+  naratte_imasu: { t: "naratte imasu", pos: verb, en: ["I am learning", "I take lessons in"], forms: ["naratte imasu", "naratteimasu", "naratte masu", "naratteru", "naraimasu"], ex: ["Nihongo o naratte imasu.", "I am learning Japanese."], n: "Learning from a teacher." }
+  eigo_o_hanashimasu_ka: { t: "eigo o hanashimasu ka", pos: phrase, en: ["do you speak English"], forms: ["eigo o hanashimasu ka", "eigo hanashimasu ka", "eigo o hanasemasu ka", "eigo ga hanasemasu ka", "eigo wa hanasemasu ka", "eigo hanasemasu ka", "eigo hanaseru", "eigo ga dekimasu ka", "eigo wa dekimasu ka", "eigo dekimasu ka", "eigo wa daijōbu desu ka", "eigo wa daijoubu desu ka", "eigo wa daijoobu desu ka", "eigo daijōbu", "eigo daijoubu", "eigo daijoobu"], ex: ["Sumimasen, eigo o hanashimasu ka?", "Excuse me, do you speak English?"], n: "Eigo ga hanasemasu ka? ('can you speak English?') is the more usual question." }
+  # courtesy
+  onegaishimasu: { t: "onegaishimasu", pos: phrase, en: ["please"], forms: ["onegaishimasu", "onegai shimasu", "onegai"], ex: ["Kōhī o onegaishimasu.", "A coffee, please."], n: "After the thing asked for, with o: mizu o onegaishimasu. The polite 'please' of a request." }
+  kudasai: { t: "kudasai", pos: verb, en: ["please give me", "please"], ex: ["Mizu o kudasai.", "Water, please."], n: "After a thing (kore o kudasai) or a verb in -te (matte kudasai, 'please wait')." }
+  arigato_gozaimasu: { t: "arigatō gozaimasu", pos: phrase, en: ["thank you very much", "thank you (polite)"], forms: ["arigatō gozaimasu", "arigatou gozaimasu", "arigatoo gozaimasu", "dōmo arigatō gozaimasu", "doumo arigatou gozaimasu", "doomo arigatoo gozaimasu", "dōmo arigatō", "doumo arigatou", "doomo arigatoo", "arigatō gozaimashita", "arigatou gozaimashita", "arigatoo gozaimashita", "dōmo arigatō gozaimashita", "doumo arigatou gozaimashita", "doomo arigatoo gozaimashita", "hontō ni arigatō", "hontou ni arigatou", "hontoo ni arigatoo", "hontō ni arigatō gozaimasu", "hontou ni arigatou gozaimasu", "hontoo ni arigatoo gozaimasu"], ex: ["Iroiro to arigatō gozaimasu.", "Thank you for everything."], n: "Gozaimashita, the past, thanks for something now done." }
+  do_itashimashite: { t: "dō itashimashite", pos: phrase, en: ["you're welcome"], forms: ["dō itashimashite", "dou itashimashite", "doo itashimashite"], ex: ["Arigatō! Dō itashimashite.", "Thanks! You're welcome."], n: "Correct but formal; everyday Japanese often waves thanks away with iie, iie." }
+  iie: { t: "iie", pos: interjection, en: ["no", "not at all", "don't mention it"], forms: ["iie", "iie iie", "ie ie", "iya iya"], ex: ["Iie, iie, daijōbu desu.", "Not at all, it's fine."], n: "'No'; doubled, it waves away thanks or an apology." }
+  sumimasen: { t: "sumimasen", pos: interjection, en: ["excuse me", "sorry", "thank you for your trouble"], forms: ["sumimasen", "suimasen", "sumimasen deshita"], ex: ["Sumimasen, toire wa doko desu ka?", "Excuse me, where is the toilet?"], n: "Gets attention, apologises, and thanks someone for trouble taken." }
+  gomen_nasai: { t: "gomen nasai", pos: phrase, en: ["I'm sorry", "sorry"], forms: ["gomen nasai", "gomennasai", "gomen", "gomen ne"], ex: ["Okurete gomen nasai.", "Sorry I'm late."], n: "To friends and family; at work and to strangers, sumimasen or mōshiwake arimasen." }
+  moshiwake_arimasen: { t: "mōshiwake arimasen", pos: phrase, en: ["I am very sorry", "I apologise"], forms: ["mōshiwake arimasen", "moushiwake arimasen", "mooshiwake arimasen", "mōshiwake arimasen deshita", "moushiwake arimasen deshita", "mooshiwake arimasen deshita", "mōshiwake gozaimasen", "moushiwake gozaimasen", "mooshiwake gozaimasen", "mōshiwake nai", "moushiwake nai", "mooshiwake nai"], ex: ["Okurete mōshiwake arimasen.", "I am very sorry for the delay."], n: "The formal apology, to a customer or a superior." }
+  daijobu: { t: "daijōbu", pos: phrase, en: ["it's all right", "no problem", "it's fine"], forms: ["daijōbu", "daijoubu", "daijoobu", "daijōbu desu", "daijoubu desu", "daijoobu desu", "mondai nai", "mondai arimasen", "ki ni shinaide", "ki ni shinai de", "ki ni shinaide kudasai"], ex: ["Daijōbu desu, ki ni shinaide.", "It's fine, don't worry."], n: "Also asks 'are you all right?' (daijōbu desu ka?) and, said to an offer, often means 'no, thank you'." }
+  wakarimasen: { t: "wakarimasen", pos: phrase, en: ["I don't understand"], forms: ["wakarimasen", "wakarimasen deshita", "yoku wakarimasen", "wakaranai", "wakannai"], ex: ["Sumimasen, wakarimasen.", "Sorry, I don't understand."], n: "Wakarimasen deshita: 'I didn't understand (what you just said)'." }
+  mo_ichido: { t: "mō ichido", pos: phrase, en: ["once more", "again"], forms: ["mō ichido", "mou ichido", "moo ichido", "mō ikkai", "mou ikkai", "moo ikkai", "kurikaeshite kudasai", "kurikaeshite"], ex: ["Mō ichido onegaishimasu.", "Once more, please."], n: "Mō ichido itte kudasai: 'please say it again'." }
+  yukkuri: { t: "yukkuri", pos: adverb, en: ["slowly", "more slowly"], forms: ["yukkuri", "motto yukkuri"], ex: ["Motto yukkuri hanashite kudasai.", "Please speak more slowly."] }
+  # numbers
+  ichi_ni_san: { t: "ichi, ni, san", pos: phrase, en: ["one, two, three"], forms: ["ichi, ni, san", "ichi ni san", "ichi-ni-san", "hitotsu, futatsu, mittsu", "hitotsu futatsu mittsu"], ex: ["Ichi, ni, san, shi, go!", "One, two, three, four, five!"], n: "Counting aloud: ichi, ni, san. Counting things: hitotsu, futatsu, mittsu. Ni and san are not listed alone: ni is also a particle, and san the -san after a name." }
+  yon: { t: "yon", pos: number, en: ["four"], forms: ["yon", "yottsu"], ex: ["Yon-nin desu.", "There are four of us."], n: "Shi, the other four, is avoided: it sounds like 'death'. Yottsu is four things." }
+  itsutsu: { t: "itsutsu", pos: number, en: ["five", "five things"], ex: ["Ringo o itsutsu kudasai.", "Five apples, please."], n: "Counting aloud, five is go; go is not listed alone, because it is also English 'go'." }
+  roku: { t: "roku", pos: number, en: ["six"], forms: ["roku", "muttsu"], ex: ["Roku-nin desu.", "There are six of us."] }
+  nana: { t: "nana", pos: number, en: ["seven"], forms: ["nana", "shichi", "nanatsu"], ex: ["Nana-nin desu.", "There are seven of us."], n: "Also shichi, as in shichi-ji, seven o'clock." }
+  hachi: { t: "hachi", pos: number, en: ["eight"], forms: ["hachi", "yattsu"], ex: ["Hachi-nin desu.", "There are eight of us."], n: "Before some counters it becomes hap- or has-: happun (eight minutes), hassai (eight years old)." }
+  kyu: { t: "kyū", pos: number, en: ["nine"], forms: ["kyū", "kyuu", "ku", "kokonotsu"], ex: ["Kyū-nin desu.", "There are nine of us."], n: "Also ku, as in ku-ji, nine o'clock." }
+  ju: { t: "jū", pos: number, en: ["ten"], forms: ["jū", "juu"], ex: ["Jū-en desu.", "That's ten yen."], n: "The tens are built on it: nijū (20), sanjū (30), and nijūichi (21)." }
+  ikutsu: { t: "ikutsu", pos: adverb, en: ["how many"], forms: ["ikutsu", "nan-ko", "nanko", "nan-nin", "nannin"], ex: ["Ringo wa ikutsu arimasu ka?", "How many apples are there?"], n: "Ikutsu for things; nan-nin for people, and nan- with the other counters (nan-ko, nan-mai)." }
+  sai: { t: "sai", pos: noun, en: ["years old"], forms: ["sai", "hatachi", "hassai", "jussai", "nijussai", "sanjussai", "yonjussai", "gojussai", "rokujussai"], ex: ["Nijūgo-sai desu.", "I am twenty-five."], n: "After the number, with a hyphen: nijūgo-sai. Some ages change sound and are written joined: jussai (10), sanjussai (30); twenty is hatachi." }
+  nansai_desu_ka: { t: "nan-sai desu ka", pos: phrase, en: ["how old are you"], forms: ["nan-sai desu ka", "nan-sai", "nansai", "nan sai", "o-ikutsu desu ka", "o-ikutsu", "oikutsu"], ex: ["Musuko-san wa nan-sai desu ka?", "How old is your son?"], n: "O-ikutsu desu ka? is politer, to an adult." }
+  niju: { t: "nijū", pos: number, en: ["twenty"], forms: ["nijū", "nijuu"], ex: ["Nijū-en desu.", "Twenty yen."] }
+  sanju: { t: "sanjū", pos: number, en: ["thirty"], forms: ["sanjū", "sanjuu"], ex: ["Sanjū-nin imasu.", "There are thirty people."] }
+  yonju: { t: "yonjū", pos: number, en: ["forty"], forms: ["yonjū", "yonjuu"], ex: ["Yonjū-nin imasu.", "There are forty people."] }
+  goju: { t: "gojū", pos: number, en: ["fifty"], forms: ["gojū", "gojuu"], ex: ["Gojū-en desu.", "Fifty yen."] }
+  ikura: { t: "ikura", pos: adverb, en: ["how much"], forms: ["ikura", "o-ikura"], ex: ["Kono kasa wa ikura desu ka?", "How much is this umbrella?"], n: "Kore wa ikura desu ka? 'How much is this?'" }
+  takai: { t: "takai", pos: adjective, en: ["expensive", "high"], ex: ["Kono hon wa takai desu.", "This book is expensive."], n: "Also 'high'; of a person, se ga takai is 'tall'." }
+  takasugimasu: { t: "takasugimasu", pos: phrase, en: ["it's too expensive"], forms: ["takasugimasu", "takasugiru", "takasugi"], ex: ["Chotto takasugimasu ne.", "It is a bit too expensive."], n: "-sugimasu after an adjective's stem is 'too': takai, takasugimasu." }
+  ii_desu: { t: "ii desu", pos: phrase, en: ["it's fine", "that's good", "okay"], forms: ["ii desu", "ii desu yo", "ii yo"], ex: ["Sen-en? Ii desu yo.", "A thousand yen? That's fine."], n: "Careful: offered something, ii desu can also mean 'no, thank you'." }
+  wakarimashita: { t: "wakarimashita", pos: phrase, en: ["understood", "all right", "okay"], forms: ["wakarimashita", "wakatta", "ryōkai", "ryoukai", "ryookai", "ryōkai desu", "ryoukai desu", "ryookai desu", "shōchi shimashita", "shouchi shimashita", "shoochi shimashita", "kashikomarimashita"], ex: ["Wakarimashita, sen-en de.", "All right, a thousand yen."], n: "Kashikomarimashita is what staff say to a customer." }
+  # cafe
+  chumon: { t: "chūmon", pos: noun, en: ["order", "an order"], forms: ["chūmon", "chuumon", "go-chūmon", "go-chuumon"], ex: ["Sumimasen, chūmon ii desu ka?", "Excuse me, may we order?"], n: "Chūmon onegaishimasu: 'we'd like to order'; the waiter asks go-chūmon wa?" }
+  ni_shimasu: { t: "ni shimasu", pos: phrase, en: ["I'll have", "I'll go for"], ex: ["Watashi wa kōhī ni shimasu.", "I'll have a coffee."], n: "After a noun: X ni shimasu, 'I decide on X'. Japanese has no word for 'a': kōhī is 'a coffee', 'coffee' and 'coffees'." }
+  kohi: { t: "kōhī", pos: noun, en: ["coffee"], forms: ["kōhī", "kouhii", "koohii", "kohii", "hotto kōhī", "hotto kouhii", "hotto koohii", "aisu kōhī", "aisu kouhii", "aisu koohii"], ex: ["Kōhī o futatsu kudasai.", "Two coffees, please."], n: "English loanwords take a Japanese shape: kōhī, 'coffee'. A kissaten is an old-style coffee house." }
+  ocha: { t: "o-cha", pos: noun, en: ["tea", "green tea"], forms: ["o-cha", "ocha", "ryokucha", "matcha", "kōcha", "koucha", "koocha"], ex: ["Atsui o-cha o kudasai.", "A hot green tea, please."], n: "O-cha is green tea; tea with milk is kōcha, 'red tea'." }
+  mizu: { t: "mizu", pos: noun, en: ["water"], forms: ["mizu", "o-mizu", "omizu", "o-hiya", "ohiya"], ex: ["O-mizu o kudasai.", "Some water, please."], n: "Water comes free in a Japanese restaurant, often iced (o-hiya)." }
+  biru: { t: "bīru", pos: noun, en: ["beer"], forms: ["bīru", "biiru", "nama bīru", "nama biiru", "nama"], ex: ["Nama bīru o futatsu.", "Two draught beers."], n: "Nama ('draught') alone is the beer order in an izakaya." }
+  nihonshu: { t: "nihonshu", pos: noun, en: ["sake", "rice wine"], forms: ["nihonshu", "o-sake", "osake"], ex: ["Nihonshu o hitotsu onegaishimasu.", "One sake, please."], n: "O-sake is any alcohol in Japanese; the rice wine is nihonshu." }
+  jusu: { t: "jūsu", pos: noun, en: ["juice", "soft drink"], forms: ["jūsu", "juusu", "orenji jūsu", "orenji juusu"], ex: ["Orenji jūsu o kudasai.", "An orange juice, please."], n: "Jūsu covers sweet soft drinks too." }
+  itadakimasu: { t: "itadakimasu", pos: interjection, en: ["thank you for this food", "let's eat"], ex: ["Oishisō! Itadakimasu!", "It looks delicious! Thank you for the food!"], n: "Said before eating, to the food and the people who made it; the waiter is thanked with arigatō gozaimasu." }
+  nani_ga_arimasu_ka: { t: "nani ga arimasu ka", pos: phrase, en: ["what is there", "what do you have"], forms: ["nani ga arimasu ka", "nani ga arimasu", "nani ga aru", "o-susume wa", "osusume wa", "o-susume", "osusume", "menyū", "menyuu"], ex: ["Kyō wa nani ga arimasu ka?", "What is there today?"], n: "O-susume wa? 'What do you recommend?' is the usual question in a Japanese restaurant." }
+  onigiri: { t: "onigiri", pos: noun, en: ["rice ball"], forms: ["onigiri", "o-nigiri", "omusubi"], ex: ["Ume no onigiri o futatsu kudasai.", "Two pickled-plum rice balls, please."], n: "Rice pressed round a filling and wrapped in seaweed: the convenience-store lunch." }
+  ramen: { t: "rāmen", pos: noun, en: ["ramen", "noodle soup"], forms: ["rāmen", "raamen"], ex: ["Miso rāmen o hitotsu.", "One miso ramen."] }
+  sushi: { t: "sushi", pos: noun, en: ["sushi"], forms: ["sushi", "o-sushi", "osushi"], ex: ["O-sushi ga tabetai desu.", "I'd like to eat sushi."] }
+  udon: { t: "udon", pos: noun, en: ["udon", "thick wheat noodles"], ex: ["Kitsune udon o kudasai.", "A fox udon (with fried tofu), please."] }
+  kare_raisu: { t: "karē raisu", pos: noun, en: ["curry and rice", "curry"], forms: ["karē raisu", "karee raisu", "karee"], ex: ["Karē raisu o onegaishimasu.", "Curry and rice, please."], n: "Karē alone is not listed: without its long vowel it reads as kare, 'he'." }
+  keki: { t: "kēki", pos: noun, en: ["cake"], forms: ["kēki", "keeki", "chīzu kēki", "chiizu keeki", "shōto kēki", "shouto keeki", "shooto keeki"], ex: ["Kēki to kōhī o kudasai.", "A cake and a coffee, please."] }
+  sorekara: { t: "sore kara", pos: phrase, en: ["and also", "and then", "after that"], forms: ["sore kara", "sorekara", "sore to"], ex: ["Sore kara, o-mizu mo kudasai.", "And some water too, please."] }
+  mo_onegaishimasu: { t: "mo onegaishimasu", pos: phrase, en: ["... too, please", "also, please"], forms: ["mo onegaishimasu", "mo onegai shimasu", "mo kudasai", "mo onegai"], ex: ["Kēki mo onegaishimasu.", "A cake too, please."], n: "Mo, 'also', takes the place of o: kōhī o kudasai, kēki mo kudasai." }
+  oishii: { t: "oishii", pos: adjective, en: ["delicious", "tasty", "good"], ex: ["Kono rāmen wa oishii desu.", "This ramen is delicious."] }
+  oishikatta: { t: "oishikatta", pos: adjective, en: ["it was delicious", "it was good"], ex: ["Totemo oishikatta desu.", "It was very good."], n: "The past of oishii: -i becomes -katta." }
+  gochisosama_deshita: { t: "gochisōsama deshita", pos: phrase, en: ["thank you for the meal", "that was a feast"], forms: ["gochisōsama deshita", "gochisousama deshita", "gochisoosama deshita", "gochisō sama deshita", "gochisou sama deshita", "gochisoo sama deshita", "gochisōsama", "gochisousama", "gochisoosama", "gochisō sama", "gochisou sama", "gochisoo sama"], ex: ["Gochisōsama deshita! Oishikatta desu.", "Thank you for the meal! It was delicious."], n: "Said when you finish eating, and to the staff on the way out." }
+  okaikei: { t: "o-kaikei", pos: noun, en: ["the bill", "the check"], forms: ["o-kaikei", "okaikei", "kaikei", "o-kanjō", "o-kanjou", "o-kanjoo", "okanjō", "okanjou", "okanjoo", "kanjō", "kanjou", "kanjoo"], ex: ["O-kaikei o onegaishimasu.", "The bill, please."], n: "Often you take the slip to the till by the door; there is no tipping." }
+  kado_de: { t: "kādo de", pos: phrase, en: ["by card", "with a card"], forms: ["kādo de", "kaado de", "kādo wa", "kaado wa", "kādo ga", "kaado ga", "kaado", "kurejitto kādo", "kurejitto kaado", "kurejitto"], ex: ["Kādo de onegaishimasu.", "By card, please."], n: "Kādo is listed alone only as kaado: without its long vowel it reads as kado, 'corner'." }
+  haraemasu_ka: { t: "haraemasu ka", pos: phrase, en: ["can I pay", "can I use"], forms: ["haraemasu ka", "haraemasu", "tsukaemasu ka", "tsukaemasu", "shiharai"], ex: ["Genkin de haraemasu ka?", "Can I pay in cash?"], n: "Tsukaemasu ka? 'Can I use (it)?': kādo wa tsukaemasu ka?" }
+  # likes
+  suki: { t: "suki", pos: adjective, en: ["I like", "liked", "fond of"], forms: ["suki", "suki desu", "suki da"], ex: ["Neko ga suki desu.", "I like cats."], n: "The thing liked takes ga: kōhī ga suki desu. There is no plural: neko is one cat or many." }
+  suki_ja_nai: { t: "suki ja nai desu", pos: phrase, en: ["I don't like"], forms: ["suki ja nai desu", "suki ja nai", "suki janai", "suki ja arimasen", "suki dewa arimasen", "suki de wa arimasen", "suki dewa nai"], ex: ["Bīru wa amari suki ja nai desu.", "I don't much like beer."], n: "Amari ... suki ja nai, 'not much', is the gentler way to say it." }
+  suki_desu_ka: { t: "suki desu ka", pos: phrase, en: ["do you like"], forms: ["suki desu ka", "suki ka", "o-suki desu ka", "osuki desu ka"], ex: ["Nihonshu wa suki desu ka?", "Do you like sake?"] }
+  daisuki: { t: "daisuki", pos: adjective, en: ["I love", "I really like"], forms: ["daisuki", "dai suki"], ex: ["Chokorēto ga daisuki desu.", "I love chocolate."], n: "For things and for people: daisuki is how most Japanese say 'love'." }
+  kirai: { t: "kirai", pos: adjective, en: ["I dislike", "I hate"], ex: ["Getsuyōbi ga kirai desu.", "I hate Mondays."], n: "Blunt; nigate is the politer way to say it." }
+  daikirai: { t: "daikirai", pos: adjective, en: ["I hate", "I can't stand"], forms: ["daikirai", "dai kirai"], ex: ["Matsu no wa daikirai desu.", "I hate waiting."] }
+  nigate: { t: "nigate", pos: adjective, en: ["I'm not keen on", "I can't stand", "I'm bad at"], ex: ["Nattō wa chotto nigate desu.", "I'm not keen on natto."], n: "The polite way to say you dislike something; also 'weak at' a skill." }
+  totemo: { t: "totemo", pos: adverb, en: ["very", "very much", "really"], forms: ["totemo", "sugoku", "hontō ni", "hontou ni", "hontoo ni"], ex: ["Totemo suki desu.", "I like it very much."] }
+  zenzen: { t: "zenzen", pos: adverb, en: ["not at all", "never"], forms: ["zenzen", "mattaku"], ex: ["Zenzen suki ja nai desu.", "I don't like it at all."], n: "With a negative: zenzen ... nai. Alone, as an answer: 'not at all'." }
+  no_ho_ga: { t: "no hō ga", pos: phrase, en: ["I prefer", "rather"], forms: ["no hō ga", "no hou ga", "no hoo ga", "hō ga ii", "hou ga ii", "hoo ga ii", "hō ga suki", "hou ga suki", "hoo ga suki"], ex: ["Kōhī yori o-cha no hō ga suki desu.", "I prefer tea to coffee."], n: "X yori Y no hō ga suki desu: 'I like Y more than X'." }
+  doshite: { t: "dōshite", pos: adverb, en: ["why"], forms: ["dōshite", "doushite", "dooshite", "naze", "nande"], ex: ["Dōshite o-cha no hō ga suki desu ka?", "Why do you prefer tea?"], n: "The answer ends in kara: amai kara desu, 'because it is sweet'." }
+  watashi_mo: { t: "watashi mo", pos: phrase, en: ["me too", "me neither", "so do I"], forms: ["watashi mo", "boku mo", "atashi mo", "ore mo"], ex: ["Umi ga daisuki desu. Watashi mo!", "I love the sea. Me too!"], n: "Mo answers both: watashi mo suki desu (me too), watashi mo suki ja nai desu (me neither)." }

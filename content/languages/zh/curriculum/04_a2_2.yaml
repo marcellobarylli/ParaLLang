@@ -111,7 +111,7 @@ vocabulary:
   pianyi: { t: "piányi", pos: adjective, en: ["cheap", "cheaper"], forms: ["piányi", "pián yi", "piányi yìdiǎn"], ex: ["Gōngjiāochē bǐ chūzūchē piányi.", "The bus is cheaper than a taxi."], n: "'Piányi yìdiǎn ba?' is how to haggle: 'a bit cheaper?'." }
   gui: { t: "guì", pos: adjective, en: ["expensive", "dear"], forms: ["guì", "bǐjiào guì"], ex: ["Fēijī piào bǐ huǒchē piào guì.", "A plane ticket is dearer than a train ticket."] }
   geng_hao: { t: "gèng hǎo", pos: phrase, en: ["better"], forms: ["gèng hǎo", "hǎo yìdiǎn", "hǎo yìxiē", "bǐjiào hǎo"], ex: ["Jīntiān wǒ hǎo yìdiǎn le.", "I feel a bit better today."] }
-  geng_cha: { t: "gèng chà", pos: phrase, en: ["worse"], forms: ["gèng chà", "chà yìdiǎn", "gèng bù hǎo", "gèng zāogāo", "bù rú"], ex: ["Jīntiān wǒ gèng bù shūfu le.", "I feel worse today."], n: "A bù rú B: A is not as good as B." }
+  geng_cha: { t: "gèng chà", pos: phrase, en: ["worse"], forms: ["gèng chà", "chà yìdiǎn", "gèng bù hǎo", "gèng zāogāo", "bù rú"], ex: ["Jīntiān de tiānqì gèng chà.", "The weather is worse today."], n: "A bù rú B: A is not as good as B." }
   zui_hao: { t: "zuì hǎo", pos: phrase, en: ["the best"], forms: ["zuì hǎo", "zuì hǎo de", "zuì bàng", "zuì hǎochī", "zuì hǎochī de"], ex: ["Zhè jiā de miàntiáo zuì hǎochī.", "This place's noodles are the best."] }
   zui: { t: "zuì", pos: adverb, en: ["most", "the most"], forms: ["zuì"], ex: ["Zhè ge zuì piányi.", "This one is the cheapest."], n: "Zuì before any adjective makes the superlative: zuì dà, zuì guì." }
   yiyang: { t: "yíyàng", pos: adjective, en: ["the same", "as ... as"], forms: ["yíyàng", "yí yàng", "yíyàng de"], ex: ["Wǒ gēn wǒ māma yíyàng gāo.", "I am as tall as my mother."], n: "A gēn B yíyàng + adjective: 'A is as ... as B'." }
@@ -147,7 +147,7 @@ vocabulary:
   hui: { t: "huì", pos: verb, en: ["will", "is likely to"], forms: ["huì"], ex: ["Tā huì lái de.", "He will come."], n: "Huì is also 'can' for a skill learned: wǒ huì shuō Zhōngwén." }
   luxing: { t: "lǚxíng", pos: verb, en: ["to travel", "a trip"], forms: ["lǚxíng", "lǚ xíng", "lvxing", "lv xing", "qù lǚxíng"], ex: ["Wǒmen zuò huǒchē qù lǚxíng.", "We will travel by train."], n: "Typed without marks, ü is often v: lvxing." }
   dasuan_zuo_shenme: { t: "dǎsuan zuò shénme", pos: phrase, en: ["what will you do", "what are you going to do"], forms: ["dǎsuan zuò shénme", "dǎsuan gàn shénme", "huì zuò shénme", "yào zuò shénme"], ex: ["Nǐ míngtiān dǎsuan zuò shénme?", "What will you do tomorrow?"] }
-  hen_nan: { t: "hěn nán", pos: phrase, en: ["difficult", "it is hard"], forms: ["hěn nán", "tài nán le", "fēicháng nán", "bù nán"], ex: ["Zhōngwén bú tài nán.", "Chinese is not too hard."] }
+  hen_nan: { t: "hěn nán", pos: phrase, en: ["difficult", "it is hard"], forms: ["hěn nán", "tài nán le", "fēicháng nán", "bù nán"], ex: ["Zhōngwén hěn nán ma?", "Is Chinese hard?"] }
   rongyi: { t: "róngyì", pos: adjective, en: ["easy"], forms: ["róngyì", "hěn róngyì", "bù róngyì"], ex: ["Zhè ge wèntí hěn róngyì.", "This question is easy."] }
   keneng: { t: "kěnéng", pos: adverb, en: ["perhaps", "maybe", "probably"], forms: ["kěnéng", "kě néng", "yěxǔ", "yě xǔ", "dàgài", "huòxǔ"], ex: ["Wǒ kěnéng yě qù.", "Perhaps I'll go too."], n: "'Dàgài' is 'probably'." }
   wo_baozheng: { t: "wǒ bǎozhèng", pos: phrase, en: ["I promise"], forms: ["wǒ bǎozhèng", "bǎozhèng", "wǒ dāying nǐ", "dāying nǐ", "wǒ dāying nín"], ex: ["Wǒ bǎozhèng míngtiān lái.", "I promise to come tomorrow."], n: "'Wǒ dāying nǐ' is 'I give you my word'." }
@@ -163,7 +163,7 @@ vocabulary:
   hushi: { t: "hùshi", pos: noun, en: ["nurse"], forms: ["hùshi", "hù shi"], ex: ["Tā zài yīyuàn dāng hùshi.", "She works as a nurse in a hospital."] }
   gongsi: { t: "gōngsī", pos: noun, en: ["company", "office"], forms: ["gōngsī", "gōng sī", "bàngōngshì"], ex: ["Wǒ zài yì jiā xiǎo gōngsī gōngzuò.", "I work for a small company."], n: "Zài + the place + gōngzuò: the place comes before the verb." }
   xuexiao: { t: "xuéxiào", pos: noun, en: ["school"], forms: ["xuéxiào", "xué xiào"], ex: ["Wǒ zài xuéxiào gōngzuò.", "I work in a school."] }
-  shangdian: { t: "shāngdiàn", pos: noun, en: ["shop", "store"], forms: ["shāngdiàn", "shāng diàn"], ex: ["Wǒ zài yì jiā xié diàn gōngzuò.", "I work in a shoe shop."], n: "A particular kind of shop is ... diàn: xié diàn, shū diàn." }
+  shangdian: { t: "shāngdiàn", pos: noun, en: ["shop", "store"], forms: ["shāngdiàn", "shāng diàn"], ex: ["Wǒ zài yì jiā shāngdiàn gōngzuò.", "I work in a shop."], n: "A particular kind of shop is ... diàn: xié diàn, shū diàn." }
   yiyuan: { t: "yīyuàn", pos: noun, en: ["hospital"], forms: ["yīyuàn"], ex: ["Wǒ zài yīyuàn gōngzuò.", "I work in a hospital."] }
   zai_jia_gongzuo: { t: "zài jiā gōngzuò", pos: phrase, en: ["to work from home", "I work from home"], forms: ["zài jiā gōngzuò", "zàijiā gōngzuò", "zài jiā shàngbān", "zài jiā bàngōng"], ex: ["Xīngqīwǔ wǒ zài jiā gōngzuò.", "On Fridays I work from home."] }
   shangban: { t: "shàngbān", pos: verb, en: ["to start work", "to go to work"], forms: ["shàngbān", "shàng bān", "kāishǐ gōngzuò", "kāishǐ shàngbān"], ex: ["Wǒ bā diǎn bàn shàngbān.", "I start work at half past eight."] }
@@ -173,5 +173,5 @@ vocabulary:
   yinwei: { t: "yīnwèi", pos: conjunction, en: ["because"], forms: ["yīnwèi", "yīn wèi"], ex: ["Wǒ bù qù, yīnwèi wǒ hěn lèi.", "I'm not going, because I'm tired."], n: "Often paired: yīnwèi ..., suǒyǐ ... (because ..., so ...)." }
   you_yisi: { t: "yǒu yìsi", pos: adjective, en: ["interesting", "fun"], forms: ["yǒu yìsi", "yǒuyìsi", "hěn yǒu yìsi", "méi yìsi"], ex: ["Zhè běn shū hěn yǒu yìsi.", "This book is very interesting."], n: "'Méi yìsi' is 'boring'." }
   youyong: { t: "yǒuyòng", pos: adjective, en: ["useful"], forms: ["yǒuyòng", "yǒu yòng", "hěn yǒuyòng"], ex: ["Zhè ge gōngzuò hěn yǒuyòng.", "This job is useful."] }
-  gongzi_gao: { t: "gōngzī gāo", pos: phrase, en: ["well paid", "the pay is high"], forms: ["gōngzī gāo", "gōngzī hěn gāo", "gōngzī bú cuò", "zhuàn qián duō", "zhèng qián duō"], ex: ["Zhè ge gōngzuò gōngzī bù gāo.", "This job is not well paid."] }
+  gongzi_gao: { t: "gōngzī gāo", pos: phrase, en: ["well paid", "the pay is high"], forms: ["gōngzī gāo", "gōngzī hěn gāo", "gōngzī bú cuò", "zhuàn qián duō", "zhèng qián duō"], ex: ["Zhè ge gōngzuò gōngzī hěn gāo.", "This job is well paid."] }
   xiang_dang_shenme: { t: "xiǎng dāng shénme", pos: phrase, en: ["what did you want to be", "what do you want to be"], forms: ["xiǎng dāng shénme", "xiǎng chéngwéi shénme", "xiǎng zuò shénme gōngzuò"], ex: ["Nǐ xiǎo shíhou xiǎng dāng shénme?", "What did you want to be when you were little?"], n: "Zhǎngdà yǐhòu is 'when I grow up'." }
