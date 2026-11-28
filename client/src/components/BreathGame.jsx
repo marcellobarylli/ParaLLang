@@ -11,7 +11,8 @@ import Narration from './Narration.jsx';
 const FADE_MS = 700;
 const GOLD = '228 184 71';
 const GOLD_HI = '246 220 140';
-const INK = '236 236 228';
+const TURMERIC = '226 150 16';
+const INK ='236 236 228';
 const TAU = Math.PI * 2;
 
 export const browserFrames = () => ({
@@ -82,11 +83,12 @@ function draw(context, game, view) {
     const life = mark.age / BREATH.markFor;
     const strength = (mark.grade === 'perfect' ? 0.42 : 0.2) * (1 - life) ** 2;
     const radius = body + life * ring * 0.9;
+    const tint = mark.grade === 'perfect' ? TURMERIC : GOLD_HI; // the best moment goes out as a turmeric circle
     context.save();
-    context.shadowColor = `rgb(${GOLD_HI} / ${strength})`;
+    context.shadowColor = `rgb(${tint} / ${strength})`;
     context.shadowBlur = 18;
     for (const [width, share] of [[14, 0.22], [5, 0.4], [1.5, 0.7]]) { // a band that is brightest in its middle, with no edge
-      context.strokeStyle = `rgb(${GOLD_HI} / ${strength * share})`;
+      context.strokeStyle = `rgb(${tint} / ${strength * share})`;
       context.lineWidth = width;
       context.beginPath();
       context.arc(cx, cy, radius, 0, TAU);
