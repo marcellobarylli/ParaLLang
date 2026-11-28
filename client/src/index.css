@@ -153,6 +153,18 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .breath-intro-card .narration { margin: 0; }
 .breath-intro-card small { color: #b9bbb4; }
 @keyframes breath-intro-in { from { opacity: 0; } to { opacity: 1; } }
+/* Round 227: the shooting game of round 203, one of the choices of "While you wait". It covers the conversation panel
+   with an opaque field (over the panel's own opacity) and goes the same way; on the road's walk the field is clear, so
+   the walk shows through. One life, so no hearts: only the score. */
+.wait-game { position: absolute; inset: 0; z-index: 6; overflow: hidden; background: #1a1c1b; opacity: 0; transition: opacity .42s ease; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; cursor: ew-resize; }
+.wait-game.shown { opacity: 1; }
+.road-breath .wait-game { background: none; }
+.wait-game-field { position: absolute; inset: 0; display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.wait-game-hud, .wait-game-status { position: absolute; left: 0; right: 0; margin: 0; padding: 0 .9rem; pointer-events: none; text-shadow: 1px 1px 0 #000; }
+.wait-game-hud { top: .55rem; display: flex; justify-content: flex-end; align-items: center; font-weight: 700; }
+.wait-game-score { color: var(--gold); }
+.wait-game-status { top: 2.1rem; color: var(--dim); font-size: .82rem; text-align: center; }
+.wait-game.lost .wait-game-status { top: 42%; color: var(--ink); font-size: .95rem; }
 .overlay { position: absolute; inset: 0; z-index: 8; overflow-y: auto; overscroll-behavior: contain; background: rgb(22 23 22 / .96); padding-top: max(.5rem, env(safe-area-inset-top)); padding-bottom: calc(env(safe-area-inset-bottom) + var(--bottom-gap, 0px)); font-size: .92rem; text-shadow: 1px 1px 0 #000; }
 
 @media (min-width: 1100px) {

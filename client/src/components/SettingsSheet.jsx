@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IMMERSION, NARRATOR_VOICES, PANEL_OPACITY, VOLUME, clampImmersion, clampPanelOpacity, volumesOf } from '../display.js';
+import { IMMERSION, NARRATOR_VOICES, PANEL_OPACITY, VOLUME, WAIT_MODES, clampImmersion, clampPanelOpacity, volumesOf } from '../display.js';
 import { BUILD_ID } from '../build.js';
 import { requestTiltPermission } from '../scene/tilt.js';
 import { describeViewport, latestBuild, measureViewport, reloadPage } from '../viewport.js';
@@ -75,7 +75,7 @@ export function jumpTargets(curriculum, streamlined = true) {
   return targets;
 }
 
-export default function SettingsSheet({ settings, onSave, onClose, dev = false, onDev = null, curriculum = null, onJump = null, jumping = false, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, breathing = true, onBreathing = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, narratorVoice = NARRATOR_VOICES[0].id, onNarratorVoice = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
+export default function SettingsSheet({ settings, onSave, onClose, dev = false, onDev = null, curriculum = null, onJump = null, jumping = false, panelOpacity = PANEL_OPACITY.default, onPanelOpacity, tiltLook = false, onTiltLook, beginner = true, onBeginner, light = true, onLight, follow = true, onFollow = null, waitMode = WAIT_MODES[0].id, onWaitMode = null, glitch = false, onGlitch = null, streamlined = true, onStreamlined, immersion = IMMERSION.default, onImmersion, immersionAuto = false, onImmersionAuto = null, languageName = null, music = true, onMusic, musicSupported = true, voices = true, onVoices, narrator = true, onNarrator = null, narratorVoice = NARRATOR_VOICES[0].id, onNarratorVoice = null, speechSupport = { speak: true, listen: true }, volume = null, onVolume = null, site = SITE, savedAt = null, onExportCopy = null, onImportCopy = null, saveStore = null }) {
   const immersionPercent = Math.round(clampImmersion(immersion) * 100);
   const [serverUrl, setServerUrl] = useState(settings.serverUrl);
   const [token, setToken] = useState(settings.token);
@@ -232,7 +232,7 @@ export default function SettingsSheet({ settings, onSave, onClose, dev = false, 
             )}
           </Group>
         )}
-        {(onPanelOpacity || onTiltLook || onFollow || onBreathing || onGlitch) && (
+        {(onPanelOpacity || onTiltLook || onFollow || onWaitMode || onGlitch) && (
           <Group title="Display and controls">
             {onFollow && (
               <>
@@ -274,14 +274,19 @@ export default function SettingsSheet({ settings, onSave, onClose, dev = false, 
                 <small>In Ta Prohm, The Kiln and on Micromort Mountain the wind is allowed to pull the trees' leaves into long shards, more the harder it blows. It began as a fault. It applies at once.</small>
               </>
             )}
-            {/* Round 214: on unless switched off. */}
-            {onBreathing && (
+            {/* Round 214: the breathing, on unless switched off. Round 227: one of the choices of "While you wait". */}
+            {onWaitMode && (
               <>
-                <label className="setting-check" htmlFor="settings-breathing">
-                  <input id="settings-breathing" type="checkbox" checked={breathing} onChange={(event) => onBreathing(event.target.checked)} />
-                  <span>Breathe while you wait</span>
-                </label>
-                <small>When you send an answer, the conversation fades and a slow breath takes its place: four seconds in, six out. Hold the panel while the light swells, let go where the ring glows, and press again where it glows next. There are at least three breaths, the reply waits for the last one to be out, and nothing is counted. Off, the reply shows as soon as it is ready.</small>
+                <label htmlFor="settings-wait">While you wait</label>
+                <select id="settings-wait" value={waitMode} onChange={(event) => onWaitMode(event.target.value)}>
+                  {WAIT_MODES.map((each) => <option key={each.id} value={each.id}>{each.label}</option>)}
+                  <option value="none">Nothing</option>
+                </select>
+                <small>{waitMode === 'invaders'
+                  ? 'When you send an answer, the conversation is covered by a small game: drag left and right to move a figure that fires without pause at invaders coming down in a stream. One that gets past you loses the game, and you wait for the reply as it is. When the reply is ready no more set out, and the panel comes back once the last are dealt with.'
+                  : waitMode === 'none'
+                    ? 'Nothing is played while you wait: the reply shows as soon as it is ready.'
+                    : 'When you send an answer, the conversation fades and a slow breath takes its place: four seconds in, six out. Hold the panel while the light swells, let go where the ring glows, and press again where it glows next. There are at least three breaths, the reply waits for the last one to be out, and nothing is counted.'}</small>
               </>
             )}
           </Group>

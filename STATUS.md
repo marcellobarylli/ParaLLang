@@ -34,6 +34,15 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
+## Addendum 2026-11-28: round 227, "While you wait": Meditation or Space Invaders
+
+Settings, "Display and controls", has a "While you wait" dropdown in place of the breathing's checkbox: Meditation (the
+default), Space Invaders (round 203's game, back) or Nothing. The game is now harder: one life and no hearts (the first
+invader past the figure loses the game and the player waits for the reply), and the invaders 10 % faster, in speed and
+in how often they set out. Tests pass; seen in headless Chromium at phone size, **not on a phone**. The road's walk
+with Space Invaders was not played. [Architecture](docs/rounds/227/architecture.md),
+[findings](docs/rounds/227/findings.md).
+
 ## Addendum 2026-11-28: round 226, the breath in is pale blue
 
 In the breathing, "in" and "out" are larger (22 px), the breath in is pale blue (its stretch, its word, its ripple and

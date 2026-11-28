@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createLearningApi } from '../api/encounter.js';
 import { loadSettings, saveSettings as persistSettings, settingsProblem, SAME_ORIGIN_API } from '../api/settings.js';
-import { LEVELS, clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf } from '../display.js';
+import { LEVELS, clampImmersion, clampVolume, immersionOf, loadDisplay, saveDisplay, volumesOf, waitModeOf } from '../display.js';
 import { LANGUAGE_KEY, LEVEL_KEY, NEW_GAME_KEY, SHARE_KEY, chooseSlot, clearSlot, currentSlot, learnerOf, setSlotLanguage, slotSummaries, slottedStorage } from '../slots.js';
 import { unexploredSites } from '../dungeonModel.js';
 import { createRoadSlice } from './roadSlice.js';
@@ -775,6 +775,13 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       setBreathing: (on) => {
         set({ display: persist({ ...get().display, breathing: on !== false }) });
         if (on === false && get().roadBreathing) get().roadBreathed(); // round 218: switched off mid-walk, it ends now
+      },
+      // Round 227: "While you wait": 'meditation', 'invaders' or 'none' (the breathing's switch is then off; the mode is kept).
+      setWaitMode: (value) => {
+        const on = value !== 'none';
+        const display = get().display;
+        set({ display: persist({ ...display, breathing: on, waitMode: on ? waitModeOf(value) : waitModeOf(display?.waitMode) }) });
+        if (!on && get().roadBreathing) get().roadBreathed();
       },
       // Round 214: something the page itself tells the player for the first time (the breathing) is entered in the
       // guidebook. Nothing waits for it: the note is taken when the server answers.

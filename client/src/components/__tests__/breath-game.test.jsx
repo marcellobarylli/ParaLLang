@@ -97,25 +97,31 @@ test('the few words before the first breathing: the guidebook entry, and a butto
   expect(onBegin).toHaveBeenCalledOnce();
 });
 
-test('the breathing is on unless switched off in Settings, and the switch is kept in this browser', () => {
+test('the breathing is on unless switched off in Settings ("While you wait"), and the choice is kept in this browser', () => {
   const values = new Map();
   const storage = { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } };
   expect(loadDisplay(storage).breathing).toBe(true);
-  values.set('parallang.display', JSON.stringify({ waitGame: false })); // a display saved before this round: on, whatever the old game's switch said
+  expect(loadDisplay(storage).waitMode).toBe('meditation');
+  values.set('parallang.display', JSON.stringify({ waitGame: false })); // a display saved before round 214: on, whatever the old game's switch said
   expect(loadDisplay(storage).breathing).toBe(true);
   expect('waitGame' in loadDisplay(storage)).toBe(false);
   const store = createGameStore({ storage, dungeon: DUNGEON });
   expect(store.getState().display.breathing).toBe(true);
-  const view = () => render(<SettingsSheet settings={{ serverUrl: '', token: '' }} onSave={() => {}} onClose={() => {}} breathing={store.getState().display.breathing} onBreathing={store.getState().setBreathing} />);
+  const view = () => {
+    const { display, setWaitMode } = store.getState();
+    return render(<SettingsSheet settings={{ serverUrl: '', token: '' }} onSave={() => {}} onClose={() => {}} waitMode={display.breathing ? display.waitMode : 'none'} onWaitMode={setWaitMode} />);
+  };
   const first = view();
-  const box = screen.getByLabelText('Breathe while you wait');
-  expect(box.checked).toBe(true);
-  act(() => box.click());
+  const box = screen.getByLabelText('While you wait');
+  expect([...box.options].map((option) => option.textContent)).toEqual(['Meditation', 'Space Invaders', 'Nothing']);
+  expect(box.value).toBe('meditation');
+  act(() => { fireEvent.change(box, { target: { value: 'none' } }); });
   expect(store.getState().display.breathing).toBe(false);
   expect(loadDisplay(storage).breathing).toBe(false);
+  expect(loadDisplay(storage).waitMode).toBe('meditation'); // the mode is kept for when it is switched on again
   first.unmount();
   view();
-  expect(screen.getByLabelText('Breathe while you wait').checked).toBe(false);
+  expect(screen.getByLabelText('While you wait').value).toBe('none');
 });
 
 // Round 214: where the ring's points are and which way the light goes. Canvas angles: 0 is east, growing clockwise.

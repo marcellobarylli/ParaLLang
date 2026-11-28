@@ -7,13 +7,14 @@ import InputBar from './InputBar.jsx';
 import CorrectionCard from './CorrectionCard.jsx';
 import SheetHandle from './SheetHandle.jsx';
 import BreathGame, { BreathIntro } from './BreathGame.jsx';
+import WaitGame from './WaitGame.jsx';
 import { browserSpeech } from '../speech.js';
 import { updateIfNewer } from '../viewport.js';
 import { BUILD_ID } from '../build.js';
 import { narrativeParts, narratorOn, useReadPassage } from '../narratorVoice.js';
 import { browserAmbience } from '../ambience.js';
 import { TITLE_MUSIC, browserTitleMusic } from '../titleMusic.js';
-import { LEVELS, volumesOf } from '../display.js';
+import { LEVELS, volumesOf, waitModeOf } from '../display.js';
 import Spellbook from './Spellbook.jsx';
 import ReviewPanel from './ReviewPanel.jsx';
 import SettingsSheet from './SettingsSheet.jsx';
@@ -419,7 +420,9 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   // breath is drawn over it (BreathGame.jsx). The reply that arrives under it waits: it is shown, read aloud and
   // followed only once the breathing has ended, on a breath out. The first time in a game, the guidebook's entry on
   // it is told first ('telling'), and entered.
-  const [breath, setBreath] = useState(null); // null | 'telling' | 'breathing'
+  // Round 227: Settings' "While you wait" also offers round 203's game ('invaders': WaitGame.jsx, one life); the
+  // same rules hold for it: the reply waits under it and is shown once it has gone. It has no guidebook entry.
+  const [breath, setBreath] = useState(null); // null | 'telling' | 'breathing' | 'invaders'
   useEffect(() => { setBreath(null); }, [encounter?.id]);
   // Round 218: switched off in Settings while it runs, it ends at once and the reply is shown.
   const breathingWanted = state.display?.breathing !== false;
@@ -428,13 +431,14 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   const toldRef = useRef(null); // the entry while it is being told (the store stops offering it once it is entered)
   const startBreath = () => {
     if (state.display?.breathing === false) return;
+    if (state.display?.waitMode === 'invaders') { setBreath('invaders'); return; }
     toldRef.current = breathEntry;
     setBreath(breathEntry ? 'telling' : 'breathing');
     if (breathEntry) state.enterGuide?.('breath_wait');
   };
   // A request that fails ends the breathing as a reply does; its message waits with it (the screen shows none while
   // `breathingNow` is set).
-  const breathingNow = breath === 'breathing';
+  const breathingNow = breath === 'breathing' || breath === 'invaders';
   useEffect(() => { state.setBreathingNow?.(breathingNow); return () => state.setBreathingNow?.(false); }, [breathingNow]);
   const shownKeyRef = useRef(lineKey);
   if (!breath) shownKeyRef.current = lineKey;
@@ -572,6 +576,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
       )}
       {breath === 'telling' && toldRef.current && <BreathIntro entry={toldRef.current} onBegin={() => setBreath('breathing')} />}
       {breath === 'breathing' && <BreathGame ready={!isLoading} onDone={() => setBreath(null)} />}
+      {breath === 'invaders' && <WaitGame ready={!isLoading} name={name} onDone={() => setBreath(null)} />}
     </section>
   );
 }
@@ -598,7 +603,8 @@ function VictoryCard({ state }) {
 // starts with the walk; the conversation opens once it has ended (roadSlice.js `roadBreathed`). The first time in a
 // game, the guidebook's entry on it is told first.
 function RoadBreath({ state }) {
-  const entry = state.guideNote?.ahead?.find((item) => item.event === 'breath_wait') ?? null;
+  const [invaders] = useState(() => state.display?.waitMode === 'invaders'); // round 227: chosen when the walk starts
+  const entry = invaders ? null : state.guideNote?.ahead?.find((item) => item.event === 'breath_wait') ?? null;
   const toldRef = useRef(entry);
   const [stage, setStage] = useState(entry ? 'telling' : 'breathing');
   useEffect(() => { if (entry) state.enterGuide?.('breath_wait'); }, []);
@@ -607,7 +613,9 @@ function RoadBreath({ state }) {
   return (
     <div className="road-breath">
       {stage === 'telling' && toldRef.current && <BreathIntro entry={toldRef.current} onBegin={() => setStage('breathing')} />}
-      {stage === 'breathing' && <BreathGame ready={ready} onDone={() => state.roadBreathed?.()} />}
+      {stage === 'breathing' && (invaders
+        ? <WaitGame ready={ready} onDone={() => state.roadBreathed?.()} />
+        : <BreathGame ready={ready} onDone={() => state.roadBreathed?.()} />)}
     </div>
   );
 }
@@ -875,7 +883,7 @@ export default function DungeonScreen({ useStore, speech = browserSpeech(), ambi
       {state.settingsOpen && <SettingsSheet settings={state.settings} onSave={state.saveSettings} onClose={state.closeSettings} panelOpacity={state.display?.panelOpacity} onPanelOpacity={state.setPanelOpacity} tiltLook={state.display?.tiltLook === true} onTiltLook={state.setTiltLook}
         beginner={state.display?.beginner !== false} onBeginner={state.setBeginner}
         light={state.display?.light === true} onLight={state.setLight}
-        follow={state.display?.follow !== false} onFollow={state.setFollow} breathing={state.display?.breathing !== false} onBreathing={state.setBreathing} glitch={state.display?.glitch === true} onGlitch={state.setGlitch}
+        follow={state.display?.follow !== false} onFollow={state.setFollow} waitMode={state.display?.breathing === false ? 'none' : waitModeOf(state.display?.waitMode)} onWaitMode={state.setWaitMode} glitch={state.display?.glitch === true} onGlitch={state.setGlitch}
         dev={state.display?.dev === true} onDev={state.setDev} curriculum={state.curriculum} onJump={state.devJump} jumping={state.devJumping}
         streamlined={state.display?.streamlined !== false} onStreamlined={state.setStreamlined}
         immersion={state.display?.immersion} onImmersion={state.setImmersion} immersionAuto={state.display?.immersionAuto !== false} onImmersionAuto={state.setImmersionAuto} languageName={state.language?.name}
