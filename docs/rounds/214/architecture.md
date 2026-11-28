@@ -31,7 +31,7 @@ be built, merged and deployed.
    the end of the last breath out.
 4. **What is drawn.** A light in the middle swells with the breath in and sinks with the breath out, eased so that it
    slows into each turn, and is brighter while the panel is held. Round it is a thin ring; a small light goes once
-   round it for each breath, clockwise from the upper left (45 degrees anticlockwise of north; amended 2026-11-28). Two
+   round it for each breath, clockwise from the top (the breath in; the light itself sets off 45 degrees before it; amended 2026-11-28). Two
    stretches of the ring glow: one 40 % of the way round, where the breath turns (let go), and one at the start, where
    the next begins (press). Each stretch is the window of
    tolerance, fading at both ends, with a brighter point in its middle for the best moment. Gold and the ink colour
@@ -88,8 +88,8 @@ word. The wording reached this session through another session and was applied o
 
 ## Amendment (2026-11-28): where the light starts
 
-The owner asked for the breathing's start point to be 45 degrees anticlockwise of north. The ring's light, its "in"
-label and the press stretch are now at the upper left, and the light goes clockwise from there; the breath out begins
-144 degrees on, at the right. Only the angle moved: `BREATH_START` in `client/src/components/BreathGame.jsx`, with a test
-of where the light starts and which way it goes (`breath-game.test.jsx`). Seen in headless Chromium at phone size
-(the light just set off from the "in" at the upper left, then going round to the "out" at the right); not on a phone.
+Corrected the same day. An earlier amendment moved the points themselves (the "in" stretch to the upper left); that was
+a misreading. The points stay where the breathing guideline puts them: "in" at the top, "out" 144 degrees on (40 % of
+the way round, the 4 s in and 6 s out), each with a faint lowercase label just outside the ring. What the owner asked
+for is a lead-in: the light sets off **45 degrees before the "in"** (1.25 s, `BREATH.lead` in `breath.js`), so the
+player has a moment to prepare; no turn is judged during it. `BREATH_START` in `BreathGame.jsx` is the top again.

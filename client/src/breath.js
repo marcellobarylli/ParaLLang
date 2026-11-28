@@ -16,7 +16,7 @@ export const BREATH = Object.freeze({
   tolerance: 0.6, // seconds either side of a turn within which a press or a release is in time,
   perfect: 0.2, // and within which it is at the best moment
   markFor: 1.8, // seconds a kept turn's ripple lasts
-  lead: 15 / 360 * 10, // the light starts 15 degrees of the ring before the breath in, a moment to prepare
+  lead: 45 / 360 * 10, // the light starts 45 degrees of the ring before the breath in (1.25 s), a moment to prepare
   maxStep: 0.1,
 });
 export const BREATH_CYCLE = BREATH.inhale + BREATH.exhale;
