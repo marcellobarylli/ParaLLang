@@ -244,7 +244,7 @@ export default function SettingsSheet({ settings, onSave, onClose, panelOpacity 
                 <small>In Ta Prohm, The Kiln and on Micromort Mountain the wind is allowed to pull the trees' leaves into long shards, more the harder it blows. It began as a fault. It applies at once.</small>
               </>
             )}
-            {/* Round 213: on unless switched off. */}
+            {/* Round 214: on unless switched off. */}
             {onBreathing && (
               <>
                 <label className="setting-check" htmlFor="settings-breathing">

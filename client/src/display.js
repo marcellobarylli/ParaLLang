@@ -19,7 +19,7 @@
 // follow (round 190): whether a character's new reply is brought to the top of the conversation panel. On unless
 //   switched off (off, the panel stays where the player left it, round 140).
 // glitch (round 205): whether the wind may tear the legacy dungeons' leaves into shards (levelView.js). Off unless switched on.
-// breathing (round 213): whether the wait for a reply is breathed through over the conversation panel (breath.js).
+// breathing (round 214): whether the wait for a reply is breathed through over the conversation panel (breath.js).
 //   On unless switched off. It replaces round 203's `waitGame`, which is no longer read.
 // immersion (round 148): the share of a character's lines in the language being learned, 0.1 to 1. 1 unless moved.
 import { browserStorage } from './api/settings.js';

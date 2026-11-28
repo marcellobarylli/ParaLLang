@@ -10,7 +10,7 @@
 #             site_arrive  dungeon, site                       standing at a site of a dungeon
 #             truth_shown                                      (round 158) a passage with an untranslatable text was told
 #             journey_remarked                                 (round 163) the narrator remarked on a long journey shown whole
-#             breath_wait                                      (round 213) the first answer sent with the breathing on. The page
+#             breath_wait                                      (round 214) the first answer sent with the breathing on. The page
 #                                                              tells this one itself, before the first breathing, and
 #                                                              asks for it to be entered (narration.js, CLIENT_EVENTS)
 #   text    the entry, in English, in the narrator's voice. It may say how things are done here; like every other
@@ -57,7 +57,7 @@ entries:
       Each stretch of the road ends at a gate, and its keeper asks for what the stretch taught. No hint is given at
       a gate. A traveller who is turned back is sent to say a lesson again, and is then asked other questions.
 
-  # Round 213: told by the page before the first breathing of a game (the first answer sent), and entered then.
+  # Round 214: told by the page before the first breathing of a game (the first answer sent), and entered then.
   - id: the_breath
     title: A breath while you wait
     when: { event: breath_wait }

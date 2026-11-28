@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BREATH, BREATH_CYCLE, BREATH_TURN, breathLevel, breathProgress, newBreath, stepBreath } from '../breath.js';
 import Narration from './Narration.jsx';
 
-// Round 213: the breathing, drawn over the conversation panel while a reply is on its way. The panel does not go
+// Round 214: the breathing, drawn over the conversation panel while a reply is on its way. The panel does not go
 // away: its text fades and the panel itself turns more see-through (index.css, `.sheet.breathing`), and this is
 // drawn over it. Nothing is written on it: a light swells with the breath in and sinks with the breath out, and a
 // small light goes once round a ring for each breath, through two glowing stretches, one where the breath turns

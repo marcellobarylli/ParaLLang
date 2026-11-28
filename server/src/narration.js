@@ -47,7 +47,7 @@ export function entriesFor(entries, event, have = {}) {
   return entries.filter((entry) => matches(entry, event) && !Object.hasOwn(have, entry.id));
 }
 
-// Round 213: the events that the page tells of itself, because they happen there and the server never sees them. An
+// Round 214: the events that the page tells of itself, because they happen there and the server never sees them. An
 // entry entered by one is told by the page at that moment (and so is entered as read); until then every view carries
 // it, so that the page has its words when the moment comes.
 //   breath_wait   the first answer sent with the breathing on: the breath that takes the place of the wait

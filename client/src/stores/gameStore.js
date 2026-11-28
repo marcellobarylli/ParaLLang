@@ -324,7 +324,7 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       enterable: [...bundled.keys()], // round 133: the dungeons this client holds; a place opens only one of these
       runs: {}, // round 133: { [dungeonId]: { cleared, total, complete } }, as far as the server has been read
       progress: null,
-      breathingNow: false, // round 213: the breathing is being drawn over the conversation panel
+      breathingNow: false, // round 214: the breathing is being drawn over the conversation panel
       guideNote: null, // round 157: { count, unread }: the guidebook's size and the entries not yet read
       guidebook: null, // the guidebook as last read ({ entries, total }), while its panel is open
       narration: null, // round 156: the narrator's passage for the dungeon site the player stands at
@@ -734,10 +734,10 @@ export function createGameStore({ api: givenApi, storage: baseStorage = browserS
       setLight: (on) => set({ display: saveDisplay({ ...get().display, light: on === true }, storage) }), // round 198: light is the default
       setFollow: (on) => set({ display: saveDisplay({ ...get().display, follow: on !== false }, storage) }),
       setGlitch: (on) => set({ display: saveDisplay({ ...get().display, glitch: on === true }, storage) }), // round 205
-      // Round 213: the breathing while a reply is on its way.
+      // Round 214: the breathing while a reply is on its way.
       setBreathingNow: (on) => { if (get().breathingNow !== (on === true)) set({ breathingNow: on === true }); }, // while it is drawn: nothing is written over it
       setBreathing: (on) => set({ display: saveDisplay({ ...get().display, breathing: on !== false }, storage) }),
-      // Round 213: something the page itself tells the player for the first time (the breathing) is entered in the
+      // Round 214: something the page itself tells the player for the first time (the breathing) is entered in the
       // guidebook. Nothing waits for it: the note is taken when the server answers.
       enterGuide: (event) => {
         const { learnerId } = get();

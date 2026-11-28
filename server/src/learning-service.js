@@ -319,7 +319,7 @@ export class LearningService {
       .sort((a, b) => a.entry.at.localeCompare(b.entry.at) || a.index - b.index).map(({ entry }) => entry);
   }
   // What every view of a place carries: how many entries the learner has, and those not yet read, to be told there.
-  // Round 213: and, as `ahead`, the entries that the page itself will tell and enter (CLIENT_EVENTS), until it has.
+  // Round 214: and, as `ahead`, the entries that the page itself will tell and enter (CLIENT_EVENTS), until it has.
   guidebookNote(envelope) {
     const entries = this.guideEntries(envelope);
     const have = envelope.guidebook ?? {};
@@ -327,7 +327,7 @@ export class LearningService {
       .map((entry) => ({ id: entry.id, title: entry.title, segments: toSegments(entry.text, this.narrationPack), event: entry.when.event }));
     return { count: entries.length, unread: entries.filter((entry) => entry.unread), ...(ahead.length ? { ahead } : {}) };
   }
-  // Round 213: the page has told the player an entry of its own (the breathing, before the first one): it is entered,
+  // Round 214: the page has told the player an entry of its own (the breathing, before the first one): it is entered,
   // as read. Entering it again changes nothing.
   async enterGuidebook(learnerId, request) {
     assertLearnerId(learnerId);

@@ -34,7 +34,7 @@ The entry point for agents: the current state, how the project is logged, and th
   ([round 004 open items](docs/rounds/004/findings.md#open-items),
   [round 003 open items](docs/rounds/003/findings.md#open-items)).
 
-## Addendum 2026-11-28: round 213, a breath while a reply is awaited
+## Addendum 2026-11-28: round 214, a breath while a reply is awaited
 
 The shooting game of round 203 is gone. Sending an answer now starts a slow breath over the conversation panel, which
 thins so the place shows through and loses its text: four seconds in, six out (six breaths a minute). The player
@@ -43,7 +43,7 @@ leaves a soft ring, and nothing is counted. There are at least three breaths, th
 always ends on a breath out. On by default (Settings: "Breathe while you wait"); the first time, the guidebook's new
 entry "A breath while you wait" is told first. Played in the desktop app's browser pane with scripted holds, **not on
 a phone**. **Merged to `main` and deployed** on the owner's word.
-[Architecture](docs/rounds/213/architecture.md), [findings](docs/rounds/213/findings.md).
+[Architecture](docs/rounds/214/architecture.md), [findings](docs/rounds/214/findings.md).
 
 ## Addendum 2026-11-28: round 212, Reduce motion ignored
 

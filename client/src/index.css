@@ -132,7 +132,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .sheet-header { flex: none; padding: .55rem 1rem; border-bottom: 2px solid rgb(0 0 0 / .55); box-shadow: 0 1px 0 rgb(255 255 255 / .14); }
 .sheet-header .text-button { margin-left: auto; }
 .sheet-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: .25rem 0 .5rem; scrollbar-width: thin; scrollbar-color: #8a8c86 transparent; }
-/* Round 213: the breathing while a reply is on its way. The panel stays, but turns more see-through, and its text
+/* Round 214: the breathing while a reply is on its way. The panel stays, but turns more see-through, and its text
    fades; a canvas is drawn over it (BreathGame.jsx). The panel's background is on ::before so that it alone can fade.
    Nothing here has an edge: every light is a gradient to nothing. */
 .sheet { isolation: isolate; background: none; }

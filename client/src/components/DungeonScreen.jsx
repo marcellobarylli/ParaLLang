@@ -392,7 +392,7 @@ function EncounterSheet({ state, site, sites, party = false, road = null, speech
   // Round 196: a new line comes with its narrative read first, by the narrator (unless switched off), and waits for a
   // travel passage still being read.
   const narrating = narratorOn(state.display);
-  // Round 213 (a setting, on unless switched off; it replaces round 203's game): the wait for a reply is breathed
+  // Round 214 (a setting, on unless switched off; it replaces round 203's game): the wait for a reply is breathed
   // through. From the moment an answer is sent the panel's text fades, the panel turns more see-through and a slow
   // breath is drawn over it (BreathGame.jsx). The reply that arrives under it waits: it is shown, read aloud and
   // followed only once the breathing has ended, on a breath out. The first time in a game, the guidebook's entry on

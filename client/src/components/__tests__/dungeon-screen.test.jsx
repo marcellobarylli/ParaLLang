@@ -165,7 +165,7 @@ function fakeServer({ steps = 0, stored, xp, failFirstSend = false, failFirstSta
 
 function renderScreen(options = {}) {
   const store = createGameStore({ dungeon: DUNGEON, atlas: ATLAS, storage: memoryStorage(), ...options });
-  store.getState().setBreathing(false); // round 213: these are tests of the flow; the breathing (breath-game.test.jsx) would hold each reply for three breaths
+  store.getState().setBreathing(false); // round 214: these are tests of the flow; the breathing (breath-game.test.jsx) would hold each reply for three breaths
   render(<DungeonScreen useStore={store} />);
   return store;
 }

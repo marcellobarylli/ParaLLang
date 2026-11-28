@@ -200,7 +200,7 @@ function gameRoutes(service, languages) {
     try { res.json(await service.readGuidebook(req.get('X-Learner-Id'))); }
     catch (error) { next(error); }
   });
-  // Round 213: an entry the page tells the player itself (the breathing) is entered when it is told.
+  // Round 214: an entry the page tells the player itself (the breathing) is entered when it is told.
   app.post('/api/guidebook/enter', async (req, res, next) => {
     try { res.json(await service.enterGuidebook(req.get('X-Learner-Id'), req.body ?? {})); }
     catch (error) { next(error); }
